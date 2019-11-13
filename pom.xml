@@ -70,7 +70,7 @@
         <swagger-annotations.version>1.5.20</swagger-annotations.version>
         <jetbrains.annotations.version>15.0</jetbrains.annotations.version>
         <lombok.version>1.18.4</lombok.version>
-        <fasterxml.version>2.9.10</fasterxml.version>
+        <fasterxml.version>2.10.1</fasterxml.version>
         <fasterxml-data-format.version>2.9.8</fasterxml-data-format.version>
     </properties>
 
