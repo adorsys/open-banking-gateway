@@ -1,0 +1,28 @@
+@startuml
+
+autonumber "<b><color blue>[00]"
+actor psu
+
+box "PsuUserAgent" #LightGray
+    participant "FinTechUI" as FinTechUI
+end box
+box "FinTechServer" #DarkSeaGreen
+    participant "FinTechApi" as FinTechApi
+end box
+box "TppServer" #LightGray
+    participant "TppBankingApi" as TppBankingApi
+end box
+box "AspspServer" #LightSkyBlue
+    participant "AspspBankingApi" as AspspConsentSessionApi
+end box
+
+psu -> FinTechUI ++ : requestService
+FinTechUI -> FinTechApi ++ : initiateConsent\n[UserAgentContext, PsuFintechSession]\n(ConsentData)
+FinTechApi -> TppBankingApi ++ : initiateConsent\n[UserAgentContext, FinTechContext]\n(ConsentData)
+TppBankingApi -> AspspConsentSessionApi ++ : initiateConsent\n[UserAgentContext, TppContext]\n(ConsentData) 
+return redirectTo_AspspConsentSessionApi(Tpp2AspspConsentSession)
+return redirectTo_TppConsentSessionApi(Fintech2TppConsentSession)
+return redirect302[TppConsentSessionApiUrl, PsuFintechSession]()<authCode>
+return display PsuTppConsentSessionUI
+'return redirect302[TppConsentSessionApi, PsuFintechSession]()
+@enduml
