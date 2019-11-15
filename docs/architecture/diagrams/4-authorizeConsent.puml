@@ -1,6 +1,24 @@
 @startuml
 
-!include actors.puml
+autonumber "<b><color blue>[00]"
+actor psu
+
+box "User Agent" #LightGray
+    participant "FinTech UI" as FinTechUI
+    participant "TPP PSU\nConsentUI" as TppConsentUI
+    participant "ASPSP\nConsentUI" as AspspConsentUI
+end box
+participant "Fintech API" as FinTechAPI
+box "Banking Gateway (TPP)" #LightGray
+    participant "TPP Banking API" as TPPBankingAPI
+    participant "Bank Search API" as BankList
+    participant "TPP Consent\nSession API" as ConsentAPI
+    participant "TPP Consent\nSession Store API" as ConsentStore
+    participant "Banking Protocol\nSelector" as ProtocolSelector
+    participant "Banking Protocol" as BankingProtocol
+    participant ConsentDB
+end box
+participant "ASPSP (Bank)" as ASPSP
 
 == Authorisation ==
 psu -> TppConsentUI ++ : redirect

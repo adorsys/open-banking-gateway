@@ -1,6 +1,10 @@
-# Consent Embedded Rest API
+# TPP PSU Consent Session API
 
-Provides an interface for interaction between the TPP and the PSU
+Provide interaction between PSU and TPP during a consent session.
+
+The purpose of a TppPsuConsentSession is to manage a single consent session between the TPP and the PSU. Note that there is no direct one to one relationship between the TppPsuConssentSession and an AspspConsent
+
+![How privatespace diagram](http://www.plantuml.com/plantuml/proxy?src=https://https://raw.githubusercontent.com/adorsys/open-banking-gateway/master/docs/architecture/diagrams/3-initiateConsent.puml&fmt=svg&vvv=1&sanitize=true)  
 
 ## Supported Standards
 
@@ -21,4 +25,6 @@ This API brings an object model that can be used to display:
 The API uses cookies for session tracking. As we assume the calling interface is the user agent of the PSU. Cookies provide for maximum protection here as we can use them to:
 - Store session information while exchanging between user agent and TPP consent backend. This way we wont have to persist any PSU related information in the TPP consent backend.
 - State information use to validate legitimacy of the cookie sent will be found in the request URL. 
+
+## 
 
