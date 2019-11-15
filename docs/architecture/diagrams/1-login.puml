@@ -1,0 +1,17 @@
+@startuml
+
+!include actors.puml
+
+== PSU establishes a session with the FinTech API ==
+psu -> FinTechUI ++ : Load FinTech Application
+FinTechUI -> FinTechAPI ++ : login(psu-auth@fintech)
+return storeSessionCookie[PsuFinTechSessionCookie]
+note right
+    terminology -> call[header](body)
+    PsuFinTechSessionCookie = Psu Session Cookie
+    psu-auth@fintech = Data used to authenticate
+    the psu at the fintech interface
+end note
+return Display use case "Bank Selection"
+
+@enduml

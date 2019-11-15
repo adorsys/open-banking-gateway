@@ -1,0 +1,24 @@
+@startuml BGAPI
+
+!include actors.puml
+
+== Productive work with Data ==
+
+psu -> FinTechAPI ++ : authCode
+FinTechAPI -> TPPBankingAPI ++ : code2Token(authCode)
+TPPBankingAPI -> BankingProtocol ++ : load consent (authCode)
+BankingProtocol -> ConsentDB ++ : load consent (authCode)
+return consent data
+return consent data
+TPPBankingAPI -> TPPBankingAPI: generate token (consent data, authCode)
+return token
+FinTechAPI -> TPPBankingAPI ++ : service reques\n (serviceId, token)
+TPPBankingAPI -> BankingProtocol ++ : service request (sid, serviceId)
+BankingProtocol -> ConsentDB ++: read Consent info (sid)
+return Consent info
+BankingProtocol -> ASPSP ++ : request service (consent id)
+return service data
+return service data
+return service data
+return display service data
+@enduml

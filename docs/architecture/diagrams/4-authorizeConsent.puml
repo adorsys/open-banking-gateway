@@ -1,0 +1,53 @@
+@startuml
+
+!include actors.puml
+
+== Authorisation ==
+psu -> TppConsentUI ++ : redirect
+TppConsentUI -> ConsentAPI ++ : auth(authCode)
+ConsentAPI -> BankingProtocol ++ : loadConsentSession(authCode)
+BankingProtocol -> ConsentDB ++ : deleteConsentSession(authCode)
+return ConsentSession
+return ConsentSession
+alt embedded authorisation
+    return loginPage[ConsentSessionCookie](AuthorizeResponse)
+    return displayLoginPage(AuthorizeResponse)
+    loop until authorisation is done
+        psu -> TppConsentUI ++ : enter credentials
+        TppConsentUI -> ConsentAPI ++ : psuAuth(ConsentSessionCookie, credentials)
+        note right
+         post next step authorisation data
+         Sample Alternative Steps:
+         - Enter PSUIdentification
+         - Enter PSU Account
+         - SCA for Account Selection
+         - Select Account
+         - Select SCA Method
+         - Send TAN ...
+        end note
+        ConsentAPI -> BankingProtocol ++ : psuAuth(ConsentSession,credentials)
+        BankingProtocol -> ASPSP ++ : perform authorisation step
+        return OK
+        BankingProtocol -> BankingProtocol : generateAuthCode(ConsentSession):authCode
+        BankingProtocol -> ConsentDB: persistConsentSession\n(authCode,ConsentSession)
+        return next step id / OK (FtOkURL, authCode)
+        return display next authorisation screen / redirect to FinTechAPIRedirUrl (authCode)
+    end
+else Redirect / OAuth authorisation
+return redirect - displayTransitionScreen[ConsentSessionCookie](AuthorizeResponse)
+return oauthRedirectToASPSP
+psu -> ASPSP ++ : Authorisation steps with the Bank IDP
+return backRedirectToConsentAPI[ConsentOkUrl](aspspAuthCode)
+psu -> ConsentAPI ++ : backRedirectToConsentAPI[ConsentSessionCookie](aspspAuthCode)
+ConsentAPI -> BankingProtocol ++ : authSuccess(ConsentSession,aspspAuthCode)
+BankingProtocol -> ASPSP ++ : getConsentToken(aspspAuthCode)
+return consentToken
+BankingProtocol -> BankingProtocol : addToConsentSession(consentToken, consentSession)
+BankingProtocol -> BankingProtocol : generateAuthCode(consentSession):authCode
+BankingProtocol -> ConsentDB: persistConsentSession\n(authCode,ConsentSession)
+
+return backRedirectToFintechAPI(consentSession,authCode)
+return backRedirectToFintechAPI[FinTechAPIRedirUrl](authCode)
+end
+
+@enduml

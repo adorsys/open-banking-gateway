@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiOperation;
 public interface AuthEntryPointApi {
 
 	@GetMapping(path="/auth", params= {"code"})
-    @ApiOperation(value = "Entry point for processing a consent request redirected by the TPP server to the ConsentAPI.",
+    @ApiOperation(value = "Entry point for processing a consent request redirected by the TPP Banking API over the FinTechAPI to the ConsentAPI.",
             notes = "This is the <b>entry point</b> for authenticating a consent redirected by the TPP server to the ConsentAPI."
                     + "<ul>"
                     + "<ul> TPP behavior prior to redirecting to the ConsentAPI"

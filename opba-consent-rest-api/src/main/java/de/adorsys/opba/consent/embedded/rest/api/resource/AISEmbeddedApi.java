@@ -22,7 +22,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 
-@Api(value = "/embedded-ais", tags = "PSU AIS Consent", description = "Provides access to embedded (tpp driven) AIS consent functionality")
+@Api(value = "/consent-embedded-ais", tags = "PSU AIS Consent", description = "Provides access to embedded (tpp driven) AIS consent functionality")
 public interface AISEmbeddedApi extends AuthEntryPointApi {
     public static final String API_KEY = "apiKey";
 	public static final String COOKIE = "Cookie";

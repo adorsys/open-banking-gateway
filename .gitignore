@@ -60,3 +60,4 @@ target/sonar/
 .settings
 .classpath/
 .classpath
+.factorypath

@@ -11,7 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 
-@Api(value = "/redirect", tags = "PSU Consent Redirect API", description = "Provides access to redirect consent functionality")
+@Api(value = "/consent-redirect", tags = "PSU Consent Redirect API", description = "Provides access to redirect consent functionality")
 public interface RedirectApi extends AuthEntryPointApi {
     public static final String API_KEY = "apiKey";
 	public static final String COOKIE = "Cookie";

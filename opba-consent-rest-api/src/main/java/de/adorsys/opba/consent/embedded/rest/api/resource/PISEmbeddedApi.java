@@ -19,7 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 
-@Api(value = "/embedded-pis", tags = "PSU PIS Consent", description = "Provides access to embedded (tpp driven) PIS consent functionality")
+@Api(value = "/consent-embedded-pis", tags = "PSU PIS Consent", description = "Provides access to embedded (tpp driven) PIS consent functionality")
 public interface PISEmbeddedApi extends AuthEntryPointApi {
     public static final String API_KEY = "apiKey";
 	public static final String COOKIE = "Cookie";
