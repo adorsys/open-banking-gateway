@@ -1,10 +1,10 @@
-# Environments
+# Dictionary
 
 ## PsuUserDevice
 
 A PSU user device runs applications used by the PSU to access banking functionality. Those applications are generally called PsuUgerAgents.
 
-## PsuUgerAgent
+## PsuUserAgent
 
 Application running on a PSU device and used by the PSU to access banking functionality. We are describing the two main types of PsuUserAgents.
 
