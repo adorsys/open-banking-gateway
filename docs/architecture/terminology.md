@@ -31,7 +31,7 @@ We assume all three applications FinTechApi, TppConsentSessionApi, AspspConsentS
 We also do not advice adding persistent information to __RedirectUrl__, as these are log files everywhere on infrastructure components in data centers. __RedirectUrl__ shall instead carry __OneTime__ and __ShortLived__ authorization code we call __code__, that can be used to retrieved shared payload through an authenticated back channel connection. This is the practice borrowed from [oAuth2 RFC6749](https://tools.ietf.org/html/rfc6749). Following table shows defined redirects and corresponding back chanel endpoints.
 
 | Origin Application | Redirecting Application | Response Code; Location ; AuthCodeParam; Expiration | Redirect Target Application | Destination Application  | Data EndPoint at Origin Application |
-| -- | -- | -- | -- | -- |
+| -- | -- | -- | -- | -- | -- |
 | TppBankingApi | FinTechApi | 302 ; /auth ; code ; 5s | TppConsentSessionApi | TppConsentSessionApi | /loadTppConsentSession |
 | TppConsentSessionApi | TppConsentSessionApi | Proprietary banking API. Assume RFC6749. /auth | AspspConsentSessionApi | AspspConsentSessionApi | none |
 | AspspConsentSessionApi | AspspConsentSessionApi | 302 ; \[/ok\|/nok\] ; code ; 5s | TppConsentSessionApi | TppConsentSessionApi | /token |
