@@ -22,7 +22,6 @@ FinTechApi -> TppBankingApi ++ : initiateConsent\n[UserAgentContext, FinTechCont
 TppBankingApi -> AspspConsentSessionApi ++ : initiateConsent\n[UserAgentContext, TppContext]\n(ConsentData) 
 return redirectTo_AspspConsentSessionApi(Tpp2AspspConsentSession)
 return redirectTo_TppConsentSessionApi(Fintech2TppConsentSession)
-return redirect302[TppConsentSessionApiUrl, PsuFintechSession]()<authCode>
+return redirect302<authCode>\n[TppConsentSessionApiUrl, PsuFintechSession]()
 return display PsuTppConsentSessionUI
-'return redirect302[TppConsentSessionApi, PsuFintechSession]()
 @enduml
