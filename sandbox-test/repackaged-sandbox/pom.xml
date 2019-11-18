@@ -1,0 +1,120 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>de.adorsys.opba</groupId>
+        <artifactId>sandbox-test</artifactId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+
+    <!-- POC that we can run whole sandbox within single JVM and H2 database for performance and debugging easiness -->
+    <artifactId>repackaged-sandbox</artifactId>
+    <name>Sandbox test artifact</name>
+
+    <properties>
+        <ruleset.basedir>../..</ruleset.basedir>
+    </properties>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+
+        <!-- https://github.com/adorsys/xs2a FIXME BOOT-INF/LedgersApplication -->
+        <!-- - adorsys/xs2a-connector-examples:5.3.1+ -->
+        <dependency>
+            <groupId>de.adorsys.ledgers</groupId>
+            <artifactId>gateway-app</artifactId>
+            <version>5.4</version>
+        </dependency>
+        <!-- adorsys/xs2a-aspsp-profile:5.3+ AspspProfileApplication -->
+        <dependency>
+            <groupId>de.adorsys.psd2</groupId>
+            <artifactId>aspsp-profile-server</artifactId>
+            <version>5.4</version>
+        </dependency>
+        <!-- adorsys/xs2a-consent-management:5.3 FIXME BOOT-INF/ConsentManagementStandaloneApp -->
+        <dependency>
+            <groupId>de.adorsys.psd2</groupId>
+            <artifactId>cms-standalone-service</artifactId>
+            <version>5.4</version>
+        </dependency>
+
+
+        <!-- https://github.com/adorsys/XS2A-Sandbox -->
+        <!-- adorsys/xs2a-online-banking FIXME BOOT-INF/LedgersXs2aObaApplication -->
+        <dependency>
+            <groupId>de.adorsys.psd2.sandbox</groupId>
+            <artifactId>online-banking-app</artifactId>
+            <version>1.7</version>
+        </dependency>
+        <!-- adorsys/xs2a-tpp-rest-server FIXME BOOT-INF/TppApplication -->
+        <dependency>
+            <groupId>de.adorsys.psd2.sandbox</groupId>
+            <artifactId>tpp-rest-server</artifactId>
+            <version>1.7</version>
+        </dependency>
+        <!-- adorsys/xs2a-certificate-generator FIXME BOOT-INF/CertificateGeneratorApp -->
+        <dependency>
+            <groupId>de.adorsys.psd2.sandbox</groupId>
+            <artifactId>certificate-generator</artifactId>
+            <version>1.7</version>
+        </dependency>
+
+
+        <!-- https://github.com/adorsys/ledgers FIXME BOOT-INF/LedgersApplication -->
+        <!-- adorsys/ledgers:2.0 -->
+        <dependency>
+            <groupId>de.adorsys.ledgers</groupId>
+            <artifactId>ledgers-app</artifactId>
+            <version>2.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Moving spring shaded BOOT-INF classes back to public space -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>de.adorsys.opba</groupId>
+                        <artifactId>boot-inf-repackager</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>junit:junit</exclude>
+                                    <exclude>log4j:log4j:jar:</exclude>
+                                </excludes>
+                            </artifactSet>
+                            <relocations>
+                                <relocation>
+
+                                </relocation>
+                            </relocations>
+                            <transformers>
+                                <transformer implementation="de.adorsys.plugins.repackaging.BootInfRelocatingTransformer"/>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
