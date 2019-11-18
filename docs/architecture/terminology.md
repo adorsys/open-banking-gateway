@@ -82,6 +82,9 @@ Information used to identify the FinTech application at the TppBankingApi. For e
 ### FinTech2TppConsentSession
 Information associated with the consent as exchanged between the FinTechApi and the TppBankingApi. Containing ConsentData, authCode, TppConsentSessionRedirectUrl (in the response), ...
 
+### TppConsentSessionUI
+UI used by PSU to authoraise consent in embedded case.
+
 ## AspspDC
 Data center environment of the ASPSP
 
