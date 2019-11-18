@@ -30,6 +30,7 @@
 
     <modules>
         <module>opba-consent-rest-api</module>
+        <module>sandbox-test</module>
     </modules>
 
     <url>https://github.com/adorsys/open-banking-gateway</url>
@@ -72,6 +73,8 @@
         <lombok.version>1.18.4</lombok.version>
         <fasterxml.version>2.10.1</fasterxml.version>
         <fasterxml-data-format.version>2.9.8</fasterxml-data-format.version>
+
+        <jupiter.version>5.4.1</jupiter.version>
     </properties>
 
     <repositories>
@@ -159,6 +162,14 @@
                 <groupId>com.fasterxml.jackson.dataformat</groupId>
                 <artifactId>jackson-dataformat-yaml</artifactId>
                 <version>${fasterxml-data-format.version}</version>
+            </dependency>
+
+            <!-- Test -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${jupiter.version}</version>
+                <scope>test</scope>
             </dependency>
             
         </dependencies>
