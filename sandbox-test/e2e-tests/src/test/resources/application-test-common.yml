@@ -1,3 +1,34 @@
+# Note that applications will start in isolated mode, so you can safely use variables defined in app specific profile
+# like ${localapp.schema.name} that will come from app-specific profile
 common:
+  # Database instance for sandbox applications, one should assume that username and password are same and are
+  # equal to application profile without '-', ' ', etc.:
   db:
-    url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=${localapp.schema.name}
+    driver: org.postgresql.Driver
+  apps:
+    # On which port local applications will be started
+    local:
+      aspsp:
+        port: 10010
+      certgenerator:
+        port: 10011
+      consentmgmt:
+        port: 10012
+      ledgersapp:
+        port: 10013
+      ledgersgateway:
+        port: 10014
+      onlinebanking:
+        port: 10015
+      tpprest:
+        port: 10016
+    # Which urls local sandbox applications will use to talk each with other
+    mapping:
+      aspsp: http://localhost:${common.apps.local.aspsp.port}
+      certgenerator: http://localhost:${common.apps.certgenerator.port}
+      consentmgmt: http://localhost:${common.apps.consentmgmt.port}
+      ledgersapp: http://localhost:${common.apps.ledgersapp.port}
+      ledgersgateway: http://localhost:${common.apps.ledgersgateway.port}
+      onlinebanking: http://localhost:${common.apps.onlinebanking.port}
+      tpprest: http://localhost:${common.apps.tpprest.port}
