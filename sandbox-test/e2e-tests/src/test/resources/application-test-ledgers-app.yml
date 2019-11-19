@@ -1,0 +1,4 @@
+db:
+  url: ${common.db.url}
+  user: user
+  password: password
