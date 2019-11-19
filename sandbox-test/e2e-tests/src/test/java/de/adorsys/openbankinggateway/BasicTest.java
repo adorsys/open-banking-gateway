@@ -1,18 +1,19 @@
 package de.adorsys.openbankinggateway;
 
+import de.adorsys.openbankinggateway.sandbox.SandboxAppsStarter;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-
-import java.util.jar.Attributes;
 
 
 class BasicTest extends WithSandboxSpringBootTest {
 
-    @Test
-    void testEnvStartsUp() {
+    private final SandboxAppsStarter executor = new SandboxAppsStarter();
 
-        JarFile jarFile = new JarFile(file);
-        Manifest manifest = jarFile.getManifest(); // warning: can be null
-        Attributes attributes = manifest.getMainAttributes();
-        String className = attributes.getValue(Attributes.Name.MAIN_CLASS);
+    @Test
+    @SneakyThrows
+    void testEnvStartsUp() {
+        executor.runAll();
+
+        Thread.sleep(20000);
     }
 }
