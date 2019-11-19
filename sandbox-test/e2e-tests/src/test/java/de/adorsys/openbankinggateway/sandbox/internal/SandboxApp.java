@@ -27,14 +27,16 @@ import java.util.jar.Manifest;
  * application has its own class loader and context.
  *
  * Each application will receive spring profile based on its lowercase name. I.e. LEDGERS_GATEWAY assumes to have
- * application-test-ledgers-gateway.yml property file on resources path.
+ * sandbox/application-test-ledgers-gateway.yml as well as common sandbox/application-test-common.yml
+ * property files on resources path.
  */
 @Slf4j
 @Getter
 public enum SandboxApp {
 
-    LEDGERS_GATEWAY("gateway-app-5.4.jar"),
-    ASPSP_PROFILE("aspsp-profile-server-5.4.jar", "de.adorsys.psd2.aspsp.profile.AspspProfileApplication"),
+    // TODO - adorsys/xs2a-connector-examples ?
+    LEDGERS_GATEWAY("gateway-app-5.4.jar"), // TODO Unneeded?
+    ASPSP_PROFILE("aspsp-profile-server-5.4-exec.jar"),
     CONSENT_MGMT("cms-standalone-service-5.4.jar"),
     ONLINE_BANKING("online-banking-app-1.7.jar"),
     TPP_REST("tpp-rest-server-1.7.jar"),
@@ -138,7 +140,9 @@ public enum SandboxApp {
             jarPath = Arrays.stream(System.getProperty("java.class.path").split(System.getProperty("path.separator")))
                     .filter(it -> it.endsWith(jar))
                     .findAny()
-                    .orElseThrow(() -> new IllegalStateException("Jar " + jar + " not found on classpath"));
+                    .orElseThrow(() -> new IllegalStateException(
+                            "Jar " + jar + " not found on classpath: " + System.getProperty("java.class.path"))
+                    );
 
             loader = new URLClassLoader(
                     // It makes no sense to provide anything else except Spring JAR as it will use its own classloader

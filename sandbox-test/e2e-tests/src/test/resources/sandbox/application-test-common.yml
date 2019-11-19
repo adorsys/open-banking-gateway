@@ -9,7 +9,7 @@ common:
   apps:
     # On which port local applications will be started
     local:
-      aspsp:
+      aspspprofile:
         port: 10010
       certgenerator:
         port: 10011
@@ -25,10 +25,10 @@ common:
         port: 10016
     # Which urls local sandbox applications will use to talk each with other
     mapping:
-      aspsp: http://localhost:${common.apps.local.aspsp.port}
-      certgenerator: http://localhost:${common.apps.certgenerator.port}
-      consentmgmt: http://localhost:${common.apps.consentmgmt.port}
-      ledgersapp: http://localhost:${common.apps.ledgersapp.port}
-      ledgersgateway: http://localhost:${common.apps.ledgersgateway.port}
-      onlinebanking: http://localhost:${common.apps.onlinebanking.port}
-      tpprest: http://localhost:${common.apps.tpprest.port}
+      aspsp: http://localhost:${common.apps.local.aspspprofile.port}
+      certgenerator: http://localhost:${common.apps.local.certgenerator.port}
+      consentmgmt: http://localhost:${common.apps.local.consentmgmt.port}
+      ledgersapp: http://localhost:${common.apps.local.ledgersapp.port}
+      ledgersgateway: http://localhost:${common.apps.local.ledgersgateway.port}
+      onlinebanking: http://localhost:${common.apps.local.onlinebanking.port}
+      tpprest: http://localhost:${common.apps.local.tpprest.port}
