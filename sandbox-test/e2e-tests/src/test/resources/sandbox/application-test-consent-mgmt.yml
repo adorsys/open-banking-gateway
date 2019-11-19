@@ -1,0 +1,16 @@
+localapp:
+  schema:
+    name: consent
+
+spring:
+  datasource:
+    url: ${common.db.url}
+    username: test-consentmgmt
+    password: test-consentmgmt
+    driver-class-name: ${common.db.driver}
+  liquibase:
+    enabled: true
+server:
+  port: ${common.apps.local.consentmgmt.port}
+
+server_key: secret123
