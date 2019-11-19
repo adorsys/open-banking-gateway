@@ -1,27 +1,32 @@
-@startuml
-
+@startuml PsuInitiateConsent
+title PsuInitiateConsent
 autonumber "<b><color blue>[00]"
 actor psu
 
 box "PsuUserAgent" #LightGray
     participant "FinTechUI" as FinTechUI
+    participant "PsuTppConsentSessionUI" as PsuTppConsentSessionUI
+    participant "PsuAspspConsentSessionUI" as PsuAspspConsentSessionUI
 end box
 box "FinTechDC" #DarkSeaGreen
     participant "FinTechApi" as FinTechApi
 end box
 box "TppDC" #LightGray
     participant "TppBankingApi" as TppBankingApi
+    participant "TppConsentSessionApi" as TppConsentSessionApi
 end box
 box "AspspDC" #LightSkyBlue
-    participant "AspspBankingApi" as AspspConsentSessionApi
+    participant "AspspConsentSessionApi" as AspspConsentSessionApi
 end box
 
-psu -> FinTechUI ++ : requestService
-FinTechUI -> FinTechApi ++ : initiateConsent\n[UserAgentContext, PsuFintechSession]\n(ConsentData)
-FinTechApi -> TppBankingApi ++ : initiateConsent\n[UserAgentContext, FinTechContext]\n(ConsentData)
-TppBankingApi -> AspspConsentSessionApi ++ : initiateConsent\n[UserAgentContext, TppContext]\n(ConsentData) 
-return redirectTo_AspspConsentSessionApi(Tpp2AspspConsentSession)
-return redirectTo_TppConsentSessionApi(Fintech2TppConsentSession)
-return redirect302<authCode>\n[TppConsentSessionApiUrl, PsuFintechSession]()
-return display PsuTppConsentSessionUI
+psu -> FinTechUI ++ : requestService(ConsentData)
+FinTechUI -> FinTechApi ++ : initiateConsent\n[UserAgentContext, Psu2FintechLoginSessionCookie]\n(ConsentData)
+FinTechApi -> TppBankingApi ++ : initiateConsent\n[UserAgentContext, FinTech2TppContext]\n(FinTech2TppConsentSession)
+TppBankingApi -> AspspConsentSessionApi ++ : initiateConsent\n[UserAgentContext, Tpp2AspspContext]\n(Tpp2AspspConsentSession) 
+return auth(Tpp2AspspConsentSession, AspspRedirectInfo)
+TppBankingApi -> TppBankingApi : TppConsentSession.redirectSession():TppRedirectSession
+TppBankingApi -> TppBankingApi : storeRedirectSession(TppConsentSession, exp):code
+TppBankingApi -> TppBankingApi : TppConsentSession.finTechSession():FinTech2TppConsentSession
+return resp(FinTech2TppConsentSession,\nTppRedirectInfo)<code>
+return redirect302[TppConsentSessionApi.authEntryPoint,\nPsu2FintechLoginSessionCookie]()<code>
 @enduml

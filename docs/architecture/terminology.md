@@ -85,6 +85,8 @@ Information associated with the consent as exchanged between the FinTechApi and 
 ### TppConsentSessionUI
 UI used by PSU to authoraise consent in embedded case.
 
+### Psu2TppConsentSession
+
 ## AspspDC
 Data center environment of the ASPSP
 
@@ -94,7 +96,7 @@ Api banking provided by ASPSP. This interface is not directly accessed by the PS
 ### Tpp2AspspContext
 Information used to identify the Tpp application in the ASPSP environment. Like a TPP QWAC certificate.
 
-### Tpp2AspspConsentData
+### Tpp2AspspConsentSession
 Information associated with the consent initialized by the ASPSP. Containing ConsentId, ConsentData, AspspConsentSessionRedirectUrl, ...
 
 ### AspspConsentSessionApi
