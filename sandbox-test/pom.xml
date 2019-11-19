@@ -14,8 +14,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>boot-inf-repackager</module>
-        <module>repackaged-sandbox</module>
         <module>e2e-tests</module>
     </modules>
 </project>

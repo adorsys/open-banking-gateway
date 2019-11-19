@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Allows to start all sandbox (they imitate bank / ASPSP) application.
+ * Allows to start all sandbox (they imitate bank / ASPSP) applications.
  */
 public class SandboxAppsStarter {
 

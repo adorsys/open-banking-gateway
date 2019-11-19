@@ -1,10 +1,11 @@
 package de.adorsys.openbankinggateway;
 
-import com.google.common.collect.ImmutableSet;
 import de.adorsys.openbankinggateway.sandbox.SandboxAppsStarter;
 import de.adorsys.openbankinggateway.sandbox.internal.SandboxApp;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 class BasicTest extends WithSandboxSpringBootTest {
@@ -14,8 +15,10 @@ class BasicTest extends WithSandboxSpringBootTest {
     @Test
     @SneakyThrows
     void testEnvStartsUp() {
-        executor.run(ImmutableSet.of(SandboxApp.CONSENT_MGMT));
+        executor.runAll();
 
         Thread.sleep(20000);
+
+        assertThat(SandboxApp.values()).extracting(it -> it.getLoader().get()).isNotNull();
     }
 }
