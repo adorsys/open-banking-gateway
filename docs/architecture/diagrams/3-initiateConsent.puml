@@ -1,109 +1,34 @@
-@startuml
-
+@startuml PsuInitiateConsent
+title PsuInitiateConsent
 autonumber "<b><color blue>[00]"
 actor psu
 
 box "PsuUserAgent" #LightGray
     participant "FinTechUI" as FinTechUI
-    participant "PsuTppConsentSessionUI" as TppConsentUI
-    participant "PsuAspspConsentSessionUI" as AspspConsentUI
+    participant "PsuTppConsentSessionUI" as PsuTppConsentSessionUI
+    participant "PsuAspspConsentSessionUI" as PsuAspspConsentSessionUI
 end box
 box "FinTechDC" #DarkSeaGreen
-    participant "FinTechApi" as FinTechAPI
+    participant "FinTechApi" as FinTechApi
 end box
 box "TppDC" #LightGray
-    participant "TppBankingApi" as TPPBankingAPI
-    participant "TppBankSearchAPI" as BankList
-    participant "TppConsentSessionApi" as ConsentAPI
-    participant "TppConsentSessionStoreAPI" as ConsentStore
-    participant "BankingProtocolSelector" as ProtocolSelector
-    participant "BankingProtocol" as BankingProtocol
-    participant ConsentDB
+    participant "TppBankingApi" as TppBankingApi
+    participant "TppConsentSessionApi" as TppConsentSessionApi
 end box
 box "AspspDC" #LightSkyBlue
-    participant "AspspConsentSessionApi" as ASPSP
+    participant "AspspConsentSessionApi" as AspspConsentSessionApi
 end box
 
-== InitiateConsent ==
-psu -> FinTechUI ++ : bankConnection(bankProfile,ConsentData)
-note right
-ConsentData = 
-    - iban | AllPDS2 Consent
-    - Frequency
-end note
-FinTechUI -> FinTechAPI ++ : bankConnection[uac](bankProfile,ConsentData)
-note right
-uac = User Agent Context
-    - User Agent IP
-    - User Agent Location
-    - User Agent State
-end note
-FinTechAPI -> TPPBankingAPI ++ : bankConnection\n[uac,fts](bankProfile)
-note right
-fts = FinTech Session
-    - fti (FinTech Certificate)
-    - cs (Consent Session)
-        - FtOkURL
-        - FtNoOkURL
-        - ...
-end note
-alt some banks like ING, Berlin Group except OAuth pre-step
-    TPPBankingAPI -> BankingProtocol ++: initiateConsentSession[uac,fts](ConsentData)
-    BankingProtocol -> ASPSP ++ : initiateConsentSession[uac,fts](ConsentData)
-    return AspspConsentData
-end
-BankingProtocol -> BankingProtocol : createConsentSession(AspspConsentData):ConsentSession
-BankingProtocol -> BankingProtocol : generateAuthCode(ConsentSession):authCode
-BankingProtocol -> ConsentDB: persistConsentSession\n(authCode,ConsentSession)
-return redirectToTppConsentSessionAPI(authCode)
-return redirectToTppConsentSessionAPI(authCode)
-return redirectToTppConsentSessionAPI(authCode)\n[PsuFinTechSessionCookie]
-return redirect
-newpage Authorisation
-psu -> TppConsentUI ++ : redirect
-TppConsentUI -> ConsentAPI ++ : auth(authCode)
-ConsentAPI -> BankingProtocol ++ : loadConsentSession(authCode)
-BankingProtocol -> ConsentDB ++ : deleteConsentSession(authCode)
-return ConsentSession
-return ConsentSession
-alt embedded authorisation
-    return loginPage[ConsentSessionCookie](AuthorizeResponse)
-    return displayLoginPage(AuthorizeResponse)
-    loop until authorisation is done
-        psu -> TppConsentUI ++ : enter credentials
-        TppConsentUI -> ConsentAPI ++ : psuAuth(ConsentSessionCookie, credentials)
-        note right
-         post next step authorisation data
-         Sample Alternative Steps:
-         - Enter PSUIdentification
-         - Enter PSU Account
-         - SCA for Account Selection
-         - Select Account
-         - Select SCA Method
-         - Send TAN ...
-        end note
-        ConsentAPI -> BankingProtocol ++ : psuAuth(ConsentSession,credentials)
-        BankingProtocol -> ASPSP ++ : perform authorisation step
-        return OK
-        BankingProtocol -> BankingProtocol : generateAuthCode(ConsentSession):authCode
-        BankingProtocol -> ConsentDB: persistConsentSession\n(authCode,ConsentSession)
-        return next step id / OK (FtOkURL, authCode)
-        return display next authorisation screen / redirect to FinTechAPIRedirUrl (authCode)
-    end
-else Redirect / OAuth authorisation
-return redirect - displayTransitionScreen[ConsentSessionCookie](AuthorizeResponse)
-return oauthRedirectToASPSP
-psu -> ASPSP ++ : Authorisation steps with the Bank IDP
-return backRedirectToConsentAPI[ConsentOkUrl](aspspAuthCode)
-psu -> ConsentAPI ++ : backRedirectToConsentAPI[ConsentSessionCookie](aspspAuthCode)
-ConsentAPI -> BankingProtocol ++ : authSuccess(ConsentSession,aspspAuthCode)
-BankingProtocol -> ASPSP ++ : getConsentToken(aspspAuthCode)
-return consentToken
-BankingProtocol -> BankingProtocol : addToConsentSession(consentToken, consentSession)
-BankingProtocol -> BankingProtocol : generateAuthCode(consentSession):authCode
-BankingProtocol -> ConsentDB: persistConsentSession\n(authCode,ConsentSession)
+== call[header](body)<params> ==
 
-return backRedirectToFintechAPI(consentSession,authCode)
-return backRedirectToFintechAPI[FinTechAPIRedirUrl](authCode)
-end
+psu -> FinTechUI ++ : listTransactions(bankId)
+FinTechUI -> FinTechApi ++ : listTransactions\n[UserAgentContext, Psu2FintechLoginSessionCookie]\n(bankId)
+FinTechApi -> TppBankingApi ++ : initiateConsent\n[UserAgentContext, FinTech2TppContext]\n(FinTech2TppConsentSession)
+TppBankingApi -> AspspConsentSessionApi ++ : initiateConsent\n[UserAgentContext, Tpp2AspspContext]\n(Tpp2AspspConsentSession)
+return auth(Tpp2AspspConsentSession, AspspRedirectInfo)
+TppBankingApi -> TppBankingApi : TppConsentSession.redirectSession():TppRedirectSession
+TppBankingApi -> TppBankingApi : storeRedirectSession(TppConsentSession, exp):code
+TppBankingApi -> TppBankingApi : TppConsentSession.finTechSession():FinTech2TppConsentSession
+return resp(FinTech2TppConsentSession,\nTppRedirectInfo)<code>
+return redirect302[TppConsentSessionApi.authEntryPoint,\nPsu2FintechLoginSessionCookie]()<code>
 @enduml

@@ -25,17 +25,19 @@ box "AspspDC" #LightSkyBlue
 end box
 
 == PSU searches and selects a bank ==
-psu -> FinTechUI ++ : Select UC "Bank Selection"
-note right
-    whithout a bank selected we can not 
-    know what services to offer to the psu
-end note
-return Display bank search screen
+FinTechUI -->  psu : Display bank list
 
-psu -> FinTechUI ++ : incrementalBankSearch(keyword)
-FinTechUI -> FinTechAPI ++ : incrementalBankSearch(keyword)
-FinTechAPI -> BankList ++ : incrementalBankSearch(keyword)
-return bankList
-return bankList
-return Display bank list
+psu -> FinTechUI ++ : selectBank
+FinTechUI -> FinTechAPI ++ : selectBankProfile[...](bankId)
+FinTechAPI -> TPPBankingAPI ++ : selectBankProfile[...](bankId)
+TPPBankingAPI -> ProtocolSelector ++: selectBankingProtocol(bankId)
+return BankingProtocol
+TPPBankingAPI -> BankingProtocol ++ : getBankProfile(bankId)
+BankingProtocol -> BankList ++ : getBankProfile(bankId)
+return bankProfile
+return bankProfile
+return bankProfile
+return bankProfile
+return Display use cases
+
 @enduml

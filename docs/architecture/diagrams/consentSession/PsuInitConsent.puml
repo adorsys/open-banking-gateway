@@ -19,8 +19,8 @@ box "AspspDC" #LightSkyBlue
     participant "AspspConsentSessionApi" as AspspConsentSessionApi
 end box
 
-psu -> FinTechUI ++ : requestService(ConsentData)
-FinTechUI -> FinTechApi ++ : initiateConsent\n[UserAgentContext, Psu2FintechLoginSessionCookie]\n(ConsentData)
+psu -> FinTechUI ++ : listTransactions(bankcode)
+FinTechUI -> FinTechApi ++ : listTransactions\n[UserAgentContext, Psu2FintechLoginSessionCookie]\n(bankcode)
 FinTechApi -> TppBankingApi ++ : initiateConsent\n[UserAgentContext, FinTech2TppContext]\n(FinTech2TppConsentSession)
 TppBankingApi -> AspspConsentSessionApi ++ : initiateConsent\n[UserAgentContext, Tpp2AspspContext]\n(Tpp2AspspConsentSession) 
 return auth(Tpp2AspspConsentSession, AspspRedirectInfo)
