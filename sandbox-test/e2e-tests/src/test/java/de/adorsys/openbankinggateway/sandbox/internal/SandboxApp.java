@@ -2,11 +2,13 @@ package de.adorsys.openbankinggateway.sandbox.internal;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.io.Resources;
 import lombok.Data;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -48,13 +50,13 @@ public enum SandboxApp {
     SandboxApp(String jar) {
         this.jar = jar;
         this.mainClass = null;
-        this.activeProfiles = defaultProfile();
+        this.activeProfiles = defaultProfiles();
     }
 
     SandboxApp(String jar, String mainClass) {
         this.jar = jar;
         this.mainClass = mainClass;
-        this.activeProfiles = defaultProfile();
+        this.activeProfiles = defaultProfiles();
     }
 
     @SneakyThrows
@@ -83,7 +85,6 @@ public enum SandboxApp {
         return attributes.getValue(Attributes.Name.MAIN_CLASS);
     }
 
-    @SneakyThrows
     private void doRun() {
         String oldName = Thread.currentThread().getName();
         Thread.currentThread().setName(name());
@@ -91,8 +92,13 @@ public enum SandboxApp {
             ClassloaderWithJar classloaderWithJar = new ClassloaderWithJar(jar);
             getMainEntryPoint(classloaderWithJar).invoke(
                     null,
-                    (Object) new String[]{"--spring.profiles.active=" + Joiner.on(",").join(activeProfiles)}
+                    (Object) new String[] {
+                            "--spring.profiles.active=" + Joiner.on(",").join(activeProfiles),
+                            "--spring.config.location=" + buildSpringConfigLocation()
+                    }
             );
+        } catch (IllegalAccessException | InvocationTargetException ex) {
+            log.error("Failed to invoke main() method for {} of {}", name(), jar, ex);
         } catch (RuntimeException ex) {
             log.error("{} from {} jar has terminated exceptionally", name(), jar, ex);
         } finally {
@@ -100,8 +106,25 @@ public enum SandboxApp {
         }
     }
 
-    private Set<String> defaultProfile() {
-        return ImmutableSet.of("test-" + name().toLowerCase().replaceAll("_", "-"));
+    @SneakyThrows
+    private String buildSpringConfigLocation() {
+        return Joiner.on(",").join(
+                "classpath:/",
+                // Due to different classloader used by Spring we can't reference these in other way:
+                Resources.getResource("application-test-common.yml").toURI().toASCIIString(),
+                Resources.getResource("application-" + testProfileName() + ".yml").toURI().toASCIIString()
+        );
+    }
+
+    private Set<String> defaultProfiles() {
+        return ImmutableSet.of(
+                "test-common",
+                testProfileName()
+        );
+    }
+
+    private String testProfileName() {
+        return "test-" + name().toLowerCase().replaceAll("_", "-");
     }
 
     @Data
@@ -118,7 +141,8 @@ public enum SandboxApp {
                     .orElseThrow(() -> new IllegalStateException("Jar " + jar + " not found on classpath"));
 
             loader = new URLClassLoader(
-                    new URL[]{Paths.get(jarPath).toUri().toURL()},
+                    // It makes no sense to provide anything else except Spring JAR as it will use its own classloader
+                    new URL[] {Paths.get(jarPath).toUri().toURL()},
                     null
             );
         }

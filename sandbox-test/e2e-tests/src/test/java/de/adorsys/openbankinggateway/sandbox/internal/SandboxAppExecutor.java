@@ -12,6 +12,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Special executor service to deal with intricacies while starting spring-boot microservices within
  * same JVM.
+ *
+ * TODO: Most probably it should be removed and all stuff should be done using custom Thread class.
  */
 public class SandboxAppExecutor extends ThreadPoolExecutor {
 

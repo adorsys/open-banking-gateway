@@ -1,4 +1,15 @@
-db:
-  url: ${common.db.url}
-  user: user
-  password: password
+localapp:
+  schema:
+    name: ledgers
+
+spring:
+  datasource:
+    url: ${common.db.url}
+    username: test-ledgers-app
+    password: test-ledgers-app
+    driver-class-name: ${common.db.driver}
+  liquibase:
+    enabled: true
+    change-log: classpath:liquibase-master-changelog.xml
+server:
+  port: ${common.apps.local.ledgersapp.port}
