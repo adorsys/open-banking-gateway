@@ -111,8 +111,8 @@ public enum SandboxApp {
         return Joiner.on(",").join(
                 "classpath:/",
                 // Due to different classloader used by Spring we can't reference these in other way:
-                Resources.getResource("application-test-common.yml").toURI().toASCIIString(),
-                Resources.getResource("application-" + testProfileName() + ".yml").toURI().toASCIIString()
+                Resources.getResource("sandbox/application-test-common.yml").toURI().toASCIIString(),
+                Resources.getResource("sandbox/application-" + testProfileName() + ".yml").toURI().toASCIIString()
         );
     }
 

@@ -14,7 +14,7 @@ class BasicTest extends WithSandboxSpringBootTest {
     @Test
     @SneakyThrows
     void testEnvStartsUp() {
-        executor.run(ImmutableSet.of(SandboxApp.LEDGERS_APP));
+        executor.run(ImmutableSet.of(SandboxApp.CONSENT_MGMT));
 
         Thread.sleep(20000);
     }
