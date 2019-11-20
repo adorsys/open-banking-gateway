@@ -34,22 +34,27 @@ import java.util.jar.Manifest;
  * Each application will receive spring profile based on its lowercase name. I.e. LEDGERS_GATEWAY assumes to have
  * sandbox/application-test-ledgers-gateway.yml as well as common sandbox/application-test-common.yml
  * property files on resources path.
+ *
+ * You can specify database type using System property / Environment variable (in order of precedence) `DB_TYPE`:
+ * 1. (DEFAULT) DB_TYPE = IN_MEM_H2 - will connect to in-memory H2 instance
+ * 2. DB_TYPE = LOCAL_POSTGRES - will connect to local postgres db
+ * (you need to prepare schema and users - see prepare-postgres.sql)
  */
 @Slf4j
 @Getter
 public enum SandboxApp {
 
-    // TODO - adorsys/xs2a-connector-examples ?
-    LEDGERS_GATEWAY("gateway-app-5.4.jar"), // TODO Unneeded?
-    ASPSP_PROFILE("aspsp-profile-server-5.4-exec.jar"),
-    CONSENT_MGMT("cms-standalone-service-5.4.jar"),
-    ONLINE_BANKING("online-banking-app-1.7.jar"),
-    TPP_REST("tpp-rest-server-1.7.jar"),
-    CERT_GENERATOR("certificate-generator-1.7.jar"),
-    LEDGERS_APP("ledgers-app-2.0.jar");
+    LEDGERS_GATEWAY("gateway-app-5.4.jar"), // adorsys/xs2a-connector-examples
+    ASPSP_PROFILE("aspsp-profile-server-5.4-exec.jar"), // adorsys/xs2a-aspsp-profile
+    CONSENT_MGMT("cms-standalone-service-5.4.jar"), // adorsys/xs2a-consent-management
+    ONLINE_BANKING("online-banking-app-1.7.jar"), // adorsys/xs2a-online-banking
+    TPP_REST("tpp-rest-server-1.7.jar"), // adorsys/xs2a-tpp-rest-server
+    CERT_GENERATOR("certificate-generator-1.7.jar"), // adorsys/xs2a-certificate-generator
+    LEDGERS_APP("ledgers-app-2.0.jar"); // adorsys/ledgers
+
+    public static final String DB_TYPE = "DB_TYPE";
 
     private static final ObjectMapper YML = new ObjectMapper(new YAMLFactory());
-
     private final AtomicReference<ClassLoader> loader = new AtomicReference<>();
 
     private final String jar;
@@ -142,6 +147,7 @@ public enum SandboxApp {
         return Joiner.on(",").join(
                 "classpath:/",
                 // Due to different classloader used by Spring we can't reference these in other way:
+                Resources.getResource("sandbox/application-test-db" + dbProfile() + ".yml").toURI().toASCIIString(),
                 Resources.getResource("sandbox/application-test-common.yml").toURI().toASCIIString(),
                 Resources.getResource("sandbox/application-" + testProfileName() + ".yml").toURI().toASCIIString()
         );
@@ -156,6 +162,16 @@ public enum SandboxApp {
 
     private String testProfileName() {
         return "test-" + name().toLowerCase().replaceAll("_", "-");
+    }
+
+    private static String dbProfile() {
+        String value = System.getProperty(DB_TYPE, System.getenv(DB_TYPE));
+
+        if (null != value) {
+            return "-" + value.toLowerCase().replaceAll("_", "-");
+        }
+
+        return "-in-mem-h2";
     }
 
     @Data

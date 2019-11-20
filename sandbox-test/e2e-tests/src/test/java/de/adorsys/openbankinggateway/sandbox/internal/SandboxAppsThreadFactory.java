@@ -8,6 +8,8 @@ import org.springframework.boot.loader.LaunchedURLClassLoader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.concurrent.ThreadFactory;
 
 /**
@@ -37,6 +39,7 @@ class SandboxAppsThreadFactory implements ThreadFactory {
         }
 
         @Override
+        @SneakyThrows
         public void setContextClassLoader(ClassLoader loader) {
             if (!app.getLoader().compareAndSet(null, loader)) {
                 if (loader instanceof LaunchedURLClassLoader) {
@@ -48,7 +51,13 @@ class SandboxAppsThreadFactory implements ThreadFactory {
                 disableTomcatWar(loader);
             }
 
-            super.setContextClassLoader(loader);
+            super.setContextClassLoader(
+                    new URLClassLoader(
+                            // Not all do have H2 on classpath
+                            new URL[] {org.h2.Driver.class.getProtectionDomain().getCodeSource().getLocation()},
+                            loader
+                    )
+            );
         }
 
         @SneakyThrows
