@@ -8,7 +8,7 @@ A PSU user device runs applications used by the PSU to access banking functional
 
 Application running on a PSU device and used by the PSU to access banking functionality. We are describing the two main types of PsuUserAgents.
 
-### A WebBrowser
+### WebBrowser
 
 A Web browser is considered compliant in the context of this framework when it can protect specific information used between the PusUserDevice and the the corresponding server application to track the user session. For session tracking, this framework uses [Cookies RFC6265](https://tools.ietf.org/html/rfc6265). 
 
@@ -48,12 +48,21 @@ We assume all three applications FinTechApi, TppConsentSessionApi, AspspConsentS
 
 Session information can also be kept across redirect life cycles. Upon redirecting the UserAgent to another application, the redirecting application can set Cookies that will be resent to the domain with future requests. This way, there will be no need to maintain user session information in temporary databases on the server, thus keeping server tiny.    
 
-### A Native App
+### Native App
 The UserAgent might be a native application running on a user mobile device or a desktop computer. In this case, redirection might still take place, but with consideration of the physical transition between source and target UI-Application. Following specifications deal with security threads associated with the redirection between UI-Application on a user device: [RFC8252:OAuth 2.0 for Native Apps](https://tools.ietf.org/html/rfc8252),[RFC7636:Proof Key for Code Exchange by OAuth Public Clients](https://tools.ietf.org/html/rfc7636) 
 For the purpose of kepping the overall architecture of this framework simple, we will require native applications to provide the same behavior as the WebBrowser described above.
 
 ### UserAgentContext
 All information associated with the PsuUserAgent. Like PSU-IP-Address, PSU-IP-Port, PSU-Accept, PSU-Accept-Charset, PSU-Accept-Encoding, PSU-Accept-Language, PSU-Device-ID, PSU-User-Agent, PSU-Geo-Location, PSU-Http-Method. Many backend API will require provisioning of the UserAgentContext to perform verification of the authenticity of the original PSU request and to customize the response produced for intermediary layers.
+
+### FinTechUI
+UI Application running on the PsuUserAgent and used by the PSU to access the FinTechApi
+
+### TppConsentSessionUI
+UI used by PSU to authoraise consent in embedded case.
+
+### AspspConsentSessionUI
+This UI manages the interaction between the PSU and the ASPSP in redirect cases.
 
 ## FinTechDC
 Data center environment of the FinTech. Host the FinTechApi.
@@ -61,10 +70,7 @@ Data center environment of the FinTech. Host the FinTechApi.
 ### FinTechApi
 Financial web service provided by the FinTech.
 
-### FinTechUI
-UI Application running on the PsuUserAgent and used by the PSU to access the FinTechApi
-
-### Psu2FintechLoginSession
+### Psu2FinTechLoginSessionCookie
 This is a cookie used to maintain the login session between the FinTechUI and the FinTechApi. As this maintains the login state of the PSU in the FinTechUI, this session can be kept open for the life span of the interaction between the FinTechUI and the FinTechApi.
 
 ### FinTech2TppRedirectionInfoPanel
@@ -76,16 +82,66 @@ Data center environment of the TPP
 ### TppBankingApi
 Tpp backend providing access to ASPSP banking functionality. This interface is not directly accessed by the PSU but by the FinTechApi. FinTechApi will use a FinTech2TppContext to authenticate with the TppBankingApi.
 
+### TppBankSearchApi
+Repository of banks maintained in the TPP's banking gateway. The banking search API will later presen an interface to configure profiles attached to listed banks.
+
+### BankDescriptor
+Descriptive information assocaited with a bank like:
+- The name of the Bank
+- The address of the bank
+- The bank identification code
+
+### BankProfile
+BankingApi profile information associated with a bank like:
+- The BankingProtocol used to connect with the bank
+- List of Banking services provided by the BankingApi of the bank
+- SCA approcahes associated with the BankingApi
+- ScaUIMetadaData: Screens and field used to collect user authentication data.
+- Actions to be performed by the PSU prior to using the BankingProtocol
+
+#### AisConsentSpec
+Specification associated with an AisConsent. This is highly dependent on the BankProfile. Following information might be carried by an AisConsentSpec object:
+- recurringIndicator
+- validUntil
+- frequencyPerDay
+- combinedService
+- accountAccessTemplate
+- availableAccounts[availableAccountsWithBalances, allAccounts]
+- allPsd2[allAccounts]
+
 ### FinTech2TppContext
 Information used to identify the FinTech application at the TppBankingApi. For example a FinTech SSL client certificate or an APIKey or an oAuth2 Password Grant Credential.
 
 ### FinTech2TppConsentSession
-Information associated with the consent as exchanged between the FinTechApi and the TppBankingApi. Containing ConsentData, authCode, TppConsentSessionRedirectUrl (in the response), ...
+Information associated with the consent as exchanged between the FinTechApi and the TppBankingApi. Generally contain:
+- Data needed to authorize the FinTechApi (FinTechSSLCertificate, ApiKey, SignedJWT)
+- Data needed to customize psu access at the TppConsentSessionApi (showInfoPanel, fintechStateHash)
+- Data needed to manage redirection of PSU from the TppConsentSession to the FintechUI like (FinTech-Redirect-URI, TPP-Nok-Redirect- URI, FinTech-Explicit- Authorisation- Preferred, FinTech-Content-Negotiation)
 
-### TppConsentSessionUI
-UI used by PSU to authoraise consent in embedded case.
+Object also contains information associated with the PSU requesting service if available.
+- The identifier of the PSU in the realm of the Tpp FinTech2TppPsuIdentifier
 
-### Psu2TppConsentSession
+#### FinTechSSLCertificate, ApiKey, SignedJWT
+These are credential used by a FinTech to identify themself at the interface of a TppBankingApi. This identifiers are obtained in negotiontiation between FinTech and Tpp prior to accessing the TppBankingApi
+
+#### FinTech2TppPsuIdentifier
+This is the identifier of the PSU in the FinTech2Tpp relationship. This identifier can be saved once a consent has been sucessfully established to allow for reuse of existing consent in future sessions.
+
+### Psu2TppConsentSessionCookie
+This is the cookie object used to maintain the consent session between the TppConsentSessionUI and the TppConsentSessionApi
+
+### RedirectSessionStoreAPI
+Storage of temporary redirect sessions. Redirect session are stored only for the duration of the redirect request while redirecting from the TppBankingApi to the TppConsentSessionApi and from the TppConsentSessionApi back to the TppBankingApi.
+
+Consent Data might contain security sentive data like account number or payment information of the PSU. This is the reason why they will be encrypted prior to being temporarily held for the duration of the redirection in the RedirectSessionStoreAPI. So the RedirectSessionStoreAPI will generate a temporary authorization code that contains both the id of the redirect session and the key used to encrypt the content of the redirect session.
+
+Upon request, the RedirectSessionStoreAPI will use the provided authorization code to read and decrypt the consent session and will delete the consent session prior to returning it for the first time to the caller.
+
+### BankingProtocol
+Component managing access to a banking interface initiative. WE will have to deal with many protocols like NextGenPSD2, HBCI, OpenBanking UK, PolishAPI.
+
+### BankingProtocolSelector
+Help select a banking protocol.
 
 ## AspspDC
 Data center environment of the ASPSP
@@ -102,9 +158,6 @@ Information associated with the consent initialized by the ASPSP. Containing Con
 ### AspspConsentSessionApi
 Generally the online banking application on an ASPSP. In redirect cases, the ASPSP AspspConsentSessionApi establishes a direct session with the PSU to allow the PSU to identify himself, review and authorize the consent. 
 
-### AspspConsentSessionUI
-This UI manages the interaction between the PSU and the ASPSP in redirect cases.
-
 ### Psu2AspspConsentSession
 This is a Cookie used to maintain the session between the AspspConsentSessionUI and the AspspConsentSessionApi. As a recommendation, the validity of this Cookie shall be limited to the life span of the consent session. As the AspspConsentSessionApi redirects the PSU back to the TppConsentSessionApi up on completion of the consent session. Redirection happens independently on whether the consent was authorized or not.
  
@@ -116,3 +169,4 @@ This Cookie will be used by the ASPSP to keep a login session of the PSU over th
 
 ## ConsentData    
 Specification of the requested consent. BankAccount, frequencyPerDay, validUntil, ..., 
+
