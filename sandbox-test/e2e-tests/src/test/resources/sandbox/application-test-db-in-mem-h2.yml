@@ -3,25 +3,10 @@
 common:
   # Database instance for sandbox applications, one should assume that username and password are same and are
   # equal to application profile without '-', ' ', etc.:
-  prepare: >
-    CREATE SCHEMA IF NOT EXISTS ledgers\;
-    CREATE USER IF NOT EXISTS "test-ledgers-app" PASSWORD 'test-ledgers-app'\;
-    GRANT ALL ON SCHEMA ledgers TO "test-ledgers-app"\;
-    CREATE SCHEMA IF NOT EXISTS consent\;
-    GRANT ALL ON SCHEMA consent TO "test-ledgers-app"\;
-    CREATE USER IF NOT EXISTS "test-consentmgmt" PASSWORD 'test-consentmgmt'\;
-    GRANT ALL ON SCHEMA consent TO "test-consentmgmt"\;
-    CREATE USER IF NOT EXISTS "test-online-banking" PASSWORD 'test-online-banking'\;
-    GRANT ALL ON SCHEMA consent TO "test-online-banking"\;
-    CREATE USER IF NOT EXISTS "test-tpp-rest" PASSWORD 'test-tpp-rest'\;
-    GRANT ALL ON SCHEMA consent TO "test-tpp-rest"\;
   db:
-    url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;DATABASE_TO_UPPER=false;INIT=${common.prepare}
+    url: jdbc:h2:tcp://localhost:33333/~/h2/sandbox-db;SCHEMA=${localapp.schema.name}
     driver: org.h2.Driver
 spring:
-  datasource:
-    hikari:
-      schema: ${localapp.schema.name}
   hibernate:
     dialect: org.hibernate.dialect.H2Dialect
   profiles:
