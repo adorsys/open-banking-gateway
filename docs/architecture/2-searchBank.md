@@ -62,3 +62,6 @@ A discriminator can be used to limit the size of the index returned to client. I
 
 #### LuceneSearch
 This is the UI-Komponent that operates on a lucene search index in the UI-Application.
+
+#### Caching Search Index
+SearchIndex might be cached on client as adding and removing bank records to the configuration does not happen frequently.
