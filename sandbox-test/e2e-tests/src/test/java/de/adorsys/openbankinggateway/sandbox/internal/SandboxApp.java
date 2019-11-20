@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.h2.tools.Server;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -17,9 +18,15 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
@@ -54,7 +61,9 @@ public enum SandboxApp {
 
     public static final String DB_TYPE = "DB_TYPE";
 
+    private static final AtomicBoolean H2_RUNNING = new AtomicBoolean();
     private static final ObjectMapper YML = new ObjectMapper(new YAMLFactory());
+
     private final AtomicReference<ClassLoader> loader = new AtomicReference<>();
 
     private final String jar;
@@ -126,6 +135,7 @@ public enum SandboxApp {
         Thread.currentThread().setName(name());
         try {
             ClassloaderWithJar classloaderWithJar = new ClassloaderWithJar(jar);
+            buildSpringConfigLocation();
             getMainEntryPoint(classloaderWithJar).invoke(
                     null,
                     (Object) new String[] {
@@ -147,7 +157,7 @@ public enum SandboxApp {
         return Joiner.on(",").join(
                 "classpath:/",
                 // Due to different classloader used by Spring we can't reference these in other way:
-                Resources.getResource("sandbox/application-test-db" + dbProfile() + ".yml").toURI().toASCIIString(),
+                Resources.getResource("sandbox/application-test-db" + dbProfileAndStartDbIfNeeded() + ".yml").toURI().toASCIIString(),
                 Resources.getResource("sandbox/application-test-common.yml").toURI().toASCIIString(),
                 Resources.getResource("sandbox/application-" + testProfileName() + ".yml").toURI().toASCIIString()
         );
@@ -164,14 +174,56 @@ public enum SandboxApp {
         return "test-" + name().toLowerCase().replaceAll("_", "-");
     }
 
-    private static String dbProfile() {
+    private static String dbProfileAndStartDbIfNeeded() {
         String value = System.getProperty(DB_TYPE, System.getenv(DB_TYPE));
 
         if (null != value) {
             return "-" + value.toLowerCase().replaceAll("_", "-");
         }
 
+        startH2Server();
         return "-in-mem-h2";
+    }
+
+    private static void startH2Server() {
+        if (!H2_RUNNING.compareAndSet(false, true)) {
+            return;
+        }
+
+        try {
+            String port = "33333";
+            String webPort = "33334";
+            Server h2Server = Server.createTcpServer("-tcpPort", port, "-ifNotExists").start();
+            Server.createWebServer("-webPort", webPort).start();
+            if (h2Server.isRunning(true)) {
+                log.info("H2 server was started and is running on tcp port {}, " +
+                                "you can open is web interface using http://localhost:{} use sa/sa and " +
+                                "url jdbc:h2:tcp://localhost:{}/~/h2/sandbox-db",
+                        port,
+                        webPort,
+                        port);
+                populateH2("jdbc:h2:tcp://localhost:" + port + "/~/h2/sandbox-db");
+            } else {
+                throw new RuntimeException("Could not start H2 server.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to start H2 server: ", e);
+        }
+    }
+
+    @SneakyThrows
+    private static void populateH2(String connStr) {
+        try (Connection conn = DriverManager.getConnection(connStr, "sa", "sa");
+             PreparedStatement ps = conn.prepareStatement(
+                     Joiner.on("").join(
+                             Resources.readLines(
+                                     Resources.getResource("sandbox/prepare-h2.sql"),
+                                     StandardCharsets.UTF_8
+                             )
+                     ))
+        ) {
+            ps.executeUpdate();
+        }
     }
 
     @Data

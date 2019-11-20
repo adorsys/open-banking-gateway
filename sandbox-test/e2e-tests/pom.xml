@@ -86,6 +86,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <!-- 1.4.200 has problems with detected names -->
             <version>1.4.200</version>
             <scope>test</scope>
         </dependency>
