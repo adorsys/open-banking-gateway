@@ -1,5 +1,8 @@
 package de.adorsys.openbankinggateway.sandbox.internal;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
@@ -8,8 +11,10 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.Socket;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Paths;
@@ -43,6 +48,8 @@ public enum SandboxApp {
     CERT_GENERATOR("certificate-generator-1.7.jar"),
     LEDGERS_APP("ledgers-app-2.0.jar");
 
+    private static final ObjectMapper YML = new ObjectMapper(new YAMLFactory());
+
     private final AtomicReference<ClassLoader> loader = new AtomicReference<>();
 
     private final String jar;
@@ -64,6 +71,28 @@ public enum SandboxApp {
     @SneakyThrows
     public Runnable runnable() {
         return new SandboxRunnable(this, this::doRun);
+    }
+
+    @SneakyThrows
+    public boolean isReadyToUse() {
+        JsonNode tree = YML.readTree(Resources.getResource("sandbox/application-test-common.yml"));
+        String pointer = "/common/apps/local/" + name().toLowerCase().replaceAll("_", "") + "/port";
+        JsonNode port = tree.at(pointer);
+
+        if (!port.isInt()) {
+            throw new IllegalStateException("Port for " + pointer + " should be specified");
+        }
+
+        try (Socket ignored = new Socket("localhost", port.asInt())) {
+            return true;
+        } catch (IOException ignored) {
+            return false;
+        }
+    }
+
+    public static boolean allReadyToUse() {
+        return SandboxApp.values().length ==
+                Arrays.stream(SandboxApp.values()).map(SandboxApp::isReadyToUse).filter(it -> it).count();
     }
 
     @SneakyThrows

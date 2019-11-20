@@ -32,3 +32,8 @@ common:
       ledgersgateway: http://localhost:${common.apps.local.ledgersgateway.port}
       onlinebanking: http://localhost:${common.apps.local.onlinebanking.port}
       tpprest: http://localhost:${common.apps.local.tpprest.port}
+
+# Disable JMX to avoid collisions
+spring:
+  jmx:
+    enabled: false
