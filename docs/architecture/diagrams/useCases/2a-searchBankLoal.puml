@@ -5,6 +5,7 @@ actor psu
 
 box "PsuUserAgent" #LightGray
     participant "FinTechUI" as FinTechUI
+    participant "LuceneSearch" as LuceneSearch
     'participant "TppConsentSessionUI" as TppConsentSessionUI
     'participant "AspspConsentSessionUI" as AspspConsentSessionUI
 end box
@@ -28,13 +29,16 @@ end box
 == PSU searches a bank by keyword : call[header](body)<params> return code[header](body) ==
 
 psu -> FinTechUI ++ : loadFinTechSeachScreen()
+FinTechUI -> FinTechApi ++ : GET:bankSearchIndex[]()<discriminator>
+FinTechApi -> TppBankSearchApi ++ : GET:bankSearchIndex[]()<discriminator>
+return 200_OK[](BankSearchIndex)
+return 200_OK[](BankSearchIndex)
 return displaySearchScreen()
 psu -> FinTechUI ++ : enterKeyword(keyword)
 loop while(furtherKeyWords)
-FinTechUI -> FinTechApi ++ : incrementalBankSearch[](keyword)<>
-FinTechApi -> TppBankSearchApi ++ : incrementalBankSearch[](keyword)<>
-return 200_OK[](List<BankDescriptor>)
-return 200_OK[](List<BankDescriptor>)
+FinTechUI -> LuceneSearch ++ : search(keyword)
+LuceneSearch -> LuceneSearch : search(keyWord,BankSearchIndex)
+return List<BankDescriptor>
 return display(List<BankDescriptor>)
 end
 @enduml
