@@ -20,7 +20,7 @@
 
         <!-- List of SANDBOX applications -->
         <!-- https://github.com/adorsys/xs2a -->
-        <!-- - adorsys/xs2a-connector-examples:5.3.1+ -->
+        <!-- adorsys/xs2a-connector-examples:5.3.1+ -->
         <dependency>
             <groupId>de.adorsys.ledgers</groupId>
             <artifactId>gateway-app</artifactId>
@@ -69,17 +69,6 @@
         </dependency>
         <!-- END -->
 
-        <!-- YAML parsing to wait for application started -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.9.8</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-yaml</artifactId>
-            <version>2.9.8</version>
-        </dependency>
 
         <!-- Test only dependencies -->
         <dependency>
@@ -92,6 +81,27 @@
                     <artifactId>junit</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.200</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- YAML parsing to wait for application started -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>2.9.8</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
