@@ -30,7 +30,7 @@ For the purpose of keeping the client code simple, interface will also provide t
 
 The following diagram describes additional steps performed in the local incremental search.
 
-![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/diagrams/useCases/2a-searchBankLoal.puml&fmt=svg&vvv=1&sanitize=true)
+![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/diagrams/useCases/2a-searchBankLocal.puml&fmt=svg&vvv=1&sanitize=true)
 
 Like this diagram shown, local bank search does not send request to the network.
 
