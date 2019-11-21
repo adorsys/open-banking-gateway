@@ -167,6 +167,7 @@ public enum SandboxApp {
     private Set<String> defaultProfiles() {
         return ImmutableSet.of(
                 "test-common",
+                "develop",
                 testProfileName()
         );
     }
