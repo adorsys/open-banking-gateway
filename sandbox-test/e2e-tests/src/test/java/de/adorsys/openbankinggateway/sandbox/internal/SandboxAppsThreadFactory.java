@@ -14,7 +14,7 @@ import java.util.concurrent.ThreadFactory;
 
 /**
  * This class exists for:
- * 1. To intercept Tomcat attempt to {@link org.apache.catalina.webresources.TomcatURLStreamHandlerFactory#register()}
+ * 1. To intercept Tomcat call to {@link org.apache.catalina.webresources.TomcatURLStreamHandlerFactory#register()}
  * because URL is shared system class.
  * 2. To provide access to ClassLoaders that are created by Spring - to be able to manipulate child Spring
  * application state.
