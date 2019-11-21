@@ -43,7 +43,7 @@ import java.util.jar.Manifest;
  * property files on resources path.
  *
  * You can specify database type using System property / Environment variable (in order of precedence) `DB_TYPE`:
- * 1. (DEFAULT) DB_TYPE = IN_MEM_H2 - will connect to in-memory H2 instance
+ * 1. (DEFAULT) DB_TYPE = H2_LOCAL_SERVER - will connect to in-memory H2 instance
  * 2. DB_TYPE = LOCAL_POSTGRES - will connect to local postgres db
  * (you need to prepare schema and users - see prepare-postgres.sql)
  */
@@ -60,6 +60,7 @@ public enum SandboxApp {
     LEDGERS_APP("ledgers-app-2.0.jar"); // adorsys/ledgers
 
     public static final String DB_TYPE = "DB_TYPE";
+    public static final String H2_LOCAL_SERVER = "h2-local-server";
 
     private static final AtomicBoolean H2_RUNNING = new AtomicBoolean();
     private static final ObjectMapper YML = new ObjectMapper(new YAMLFactory());
@@ -175,14 +176,22 @@ public enum SandboxApp {
     }
 
     private static String dbProfileAndStartDbIfNeeded() {
+        String profile = getDbProfile();
+        if (H2_LOCAL_SERVER.equals(profile)) {
+            startH2Server();
+        }
+
+        return "-" + profile;
+    }
+
+    private static String getDbProfile() {
         String value = System.getProperty(DB_TYPE, System.getenv(DB_TYPE));
 
         if (null != value) {
-            return "-" + value.toLowerCase().replaceAll("_", "-");
+            return value.toLowerCase().replaceAll("_", "-");
         }
 
-        startH2Server();
-        return "-in-mem-h2";
+        return H2_LOCAL_SERVER;
     }
 
     private static void startH2Server() {
