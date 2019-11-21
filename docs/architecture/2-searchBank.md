@@ -3,7 +3,7 @@
 ## Definition
 Describes the bank search functionality in a FinTech Application. Generally bank search is provided to prevent PSU from manually entering complicated bank identifiers.
 
-This bank search API allow for incremental keyword based search.
+This bank search API allows for incremental keyword based search.
 
 ## Implementation Approaches
 We will distinguish between remote and local incremental search.
@@ -53,7 +53,7 @@ Step 8. through 11. is repeated as long as PSU modifies keywords (by adding or r
 
 ![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/diagrams/useCases/2a-searchBankLocal.puml&fmt=svg&vvv=1&sanitize=true)
 
-Like this diagram shown, local bank search does not send request to the network.
+Like this diagram shows, local bank search does not send request to the network.
 
 ### New Idioms
 

@@ -91,7 +91,7 @@ Descriptive information assocaited with a bank like:
 - The address of the bank
 - The bank identification code
 
-### BankProfile
+### <a name="BankProfile"></a> BankProfile
 BankingApi profile information associated with a bank like:
 - The BankingProtocol used to connect with the bank
 - List of Banking services provided by the BankingApi of the bank

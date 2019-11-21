@@ -5,24 +5,24 @@ actor psu
 
 box "PsuUserAgent" #LightGray
     participant "FinTechUI" as FinTechUI
-    participant "TppConsentSessionUI" as TppConsentSessionUI
-    participant "AspspConsentSessionUI" as AspspConsentSessionUI
+    'participant "TppConsentSessionUI" as TppConsentSessionUI
+    'participant "AspspConsentSessionUI" as AspspConsentSessionUI
 end box
 box "FinTechDC" #DarkSeaGreen
     participant "FinTechApi" as FinTechApi
 end box
 box "TppDC" #LightGray
-    participant "TppBankingApi" as TppBankingApi
+    'participant "TppBankingApi" as TppBankingApi
     participant "TppBankSearchApi" as TppBankSearchApi
-    participant "TppConsentSessionApi" as TppConsentSessionApi
+    'participant "TppConsentSessionApi" as TppConsentSessionApi
 
-    participant "RedirectSessionStoreAPI" as RedirectSessionStoreAPI
-    participant "BankingProtocolSelector" as BankingProtocolSelector
-    participant "BankingProtocol" as BankingProtocol
+    'participant "RedirectSessionStoreAPI" as RedirectSessionStoreAPI
+    'participant "BankingProtocolSelector" as BankingProtocolSelector
+    'participant "BankingProtocol" as BankingProtocol
 end box
 box "AspspDC" #LightSkyBlue
-	participant "AspspBankingApi" as AspspBankingApi
-    participant "AspspConsentSessionApi" as AspspConsentSessionApi
+	'participant "AspspBankingApi" as AspspBankingApi
+    'participant "AspspConsentSessionApi" as AspspConsentSessionApi
 end box
 
 == PSU selects bank from ListOf_BankDescriptors : call[header](body)<params> return code[header](body) ==
