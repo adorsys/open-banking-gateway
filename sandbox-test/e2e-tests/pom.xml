@@ -84,10 +84,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <!-- 1.4.200 has problems with detected names -->
-            <version>1.4.200</version>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>1.12.1</version>
             <scope>test</scope>
         </dependency>
 

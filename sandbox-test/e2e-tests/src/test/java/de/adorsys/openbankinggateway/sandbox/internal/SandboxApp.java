@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.h2.tools.Server;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -18,12 +17,9 @@ import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,6 +27,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class launches spring-fat jar in its own class loader (we assume {@link SandboxApp#runnable()}
@@ -43,8 +41,8 @@ import java.util.jar.Manifest;
  * property files on resources path.
  *
  * You can specify database type using System property / Environment variable (in order of precedence) `DB_TYPE`:
- * 1. (DEFAULT) DB_TYPE = H2_LOCAL_SERVER - will connect to in-memory H2 instance
- * 2. DB_TYPE = LOCAL_POSTGRES - will connect to local postgres db
+ * 1. DB_TYPE = LOCAL_POSTGRES - will connect to local postgres db on port 5432
+ * 2. (DEFAULT) DB_TYPE = TEST_CONTAINERS_POSTGRES - will start Postgres using TestContainers and use port 15432 for it
  * (you need to prepare schema and users - see prepare-postgres.sql)
  */
 @Slf4j
@@ -60,9 +58,11 @@ public enum SandboxApp {
     LEDGERS_APP("ledgers-app-2.0.jar"); // adorsys/ledgers
 
     public static final String DB_TYPE = "DB_TYPE";
-    public static final String H2_LOCAL_SERVER = "h2-local-server";
+    public static final String TEST_CONTAINERS_POSTGRES = "test-containers-postgres";
 
-    private static final AtomicBoolean H2_RUNNING = new AtomicBoolean();
+
+    private static final Pattern PORT_PATTERN = Pattern.compile("^.+:([0-9]+)/.+$");
+    private static final AtomicBoolean DB_STARTED = new AtomicBoolean();
     private static final ObjectMapper YML = new ObjectMapper(new YAMLFactory());
 
     private final AtomicReference<ClassLoader> loader = new AtomicReference<>();
@@ -178,8 +178,9 @@ public enum SandboxApp {
 
     private static String dbProfileAndStartDbIfNeeded() {
         String profile = getDbProfile();
-        if (H2_LOCAL_SERVER.equals(profile)) {
-            startH2Server();
+
+        if (TEST_CONTAINERS_POSTGRES.equals(profile)) {
+            startContainerizedPostgresAndPopulateIt();
         }
 
         return "-" + profile;
@@ -192,47 +193,24 @@ public enum SandboxApp {
             return value.toLowerCase().replaceAll("_", "-");
         }
 
-        return H2_LOCAL_SERVER;
-    }
-
-    private static void startH2Server() {
-        if (!H2_RUNNING.compareAndSet(false, true)) {
-            return;
-        }
-
-        try {
-            String port = "33333";
-            String webPort = "33334";
-            Server h2Server = Server.createTcpServer("-tcpPort", port, "-ifNotExists").start();
-            Server.createWebServer("-webPort", webPort).start();
-            if (h2Server.isRunning(true)) {
-                log.info("H2 server was started and is running on tcp port {}, " +
-                                "you can open is web interface using http://localhost:{} use sa/sa and " +
-                                "url jdbc:h2:tcp://localhost:{}/~/h2/sandbox-db",
-                        port,
-                        webPort,
-                        port);
-                populateH2("jdbc:h2:tcp://localhost:" + port + "/~/h2/sandbox-db");
-            } else {
-                throw new RuntimeException("Could not start H2 server.");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to start H2 server: ", e);
-        }
+        return TEST_CONTAINERS_POSTGRES;
     }
 
     @SneakyThrows
-    private static void populateH2(String connStr) {
-        try (Connection conn = DriverManager.getConnection(connStr, "sa", "sa");
-             PreparedStatement ps = conn.prepareStatement(
-                     Joiner.on("").join(
-                             Resources.readLines(
-                                     Resources.getResource("sandbox/prepare-h2.sql"),
-                                     StandardCharsets.UTF_8
-                             )
-                     ))
-        ) {
-            ps.executeUpdate();
+    private static void startContainerizedPostgresAndPopulateIt() {
+        if (!DB_STARTED.compareAndSet(false, true)) {
+            return;
+        }
+
+        try (Connection conn =
+                     DriverManager.getConnection(
+                             "jdbc:tc:postgresql:12:////sandbox" +
+                                     "?TC_TMPFS=/testtmpfs:rw" +
+                                     "&TC_DAEMON=true" +
+                                     "&TC_INITSCRIPT=sandbox/prepare-postgres.sql")) {
+            Matcher port = PORT_PATTERN.matcher(conn.getMetaData().getURL());
+            port.matches();
+            System.setProperty("testcontainers.postgres.port", port.group(1));
         }
     }
 

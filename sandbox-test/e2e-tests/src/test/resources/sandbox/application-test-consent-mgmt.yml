@@ -5,8 +5,8 @@ localapp:
 spring:
   datasource:
     url: ${common.db.url}
-    username: test-consentmgmt
-    password: test-consentmgmt
+    username: testconsentmgmt
+    password: testconsentmgmt
     driver-class-name: ${common.db.driver}
   liquibase:
     enabled: true
