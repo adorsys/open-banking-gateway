@@ -5,8 +5,8 @@ localapp:
 spring:
   datasource:
     url: ${common.db.url}
-    username: test-ledgers-app
-    password: test-ledgers-app
+    username: testledgersapp
+    password: testledgersapp
     driver-class-name: ${common.db.driver}
   liquibase:
     enabled: true

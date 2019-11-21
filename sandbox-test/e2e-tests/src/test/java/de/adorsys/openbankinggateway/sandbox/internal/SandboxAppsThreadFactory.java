@@ -53,8 +53,7 @@ class SandboxAppsThreadFactory implements ThreadFactory {
 
             super.setContextClassLoader(
                     new URLClassLoader(
-                            // Not all do have H2 on classpath
-                            new URL[] {org.h2.Driver.class.getProtectionDomain().getCodeSource().getLocation()},
+                            new URL[] { /* Here you can add extra jars */},
                             loader
                     )
             );

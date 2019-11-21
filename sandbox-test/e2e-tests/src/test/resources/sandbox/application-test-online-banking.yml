@@ -6,8 +6,8 @@ localapp:
 spring:
   datasource:
     url: ${common.db.url}
-    username: test-online-banking
-    password: test-online-banking
+    username: testonlinebanking
+    password: testonlinebanking
     driver-class-name: ${common.db.driver}
   liquibase:
     enabled: true

@@ -6,8 +6,8 @@ localapp:
 spring:
   datasource:
     url: ${common.db.url}
-    username: test-tpp-rest
-    password: test-tpp-rest
+    username: testtpprest
+    password: testtpprest
     driver-class-name: ${common.db.driver}
   liquibase:
     enabled: true

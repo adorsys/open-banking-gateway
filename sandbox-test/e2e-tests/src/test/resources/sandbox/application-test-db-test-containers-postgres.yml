@@ -4,10 +4,9 @@ common:
   # Database instance for sandbox applications, one should assume that username and password are same and are
   # equal to application profile without '-', ' ', etc.:
   db:
-    url: jdbc:h2:tcp://localhost:33333/~/h2/sandbox-db;SCHEMA=${localapp.schema.name}
-    driver: org.h2.Driver
+    url: jdbc:postgresql://localhost:${testcontainers.postgres.port}/sandbox?currentSchema=${localapp.schema.name}
+    driver: org.postgresql.Driver
+
 spring:
-  hibernate:
-    dialect: org.hibernate.dialect.H2Dialect
   profiles:
-    active: h2
+    active: postgres
