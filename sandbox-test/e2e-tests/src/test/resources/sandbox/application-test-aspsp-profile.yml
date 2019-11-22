@@ -1,2 +1,7 @@
 server:
   port: ${common.apps.local.aspspprofile.port}
+
+spring:
+  profiles:
+    # debug_mode allows to change bank profiles for test purposes
+    active: debug_mode

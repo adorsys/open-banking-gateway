@@ -24,7 +24,7 @@ class BasicTest extends WithSandboxSpringBootTest {
         await().atMost(Duration.FIVE_MINUTES).pollDelay(Duration.ONE_SECOND).until(SandboxApp::allReadyToUse);
         log.info("ALL READY!");
 
-        Thread.sleep(20000);
+        Thread.sleep(Duration.FOREVER.getValueInMS());
         assertThat(SandboxApp.values()).extracting(it -> it.getLoader().get()).isNotNull();
     }
 }

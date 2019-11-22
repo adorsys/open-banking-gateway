@@ -13,3 +13,14 @@ spring:
     enabled: true
 server:
   port: ${common.apps.local.onlinebanking.port}
+
+cms-url: ${common.apps.local.mapping.consentmgmt}
+ledgers-url: ${common.apps.local.mapping.ledgersapp}
+oba-url: ${common.apps.local.mapping.onlinebanking}
+self-url: ${common.apps.local.mapping.onlinebanking}
+xs2a-url: ${common.apps.local.mapping.ledgersgateway} # alias port 8089 in dev
+
+online-banking-scauiredirect: true
+
+# To verify
+server_key: 12345

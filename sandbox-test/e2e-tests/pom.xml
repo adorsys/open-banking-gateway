@@ -21,6 +21,7 @@
         <!-- List of SANDBOX applications -->
         <!-- https://github.com/adorsys/xs2a -->
         <!-- adorsys/xs2a-connector-examples:5.3.1+ -->
+        <!-- Alias XS2A -->
         <dependency>
             <groupId>de.adorsys.ledgers</groupId>
             <artifactId>gateway-app</artifactId>
