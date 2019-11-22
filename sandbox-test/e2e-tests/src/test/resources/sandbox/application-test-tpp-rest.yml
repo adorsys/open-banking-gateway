@@ -14,7 +14,8 @@ spring:
 server:
   port: ${common.apps.local.tpprest.port}
 
-ledgers-url: ${common.apps.local.mapping.ledgersapp}
+ledgers:
+  url: ${common.apps.mapping.ledgersapp}
 
 iban_generator_bankcode_nisp: 76070025
 iban_generator_bankcode_random: 90000001

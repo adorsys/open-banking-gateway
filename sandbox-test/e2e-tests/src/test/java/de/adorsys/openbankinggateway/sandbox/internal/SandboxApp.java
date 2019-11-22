@@ -11,11 +11,13 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Paths;
@@ -30,6 +32,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * This class launches spring-fat jar in its own class loader (we assume {@link SandboxApp#runnable()}
@@ -139,7 +142,7 @@ public enum SandboxApp {
                     null,
                     (Object) new String[] {
                             "--spring.profiles.include=" + Joiner.on(",").join(activeProfilesForTest()),
-                            "--spring.config.location=" + buildSpringConfigLocation()
+                            "--spring.config.location=" + buildSpringConfigLocation(),
                     }
             );
         } catch (IllegalAccessException | InvocationTargetException ex) {
@@ -160,21 +163,46 @@ public enum SandboxApp {
         return Joiner.on(",").join(
                 "classpath:/",
                 // Due to different classloader used by Spring we can't reference these in other way:
-                Resources.getResource("sandbox/application-" + dbProfileAndStartDbIfNeeded() + ".yml").toURI().toASCIIString(),
-                Resources.getResource("sandbox/application-test-common.yml").toURI().toASCIIString(),
-                Resources.getResource("sandbox/application-" + testProfileName() + ".yml").toURI().toASCIIString()
+                getAndValidatePathFromResource("sandbox/application-" + dbProfileAndStartDbIfNeeded() + ".yml"),
+                getAndValidatePathFromResource("sandbox/application-test-common.yml"),
+                getAndValidatePathFromResource("sandbox/application-" + testProfileName() + ".yml")
         );
     }
 
+    @SneakyThrows
+    private String getAndValidatePathFromResource(String resource) {
+        URI path = Resources.getResource(resource).toURI();
+        if (!Paths.get(path).toFile().exists()) {
+            throw new IllegalStateException("Profile path " + resource + " does not exist");
+        }
+
+        return path.toASCIIString();
+    }
+
     private Set<String> defaultProfiles() {
-        return ImmutableSet.of(
-                "test-common",
-                testProfileName()
+        Set<String> basicProfiles = ImmutableSet.of("test-common", testProfileName());
+        Set<String> extraProfiles = extraProfiles();
+
+        return Sets.union(
+                basicProfiles,
+                extraProfiles
         );
     }
 
     private String testProfileName() {
         return "test-" + name().toLowerCase().replaceAll("_", "-");
+    }
+
+    // Profiles from spring.profile.active are not always applied, forcing it.
+    @SneakyThrows
+    public Set<String> extraProfiles() {
+        JsonNode tree = YML.readTree(Resources.getResource("sandbox/application-" + testProfileName() + ".yml"));
+        String pointer = "/spring/profiles/active";
+        JsonNode activeProfiles = tree.at(pointer);
+
+        return Arrays.stream(activeProfiles.asText("").split(","))
+                .filter(Strings::isNotBlank)
+                .collect(Collectors.toSet());
     }
 
     private static String dbProfileAndStartDbIfNeeded() {
