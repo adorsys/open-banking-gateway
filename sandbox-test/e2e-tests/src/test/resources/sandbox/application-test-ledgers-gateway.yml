@@ -1,2 +1,17 @@
+# Alias xs2a at 8089 on host
 server:
   port: ${common.apps.local.ledgersgateway.port}
+
+spring:
+  profiles:
+    # FIXME: Maybe mock-qwac is not good idea
+    active: postgres,mock-qwac,remote
+
+aspsp-profile-baseurl: ${common.apps.local.mapping.aspsp}
+cms-url: ${common.apps.local.mapping.consentmgmt}
+consent-service-baseurl: ${common.apps.local.mapping.consentmgmt}/api/v1
+ledgers-url: ${common.apps.local.mapping.ledgersapp}
+online-baking-url: ${common.apps.local.mapping.onlinebanking}/api/v1/consents/confirm/{userLogin}/{consentId}/{authorizationId}/{tan}
+
+# To verify:
+skip_ssl_certificate_verification: true

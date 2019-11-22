@@ -14,3 +14,9 @@ server:
   port: ${common.apps.local.consentmgmt.port}
 
 server_key: secret123
+
+# To verify:
+skip_ssl_certificate_verification: true
+used-non-recurring-consent-expiration:
+  cron:
+    expression: 0 0 * * * *

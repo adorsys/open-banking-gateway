@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
 import lombok.Data;
 import lombok.Getter;
@@ -69,18 +70,15 @@ public enum SandboxApp {
 
     private final String jar;
     private final String mainClass;
-    private final Set<String> activeProfiles;
 
     SandboxApp(String jar) {
         this.jar = jar;
         this.mainClass = null;
-        this.activeProfiles = defaultProfiles();
     }
 
     SandboxApp(String jar, String mainClass) {
         this.jar = jar;
         this.mainClass = mainClass;
-        this.activeProfiles = defaultProfiles();
     }
 
     @SneakyThrows
@@ -140,7 +138,7 @@ public enum SandboxApp {
             getMainEntryPoint(classloaderWithJar).invoke(
                     null,
                     (Object) new String[] {
-                            "--spring.profiles.active=" + Joiner.on(",").join(activeProfiles),
+                            "--spring.profiles.include=" + Joiner.on(",").join(activeProfilesForTest()),
                             "--spring.config.location=" + buildSpringConfigLocation()
                     }
             );
@@ -153,12 +151,16 @@ public enum SandboxApp {
         }
     }
 
+    private Set<String> activeProfilesForTest() {
+        return Sets.union(ImmutableSet.of(getDbProfile()), defaultProfiles());
+    }
+
     @SneakyThrows
     private String buildSpringConfigLocation() {
         return Joiner.on(",").join(
                 "classpath:/",
                 // Due to different classloader used by Spring we can't reference these in other way:
-                Resources.getResource("sandbox/application-test-db" + dbProfileAndStartDbIfNeeded() + ".yml").toURI().toASCIIString(),
+                Resources.getResource("sandbox/application-" + dbProfileAndStartDbIfNeeded() + ".yml").toURI().toASCIIString(),
                 Resources.getResource("sandbox/application-test-common.yml").toURI().toASCIIString(),
                 Resources.getResource("sandbox/application-" + testProfileName() + ".yml").toURI().toASCIIString()
         );
@@ -167,7 +169,6 @@ public enum SandboxApp {
     private Set<String> defaultProfiles() {
         return ImmutableSet.of(
                 "test-common",
-                "develop", // used to populate ledgers
                 testProfileName()
         );
     }
@@ -179,18 +180,24 @@ public enum SandboxApp {
     private static String dbProfileAndStartDbIfNeeded() {
         String profile = getDbProfile();
 
-        if (TEST_CONTAINERS_POSTGRES.equals(profile)) {
+        if (TEST_CONTAINERS_POSTGRES.equals(getDbType())) {
             startContainerizedPostgresAndPopulateIt();
         }
 
-        return "-" + profile;
+        return profile;
     }
 
     private static String getDbProfile() {
+        String prefix = "test-db-";
+        String value = getDbType();
+        return prefix + value.toLowerCase().replaceAll("_", "-");
+    }
+
+    private static String getDbType() {
         String value = System.getProperty(DB_TYPE, System.getenv(DB_TYPE));
 
         if (null != value) {
-            return value.toLowerCase().replaceAll("_", "-");
+            return value;
         }
 
         return TEST_CONTAINERS_POSTGRES;
