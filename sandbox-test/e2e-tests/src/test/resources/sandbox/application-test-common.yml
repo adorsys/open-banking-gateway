@@ -5,18 +5,18 @@ common:
     # On which port local applications will be started
     local:
       aspspprofile:
-        # url aspsp profile
+        # url aspsp profile in Postman
         port: 10010
       certgenerator:
         port: 10011
       consentmgmt:
-        # url_cms
+        # url_cms in Postman
         port: 10012
       ledgersapp:
-        # url_ledgers
+        # url_ledgers in Postman
         port: 10013
       ledgersgateway:
-        # url_xs2a
+        # url_xs2a  in Postman
         port: 10014
       onlinebanking:
         port: 10015
