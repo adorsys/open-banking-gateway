@@ -15,6 +15,9 @@ server:
 
 server_key: secret123
 
+aspsp-profile:
+  baseurl: ${common.apps.mapping.aspsp}/api/v1
+
 # To verify:
 skip_ssl_certificate_verification: true
 used-non-recurring-consent-expiration:

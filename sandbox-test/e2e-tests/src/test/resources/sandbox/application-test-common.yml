@@ -5,14 +5,18 @@ common:
     # On which port local applications will be started
     local:
       aspspprofile:
+        # url aspsp profile
         port: 10010
       certgenerator:
         port: 10011
       consentmgmt:
+        # url_cms
         port: 10012
       ledgersapp:
+        # url_ledgers
         port: 10013
       ledgersgateway:
+        # url_xs2a
         port: 10014
       onlinebanking:
         port: 10015

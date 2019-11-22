@@ -4,7 +4,7 @@ localapp:
 
 spring:
   profiles:
-    active: sandbox
+    active: develop,sandbox
   datasource:
     url: ${common.db.url}
     username: testledgersapp
