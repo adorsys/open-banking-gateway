@@ -13,7 +13,7 @@
 # Initial implementation diagram
 
 <!-- Embedding it as PNG because SVG causes 504 -->
-![Implementation draft diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-draft-v0.puml&vvv=6)
+![Implementation draft diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-draft-v0.puml)
 
 
 # API sketch
