@@ -13,11 +13,6 @@
 
 # Initial implementation diagram
 
-<!-- 
-Embedding it in RAW, because plantuml is giving 504 when using diagram with embedded plantuml in it
-This is what it should be:
-![Implementation draft diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-draft-v0.puml&fmt=svg&vvv=3&sanitize=true)
- -->
 ![Implementation draft diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-draft-v0.puml&fmt=svg&vvv=12&sanitize=true)
 
 
