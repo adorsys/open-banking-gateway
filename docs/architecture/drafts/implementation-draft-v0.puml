@@ -15,7 +15,7 @@ component "Open banking gateway API" as OBA {
    component session
 }
 
-database "Open banking\ngateway database" as OBADB {
+database "Open banking\ngateway configuration\ndatabase" as OBADB {
   node tppUserProfile [
     Static user profile
     ---
@@ -53,6 +53,16 @@ component "TPP user info provider" as extraUserInfo {
 
 component "Joined knowledge\nabout user\nfrom static\nand dynamic context" as knowledge
 
+database "Open banking\ngateway API execution\nconfiguration database" as executions {
+  component "REST call sequence based on\nbank id and protocol" as sequence
+  component "Endpoint OpenAPI\nspec <b>select SCA</b>" as scaEndpointSpec
+  component "Endpoint OpenAPI\nspec <b>initiate payment</b>" as payEndpointSpec
+  component "Checklist definition" as checklist
+  sequence ==> checklist
+  scaEndpointSpec ==> checklist
+  payEndpointSpec ==> checklist
+}
+
 package "Rule engine" as ruleEngine {
   component "Required fields for call\ncomputed based on sequence diagram\nand OpenAPI bank endpoints definition" as requiredTemplate
   component "Check if all data\nis present for request" as askForExtraInfo
@@ -86,6 +96,7 @@ session ==> ruleEngine : 3. Compute resulting\nrequest to XS2A
 requestInfo ==> knowledge : 4. Read static user\nand bank profile
 transientData ==> knowledge : 5. Compute transient\nrequest data
 extraUserInfo ==> knowledge : 6. Expand knowledge\nwith extra information
+checklist =right=> requiredTemplate
 knowledge ==> askForExtraInfo : 7. Resulting knowledge
 requiredTemplate ==> askForExtraInfo : 8. Compute required\narguments\nfor XS2A api call
 askForExtraInfo <==> moreInformationNeeded : 9b. Go get more data
