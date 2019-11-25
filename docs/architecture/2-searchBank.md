@@ -14,9 +14,9 @@ The remote incremental search is implemented on the server side. A rest endpoint
 ### Use Case Steps
 Use cases for this API:
 1. PSU loads FinTechSearchScreen
-2. FinTechSearchUI displays a search screen to the PSU
+2. FinTechUI displays a search screen to the PSU
 3. PSU enters any keyword in the search input field
-4. FinTechSearchUI forward request to FinTechAPI
+4. FinTechUI forward request to FinTechAPI
 5. FinTechAPI forward request to TppBeanSearchApi
 6. TppBankSearchApi returns a list of matching BankDescriptors to FinTechAPI
 7. FinTechAPI returns a list of matching BankDescriptors to FinTechBankSearchUI
@@ -42,9 +42,9 @@ Use cases for this API:
 3. FinTechApi requests the BankSearchIndex from TppBeanSearchApi
 4. TppBeanSearchApi return BankSearchIndex to FinTechApi
 5. FinTechApi return BankSearchIndex to FinTechUI
-6. FinTechSearchUI displays a search screen to the PSU
+6. FinTechUI displays a search screen to the PSU
 7. PSU enters any keyword in the search input field
-8. FinTechSearchUI call the search routine of the embedded LuceneSearch
+8. FinTechUI call the search routine of the embedded LuceneSearch
 9. LuceneSearch uses the keyword to retrieve the list of matching entries
 10. LuceneSearch returns a list of matching BankDescriptors to FinTechBankSearchUI
 11. UI displays list of found bank descriptors to PSU
