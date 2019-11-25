@@ -18,20 +18,20 @@ component "Open banking gateway API" as OBA {
 database "Open banking\ngateway database" as OBADB {
   node tppUserProfile [
     Static user profile
-    ==-
+    ---
     Name: John
     Surname: Doe
     Billing address: Nuremberg,\nFurther strasse 59
   ]
   node bankProfile [
     Bank profile
-    ==-
+    ---
     API rate limit: 10/day
     SCA methods: Embedded
   ]
   node bankConfiguration [
     Bank configuration (xs2a-adapter)
-    ==-
+    ---
     API address: somehost.com
   ]
   component "Static request info" as requestInfo
