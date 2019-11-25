@@ -51,11 +51,14 @@ component "TPP user info provider" as extraUserInfo {
 }
 
 
-package "BPMN engine" as engine {
-  component "Join knowledge about user" as knowledge
-  component "Required fields for call" as requiredTemplate
+component "Joined knowledge\nabout user\nfrom static\nand dynamic context" as knowledge
+
+package "Rule engine" as ruleEngine {
+  component "Required fields for call\ncomputed based on sequence diagram\nand OpenAPI bank endpoints definition" as requiredTemplate
   component "Check if all data\nis present for request" as askForExtraInfo
-  component "More information\nrequired for request" as moreInformationNeeded
+}
+
+package "BPMN engine" as engine {
   component "11. Resulting request\nsequence managed by BPMN" as resultingRequest
   component Sequence [
       BPMN managed payment
@@ -73,6 +76,7 @@ package "BPMN engine" as engine {
   ]
 }
 
+component "More information\nrequired for request" as moreInformationNeeded
 component "XS2A-Implementation" as xs2aImpl
 component "Bank" as bank
 
@@ -84,9 +88,8 @@ transientData ==> knowledge : 5. Compute transient\nrequest data
 extraUserInfo ==> knowledge : 6. Expand knowledge\nwith extra information
 knowledge ==> askForExtraInfo : 7. Resulting knowledge
 requiredTemplate ==> askForExtraInfo : 8. Compute required\narguments\nfor XS2A api call
-askForExtraInfo ==> moreInformationNeeded : 9b. Go get more data
+askForExtraInfo <==> moreInformationNeeded : 9b. Go get more data
 moreInformationNeeded ==> OBA : 10b. Ask TPP or PSU\nfor extra information
-moreInformationNeeded ==> resultingRequest : Fill with more data
 resultingRequest ==> Sequence : Computed sequence according\nto bank protocol
 askForExtraInfo ==> resultingRequest : 9a. Perform call\nto XS2A API
 Sequence ==> adapter : 12. Call XS2A-adapter

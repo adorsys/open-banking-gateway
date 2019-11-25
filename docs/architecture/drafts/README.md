@@ -1,6 +1,7 @@
 # Tech setup
     Spring Boot >= 2.2
     Flowable BPMN 6.x
+    Drools rule engine (embedded with Flowable)
     Postgres RDBMS 12.x
     XS2A-flow for tests
  
@@ -17,7 +18,7 @@ Embedding it in RAW, because plantuml is giving 504 when using diagram with embe
 This is what it should be:
 ![Implementation draft diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-draft-v0.puml&fmt=svg&vvv=3&sanitize=true)
  -->
-![Implementation draft diagram](http://www.plantuml.com/plantuml/png/ZLPHRzis47xdhpZqPHiwUurTTuk11BKJ9t2n94AS00FcFj3YMIOiaHf9BScA_FVnA36I1HTR-s3dxhkFn-_8Z_vi7JUkAd9czrALtF02b1PeiOJHXqxGSBMdu6J2ViXnwy1fC3BREH3IOEgaLepnr6a3oUgHCOfnbUK82NyfKBbx_Aj2w-1F1W2pGbVAJU7amuV5upr5XCz9nOd7XqVZZnEAplsgKxXveK_sbR5K5wLMdWtUtPMeOEFZKcMGSOTF_0LcoV8TS0jtynby8uAsmAArrEGhOu8xlk4M3qdMAhB4VAIwd0SoqWLSMJvQD8dHMvbZlHjOETzu2fLFG5bdGdmm68JFMrxW5BxedQhXbL4XSgbht5pcEMs32s5ycrEuhGmM6pJPpsjrLHctyyJM6MujmkJKrtoD_L3pXysGLiUw8770S8UGoq86yNyH_ANkw6861RgT5dxnXLzP21JzPIwqsigiCc58tSNIWyIFptR41rpmqg7vgTz1kqUh2znfwuP-HirIdV4safhcr4YrrJIE65Zwlnc3_ZZEpiuF4D3LvtYsjwq-vlNWqFsn6iq6itfhePrccrtCW-7AIlhQy8Jp5D0kfYvz99ofzfgyMoQjDYV3y3yKBPDU4mz94evQ48Kc_RSKJJlux9SWGQZt_WBNg7_NQNF59f-6amdatC5uD1oF8LTPOBXUtD5ohEJfdcU-QfxSt0AgJ2eaGFCrS7Tw-gAbWhtIJpaANyKtkdAXIQff4uT5P0dIe82jn5nOs6e3AS_pEEYGVC2Yz6tsIYzscEv1Ri73Wxvh9QtN0YsbYQWHFt1nkx_IPa7Ya327L3VQO93I546RjOfBztcWyD1bYxn552WEsKvEXd2FjigTL5aiNYjBNrIAK735Cq-zUG5IjjbgWsyyye1nrLGs5mv2sHjDMPjha_f6Kud_akKgWS4vp5Q9__B-FKoZ5ODKqicmXTXXfywWgumwZhM-AOj75l6Ux_cl4CM6-y4CW5Tkfuty1-j3pyCBqIdCjIw3xSmQ8Ey1W1hlaXCutVbveygm2wHykz4fN4HG8sm7YqhyFuMiuwwo_wLEnFMLUNqbGplc7Kj_c94gmtR3zCakATp5agrICXWKOxJ1i_3QdftttrCo2uerRoczoylvxBP-GzUgib9byGNjbPBNDS-YfndvWxjOFOGRo9emGUADdy9u21U-nyf5PSEhsMX42zCMMSSzGtdh2bFuI9U32x3jWxbMN0dOT1-jGvliSqpQBjw0QzNrMdPeWts2JqDOF9T-rJQwLa_IxI3KTRs0jNN4qlCHp_LhzxQtDjSph-zL_zPk9LPuEKnMqPJicle8cW8lPJsNFWVn7dKbptww6SArXWnTWDJI70SJ3VrceXy5lcfczq2lJFrZBlHnH9llK_KDZQn1vZa4aTjU-Z2gRVrk6hKHO6ECfwas8XmxfzyEZTEfFYBDyKPE-H0IDDHsa3Gm1P5doPB5rQawFkwaoiXFoeC3SD34MSmJDjvY0e-xO6ADoVOIK-i4zHTYgJo7uZde4asjB6KZDjhVoQJjsriX-unAL4N-Bm00&fmt=svg&vvv=11&sanitize=true)
+![Implementation draft diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-draft-v0.puml&fmt=svg&vvv=12&sanitize=true)
 
 
 # API sketch
