@@ -1,6 +1,6 @@
 @startuml
-skinparam nodesep 20
-skinparam ranksep 55
+skinparam nodesep 10
+skinparam ranksep 10
 'left to right direction
 
 actor PSU
