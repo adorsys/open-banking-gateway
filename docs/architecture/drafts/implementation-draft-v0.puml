@@ -60,10 +60,9 @@ package "BPMN engine" as engine {
   component Sequence [
       BPMN managed payment
       {{
-          PSU -> PISP ++ : PSU initiate payment via TPP
           PISP -> ASPSP ++ : Payment initiation request
           return Payment initiation response
-          return Feedback - authorize transaction
+          PISP -> PSU : Feedback - authorize transaction
           loop SCA Authorization
             ASPSP -> PSU : SCA challenge
             PSU -> ASPSP : Challenge result
