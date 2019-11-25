@@ -60,7 +60,6 @@ package "BPMN engine" as engine {
   component Sequence [
       BPMN managed payment
       {{
-          autonumber "<b><color blue>[00]"
           PSU -> PISP ++ : PSU initiate payment via TPP
           PISP -> ASPSP ++ : Payment initiation request
           return Payment initiation response
@@ -78,9 +77,9 @@ package "BPMN engine" as engine {
 component "XS2A-Implementation" as xs2aImpl
 component "Bank" as bank
 
-PSU ==> PaymentRequest : 1. Pay 100EUR to IBAN 12345\nusing MyBank
+PSU =right=> PaymentRequest : 1. Pay 100EUR to IBAN 12345\nusing MyBank
 PaymentRequest ==> session : 2. REST call
-session =left=> engine : 3. Compute resulting\nrequest to XS2A
+session ==> engine : 3. Compute resulting\nrequest to XS2A
 requestInfo ==> knowledge : 4. Read static user\nand bank profile
 transientData ==> knowledge : 5. Compute transient\nrequest data
 extraUserInfo ==> knowledge : 6. Expand knowledge\nwith extra information
@@ -93,7 +92,6 @@ resultingRequest ==> Sequence : Computed sequence according\nto bank protocol
 askForExtraInfo ==> resultingRequest : 9a. Perform call\nto XS2A API
 Sequence ==> adapter : 12. Call XS2A-adapter
 adapter ==> xs2aImpl : 13. Call XS2A-API
-xs2aImpl ==> bank : 14. Internal operation
-bank ==> PSU : 15. Perform SCA
-
+xs2aImpl =right=> bank : 14. Internal operation
+bank =right=> PSU : 15. Perform SCA
 @enduml
