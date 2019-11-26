@@ -15,7 +15,15 @@
 
 ## Generic request handling (Check consent is valid pre-filter)
 
-![Implementation draft diagram - generic request](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-generic.puml&fmt=svg&vvv=1&sanitize=true)
+Initially (for MVP0), questions `Needs consent?` and `Consent valid?` are answered using database-table that 
+contains bank profile, in future it can be switched to rule engine or entire BPMN job. 
+
+### TPP can initiate consent with PSU under the hood if required. 
+
+This basically means that if request is missing consent, but has flag to allow automatic consent creation TPP will 
+call [obtaining consent](#Obtaining AIS Consent swimlane) flow.
+
+![Implementation draft diagram - generic request](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-generic.puml&fmt=svg&vvv=2&sanitize=true)
 
 ## Obtaining AIS Consent swimlane
 
@@ -30,10 +38,15 @@
 OpenBankingGateway Api is defined for boundary (of course TPP itself can use it):
 FinTech with OpenBankingGw API <--> TPP with OpenBankingGw Impl (See diagrams above)
 
-1. PUT /consents to create consent
-1. GET /transactions to read transactions
-1. GET /accounts to read account details
-1. PUT /payments to initiate payment
+Consent API:
+1. `PUT /consents/{bankId} body: {accounts: [<accountIds>], allAccounts: true}` to create consent
+
+Account information API:
+1. `GET /transactions` to read transactions **with option to ask for consent automatically**
+1. `GET /accounts` to read account details **with option to ask for consent automatically**
+
+Payment API:
+1. `PUT /payments` to initiate payment
 ...
 
 

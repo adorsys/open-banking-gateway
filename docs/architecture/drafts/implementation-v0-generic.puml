@@ -17,13 +17,26 @@ DKB ==> FKBA
 -> Read transactions - call\n**GET /transactions/{bankId}** with consent ID;
 |#AntiqueWhite|TPP with OpenBankingGw Impl|
 if (Needs Consent?) then (YES)
+note right
+  For <b>MVP0</b>:
+  - Needs Consent? Simply read from bank
+  profile definition table
+  - Consent valid? Stubbed to assume is always valid
+  For <b>MVP1</b>:
+  Answers to both questions are handled by rule engine or BPMN flow.
+end note
 if (Consent valid?) then (YES)
 |FinTech with OpenBankingGw API|
 |#AntiqueWhite|TPP with OpenBankingGw Impl|
 else
+if (Ask for consent automatically parameter missing?) then (ABSENT)
 |FinTech with OpenBankingGw API|
 :Notification that consent is missing;
 stop
+else (PRESENT)
+|#AntiqueWhite|TPP with OpenBankingGw Impl|
+:Initiate <b>Ask PSU for consent</b>\nflow as below diagram;
+endif
 endif
 endif
 |#AntiqueWhite|TPP with OpenBankingGw Impl|
