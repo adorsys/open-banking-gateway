@@ -21,7 +21,7 @@ contains bank profile, in future it can be switched to rule engine or entire BPM
 ### TPP can initiate consent with PSU under the hood if required. 
 
 This basically means that if request is missing consent, but has flag to allow automatic consent creation TPP will 
-call ![obtaining consent](#obtaining-ais-consent-swimlane) flow.
+call [obtaining consent](#obtaining-ais-consent-swimlane) flow.
 
 ![Implementation draft diagram - generic request](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-generic.puml&fmt=svg&vvv=2&sanitize=true)
 
