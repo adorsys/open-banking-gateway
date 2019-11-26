@@ -13,9 +13,29 @@
 
 # Initial implementation diagram
 
-## With parties defined
+## Generic request handling (Check consent is valid pre-filter)
 
-![Implementation draft diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-consent.puml&fmt=svg&vvv=1&sanitize=true)
+![Implementation draft diagram - generic request](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-generic.puml&fmt=svg&vvv=1&sanitize=true)
+
+## Obtaining AIS Consent swimlane
+
+![Implementation draft diagram - consent](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-consent.puml&fmt=svg&vvv=1&sanitize=true)
+
+## Getting transaction list using AIS Consent swimlane
+
+![Implementation draft diagram - Tx list](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-tx-list.puml&fmt=svg&vvv=1&sanitize=true)
+
+## API
+
+OpenBankingGateway Api is defined for boundary (of course TPP itself can use it):
+FinTech with OpenBankingGw API <--> TPP with OpenBankingGw Impl (See diagrams above)
+
+1. PUT /consents to create consent
+1. GET /transactions to read transactions
+1. GET /accounts to read account details
+1. PUT /payments to initiate payment
+...
+
 
 ## In short
 
