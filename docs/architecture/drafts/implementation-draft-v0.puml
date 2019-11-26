@@ -53,14 +53,14 @@ component "TPP user info provider" as extraUserInfo {
 
 component "Joined knowledge\nabout user\nfrom static\nand dynamic context" as knowledge
 
-package "ValidationEngine engine" as ruleEngine {
+package "Validation engine" as ruleEngine {
   package "BPMN parameter validation engine" as bpmnMockEngine {
     component ValidationSequence [
-        BPMN managed mock call sequence
+        BPMN managed mock call sequence\n(uses <b>same flow definition</b> as real sequence)
         {{
-            PISP -> "(MOCK) ASPSP" ++ : Payment initiation request
+            PISP -> "(MOCK) ASPSP" ++ : Payment initiation request to <b>mock</b> endpoint
             return (Argument validation) Payment initiation response
-            PISP -> "(MOCK) ASPSP" ++ : Payment status request
+            PISP -> "(MOCK) ASPSP" ++ : Payment status request to <b>mock</b> endpoint
             return (Argument validation) Payment status response
         }}
     ]
