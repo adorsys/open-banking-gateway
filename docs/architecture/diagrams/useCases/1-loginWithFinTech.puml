@@ -28,8 +28,8 @@ end box
 == PSU establishes a session with the FinTech API : call[header](body)<params> return code[header](body) ==
 psu -> FinTechUI ++ : loadFinTechApplication()
 return displayLoginUI()
-psu -> FinTechUI ++ : enterLoginData(login,password)
-FinTechUI -> FinTechApi ++ : login[](login,password)<>
+psu -> FinTechUI ++ : enterLoginData(username,password)
+FinTechUI -> FinTechApi ++ : login[](username,password)<>
 return 200_OK[Psu2FintechLoginSessionCookie](BankSearchScreenConfig)
 return displayBankSearchScreen()
 @enduml
