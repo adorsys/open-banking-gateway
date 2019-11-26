@@ -53,19 +53,24 @@ component "TPP user info provider" as extraUserInfo {
 
 component "Joined knowledge\nabout user\nfrom static\nand dynamic context" as knowledge
 
-database "Open banking\ngateway API execution\nconfiguration database" as executions {
-  component "REST call sequence based on\nbank id and protocol" as sequence
-  component "Endpoint OpenAPI\nspec <b>select SCA</b>" as scaEndpointSpec
-  component "Endpoint OpenAPI\nspec <b>initiate payment</b>" as payEndpointSpec
-  component "Checklist definition" as checklist
-  sequence ==> checklist
-  scaEndpointSpec ==> checklist
-  payEndpointSpec ==> checklist
-}
+package "ValidationEngine engine" as ruleEngine {
+  package "BPMN parameter validation engine" as bpmnMockEngine {
+    component ValidationSequence [
+        BPMN managed mock call sequence
+        {{
+            PISP -> "(MOCK) ASPSP" ++ : Payment initiation request
+            return (Argument validation) Payment initiation response
+            PISP -> "(MOCK) ASPSP" ++ : Payment status request
+            return (Argument validation) Payment status response
+        }}
+    ]
+  }
 
-package "Rule engine" as ruleEngine {
+  component "Checklist definition" as checklist
   component "Required fields for call\ncomputed based on sequence diagram\nand OpenAPI bank endpoints definition" as requiredTemplate
   component "Check if all data\nis present for request" as askForExtraInfo
+
+  ValidationSequence ==> checklist
 }
 
 package "BPMN engine" as bpmnEngine {
@@ -94,8 +99,8 @@ PSU ==> PaymentRequest : 1. Pay 100EUR to IBAN 12345\nusing MyBank
 PaymentRequest ==> session : 2. REST call
 session ==> ruleEngine : 3. Compute resulting\nrequest to XS2A
 requestInfo ==> knowledge : 4. Read static user\nand bank profile
-transientData ==> knowledge : 5. Compute transient\nrequest data
-extraUserInfo ==> knowledge : 6. Expand knowledge\nwith extra information
+transientData =up=> knowledge : 5. Compute transient\nrequest data
+extraUserInfo =up=> knowledge : 6. Expand knowledge\nwith extra information
 checklist =right=> requiredTemplate
 knowledge ==> askForExtraInfo : 7. Resulting knowledge
 requiredTemplate ==> askForExtraInfo : 8. Compute required\narguments\nfor XS2A api call
@@ -105,6 +110,6 @@ resultingRequest ==> Sequence : Computed sequence according\nto bank protocol
 askForExtraInfo ==> resultingRequest : 9a. Pass context\nto BPMN engine
 Sequence ==> adapter : 11. Call XS2A-adapter
 adapter ==> xs2aImpl : 12. Call XS2A-API
-xs2aImpl =right=> bank : 13. Internal operation
-bank =right=> PSU : 14. Perform SCA
+xs2aImpl ==> bank : 13. Internal operation
+bank ==> PSU : 14. Perform SCA
 @enduml
