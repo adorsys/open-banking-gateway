@@ -13,6 +13,11 @@
 
 # Initial implementation diagram
 
+## E2E flows
+
+1. [Transaction list](#full-swimlane-e2e-for-getting-transaction-list) flow.
+1. [Performing payment](#full-swimlane-e2e-for-performing-payment) flow.
+
 ## Generic request handling (Check consent is valid pre-filter)
 
 Initially (for MVP0), questions `Needs consent?` and `Consent valid?` are answered using database-table that 
@@ -45,6 +50,14 @@ call [obtaining consent](#obtaining-ais-consent-swimlane) flow.
 1. If consent has expired FinTech should inform user and perform step 1 again 
 
 ![Implementation draft diagram - Tx list full](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-full-flow-tx-list.puml&fmt=svg&vvv=1&sanitize=true)
+
+</details>
+
+## Full swimlane e2e for performing payment
+
+<details><summary>Perform payment by FinTech</summary>
+
+![Implementation draft diagram - Perform payment](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-full-flow-payment.puml&fmt=svg&vvv=1&sanitize=true)
 
 </details>
 
