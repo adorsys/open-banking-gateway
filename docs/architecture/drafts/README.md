@@ -37,6 +37,13 @@ call [obtaining consent](#obtaining-ais-consent-swimlane) flow.
 
 <details><summary>Get transaction list by FinTech</summary>
 
+**Notes:**
+1. Initially PSU enters FinTech screen 'Transaction list'
+1. Since consent is missing, when being asked for 'Transaction list' TPP will create implicit consent with PSU 
+(since PSU is in session with FinTech)
+1. After consent was established FinTech can store it and get 'Transaction list' without PSU intervention
+1. If consent has expired FinTech should inform user and perform step 1 again 
+
 ![Implementation draft diagram - Tx list full](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-full-flow-tx-list.puml&fmt=svg&vvv=1&sanitize=true)
 
 </details>
