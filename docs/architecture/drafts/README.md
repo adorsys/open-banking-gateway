@@ -33,6 +33,12 @@ call [obtaining consent](#obtaining-ais-consent-swimlane) flow.
 
 ![Implementation draft diagram - Tx list](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-tx-list.puml&fmt=svg&vvv=1&sanitize=true)
 
+## Full swimlane e2e for getting transaction list
+
+<details><summary>Get transaction list by FinTech</summary>
+![Implementation draft diagram - Tx list full](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-full-flow-tx-list.puml&fmt=svg&vvv=1&sanitize=true)
+</details>
+
 ## API
 
 OpenBankingGateway Api is defined for boundary (of course TPP itself can use it):
