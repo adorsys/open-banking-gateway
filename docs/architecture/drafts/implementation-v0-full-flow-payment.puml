@@ -16,7 +16,7 @@ database "Dynamic KB\n(i.e. consent id)" as DKB
 component "FinTech KB adapter" as FKBA
 DKB ==> FKBA
 }};
--> Read transactions - call\n**GET /transactions/{bankId}** with consent ID;
+-> Perform payment - call\n**PUT /payment/{bankId}**;
 |#AntiqueWhite|TPP with OpenBankingGw Impl|
 :{{
 database "Static KB\n(i.e. bank profile)" as SKB

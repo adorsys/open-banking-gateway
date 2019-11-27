@@ -57,7 +57,7 @@ call [obtaining consent](#obtaining-ais-consent-swimlane) flow.
 
 <details><summary>Perform payment by FinTech</summary>
 
-![Implementation draft diagram - Perform payment](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-full-flow-payment.puml&fmt=svg&vvv=1&sanitize=true)
+![Implementation draft diagram - Perform payment](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-full-flow-payment.puml&fmt=svg&vvv=2&sanitize=true)
 
 </details>
 
