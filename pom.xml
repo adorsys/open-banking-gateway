@@ -30,6 +30,7 @@
 
     <modules>
         <module>opba-consent-rest-api</module>
+        <module>core</module>
         <module>opba-banking-rest-api</module>
         <module>opba-embedded-starter</module>
         <module>last-module-codecoverage</module>
@@ -145,7 +146,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot-dependencies.version}</version>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
