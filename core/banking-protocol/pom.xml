@@ -39,6 +39,11 @@
         </dependency>
 
         <!-- DB Access -->
+        <!-- XA since Flowable resides in different Datasource -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jta-atomikos</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
