@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    jdbc-url: jdbc:postgresql://localhost:5432/postgres?currentSchema=banking-gateway
+    username: postgres
+    password: docker
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      schema: banking-gateway
+    # Schema for process management state (flowable):
+    flowable:
+      jdbc-url: jdbc:postgresql://localhost:5432/postgres?currentSchema=flowable
+      username: postgres
+      password: docker
+      driver-class-name: org.postgresql.Driver
+      type: com.zaxxer.hikari.HikariDataSource
+      hikari:
+        schema: flowable

@@ -8,13 +8,13 @@
         <version>0.1-SNAPSHOT</version>
     </parent>
 
-    <!-- POC that we can run whole sandbox within single JVM and H2 database for performance and debugging easiness -->
-    <artifactId>sandbox-test</artifactId>
-    <name>Sandbox test module</name>
+    <!-- Core module that implements main business logic -->
+    <artifactId>core</artifactId>
+    <name>Core business logic</name>
     <packaging>pom</packaging>
 
     <modules>
-        <module>e2e-tests</module>
+        <module>banking-protocol</module>
     </modules>
 </project>
 

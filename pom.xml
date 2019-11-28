@@ -30,6 +30,7 @@
 
     <modules>
         <module>opba-consent-rest-api</module>
+        <module>core</module>
         <module>sandbox-test</module>
     </modules>
 
@@ -66,7 +67,12 @@
         <xs2a.version>5.1</xs2a.version>
         <!-- other properties -->
         <lombok.version>1.18.4</lombok.version>
-		<spring-boot-dependencies.version>2.1.1.RELEASE</spring-boot-dependencies.version>
+
+        <!-- Spring -->
+        <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
+        <!-- Flowable BPMN -->
+        <flowable.version>6.4.2</flowable.version>
+
         <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
         <swagger-annotations.version>1.5.20</swagger-annotations.version>
         <jetbrains.annotations.version>15.0</jetbrains.annotations.version>
@@ -121,7 +127,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot-dependencies.version}</version>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
