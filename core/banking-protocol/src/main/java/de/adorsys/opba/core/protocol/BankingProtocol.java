@@ -11,7 +11,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
         scanBasePackages = {
                 "de.adorsys.opba.core.protocol.config",
                 "de.adorsys.opba.core.protocol.controller",
-                "de.adorsys.opba.core.protocol.service"
+                "de.adorsys.opba.core.protocol.service",
+                "de.adorsys.opba.core.protocol.repository"
         }
 )
 public class BankingProtocol {
