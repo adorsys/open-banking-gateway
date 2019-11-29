@@ -65,6 +65,7 @@
         <pmd.plugin.version>3.10.0</pmd.plugin.version>
         <!-- xs2a version -->
         <xs2a.version>5.1</xs2a.version>
+        <xs2a-adapter.version>0.0.5</xs2a-adapter.version>
         <!-- other properties -->
         <lombok.version>1.18.4</lombok.version>
 
