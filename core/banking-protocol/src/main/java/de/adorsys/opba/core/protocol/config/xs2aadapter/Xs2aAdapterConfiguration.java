@@ -4,12 +4,8 @@ import com.google.common.io.Resources;
 import de.adorsys.xs2a.adapter.http.ApacheHttpClientFactory;
 import de.adorsys.xs2a.adapter.http.HttpClientFactory;
 import de.adorsys.xs2a.adapter.mapper.PaymentInitiationScaStatusResponseMapper;
-import de.adorsys.xs2a.adapter.registry.AspspSearchServiceImpl;
-import de.adorsys.xs2a.adapter.registry.LuceneAspspRepositoryFactory;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.AspspReadOnlyRepository;
-import de.adorsys.xs2a.adapter.service.AspspRepository;
-import de.adorsys.xs2a.adapter.service.AspspSearchService;
 import de.adorsys.xs2a.adapter.service.DownloadService;
 import de.adorsys.xs2a.adapter.service.Oauth2Service;
 import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
@@ -50,9 +46,9 @@ public class Xs2aAdapterConfiguration {
     }
 
     @Bean
-    AdapterServiceLoader xs2aadapterServiceLoader(Pkcs12KeyStore keyStore, HttpClientFactory httpClientFactory) {
-        return new AdapterServiceLoader(
-                xs2aAspspRepository(), keyStore, httpClientFactory, chooseFirstFromMultipleAspsps);
+    AdapterServiceLoader xs2aadapterServiceLoader(AspspReadOnlyRepository aspspRepository,
+                                                  Pkcs12KeyStore keyStore, HttpClientFactory httpClientFactory) {
+        return new AdapterServiceLoader(aspspRepository, keyStore, httpClientFactory, chooseFirstFromMultipleAspsps);
     }
 
     @Bean
@@ -74,16 +70,6 @@ public class Xs2aAdapterConfiguration {
     }
 
     @Bean
-    AspspRepository xs2aAspspRepository() {
-        return new LuceneAspspRepositoryFactory().newLuceneAspspRepository();
-    }
-
-    @Bean
-    AspspSearchService xs2aAspspSearchService(AspspReadOnlyRepository aspspRepository) {
-        return new AspspSearchServiceImpl(aspspRepository);
-    }
-
-    @Bean
     Oauth2Service xs2aOauth2Service(AdapterServiceLoader adapterServiceLoader) {
         return new AdapterDelegatingOauth2Service(adapterServiceLoader);
     }
@@ -91,7 +77,9 @@ public class Xs2aAdapterConfiguration {
     @Bean
     @SneakyThrows
     Pkcs12KeyStore xs2aPkcs12KeyStore(
-            @Value("${pkcs12.keyStore}") String keystorePath, @Value("${pkcs12.password}") String keystorePassword) {
+            @Value("${pkcs12.keyStore}") String keystorePath,
+            @Value("${pkcs12.password}") String keystorePassword
+    ) {
         char[] keyStorePassword = keystorePassword.toCharArray();
         return new Pkcs12KeyStore(
                 Paths.get(Resources.getResource(keystorePath).toURI()).toAbsolutePath().toString(), keyStorePassword
