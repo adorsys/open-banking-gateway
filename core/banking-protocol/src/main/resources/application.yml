@@ -1,51 +1,9 @@
 spring:
-  devtools:
-    restart:
-      enabled: false
-  jta:
-    enabled: true
-    service: com.atomikos.icatch.standalone.UserTransactionServiceFactory
-    max-actives: 200
-    enable-logging: false
-    atomikos:
-      connectionfactory:
-        local-transaction-mode: true
-      datasource:
-        # This is core business data source
-        banking-protocol:
-          unique-resource-name: banking-protocol
-          max-pool-size: 10
-          min-pool-size: 1
-          max-life-time: 20000
-          borrow-connection-timeout: 10000
-          xa-data-source-class-name: org.postgresql.xa.PGXADataSource
-          xa-properties:
-            user: postgres
-            password: docker
-            url: jdbc:postgresql://localhost:5432/open-banking?currentSchema=banking-protocol
-        # this is BPMN only DataSource
-        flowable:
-          unique-resource-name: flowable
-          max-pool-size: 10
-          min-pool-size: 1
-          max-life-time: 20000
-          borrow-connection-timeout: 10000
-          xa-data-source-class-name: org.postgresql.xa.PGXADataSource
-          xa-properties:
-            user: postgres
-            password: docker
-            url:  jdbc:postgresql://localhost:5432/open-banking?currentSchema=flowable
-
-flowable:
-  database-schema: flowable
-  jpa-enabled: false
-  database-schema-update: drop-create
-  async-executor-activate: false
-  cmmn:
-    async:
-      executor:
-        async-job-acquisition-enabled: false
-        auto-activate: false
-
-debug: true
-trace: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/open-banking?currentSchema=banking-protocol
+    username: postgres
+    password: docker
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      schema: banking-protocol
