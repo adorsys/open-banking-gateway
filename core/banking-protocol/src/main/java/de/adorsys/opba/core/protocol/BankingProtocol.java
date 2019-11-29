@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-// FIXME - Multiple DataSource requires JTA
 @EnableConfigurationProperties
 @EnableTransactionManagement
 @SpringBootApplication(
