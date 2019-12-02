@@ -239,7 +239,7 @@ public enum SandboxApp {
 
         try (Connection conn =
                      DriverManager.getConnection(
-                             "jdbc:tc:postgresql:12:////sandbox" +
+                             "jdbc:tc:postgresql:12:////sandbox_apps" +
                                      "?TC_TMPFS=/testtmpfs:rw" +
                                      "&TC_DAEMON=true" +
                                      "&TC_INITSCRIPT=sandbox/prepare-postgres.sql")) {

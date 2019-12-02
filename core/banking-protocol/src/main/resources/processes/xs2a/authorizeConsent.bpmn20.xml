@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="authorizeConsent" name="authorizeConsent" isExecutable="true">
+    <startEvent id="startEvent1" flowable:formFieldValidation="true"></startEvent>
+    <serviceTask id="sid-E0ED673E-BEC6-4DEA-B9A6-F2C12BCD8130" name="StartAuthorization" flowable:delegateExpression="${startAuthorization}"></serviceTask>
+    <serviceTask id="sid-CA83FF47-FB22-4CB1-B246-2C3525B0EFD7" name="Perform SCA challenge" flowable:delegateExpression="${doScaChallenge}"></serviceTask>
+    <serviceTask id="sid-98ECAA64-A5D9-48D8-9BBE-8C39D17C7C6F" name="Update PSU data to finalize consent" flowable:delegateExpression="${finalizeConsent}"></serviceTask>
+    <sequenceFlow id="sid-0FE4E925-3D36-4592-A123-C5351D64EC4F" sourceRef="startEvent1" targetRef="sid-E0ED673E-BEC6-4DEA-B9A6-F2C12BCD8130"></sequenceFlow>
+    <sequenceFlow id="sid-BE28C143-C115-4FF2-A36E-306978749824" sourceRef="sid-CA83FF47-FB22-4CB1-B246-2C3525B0EFD7" targetRef="sid-98ECAA64-A5D9-48D8-9BBE-8C39D17C7C6F"></sequenceFlow>
+    <sequenceFlow id="sid-4E10CFCF-F134-4CD1-83FA-BB22F6F3920A" sourceRef="sid-E0ED673E-BEC6-4DEA-B9A6-F2C12BCD8130" targetRef="sid-CA83FF47-FB22-4CB1-B246-2C3525B0EFD7"></sequenceFlow>
+    <endEvent id="sid-42814AD2-27FB-4735-ABEE-7254CA2FA567"></endEvent>
+    <sequenceFlow id="sid-11B7B73B-361F-42E5-9094-1E99E3A85F5D" sourceRef="sid-98ECAA64-A5D9-48D8-9BBE-8C39D17C7C6F" targetRef="sid-42814AD2-27FB-4735-ABEE-7254CA2FA567"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_authorizeConsent">
+    <bpmndi:BPMNPlane bpmnElement="authorizeConsent" id="BPMNPlane_authorizeConsent">
+      <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="163.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-E0ED673E-BEC6-4DEA-B9A6-F2C12BCD8130" id="BPMNShape_sid-E0ED673E-BEC6-4DEA-B9A6-F2C12BCD8130">
+        <omgdc:Bounds height="80.0" width="100.0" x="180.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-CA83FF47-FB22-4CB1-B246-2C3525B0EFD7" id="BPMNShape_sid-CA83FF47-FB22-4CB1-B246-2C3525B0EFD7">
+        <omgdc:Bounds height="80.0" width="100.0" x="345.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-98ECAA64-A5D9-48D8-9BBE-8C39D17C7C6F" id="BPMNShape_sid-98ECAA64-A5D9-48D8-9BBE-8C39D17C7C6F">
+        <omgdc:Bounds height="80.0" width="100.0" x="510.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-42814AD2-27FB-4735-ABEE-7254CA2FA567" id="BPMNShape_sid-42814AD2-27FB-4735-ABEE-7254CA2FA567">
+        <omgdc:Bounds height="28.0" width="28.0" x="700.75" y="164.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-11B7B73B-361F-42E5-9094-1E99E3A85F5D" id="BPMNEdge_sid-11B7B73B-361F-42E5-9094-1E99E3A85F5D">
+        <omgdi:waypoint x="609.95" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="700.75" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-0FE4E925-3D36-4592-A123-C5351D64EC4F" id="BPMNEdge_sid-0FE4E925-3D36-4592-A123-C5351D64EC4F">
+        <omgdi:waypoint x="129.9499986183554" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="180.0" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-4E10CFCF-F134-4CD1-83FA-BB22F6F3920A" id="BPMNEdge_sid-4E10CFCF-F134-4CD1-83FA-BB22F6F3920A">
+        <omgdi:waypoint x="279.9499999998897" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="344.99999999998465" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-BE28C143-C115-4FF2-A36E-306978749824" id="BPMNEdge_sid-BE28C143-C115-4FF2-A36E-306978749824">
+        <omgdi:waypoint x="444.9499999998897" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="509.99999999998465" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
