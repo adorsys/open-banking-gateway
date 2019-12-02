@@ -61,7 +61,7 @@ UI Application running on the PsuUserAgent and used by the PSU to access the Fin
 ### <a name="TppConsentSessionUI"></a> TppConsentSessionUI
 UI used by PSU to authorise consent in embedded case.
 
-### <a name="ASPSP Online Banking UI"></a> ASPSP Online Banking UI
+### <a name="AspsOnlineBankingUI"></a> AspsOnlineBankingUI
 This UI manages the interaction between the PSU and the ASPSP in redirect cases.
 
 ## <a name="FinTechDC"></a> FinTechDC
@@ -162,7 +162,7 @@ Information associated with the consent initialized by the ASPSP. Containing Con
 Generally the online banking application on an ASPSP. In redirect cases, the ASPSP AspspOnlineBankingAPI establishes a direct session with the PSU to allow the PSU to identify himself, review and authorize the consent. 
 
 ### <a name="Psu2AspspConsentSession"></a> Psu2AspspConsentSession
-This is a Cookie used to maintain the session between the ASPSP Online Banking UI and the AspspOnlineBankingAPI. As a recommendation, the validity of this Cookie shall be limited to the life span of the consent session. As the AspspOnlineBankingAPI redirects the PSU back to the TppConsentSessionApi up on completion of the consent session. Redirection happens independently on whether the consent was authorized or not.
+This is a Cookie used to maintain the session between the AspsOnlineBankingUI and the AspspOnlineBankingAPI. As a recommendation, the validity of this Cookie shall be limited to the life span of the consent session. As the AspspOnlineBankingAPI redirects the PSU back to the TppConsentSessionApi up on completion of the consent session. Redirection happens independently on whether the consent was authorized or not.
  
 ### <a name="RedirectInfoPage"></a> RedirectInfoPage
 It is recommended to inform the PSU prior to redirecting the PSU back to the TPP. This UI-Panel will be called RedirectInfoPage. If the ASPSP is using a trusted environment (Native App) and wants to keep the relationship to the PSU alive, it is necessary to store this relationship in a separated Psu2AspspLoginSession.
