@@ -13,6 +13,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createSequence sequenceName="consent_id_sequence"/>
+        <createSequence sequenceName="consent_id_sequence" incrementBy="50"/>
     </changeSet>
 </databaseChangeLog>

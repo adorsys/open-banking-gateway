@@ -24,9 +24,9 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_IP_ADDRESS;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_GTW_ASPSP_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 
-@Service("xs2aTransactionListConsentInitiate")
+@Service("xs2aAccountListConsentInitiate")
 @RequiredArgsConstructor
-public class Xs2aTransactionListConsentInitiate implements JavaDelegate {
+public class Xs2aAccountListConsentInitiate implements JavaDelegate {
 
     private final AccountInformationService ais;
 
@@ -48,8 +48,8 @@ public class Xs2aTransactionListConsentInitiate implements JavaDelegate {
                 consents()
         );
 
-        delegateExecution.setVariableLocal(CONSENT_ID, consentInit.getBody().getConsentId());
-        delegateExecution.setVariableLocal(CONSENT_INIT, consentInit.getBody());
+        delegateExecution.setVariable(CONSENT_ID, consentInit.getBody().getConsentId());
+        delegateExecution.setVariable(CONSENT_INIT, consentInit.getBody());
     }
 
     private Consents consents() {

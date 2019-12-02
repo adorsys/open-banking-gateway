@@ -27,7 +27,7 @@ public class AccountInformation {
     @GetMapping(ACCOUNTS)
     @Transactional
     public ResponseEntity<List<AccountDetails>> accounts() {
-        ProcessInstance instance = runtimeService.startProcessInstanceByKey("createConsent");
+        ProcessInstance instance = runtimeService.startProcessInstanceByKey("listAccounts");
         return ResponseEntity.ok(((AccountListHolder) instance.getProcessVariables().get(ACCOUNT_LIST)).getAccounts());
     }
 }
