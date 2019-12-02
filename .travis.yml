@@ -13,13 +13,13 @@ before_deploy:
     provider: script
     script: /bin/bash .travis/gpg.import.sh
     on:
-      branch: develop
+      branch: OBG-#16
   -
     skip_cleanup: true
     provider: script
     script: /bin/bash .travis/gpg.import.ownertrust.sh
     on:
-      branch: develop
+      branch: OBG-#16
 
 deploy:
   -
