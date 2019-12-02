@@ -7,7 +7,18 @@ spring:
     driver-class-name: org.postgresql.Driver
     hikari:
       schema: banking_protocol
-
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: de.adorsys.opba.core.protocol.config.hibernate.PrefixAndSnakeCasePhysicalNamingStrategy
+      # DDL is handled by Liquibase
+      ddl-auto: validate
+    open-in-view: false
+  liquibase:
+    enabled: true
+    change-log: classpath:migration/master.xml
+    parameters:
+      table-prefix: opb_
 pkcs12:
   keyStore: sample-qwac.keystore
   password: password
