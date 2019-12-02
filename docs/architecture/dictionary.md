@@ -10,7 +10,7 @@ Application running on a PSU device and used by the PSU to access banking functi
 
 ### WebBrowser
 
-A Web browser is considered compliant in the context of this framework when it can protect specific information used between the PusUserDevice and the the corresponding server application to track the user session. For session tracking, this framework uses [Cookies RFC6265](https://tools.ietf.org/html/rfc6265). 
+A Web browser is considered compliant in the context of this framework when it can protect specific information used between the PsuUserDevice and the corresponding server application to track the user session. For session tracking, this framework uses [Cookies RFC6265](https://tools.ietf.org/html/rfc6265). 
 
 #### Security Considerations
 The use of cookies provides the most elaborated way to protect a session established between a WebBrowser and server application. We assume a WebBrowser storing a cookie fulfills following requirements:
@@ -59,7 +59,7 @@ All information associated with the PsuUserAgent. Like PSU-IP-Address, PSU-IP-Po
 UI Application running on the PsuUserAgent and used by the PSU to access the FinTechApi
 
 ### <a name="TppConsentSessionUI"></a> TppConsentSessionUI
-UI used by PSU to authoraise consent in embedded case.
+UI used by PSU to authorise consent in embedded case.
 
 ### <a name="AspspConsentSessionUI"></a> AspspConsentSessionUI
 This UI manages the interaction between the PSU and the ASPSP in redirect cases.
@@ -83,10 +83,10 @@ Data center environment of the TPP
 Tpp backend providing access to ASPSP banking functionality. This interface is not directly accessed by the PSU but by the FinTechApi. FinTechApi will use a FinTech2TppContext to authenticate with the TppBankingApi.
 
 ### <a name="TppBankSearchApi"></a> TppBankSearchApi
-Repository of banks maintained in the TPP's banking gateway. The banking search API will later presen an interface to configure profiles attached to listed banks.
+Repository of banks maintained in the TPP's banking gateway. The banking search API will later present an interface to configure profiles attached to listed banks.
 
 ### <a name="BankDescriptor"></a> BankDescriptor
-Descriptive information assocaited with a bank like:
+Descriptive information associated with a bank like:
 - The name of the Bank
 - The address of the bank
 - The bank identification code
@@ -95,9 +95,10 @@ Descriptive information assocaited with a bank like:
 BankingApi profile information associated with a bank like:
 - The BankingProtocol used to connect with the bank
 - List of Banking services provided by the BankingApi of the bank
-- SCA approcahes associated with the BankingApi
+- SCA approaches associated with the BankingApi
 - ScaUIMetadaData: Screens and field used to collect user authentication data.
-- Actions to be performed by the PSU prior to using the BankingProtocol
+- Actions to be performed by the PSU before the Banking Protocol is used.
+
 
 #### <a name="AisConsentSpec"></a> AisConsentSpec
 Specification associated with an AisConsent. This is highly dependent on the BankProfile. Following information might be carried by an AisConsentSpec object:
@@ -147,7 +148,7 @@ Help select a banking protocol.
 Data center environment of the ASPSP
 
 ### <a name="AspspBankingApi"></a> AspspBankingApi 
-Api banking provided by ASPSP. This interface is not directly accessed by the PSU but by the TppBankingApi. TppBankingApi will use a Tpp2AspspContext to authenticate with the TppBankingApi.
+Api banking provided by ASPSP. This interface is not directly accessed by the PSU but by the TppBankingApi. TppBankingApi will use a Tpp2AspspContext to authenticate with the AspspBankingApi.
 
 ### <a name="Tpp2AspspContext"></a> Tpp2AspspContext
 Information used to identify the Tpp application in the ASPSP environment. Like a TPP QWAC certificate.
