@@ -20,3 +20,6 @@ xs2a-profile:
   adapterId: adorsys-integ-adapter
   idpUrl:
   aspspScaApproaches:
+
+flowable:
+  process-definition-location-prefix: classpath*:/processes/xs2a/
