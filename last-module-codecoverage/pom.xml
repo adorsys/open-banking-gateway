@@ -51,7 +51,7 @@
                 <version>${xml-maven-plugin.version}</version>
                 <executions>
                     <execution>
-                        <phase>test</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>transform</goal>
                         </goals>
