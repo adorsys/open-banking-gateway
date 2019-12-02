@@ -15,6 +15,7 @@
 
 	<properties>
 		<ruleset.basedir>..</ruleset.basedir>
+		<openapi-spec-file-location>${project.basedir}/src/main/resources/banking_api.yml</openapi-spec-file-location>
 	</properties>
 
 	<dependencies>
@@ -26,6 +27,80 @@
 			<groupId>io.swagger.core.v3</groupId>
 			<artifactId>swagger-annotations</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>1.5.23</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>io.swagger.codegen.v3</groupId>
+				<artifactId>swagger-codegen-maven-plugin</artifactId>
+				<version>3.0.11</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${openapi-spec-file-location}</inputSpec>
+							<language>spring</language>
+							<output>${project.basedir}/generated/</output>
+							<configOptions>
+								<sourceFolder>src/main</sourceFolder>
+								<basePackage>de.adorsys.opba.bankingapi</basePackage>
+								<configPackage>de.adorsys.opba.bankingapi.config</configPackage>
+								<modelPackage>de.adorsys.opba.bankingapi.model</modelPackage>
+								<apiPackage>de.adorsys.opba.bankingapi.api</apiPackage>
+								<interfaceOnly>true</interfaceOnly>
+								<skipOverwrite>true</skipOverwrite>
+								<dateLibrary>java8</dateLibrary>
+								<java8>true</java8>
+								<implicitHeaders>false</implicitHeaders>
+								<delegatePattern>true</delegatePattern>
+								<useTags>true</useTags>
+								<library>spring-mvc</library>
+								<swaggerDocketConfig>false</swaggerDocketConfig>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>io.swagger.codegen.v3</groupId>
+						<artifactId>swagger-codegen-generators</artifactId>
+						<version>1.0.11</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>
