@@ -15,7 +15,7 @@
 
 	<properties>
 		<ruleset.basedir>..</ruleset.basedir>
-		<openapi-spec-file-location>${project.basedir}/src/main/resources/banking_api.yml</openapi-spec-file-location>
+		<openapi-spec-file-location>${project.basedir}/src/main/resources/banking_api_ais.yml</openapi-spec-file-location>
 	</properties>
 
 	<dependencies>
@@ -23,10 +23,7 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>io.swagger.core.v3</groupId>
-			<artifactId>swagger-annotations</artifactId>
-		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -75,10 +72,10 @@
 							<output>${project.basedir}/generated/</output>
 							<configOptions>
 								<sourceFolder>src/main</sourceFolder>
-								<basePackage>de.adorsys.opba.bankingapi</basePackage>
+								<basePackage>de.adorsys.opba.bankingapi.ais</basePackage>
 								<configPackage>de.adorsys.opba.bankingapi.config</configPackage>
-								<modelPackage>de.adorsys.opba.bankingapi.model</modelPackage>
-								<apiPackage>de.adorsys.opba.bankingapi.api</apiPackage>
+								<modelPackage>de.adorsys.opba.bankingapi.ais.model</modelPackage>
+								<apiPackage>de.adorsys.opba.bankingapi.ais.resource</apiPackage>
 								<interfaceOnly>true</interfaceOnly>
 								<skipOverwrite>true</skipOverwrite>
 								<dateLibrary>java8</dateLibrary>
