@@ -11,15 +11,19 @@ before_deploy:
   -
     skip_cleanup: true
     provider: script
-    script: /bin/bash .travis/gpg.import.sh
+    script: echo $GPG_SECRET_KEY | base64 --decode | $GPG_EXECUTABLE --import
     on:
-      branch: develop
+      tags: true
+      # matches: vX.Y.Z, vX.Y.Z-A, vX.Y.Z-RCA, vX.Y.Z-A-B.C.D, vX.Y.Z-A-B.C.D-E, vX.Y.Z-RCA-B.C.D-E
+      condition: "$TRAVIS_TAG =~ ^v([[:digit:]]+\\.)+[[:digit:]]+(-(RC)?[[:digit:]]+)?(-([[:digit:]]+\\.)+[[:digit:]]+(-[[:digit:]]+)?)?$"
   -
     skip_cleanup: true
     provider: script
-    script: /bin/bash .travis/gpg.import.ownertrust.sh
+    script: echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
     on:
-      branch: develop
+      tags: true
+      # matches: vX.Y.Z, vX.Y.Z-A, vX.Y.Z-RCA, vX.Y.Z-A-B.C.D, vX.Y.Z-A-B.C.D-E, vX.Y.Z-RCA-B.C.D-E
+      condition: "$TRAVIS_TAG =~ ^v([[:digit:]]+\\.)+[[:digit:]]+(-(RC)?[[:digit:]]+)?(-([[:digit:]]+\\.)+[[:digit:]]+(-[[:digit:]]+)?)?$"
 
 deploy:
   -
