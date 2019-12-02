@@ -30,6 +30,7 @@
 
     <modules>
         <module>opba-consent-rest-api</module>
+        <module>last-module-codecoverage</module>
     </modules>
 
     <url>https://github.com/adorsys/open-banking-gateway</url>
@@ -65,13 +66,18 @@
         <xs2a.version>5.1</xs2a.version>
         <!-- other properties -->
         <lombok.version>1.18.4</lombok.version>
-		<spring-boot-dependencies.version>2.1.1.RELEASE</spring-boot-dependencies.version>
+        <spring-boot-dependencies.version>2.1.1.RELEASE</spring-boot-dependencies.version>
         <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
         <swagger-annotations.version>1.5.20</swagger-annotations.version>
         <jetbrains.annotations.version>15.0</jetbrains.annotations.version>
         <lombok.version>1.18.4</lombok.version>
         <fasterxml.version>2.10.1</fasterxml.version>
         <fasterxml-data-format.version>2.9.8</fasterxml-data-format.version>
+        <xml-maven-plugin.version>1.0.2</xml-maven-plugin.version>
+        <jacoco.version>0.8.4</jacoco.version>
+        <jupiter.version>5.4.1</jupiter.version>
+        <surefire.version>2.22.1</surefire.version>
+        <junit.platform.commons.version>1.4.1</junit.platform.commons.version>
     </properties>
 
     <repositories>
@@ -113,7 +119,7 @@
                 <artifactId>springfox-swagger-ui</artifactId>
                 <version>${springfox-swagger2.version}</version>
             </dependency>
-            
+
             <!-- Spring Boot -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -122,8 +128,8 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-			
-			<!-- Lombok -->
+
+            <!-- Lombok -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
@@ -135,7 +141,7 @@
                 <version>${jetbrains.annotations.version}</version>
                 <scope>compile</scope>
             </dependency>
-            
+
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
@@ -160,11 +166,28 @@
                 <artifactId>jackson-dataformat-yaml</artifactId>
                 <version>${fasterxml-data-format.version}</version>
             </dependency>
-            
+
+            <!-- jupiter -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${jupiter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${jupiter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-params</artifactId>
+                <version>${jupiter.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <build>
+
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -175,6 +198,15 @@
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+                <configuration>
+                    <argLine>${surefireArgLine}</argLine>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
@@ -212,31 +244,37 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.2</version>
-                <configuration>
-                    <destFile>${sonar.jacoco.reportPath}</destFile>
-                    <dataFile>${sonar.jacoco.reportPath}</dataFile>
-                    <append>true</append>
-                    <excludes>
-                        <exclude>**/generated-sources/**</exclude>
-                    </excludes>
-
-                </configuration>
+                <version>${jacoco.version}</version>
                 <executions>
                     <execution>
-                        <id>jacoco-initialize</id>
+                        <id>prepare-agent</id>
+                        <phase>validate</phase>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>jacoco-site</id>
-                        <phase>package</phase>
+                        <id>report</id>
+                        <phase>test</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>report-aggregate</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                    </execution>
                 </executions>
+                <configuration>
+                    <append>true</append>
+                    <excludes>
+                        <!-- Exclude Dagger2 generated code -->
+                    </excludes>
+                    <propertyName>surefireArgLine</propertyName>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
