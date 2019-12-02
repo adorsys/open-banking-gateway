@@ -85,6 +85,8 @@ Tpp backend providing access to ASPSP banking functionality. This interface is n
 ### <a name="TppBankSearchApi"></a> TppBankSearchApi
 Repository of banks maintained in the TPP's banking gateway. The banking search API will later present an interface to configure profiles attached to listed banks.
 
+### <a name="TppConsentSessionApi"></a> TppConsentSessionApi
+This API is used to perform authorization and consent management for the PSU. In the embedded case, the PSU authorizes the consent via the TppConsentSessionUI. In case of redirection, the psu browser is redirected to the AspspConsentSessionApi so that the psu can authorize the consent.
 ### <a name="BankDescriptor"></a> BankDescriptor
 Descriptive information associated with a bank like:
 - The name of the Bank
