@@ -71,9 +71,11 @@
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
         <java.version>11</java.version>
         <pmd.plugin.version>3.10.0</pmd.plugin.version>
+        <apache.commons-lang3.version>3.9</apache.commons-lang3.version>
 		<spring-boot-dependencies.version>2.1.1.RELEASE</spring-boot-dependencies.version>
         <swaggerv3.version>2.1.0</swaggerv3.version>
         <swagger.version>1.5.23</swagger.version>
+        <springfox.version>2.9.2</springfox.version>
         <lombok.version>1.18.10</lombok.version>
         <junit.version>5.3.2</junit.version>
         <xml-maven-plugin.version>1.0.2</xml-maven-plugin.version>
@@ -109,6 +111,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache.commons-lang3.version}</version>
+            </dependency>
             <!-- swagger -->
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>
@@ -120,6 +127,18 @@
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-annotations</artifactId>
                 <version>${swagger.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${springfox.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${springfox.version}</version>
             </dependency>
 
             <!-- Spring Boot -->

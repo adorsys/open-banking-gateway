@@ -15,10 +15,14 @@
 
 	<properties>
 		<ruleset.basedir>..</ruleset.basedir>
-		<openapi-spec-file-location>${project.basedir}/src/main/resources/banking_api_ais.yml</openapi-spec-file-location>
+		<openapi-spec-file-location>${project.basedir}/src/main/resources/static/banking_api_ais.yml</openapi-spec-file-location>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -51,6 +55,15 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
 		</dependency>
 	</dependencies>
 
