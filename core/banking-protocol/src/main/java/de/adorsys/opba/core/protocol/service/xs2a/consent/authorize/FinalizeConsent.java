@@ -1,6 +1,8 @@
 package de.adorsys.opba.core.protocol.service.xs2a.consent.authorize;
 
 import com.google.common.collect.ImmutableMap;
+import de.adorsys.opba.core.protocol.domain.entity.Consent;
+import de.adorsys.opba.core.protocol.repository.jpa.ConsentRepository;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.RequestHeaders;
 import de.adorsys.xs2a.adapter.service.Response;
@@ -28,6 +30,7 @@ import static org.springframework.transaction.annotation.Propagation.REQUIRES_NE
 public class FinalizeConsent implements JavaDelegate {
 
     private final AccountInformationService ais;
+    private final ConsentRepository consents;
 
     @Override
     @Transactional(propagation = REQUIRES_NEW)
@@ -50,6 +53,8 @@ public class FinalizeConsent implements JavaDelegate {
                 ),
                 authentication()
         );
+
+        consents.save(Consent.builder().consentCode(consent.getConsentId()).build());
     }
 
     private TransactionAuthorisation authentication() {
