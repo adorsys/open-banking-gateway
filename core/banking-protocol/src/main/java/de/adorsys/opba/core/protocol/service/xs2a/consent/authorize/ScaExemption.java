@@ -6,14 +6,12 @@ import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
-
 @Slf4j
 @Service("scaExemption")
 public class ScaExemption implements JavaDelegate {
 
     @Override
-    @Transactional(propagation = REQUIRES_NEW)
+    @Transactional
     public void execute(DelegateExecution delegateExecution) {
         log.info("SCA Exemption");
     }

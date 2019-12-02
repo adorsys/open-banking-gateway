@@ -5,5 +5,5 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class ApiPaths {
 
-    public static final String TRANSACTIONS = "/transactions";
+    public static final String ACCOUNTS = "/accounts";
 }

@@ -22,7 +22,7 @@ public class Consent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "consent_id_generator")
-    @SequenceGenerator(name = "consent_id_generator", sequenceName = "consent_id_sequence", allocationSize = 1)
+    @SequenceGenerator(name = "consent_id_generator", sequenceName = "consent_id_sequence")
     private Long id;
 
     private String consentCode;

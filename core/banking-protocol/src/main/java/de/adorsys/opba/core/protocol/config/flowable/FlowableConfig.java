@@ -17,9 +17,14 @@ import org.springframework.context.annotation.Configuration;
 import java.util.ArrayList;
 import java.util.Map;
 
+// TODO: Use async entries in process definition, so that when some execution fails, whole transaction is not rolled back
 @Configuration
 public class FlowableConfig {
 
+    /**
+     * Customizes flowable so that it can store custom classes (not ones that implement Serializable) as
+     * JSON as variables in database.
+     */
     @Bean
     EngineConfigurationConfigurer<SpringAppEngineConfiguration> storeCustomClassesAsJson(
             @Value("${opba.flowable.serializeOnly:de.adorsys}") String serializableClassesPrefix,
@@ -28,8 +33,8 @@ public class FlowableConfig {
     ) {
         return engineConfiguration ->
                 engineConfiguration.setCustomPreVariableTypes(
-                        new ArrayList<>(ImmutableList.of(new AsJsonVariableType(
-                                serializableClassesPrefix, mapper, maxLength))
+                        new ArrayList<>(ImmutableList.of(
+                                new AsJsonVariableType(serializableClassesPrefix, mapper, maxLength))
                         )
         );
     }

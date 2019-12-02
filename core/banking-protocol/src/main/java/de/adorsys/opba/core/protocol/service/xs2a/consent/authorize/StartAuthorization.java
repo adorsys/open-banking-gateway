@@ -19,7 +19,6 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.CONTENT_TYPE;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_GTW_ASPSP_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
-import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
 
 @Service("startAuthorization")
 @RequiredArgsConstructor
@@ -28,7 +27,7 @@ public class StartAuthorization implements JavaDelegate {
     private final AccountInformationService ais;
 
     @Override
-    @Transactional(propagation = REQUIRES_NEW)
+    @Transactional
     public void execute(DelegateExecution delegateExecution) {
         ConsentCreationResponse consent = delegateExecution.getVariable(CONSENT_INIT, ConsentCreationResponse.class);
         Response<StartScaProcessResponse> scaStart = ais.startConsentAuthorisation(consent.getConsentId(), RequestHeaders.fromMap(

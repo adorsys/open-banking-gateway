@@ -78,11 +78,11 @@ public class Xs2aAdapterConfiguration {
     @SneakyThrows
     Pkcs12KeyStore xs2aPkcs12KeyStore(
             @Value("${pkcs12.keyStore}") String keystorePath,
-            @Value("${pkcs12.password}") String keystorePassword
+            @Value("${pkcs12.password}") char[] keystorePassword
     ) {
-        char[] keyStorePassword = keystorePassword.toCharArray();
         return new Pkcs12KeyStore(
-                Paths.get(Resources.getResource(keystorePath).toURI()).toAbsolutePath().toString(), keyStorePassword
+                Paths.get(Resources.getResource(keystorePath).toURI()).toAbsolutePath().toString(),
+                keystorePassword
         );
     }
 
