@@ -5,7 +5,7 @@ jdk:
 
 
 script:
-  - mvn clean
+  - mvn test
 
 before_deploy:
   - echo $GPG_SECRET_KEY | base64 --decode | $GPG_EXECUTABLE --import
