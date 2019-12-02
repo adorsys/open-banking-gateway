@@ -8,8 +8,18 @@ script:
   - mvn verify
 
 before_deploy:
-  - echo $GPG_SECRET_KEY | base64 --decode | $GPG_EXECUTABLE --import
-  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+  -
+    skip_cleanup: true
+    provider: script
+    script: /bin/bash .travis/gpg.import.sh
+    on:
+      branch: develop
+  -
+    skip_cleanup: true
+    provider: script
+    script: /bin/bash .travis/gpg.import.ownertrust.sh
+    on:
+      branch: develop
 
 deploy:
   -
