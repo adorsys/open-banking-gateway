@@ -1,0 +1,22 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="banks-create" author="mhr">
+        <createSequence
+                sequenceName="bank_id_sequence"
+                cycle="false"
+                cacheSize="1000"
+                incrementBy="1"
+                startValue="1"/>
+
+        <createTable tableName="${table-prefix}bank">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="bic" type="VARCHAR(11)"/>
+            <column name="bank_code" type="VARCHAR(8)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
