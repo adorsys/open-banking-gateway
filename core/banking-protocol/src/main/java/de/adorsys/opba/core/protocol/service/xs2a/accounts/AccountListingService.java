@@ -50,6 +50,6 @@ public class AccountListingService implements JavaDelegate {
         );
 
 
-        delegateExecution.setVariableLocal(ACCOUNT_LIST, accounts.getBody());
+        delegateExecution.setVariable(ACCOUNT_LIST, accounts.getBody());
     }
 }

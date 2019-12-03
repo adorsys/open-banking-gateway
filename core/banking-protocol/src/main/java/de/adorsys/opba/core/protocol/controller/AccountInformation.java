@@ -4,6 +4,7 @@ import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
+import org.flowable.engine.impl.persistence.entity.ExecutionEntity;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ public class AccountInformation {
     @Transactional
     public ResponseEntity<List<AccountDetails>> accounts() {
         ProcessInstance instance = runtimeService.startProcessInstanceByKey("listAccounts");
-        return ResponseEntity.ok(((AccountListHolder) instance.getProcessVariables().get(ACCOUNT_LIST)).getAccounts());
+        ExecutionEntity exec = (ExecutionEntity) instance;
+        return ResponseEntity.ok(((AccountListHolder) exec.getVariable(ACCOUNT_LIST)).getAccounts());
     }
 }
