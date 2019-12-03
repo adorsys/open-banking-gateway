@@ -26,16 +26,16 @@ The server can request the WebBrowser to redirect the user to another page by re
 - AspspConsentSessionApi backTo-> TppConsentSessionApi
 - TppConsentSessionApi backTo-> FinTechApi
 
-#### Redirection and Data Sharing
+#### <a name="redirectCode"> </a>Redirection and Data Sharing
 We assume all three applications FinTechApi, TppConsentSessionApi, AspspConsentSessionApi are hosted on different domains. This is, we are not expecting Cookies set by one application to be visible to another application (this might still happen on some local development environment, where everything runs on localhost). 
-We also do not advice adding persistent information to __RedirectUrl__, as these are log files everywhere on infrastructure components in data centers. __RedirectUrl__ shall instead carry __OneTime__ and __ShortLived__ authorization code we call __code__, that can be used to retrieved shared payload through an authenticated back channel connection. This is the practice borrowed from [oAuth2 RFC6749](https://tools.ietf.org/html/rfc6749). Following table shows defined redirects and corresponding back chanel endpoints.
+We also do not advice adding persistent information to __RedirectUrl__, as these are log files everywhere on infrastructure components in data centers. __RedirectUrl__ shall instead carry __OneTime__ and __ShortLived__ authorization code we call __redirectCode__, that can be used to retrieved shared payload through an authenticated back channel connection. This is the practice borrowed from [oAuth2 RFC6749](https://tools.ietf.org/html/rfc6749). Following table shows defined redirects and corresponding back chanel endpoints.
 
-| Origin Application | Redirecting Application | Response Code; Location ; AuthCodeParam; Expiration | Redirect Target Application | Destination Application  | Data EndPoint at Origin Application |
+| Origin Application | Redirecting Application | Response code; Location ; AuthCodeParam; Expiration | Redirect Target Application | Destination Application  | Data EndPoint at Origin Application |
 | -- | -- | -- | -- | -- | -- |
-| TppBankingApi | FinTechApi | 302 ; /auth ; code ; 5s | TppConsentSessionApi | TppConsentSessionApi | /loadTppConsentSession |
+| TppBankingApi | FinTechApi | 302 ; /auth ; redirectCode ; 5s | TppConsentSessionApi | TppConsentSessionApi | /loadTppConsentSession |
 | TppConsentSessionApi | TppConsentSessionApi | Proprietary banking API. Assume RFC6749. /auth | AspspConsentSessionApi | AspspConsentSessionApi | none |
-| AspspConsentSessionApi | AspspConsentSessionApi | 302 ; \[/ok\|/nok\] ; code ; 5s | TppConsentSessionApi | TppConsentSessionApi | /token |
-| TppConsentSessionApi | TppConsentSessionApi | 302 ; \[/ok\|/nok\] ; code ; 5s | FinTechApi | TppBankingApi | /loadTppConsentSession |
+| AspspConsentSessionApi | AspspConsentSessionApi | 302 ; \[/ok\|/nok\] ; redirectCode ; 5s | TppConsentSessionApi | TppConsentSessionApi | /token |
+| TppConsentSessionApi | TppConsentSessionApi | 302 ; \[/ok\|/nok\] ; redirectCode ; 5s | FinTechApi | TppBankingApi | /loadTppConsentSession |
 
 #### Keeping Session Information
 We assume all three applications FinTechApi, TppConsentSessionApi, AspspConsentSessionApi maintain their own session information. This framework uses following terms to name the session information held by an application on the UserAgent of the PSU.
@@ -49,7 +49,7 @@ We assume all three applications FinTechApi, TppConsentSessionApi, AspspConsentS
 Session information can also be kept across redirect life cycles. Upon redirecting the UserAgent to another application, the redirecting application can set Cookies that will be resent to the domain with future requests. This way, there will be no need to maintain user session information in temporary databases on the server, thus keeping server tiny.    
 
 ### Native App
-The UserAgent might be a native application running on a user mobile device or a desktop computer. In this case, redirection might still take place, but with consideration of the physical transition between source and target UI-Application. Following specifications deal with security threads associated with the redirection between UI-Application on a user device: [RFC8252:OAuth 2.0 for Native Apps](https://tools.ietf.org/html/rfc8252),[RFC7636:Proof Key for Code Exchange by OAuth Public Clients](https://tools.ietf.org/html/rfc7636) 
+The UserAgent might be a native application running on a user mobile device or a desktop computer. In this case, redirection might still take place, but with consideration of the physical transition between source and target UI-Application. Following specifications deal with security threads associated with the redirection between UI-Application on a user device: [RFC8252:OAuth 2.0 for Native Apps](https://tools.ietf.org/html/rfc8252),[RFC7636:Proof Key for code Exchange by OAuth Public Clients](https://tools.ietf.org/html/rfc7636) 
 For the purpose of kepping the overall architecture of this framework simple, we will require native applications to provide the same behavior as the WebBrowser described above.
 
 ### <a name="UserAgentContext"></a> UserAgentContext
@@ -129,6 +129,9 @@ This is the identifier of the PSU in the FinTech2Tpp relationship. This identifi
 
 ### <a name="Psu2TppConsentSessionCookie"></a> Psu2TppConsentSessionCookie
 This is the cookie object used to maintain the consent session between the TppConsentSessionUI and the TppConsentSessionApi
+
+### <a name="TppConsentSessionApi"></a> TppConsentSessionApi
+Manages the interaction between the PSU and the TPP.
 
 ### <a name="RedirectSessionStoreAPI"></a> RedirectSessionStoreAPI
 Storage of temporary redirect sessions. Redirect session are stored only for the duration of the redirect request while redirecting from the TppBankingApi to the TppConsentSessionApi and from the TppConsentSessionApi back to the TppBankingApi.
