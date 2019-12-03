@@ -39,14 +39,15 @@ public enum AccountTypeTO {
     SLRY("Salary"),  // Accounts used for salary payments
     SVGS("Savings"),  // Account used for savings
     TAXE("Tax"),  // Account used for taxes if different from the account for payment
-    TRAN("TransactingAccount"),  // A transacting account is the most basic type of bank account that you can get. The main difference between transaction and cheque accounts is that you usually do not get a cheque book with your transacting account and neither are you offered an overdraft facility
+    TRAN("TransactingAccount"),  // A transacting account is the most basic type of bank account that you can get. The main difference between transaction and cheque accounts
+    //                                        is that you usually do not get a cheque book with your transacting account and neither are you offered an overdraft facility
     TRAS("Cash Trading");  // Account used for trading if different from the current cash account
 
-    private final static Map<String, AccountTypeTO> container = new HashMap<>();
+    private static final Map<String, AccountTypeTO> CONTAINER = new HashMap<>();
 
     static {
         for (AccountTypeTO accountType : values()) {
-            container.put(accountType.getValue(), accountType);
+            CONTAINER.put(accountType.getValue(), accountType);
         }
     }
 
@@ -61,6 +62,6 @@ public enum AccountTypeTO {
     }
 
     public static Optional<AccountTypeTO> getByValue(String value) {
-        return Optional.ofNullable(container.get(value));
+        return Optional.ofNullable(CONTAINER.get(value));
     }
 }

@@ -25,11 +25,11 @@ public enum AccountStatusTO {
     DELETED("deleted"),
     BLOCKED("blocked");
 
-    private final static Map<String, AccountStatusTO> container = new HashMap<>();
+    private static final Map<String, AccountStatusTO> CONTAINER = new HashMap<>();
 
     static {
         for (AccountStatusTO accountStatus : values()) {
-            container.put(accountStatus.getValue(), accountStatus);
+            CONTAINER.put(accountStatus.getValue(), accountStatus);
         }
     }
 
@@ -44,6 +44,6 @@ public enum AccountStatusTO {
     }
 
     public static Optional<AccountStatusTO> getByValue(String value) {
-        return Optional.ofNullable(container.get(value));
+        return Optional.ofNullable(CONTAINER.get(value));
     }
 }

@@ -9,13 +9,12 @@ import io.swagger.annotations.ApiOperation;
 
 /**
  * tags = "Authorization Entry Point", description = "Provides access to ConsentAPI"
- * 
- * @author fpo
  *
+ * @author fpo
  */
 public interface AuthEntryPointApi {
 
-	@GetMapping(path="/auth", params= {"code"})
+    @GetMapping(path = "/auth", params = {"code"})
     @ApiOperation(value = "Entry point for processing a consent request redirected by the TPP Banking API over the FinTechAPI to the ConsentAPI.",
             notes = "This is the <b>entry point</b> for authenticating a consent redirected by the TPP server to the ConsentAPI."
                     + "<ul>"
@@ -32,7 +31,8 @@ public interface AuthEntryPointApi {
                     + "<ul> Interacting with the PSU user agent"
                     + "<li>The consent-session-state is a transient reference of the consent request. It is used to encrypt information stored in the corresponding consentCookieString.</li>"
                     + "<li>The retruned AuthorizeResponse object info is needed to display a qualified information page to the PSU prio to redirecting the PSU to the target ASPSP.</li>"
-                    + "<li>The retruned AuthorizeResponse object allways carries the consent-session-state that is needed in any subsequent request to the ConsentAPI. Therefore ConsentAPI shall never store the consent-session-state the consentCookieString</li>"
+                    + "<li>The retruned AuthorizeResponse object allways carries the consent-session-state that is needed in any subsequent request to the ConsentAPI. Therefore ConsentAPI shall never"
+                    + " store the consent-session-state the consentCookieString</li>"
                     + "<li>The retruned AuthorizeResponse object is allways synchronized with the consentCookieString set with the same HTTP response object.</li>"
                     + "<li>The retruned AuthorizeResponse object is also used to decrypt information stored in the consentCookieString set with the same HTTP response object.</li>"
                     + "<li>Any session, account or payment information needed to manage the authorization process is stored in both AuthorizeResponse and encrypted in the consentCookieString</li>"

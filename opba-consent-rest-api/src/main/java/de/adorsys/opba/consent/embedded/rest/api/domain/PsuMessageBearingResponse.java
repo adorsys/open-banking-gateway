@@ -5,13 +5,13 @@ import java.util.List;
 
 public class PsuMessageBearingResponse {
 
-	private List<PsuMessage> psuMessages = new ArrayList<>();
+    private List<PsuMessage> psuMessages = new ArrayList<>();
 
-	public List<PsuMessage> getPsuMessages() {
-		return psuMessages;
-	}
+    public List<PsuMessage> getPsuMessages() {
+        return psuMessages;
+    }
 
-	public void setPsuMessages(List<PsuMessage> psuMessages) {
-		this.psuMessages = psuMessages;
-	}
+    public void setPsuMessages(List<PsuMessage> psuMessages) {
+        this.psuMessages = psuMessages;
+    }
 }

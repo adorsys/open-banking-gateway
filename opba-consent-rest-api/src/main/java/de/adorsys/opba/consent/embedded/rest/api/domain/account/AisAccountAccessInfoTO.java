@@ -48,10 +48,10 @@ public class AisAccountAccessInfoTO {
     private AisAccountAccessTypeTO allPsd2;
 
     public boolean hasIbanInAccess(String iban) {
-        return availableAccounts != null ||
-                       allPsd2 != null ||
-                       accounts != null && accounts.contains(iban) ||
-                       balances != null && balances.contains(iban) ||
-                       transactions != null && transactions.contains(iban);
+        return availableAccounts != null
+                || allPsd2 != null
+                || accounts != null && accounts.contains(iban)
+                || balances != null && balances.contains(iban)
+                || transactions != null && transactions.contains(iban);
     }
 }

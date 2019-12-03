@@ -9,7 +9,7 @@ public class PsuScaDoneDataTO {
     private Boolean forgetConsent;
 
     @ApiModelProperty(value = "Set to true if PSU shall be redirected to the TPP, "
-    		+ "false if redirect information shall be returned in the response body. "
-    		+ "Null if no redirect information needed.",required = true)
+            + "false if redirect information shall be returned in the response body. "
+            + "Null if no redirect information needed.", required = true)
     private Boolean backToTpp;
 }

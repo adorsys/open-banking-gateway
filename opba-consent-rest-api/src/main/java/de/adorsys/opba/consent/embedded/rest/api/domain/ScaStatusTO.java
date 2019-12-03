@@ -4,34 +4,34 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ScaStatusTO {
-	RECEIVED("received"), 
-	PSUIDENTIFIED("psuIdentified"), 
-	PSUAUTHENTICATED("psuAuthenticated"),
-	SCAMETHODSELECTED("scaMethodSelected"), 
-	STARTED("started"), 
-	FINALISED("finalised"), 
-	FAILED("failed"),
-	EXEMPTED("exempted");
+    RECEIVED("received"),
+    PSUIDENTIFIED("psuIdentified"),
+    PSUAUTHENTICATED("psuAuthenticated"),
+    SCAMETHODSELECTED("scaMethodSelected"),
+    STARTED("started"),
+    FINALISED("finalised"),
+    FAILED("failed"),
+    EXEMPTED("exempted");
 
-	private String value;
+    private String value;
 
-	ScaStatusTO(String value) {
+    ScaStatusTO(String value) {
         this.value = value;
     }
 
-	@JsonCreator
-	public static ScaStatusTO fromValue(String text) {
-		for (ScaStatusTO b : ScaStatusTO.values()) {
-			if (String.valueOf(b.value).equals(text)) {
-				return b;
-			}
-		}
-		return null;
-	}
+    @JsonCreator
+    public static ScaStatusTO fromValue(String text) {
+        for (ScaStatusTO b : ScaStatusTO.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 
-	@Override
-	@JsonValue
-	public String toString() {
-		return String.valueOf(value);
-	}
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(value);
+    }
 }

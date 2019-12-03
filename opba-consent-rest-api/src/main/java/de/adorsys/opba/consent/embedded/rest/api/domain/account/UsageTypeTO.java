@@ -25,11 +25,11 @@ public enum UsageTypeTO {
     PRIV("PRIV"),
     ORGA("ORGA");
 
-    private final static Map<String, UsageTypeTO> container = new HashMap<>();
+    private static final Map<String, UsageTypeTO> CONTAINER = new HashMap<>();
 
     static {
         for (UsageTypeTO usageType : values()) {
-            container.put(usageType.getValue(), usageType);
+            CONTAINER.put(usageType.getValue(), usageType);
         }
     }
 
@@ -46,6 +46,6 @@ public enum UsageTypeTO {
 
 
     public static Optional<UsageTypeTO> getByValue(String value) {
-        return Optional.ofNullable(container.get(value));
+        return Optional.ofNullable(CONTAINER.get(value));
     }
 }
