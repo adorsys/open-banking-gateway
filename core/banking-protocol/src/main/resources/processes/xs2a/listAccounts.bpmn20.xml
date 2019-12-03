@@ -5,7 +5,7 @@
     <serviceTask id="listAccountsExecution" name="listAccountsExecution" flowable:delegateExpression="${accountListing}"></serviceTask>
     <callActivity id="consentCreationActivity" name="consentCreationActivity" calledElement="createConsent" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false">
       <extensionElements>
-        <flowable:out source="consentId" target="consentId"></flowable:out>
+        <flowable:out source="CONTEXT" target="CONTEXT"></flowable:out>
       </extensionElements>
     </callActivity>
     <exclusiveGateway id="consentPresentSelector" name="consentPresentSelector" default="sid-F6FD0347-EF1E-47BA-8E77-E7E096983E43"></exclusiveGateway>

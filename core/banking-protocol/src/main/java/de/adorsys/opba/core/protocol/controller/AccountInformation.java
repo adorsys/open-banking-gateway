@@ -1,5 +1,7 @@
 package de.adorsys.opba.core.protocol.controller;
 
+import de.adorsys.opba.core.protocol.service.xs2a.ContextFactory;
+import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 import static de.adorsys.opba.core.protocol.controller.constants.ApiPaths.ACCOUNTS;
 import static de.adorsys.opba.core.protocol.controller.constants.ApiVersion.API_1;
-import static de.adorsys.opba.core.protocol.service.xs2a.accounts.AccountListConst.ACCOUNT_LIST;
 
 @RestController
 @RequestMapping(API_1)
@@ -24,12 +26,19 @@ import static de.adorsys.opba.core.protocol.service.xs2a.accounts.AccountListCon
 public class AccountInformation {
 
     private final RuntimeService runtimeService;
+    private final ContextFactory contextFactory;
 
     @GetMapping(ACCOUNTS)
     @Transactional
     public ResponseEntity<List<AccountDetails>> accounts() {
-        ProcessInstance instance = runtimeService.startProcessInstanceByKey("listAccounts");
+        ProcessInstance instance = runtimeService.startProcessInstanceByKey(
+                "listAccounts",
+                contextFactory.createXs2aContext()
+        );
+
         ExecutionEntity exec = (ExecutionEntity) instance;
-        return ResponseEntity.ok(((AccountListHolder) exec.getVariable(ACCOUNT_LIST)).getAccounts());
+        return ResponseEntity.ok(
+                ((Xs2aContext) exec.getVariable(CONTEXT)).getResult(AccountListHolder.class).getAccounts()
+        );
     }
 }
