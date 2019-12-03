@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
-  <process id="authorizeConsent" name="authorizeConsent" isExecutable="true">
+  <process id="xs2aAuthorizeConsent" name="authorizeConsent" isExecutable="true">
     <startEvent id="consentAuthorizationStartEvent" flowable:formFieldValidation="true"></startEvent>
     <serviceTask id="startScaAuthorization" name="StartAuthorization" flowable:delegateExpression="${startAuthorization}"></serviceTask>
     <serviceTask id="consentPerformScaChallenge" name="Perform SCA challenge" flowable:delegateExpression="${doScaChallenge}"></serviceTask>
@@ -12,7 +12,7 @@
     <sequenceFlow id="sid-11B7B73B-361F-42E5-9094-1E99E3A85F5D" sourceRef="consentAuthorizationFinalize" targetRef="consentAuthorizationEndEvent"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_authorizeConsent">
-    <bpmndi:BPMNPlane bpmnElement="authorizeConsent" id="BPMNPlane_authorizeConsent">
+    <bpmndi:BPMNPlane bpmnElement="xs2aAuthorizeConsent" id="BPMNPlane_authorizeConsent">
       <bpmndi:BPMNShape bpmnElement="consentAuthorizationStartEvent" id="BPMNShape_consentAuthorizationStartEvent">
         <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="163.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>

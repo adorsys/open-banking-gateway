@@ -32,7 +32,7 @@ public class AccountInformation {
     @Transactional
     public ResponseEntity<List<AccountDetails>> accounts() {
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(
-                "listAccounts",
+                "xs2aListAccounts",
                 contextFactory.createXs2aContext()
         );
 

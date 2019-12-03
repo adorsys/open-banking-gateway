@@ -33,4 +33,4 @@ xs2a-profile:
   aspspScaApproaches:
 
 flowable:
-  process-definition-location-prefix: classpath*:/processes/xs2a/
+  process-definition-location-prefix: classpath*:/processes/**/
