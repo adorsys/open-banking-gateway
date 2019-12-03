@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
-  <process id="xs2aCreateConsent" name="createConsent" isExecutable="true">
+  <process id="xs2a-TransactionListCreateConsent" name="createConsent" isExecutable="true">
     <startEvent id="createConsentStartEvent" flowable:formFieldValidation="true"></startEvent>
-    <serviceTask id="consentInitiation" name="Initiate consent" flowable:delegateExpression="${xs2aAccountListConsentInitiate}"></serviceTask>
+    <serviceTask id="consentInitiation" name="Initiate consent" flowable:delegateExpression="${xs2aTransactionListConsentInitiate}"></serviceTask>
     <sequenceFlow id="sid-355BCB23-F128-4464-BE6E-4D40A1860587" sourceRef="createConsentStartEvent" targetRef="consentInitiation"></sequenceFlow>
     <exclusiveGateway id="consentAuthorizationDetection" default="consentAuthorizationExemption"></exclusiveGateway>
-    <serviceTask id="consentScaExemptionHandler" name="SCA Authorization exemption" flowable:delegateExpression="${scaExemption}"></serviceTask>
-    <callActivity id="consentScaChallengeSolver" name="SCA authorization" calledElement="xs2aAuthorizeConsent" flowable:inheritVariables="true" flowable:sameDeployment="true" flowable:fallbackToDefaultTenant="false"></callActivity>
+    <serviceTask id="consentScaExemptionHandler" name="SCA Authorization exemption" flowable:delegateExpression="${xs2aScaExemption}"></serviceTask>
+    <callActivity id="consentScaChallengeSolver" name="SCA authorization" calledElement="xs2a-AuthorizeConsent" flowable:inheritVariables="true" flowable:sameDeployment="true" flowable:fallbackToDefaultTenant="false"></callActivity>
     <endEvent id="consentInitiatedEvent"></endEvent>
     <sequenceFlow id="sid-0C51C282-61CF-4C80-AE97-FCF7EC56896B" sourceRef="consentScaExemptionHandler" targetRef="consentInitiatedEvent"></sequenceFlow>
     <sequenceFlow id="sid-2671BBFF-4D8A-4C15-93A9-BF8FF0E41E75" sourceRef="consentScaChallengeSolver" targetRef="consentInitiatedEvent"></sequenceFlow>
     <sequenceFlow id="consentAuthorizationExemption" sourceRef="consentAuthorizationDetection" targetRef="consentScaExemptionHandler"></sequenceFlow>
     <sequenceFlow id="sid-3C0DCE07-F245-4BB6-9397-936E87A2E1A2" sourceRef="consentInitiation" targetRef="consentAuthorizationDetection"></sequenceFlow>
     <sequenceFlow id="isScaChallengeNedeed" name="Authorize" sourceRef="consentAuthorizationDetection" targetRef="consentScaChallengeSolver">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{consentEvaluator.consentAuthorizationNeeded()}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentEvaluator.consentAuthorizationNeeded()}]]></conditionExpression>
     </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-create-consent">
-    <bpmndi:BPMNPlane bpmnElement="xs2aCreateConsent" id="BPMNPlane_xs2a-create-consent">
+    <bpmndi:BPMNPlane bpmnElement="xs2a-TransactionListCreateConsent" id="BPMNPlane_xs2a-create-consent">
       <bpmndi:BPMNShape bpmnElement="createConsentStartEvent" id="BPMNShape_createConsentStartEvent">
         <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="163.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>

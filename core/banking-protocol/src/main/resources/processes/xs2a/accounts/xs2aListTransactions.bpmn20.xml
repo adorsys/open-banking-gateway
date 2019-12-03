@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" targetNamespace="http://www.flowable.org/processdef" exporter="Camunda Modeler" exporterVersion="3.4.1">
-  <process id="xs2a-ListAccounts" name="listAccounts" isExecutable="true">
+  <process id="xs2a-ListTransactions" name="listTransactions" isExecutable="true">
     <startEvent id="withConsentStartEvent" flowable:formFieldValidation="true" />
-    <serviceTask id="withConsentExecution" name="withConsentExecution" flowable:delegateExpression="${xs2aAccountListing}" />
-    <callActivity id="consentCreationActivity" name="consentCreationActivity" calledElement="xs2a-AccountListCreateConsent" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false">
+    <serviceTask id="withConsentExecution" name="withConsentExecution" flowable:delegateExpression="${xs2aTransactionListing}" />
+    <callActivity id="consentCreationActivity" name="consentCreationActivity" calledElement="xs2a-TransactionListCreateConsent" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false">
       <extensionElements>
         <flowable:out source="CONTEXT" target="CONTEXT" />
       </extensionElements>
@@ -18,12 +18,12 @@
     </sequenceFlow>
     <sequenceFlow id="sid-66819A9E-0591-4334-95D1-64A681AEA554" sourceRef="consentCreationActivity" targetRef="withConsentExecution" />
   </process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_listAccounts">
-    <bpmndi:BPMNPlane id="BPMNPlane_listAccounts" bpmnElement="xs2a-ListAccounts">
-      <bpmndi:BPMNShape id="BPMNShape_listAccountsStartEvent" bpmnElement="withConsentStartEvent">
+  <bpmndi:BPMNDiagram id="BPMNDiagram_listTransactions">
+    <bpmndi:BPMNPlane id="BPMNPlane_listTransactions" bpmnElement="xs2a-ListTransactions">
+      <bpmndi:BPMNShape id="BPMNShape_listTransactionsStartEvent" bpmnElement="withConsentStartEvent">
         <omgdc:Bounds x="160" y="163" width="30" height="30" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_listAccountsExecution" bpmnElement="withConsentExecution">
+      <bpmndi:BPMNShape id="BPMNShape_listTransactionsExecution" bpmnElement="withConsentExecution">
         <omgdc:Bounds x="375" y="64" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_consentCreationActivity" bpmnElement="consentCreationActivity">
@@ -35,7 +35,7 @@
           <omgdc:Bounds x="210" y="198" width="90" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_listAccountsEndEvent" bpmnElement="withConsentEndEvent">
+      <bpmndi:BPMNShape id="BPMNShape_listTransactionsEndEvent" bpmnElement="withConsentEndEvent">
         <omgdc:Bounds x="570" y="90" width="28" height="28" />
         <bpmndi:BPMNLabel>
           <omgdc:Bounds x="541" y="118" width="87" height="27" />

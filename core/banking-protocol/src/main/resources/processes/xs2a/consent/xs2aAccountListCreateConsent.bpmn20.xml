@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="xs2a-AccountListCreateConsent" name="createConsent" isExecutable="true">
+    <startEvent id="createConsentStartEvent" flowable:formFieldValidation="true"></startEvent>
+    <serviceTask id="consentInitiation" name="Initiate consent" flowable:delegateExpression="${xs2aAccountListConsentInitiate}"></serviceTask>
+    <sequenceFlow id="sid-355BCB23-F128-4464-BE6E-4D40A1860587" sourceRef="createConsentStartEvent" targetRef="consentInitiation"></sequenceFlow>
+    <exclusiveGateway id="consentAuthorizationDetection" default="consentAuthorizationExemption"></exclusiveGateway>
+    <serviceTask id="consentScaExemptionHandler" name="SCA Authorization exemption" flowable:delegateExpression="${xs2aScaExemption}"></serviceTask>
+    <callActivity id="consentScaChallengeSolver" name="SCA authorization" calledElement="xs2a-AuthorizeConsent" flowable:inheritVariables="true" flowable:sameDeployment="true" flowable:fallbackToDefaultTenant="false"></callActivity>
+    <endEvent id="consentInitiatedEvent"></endEvent>
+    <sequenceFlow id="sid-0C51C282-61CF-4C80-AE97-FCF7EC56896B" sourceRef="consentScaExemptionHandler" targetRef="consentInitiatedEvent"></sequenceFlow>
+    <sequenceFlow id="sid-2671BBFF-4D8A-4C15-93A9-BF8FF0E41E75" sourceRef="consentScaChallengeSolver" targetRef="consentInitiatedEvent"></sequenceFlow>
+    <sequenceFlow id="consentAuthorizationExemption" sourceRef="consentAuthorizationDetection" targetRef="consentScaExemptionHandler"></sequenceFlow>
+    <sequenceFlow id="sid-3C0DCE07-F245-4BB6-9397-936E87A2E1A2" sourceRef="consentInitiation" targetRef="consentAuthorizationDetection"></sequenceFlow>
+    <sequenceFlow id="isScaChallengeNedeed" name="Authorize" sourceRef="consentAuthorizationDetection" targetRef="consentScaChallengeSolver">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentEvaluator.consentAuthorizationNeeded()}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-create-consent">
+    <bpmndi:BPMNPlane bpmnElement="xs2a-AccountListCreateConsent" id="BPMNPlane_xs2a-create-consent">
+      <bpmndi:BPMNShape bpmnElement="createConsentStartEvent" id="BPMNShape_createConsentStartEvent">
+        <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="163.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="consentInitiation" id="BPMNShape_consentInitiation">
+        <omgdc:Bounds height="80.0" width="100.0" x="201.75" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="consentAuthorizationDetection" id="BPMNShape_consentAuthorizationDetection">
+        <omgdc:Bounds height="40.0" width="40.0" x="375.0" y="158.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="consentScaExemptionHandler" id="BPMNShape_consentScaExemptionHandler">
+        <omgdc:Bounds height="80.0" width="100.0" x="480.0" y="232.11666870117188"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="consentScaChallengeSolver" id="BPMNShape_consentScaChallengeSolver">
+        <omgdc:Bounds height="80.0" width="100.0" x="480.0" y="90.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="consentInitiatedEvent" id="BPMNShape_consentInitiatedEvent">
+        <omgdc:Bounds height="28.0" width="28.0" x="645.0" y="164.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-355BCB23-F128-4464-BE6E-4D40A1860587" id="BPMNEdge_sid-355BCB23-F128-4464-BE6E-4D40A1860587">
+        <omgdi:waypoint x="129.9499990227659" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="201.74999999996209" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-0C51C282-61CF-4C80-AE97-FCF7EC56896B" id="BPMNEdge_sid-0C51C282-61CF-4C80-AE97-FCF7EC56896B">
+        <omgdi:waypoint x="579.95" y="235.63733974722928"></omgdi:waypoint>
+        <omgdi:waypoint x="647.6893756776362" y="186.22260799347364"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-2671BBFF-4D8A-4C15-93A9-BF8FF0E41E75" id="BPMNEdge_sid-2671BBFF-4D8A-4C15-93A9-BF8FF0E41E75">
+        <omgdi:waypoint x="579.95" y="148.58604651162796"></omgdi:waypoint>
+        <omgdi:waypoint x="645.8661401870414" y="173.11640311440163"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-3C0DCE07-F245-4BB6-9397-936E87A2E1A2" id="BPMNEdge_sid-3C0DCE07-F245-4BB6-9397-936E87A2E1A2">
+        <omgdi:waypoint x="301.6999999999982" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="375.0" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="consentAuthorizationExemption" id="BPMNEdge_consentAuthorizationExemption">
+        <omgdi:waypoint x="406.75415171709204" y="186.19507175637798"></omgdi:waypoint>
+        <omgdi:waypoint x="479.99999999999994" y="237.25864325629337"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="isScaChallengeNedeed" id="BPMNEdge_isScaChallengeNedeed">
+        <omgdi:waypoint x="409.7172131147541" y="172.75409836065575"></omgdi:waypoint>
+        <omgdi:waypoint x="480.0" y="147.76"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

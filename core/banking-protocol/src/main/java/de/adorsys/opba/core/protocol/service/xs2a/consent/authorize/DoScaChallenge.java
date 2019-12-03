@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 
-@Service("doScaChallenge")
+@Service("xs2aDoScaChallenge")
 @RequiredArgsConstructor
 public class DoScaChallenge implements JavaDelegate {
 

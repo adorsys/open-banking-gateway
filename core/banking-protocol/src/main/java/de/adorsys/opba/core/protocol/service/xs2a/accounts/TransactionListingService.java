@@ -1,11 +1,11 @@
 package de.adorsys.opba.core.protocol.service.xs2a.accounts;
 
 import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
+import de.adorsys.opba.core.protocol.service.xs2a.context.TransactionListXs2aContext;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.RequestParams;
 import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
+import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
@@ -14,20 +14,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 
-@Service("xs2aAccountListing")
+@Service("xs2aTransactionListing")
 @RequiredArgsConstructor
-public class AccountListingService implements JavaDelegate {
+public class TransactionListingService implements JavaDelegate {
 
     private final AccountInformationService ais;
 
     @Override
     @Transactional
     public void execute(DelegateExecution delegateExecution) {
-        Xs2aContext context = delegateExecution.getVariable(CONTEXT, Xs2aContext.class);
+        TransactionListXs2aContext context = delegateExecution.getVariable(CONTEXT, TransactionListXs2aContext.class);
 
-        Response<AccountListHolder> accounts = ais.getAccountList(
+        // FIXME: First you need to call Account list (Sandbox issue), otherwise, your consent will be incorrect
+        Response<TransactionsReport> accounts = ais.getTransactionList(
+                context.getResourceId(),
                 context.toHeaders(),
-                RequestParams.fromMap(ImmutableMap.of("withBalance", "false"))
+                RequestParams.fromMap(ImmutableMap.of("bookingStatus", "BOTH", "withBalance", "true", "dateFrom", "2018-01-01", "dateTo" , "2020-09-30"))
         );
 
         context.setResult(accounts.getBody());

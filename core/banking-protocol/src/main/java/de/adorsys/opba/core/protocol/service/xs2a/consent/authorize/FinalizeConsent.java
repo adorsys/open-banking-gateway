@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 
-@Service("finalizeConsent")
+@Service("xs2aFinalizeConsent")
 @RequiredArgsConstructor
 public class FinalizeConsent implements JavaDelegate {
 

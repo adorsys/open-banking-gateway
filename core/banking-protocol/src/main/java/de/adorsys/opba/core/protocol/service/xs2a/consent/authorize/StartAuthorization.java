@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 
-@Service("startAuthorization")
+@Service("xs2aStartAuthorization")
 @RequiredArgsConstructor
 public class StartAuthorization implements JavaDelegate {
 
