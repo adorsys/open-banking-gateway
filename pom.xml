@@ -80,7 +80,6 @@
         <junit.platform.commons.version>1.4.1</junit.platform.commons.version>
         <checkstyle-plugin.version>3.1.0</checkstyle-plugin.version>
         <spotbugs-plugin.version>3.1.12.2</spotbugs-plugin.version>
-
     </properties>
 
     <repositories>
@@ -305,6 +304,34 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.12.0</version>
+                <configuration>
+                    <includeTests>true</includeTests>
+                    <minimumTokens>100</minimumTokens>
+                    <linkXref>true</linkXref>
+                    <targetJdk>${java.version}</targetJdk>
+                    <rulesets>
+                        <ruleset>${maven.multiModuleProjectDirectory}/pmd-ruleset.xml</ruleset>
+                    </rulesets>
+                    <failOnViolation>true</failOnViolation>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>pmd</goal>
+                            <goal>cpd</goal>
+                            <goal>cpd-check</goal>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!--
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
