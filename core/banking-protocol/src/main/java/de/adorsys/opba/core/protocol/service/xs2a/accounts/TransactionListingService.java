@@ -28,7 +28,7 @@ public class TransactionListingService implements JavaDelegate {
         Response<TransactionsReport> accounts = ais.getTransactionList(
                 context.getResourceId(),
                 context.toHeaders(),
-                RequestParams.fromMap(ImmutableMap.of("bookingStatus", "BOTH", "withBalance", "true", "dateFrom", "2018-01-01", "dateTo" , "2020-09-30"))
+                RequestParams.fromMap(ImmutableMap.of("bookingStatus", "BOTH", "withBalance", String.valueOf(context.isWithBalance()), "dateFrom", "2018-01-01", "dateTo" , "2020-09-30"))
         );
 
         context.setResult(accounts.getBody());

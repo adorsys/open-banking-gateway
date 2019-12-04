@@ -14,8 +14,12 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_IP_ADDRESS;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_GTW_ASPSP_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 
+// TODO - Make immutable, modify only with toBuilder
 @Data
 public class Xs2aContext {
+
+    // Application required
+    private long bankConfigId = 1;
 
     // Mandatory static
     private String psuId;
@@ -25,6 +29,9 @@ public class Xs2aContext {
 
     // Mandatory dynamic
     private String psuIpAddress;
+
+    // Optional consent-specific
+    private boolean withBalance;
 
     // In-process
     private String consentId;

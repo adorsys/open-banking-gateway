@@ -19,6 +19,7 @@ spring:
     change-log: classpath:migration/master.xml
     parameters:
       table-prefix: opb_
+      fill-with-mock-data: true
 pkcs12:
   keyStore: sample-qwac.keystore
   password: password
