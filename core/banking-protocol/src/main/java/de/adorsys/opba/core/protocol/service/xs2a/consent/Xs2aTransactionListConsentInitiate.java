@@ -55,7 +55,6 @@ public class Xs2aTransactionListConsentInitiate implements JavaDelegate {
 
     private AccountReference reference(TransactionListXs2aContext ctx) {
         AccountReference account = new AccountReference();
-        // FIXME AccountReferenceAccessValidator validates it by resourceId, but how to set it ?
         account.setIban(ctx.getIban());
         account.setCurrency(ctx.getCurrency());
         return account;

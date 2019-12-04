@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="xs2a-authorize-consent" name="xs2a-authorize-consent" isExecutable="true">
+    <documentation>XS2A consent authorization process</documentation>
+    <startEvent id="start" name="start" flowable:formFieldValidation="true"></startEvent>
+    <serviceTask id="startAuthorization" name="Start SCA authorization" flowable:delegateExpression="${xs2aStartAuthorization}"></serviceTask>
+    <serviceTask id="scaChallenge" name="Perform SCA challenge" flowable:delegateExpression="${xs2aDoScaChallenge}"></serviceTask>
+    <serviceTask id="finalizeAuthoration" name="Finalize authorization" flowable:delegateExpression="${xs2aFinalizeConsent}"></serviceTask>
+    <endEvent id="end" name="end"></endEvent>
+    <sequenceFlow id="sid-1139B3D0-261B-4594-B84F-638928669262" sourceRef="start" targetRef="startAuthorization"></sequenceFlow>
+    <sequenceFlow id="sid-79A26390-A2CB-4D44-AA97-D08875EDDF35" sourceRef="startAuthorization" targetRef="scaChallenge"></sequenceFlow>
+    <sequenceFlow id="sid-3E4021E2-4726-4056-97A0-A40CABFCEDBA" sourceRef="scaChallenge" targetRef="finalizeAuthoration"></sequenceFlow>
+    <sequenceFlow id="sid-92E22B43-DFA8-4791-A2EA-4ADF944B4889" sourceRef="finalizeAuthoration" targetRef="end"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
+    <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="163.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="startAuthorization" id="BPMNShape_startAuthorization">
+        <omgdc:Bounds height="80.0" width="100.0" x="195.0" y="140.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="scaChallenge" id="BPMNShape_scaChallenge">
+        <omgdc:Bounds height="80.0" width="100.0" x="345.0" y="140.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="finalizeAuthoration" id="BPMNShape_finalizeAuthoration">
+        <omgdc:Bounds height="80.0" width="100.0" x="495.0" y="140.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+        <omgdc:Bounds height="28.0" width="28.0" x="660.0" y="166.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-1139B3D0-261B-4594-B84F-638928669262" id="BPMNEdge_sid-1139B3D0-261B-4594-B84F-638928669262">
+        <omgdi:waypoint x="129.94818070118578" y="178.2299735565482"></omgdi:waypoint>
+        <omgdi:waypoint x="194.99999999999898" y="179.23076923076923"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-92E22B43-DFA8-4791-A2EA-4ADF944B4889" id="BPMNEdge_sid-92E22B43-DFA8-4791-A2EA-4ADF944B4889">
+        <omgdi:waypoint x="594.95" y="180.0"></omgdi:waypoint>
+        <omgdi:waypoint x="660.0" y="180.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-79A26390-A2CB-4D44-AA97-D08875EDDF35" id="BPMNEdge_sid-79A26390-A2CB-4D44-AA97-D08875EDDF35">
+        <omgdi:waypoint x="294.9499999999581" y="180.0"></omgdi:waypoint>
+        <omgdi:waypoint x="345.0" y="180.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-3E4021E2-4726-4056-97A0-A40CABFCEDBA" id="BPMNEdge_sid-3E4021E2-4726-4056-97A0-A40CABFCEDBA">
+        <omgdi:waypoint x="444.9499999999581" y="180.0"></omgdi:waypoint>
+        <omgdi:waypoint x="495.0" y="180.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

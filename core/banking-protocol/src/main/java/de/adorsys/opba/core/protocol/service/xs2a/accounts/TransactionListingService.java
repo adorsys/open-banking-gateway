@@ -25,7 +25,6 @@ public class TransactionListingService implements JavaDelegate {
     public void execute(DelegateExecution delegateExecution) {
         TransactionListXs2aContext context = delegateExecution.getVariable(CONTEXT, TransactionListXs2aContext.class);
 
-        // FIXME: First you need to call Account list (Sandbox issue), otherwise, your consent will be incorrect
         Response<TransactionsReport> accounts = ais.getTransactionList(
                 context.getResourceId(),
                 context.toHeaders(),

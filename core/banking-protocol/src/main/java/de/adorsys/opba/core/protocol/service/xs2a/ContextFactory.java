@@ -37,7 +37,7 @@ public class ContextFactory {
         context.setRequestId("2f77a125-aa7a-45c0-b414-cea25a116035");
         context.setGatewayAspspId("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46");
         context.setPsuIpAddress("1.1.1.1");
-        context.setResourceId("rHyIzv2QSkMj0I6wcauxiU");
+        context.setResourceId("d2ZqA1ObSS0qfd4geGdAFw"); // account ID
         context.setCurrency("EUR");
         context.setIban("DE80760700240271232400");
         return context;

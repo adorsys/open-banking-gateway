@@ -27,7 +27,7 @@ public class AccountListingService implements JavaDelegate {
 
         Response<AccountListHolder> accounts = ais.getAccountList(
                 context.toHeaders(),
-                RequestParams.fromMap(ImmutableMap.of("withBalance", "false"))
+                RequestParams.fromMap(ImmutableMap.of("withBalance", "true"))
         );
 
         context.setResult(accounts.getBody());

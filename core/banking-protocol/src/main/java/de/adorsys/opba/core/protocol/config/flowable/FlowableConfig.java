@@ -26,8 +26,11 @@ public class FlowableConfig {
     ) {
         return engineConfiguration ->
                 engineConfiguration.setCustomPreVariableTypes(
-                        new ArrayList<>(ImmutableList.of(
-                                new AsJsonVariableType(mapper, serializableClassesPrefix, maxLength))
+                        new ArrayList<>(
+                                ImmutableList.of(
+                                        new JsonCustomSerializer(mapper, serializableClassesPrefix, maxLength),
+                                        new LargeJsonCustomSerializer(mapper, serializableClassesPrefix, maxLength)
+                                )
                         )
         );
     }

@@ -12,7 +12,7 @@ import java.util.Map;
 
 // TODO: Secure serialized values with some encryption.
 @RequiredArgsConstructor
-class AsJsonVariableType implements VariableType {
+class JsonCustomSerializer implements VariableType {
 
     static final String JSON = "as_json";
 
@@ -48,9 +48,15 @@ class AsJsonVariableType implements VariableType {
     @Override
     @SneakyThrows
     public void setValue(Object o, ValueFields valueFields) {
-        valueFields.setTextValue(mapper.writeValueAsString(ImmutableMap.of(
-                o.getClass().getCanonicalName(),
-                o
+        if (o == null) {
+            valueFields.setTextValue(null);
+            return;
+        }
+
+        valueFields.setTextValue(mapper.writeValueAsString(
+                ImmutableMap.of(
+                        o.getClass().getCanonicalName(),
+                        o
         )));
     }
 
