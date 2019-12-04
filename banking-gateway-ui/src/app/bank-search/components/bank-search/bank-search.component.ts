@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {BankSearchService} from "../../services/bank-search.service";
+import {Bank} from "../../models/bank.model";
 
 @Component({
   selector: 'app-bank-search',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BankSearchComponent implements OnInit {
 
-  constructor() { }
+  private searchedBanks: Bank[];
+
+  constructor(private bankSearchService: BankSearchService) { }
 
   ngOnInit() {
+    this.bankSearchService.getBanks().subscribe((banks: Bank[]) => this.searchedBanks = banks);
+  }
+
+  onSearch() {
+
   }
 
 }
