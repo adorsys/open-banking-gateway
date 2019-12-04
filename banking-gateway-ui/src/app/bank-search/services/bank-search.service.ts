@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Bank} from "../models/bank.model";
-import { of } from 'rxjs';
+import {Observable, of} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,11 @@ export class BankSearchService {
 
   constructor() { }
 
-  getBanks() {
+  getBanks(): Observable<Bank[]> {
     return of(BankSearchService.BANK_STUBS);
+  }
+
+  searchBanks(keyword: string): Observable<Bank[]> {
+    return of(BankSearchService.BANK_STUBS.filter(bank => bank.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase())));
   }
 }

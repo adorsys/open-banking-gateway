@@ -14,11 +14,15 @@ export class BankSearchComponent implements OnInit {
   constructor(private bankSearchService: BankSearchService) { }
 
   ngOnInit() {
-    this.bankSearchService.getBanks().subscribe((banks: Bank[]) => this.searchedBanks = banks);
+    this.bankSearchService
+      .getBanks()
+      .subscribe((banks: Bank[]) => this.searchedBanks = banks);
   }
 
-  onSearch() {
-
+  onSearch(keyword: string) {
+    this.bankSearchService
+      .searchBanks(keyword)
+      .subscribe((banks: Bank[]) => this.searchedBanks = banks);
   }
 
 }
