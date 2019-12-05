@@ -1,6 +1,6 @@
 @startuml
 
-autonumber "<b><color blue>[00]"
+autonumber 100 "<b><color blue>[Search-000]</color></b>"
 actor psu
 
 box "PsuUserAgent" #LightGray

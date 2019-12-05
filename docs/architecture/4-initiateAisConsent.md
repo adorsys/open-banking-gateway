@@ -66,6 +66,8 @@ Encrypted [TppConsentSession](dictionary.md#TppConsentSession) shall only be sto
 Auto Cleanup process will make sure all expired redirect sessions are removed from that storage.
 
 #### 6.5 [RedirectSessionStoreApi](dictionary.md#RedirectSessionStoreApi) returns redirectCode to BankingProtocol
+The [redirectCode](dictionary.md#redirectCode) is a one time string that contains information used to retrieve redirectInfo from the TPP Server in a back channel.
+The redirectCode is short lived (like 10 seconds). This is, TPP server does not need to hold the record indexed by this redirectCode for more than the given expiration time. Record must also be deleted by the TPP on first retrieval by the ConsentAPI.
 
 #### 6.6 BankingProtocol reproduces [PsuConsentSession](dictionary.md#PsuConsentSession) from the [TppConsentSession](dictionary.md#TppConsentSession)
 
@@ -86,3 +88,4 @@ Service request ist forwarded to the [AspspBankingApi](dictionary.md#AspspBankin
 The Associated [TppContext](dictionary.md#TppContext) contains Tpp identifying information.
 
 #### 7.2 Returned Service Response if sent and displayed to the PSU.
+

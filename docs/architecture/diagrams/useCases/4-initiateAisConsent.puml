@@ -1,6 +1,6 @@
 @startuml
 
-autonumber "<b><color blue>[00]"
+autonumber 10 10 "<b><color blue>[InitConsent-000]</color></b>"
 actor psu
 
 box "PsuUserAgent" #LightGray
@@ -29,19 +29,19 @@ end box
 FinTechUI --> psu : displayBankServices(BankProfile)
 psu -> FinTechUI ++ : selectService\n"listBankAccounts(BankProfile)"
 FinTechUI -> FinTechApi ++ : listBankAccounts[FinTechLoginSessionCookie,\nUserAgentContext](BankProfile,ListBankAccountSpec)<>
-autonumber 31 1 "<b><color blue>[000]"
+autonumber 31 1 "<b><color blue>[InitConsent-000]"
 FinTechApi -> FinTechApi : psuConsentSession\n(FinTechLoginSessionCookie,\nBankProfile,ListBankAccountSpec)<>
-autonumber 4 1 "<b><color blue>[00]"
+autonumber 40 1 "<b><color blue>[InitConsent-000]"
 FinTechApi -> TppBankingApi ++ : listBankAccounts[UserAgentContext,\nPsuConsentSession,FinTechContext]\n(BankProfile,ListBankAccountSpec)<>
-autonumber 41 1 "<b><color blue>[000]"
+autonumber 41 1 "<b><color blue>[InitConsent-000]"
 TppBankingApi -> TppBankingApi : BankProfile.bankingProtocol():BankingProtocol
-autonumber 5 1 "<b><color blue>[00]"
+autonumber 50 1 "<b><color blue>[InitConsent-000]"
 TppBankingApi -> BankingProtocol ++ : listBankAccounts[UserAgentContext, PsuConsentSession]\n(BankProfile, ListBankAccountSpec) 
 
 autonumber 51 1 "<b><color blue>[000]"
 BankingProtocol -> BankingProtocol : PsuConsentSession.tppConsentSession()\n:TppConsentSession
 alt TppConsentSession.noConsentPresent()
-    autonumber 61 1 "<b><color blue>[000]"
+    autonumber 61 1 "<b><color blue>[InitConsent-000]"
     BankingProtocol -> AspspBankingApi ++ : initiateConsent[UserAgentContext,\nTppContext](AisConsent) 
     return 200_OK(TppConsentSession,\nAspspRedirectInfo)
     BankingProtocol -> RedirectSessionStoreApi ++ : redirectSession(TppConsentSession, exp)
@@ -52,7 +52,7 @@ alt TppConsentSession.noConsentPresent()
     return 200_Ok(PsuConsentSession,\nConsentAuthorisationApi\n.entryPoint()<redirectCode>)
     return redirect302[ConsentAuthorisationApi.entryPoint()<redirectCode>,\nFintechLoginSessionCookie]()
 else TppConsentSession.consentPresent()
-    autonumber 71 1 "<b><color blue>[000]"
+    autonumber 71 1 "<b><color blue>[InitConsent-000]"
     activate BankingProtocol
     BankingProtocol -> AspspBankingApi ++ : listOfAccounts[UserAgentContext,\nTppContext](AisConsent) 
     return 200_OK[](BankAccounts)

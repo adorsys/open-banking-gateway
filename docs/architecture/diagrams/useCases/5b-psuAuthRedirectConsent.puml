@@ -1,6 +1,6 @@
 @startuml PsuAuthorizeRedirectConsent
 title PsuAuthorizeRedirectConsent
-autonumber "<b><color blue>[00]"
+autonumber 10 10 "<b><color blue>[AuthRedirect-000]</color></b>"
 actor psu
 
 box "PsuUserAgent" #LightGray
@@ -16,8 +16,8 @@ box "TppDC" #LightGray
     participant "TppBankSearchApi" as TppBankSearchApi
     participant "ConsentAuthorisationApi" as ConsentAuthorisationApi
 
-    participant "RedirectSessionStoreApi" as RedirectSessionStoreApi
     participant "BankingProtocol" as BankingProtocol
+    participant "RedirectSessionStoreApi" as RedirectSessionStoreApi
 end box
 box "AspspDC" #LightSkyBlue
 	participant "AspspBankingApi" as AspspBankingApi
@@ -26,51 +26,54 @@ end box
 
 == Initiate consent upon PSU transaction display request : call[header](body)<params> return code[header](body) ==
 
-FinTechUI -> ConsentAuthorisationApi ++ : GET:ConsentAuthorisationApi.redirectAuthEntryPoint[UserAgentContext]()<redirectCode>
-ConsentAuthorisationApi -> RedirectSessionStoreApi ++ : redirectSession(redirectCode)
-RedirectSessionStoreApi -> RedirectSessionStoreApi : loadDeryptDeleteRedirectSession\n(redirectCode):TppConsentSession
-return TppConsentSession
-ConsentAuthorisationApi -> ConsentAuthorisationUI ++ : 200_OK[Psu2TppConsentSessionCookie,\nConsentAuthorisationUI.infoPanel](TppConsentSession)
-deactivate ConsentAuthorisationApi
-ConsentAuthorisationUI --> psu : displayTpp2AspspRedirectionInfoPanel()
+ConsentAuthorisationApi --> ConsentAuthorisationUI ++ : displayRedirectInfoPage[ConsentAuthSessionCookie,\nConsentAuthorisationUI.infoPanel](AuthorizeResponse)
+ConsentAuthorisationUI --> psu : displayRedirectInfoPage()
 deactivate ConsentAuthorisationUI
 psu -> ConsentAuthorisationUI ++ : confirmRedirect()
-ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:ConsentAuthorisationApi.confirmRedirect[Psu2TppConsentSessionCookie]()<consentSessionState>
+ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:confirmRedirect\n[ConsentAuthSessionCookie]()<consentSessionState>
 deactivate ConsentAuthorisationUI
-ConsentAuthorisationApi --> OnlineBankingUI ++ : redirect302[OnlineBankingApi.redirectEntryPoint]\n()<consentId, authorizationId>
-group Psu2AspspConsentSession
+ConsentAuthorisationApi --> OnlineBankingUI ++ : redirect302[ConsentAuthSessionCookie,\nOnlineBankingApi.redirectEntryPoint]\n()<consentId, authorizationId>
+deactivate ConsentAuthorisationApi
+autonumber stop
+group OnlineBankingConsent
     OnlineBankingUI -> OnlineBankingApi ++ : redirectEntryPoint[]()<consentId, authorizationId>
-    return redirect302[Psu2AspspConsentSession, OnlineBankingUI.loginScreen, Psu2AspspConsentSessionCookie]()<consentId, authorizationId>
+    return redirect302[OnlineBankingConsent, OnlineBankingUI.loginScreen, OnlineBankingConsentSessionCookie]()<consentId, authorizationId>
     OnlineBankingUI --> psu : displayLoginScreen()
     deactivate OnlineBankingUI
     psu -> OnlineBankingUI ++ : loginData(PsuAuthData)
-    OnlineBankingUI -> OnlineBankingApi ++ : POST:login[Psu2AspspConsentSessionCookie](PsuAuthData)<consentId, authorizationId> 
-    return 200_OK[Psu2AspspConsentSessionCookie,OnlineBankingApi.selectScaMethod](Psu2AspspConsentSession,ScaMethods)
+    OnlineBankingUI -> OnlineBankingApi ++ : POST:login[OnlineBankingConsentSessionCookie](PsuAuthData)<consentId, authorizationId> 
+    return 200_OK[OnlineBankingConsentSessionCookie,OnlineBankingApi.selectScaMethod](OnlineBankingConsent,ScaMethods)
     return displayAisConsentAndScaMethods(ScaMethods)
     psu -> OnlineBankingUI ++ : selectScaMethod(selectedScaMethod)
-    OnlineBankingUI -> OnlineBankingApi ++ : GET:selectScaMethod[Psu2AspspConsentSessionCookie](selectedScaMethod)<consentId, authorizationId> 
-    return 200_OK[Psu2AspspConsentSessionCookie,OnlineBankingApi.enterOTP](Psu2AspspConsentSession,ScaData)
-    return displayAisConsentAndOTPScreen\n(Psu2AspspConsentSession.otpMetaData)
+    OnlineBankingUI -> OnlineBankingApi ++ : GET:selectScaMethod[OnlineBankingConsentSessionCookie](selectedScaMethod)<consentId, authorizationId> 
+    return 200_OK[OnlineBankingConsentSessionCookie,OnlineBankingApi.enterOTP](OnlineBankingConsent,ScaData)
+    return displayAisConsentAndOTPScreen\n(OnlineBankingConsent.otpMetaData)
     psu -> OnlineBankingUI ++ : enterOTP(otp)
-    OnlineBankingUI -> OnlineBankingApi ++ : authorizeConsent[Psu2AspspConsentSessionCookie](TAN)<consentId, authorizationId> 
-    return 200_OK[Psu2AspspConsentSessionCookie,\nOnlineBankingUI.infoPanel](Psu2AspspConsentSession)
+    OnlineBankingUI -> OnlineBankingApi ++ : authorizeConsent[OnlineBankingConsentSessionCookie](TAN)<consentId, authorizationId> 
+    return 200_OK[OnlineBankingConsentSessionCookie,\nOnlineBankingUI.infoPanel](OnlineBankingConsent)
     OnlineBankingUI --> psu : displayAspsp2TppRedirectionInfoPanel()
     deactivate OnlineBankingUI
     psu -> OnlineBankingUI ++ : confirmRedirect()
-    OnlineBankingUI -> OnlineBankingApi ++ : GET:OnlineBankingApi.confirmRedirect[Psu2AspspConsentSessionCookie]()<consentId, authorizationId>
+    OnlineBankingUI -> OnlineBankingApi ++ : GET:OnlineBankingApi.confirmRedirect[OnlineBankingConsentSessionCookie]()<consentId, authorizationId>
     deactivate OnlineBankingUI
-    OnlineBankingApi --> ConsentAuthorisationUI ++ : redirect302[OnlineBankingApi.TPP-Redirect-URI]\n()<consentId, authorizationId>
+    OnlineBankingApi --> ConsentAuthorisationUI ++ : redirect302[OnlineBankingApi.TPP-Redirect-URI]\n()<consentAuthState>
     deactivate OnlineBankingApi
 end
+autonumber resume
 activate ConsentAuthorisationUI
-ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:TPP-Redirect-URI[Psu2TppConsentSessionCookie]()<consentId, authorizationId>
-ConsentAuthorisationApi -> BankingProtocol ++ : getConsentStatus(consentId)
-BankingProtocol -> OnlineBankingApi ++ : getConsentStatus[consentId, TppContext]()
+ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:aspspAuthSuccess[ConsentAuthSessionCookie]()<consentAuthState, aspspAuthCode>
+autonumber 71 1 "<b><color blue>[AuthRedirect-000]"
+ConsentAuthorisationApi -> ConsentAuthorisationApi : ConsentAuthSessionCookie.tppConsentSession\n(consentAuthState):TppConsentSession
+ConsentAuthorisationApi -> ConsentAuthorisationApi : getBankingProtocol(TppConsentSession)
+ConsentAuthorisationApi -> BankingProtocol ++ : aspspAuthSuccess(TppConsentSession, aspspAuthCode)
+group RetrievASPSPConsent
+BankingProtocol -> OnlineBankingApi ++ : getConsentStatus or getToken[TppConsentSession, TppContext, aspspAuthCode]()
 return TppConsentSession
 BankingProtocol -> BankingProtocol : TppConsentSession\n.tppConsentSession():TppConsentSession
-return 200_OK(TppConsentSession)
-ConsentAuthorisationApi -> RedirectSessionStoreApi ++ : redirectSession(TppConsentSession, exp)
+end
+BankingProtocol -> RedirectSessionStoreApi ++ : redirectSession(TppConsentSession, exp)
 RedirectSessionStoreApi -> RedirectSessionStoreApi : createEncryptStoreRedirectSession\n(TppConsentSession):redirectCode
 return 200_OK[](redirectCode)<>
-return redirect302[Psu2TppConsentSessionCookie=null,\nFinTechApi.FinTech-Redirect-URI<redirectCode>]()
+return 200_OK(TppConsentSession)
+return redirect302[ConsentAuthSessionCookie=null,\nFinTechApi.FinTech-Redirect-URI<redirectCode>]()
 @enduml
