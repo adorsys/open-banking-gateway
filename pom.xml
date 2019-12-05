@@ -80,6 +80,7 @@
         <junit.platform.commons.version>1.4.1</junit.platform.commons.version>
         <checkstyle-plugin.version>3.1.0</checkstyle-plugin.version>
         <spotbugs-plugin.version>3.1.12.2</spotbugs-plugin.version>
+        <maven.jxr.plugin.version>3.0.0</maven.jxr.plugin.version>
     </properties>
 
     <repositories>
@@ -370,6 +371,16 @@
     -->
         </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>${maven.jxr.plugin.version}</version>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <scm>
         <connection>scm:git@github.com:adorsys/open-banking-gateway.git</connection>
