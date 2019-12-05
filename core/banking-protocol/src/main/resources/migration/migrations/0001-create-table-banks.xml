@@ -32,4 +32,25 @@
         </loadData>
         <rollback />
     </changeSet>
+
+    <changeSet id="load_csv_banks_random" author="mhr">
+        <loadData
+                encoding="utf8"
+                relativeToChangelogFile="true"
+                file="banks_random_data.csv"
+                catalogName=""
+                tableName="${table-prefix}bank">
+            <column header="name"       name="name"         type="STRING"/>
+            <column header="bic"        name="bic"          type="STRING"/>
+            <column header="bank_code"  name="bank_code"    type="STRING"/>
+        </loadData>
+        <rollback />
+    </changeSet>
+    
+    <changeSet id="create_index" author="mhr">
+        <sql dbms="postgresql" stripComments="true">
+            CREATE INDEX bank_trgm_idx ON opb_bank USING gin ( (name || ' ' || bic || ' ' || bank_code) gin_trgm_ops);
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

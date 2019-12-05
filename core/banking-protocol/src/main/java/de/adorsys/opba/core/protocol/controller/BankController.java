@@ -26,6 +26,12 @@ public class BankController {
         return bankService.getBanks(query, maxResults);
     }
 
+    @GetMapping("/fts")
+    public List<Bank> getBanksFTS(@RequestParam("q") String query,
+                               @RequestParam("max_results") int maxResults) {
+        return bankService.getBanksFTS(query, maxResults);
+    }
+
     @GetMapping("/profile")
     public Bank getBankProfile(@RequestParam Long id) {
         return bankService.getBankProfile(id);

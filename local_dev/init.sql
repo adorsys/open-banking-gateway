@@ -1,1 +1,2 @@
 CREATE SCHEMA IF NOT EXISTS banking_protocol;
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA banking_protocol;
