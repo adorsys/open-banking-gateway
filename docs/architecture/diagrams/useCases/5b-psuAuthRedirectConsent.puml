@@ -62,7 +62,7 @@ end
 autonumber resume
 activate ConsentAuthorisationUI
 ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:aspspAuthSuccess[ConsentAuthSessionCookie]()<consentAuthState, aspspAuthCode>
-autonumber 71 1 "<b><color blue>[InitConsent-000]"
+autonumber 71 1 "<b><color blue>[AuthRedirect-000]"
 ConsentAuthorisationApi -> ConsentAuthorisationApi : ConsentAuthSessionCookie.tppConsentSession\n(consentAuthState):TppConsentSession
 ConsentAuthorisationApi -> ConsentAuthorisationApi : getBankingProtocol(TppConsentSession)
 ConsentAuthorisationApi -> BankingProtocol ++ : aspspAuthSuccess(TppConsentSession, aspspAuthCode)
