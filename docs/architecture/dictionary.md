@@ -114,18 +114,13 @@ Information used to identify the FinTech application at the TppBankingApi. For e
 
 ### <a name="PsuConsentSession"></a> PsuConsentSession
 Information associated with the consent as exchanged between the FinTechApi and the TppBankingApi. Generally contains:
-- FinTechContext: Data needed to authorize the FinTechApi (FinTechSSLCertificate, ApiKey, SignedJWT)
 - Data needed to customize psu access at the ConsentAuthorisationApi (showInfoPanel, fintechStateHash)
-- Data needed to manage redirection of PSU from the TppConsentSession to the FintechUI like (FinTech-Redirect-URI, TPP-Nok-Redirect- URI, FinTech-Explicit- Authorisation- Preferred, FinTech-Content-Negotiation)
-
+- Data needed to manage redirection of PSU from the TppConsentSession to the FintechUI like (FinTech-Redirect-URI, FinTech-Nok-Redirect- URI, FinTech-Explicit-Authorisation-Preferred, FinTech-Content-Negotiation)
 Object also contains information associated with the PSU requesting service if available.
 - The identifier of the PSU in the realm of the Tpp PsuIdentifier
 
-#### <a name="FinTechAuth"></a> FinTechSSLCertificate, ApiKey, SignedJWT
-These are credential used by a FinTech to identify themself at the interface of a TppBankingApi. This identifiers are obtained in negotiontiation between FinTech and Tpp prior to accessing the TppBankingApi
-
 #### <a name="PsuIdentifier"></a> PsuIdentifier
-This is the identifier of the PSU in the FinTech2Tpp relationship. This identifier can be saved once a consent has been sucessfully established to allow for reuse of existing consent in future sessions.
+This is the identifier of the PSU in the FinTech2Tpp relationship. This identifier can be saved once a consent has been successfully established to allow for reuse of existing consent in future sessions.
 
 ### <a name="ConsentAuthorisationApi"></a> ConsentAuthorisationApi 
 Interface used by the PSU to authorize a consent.
@@ -156,7 +151,9 @@ Api banking provided by ASPSP. This interface is not directly accessed by the PS
 Information used to identify the Tpp application in the ASPSP environment. Like a TPP QWAC certificate.
 
 ### <a name="TppConsentSession"></a> TppConsentSession
-Information associated with the consent initialized by the ASPSP. Containing ConsentId, ConsentData, AspspConsentSessionRedirectUrl, ...
+- [FinTechContext](dictionary.md#FinTechContext): Data needed to authorize the FinTechApi (FinTechSSLCertificate, ApiKey, SignedJWT)
+- [PsuConsentSession](dictionary.md#PsuConsentSession): Information associated with the consent initialized by the TPP at the ASPSP interface.
+- Additional information not available in the PsuConsentSession: Containing ConsentId, ConsentData, AspspConsentSessionRedirectUrl.
 
 ### <a name="OnlineBankingApi"></a> OnlineBankingApi
 Generally the online banking application on an ASPSP. In redirect cases, the ASPSP OnlineBankingApi establishes a direct session with the PSU to allow the PSU to identify himself, review and authorize the consent. 
