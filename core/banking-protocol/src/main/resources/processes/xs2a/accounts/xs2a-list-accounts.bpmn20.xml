@@ -6,13 +6,13 @@
       <documentation>Starts XS2A account listing flow</documentation>
     </startEvent>
     <exclusiveGateway id="consentPresent" name="Is consent to list accounts available?" default="consentMissing"></exclusiveGateway>
-    <serviceTask id="listAccounts" name="Call account list" flowable:delegateExpression="${xs2aAccountListing}">
+    <serviceTask id="listAccounts" name="Call account list" flowable:async="true" flowable:delegateExpression="${xs2aAccountListing}">
       <documentation>Calls XS2A service to get account list with consent</documentation>
     </serviceTask>
-    <serviceTask id="createConsent" name="Create consent to do account list" flowable:delegateExpression="${xs2aAccountListConsentInitiate}"></serviceTask>
-    <callActivity id="authorizeConsent" name="Authorize consent to perform account list" calledElement="xs2a-authorize-consent" flowable:calledElementType="key" flowable:inheritVariables="true"  flowable:fallbackToDefaultTenant="false">
+    <serviceTask id="createConsent" name="Create consent to do account list" flowable:async="true" flowable:delegateExpression="${xs2aAccountListConsentInitiate}"></serviceTask>
+    <callActivity id="authorizeConsent" name="Authorize consent to perform account list" flowable:async="true" calledElement="xs2a-authorize-consent" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false">
       <extensionElements>
-        <flowable:out source="CONTEXT" target="CONTEXT" />
+        <flowable:out source="CONTEXT" target="CONTEXT"></flowable:out>
       </extensionElements>
     </callActivity>
     <endEvent id="end" name="end"></endEvent>
@@ -46,9 +46,9 @@
         <omgdc:Bounds height="28.0" width="28.0" x="660.0" y="101.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="consentAvailable" id="BPMNEdge_consentAvailable">
-        <omgdi:waypoint x="215.5" y="159.5"></omgdi:waypoint>
-        <omgdi:waypoint x="215.5" y="115.0"></omgdi:waypoint>
-        <omgdi:waypoint x="464.99999999999545" y="115.0"></omgdi:waypoint>
+        <omgdi:waypoint x="215.0" y="159.0"></omgdi:waypoint>
+        <omgdi:waypoint x="215.0" y="115.0"></omgdi:waypoint>
+        <omgdi:waypoint x="465.0" y="115.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-42764015-F0E2-4E8D-A156-87420CF9FC28" id="BPMNEdge_sid-42764015-F0E2-4E8D-A156-87420CF9FC28">
         <omgdi:waypoint x="389.70000000000005" y="250.0"></omgdi:waypoint>
@@ -63,8 +63,8 @@
         <omgdi:waypoint x="660.0" y="115.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="consentMissing" id="BPMNEdge_consentMissing">
-        <omgdi:waypoint x="215.5" y="198.4365793201133"></omgdi:waypoint>
-        <omgdi:waypoint x="215.5" y="250.0"></omgdi:waypoint>
+        <omgdi:waypoint x="215.0" y="198.93597046413507"></omgdi:waypoint>
+        <omgdi:waypoint x="215.0" y="250.0"></omgdi:waypoint>
         <omgdi:waypoint x="289.75" y="250.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-E3EA7F14-BD1C-4FC7-9939-1096C5773255" id="BPMNEdge_sid-E3EA7F14-BD1C-4FC7-9939-1096C5773255">

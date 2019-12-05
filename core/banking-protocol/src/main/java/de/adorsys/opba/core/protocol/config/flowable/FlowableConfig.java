@@ -3,6 +3,7 @@ package de.adorsys.opba.core.protocol.config.flowable;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import org.flowable.app.spring.SpringAppEngineConfiguration;
+import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.flowable.spring.boot.EngineConfigurationConfigurer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,18 +21,28 @@ public class FlowableConfig {
      */
     @Bean
     EngineConfigurationConfigurer<SpringAppEngineConfiguration> storeCustomClassesAsJson(
-            @Value("${opba.flowable.serializeOnly:de.adorsys}") String serializableClassesPrefix,
-            @Value("${opba.flowable.maxVarLen:2048}") int maxLength,
-            ObjectMapper mapper
+        @Value("${opba.flowable.serializeOnly:de.adorsys}") String serializableClassesPrefix,
+        @Value("${opba.flowable.maxVarLen:2048}") int maxLength,
+        ObjectMapper mapper
     ) {
         return engineConfiguration ->
-                engineConfiguration.setCustomPreVariableTypes(
-                        new ArrayList<>(
-                                ImmutableList.of(
-                                        new JsonCustomSerializer(mapper, serializableClassesPrefix, maxLength),
-                                        new LargeJsonCustomSerializer(mapper, serializableClassesPrefix, maxLength)
-                                )
-                        )
-        );
+            engineConfiguration.setCustomPreVariableTypes(
+                new ArrayList<>(
+                    ImmutableList.of(
+                        new JsonCustomSerializer(mapper, serializableClassesPrefix, maxLength),
+                        new LargeJsonCustomSerializer(mapper, serializableClassesPrefix, maxLength)
+                    )
+                )
+            );
+    }
+
+    @Bean
+    EngineConfigurationConfigurer<SpringProcessEngineConfiguration> flowableEventListeners(
+        FlowableJobSuccessEventListener eventListener
+    ) {
+        return processConfiguration -> {
+            processConfiguration.setEnableEventDispatcher(true);
+            processConfiguration.setEventListeners(ImmutableList.of(eventListener));
+        };
     }
 }

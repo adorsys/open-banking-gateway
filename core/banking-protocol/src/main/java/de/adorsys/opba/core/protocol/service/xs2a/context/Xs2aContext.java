@@ -11,6 +11,8 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.CONSENT_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.CONTENT_TYPE;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_IP_ADDRESS;
+import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_NOK_REDIRECT_URI;
+import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_URI;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_GTW_ASPSP_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 
@@ -20,6 +22,8 @@ public class Xs2aContext {
 
     // Application required
     private long bankConfigId = 1;
+    // Redirect-required:
+    private String executionId;
 
     // Mandatory static
     private String psuId;
@@ -34,8 +38,12 @@ public class Xs2aContext {
     private boolean withBalance;
 
     // In-process
+    private String aspspScaApproach;
     private String consentId;
     private String authorizationId;
+
+    private String redirectUriOk = "http://localhost:3218/";
+    private String redirectUriNok = "http://localhost:3218/";
 
     private Object result;
 
@@ -53,6 +61,8 @@ public class Xs2aContext {
         allValues.put(X_REQUEST_ID, requestId);
         allValues.put(CONTENT_TYPE, contentType);
         allValues.put(X_GTW_ASPSP_ID, gatewayAspspId);
+        allValues.put(TPP_REDIRECT_URI, redirectUriOk);
+        allValues.put(TPP_NOK_REDIRECT_URI, redirectUriNok);
 
         allValues.put(PSU_IP_ADDRESS, psuIpAddress);
 

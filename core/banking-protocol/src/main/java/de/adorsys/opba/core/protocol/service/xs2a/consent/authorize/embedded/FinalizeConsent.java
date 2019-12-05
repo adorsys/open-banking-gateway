@@ -1,9 +1,10 @@
-package de.adorsys.opba.core.protocol.service.xs2a.consent.authorize;
+package de.adorsys.opba.core.protocol.service.xs2a.consent.authorize.embedded;
 
+import de.adorsys.opba.core.protocol.domain.entity.Consent;
+import de.adorsys.opba.core.protocol.repository.jpa.ConsentRepository;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
-import de.adorsys.xs2a.adapter.service.model.PsuData;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthentication;
+import de.adorsys.xs2a.adapter.service.model.TransactionAuthorisation;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
@@ -12,11 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 
-@Service("xs2aDoScaChallenge")
+@Service("xs2aFinalizeConsent")
 @RequiredArgsConstructor
-public class DoScaChallenge implements JavaDelegate {
+public class FinalizeConsent implements JavaDelegate {
 
     private final AccountInformationService ais;
+    private final ConsentRepository consents;
 
     @Override
     @Transactional
@@ -29,13 +31,13 @@ public class DoScaChallenge implements JavaDelegate {
                 context.toHeaders(),
                 authentication()
         );
+
+        consents.save(Consent.builder().consentCode(context.getConsentId()).build());
     }
 
-    private UpdatePsuAuthentication authentication() {
-        UpdatePsuAuthentication psuAuthentication = new UpdatePsuAuthentication();
-        PsuData data = new PsuData();
-        data.setPassword("12345");
-        psuAuthentication.setPsuData(data);
-        return psuAuthentication;
+    private TransactionAuthorisation authentication() {
+        TransactionAuthorisation authorisation = new TransactionAuthorisation();
+        authorisation.setScaAuthenticationData("123456");
+        return authorisation;
     }
 }

@@ -1,4 +1,4 @@
-package de.adorsys.opba.core.protocol.service.xs2a.consent.authorize;
+package de.adorsys.opba.core.protocol.service.xs2a.consent.authorize.embedded;
 
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;

@@ -6,11 +6,11 @@
       <documentation>Starts XS2A transaction listing flow</documentation>
     </startEvent>
     <exclusiveGateway id="consentPresent" name="Is consent to list transactions available?" default="consentMissing"></exclusiveGateway>
-    <serviceTask id="listTransactions" name="Call transaction list" flowable:delegateExpression="${xs2aTransactionListing}">
+    <serviceTask id="listTransactions" name="Call transaction list" flowable:async="true" flowable:delegateExpression="${xs2aTransactionListing}">
       <documentation>Calls XS2A service to get transaction list with consent</documentation>
     </serviceTask>
-    <serviceTask id="createConsent" name="Create consent to do transaction list" flowable:delegateExpression="${xs2aTransactionListConsentInitiate}"></serviceTask>
-    <callActivity id="authorizeConsent" name="Authorize consent to perform transaction list" calledElement="xs2a-authorize-consent" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false">
+    <serviceTask id="createConsent" name="Create consent to do transaction list" flowable:async="true" flowable:delegateExpression="${xs2aTransactionListConsentInitiate}"></serviceTask>
+    <callActivity id="authorizeConsent" name="Authorize consent to perform transaction list" flowable:async="true" calledElement="xs2a-authorize-consent" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false">
       <extensionElements>
         <flowable:out source="CONTEXT" target="CONTEXT"></flowable:out>
       </extensionElements>
@@ -20,7 +20,7 @@
     <sequenceFlow id="sid-F617FA73-A930-45E8-80DA-2B6C6393D5AB" sourceRef="listTransactions" targetRef="end"></sequenceFlow>
     <sequenceFlow id="sid-E3EA7F14-BD1C-4FC7-9939-1096C5773255" sourceRef="start" targetRef="consentPresent"></sequenceFlow>
     <sequenceFlow id="consentMissing" name="Consent missing" sourceRef="consentPresent" targetRef="createConsent"></sequenceFlow>
-    <serviceTask id="accountList" name="Call account list (XS2A sandbox quirk)" flowable:delegateExpression="${xs2aAccountListing}">
+    <serviceTask id="accountList" name="Call account list (XS2A sandbox quirk)" flowable:async="true" flowable:delegateExpression="${xs2aAccountListing}">
       <documentation>We need to list accounts first for XS2A-Sandbox, because transactions permissions do propagate there only after this</documentation>
     </serviceTask>
     <sequenceFlow id="consentAvailable" name="Consent available" sourceRef="consentPresent" targetRef="accountList">
@@ -54,8 +54,8 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="consentAvailable" id="BPMNEdge_consentAvailable">
         <omgdi:waypoint x="215.0" y="259.0"></omgdi:waypoint>
-        <omgdi:waypoint x="215.0" y="149.09090672642736"></omgdi:waypoint>
-        <omgdi:waypoint x="463.6363535873" y="149.09090672642736"></omgdi:waypoint>
+        <omgdi:waypoint x="215.0" y="149.0"></omgdi:waypoint>
+        <omgdi:waypoint x="463.63635358728783" y="149.07568642164273"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-42764015-F0E2-4E8D-A156-87420CF9FC28" id="BPMNEdge_sid-42764015-F0E2-4E8D-A156-87420CF9FC28">
         <omgdi:waypoint x="389.6999999998765" y="350.0"></omgdi:waypoint>

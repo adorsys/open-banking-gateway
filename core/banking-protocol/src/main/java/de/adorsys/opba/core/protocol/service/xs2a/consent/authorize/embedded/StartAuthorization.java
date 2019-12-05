@@ -1,4 +1,4 @@
-package de.adorsys.opba.core.protocol.service.xs2a.consent.authorize;
+package de.adorsys.opba.core.protocol.service.xs2a.consent.authorize.embedded;
 
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
+import static de.adorsys.xs2a.adapter.service.ResponseHeaders.ASPSP_SCA_APPROACH;
 
 @Service("xs2aStartAuthorization")
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class StartAuthorization implements JavaDelegate {
                 context.toHeaders()
         );
 
+        context.setAspspScaApproach(scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH));
         context.setAuthorizationId(scaStart.getBody().getAuthorisationId());
         delegateExecution.setVariable(CONTEXT, context);
     }
