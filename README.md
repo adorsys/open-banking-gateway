@@ -18,7 +18,7 @@ Being able to interact with different bank APIs can be a time and cost consuming
 This project is designed to enable contribution from different sources, as the open banking challenge will start with a magnitude of discrepancies in individual bank implementations, even for banks implementing a common standards.
 
 The following picture displays the overall architecture of this banking gateway:
-![High level architecture](docs/img/open-banking-gateway-arch-30-10-2019.png)
+![High level architecture](docs/img/open-banking-gateway-arch-05-12-2019.png)
 
 ## Releases and versions
 
