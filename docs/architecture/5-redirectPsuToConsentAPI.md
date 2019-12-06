@@ -17,16 +17,7 @@ ConsentAuthorisationApi will let BankingProtocol use the redirectCode to retriev
 ### Interacting with the PsuUserAgent
 
 #### 2.7 consentAuthState
-The CSRF-State String is called: consentAuthState
-The [consentAuthState](dictionary.md#consentAuthState) is a transient reference of the consent request. It encodes a key that is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.
-
-This is: consentAuthState = state-id + consentEncryptionKey
-
-All requests to the ConsentAuthorisationApi must always provide the [consentAuthState](dictionary.md#consentAuthState) as a __X-XRSF-Token__ and the ConsentAuthSessionCookie as a cookie. 
-
-The consentAuthState is always included in the returned AuthorizeResponse object that is used by the ConsentAuthorisationUI to display a qualified information page to the PSU prior to redirecting the PSU to the target ASPSP.
-
-Therefore ConsentAuthorisationApi shall never store the consentAuthState in the ConsentAuthSessionCookie.
+The CSRF-State String is called: [consentAuthState](dictionary.md#consentAuthState)
 
 #### 2.8 AuthorizeResponse
 The AuthorizeResponse returned to the ConsentAuthorisationUI is used to display info to the PSU.
@@ -37,7 +28,7 @@ Any session, account or payment information needed to manage the authorization p
 The consentCookieString is httpOnly
 
 #### 2.9 ConsentAuthSessionCookie
-The cookie to maintain session between ConsentAuthorisationUI and ConsentAuthorisationApi is called ConsentAuthSessionCookie. It will generated and set as a __httpOnly, Secure__
+The [ConsentAuthSessionCookie](dictionary.md#ConsentAuthSessionCookie) is used to maintain session between ConsentAuthorisationUI and ConsentAuthorisationApi. It will generated and set as a __httpOnly, Secure__
 
 ### 3. Displaying Consent Authorize UI
 
