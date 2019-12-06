@@ -208,6 +208,9 @@
                         <ruleset>${maven.multiModuleProjectDirectory}/pmd-ruleset.xml</ruleset>
                     </rulesets>
                     <failOnViolation>true</failOnViolation>
+                    <excludeRoots>
+                        <excludeRoot>${maven.multiModuleProjectDirectory}/opba-banking-rest-api/generated</excludeRoot>
+                    </excludeRoots>
                 </configuration>
                 <executions>
                     <execution>
