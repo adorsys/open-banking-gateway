@@ -31,6 +31,7 @@ public class StartAuthorization implements JavaDelegate {
 
         context.setAspspScaApproach(scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH));
         context.setAuthorizationId(scaStart.getBody().getAuthorisationId());
+        context.setStartScaProcessResponse(scaStart.getBody());
         delegateExecution.setVariable(CONTEXT, context);
     }
 }

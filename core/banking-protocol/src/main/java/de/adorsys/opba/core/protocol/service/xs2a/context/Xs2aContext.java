@@ -1,6 +1,7 @@
 package de.adorsys.opba.core.protocol.service.xs2a.context;
 
 import de.adorsys.xs2a.adapter.service.RequestHeaders;
+import de.adorsys.xs2a.adapter.service.model.StartScaProcessResponse;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -39,6 +40,7 @@ public class Xs2aContext {
 
     // In-process
     private String aspspScaApproach;
+    private StartScaProcessResponse startScaProcessResponse;
     private String consentId;
     private String authorizationId;
 
