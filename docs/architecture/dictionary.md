@@ -118,6 +118,7 @@ Information associated with the consent as exchanged between the FinTechApi and 
 - Data needed to manage redirection of PSU from the TppConsentSession to the FintechUI like (FinTech-Redirect-URI, FinTech-Nok-Redirect- URI, FinTech-Explicit-Authorisation-Preferred, FinTech-Content-Negotiation)
 Object also contains information associated with the PSU requesting service if available.
 - The identifier of the PSU in the realm of the Tpp PsuIdentifier
+- Existing Consent References if any.
 
 #### <a name="PsuIdentifier"></a> PsuIdentifier
 This is the identifier of the PSU in the FinTech2Tpp relationship. This identifier can be saved once a consent has been successfully established to allow for reuse of existing consent in future sessions.
@@ -126,7 +127,22 @@ This is the identifier of the PSU in the FinTech2Tpp relationship. This identifi
 Interface used by the PSU to authorize a consent.
 
 ### <a name="ConsentAuthSessionCookie"></a> ConsentAuthSessionCookie
-This is the cookie object used to maintain the consent session between the ConsentAuthorisationUI and the ConsentAuthorisationApi
+This is the cookie object used to maintain the consent session between the ConsentAuthorisationUI and the ConsentAuthorisationApi. It will generated and set as a __httpOnly, Secure__
+
+### <a name="consentAuthState"></a> consentAuthState
+This is the CSRF-State String of the ConsentAuthorisationApi. It is a transient reference of the consent request. It encodes a key that is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.
+
+This is: consentAuthState = state-id + consentEncryptionKey
+
+All requests to the ConsentAuthorisationApi must always provide the consentAuthState as a __X-XRSF-Token__ and set a ConsentAuthSessionCookie as a cookie. 
+
+Passing a consentAuthState to the UI.
+- For 30X Redirect Requests, this is passed to the UI as a URL query param part of the redirect URL.
+- For 20X Responses, this is part of the returned response body (AuthorizeResponse).
+
+The consentAuthState shall never be stored in the ConsentAuthSessionCookie. 
+
+As a redirect request carries the consentAuthState in parameter, a new consentAuthState shall be generated after each redirect and returned back to the client, as the old one is probably leaked into log files as part of a request URI.
 
 ### <a name="RedirectSessionStoreApi"></a> RedirectSessionStoreApi
 Storage of temporary redirect sessions. Redirect session are stored only for the duration of the redirect request while redirecting from the TppBankingApi to the ConsentAuthorisationApi and from the ConsentAuthorisationApi back to the TppBankingApi.

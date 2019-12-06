@@ -1,6 +1,6 @@
 @startuml PsuAuthorizeEmbeddedConsent
 title PsuAuthorizeEmbeddedConsent
-autonumber "<b><color blue>[00]"
+autonumber 10 10 "<b><color blue>[AuthEmbedded-000]</color></b>"
 actor psu
 
 box "PsuUserAgent" #LightGray
@@ -13,41 +13,47 @@ box "FinTechDC" #DarkSeaGreen
 end box
 box "TppDC" #LightGray
     participant "TppBankingApi" as TppBankingApi
-    participant "TppBankSearchApi" as TppBankSearchApi
+    'participant "TppBankSearchApi" as TppBankSearchApi
     participant "ConsentAuthorisationApi" as ConsentAuthorisationApi
 
-    participant "RedirectSessionStoreApi" as RedirectSessionStoreApi
     participant "BankingProtocol" as BankingProtocol
+    participant "RedirectSessionStoreApi" as RedirectSessionStoreApi
 end box
 box "AspspDC" #LightSkyBlue
 	participant "AspspBankingApi" as AspspBankingApi
-    participant "OnlineBankingApi" as OnlineBankingApi
+    'participant "OnlineBankingApi" as OnlineBankingApi
 end box
 == TPPAuthorize consent upon PSU transaction display request - method:endpoint[header](body)<params> return code[header](body) ==
-
-FinTechUI -> ConsentAuthorisationApi ++ : GET:ConsentAuthorisationApi.embeddedAuthEntryPoint[UserAgentContext]()<redirectCode>
-ConsentAuthorisationApi -> RedirectSessionStoreApi ++ : redirectSession(redirectCode)
-RedirectSessionStoreApi -> RedirectSessionStoreApi : loadDeryptDeleteRedirectSession\n(redirectCode):TppConsentSession
-return TppConsentSession
-loop while(TppConsentSession.hasAuthChallenge())
-    ConsentAuthorisationApi -> ConsentAuthorisationApi : TppConsentSession.getCookie():\nPsu2TppConsentSessionCookie
-    ConsentAuthorisationApi --> ConsentAuthorisationUI ++ : redirect302[Psu2TppConsentSessionCookie,\nConsentAuthorisationUI.authScreen]()<consentSessionState>
-    deactivate ConsentAuthorisationApi
-    ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:ConsentAuthorisationApi.auth\n[Psu2TppConsentSessionCookie, UserAgentContext]()<consentSessionState>
-    return response[Psu2TppConsentSessionCookie]\n(ConsentAuthorizeResponse{AccountDetails[],AisConsent,ScaUIMetadaData})
+activate ConsentAuthorisationApi
+alt TppConsentSession.hasAuthChallenge()
+ConsentAuthorisationApi -> ConsentAuthorisationApi : TppConsentSession.getCookie(consentSessionState):\nConsentAuthSessionCookie
+ConsentAuthorisationApi --> ConsentAuthorisationUI : redirect302[ConsentAuthSessionCookie,\nConsentAuthorisationUI.embeddedAuthInitScreen]()<consentSessionState>
+deactivate ConsentAuthorisationApi
+activate ConsentAuthorisationUI
+ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:ConsentAuthorisationApi.authChallenge\n[ConsentAuthSessionCookie, UserAgentContext]()<consentSessionState>
+return 200_OK[ConsentAuthSessionCookie]\n(ConsentAuthorizeResponse{AccountDetails[],AisConsent,ScaUIMetadaData})
+loop #LightCyan while(ConsentAuthorizeResponse.hasAuthChallenge())
     ConsentAuthorisationUI --> psu : displayAuthScreen(ScaUIMetadaData)
     deactivate ConsentAuthorisationUI
     psu -> ConsentAuthorisationUI ++ : enterAuthData(PsuAuthData)
-    ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : POST:ConsentAuthorisationApi.psuAuth\n[Psu2TppConsentSessionCookie, UserAgentContext](PsuAuthData)<consentSessionState>
+    ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : POST:ConsentAuthorisationApi.psuAuth\n[ConsentAuthSessionCookie, UserAgentContext](PsuAuthData)<consentSessionState>
+    autonumber 80 1 "<b><color blue>[AuthEmbedded-000]</color></b>"
     ConsentAuthorisationApi -> BankingProtocol ++ : updatePsuAuth[TppConsentSession](PsuAuthData)<>
     BankingProtocol -> BankingProtocol : TppConsentSession.aspspConsentSession()\n:TppConsentSession
     BankingProtocol -> AspspBankingApi ++ : updatePsuAuth\n[TppConsentSession](PsuAuthData)<>
     return TppConsentSession
     BankingProtocol -> BankingProtocol : TppConsentSession\n.tppConsentSession():TppConsentSession
     return 200_OK(TppConsentSession)
+    return 200_OK[ConsentAuthSessionCookie]\n(ConsentAuthorizeResponse)
+    return displayAuthScreen(ScaUIMetadaData)
 end
-ConsentAuthorisationApi -> RedirectSessionStoreApi ++ : redirectSession(TppConsentSession, exp)
+else
+autonumber 90 1 "<b><color blue>[AuthEmbedded-000]</color></b>"
+activate BankingProtocol
+BankingProtocol -> RedirectSessionStoreApi ++ : redirectSession(TppConsentSession, exp)
 RedirectSessionStoreApi -> RedirectSessionStoreApi : createEncryptStoreRedirectSession\n(TppConsentSession):redirectCode
-return 200_OK[](redirectCode)<>
-return redirect302[Psu2TppConsentSessionCookie=null,\nFinTechApi.FinTech-Redirect-URI<redirectCode>]()
+return redirectCode
+BankingProtocol --> ConsentAuthorisationApi ++ : redirect302To(FinTechApi.FinTech-Redirect-URI)<redirectCode>
+ConsentAuthorisationApi --> FinTechUI ++ : redirect302[ConsentAuthSessionCookie=null,\nFinTechApi.FinTech-Redirect-URI<redirectCode>]()
+end
 @enduml

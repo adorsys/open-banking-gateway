@@ -1,12 +1,14 @@
 # Authorize Consent Redirect
 
+## Description
+
 Describes the process of redirecting a PSU to the Online Banking interface of it's ASPSP.
 
 ## Diagram
 
 ![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/diagrams/useCases/5b-psuAuthRedirectConsent.puml&fmt=svg&vvv=1&sanitize=true)  
 
-## Description
+## Use Cases
 
 ### 010 .. 040 Display RedirectInfoPage
 A redirection to the ASPSP OnlineBanking interface start with a information of the PSU about the redirect process. After a confirmation of the redirection process through the PSU, a redirection is initiated by the ConsentAuthorizeApi.

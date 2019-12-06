@@ -24,7 +24,7 @@ The result of a bank selection ist that the FinTechUI displays the list of servi
 
 #### 3.1 Load PsuConsentSession
 ==> FinTechApi -> FinTechApi : psuConsentSession\n(FinTechLoginSessionCookie,\nBankProfile,ListBankAccountSpec)<>
-FinTechApi loads any matching existing PsuConsentSession. The FinTechLoginSessionCookie holds the reference of the PSU in the system of the FinTech. The PsuConsentSession contains the reference to any PSU consent stored in the realm of the TPP. If there is no consent suitable for the given operation, the PsuConsentSession will be empty.
+FinTechApi loads any matching existing [PsuConsentSession](dictionary.md#PsuConsentSession). The FinTechLoginSessionCookie holds the reference of the PSU in the system of the FinTech.
 
 ### 4. FinTechApi forwards service request to TppBankingApi
 ==> FinTechApi -> TppBankingApi ++ : listBankAccounts\[UserAgentContext,\nPsuConsentSession,FinTechContext\]\n(BankProfile,ListBankAccountSpec)<>
