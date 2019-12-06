@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+// TODO - move this to bank configuration (settings like xs2a url) and bank profile (name, bic, etc)
 @Service
 @RequiredArgsConstructor
 public class HardcodedAspspRepository implements AspspSearchService {

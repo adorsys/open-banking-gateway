@@ -1,4 +1,4 @@
-package de.adorsys.opba.core.protocol.service.xs2a.consent.authorize.embedded;
+package de.adorsys.opba.core.protocol.service.xs2a.consent.authorize;
 
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
