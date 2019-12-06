@@ -18,6 +18,7 @@ public class AccountInformationServiceResource implements AccountInformationServ
     }
 
     @Override
+    @SuppressWarnings("checkstyle:ParameterNumber") // Parameters are provided through auto-generated base class
     public ResponseEntity<TransactionsResponse> getTransactions(String accountId, UUID xRequestID, LocalDate dateFrom,
                                                                 LocalDate dateTo, String entryReferenceFrom,
                                                                 String bookingStatus, Boolean deltaList
