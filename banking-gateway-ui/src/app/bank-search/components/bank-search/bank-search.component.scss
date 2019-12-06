@@ -1,0 +1,38 @@
+.box-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+
+    .card {
+        min-height: 40vh;
+        border: 0;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.19), 0 3px 3px rgba(0,0,0,0.23);
+    }
+
+}
+
+.box-header{
+    &__title{
+        font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
+        color: hsl(0, 0%, 13%);
+        font-size: 1.8rem;
+        font-weight: 400;
+        margin-bottom: 1rem;
+    }
+    &__text {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1.4;
+        color: hsl(0, 0%, 45%);
+    }
+}
+
+.box-item {
+    max-width: 26rem;
+}
+
+.list-group-item:hover {
+    background-color: #EDF4F7;
+    transition: .5s ease-in-out;
+}
