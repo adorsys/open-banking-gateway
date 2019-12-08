@@ -46,19 +46,19 @@
         <dependency>
             <groupId>de.adorsys.psd2.sandbox</groupId>
             <artifactId>online-banking-app</artifactId>
-            <version>1.7</version>
+            <version>1.8</version>
         </dependency>
         <!-- adorsys/xs2a-tpp-rest-server -->
         <dependency>
             <groupId>de.adorsys.psd2.sandbox</groupId>
             <artifactId>tpp-rest-server</artifactId>
-            <version>1.7</version>
+            <version>1.8</version>
         </dependency>
         <!-- adorsys/xs2a-certificate-generator -->
         <dependency>
             <groupId>de.adorsys.psd2.sandbox</groupId>
             <artifactId>certificate-generator</artifactId>
-            <version>1.7</version>
+            <version>1.8</version>
         </dependency>
 
         <!-- https://github.com/adorsys/ledgers -->
@@ -66,7 +66,7 @@
         <dependency>
             <groupId>de.adorsys.ledgers</groupId>
             <artifactId>ledgers-app</artifactId>
-            <version>2.0</version>
+            <version>2.1</version>
         </dependency>
         <!-- END -->
 

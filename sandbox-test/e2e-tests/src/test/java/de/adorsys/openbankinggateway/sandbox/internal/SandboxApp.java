@@ -56,10 +56,10 @@ public enum SandboxApp {
     LEDGERS_GATEWAY("gateway-app-5.4.jar"), // adorsys/xs2a-connector-examples
     ASPSP_PROFILE("aspsp-profile-server-5.4-exec.jar"), // adorsys/xs2a-aspsp-profile
     CONSENT_MGMT("cms-standalone-service-5.4.jar"), // adorsys/xs2a-consent-management
-    ONLINE_BANKING("online-banking-app-1.7.jar"), // adorsys/xs2a-online-banking
-    TPP_REST("tpp-rest-server-1.7.jar"), // adorsys/xs2a-tpp-rest-server
-    CERT_GENERATOR("certificate-generator-1.7.jar"), // adorsys/xs2a-certificate-generator
-    LEDGERS_APP("ledgers-app-2.0.jar"); // adorsys/ledgers
+    ONLINE_BANKING("online-banking-app-1.8.jar"), // adorsys/xs2a-online-banking
+    TPP_REST("tpp-rest-server-1.8.jar"), // adorsys/xs2a-tpp-rest-server
+    CERT_GENERATOR("certificate-generator-1.8.jar"), // adorsys/xs2a-certificate-generator
+    LEDGERS_APP("ledgers-app-2.1.jar"); // adorsys/ledgers
 
     public static final String DB_TYPE = "DB_TYPE";
     public static final String TEST_CONTAINERS_POSTGRES = "test-containers-postgres";
@@ -143,6 +143,7 @@ public enum SandboxApp {
                     (Object) new String[] {
                             "--spring.profiles.include=" + Joiner.on(",").join(activeProfilesForTest()),
                             "--spring.config.location=" + buildSpringConfigLocation(),
+                            "--primary.profile=" + getPrimaryConfigFile()
                     }
             );
         } catch (IllegalAccessException | InvocationTargetException ex) {
@@ -165,8 +166,12 @@ public enum SandboxApp {
                 // Due to different classloader used by Spring we can't reference these in other way:
                 getAndValidatePathFromResource("sandbox/application-" + dbProfileAndStartDbIfNeeded() + ".yml"),
                 getAndValidatePathFromResource("sandbox/application-test-common.yml"),
-                getAndValidatePathFromResource("sandbox/application-" + testProfileName() + ".yml")
+                getPrimaryConfigFile()
         );
+    }
+
+    private String getPrimaryConfigFile() {
+        return getAndValidatePathFromResource("sandbox/application-" + testProfileName() + ".yml");
     }
 
     @SneakyThrows
