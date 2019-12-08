@@ -30,6 +30,7 @@ setting:
       aisRedirectUrlToAspsp: http://localhost:4400/account-information/login?encryptedConsentId={encrypted-consent-id}&redirectId={redirect-id}
     transactionParameters:
       availableBookingStatuses:
+        - BOTH
         - BOOKED
         - PENDING
       transactionsWithoutBalancesSupported: FALSE
