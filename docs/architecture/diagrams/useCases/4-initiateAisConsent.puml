@@ -27,21 +27,21 @@ end box
 == Initiate consent upon PSU transaction display request : call[header](body)<params> return code[header](body) ==
 
 FinTechUI --> psu : displayBankServices(BankProfile)
-psu -> FinTechUI ++ : selectService\n"listBankAccounts(BankProfile)"
-FinTechUI -> FinTechApi ++ : listBankAccounts[FinTechLoginSessionCookie,\nUserAgentContext](BankProfile,ListBankAccountSpec)<>
+psu -> FinTechUI ++ : selectService\n"listTransactions(BankProfile)"
+FinTechUI -> FinTechApi ++ : listTransactions[FinTechLoginSessionCookie,\nUserAgentContext](BankProfile,ListTransactionsSpec)<>
 autonumber 31 1 "<b><color blue>[InitConsent-000]"
-FinTechApi -> FinTechApi : psuConsentSession\n(FinTechLoginSessionCookie,\nBankProfile,ListBankAccountSpec)<>
+FinTechApi -> FinTechApi : psuConsentSession\n(FinTechLoginSessionCookie,\nBankProfile,ListTransactionsSpec)<>
 autonumber 40 1 "<b><color blue>[InitConsent-000]"
-FinTechApi -> TppBankingApi ++ : listBankAccounts[UserAgentContext,\nPsuConsentSession,FinTechContext]\n(BankProfile,ListBankAccountSpec)<>
+FinTechApi -> TppBankingApi ++ : listTransactions[UserAgentContext,\nPsuConsentSession,FinTechContext]\n(BankProfile,ListTransactionsSpec)<>
 autonumber 41 1 "<b><color blue>[InitConsent-000]"
 TppBankingApi -> TppBankingApi : BankProfile.bankingProtocol():BankingProtocol
 autonumber 50 1 "<b><color blue>[InitConsent-000]"
-TppBankingApi -> BankingProtocol ++ : listBankAccounts[UserAgentContext, PsuConsentSession]\n(BankProfile, ListBankAccountSpec) 
+TppBankingApi -> BankingProtocol ++ : listTransactions[UserAgentContext, PsuConsentSession]\n(BankProfile, ListTransactionsSpec) 
 
 autonumber 51 1 "<b><color blue>[000]"
 BankingProtocol -> BankingProtocol : PsuConsentSession.tppConsentSession()\n:TppConsentSession
 alt TppConsentSession.noConsentPresent()
-    autonumber 61 1 "<b><color blue>[InitConsent-000]"
+    autonumber 60 1 "<b><color blue>[InitConsent-000]"
     BankingProtocol -> AspspBankingApi ++ : initiateConsent[UserAgentContext,\nTppContext](AisConsent) 
     return 200_OK(TppConsentSession,\nAspspRedirectInfo)
     BankingProtocol -> RedirectSessionStoreApi ++ : redirectSession(TppConsentSession, exp)
@@ -50,18 +50,19 @@ alt TppConsentSession.noConsentPresent()
     BankingProtocol -> BankingProtocol : TppConsentSession.psuConsentSession()\n:PsuConsentSession
     return 200_OK(PsuConsentSession, AspspRedirectInfo)
     return 200_Ok(PsuConsentSession,\nConsentAuthorisationApi\n.entryPoint()<redirectCode>)
-    return redirect302[ConsentAuthorisationApi.entryPoint()<redirectCode>,\nFintechLoginSessionCookie]()
+    FinTechApi -> FinTechApi : finTechConsentSessionCookie(PsuConsentSession,\nfinTechConsentSessionState):FinTechConsentSessionCookie
+    return redirect302[ConsentAuthorisationApi.entryPoint()<redirectCode,\nfinTechConsentSessionState>,\nFinTechConsentSessionCookie]()
 else TppConsentSession.consentPresent()
     autonumber 71 1 "<b><color blue>[InitConsent-000]"
     activate BankingProtocol
-    BankingProtocol -> AspspBankingApi ++ : listOfAccounts[UserAgentContext,\nTppContext](AisConsent) 
-    return 200_OK[](BankAccounts)
-    BankingProtocol --> TppBankingApi ++: 200_OK[](BankAccounts)
+    BankingProtocol -> AspspBankingApi ++ : listOfTransactions[UserAgentContext,\nTppContext](AisConsent) 
+    return 200_OK[](Transactions)
+    BankingProtocol --> TppBankingApi ++: 200_OK[](Transactions)
     deactivate BankingProtocol
-    TppBankingApi --> FinTechApi ++ : 200_OK[](BankAccounts)
+    TppBankingApi --> FinTechApi ++ : 200_OK[](Transactions)
     deactivate TppBankingApi
-    FinTechApi --> FinTechUI : 200_OK[FintechLoginSessionCookie](BankAccounts)
+    FinTechApi --> FinTechUI : 200_OK[FintechLoginSessionCookie](Transactions)
     deactivate FinTechApi
-    return displayListOfAccounts(BankAccounts)
+    return displayListOfTransactions(Transactions)
 end
 @enduml

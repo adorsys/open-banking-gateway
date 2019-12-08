@@ -31,7 +31,7 @@ ConsentAuthorisationApi --> ConsentAuthorisationUI : redirect302[ConsentAuthSess
 deactivate ConsentAuthorisationApi
 activate ConsentAuthorisationUI
 ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:ConsentAuthorisationApi.authChallenge\n[ConsentAuthSessionCookie, UserAgentContext]()<consentSessionState>
-return 200_OK[ConsentAuthSessionCookie]\n(ConsentAuthorizeResponse{AccountDetails[],AisConsent,ScaUIMetadaData})
+return 200_OK[ConsentAuthSessionCookie]\n(ConsentAuthorizeResponse{Transactions[],AisConsent,ScaUIMetadaData})
 loop #LightCyan while(ConsentAuthorizeResponse.hasAuthChallenge())
     ConsentAuthorisationUI --> psu : displayAuthScreen(ScaUIMetadaData)
     deactivate ConsentAuthorisationUI
