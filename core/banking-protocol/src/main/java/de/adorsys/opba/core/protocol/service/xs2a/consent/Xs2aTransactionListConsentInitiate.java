@@ -34,6 +34,7 @@ public class Xs2aTransactionListConsentInitiate implements JavaDelegate {
                 consents(context)
         );
 
+        context.setRedirectUriOk("http://localhost:8080/v1/consents/confirm/transactions/" + delegateExecution.getProcessInstanceId() + "/");
         context.setConsentId(consentInit.getBody().getConsentId());
         delegateExecution.setVariable(CONTEXT, context);
     }

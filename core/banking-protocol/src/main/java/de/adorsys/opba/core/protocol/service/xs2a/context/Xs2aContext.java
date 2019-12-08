@@ -45,7 +45,7 @@ public class Xs2aContext {
     private String authorizationId;
 
     private String redirectUriOk = "http://localhost:3218/";
-    private String redirectUriNok = "http://localhost:3218/";
+    private String redirectUriNok = "http://localhost:8080/NOK";
 
     private Object result;
 

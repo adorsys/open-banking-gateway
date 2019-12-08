@@ -18,15 +18,13 @@
       <documentation>ASPSP selected embedded SCA</documentation>
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aAspspMethodGateway.isEmbedded(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="finalizeRedirectAuthoration" name="Finalize redirect authoration" flowable:async="true" flowable:delegateExpression="${xs2aFinalizeConsent}"></serviceTask>
     <sequenceFlow id="sid-1DFDC2B8-6141-4818-99C6-89D8BDB7E871" sourceRef="finalizeEmbeddedAuthoration" targetRef="end"></sequenceFlow>
-    <sequenceFlow id="sid-AE14268E-834A-482F-ABF7-D4B63933E136" sourceRef="finalizeRedirectAuthoration" targetRef="end"></sequenceFlow>
     <sequenceFlow id="redirect" name="redirect" sourceRef="scaChallengeSelector" targetRef="notifyUserWithRedirect">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aAspspMethodGateway.isRedirect(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
     <receiveTask id="waitForUserScaComplete" name="Waits for user to complete SCA" flowable:async="true"></receiveTask>
     <sequenceFlow id="sid-6AAE53C3-DAA6-455D-A7A2-E35086D95D45" sourceRef="notifyUserWithRedirect" targetRef="waitForUserScaComplete"></sequenceFlow>
-    <sequenceFlow id="sid-FC171C5B-4D7E-40B5-9C35-31DF93146BB6" sourceRef="waitForUserScaComplete" targetRef="finalizeRedirectAuthoration"></sequenceFlow>
+    <sequenceFlow id="sid-FC171C5B-4D7E-40B5-9C35-31DF93146BB6" sourceRef="waitForUserScaComplete" targetRef="end"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">

@@ -32,6 +32,7 @@ public class Xs2aAccountListConsentInitiate implements JavaDelegate {
                 consents()
         );
 
+        context.setRedirectUriOk("http://localhost:8080/v1/consents/confirm/accounts/" + delegateExecution.getProcessInstanceId() + "/");
         context.setConsentId(consentInit.getBody().getConsentId());
         delegateExecution.setVariable(CONTEXT, context);
     }

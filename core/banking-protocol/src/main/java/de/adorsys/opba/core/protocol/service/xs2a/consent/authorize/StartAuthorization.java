@@ -23,6 +23,7 @@ public class StartAuthorization implements JavaDelegate {
     @Transactional
     public void execute(DelegateExecution delegateExecution) {
         Xs2aContext context = delegateExecution.getVariable(CONTEXT, Xs2aContext.class);
+        context.setRedirectUriOk(context.getRedirectUriOk() + delegateExecution.getProcessInstanceId());
 
         Response<StartScaProcessResponse> scaStart = ais.startConsentAuthorisation(
                 context.getConsentId(),

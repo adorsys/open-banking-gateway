@@ -8,6 +8,8 @@ import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 
 @Service("xs2aDoRedirectForScaChallenge")
@@ -17,6 +19,7 @@ public class ScaRedirect implements JavaDelegate {
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override
+    @Transactional
     public void execute(DelegateExecution delegateExecution) {
         Xs2aContext context = delegateExecution.getVariable(CONTEXT, Xs2aContext.class);
         RedirectResult redirect = new RedirectResult();
