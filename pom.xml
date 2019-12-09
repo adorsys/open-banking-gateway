@@ -84,6 +84,7 @@
         <jupiter.version>5.5.2</jupiter.version>
         <junit.platform.commons.version>1.5.2</junit.platform.commons.version>
         <surefire.version>3.0.0-M3</surefire.version>
+        <assertj.version>3.12.2</assertj.version>
         <checkstyle-plugin.version>3.1.0</checkstyle-plugin.version>
         <spotbugs-plugin.version>3.1.12.2</spotbugs-plugin.version>
         <maven.jxr.plugin.version>3.0.0</maven.jxr.plugin.version>
