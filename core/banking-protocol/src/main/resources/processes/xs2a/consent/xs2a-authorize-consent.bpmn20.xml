@@ -49,9 +49,6 @@
       <bpmndi:BPMNShape bpmnElement="notifyUserWithRedirect" id="BPMNShape_notifyUserWithRedirect">
         <omgdc:Bounds height="80.0" width="100.0" x="420.0" y="375.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="finalizeRedirectAuthoration" id="BPMNShape_finalizeRedirectAuthoration">
-        <omgdc:Bounds height="80.0" width="100.0" x="720.0" y="375.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="waitForUserScaComplete" id="BPMNShape_waitForUserScaComplete">
         <omgdc:Bounds height="80.0" width="100.0" x="570.0" y="375.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
