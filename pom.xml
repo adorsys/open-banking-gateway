@@ -87,6 +87,7 @@
         <checkstyle-plugin.version>3.1.0</checkstyle-plugin.version>
         <spotbugs-plugin.version>3.1.12.2</spotbugs-plugin.version>
         <maven.jxr.plugin.version>3.0.0</maven.jxr.plugin.version>
+        <guava.version>28.1-jre</guava.version>
     </properties>
 
     <repositories>
@@ -184,7 +185,33 @@
                 <artifactId>jackson-dataformat-yaml</artifactId>
                 <version>${fasterxml-data-format.version}</version>
             </dependency>
-            
+
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+            <!-- Test -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-params</artifactId>
+                <version>${jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
                 "de.adorsys.opba.core.protocol.repository"
         }
 )
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Spring entry point
 public class BankingProtocol {
 
     public static void main(String[] args) {

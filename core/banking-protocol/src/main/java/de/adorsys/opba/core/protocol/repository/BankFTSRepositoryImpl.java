@@ -18,8 +18,7 @@ public class BankFTSRepositoryImpl {
 
     public List<Bank> getBanks(String query, int maxResults) {
 
-        String sql = "SELECT id, name, bic, bank_code, word_similarity(?, (name || ' ' || bic || ' ' || bank_code)) as sim " +
-                "FROM opb_bank order by sim desc limit ?";
+        String sql = "SELECT id, name, bic, bank_code, word_similarity(?, (name || ' ' || bic || ' ' || bank_code)) as sim FROM opb_bank order by sim desc limit ?";
         return jdbcTemplate.query(sql, ROW_MAPPER, query, maxResults);
     }
 }
