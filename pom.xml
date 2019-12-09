@@ -79,16 +79,18 @@
         <springfox.version>2.9.2</springfox.version>
         <jetbrains.annotations.version>17.0.0</jetbrains.annotations.version>
         <lombok.version>1.18.10</lombok.version>
-        <junit.version>5.3.2</junit.version>
         <xml-maven-plugin.version>1.0.2</xml-maven-plugin.version>
         <jacoco.version>0.8.4</jacoco.version>
-        <jupiter.version>5.4.1</jupiter.version>
-        <surefire.version>2.22.1</surefire.version>
-        <junit.platform.commons.version>1.4.1</junit.platform.commons.version>
+        <jupiter.version>5.5.2</jupiter.version>
+        <junit.platform.commons.version>1.5.2</junit.platform.commons.version>
+        <surefire.version>3.0.0-M3</surefire.version>
         <checkstyle-plugin.version>3.1.0</checkstyle-plugin.version>
         <spotbugs-plugin.version>3.1.12.2</spotbugs-plugin.version>
         <maven.jxr.plugin.version>3.0.0</maven.jxr.plugin.version>
         <guava.version>28.1-jre</guava.version>
+        <bouncycastle.version>1.64</bouncycastle.version>
+        <testcontainers.version>1.12.1</testcontainers.version>
+        <surefireArgLine/>
     </properties>
 
     <repositories>
