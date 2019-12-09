@@ -1,4 +1,4 @@
-# Authorize Consent Redirect
+# Authorize Consent Redirect Approach
 
 ## Description
 
@@ -28,7 +28,7 @@ The aspspAuthSuccess method of the BankingProtocol is called with TppConsentSess
 - The consent session contains any other information needed to manage the consent process.
 
 #### 077 Redirect PSU to FinTechAPI
-The TppConsentSession is temporarily encrypted snd stored. Coresponding redirectCode is used to redirect PSU to the FinTechAPI redirect endpoint. ConsentAuthSessionCookie is deleted with the redirect process.
+The TppConsentSession is temporarily encrypted and stored. Corresponding redirectCode is used to redirect PSU to the FinTechAPI redirect endpoint. ConsentAuthSessionCookie is deleted with the redirect process.
 
 
 

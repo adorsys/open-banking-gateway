@@ -1,4 +1,4 @@
-# Authorize Consent Embedded
+# Authorize Consent Embedded Approach
 
 ## Description
 
