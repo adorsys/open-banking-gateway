@@ -30,6 +30,8 @@
 
     <modules>
         <module>opba-consent-rest-api</module>
+        <module>opba-banking-rest-api</module>
+        <module>opba-embedded-starter</module>
         <module>last-module-codecoverage</module>
     </modules>
 
@@ -49,6 +51,13 @@
             <organization>adorsys GmbH &amp; Co KG</organization>
             <organizationUrl>https://adorsys.de/</organizationUrl>
         </developer>
+        <developer>
+            <name>Denys Golubiev</name>
+            <email>dgo@adorsys.de</email>
+            <organization>adorsys GmbH &amp; Co KG</organization>
+            <organizationUrl>https://adorsys.de/</organizationUrl>
+        </developer>
+
     </developers>
 
     <properties>
@@ -62,17 +71,13 @@
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
         <java.version>1.8</java.version>
         <pmd.plugin.version>3.10.0</pmd.plugin.version>
-        <!-- xs2a version -->
-        <xs2a.version>5.1</xs2a.version>
-        <!-- other properties -->
-        <lombok.version>1.18.4</lombok.version>
-        <spring-boot-dependencies.version>2.1.1.RELEASE</spring-boot-dependencies.version>
-        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
-        <swagger-annotations.version>1.5.20</swagger-annotations.version>
-        <jetbrains.annotations.version>15.0</jetbrains.annotations.version>
-        <lombok.version>1.18.4</lombok.version>
-        <fasterxml.version>2.10.1</fasterxml.version>
-        <fasterxml-data-format.version>2.9.8</fasterxml-data-format.version>
+        <apache.commons-lang3.version>3.9</apache.commons-lang3.version>
+		<spring-boot-dependencies.version>2.1.1.RELEASE</spring-boot-dependencies.version>
+        <swaggerv3.version>2.1.0</swaggerv3.version>
+        <swagger.version>1.5.23</swagger.version>
+        <springfox.version>2.9.2</springfox.version>
+        <lombok.version>1.18.10</lombok.version>
+        <junit.version>5.3.2</junit.version>
         <xml-maven-plugin.version>1.0.2</xml-maven-plugin.version>
         <jacoco.version>0.8.4</jacoco.version>
         <jupiter.version>5.4.1</jupiter.version>
@@ -106,21 +111,34 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache.commons-lang3.version}</version>
+            </dependency>
             <!-- swagger -->
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swaggerv3.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-annotations</artifactId>
-                <version>${swagger-annotations.version}</version>
+                <version>${swagger.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger2</artifactId>
-                <version>${springfox-swagger2.version}</version>
+                <version>${springfox.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger-ui</artifactId>
-                <version>${springfox-swagger2.version}</version>
+                <version>${springfox.version}</version>
             </dependency>
 
             <!-- Spring Boot -->
@@ -138,69 +156,25 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.jetbrains</groupId>
                 <artifactId>annotations</artifactId>
-                <version>${jetbrains.annotations.version}</version>
-                <scope>compile</scope>
+                <version>17.0.0</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-annotations</artifactId>
-                <version>${fasterxml.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${fasterxml.version}</version>
-                <scope>compile</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.datatype</groupId>
-                <artifactId>jackson-datatype-jsr310</artifactId>
-                <version>${fasterxml.version}</version>
-                <scope>compile</scope>
-            </dependency>
+            <!-- Test -->
 
-            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-yaml</artifactId>
-                <version>${fasterxml-data-format.version}</version>
-            </dependency>
-
-            <!-- jupiter -->
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-api</artifactId>
-                <version>${jupiter.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
-                <version>${jupiter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-params</artifactId>
-                <version>${jupiter.version}</version>
+                <version>${junit.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <build>
-
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.sonarsource.scanner.maven</groupId>
-                    <artifactId>sonar-maven-plugin</artifactId>
-                    <version>3.6.0.1398</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-
         <plugins>
             <!-- lombok -->
             <plugin>
@@ -234,6 +208,9 @@
                         <ruleset>${maven.multiModuleProjectDirectory}/pmd-ruleset.xml</ruleset>
                     </rulesets>
                     <failOnViolation>true</failOnViolation>
+                    <excludeRoots>
+                        <excludeRoot>${maven.multiModuleProjectDirectory}/opba-banking-rest-api/generated</excludeRoot>
+                    </excludeRoots>
                 </configuration>
                 <executions>
                     <execution>
