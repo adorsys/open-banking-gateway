@@ -1,0 +1,24 @@
+.search {
+    margin-bottom: 10px;
+     .form-control {
+        font-style: italic;
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+        padding-left: 2.375rem;
+         background-color: #FBFBFC;
+    }
+
+    .form-control-feedback {
+        position: absolute;
+        z-index: 2;
+        display: block;
+        width: 2.375rem;
+        height: 2.375rem;
+        padding-top: 18px;
+        text-align: center;
+        pointer-events: none;
+        color: #A7A7A7;
+    }
+}
+
+
