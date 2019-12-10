@@ -15,7 +15,7 @@ export class BankSearchComponent implements OnInit {
 
   ngOnInit() {
     this.bankSearchService
-      .getBanks()
+      .getPopularBanks()
       .subscribe((banks: Bank[]) => this.searchedBanks = banks);
   }
 
