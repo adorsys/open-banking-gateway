@@ -5,7 +5,6 @@ import de.adorsys.opba.core.protocol.dto.TestResult;
 import de.adorsys.opba.core.protocol.services.StatisticService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.junit.ClassRule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 import org.testcontainers.containers.DockerComposeContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.org.apache.commons.lang.RandomStringUtils;
 
 import java.io.File;
@@ -32,6 +34,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 @SpringBootTest
 @Slf4j
+@Testcontainers
 public class TestBankSearchPerformance extends BaseMockitoTest {
 
     private static final int POSTGRES_PORT = 5432;
@@ -43,10 +46,12 @@ public class TestBankSearchPerformance extends BaseMockitoTest {
 
     private MockMvc mockMvc;
 
-    @ClassRule
-    public static DockerComposeContainer environment =
+    @Container
+    @SuppressWarnings("PMD.UnusedPrivateField")
+    private static final DockerComposeContainer environment =
             new DockerComposeContainer(new File("src/test/resources/docker-compose.yml"))
-                    .withExposedService("postgres", POSTGRES_PORT);
+                    .withExposedService("postgres", POSTGRES_PORT)
+                    .waitingFor("postgres", Wait.forListeningPort());
 
     @Autowired
     private WebApplicationContext webApplicationContext;

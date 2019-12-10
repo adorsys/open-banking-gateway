@@ -90,7 +90,7 @@
         <maven.jxr.plugin.version>3.0.0</maven.jxr.plugin.version>
         <guava.version>28.1-jre</guava.version>
         <bouncycastle.version>1.64</bouncycastle.version>
-        <testcontainers.version>1.12.1</testcontainers.version>
+        <testcontainers.version>1.12.4</testcontainers.version>
         <liquibase.version>3.8.0</liquibase.version>
         <slf4j-simple.version>1.7.29</slf4j-simple.version>
         <surefireArgLine/>
