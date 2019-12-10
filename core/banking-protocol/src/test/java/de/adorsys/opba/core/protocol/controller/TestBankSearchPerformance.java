@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringBootTest
 @Slf4j
 @Testcontainers
-public class TestBankSearchPerformance extends BaseMockitoTest {
+class TestBankSearchPerformance extends BaseMockitoTest {
 
     private static final int POSTGRES_PORT = 5432;
     private static final int N_THREADS = 10;
@@ -44,14 +44,15 @@ public class TestBankSearchPerformance extends BaseMockitoTest {
     private final AtomicInteger counter = new AtomicInteger();
     private final AtomicInteger counterFTS = new AtomicInteger();
 
+    private static List<String> searchStrings = generateTestData();
+
     private MockMvc mockMvc;
 
     @Container
     @SuppressWarnings("PMD.UnusedPrivateField")
     private static final DockerComposeContainer environment =
             new DockerComposeContainer(new File("src/test/resources/docker-compose.yml"))
-                    .withExposedService("postgres", POSTGRES_PORT)
-                    .waitingFor("postgres", Wait.forListeningPort());
+                    .withExposedService("postgres", 1, POSTGRES_PORT, Wait.forListeningPort());
 
     @Autowired
     private WebApplicationContext webApplicationContext;
@@ -66,16 +67,19 @@ public class TestBankSearchPerformance extends BaseMockitoTest {
         StatisticService statisticService = new StatisticService();
         ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
 
-        List<String> searchStrings = generateTestData();
-
         log.info("Starting test endpoints...");
         Runnable runnable = getBanksEnpoint(statisticService, searchStrings);
         searchStrings.forEach(s -> executorService.execute(runnable));
 
         executorService.awaitTermination(60L, TimeUnit.SECONDS);
         printResults(statisticService);
+    }
 
-        statisticService = new StatisticService();
+    @Test
+    void TestBankSearchFTS() throws Exception {
+        StatisticService statisticService = new StatisticService();
+        ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
+
         log.info("Starting test FTS endpoints...");
         Runnable runnableFTS = getBanksFTSEnpoint(statisticService, searchStrings);
         searchStrings.forEach(s -> executorService.execute(runnableFTS));
@@ -86,7 +90,7 @@ public class TestBankSearchPerformance extends BaseMockitoTest {
 
     private void printResults(StatisticService statisticService) {
         log.info("Test results:");
-        statisticService.getTestResult().forEach(System.out::println);
+        statisticService.getTestResult().forEach(tr -> log.info("{}", tr));
 
         Long start = statisticService.getTestResult()
                 .stream().map(TestResult::getStart).collect(Collectors.toList())
@@ -94,6 +98,8 @@ public class TestBankSearchPerformance extends BaseMockitoTest {
         Long end = statisticService.getTestResult()
                 .stream().map(TestResult::getEnd).collect(Collectors.toList())
                 .stream().max(Long::compareTo).get();
+        log.info("start: {}", start);
+        log.info("end: {}", end);
         log.info("{} calls completed in {} milliseconds", ITERATIONS, end - start);
     }
 
@@ -142,7 +148,7 @@ public class TestBankSearchPerformance extends BaseMockitoTest {
     }
 
     @NotNull
-    private List<String> generateTestData() {
+    private static List<String> generateTestData() {
         log.info("Generating test data...");
         List<String> searchStrings = new ArrayList<>();
         for (int i = 0; i < ITERATIONS; i++) {
