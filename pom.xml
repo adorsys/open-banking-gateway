@@ -91,6 +91,8 @@
         <guava.version>28.1-jre</guava.version>
         <bouncycastle.version>1.64</bouncycastle.version>
         <testcontainers.version>1.12.1</testcontainers.version>
+        <liquibase.version>3.8.0</liquibase.version>
+        <slf4j-simple.version>1.7.29</slf4j-simple.version>
         <surefireArgLine/>
     </properties>
 
@@ -172,6 +174,22 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>${liquibase.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j-simple.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
