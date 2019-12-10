@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import {BankSearchService} from "../../services/bank-search.service";
+import {Component, OnInit} from '@angular/core';
 import {Bank} from "../../models/bank.model";
+import {BankSearchFacade} from "../../bank-search.facade";
 
 @Component({
   selector: 'app-bank-search',
@@ -9,18 +9,21 @@ import {Bank} from "../../models/bank.model";
 })
 export class BankSearchComponent implements OnInit {
 
+  loading: boolean;
   private searchedBanks: Bank[];
 
-  constructor(private bankSearchService: BankSearchService) { }
+  constructor(private bankSearchFacade: BankSearchFacade) {
+    bankSearchFacade.isUpdating$().subscribe(loading => this.loading = loading);
+  }
 
   ngOnInit() {
-    this.bankSearchService
+    this.bankSearchFacade
       .getPopularBanks()
       .subscribe((banks: Bank[]) => this.searchedBanks = banks);
   }
 
   onSearch(keyword: string) {
-    this.bankSearchService
+    this.bankSearchFacade
       .searchBanks(keyword)
       .subscribe((banks: Bank[]) => this.searchedBanks = banks);
   }

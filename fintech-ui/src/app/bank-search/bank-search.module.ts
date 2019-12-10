@@ -14,6 +14,6 @@ import {FormsModule} from "@angular/forms";
         CommonModule,
         BankSearchRoutingModule,
         FormsModule
-    ]
+    ],
 })
 export class BankSearchModule { }

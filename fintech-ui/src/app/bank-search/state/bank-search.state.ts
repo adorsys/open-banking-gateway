@@ -1,7 +1,9 @@
 import {Injectable} from "@angular/core";
 import {BehaviorSubject} from "rxjs";
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class BankSearchState {
   private updating$ = new BehaviorSubject<boolean>(false);
 

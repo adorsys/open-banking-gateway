@@ -1,13 +1,12 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Bank} from "../models/bank.model";
 import {Observable, of} from 'rxjs';
+import {delay} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
 })
 export class BankSearchService {
-
-  readonly API_PATH = '/to-be-defined';
 
   private static MOST_POPULAR_BANKS_STUBS: Bank[] = [
     {id: '0', name: 'Sparkasse Nürnberg', bic: 'SSXXXX', bankCode: 373737},
@@ -16,7 +15,6 @@ export class BankSearchService {
     {id: '3', name: 'Sparda Nürnberg', bic: 'SSXXXX', bankCode: 488737},
     {id: '4', name: 'Commerzbank', bic: 'SSXXXX', bankCode: 488737}
   ];
-
   private static ALL_BANKS_STUBS: Bank[] = [
     {id: '0', name: 'Sparkasse Nürnberg', bic: 'SSXXXX', bankCode: 373737},
     {id: '1', name: 'N26', bic: 'SSXXXX', bankCode: 473737},
@@ -30,16 +28,20 @@ export class BankSearchService {
     {id: '9', name: 'Bausparkasse Mainz', bic: 'SSXXXX', bankCode: 373737},
     {id: '10', name: 'Sparkasse Hochfranken', bic: 'SSXXXX', bankCode: 373737},
   ];
+  readonly API_PATH = '/to-be-defined';
 
-  constructor() { }
+  constructor() {
+  }
 
   getPopularBanks(): Observable<Bank[]> {
-    return of(BankSearchService.MOST_POPULAR_BANKS_STUBS);
+    return of(BankSearchService.MOST_POPULAR_BANKS_STUBS)
+      .pipe(delay(600));
   }
 
   searchBanks(keyword: string): Observable<Bank[]> {
     return of(BankSearchService.ALL_BANKS_STUBS.filter(bank =>
       bank.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase())
-    ).slice(0, 5));
+    ).slice(0, 5))
+      .pipe(delay(1200));
   }
 }
