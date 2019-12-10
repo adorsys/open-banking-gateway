@@ -17,7 +17,7 @@ If no review is done for more than 24 hours, the developer is allowed to merge t
 Of course build in [travis](https://travis-ci.com/adorsys/open-banking-gateway) must work after merge.
 
 The master branch is never touched. Never, except when release build is done. This is triggered by
-the project management. When release build is triggered the current develoop is merged into master. 
+the project management. When release build is triggered the current develop is merged into master. 
 For that master never ever must be updated manually.
  
 ### Definition of Ready
