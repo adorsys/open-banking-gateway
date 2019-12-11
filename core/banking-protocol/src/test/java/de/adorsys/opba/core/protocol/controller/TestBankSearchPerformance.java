@@ -22,9 +22,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -41,6 +41,7 @@ class TestBankSearchPerformance extends BaseMockitoTest {
     private static final int N_THREADS = 10;
     private static final int ITERATIONS = N_THREADS * 100;
 
+    private final CountDownLatch latch = new CountDownLatch(ITERATIONS);
     private final AtomicInteger counter = new AtomicInteger();
     private final AtomicInteger counterFTS = new AtomicInteger();
 
@@ -68,10 +69,10 @@ class TestBankSearchPerformance extends BaseMockitoTest {
         ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
 
         log.info("Starting test endpoints...");
-        Runnable runnable = getBanksEnpoint(statisticService, searchStrings);
+        Runnable runnable = getBanksEndpoint(statisticService, searchStrings);
         searchStrings.forEach(s -> executorService.execute(runnable));
 
-        executorService.awaitTermination(60L, TimeUnit.SECONDS);
+        latch.await();
         printResults(statisticService);
     }
 
@@ -81,10 +82,11 @@ class TestBankSearchPerformance extends BaseMockitoTest {
         ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
 
         log.info("Starting test FTS endpoints...");
-        Runnable runnableFTS = getBanksFTSEnpoint(statisticService, searchStrings);
+        Runnable runnableFTS = getBanksFTSEndpoint(statisticService, searchStrings);
+
         searchStrings.forEach(s -> executorService.execute(runnableFTS));
 
-        executorService.awaitTermination(60L, TimeUnit.SECONDS);
+        latch.await();
         printResults(statisticService);
     }
 
@@ -101,10 +103,11 @@ class TestBankSearchPerformance extends BaseMockitoTest {
         log.info("start: {}", start);
         log.info("end: {}", end);
         log.info("{} calls completed in {} milliseconds", ITERATIONS, end - start);
+        log.info("Operations per second: {}", ITERATIONS / ((end - start)/1000));
     }
 
     @NotNull
-    private Runnable getBanksEnpoint(StatisticService statisticService, List<String> searchStrings) {
+    private Runnable getBanksEndpoint(StatisticService statisticService, List<String> searchStrings) {
         return () -> {
             int cnt = counter.incrementAndGet();
             String searchString = searchStrings.get(cnt - 1);
@@ -119,6 +122,7 @@ class TestBankSearchPerformance extends BaseMockitoTest {
                 long end = System.currentTimeMillis();
                 TestResult testResult = new TestResult(start, end, searchString, mvcResult.getResponse().getContentAsString());
                 statisticService.getTestResult().add(testResult);
+                latch.countDown();
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
@@ -126,7 +130,7 @@ class TestBankSearchPerformance extends BaseMockitoTest {
     }
 
     @NotNull
-    private Runnable getBanksFTSEnpoint(StatisticService statisticService, List<String> searchStrings) {
+    private Runnable getBanksFTSEndpoint(StatisticService statisticService, List<String> searchStrings) {
         return () -> {
             int cnt = counterFTS.incrementAndGet();
             String searchString = searchStrings.get(cnt - 1);
@@ -141,6 +145,7 @@ class TestBankSearchPerformance extends BaseMockitoTest {
                 long end = System.currentTimeMillis();
                 TestResult testResult = new TestResult(start, end, searchString, mvcResult.getResponse().getContentAsString());
                 statisticService.getTestResult().add(testResult);
+                latch.countDown();
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
