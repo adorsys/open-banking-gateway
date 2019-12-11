@@ -58,3 +58,6 @@ The code uses <code>the checkstyle.xml</code> placed in the root of the project.
 install the <code>CheckStyle-IDEA v5.34.0</code> Plugin and configure in <code>Other Settings -> Checkstyle</code>
 the version <code>8.19</code> and add the configuration file <code>checkstyle.xml</code>.
 
+## Contribution Guidelines
+
+* [Contribution Guidelines](docs/ContributionGuidelines.md) 
