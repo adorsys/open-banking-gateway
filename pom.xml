@@ -30,6 +30,7 @@
 
     <modules>
         <module>opba-consent-rest-api</module>
+        <module>core</module>
         <module>opba-banking-rest-api</module>
         <module>opba-embedded-starter</module>
         <module>last-module-codecoverage</module>
@@ -72,20 +73,27 @@
         <java.version>1.8</java.version>
         <pmd.plugin.version>3.10.0</pmd.plugin.version>
         <apache.commons-lang3.version>3.9</apache.commons-lang3.version>
-		<spring-boot-dependencies.version>2.1.1.RELEASE</spring-boot-dependencies.version>
+		<spring-boot.version>2.2.2.RELEASE</spring-boot.version>
         <swaggerv3.version>2.1.0</swaggerv3.version>
         <swagger.version>1.5.23</swagger.version>
         <springfox.version>2.9.2</springfox.version>
+        <jetbrains.annotations.version>17.0.0</jetbrains.annotations.version>
         <lombok.version>1.18.10</lombok.version>
-        <junit.version>5.3.2</junit.version>
         <xml-maven-plugin.version>1.0.2</xml-maven-plugin.version>
         <jacoco.version>0.8.4</jacoco.version>
-        <jupiter.version>5.4.1</jupiter.version>
-        <surefire.version>2.22.1</surefire.version>
-        <junit.platform.commons.version>1.4.1</junit.platform.commons.version>
+        <jupiter.version>5.5.2</jupiter.version>
+        <junit.platform.commons.version>1.5.2</junit.platform.commons.version>
+        <surefire.version>3.0.0-M3</surefire.version>
+        <assertj.version>3.12.2</assertj.version>
         <checkstyle-plugin.version>3.1.0</checkstyle-plugin.version>
         <spotbugs-plugin.version>3.1.12.2</spotbugs-plugin.version>
         <maven.jxr.plugin.version>3.0.0</maven.jxr.plugin.version>
+        <guava.version>28.1-jre</guava.version>
+        <bouncycastle.version>1.64</bouncycastle.version>
+        <testcontainers.version>1.12.4</testcontainers.version>
+        <liquibase.version>3.8.0</liquibase.version>
+        <slf4j-simple.version>1.7.29</slf4j-simple.version>
+        <surefireArgLine/>
     </properties>
 
     <repositories>
@@ -145,7 +153,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot-dependencies.version}</version>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -160,16 +168,28 @@
             <dependency>
                 <groupId>org.jetbrains</groupId>
                 <artifactId>annotations</artifactId>
-                <version>17.0.0</version>
+                <version>${jetbrains.annotations.version}</version>
             </dependency>
-
-            <!-- Test -->
-
             <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
-                <version>${junit.version}</version>
-                <scope>test</scope>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>${liquibase.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j-simple.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
