@@ -21,12 +21,16 @@ deploy:
 #    script: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.host.url=$SONAR_HOST -Dsonar.login=$SONAR_TOKEN
 #    on:
 #      branch: develop
-  -
+  - provider: script
     skip_cleanup: true
-    provider: script
     script: /bin/bash .travis/deploy.sh
     on:
       tags: true
       # matches: vX.Y.Z, vX.Y.Z-A, vX.Y.Z-RCA, vX.Y.Z-A-B.C.D, vX.Y.Z-A-B.C.D-E, vX.Y.Z-RCA-B.C.D-E
       condition: "$TRAVIS_TAG =~ ^v([[:digit:]]+\\.)+[[:digit:]]+(-(RC)?[[:digit:]]+)?(-([[:digit:]]+\\.)+[[:digit:]]+(-[[:digit:]]+)?)?$"
 
+  - provider: script
+    skip_cleanup: true
+    script: /bin/bash .travis/deploy_to_openshift.sh
+    on:
+      branch: develop
