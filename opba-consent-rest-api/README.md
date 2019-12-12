@@ -2,7 +2,17 @@
 
 Provide interaction between PSU and TPP during a consent session.
 
-The purpose of a TppPsuConsentSession is to manage a single consent session between the PsuUserAgent and the TppConsentSessionApi. The TppPsuConsentSession start with the redirect of the PsuUserAgent from the TppBankingApi to the TppConsentSessionApi.
+The purpose of a TppPsuConsentSession is to manage a single consent session between the PsuUserAgent and the TppConsentSessionApi. The TppPsuConsentSession starts with the redirect of the PsuUserAgent from the TppBankingApi to the TppConsentSessionApi.
+
+## Running
+
+For now just simple starter in test package.
+
+Run the class: opba-consent-rest-api/src/test/java/de/adorsys/opba/consent/rest/impl/SampleApplication.java to start a spring-boot server process.
+
+swagger-ui: http://localhost:8080/swagger-ui.html
+
+## Description
 
 Following environments are involved in the consent initiation process.
 
@@ -30,11 +40,4 @@ Following environments are involved in the consent initiation process.
 | Tpp2AspspConsentSession | Information associated with the consent initialized by the ASPSP. Containing ConsentId, AspspConsentSessionRedirectUrl |
 | Fintech2TppConsentSession | Information associated with the consent as returned by the Tpp to the FinTech. Containing authCode, TppConsentSessionApiUrl |
 
-## Initiating a consent session
-
-The following diagram displays a consent initiation process triggered by the PSU. Calls and return have the semantic "endPoint\<params\>\[header\](body)"
-
-![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/master/docs/architecture/diagrams/consentSession/PsuInitConsent.puml&fmt=svg&vvv=1&sanitize=true)  
-
-## Authorizing a consent session
 
