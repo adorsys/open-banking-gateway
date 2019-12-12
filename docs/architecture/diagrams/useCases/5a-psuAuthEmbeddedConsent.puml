@@ -30,13 +30,13 @@ ConsentAuthorisationApi -> ConsentAuthorisationApi : TppConsentSession.getCookie
 ConsentAuthorisationApi --> ConsentAuthorisationUI : redirect302[ConsentAuthSessionCookie,\nConsentAuthorisationUI.embeddedAuthInitScreen]()<consentSessionState>
 deactivate ConsentAuthorisationApi
 activate ConsentAuthorisationUI
-ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:ConsentAuthorisationApi.authChallenge\n[ConsentAuthSessionCookie, UserAgentContext]()<consentSessionState>
+ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:ConsentAuthorisationApi.embeddedAuth\n[ConsentAuthSessionCookie, UserAgentContext]()<consentSessionState>
 return 200_OK[ConsentAuthSessionCookie]\n(ConsentAuthorizeResponse{Transactions[],AisConsent,ScaUIMetadaData})
 loop #LightCyan while(ConsentAuthorizeResponse.hasAuthChallenge())
     ConsentAuthorisationUI --> psu : displayAuthScreen(ScaUIMetadaData)
     deactivate ConsentAuthorisationUI
     psu -> ConsentAuthorisationUI ++ : enterAuthData(PsuAuthData)
-    ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : POST:ConsentAuthorisationApi.psuAuth\n[ConsentAuthSessionCookie, UserAgentContext](PsuAuthData)<consentSessionState>
+    ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : POST:ConsentAuthorisationApi.embeddedAuth\n[ConsentAuthSessionCookie, UserAgentContext](PsuAuthData)<consentSessionState>
     autonumber 80 1 "<b><color blue>[AuthEmbedded-000]</color></b>"
     ConsentAuthorisationApi -> BankingProtocol ++ : updatePsuAuth[TppConsentSession](PsuAuthData)<>
     BankingProtocol -> BankingProtocol : TppConsentSession.aspspConsentSession()\n:TppConsentSession

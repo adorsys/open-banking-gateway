@@ -29,8 +29,8 @@ end box
 ConsentAuthorisationApi --> ConsentAuthorisationUI ++ : displayRedirectInfoPage[ConsentAuthSessionCookie,\nConsentAuthorisationUI.infoPanel](AuthorizeResponse)
 ConsentAuthorisationUI --> psu : displayRedirectInfoPage()
 deactivate ConsentAuthorisationUI
-psu -> ConsentAuthorisationUI ++ : confirmRedirect()
-ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:confirmRedirect\n[ConsentAuthSessionCookie]()<consentSessionState>
+psu -> ConsentAuthorisationUI ++ : toAspspGrant
+ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:toAspspGrant\n[ConsentAuthSessionCookie]()<consentSessionState>
 deactivate ConsentAuthorisationUI
 ConsentAuthorisationApi --> OnlineBankingUI ++ : redirect302[ConsentAuthSessionCookie,\nOnlineBankingApi.redirectEntryPoint]\n()<consentId, authorizationId>
 deactivate ConsentAuthorisationApi
@@ -61,11 +61,11 @@ group OnlineBankingConsent
 end
 autonumber resume
 activate ConsentAuthorisationUI
-ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:aspspAuthSuccess[ConsentAuthSessionCookie]()<consentAuthState, aspspAuthCode>
+ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:fromAspspOk[ConsentAuthSessionCookie]()<consentAuthState, aspspAuthCode>
 autonumber 71 1 "<b><color blue>[AuthRedirect-000]"
 ConsentAuthorisationApi -> ConsentAuthorisationApi : ConsentAuthSessionCookie.tppConsentSession\n(consentAuthState):TppConsentSession
 ConsentAuthorisationApi -> ConsentAuthorisationApi : getBankingProtocol(TppConsentSession)
-ConsentAuthorisationApi -> BankingProtocol ++ : aspspAuthSuccess(TppConsentSession, aspspAuthCode)
+ConsentAuthorisationApi -> BankingProtocol ++ : fromAspspOk(TppConsentSession, aspspAuthCode)
 group RetrievASPSPConsent
 BankingProtocol -> OnlineBankingApi ++ : getConsentStatus or getToken[TppConsentSession, TppContext, aspspAuthCode]()
 return TppConsentSession
