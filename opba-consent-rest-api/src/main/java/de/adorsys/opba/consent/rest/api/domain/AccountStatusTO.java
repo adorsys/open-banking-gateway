@@ -21,29 +21,27 @@ import java.util.Map;
 import java.util.Optional;
 
 public enum AccountStatusTO {
-    ENABLED("enabled"),
-    DELETED("deleted"),
-    BLOCKED("blocked");
+  ENABLED("enabled"), DELETED("deleted"), BLOCKED("blocked");
 
-    private static final Map<String, AccountStatusTO> CONTAINER = new HashMap<>();
+  private static final Map<String, AccountStatusTO> CONTAINER = new HashMap<>();
 
-    static {
-        for (AccountStatusTO accountStatus : values()) {
-            CONTAINER.put(accountStatus.getValue(), accountStatus);
-        }
+  static {
+    for (AccountStatusTO accountStatus : values()) {
+      CONTAINER.put(accountStatus.getValue(), accountStatus);
     }
+  }
 
-    private String value;
+  private String value;
 
-    AccountStatusTO(String value) {
-        this.value = value;
-    }
+  AccountStatusTO(String value) {
+    this.value = value;
+  }
 
-    public String getValue() {
-        return value;
-    }
+  public String getValue() {
+    return value;
+  }
 
-    public static Optional<AccountStatusTO> getByValue(String value) {
-        return Optional.ofNullable(CONTAINER.get(value));
-    }
+  public static Optional<AccountStatusTO> getByValue(String value) {
+    return Optional.ofNullable(CONTAINER.get(value));
+  }
 }

@@ -1,12 +1,11 @@
 package de.adorsys.opba.consent.rest.api.domain;
 
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
-
-import de.adorsys.opba.consent.rest.api.domain.AmountTO;
-
 import java.math.BigDecimal;
 import java.util.Currency;
+
+import org.junit.jupiter.api.Test;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AmountTOTest {

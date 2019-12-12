@@ -28,50 +28,46 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AccountDetailsTO {
 
-    private String id;
-    /**
-     * International Bank Account Number
-     * 2 letters CountryCode + 2 digits checksum + BBAN
-     * DE89 3704 0044 0532 0130 00 (Sample for Germany)
-     */
-    private String iban;
-    /**
-     * Basic Bank Account Number
-     * 8 symbols bank id + account number
-     * 3704 0044 0532 0130 00 (Sample for Germany)
-     */
-    private String bban;
-    /**
-     * Primary Account Number
-     * 0000 0000 0000 0000 (Example)
-     */
-    private String pan;
+  private String id;
+  /**
+   * International Bank Account Number 2 letters CountryCode + 2 digits checksum +
+   * BBAN DE89 3704 0044 0532 0130 00 (Sample for Germany)
+   */
+  private String iban;
+  /**
+   * Basic Bank Account Number 8 symbols bank id + account number 3704 0044 0532
+   * 0130 00 (Sample for Germany)
+   */
+  private String bban;
+  /**
+   * Primary Account Number 0000 0000 0000 0000 (Example)
+   */
+  private String pan;
 
-    /**
-     * Same as previous, several signs are masked with "*"
-     */
-    private String maskedPan;
+  /**
+   * Same as previous, several signs are masked with "*"
+   */
+  private String maskedPan;
 
-    /**
-     * Mobile Subscriber Integrated Services Digital Number
-     * 00499113606980 (Adorsys tel nr)
-     */
-    private String msisdn;
-    private Currency currency;
-    private String name;
-    private String product;
-    private AccountTypeTO accountType;
-    private AccountStatusTO accountStatus;
+  /**
+   * Mobile Subscriber Integrated Services Digital Number 00499113606980 (Adorsys
+   * tel nr)
+   */
+  private String msisdn;
+  private Currency currency;
+  private String name;
+  private String product;
+  private AccountTypeTO accountType;
+  private AccountStatusTO accountStatus;
 
-    /**
-     * SWIFT
-     * 4 letters bankCode + 2 letters CountryCode + 2 symbols CityCode + 3 symbols BranchCode
-     * DEUTDE8EXXX (Deuche Bank AG example)
-     */
-    private String bic;
-    private String linkedAccounts;
-    private UsageTypeTO usageType;
-    private String details;
+  /**
+   * SWIFT 4 letters bankCode + 2 letters CountryCode + 2 symbols CityCode + 3
+   * symbols BranchCode DEUTDE8EXXX (Deuche Bank AG example)
+   */
+  private String bic;
+  private String linkedAccounts;
+  private UsageTypeTO usageType;
+  private String details;
 
-    private List<AccountBalanceTO> balances;
+  private List<AccountBalanceTO> balances;
 }

@@ -27,6 +27,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AmountTO {
-    private Currency currency;
-    private BigDecimal amount;
+  private Currency currency;
+  private BigDecimal amount;
 }

@@ -30,19 +30,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountBalanceTO {
-    private AmountTO amount;
-    private BalanceTypeTO balanceType;
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    private LocalDateTime lastChangeDateTime;
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
-    private LocalDate referenceDate;
-    private String lastCommittedTransaction;
-    private String iban;
+  private AmountTO amount;
+  private BalanceTypeTO balanceType;
+  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
+  private LocalDateTime lastChangeDateTime;
+  @JsonDeserialize(using = LocalDateDeserializer.class)
+  @JsonSerialize(using = LocalDateSerializer.class)
+  private LocalDate referenceDate;
+  private String lastCommittedTransaction;
+  private String iban;
 }

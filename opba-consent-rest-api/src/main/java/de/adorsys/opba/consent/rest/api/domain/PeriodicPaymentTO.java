@@ -10,10 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PeriodicPaymentTO extends SinglePaymentTO {
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String executionRule;
-    private FrequencyCodeTO frequency;
-    private Integer dayOfExecution;
+  private LocalDate startDate;
+  private LocalDate endDate;
+  private String executionRule;
+  private FrequencyCodeTO frequency;
+  private Integer dayOfExecution;
 }
-

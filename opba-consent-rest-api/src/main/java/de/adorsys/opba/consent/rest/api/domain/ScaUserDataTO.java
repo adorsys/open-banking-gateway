@@ -10,17 +10,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ScaUserDataTO {
-    private String id;
-    @NotNull
-    private ScaMethodTypeTO scaMethod;
-    @NotNull
-    private String methodValue;
+  private String id;
+  @NotNull
+  private ScaMethodTypeTO scaMethod;
+  @NotNull
+  private String methodValue;
 
-    private boolean usesStaticTan;
-    private String staticTan;
-    private boolean decoupled;
+  private boolean usesStaticTan;
+  private String staticTan;
+  private boolean decoupled;
 
-    public boolean isDecoupled() {
-        return scaMethod.isDecoupled();
-    }
+  public boolean isDecoupled() {
+    return scaMethod.isDecoupled();
+  }
 }

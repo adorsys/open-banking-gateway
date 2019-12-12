@@ -16,13 +16,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BulkPaymentTO {
-    private String paymentId;
-    private Boolean batchBookingPreferred;
-    private AccountReferenceTO debtorAccount;
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
-    private LocalDate requestedExecutionDate;
-    private TransactionStatusTO paymentStatus;
-    private List<SinglePaymentTO> payments;
-    private PaymentProductTO paymentProduct;
+  private String paymentId;
+  private Boolean batchBookingPreferred;
+  private AccountReferenceTO debtorAccount;
+  @JsonDeserialize(using = LocalDateDeserializer.class)
+  @JsonSerialize(using = LocalDateSerializer.class)
+  private LocalDate requestedExecutionDate;
+  private TransactionStatusTO paymentStatus;
+  private List<SinglePaymentTO> payments;
+  private PaymentProductTO paymentProduct;
 }

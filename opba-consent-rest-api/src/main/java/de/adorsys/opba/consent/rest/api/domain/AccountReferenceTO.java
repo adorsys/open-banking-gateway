@@ -26,10 +26,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountReferenceTO {
-    private String iban;
-    private String bban;
-    private String pan;
-    private String maskedPan;
-    private String msisdn;
-    private Currency currency;
+  private String iban;
+  private String bban;
+  private String pan;
+  private String maskedPan;
+  private String msisdn;
+  private Currency currency;
 }

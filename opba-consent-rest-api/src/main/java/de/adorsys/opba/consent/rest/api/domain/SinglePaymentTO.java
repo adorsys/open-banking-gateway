@@ -18,21 +18,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SinglePaymentTO {
-    private String paymentId;
-    private String endToEndIdentification;
-    private AccountReferenceTO debtorAccount;
-    private AmountTO instructedAmount;
-    private AccountReferenceTO creditorAccount;
-    private String creditorAgent;
-    private String creditorName;
-    private AddressTO creditorAddress;
-    private String remittanceInformationUnstructured;
-    private TransactionStatusTO paymentStatus;
-    private PaymentProductTO paymentProduct;
-    @JsonDeserialize(using = LocalDateDeserializer.class)
-    @JsonSerialize(using = LocalDateSerializer.class)
-    private LocalDate requestedExecutionDate;
-    @JsonDeserialize(using = LocalTimeDeserializer.class)
-    @JsonSerialize(using = LocalTimeSerializer.class)
-    private LocalTime requestedExecutionTime;
+  private String paymentId;
+  private String endToEndIdentification;
+  private AccountReferenceTO debtorAccount;
+  private AmountTO instructedAmount;
+  private AccountReferenceTO creditorAccount;
+  private String creditorAgent;
+  private String creditorName;
+  private AddressTO creditorAddress;
+  private String remittanceInformationUnstructured;
+  private TransactionStatusTO paymentStatus;
+  private PaymentProductTO paymentProduct;
+  @JsonDeserialize(using = LocalDateDeserializer.class)
+  @JsonSerialize(using = LocalDateSerializer.class)
+  private LocalDate requestedExecutionDate;
+  @JsonDeserialize(using = LocalTimeDeserializer.class)
+  @JsonSerialize(using = LocalTimeSerializer.class)
+  private LocalTime requestedExecutionTime;
 }

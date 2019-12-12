@@ -16,36 +16,32 @@
 
 package de.adorsys.opba.consent.rest.api.domain;
 
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public enum UsageTypeTO {
-    PRIV("PRIV"),
-    ORGA("ORGA");
+  PRIV("PRIV"), ORGA("ORGA");
 
-    private static final Map<String, UsageTypeTO> CONTAINER = new HashMap<>();
+  private static final Map<String, UsageTypeTO> CONTAINER = new HashMap<>();
 
-    static {
-        for (UsageTypeTO usageType : values()) {
-            CONTAINER.put(usageType.getValue(), usageType);
-        }
+  static {
+    for (UsageTypeTO usageType : values()) {
+      CONTAINER.put(usageType.getValue(), usageType);
     }
+  }
 
-    private String value;
+  private String value;
 
+  UsageTypeTO(String value) {
+    this.value = value;
+  }
 
-    UsageTypeTO(String value) {
-        this.value = value;
-    }
+  public String getValue() {
+    return value;
+  }
 
-    public String getValue() {
-        return value;
-    }
-
-
-    public static Optional<UsageTypeTO> getByValue(String value) {
-        return Optional.ofNullable(CONTAINER.get(value));
-    }
+  public static Optional<UsageTypeTO> getByValue(String value) {
+    return Optional.ofNullable(CONTAINER.get(value));
+  }
 }

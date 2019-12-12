@@ -33,26 +33,23 @@ import lombok.NoArgsConstructor;
 @ApiModel(description = "Ais account access information", value = "AisAccountAccessInfo")
 public class AisAccountAccessInfoTO {
 
-    @ApiModelProperty(value = "Access to accounts")
-    private List<String> accounts;
+  @ApiModelProperty(value = "Access to accounts")
+  private List<String> accounts;
 
-    @ApiModelProperty(value = "Access to balances")
-    private List<String> balances;
+  @ApiModelProperty(value = "Access to balances")
+  private List<String> balances;
 
-    @ApiModelProperty(value = "Access to transactions")
-    private List<String> transactions;
+  @ApiModelProperty(value = "Access to transactions")
+  private List<String> transactions;
 
-    @ApiModelProperty(value = "Consent on all available accounts of psu", example = "ALL_ACCOUNTS")
-    private AisAccountAccessTypeTO availableAccounts;
+  @ApiModelProperty(value = "Consent on all available accounts of psu", example = "ALL_ACCOUNTS")
+  private AisAccountAccessTypeTO availableAccounts;
 
-    @ApiModelProperty(value = "Consent on all accounts, balances and transactions of psu", example = "ALL_ACCOUNTS")
-    private AisAccountAccessTypeTO allPsd2;
+  @ApiModelProperty(value = "Consent on all accounts, balances and transactions of psu", example = "ALL_ACCOUNTS")
+  private AisAccountAccessTypeTO allPsd2;
 
-    public boolean hasIbanInAccess(String iban) {
-        return availableAccounts != null
-                || allPsd2 != null
-                || accounts != null && accounts.contains(iban)
-                || balances != null && balances.contains(iban)
-                || transactions != null && transactions.contains(iban);
-    }
+  public boolean hasIbanInAccess(String iban) {
+    return availableAccounts != null || allPsd2 != null || accounts != null && accounts.contains(iban)
+        || balances != null && balances.contains(iban) || transactions != null && transactions.contains(iban);
+  }
 }

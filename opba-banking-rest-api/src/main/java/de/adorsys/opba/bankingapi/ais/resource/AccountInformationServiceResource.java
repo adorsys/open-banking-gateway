@@ -11,18 +11,15 @@ import java.util.UUID;
 
 @Controller
 public class AccountInformationServiceResource implements AccountInformationServiceAisApi {
-    @Override
-    public ResponseEntity<AccountList> getAccounts(UUID xRequestID
-                                                  ) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-    }
+  @Override
+  public ResponseEntity<AccountList> getAccounts(UUID xRequestID) {
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
 
-    @Override
-    @SuppressWarnings("checkstyle:ParameterNumber") // Parameters are provided through auto-generated base class
-    public ResponseEntity<TransactionsResponse> getTransactions(String accountId, UUID xRequestID, LocalDate dateFrom,
-                                                                LocalDate dateTo, String entryReferenceFrom,
-                                                                String bookingStatus, Boolean deltaList
-                                                               ) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-    }
+  @Override
+  @SuppressWarnings("checkstyle:ParameterNumber") // Parameters are provided through auto-generated base class
+  public ResponseEntity<TransactionsResponse> getTransactions(String accountId, UUID xRequestID, LocalDate dateFrom,
+      LocalDate dateTo, String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
+    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+  }
 }

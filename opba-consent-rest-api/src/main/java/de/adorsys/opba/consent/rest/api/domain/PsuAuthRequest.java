@@ -8,8 +8,7 @@ import lombok.Data;
 @Data
 public class PsuAuthRequest extends AuthorizeRequest {
 
-    @ApiModelProperty(value = "SCA authentication data, depending on the chosen authentication method. If the data is"
-            + " binary, then it is base64 encoded.",
-            required = true)
-    private Map<String, String> scaAuthenticationData;
+  @ApiModelProperty(value = "SCA authentication data, depending on the chosen authentication method. If the data is"
+      + " binary, then it is base64 encoded.", required = true)
+  private Map<String, String> scaAuthenticationData;
 }
