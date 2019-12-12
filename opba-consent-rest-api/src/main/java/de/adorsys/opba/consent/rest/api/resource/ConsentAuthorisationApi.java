@@ -22,8 +22,9 @@ import io.swagger.annotations.Authorization;
  *
  * @author fpo
  */
-@SuppressWarnings("LineLength")
-@Api(value = ConsentAuthorisationApi.PATH, tags = "Consent Authorization Api", description = "Entry point for processing a consent request redirected by the TppBankingApi over the FinTechApi to this ConsentAuthorisationApi.")
+@Api(value = ConsentAuthorisationApi.PATH, tags = "Consent Authorization Api",
+  description = "Entry point for processing a consent request redirected by the TppBankingApi over the FinTechApi to "
+  + "this ConsentAuthorisationApi.")
 public interface ConsentAuthorisationApi {
   String COOKIE = "Cookie";
   String API_KEY = "apiKey";
@@ -32,7 +33,9 @@ public interface ConsentAuthorisationApi {
   String CONSENT_SESSION_STATE_PATH = "/{" + CONSENT_SESSION_STATE + "}";
 
   @GetMapping(path = "/auth", params = { "redirectCode" })
-  @ApiOperation(value = "Entry point for processing a consent request redirected by the TppBankingApi over the FinTechApi to this ConsentAuthorisationApi.", notes = "This is the <b>entry point</b> for processing a consent redirected by the TppBankingApi to this ConsentAuthorisationApi."
+  @ApiOperation(value = "Entry point for processing a consent request redirected by the TppBankingApi over the "
+      + "FinTechApi to this ConsentAuthorisationApi.", notes = "This is the <b>entry point</b> for processing a "
+      + "consent redirected by the TppBankingApi to this ConsentAuthorisationApi."
       + "<ul><b>TPP behavior prior to redirecting to the ConsentAuthorisationApi</b>"
       + "<li>The code is a one time string that contains information used to retrieve RedirectSession from the BankingProtocol in a back channel.</li>"
       + "<li>The code is short lived (like 10 seconds). This is, BankingProtocol does not need to hold the RedirectSession after expiration.</li>"
@@ -44,10 +47,11 @@ public interface ConsentAuthorisationApi {
       + "<ul><b>Interacting with the PSU user agent</b>"
       + "<li>The consentAuthState is a transient reference of the ConsentSession. It is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.</li>"
       + "<li>The retruned AuthorizeResponse object info is needed to display a qualified information page to the PSU prio to eventually redirecting the PSU to the target ASPSP.</li>"
-      + "<li>The retruned AuthorizeResponse object allways carries the consentAuthState that is needed in any subsequent request to the ConsentAuthorisationApi. Therefore ConsentAuthorisationApi shall never"
-      + " store the consentAuthState the ConsentAuthSessionCookie</li>"
+      + "<li>The retruned AuthorizeResponse object allways carries the consentAuthState that is needed in any subsequent request to the ConsentAuthorisationApi. "
+      + "Therefore ConsentAuthorisationApi shall never store the consentAuthState the ConsentAuthSessionCookie</li>"
       + "<li>The retruned AuthorizeResponse object is allways synchronized with the ConsentAuthSessionCookie set with the same HTTP response object.</li>"
-      + "<li>The consentAuthState contained in the retruned AuthorizeResponse object is also used to decrypt information stored in the ConsentAuthSessionCookie set with the same HTTP response object.</li>"
+      + "<li>The consentAuthState contained in the retruned AuthorizeResponse object is also used to decrypt "
+      + "information stored in the ConsentAuthSessionCookie set with the same HTTP response object.</li>"
       + "<li>Any session, account or payment information needed to manage the authorization process is stored in both AuthorizeResponse and encrypted in the ConsentAuthSessionCookie</li>"
       + "<li>The ConsentAuthSessionCookie is httpOnly</li>" + "</ul>" + "<ul><b>Redirecting PSU to the ASPSP</b>"
       + "<li>The retruned AuthorizeResponse object contains information needed to redirect the PSU to the target ASPSP.</li>"
@@ -71,7 +75,8 @@ public interface ConsentAuthorisationApi {
    * @return Void
    */
   @PostMapping(path = "/to/aspsp/grant")
-  @ApiOperation(value = "Provides the ConsentAuthorisationApi with the opportunity to redirect the PSU to the ASPSP.", notes = "Provides the ConsentAuthorisationApi with the opportunity to redirect the PSU to the ASPSP."
+  @ApiOperation(value = "Provides the ConsentAuthorisationApi with the opportunity to redirect the PSU to the ASPSP.",
+  notes = "Provides the ConsentAuthorisationApi with the opportunity to redirect the PSU to the ASPSP."
       + "<ul><b>Request contains:</b>"
       + "<li>consentSessionState is retrieved from the AuthorizeResponse of the peceeding request.</li>"
       + "<li>ConsentAuthSessionCookie.</li>" + "</ul>" + "<ul><b>Returns:</b>" + "<li>302 Redirect</li>"
@@ -93,7 +98,8 @@ public interface ConsentAuthorisationApi {
    * @return Void
    */
   @PostMapping(path = "/to/aspsp/deny")
-  @ApiOperation(value = "Closes this session and redirects the PSU back to the FinTechApi or close the application window.", notes = "Closes this session and redirects the PSU back to the FinTechApi or close the application window. "
+  @ApiOperation(value = "Closes this session and redirects the PSU back to the FinTechApi or close the application window.",
+  notes = "Closes this session and redirects the PSU back to the FinTechApi or close the application window. "
       + "In any case, the session of the user will be closed and cookies will be deleted with the response to this request."
       + "<ul><b>Request contains:</b>"
       + "<li>consentSessionState is retrieved from the AuthorizeResponse of the peceeding request.</li>"
@@ -112,7 +118,8 @@ public interface ConsentAuthorisationApi {
    * @return Void
    */
   @GetMapping(path = "/from/aspsp" + CONSENT_SESSION_STATE_PATH + "/ok")
-  @ApiOperation(value = "Redirecting back from ASPSP to ConsentAuthorisationApi after a successful consent authorization.", notes = "Redirecting back from ASPSP to ConsentAuthorisationApi after a successful consent authorization. "
+  @ApiOperation(value = "Redirecting back from ASPSP to ConsentAuthorisationApi after a successful consent authorization.",
+  notes = "Redirecting back from ASPSP to ConsentAuthorisationApi after a successful consent authorization. "
       + "In any case, the consent session of the user will be closed and cookies will be deleted with the response to this request."
       + "<ul><b>Request contains:</b>"
       + "<li>consentSessionState included in the link sent to the ASPSP in the consent initiation.</li>"
@@ -152,7 +159,9 @@ public interface ConsentAuthorisationApi {
    * @return AuthorizeResponse
    */
   @PostMapping(path = "/embedded/auth")
-  @ApiOperation(value = "Generic challenge response end point for updating consent session with PSU authentication data while requesting remaining challenges for the ongoing authorization process.", notes = "Update consent session with PSU auth data whereby requesting remaining challenges for the ongoing authorization process."
+  @ApiOperation(value = "Generic challenge response end point for updating consent session with PSU authentication "
+      + "data while requesting remaining challenges for the ongoing authorization process.",
+      notes = "Update consent session with PSU auth data whereby requesting remaining challenges for the ongoing authorization process."
       + "<ul><b>Request contains:</b>"
       + "<li>consentSessionState is retrieved from the response of the peceeding request.</li>"
       + "<li>The PsuAuthRequest constaining necessary consent info and auth data.</li>" + "</ul>"

@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-@SuppressWarnings("LineLength")
 @Data
 @ApiModel(description = "General purpose transport object for consent information.")
 public class ConsentAuthTO {
@@ -15,7 +14,9 @@ public class ConsentAuthTO {
    * transient reference of the consent request. It encodes a key that is used to
    * encrypt information stored in the corresponding ConsentAuthSessionCookie.
    */
-  @ApiModelProperty("This is the CSRF-State String of the ConsentAuthorisationApi. It is a transient reference of the consent request. It encodes a key that is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.")
+  @ApiModelProperty("This is the CSRF-State String of the ConsentAuthorisationApi. It is a transient reference of the "
+      + "consent request. It encodes a key that is used to encrypt information stored in "
+      + "the corresponding ConsentAuthSessionCookie.")
   private String consentAuthState;
 
   /*
