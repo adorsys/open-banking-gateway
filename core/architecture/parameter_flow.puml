@@ -37,7 +37,7 @@ FinTech -down-> api : 2. Get transaction\nlist for John Doe
 api -down-> db : 3. Read initial context
 db -down-> initialContext : 4. Context
 initialContext -right-> restContext : 5. Add request\ndata to context
-restContext -right-> requestContext : 6. Full context
+restContext -up-> requestContext : 6. Full context
 api -down-> bpmn : 7. Execute flow\nassociated with bank
 initiate <-- requestContext : Use\naspsp-id: 53c47f54\nsca-preferred: EMBEDDED
 challenge <-- requestContext : Use\nusername: anton.brueckner\npassword: 12345
