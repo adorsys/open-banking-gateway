@@ -20,4 +20,8 @@ TBD.
 
 ### Flow overview
 
-![Microkernel expanded architecture](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/feature/POC-bpmn-based-protocol-async-detach/core/architecture/short_flow.puml&fmt=svg&vvv=3&sanitize=true)
+![General flow overview](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/feature/POC-bpmn-based-protocol-async-detach/core/architecture/short_flow.puml&fmt=svg&vvv=3&sanitize=true)
+
+### Parameter flow overview
+
+![Parameter flow overview](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/feature/POC-bpmn-based-protocol-async-detach/core/architecture/parameter_flow.puml&fmt=svg&vvv=3&sanitize=true)
