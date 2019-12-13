@@ -10,10 +10,6 @@ script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
-before_deploy:
-  - echo $GPG_SECRET_KEY | base64 --decode | $GPG_EXECUTABLE --import
-  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
-
 deploy:
 #  -
 #    skip_cleanup: true
@@ -23,14 +19,30 @@ deploy:
 #      branch: develop
   - provider: script
     skip_cleanup: true
-    script: /bin/bash .travis/deploy.sh
+    script: /bin/bash scripts/deploy_mvn.sh
     on:
       tags: true
       # matches: vX.Y.Z, vX.Y.Z-A, vX.Y.Z-RCA, vX.Y.Z-A-B.C.D, vX.Y.Z-A-B.C.D-E, vX.Y.Z-RCA-B.C.D-E
       condition: "$TRAVIS_TAG =~ ^v([[:digit:]]+\\.)+[[:digit:]]+(-(RC)?[[:digit:]]+)?(-([[:digit:]]+\\.)+[[:digit:]]+(-[[:digit:]]+)?)?$"
 
+  # Deploy to open banking gateway dev
   - provider: script
     skip_cleanup: true
-    script: /bin/bash .travis/deploy_to_openshift.sh
+    script: bash scripts/deploy_openshift.sh
     on:
-      branch: develop
+      branch: OBG-7_DocumentationFramework
+#      branch: develop
+
+  - provider: script
+    skip_cleanup: true
+    script: bash scripts/deploy_doc.sh
+    on:
+#      branch: OBG-7_DocumentationFramework
+      tags: true
+
+  - provider: script
+    skip_cleanup: true
+    script: bash scripts/deploy_javadoc.sh
+    on:
+#      branch: OBG-7_DocumentationFramework
+      tags: true
