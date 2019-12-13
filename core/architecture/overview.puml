@@ -1,0 +1,25 @@
+@startuml
+
+node core [
+    <b>Kernel</b>
+    ==
+    BPMN engine
+    Configurations (bank profile)
+    REST API (TPP API)
+]
+
+component "XS2A compatible Bank-1 adapter" as bank1
+component "XS2A compatible Bank-2 adapter" as bank2
+
+component "HBCI compatible Bank-3 adapter" as bank3
+component "Bank-4 adapter" as bank4
+
+bank1 =left=> core
+bank2 =left=> core
+bank3 =right=> core
+bank4 =right=> core
+
+bank1 -[hidden]down-> bank2
+bank3 -[hidden]down-> bank4
+
+@enduml
