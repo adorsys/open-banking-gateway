@@ -41,7 +41,7 @@ public interface PISEmbeddedApi extends AuthEntryPointApi {
      *
      * @param consentSessionState The consent session state
      * @param consentCookieString The consent cookie
-     * @param PsuAuthDataTO       auth data
+     * @param authData       auth data
      * @return PaymentAuthorizeResponse
      */
     @PostMapping(path = CORE_PATH + "/psuAuth")
@@ -91,7 +91,7 @@ public interface PISEmbeddedApi extends AuthEntryPointApi {
      *
      * @param consentSessionState     The consent session state
      * @param consentCookieString     The consent cookie
-     * @param SelectedPsuAuthMethodTO Holds the selected SCA method
+     * @param scaAuthMethod Holds the selected SCA method
      * @return PaymentAuthorizeResponse
      */
     @PostMapping(CORE_PATH + "/scaAuthMethod")
@@ -118,7 +118,7 @@ public interface PISEmbeddedApi extends AuthEntryPointApi {
      *
      * @param consentSessionState The consent session state
      * @param consentCookieString The consent cookie
-     * @param PsuScaAuthDataTO    The authentication code
+     * @param scaAuthData    The authentication code
      * @return PaymentAuthorizeResponse
      */
     @PostMapping(path = CORE_PATH + "/scaAuthData")
@@ -144,7 +144,7 @@ public interface PISEmbeddedApi extends AuthEntryPointApi {
      *
      * @param consentSessionState The consent session state
      * @param consentCookieString The consent cookie
-     * @param PsuScaDoneDataTO    Redirection preferences of the user agent.
+     * @param scaDoneData    Redirection preferences of the user agent.
      * @return PaymentAuthorizeResponse
      */
     @DeleteMapping(path = CORE_PATH)
@@ -177,7 +177,7 @@ public interface PISEmbeddedApi extends AuthEntryPointApi {
      *
      * @param consentSessionState The consent session state
      * @param consentCookieString The consent cookie
-     * @param PsuScaDoneDataTO    Redirection preferences of the user agent.
+     * @param scaDoneData    Redirection preferences of the user agent.
      * @return PaymentAuthorizeResponse
      */
     @GetMapping(path = CORE_PATH + "/scaDone")

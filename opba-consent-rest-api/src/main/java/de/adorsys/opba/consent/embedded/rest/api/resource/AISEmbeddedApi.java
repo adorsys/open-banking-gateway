@@ -41,7 +41,7 @@ public interface AISEmbeddedApi extends AuthEntryPointApi {
      *
      * @param consentSessionState The consent session state
      * @param consentCookieString The consent cookie
-     * @param PsuAuthDataTO       auth data
+     * @param authData       auth data
      * @return ConsentAuthorizeResponse
      */
     @PostMapping(path = CORE_PATH + "/psuAuth")
@@ -68,7 +68,7 @@ public interface AISEmbeddedApi extends AuthEntryPointApi {
      *
      * @param consentSessionState The consent session state
      * @param consentCookieString The consent cookie
-     * @param AisConsentTO        the consent request object
+     * @param aisConsent        the consent request object
      * @return ConsentAuthorizeResponse
      */
     @PostMapping(CORE_PATH + "/startAuth")
@@ -97,7 +97,7 @@ public interface AISEmbeddedApi extends AuthEntryPointApi {
      *
      * @param consentSessionState     The consent session state
      * @param consentCookieString     The consent cookie
-     * @param SelectedPsuAuthMethodTO Holds the selected SCA method
+     * @param scaAuthMethod Holds the selected SCA method
      * @return ConsentAuthorizeResponse
      */
     @PostMapping(CORE_PATH + "/scaAuthMethod")
@@ -124,7 +124,7 @@ public interface AISEmbeddedApi extends AuthEntryPointApi {
      *
      * @param consentSessionState The consent session state
      * @param consentCookieString The consent cookie
-     * @param PsuScaAuthDataTO    The authentication code
+     * @param scaAuthData    The authentication code
      * @return ConsentAuthorizeResponse
      */
     @PostMapping(path = CORE_PATH + "/scaAuthData")
@@ -151,7 +151,7 @@ public interface AISEmbeddedApi extends AuthEntryPointApi {
      *
      * @param consentSessionState The consent session state
      * @param consentCookieString The consent cookie
-     * @param PsuScaDoneDataTO    Redirection preferences of the user agent.
+     * @param scaDoneData    Redirection preferences of the user agent.
      * @return ConsentAuthorizeResponse
      */
     @DeleteMapping(path = CORE_PATH)
@@ -185,7 +185,7 @@ public interface AISEmbeddedApi extends AuthEntryPointApi {
      *
      * @param consentSessionState The consent session state
      * @param consentCookieString The consent cookie
-     * @param PsuScaDoneDataTO    Redirection preferences of the user agent.
+     * @param scaDoneData    Redirection preferences of the user agent.
      * @return ConsentAuthorizeResponse
      */
     @GetMapping(path = CORE_PATH + "/scaDone")

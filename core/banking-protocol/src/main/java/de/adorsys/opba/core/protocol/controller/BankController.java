@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +21,7 @@ import static de.adorsys.opba.core.protocol.controller.constants.ApiVersion.API_
 @RequestMapping(API_1 + BANKS)
 @RequiredArgsConstructor
 @Api(value = "/v1/banks", tags = "Bank search API", description = "Search bank and select bank profile")
+@CrossOrigin(origins = "*")
 public class BankController {
 
     private final BankService bankService;
