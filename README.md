@@ -23,9 +23,9 @@ The following picture displays the overall architecture of this banking gateway:
 ## Releases and versions
 
 * [Versioning, Release and Support policy](docs/Version_Policy.md)
- 
 * [Release notes](docs/releasenotes.md) 
 * [Roadmap for next features development](docs/roadmap.md)
+* [Initial Requirements](docs/README.md)
  
 ### Testing API with Postman json collections
  
