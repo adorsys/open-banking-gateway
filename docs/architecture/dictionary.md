@@ -93,6 +93,9 @@ Financial web service provided by the FinTech.
 ### <a name="FinTechLoginSessionCookie"></a> FinTechLoginSessionCookie
 This is a cookie used to maintain the login session between the FinTechUI and the FinTechApi. As this maintains the login state of the PSU in the FinTechUI, this session can be kept open for the life span of the interaction between the FinTechUI and the FinTechApi.
 
+### <a name="FinTechLoginSessionState"></a> FinTechLoginSessionState
+This is the CSRF-State String associated with the FinTechLoginSessionCookie. This information must be presented whenever the FinTechApi consumes the FinTechLoginSessionCookie. It encodes a key that is used to encrypt/decrypt information stored in the corresponding FinTechLoginSessionCookie.
+
 ### <a name="Fintech2TppRedirectInfoPage"></a> Fintech2TppRedirectInfoPage
 This panel will be used to inform the PSU upon redirecting the PSU to the ConsentAuthorisationApi. This information step is recommended as changes in UI display between the FinTechUI and the ConsentAuthorisationUI might confuse the PSU.     
 
@@ -153,7 +156,7 @@ This is the cookie object used to maintain the consent session between the Conse
 This cookie will generally contain the identifier of the TppContentSession and the cryptographic key used to read that TppContentSession.
 
 ### <a name="consentAuthState"></a> consentAuthState
-This is the CSRF-State String of the ConsentAuthorisationApi. It is a transient reference of the consent request. It encodes a key that is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.
+This is the CSRF-State String associated with the ConsentAuthSessionCookie. It encodes a key that is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.
 
 This is: consentAuthState = state-id + consentEncryptionKey
 

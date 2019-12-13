@@ -28,7 +28,7 @@ end box
 
 FinTechUI --> psu : displayBankServices(BankProfile)
 psu -> FinTechUI ++ : selectService\n"listTransactions(BankProfile)"
-FinTechUI -> FinTechApi ++ : listTransactions[FinTechLoginSessionCookie,\nUserAgentContext](BankProfile,ListTransactionsSpec)<>
+FinTechUI -> FinTechApi ++ : listTransactions[FinTechLoginSessionCookie,\nUserAgentContext](BankProfile,ListTransactionsSpec)<FinTechLoginSessionState>
 autonumber 31 1 "<b><color blue>[InitConsent-000]"
 FinTechApi -> FinTechApi : psuConsentSession\n(FinTechLoginSessionCookie,\nBankProfile,ListTransactionsSpec)<>
 autonumber 40 1 "<b><color blue>[InitConsent-000]"
