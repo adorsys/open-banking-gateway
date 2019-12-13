@@ -3,52 +3,45 @@
 node core [
     <b>Kernel</b>
     ==
-    Process orchestration: BPMN
-    Configuration / bank profiles
-    Consent storage
+    BPMN engine
+    Configurations (bank profile)
     REST API (TPP API)
 ]
 
-rectangle "Financier Globe Bank" as xs2aBank1 {
-    component "Financier Globe Bank (XS2A) Adapter" as bank1_adapter
-    component "Financier workflow" as workflow1
-    note left {
-        {{
-            Consent --> Authorize
-            Authorize --> Challenge
-            return
-            Authorize --> Consent
-        }}
-    }
-    workflow1 --> bank1_adapter
+rectangle "Bank-1 plugin" {
+    component "XS2A compatible Bank-1 adapter" as bank1
+    component "Bank-1 workflow" as workflow1
 }
 
-rectangle "California Bank & Trust" as xs2aBank2 {
-    component "California Bank & Trust adapter (XS2A)" as bank2_adapter
-    component "California workflow" as workflow2
-    note left {
-        {{
-            Consent --> Authorize
-            return
-        }}
-    }
-    workflow2 --> bank2_adapter
+rectangle "Bank-2 plugin" {
+    component "XS2A compatible Bank-2 adapter" as bank2
+    component "Bank-2 workflow" as workflow2
 }
 
-rectangle "Cashier Globe Bank" as bank3 {
-    component "Cashier Globe Bank adapter (Non-XS2A)" as bank3_adapter
-    component "Cashier workflow" as workflow3
-    note left {
-        {{
-            User --> Bank
-            return
-        }}
-    }
-    workflow3 --> bank3_adapter
+rectangle "Bank-3 plugin" {
+    component "HBCI compatible Bank-3 adapter" as bank3
+    component "Bank-3 workflow" as workflow3
 }
 
-xs2aBank1 =right=> core
-xs2aBank2 =down=> core
-bank3 =up=> core
+rectangle "Bank-4 plugin" {
+    component "Bank-4 adapter" as bank4
+    component "Bank-4 workflow" as workflow4
+}
+
+
+workflow1 =right=> core
+bank1 =right=> workflow1
+
+workflow2 =left=> core
+bank2 =left=> workflow2
+
+workflow3 =left=> core
+bank3 =left=> workflow3
+
+workflow4 =left=> core
+bank4 =left=> workflow4
+
+bank1 -[hidden]down-> bank2
+bank3 -[hidden]down-> bank4
 
 @enduml
