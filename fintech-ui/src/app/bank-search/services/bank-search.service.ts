@@ -34,14 +34,14 @@ export class BankSearchService {
   }
 
   getPopularBanks(): Observable<Bank[]> {
-    return of(BankSearchService.MOST_POPULAR_BANKS_STUBS)
-      .pipe(delay(600));
+    return of(BankSearchService.MOST_POPULAR_BANKS_STUBS);
+      // .pipe(delay(600));
   }
 
   searchBanks(keyword: string): Observable<Bank[]> {
     return of(BankSearchService.ALL_BANKS_STUBS.filter(bank =>
       bank.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase())
-    ).slice(0, 5))
-      .pipe(delay(1200));
+    ).slice(0, 5));
+      // .pipe(delay(1200));
   }
 }
