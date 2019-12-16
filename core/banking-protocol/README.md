@@ -6,6 +6,7 @@
 docker run --rm  --name pg-docker -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data   postgres --max_prepared_transactions=100
 ```
 Run [init.sql](core/banking-protocol/src/test/resources/init.sql) on it using user `postgres` and password `docker`
+!TODO: This file is on develop branch.
 to create schema banking_protocol and text-extensions.
 
 ## 2. Start Sandbox (all defaults)
