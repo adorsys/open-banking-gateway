@@ -97,8 +97,6 @@
         <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
         <surefireArgLine/>
-        <maven.multiModuleProjectDirectory/>
-        <maven.jxr.plugin.version/>
     </properties>
 
     <repositories>
