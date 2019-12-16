@@ -1,3 +1,26 @@
+# How to start local environment
+
+## 1. Run/Create postgres docker container for banking protocol
+
+```shell script
+docker run --rm  --name pg-docker -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data   postgres --max_prepared_transactions=100
+```
+Run [init.sql](core/banking-protocol/src/test/resources/init.sql) on it using user `postgres` and password `docker`
+to create schema banking_protocol and text-extensions.
+
+## 2. Start Sandbox (all defaults)
+
+Execute `BasicTest.testEnvStartsUp()` as java test or from maven - it will create everything it needs
+
+## 3. Start Open-banking-ui
+
+```shell script
+docker run --network host -e ONLINE_BANKING_SERVER_URL='http://127.0.0.1:10015' adorsys/xs2a-online-banking-ui:1.8
+```
+
+And you are good to go. Use localhost:8080 to access banking-protocol.
+
+
 # How to design BPMN flow with Flowable
 
 ## Using Flowable docker all image:
