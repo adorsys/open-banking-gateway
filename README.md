@@ -54,9 +54,9 @@ This project is licensed under the Apache License version 2.0 - see the [LICENSE
 
 ## checkstyle
 
-The code uses <code>the checkstyle.xml</code> placed in the root of the project. To activate it with intellij 
+The code uses <code>backend.checkstyle.xml</code> placed in the root of the project. To activate it with intellij 
 install the <code>CheckStyle-IDEA v5.34.0</code> Plugin and configure in <code>Other Settings -> Checkstyle</code>
-the version <code>8.19</code> and add the configuration file <code>checkstyle.xml</code>.
+the version <code>8.19</code> and add the configuration file <code>backend.checkstyle.xml</code>.
 
 ## Contribution Guidelines
 
