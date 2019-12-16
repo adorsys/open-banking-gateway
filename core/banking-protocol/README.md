@@ -12,14 +12,11 @@ to create schema banking_protocol and text-extensions.
 
 ## 2. Start Sandbox (all defaults)
 
-Execute `BasicTest.testEnvStartsUp()` as java test or from maven - it will create everything it needs
+Execute `BasicTest.testEnvStartsUp()` as java test or from maven - it will create everything it needs including UI
 
-## 3. Start Open-banking-ui
+## 3. Start banking-protocol 
 
-```shell script
-docker run --network host -e ONLINE_BANKING_SERVER_URL='http://127.0.0.1:10015' adorsys/xs2a-online-banking-ui:1.8
-```
-
+Run BankingProtocol spring application.
 And you are good to go. Use localhost:8080 to access banking-protocol.
 
 

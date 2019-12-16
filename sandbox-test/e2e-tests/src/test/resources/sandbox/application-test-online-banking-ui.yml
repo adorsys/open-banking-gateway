@@ -1,0 +1,2 @@
+env:
+  ONLINE_BANKING_SERVER_URL: ${common.apps.mapping.onlinebanking}

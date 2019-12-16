@@ -22,6 +22,8 @@ common:
         port: 10015
       tpprest:
         port: 10016
+      onlinebankingui: # XS2A-Sandbox/oba-ui
+        port: 4400 # This one is rather hardcoded in Docker-UI
     # Which urls local sandbox applications will use to talk each with other
     mapping:
       aspsp: http://localhost:${common.apps.local.aspspprofile.port}

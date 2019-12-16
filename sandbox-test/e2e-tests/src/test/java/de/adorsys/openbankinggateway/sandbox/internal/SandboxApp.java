@@ -12,6 +12,8 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -24,6 +26,8 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -59,29 +63,41 @@ public enum SandboxApp {
     ONLINE_BANKING("online-banking-app-1.8.jar"), // adorsys/xs2a-online-banking
     TPP_REST("tpp-rest-server-1.8.jar"), // adorsys/xs2a-tpp-rest-server
     CERT_GENERATOR("certificate-generator-1.8.jar"), // adorsys/xs2a-certificate-generator
-    LEDGERS_APP("ledgers-app-2.1.jar"); // adorsys/ledgers
+    LEDGERS_APP("ledgers-app-2.1.jar"), // adorsys/ledgers
+    ONLINE_BANKING_UI("adorsys/xs2a-online-banking-ui:1.8", true); // adorsys/xs2a-online-banking-ui
 
     public static final String DB_TYPE = "DB_TYPE";
     public static final String TEST_CONTAINERS_POSTGRES = "test-containers-postgres";
 
 
+    private static final Pattern REFERENCE_PATTERN = Pattern.compile("\\$\\{([a-zA-Z0-9.]+)}");
     private static final Pattern PORT_PATTERN = Pattern.compile("^.+:([0-9]+)/.+$");
     private static final AtomicBoolean DB_STARTED = new AtomicBoolean();
     private static final ObjectMapper YML = new ObjectMapper(new YAMLFactory());
 
     private final AtomicReference<ClassLoader> loader = new AtomicReference<>();
+    private final AtomicReference<GenericContainer> dockerContainer = new AtomicReference<>();
 
-    private final String jar;
+    private final boolean dockerized;
+    private final String jarOrDockerFile;
     private final String mainClass;
 
-    SandboxApp(String jar) {
-        this.jar = jar;
+    SandboxApp(String jarOrDockerFile) {
+        this.jarOrDockerFile = jarOrDockerFile;
         this.mainClass = null;
+        this.dockerized = false;
     }
 
-    SandboxApp(String jar, String mainClass) {
-        this.jar = jar;
+    SandboxApp(String jarOrDockerFile, String mainClass) {
+        this.jarOrDockerFile = jarOrDockerFile;
         this.mainClass = mainClass;
+        this.dockerized = false;
+    }
+
+    SandboxApp(String jarOrDockerImage, boolean dockerized) {
+        this.jarOrDockerFile = jarOrDockerImage;
+        this.mainClass = null;
+        this.dockerized = dockerized;
     }
 
     @SneakyThrows
@@ -133,10 +149,82 @@ public enum SandboxApp {
     }
 
     private void doRun() {
+        if (dockerized) {
+            doRunDocker();
+        } else {
+            doRunJar();
+        }
+    }
+
+    private void doRunDocker() {
         String oldName = Thread.currentThread().getName();
         Thread.currentThread().setName(name());
         try {
-            ClassloaderWithJar classloaderWithJar = new ClassloaderWithJar(jar);
+            Map<String, String> envVars = new HashMap<>();
+            // sandbox/application-test-common.yml
+            JsonNode commonConfig = YML.readTree(
+                    Resources.getResource("sandbox/application-test-common.yml")
+            );
+            // sandbox/application-test-${appName}.yml
+            String pointer = "/env";
+            JsonNode appConfig = YML.readTree(
+                    Resources.getResource("sandbox/application-" + testProfileName() +".yml")
+            );
+            JsonNode declaredVars = appConfig.at(pointer);
+            declaredVars.fields().forEachRemaining(entry ->
+                readYamlVariableToMap(entry, commonConfig, envVars)
+            );
+
+            GenericContainer container = new GenericContainer(jarOrDockerFile)
+                    .withNetworkMode("host")
+                    .withEnv(envVars)
+                    .waitingFor(Wait.defaultWaitStrategy());
+            container.start();
+            this.dockerContainer.set(container);
+        } catch (IOException | RuntimeException ex) {
+            log.error("{} from {} Dockerfile has terminated exceptionally", name(), jarOrDockerFile, ex);
+        } finally {
+            Thread.currentThread().setName(oldName);
+        }
+    }
+
+    private void readYamlVariableToMap(
+            Map.Entry<String, JsonNode> entry, JsonNode configSource, Map<String, String> envVars
+    ) {
+        envVars.put(entry.getKey(), readVariableFromConfig(entry.getValue(), configSource));
+    }
+
+    private boolean hasReference(JsonNode entry) {
+        return entry.isTextual()
+                && entry.textValue().contains("${")
+                && entry.textValue().contains("}");
+    }
+
+    private String readVariableFromConfig(JsonNode value, JsonNode configSource) {
+        if (!hasReference(value)) {
+            return value.asText();
+        }
+
+        String toParse = value.textValue();
+        String result = value.textValue();
+        Matcher matcher = REFERENCE_PATTERN.matcher(toParse);
+        matcher.find();
+        for (int i = 1; i <= matcher.groupCount(); ++i) {
+            String path = matcher.group(i).replaceAll("\\.", "/");
+            result = result.replaceAll(
+                    Pattern.quote("${" + matcher.group(i) + "}"),
+                    readVariableFromConfig(configSource.at("/" + path), configSource)
+            );
+        }
+
+        return result;
+    }
+
+    private void doRunJar() {
+        String oldName = Thread.currentThread().getName();
+        Thread.currentThread().setName(name());
+        try {
+            ClassloaderWithJar classloaderWithJar = new ClassloaderWithJar(jarOrDockerFile);
             buildSpringConfigLocation();
             getMainEntryPoint(classloaderWithJar).invoke(
                     null,
@@ -147,9 +235,9 @@ public enum SandboxApp {
                     }
             );
         } catch (IllegalAccessException | InvocationTargetException ex) {
-            log.error("Failed to invoke main() method for {} of {}", name(), jar, ex);
+            log.error("Failed to invoke main() method for {} of {}", name(), jarOrDockerFile, ex);
         } catch (RuntimeException ex) {
-            log.error("{} from {} jar has terminated exceptionally", name(), jar, ex);
+            log.error("{} from {} jar has terminated exceptionally", name(), jarOrDockerFile, ex);
         } finally {
             Thread.currentThread().setName(oldName);
         }
