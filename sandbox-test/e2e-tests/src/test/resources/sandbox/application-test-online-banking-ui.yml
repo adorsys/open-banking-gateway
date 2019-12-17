@@ -1,2 +1,3 @@
+port: ${common.apps.local.onlinebankingui.port}
 env:
-  ONLINE_BANKING_SERVER_URL: ${common.apps.mapping.onlinebanking}
+  ONLINE_BANKING_SERVER_URL: http://${dockerHost}:${common.apps.local.onlinebanking.port}

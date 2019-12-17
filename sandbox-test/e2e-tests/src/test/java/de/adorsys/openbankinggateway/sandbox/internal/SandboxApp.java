@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
@@ -12,12 +13,14 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
+import org.testcontainers.containers.FixedHostPortGenericContainer;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URL;
@@ -72,6 +75,9 @@ public enum SandboxApp {
 
     private static final Pattern REFERENCE_PATTERN = Pattern.compile("\\$\\{([a-zA-Z0-9.]+)}");
     private static final Pattern PORT_PATTERN = Pattern.compile("^.+:([0-9]+)/.+$");
+    private static final Map<String, String> EXPOSED_VARIABLES = ImmutableMap.of(
+            "dockerHost", hostAddress()
+    );
     private static final AtomicBoolean DB_STARTED = new AtomicBoolean();
     private static final ObjectMapper YML = new ObjectMapper(new YAMLFactory());
 
@@ -175,10 +181,12 @@ public enum SandboxApp {
                 readYamlVariableToMap(entry, commonConfig, envVars)
             );
 
-            GenericContainer container = new GenericContainer(jarOrDockerFile)
-                    .withNetworkMode("host")
+            int desiredPort = Integer.parseInt(readVariableFromConfig(appConfig.at("/port"), commonConfig));
+            GenericContainer container = new FixedHostPortGenericContainer(jarOrDockerFile)
+                    .withFixedExposedPort(desiredPort, desiredPort)
                     .withEnv(envVars)
                     .waitingFor(Wait.defaultWaitStrategy());
+
             container.start();
             this.dockerContainer.set(container);
         } catch (IOException | RuntimeException ex) {
@@ -208,15 +216,23 @@ public enum SandboxApp {
         String toParse = value.textValue();
         String result = value.textValue();
         Matcher matcher = REFERENCE_PATTERN.matcher(toParse);
-        matcher.find();
-        for (int i = 1; i <= matcher.groupCount(); ++i) {
-            String path = matcher.group(i).replaceAll("\\.", "/");
-            result = result.replaceAll(
-                    Pattern.quote("${" + matcher.group(i) + "}"),
-                    readVariableFromConfig(configSource.at("/" + path), configSource)
-            );
-        }
+        while(matcher.find()) {
+            for (int i = 1; i <= matcher.groupCount(); ++i) {
+                String variableName = matcher.group(i);
+                String foundValue;
+                if (EXPOSED_VARIABLES.containsKey(variableName)) {
+                    foundValue = EXPOSED_VARIABLES.get(variableName);
+                } else {
+                    String path = variableName.replaceAll("\\.", "/");
+                    foundValue = readVariableFromConfig(configSource.at("/" + path), configSource);
+                }
 
+                result = result.replaceAll(
+                        Pattern.quote("${" + variableName + "}"),
+                        foundValue
+                );
+            }
+        }
         return result;
     }
 
@@ -340,6 +356,11 @@ public enum SandboxApp {
             port.matches();
             System.setProperty("testcontainers.postgres.port", port.group(1));
         }
+    }
+
+    @SneakyThrows
+    private static String hostAddress() {
+        return InetAddress.getLocalHost().getHostAddress();
     }
 
     @Data
