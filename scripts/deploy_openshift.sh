@@ -6,8 +6,7 @@ sudo mv ./openshift-origin-client-tools-v3.11.0-0cbc58b-linux-64bit/oc /usr/loca
 
 PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
 oc login https://openshift.adorsys.de --token="$OPENSHIFT_TOKEN"
-oc project open-banking-gateway-dev
-oc new-app tpp-bank-search-api
+
 
 IMAGE_TAG=${TRAVIS_COMMIT:0:7}
 REGISTRY_DOMAIN=openshift-registry.adorsys.de
