@@ -31,7 +31,7 @@ We assume all three applications FinTechApi, TppConsentSessionApi, AspspConsentS
 We also do not advice adding persistent information to __RedirectUrl__, as these are log files everywhere on infrastructure components in data centers. __RedirectUrl__ shall instead carry __OneTime__ and __ShortLived__ authorization code we call __code__, that can be used to retrieved shared payload through an authenticated back channel connection. This is the practice borrowed from [oAuth2 RFC6749](https://tools.ietf.org/html/rfc6749). Following table shows defined redirects and corresponding back chanel endpoints.
 
 | Origin Application | Redirecting Application | Response Code; Location ; AuthCodeParam; Expiration | Redirect Target Application | Destination Application  | Data EndPoint at Origin Application |
-| -- | -- | -- | -- | -- |
+| -- | -- | -- | -- | -- | -- |
 | TppBankingApi | FinTechApi | 302 ; /auth ; code ; 5s | TppConsentSessionApi | TppConsentSessionApi | /loadTppConsentSession |
 | TppConsentSessionApi | TppConsentSessionApi | Proprietary banking API. Assume RFC6749. /auth | AspspConsentSessionApi | AspspConsentSessionApi | none |
 | AspspConsentSessionApi | AspspConsentSessionApi | 302 ; \[/ok\|/nok\] ; code ; 5s | TppConsentSessionApi | TppConsentSessionApi | /token |
@@ -85,6 +85,8 @@ Information associated with the consent as exchanged between the FinTechApi and 
 ### TppConsentSessionUI
 UI used by PSU to authoraise consent in embedded case.
 
+### Psu2TppConsentSession
+
 ## AspspDC
 Data center environment of the ASPSP
 
@@ -94,7 +96,7 @@ Api banking provided by ASPSP. This interface is not directly accessed by the PS
 ### Tpp2AspspContext
 Information used to identify the Tpp application in the ASPSP environment. Like a TPP QWAC certificate.
 
-### Tpp2AspspConsentData
+### Tpp2AspspConsentSession
 Information associated with the consent initialized by the ASPSP. Containing ConsentId, ConsentData, AspspConsentSessionRedirectUrl, ...
 
 ### AspspConsentSessionApi

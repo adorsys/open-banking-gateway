@@ -17,6 +17,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>${jetbrains.annotations.version}</version>
+        </dependency>
 
         <!-- Spring -->
         <dependency>
@@ -50,6 +55,11 @@
             <optional>true</optional>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
         <!-- Flowable BPMN -->
         <dependency>
             <groupId>org.flowable</groupId>
@@ -63,6 +73,14 @@
         </dependency>
 
         <!-- XS2A Adapter BEGIN -->
+        <!-- Adapter BOM -->
+        <dependency>
+            <groupId>de.adorsys.xs2a.adapter</groupId>
+            <artifactId>adapters</artifactId>
+            <version>${xs2a-adapter.version}</version>
+            <type>pom</type>
+        </dependency>
+
         <dependency>
             <groupId>de.adorsys.xs2a.adapter</groupId>
             <artifactId>xs2a-adapter-rest-impl</artifactId>
@@ -86,15 +104,6 @@
             <artifactId>xs2a-adapter-aspsp-registry</artifactId>
             <version>${xs2a-adapter.version}</version>
         </dependency>
-
-        <!-- adapters -->
-
-        <dependency>
-            <groupId>de.adorsys.xs2a.adapter</groupId>
-            <artifactId>adapters</artifactId>
-            <version>${xs2a-adapter.version}</version>
-            <type>pom</type>
-        </dependency>
         <!-- XS2A Adapter END -->
 
         <!-- Test only dependencies -->
@@ -113,13 +122,20 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
-            <version>1.12.1</version>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <version>${jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -131,6 +147,7 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
+            <version>${assertj.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -147,8 +164,23 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.64</version>
+            <version>${bouncycastle.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
         </dependency>
 
     </dependencies>

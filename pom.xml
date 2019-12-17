@@ -32,6 +32,9 @@
         <module>opba-consent-rest-api</module>
         <module>core</module>
         <module>sandbox-test</module>
+        <module>opba-banking-rest-api</module>
+        <module>opba-embedded-starter</module>
+        <module>last-module-codecoverage</module>
     </modules>
 
     <url>https://github.com/adorsys/open-banking-gateway</url>
@@ -50,10 +53,16 @@
             <organization>adorsys GmbH &amp; Co KG</organization>
             <organizationUrl>https://adorsys.de/</organizationUrl>
         </developer>
+        <developer>
+            <name>Denys Golubiev</name>
+            <email>dgo@adorsys.de</email>
+            <organization>adorsys GmbH &amp; Co KG</organization>
+            <organizationUrl>https://adorsys.de/</organizationUrl>
+        </developer>
     </developers>
 
     <properties>
-        <!-- common properties -->
+        <!-- Common properties -->
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <ruleset.basedir>${project.basedir}</ruleset.basedir>
@@ -63,25 +72,43 @@
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
         <java.version>1.8</java.version>
         <pmd.plugin.version>3.10.0</pmd.plugin.version>
-        <!-- xs2a version -->
-        <xs2a.version>5.1</xs2a.version>
-        <xs2a-adapter.version>0.0.5</xs2a-adapter.version>
-        <!-- other properties -->
-        <lombok.version>1.18.4</lombok.version>
 
-        <!-- Spring -->
-        <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
+        <!-- Framework libs -->
+        <spring-boot.version>2.2.2.RELEASE</spring-boot.version>
+        <guava.version>28.1-jre</guava.version>
+        <apache.commons-lang3.version>3.9</apache.commons-lang3.version>
+        <fasterxml.version>2.10.1</fasterxml.version>
+        <fasterxml-data-format.version>2.9.8</fasterxml-data-format.version>
+        <swaggerv3.version>2.1.0</swaggerv3.version>
+        <swagger.version>1.5.23</swagger.version>
+        <springfox.version>2.9.2</springfox.version>
+        <jetbrains.annotations.version>17.0.0</jetbrains.annotations.version>
+        <lombok.version>1.18.10</lombok.version>
+        <xml-maven-plugin.version>1.0.2</xml-maven-plugin.version>
+        <checkstyle-plugin.version>3.1.0</checkstyle-plugin.version>
+        <spotbugs-plugin.version>3.1.12.2</spotbugs-plugin.version>
+        <maven.jxr.plugin.version>3.0.0</maven.jxr.plugin.version>
+        <bouncycastle.version>1.64</bouncycastle.version>
+        <liquibase.version>3.8.0</liquibase.version>
+
         <!-- Flowable BPMN -->
         <flowable.version>6.4.2</flowable.version>
 
-        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
-        <swagger-annotations.version>1.5.20</swagger-annotations.version>
-        <jetbrains.annotations.version>15.0</jetbrains.annotations.version>
-        <lombok.version>1.18.4</lombok.version>
-        <fasterxml.version>2.10.1</fasterxml.version>
-        <fasterxml-data-format.version>2.9.8</fasterxml-data-format.version>
+        <!-- Adorsys libs -->
+        <xs2a.version>5.1</xs2a.version>
+        <xs2a-adapter.version>0.0.5</xs2a-adapter.version>
 
-        <jupiter.version>5.4.1</jupiter.version>
+        <!-- Test libs -->
+        <jacoco.version>0.8.4</jacoco.version>
+        <jupiter.version>5.5.2</jupiter.version>
+        <junit.platform.commons.version>1.5.2</junit.platform.commons.version>
+        <surefire.version>3.0.0-M3</surefire.version>
+        <assertj.version>3.12.2</assertj.version>
+        <testcontainers.version>1.12.4</testcontainers.version>
+        <slf4j-simple.version>1.7.29</slf4j-simple.version>
+
+        <!-- other properties -->
+        <surefireArgLine/>
     </properties>
 
     <repositories>
@@ -107,23 +134,36 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache.commons-lang3.version}</version>
+            </dependency>
             <!-- swagger -->
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swaggerv3.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-annotations</artifactId>
-                <version>${swagger-annotations.version}</version>
+                <version>${swagger.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger2</artifactId>
-                <version>${springfox-swagger2.version}</version>
+                <version>${springfox.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger-ui</artifactId>
-                <version>${springfox-swagger2.version}</version>
+                <version>${springfox.version}</version>
             </dependency>
-            
+
             <!-- Spring Boot -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -132,13 +172,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-			
-			<!-- Lombok -->
+
+            <!-- Lombok -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.jetbrains</groupId>
                 <artifactId>annotations</artifactId>
@@ -171,6 +212,29 @@
                 <version>${fasterxml-data-format.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>${liquibase.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j-simple.version}</version>
+            </dependency>
+
             <!-- Test -->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
@@ -178,39 +242,12 @@
                 <version>${jupiter.version}</version>
                 <scope>test</scope>
             </dependency>
-            
         </dependencies>
     </dependencyManagement>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.sonarsource.scanner.maven</groupId>
-                    <artifactId>sonar-maven-plugin</artifactId>
-                    <version>3.6.0.1398</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>${pmd.plugin.version}</version>
-                <configuration>
-                    <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
-                    <minimumTokens>100</minimumTokens>
-                    <targetJdk>${java.version}</targetJdk>
-                    <analysisCache>true</analysisCache>
-                    <linkXRef>false</linkXRef>
-                    <rulesets>
-                        <ruleset>${ruleset.basedir}/qa/pmd/pmd-ruleset.xml</ruleset>
-                    </rulesets>
-                    <failOnViolation>true</failOnViolation>
-                    <printFailingErrors>true</printFailingErrors>
-                </configuration>
-            </plugin>
-
+            <!-- lombok -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -227,35 +264,107 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.2</version>
-                <configuration>
-                    <destFile>${sonar.jacoco.reportPath}</destFile>
-                    <dataFile>${sonar.jacoco.reportPath}</dataFile>
-                    <append>true</append>
-                    <excludes>
-                        <exclude>**/generated-sources/**</exclude>
-                    </excludes>
 
+            <!-- pmd -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${pmd.plugin.version}</version>
+                <configuration>
+                    <includeTests>true</includeTests>
+                    <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+                    <minimumTokens>100</minimumTokens>
+                    <targetJdk>${java.version}</targetJdk>
+                    <analysisCache>true</analysisCache>
+                    <linkXRef>false</linkXRef>
+                    <rulesets>
+                        <ruleset>${maven.multiModuleProjectDirectory}/pmd-ruleset.xml</ruleset>
+                    </rulesets>
+                    <excludeRoots>
+                        <excludeRoot>${maven.multiModuleProjectDirectory}/opba-banking-rest-api/generated</excludeRoot>
+                    </excludeRoots>
+                    <failOnViolation>true</failOnViolation>
+                    <printFailingErrors>true</printFailingErrors>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>jacoco-initialize</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>pmd</goal>
+                            <goal>cpd</goal>
+                            <goal>cpd-check</goal>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- checkstyle -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle-plugin.version}</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- code coverage -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <phase>validate</phase>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
                     <execution>
-                        <id>jacoco-site</id>
-                        <phase>package</phase>
+                        <id>report</id>
+                        <phase>test</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>report-aggregate</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                    </execution>
                 </executions>
+                <configuration>
+                    <append>true</append>
+                    <propertyName>surefireArgLine</propertyName>
+                </configuration>
             </plugin>
+
+            <!-- junit tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+                <configuration>
+                    <argLine>${surefireArgLine}</argLine>
+                </configuration>
+            </plugin>
+
+            <!-- integration tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
@@ -280,6 +389,16 @@
             </plugin>
         </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>${maven.jxr.plugin.version}</version>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <scm>
         <connection>scm:git@github.com:adorsys/open-banking-gateway.git</connection>

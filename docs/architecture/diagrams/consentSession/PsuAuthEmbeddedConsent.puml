@@ -1,0 +1,45 @@
+@startuml PsuAuthorizeEmbeddedConsent
+title PsuAuthorizeEmbeddedConsent
+autonumber 11 1 "<b><color blue>[00]"
+actor psu
+
+box "PsuUserAgent" #LightGray
+    participant "FinTechUI" as FinTechUI
+    participant "PsuTppConsentSessionUI" as PsuTppConsentSessionUI
+    participant "PsuAspspConsentSessionUI" as PsuAspspConsentSessionUI
+end box
+box "FinTechDC" #DarkSeaGreen
+    participant "FinTechApi" as FinTechApi
+end box
+box "TppDC" #LightGray
+    participant "TppConsentSessionApi" as TppConsentSessionApi
+    participant "TppBankingApi" as TppBankingApi
+end box
+box "AspspDC" #LightSkyBlue
+    participant "AspspConsentSessionApi" as AspspConsentSessionApi
+    participant "AspspBankingApi" as AspspBankingApi
+end box
+
+FinTechUI -> TppConsentSessionApi ++ : GET:TppConsentSessionApi.embeddedAuthEntryPoint[]()<code>
+TppConsentSessionApi -> TppBankingApi ++ : deleteRedirectSession(code)
+return TppRedirectSession
+TppConsentSessionApi -> TppConsentSessionApi : TppRedirectSession.getConsentSession():\nTppConsentSession
+loop while(TppConsentSession.hasAuthChallenge())
+    TppConsentSessionApi -> TppConsentSessionApi : TppConsentSession.getCookie():\nPsu2TppConsentSessionCookie
+    TppConsentSessionApi --> PsuTppConsentSessionUI ++ : redirect302[Psu2TppConsentSessionCookie,\nPsuTppConsentSessionUI.authScreen]()<consentSessionState>
+    deactivate TppConsentSessionApi
+    PsuTppConsentSessionUI -> TppConsentSessionApi ++ : GET:/consent-embedded-ais/auth\n[Psu2TppConsentSessionCookie]()<consentSessionState>
+    return response[Psu2TppConsentSessionCookie]\n(ConsentAuthorizeResponse{AccountDetails[],AisConsent,AuthMetaData})
+    PsuTppConsentSessionUI --> psu : displayAuthScreen(AuthMetaData)
+    deactivate PsuTppConsentSessionUI
+    psu -> PsuTppConsentSessionUI ++ : enterAuthData(PsuAuthData)
+    PsuTppConsentSessionUI -> TppConsentSessionApi ++ : POST:/consent-embedded-ais/psuAuth\n[Psu2TppConsentSessionCookie](PsuAuthData)<consentSessionState>
+    TppConsentSessionApi -> AspspBankingApi ++ : updatePsuAuth[Tpp2AspspConsentSession](PsuAuthData)<>
+    return Tpp2AspspConsentSession
+    TppConsentSessionApi -> TppConsentSessionApi : Tpp2AspspConsentSession.consentSession():TppConsentSession
+end
+TppConsentSessionApi -> TppConsentSessionApi : TppConsentSession.redirectSession():TppRedirectSession
+TppConsentSessionApi -> TppBankingApi ++ : storeRedirectSession(TppConsentSession, exp)
+return code
+return redirect302[Psu2TppConsentSessionCookie=null,\nFinTechApi.okReturnPoint]()<code>
+@enduml

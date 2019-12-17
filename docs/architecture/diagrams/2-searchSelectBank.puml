@@ -38,18 +38,4 @@ FinTechAPI -> BankList ++ : incrementalBankSearch(keyword)
 return bankList
 return bankList
 return Display bank list
-
-psu -> FinTechUI ++ : selectBank
-FinTechUI -> FinTechAPI ++ : selectBank[...](bankId)
-FinTechAPI -> TPPBankingAPI ++ : selectBank[...](bankId)
-TPPBankingAPI -> ProtocolSelector ++: selectBankingProtocol(bankId)
-return BankingProtocol
-TPPBankingAPI -> BankingProtocol ++ : getBankProfile(bankId)
-BankingProtocol -> BankList ++ : getBankProfile(bankId)
-return bankProfile
-return bankProfile
-return bankProfile
-return bankProfile
-return Display use case
-
 @enduml

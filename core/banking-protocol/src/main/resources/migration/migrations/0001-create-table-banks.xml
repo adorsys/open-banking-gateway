@@ -1,0 +1,56 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create-table-bank" author="mhr">
+
+        <createTable tableName="${table-prefix}bank">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="${table-prefix}bankPK"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="bic" type="VARCHAR(11)"/>
+            <column name="bank_code" type="VARCHAR(8)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="load_csv_banks" author="mhr">
+        <loadData
+                encoding="utf8"
+                relativeToChangelogFile="true"
+                file="banks.csv"
+                catalogName=""
+                tableName="${table-prefix}bank">
+            <column header="uuid"                           type="skip"/>
+            <column header="name"       name="name"         type="STRING"/>
+            <column header="bic"        name="bic"          type="STRING"/>
+            <column header="url"                            type="skip"/>
+            <column header="adapter_id"                     type="skip"/>
+            <column header="bank_code"  name="bank_code"    type="STRING"/>
+            <column header="idp_url"                        type="skip"/>
+            <column header="aspsp_sca_approaches"           type="skip"/>
+        </loadData>
+        <rollback />
+    </changeSet>
+
+    <changeSet id="load_csv_banks_random" author="mhr">
+        <loadData
+                encoding="utf8"
+                relativeToChangelogFile="true"
+                file="banks_random_data.csv"
+                catalogName=""
+                tableName="${table-prefix}bank">
+            <column header="name"       name="name"         type="STRING"/>
+            <column header="bic"        name="bic"          type="STRING"/>
+            <column header="bank_code"  name="bank_code"    type="STRING"/>
+        </loadData>
+        <rollback />
+    </changeSet>
+    
+    <changeSet id="create_index" author="mhr">
+        <sql dbms="postgresql" stripComments="true">
+            CREATE INDEX bank_trgm_idx ON opb_bank USING gin ( (name || ' ' || bic || ' ' || bank_code) gin_trgm_ops);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
