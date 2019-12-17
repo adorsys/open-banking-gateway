@@ -1,0 +1,45 @@
+@startuml
+skinparam nodesep 10
+skinparam ranksep 10
+skinparam swimlane {
+  BorderThickness 2
+  TitleFontColor black
+  TitleFontSize 20
+  width 30
+}
+
+|FinTech with OpenBankingGw API|
+:{{
+database "Dynamic KB\n(i.e. consent id)" as DKB
+component "FinTech KB adapter" as FKBA
+DKB ==> FKBA
+}};
+-> Read transactions - call\n**GET /transactions/{bankId}** with consent ID;
+|#AntiqueWhite|TPP with OpenBankingGw Impl|
+if (Needs Consent?) then (YES)
+note right
+  For <b>MVP0</b>:
+  - Needs Consent? Simply read from bank
+  profile definition table
+  - Consent valid? Stubbed to assume is always valid
+  For <b>MVP1</b>:
+  Answers to both questions are handled by rule engine or BPMN flow.
+end note
+if (Consent valid?) then (YES)
+|FinTech with OpenBankingGw API|
+|#AntiqueWhite|TPP with OpenBankingGw Impl|
+else
+if (Ask for consent automatically parameter missing?) then (ABSENT)
+|FinTech with OpenBankingGw API|
+:Notification that consent is missing;
+stop
+else (PRESENT)
+|#AntiqueWhite|TPP with OpenBankingGw Impl|
+:Initiate <b>Ask PSU for consent</b>\nflow as below diagram;
+endif
+endif
+endif
+|#AntiqueWhite|TPP with OpenBankingGw Impl|
+:Proceed with request specific flow computed by BPMN\nsee details on below charts;
+stop
+@enduml

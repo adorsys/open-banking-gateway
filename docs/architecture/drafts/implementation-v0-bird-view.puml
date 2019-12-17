@@ -1,0 +1,28 @@
+@startuml
+skinparam nodesep 10
+skinparam ranksep 10
+'left to right direction
+
+actor PSU
+component "OpenBanking API" as OBA
+database "Static knowledge base\n(i.e. client profile)" as SKB
+database "Dynamic knowledge base\n(i.e. client ip address),\ncan be extended with TPP adapters" as DKB
+component "<size:30><&spreadsheet></size>Request context knowledge" as knowledge
+component "<size:30><&cog></size> Request validation engine\n(mock that validates if\nall params are present)" as mockEngine
+component "<size:30><&cog></size>Request performing engine" as engine
+component "<size:30><&cloud-upload></size>ASPSP" as ASPSP
+component "<size:30><&fork></size>ASPSP mock endpoints with\nrequest definition" as ASPSPMock
+
+PSU --> OBA : 1. Create payment
+OBA -> knowledge : 2. Gather knowledge\nfor this request
+SKB --> knowledge : 3. User profile,\nBank profile
+DKB --> knowledge : 4. User IP address,\nUser Geo location
+knowledge --> mockEngine : 5. Use knowledge to compute\ndo we have all necessary
+mockEngine <-left-> ASPSPMock : 6. Run request against mock-endpoints\nthat declare bank required params
+mockEngine --> OBA : 7opt. [IF NEEDED] Ask for more parameters
+mockEngine --> engine : 7. Proceed with this knowledge
+engine -> ASPSP : 8. Perform requests to bank
+ASPSP --> PSU : 9. SCA
+ASPSP <-down-> engine : 10. Tx succesfull
+engine --> OBA : 11. Done
+@enduml
