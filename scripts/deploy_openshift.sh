@@ -15,7 +15,7 @@ PROJECT_NAME=open-banking-gateway-dev
 SERVICE_NAME="tpp-bank-search-api"
 IMAGE_NAME=$REGISTRY_DOMAIN/$PROJECT_NAME/$SERVICE_NAME
 
-docker login -u image-pusher -p "$OPENSHIFT_TOKEN" $REGISTRY_DOMAIN
+docker login -u github-image-pusher -p "$OPENSHIFT_TOKEN" $REGISTRY_DOMAIN
 JAR_NAME=banking-protocol-$PROJECT_VERSION.jar
 docker build -t $IMAGE_NAME:"$IMAGE_TAG" --build-arg JAR_FILE="$JAR_NAME" ./core/banking-protocol
 docker push $IMAGE_NAME:"$IMAGE_TAG" && \
