@@ -14,51 +14,103 @@
 
 	<properties>
 		<ruleset.basedir>../..</ruleset.basedir>
+    <openapi-spec-file-location>${project.basedir}/src/main/resources/static/consent_api.yml</openapi-spec-file-location>
 	</properties>
 
-	<dependencies>
-		<!-- swagger -->
-		<dependency>
-			<groupId>io.swagger</groupId>
-			<artifactId>swagger-annotations</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.jetbrains</groupId>
-			<artifactId>annotations</artifactId>
-		</dependency>
 
-		<!-- Spring -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+    </dependency>
 
-		<!-- test -->
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter</artifactId>
-			<version>${jupiter.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.platform</groupId>
-			<artifactId>junit-platform-commons</artifactId>
-			<version>${junit.platform.commons.version}</version>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger2</artifactId>
+    </dependency>
 
-	</dependencies>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger-ui</artifactId>
+    </dependency>
+  </dependencies>
+  
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>io.swagger.codegen.v3</groupId>
+        <artifactId>swagger-codegen-maven-plugin</artifactId>
+        <version>3.0.11</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>${openapi-spec-file-location}</inputSpec>
+              <language>spring</language>
+              <output>${project.basedir}/generated/</output>
+              <configOptions>
+                <sourceFolder>src/main</sourceFolder>
+                <basePackage>de.adorsys.opba.consent</basePackage>
+                <configPackage>de.adorsys.opba.consent.config</configPackage>
+                <modelPackage>de.adorsys.opba.consent.model</modelPackage>
+                <apiPackage>de.adorsys.opba.consent.resource</apiPackage>
+                <interfaceOnly>true</interfaceOnly>
+                <skipOverwrite>true</skipOverwrite>
+                <dateLibrary>java8</dateLibrary>
+                <java8>true</java8>
+                <implicitHeaders>false</implicitHeaders>
+                <delegatePattern>true</delegatePattern>
+                <useTags>true</useTags>
+                <library>spring-mvc</library>
+                <swaggerDocketConfig>false</swaggerDocketConfig>
+              </configOptions>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>io.swagger.codegen.v3</groupId>
+            <artifactId>swagger-codegen-generators</artifactId>
+            <version>1.0.11</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+  </build>
 </project>
 

@@ -61,3 +61,6 @@ target/sonar/
 .classpath/
 .classpath
 .factorypath
+*/generated
+!generated/.swagger-codegen-ignore
+
