@@ -1,15 +1,15 @@
 # Redirect PSU to consent API
 
-## 1. [ConsentAuthorisationApi](dictionary.md#ConsentAuthorisationApi)
-The redirect start with a get request to the entryPoint of the ConsentAuthorisationApi, for authorizing a consent initiated on the TppBankingApi side.
+## Redirect-010 [ConsentAuthorisationApi](dictionary.md#ConsentAuthorisationApi)
+The redirect starts with a get request to ConsentAuthorisationApi.auth. The entryPoint of the ConsentAuthorisationApi, for processing a consent initiated on the TppBankingApi side.
 
 ## Diagram
 ![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/diagrams/useCases/5-redirectPsuToConsentAPI.puml&fmt=svg&vvv=1&sanitize=true)  
 
-## Request processing ConsentAPI
+## Request processing ConsentAuthorisationApi
 
-### 2.1 Retrieve Corresponding BankingProtocol
-ConsentAuthorisationApi will use the given redirectCode to load the matching BankingProtocol.
+### Redirect-021 Retrieve Corresponding BankingProtocol
+ConsentAuthorisationApi will use the given redirectCode to load the matching BankingProtocol. This means that the protocol selection information must be encoded in the redirectCode. See [Issue #54](https://github.com/adorsys/open-banking-gateway/issues/54).
 
 ### 2.2 .. 2.6 Retrieve associated TppConsentSession
 ConsentAuthorisationApi will let BankingProtocol use the redirectCode to retrieve the TppConsentSession

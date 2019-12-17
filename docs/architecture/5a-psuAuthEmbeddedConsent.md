@@ -10,23 +10,23 @@ Implements the process of collecting consent authorization credentials in an int
 
 ## Use Cases
 
-### 1.0 Create ConsentAuthSessionCookie
+### AuthEmbedded-010 : Create ConsentAuthSessionCookie
 
 If the TppConsentSession has an authChallenge, the interaction starts with the initialization of a [ConsentAuthSessionCookie](dictionary.md#ConsentAuthSessionCookie). The ConsentAuthSessionCookie is encrypted with a key stored in the [consentSessionState](dictionary.md#consentSessionState).
 
-### 2.0 Redirect to EmbeddedAuthInitScreen
+### AuthEmbedded-020 : Redirect to EmbeddedAuthInitScreen
 
 After preparation of the ConsentAuthSessionCookie, the UserAgent is redirected to the EmbeddedAuthInitScreen of the ConsentAuthorisationUI.
 
-### 30 .. 40 Load AuthChallenge
-The authChallenge returns the ConsentAuthorizeResponse that contains all information necessary to display the challenge to the PSU. An ScaUIMetadaData object contain UI customization parameter.
+### AuthEmbedded-030&-040 : Load AuthChallenges
+The generic endpoint at ConsentAuthorisationApi.embeddedAuth allows the ConsentAuthorisationUI to load AuthChallenges if any. The call returns the AuthorizeResponse that contains all information necessary to display returned challenges to the PSU. An ScaUIMetadaData object contain UI customization parameter.
 
-### 50 .. 60 Display Auth Screen and Collect PSU Auth Data
-This STep will display the Auth Screen and collect PSU auth data.
+### AuthEmbedded-050&-060 : Display Auth Screen and Collect PSU Auth Data
+Using information contained in the AuthorizeResponse object, the ConsentAuthorisationUI will display the suitable AuthScreen to the PSU and use it to collect PsuAuthData.
 
-### 70 .. 85 Send PSU Auth Data to ConsentAuthorisationApi
-The psuAuth endpoint of the ConsentAuthorisationApi will finally be called to process authentication data entered by the PSU.
+### AuthEmbedded-070..-087 : Send PsuAuthData to ConsentAuthorisationApi
+The generic endpoint at ConsentAuthorisationApi.embeddedAuth will finally be called again to send authentication data entered by the PSU to the BankingProtocol.
 
-### 90 .. 94 Redirect to FinTechApi
-As the TppConsentSession present no more AuthChallenge, a redirect session is prepared and the PSU is redirected back to the FinTechApi.
+### AuthEmbedded-090..-094 : Redirect to FinTechApi
+As the TppConsentSession presents no more AuthChallenge, a RedirectSession is prepared and the PSU is redirected back to the FinTechApi.
     

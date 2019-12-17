@@ -1,6 +1,6 @@
 @startuml
 
-autonumber 10 10 "<b><color blue>[Service-000]"
+autonumber 10 10 "<b><color blue>[BankingService-000]"
 actor psu
 
 box "PsuUserAgent" #LightGray
@@ -29,7 +29,7 @@ end box
 FinTechUI -> FinTechApi ++ : GET:FinTech-Redirect-URI[UserAgentContext,\nFinTechConsentSessionCookie]()\n<redirectCode,finTechConsentSessionState>
 FinTechApi -> FinTechApi : validateRedirectCall\n(finTechConsentSessionState,FinTechConsentSessionCookie)
 FinTechApi -> TppBankingApi ++ : GET:code2Token[UserAgentContext,\nFinTechContext]\n(redirectCode)<>
-autonumber 40 1 "<b><color blue>[Service-000]"
+autonumber 40 1 "<b><color blue>[BankingService-000]"
 TppBankingApi -> BankingProtocol ++ : code2Token(redirectCode)
 BankingProtocol -> RedirectSessionStoreApi ++ : redirectSession(redirectCode)
 RedirectSessionStoreApi -> RedirectSessionStoreApi : loadDeryptDeleteRedirectSession\n(redirectCode):TppConsentSession
@@ -37,10 +37,10 @@ return TppConsentSession
 return TppConsentSession
 TppBankingApi -> TppBankingApi: TppConsentSession.PsuConsentSession()
 return PsuConsentSession
-autonumber 50 10 "<b><color blue>[Service-000]"
+autonumber 50 10 "<b><color blue>[BankingService-000]"
 FinTechApi -> FinTechApi : storePsuConsent(PsuConsentSession)
 loop FinTech2TppConsentToken.isValid()
-    autonumber 60 1 "<b><color blue>[Service-000]"
+    autonumber 60 1 "<b><color blue>[BankingService-000]"
     FinTechApi -> TppBankingApi ++ : POST:listTransactions[PsuConsentSession](requestSpec)
     TppBankingApi -> BankingProtocol ++ : listTransactions[TppConsentSession]\n(requestSpec) 
     BankingProtocol -> AspspBankingApi ++ : listTransactions[TppContext](AisConsent, requestSpec) 

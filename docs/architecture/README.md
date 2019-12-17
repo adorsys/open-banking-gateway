@@ -6,7 +6,8 @@
 - [List of Transactions](4-initiateAisConsent.md)
 - [Redirect to Consent Authorization API](5-redirectPsuToConsentAPI.md)
 - [Authorize Consent Redirect Approach](5b-psuAuthRedirectConsent.md)
-- [Authorize Consent Embedded Approach](5a-psuAuthRedirectConsent.md)
+- [Authorize Consent Embedded Approach](5a-psuAuthEmbeddedConsent.md)
+- [Consume Service](6-consume_api.md)
 
 
 
