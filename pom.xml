@@ -73,7 +73,7 @@
         <java.version>1.8</java.version>
         <pmd.plugin.version>3.10.0</pmd.plugin.version>
         <apache.commons-lang3.version>3.9</apache.commons-lang3.version>
-		<spring-boot.version>2.2.2.RELEASE</spring-boot.version>
+    <spring-boot.version>2.2.2.RELEASE</spring-boot.version>
         <swaggerv3.version>2.1.0</swaggerv3.version>
         <swagger.version>1.5.23</swagger.version>
         <springfox.version>2.9.2</springfox.version>
