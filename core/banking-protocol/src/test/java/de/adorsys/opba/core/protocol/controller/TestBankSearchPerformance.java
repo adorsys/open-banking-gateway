@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 @SpringBootTest
 @Slf4j
-@Profile(ONE_TIME_POSTGRES_ON_DISK)
+@ActiveProfiles(ONE_TIME_POSTGRES_ON_DISK)
 class TestBankSearchPerformance extends BaseMockitoTest {
 
     private static final int N_THREADS = 10;
