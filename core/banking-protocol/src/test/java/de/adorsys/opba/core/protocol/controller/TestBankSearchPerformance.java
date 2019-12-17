@@ -9,16 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
-import org.testcontainers.containers.DockerComposeContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.org.apache.commons.lang.RandomStringUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -28,16 +24,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static de.adorsys.opba.core.protocol.TestProfiles.ONE_TIME_POSTGRES_ON_DISK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @SpringBootTest
 @Slf4j
-@Testcontainers
+@Profile(ONE_TIME_POSTGRES_ON_DISK)
 class TestBankSearchPerformance extends BaseMockitoTest {
 
-    private static final int POSTGRES_PORT = 5432;
     private static final int N_THREADS = 10;
     private static final int ITERATIONS = N_THREADS * 100;
 
@@ -48,12 +44,6 @@ class TestBankSearchPerformance extends BaseMockitoTest {
     private static List<String> searchStrings = generateTestData();
 
     private MockMvc mockMvc;
-
-    @Container
-    @SuppressWarnings("PMD.UnusedPrivateField")
-    private static final DockerComposeContainer environment =
-            new DockerComposeContainer(new File("src/test/resources/docker-compose.yml"))
-                    .withExposedService("postgres", 1, POSTGRES_PORT, Wait.forListeningPort());
 
     @Autowired
     private WebApplicationContext webApplicationContext;

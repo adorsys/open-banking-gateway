@@ -6,12 +6,14 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.Duration;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
 
 @Slf4j
+@EnabledIfEnvironmentVariable(named = "START_SANDBOX", matches = "true")
 class BasicTest extends WithSandboxSpringBootTest {
 
     private final SandboxAppsStarter executor = new SandboxAppsStarter();

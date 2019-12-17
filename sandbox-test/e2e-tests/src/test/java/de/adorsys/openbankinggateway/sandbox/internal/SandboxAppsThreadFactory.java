@@ -74,7 +74,7 @@ class SandboxAppsThreadFactory implements ThreadFactory {
                 disable.invoke(null);
 
             } catch (NoSuchMethodException | ClassNotFoundException ex) {
-                // NOP
+                log.info("Looks like tomcat is not present", ex);
             } catch (IllegalAccessException | InvocationTargetException ex) {
                 log.error("Failed disabling tomcat", ex);
             }

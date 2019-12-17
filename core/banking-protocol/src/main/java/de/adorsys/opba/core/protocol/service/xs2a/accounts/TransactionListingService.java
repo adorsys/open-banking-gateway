@@ -22,13 +22,14 @@ public class TransactionListingService implements JavaDelegate {
 
     @Override
     @Transactional
+    @SuppressWarnings("checkstyle:MagicNumber") // Hardcoded as it is POC, these should be read from context
     public void execute(DelegateExecution delegateExecution) {
         TransactionListXs2aContext context = delegateExecution.getVariable(CONTEXT, TransactionListXs2aContext.class);
 
         Response<TransactionsReport> accounts = ais.getTransactionList(
                 context.getResourceId(),
                 context.toHeaders(),
-                RequestParams.fromMap(ImmutableMap.of("bookingStatus", "BOTH", "withBalance", String.valueOf(context.isWithBalance()), "dateFrom", "2018-01-01", "dateTo" , "2020-09-30"))
+                RequestParams.fromMap(ImmutableMap.of("bookingStatus", "BOTH", "withBalance", String.valueOf(context.isWithBalance()), "dateFrom", "2018-01-01", "dateTo", "2020-09-30"))
         );
 
         context.setResult(accounts.getBody());

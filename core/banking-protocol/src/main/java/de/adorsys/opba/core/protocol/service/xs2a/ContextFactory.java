@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContextFactory {
 
+    @SuppressWarnings("PMD.AvoidUsingHardCodedIP") // This is a POC hardcoded values
     public Xs2aContext createContext() {
         Xs2aContext context = new Xs2aContext();
         context.setPsuId("anton.brueckner");
@@ -17,6 +18,7 @@ public class ContextFactory {
         return context;
     }
 
+    @SuppressWarnings("PMD.AvoidUsingHardCodedIP") // This is a POC hardcoded values
     public TransactionListXs2aContext createContextForTx() {
         TransactionListXs2aContext context = new TransactionListXs2aContext();
         context.setPsuId("anton.brueckner");

@@ -37,6 +37,7 @@ public class Xs2aAccountListConsentInitiate implements JavaDelegate {
         delegateExecution.setVariable(CONTEXT, context);
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber") // Hardcoded as it is POC, these should be read from context
     private Consents consents() {
         Consents consents = new Consents();
         AccountAccess access = new AccountAccess();
