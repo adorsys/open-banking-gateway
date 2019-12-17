@@ -52,10 +52,10 @@ We also do not advice adding persistent information to __RedirectUrl__, as these
 
 | Origin Application | Redirecting Application | Response Code; Location ; AuthCodeParam; Expiration | Redirect Target Application | Destination Application  | Data EndPoint at Origin Application |
 | -- | -- | -- | -- | -- | -- |
-| TppBankingApi | FinTechApi | 302 ; /auth ; code ; 5s | ConsentAuthorisationApi | ConsentAuthorisationApi | /loadTppConsentSession |
+| BankingApi | FinTechApi | 302 ; /auth ; code ; 5s | ConsentAuthorisationApi | ConsentAuthorisationApi | /loadTppConsentSession |
 | ConsentAuthorisationApi | ConsentAuthorisationApi | Proprietary banking API. Assume RFC6749. /auth | OnlineBankingApi | OnlineBankingApi | none |
 | OnlineBankingApi | OnlineBankingApi | 302 ; \[/ok\|/nok\] ; code ; 5s | ConsentAuthorisationApi | ConsentAuthorisationApi | /token |
-| ConsentAuthorisationApi | ConsentAuthorisationApi | 302 ; \[/ok\|/nok\] ; code ; 5s | FinTechApi | TppBankingApi | /loadTppConsentSession |
+| ConsentAuthorisationApi | ConsentAuthorisationApi | 302 ; \[/ok\|/nok\] ; code ; 5s | FinTechApi | BankingApi | /loadTppConsentSession |
 
 #### Keeping Session Information
 We assume all three applications FinTechApi, ConsentAuthorisationApi, OnlineBankingApi maintain their own session information. This framework uses following terms to name the session information held by an application on the UserAgent of the PSU.
@@ -102,8 +102,8 @@ This panel will be used to inform the PSU upon redirecting the PSU to the Consen
 ## <a name="TppDC"></a> Tpp Data Center
 Data center environment of the TPP
 
-### <a name="TppBankingApi"></a> TppBankingApi
-Tpp backend providing access to ASPSP banking functionality. This interface is not directly accessed by the PSU but by the FinTechApi. FinTechApi will use a FinTechContext to authenticate with the TppBankingApi.
+### <a name="BankingApi"></a> BankingApi
+Tpp backend providing access to ASPSP banking functionality. This interface is not directly accessed by the PSU but by the FinTechApi. FinTechApi will use a FinTechContext to authenticate with the BankingApi.
 
 ### <a name="TppBankSearchApi"></a> TppBankSearchApi
 Repository of banks maintained in the TPP's banking gateway. The banking search API will later presen an interface to configure profiles attached to listed banks.
@@ -133,10 +133,10 @@ Specification associated with an AisConsent. This is highly dependent on the Ban
 - allPsd2[allAccounts]
 
 ### <a name="FinTechContext"></a> FinTechContext
-Information used to identify the FinTech application at the TppBankingApi. For example a FinTech SSL client certificate or an APIKey or an oAuth2 Password Grant Credential.
+Information used to identify the FinTech application at the BankingApi. For example a FinTech SSL client certificate or an APIKey or an oAuth2 Password Grant Credential.
 
 ### <a name="PsuConsentSession"></a> PsuConsentSession
-Information associated with the consent as exchanged between the FinTechApi and the TppBankingApi. Generally contains:
+Information associated with the consent as exchanged between the FinTechApi and the BankingApi. Generally contains:
 - Data needed to customize psu access at the ConsentAuthorisationApi (showInfoPanel, fintechStateHash)
 - Data needed to manage redirection of PSU from the TppConsentSession to the FintechUI like (FinTech-Redirect-URI, FinTech-Nok-Redirect-URI, FinTech-Explicit-Authorisation-Preferred, FinTech-Content-Negotiation)
 
@@ -174,7 +174,7 @@ As a redirect request carries the consentAuthState in parameter, a new consentAu
 Holds consent information for the duration of a redirect. Redirect patterns are described [below](dictionary.md#Redirection).
 
 ### <a name="RedirectSessionStoreApi"></a> RedirectSessionStoreApi
-Storage of temporary redirect sessions. Redirect session are stored only for the duration of the redirect request while redirecting from the TppBankingApi to the ConsentAuthorisationApi and from the ConsentAuthorisationApi back to the TppBankingApi.
+Storage of temporary redirect sessions. Redirect session are stored only for the duration of the redirect request while redirecting from the BankingApi to the ConsentAuthorisationApi and from the ConsentAuthorisationApi back to the BankingApi.
 
 Consent Data might contain security sentive data like account number or payment information of the PSU. This is the reason why they will be encrypted prior to being temporarily held for the duration of the redirection in the RedirectSessionStoreApi. So the RedirectSessionStoreApi will generate a temporary authorization code that contains both the id of the redirect session and the key used to encrypt the content of the redirect session.
 
@@ -190,16 +190,16 @@ Help select a banking protocol.
 Data center environment of the ASPSP
 
 ### <a name="AspspBankingApi"></a> AspspBankingApi 
-Api banking provided by ASPSP. This interface is not directly accessed by the PSU but by the TppBankingApi. TppBankingApi will use a TppContext to authenticate with the TppBankingApi.
+Api banking provided by ASPSP. This interface is not directly accessed by the PSU but by the BankingApi. BankingApi will use a TppContext to authenticate with the BankingApi.
 
 ### <a name="TppContext"></a> TppContext
 Information used to identify the Tpp application in the ASPSP environment. Like a TPP QWAC certificate.
 
 ### <a name="TppConsentSession"></a> TppConsentSession
-Storage for consent data in the realm of the BankingProtocol. The banking protocol is both accessible to the TppBankingApi and the ConsentAuthorizationApi.
+Storage for consent data in the realm of the BankingProtocol. The banking protocol is both accessible to the BankingApi and the ConsentAuthorizationApi.
 
 The cryptographic key needed to recover the TppConsentSession is always delivered by the calling layer. These are:
-- FinTechUI -> FinTechApi -> TppBankingApi -> BankingProtocol : in this case the key needed to recover the TppConsentSession in contained in the PsuConsentSession. Generally that key will transitively originate from an interaction with the user agent. 
+- FinTechUI -> FinTechApi -> BankingApi -> BankingProtocol : in this case the key needed to recover the TppConsentSession in contained in the PsuConsentSession. Generally that key will transitively originate from an interaction with the user agent. 
 - CosentAuthorizationUI -> CosentAuthorizationApi -> BankingProtocol : in this case the key needed to recover the TppConsentSession originate from the ConsentAuthSessionCookie.
 
 Beside consent data, additional data might be held in the TppConsentSession: 

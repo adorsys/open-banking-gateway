@@ -13,7 +13,7 @@ box "FinTechDC" #DarkSeaGreen
     participant "FinTechApi" as FinTechApi
 end box
 box "TppDC" #LightGray
-    'participant "TppBankingApi" as TppBankingApi
+    'participant "BankingApi" as BankingApi
     participant "TppBankSearchApi" as TppBankSearchApi
     'participant "ConsentAuthorisationApi" as ConsentAuthorisationApi
 

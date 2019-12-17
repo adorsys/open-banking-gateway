@@ -1,7 +1,7 @@
 # Redirect PSU to consent API
 
 ## Redirect-010 [ConsentAuthorisationApi](dictionary.md#ConsentAuthorisationApi)
-The redirect starts with a get request to ConsentAuthorisationApi.auth. The entryPoint of the ConsentAuthorisationApi, for processing a consent initiated on the TppBankingApi side.
+The redirect starts with a get request to ConsentAuthorisationApi.auth. The entryPoint of the ConsentAuthorisationApi, for processing a consent initiated on the BankingApi side.
 
 ## Diagram
 ![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/diagrams/useCases/5-redirectPsuToConsentAPI.puml&fmt=svg&vvv=1&sanitize=true)  

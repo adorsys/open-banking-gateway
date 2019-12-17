@@ -21,10 +21,10 @@ The FinTechUI will forward the service selected to the FinTechApi. In this case 
 - The ListTransactionsSpec specifies details of the service requested by the PSU.
 
 #### InitConsent-031 : Load PsuConsentSession
-A [PsuConsentSession](dictionary.md#PsuConsentSession) is a reusable token, that can be used to request service with the TppBankingApi. It is reference to the PSU in the realm of the TPP.
-Whether a service request is covered by an existing PsuConsent is decided by the TppBankingApi. The Task of the FinTechApi is to load any existing PsuConsentSession and associate it with the PSU.
+A [PsuConsentSession](dictionary.md#PsuConsentSession) is a reusable token, that can be used to request service with the BankingApi. It is reference to the PSU in the realm of the TPP.
+Whether a service request is covered by an existing PsuConsent is decided by the BankingApi. The Task of the FinTechApi is to load any existing PsuConsentSession and associate it with the PSU.
 
-### InitConsent-040 : FinTechApi to TppBankingApi.listTransactions
+### InitConsent-040 : FinTechApi to BankingApi.listTransactions
 - The associated [FinTechContext](dictionary.md#FinTechContext) contains identification information associated with the FinTech.
 - PsuConsentSession
 - UserAgentContext
@@ -32,9 +32,9 @@ Whether a service request is covered by an existing PsuConsent is decided by the
 - ListTransactionsSpec
 
 #### InitConsent-041 : Loads the BankingProtocol from the given BankProfile
-TppBankingApi selects the [BankingProtocol](dictionary.md#BankingProtocol) based on the given BankProfile.
+BankingApi selects the [BankingProtocol](dictionary.md#BankingProtocol) based on the given BankProfile.
 
-### InitConsent-050 : TppBankingApi to BankingProtocol.listTransactions
+### InitConsent-050 : BankingApi to BankingProtocol.listTransactions
 The [BankingProtocol](dictionary.md#BankingProtocol) associated with the given BankProfile decides on how to proceed with the request. 
 BankingProtocol can:
 
@@ -72,10 +72,10 @@ The redirectCode is short lived (like 10 seconds). This is, TPP server does not 
 
 #### InitConsent-065 : BankingProtocol reproduces PsuConsentSession from the TppConsentSession
 
-#### InitConsent-066 : Resulting Redirect Information is returned to the TppBankingApi
+#### InitConsent-066 : Resulting Redirect Information is returned to the BankingApi
 The attached [AspspRedirectInfo](dictionary.md#AspspRedirectInfo) contains all information necessary to redirect the PSU to the [ConsentAuthorisationApi](dictionary.md#ConsentAuthorisationApi).
 
-#### InitConsent-067 : TppBankingApi returns the PsuConsentSession an a redirectCode to FinTechApi
+#### InitConsent-067 : BankingApi returns the PsuConsentSession an a redirectCode to FinTechApi
 
 #### InitConsent-068 : FinTechConsentSessionCookie
 Available in the request header. This cookie shall be set for the Max time given to the PSU for the authorization of the corresponding consent. The cookie can be bound to the end point FinTechApi.consentAuthDone so it does no need to be transported to the server on other requests. 

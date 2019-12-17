@@ -12,7 +12,7 @@ box "FinTechDC" #DarkSeaGreen
     participant "FinTechApi" as FinTechApi
 end box
 box "TppDC" #LightGray
-    participant "TppBankingApi" as TppBankingApi
+    participant "BankingApi" as BankingApi
     'participant "TppBankSearchApi" as TppBankSearchApi
     'participant "ConsentAuthorisationApi" as ConsentAuthorisationApi
 
@@ -32,11 +32,11 @@ FinTechUI -> FinTechApi ++ : listTransactions[FinTechLoginSessionCookie,\nUserAg
 autonumber 31 1 "<b><color blue>[InitConsent-000]"
 FinTechApi -> FinTechApi : psuConsentSession\n(FinTechLoginSessionCookie,\nBankProfile,ListTransactionsSpec)<>
 autonumber 40 1 "<b><color blue>[InitConsent-000]"
-FinTechApi -> TppBankingApi ++ : listTransactions[UserAgentContext,\nPsuConsentSession,FinTechContext]\n(BankProfile,ListTransactionsSpec)<>
+FinTechApi -> BankingApi ++ : listTransactions[UserAgentContext,\nPsuConsentSession,FinTechContext]\n(BankProfile,ListTransactionsSpec)<>
 autonumber 41 1 "<b><color blue>[InitConsent-000]"
-TppBankingApi -> TppBankingApi : BankProfile.bankingProtocol():BankingProtocol
+BankingApi -> BankingApi : BankProfile.bankingProtocol():BankingProtocol
 autonumber 50 1 "<b><color blue>[InitConsent-000]"
-TppBankingApi -> BankingProtocol ++ : listTransactions[UserAgentContext, PsuConsentSession]\n(BankProfile, ListTransactionsSpec) 
+BankingApi -> BankingProtocol ++ : listTransactions[UserAgentContext, PsuConsentSession]\n(BankProfile, ListTransactionsSpec)
 
 autonumber 51 1 "<b><color blue>[000]"
 BankingProtocol -> BankingProtocol : PsuConsentSession.tppConsentSession()\n:TppConsentSession
@@ -57,10 +57,10 @@ else TppConsentSession.consentPresent()
     activate BankingProtocol
     BankingProtocol -> AspspBankingApi ++ : listOfTransactions[UserAgentContext,\nTppContext](AisConsent) 
     return 200_OK[](Transactions)
-    BankingProtocol --> TppBankingApi ++: 200_OK[](Transactions)
+    BankingProtocol --> BankingApi ++: 200_OK[](Transactions)
     deactivate BankingProtocol
-    TppBankingApi --> FinTechApi ++ : 200_OK[](Transactions)
-    deactivate TppBankingApi
+    BankingApi --> FinTechApi ++ : 200_OK[](Transactions)
+    deactivate BankingApi
     FinTechApi --> FinTechUI : 200_OK[FintechLoginSessionCookie](Transactions)
     deactivate FinTechApi
     return displayListOfTransactions(Transactions)
