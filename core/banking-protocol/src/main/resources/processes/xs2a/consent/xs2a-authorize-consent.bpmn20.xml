@@ -5,10 +5,10 @@
     <startEvent id="start" name="start" flowable:formFieldValidation="true"></startEvent>
     <serviceTask id="startAuthorization" name="Start SCA authorization" flowable:async="true" flowable:delegateExpression="${xs2aStartAuthorization}"></serviceTask>
     <serviceTask id="scaEmbeddedChallenge" name="Perform SCA embedded challenge" flowable:async="true" flowable:delegateExpression="${xs2aDoScaChallenge}"></serviceTask>
-    <serviceTask id="finalizeEmbeddedAuthoration" name="Finalize embedded authoration" flowable:async="true" flowable:delegateExpression="${xs2aFinalizeConsent}"></serviceTask>
+    <serviceTask id="finalizeEmbeddedAuthorization" name="Finalize embedded authorization" flowable:async="true" flowable:delegateExpression="${xs2aFinalizeEmbeddedConsent}"></serviceTask>
     <endEvent id="end" name="end"></endEvent>
     <sequenceFlow id="sid-1139B3D0-261B-4594-B84F-638928669262" sourceRef="start" targetRef="startAuthorization"></sequenceFlow>
-    <sequenceFlow id="sid-3E4021E2-4726-4056-97A0-A40CABFCEDBA" sourceRef="scaEmbeddedChallenge" targetRef="finalizeEmbeddedAuthoration"></sequenceFlow>
+    <sequenceFlow id="sid-3E4021E2-4726-4056-97A0-A40CABFCEDBA" sourceRef="scaEmbeddedChallenge" targetRef="finalizeEmbeddedAuthorization"></sequenceFlow>
     <exclusiveGateway id="scaChallengeSelector">
       <documentation>Determines which SCA method was selected by bank</documentation>
     </exclusiveGateway>
@@ -18,13 +18,15 @@
       <documentation>ASPSP selected embedded SCA</documentation>
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aAspspMethodGateway.isEmbedded(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-1DFDC2B8-6141-4818-99C6-89D8BDB7E871" sourceRef="finalizeEmbeddedAuthoration" targetRef="end"></sequenceFlow>
+    <sequenceFlow id="sid-1DFDC2B8-6141-4818-99C6-89D8BDB7E871" sourceRef="finalizeEmbeddedAuthorization" targetRef="end"></sequenceFlow>
     <sequenceFlow id="redirect" name="redirect" sourceRef="scaChallengeSelector" targetRef="notifyUserWithRedirect">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aAspspMethodGateway.isRedirect(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
     <receiveTask id="waitForUserScaComplete" name="Waits for user to complete SCA" flowable:async="true"></receiveTask>
     <sequenceFlow id="sid-6AAE53C3-DAA6-455D-A7A2-E35086D95D45" sourceRef="notifyUserWithRedirect" targetRef="waitForUserScaComplete"></sequenceFlow>
-    <sequenceFlow id="sid-FC171C5B-4D7E-40B5-9C35-31DF93146BB6" sourceRef="waitForUserScaComplete" targetRef="end"></sequenceFlow>
+    <serviceTask id="finalizeRedirectAuthorization" name="Finalize redirect authorization" flowable:async="true" flowable:delegateExpression="${xs2aFinalizeRedirectConsent}"></serviceTask>
+    <sequenceFlow id="sid-8643930F-623B-4411-AF42-03F4D1BD01C8" sourceRef="waitForUserScaComplete" targetRef="finalizeRedirectAuthorization"></sequenceFlow>
+    <sequenceFlow id="sid-C4769746-A7E8-4808-B771-6CC78EFF4F99" sourceRef="finalizeRedirectAuthorization" targetRef="end"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
@@ -35,10 +37,10 @@
         <omgdc:Bounds height="80.0" width="100.0" x="195.0" y="240.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scaEmbeddedChallenge" id="BPMNShape_scaEmbeddedChallenge">
-        <omgdc:Bounds height="80.0" width="100.0" x="420.0" y="105.0"></omgdc:Bounds>
+        <omgdc:Bounds height="80.0" width="100.0" x="495.0" y="105.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="finalizeEmbeddedAuthoration" id="BPMNShape_finalizeEmbeddedAuthoration">
-        <omgdc:Bounds height="80.0" width="100.0" x="705.0" y="105.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="finalizeEmbeddedAuthorization" id="BPMNShape_finalizeEmbeddedAuthorization">
+        <omgdc:Bounds height="80.0" width="100.0" x="660.0" y="105.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
         <omgdc:Bounds height="28.0" width="28.0" x="855.0" y="266.0"></omgdc:Bounds>
@@ -50,7 +52,10 @@
         <omgdc:Bounds height="80.0" width="100.0" x="420.0" y="375.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="waitForUserScaComplete" id="BPMNShape_waitForUserScaComplete">
-        <omgdc:Bounds height="80.0" width="100.0" x="570.0" y="375.0"></omgdc:Bounds>
+        <omgdc:Bounds height="80.0" width="100.0" x="585.0" y="375.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="finalizeRedirectAuthorization" id="BPMNShape_finalizeRedirectAuthorization">
+        <omgdc:Bounds height="80.0" width="100.0" x="735.0" y="375.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="sid-1139B3D0-261B-4594-B84F-638928669262" id="BPMNEdge_sid-1139B3D0-261B-4594-B84F-638928669262">
         <omgdi:waypoint x="129.94818070118578" y="278.2299735565482"></omgdi:waypoint>
@@ -62,7 +67,7 @@
         <omgdi:waypoint x="420.0" y="415.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-1DFDC2B8-6141-4818-99C6-89D8BDB7E871" id="BPMNEdge_sid-1DFDC2B8-6141-4818-99C6-89D8BDB7E871">
-        <omgdi:waypoint x="804.949999999996" y="145.0"></omgdi:waypoint>
+        <omgdi:waypoint x="759.9499999999605" y="145.0"></omgdi:waypoint>
         <omgdi:waypoint x="869.0" y="145.0"></omgdi:waypoint>
         <omgdi:waypoint x="869.0" y="266.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
@@ -70,27 +75,27 @@
         <omgdi:waypoint x="294.9499999999989" y="279.1666666666667"></omgdi:waypoint>
         <omgdi:waypoint x="345.327868852459" y="278.32704918032783"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-AE14268E-834A-482F-ABF7-D4B63933E136" id="BPMNEdge_sid-AE14268E-834A-482F-ABF7-D4B63933E136">
-        <omgdi:waypoint x="819.949999999937" y="415.0"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="sid-C4769746-A7E8-4808-B771-6CC78EFF4F99" id="BPMNEdge_sid-C4769746-A7E8-4808-B771-6CC78EFF4F99">
+        <omgdi:waypoint x="834.9499999998733" y="415.0"></omgdi:waypoint>
         <omgdi:waypoint x="869.0" y="415.0"></omgdi:waypoint>
         <omgdi:waypoint x="869.0" y="293.94992943204846"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-FC171C5B-4D7E-40B5-9C35-31DF93146BB6" id="BPMNEdge_sid-FC171C5B-4D7E-40B5-9C35-31DF93146BB6">
-        <omgdi:waypoint x="669.9499999999999" y="415.0"></omgdi:waypoint>
-        <omgdi:waypoint x="719.9999999999363" y="415.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-6AAE53C3-DAA6-455D-A7A2-E35086D95D45" id="BPMNEdge_sid-6AAE53C3-DAA6-455D-A7A2-E35086D95D45">
-        <omgdi:waypoint x="519.95" y="415.0"></omgdi:waypoint>
-        <omgdi:waypoint x="569.9999999999363" y="415.0"></omgdi:waypoint>
+        <omgdi:waypoint x="519.9499999998898" y="415.0"></omgdi:waypoint>
+        <omgdi:waypoint x="585.0" y="415.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-8643930F-623B-4411-AF42-03F4D1BD01C8" id="BPMNEdge_sid-8643930F-623B-4411-AF42-03F4D1BD01C8">
+        <omgdi:waypoint x="684.9499999999999" y="415.0"></omgdi:waypoint>
+        <omgdi:waypoint x="734.9999999999363" y="415.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-3E4021E2-4726-4056-97A0-A40CABFCEDBA" id="BPMNEdge_sid-3E4021E2-4726-4056-97A0-A40CABFCEDBA">
-        <omgdi:waypoint x="519.9499999998878" y="145.0"></omgdi:waypoint>
-        <omgdi:waypoint x="705.0" y="145.0"></omgdi:waypoint>
+        <omgdi:waypoint x="594.9499999999836" y="145.0"></omgdi:waypoint>
+        <omgdi:waypoint x="659.9999999999847" y="145.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="embedded" id="BPMNEdge_embedded">
         <omgdi:waypoint x="365.0" y="258.0"></omgdi:waypoint>
         <omgdi:waypoint x="365.0" y="145.0"></omgdi:waypoint>
-        <omgdi:waypoint x="420.0" y="145.0"></omgdi:waypoint>
+        <omgdi:waypoint x="495.0" y="145.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
