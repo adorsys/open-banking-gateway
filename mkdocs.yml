@@ -1,0 +1,20 @@
+site_name: Open Banking Gateway Documentation
+nav:
+  - Home: ../README.md
+  - "Architecture":
+    - architecture/README.md
+    - "Search bank": architecture/2-searchBank.md
+    - architecture/1-loginWithFinTech.md
+    - architecture/3-selectBank.md
+    - architecture/4-initiateAisConsent.md
+    - architecture/5-redirectPsuToConsentAPI.md
+    - architecture/5a-psuAuthEmbeddedConsent.md
+    - architecture/5b-psuAuthRedirectConsent.md
+    - architecture/6-consume_api.md
+    - architecture/dictionary.md
+    - architecture/drafts/README.md
+  - roadmap.md
+  - ContributionGuidelines.md
+  - releasenotes.md
+  - version_policy.md
+theme: readthedocs
