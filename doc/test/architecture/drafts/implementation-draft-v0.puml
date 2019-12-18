@@ -1,0 +1,115 @@
+@startuml
+skinparam nodesep 10
+skinparam ranksep 10
+'left to right direction
+
+actor PSU
+
+rectangle PaymentRequest [
+   Amount: 100EUR
+   destination: 12345
+   Bank: MyBank
+]
+
+component "Open banking gateway API" as OBA {
+   component session
+}
+
+database "Open banking\ngateway configuration\ndatabase" as OBADB {
+  node tppUserProfile [
+    Static user profile
+    ---
+    Name: John
+    Surname: Doe
+    Billing address: Nuremberg,\nFurther strasse 59
+  ]
+  node bankProfile [
+    Bank profile
+    ---
+    API rate limit: 10/day
+    SCA methods: Embedded
+  ]
+  node bankConfiguration [
+    Bank configuration (xs2a-adapter)
+    ---
+    API address: somehost.com
+  ]
+  component "Static request info" as requestInfo
+
+  tppUserProfile ==> requestInfo
+  bankProfile ==> requestInfo
+  bankConfiguration ==> requestInfo
+}
+
+component "XS2A-Adapter" as adapter
+component "Transient request data" as transientData {
+  rectangle "IP address: 1.1.1.1" as IP
+}
+
+component "TPP user info provider" as extraUserInfo {
+  rectangle "GeoLocation: 56.55 lat 32.33 lng" as GEO
+}
+
+
+component "Joined knowledge\nabout user\nfrom static\nand dynamic context" as knowledge
+
+package "Validation engine" as ruleEngine {
+  package "BPMN parameter validation engine" as bpmnMockEngine {
+    component ValidationSequence [
+        BPMN managed mock call sequence\n(uses <b>same flow definition</b> as real sequence)
+        {{
+            PISP -> "(MOCK) ASPSP" ++ : Payment initiation request to <b>mock</b> endpoint
+            return (Argument validation) Payment initiation response
+            PISP -> "(MOCK) ASPSP" ++ : Payment status request to <b>mock</b> endpoint
+            return (Argument validation) Payment status response
+        }}
+    ]
+  }
+
+  component "Checklist definition" as checklist
+  component "Required fields for call\ncomputed based on sequence diagram\nand OpenAPI bank endpoints definition" as requiredTemplate
+  component "Check if all data\nis present for request" as askForExtraInfo
+
+  ValidationSequence ==> checklist
+}
+
+package "BPMN engine" as bpmnEngine {
+  component "10. Resulting request\nsequence managed by BPMN" as resultingRequest
+  component Sequence [
+      BPMN managed payment
+      {{
+          PISP -> ASPSP ++ : Payment initiation request
+          return Payment initiation response
+          PISP -> PSU : Feedback - authorize transaction
+          loop SCA Authorization
+            ASPSP -> PSU : SCA challenge
+            PSU -> ASPSP : Challenge result
+          end
+          PISP -> ASPSP ++ : Payment status request
+          return Payment status response
+      }}
+  ]
+}
+
+component "More information\nrequired for request" as moreInformationNeeded
+component "XS2A-Implementation" as xs2aImpl
+component "Bank" as bank
+
+PSU ==> PaymentRequest : 1. Pay 100EUR to IBAN 12345\nusing MyBank
+PaymentRequest ==> session : 2. REST call
+session ==> ruleEngine : 3. Compute resulting\nrequest to XS2A
+requestInfo ==> knowledge : 4. Read static user\nand bank profile
+transientData =up=> knowledge : 5. Compute transient\nrequest data
+extraUserInfo =up=> knowledge : 6. Expand knowledge\nwith extra information
+checklist =right=> requiredTemplate
+knowledge ==> askForExtraInfo : 7. Resulting knowledge
+requiredTemplate ==> askForExtraInfo : 8. Compute required\narguments\nfor XS2A api call
+askForExtraInfo <==> moreInformationNeeded : 9b. Go get more data
+moreInformationNeeded ==> OBA : 10b. Ask TPP or PSU\nfor extra information
+resultingRequest ==> Sequence : Computed sequence according\nto bank protocol
+askForExtraInfo ==> resultingRequest : 9a. Pass context\nto BPMN engine
+Sequence ==> adapter : 11. Call XS2A-adapter
+adapter ==> xs2aImpl : 12. Call XS2A-API
+xs2aImpl ==> bank : 13. Internal operation
+bank ==> PSU : 14. Perform SCA
+@enduml

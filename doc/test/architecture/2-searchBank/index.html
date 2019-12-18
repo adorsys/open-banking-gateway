@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Search bank - Open Banking Gateway Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Search bank";
+    var mkdocs_page_input_path = "architecture/2-searchBank.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Open Banking Gateway Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../README.md">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Architecture</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../">Use Cases</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Search bank</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#psu-searches-bank-by-keyword">PSU Searches Bank By Keyword</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#definition">Definition</a></li>
+        
+            <li><a class="toctree-l4" href="#implementation-approaches">Implementation Approaches</a></li>
+        
+            <li><a class="toctree-l4" href="#remote-incremental-search">Remote Incremental Search</a></li>
+        
+            <li><a class="toctree-l4" href="#local-incremental-search">Local Incremental Search</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../1-loginWithFinTech/">User Login</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../3-selectBank/">Select Bank</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../4-initiateAisConsent/">List Of Transactions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5-redirectPsuToConsentAPI/">Redirect PSU to consent API</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5a-psuAuthEmbeddedConsent/">Authorize Consent Embedded Approach</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5b-psuAuthRedirectConsent/">Authorize Consent Redirect Approach</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../6-consume_api/">Consume API after Consent Authorization</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../dictionary/">Dictionary</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../drafts/">Tech setup</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../roadmap/">Roadmap</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../ContributionGuidelines/">ContributionGuidelines</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../releasenotes/">Release Notes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../version_policy/">Version Policy</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Open Banking Gateway Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Architecture &raquo;</li>
+        
+      
+    
+    <li>Search bank</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="psu-searches-bank-by-keyword">PSU Searches Bank By Keyword</h1>
+<h2 id="definition">Definition</h2>
+<p>Describes the bank search functionality in a FinTech Application. Generally bank search is provided to prevent PSU from manually entering complicated bank identifiers.</p>
+<p>This bank search API allows for incremental keyword based search.</p>
+<h2 id="implementation-approaches">Implementation Approaches</h2>
+<p>We will distinguish between remote and local incremental search.</p>
+<h2 id="remote-incremental-search">Remote Incremental Search</h2>
+<p>The remote incremental search is implemented on the server side. A rest endpoint receives a searchString and return a list of matching search entries.</p>
+<h3 id="use-case-steps">Use Case Steps</h3>
+<p>Use cases for this API:
+1. PSU loads FinTechSearchScreen
+2. FinTechUI displays a search screen to the PSU
+3. PSU enters any keyword in the search input field
+4. FinTechUI forward request to FinTechAPI
+5. FinTechAPI forward request to TppBeanSearchApi
+6. TppBankSearchApi returns a list of matching BankDescriptors to FinTechAPI
+7. FinTechAPI returns a list of matching BankDescriptors to FinTechBankSearchUI
+8. UI displays list of found bank descriptors to PSU</p>
+<p>Step 4. through 8. is repeated as long as PSU modifies keywords (by adding or removing characters)</p>
+<p><img alt="Session diagram" src="https://adorsys.github.io/open-banking-gateway/doc/test/architecture/diagrams/useCases/2-searchBank.png" /></p>
+<h2 id="local-incremental-search">Local Incremental Search</h2>
+<p>Local incremental search generally provides a way of reducing round trip to servers. So there is no local incremental search endpoint, but an endpoint to download the list of all BankDescriptors.</p>
+<p>The client is then responsible for the indexing and the implementation of the search logic.   </p>
+<p>For the purpose of keeping the client code simple, interface will also provide the possibility of downloading a standard lucene index file, as many platform provide login provide processing of lucene indexes. This approach will prevent each client from perfoming the expensive lucene indexing.</p>
+<p>The following diagram describes additional steps performed in the local incremental search.</p>
+<h3 id="use-case-steps_1">Use Case Steps</h3>
+<p>Use cases for this API:
+1. PSU loads FinTechSearchScreen
+2. FinTechUI requests the BankSearchIndex from FinTechApi
+3. FinTechApi requests the BankSearchIndex from TppBeanSearchApi
+4. TppBeanSearchApi return BankSearchIndex to FinTechApi
+5. FinTechApi return BankSearchIndex to FinTechUI
+6. FinTechUI displays a search screen to the PSU
+7. PSU enters any keyword in the search input field
+8. FinTechUI call the search routine of the embedded LuceneSearch
+9. LuceneSearch uses the keyword to retrieve the list of matching entries
+10. LuceneSearch returns a list of matching BankDescriptors to FinTechBankSearchUI
+11. UI displays list of found bank descriptors to PSU</p>
+<p>Step 8. through 11. is repeated as long as PSU modifies keywords (by adding or removing characters)</p>
+<p><img alt="Session diagram" src="https://adorsys.github.io/open-banking-gateway/doc/test/architecture/diagrams/useCases/2a-searchBankLocal.png" /></p>
+<p>Like this diagram shows, local bank search does not send request to the network.</p>
+<h3 id="new-idioms">New Idioms</h3>
+<h4 id="discriminator">Discriminator</h4>
+<p>A discriminator can be used to limit the size of the index returned to client. If for example the TPP does not support some banks, there is no need for returning those banks to the client.</p>
+<h4 id="lucenesearch">LuceneSearch</h4>
+<p>This is the UI-Komponent that operates on a lucene search index in the UI-Application.</p>
+<h4 id="caching-search-index">Caching Search Index</h4>
+<p>SearchIndex might be cached on client as adding and removing bank records to the configuration does not happen frequently.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../1-loginWithFinTech/" class="btn btn-neutral float-right" title="User Login">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../" class="btn btn-neutral" title="Use Cases"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../1-loginWithFinTech/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+
+</body>
+</html>
