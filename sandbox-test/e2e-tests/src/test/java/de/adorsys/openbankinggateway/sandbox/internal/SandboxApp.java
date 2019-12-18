@@ -20,7 +20,8 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.InetAddress;
+import java.net.Inet4Address;
+import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URL;
@@ -29,6 +30,8 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -76,7 +79,7 @@ public enum SandboxApp {
     private static final Pattern REFERENCE_PATTERN = Pattern.compile("\\$\\{([a-zA-Z0-9.]+)}");
     private static final Pattern PORT_PATTERN = Pattern.compile("^.+:([0-9]+)/.+$");
     private static final Map<String, String> EXPOSED_VARIABLES = ImmutableMap.of(
-            "dockerHost", hostAddress()
+            "dockerHost", "host.docker.internal"
     );
     private static final AtomicBoolean DB_STARTED = new AtomicBoolean();
     private static final ObjectMapper YML = new ObjectMapper(new YAMLFactory());
@@ -182,10 +185,16 @@ public enum SandboxApp {
             );
 
             int desiredPort = Integer.parseInt(readVariableFromConfig(appConfig.at("/port"), commonConfig));
-            GenericContainer container = new FixedHostPortGenericContainer(jarOrDockerFile)
-                    .withFixedExposedPort(desiredPort, desiredPort)
-                    .withEnv(envVars)
-                    .waitingFor(Wait.defaultWaitStrategy());
+            FixedHostPortGenericContainer container = new FixedHostPortGenericContainer(jarOrDockerFile);
+            container.withFixedExposedPort(desiredPort, desiredPort);
+
+            // Hack for linux as it does not have `host.docker.internal` so directly placing into host network
+            if (System.getProperty("os.name").toLowerCase().contains("linux")) {
+                container.withExtraHost("host.docker.internal", hostAddressForLinux());
+                container.withNetworkMode("host");
+            }
+
+            container.withEnv(envVars).waitingFor(Wait.defaultWaitStrategy());
 
             container.start();
             this.dockerContainer.set(container);
@@ -359,8 +368,21 @@ public enum SandboxApp {
     }
 
     @SneakyThrows
-    private static String hostAddress() {
-        return InetAddress.getLocalHost().getHostAddress();
+    private static String hostAddressForLinux() {
+        Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
+        for (NetworkInterface netInt : Collections.list(nets)) {
+            if (!"docker0".equals(netInt.getName())) {
+                continue;
+            }
+
+            return netInt.getInterfaceAddresses().stream()
+                .filter(it -> it.getAddress() instanceof Inet4Address)
+                .map(it -> it.getAddress().getHostAddress())
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No IP4 docker0 address"));
+        }
+
+        throw new IllegalStateException("No docker0 interface present");
     }
 
     @Data
