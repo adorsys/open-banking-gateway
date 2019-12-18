@@ -60,6 +60,52 @@
             <artifactId>guava</artifactId>
         </dependency>
 
+        <!-- Flowable BPMN -->
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-spring-boot-starter-rest</artifactId>
+            <version>${flowable.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.flowable</groupId>
+            <artifactId>flowable-spring-boot-starter-actuator</artifactId>
+            <version>${flowable.version}</version>
+        </dependency>
+
+        <!-- XS2A Adapter BEGIN -->
+        <!-- Adapter BOM -->
+        <dependency>
+            <groupId>de.adorsys.xs2a.adapter</groupId>
+            <artifactId>adapters</artifactId>
+            <version>${xs2a-adapter.version}</version>
+            <type>pom</type>
+        </dependency>
+
+        <dependency>
+            <groupId>de.adorsys.xs2a.adapter</groupId>
+            <artifactId>xs2a-adapter-rest-impl</artifactId>
+            <version>${xs2a-adapter.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.adorsys.xs2a.adapter</groupId>
+            <artifactId>xs2a-adapter-service-api</artifactId>
+            <version>${xs2a-adapter.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.adorsys.xs2a.adapter</groupId>
+            <artifactId>xs2a-adapter-service-loader</artifactId>
+            <version>${xs2a-adapter.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.adorsys.xs2a.adapter</groupId>
+            <artifactId>xs2a-adapter-aspsp-registry</artifactId>
+            <version>${xs2a-adapter.version}</version>
+        </dependency>
+        <!-- XS2A Adapter END -->
+
         <!-- Test only dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
