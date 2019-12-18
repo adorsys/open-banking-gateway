@@ -20,8 +20,6 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.Inet4Address;
-import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URL;
@@ -30,8 +28,6 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -190,7 +186,7 @@ public enum SandboxApp {
 
             // Hack for linux as it does not have `host.docker.internal` so directly placing into host network
             if (System.getProperty("os.name").toLowerCase().contains("linux")) {
-                container.withExtraHost("host.docker.internal", hostAddressForLinux());
+                container.withExtraHost("host.docker.internal", "127.0.0.1");
                 container.withNetworkMode("host");
             }
 
@@ -365,24 +361,6 @@ public enum SandboxApp {
             port.matches();
             System.setProperty("testcontainers.postgres.port", port.group(1));
         }
-    }
-
-    @SneakyThrows
-    private static String hostAddressForLinux() {
-        Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
-        for (NetworkInterface netInt : Collections.list(nets)) {
-            if (!"docker0".equals(netInt.getName())) {
-                continue;
-            }
-
-            return netInt.getInterfaceAddresses().stream()
-                .filter(it -> it.getAddress() instanceof Inet4Address)
-                .map(it -> it.getAddress().getHostAddress())
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No IP4 docker0 address"));
-        }
-
-        throw new IllegalStateException("No docker0 interface present");
     }
 
     @Data
