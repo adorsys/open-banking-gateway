@@ -6,22 +6,22 @@ common:
     local:
       aspspprofile:
         # url aspsp profile in Postman
-        port: 10010
+        port: 20010
       certgenerator:
-        port: 10011
+        port: 20011
       consentmgmt:
         # url_cms in Postman
-        port: 10012
+        port: 20012
       ledgersapp:
         # url_ledgers in Postman
-        port: 10013
+        port: 20013
       ledgersgateway:
         # url_xs2a  in Postman
-        port: 10014
+        port: 20014
       onlinebanking:
-        port: 10015
+        port: 20015
       tpprest:
-        port: 10016
+        port: 20016
       onlinebankingui: # XS2A-Sandbox/oba-ui
         port: 4400 # This one is rather hardcoded in Docker-UI
     # Which urls local sandbox applications will use to talk each with other
