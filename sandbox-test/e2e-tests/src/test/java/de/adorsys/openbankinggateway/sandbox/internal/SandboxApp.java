@@ -20,6 +20,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URI;
 import java.net.URL;
@@ -186,7 +187,11 @@ public enum SandboxApp {
 
             // Hack for linux as it does not have `host.docker.internal` so directly placing into host network
             if (System.getProperty("os.name").toLowerCase().contains("linux")) {
-                container.withExtraHost("host.docker.internal", "127.0.0.1");
+                container.withExtraHost(
+                    "host.docker.internal",
+                    new InetSocketAddress(0).getAddress().getHostAddress()
+                );
+
                 container.withNetworkMode("host");
             }
 
