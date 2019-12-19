@@ -224,7 +224,7 @@ contains bank profile, in future it can be switched to rule engine or entire BPM
 <h3 id="tpp-can-initiate-consent-with-psu-under-the-hood-if-required">TPP can initiate consent with PSU under the hood if required.</h3>
 <p>This basically means that if request is missing consent, but has flag to allow automatic consent creation TPP will 
 call <a href="#obtaining-ais-consent-swimlane">obtaining consent</a> flow.</p>
-<p><img alt="Implementation draft diagram - generic request" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-generic.puml&amp;fmt=svg&amp;vvv=2&amp;sanitize=true" /></p>
+<p><img alt="Implementation draft diagram - generic request" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-generic.puml&amp;fmt=svg&amp;vvv=2&amp;sanitize=true" /></p>
 <h2 id="obtaining-ais-consent-swimlane">Obtaining AIS Consent swimlane</h2>
 <p><img alt="Implementation draft diagram - consent" src="https://adorsys.github.io/open-banking-gateway/doc/test/architecture/drafts/implementation-v0-consent.png" /></p>
 <h2 id="getting-transaction-list-using-ais-consent-swimlane">Getting transaction list using AIS Consent swimlane</h2>
@@ -246,7 +246,7 @@ call <a href="#obtaining-ais-consent-swimlane">obtaining consent</a> flow.</p>
 <h2 id="full-swimlane-e2e-for-performing-payment">Full swimlane e2e for performing payment</h2>
 <details><summary>Perform payment by FinTech</summary>
 
-![Implementation draft diagram - Perform payment](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-full-flow-payment.puml&fmt=svg&vvv=2&sanitize=true)
+![Implementation draft diagram - Perform payment](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-full-flow-payment.puml&fmt=svg&vvv=2&sanitize=true)
 
 </details>
 
@@ -264,7 +264,7 @@ FinTech with OpenBankingGw API &lt;--&gt; TPP with OpenBankingGw Impl (See diagr
 <h2 id="in-short">In short</h2>
 <p><img alt="Implementation draft diagram" src="https://adorsys.github.io/open-banking-gateway/doc/test/architecture/drafts/implementation-v0-bird-view.png" /></p>
 <h2 id="with-details">With details</h2>
-<p><img alt="Detailed Implementation draft diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-draft-v0.puml&amp;fmt=svg&amp;vvv=17&amp;sanitize=true" /></p>
+<p><img alt="Detailed Implementation draft diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-draft-v0.puml&amp;fmt=svg&amp;vvv=17&amp;sanitize=true" /></p>
 <h1 id="api-sketch">API sketch</h1>
 <h2 id="psu-wants-to-pay-100eur-to-iban-12345">PSU wants to pay 100EUR to IBAN 12345</h2>
 <h3 id="generic-case">Generic case</h3>
@@ -280,7 +280,7 @@ FinTech with OpenBankingGw API &lt;--&gt; TPP with OpenBankingGw Impl (See diagr
 </ol>
 <h3 id="sequence-diagram">Sequence diagram</h3>
 <h4 id="tpp-acquires-mandatory-parameters-before-request">TPP acquires mandatory parameters before request</h4>
-<p><img alt="Implementation draft diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/payment-static-param.puml&amp;fmt=svg&amp;vvv=2&amp;sanitize=true" /></p>
+<p><img alt="Implementation draft diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/payment-static-param.puml&amp;fmt=svg&amp;vvv=2&amp;sanitize=true" /></p>
 <h4 id="tpp-acquires-mandatory-parameters-during-request">TPP acquires mandatory parameters during request</h4>
 <p><img alt="Implementation draft diagram" src="https://adorsys.github.io/open-banking-gateway/doc/test/architecture/drafts/payment-dynamic-param.png" /></p>
               
