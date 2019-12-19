@@ -5,22 +5,20 @@ jdk:
 
 
 script:
-  - mvn verify cobertura:cobertura
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  # tests are not done with mvn test - dont know why
+  - mvn install
 
 before_deploy:
   - echo $GPG_SECRET_KEY | base64 --decode | $GPG_EXECUTABLE --import
   - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
 
 deploy:
-#  -
-#    skip_cleanup: true
-#    provider: script
-#    script: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.host.url=$SONAR_HOST -Dsonar.login=$SONAR_TOKEN
-#    on:
-#      branch: develop
+  -
+    skip_cleanup: true
+    provider: script
+    script: mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.host.url=$SONAR_HOST -Dsonar.login=$SONAR_TOKEN
+    on:
+      branch: develop
   -
     skip_cleanup: true
     provider: script
