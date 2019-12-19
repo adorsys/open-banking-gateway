@@ -8,6 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Converts Hibernate snakeCase naming into Database-friendly camel_case, also adds prefix to the tables.
+ */
 @Configuration
 public class PrefixAndSnakeCasePhysicalNamingStrategy extends PhysicalNamingStrategyStandardImpl {
 
