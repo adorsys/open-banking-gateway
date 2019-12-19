@@ -81,6 +81,7 @@
         <fasterxml-data-format.version>2.9.8</fasterxml-data-format.version>
         <swaggerv3.version>2.1.0</swaggerv3.version>
         <swagger.version>1.5.23</swagger.version>
+        <springdoc.version>1.2.18</springdoc.version> <!-- springfox replacement for OpenApi 3 -->
         <springfox.version>2.9.2</springfox.version>
         <jetbrains.annotations.version>17.0.0</jetbrains.annotations.version>
         <lombok.version>1.18.10</lombok.version>
