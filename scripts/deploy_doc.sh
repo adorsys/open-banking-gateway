@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-TRAVIS_TAG="test"
-
 if [[ $TRAVIS_REPO_SLUG != "adorsys/open-banking-gateway"
     || $TRAVIS_JDK_VERSION != "openjdk8"
     || $TRAVIS_PULL_REQUEST != "false"
