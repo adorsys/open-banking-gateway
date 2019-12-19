@@ -93,7 +93,7 @@ class TestBankSearchPerformance extends BaseMockitoTest {
         log.info("start: {}", start);
         log.info("end: {}", end);
         log.info("{} calls completed in {} milliseconds", ITERATIONS, end - start);
-        log.info("Operations per second: {}", ITERATIONS / ((end - start)/1000));
+        log.info("Operations per second: {}", ITERATIONS / Double.max((end - start) / 1000.0, 1e-3));
     }
 
     @NotNull
