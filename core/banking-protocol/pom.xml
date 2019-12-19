@@ -13,6 +13,14 @@
     <name>core/banking-protocol</name>
 
     <dependencies>
+        <!-- javadoc -->
+        <dependency>
+            <groupId>javax.interceptor</groupId>
+            <artifactId>javax.interceptor-api</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+        <!-- end javadoc -->
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
