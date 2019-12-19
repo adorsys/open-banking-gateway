@@ -30,19 +30,16 @@ deploy:
     skip_cleanup: true
     script: bash scripts/deploy_openshift.sh
     on:
-#      branch: feature/OBG-7_DocumentationFramework
       branch: develop
 
   - provider: script
     skip_cleanup: true
     script: bash scripts/deploy_doc.sh
     on:
-      branch: feature/OBG-7_DocumentationFramework
-#      tags: true
+      tags: true
 
   - provider: script
     skip_cleanup: true
     script: bash scripts/deploy_javadoc.sh
     on:
-      branch: feature/OBG-7_DocumentationFramework
-#      tags: true
+      tags: true

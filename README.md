@@ -22,7 +22,7 @@ The following picture displays the overall architecture of this banking gateway:
 
 ## Releases and versions
 
-* [Versioning, Release and Support policy](docs/Version_Policy.md)
+* [Versioning, Release and Support policy](docs/version_policy.md)
 * [Release notes](docs/releasenotes.md) 
 * [Roadmap for next features development](docs/roadmap.md)
 * [Initial Requirements](docs/README.md)
@@ -52,7 +52,7 @@ For commercial support please contact **[adorsys Team](https://adorsys.de/en/psd
 
 This project is licensed under the Apache License version 2.0 - see the [LICENSE](LICENSE) file for details
 
-## checkstyle
+## Checkstyle
 
 The code uses <code>backend.checkstyle.xml</code> placed in the root of the project. To activate it with intellij 
 install the <code>CheckStyle-IDEA v5.34.0</code> Plugin and configure in <code>Other Settings -> Checkstyle</code>
@@ -61,3 +61,6 @@ the version <code>8.19</code> and add the configuration file <code>backend.check
 ## Contribution Guidelines
 
 * [Contribution Guidelines](docs/ContributionGuidelines.md) 
+
+## JavaDoc
+* [JavaDoc](https://adorsys.github.io/open-banking-gateway/javadoc/latest/index.html)
