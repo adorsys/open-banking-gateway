@@ -10,7 +10,7 @@
 
     <!-- BPMN based engine to talk to banks -->
     <artifactId>banking-protocol</artifactId>
-    <name>Banking protocol - core business logic</name>
+    <name>core/banking-protocol</name>
 
     <dependencies>
         <dependency>
