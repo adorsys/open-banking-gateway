@@ -1,4 +1,4 @@
-@startuml PsuAuthorizeEmbeddedConsent
+@startuml
 title PsuAuthorizeEmbeddedConsent
 autonumber 10 10 "<b><color blue>[AuthEmbedded-000]</color></b>"
 actor psu
