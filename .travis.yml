@@ -2,11 +2,13 @@ language: java
 
 jdk:
   - openjdk8
-
-
+  -
 script:
   # tests are not done with mvn test - dont know why
-  - mvn install
+  - mvn verify cobertura:cobertura
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 
 before_deploy:
   - echo $GPG_SECRET_KEY | base64 --decode | $GPG_EXECUTABLE --import

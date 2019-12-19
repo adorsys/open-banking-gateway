@@ -10,8 +10,7 @@
     </parent>
 
     <artifactId>opba-embedded-starter</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
-    <name>Open Banking embedded starter</name>
+    <name>opba-embedded-starter</name>
 
     <properties>
         <ruleset.basedir>..</ruleset.basedir>

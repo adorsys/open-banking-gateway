@@ -10,7 +10,8 @@
 
     <!-- POC that we can run whole sandbox within single JVM and H2 database for performance and debugging easiness -->
     <artifactId>sandbox-test</artifactId>
-    <name>Sandbox test module</name>
+    <name>sandbox-test</name>
+
     <packaging>pom</packaging>
 
     <modules>

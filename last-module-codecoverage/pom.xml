@@ -11,6 +11,7 @@
 
     <groupId>de.adorsys.opba</groupId>
     <artifactId>last-module-codecoverage</artifactId>
+    <name>last-module-codecoverage</name>
 
     <dependencies>
         <dependency>

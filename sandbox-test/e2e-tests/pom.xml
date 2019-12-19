@@ -10,7 +10,7 @@
 
     <!-- POC that we can run whole sandbox within single JVM and H2 database for performance and debugging easiness -->
     <artifactId>e2e-tests</artifactId>
-    <name>Sandbox (imitates PS2-compliant bank with XS2A) E2E starter</name>
+    <name>sandbox-test/e2e-tests</name>
 
     <dependencies>
         <dependency>

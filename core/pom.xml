@@ -10,7 +10,7 @@
 
     <!-- Core module that implements main business logic -->
     <artifactId>core</artifactId>
-    <name>Core business logic</name>
+    <name>core</name>
     <packaging>pom</packaging>
 
     <modules>
