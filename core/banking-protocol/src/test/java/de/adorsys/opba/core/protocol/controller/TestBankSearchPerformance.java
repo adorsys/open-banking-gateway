@@ -34,8 +34,8 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @ActiveProfiles(ONE_TIME_POSTGRES_ON_DISK)
 class TestBankSearchPerformance extends BaseMockitoTest {
 
-    private static final int N_THREADS = 10;
-    private static final int ITERATIONS = N_THREADS * 100;
+    private static final int N_THREADS = Integer.parseInt(System.getProperty("SEARCH_PERF_N_THREADS", "1"));
+    private static final int ITERATIONS = Integer.parseInt(System.getProperty("SEARCH_PERF_ITERATIONS", "3"));
 
     private final CountDownLatch latch = new CountDownLatch(ITERATIONS);
     private final AtomicInteger counter = new AtomicInteger();
@@ -93,7 +93,7 @@ class TestBankSearchPerformance extends BaseMockitoTest {
         log.info("start: {}", start);
         log.info("end: {}", end);
         log.info("{} calls completed in {} milliseconds", ITERATIONS, end - start);
-        log.info("Operations per second: {}", ITERATIONS / ((end - start)/1000));
+        log.info("Operations per second: {}", ITERATIONS / Double.max((end - start) / 1000.0, 1e-3));
     }
 
     @NotNull

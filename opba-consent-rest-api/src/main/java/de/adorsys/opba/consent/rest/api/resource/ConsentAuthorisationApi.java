@@ -70,7 +70,6 @@ public interface ConsentAuthorisationApi {
    * Provides the ConsentAuthorisationApi with the opportunity to redirect the PSU
    * to the ASPSP.
    *
-   * @param AuthorizeRequest         containing the consentSessionState
    * @param consentAuthSessionCookie The ConsentAuthSessionCookie
    * @return Void
    */
@@ -93,7 +92,6 @@ public interface ConsentAuthorisationApi {
    * In any case, the ConsentSession of the PSU will be terminated and cookies
    * will be deleted.
    *
-   * @param DenyRedirectRequest      containing the exit page.
    * @param consentAuthSessionCookie The ConsentAuthSessionCookie
    * @return Void
    */
@@ -153,9 +151,7 @@ public interface ConsentAuthorisationApi {
    * Update consent session with PSU auth data whereby requesting remaining
    * challenges for the ongoing authorization process.
    *
-   * @param consentSessionState      The consent session state
    * @param consentAuthSessionCookie The consent cookie
-   * @param PsuAuthRequest           the PsuAuthRequest
    * @return AuthorizeResponse
    */
   @PostMapping(path = "/embedded/auth")

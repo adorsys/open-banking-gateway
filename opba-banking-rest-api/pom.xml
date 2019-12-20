@@ -5,13 +5,11 @@
 	<parent>
 		<groupId>de.adorsys.opba</groupId>
 		<artifactId>open-banking-gateway</artifactId>
-		<version>0.0.2</version>
-		<relativePath>../pom.xml</relativePath>
+		<version>0.0.3</version>
 	</parent>
 
 	<artifactId>opba-banking-rest-api</artifactId>
-	<version>0.0.2</version>
-	<name>Banking embeded rest API</name>
+	<name>opba-banking-rest-api</name>
 
 	<properties>
 		<ruleset.basedir>..</ruleset.basedir>

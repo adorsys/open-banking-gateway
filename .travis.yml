@@ -3,8 +3,8 @@ language: java
 jdk:
   - openjdk8
 
-
 script:
+  # tests are not done with mvn test - dont know why
   - mvn verify cobertura:cobertura
 
 after_success:

@@ -5,12 +5,12 @@
     <parent>
         <groupId>de.adorsys.opba</groupId>
         <artifactId>open-banking-gateway</artifactId>
-        <version>0.0.2</version>
+        <version>0.0.3</version>
     </parent>
 
     <!-- Core module that implements main business logic -->
     <artifactId>core</artifactId>
-    <name>Core business logic</name>
+    <name>core</name>
     <packaging>pom</packaging>
 
     <modules>
