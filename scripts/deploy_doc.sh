@@ -5,7 +5,8 @@ if [[ $TRAVIS_REPO_SLUG != "adorsys/open-banking-gateway"
     || $TRAVIS_PULL_REQUEST != "false"
     || ! $TRAVIS_TAG ]];
 then
-  return
+  echo "ERROR: Documentation deployment for this build not allowed"
+  exit 1
 fi
 
 docker run -it --rm -v $PWD:/src -w /src -u $(id -u ${USER}):$(id -g ${USER}) --env TRAVIS_TAG g0lden/mkdocs make site

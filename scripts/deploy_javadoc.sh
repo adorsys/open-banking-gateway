@@ -5,7 +5,8 @@ if [[ $TRAVIS_REPO_SLUG != "adorsys/open-banking-gateway"
     || $TRAVIS_PULL_REQUEST != "false"
     || ! $TRAVIS_TAG ]];
 then
-  return
+  echo "ERROR: Javadoc deployment for this build not allowed"
+  exit 1
 fi
 
 mvn clean javadoc:aggregate -P javadoc
