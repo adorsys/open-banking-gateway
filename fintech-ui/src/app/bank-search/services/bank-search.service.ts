@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Bank } from '../models/bank.model';
 import { Observable, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -18,12 +19,12 @@ export class BankSearchService {
   constructor() {}
 
   getBanks(): Observable<Bank[]> {
-    return of(BankSearchService.BANK_STUBS);
+    return of(BankSearchService.BANK_STUBS).pipe(delay(1000));
   }
 
   searchBanks(keyword: string): Observable<Bank[]> {
     return of(
       BankSearchService.BANK_STUBS.filter(bank => bank.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase()))
-    );
+    ).pipe(delay(2000));
   }
 }
