@@ -1,11 +1,11 @@
-<form class="search">
+<div class="search">
   <i class="fa fa-search form-control-feedback"></i>
   <input
-    (keyup)="searchTerm$.next($event.target.value)"
+    [formControl]="searchTerm"
     autocomplete="off"
     name="searchValue"
     type="text"
     placeholder="Search for your bank"
     class="form-control border-3"
   />
-</form>
+</div>

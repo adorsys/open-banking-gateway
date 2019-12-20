@@ -1,25 +1,19 @@
-import { Component, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent implements OnDestroy {
-  private subscriptions: Subscription;
-
+export class SearchComponent {
   @Output() keyword = new EventEmitter();
-  searchTerm$ = new Subject<string>();
+  searchTerm = new FormControl('');
 
   constructor() {
-    this.subscriptions = this.searchTerm$.pipe(debounceTime(200), distinctUntilChanged()).subscribe(inputData => {
+    this.searchTerm.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).subscribe(inputData => {
       this.keyword.emit(inputData);
     });
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
   }
 }
