@@ -26,7 +26,7 @@ import static de.adorsys.opba.core.protocol.controller.constants.ApiVersion.API_
     description = "Bank search API",
     externalDocs = @ExternalDocumentation(description = "Search bank and select bank profile")
 )
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*") //FIXME move CORS at gateway/load balancer level
 public class BankController {
 
     private final BankService bankService;
