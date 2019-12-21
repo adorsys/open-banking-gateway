@@ -32,7 +32,7 @@ public class Xs2aContext extends BaseContext {
     private String psuId;
     private String requestId;
     private String contentType = "application/json";
-    private String gatewayAspspId;
+    private String aspspId;
 
     // Mandatory dynamic
     private String psuIpAddress;
@@ -64,7 +64,7 @@ public class Xs2aContext extends BaseContext {
         allValues.put(PSU_ID, psuId);
         allValues.put(X_REQUEST_ID, requestId);
         allValues.put(CONTENT_TYPE, contentType);
-        allValues.put(X_GTW_ASPSP_ID, gatewayAspspId);
+        allValues.put(X_GTW_ASPSP_ID, aspspId);
         allValues.put(TPP_REDIRECT_URI, redirectUriOk);
         allValues.put(TPP_NOK_REDIRECT_URI, redirectUriNok);
 

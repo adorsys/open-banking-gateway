@@ -125,6 +125,13 @@
             <version>${springdoc.version}</version>
         </dependency>
 
+        <!-- Mappers -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+
         <!-- Test only dependencies -->
         <!-- BouncyCastle to generate P12 keystores -->
         <dependency>
