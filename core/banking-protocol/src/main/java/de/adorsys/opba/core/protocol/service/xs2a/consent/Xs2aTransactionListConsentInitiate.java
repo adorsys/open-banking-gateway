@@ -1,7 +1,7 @@
 package de.adorsys.opba.core.protocol.service.xs2a.consent;
 
 import com.google.common.collect.ImmutableList;
-import de.adorsys.opba.core.protocol.service.ValidatedExternalServiceCall;
+import de.adorsys.opba.core.protocol.service.ValidatedExecution;
 import de.adorsys.opba.core.protocol.service.xs2a.context.TransactionListXs2aContext;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.Response;
@@ -19,12 +19,12 @@ import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 
 @Service("xs2aTransactionListConsentInitiate")
 @RequiredArgsConstructor
-public class Xs2aTransactionListConsentInitiate extends ValidatedExternalServiceCall<TransactionListXs2aContext> {
+public class Xs2aTransactionListConsentInitiate extends ValidatedExecution<TransactionListXs2aContext> {
 
     private final AccountInformationService ais;
 
     @Override
-    protected void doCallRealService(DelegateExecution execution, TransactionListXs2aContext context) {
+    protected void doRealExecution(DelegateExecution execution, TransactionListXs2aContext context) {
         Response<ConsentCreationResponse> consentInit = ais.createConsent(
                 context.toHeaders(),
                 consents(context)

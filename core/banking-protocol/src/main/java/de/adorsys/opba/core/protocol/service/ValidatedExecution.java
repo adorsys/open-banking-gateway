@@ -10,18 +10,19 @@ import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 import static de.adorsys.opba.core.protocol.service.xs2a.context.ContextMode.MOCK_REAL_CALLS;
 
 @RequiredArgsConstructor
-public abstract class ValidatedExternalServiceCall<T extends BaseContext> implements JavaDelegate {
+public abstract class ValidatedExecution<T extends BaseContext> implements JavaDelegate {
 
     @Override
     @Transactional
     public void execute(DelegateExecution execution) {
+        @SuppressWarnings("unchecked")
         T context = (T) execution.getVariable(CONTEXT, BaseContext.class);
 
         doValidate(execution, context);
         if (MOCK_REAL_CALLS == context.getMode()) {
-            doCallMockService(execution, context);
+            doMockedExecution(execution, context);
         } else {
-            doCallRealService(execution, context);
+            doRealExecution(execution, context);
         }
         doAfterCall(execution, context);
     }
@@ -29,9 +30,9 @@ public abstract class ValidatedExternalServiceCall<T extends BaseContext> implem
     protected void doValidate(DelegateExecution execution, T context) {
     }
 
-    protected abstract void doCallRealService(DelegateExecution execution, T context);
+    protected abstract void doRealExecution(DelegateExecution execution, T context);
 
-    protected void doCallMockService(DelegateExecution execution, T context) {
+    protected void doMockedExecution(DelegateExecution execution, T context) {
     }
 
     protected void doAfterCall(DelegateExecution execution, T context) {
