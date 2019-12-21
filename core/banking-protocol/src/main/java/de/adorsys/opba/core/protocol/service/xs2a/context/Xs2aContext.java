@@ -3,6 +3,7 @@ package de.adorsys.opba.core.protocol.service.xs2a.context;
 import de.adorsys.xs2a.adapter.service.RequestHeaders;
 import de.adorsys.xs2a.adapter.service.model.StartScaProcessResponse;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,8 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 
 // TODO - Make immutable, modify only with toBuilder
 @Data
-public class Xs2aContext {
+@EqualsAndHashCode(callSuper = true)
+public class Xs2aContext extends BaseContext {
 
     // Application required
     private long bankConfigId = 1;
