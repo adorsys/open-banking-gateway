@@ -9,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
-@Service("xs2aDoScaChallenge")
+@Service("xs2aDoScaLoginChallenge")
 @RequiredArgsConstructor
-public class DoScaChallenge  extends ValidatedExecution<Xs2aContext> {
+public class DoScaLoginChallenge extends ValidatedExecution<Xs2aContext> {
 
     private final AccountInformationService ais;
 

@@ -4,7 +4,7 @@
     <documentation>XS2A consent authorization process</documentation>
     <startEvent id="start" name="start" flowable:formFieldValidation="true"></startEvent>
     <serviceTask id="startAuthorization" name="Start SCA authorization" flowable:async="true" flowable:delegateExpression="${xs2aStartAuthorization}"></serviceTask>
-    <serviceTask id="scaEmbeddedChallenge" name="Perform SCA embedded challenge" flowable:async="true" flowable:delegateExpression="${xs2aDoScaChallenge}"></serviceTask>
+    <serviceTask id="scaEmbeddedChallenge" name="Perform SCA embedded challenge" flowable:async="true" flowable:delegateExpression="${xs2aDoScaLoginChallenge}"></serviceTask>
     <serviceTask id="finalizeEmbeddedAuthorization" name="Finalize embedded authorization" flowable:async="true" flowable:delegateExpression="${xs2aFinalizeEmbeddedConsent}"></serviceTask>
     <endEvent id="end" name="end"></endEvent>
     <sequenceFlow id="sid-1139B3D0-261B-4594-B84F-638928669262" sourceRef="start" targetRef="startAuthorization"></sequenceFlow>
