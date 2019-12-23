@@ -9,14 +9,14 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0
   version: "1.0"
 tags:
-- name: Consent Authorization Api
+- name: Consent Authorization
   description: Entry point for processing a consent request redirected by the TppBankingApi
     over the FinTechApi to this ConsentAuthorisationApi.
 paths:
   /consent/auth:
     get:
       tags:
-      - Consent Authorization Api
+      - Consent Authorization
       summary: Entry point for processing a consent request redirected by the TppBankingApi
         over the FinTechApi to this ConsentAuthorisationApi.
       description: This is the <b>entry point</b> for processing a consent redirected
@@ -86,7 +86,7 @@ paths:
   /consent/embedded/auth:
     post:
       tags:
-      - Consent Authorization Api
+      - Consent Authorization
       summary: Generic challenge response end point for updating consent session with
         PSU authentication data while requesting remaining challenges for the ongoing
         authorization process.
@@ -135,7 +135,7 @@ paths:
   /consent/from/aspsp/{consentSessionState}/nok:
     get:
       tags:
-      - Consent Authorization Api
+      - Consent Authorization
       summary: Redirecting back from ASPSP to TPP after a failed consent authorization.
       description: Redirecting back from ASPSP to TPP after a failed consent authorization.
         In any case, the session of the user will be closed and cookies will be deleted
@@ -179,7 +179,7 @@ paths:
   /consent/from/aspsp/{consentSessionState}/ok:
     get:
       tags:
-      - Consent Authorization Api
+      - Consent Authorization
       summary: Redirecting back from ASPSP to ConsentAuthorisationApi after a successful
         consent authorization.
       description: Redirecting back from ASPSP to ConsentAuthorisationApi after a
@@ -225,7 +225,7 @@ paths:
   /consent/to/aspsp/deny:
     post:
       tags:
-      - Consent Authorization Api
+      - Consent Authorization
       summary: Closes this session and redirects the PSU back to the FinTechApi or
         close the application window.
       description: Closes this session and redirects the PSU back to the FinTechApi
@@ -272,7 +272,7 @@ paths:
   /consent/to/aspsp/grant:
     post:
       tags:
-      - Consent Authorization Api
+      - Consent Authorization
       summary: Provides the ConsentAuthorisationApi with the opportunity to redirect
         the PSU to the ASPSP.
       description: Provides the ConsentAuthorisationApi with the opportunity to redirect
@@ -315,6 +315,80 @@ paths:
       x-codegen-request-body-name: request
 components:
   schemas:
+    AccountStatus:
+      type: string
+      enum:
+        - ENABLED
+        - DELETED
+        - BLOCKED
+    AccountType:
+      type: string
+      enum:
+        - CACC
+        - CASH
+        - CHAR
+        - CISH
+        - COMM
+        - CPAC
+        - LLSV
+        - LOAN
+        - MGLD
+        - MOMA
+        - NREX
+        - ODFT
+        - ONDP
+        - OTHR
+        - SACC
+        - SLRY
+        - SVGS
+        - TAXE
+        - TRAN
+        - TRAS
+    BalanceType:
+      type: string
+      enum:
+        - CLOSING_BOOKED
+        - EXPECTED
+        - AUTHORISED
+        - OPENING_BOOKED
+        - INTERIM_AVAILABLE
+        - FORWARD_AVAILABLE
+        - NONINVOICED
+    PaymentProduct:
+      type: string
+      enum:
+        - SEPA
+        - INSTANT_SEPA
+        - TARGET2
+        - CROSS_BORDER
+    PaymentStatus:
+      type: string
+      enum:
+        - ACCC
+        - ACCP
+        - ACSC
+        - ACSP
+        - ACTC
+        - ACWC
+        - ACWP
+        - RCVD
+        - PDNG
+        - RJCT
+        - CANC
+        - ACFC
+        - PATC
+    ScaStatus:
+      type: string
+      description: The sca status. Used to manage the consent authorization flows.
+      enum:
+        - received
+        - psuIdentified
+        - psuAuthenticated
+        - scaMethodSelected
+        - started
+        - finalised
+        - failed
+        - exempted
     AccountBalanceTO:
       title: AccountBalanceTO
       type: object
@@ -322,15 +396,7 @@ components:
         amount:
           $ref: '#/components/schemas/AmountTO'
         balanceType:
-          type: string
-          enum:
-          - CLOSING_BOOKED
-          - EXPECTED
-          - AUTHORISED
-          - OPENING_BOOKED
-          - INTERIM_AVAILABLE
-          - FORWARD_AVAILABLE
-          - NONINVOICED
+          $ref: '#/components/schemas/BalanceType'
         iban:
           type: string
         lastChangeDateTime:
@@ -346,34 +412,9 @@ components:
       type: object
       properties:
         accountStatus:
-          type: string
-          enum:
-          - ENABLED
-          - DELETED
-          - BLOCKED
+          $ref: '#/components/schemas/AccountStatus'
         accountType:
-          type: string
-          enum:
-          - CACC
-          - CASH
-          - CHAR
-          - CISH
-          - COMM
-          - CPAC
-          - LLSV
-          - LOAN
-          - MGLD
-          - MOMA
-          - NREX
-          - ODFT
-          - ONDP
-          - OTHR
-          - SACC
-          - SLRY
-          - SVGS
-          - TAXE
-          - TRAN
-          - TRAS
+          $ref: '#/components/schemas/AccountType'
         balances:
           type: array
           items:
@@ -521,110 +562,92 @@ components:
           type: number
         currency:
           type: string
+    ConsentAuthTO:
+      title: ConsentAuthTO
+      type: object
+      description: Transport object for consent API request response 
+      properties:
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountDetailsTO'
+        authMessageTemplate:
+          type: string
+        authenticationMethodId:
+          type: string
+          description: An identification provided by the ASPSP for the later identification
+            of the authentication method selection.
+          example: myAuthenticationID
+        bulkPayment:
+          $ref: '#/components/schemas/BulkPaymentTO'
+        consent:
+          $ref: '#/components/schemas/AisConsentRequest'
+        consentAuthState:
+          type: string
+          description: This is the CSRF-State String of the ConsentAuthorisationApi.
+            It is a transient reference of the consent request. It encodes a key that
+            is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.
+        periodicPayment:
+          $ref: '#/components/schemas/PeriodicPaymentTO'
+        psuCorporateId:
+          type: string
+        psuId:
+          type: string
+        scaMethods:
+          type: array
+          description: List of sca methods for selection if necessary.
+          items:
+            $ref: '#/components/schemas/ScaUserDataTO'
+        scaStatus:
+          $ref: '#/components/schemas/ScaStatus'
+        singlePayment:
+          $ref: '#/components/schemas/SinglePaymentTO'
     AuthorizeRequest:
       title: AuthorizeRequest
-      required:
-      - authenticationMethodId
       type: object
-      properties:
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/AccountDetailsTO'
-        authMessageTemplate:
-          type: string
-        authenticationMethodId:
-          type: string
-          description: An identification provided by the ASPSP for the later identification
-            of the authentication method selection.
-          example: myAuthenticationID
-        bulkPayment:
-          $ref: '#/components/schemas/BulkPaymentTO'
-        consent:
-          $ref: '#/components/schemas/AisConsentRequest'
-        consentAuthState:
-          type: string
-          description: This is the CSRF-State String of the ConsentAuthorisationApi.
-            It is a transient reference of the consent request. It encodes a key that
-            is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.
-        periodicPayment:
-          $ref: '#/components/schemas/PeriodicPaymentTO'
-        psuCorporateId:
-          type: string
-        psuId:
-          type: string
-        scaMethods:
-          type: array
-          description: List of sca methods for selection if necessary.
-          items:
-            $ref: '#/components/schemas/ScaUserDataTO'
-        scaStatus:
-          type: string
-          description: The sca status. Used to manage the consent authorization flows.
-          enum:
-          - received
-          - psuIdentified
-          - psuAuthenticated
-          - scaMethodSelected
-          - started
-          - finalised
-          - failed
-          - exempted
-        singlePayment:
-          $ref: '#/components/schemas/SinglePaymentTO'
       description: Contains information used to legitimate a request.
+      properties:
+        consentAuthTO:
+          $ref: '#/components/schemas/ConsentAuthTO'
     AuthorizeResponse:
       title: AuthorizeResponse
-      required:
-      - authenticationMethodId
       type: object
-      properties:
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/AccountDetailsTO'
-        authMessageTemplate:
-          type: string
-        authenticationMethodId:
-          type: string
-          description: An identification provided by the ASPSP for the later identification
-            of the authentication method selection.
-          example: myAuthenticationID
-        bulkPayment:
-          $ref: '#/components/schemas/BulkPaymentTO'
-        consent:
-          $ref: '#/components/schemas/AisConsentRequest'
-        consentAuthState:
-          type: string
-          description: This is the CSRF-State String of the ConsentAuthorisationApi.
-            It is a transient reference of the consent request. It encodes a key that
-            is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.
-        periodicPayment:
-          $ref: '#/components/schemas/PeriodicPaymentTO'
-        psuCorporateId:
-          type: string
-        psuId:
-          type: string
-        scaMethods:
-          type: array
-          description: List of sca methods for selection if necessary.
-          items:
-            $ref: '#/components/schemas/ScaUserDataTO'
-        scaStatus:
-          type: string
-          description: The sca status. Used to manage the consent authorization flows.
-          enum:
-          - received
-          - psuIdentified
-          - psuAuthenticated
-          - scaMethodSelected
-          - started
-          - finalised
-          - failed
-          - exempted
-        singlePayment:
-          $ref: '#/components/schemas/SinglePaymentTO'
       description: Container for consent information as sent to the user agent.
+      properties:
+        consentAuthTO:
+          $ref: '#/components/schemas/ConsentAuthTO'
+    DenyRedirectRequest:
+      title: DenyRedirectRequest
+      type: object
+      description: Denies a redirect to ASPSP requested by the ConsentAuthorisationApi
+      properties:
+        consentAuthTO:
+          $ref: '#/components/schemas/ConsentAuthTO'
+        backToFinTech:
+          type: boolean
+          description: Will indicate if PSU wants to be sent back to FinTechApi.
+        exitPage:
+          type: string
+          description: In case there is no redirect back to TPP desired, exit page
+            can be specified by ConsentAuthorisationApi
+        forgetConsent:
+          type: boolean
+          description: Set to true if consent object shall be forgotten or frozen.
+    PsuAuthRequest:
+      title: PsuAuthRequest
+      required:
+      - scaAuthenticationData
+      type: object
+      description: Contains information used to legitimate a request.
+      properties:
+        consentAuthTO:
+          $ref: '#/components/schemas/ConsentAuthTO'
+        scaAuthenticationData:
+          type: object
+          additionalProperties:
+            type: string
+          description: SCA authentication data, depending on the chosen authentication
+            method. If the data is binary, then it is base64 encoded.
     BulkPaymentTO:
       title: BulkPaymentTO
       type: object
@@ -636,28 +659,9 @@ components:
         paymentId:
           type: string
         paymentProduct:
-          type: string
-          enum:
-          - SEPA
-          - INSTANT_SEPA
-          - TARGET2
-          - CROSS_BORDER
+          $ref: '#/components/schemas/PaymentProduct'
         paymentStatus:
-          type: string
-          enum:
-          - ACCC
-          - ACCP
-          - ACSC
-          - ACSP
-          - ACTC
-          - ACWC
-          - ACWP
-          - RCVD
-          - PDNG
-          - RJCT
-          - CANC
-          - ACFC
-          - PATC
+          $ref: '#/components/schemas/PaymentStatus'
         payments:
           type: array
           items:
@@ -665,90 +669,18 @@ components:
         requestedExecutionDate:
           type: string
           format: date
-    DenyRedirectRequest:
-      title: DenyRedirectRequest
-      required:
-      - authenticationMethodId
-      type: object
-      properties:
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/AccountDetailsTO'
-        authMessageTemplate:
-          type: string
-        authenticationMethodId:
-          type: string
-          description: An identification provided by the ASPSP for the later identification
-            of the authentication method selection.
-          example: myAuthenticationID
-        backToFinTech:
-          type: boolean
-          description: Will indicate if PSU wants to be sent back to FinTechApi.
-        bulkPayment:
-          $ref: '#/components/schemas/BulkPaymentTO'
-        consent:
-          $ref: '#/components/schemas/AisConsentRequest'
-        consentAuthState:
-          type: string
-          description: This is the CSRF-State String of the ConsentAuthorisationApi.
-            It is a transient reference of the consent request. It encodes a key that
-            is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.
-        exitPage:
-          type: string
-          description: In case there is no redirect back to TPP desired, exit page
-            can be specified by ConsentAuthorisationApi
-        forgetConsent:
-          type: boolean
-          description: Set to true if consent object shall be forgotten or frozen.
-        periodicPayment:
-          $ref: '#/components/schemas/PeriodicPaymentTO'
-        psuCorporateId:
-          type: string
-        psuId:
-          type: string
-        scaMethods:
-          type: array
-          description: List of sca methods for selection if necessary.
-          items:
-            $ref: '#/components/schemas/ScaUserDataTO'
-        scaStatus:
-          type: string
-          description: The sca status. Used to manage the consent authorization flows.
-          enum:
-          - received
-          - psuIdentified
-          - psuAuthenticated
-          - scaMethodSelected
-          - started
-          - finalised
-          - failed
-          - exempted
-        singlePayment:
-          $ref: '#/components/schemas/SinglePaymentTO'
-      description: Denies a redirect to ASPSP requested by the ConsentAuthorisationApi
     PeriodicPaymentTO:
       title: PeriodicPaymentTO
       type: object
       properties:
-        creditorAccount:
-          $ref: '#/components/schemas/AccountReferenceTO'
-        creditorAddress:
-          $ref: '#/components/schemas/AddressTO'
-        creditorAgent:
-          type: string
-        creditorName:
-          type: string
+        paymentData:
+          $ref: '#/components/schemas/SinglePaymentTO'
         dayOfExecution:
           type: integer
           format: int32
-        debtorAccount:
-          $ref: '#/components/schemas/AccountReferenceTO'
         endDate:
           type: string
           format: date
-        endToEndIdentification:
-          type: string
         executionRule:
           type: string
         frequency:
@@ -762,102 +694,9 @@ components:
           - Quarterly
           - SemiAnnual
           - Annual
-        instructedAmount:
-          $ref: '#/components/schemas/AmountTO'
-        paymentId:
-          type: string
-        paymentProduct:
-          type: string
-          enum:
-          - SEPA
-          - INSTANT_SEPA
-          - TARGET2
-          - CROSS_BORDER
-        paymentStatus:
-          type: string
-          enum:
-          - ACCC
-          - ACCP
-          - ACSC
-          - ACSP
-          - ACTC
-          - ACWC
-          - ACWP
-          - RCVD
-          - PDNG
-          - RJCT
-          - CANC
-          - ACFC
-          - PATC
-        remittanceInformationUnstructured:
-          type: string
-        requestedExecutionDate:
-          type: string
-          format: date
-        requestedExecutionTime:
-          type: string
         startDate:
           type: string
           format: date
-    PsuAuthRequest:
-      title: PsuAuthRequest
-      required:
-      - authenticationMethodId
-      - scaAuthenticationData
-      type: object
-      properties:
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/AccountDetailsTO'
-        authMessageTemplate:
-          type: string
-        authenticationMethodId:
-          type: string
-          description: An identification provided by the ASPSP for the later identification
-            of the authentication method selection.
-          example: myAuthenticationID
-        bulkPayment:
-          $ref: '#/components/schemas/BulkPaymentTO'
-        consent:
-          $ref: '#/components/schemas/AisConsentRequest'
-        consentAuthState:
-          type: string
-          description: This is the CSRF-State String of the ConsentAuthorisationApi.
-            It is a transient reference of the consent request. It encodes a key that
-            is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.
-        periodicPayment:
-          $ref: '#/components/schemas/PeriodicPaymentTO'
-        psuCorporateId:
-          type: string
-        psuId:
-          type: string
-        scaAuthenticationData:
-          type: object
-          additionalProperties:
-            type: string
-          description: SCA authentication data, depending on the chosen authentication
-            method. If the data is binary, then it is base64 encoded.
-        scaMethods:
-          type: array
-          description: List of sca methods for selection if necessary.
-          items:
-            $ref: '#/components/schemas/ScaUserDataTO'
-        scaStatus:
-          type: string
-          description: The sca status. Used to manage the consent authorization flows.
-          enum:
-          - received
-          - psuIdentified
-          - psuAuthenticated
-          - scaMethodSelected
-          - started
-          - finalised
-          - failed
-          - exempted
-        singlePayment:
-          $ref: '#/components/schemas/SinglePaymentTO'
-      description: Contains information used to legitimate a request.
     ScaUserDataTO:
       title: ScaUserDataTO
       type: object
@@ -903,28 +742,9 @@ components:
         paymentId:
           type: string
         paymentProduct:
-          type: string
-          enum:
-          - SEPA
-          - INSTANT_SEPA
-          - TARGET2
-          - CROSS_BORDER
+          $ref: '#/components/schemas/PaymentProduct'
         paymentStatus:
-          type: string
-          enum:
-          - ACCC
-          - ACCP
-          - ACSC
-          - ACSP
-          - ACTC
-          - ACWC
-          - ACWP
-          - RCVD
-          - PDNG
-          - RJCT
-          - CANC
-          - ACFC
-          - PATC
+          $ref: '#/components/schemas/PaymentStatus'
         remittanceInformationUnstructured:
           type: string
         requestedExecutionDate:

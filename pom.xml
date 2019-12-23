@@ -230,6 +230,7 @@
                     <failOnViolation>true</failOnViolation>
                     <excludeRoots>
                         <excludeRoot>${maven.multiModuleProjectDirectory}/opba-banking-rest-api/generated</excludeRoot>
+                        <excludeRoot>${maven.multiModuleProjectDirectory}/opba-consent-rest-api/generated</excludeRoot>
                     </excludeRoots>
                 </configuration>
                 <executions>
