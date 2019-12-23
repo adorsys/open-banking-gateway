@@ -5,13 +5,11 @@
 	<parent>
 		<groupId>de.adorsys.opba</groupId>
 		<artifactId>open-banking-gateway</artifactId>
-		<version>0.1-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
+		<version>0.0.4-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>opba-banking-rest-api</artifactId>
-	<version>0.1-SNAPSHOT</version>
-	<name>Banking embeded rest API</name>
+	<name>opba-banking-rest-api</name>
 
 	<properties>
 		<ruleset.basedir>..</ruleset.basedir>
@@ -98,6 +96,8 @@
 								<library>spring-mvc</library>
 								<swaggerDocketConfig>false</swaggerDocketConfig>
 							</configOptions>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
 						</configuration>
 					</execution>
 				</executions>
@@ -108,6 +108,25 @@
 						<version>1.0.11</version>
 					</dependency>
 				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<id>add-generated-source</id>
+						<phase>initialize</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${project.basedir}/generated/src/main</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

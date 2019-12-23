@@ -5,12 +5,13 @@
     <parent>
         <artifactId>open-banking-gateway</artifactId>
         <groupId>de.adorsys.opba</groupId>
-        <version>0.1-SNAPSHOT</version>
+        <version>0.0.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.adorsys.opba</groupId>
     <artifactId>last-module-codecoverage</artifactId>
+    <name>last-module-codecoverage</name>
 
     <dependencies>
         <dependency>

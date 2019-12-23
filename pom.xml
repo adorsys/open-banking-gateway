@@ -22,15 +22,16 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.adorsys.opba</groupId>
     <artifactId>open-banking-gateway</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Open Banking Gateway</name>
+    <name>open-banking-gateway</name>
     <description>Provides Access to Banking API</description>
 
     <modules>
         <module>opba-consent-rest-api</module>
         <module>core</module>
+        <module>sandbox-test</module>
         <module>opba-banking-rest-api</module>
         <module>opba-embedded-starter</module>
         <module>last-module-codecoverage</module>
@@ -58,41 +59,55 @@
             <organization>adorsys GmbH &amp; Co KG</organization>
             <organizationUrl>https://adorsys.de/</organizationUrl>
         </developer>
-
     </developers>
 
     <properties>
-        <!-- common properties -->
+        <!-- Common properties -->
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <ruleset.basedir>${project.basedir}</ruleset.basedir>
         <dependency.locations.enabled>false</dependency.locations.enabled>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
         <java.version>1.8</java.version>
         <pmd.plugin.version>3.10.0</pmd.plugin.version>
+
+        <!-- Framework libs -->
+        <spring-boot.version>2.2.2.RELEASE</spring-boot.version>
+        <guava.version>28.1-jre</guava.version>
         <apache.commons-lang3.version>3.9</apache.commons-lang3.version>
-		<spring-boot.version>2.2.2.RELEASE</spring-boot.version>
+        <fasterxml.version>2.10.1</fasterxml.version>
+        <fasterxml-data-format.version>2.9.8</fasterxml-data-format.version>
         <swaggerv3.version>2.1.0</swaggerv3.version>
         <swagger.version>1.5.23</swagger.version>
+        <springdoc.version>1.2.18</springdoc.version> <!-- springfox replacement for OpenApi 3 -->
         <springfox.version>2.9.2</springfox.version>
         <jetbrains.annotations.version>17.0.0</jetbrains.annotations.version>
         <lombok.version>1.18.10</lombok.version>
         <xml-maven-plugin.version>1.0.2</xml-maven-plugin.version>
+        <checkstyle-plugin.version>3.1.0</checkstyle-plugin.version>
+        <spotbugs-plugin.version>3.1.12.2</spotbugs-plugin.version>
+        <maven.jxr.plugin.version>3.0.0</maven.jxr.plugin.version>
+        <bouncycastle.version>1.64</bouncycastle.version>
+        <liquibase.version>3.8.0</liquibase.version>
+
+        <!-- Flowable BPMN -->
+        <flowable.version>6.4.2</flowable.version>
+
+        <!-- Adorsys libs -->
+        <xs2a.version>5.1</xs2a.version>
+        <xs2a-adapter.version>0.0.5</xs2a-adapter.version>
+
+        <!-- Test libs -->
         <jacoco.version>0.8.4</jacoco.version>
         <jupiter.version>5.5.2</jupiter.version>
         <junit.platform.commons.version>1.5.2</junit.platform.commons.version>
         <surefire.version>3.0.0-M3</surefire.version>
         <assertj.version>3.12.2</assertj.version>
-        <checkstyle-plugin.version>3.1.0</checkstyle-plugin.version>
-        <spotbugs-plugin.version>3.1.12.2</spotbugs-plugin.version>
-        <maven.jxr.plugin.version>3.0.0</maven.jxr.plugin.version>
-        <guava.version>28.1-jre</guava.version>
-        <bouncycastle.version>1.64</bouncycastle.version>
         <testcontainers.version>1.12.4</testcontainers.version>
-        <liquibase.version>3.8.0</liquibase.version>
         <slf4j-simple.version>1.7.29</slf4j-simple.version>
+
+        <!-- other properties -->
         <surefireArgLine/>
     </properties>
 
@@ -169,7 +184,34 @@
                 <groupId>org.jetbrains</groupId>
                 <artifactId>annotations</artifactId>
                 <version>${jetbrains.annotations.version}</version>
+                <scope>compile</scope>
             </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${fasterxml.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${fasterxml.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${fasterxml.version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${fasterxml-data-format.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
@@ -186,10 +228,19 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j-simple.version}</version>
+            </dependency>
+
+            <!-- Test -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${jupiter.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -218,20 +269,23 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.12.0</version>
+                <version>${pmd.plugin.version}</version>
                 <configuration>
                     <includeTests>true</includeTests>
+                    <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
                     <minimumTokens>100</minimumTokens>
-                    <linkXref>true</linkXref>
                     <targetJdk>${java.version}</targetJdk>
+                    <analysisCache>true</analysisCache>
+                    <linkXRef>false</linkXRef>
                     <rulesets>
-                        <ruleset>${maven.multiModuleProjectDirectory}/pmd-ruleset.xml</ruleset>
+                        <ruleset>${maven.multiModuleProjectDirectory}/backend.pmd-ruleset.xml</ruleset>
                     </rulesets>
-                    <failOnViolation>true</failOnViolation>
                     <excludeRoots>
                         <excludeRoot>${maven.multiModuleProjectDirectory}/opba-banking-rest-api/generated</excludeRoot>
                         <excludeRoot>${maven.multiModuleProjectDirectory}/opba-consent-rest-api/generated</excludeRoot>
                     </excludeRoots>
+                    <failOnViolation>true</failOnViolation>
+                    <printFailingErrors>true</printFailingErrors>
                 </configuration>
                 <executions>
                     <execution>
@@ -245,14 +299,13 @@
                     </execution>
                 </executions>
             </plugin>
-
             <!-- checkstyle -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>${checkstyle-plugin.version}</version>
                 <configuration>
-                    <configLocation>checkstyle.xml</configLocation>
+                    <configLocation>backend.checkstyle.xml</configLocation>
                     <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
@@ -268,7 +321,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <!-- code coverage -->
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -299,9 +351,6 @@
                 </executions>
                 <configuration>
                     <append>true</append>
-                    <excludes>
-                        <!-- Exclude Dagger2 generated code -->
-                    </excludes>
                     <propertyName>surefireArgLine</propertyName>
                 </configuration>
             </plugin>
@@ -339,34 +388,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-
-            <!--
-            <plugin>
-                <groupId>com.github.spotbugs</groupId>
-                <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>${spotbugs-plugin.version}</version>
-                <configuration>
-                    <effort>Max</effort>
-                    <threshold>Low</threshold>
-                    <xmlOutput>true</xmlOutput>
-                    -->
-            <!-- Java11 triggers issue
-            https://github.com/spotbugs/spotbugs/issues/756
-            that is false positive, excluding it
-            -->
-            <!--
-                    <excludeFilterFile>spotbugs-exclude.xml</excludeFilterFile>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-    -->
         </plugins>
     </build>
 

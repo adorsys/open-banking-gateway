@@ -5,4 +5,5 @@
 
     <include relativeToChangelogFile="true" file="migrations/0000-init-schema.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0001-create-table-banks.xml"/>
+    <include relativeToChangelogFile="true" file="migrations/0002-mock-data.xml"/>
 </databaseChangeLog>

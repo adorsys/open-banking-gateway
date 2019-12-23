@@ -1,0 +1,21 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>de.adorsys.opba</groupId>
+        <artifactId>open-banking-gateway</artifactId>
+        <version>0.0.4-SNAPSHOT</version>
+    </parent>
+
+    <!-- POC that we can run whole sandbox within single JVM and H2 database for performance and debugging easiness -->
+    <artifactId>sandbox-test</artifactId>
+    <name>sandbox-test</name>
+
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>e2e-tests</module>
+    </modules>
+</project>
+

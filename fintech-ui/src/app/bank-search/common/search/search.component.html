@@ -1,9 +1,11 @@
-<form class="search">
-    <i class="fa fa-search form-control-feedback"></i>
-    <input (input)="onSearch($event.target.value)"
-           name="searchValue"
-           type="text"
-           placeholder="Search for your bank"
-           class="form-control border-3">
-</form>
-
+<div class="search">
+  <i class="fa fa-search form-control-feedback"></i>
+  <input
+    [formControl]="searchTerm"
+    autocomplete="off"
+    name="searchValue"
+    type="text"
+    placeholder="Search for your bank"
+    class="form-control border-3"
+  />
+</div>
