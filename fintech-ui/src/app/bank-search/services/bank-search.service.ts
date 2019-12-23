@@ -15,7 +15,8 @@ export class BankSearchService {
     { id: '3', name: 'Sparda Nürnberg', bic: 'SSXXXX', bankCode: 488737 }
   ];
 
-  readonly API_PATH = 'http://localhost:8080/v1/banks/fts';
+  // path resolved by proxy
+  readonly API_PATH = 'fintech-api-proxy';
 
   constructor(private http: HttpClient) {}
 
@@ -24,10 +25,10 @@ export class BankSearchService {
   }
 
   searchBanks(keyword: string): Observable<Bank[]> {
-    return this.http.get<Bank[]>(this.API_PATH + '/fts', {
+    return this.http.get<Bank[]>(this.API_PATH + '/v1/banks/fts', {
       params: {
         q: keyword,
-        max_results: '10'
+        max_results: '5'
       }
     });
   }

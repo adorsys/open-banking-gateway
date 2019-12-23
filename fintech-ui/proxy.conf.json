@@ -1,11 +1,11 @@
 {
-  "/bank-search/*": {
+  "/fintech-api-proxy/*": {
     "target": "http://localhost:8080",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "debug",
     "pathRewrite": {
-      "^/bank-search": ""
+      "^/fintech-api-proxy": ""
     }
   }
 }
