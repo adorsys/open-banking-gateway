@@ -1,5 +1,6 @@
 package de.adorsys.opba.core.protocol.service.xs2a.consent;
 
+import de.adorsys.opba.core.protocol.config.protocol.ProtocolConfiguration;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.core.protocol.service.xs2a.dto.WithBasicInfo;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.UUID;
 
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_IP_ADDRESS;
@@ -37,6 +39,14 @@ public class Xs2aAccountListConsentInitiate extends ValidatedExecution<Xs2aConte
 
     private final AccountInformationService ais;
     private final Xs2aValidator validator;
+    private final ProtocolConfiguration configuration;
+
+    @Override
+    protected void doPrepareContext(DelegateExecution execution, Xs2aContext context) {
+        context.setRedirectUriOk(
+            evaluateSpelForCtx(configuration.getRedirect().getConsentAccounts().getOk(), execution, context)
+        );
+    }
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
@@ -50,13 +60,14 @@ public class Xs2aAccountListConsentInitiate extends ValidatedExecution<Xs2aConte
                 CONSENTS.map(context)
         );
 
-        context.setRedirectUriOk("http://localhost:8080/v1/consents/confirm/accounts/" + execution.getProcessInstanceId() + "/");
         context.setConsentId(consentInit.getBody().getConsentId());
         execution.setVariable(CONTEXT, context);
     }
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
+        context.setConsentId("MOCK-" + UUID.randomUUID().toString());
+        execution.setVariable(CONTEXT, context);
     }
 
     @Getter
@@ -90,6 +101,7 @@ public class Xs2aAccountListConsentInitiate extends ValidatedExecution<Xs2aConte
     public static class Consent {
     }
 
+    // TODO: should map to Consent class above
     @Mapper
     public interface ConsentsMapper {
 

@@ -46,8 +46,8 @@ public class Xs2aContext extends BaseContext {
     private String consentId;
     private String authorizationId;
 
-    private String redirectUriOk = "http://localhost:3218/";
-    private String redirectUriNok = "http://localhost:8080/NOK";
+    private String redirectUriOk;
+    private String redirectUriNok;
 
     private Object result;
 

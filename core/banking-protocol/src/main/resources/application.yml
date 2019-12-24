@@ -20,6 +20,15 @@ spring:
     parameters:
       table-prefix: opb_
       fill-with-mock-data: true
+
+protocol:
+  redirect:
+    consent-accounts:
+      ok: 'http://localhost:8080/v1/consents/confirm/accounts/#{execution.getProcessInstanceId()}'
+      nok: 'http://localhost:8080/v1/consents/failed/accounts/#{execution.getProcessInstanceId()}'
+    parameters:
+      provide-more: 'http://localhost:8080/v1/tpp-ui/parameters/provide-more/#{execution.getProcessInstanceId()}'
+
 pkcs12:
   keyStore: sample-qwac.keystore
   password: password
