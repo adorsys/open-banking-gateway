@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import {ParametersInputComponent} from "./parameters-input/parameters-input.component";
 
 
-const routes: Routes = [];
+const routes: Routes = [
+  {path: 'parameters/provide-more', component: ParametersInputComponent}
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
