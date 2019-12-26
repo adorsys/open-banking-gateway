@@ -55,11 +55,6 @@
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
     </dependency>
-    <dependency>
-        <groupId>org.springdoc</groupId>
-        <artifactId>springdoc-openapi-ui</artifactId>
-        <version>${springdoc.version}</version>
-    </dependency>
   </dependencies>
   
 
@@ -68,7 +63,7 @@
       <plugin>
         <groupId>io.swagger.codegen.v3</groupId>
         <artifactId>swagger-codegen-maven-plugin</artifactId>
-        <version>3.0.11</version>
+        <version>${swagger-codegen-maven-plugin.version}</version>
         <executions>
           <execution>
             <goals>
@@ -80,10 +75,10 @@
               <output>${project.basedir}/generated/</output>
               <configOptions>
                 <sourceFolder>src/main</sourceFolder>
-                <basePackage>de.adorsys.opba.consent</basePackage>
-                <configPackage>de.adorsys.opba.consent.config</configPackage>
-                <modelPackage>de.adorsys.opba.consent.model</modelPackage>
-                <apiPackage>de.adorsys.opba.consent.resource</apiPackage>
+                <basePackage>de.adorsys.opba.consentapi</basePackage>
+                <configPackage>de.adorsys.opba.consentapi.config</configPackage>
+                <modelPackage>de.adorsys.opba.consentapi.model</modelPackage>
+                <apiPackage>de.adorsys.opba.consentapi.resource</apiPackage>
                 <interfaceOnly>true</interfaceOnly>
                 <skipOverwrite>true</skipOverwrite>
                 <dateLibrary>java8</dateLibrary>
@@ -101,14 +96,14 @@
           <dependency>
             <groupId>io.swagger.codegen.v3</groupId>
             <artifactId>swagger-codegen-generators</artifactId>
-            <version>${swagger-codegen.version}</version>
+            <version>${swagger-codegen-generators.version}</version>
           </dependency>
         </dependencies>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>${build-helper-maven-plugin.version}</version>
         <executions>
           <execution>
             <id>add-generated-source</id>
