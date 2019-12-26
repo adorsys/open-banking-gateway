@@ -1,7 +1,6 @@
 package de.adorsys.opba.core.protocol.controller;
 
 import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.core.protocol.repository.jpa.BankConfigurationRepository;
 import de.adorsys.opba.core.protocol.service.eventbus.ProcessEventHandlerRegistrar;
 import de.adorsys.opba.core.protocol.service.xs2a.ContextFactory;
 import de.adorsys.opba.core.protocol.service.xs2a.Xs2aResultExtractor;
@@ -24,6 +23,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
+import static de.adorsys.opba.core.protocol.constant.GlobalConst.REQUEST_SAGA;
 import static de.adorsys.opba.core.protocol.controller.constants.ApiPaths.ACCOUNTS;
 import static de.adorsys.opba.core.protocol.controller.constants.ApiPaths.TRANSACTIONS;
 import static de.adorsys.opba.core.protocol.controller.constants.ApiVersion.API_1;
@@ -37,7 +37,6 @@ public class AccountInformation {
 
     private final RuntimeService runtimeService;
     private final ContextFactory contextFactory;
-    private final BankConfigurationRepository config;
     private final Xs2aResultExtractor extractor;
     private final ProcessEventHandlerRegistrar registrar;
 
@@ -45,9 +44,10 @@ public class AccountInformation {
     @Transactional
     public CompletableFuture<ResponseEntity<List<AccountDetails>>> accounts() {
         Xs2aContext context = contextFactory.createContext();
+        context.setAction(LIST_ACCOUNTS);
 
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(
-                config.getOne(context.getBankConfigId()).getActions().get(LIST_ACCOUNTS).getProcessName(),
+                REQUEST_SAGA,
                 new ConcurrentHashMap<>(ImmutableMap.of(CONTEXT, context))
         );
 
@@ -68,10 +68,11 @@ public class AccountInformation {
     @Transactional
     public CompletableFuture<ResponseEntity<TransactionsReport>> transactions(@PathVariable String accountId) {
         TransactionListXs2aContext context = contextFactory.createContextForTx();
+        context.setAction(LIST_TRANSACTIONS);
         context.setResourceId(accountId);
 
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(
-                config.getOne(context.getBankConfigId()).getActions().get(LIST_TRANSACTIONS).getProcessName(),
+                REQUEST_SAGA,
                 new ConcurrentHashMap<>(ImmutableMap.of(CONTEXT, context))
         );
 

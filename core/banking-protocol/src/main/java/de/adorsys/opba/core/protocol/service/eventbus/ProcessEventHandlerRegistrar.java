@@ -2,6 +2,7 @@ package de.adorsys.opba.core.protocol.service.eventbus;
 
 import de.adorsys.opba.core.protocol.domain.dto.RedirectResult;
 import de.adorsys.opba.core.protocol.domain.dto.ResponseResult;
+import de.adorsys.opba.core.protocol.domain.dto.ValidationIssueResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,14 +27,34 @@ public class ProcessEventHandlerRegistrar {
                 processId,
                 procResult -> {
                     if (procResult instanceof ResponseResult) {
-                        onSuccess.accept((ResponseResult) procResult);
+                        doSuccess(onSuccess, (ResponseResult) procResult);
                     } else if (procResult instanceof RedirectResult) {
-                        HttpHeaders headers = new HttpHeaders();
-                        headers.setLocation(URI.create(((RedirectResult) procResult).getRedirectUri()));
-                        result.complete(new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY));
+                        doRedirect(result, (RedirectResult) procResult);
+                    } else if (procResult instanceof ValidationIssueResult) {
+                        doFixValidation(result, (ValidationIssueResult) procResult);
                     } else {
-                        result.complete(ResponseEntity.badRequest().build());
+                        doHandleOther(result);
                     }
                 });
+    }
+
+    private <T> void doSuccess(Consumer<ResponseResult> onSuccess, ResponseResult procResult) {
+        onSuccess.accept(procResult);
+    }
+
+    private <T> void doRedirect(CompletableFuture<ResponseEntity<T>> result, RedirectResult redirResult) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(URI.create(redirResult.getRedirectUri()));
+        result.complete(new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY));
+    }
+
+    private <T> void doFixValidation(CompletableFuture<ResponseEntity<T>> result, ValidationIssueResult validResult) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(validResult.getProvideMoreParamsDialog());
+        result.complete(new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY));
+    }
+
+    private <T> void doHandleOther(CompletableFuture<ResponseEntity<T>> result) {
+        result.complete(ResponseEntity.badRequest().build());
     }
 }

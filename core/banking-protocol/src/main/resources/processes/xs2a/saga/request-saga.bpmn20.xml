@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="request-saga" name="request-saga" isExecutable="true">
+    <documentation>Saga that manages full cycle of request - from getting user initial input to providing additional data that is required by ASPSP during runtime</documentation>
+    <startEvent id="start" name="start" flowable:formFieldValidation="true"></startEvent>
+    <endEvent id="end" name="end"></endEvent>
+    <callActivity id="execution" name="Perform real bank call sequence" calledElement="${protocolSelector.getProtocolForValidation(CONTEXT)}" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false"></callActivity>
+    <callActivity id="validation" name="Perform validation process sequence" calledElement="${protocolSelector.getProtocolForExecution(CONTEXT)}" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false"></callActivity>
+    <boundaryEvent id="sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A" attachedToRef="execution">
+      <errorEventDefinition></errorEventDefinition>
+    </boundaryEvent>
+    <boundaryEvent id="sid-9423DFF0-FF17-42E9-BB31-83AFE92A4AED" attachedToRef="validation">
+      <errorEventDefinition></errorEventDefinition>
+    </boundaryEvent>
+    <receiveTask id="requestAdditionalParamsOnValidation" name="Ask user to input extra parameters"></receiveTask>
+    <serviceTask id="validationErrorsHandler" name="Handle validation errors" flowable:delegateExpression="${validationErrorHandler}"></serviceTask>
+    <sequenceFlow id="sid-2C91DF0D-FE63-4134-9222-542A5F188FEE" sourceRef="validation" targetRef="execution"></sequenceFlow>
+    <sequenceFlow id="sid-AA3814A7-D245-4099-ABA7-449E203665F1" sourceRef="execution" targetRef="end"></sequenceFlow>
+    <sequenceFlow id="sid-567377B1-F9FB-45A1-B2F8-F2ED47217578" sourceRef="validationErrorsHandler" targetRef="requestAdditionalParamsOnValidation"></sequenceFlow>
+    <receiveTask id="requestAdditionalParamsOnExecution" name="Ask user to input extra parameters"></receiveTask>
+    <serviceTask id="handleExecutionErrors" name="Handle execution errors" flowable:delegateExpression="${executionErrorHandler}"></serviceTask>
+    <sequenceFlow id="sid-1007B142-F039-44E1-AA01-A9D66832A081" sourceRef="handleExecutionErrors" targetRef="requestAdditionalParamsOnExecution"></sequenceFlow>
+    <sequenceFlow id="sid-C66278C4-EC81-438B-8264-C15C99FDDD18" sourceRef="sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A" targetRef="handleExecutionErrors"></sequenceFlow>
+    <sequenceFlow id="sid-B7A7DE44-0291-4A10-AF22-440DE439B454" sourceRef="requestAdditionalParamsOnExecution" targetRef="execution"></sequenceFlow>
+    <sequenceFlow id="sid-B4A38440-9E24-479E-A358-56B7529066F4" sourceRef="sid-9423DFF0-FF17-42E9-BB31-83AFE92A4AED" targetRef="validationErrorsHandler"></sequenceFlow>
+    <serviceTask id="fillInitialContext" name="Fill context with bpmn-related information" flowable:delegateExpression="${fillBpmnContext}"></serviceTask>
+    <sequenceFlow id="sid-BE22A9B7-11C3-41BC-A8F7-9CD8809C8C55" sourceRef="fillInitialContext" targetRef="validation"></sequenceFlow>
+    <sequenceFlow id="sid-846BCBC1-F77B-4252-92F3-2C0340C8245B" sourceRef="start" targetRef="fillInitialContext"></sequenceFlow>
+    <sequenceFlow id="sid-EC61366B-D4E9-4605-8985-5A672B7962A1" sourceRef="requestAdditionalParamsOnValidation" targetRef="validation"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_request-saga">
+    <bpmndi:BPMNPlane bpmnElement="request-saga" id="BPMNPlane_request-saga">
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="30.0" width="30.0" x="75.0" y="160.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+        <omgdc:Bounds height="28.0" width="28.0" x="747.0" y="161.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="execution" id="BPMNShape_execution">
+        <omgdc:Bounds height="80.0" width="100.0" x="582.0" y="135.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="validation" id="BPMNShape_validation">
+        <omgdc:Bounds height="80.0" width="100.0" x="357.0" y="135.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A" id="BPMNShape_sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A">
+        <omgdc:Bounds height="30.0" width="30.0" x="622.1240347345893" y="200.99227787671367"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-9423DFF0-FF17-42E9-BB31-83AFE92A4AED" id="BPMNShape_sid-9423DFF0-FF17-42E9-BB31-83AFE92A4AED">
+        <omgdc:Bounds height="30.0" width="30.0" x="390.9750078088398" y="200.99968764640812"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="requestAdditionalParamsOnValidation" id="BPMNShape_requestAdditionalParamsOnValidation">
+        <omgdc:Bounds height="80.0" width="100.0" x="355.9750078088398" y="447.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="validationErrorsHandler" id="BPMNShape_validationErrorsHandler">
+        <omgdc:Bounds height="80.0" width="100.0" x="355.9750078088398" y="312.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="requestAdditionalParamsOnExecution" id="BPMNShape_requestAdditionalParamsOnExecution">
+        <omgdc:Bounds height="80.0" width="100.0" x="587.018993230683" y="447.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="handleExecutionErrors" id="BPMNShape_handleExecutionErrors">
+        <omgdc:Bounds height="80.0" width="100.0" x="587.018993230683" y="312.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="fillInitialContext" id="BPMNShape_fillInitialContext">
+        <omgdc:Bounds height="80.0" width="100.0" x="164.75" y="135.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-2C91DF0D-FE63-4134-9222-542A5F188FEE" id="BPMNEdge_sid-2C91DF0D-FE63-4134-9222-542A5F188FEE">
+        <omgdi:waypoint x="456.94999999983776" y="175.0"></omgdi:waypoint>
+        <omgdi:waypoint x="582.0" y="175.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-567377B1-F9FB-45A1-B2F8-F2ED47217578" id="BPMNEdge_sid-567377B1-F9FB-45A1-B2F8-F2ED47217578">
+        <omgdi:waypoint x="405.9750078088398" y="391.95000000000005"></omgdi:waypoint>
+        <omgdi:waypoint x="405.9750078088398" y="447.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-BE22A9B7-11C3-41BC-A8F7-9CD8809C8C55" id="BPMNEdge_sid-BE22A9B7-11C3-41BC-A8F7-9CD8809C8C55">
+        <omgdi:waypoint x="264.6999999998349" y="175.0"></omgdi:waypoint>
+        <omgdi:waypoint x="357.0" y="175.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-AA3814A7-D245-4099-ABA7-449E203665F1" id="BPMNEdge_sid-AA3814A7-D245-4099-ABA7-449E203665F1">
+        <omgdi:waypoint x="681.9499999999999" y="175.0"></omgdi:waypoint>
+        <omgdi:waypoint x="747.0" y="175.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-C66278C4-EC81-438B-8264-C15C99FDDD18" id="BPMNEdge_sid-C66278C4-EC81-438B-8264-C15C99FDDD18">
+        <omgdi:waypoint x="637.1124499357694" y="230.94227351346078"></omgdi:waypoint>
+        <omgdi:waypoint x="637.0498474205448" y="312.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-EC61366B-D4E9-4605-8985-5A672B7962A1" id="BPMNEdge_sid-EC61366B-D4E9-4605-8985-5A672B7962A1">
+        <omgdi:waypoint x="355.9750078087651" y="487.0"></omgdi:waypoint>
+        <omgdi:waypoint x="315.0" y="487.0"></omgdi:waypoint>
+        <omgdi:waypoint x="315.0" y="195.0"></omgdi:waypoint>
+        <omgdi:waypoint x="356.99999999999994" y="185.85869565217388"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-B7A7DE44-0291-4A10-AF22-440DE439B454" id="BPMNEdge_sid-B7A7DE44-0291-4A10-AF22-440DE439B454">
+        <omgdi:waypoint x="587.0189932306513" y="487.0"></omgdi:waypoint>
+        <omgdi:waypoint x="546.0" y="487.0"></omgdi:waypoint>
+        <omgdi:waypoint x="546.0" y="195.0"></omgdi:waypoint>
+        <omgdi:waypoint x="581.9999999999999" y="186.61627906976744"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-B4A38440-9E24-479E-A358-56B7529066F4" id="BPMNEdge_sid-B4A38440-9E24-479E-A358-56B7529066F4">
+        <omgdi:waypoint x="405.9750078088398" y="230.949686658442"></omgdi:waypoint>
+        <omgdi:waypoint x="405.9750078088398" y="312.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-846BCBC1-F77B-4252-92F3-2C0340C8245B" id="BPMNEdge_sid-846BCBC1-F77B-4252-92F3-2C0340C8245B">
+        <omgdi:waypoint x="104.94999882580285" y="175.0"></omgdi:waypoint>
+        <omgdi:waypoint x="164.75" y="175.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-1007B142-F039-44E1-AA01-A9D66832A081" id="BPMNEdge_sid-1007B142-F039-44E1-AA01-A9D66832A081">
+        <omgdi:waypoint x="637.018993230683" y="391.95000000000005"></omgdi:waypoint>
+        <omgdi:waypoint x="637.018993230683" y="447.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

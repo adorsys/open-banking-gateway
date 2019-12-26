@@ -1,6 +1,7 @@
 package de.adorsys.opba.core.protocol.service.xs2a.consent;
 
 import de.adorsys.opba.core.protocol.config.protocol.ProtocolConfiguration;
+import de.adorsys.opba.core.protocol.service.ContextUtil;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.core.protocol.service.xs2a.dto.WithBasicInfo;
@@ -44,13 +45,13 @@ public class Xs2aAccountListConsentInitiate extends ValidatedExecution<Xs2aConte
     @Override
     protected void doPrepareContext(DelegateExecution execution, Xs2aContext context) {
         context.setRedirectUriOk(
-            evaluateSpelForCtx(configuration.getRedirect().getConsentAccounts().getOk(), execution, context)
+                ContextUtil.evaluateSpelForCtx(configuration.getRedirect().getConsentAccounts().getOk(), execution, context)
         );
     }
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
-        validator.validate(context, HEADERS.map(context), CONSENTS.map(context));
+        validator.validate(execution, HEADERS.map(context), CONSENTS.map(context));
     }
 
     @Override

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
+import static de.adorsys.opba.core.protocol.service.ContextUtil.getContext;
 
 @Service
 @RequiredArgsConstructor
@@ -27,13 +27,13 @@ public class Xs2aResultExtractor {
                         .processInstanceId(result.getProcessId())
                         .singleResult();
         ExecutionEntity exec = (ExecutionEntity) updated;
-        return ((Xs2aContext) exec.getVariable(CONTEXT)).getResult(AccountListHolder.class).getAccounts();
+        return getContext(exec, Xs2aContext.class).getResult(AccountListHolder.class).getAccounts();
     }
 
     public TransactionsReport extractTransactionsReport(ProcessResult result) {
         ProcessInstance updated = runtimeService.createProcessInstanceQuery()
                 .processInstanceId(result.getProcessId()).singleResult();
         ExecutionEntity exec = (ExecutionEntity) updated;
-        return ((Xs2aContext) exec.getVariable(CONTEXT)).getResult(TransactionsReport.class);
+        return getContext(exec, Xs2aContext.class).getResult(TransactionsReport.class);
     }
 }

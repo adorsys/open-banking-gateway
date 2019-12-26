@@ -23,11 +23,6 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 @EqualsAndHashCode(callSuper = true)
 public class Xs2aContext extends BaseContext {
 
-    // Application required
-    private long bankConfigId = 1;
-    // Redirect-required:
-    private String executionId;
-
     // Mandatory static
     private String psuId;
     private String requestId;

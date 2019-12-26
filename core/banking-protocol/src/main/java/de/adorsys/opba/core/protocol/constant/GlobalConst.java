@@ -7,4 +7,5 @@ import lombok.experimental.UtilityClass;
 public class GlobalConst {
 
     public static final String CONTEXT = "CONTEXT";
+    public static final String REQUEST_SAGA = "request-saga";
 }
