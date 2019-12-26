@@ -7,10 +7,10 @@
     <callActivity id="execution" name="Perform real bank call sequence" calledElement="${protocolSelector.getProtocolForValidation(CONTEXT)}" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false"></callActivity>
     <callActivity id="validation" name="Perform validation process sequence" calledElement="${protocolSelector.getProtocolForExecution(CONTEXT)}" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false"></callActivity>
     <boundaryEvent id="sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A" attachedToRef="execution">
-      <errorEventDefinition></errorEventDefinition>
+      <errorEventDefinition errorRef="VALIDATION"></errorEventDefinition>
     </boundaryEvent>
     <boundaryEvent id="sid-9423DFF0-FF17-42E9-BB31-83AFE92A4AED" attachedToRef="validation">
-      <errorEventDefinition></errorEventDefinition>
+      <errorEventDefinition errorRef="VALIDATION"></errorEventDefinition>
     </boundaryEvent>
     <receiveTask id="requestAdditionalParamsOnValidation" name="Ask user to input extra parameters"></receiveTask>
     <serviceTask id="validationErrorsHandler" name="Handle validation errors" flowable:delegateExpression="${validationErrorHandler}"></serviceTask>
