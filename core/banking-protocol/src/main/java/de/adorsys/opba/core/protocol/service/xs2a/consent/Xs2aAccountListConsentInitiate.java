@@ -75,13 +75,13 @@ public class Xs2aAccountListConsentInitiate extends ValidatedExecution<Xs2aConte
     @Setter
     public static class Headers extends WithBasicInfo {
 
-        @NotBlank
+        @NotBlank(message = "{ip.no.psu.ip.address}")
         private String psuIpAddress;
 
-        @NotBlank
+        @NotBlank(message = "{uri.redirect.ok}")
         private String redirectUriOk;
 
-        @NotBlank
+        @NotBlank(message = "{uri.redirect.nok}")
         private String redirectUriNok;
 
         public RequestHeaders toHeaders() {

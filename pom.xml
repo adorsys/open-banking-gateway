@@ -315,6 +315,7 @@
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
                     <linkXRef>false</linkXRef>
+                    <excludes>**/generated/**/*</excludes>
                 </configuration>
                 <executions>
                     <execution>

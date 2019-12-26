@@ -32,4 +32,12 @@ public class StartAuthorization extends ValidatedExecution<Xs2aContext> {
         context.setStartScaProcessResponse(scaStart.getBody());
         execution.setVariable(CONTEXT, context);
     }
+
+    @Override
+    protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
+        // TODO: Read from database - preferred bank profile
+        if (null == context.getAspspScaApproach()) {
+            context.setAspspScaApproach("EMBEDDED");
+        }
+    }
 }

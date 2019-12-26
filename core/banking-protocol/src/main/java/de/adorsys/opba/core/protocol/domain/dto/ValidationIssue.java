@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ValidationIssue {
 
-    private String beanName;
-    private String propertyPath;
-    private String message;
     private String code;
+    private String message;
 }
