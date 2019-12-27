@@ -12,6 +12,12 @@
     <artifactId>e2e-tests</artifactId>
     <name>sandbox-test/e2e-tests</name>
 
+    <properties>
+      <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+      Change this if depth changes. Current: /open-banking-gateway/sandbox-test/e2e-tests -->
+      <main.basedir>${project.parent.parent.basedir}</main.basedir>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>

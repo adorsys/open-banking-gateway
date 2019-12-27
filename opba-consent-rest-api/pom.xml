@@ -12,52 +12,116 @@
   <name>opba-consent-rest-api</name>
 
   <properties>
-    <ruleset.basedir>../..</ruleset.basedir>
+    <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+    Change this if depth changes. Current: /open-banking-gateway/open-banking-gateway -->
+    <main.basedir>${project.parent.basedir}</main.basedir>
+    <openapi-spec-file-location>${project.basedir}/src/main/resources/static/consent_api.yml</openapi-spec-file-location>
   </properties>
 
+
   <dependencies>
-    <!-- swagger -->
     <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-annotations</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger2</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.springfox</groupId>
-      <artifactId>springfox-swagger-ui</artifactId>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.jetbrains</groupId>
-      <artifactId>annotations</artifactId>
-    </dependency>
 
-    <!-- Spring -->
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-
-    <!-- test -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>${jupiter.version}</version>
-      <scope>test</scope>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.junit.platform</groupId>
-      <artifactId>junit-platform-commons</artifactId>
-      <version>${junit.platform.commons.version}</version>
-      <scope>test</scope>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-annotations</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>javax.annotation-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+    </dependency>
   </dependencies>
+  
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>io.swagger.codegen.v3</groupId>
+        <artifactId>swagger-codegen-maven-plugin</artifactId>
+        <version>${swagger-codegen-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>${openapi-spec-file-location}</inputSpec>
+              <language>spring</language>
+              <output>${project.build.directory}/generated-sources/open-api/</output>
+              <configOptions>
+                <sourceFolder>src/main</sourceFolder>
+                <basePackage>de.adorsys.opba.consentapi</basePackage>
+                <configPackage>de.adorsys.opba.consentapi.config</configPackage>
+                <modelPackage>de.adorsys.opba.consentapi.model</modelPackage>
+                <apiPackage>de.adorsys.opba.consentapi.resource</apiPackage>
+                <interfaceOnly>true</interfaceOnly>
+                <skipOverwrite>true</skipOverwrite>
+                <dateLibrary>java8</dateLibrary>
+                <java8>true</java8>
+                <implicitHeaders>false</implicitHeaders>
+                <delegatePattern>true</delegatePattern>
+                <useTags>true</useTags>
+                <library>spring-mvc</library>
+                <swaggerDocketConfig>false</swaggerDocketConfig>
+              </configOptions>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>io.swagger.codegen.v3</groupId>
+            <artifactId>swagger-codegen-generators</artifactId>
+            <version>${swagger-codegen-generators.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>${build-helper-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>add-generated-source</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/open-api/src/main</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>      
+    </plugins>
+  </build>
 </project>
 
