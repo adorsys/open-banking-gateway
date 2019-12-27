@@ -42,6 +42,15 @@ public class ProtocolConfiguration {
 
             @NotBlank
             private String provideMore;
+
+            @NotBlank
+            private String askPsuPassword;
+
+            @NotBlank
+            private String authenticateConsent;
+
+            @NotBlank
+            private String selectScaMethod;
         }
     }
 }

@@ -47,6 +47,9 @@ public class Xs2aAccountListConsentInitiate extends ValidatedExecution<Xs2aConte
         context.setRedirectUriOk(
                 ContextUtil.evaluateSpelForCtx(configuration.getRedirect().getConsentAccounts().getOk(), execution, context)
         );
+        context.setRedirectUriNok(
+                ContextUtil.evaluateSpelForCtx(configuration.getRedirect().getConsentAccounts().getNok(), execution, context)
+        );
     }
 
     @Override

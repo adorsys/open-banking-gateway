@@ -24,10 +24,13 @@ spring:
 protocol:
   redirect:
     consent-accounts:
-      ok: 'http://localhost:8080/v1/consents/confirm/accounts/#{execution.getProcessInstanceId()}'
-      nok: 'http://localhost:8080/v1/consents/failed/accounts/#{execution.getProcessInstanceId()}'
+      ok: 'http://localhost:8080/v1/consents/confirm/accounts/#{execution.getProcessInstanceId()}/'
+      nok: 'http://localhost:8080/v1/consents/failed/accounts/#{execution.getProcessInstanceId()}/'
     parameters:
-      provide-more: 'http://localhost:5500/parameters/provide-more/#{execution.getProcessInstanceId()}'
+      provide-more: 'http://localhost:5500/parameters/provide-more/#{execution.getProcessInstanceId()}/'
+      ask-psu-password: 'http://localhost:5500/parameters/ask-psu-password/#{execution.getProcessInstanceId()}/'
+      authenticate-consent: 'http://localhost:5500/parameters/authenticate-consent/#{execution.getProcessInstanceId()}/'
+      select-sca-method: 'http://localhost:5500/parameters/select-sca-method/#{execution.getProcessInstanceId()}/'
 
 pkcs12:
   keyStore: sample-qwac.keystore

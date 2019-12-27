@@ -1,7 +1,6 @@
 package de.adorsys.opba.core.protocol.controller;
 
 import de.adorsys.opba.core.protocol.service.eventbus.ProcessEventHandlerRegistrar;
-import de.adorsys.opba.core.protocol.service.eventbus.ProcessResultEventHandler;
 import de.adorsys.opba.core.protocol.service.xs2a.Xs2aResultExtractor;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
@@ -27,7 +26,6 @@ import static de.adorsys.opba.core.protocol.controller.constants.ApiVersion.API_
 public class ConsentConfirmation {
 
     private final RuntimeService runtimeService;
-    private final ProcessResultEventHandler handler;
     private final Xs2aResultExtractor extractor;
     private final ProcessEventHandlerRegistrar registrar;
 

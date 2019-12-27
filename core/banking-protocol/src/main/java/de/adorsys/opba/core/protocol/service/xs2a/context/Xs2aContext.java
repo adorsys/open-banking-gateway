@@ -40,19 +40,13 @@ public class Xs2aContext extends BaseContext {
     private StartScaProcessResponse startScaProcessResponse;
     private String consentId;
     private String authorizationId;
+    private String scaStatus;
+
+    // sensitive - do not persist?
+    private String psuPassword;
 
     private String redirectUriOk;
     private String redirectUriNok;
-
-    private Object result;
-
-    public <T> T getResult() {
-        return (T) result;
-    }
-
-    public <T> T getResult(Class<T> clazz) {
-        return (T) result;
-    }
 
     public RequestHeaders toHeaders() {
         Map<String, String> allValues = new HashMap<>();

@@ -7,6 +7,8 @@ import lombok.experimental.UtilityClass;
 public class GlobalConst {
 
     public static final String CONTEXT = "CONTEXT";
+    public static final String RESULT = "RESULT";
+
     public static final String REQUEST_SAGA = "request-saga";
     public static final String VALIDATION_ERROR_CODE = "VALIDATION";
     public static final String VALIDATIONS_RESULT_HEADER = "X-VALIDATION";

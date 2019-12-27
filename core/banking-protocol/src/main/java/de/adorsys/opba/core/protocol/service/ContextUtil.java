@@ -12,10 +12,19 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import java.util.function.Consumer;
 
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
+import static de.adorsys.opba.core.protocol.constant.GlobalConst.RESULT;
 
 @UtilityClass
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Lombok generates private ctor.
 public class ContextUtil {
+
+    public static <T> T getResult(DelegateExecution execution, Class<T> resultType) {
+        return execution.getVariable(RESULT, resultType);
+    }
+
+    public static <T> void setResult(DelegateExecution execution, T result) {
+        execution.setVariable(RESULT, result);
+    }
 
     public static <T> T getContext(DelegateExecution execution, Class<T> ctxType) {
         return execution.getVariable(CONTEXT, ctxType);
@@ -32,6 +41,7 @@ public class ContextUtil {
         execution.setVariable(CONTEXT, ctx);
     }
 
+    // TODO: Extract to service/component
     @SuppressWarnings("unchecked")
     public static <R, T> R evaluateSpelForCtx(String expression, DelegateExecution execution, T context) {
         return (R) evaluateSpelForCtx(expression, execution, context, Object.class);

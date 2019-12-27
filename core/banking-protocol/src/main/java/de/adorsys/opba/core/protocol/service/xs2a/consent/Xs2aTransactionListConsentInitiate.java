@@ -1,6 +1,8 @@
 package de.adorsys.opba.core.protocol.service.xs2a.consent;
 
 import com.google.common.collect.ImmutableList;
+import de.adorsys.opba.core.protocol.config.protocol.ProtocolConfiguration;
+import de.adorsys.opba.core.protocol.service.ContextUtil;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
 import de.adorsys.opba.core.protocol.service.xs2a.context.TransactionListXs2aContext;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
@@ -22,6 +24,17 @@ import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 public class Xs2aTransactionListConsentInitiate extends ValidatedExecution<TransactionListXs2aContext> {
 
     private final AccountInformationService ais;
+    private final ProtocolConfiguration configuration;
+
+    @Override
+    protected void doPrepareContext(DelegateExecution execution, TransactionListXs2aContext context) {
+        context.setRedirectUriOk(
+                ContextUtil.evaluateSpelForCtx(configuration.getRedirect().getConsentAccounts().getOk(), execution, context)
+        );
+        context.setRedirectUriNok(
+                ContextUtil.evaluateSpelForCtx(configuration.getRedirect().getConsentAccounts().getNok(), execution, context)
+        );
+    }
 
     @Override
     protected void doRealExecution(DelegateExecution execution, TransactionListXs2aContext context) {

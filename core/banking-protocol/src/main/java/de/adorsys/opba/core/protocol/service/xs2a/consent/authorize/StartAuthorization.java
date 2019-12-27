@@ -1,5 +1,8 @@
 package de.adorsys.opba.core.protocol.service.xs2a.consent.authorize;
 
+import de.adorsys.opba.core.protocol.domain.entity.BankConfiguration;
+import de.adorsys.opba.core.protocol.repository.jpa.BankConfigurationRepository;
+import de.adorsys.opba.core.protocol.service.ContextUtil;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
@@ -16,6 +19,7 @@ import static de.adorsys.xs2a.adapter.service.ResponseHeaders.ASPSP_SCA_APPROACH
 @RequiredArgsConstructor
 public class StartAuthorization extends ValidatedExecution<Xs2aContext> {
 
+    private final BankConfigurationRepository bic;
     private final AccountInformationService ais;
 
     @Override
@@ -35,9 +39,10 @@ public class StartAuthorization extends ValidatedExecution<Xs2aContext> {
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
-        // TODO: Read from database - preferred bank profile
-        if (null == context.getAspspScaApproach()) {
-            context.setAspspScaApproach("EMBEDDED");
-        }
+        BankConfiguration config = bic.getOne(context.getBankConfigId());
+
+        ContextUtil.getAndUpdateContext(execution, (Xs2aContext ctx) -> {
+            ctx.setAspspScaApproach(config.getPreferredApproach().name());
+        });
     }
 }

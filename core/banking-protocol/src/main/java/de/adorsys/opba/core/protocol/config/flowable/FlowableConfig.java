@@ -38,7 +38,7 @@ public class FlowableConfig {
 
     @Bean
     EngineConfigurationConfigurer<SpringProcessEngineConfiguration> flowableEventListeners(
-        FlowableJobSuccessEventListener eventListener
+            FlowableJobEventListener eventListener
     ) {
         return processConfiguration -> {
             processConfiguration.setEnableEventDispatcher(true);

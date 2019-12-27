@@ -1,9 +1,9 @@
 package de.adorsys.opba.core.protocol.service.eventbus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.opba.core.protocol.domain.dto.RedirectResult;
-import de.adorsys.opba.core.protocol.domain.dto.ResponseResult;
-import de.adorsys.opba.core.protocol.domain.dto.ValidationIssueResult;
+import de.adorsys.opba.core.protocol.domain.dto.messages.RedirectResult;
+import de.adorsys.opba.core.protocol.domain.dto.messages.ResponseResult;
+import de.adorsys.opba.core.protocol.domain.dto.messages.ValidationIssueResult;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
@@ -37,8 +37,6 @@ public class ProcessEventHandlerRegistrar {
                         doRedirect(result, (RedirectResult) procResult);
                     } else if (procResult instanceof ValidationIssueResult) {
                         doFixValidation(result, (ValidationIssueResult) procResult);
-                    } else {
-                        doHandleOther(result);
                     }
                 });
     }
@@ -59,9 +57,5 @@ public class ProcessEventHandlerRegistrar {
         headers.setLocation(validResult.getProvideMoreParamsDialog());
         headers.set(VALIDATIONS_RESULT_HEADER, mapper.writeValueAsString(validResult.getViolations()));
         result.complete(new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY));
-    }
-
-    private <T> void doHandleOther(CompletableFuture<ResponseEntity<T>> result) {
-        result.complete(ResponseEntity.badRequest().build());
     }
 }

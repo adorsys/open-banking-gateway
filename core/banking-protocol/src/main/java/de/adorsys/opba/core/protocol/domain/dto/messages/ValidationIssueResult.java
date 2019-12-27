@@ -1,5 +1,6 @@
-package de.adorsys.opba.core.protocol.domain.dto;
+package de.adorsys.opba.core.protocol.domain.dto.messages;
 
+import de.adorsys.opba.core.protocol.domain.dto.ValidationIssue;
 import lombok.Builder;
 import lombok.Getter;
 

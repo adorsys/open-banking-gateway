@@ -1,7 +1,6 @@
 package de.adorsys.opba.core.protocol.service.xs2a;
 
-import de.adorsys.opba.core.protocol.domain.dto.ProcessResult;
-import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
+import de.adorsys.opba.core.protocol.domain.dto.messages.ProcessResult;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
 import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static de.adorsys.opba.core.protocol.service.ContextUtil.getContext;
+import static de.adorsys.opba.core.protocol.service.ContextUtil.getResult;
 
 @Service
 @RequiredArgsConstructor
@@ -27,13 +26,13 @@ public class Xs2aResultExtractor {
                         .processInstanceId(result.getProcessId())
                         .singleResult();
         ExecutionEntity exec = (ExecutionEntity) updated;
-        return getContext(exec, Xs2aContext.class).getResult(AccountListHolder.class).getAccounts();
+        return getResult(exec, AccountListHolder.class).getAccounts();
     }
 
     public TransactionsReport extractTransactionsReport(ProcessResult result) {
         ProcessInstance updated = runtimeService.createProcessInstanceQuery()
                 .processInstanceId(result.getProcessId()).singleResult();
         ExecutionEntity exec = (ExecutionEntity) updated;
-        return getContext(exec, Xs2aContext.class).getResult(TransactionsReport.class);
+        return getResult(exec, TransactionsReport.class);
     }
 }
