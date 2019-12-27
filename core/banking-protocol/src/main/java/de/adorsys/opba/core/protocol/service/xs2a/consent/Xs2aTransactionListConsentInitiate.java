@@ -43,7 +43,6 @@ public class Xs2aTransactionListConsentInitiate extends ValidatedExecution<Trans
                 consents(context)
         );
 
-        context.setRedirectUriOk("http://localhost:8080/v1/consents/confirm/transactions/" + execution.getProcessInstanceId() + "/");
         context.setConsentId(consentInit.getBody().getConsentId());
         execution.setVariable(CONTEXT, context);
     }

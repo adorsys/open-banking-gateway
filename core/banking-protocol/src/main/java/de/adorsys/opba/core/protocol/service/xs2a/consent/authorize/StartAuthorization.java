@@ -24,8 +24,6 @@ public class StartAuthorization extends ValidatedExecution<Xs2aContext> {
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        context.setRedirectUriOk(context.getRedirectUriOk() + execution.getProcessInstanceId());
-
         Response<StartScaProcessResponse> scaStart = ais.startConsentAuthorisation(
                 context.getConsentId(),
                 context.toHeaders()

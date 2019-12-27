@@ -1,5 +1,6 @@
 package de.adorsys.opba.core.protocol.controller;
 
+import de.adorsys.opba.core.protocol.domain.entity.ProtocolAction;
 import de.adorsys.opba.core.protocol.service.eventbus.ProcessEventHandlerRegistrar;
 import de.adorsys.opba.core.protocol.service.xs2a.Xs2aResultExtractor;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
@@ -30,43 +31,53 @@ public class ConsentConfirmation {
     private final ProcessEventHandlerRegistrar registrar;
 
 
-    // TODO: replace this hierarchy by waitng for some message Id instead
-    @GetMapping(CONSENTS + "/confirm/accounts/{resultProcessId}/{consentProcessId}")
+    @GetMapping(CONSENTS + "/confirm/accounts/{action}/sagas/{sagaId}/consent-processes/{consentProcessId}")
     @Transactional
-    public CompletableFuture<ResponseEntity<List<AccountDetails>>> confirmedRedirectConsentAccounts(
-            @PathVariable String resultProcessId, @PathVariable String consentProcessId) {
+    public CompletableFuture<? extends ResponseEntity<?>> confirmedRedirectConsentAccounts(
+            @PathVariable ProtocolAction action,
+            @PathVariable String sagaId,
+            @PathVariable String consentProcessId) {
 
-        ActivityInstance ai = runtimeService.createActivityInstanceQuery().processInstanceId(consentProcessId).unfinished().singleResult();
+        // consent creation activity:
+        ActivityInstance parent = runtimeService.createActivityInstanceQuery()
+                .processInstanceId(consentProcessId).unfinished()
+                .singleResult();
+        // authorization activity:
+        String callee = parent.getCalledProcessInstanceId();
+        ActivityInstance ai = runtimeService.createActivityInstanceQuery()
+                .processInstanceId(callee).unfinished()
+                .singleResult();
+
         runtimeService.trigger(ai.getExecutionId());
 
-        CompletableFuture<ResponseEntity<List<AccountDetails>>> result = new CompletableFuture<>();
+        if (ProtocolAction.LIST_ACCOUNTS == action) {
+            return accounts(sagaId);
+        } else if (ProtocolAction.LIST_TRANSACTIONS == action) {
+            return transactions(sagaId);
+        }
 
+        return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
+    }
+
+    private CompletableFuture<ResponseEntity<List<AccountDetails>>> accounts(String sagaId) {
+
+        CompletableFuture<ResponseEntity<List<AccountDetails>>> result = new CompletableFuture<>();
         registrar.addHandler(
-                resultProcessId,
+                sagaId,
                 response -> result.complete(ResponseEntity.ok(extractor.extractAccountList(response))),
                 result
         );
-
         return result;
     }
 
-    // TODO: replace this hierarchy by waitng for some message Id instead
-    @GetMapping(CONSENTS + "/confirm/transactions/{resultProcessId}/{consentProcessId}")
-    @Transactional
-    public CompletableFuture<ResponseEntity<TransactionsReport>> confirmedRedirectConsentTransactions(
-            @PathVariable String resultProcessId, @PathVariable String consentProcessId) {
-
-        ActivityInstance ai = runtimeService.createActivityInstanceQuery().processInstanceId(consentProcessId).unfinished().singleResult();
-        runtimeService.trigger(ai.getExecutionId());
+    private CompletableFuture<ResponseEntity<TransactionsReport>> transactions(String sagaId) {
 
         CompletableFuture<ResponseEntity<TransactionsReport>> result = new CompletableFuture<>();
-
         registrar.addHandler(
-                resultProcessId,
+                sagaId,
                 response -> result.complete(ResponseEntity.ok(extractor.extractTransactionsReport(response))),
                 result
         );
-
         return result;
     }
 }
