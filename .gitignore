@@ -63,4 +63,5 @@ target/sonar/
 .factorypath
 */generated
 !generated/.swagger-codegen-ignore
+.checkstyle
 
