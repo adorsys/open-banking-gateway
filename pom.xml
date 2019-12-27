@@ -62,6 +62,8 @@
     </developers>
 
     <properties>
+        <!-- Hard reference to main lib. -->
+        <main.basedir>${project.basedir}</main.basedir>
         <!-- Common properties -->
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -281,11 +283,10 @@
                     <analysisCache>true</analysisCache>
                     <linkXRef>false</linkXRef>
                     <rulesets>
-                        <ruleset>${maven.multiModuleProjectDirectory}/backend.pmd-ruleset.xml</ruleset>
+                        <ruleset>${main.basedir}/backend.pmd-ruleset.xml</ruleset>
                     </rulesets>
                     <excludeRoots>
-                        <excludeRoot>${maven.multiModuleProjectDirectory}/opba-banking-rest-api/generated</excludeRoot>
-                        <excludeRoot>${maven.multiModuleProjectDirectory}/opba-consent-rest-api/generated</excludeRoot>
+                        <excludeRoot>${project.build.directory}/generated-sources</excludeRoot>
                     </excludeRoots>
                     <failOnViolation>true</failOnViolation>
                     <printFailingErrors>true</printFailingErrors>
@@ -308,7 +309,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>${checkstyle-plugin.version}</version>
                 <configuration>
-                    <configLocation>backend.checkstyle.xml</configLocation>
+                    <configLocation>${main.basedir}/backend.checkstyle.xml</configLocation>
                     <encoding>UTF-8</encoding>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>

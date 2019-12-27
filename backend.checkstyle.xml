@@ -21,10 +21,11 @@
         <property name="fileNamePattern" value="module\-info\.java$"/>
         <property name="fileNamePattern" value=".+/generated\-sources/.+"/>
     </module>
-
+<!-- 
     <module name="SuppressionFilter">
         <property name="file" value="./suppressions.xml"/>
     </module>
+ -->
 
     <!-- Checks whether files end with a new line.                        -->
     <!-- See http://checkstyle.sourceforge.net/config_misc.html#NewlineAtEndOfFile -->

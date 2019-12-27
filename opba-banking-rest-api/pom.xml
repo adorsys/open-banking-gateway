@@ -12,7 +12,9 @@
 	<name>opba-banking-rest-api</name>
 
 	<properties>
-		<ruleset.basedir>..</ruleset.basedir>
+    <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+    Change this if depth changes. Current: /open-banking-gateway/opba-banking-rest-api -->
+		<main.basedir>${project.parent.basedir}</main.basedir>
 		<openapi-spec-file-location>${project.basedir}/src/main/resources/static/banking_api_ais.yml</openapi-spec-file-location>
 	</properties>
 
@@ -70,7 +72,7 @@
 						<configuration>
 							<inputSpec>${openapi-spec-file-location}</inputSpec>
 							<language>spring</language>
-							<output>${project.basedir}/generated/</output>
+							<output>${project.build.directory}/generated-sources/open-api/</output>
 							<configOptions>
 								<sourceFolder>src/main</sourceFolder>
 								<basePackage>de.adorsys.opba.bankingapi.ais</basePackage>
@@ -113,7 +115,7 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>${project.basedir}/generated/src/main</source>
+								<source>${project.build.directory}/generated-sources/open-api/src/main</source>
 							</sources>
 						</configuration>
 					</execution>
