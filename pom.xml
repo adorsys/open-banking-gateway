@@ -287,8 +287,8 @@
                     </rulesets>
                     <excludeRoots>
                         <excludeRoot>${project.build.directory}/generated-sources</excludeRoot>
-                        <excludeRoot>${main.basedir}/opba-banking-rest-api/generated-sources</excludeRoot>
-                        <excludeRoot>${main.basedir}/opba-consent-rest-api/generated-sources</excludeRoot>
+                        <excludeRoot>${main.basedir}/opba-banking-rest-api/target/generated-sources</excludeRoot>
+                        <excludeRoot>${main.basedir}/opba-consent-rest-api/target/generated-sources</excludeRoot>
                     </excludeRoots>
                     <failOnViolation>true</failOnViolation>
                     <printFailingErrors>true</printFailingErrors>
