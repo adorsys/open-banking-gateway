@@ -287,8 +287,10 @@
                     </rulesets>
                     <excludeRoots>
                         <excludeRoot>${project.build.directory}/generated-sources</excludeRoot>
-                        <excludeRoot>${main.basedir}/opba-banking-rest-api/target/generated-sources</excludeRoot>
-                        <excludeRoot>${main.basedir}/opba-consent-rest-api/target/generated-sources</excludeRoot>
+                        <!-- 
+                        <excludeRoot>${main.basedir}/opba-banking-rest-api/target/generated-sources/open-api/src/main</excludeRoot>
+                        <excludeRoot>${main.basedir}/opba-consent-rest-api/target/generated-sources/open-api/src/main</excludeRoot>
+                         -->
                     </excludeRoots>
                     <failOnViolation>true</failOnViolation>
                     <printFailingErrors>true</printFailingErrors>
@@ -316,6 +318,9 @@
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
                     <linkXRef>false</linkXRef>
+                    <sourceDirectories>
+                      <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                    </sourceDirectories>
                 </configuration>
                 <executions>
                     <execution>
