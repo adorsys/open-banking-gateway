@@ -31,24 +31,13 @@ public class ConsentConfirmation {
     private final ProcessEventHandlerRegistrar registrar;
 
 
-    @GetMapping(CONSENTS + "/confirm/accounts/{action}/sagas/{sagaId}/consent-processes/{consentProcessId}")
+    @GetMapping(CONSENTS + "/confirm/accounts/{action}/sagas/{sagaId}")
     @Transactional
     public CompletableFuture<? extends ResponseEntity<?>> confirmedRedirectConsentAccounts(
             @PathVariable ProtocolAction action,
-            @PathVariable String sagaId,
-            @PathVariable String consentProcessId) {
+            @PathVariable String sagaId) {
 
-        // consent creation activity:
-        ActivityInstance parent = runtimeService.createActivityInstanceQuery()
-                .processInstanceId(consentProcessId).unfinished()
-                .singleResult();
-        // authorization activity:
-        String callee = parent.getCalledProcessInstanceId();
-        ActivityInstance ai = runtimeService.createActivityInstanceQuery()
-                .processInstanceId(callee).unfinished()
-                .singleResult();
-
-        runtimeService.trigger(ai.getExecutionId());
+        runtimeService.trigger(executionToTrigger(sagaId));
 
         if (ProtocolAction.LIST_ACCOUNTS == action) {
             return accounts(sagaId);
@@ -79,5 +68,21 @@ public class ConsentConfirmation {
                 result
         );
         return result;
+    }
+
+    private String executionToTrigger(String sagaId) {
+        String id = sagaId;
+        ActivityInstance activity;
+        // TODO limit depth... or find how to get execution immediately
+        do {
+            activity = runtimeService
+                    .createActivityInstanceQuery()
+                    .processInstanceId(id)
+                    .unfinished()
+                    .singleResult();
+            id = activity.getCalledProcessInstanceId();
+        } while (null != id);
+
+        return activity.getExecutionId();
     }
 }

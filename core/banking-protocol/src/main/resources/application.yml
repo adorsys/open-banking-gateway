@@ -24,8 +24,8 @@ spring:
 protocol:
   redirect:
     consent-accounts:
-      ok: 'http://localhost:8080/v1/consents/confirm/accounts/#{context.getAction()}/sagas/#{execution.getRootProcessInstanceId()}/consent-processes/#{execution.getProcessInstanceId()}/'
-      nok: 'http://localhost:8080/v1/consents/failed/accounts/#{context.getAction()}/sagas/#{execution.getRootProcessInstanceId()}/consent-processes/#{execution.getProcessInstanceId()}/'
+      ok: 'http://localhost:8080/v1/consents/confirm/accounts/#{context.getAction()}/sagas/#{execution.getRootProcessInstanceId()}'
+      nok: 'http://localhost:8080/v1/consents/failed/accounts/#{context.getAction()}/sagas/#{execution.getRootProcessInstanceId()}'
     parameters:
       provide-more: 'http://localhost:5500/parameters/provide-more/sagas/#{execution.getRootProcessInstanceId()}/executions/#{execution.getId()}/'
       ask-psu-password: 'http://localhost:5500/parameters/ask-psu-password/sagas/#{execution.getRootProcessInstanceId()}/executions/#{execution.getId()}/'
