@@ -1,6 +1,5 @@
 package de.adorsys.opba.core.protocol.controller;
 
-import com.google.common.collect.Iterables;
 import de.adorsys.opba.core.protocol.domain.entity.ProtocolAction;
 import de.adorsys.opba.core.protocol.service.eventbus.ProcessEventHandlerRegistrar;
 import de.adorsys.opba.core.protocol.service.xs2a.Xs2aResultExtractor;
@@ -48,7 +47,7 @@ public class MoreParameters {
 
         BaseContext ctx = (BaseContext) runtimeService.getVariable(executionId, CONTEXT);
         // TODO It works only for String
-        updates.forEach((name, values) -> setValueWitSetterOn(ctx, name, Iterables.getFirst(values, null)));
+        updates.forEach((name, values) -> setValueWitSetterOn(ctx, name, null == values ? null : values.get(0)));
         runtimeService.setVariable(executionId, CONTEXT, ctx);
         runtimeService.trigger(executionId);
 
