@@ -4,6 +4,7 @@ import de.adorsys.opba.core.protocol.service.xs2a.context.TransactionListXs2aCon
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import org.springframework.stereotype.Service;
 
+// TODO - Drop/refactor as dialog approach is working now
 @Service
 public class ContextFactory {
 

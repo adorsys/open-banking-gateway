@@ -8,16 +8,16 @@ import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
-@Service("xs2aAskForPassword")
+@Service("xs2aPerformScaChallenge")
 @RequiredArgsConstructor
-public class Xs2aAskForPassword extends ValidatedExecution<Xs2aContext> {
+public class Xs2aPerformScaChallenge extends ValidatedExecution<Xs2aContext> {
 
     private final RuntimeService runtimeService;
     private final RedirectExecutor redirectExecutor;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        redirectExecutor.redirect(execution, context, redir -> redir.getParameters().getProvidePsuPassword());
+        redirectExecutor.redirect(execution, context, redir -> redir.getParameters().getReportScaResult());
     }
 
     @Override

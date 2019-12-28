@@ -27,6 +27,6 @@ public class Xs2aConsentInfo {
     }
 
     public boolean isConsentFinalized(Xs2aContext ctx) {
-        return "finalized".equalsIgnoreCase(ctx.getScaStatus());
+        return "finalised".equalsIgnoreCase(ctx.getScaStatus());
     }
 }

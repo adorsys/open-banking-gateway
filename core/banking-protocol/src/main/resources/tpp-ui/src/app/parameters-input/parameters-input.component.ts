@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {DynamicFormControlBase} from "../dynamic-form/dynamic.form.control.base";
+import {DynamicFormControlBase} from "../dynamic-form/dynamic-form-control-base";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Consts} from "../consts";
 

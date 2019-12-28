@@ -44,13 +44,13 @@ public class ProtocolConfiguration {
             private String provideMore;
 
             @NotBlank
-            private String askPsuPassword;
-
-            @NotBlank
-            private String authenticateConsent;
+            private String providePsuPassword;
 
             @NotBlank
             private String selectScaMethod;
+
+            @NotBlank
+            private String reportScaResult;
         }
     }
 }

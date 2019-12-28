@@ -1,6 +1,7 @@
 package de.adorsys.opba.core.protocol.service.xs2a.context;
 
 import de.adorsys.xs2a.adapter.service.RequestHeaders;
+import de.adorsys.xs2a.adapter.service.model.AuthenticationObject;
 import de.adorsys.xs2a.adapter.service.model.StartScaProcessResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,6 +42,8 @@ public class Xs2aContext extends BaseContext {
     private String consentId;
     private String authorizationId;
     private String scaStatus;
+    private AuthenticationObject scaSelected;
+    private String lastScaChallenge;
 
     // sensitive - do not persist?
     private String psuPassword;

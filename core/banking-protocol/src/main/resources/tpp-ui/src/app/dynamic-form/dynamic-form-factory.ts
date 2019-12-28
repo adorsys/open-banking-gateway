@@ -1,7 +1,7 @@
 import { Injectable }   from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { DynamicFormControlBase } from './dynamic.form.control.base';
+import { DynamicFormControlBase } from './dynamic-form-control-base';
 
 @Injectable()
 export class DynamicFormFactory {

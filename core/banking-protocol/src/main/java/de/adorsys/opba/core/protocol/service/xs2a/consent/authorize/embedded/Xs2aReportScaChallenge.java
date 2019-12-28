@@ -5,25 +5,23 @@ import de.adorsys.opba.core.protocol.service.ValidatedExecution;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.PsuData;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthentication;
-import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthenticationResponse;
+import de.adorsys.xs2a.adapter.service.model.ScaStatusResponse;
+import de.adorsys.xs2a.adapter.service.model.TransactionAuthorisation;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
-@Service("xs2aAuthenticateUserConsent")
+@Service("xs2aReportScaChallenge")
 @RequiredArgsConstructor
-public class Xs2aAuthenticateUserConsent extends ValidatedExecution<Xs2aContext> {
+public class Xs2aReportScaChallenge extends ValidatedExecution<Xs2aContext> {
 
     private final RuntimeService runtimeService;
     private final AccountInformationService ais;
 
-    // TODO validation projection
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        Response<UpdatePsuAuthenticationResponse> authResponse = ais.updateConsentsPsuData(
+        Response<ScaStatusResponse> authResponse = ais.updateConsentsPsuData(
                 context.getConsentId(),
                 context.getAuthorizationId(),
                 context.toHeaders(),
@@ -32,7 +30,7 @@ public class Xs2aAuthenticateUserConsent extends ValidatedExecution<Xs2aContext>
 
         ContextUtil.getAndUpdateContext(
                 execution,
-                (Xs2aContext ctx) -> ctx.setScaSelected(authResponse.getBody().getChosenScaMethod())
+                (Xs2aContext ctx) -> ctx.setScaStatus(authResponse.getBody().getScaStatus().getValue())
         );
     }
 
@@ -41,11 +39,9 @@ public class Xs2aAuthenticateUserConsent extends ValidatedExecution<Xs2aContext>
         runtimeService.trigger(execution.getId());
     }
 
-    private UpdatePsuAuthentication authentication(Xs2aContext context) {
-        UpdatePsuAuthentication psuAuthentication = new UpdatePsuAuthentication();
-        PsuData data = new PsuData();
-        data.setPassword(context.getPsuPassword());
-        psuAuthentication.setPsuData(data);
-        return psuAuthentication;
+    private TransactionAuthorisation authentication(Xs2aContext context) {
+        TransactionAuthorisation authorisation = new TransactionAuthorisation();
+        authorisation.setScaAuthenticationData(context.getLastScaChallenge());
+        return authorisation;
     }
 }

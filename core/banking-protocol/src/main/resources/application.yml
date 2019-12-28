@@ -28,9 +28,9 @@ protocol:
       nok: 'http://localhost:8080/v1/consents/failed/accounts/#{context.getAction()}/sagas/#{execution.getRootProcessInstanceId()}'
     parameters:
       provide-more: 'http://localhost:5500/parameters/provide-more/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}'
-      ask-psu-password: 'http://localhost:5500/parameters/ask-psu-password/#{execution.getId()}'
-      authenticate-consent: 'http://localhost:5500/parameters/authenticate-consent/#{execution.getId()}'
+      provide-psu-password: 'http://localhost:5500/parameters/provide-psu-password/#{execution.getId()}'
       select-sca-method: 'http://localhost:5500/parameters/select-sca-method/#{execution.getId()}'
+      report-sca-result: 'http://localhost:5500/parameters/report-sca-result/#{execution.getId()}?q=#{urlSafe(context.getScaSelected().getAuthenticationType() + ":" + context.getScaSelected().getName())}'
 
 pkcs12:
   keyStore: sample-qwac.keystore
