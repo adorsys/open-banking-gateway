@@ -19,9 +19,4 @@ export class DynamicFormComponent implements OnInit {
   ngOnInit() {
     this.form = this.formFactory.toFormGroup(this.controlTemplates);
   }
-
-  onSubmit() {
-    this.http.post(this.submissionUri, {"updates": this.form.value}, {headers: {'Content-Type': 'application/json'}})
-      .subscribe((data) => {});
-  }
 }
