@@ -34,7 +34,6 @@ public class ValidationErrorHandler implements JavaDelegate {
                                         ctx,
                                         URI.class)
                         )
-                        .violations(ctx.getViolations())
                         .build()
         );
     }

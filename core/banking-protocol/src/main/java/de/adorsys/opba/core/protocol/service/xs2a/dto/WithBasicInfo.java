@@ -17,13 +17,13 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 @Setter
 public class WithBasicInfo {
 
-    @NotBlank
+    @NotBlank(message = "{input.textbox.string.no.psu.id}")
     private String psuId;
 
-    @NotBlank
+    @NotBlank(message = "{input.textbox.string.no.aspsp.id}")
     private String aspspId;
 
-    @NotBlank
+    @NotBlank(message = "{input.textbox.string.no.request.id}")
     private String requestId;
 
     @NotBlank

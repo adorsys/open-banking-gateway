@@ -1,24 +1,20 @@
 package de.adorsys.opba.core.protocol.domain.dto.messages;
 
-import de.adorsys.opba.core.protocol.domain.dto.ValidationIssue;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 
 import java.net.URI;
-import java.util.Set;
 
 @Getter
 public class ValidationIssueResult extends ProcessResult {
 
+    @NonNull
     private URI provideMoreParamsDialog;
-    private Set<ValidationIssue> violations;
 
     @Builder
-    public ValidationIssueResult(
-            String processId, Object result, URI provideMoreParamsDialog, Set<ValidationIssue> violations
-    ) {
+    public ValidationIssueResult(String processId, Object result, URI provideMoreParamsDialog) {
         super(processId, result);
         this.provideMoreParamsDialog = provideMoreParamsDialog;
-        this.violations = violations;
     }
 }

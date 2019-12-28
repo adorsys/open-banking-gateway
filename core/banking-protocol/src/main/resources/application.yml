@@ -27,7 +27,7 @@ protocol:
       ok: 'http://localhost:8080/v1/consents/confirm/accounts/#{context.getAction()}/sagas/#{execution.getRootProcessInstanceId()}'
       nok: 'http://localhost:8080/v1/consents/failed/accounts/#{context.getAction()}/sagas/#{execution.getRootProcessInstanceId()}'
     parameters:
-      provide-more: 'http://localhost:5500/parameters/provide-more/sagas/#{execution.getRootProcessInstanceId()}/executions/#{execution.getId()}/'
+      provide-more: 'http://localhost:5500/parameters/provide-more/sagas/#{execution.getRootProcessInstanceId()}/executions/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}'
       ask-psu-password: 'http://localhost:5500/parameters/ask-psu-password/sagas/#{execution.getRootProcessInstanceId()}/executions/#{execution.getId()}/'
       authenticate-consent: 'http://localhost:5500/parameters/authenticate-consent/sagas/#{execution.getRootProcessInstanceId()}/executions/#{execution.getId()}/'
       select-sca-method: 'http://localhost:5500/parameters/select-sca-method/sagas/#{execution.getRootProcessInstanceId()}/executions/#{execution.getId()}/'

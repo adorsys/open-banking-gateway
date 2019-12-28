@@ -4,7 +4,7 @@ import {ParametersInputComponent} from "./parameters-input/parameters-input.comp
 
 
 const routes: Routes = [
-  {path: 'parameters/provide-more', component: ParametersInputComponent}
+  {path: 'parameters/provide-more/sagas/:sagaId/executions/:executionId', component: ParametersInputComponent}
 ];
 
 @NgModule({

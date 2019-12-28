@@ -13,4 +13,12 @@ public class ValidationIssue {
 
     private String code;
     private String message;
+
+    /**
+     * @return Json-alike entry
+     */
+    @Override
+    public String toString() {
+        return "{" + "\"code\":\"" + code + "\", \"message\":\"" + message + "\"}";
+    }
 }

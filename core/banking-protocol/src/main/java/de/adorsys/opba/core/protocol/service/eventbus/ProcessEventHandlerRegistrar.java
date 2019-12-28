@@ -15,8 +15,6 @@ import java.net.URI;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import static de.adorsys.opba.core.protocol.constant.GlobalConst.VALIDATIONS_RESULT_HEADER;
-
 @Service
 @RequiredArgsConstructor
 public class ProcessEventHandlerRegistrar {
@@ -55,7 +53,6 @@ public class ProcessEventHandlerRegistrar {
     private <T> void doFixValidation(CompletableFuture<ResponseEntity<T>> result, ValidationIssueResult validResult) {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(validResult.getProvideMoreParamsDialog());
-        headers.set(VALIDATIONS_RESULT_HEADER, mapper.writeValueAsString(validResult.getViolations()));
         result.complete(new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY));
     }
 }

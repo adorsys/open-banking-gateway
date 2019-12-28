@@ -10,7 +10,7 @@ public class ContextFactory {
     @SuppressWarnings("PMD.AvoidUsingHardCodedIP") // This is a POC hardcoded values
     public Xs2aContext createContext() {
         Xs2aContext context = new Xs2aContext();
-        context.setPsuId("anton.brueckner");
+        //context.setPsuId("anton.brueckner");
         context.setRequestId("2f77a125-aa7a-45c0-b414-cea25a116035");
         context.setAspspId("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46");
         context.setPsuIpAddress("1.1.1.1");

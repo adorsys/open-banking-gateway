@@ -1,5 +1,6 @@
 package de.adorsys.opba.core.protocol.service;
 
+import com.google.common.net.UrlEscapers;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
@@ -60,5 +61,9 @@ public class ContextUtil {
 
         private final DelegateExecution execution;
         private final T context;
+
+        public String urlSafe(String original) {
+            return UrlEscapers.urlFragmentEscaper().escape(original);
+        }
     }
 }
