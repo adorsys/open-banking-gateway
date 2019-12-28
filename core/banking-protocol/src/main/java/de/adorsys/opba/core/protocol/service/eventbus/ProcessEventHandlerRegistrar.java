@@ -1,6 +1,5 @@
 package de.adorsys.opba.core.protocol.service.eventbus;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.core.protocol.domain.dto.messages.RedirectResult;
 import de.adorsys.opba.core.protocol.domain.dto.messages.ResponseResult;
 import de.adorsys.opba.core.protocol.domain.dto.messages.ValidationIssueResult;
@@ -19,7 +18,6 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class ProcessEventHandlerRegistrar {
 
-    private final ObjectMapper mapper;
     private final ProcessResultEventHandler handler;
 
     public <T> void addHandler(String processId,

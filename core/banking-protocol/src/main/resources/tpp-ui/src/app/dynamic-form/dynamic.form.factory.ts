@@ -11,7 +11,7 @@ export class DynamicFormFactory {
     let group: any = {};
 
     controls.forEach(control => {
-      group[control.code] = control.required
+      group[control.id] = control.required
         ? new FormControl(control.value || '', Validators.required)
         : new FormControl(control.value || '');
     });

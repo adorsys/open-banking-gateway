@@ -1,6 +1,9 @@
 package de.adorsys.opba.core.protocol.service.xs2a.dto;
 
 import com.google.common.net.MediaType;
+import de.adorsys.opba.core.protocol.service.xs2a.annotations.ContextCode;
+import de.adorsys.opba.core.protocol.service.xs2a.annotations.FrontendCode;
+import de.adorsys.opba.core.protocol.service.xs2a.annotations.ValidationInfo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,13 +20,16 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 @Setter
 public class WithBasicInfo {
 
-    @NotBlank(message = "{input.textbox.string.no.psu.id}")
+    @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("psuId"))
+    @NotBlank(message = "{no.ctx.psuId}")
     private String psuId;
 
-    @NotBlank(message = "{input.textbox.string.no.aspsp.id}")
+    @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("aspspId"))
+    @NotBlank(message = "{no.ctx.aspspId}")
     private String aspspId;
 
-    @NotBlank(message = "{input.textbox.string.no.request.id}")
+    @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("requestId"))
+    @NotBlank(message = "{no.ctx.requestId}")
     private String requestId;
 
     @NotBlank

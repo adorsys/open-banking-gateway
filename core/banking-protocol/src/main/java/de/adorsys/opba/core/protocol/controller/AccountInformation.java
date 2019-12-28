@@ -51,6 +51,7 @@ public class AccountInformation {
                 new ConcurrentHashMap<>(ImmutableMap.of(CONTEXT, context))
         );
 
+        // TODO: Duplicated code
         CompletableFuture<ResponseEntity<List<AccountDetails>>> result = new CompletableFuture<>();
 
         registrar.addHandler(
@@ -76,6 +77,7 @@ public class AccountInformation {
                 new ConcurrentHashMap<>(ImmutableMap.of(CONTEXT, context))
         );
 
+        // TODO: Duplicated code
         CompletableFuture<ResponseEntity<TransactionsReport>> result = new CompletableFuture<>();
 
         registrar.addHandler(

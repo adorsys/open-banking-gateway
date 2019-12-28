@@ -11,5 +11,5 @@ export class DynamicFormControlComponent {
   @Input() control: DynamicFormControlBase<any>;
   @Input() form: FormGroup;
 
-  get isValid() { return this.form.controls[this.control.code].valid; }
+  get isValid() { return this.form.controls[this.control.id].valid; }
 }

@@ -19,7 +19,7 @@
     <boundaryEvent id="sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A" attachedToRef="execution">
       <errorEventDefinition errorRef="VALIDATION"></errorEventDefinition>
     </boundaryEvent>
-    <serviceTask id="validationErrorsHandler" name="Handle validation errors" flowable:async="true" flowable:delegateExpression="${validationErrorHandler}" flowable:triggerable="true"></serviceTask>
+    <serviceTask id="validationErrorsHandler" name="Handle validation errors" flowable:async="true" flowable:delegateExpression="${handleAndClearValidationErrors}" flowable:triggerable="true"></serviceTask>
     <sequenceFlow id="sid-AA3814A7-D245-4099-ABA7-449E203665F1" sourceRef="execution" targetRef="end"></sequenceFlow>
     <sequenceFlow id="sid-C66278C4-EC81-438B-8264-C15C99FDDD18" sourceRef="sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A" targetRef="handleExecutionErrors"></sequenceFlow>
     <serviceTask id="fillInitialContext" name="Fill context with bpmn-related information" flowable:async="true" flowable:delegateExpression="${fillBpmnContext}"></serviceTask>

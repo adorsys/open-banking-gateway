@@ -8,6 +8,7 @@ import {ParametersInputComponent} from './parameters-input/parameters-input.comp
 import {DynamicFormComponent} from "./dynamic-form/dynamic.form.component";
 import {DynamicFormFactory} from "./dynamic-form/dynamic.form.factory";
 import {DynamicFormControlComponent} from "./dynamic-form/dynamic.form.control.component";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import {DynamicFormControlComponent} from "./dynamic-form/dynamic.form.control.c
   ],
   imports: [
     BrowserModule,
+    HttpClientModule,
     AppRoutingModule,
     ReactiveFormsModule
   ],

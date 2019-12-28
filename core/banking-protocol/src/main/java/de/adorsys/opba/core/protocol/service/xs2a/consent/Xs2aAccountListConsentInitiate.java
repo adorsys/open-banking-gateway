@@ -3,6 +3,9 @@ package de.adorsys.opba.core.protocol.service.xs2a.consent;
 import de.adorsys.opba.core.protocol.config.protocol.ProtocolConfiguration;
 import de.adorsys.opba.core.protocol.service.ContextUtil;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
+import de.adorsys.opba.core.protocol.service.xs2a.annotations.ContextCode;
+import de.adorsys.opba.core.protocol.service.xs2a.annotations.FrontendCode;
+import de.adorsys.opba.core.protocol.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.core.protocol.service.xs2a.dto.WithBasicInfo;
 import de.adorsys.opba.core.protocol.service.xs2a.validation.Xs2aValidator;
@@ -78,13 +81,16 @@ public class Xs2aAccountListConsentInitiate extends ValidatedExecution<Xs2aConte
     @Setter
     public static class Headers extends WithBasicInfo {
 
-        @NotBlank(message = "{input.textbox.ipaddr.no.psu.ip.ipaddress}")
+        @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("psuIpAddress"))
+        @NotBlank(message = "{no.ctx.psuIpAddress}")
         private String psuIpAddress;
 
-        @NotBlank(message = "{input.textbox.string.uri.redirect.ok}")
+        @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("redirectUriOk"))
+        @NotBlank(message = "{redirect.ok}")
         private String redirectUriOk;
 
-        @NotBlank(message = "{input.textbox.string,uri.redirect.nok}")
+        @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("redirectUriNok"))
+        @NotBlank(message = "{redirect.nok}")
         private String redirectUriNok;
 
         public RequestHeaders toHeaders() {

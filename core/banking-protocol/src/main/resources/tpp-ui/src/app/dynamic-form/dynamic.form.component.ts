@@ -1,8 +1,8 @@
 import { Component, Input, OnInit }  from '@angular/core';
-import { FormGroup }                 from '@angular/forms';
-
-import { DynamicFormControlBase }              from './dynamic.form.control.base';
+import { FormGroup } from '@angular/forms';
+import { DynamicFormControlBase } from './dynamic.form.control.base';
 import {DynamicFormFactory} from "./dynamic.form.factory";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'dynamic-form',
@@ -11,16 +11,17 @@ import {DynamicFormFactory} from "./dynamic.form.factory";
 export class DynamicFormComponent implements OnInit {
 
   @Input() controlTemplates: DynamicFormControlBase<any>[] = [];
+  @Input() submissionUri: string;
   form: FormGroup;
-  payLoad = '';
 
-  constructor(private formFactory: DynamicFormFactory) {  }
+  constructor(private formFactory: DynamicFormFactory, private http: HttpClient) {  }
 
   ngOnInit() {
     this.form = this.formFactory.toFormGroup(this.controlTemplates);
   }
 
   onSubmit() {
-    this.payLoad = JSON.stringify(this.form.value);
+    this.http.post(this.submissionUri, {"updates": this.form.value}, {headers: {'Content-Type': 'application/json'}})
+      .subscribe((data) => {});
   }
 }

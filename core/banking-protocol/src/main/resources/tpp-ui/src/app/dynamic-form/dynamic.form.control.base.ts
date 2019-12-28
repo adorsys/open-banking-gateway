@@ -1,16 +1,16 @@
 const KnownControlTypes = ['textbox', 'dropdown'];
 const KnownTypeValidations = ['string', 'ipaddr'];
-const MagicKeyForInput = 'input.';
 
 // Validations are defined in format:
-// input.<controlType>.<valueType>.<...> - 'input' is magic anchor to find code in message template
-// I.e.: 'input.textbox.string.no.psu.id'
+// <controlType>.<valueType>
+// I.e.: 'textbox.string'
 // where:
 // controlType can be: textbox, dropdown, ...
 // valueType can be: string, int, decimal, enum ...
 
 export class DynamicFormControlBase<T> {
   value: T;
+  id: string;
   code: string;
   message: string;
   type: string;
@@ -22,9 +22,11 @@ export class DynamicFormControlBase<T> {
   options: {key: string, value: string}[] = [];
 
   constructor(
+    id: string,
     code: string,
     message: string
   ) {
+    this.id = id;
     this.code = code || '';
     this.message = message || '';
     this.order = 1;
@@ -32,12 +34,7 @@ export class DynamicFormControlBase<T> {
   }
 
   private parseAndValidateCode(code: string) {
-    let start = code.indexOf(MagicKeyForInput);
-    if (start < 0) {
-      throw new SyntaxError("Wrong code " + code);
-    }
-
-    let parts = code.substr(start + MagicKeyForInput.length).replace('}', '').split('.');
+    let parts = code.split('.');
 
     if (parts.length < 2) {
       throw new SyntaxError("Wrong code " + code);
