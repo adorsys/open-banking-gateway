@@ -34,6 +34,7 @@
         <module>sandbox-test</module>
         <module>opba-banking-rest-api</module>
         <module>opba-embedded-starter</module>
+        <module>fintech-examples</module>
         <module>last-module-codecoverage</module>
     </modules>
 

@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>de.adorsys.opba</groupId>
+        <artifactId>open-banking-gateway</artifactId>
+        <version>0.0.4-SNAPSHOT</version>
+    </parent>
+
+    <!-- Core module that implements main business logic -->
+    <artifactId>fintech-examples</artifactId>
+    <name>fintech-examples</name>
+    <packaging>pom</packaging>
+
+    <properties>
+      <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+      Change this if depth changes. Current: /open-banking-gateway/core -->
+      <main.basedir>${project.parent.basedir}</main.basedir>
+    </properties>
+
+    <modules>
+        <module>fintech-api</module>
+        <module>fintech-server</module>
+    </modules>
+</project>
+
