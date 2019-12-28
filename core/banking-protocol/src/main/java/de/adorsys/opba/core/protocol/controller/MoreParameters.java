@@ -1,6 +1,6 @@
 package de.adorsys.opba.core.protocol.controller;
 
-import de.adorsys.opba.core.protocol.domain.dto.ContextParamUpdate;
+import com.google.common.collect.Iterables;
 import de.adorsys.opba.core.protocol.domain.entity.ProtocolAction;
 import de.adorsys.opba.core.protocol.service.eventbus.ProcessEventHandlerRegistrar;
 import de.adorsys.opba.core.protocol.service.xs2a.Xs2aResultExtractor;
@@ -11,8 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.engine.RuntimeService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -36,15 +40,15 @@ public class MoreParameters {
     private final Xs2aResultExtractor extractor;
     private final ProcessEventHandlerRegistrar registrar;
 
-    @PostMapping(MORE_PARAMETERS + "/{executionId}")
+    @PostMapping(value = MORE_PARAMETERS + "/{executionId}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @Transactional
     public CompletableFuture<? extends ResponseEntity<?>> confirmedRedirectConsentAccounts(
             @PathVariable String executionId,
-            @Valid @RequestBody ContextParamUpdate paramUpdate) {
+            @RequestBody @Valid @NotNull LinkedMultiValueMap<@NotBlank String, String> updates) {
 
         BaseContext ctx = (BaseContext) runtimeService.getVariable(executionId, CONTEXT);
         // TODO It works only for String
-        paramUpdate.getUpdates().forEach((name, value) -> setValueWitSetterOn(ctx, name, value));
+        updates.forEach((name, values) -> setValueWitSetterOn(ctx, name, Iterables.getFirst(values, null)));
         runtimeService.setVariable(executionId, CONTEXT, ctx);
         runtimeService.trigger(executionId);
 
