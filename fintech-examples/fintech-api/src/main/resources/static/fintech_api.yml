@@ -34,7 +34,7 @@ paths:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
       requestBody:
-        description: request
+        description: Login request
         content:
           application/json:
             schema:
@@ -53,7 +53,7 @@ paths:
         '404':
           $ref: '#/components/responses/404_NotFound'
            
-  /v1/{sessionState}/bankSearch:
+  /v1/search/{sessionState}/bankSearch:
     get:
       tags:
       - BankSearch
@@ -95,7 +95,7 @@ paths:
         '404':
           $ref: '#/components/responses/404_NotFound'
 
-  /v1/{sessionState}/bankProfile:
+  /v1/search/{sessionState}/bankProfile:
     get:
       tags:
       - BankSearch
@@ -127,7 +127,7 @@ paths:
         '404':
           $ref: '#/components/responses/404_NotFound'
 
-  /v1/{sessionState}/ais/accounts:
+  /v1/ais/{sessionState}/banks/{bank-id}/accounts:
     get:
       tags:
         - Account Information
@@ -146,6 +146,7 @@ paths:
       parameters:
         #path
         - $ref: "#/components/parameters/sessionState"
+        - $ref: "#/components/parameters/bank-id"
         #header
         - $ref: "#/components/parameters/X-Request-ID"
       security:
@@ -162,7 +163,7 @@ paths:
         '404':
           $ref: '#/components/responses/404_NotFound' 
 
-  /v1/{sessionState}/ais/accounts/{account-id}/transactions:
+  /v1/ais/{sessionState}/banks/{bank-id}/accounts/{account-id}/transactions:
     get:
       tags:
         - Account Information
@@ -172,6 +173,7 @@ paths:
       parameters:
         #path
         - $ref: "#/components/parameters/sessionState"
+        - $ref: "#/components/parameters/bank-id"
         - $ref: "#/components/parameters/account-id"
         #query
         - $ref: "#/components/parameters/dateFrom"
@@ -328,6 +330,13 @@ components:
     redirectCode:
       name: redirectCode
       in: query
+      required: true
+      schema:
+        type: string
+
+    bank-id:
+      name: bank-id
+      in: path
       required: true
       schema:
         type: string
@@ -677,11 +686,11 @@ components:
       schema:
         type: string
     searchStartIndex:
-      description: The index for the first result
+      description: The index of the first result
       schema:
         type: integer
     searchMaxResult:
-      description: The max result
+      description: The max number of entries to return with the response.
       schema:
         type: integer
     searchTotalResult:

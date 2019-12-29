@@ -5,7 +5,15 @@
 
 ## Description
 
-### Login-004 Sign In
-The PSU initiate a session with the FinTech providing his username and password as known to the FinTech. Upon successful login, the FinTechApi will return a BankSearchScreenConfig and set a FinTechLoginSessionCookie.
+### Login-001, -002, -003 FinTechUI.loadFinTechApplication & enterLoginData
+FinTechUI displays the LoginUI to the PSU. PSU enters username and password and initiates the login request.
 
-Username and password  are provided in a FintechLoginRequest object. The request is also sent with a cookie used to maintain the login session between the FinTechUI and the FinTechApi (The FinTechLoginSessionCookie). If this cookie is sent, the FintechLoginRequest will contain a fintechSessionState used to check the cookie agains CSRF.
+### Login-004, -005 FinTechApi.login
+The PSU initiate a session with the FinTech providing his username and password as known to the FinTechApi.
+Username and password are provided in a LoginRequest object. Upon successful login, the FinTechApi will return a response 200_UserProfile containing:
+* UserProfile: provided in the body.
+* sessionState: provided in the body. Used read the FinTechLoginSessionCookie. 
+* FinTechLoginSessionCookie: provided in the Set-Cookie header.
+
+### Login-006 FinTechUI.displayBankSearchScreen
+Upon successfull login, the FinTechUi displays the bank search screen to the PSU.
