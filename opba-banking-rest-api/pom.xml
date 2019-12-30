@@ -15,7 +15,8 @@
     <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
     Change this if depth changes. Current: /open-banking-gateway/opba-banking-rest-api -->
 		<main.basedir>${project.parent.basedir}</main.basedir>
-		<openapi-spec-file-location>${project.basedir}/src/main/resources/static/banking_api_ais.yml</openapi-spec-file-location>
+    <openapi-spec-file-location-banking_api_ais>${project.basedir}/src/main/resources/static/banking_api_ais.yml</openapi-spec-file-location-banking_api_ais>
+    <openapi-spec-file-location-tpp_bank_search_api>${project.basedir}/src/main/resources/static/tpp_bank_search_api.yml</openapi-spec-file-location-tpp_bank_search_api>
 	</properties>
 
 	<dependencies>
@@ -66,11 +67,12 @@
 				<version>${swagger-codegen-maven-plugin.version}</version>
 				<executions>
 					<execution>
+					  <id>generate_banking_api_ais</id>
 						<goals>
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<inputSpec>${openapi-spec-file-location}</inputSpec>
+              <inputSpec>${openapi-spec-file-location-banking_api_ais}</inputSpec>
 							<language>spring</language>
 							<output>${project.build.directory}/generated-sources/open-api/</output>
 							<configOptions>
@@ -93,6 +95,35 @@
 							<generateModelTests>false</generateModelTests>
 						</configuration>
 					</execution>
+          <execution>
+            <id>generate_tpp_bank_search_api</id>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <inputSpec>${openapi-spec-file-location-tpp_bank_search_api}</inputSpec>
+              <language>spring</language>
+              <output>${project.build.directory}/generated-sources/open-api/</output>
+              <configOptions>
+                <sourceFolder>src/main</sourceFolder>
+                <basePackage>de.adorsys.opba.bankingapi.search</basePackage>
+                <configPackage>de.adorsys.opba.bankingapi.config</configPackage>
+                <modelPackage>de.adorsys.opba.bankingapi.search.model</modelPackage>
+                <apiPackage>de.adorsys.opba.bankingapi.search.resource</apiPackage>
+                <interfaceOnly>true</interfaceOnly>
+                <skipOverwrite>true</skipOverwrite>
+                <dateLibrary>java8</dateLibrary>
+                <java8>true</java8>
+                <implicitHeaders>false</implicitHeaders>
+                <delegatePattern>true</delegatePattern>
+                <useTags>true</useTags>
+                <library>spring-mvc</library>
+                <swaggerDocketConfig>false</swaggerDocketConfig>
+              </configOptions>
+              <generateApiTests>false</generateApiTests>
+              <generateModelTests>false</generateModelTests>
+            </configuration>
+          </execution>
 				</executions>
 				<dependencies>
 					<dependency>
