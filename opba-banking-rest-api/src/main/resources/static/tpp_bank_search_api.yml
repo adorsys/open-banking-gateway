@@ -1,0 +1,205 @@
+openapi: 3.0.1
+info:
+  version: "1.0.0"
+  title: Open Banking Gateway Tpp Bank Search API
+  description: >-
+    This API provides FinTech possibilities to perform search calls to the PSU.
+externalDocs:
+  url: "https://adorsys.github.com/open-banking-gateway"
+
+
+paths:
+
+  /v1/search/bankSearch:
+    get:
+      tags:
+      - TppBankSearch
+      operationId: bankSearchGET
+      summary: Issues an incremental bank search request to the TppBankSearchApi.
+      description: Issues an incremental bank search request to the TppBankSearchApi.
+      parameters:
+      #header
+      - $ref: "#/components/parameters/X-Request-ID"
+      #query
+      - name: keyword
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/searchInput'
+      - name: start
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/searchStartIndex'
+      - name: max
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/searchMaxResult'
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          $ref: "#/components/responses/200_BankSearchResult"
+        '401':
+          $ref: '#/components/responses/401_UNAUTHORIZED'
+
+  /v1/search/bankProfile:
+    get:
+      tags:
+      - TppBankSearch
+      summary: Request the profile of the bank identified with id (bankId).
+      description: Request the profile of the bank identified with id (bankId).
+      operationId: bankProfileGET
+      parameters:
+      #header
+      - $ref: "#/components/parameters/X-Request-ID"
+      - name: bankId
+        in: query
+        description: Identifier of the bank to be loaded.
+        required: true
+        schema:
+          type: string
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          $ref: "#/components/responses/200_BankProfile"
+        '401':
+          $ref: '#/components/responses/401_UNAUTHORIZED'
+
+components:
+  headers:
+    X-Request-ID:
+      required: true
+      description: |
+        Unique ID that identifies this request through common workflow.
+        Shall be contained in HTTP Response as well.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+
+  parameters:
+    X-Request-ID:
+      name: X-Request-ID
+      in: header
+      required: true
+      description: |
+        Unique ID that identifies this request through common workflow.
+        Shall be contained in HTTP Response as well.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+
+
+  responses:
+    401_UNAUTHORIZED:
+      description: |
+        Unauthorised. Access token absent or invalid.
+      headers:
+        X-Request-ID:
+          $ref: "#/components/headers/X-Request-ID"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/generalError"
+
+    200_BankSearchResult:
+      description: The result of a bank search.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              bankProfile:
+                type: array
+                items:
+                  $ref: '#/components/schemas/bankProfile'
+              keyword:
+                $ref: '#/components/schemas/searchInput'
+              start:
+                $ref: '#/components/schemas/searchStartIndex'
+              max:
+                $ref: '#/components/schemas/searchMaxResult'
+              total:
+                $ref: '#/components/schemas/searchTotalResult'
+
+    200_BankProfile:
+      description: Response containing the service profile of a bank.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              userProfile:
+                type: array
+                items:
+                  $ref: '#/components/schemas/bankProfile'
+
+
+  schemas:
+
+    generalError:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "ERROR_CODE"
+        message:
+          type: string
+          example: "Error description message"
+
+    # Search and bank profile
+    searchInput:
+      description: The bank search input string
+      schema:
+        type: string
+    searchStartIndex:
+      description: The index of the first result
+      schema:
+        type: integer
+    searchMaxResult:
+      description: The max number of entries to return with the response.
+      schema:
+        type: integer
+    searchTotalResult:
+      description: The total count of entities found for the given search input.
+      schema:
+        type: integer
+    bankProfile:
+      title: Bank Profile
+      type: object
+      properties:
+        bankName:
+          type: string
+        bic:
+          type: string
+        services:
+          type: array
+          items:
+            # can be an enum
+            type: string
+
+  securitySchemes:
+    BearerAuthOAuth:
+      description: |
+        Bearer Token.
+      type: http
+      scheme: bearer
+    accessCode:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: 'http://example.com/oauth/auth'
+          tokenUrl: 'http://example.com/oauth/token'
+          scopes:
+            write: allows modifying resources
+            read: allows reading resources
