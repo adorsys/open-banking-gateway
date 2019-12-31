@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   version: "1.0.0"
-  title: Open Banking Gateway Banking API
+  title: Open Banking Gateway Tpp Banking API
   description: >-
     This API provides FinTech possibilities to perform use-cases specific calls to the bank of PSU.
 externalDocs:
