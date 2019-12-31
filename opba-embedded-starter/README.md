@@ -1,10 +1,10 @@
 # TPP Server
 
-Deploys all API presented by the TPP
+Deploys all APIs presented by the TPP
 
 ```
 > mvn clean install
 > mvn spring-boot:run
 
-then http://localhost:8080
+then http://localhost:8085
 ```
