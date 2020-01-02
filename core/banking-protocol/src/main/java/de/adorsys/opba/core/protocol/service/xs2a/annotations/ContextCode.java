@@ -10,5 +10,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface ContextCode {
 
-    String value();
+    /**
+     * Direct path in context class.
+     */
+    String value() default "";
+
+    /**
+     * Prefix how to reach field in context class that will be appended with validation error path.
+     */
+    String prefix() default "";
 }

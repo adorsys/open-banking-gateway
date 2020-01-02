@@ -36,13 +36,23 @@ public class Xs2aAuthenticateUserConsent extends ValidatedExecution<Xs2aContext>
         ContextUtil.getAndUpdateContext(
                 execution,
                 (Xs2aContext ctx) -> {
-                    ctx.setAvailableSca(
-                        authResponse.getBody().getScaMethods().stream()
-                            .map(ScaMethod.FROM_AUTH::map)
-                            .collect(Collectors.toList())
-                    );
+                    setScaAvailableMethodsIfCanBeChosen(authResponse, ctx);
                     ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
                 }
+        );
+    }
+
+    private void setScaAvailableMethodsIfCanBeChosen(
+        Response<UpdatePsuAuthenticationResponse> authResponse, Xs2aContext ctx
+    ) {
+        if (null == authResponse.getBody().getScaMethods()) {
+           return;
+        }
+
+        ctx.setAvailableSca(
+            authResponse.getBody().getScaMethods().stream()
+                .map(ScaMethod.FROM_AUTH::map)
+                .collect(Collectors.toList())
         );
     }
 

@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import {Component, Input} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 
-import { DynamicFormControlBase } from './dynamic-form-control-base';
+import {DynamicFormControlBase} from './dynamic-form-control-base';
 
 @Component({
   selector: 'dynamic-form-control',

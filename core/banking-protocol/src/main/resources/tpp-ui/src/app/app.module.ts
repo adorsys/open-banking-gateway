@@ -12,6 +12,9 @@ import {HttpClientModule} from "@angular/common/http";
 import { ProvidePsuPasswordComponent } from './provide-psu-password/provide-psu-password.component';
 import { SelectScaMethodComponent } from './select-sca-method/select-sca-method.component';
 import { ReportScaResultComponent } from './report-sca-result/report-sca-result.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
 
 @NgModule({
   declarations: [
@@ -27,7 +30,10 @@ import { ReportScaResultComponent } from './report-sca-result/report-sca-result.
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NoopAnimationsModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [
     DynamicFormFactory

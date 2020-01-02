@@ -1,6 +1,7 @@
 package de.adorsys.opba.core.protocol.service.xs2a.context;
 
 import de.adorsys.opba.core.protocol.domain.dto.forms.ScaMethod;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.consent.ConsentsBody;
 import de.adorsys.xs2a.adapter.service.RequestHeaders;
 import de.adorsys.xs2a.adapter.service.model.AuthenticationObject;
 import de.adorsys.xs2a.adapter.service.model.StartScaProcessResponse;
@@ -31,6 +32,7 @@ public class Xs2aContext extends BaseContext {
     private String requestId;
     private String contentType = "application/json";
     private String aspspId;
+    private ConsentsBody consent;
 
     // Mandatory dynamic
     private String psuIpAddress;

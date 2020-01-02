@@ -13,6 +13,7 @@ public class ContextFactory {
         Xs2aContext context = new Xs2aContext();
         context.setRequestId("2f77a125-aa7a-45c0-b414-cea25a116035");
         context.setAspspId("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46");
+
         context.setPsuIpAddress("1.1.1.1");
 
         return context;
@@ -23,11 +24,12 @@ public class ContextFactory {
         TransactionListXs2aContext context = new TransactionListXs2aContext();
         context.setRequestId("2f77a125-aa7a-45c0-b414-cea25a116035");
         context.setAspspId("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46");
+
         context.setPsuIpAddress("1.1.1.1");
-        context.setResourceId("d2ZqA1ObSS0qfd4geGdAFw"); // account ID
         context.setCurrency("EUR");
         context.setWithBalance(true);
-        context.setIban("DE80760700240271232400");
+        //context.setIban("DE80760700240271232400");
+
         return context;
     }
 }

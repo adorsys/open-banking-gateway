@@ -1,5 +1,6 @@
 package de.adorsys.opba.core.protocol.service.xs2a.validation;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import de.adorsys.opba.core.protocol.domain.ValidationIssueException;
 import de.adorsys.opba.core.protocol.domain.dto.ValidationIssue;
@@ -57,7 +58,7 @@ public class Xs2aValidator {
         ValidationInfo info = findInfoOnViolation(violation);
         return ValidationIssue.builder()
                 .uiCode(info.ui().value())
-                .ctxCode(info.ctx().value())
+                .ctxCode(computeCtxCode(violation, info))
                 .message(violation.getMessage())
                 .build();
     }
@@ -76,5 +77,13 @@ public class Xs2aValidator {
         }
 
         return fieldValue.getAnnotationsByType(ValidationInfo.class)[0];
+    }
+
+    private String computeCtxCode(ConstraintViolation<Object> violation, ValidationInfo info) {
+        if (Strings.isNullOrEmpty(info.ctx().prefix())) {
+            return info.ctx().value();
+        }
+
+        return info.ctx().prefix() + "." + violation.getPropertyPath().toString();
     }
 }

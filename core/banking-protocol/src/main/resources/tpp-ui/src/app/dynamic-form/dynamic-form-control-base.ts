@@ -1,5 +1,5 @@
-const KnownControlTypes = ['textbox', 'dropdown'];
-const KnownTypeValidations = ['string', 'ipaddr'];
+const KnownControlTypes = ['textbox', 'dropdown', 'boolean', 'accountaccess', 'date'];
+const KnownTypeValidations = ['string', 'ipaddr', 'class', 'boolean', 'integer'];
 
 // Validations are defined in format:
 // <controlType>.<valueType>

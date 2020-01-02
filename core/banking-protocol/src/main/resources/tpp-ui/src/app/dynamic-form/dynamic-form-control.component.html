@@ -4,11 +4,23 @@
   <div [ngSwitch]="control.controlType">
 
     <input *ngSwitchCase="'textbox'" [formControlName]="control.id" name="{{control.id}}"
-           [id]="control.id" [type]="control.type">
+           [id]="control.id" [type]="control.type" placeholder="{{control.message}}">
 
-    <select [id]="control.id" *ngSwitchCase="'dropdown'" [formControlName]="control.id" name="{{control.id}}">
-      <option *ngFor="let opt of control.options" [value]="opt.key">{{opt.value}}</option>
-    </select>
+    <div *ngSwitchCase="'dropdown'">
+      {{control.message}}
+      <select [id]="control.id" [formControlName]="control.id" name="{{control.id}}">
+        <option *ngFor="let opt of control.options" [value]="opt.key">{{opt.value}}</option>
+      </select>
+    </div>
+
+    <input *ngSwitchCase="'boolean'" [formControlName]="control.id" name="{{control.id}}"
+           [id]="control.id" type="checkbox" placeholder="{{control.message}}">
+
+    <div *ngSwitchCase="'date'">
+      <input matInput [matDatepicker]="picker" name="{{control.id}}" placeholder="Choose a date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </div>
 
   </div>
 
