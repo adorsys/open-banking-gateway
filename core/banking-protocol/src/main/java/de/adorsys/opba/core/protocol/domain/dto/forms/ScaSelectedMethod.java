@@ -8,5 +8,5 @@ import javax.validation.constraints.NotBlank;
 public class ScaSelectedMethod {
 
     @NotBlank
-    private String scaMethod;
+    private String scaMethodId;
 }

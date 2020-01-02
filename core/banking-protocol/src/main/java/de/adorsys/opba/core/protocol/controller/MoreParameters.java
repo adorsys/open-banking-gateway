@@ -96,7 +96,7 @@ public class MoreParameters {
             @Valid ScaSelectedMethod methodSelected) {
 
         Xs2aContext ctx = (Xs2aContext) runtimeService.getVariable(executionId, CONTEXT);
-        ctx.setAspspScaApproach(methodSelected.getScaMethod());
+        ctx.setUserSelectScaId(methodSelected.getScaMethodId());
         runtimeService.setVariable(executionId, CONTEXT, ctx);
         runtimeService.trigger(executionId);
 

@@ -29,7 +29,7 @@ protocol:
     parameters:
       provide-more: 'http://localhost:5500/parameters/provide-more/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}'
       provide-psu-password: 'http://localhost:5500/parameters/provide-psu-password/#{execution.getId()}'
-      select-sca-method: 'http://localhost:5500/parameters/select-sca-method/#{execution.getId()}'
+      select-sca-method: 'http://localhost:5500/parameters/select-sca-method/#{execution.getId()}?q=#{urlSafe(context.getAvailableSca().toString())}'
       report-sca-result: 'http://localhost:5500/parameters/report-sca-result/#{execution.getId()}?q=#{urlSafe(context.getScaSelected().getAuthenticationType() + ":" + context.getScaSelected().getName())}'
 
 pkcs12:

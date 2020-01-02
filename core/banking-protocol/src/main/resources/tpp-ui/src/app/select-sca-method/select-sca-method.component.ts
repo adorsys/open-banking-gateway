@@ -19,7 +19,13 @@ export class SelectScaMethodComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.params.subscribe(
       params => {
-        this.submissionUri = this.submissionUri + params['executionId']
+        this.submissionUri = this.submissionUri + params['executionId'];
+      }
+    );
+
+    this.activatedRoute.queryParams.subscribe(
+      params => {
+        this.methods = JSON.parse(params['q']);
       }
     );
   }

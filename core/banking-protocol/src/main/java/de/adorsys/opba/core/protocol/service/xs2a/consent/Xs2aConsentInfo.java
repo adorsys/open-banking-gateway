@@ -18,8 +18,7 @@ public class Xs2aConsentInfo {
     }
 
     public boolean isMultipleScaAvailable(Xs2aContext ctx) {
-        return null != ctx.getStartScaProcessResponse().getScaMethods() &&
-                !ctx.getStartScaProcessResponse().getScaMethods().isEmpty();
+        return null != ctx.getAvailableSca() && !ctx.getAvailableSca().isEmpty();
     }
 
     public boolean isPasswordPresent(Xs2aContext ctx) {

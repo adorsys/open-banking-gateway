@@ -1,5 +1,6 @@
 package de.adorsys.opba.core.protocol.service.xs2a.consent.authorize.embedded;
 
+import de.adorsys.opba.core.protocol.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.core.protocol.service.ContextUtil;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 @Service("xs2aAuthenticateUserConsent")
 @RequiredArgsConstructor
@@ -32,7 +35,14 @@ public class Xs2aAuthenticateUserConsent extends ValidatedExecution<Xs2aContext>
 
         ContextUtil.getAndUpdateContext(
                 execution,
-                (Xs2aContext ctx) -> ctx.setScaSelected(authResponse.getBody().getChosenScaMethod())
+                (Xs2aContext ctx) -> {
+                    ctx.setAvailableSca(
+                        authResponse.getBody().getScaMethods().stream()
+                            .map(ScaMethod.FROM_AUTH::map)
+                            .collect(Collectors.toList())
+                    );
+                    ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
+                }
         );
     }
 

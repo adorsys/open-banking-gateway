@@ -1,5 +1,6 @@
 package de.adorsys.opba.core.protocol.service.xs2a.context;
 
+import de.adorsys.opba.core.protocol.domain.dto.forms.ScaMethod;
 import de.adorsys.xs2a.adapter.service.RequestHeaders;
 import de.adorsys.xs2a.adapter.service.model.AuthenticationObject;
 import de.adorsys.xs2a.adapter.service.model.StartScaProcessResponse;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -42,6 +44,8 @@ public class Xs2aContext extends BaseContext {
     private String consentId;
     private String authorizationId;
     private String scaStatus;
+    private List<ScaMethod> availableSca;
+    private String userSelectScaId;
     private AuthenticationObject scaSelected;
     private String lastScaChallenge;
 
