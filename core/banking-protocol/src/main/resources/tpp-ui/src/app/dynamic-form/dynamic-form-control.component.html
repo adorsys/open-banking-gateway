@@ -13,8 +13,9 @@
       </select>
     </div>
 
-    <input *ngSwitchCase="'boolean'" [formControlName]="control.id" name="{{control.id}}"
-           [id]="control.id" type="checkbox" placeholder="{{control.message}}">
+    <input #checkbox *ngSwitchCase="'boolean'" [formControlName]="control.id" name="{{control.id}}"
+           [id]="control.id" type="checkbox" placeholder="{{control.message}}"
+           [value]="checkbox.checked">
 
     <div *ngSwitchCase="'date'">
       <input matInput [matDatepicker]="picker" name="{{control.id}}" placeholder="Choose a date">
