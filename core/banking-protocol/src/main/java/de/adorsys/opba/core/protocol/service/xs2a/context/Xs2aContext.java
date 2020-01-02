@@ -32,7 +32,7 @@ public class Xs2aContext extends BaseContext {
     private String requestId;
     private String contentType = "application/json";
     private String aspspId;
-    private ConsentsBody consent;
+    private ConsentsBody consent = new ConsentsBody(); // to avoid initialization in more-parameters
 
     // Mandatory dynamic
     private String psuIpAddress;

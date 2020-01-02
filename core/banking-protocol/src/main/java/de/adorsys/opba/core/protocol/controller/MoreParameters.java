@@ -64,7 +64,7 @@ public class MoreParameters {
 
         BaseContext ctx = (BaseContext) runtimeService.getVariable(executionId, CONTEXT);
         // TODO It works only for String
-        ctx = updateCtxUsingJsonPath(ctx, pathAndValueUpdates);
+        ctx = (BaseContext) updateCtxUsingJsonPath(ctx, pathAndValueUpdates);
         runtimeService.setVariable(executionId, CONTEXT, ctx);
         runtimeService.trigger(executionId);
 
@@ -164,7 +164,7 @@ public class MoreParameters {
     }
 
     @SneakyThrows
-    private BaseContext updateCtxUsingJsonPath(BaseContext original, MultiValueMap<String, String> pathAndValueUpdates) {
+    private Object updateCtxUsingJsonPath(Object original, MultiValueMap<String, String> pathAndValueUpdates) {
         Configuration jsonConfig = Configuration.builder()
             .jsonProvider(new JacksonJsonNodeJsonProvider())
             .options(DEFAULT_PATH_LEAF_TO_NULL, SUPPRESS_EXCEPTIONS)
@@ -172,12 +172,8 @@ public class MoreParameters {
 
         TreeNode tree = mapper.valueToTree(original);
         DocumentContext docCtx = JsonPath.parse(tree, jsonConfig);
-        JsonPath path = JsonPath.compile("");
-        path.
         pathAndValueUpdates.forEach((key, values) -> docCtx.set("$." + key, Iterables.getFirst(values, null)));
 
-        return mapper.treeToValue(tree, BaseContext.class);
+        return mapper.treeToValue(tree, original.getClass());
     }
-
-    //private void
 }
