@@ -14,7 +14,27 @@ import { SelectScaMethodComponent } from './select-sca-method/select-sca-method.
 import { ReportScaResultComponent } from './report-sca-result/report-sca-result.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatNativeDateModule} from "@angular/material/core";
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from "@angular/material/core";
+import { AccountSelectorComponent } from './account-selector/account-selector.component';
+import {MatRadioModule} from "@angular/material/radio";
+import { AccountReferenceComponent } from './account-reference-selector/account-reference.component';
+import {MatInputModule} from "@angular/material/input";
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-adapter';
+
+export const AppDateFormats = {
+  parse: {
+    dateInput: 'YYYY-MM-DD',
+  },
+  display: {
+    dateInput: 'YYYY-MM-DD',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  }
+};
 
 @NgModule({
   declarations: [
@@ -24,7 +44,9 @@ import {MatNativeDateModule} from "@angular/material/core";
     DynamicFormControlComponent,
     ProvidePsuPasswordComponent,
     SelectScaMethodComponent,
-    ReportScaResultComponent
+    ReportScaResultComponent,
+    AccountSelectorComponent,
+    AccountReferenceComponent
   ],
   imports: [
     BrowserModule,
@@ -33,10 +55,17 @@ import {MatNativeDateModule} from "@angular/material/core";
     ReactiveFormsModule,
     NoopAnimationsModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatMomentDateModule,
+    MatRadioModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    MatCheckboxModule
   ],
   providers: [
-    DynamicFormFactory
+    DynamicFormFactory,
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+    {provide: MAT_DATE_FORMATS, useValue: AppDateFormats},
   ],
   bootstrap: [AppComponent]
 })

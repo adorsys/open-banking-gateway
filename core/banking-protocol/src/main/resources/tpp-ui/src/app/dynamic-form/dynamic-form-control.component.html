@@ -1,10 +1,9 @@
 <div [formGroup]="form">
-  <label [attr.for]="control.id">{{control.message}}</label>
-
   <div [ngSwitch]="control.controlType">
 
-    <input *ngSwitchCase="'textbox'" [formControlName]="control.id" name="{{control.id}}"
-           [id]="control.id" [type]="control.type" placeholder="{{control.message}}">
+    <mat-form-field *ngSwitchCase="'textbox'">
+      <input name="{{control.id}}" [formControlName]="control.id" [type]="control.type" matInput placeholder="{{control.message}}">
+    </mat-form-field>
 
     <div *ngSwitchCase="'dropdown'">
       {{control.message}}
@@ -13,14 +12,17 @@
       </select>
     </div>
 
-    <input #checkbox *ngSwitchCase="'boolean'" [formControlName]="control.id" name="{{control.id}}"
-           [id]="control.id" type="checkbox" placeholder="{{control.message}}"
-           [value]="checkbox.checked">
+    <mat-checkbox #checkbox *ngSwitchCase="'boolean'" [formControlName]="control.id" name="{{control.id}}" [value]="checkbox.checked">{{control.message}}</mat-checkbox>
 
-    <div *ngSwitchCase="'date'">
-      <input matInput [matDatepicker]="picker" name="{{control.id}}" placeholder="Choose a date">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
+    <mat-form-field *ngSwitchCase="'date'">
+      <input matInput [matDatepicker]="dp" name="{{control.id}}" placeholder="{{control.message}}" [formControlName]="control.id">
+      <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+      <mat-datepicker #dp></mat-datepicker>
+    </mat-form-field>
+
+    <div *ngSwitchCase="'accountaccess'">
+      <br><br>
+      <app-account-selector></app-account-selector>
     </div>
 
   </div>

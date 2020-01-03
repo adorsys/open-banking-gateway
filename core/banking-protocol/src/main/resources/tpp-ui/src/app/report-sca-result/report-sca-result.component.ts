@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {Consts} from "../consts";
 import {FormGroup} from "@angular/forms";
 import {ActivatedRoute} from "@angular/router";
-import {DynamicFormControlBase} from "../dynamic-form/dynamic-form-control-base";
 
 @Component({
   selector: 'app-report-sca-result',

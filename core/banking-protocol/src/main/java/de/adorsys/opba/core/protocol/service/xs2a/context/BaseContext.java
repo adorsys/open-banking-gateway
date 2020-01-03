@@ -17,4 +17,8 @@ public class BaseContext {
     private String sagaId;
 
     private final Set<ValidationIssue> violations = new HashSet<>();
+
+    public String getRequestId() {
+        return this.sagaId;
+    }
 }

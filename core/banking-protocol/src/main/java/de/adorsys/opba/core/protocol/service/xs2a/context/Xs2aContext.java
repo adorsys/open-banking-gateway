@@ -29,7 +29,6 @@ public class Xs2aContext extends BaseContext {
 
     // Mandatory static
     private String psuId;
-    private String requestId;
     private String contentType = "application/json";
     private String aspspId;
     private ConsentsBody consent = new ConsentsBody(); // to avoid initialization in more-parameters
@@ -54,13 +53,16 @@ public class Xs2aContext extends BaseContext {
     // sensitive - do not persist?
     private String psuPassword;
 
+    // TODO: protect from overriding using reflection
     private String redirectUriOk;
+
+    // TODO: protect from overriding reflection
     private String redirectUriNok;
 
     public RequestHeaders toHeaders() {
         Map<String, String> allValues = new HashMap<>();
         allValues.put(PSU_ID, psuId);
-        allValues.put(X_REQUEST_ID, requestId);
+        allValues.put(X_REQUEST_ID, getSagaId());
         allValues.put(CONTENT_TYPE, contentType);
         allValues.put(X_GTW_ASPSP_ID, aspspId);
         allValues.put(TPP_REDIRECT_URI, redirectUriOk);
