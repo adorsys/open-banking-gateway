@@ -1,0 +1,45 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Login</h4>
+      <div class="form__margin">
+        <div class="form-group">
+          <input
+            [ngClass]="{ 'is-invalid': loginForm.get('username')?.errors && loginForm.get('username')?.dirty }"
+            autocomplete="off"
+            placeholder="Username"
+            class="form-control"
+            formControlName="username"
+            id="username"
+            type="text"
+          />
+          <div
+            *ngIf="loginForm.get('username')?.errors?.required && loginForm.get('username')?.dirty"
+            class="invalid-feedback"
+          >
+            Username is Required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <input
+            [ngClass]="{ 'is-invalid': loginForm.get('password')?.errors && loginForm.get('password')?.dirty }"
+            autocomplete="off"
+            placeholder="Password"
+            class="form-control"
+            formControlName="password"
+            id="password"
+            type="password"
+          />
+          <div
+            *ngIf="loginForm.get('password')?.errors?.required && loginForm.get('password')?.dirty"
+            class="invalid-feedback"
+          >
+            Password is Required
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block mb-3" type="submit">Login</button>
+    </div>
+  </div>
+</form>
