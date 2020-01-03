@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {AccountReferenceComponent} from "../account-reference-selector/account-reference.component";
 
@@ -9,18 +9,13 @@ import {AccountReferenceComponent} from "../account-reference-selector/account-r
 })
 export class AccountSelectorComponent implements OnInit {
 
-  form: FormGroup;
+  @Input() form: FormGroup;
 
   accounts: AccountReferenceComponent[] = [];
   balances: AccountReferenceComponent[] = [];
   transactions: AccountReferenceComponent[] = [];
 
-  constructor(fb: FormBuilder) {
-    this.form = fb.group({
-      hideRequired: false,
-      floatLabel: 'auto',
-    });
-  }
+  constructor() {}
 
   ngOnInit() {
   }

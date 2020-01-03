@@ -1,6 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -23,6 +23,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-adapter';
+import { ThreeStateCheckboxComponent } from './three-state-checkbox/three-state-checkbox.component';
 
 export const AppDateFormats = {
   parse: {
@@ -46,22 +47,24 @@ export const AppDateFormats = {
     SelectScaMethodComponent,
     ReportScaResultComponent,
     AccountSelectorComponent,
-    AccountReferenceComponent
+    AccountReferenceComponent,
+    ThreeStateCheckboxComponent
   ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    NoopAnimationsModule,
-    MatDatepickerModule,
-    MatMomentDateModule,
-    MatRadioModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    MatCheckboxModule
-  ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        NoopAnimationsModule,
+        MatDatepickerModule,
+        MatMomentDateModule,
+        MatRadioModule,
+        MatInputModule,
+        MatIconModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        FormsModule
+    ],
   providers: [
     DynamicFormFactory,
     {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},

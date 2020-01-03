@@ -40,8 +40,7 @@ public class ConsentsBody {
     @NotNull(message = "{no.ctx.frequencyPerDay}")
     private Integer frequencyPerDay;
 
-    @ValidationInfo(ui = @FrontendCode("boolean.boolean"), ctx = @ContextCode("consent.combinedServiceIndicator"))
-    @NotNull(message = "{no.ctx.combinedServiceIndicator}")
+    // Optional
     private Boolean combinedServiceIndicator;
 
     @Getter

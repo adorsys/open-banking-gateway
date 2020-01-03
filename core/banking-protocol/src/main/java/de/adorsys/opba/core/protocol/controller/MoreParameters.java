@@ -1,30 +1,22 @@
 package de.adorsys.opba.core.protocol.controller;
 
-import com.fasterxml.jackson.core.TreeNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Iterables;
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import de.adorsys.opba.core.protocol.domain.dto.forms.PsuPassword;
 import de.adorsys.opba.core.protocol.domain.dto.forms.ScaChallengeResult;
 import de.adorsys.opba.core.protocol.domain.dto.forms.ScaSelectedMethod;
 import de.adorsys.opba.core.protocol.domain.entity.ProtocolAction;
 import de.adorsys.opba.core.protocol.service.eventbus.ProcessEventHandlerRegistrar;
+import de.adorsys.opba.core.protocol.service.json.JsonPathBasedObjectUpdater;
 import de.adorsys.opba.core.protocol.service.xs2a.Xs2aResultExtractor;
 import de.adorsys.opba.core.protocol.service.xs2a.context.BaseContext;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.flowable.engine.RuntimeService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,8 +29,6 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static com.jayway.jsonpath.Option.DEFAULT_PATH_LEAF_TO_NULL;
-import static com.jayway.jsonpath.Option.SUPPRESS_EXCEPTIONS;
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 import static de.adorsys.opba.core.protocol.controller.constants.ApiPaths.MORE_PARAMETERS;
 import static de.adorsys.opba.core.protocol.controller.constants.ApiPaths.MORE_PARAMETERS_PSU_PASSWORD;
@@ -51,10 +41,10 @@ import static de.adorsys.opba.core.protocol.controller.constants.ApiVersion.API_
 @RequiredArgsConstructor
 public class MoreParameters {
 
-    private final ObjectMapper mapper;
     private final RuntimeService runtimeService;
     private final Xs2aResultExtractor extractor;
     private final ProcessEventHandlerRegistrar registrar;
+    private final JsonPathBasedObjectUpdater updater;
 
     @PostMapping(value = MORE_PARAMETERS + "/{executionId}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @Transactional
@@ -64,7 +54,7 @@ public class MoreParameters {
 
         BaseContext ctx = (BaseContext) runtimeService.getVariable(executionId, CONTEXT);
         // TODO It works only for String
-        ctx = (BaseContext) updateCtxUsingJsonPath(ctx, pathAndValueUpdates);
+        ctx = updater.updateObjectUsingJsonPath(ctx, pathAndValueUpdates.toSingleValueMap());
         runtimeService.setVariable(executionId, CONTEXT, ctx);
         runtimeService.trigger(executionId);
 
@@ -161,19 +151,5 @@ public class MoreParameters {
                 result
         );
         return result;
-    }
-
-    @SneakyThrows
-    private Object updateCtxUsingJsonPath(Object original, MultiValueMap<String, String> pathAndValueUpdates) {
-        Configuration jsonConfig = Configuration.builder()
-            .jsonProvider(new JacksonJsonNodeJsonProvider())
-            .options(DEFAULT_PATH_LEAF_TO_NULL, SUPPRESS_EXCEPTIONS)
-            .build();
-
-        TreeNode tree = mapper.valueToTree(original);
-        DocumentContext docCtx = JsonPath.parse(tree, jsonConfig);
-        pathAndValueUpdates.forEach((key, values) -> docCtx.set("$." + key, Iterables.getFirst(values, null)));
-
-        return mapper.treeToValue(tree, original.getClass());
     }
 }

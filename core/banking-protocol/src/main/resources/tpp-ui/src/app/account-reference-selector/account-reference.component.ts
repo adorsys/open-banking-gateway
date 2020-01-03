@@ -12,6 +12,7 @@ export class AccountReferenceComponent implements OnInit {
   currency: FormControl = new FormControl();
 
   @Input() elemId: number;
+  @Input() prefix: string = "";
 
   constructor() { }
 
