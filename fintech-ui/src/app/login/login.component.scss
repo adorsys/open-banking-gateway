@@ -1,0 +1,22 @@
+.card {
+  max-width: 400px;
+  margin: 120px auto 0;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+  color: #2c2e2f;
+
+  &-title {
+    text-align: center;
+    margin: 0 auto 25px;
+  }
+}
+
+.form {
+  &__margin {
+    margin-bottom: 48px;
+  }
+}
+
+.form-control,
+.btn {
+  height: 44px;
+}
