@@ -24,6 +24,7 @@ public class ConsentsBody {
     public static final ToXs2aApi TO_XS2A = Mappers.getMapper(ToXs2aApi.class);
     public static final FromCtx FROM_CTX = Mappers.getMapper(FromCtx.class);
 
+    @Valid
     @ValidationInfo(ui = @FrontendCode("accountaccess.class"), ctx = @ContextCode("consent.access"))
     @NotNull(message = "{no.ctx.accountaccess}")
     private AccountAccessBody access;
@@ -65,7 +66,7 @@ public class ConsentsBody {
     @Setter
     public static class AccountReferenceBody {
 
-        @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode(prefix = "consent.access"))
+        @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode(prefix = "consent"))
         @NotBlank(message = "{no.ctx.iban}")
         private String iban;
 
@@ -75,8 +76,8 @@ public class ConsentsBody {
         private String msisdn;
 
         // TODO check if it is necessary
-        @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode(prefix = "consent.access"))
-        @NotBlank(message = "{no.ctx.iban}")
+        @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode(prefix = "consent"))
+        @NotBlank(message = "{no.ctx.currency}")
         private String currency;
 
         @Mapper

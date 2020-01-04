@@ -43,12 +43,13 @@ public class JsonPathBasedObjectUpdater {
         DocumentContext docCtx = JsonPath.parse(tree, jsonConfig);
         Map<String, Integer> foundArraySizes = new HashMap<>();
 
-        jsonPathToItsValue.forEach((path, value) -> analyzeArraySizes(path, docCtx, value, foundArraySizes));
+        // TODO: limit array sizes to reasonable maximum to prevent memory exhaustion
+        jsonPathToItsValue.forEach((path, value) -> analyzeArraySizes(path, docCtx, foundArraySizes));
         jsonPathToItsValue.forEach((path, value) -> safeSet(path, docCtx, value, foundArraySizes));
         return (T) mapper.treeToValue(tree, object.getClass());
     }
 
-    private void analyzeArraySizes(String path, DocumentContext ctx, Object value, Map<String, Integer> foundArraySize) {
+    private void analyzeArraySizes(String path, DocumentContext ctx, Map<String, Integer> foundArraySize) {
         visitPathParents(
                 path,
                 ctx,

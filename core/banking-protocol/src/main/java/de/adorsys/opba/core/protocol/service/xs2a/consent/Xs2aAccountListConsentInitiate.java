@@ -40,7 +40,7 @@ public class Xs2aAccountListConsentInitiate extends ValidatedExecution<Xs2aConte
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
         Xs2aConsentInitiate consent = consentInitiate(context);
-        validator.validate(execution, consent);
+        validator.validate(execution, consent.getHeaders(), consent.getBody()); // flatten path
     }
 
     @Override
