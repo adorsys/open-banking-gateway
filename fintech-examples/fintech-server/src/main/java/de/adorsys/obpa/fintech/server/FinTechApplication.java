@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import de.adorsys.opba.fintechapi.config.EnableFinTechApi;
 
-@SpringBootApplication(scanBasePackages = {})
+@SpringBootApplication
 @EnableFinTechApi
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Springboot starter class is not an utility class
 public class FinTechApplication {

@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import de.adorsys.opba.bankingapi.config.EnableBankingApi;
 import de.adorsys.opba.consentapi.config.EnableConsentApi;
 
-@SpringBootApplication(scanBasePackages = {})
+@SpringBootApplication
 @EnableBankingApi
 @EnableConsentApi
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Springboot starter class is not an utility class
