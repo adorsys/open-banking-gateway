@@ -1,0 +1,45 @@
+@startuml
+
+actor PSU
+
+component "Job Context\n\n(CONTEXT)" as ctx {
+  component "Request id" as ctxReqId
+  component "ASPSP id" as ctxAspspId
+  component "PSU id" as ctxPsuId
+  component "Account access" as ctxAccess
+
+  ctxReqId -[hidden]down-> ctxAspspId
+  ctxAspspId -[hidden]down-> ctxPsuId
+  ctxPsuId -[hidden]down-> ctxAccess
+}
+
+component "Remote endpoint DTO\nheaders" as headers {
+   component "PSU id" as psuId
+}
+
+component "Remote endpoint DTO\nbody" as body {
+   component "Account access" as access
+}
+
+node UI [
+UI to input missing
+--
+<PSU id>
+<Account access>
+__<transactions>
+__<accounts>
+]
+
+ctxPsuId --> psuId : 1. Map context
+ctxAccess -> access : 1. Map context
+psuId -> UI : 2. Validate dto:\nmissing values
+access -> UI : 2. Validate dto:\nmissing values
+PSU -> UI : 3. Input missing values
+psuId <-- UI : 4. Updated
+access <-- UI : 4. Updated
+ctxPsuId <- psuId : 5. Update context\nby mapping back
+ctxAccess <- access : 5. Update context\nby mapping back
+
+psuId -[hidden]down-> access
+
+@enduml
