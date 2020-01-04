@@ -2,7 +2,6 @@ package de.adorsys.opba.core.protocol.config.flowable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
-import org.flowable.app.spring.SpringAppEngineConfiguration;
 import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.flowable.spring.boot.EngineConfigurationConfigurer;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,13 +19,14 @@ public class FlowableConfig {
      * JSON as variables in database.
      */
     @Bean
-    EngineConfigurationConfigurer<SpringAppEngineConfiguration> storeCustomClassesAsJson(
+    EngineConfigurationConfigurer<SpringProcessEngineConfiguration> customizeListenerAndJsonSerializer(
         @Value("${opba.flowable.serializeOnly:de.adorsys}") String serializableClassesPrefix,
+        ObjectMapper mapper,
         @Value("${opba.flowable.maxVarLen:2048}") int maxLength,
-        ObjectMapper mapper
+        FlowableJobEventListener eventListener
     ) {
-        return engineConfiguration ->
-            engineConfiguration.setCustomPreVariableTypes(
+        return processConfiguration -> {
+            processConfiguration.setCustomPreVariableTypes(
                 new ArrayList<>(
                     ImmutableList.of(
                         new JsonCustomSerializer(mapper, serializableClassesPrefix, maxLength),
@@ -34,13 +34,6 @@ public class FlowableConfig {
                     )
                 )
             );
-    }
-
-    @Bean
-    EngineConfigurationConfigurer<SpringProcessEngineConfiguration> flowableEventListeners(
-            FlowableJobEventListener eventListener
-    ) {
-        return processConfiguration -> {
             processConfiguration.setEnableEventDispatcher(true);
             processConfiguration.setEventListeners(ImmutableList.of(eventListener));
         };
