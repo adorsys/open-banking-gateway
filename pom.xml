@@ -360,7 +360,7 @@
                     <append>true</append>
                     <propertyName>surefireArgLine</propertyName>
                     <excludes>
-                        <exclude>**/generated-sources/***</exclude>
+                        <exclude>**/generated-sources/**</exclude>
                     </excludes>
                 </configuration>
             </plugin>
