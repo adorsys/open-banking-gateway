@@ -16,6 +16,7 @@
     Change this if depth changes. Current: /open-banking-gateway/open-banking-gateway -->
     <main.basedir>${project.parent.basedir}</main.basedir>
     <openapi-spec-file-location>${project.basedir}/src/main/resources/static/consent_api.yml</openapi-spec-file-location>
+    <sonar.sources>src/main/java</sonar.sources>
   </properties>
 
 
