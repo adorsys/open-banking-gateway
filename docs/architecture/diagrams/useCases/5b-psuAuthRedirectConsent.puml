@@ -1,4 +1,4 @@
-@startuml PsuAuthorizeRedirectConsent
+@startuml
 title PsuAuthorizeRedirectConsent
 autonumber 10 10 "<b><color blue>[AuthRedirect-000]</color></b>"
 actor psu

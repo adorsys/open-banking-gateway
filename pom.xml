@@ -111,6 +111,9 @@
         <slf4j-simple.version>1.7.29</slf4j-simple.version>
         <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
         <!-- other properties -->
+        <lombok-maven-plugin.version>1.18.6.0</lombok-maven-plugin.version>
+        <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
+        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
         <surefireArgLine/>
 
     </properties>
@@ -508,7 +511,45 @@
                 </plugins>
             </build>
         </profile>
+        <!--
+        This profile exist to show Lombok-generated code in javadoc without touching dev and release classes.
+        You can generate JavaDoc with comments from lombok using:
+        mvn clean javadoc:aggregate -P javadoc
+        -->
+        <profile>
+            <id>javadoc</id>
+            <properties>
+                <src.dir>target/generated-sources/delombok</src.dir>
+                <test.srt.dir>target/generated-test-sources/delombok</test.srt.dir>
+            </properties>
 
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.projectlombok</groupId>
+                        <artifactId>lombok-maven-plugin</artifactId>
+                        <version>${lombok-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>delombok</goal>
+                                </goals>
+                                <configuration>
+                                    <addOutputDirectory>false</addOutputDirectory>
+                                    <sourceDirectory>src/main/java</sourceDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven-javadoc-plugin.version}</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <distributionManagement>

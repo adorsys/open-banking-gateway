@@ -24,7 +24,7 @@ Use cases for this API:
 
 Step 4. through 8. is repeated as long as PSU modifies keywords (by adding or removing characters)
 
-![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/diagrams/useCases/2-searchBank.puml&fmt=svg&vvv=1&sanitize=true)
+![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/2-searchBank.puml&fmt=svg&vvv=1&sanitize=true)
 
 ## Local Incremental Search
 Local incremental search generally provides a way of reducing round trip to servers. So there is no local incremental search endpoint, but an endpoint to download the list of all BankDescriptors.
@@ -51,7 +51,7 @@ Use cases for this API:
 
 Step 8. through 11. is repeated as long as PSU modifies keywords (by adding or removing characters)
 
-![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/diagrams/useCases/2a-searchBankLocal.puml&fmt=svg&vvv=1&sanitize=true)
+![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/2a-searchBankLocal.puml&fmt=svg&vvv=1&sanitize=true)
 
 Like this diagram shows, local bank search does not send request to the network.
 
