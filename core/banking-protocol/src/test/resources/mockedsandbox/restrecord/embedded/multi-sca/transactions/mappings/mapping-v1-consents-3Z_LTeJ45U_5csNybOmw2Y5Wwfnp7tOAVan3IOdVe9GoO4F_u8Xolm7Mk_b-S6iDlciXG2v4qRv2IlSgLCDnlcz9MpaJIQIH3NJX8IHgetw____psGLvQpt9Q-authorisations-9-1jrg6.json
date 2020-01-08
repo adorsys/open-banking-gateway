@@ -1,0 +1,23 @@
+{
+  "id" : "ef6fc333-bfec-3e6b-b5c4-1fd0b5989ea5",
+  "request" : {
+    "url" : "/v1/consents/3Z_LTeJ45U_5csNybOmw2Y5Wwfnp7tOAVan3IOdVe9GoO4F_u8Xolm7Mk_b-S6iDlciXG2v4qRv2IlSgLCDnlcz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/96e6b065-1dd4-45ae-a931-ec30b141c4d6",
+    "method" : "PUT",
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"psuData\":{\"password\":\"12345\"}}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-v1-consents-3Z_LTeJ45U_5csNybOmw2Y5Wwfnp7tOAVan3IOdVe9GoO4F_u8Xolm7Mk_b-S6iDlciXG2v4qRv2IlSgLCDnlcz9MpaJIQIH3NJX8IHgetw____psGLvQpt9Q-authorisations-9-1jrg6.json",
+    "headers" : {
+      "Aspsp-Sca-Approach" : "EMBEDDED",
+      "X-Request-Id" : "34c23ab6-322e-11ea-aed7-629df478e26a",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Date" : "Wed, 08 Jan 2020 15:48:02 GMT"
+    }
+  },
+  "uuid" : "ef6fc333-bfec-3e6b-b5c4-1fd0b5989ea5"
+}

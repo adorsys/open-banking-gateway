@@ -1,0 +1,24 @@
+{
+  "id" : "3f2b5a20-85f8-38e1-a8da-c494349fdc83",
+  "request" : {
+    "url" : "/v1/consents",
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"access\":{\"transactions\":[{\"iban\":\"DE38760700240320465700\",\"currency\":\"EUR\"}]},\"recurringIndicator\":false,\"validUntil\":\"2020-01-31\",\"frequencyPerDay\":12}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-v1-consents-pOnhB.json",
+    "headers" : {
+      "Location" : "http://127.0.0.1:20014/v1/consents/qngvJ2Qm8y-xlNuucIzGTP-fhMMXO0xXomSdMZuDThmNw9E94V6T7wkLNOXhR45ekb3BjOno8vVOBgDOyASkuMz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q",
+      "Aspsp-Sca-Approach" : "EMBEDDED",
+      "X-Request-Id" : "7c84e4fa-322e-11ea-aed7-629df478e26a",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Date" : "Wed, 08 Jan 2020 15:50:03 GMT"
+    }
+  },
+  "uuid" : "3f2b5a20-85f8-38e1-a8da-c494349fdc83"
+}

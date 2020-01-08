@@ -1,0 +1,23 @@
+{
+  "id" : "34d0e08d-f804-367c-86a9-06239c16cf0d",
+  "request" : {
+    "url" : "/v1/consents/3Z_LTeJ45U_5csNybOmw2Y5Wwfnp7tOAVan3IOdVe9GoO4F_u8Xolm7Mk_b-S6iDlciXG2v4qRv2IlSgLCDnlcz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations",
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "equalToJson" : "{}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-v1-consents-3Z_LTeJ45U_5csNybOmw2Y5Wwfnp7tOAVan3IOdVe9GoO4F_u8Xolm7Mk_b-S6iDlciXG2v4qRv2IlSgLCDnlcz9MpaJIQIH3NJX8IHgetw____psGLvQpt9Q-authorisations-BW8R7.json",
+    "headers" : {
+      "Aspsp-Sca-Approach" : "EMBEDDED",
+      "X-Request-Id" : "34c23ab6-322e-11ea-aed7-629df478e26a",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Date" : "Wed, 08 Jan 2020 15:47:56 GMT"
+    }
+  },
+  "uuid" : "34d0e08d-f804-367c-86a9-06239c16cf0d"
+}

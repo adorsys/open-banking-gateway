@@ -1,0 +1,24 @@
+{
+  "id" : "184cde87-9b8b-373d-8399-ef89acbdf3d9",
+  "request" : {
+    "url" : "/v1/parameters/report-sca-result/890f5873-322e-11ea-aed7-629df478e26a",
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "equalTo" : "scaChallengeResult=123456"
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-v1-parameters-report-sca-result-890f5873-322e-11ea-aed7-629df478e26a-44nEI.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Access-Control-Allow-Origin" : "*",
+      "Content-Type" : "application/json",
+      "Transfer-Encoding" : "chunked",
+      "Date" : "Wed, 08 Jan 2020 15:50:15 GMT",
+      "Keep-Alive" : "timeout=60",
+      "Connection" : "keep-alive"
+    }
+  },
+  "uuid" : "184cde87-9b8b-373d-8399-ef89acbdf3d9"
+}

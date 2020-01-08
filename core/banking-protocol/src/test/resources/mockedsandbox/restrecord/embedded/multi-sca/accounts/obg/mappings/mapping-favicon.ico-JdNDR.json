@@ -1,0 +1,20 @@
+{
+  "id" : "cfc453cf-06f9-31cb-90ba-782cf9738689",
+  "request" : {
+    "url" : "/favicon.ico",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 404,
+    "bodyFileName" : "body-favicon.ico-JdNDR.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Content-Type" : "application/json",
+      "Transfer-Encoding" : "chunked",
+      "Date" : "Wed, 08 Jan 2020 15:48:11 GMT",
+      "Keep-Alive" : "timeout=60",
+      "Connection" : "keep-alive"
+    }
+  },
+  "uuid" : "cfc453cf-06f9-31cb-90ba-782cf9738689"
+}
