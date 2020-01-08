@@ -4,18 +4,18 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>de.adorsys.opba</groupId>
-    <artifactId>open-banking-gateway</artifactId>
+    <artifactId>fintech-examples</artifactId>
     <version>0.0.4-SNAPSHOT</version>
   </parent>
 
-  <artifactId>opba-consent-rest-api</artifactId>
-  <name>opba-consent-rest-api</name>
+  <artifactId>fintech-api</artifactId>
+  <name>fintech-api</name>
 
   <properties>
     <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
-    Change this if depth changes. Current: /open-banking-gateway/open-banking-gateway -->
-    <main.basedir>${project.parent.basedir}</main.basedir>
-    <openapi-spec-file-location>${project.basedir}/src/main/resources/static/consent_api.yml</openapi-spec-file-location>
+    Change this if depth changes. Current: /open-banking-gateway/fintech-examples/fintech-api -->
+    <main.basedir>${project.parent.parent.basedir}</main.basedir>
+    <openapi-spec-file-location>${project.basedir}/src/main/resources/static/fintech_api.yml</openapi-spec-file-location>
   </properties>
 
 
@@ -74,15 +74,13 @@
             <configuration>
               <inputSpec>${openapi-spec-file-location}</inputSpec>
               <language>spring</language>
-              <output>${project.build.directory}/generated-sources/open-api</output>
-              <generateApiTests>false</generateApiTests>
-              <generateModelTests>false</generateModelTests>
+              <output>${project.build.directory}/generated-sources/open-api/</output>
               <configOptions>
                 <sourceFolder>src/main/java</sourceFolder>
-                <basePackage>de.adorsys.opba.consentapi</basePackage>
-                <configPackage>de.adorsys.opba.consentapi.config</configPackage>
-                <modelPackage>de.adorsys.opba.consentapi.model</modelPackage>
-                <apiPackage>de.adorsys.opba.consentapi.resource</apiPackage>
+                <basePackage>de.adorsys.opba.fintechapi</basePackage>
+                <configPackage>de.adorsys.opba.fintechapi.config</configPackage>
+                <modelPackage>de.adorsys.opba.fintechapi.model</modelPackage>
+                <apiPackage>de.adorsys.opba.fintechapi.resource</apiPackage>
                 <interfaceOnly>true</interfaceOnly>
                 <skipOverwrite>true</skipOverwrite>
                 <dateLibrary>java8</dateLibrary>

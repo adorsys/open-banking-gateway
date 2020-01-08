@@ -5,48 +5,87 @@ General terms defined in the [dictionary](dictionary.md)
 Request the list of transactions for a given bank account. Initiates a consent request if necessary. Generally the consent request is not explicitly initiated by the PSU. When the PSU requests for a banking service, if the FinTech has an existing consent that covers the service, no new consent will be initiated.
 
 ## Diagram
-![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/4-initiateAisConsent.puml&fmt=svg&vvv=1&sanitize=true)  
+![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/diagrams/useCases/4-initiateAisConsent.puml&fmt=svg&vvv=1&sanitize=true)  
 
 ## Use Cases
-### InitConsent-010 : FinTechUI displays BankProfile to PSU
+### InitConsent-010 FinTechUI.displayBankServices
 The result of a bank selection is that the FinTechUI displays the [BankProfile](dictionary.md#BankProfile) to the PSU. The bank profile also contains the list of services offered by the selected bank.
 
-### InitConsent-020 : PSU selects a service (Like listTransactions)
-The FinTechUI will forward the service selected to the FinTechApi. In this case listTransactions(BankProfile). The selection might be accompanied with some service specifications. For example in the case of listTransactions, this can be the iban of the target account. We will call this ListTransactionsSpec.
+### InitConsent-020 : FinTechUI.selectService(listTransactions)
+The FinTechUI will forward the service selected to the FinTechApi. In this case listTransactions. The selection might be accompanied with some service specifications. For example in the case of listTransactions, this can be the iban of the target account. We will call this ListTransactionsSpec.
 
-### InitConsent-030 : FinTechUI to FinTechApi.listTransactions
-- The attached [FinTechLoginSessionCookie](dictionary.md#FinTechLoginSessionCookie) is used to maintain session between PSU and FinTech.
-- The attached [UserAgentContext](dictionary.md#UserAgentContext) describes details associated with the user agent of the PSU.
-- The given [BankProfile](dictionary.md#BankProfile) contains meta information associated with the selected Bank.
-- The ListTransactionsSpec specifies details of the service requested by the PSU.
+### InitConsent-030 : FinTechApi.listTransactions
+The FinTechUI issued a listTransactions request to the FinTechAPI with following information attached:
+#### [FinTechLoginSessionCookie](dictionary.md#FinTechLoginSessionCookie):
+Used to maintain session between PSU and FinTech.
+#### [sessionState](dictionary.md#FinTechLoginSessionState)
+Used to read FinTechLoginSessionCookie. Passed as a path param.
+#### [UserAgentContext](dictionary.md#UserAgentContext)
+Describes details associated with the user agent of the PSU. Generally not visible in the API as they are automatically provided by the user agent. The purpose is to transfer context specific information on the PsuUserAgent and the request that might later be required by the ASPSP like:
+* IP-Address,
+* IP-Port,
+* Accept,
+* Accept-Charset,
+* Accept-Encoding,
+* Accept-Language,
+* Device-ID,
+* User-Agent,
+* PSU-Geo-Location,
+* Http-Method.
 
-#### InitConsent-031 : Load PsuConsentSession
-A [PsuConsentSession](dictionary.md#PsuConsentSession) is a reusable token, that can be used to request service with the TppBankingApi. It is reference to the PSU in the realm of the TPP.
-Whether a service request is covered by an existing PsuConsent is decided by the TppBankingApi. The Task of the FinTechApi is to load any existing PsuConsentSession and associate it with the PSU.
+#### The bank-id
+Passed as a query parameter and referencing the given [BankProfile](dictionary.md#BankProfile) contains meta information associated with the selected Bank.
+#### The account-id
+Sent as a query parameter and referencing the target bank account.
+#### The ListTransactionsSpec
+Specifies details of the service requested by the PSU. These are all query parameter associated with the request like:
+  * dateFrom: Starting date (inclusive the date dateFrom) of the transaction list, mandated if no delta access is required.
+  * dateTo: End date (inclusive the data dateTo) of the transaction list, default is "now" if not given.
+  * deltaList: This data attribute is indicating that the AISP is in favor to get all transactions after the last report access for this PSU on the addressed account.
+  * entryReferenceFrom: This data attribute is indicating that the AISP is in favor to get all transactions after the transaction with identification entryReferenceFrom alternatively to the above defined period.
+  * bookingStatus: interested booking status.
 
-### InitConsent-040 : FinTechApi to TppBankingApi.listTransactions
-- The associated [FinTechContext](dictionary.md#FinTechContext) contains identification information associated with the FinTech.
-- PsuConsentSession
-- UserAgentContext
-- BankProfile
-- ListTransactionsSpec
+#### InitConsent-031 : FinTechApi.loadPsuConsentSession
+A [PsuConsentSession](dictionary.md#PsuConsentSession) is a reusable token, that can be used to request service with the TppBankingApi. It is a reference to the PSU in the world of the TPP.
+Whether a service request is covered by an existing PsuConsent is decided by the TppBankingApi. The Task of the FinTechApi is to load any existing PsuConsentSession and associate it with the PSU request to the TPP.
 
-#### InitConsent-041 : Loads the BankingProtocol from the given BankProfile
+### InitConsent-040 : TppBankingApi.listTransactions
+Forward of the PSU request to TPP with following associated context informations:
+
+#### [FinTechContext](dictionary.md#FinTechContext)
+contains identification information associated with the FinTech.
+#### PsuConsentSession
+See InitConsent-031
+#### UserAgentContext
+Same as in InitConsent-030
+#### The account-id
+Same as in InitConsent-030
+#### The bank-id
+Same as in InitConsent-030
+#### ListTransactionsSpec
+Same as in InitConsent-030
+
+#### InitConsent-041 TppBankingApi.loadBankingProtocol
 TppBankingApi selects the [BankingProtocol](dictionary.md#BankingProtocol) based on the given BankProfile.
 
-### InitConsent-050 : TppBankingApi to BankingProtocol.listTransactions
-The [BankingProtocol](dictionary.md#BankingProtocol) associated with the given BankProfile decides on how to proceed with the request. 
-BankingProtocol can:
+### InitConsent-050 : BankingProtocol.listTransactions
+The [BankingProtocol](dictionary.md#BankingProtocol) associated with the given BankProfile decides on how to proceed with the request after loading and analyzing an eventually stored TppConsentSession.
 
-#### InitConsent-051 : Load TppConsentSession
+#### InitConsent-051 : BankingProtocol.loadTppConsentSession
 - If there is existing consent associated with the PSU for the given service, the BankingProtocol will load the corresponding [TppConsentSession](dictionary.md#TppConsentSession). Information needed to load the TppConsentSession is contained in the given [PsuConsentSession](dictionary.md#PsuConsentSession).
 - Use the loaded [TppConsentSession](dictionary.md#TppConsentSession) to retrieve an existing consent and proceed to the ASPSP with the service request.
 
 ### No Suitable Consent Present
 #### InitConsent-060 : Initiating a Consent with the ASPSP
-If there is no suitable consent available, the BankingProtocol will first proceed with a consent initiation request.. This is, an initiated service request will either ends up in the expected service response or first redirect the PSU to the [ConsentAuthorisationApi](dictionary.md#ConsentAuthorisationApi).
+If there is no suitable consent available, the BankingProtocol will first proceed with a consent initiation request. This is, an initiated service request will either ends up in the expected service response or first redirect the PSU to the [ConsentAuthorisationApi](dictionary.md#ConsentAuthorisationApi).
 Whether this operation is necessary or not depends on the [AspspBankingApi](dictionary.md#AspspBankingApi) interface. The selected banking protocol will know how to deal with this.
+
+##### UserAgentContext
+See [UserAgentContext](dictionary.md#UserAgentContext)
+##### TppContext
 The Associated [TppContext](dictionary.md#TppContext) contains Tpp identifying information.
+##### AisConsent
+The AisConsent object contains information associated with the service request.
 
 #### InitConsent-061 : ConsentInit Response
 The response of the consent init request depends on the ASPSP implementation. It generally provides information needed to collect PSU identification information in the embedded case or information needed to redirect the PSU to the [OnlineBankingApi](dictionary.md#OnlineBankingApi).

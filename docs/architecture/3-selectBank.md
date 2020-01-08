@@ -11,9 +11,13 @@ The bank selection allows to download the [BankProfile](dictionary.md#BankProfil
 
 ## Use Case Steps
 Use cases for this API:
-1. PSU selects a bank from the list of banks displayed by the FinTechUI
-2. FinTechUI sends a load loadBankProfile request to FinTechAPI passing the bankId
-3. FinTechAPI sends a load loadBankProfile request to TppBeanSearchApi passing the bankId
-4. TppBankSearchApi returns the BankProfine object matching the given bankId.
-
+### SelBnk-001 FinTechUI.selectBank
+PSU selects a bank from the list of banks displayed by the FinTechUI
+### SelBnk-002 FinTechApi.loadBankProfile
+FinTechUI sends a load loadBankProfile request to FinTechAPI passing the bankId
+### SelBnk-003 TppBeanSearchApi.loadBankProfile
+FinTechAPI sends a load loadBankProfile request to TppBeanSearchApi passing the bankId
+### SelBnk-004 & 005 Return 200_BankProfile
+TppBankSearchApi returns the BankProfine object matching the given bankId.
+### SelBnk-005 FinTechUI.displayBankProfile
 The displayed bank profile also displays banking api services offered by the selected bank.
