@@ -11,7 +11,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -28,10 +27,10 @@ public class Bank {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
+    @OneToOne(mappedBy = "bank", cascade = CascadeType.ALL)
+    private BankProfile bankProfile;
+
     String name;
     String bic;
     String bankCode;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bank_profile_id", referencedColumnName = "id")
-    private BankProfile bankProfile;
 }

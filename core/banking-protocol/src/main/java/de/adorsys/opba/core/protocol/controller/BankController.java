@@ -1,6 +1,7 @@
 package de.adorsys.opba.core.protocol.controller;
 
 import de.adorsys.opba.core.protocol.domain.entity.Bank;
+import de.adorsys.opba.core.protocol.domain.entity.BankProfile;
 import de.adorsys.opba.core.protocol.service.BankService;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,7 +54,7 @@ public class BankController {
 
     @GetMapping("/profile")
     @Operation(summary = "Getting bank profile by bank id")
-    public Bank getBankProfile(
+    public BankProfile getBankProfile(
             @Parameter(name = "id", description = "Selected bank id", example = "142")
             @RequestParam Long id) {
         return bankService.getBankProfile(id);
