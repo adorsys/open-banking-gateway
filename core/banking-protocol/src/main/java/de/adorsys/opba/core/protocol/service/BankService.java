@@ -21,7 +21,7 @@ public class BankService {
     }
 
     public BankProfile getBankProfile(Long bankId) {
-        return bankProfileRepository.getOne(bankId);
+        return bankProfileRepository.getProfileByBankId(bankId);
     }
 
     public List<Bank> getBanksFTS(String query, int maxResults) {
