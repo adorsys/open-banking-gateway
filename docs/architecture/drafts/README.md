@@ -28,15 +28,15 @@ contains bank profile, in future it can be switched to rule engine or entire BPM
 This basically means that if request is missing consent, but has flag to allow automatic consent creation TPP will 
 call [obtaining consent](#obtaining-ais-consent-swimlane) flow.
 
-![Implementation draft diagram - generic request](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-generic.puml&fmt=svg&vvv=2&sanitize=true)
+![Implementation draft diagram - generic request](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-generic.puml&fmt=svg&vvv=2&sanitize=true)
 
 ## Obtaining AIS Consent swimlane
 
-![Implementation draft diagram - consent](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-consent.puml&fmt=svg&vvv=1&sanitize=true)
+![Implementation draft diagram - consent](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-consent.puml&fmt=svg&vvv=1&sanitize=true)
 
 ## Getting transaction list using AIS Consent swimlane
 
-![Implementation draft diagram - Tx list](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-tx-list.puml&fmt=svg&vvv=1&sanitize=true)
+![Implementation draft diagram - Tx list](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-tx-list.puml&fmt=svg&vvv=1&sanitize=true)
 
 ## Full swimlane e2e for getting transaction list
 
@@ -49,7 +49,7 @@ call [obtaining consent](#obtaining-ais-consent-swimlane) flow.
 1. After consent was established FinTech can store it and get 'Transaction list' without PSU intervention
 1. If consent has expired FinTech should inform user and perform step 1 again 
 
-![Implementation draft diagram - Tx list full](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-full-flow-tx-list.puml&fmt=svg&vvv=1&sanitize=true)
+![Implementation draft diagram - Tx list full](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-full-flow-tx-list.puml&fmt=svg&vvv=1&sanitize=true)
 
 </details>
 
@@ -57,7 +57,7 @@ call [obtaining consent](#obtaining-ais-consent-swimlane) flow.
 
 <details><summary>Perform payment by FinTech</summary>
 
-![Implementation draft diagram - Perform payment](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-full-flow-payment.puml&fmt=svg&vvv=2&sanitize=true)
+![Implementation draft diagram - Perform payment](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-full-flow-payment.puml&fmt=svg&vvv=2&sanitize=true)
 
 </details>
 
@@ -80,11 +80,11 @@ Payment API:
 
 ## In short
 
-![Implementation draft diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-v0-bird-view.puml&fmt=svg&vvv=1&sanitize=true)
+![Implementation draft diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-bird-view.puml&fmt=svg&vvv=1&sanitize=true)
 
 ## With details
 
-![Detailed Implementation draft diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/implementation-draft-v0.puml&fmt=svg&vvv=17&sanitize=true)
+![Detailed Implementation draft diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-draft-v0.puml&fmt=svg&vvv=17&sanitize=true)
 
 
 # API sketch
@@ -106,8 +106,8 @@ Payment API:
 
 #### TPP acquires mandatory parameters before request 
 
-![Implementation draft diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/payment-static-param.puml&fmt=svg&vvv=2&sanitize=true)
+![Implementation draft diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/payment-static-param.puml&fmt=svg&vvv=2&sanitize=true)
 
 #### TPP acquires mandatory parameters during request 
 
-![Implementation draft diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/drafts/payment-dynamic-param.puml&fmt=svg&vvv=1&sanitize=true)
+![Implementation draft diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/payment-dynamic-param.puml&fmt=svg&vvv=1&sanitize=true)

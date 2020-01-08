@@ -24,7 +24,7 @@ Use cases for this API:
 
 Step 4. through 8. is repeated as long as PSU modifies keywords (by adding or removing characters)
 
-![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/diagrams/useCases/2-searchBank.puml&fmt=svg&vvv=1&sanitize=true)
+![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/2-searchBank.puml&fmt=svg&vvv=1&sanitize=true)
 
 #### RemoteSearch-001, -002 FinTechUI.loadFinTechSeachScreen, displaySearchScreen
 
@@ -84,7 +84,7 @@ Use cases for this API:
 
 Step 8. through 11. is repeated as long as PSU modifies keywords (by adding or removing characters)
 
-![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/diagrams/useCases/2a-searchBankLocal.puml&fmt=svg&vvv=1&sanitize=true)
+![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/2a-searchBankLocal.puml&fmt=svg&vvv=1&sanitize=true)
 
 Like this diagram shows, local bank search does not send request to the network.
 
