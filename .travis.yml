@@ -36,7 +36,7 @@ deploy:
     skip_cleanup: true
     script: bash scripts/deploy_doc.sh
     on:
-      tags: true
+      condition: $TRAVIS_BRANCH = "develop" || $TRAVIS_TAG
 
   - provider: script
     skip_cleanup: true
