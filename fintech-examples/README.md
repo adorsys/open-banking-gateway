@@ -7,5 +7,5 @@ Example FinTech application provide in this sub module. To view the API:
 > cd fintech-server
 > mvn spring-boot:run
 
-the http://localhost:8080
+then http://localhost:8086
 ```
