@@ -5,14 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Proxy;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -22,16 +20,15 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Proxy(lazy = false)
-public class Bank {
+@Table(name = "bank_profile")
+public class BankProfile {
     @Id
     @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    String name;
-    String bic;
-    String bankCode;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bank_profile_id", referencedColumnName = "id")
-    private BankProfile bankProfile;
+    private String url;
+    private String adapterId;
+    private String idpUrl;
+    private String scaApproaches;
 }
