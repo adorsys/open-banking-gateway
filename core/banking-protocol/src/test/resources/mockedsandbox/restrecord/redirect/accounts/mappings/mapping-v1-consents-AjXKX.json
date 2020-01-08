@@ -1,0 +1,38 @@
+{
+  "id" : "49c02872-029b-3c8b-a29c-e8290789dcb1",
+  "request" : {
+    "url" : "/v1/consents",
+    "method" : "POST",
+    "headers" : {
+      "X-Request-ID" : {
+        "equalTo" : "b575eefc-3232-11ea-b535-e2b5b1f1970b"
+      },
+      "PSU-ID" : {
+        "equalTo" : "anton.brueckner"
+      },
+      "PSU-IP-Address" : {
+        "equalTo" : "1.1.1.1"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/json; charset=UTF-8"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"access\":{\"availableAccounts\":\"allAccounts\"},\"recurringIndicator\":false,\"validUntil\":\"2020-01-31\",\"frequencyPerDay\":12}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-v1-consents-AjXKX.json",
+    "headers" : {
+      "Aspsp-Sca-Approach" : "REDIRECT",
+      "Location" : "http://127.0.0.1:20014/v1/consents/FnQrERp1CutlTlhTke5EScQUikVhZuNU40Nfru7GjyesxBtjhvuH5WGDIejOpAQ82Kg_O5MgvEsAcowGNyi7d8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q",
+      "X-Request-Id" : "b575eefc-3232-11ea-b535-e2b5b1f1970b",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Date" : "Wed, 08 Jan 2020 16:20:14 GMT"
+    }
+  },
+  "uuid" : "49c02872-029b-3c8b-a29c-e8290789dcb1"
+}

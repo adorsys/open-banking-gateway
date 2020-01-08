@@ -1,0 +1,28 @@
+{
+  "id" : "2f3303be-ec6b-3e18-b0c9-04ccc17e66d8",
+  "request" : {
+    "url" : "/v1/accounts?withBalance=false",
+    "method" : "GET",
+    "headers" : {
+      "X-Request-ID" : {
+        "equalTo" : "34ee6161-3233-11ea-b535-e2b5b1f1970b"
+      },
+      "PSU-ID" : {
+        "equalTo" : "anton.brueckner"
+      },
+      "PSU-IP-Address" : {
+        "equalTo" : "1.1.1.1"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-v1-accounts-SWFEX.json",
+    "headers" : {
+      "X-Request-Id" : "34ee6161-3233-11ea-b535-e2b5b1f1970b",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Date" : "Wed, 08 Jan 2020 16:24:06 GMT"
+    }
+  },
+  "uuid" : "2f3303be-ec6b-3e18-b0c9-04ccc17e66d8"
+}

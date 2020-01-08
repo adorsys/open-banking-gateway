@@ -1,0 +1,31 @@
+{
+  "id" : "c445b4b3-2fe7-32e9-9beb-2e13ac5155d5",
+  "request" : {
+    "url" : "/v1/parameters/report-sca-result/a3a98d1a-3233-11ea-b535-e2b5b1f1970b",
+    "method" : "POST",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/x-www-form-urlencoded"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalTo" : "scaChallengeResult=12345"
+    } ]
+  },
+  "response" : {
+    "status" : 503,
+    "bodyFileName" : "body-v1-parameters-report-sca-result-a3a98d1a-3233-11ea-b535-e2b5b1f1970b-sVtI3.txt",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Access-Control-Allow-Origin" : "*",
+      "Content-Type" : "text/html;charset=UTF-8",
+      "Content-Language" : "en-US",
+      "Date" : "Wed, 08 Jan 2020 16:27:18 GMT",
+      "Connection" : "close"
+    }
+  },
+  "uuid" : "c445b4b3-2fe7-32e9-9beb-2e13ac5155d5"
+}
