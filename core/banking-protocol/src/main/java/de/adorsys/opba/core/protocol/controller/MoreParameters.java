@@ -48,12 +48,11 @@ public class MoreParameters {
 
     @PostMapping(value = MORE_PARAMETERS + "/{executionId}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @Transactional
-    public CompletableFuture<? extends ResponseEntity<?>> confirmedRedirectConsentAccounts(
+    public CompletableFuture<? extends ResponseEntity<?>> provideMoreParameters(
             @PathVariable String executionId,
             @RequestBody @Valid @NotNull LinkedMultiValueMap<@NotBlank String, String> pathAndValueUpdates) {
 
         BaseContext ctx = (BaseContext) runtimeService.getVariable(executionId, CONTEXT);
-        // TODO It works only for String
         ctx = updater.updateObjectUsingJsonPath(ctx, pathAndValueUpdates.toSingleValueMap());
         runtimeService.setVariable(executionId, CONTEXT, ctx);
         runtimeService.trigger(executionId);
@@ -70,7 +69,7 @@ public class MoreParameters {
     // TODO duplicated code
     @PostMapping(value = MORE_PARAMETERS_PSU_PASSWORD + "/{executionId}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @Transactional
-    public CompletableFuture<? extends ResponseEntity<?>> recievePsuPassword(
+    public CompletableFuture<? extends ResponseEntity<?>> receivePsuPassword(
             @PathVariable String executionId,
             @Valid PsuPassword password) {
 
