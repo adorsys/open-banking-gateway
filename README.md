@@ -58,6 +58,23 @@ The code uses <code>backend.checkstyle.xml</code> placed in the root of the proj
 install the <code>CheckStyle-IDEA v5.34.0</code> Plugin and configure in <code>Other Settings -> Checkstyle</code>
 the version <code>8.19</code> and add the configuration file <code>backend.checkstyle.xml</code>.
 
+## open api
+
+The code generated from
+<pre>
+opba-consent-rest-api/src/main/resources/static/consent_api.yml
+opba-banking-rest-api/src/main/resources/static/banking_api_ais.yml
+</pre>
+is generated to
+<pre>
+opba-consent-rest-api/target/generated-sources/open-api/src/main/java
+opba-banking-rest-api/target/generated-sources/open-api/src/main/java
+</pre>
+
+So the folders have to be made known to the ide.
+
+
+
 ## Contribution Guidelines
 
 * [Contribution Guidelines](docs/ContributionGuidelines.md) 
