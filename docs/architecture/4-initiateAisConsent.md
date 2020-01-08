@@ -9,7 +9,7 @@ Request the list of transactions for a given bank account. Initiates a consent r
 
 ## Use Cases
 ### InitConsent-010 FinTechUI.displayBankServices
-The result of a bank selection is that the FinTechUI displays the [BankProfile](describes.md#BankProfile) to the PSU. The bank profile also contains the list of services offered by the selected bank.
+The result of a bank selection is that the FinTechUI displays the [BankProfile](dictionary.md#BankProfile) to the PSU. The bank profile also contains the list of services offered by the selected bank.
 
 ### InitConsent-020 : FinTechUI.selectService(listTransactions)
 The FinTechUI will forward the service selected to the FinTechApi. In this case listTransactions. The selection might be accompanied with some service specifications. For example in the case of listTransactions, this can be the iban of the target account. We will call this ListTransactionsSpec.
@@ -78,7 +78,7 @@ The [BankingProtocol](dictionary.md#BankingProtocol) associated with the given B
 ### No Suitable Consent Present
 #### InitConsent-060 : Initiating a Consent with the ASPSP
 If there is no suitable consent available, the BankingProtocol will first proceed with a consent initiation request. This is, an initiated service request will either ends up in the expected service response or first redirect the PSU to the [ConsentAuthorisationApi](dictionary.md#ConsentAuthorisationApi).
-Whether this operation is necessary or not depends on the [AspspBankingApi](dictionary.mdAspspBankingApi) interface. The selected banking protocol will know how to deal with this.
+Whether this operation is necessary or not depends on the [AspspBankingApi](dictionary.md#AspspBankingApi) interface. The selected banking protocol will know how to deal with this.
 
 ##### UserAgentContext
 See [UserAgentContext](dictionary.md#UserAgentContext)

@@ -7,7 +7,7 @@ The bank selection allows to download the [BankProfile](dictionary.md#BankProfil
 
 ## Diagram
 
-![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/diagrams/useCases/3-selectBank.puml&fmt=svg&vvv=1&sanitize=true)  
+![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/3-selectBank.puml&fmt=svg&vvv=1&sanitize=true)  
 
 ## Use Case Steps
 Use cases for this API:
