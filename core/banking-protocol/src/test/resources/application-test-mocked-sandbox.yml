@@ -1,12 +1,9 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/open_banking?currentSchema=banking_protocol
+    url: jdbc:tc:postgresql:12:////open_banking?TC_DAEMON=true&TC_INITSCRIPT=init.sql
     username: postgres
     password: docker
-    type: com.zaxxer.hikari.HikariDataSource
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      schema: banking_protocol
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
   jpa:
     hibernate:
       naming:
@@ -40,7 +37,7 @@ xs2a-profile:
   id: 53c47f54-b9a4-465a-8f77-bc6cd5f0cf46
   aspspName: adorsys xs2a
   bic: ADORSYS
-  url: http://localhost:20014
+  url: http://localhost:39393/sandbox/
   adapterId: adorsys-integ-adapter
   idpUrl:
   aspspScaApproaches:

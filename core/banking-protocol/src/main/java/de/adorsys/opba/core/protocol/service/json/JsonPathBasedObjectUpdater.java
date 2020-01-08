@@ -30,6 +30,8 @@ import static com.jayway.jsonpath.Option.SUPPRESS_EXCEPTIONS;
 @RequiredArgsConstructor
 public class JsonPathBasedObjectUpdater {
 
+    private static final int MAX_ARRAY_SIZE = 32;
+
     private final Configuration jsonConfig = Configuration.builder()
             .jsonProvider(new JacksonJsonNodeJsonProvider())
             .options(DEFAULT_PATH_LEAF_TO_NULL, SUPPRESS_EXCEPTIONS)
@@ -53,10 +55,10 @@ public class JsonPathBasedObjectUpdater {
         visitPathParents(
                 path,
                 ctx,
-                objPath -> {},
+                objPath -> { },
                 (arrPath, arrDesc) -> foundArraySize.compute(
-                        arrPath, (id, val) -> null == val ?
-                                arrDesc.getMinArraySize() : Math.max(val, arrDesc.getMinArraySize())
+                        arrPath, (id, val) -> null == val
+                                ? arrDesc.getMinArraySize() : Math.max(val, arrDesc.getMinArraySize())
                 )
         );
     }
@@ -101,7 +103,6 @@ public class JsonPathBasedObjectUpdater {
     }
 
     private ArraySegment tryParseArraySegment(String segment) {
-        int maxInitSize = 32;
         Pattern pattern = Pattern.compile("(.+)\\[([0-9]+)]");
         Matcher matcher = pattern.matcher(segment);
         if (!matcher.matches()) {
@@ -109,7 +110,7 @@ public class JsonPathBasedObjectUpdater {
         }
 
         int position = Integer.parseInt(matcher.group(2));
-        if (position > maxInitSize) {
+        if (position > MAX_ARRAY_SIZE) {
             throw new IllegalArgumentException("Array size is too large");
         }
 

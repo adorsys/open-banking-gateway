@@ -62,9 +62,8 @@ flowable:
 ## Recording
 Wiremock proxy to record requests:
 ```sh
-java -jar 'wiremock-standalone-2.25.1.r' -port 38080 --proxy-all http://127.0.0.1:8080 --record-mappings --match-headers accept,psu-id,x-request-id,content-type,psu-ip-address --root-dir ../results
 java -jar 'wiremock-standalone-2.25.1.r' --port 30000 --proxy-all http://127.0.0.1:20014 --record-mappings --match-headers accept,psu-id,x-request-id,content-type,psu-ip-address --root-dir ../results
-java -jar 'wiremock-standalone-2.25.1.r' -port 28080 --proxy-all http://127.0.0.1:8080 --record-mappings --match-headers accept,psu-id,x-request-id,content-type,psu-ip-address --root-dir ../results/obg
+java -jar 'wiremock-standalone-2.25.1.r' --port 28080 --proxy-all http://127.0.0.1:8080 --record-mappings --match-headers accept,psu-id,x-request-id,content-type,psu-ip-address --root-dir ../results/obg
 ```
 Clean recorded directory (assuming your current directory is /results):
 ```sh

@@ -24,6 +24,7 @@ import static de.adorsys.opba.core.protocol.controller.constants.ApiVersion.API_
 @RestController
 @RequestMapping(API_1)
 @RequiredArgsConstructor
+@SuppressWarnings("CPD-START") // FIXME
 public class ConsentConfirmation {
 
     private final RuntimeService runtimeService;

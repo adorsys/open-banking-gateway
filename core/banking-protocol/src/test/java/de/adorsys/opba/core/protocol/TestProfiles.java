@@ -7,4 +7,5 @@ import lombok.experimental.UtilityClass;
 public class TestProfiles {
 
     public static final String ONE_TIME_POSTGRES_ON_DISK = "test-one-time-postgres-disk-volume";
+    public static final String MOCKED_SANDBOX = "test-mocked-sandbox";
 }
