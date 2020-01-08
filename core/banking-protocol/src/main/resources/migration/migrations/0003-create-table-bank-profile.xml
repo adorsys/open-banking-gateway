@@ -12,6 +12,7 @@
             <column name="adapter_id" type="VARCHAR(255)"/>
             <column name="idp_url" type="VARCHAR(255)"/>
             <column name="sca_approaches" type="VARCHAR(255)"/>
+            <column name="bank_id" type="BIGINT"/>
         </createTable>
     </changeSet>
 
