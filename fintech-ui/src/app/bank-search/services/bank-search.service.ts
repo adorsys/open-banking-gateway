@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Bank } from '../models/bank.model';
 import { Observable, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -13,17 +15,21 @@ export class BankSearchService {
     { id: '3', name: 'Sparda Nürnberg', bic: 'SSXXXX', bankCode: 488737 }
   ];
 
-  readonly API_PATH = '/to-be-defined';
+  // path resolved by proxy
+  readonly API_PATH = 'fintech-api-proxy';
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   getBanks(): Observable<Bank[]> {
-    return of(BankSearchService.BANK_STUBS);
+    return of(BankSearchService.BANK_STUBS).pipe(delay(1000));
   }
 
   searchBanks(keyword: string): Observable<Bank[]> {
-    return of(
-      BankSearchService.BANK_STUBS.filter(bank => bank.name.toLocaleLowerCase().includes(keyword.toLocaleLowerCase()))
-    );
+    return this.http.get<Bank[]>(this.API_PATH + '/v1/banks/fts', {
+      params: {
+        q: keyword,
+        max_results: '5'
+      }
+    });
   }
 }

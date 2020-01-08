@@ -6,7 +6,7 @@ Implements the process of collecting consent authorization credentials in an int
 
 ## Diagram
 
-![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/diagrams/useCases/5a-psuAuthEmbeddedConsent.puml&fmt=svg&vvv=1&sanitize=true)  
+![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/5a-psuAuthEmbeddedConsent.puml&fmt=svg&vvv=1&sanitize=true)  
 
 ## Use Cases
 
