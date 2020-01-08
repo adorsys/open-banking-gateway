@@ -108,7 +108,7 @@
               <language>spring</language>
               <output>${project.build.directory}/generated-sources/open-api/</output>
               <configOptions>
-                <sourceFolder>src/main</sourceFolder>
+                <sourceFolder>src/main/java</sourceFolder>
                 <basePackage>de.adorsys.opba.bankingapi.search</basePackage>
                 <configPackage>de.adorsys.opba.bankingapi.config</configPackage>
                 <modelPackage>de.adorsys.opba.bankingapi.search.model</modelPackage>
@@ -137,7 +137,7 @@
               <language>spring</language>
               <output>${project.build.directory}/generated-sources/open-api/</output>
               <configOptions>
-                <sourceFolder>src/main</sourceFolder>
+                <sourceFolder>src/main/java</sourceFolder>
                 <basePackage>de.adorsys.opba.bankingapi.token</basePackage>
                 <configPackage>de.adorsys.opba.bankingapi.config</configPackage>
                 <modelPackage>de.adorsys.opba.bankingapi.token.model</modelPackage>
