@@ -76,6 +76,8 @@
               <inputSpec>${openapi-spec-file-location-banking_api_ais}</inputSpec>
 							<language>spring</language>
 							<output>${project.build.directory}/generated-sources/open-api/</output>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
 							<configOptions>
 								<sourceFolder>src/main/java</sourceFolder>
 								<basePackage>de.adorsys.opba.bankingapi.ais</basePackage>
