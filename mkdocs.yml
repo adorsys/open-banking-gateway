@@ -12,11 +12,11 @@ nav:
     - "Authorize Consent Embedded Approach": architecture/5a-psuAuthEmbeddedConsent.md
     - "Authorize Consent Redirect Approach": architecture/5b-psuAuthRedirectConsent.md
     - "Consume Service": architecture/6-consume_api.md
-    - "Draft": architecture/drafts/README.md
+    - "Draft": architecture/drafts/initial_requirements.md
   - "Roadmap": roadmap.md
   - "Dictionary": architecture/dictionary.md
   - "Contribution guidelines": ContributionGuidelines.md
   - "Release notes": releasenotes.md
-  - "Initial Requirements": docs/README.md
+  - "Initial Requirements": initialrequirements.md
   - "Version Policy": version_policy.md
 theme: readthedocs
