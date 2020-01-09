@@ -15,9 +15,9 @@
     <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
     Change this if depth changes. Current: /open-banking-gateway/opba-banking-rest-api -->
 		<main.basedir>${project.parent.basedir}</main.basedir>
-    <openapi-spec-file-location-banking_api_ais>${project.basedir}/src/main/resources/static/banking_api_ais.yml</openapi-spec-file-location-banking_api_ais>
-    <openapi-spec-file-location-tpp_bank_search_api>${project.basedir}/src/main/resources/static/tpp_bank_search_api.yml</openapi-spec-file-location-tpp_bank_search_api>
-    <openapi-spec-file-location-tpp_token_api>${project.basedir}/src/main/resources/static/tpp_token_api.yml</openapi-spec-file-location-tpp_token_api>
+    <openapi-spec-file-location-banking_api_ais>${project.basedir}/src/main/resources/static/tpp_banking_api_ais.yml</openapi-spec-file-location-banking_api_ais>
+    <openapi-spec-file-location-tpp_bank_search_api>${project.basedir}/src/main/resources/static/tpp_banking_api_bank_search.yml</openapi-spec-file-location-tpp_bank_search_api>
+    <openapi-spec-file-location-tpp_token_api>${project.basedir}/src/main/resources/static/tpp_banking_api_token.yml</openapi-spec-file-location-tpp_token_api>
 	</properties>
 
 	<dependencies>
