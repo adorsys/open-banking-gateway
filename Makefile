@@ -26,8 +26,8 @@ replace_puml_urls:
 	cp mkdocs.yml docs_for_site
 	cp README.md docs_for_site/docs/README.md
 	sed -i 's/docs\///g' docs_for_site/docs/README.md
-	find docs_for_site -type f -name "*.md" -exec sed -i.bak 's%${PUML_URLS_PATTERN}%${PUML_URLS_REPLACE}%' {} \;
-	find docs_for_site -type f -name "*.md.bak" -delete
+	# find docs_for_site -type f -name "*.md" -exec sed -i.bak 's%${PUML_URLS_PATTERN}%${PUML_URLS_REPLACE}%' {} \;
+	# find docs_for_site -type f -name "*.md.bak" -delete
 
 .PHONY : convert_puml
 convert_puml:
@@ -42,6 +42,5 @@ build_docs: clean_docs
 .PHONY : copy_puml
 copy_puml:
 	# "makefile: copy_puml"
-	# cd docs_for_site && mv site ..
-	# cd ..
-	# rm -rf docs_for_site
+	mv docs_for_site/site ./site
+	rm -rf docs_for_site
