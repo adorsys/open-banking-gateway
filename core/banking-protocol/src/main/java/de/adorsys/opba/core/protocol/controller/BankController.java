@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 import static de.adorsys.opba.core.protocol.controller.constants.ApiPaths.BANKS;
 import static de.adorsys.opba.core.protocol.controller.constants.ApiVersion.API_1;
@@ -54,7 +55,7 @@ public class BankController {
 
     @GetMapping("/profile")
     @Operation(summary = "Getting bank profile by bank id")
-    public BankProfile getBankProfile(
+    public Optional<BankProfile> getBankProfile(
             @Parameter(name = "id", description = "Selected bank id", example = "142")
             @RequestParam Long id) {
         return bankService.getBankProfile(id);

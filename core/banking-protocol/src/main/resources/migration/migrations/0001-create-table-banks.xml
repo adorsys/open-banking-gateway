@@ -2,8 +2,11 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="create-table-bank" author="mhr">
+    <changeSet author="mhr" id="create-sequence">
+        <createSequence cycle="false" cacheSize="20" incrementBy="1" sequenceName="hibernate_sequence" startValue="1" />
+    </changeSet>
 
+    <changeSet id="create-table-bank" author="mhr">
         <createTable tableName="${table-prefix}bank">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="${table-prefix}bankPK"/>
@@ -14,7 +17,32 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="load_csv_banks" author="mhr">
+    <changeSet id="create-table-bank-profile" author="mhr">
+        <createTable tableName="${table-prefix}bank_profile">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="${table-prefix}bank_profilePK"/>
+            </column>
+            <column name="url" type="VARCHAR(255)"/>
+            <column name="adapter_id" type="VARCHAR(255)"/>
+            <column name="idp_url" type="VARCHAR(255)"/>
+            <column name="sca_approaches" type="VARCHAR(255)"/>
+            <column name="bank_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add-relation-bank-to-bank-profile" author="mhr">
+        <addForeignKeyConstraint constraintName="fk_bank"
+                                 baseTableName="${table-prefix}bank_profile"
+                                 baseColumnNames="bank_id"
+                                 referencedTableName="${table-prefix}bank"
+                                 referencedColumnNames="id"/>
+        <addUniqueConstraint
+                columnNames="bank_id"
+                constraintName="u_bank_id"
+                tableName="opb_bank_profile" />
+    </changeSet>
+
+    <changeSet id="load_csv_bank" author="mhr">
         <loadData
                 encoding="utf8"
                 relativeToChangelogFile="true"
@@ -31,6 +59,31 @@
             <column header="aspsp_sca_approaches"           type="skip"/>
         </loadData>
         <rollback />
+    </changeSet>
+
+    <changeSet id="load_csv_bank_profile" author="mhr">
+        <loadData
+                encoding="utf8"
+                relativeToChangelogFile="true"
+                file="banks.csv"
+                catalogName=""
+                tableName="${table-prefix}bank_profile">
+            <column header="uuid"                                       type="skip"/>
+            <column header="name"       name="name"                     type="skip"/>
+            <column header="bic"        name="bic"                      type="skip"/>
+            <column header="url"        name="url"                      type="STRING"/>
+            <column header="adapter_id" name="adapter_id"               type="STRING"/>
+            <column header="bank_code"  name="bank_code"                type="skip"/>
+            <column header="idp_url"    name="idp_url"                  type="STRING"/>
+            <column header="aspsp_sca_approaches" name="sca_approaches" type="STRING"/>
+        </loadData>
+        <rollback />
+    </changeSet>
+
+    <changeSet id="fill_bank_id" author="mhr">
+        <sql dbms="postgresql" stripComments="true">
+            UPDATE opb_bank_profile SET bank_id = id WHERE true;
+        </sql>
     </changeSet>
 
     <changeSet id="load_csv_banks_random" author="mhr">

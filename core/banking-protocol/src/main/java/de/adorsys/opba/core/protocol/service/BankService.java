@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class BankService {
         return bankRepository.getBanks(query, maxResults);
     }
 
-    public BankProfile getBankProfile(Long bankId) {
+    public Optional<BankProfile> getBankProfile(Long bankId) {
         return bankProfileRepository.getProfileByBankId(bankId);
     }
 
