@@ -26,13 +26,13 @@ class BasicE2EProtocolTest extends SpringScenarioTest<MockServers, AccountListRe
     @SneakyThrows
     void testAccountsListWithConsentUsingRedirect() {
         given()
-                .redirect_sandbox_mock_running();
+                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running();
         when()
                 .open_banking_list_accounts_called()
                 .and()
-                .open_banking_user_provided_necessary_details();
+                .open_banking_user_anton_brueckner_provided_initial_parameters();
         then()
-                .obg_reads_result_on_redirect();
+                .open_banking_reads_anton_brueckner_accounts_on_redirect();
     }
 
     @Test
@@ -41,6 +41,20 @@ class BasicE2EProtocolTest extends SpringScenarioTest<MockServers, AccountListRe
 
     @Test
     void testAccountsListWithConsentUsingEmbedded() {
+        given()
+                .embedded_mock_of_sandbox_for_max_musterman_accounts_running();
+        when()
+                .open_banking_list_accounts_called()
+                .and()
+                .open_banking_user_max_musterman_provided_initial_parameters()
+                .and()
+                .open_banking_user_max_musterman_provided_password()
+                .and()
+                .open_banking_user_max_musterman_selected_sca_challenge_type()
+                .and()
+                .open_banking_user_max_musterman_provided_sca_challenge_result_and_no_redirect();
+        then()
+                .open_banking_has_max_musterman_accounts();
     }
 
     @Test

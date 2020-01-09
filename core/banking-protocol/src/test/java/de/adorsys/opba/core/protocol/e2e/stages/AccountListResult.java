@@ -1,5 +1,7 @@
 package de.adorsys.opba.core.protocol.e2e.stages;
 
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
@@ -9,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.net.URI;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -24,13 +27,26 @@ public class AccountListResult extends Stage<AccountListResult>  {
     @ProvidedScenarioState
     private String redirectOkUri;
 
+    @ProvidedScenarioState
+    private String responseContent;
+
     @SneakyThrows
-    public AccountListResult obg_reads_result_on_redirect() {
+    public AccountListResult open_banking_reads_anton_brueckner_accounts_on_redirect() {
         mvc.perform(asyncDispatch(mvc.perform(get(URI.create(redirectOkUri).getPath())).andReturn()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[*].iban").value("DE80760700240271232400"))
                 .andExpect(jsonPath("$.[*].currency").value("EUR"))
                 .andDo(print());
+        return self();
+    }
+
+    @SneakyThrows
+    public AccountListResult open_banking_has_max_musterman_accounts() {
+        DocumentContext body = JsonPath.parse(responseContent);
+
+        assertThat(body).extracting(it -> it.read("$.[*].iban")).asList().containsExactly("DE38760700240320465700");
+        assertThat(body).extracting(it -> it.read("$.[*].currency")).asList().containsExactly("EUR");
+
         return self();
     }
 }

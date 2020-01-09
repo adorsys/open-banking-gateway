@@ -5,12 +5,9 @@ import com.github.tomakehurst.wiremock.common.Slf4jNotifier;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.AfterScenario;
-import com.tngtech.jgiven.annotation.BeforeStage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,22 +18,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JGivenStage
 public class MockServers extends Stage<MockServers> {
 
-    @ProvidedScenarioState
-    private AtomicReference<String> execId = new AtomicReference<>();
+    private static final int PORT = 39393;
+    private static final WireMockConfiguration CONFIGURATION = WireMockConfiguration.options()
+            .port(PORT)
+            .notifier(new Slf4jNotifier(true));
 
     @ProvidedScenarioState
     private WireMockServer sandbox;
-
-    @BeforeStage
-    void initWireMock() {
-        WireMockConfiguration config = WireMockConfiguration.options()
-                .port(39393)
-                .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/accounts/sandbox/")
-                .notifier(new Slf4jNotifier(true));
-
-        sandbox = new WireMockServer(config);
-        sandbox.start();
-    }
 
     @AfterScenario
     void stopWireMock() {
@@ -45,9 +33,23 @@ public class MockServers extends Stage<MockServers> {
         }
     }
 
-    public void redirect_sandbox_mock_running() {
+    public void redirect_mock_of_sandbox_for_anton_brueckner_accounts_running() {
+        WireMockConfiguration config = CONFIGURATION
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/accounts/sandbox/");
+        startWireMock(config);
+    }
+
+    public void embedded_mock_of_sandbox_for_max_musterman_accounts_running() {
+        WireMockConfiguration config = CONFIGURATION
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/accounts/sandbox/");
+        startWireMock(config);
+    }
+
+    private void startWireMock(WireMockConfiguration config) {
+        sandbox = new WireMockServer(config);
+        sandbox.start();
+
         assertThat(sandbox).isNotNull();
         assertThat(sandbox.isRunning()).isTrue();
     }
-
 }
