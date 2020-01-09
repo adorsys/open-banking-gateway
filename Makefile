@@ -42,6 +42,6 @@ build_docs: clean_docs
 .PHONY : copy_puml
 copy_puml:
 	# "makefile: copy_puml"
-	cd docs_for_site && mv site ..
-	cd ..
+	# cd docs_for_site && mv site ..
+	# cd ..
 	# rm -rf docs_for_site
