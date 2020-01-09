@@ -1,1 +1,182 @@
-{"account":{"iban":"DE80760700240271232400","currency":"EUR"},"transactions":{"booked":[{"transactionId":"rnvGvu2TR2Yl99bAoM_skY","endToEndId":"20180625TAAA002","bookingDate":"2020-01-08","valueDate":"2020-01-08","transactionAmount":{"currency":"EUR","amount":"-100.00"},"creditorName":"Patrick Brueckner","creditorAccount":{"iban":"DE23760700240234367800","currency":"EUR"},"debtorAccount":{"iban":"DE80760700240271232400","currency":"EUR"},"remittanceInformationUnstructured":"Payment"},{"transactionId":"1Lag4mgPRy4kLuz1rRifJ4","endToEndId":"20180625TAAA001","bookingDate":"2020-01-08","valueDate":"2020-01-08","transactionAmount":{"currency":"EUR","amount":"-150.00"},"creditorName":"Maria Brueckner","creditorAccount":{"iban":"DE67760700240243265400","currency":"EUR"},"debtorAccount":{"iban":"DE80760700240271232400","currency":"EUR"},"remittanceInformationUnstructured":"Payment"},{"transactionId":"xKVwpTr9TaAoW9j1Zem4Tw","bookingDate":"2020-01-08","valueDate":"2020-01-08","transactionAmount":{"currency":"EUR","amount":"-2300.00"},"creditorName":"multiple","debtorAccount":{"iban":"DE80760700240271232400","currency":"EUR"}},{"transactionId":"GrrnMdDgTGIjM-w_kkTVSA","bookingDate":"2020-01-08","valueDate":"2020-01-08","transactionAmount":{"currency":"EUR","amount":"-250.00"},"creditorName":"multiple","debtorAccount":{"iban":"DE80760700240271232400","currency":"EUR"}},{"transactionId":"mfSdvTvYThwr8hocMJMsxA","endToEndId":"20180614T110000","bookingDate":"2020-01-08","valueDate":"2020-01-08","transactionAmount":{"currency":"EUR","amount":"2300.00"},"creditorName":"Anton Brueckner","creditorAccount":{"iban":"DE80760700240271232400","currency":"EUR"},"debtorAccount":{"iban":"DE38760700240320465700","currency":"EUR"},"remittanceInformationUnstructured":"Payment"},{"transactionId":"Tt7Os27bTc0vC6jDk0f5lY","endToEndId":"20180602T101000","bookingDate":"2020-01-08","valueDate":"2020-01-08","transactionAmount":{"currency":"EUR","amount":"-900.00"},"creditorName":"Rainer Maier","creditorAccount":{"iban":"DE84100100100568753108","currency":"EUR"},"debtorAccount":{"iban":"DE80760700240271232400","currency":"EUR"},"remittanceInformationUnstructured":"Payment"},{"transactionId":"qlI0mwopQIknL0n-U4bD80","endToEndId":"20180601T131000","bookingDate":"2020-01-08","valueDate":"2020-01-08","transactionAmount":{"currency":"EUR","amount":"-700.00"},"creditorName":"Max Musterman","creditorAccount":{"iban":"DE38760700240320465700","currency":"EUR"},"debtorAccount":{"iban":"DE80760700240271232400","currency":"EUR"},"remittanceInformationUnstructured":"Payment"},{"transactionId":"pG7GZlccRPsoBNudHnX25Q","endToEndId":"wRExIMhwQOstTaxciyrhEU","bookingDate":"2020-01-08","valueDate":"2020-01-08","transactionAmount":{"currency":"EUR","amount":"30000.00"},"creditorAccount":{"iban":"DE80760700240271232400","currency":"EUR"}}],"_links":{"account":{"href":"http://127.0.0.1:20014/v1/accounts/cmD4EYZeTkkhxRuIV1diKA"}}},"balances":[{"balanceAmount":{"currency":"EUR","amount":"27900.00"},"balanceType":"interimAvailable","lastChangeDateTime":"2020-01-08T18:13:59.97+02:00","referenceDate":"2020-01-08"},{"balanceAmount":{"currency":"EUR","amount":"27900.00"},"balanceType":"closingBooked","lastChangeDateTime":"2020-01-08T18:13:59.97+02:00","referenceDate":"2020-01-08"}],"_links":{"download":{"href":"http://127.0.0.1:20014/v1/accounts/cmD4EYZeTkkhxRuIV1diKA/transactions/download/ZG93bmxvYWRJZA=="}}}
+{
+  "account": {
+    "iban": "DE80760700240271232400",
+    "currency": "EUR"
+  },
+  "transactions": {
+    "booked": [
+      {
+        "transactionId": "rnvGvu2TR2Yl99bAoM_skY",
+        "endToEndId": "20180625TAAA002",
+        "bookingDate": "2020-01-08",
+        "valueDate": "2020-01-08",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-100.00"
+        },
+        "creditorName": "Patrick Brueckner",
+        "creditorAccount": {
+          "iban": "DE23760700240234367800",
+          "currency": "EUR"
+        },
+        "debtorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        },
+        "remittanceInformationUnstructured": "Payment"
+      },
+      {
+        "transactionId": "1Lag4mgPRy4kLuz1rRifJ4",
+        "endToEndId": "20180625TAAA001",
+        "bookingDate": "2020-01-08",
+        "valueDate": "2020-01-08",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-150.00"
+        },
+        "creditorName": "Maria Brueckner",
+        "creditorAccount": {
+          "iban": "DE67760700240243265400",
+          "currency": "EUR"
+        },
+        "debtorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        },
+        "remittanceInformationUnstructured": "Payment"
+      },
+      {
+        "transactionId": "xKVwpTr9TaAoW9j1Zem4Tw",
+        "bookingDate": "2020-01-08",
+        "valueDate": "2020-01-08",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-2300.00"
+        },
+        "creditorName": "multiple",
+        "debtorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        }
+      },
+      {
+        "transactionId": "GrrnMdDgTGIjM-w_kkTVSA",
+        "bookingDate": "2020-01-08",
+        "valueDate": "2020-01-08",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-250.00"
+        },
+        "creditorName": "multiple",
+        "debtorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        }
+      },
+      {
+        "transactionId": "mfSdvTvYThwr8hocMJMsxA",
+        "endToEndId": "20180614T110000",
+        "bookingDate": "2020-01-08",
+        "valueDate": "2020-01-08",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "2300.00"
+        },
+        "creditorName": "Anton Brueckner",
+        "creditorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        },
+        "debtorAccount": {
+          "iban": "DE38760700240320465700",
+          "currency": "EUR"
+        },
+        "remittanceInformationUnstructured": "Payment"
+      },
+      {
+        "transactionId": "Tt7Os27bTc0vC6jDk0f5lY",
+        "endToEndId": "20180602T101000",
+        "bookingDate": "2020-01-08",
+        "valueDate": "2020-01-08",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-900.00"
+        },
+        "creditorName": "Rainer Maier",
+        "creditorAccount": {
+          "iban": "DE84100100100568753108",
+          "currency": "EUR"
+        },
+        "debtorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        },
+        "remittanceInformationUnstructured": "Payment"
+      },
+      {
+        "transactionId": "qlI0mwopQIknL0n-U4bD80",
+        "endToEndId": "20180601T131000",
+        "bookingDate": "2020-01-08",
+        "valueDate": "2020-01-08",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "-700.00"
+        },
+        "creditorName": "Max Musterman",
+        "creditorAccount": {
+          "iban": "DE38760700240320465700",
+          "currency": "EUR"
+        },
+        "debtorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        },
+        "remittanceInformationUnstructured": "Payment"
+      },
+      {
+        "transactionId": "pG7GZlccRPsoBNudHnX25Q",
+        "endToEndId": "wRExIMhwQOstTaxciyrhEU",
+        "bookingDate": "2020-01-08",
+        "valueDate": "2020-01-08",
+        "transactionAmount": {
+          "currency": "EUR",
+          "amount": "30000.00"
+        },
+        "creditorAccount": {
+          "iban": "DE80760700240271232400",
+          "currency": "EUR"
+        }
+      }
+    ],
+    "_links": {
+      "account": {
+        "href": "http://127.0.0.1:20014/v1/accounts/cmD4EYZeTkkhxRuIV1diKA"
+      }
+    }
+  },
+  "balances": [
+    {
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "27900.00"
+      },
+      "balanceType": "interimAvailable",
+      "lastChangeDateTime": "2020-01-08T18:13:59.97+02:00",
+      "referenceDate": "2020-01-08"
+    },
+    {
+      "balanceAmount": {
+        "currency": "EUR",
+        "amount": "27900.00"
+      },
+      "balanceType": "closingBooked",
+      "lastChangeDateTime": "2020-01-08T18:13:59.97+02:00",
+      "referenceDate": "2020-01-08"
+    }
+  ],
+  "_links": {
+    "download": {
+      "href": "http://127.0.0.1:20014/v1/accounts/cmD4EYZeTkkhxRuIV1diKA/transactions/download/ZG93bmxvYWRJZA=="
+    }
+  }
+}

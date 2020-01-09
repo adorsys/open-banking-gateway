@@ -39,6 +39,12 @@ public class MockServers extends Stage<MockServers> {
         startWireMock(config);
     }
 
+    public void redirect_mock_of_sandbox_for_anton_brueckner_transactions_running() {
+        WireMockConfiguration config = CONFIGURATION
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/transactions/sandbox/");
+        startWireMock(config);
+    }
+
     public void embedded_mock_of_sandbox_for_max_musterman_accounts_running() {
         WireMockConfiguration config = CONFIGURATION
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/accounts/sandbox/");

@@ -52,18 +52,41 @@ public class AccountListRequest extends Stage<AccountListRequest> {
     @SneakyThrows
     public AccountListRequest open_banking_list_accounts_called() {
         mvc.perform(asyncDispatch(mvc.perform(get("/v1/accounts")).andReturn()))
+                .andDo(print())
                 .andExpect(status().is3xxRedirection())
-                .andDo(mvcResult -> redirectUriToGetUserParams = mvcResult.getResponse().getHeader(HttpHeaders.LOCATION))
-                .andDo(print());
+                .andDo(mvcResult -> redirectUriToGetUserParams = mvcResult.getResponse().getHeader(HttpHeaders.LOCATION));
         updateExecutionId();
         return self();
     }
 
     @SneakyThrows
-    public AccountListRequest open_banking_user_anton_brueckner_provided_initial_parameters() {
+    public AccountListRequest open_banking_list_transactions_called_for_anton_brueckner() {
+        mvc.perform(asyncDispatch(mvc.perform(get("/v1/transactions/cmD4EYZeTkkhxRuIV1diKA")).andReturn()))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andDo(mvcResult -> redirectUriToGetUserParams = mvcResult.getResponse().getHeader(HttpHeaders.LOCATION));
+        updateExecutionId();
+        return self();
+    }
+
+    @SneakyThrows
+    public AccountListRequest open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts() {
         provideParametersToBankingProtocol(
                 PARAMETERS_PROVIDE_MORE,
                 "mockedsandbox/restrecord/tpp-ui-input/params/anton-brueckner-account.txt"
+        );
+
+        LoggedRequest consentInitiateRequest = wireMock
+                .findAll(postRequestedFor(urlMatching("/v1/consents.*"))).get(0);
+        redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
+        return self();
+    }
+
+    @SneakyThrows
+    public AccountListRequest open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions() {
+        provideParametersToBankingProtocol(
+                PARAMETERS_PROVIDE_MORE,
+                "mockedsandbox/restrecord/tpp-ui-input/params/anton-brueckner-transactions.txt"
         );
 
         LoggedRequest consentInitiateRequest = wireMock
@@ -125,9 +148,9 @@ public class AccountListRequest extends Stage<AccountListRequest> {
                                 .content(readResource(resource)))
                                 .andReturn())
         )
+                .andDo(print())
                 .andExpect(matcher)
                 .andDo(mvcResult -> redirectUriToGetUserParams = mvcResult.getResponse().getHeader(HttpHeaders.LOCATION))
-                .andDo(print())
                 .andReturn();
         responseContent = result.getResponse().getContentAsString();
     }

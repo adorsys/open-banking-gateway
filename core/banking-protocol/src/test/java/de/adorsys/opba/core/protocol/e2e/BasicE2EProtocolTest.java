@@ -30,13 +30,21 @@ class BasicE2EProtocolTest extends SpringScenarioTest<MockServers, AccountListRe
         when()
                 .open_banking_list_accounts_called()
                 .and()
-                .open_banking_user_anton_brueckner_provided_initial_parameters();
+                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts();
         then()
                 .open_banking_reads_anton_brueckner_accounts_on_redirect();
     }
 
     @Test
     void testTransactionsListWithConsentUsingRedirect() {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running();
+        when()
+                .open_banking_list_transactions_called_for_anton_brueckner()
+                .and()
+                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions();
+        then()
+                .open_banking_reads_anton_brueckner_transactions_on_redirect();
     }
 
     @Test

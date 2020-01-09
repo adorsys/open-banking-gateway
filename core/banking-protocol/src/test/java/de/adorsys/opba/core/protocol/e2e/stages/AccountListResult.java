@@ -33,10 +33,20 @@ public class AccountListResult extends Stage<AccountListResult>  {
     @SneakyThrows
     public AccountListResult open_banking_reads_anton_brueckner_accounts_on_redirect() {
         mvc.perform(asyncDispatch(mvc.perform(get(URI.create(redirectOkUri).getPath())).andReturn()))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[*].iban").value("DE80760700240271232400"))
-                .andExpect(jsonPath("$.[*].currency").value("EUR"))
-                .andDo(print());
+                .andExpect(jsonPath("$.[*].currency").value("EUR"));
+        return self();
+    }
+
+    @SneakyThrows
+    public AccountListResult open_banking_reads_anton_brueckner_transactions_on_redirect() {
+        mvc.perform(asyncDispatch(mvc.perform(get(URI.create(redirectOkUri).getPath())).andReturn()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.transactions.booked").isArray())
+                .andExpect(jsonPath("$.transactions.booked[*].transactionId").isNotEmpty());
         return self();
     }
 
