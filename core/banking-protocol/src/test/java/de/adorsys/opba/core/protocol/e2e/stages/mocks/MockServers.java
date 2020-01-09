@@ -7,6 +7,7 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.AfterScenario;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MockServers extends Stage<MockServers> {
 
     private static final int PORT = 39393;
+
     private static final WireMockConfiguration CONFIGURATION = WireMockConfiguration.options()
             .port(PORT)
             .notifier(new Slf4jNotifier(true));
@@ -27,9 +29,11 @@ public class MockServers extends Stage<MockServers> {
     private WireMockServer sandbox;
 
     @AfterScenario
+    @SneakyThrows
     void stopWireMock() {
         if (null != sandbox) {
-            sandbox.shutdown();
+            sandbox.stop();
+            sandbox = null;
         }
     }
 
@@ -51,6 +55,13 @@ public class MockServers extends Stage<MockServers> {
         startWireMock(config);
     }
 
+    public void embedded_mock_of_sandbox_for_max_musterman_transactions_running() {
+        WireMockConfiguration config = CONFIGURATION
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/transactions/sandbox/");
+        startWireMock(config);
+    }
+
+    @SneakyThrows
     private void startWireMock(WireMockConfiguration config) {
         sandbox = new WireMockServer(config);
         sandbox.start();

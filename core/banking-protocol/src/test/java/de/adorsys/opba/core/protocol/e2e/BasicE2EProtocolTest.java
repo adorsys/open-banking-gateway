@@ -54,11 +54,11 @@ class BasicE2EProtocolTest extends SpringScenarioTest<MockServers, AccountListRe
         when()
                 .open_banking_list_accounts_called()
                 .and()
-                .open_banking_user_max_musterman_provided_initial_parameters()
+                .open_banking_user_max_musterman_provided_initial_parameters_to_list_accounts()
                 .and()
                 .open_banking_user_max_musterman_provided_password()
                 .and()
-                .open_banking_user_max_musterman_selected_sca_challenge_type()
+                .open_banking_user_max_musterman_selected_sca_challenge_type_email2()
                 .and()
                 .open_banking_user_max_musterman_provided_sca_challenge_result_and_no_redirect();
         then()
@@ -67,5 +67,19 @@ class BasicE2EProtocolTest extends SpringScenarioTest<MockServers, AccountListRe
 
     @Test
     void testTransactionsListWithConsentUsingEmbedded() {
+        given()
+                .embedded_mock_of_sandbox_for_max_musterman_transactions_running();
+        when()
+                .open_banking_list_transactions_called_for_max_musterman()
+                .and()
+                .open_banking_user_max_musterman_provided_initial_parameters_to_list_transactions()
+                .and()
+                .open_banking_user_max_musterman_provided_password()
+                .and()
+                .open_banking_user_max_musterman_selected_sca_challenge_type_email1()
+                .and()
+                .open_banking_user_max_musterman_provided_sca_challenge_result_and_no_redirect();
+        then()
+                .open_banking_has_max_musterman_transactions();
     }
 }
