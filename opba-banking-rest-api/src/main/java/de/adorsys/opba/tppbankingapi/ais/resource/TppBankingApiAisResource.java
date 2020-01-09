@@ -11,16 +11,25 @@ import de.adorsys.opba.tppbankingapi.ais.model.AccountList;
 import de.adorsys.opba.tppbankingapi.ais.model.TransactionsResponse;
 
 @RestController
-public class TppBankingApiAisResource implements AccountInformationServiceAisApi {
-  @Override
-  public ResponseEntity<AccountList> getAccounts(UUID xRequestID) {
-    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-  }
+public class TppBankingApiAisResource implements TppBankingApiAccountInformationServiceAisApi {
 
-  @Override
-  @SuppressWarnings("checkstyle:ParameterNumber") // Parameters are provided through auto-generated base class
-  public ResponseEntity<TransactionsResponse> getTransactions(String accountId, UUID xRequestID, LocalDate dateFrom,
-      LocalDate dateTo, String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
-    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-  }
+    @Override
+    public ResponseEntity<AccountList> getAccounts(String authorization, UUID xRequestID, String psuConsentSession) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @Override
+    @SuppressWarnings("checkstyle:ParameterNumber") // Parameters are provided through auto-generated base class
+    public ResponseEntity<TransactionsResponse> getTransactions(String accountId,
+                                                                String authorization,
+                                                                UUID xRequestID,
+                                                                String psuConsentSession,
+                                                                LocalDate dateFrom,
+                                                                LocalDate dateTo,
+                                                                String entryReferenceFrom,
+                                                                String bookingStatus,
+                                                                Boolean deltaList) {
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
 }

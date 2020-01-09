@@ -10,12 +10,12 @@ externalDocs:
 
 paths:
 
-  /v1/ais/accounts:
+  /v1/banking/ais/accounts:
     get:
       operationId: getAccounts
       summary: Provides list of available accounts
       tags:
-        - Account information service (AIS)
+        - TPP Banking API Account information service (AIS)
       description: >-
         Read the identifiers of the available payment accounts.
 
@@ -29,6 +29,8 @@ paths:
       parameters:
         #header
         #common header parameter
+        - $ref: "#/components/parameters/Authorization"
+        - $ref: "#/components/parameters/PSU-Consent-Session"
         - $ref: "#/components/parameters/X-Request-ID"
       security:
         - BearerAuthOAuth: []
@@ -41,12 +43,12 @@ paths:
           $ref: '#/components/responses/401_UNAUTHORIZED'
 
 
-  /v1/ais/accounts/{account-id}/transactions:
+  /v1/banking/ais/accounts/{account-id}/transactions:
     get:
       operationId: getTransactions
       summary: Provides list of transactions by given account
       tags:
-        - Account information service (AIS)
+        - TPP Banking API Account information service (AIS)
       description: >-
         This operation shows how to override the global security defined above,
         as we want to open it up for all users.
@@ -55,6 +57,8 @@ paths:
         - $ref: "#/components/parameters/account-id"
         #header
         #common header parameter
+        - $ref: "#/components/parameters/Authorization"
+        - $ref: "#/components/parameters/PSU-Consent-Session"
         - $ref: "#/components/parameters/X-Request-ID"
         #query
         - $ref: "#/components/parameters/dateFrom"
@@ -85,6 +89,27 @@ components:
         format: uuid
 
   parameters:
+    Authorization:
+      name: Authorization
+      in: header
+      required: true
+      description: |
+        Unique Token that identifies FinTech Session for this request.
+      example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik15IGNvb2wgRmludGVjaCBBcHAiLCJpYXQiOjE1MTYyMzkwMjJ9.NfpSq7hot-1x3rZOaqRaSJzNnMw6ltX-9eqxcCQnGbI"
+      schema:
+        type: string
+
+    PSU-Consent-Session:
+      name: PSU-Consent-Session
+      in: header
+      required: false
+      description: |
+        Unique Token that identifies PSU Consent Seession for this request, if it is already available for given PSU by Fintech through previous requests.
+        This Token is not designed to be parsed at Fintech side.
+      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicHN1IjoiSm9obl9Eb2UiLCJjb25zZW50SWQiOiI3OGUyODUwMy0xMzZkLTRkODYtYjg0NC1lNWY1NTgyNTc2ZTUiLCJpYXQiOjE1MTYyMzkwMjJ9.4BHXUW9CH63ZTkxKktFFrVGCUuFltFyivHxk3LVg2bs"
+      schema:
+        type: string
+
     X-Request-ID:
       name: X-Request-ID
       in: header

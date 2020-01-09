@@ -10,7 +10,7 @@ externalDocs:
 
 paths:
 
-  /v1/search/bankSearch:
+  /v1/banking/search/bankSearch:
     get:
       tags:
       - TppBankSearch
@@ -44,7 +44,7 @@ paths:
         '401':
           $ref: '#/components/responses/401_UNAUTHORIZED'
 
-  /v1/search/bankProfile:
+  /v1/banking/search/bankProfile:
     get:
       tags:
       - TppBankSearch
