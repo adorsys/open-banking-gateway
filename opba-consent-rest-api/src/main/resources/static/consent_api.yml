@@ -1,64 +1,169 @@
 openapi: 3.0.1
 info:
-  title: Api Documentation
-  description: Api Documentation
+  title: Open Banking Gateway - Consent Authorization API.  
   termsOfService: urn:tos
   contact: {}
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0
   version: "1.0"
+  description: |
+    ### Description
+    Interface used by the PsuUserAgent to present consent authorization services to the PSU. The consent authorization process is triggered by redirecting the PSU from
+    the [TppBankingApi](https://adorsys.github.io/open-banking-gateway/doc/latest/architecture/dictionary#TppBankingApi) (2<sub>a</sub>)
+    over the [FinTechApi](https://adorsys.github.io/open-banking-gateway/doc/latest/architecture/dictionary#FinTechApi) (2<sub>b</sub>)
+    to the /consent/auth entry point of this [ConsentAuthorisationApi](https://adorsys.github.io/open-banking-gateway/doc/latest/architecture/dictionary#ConsentAuthorisationApi) (2<sub>c</sub>).
+    The decision on whether the authorization process is embedded or redirected is taken by this ConsentAuthorisationApi.
+    
+    The following picture displays the overall architecture of this banking gateway: 
+    
+    ![High level architecture](/img/open-banking-consent-authorisation-api.png)
+    
+    
+    #### Redirecting to the ConsentAuthorisationApi (2<sub>a</sub>)
+    Any service request of the FinTechUI to the FinTechApi (1<sub>a</sub>) will be forwarded to the TppBankingApi (1<sub>b</sub>).
+    This forward might contain a [PsuConsentSession](https://adorsys.github.io/open-banking-gateway/doc/latest/architecture/dictionary#PsuConsentSession)
+    that is used to identify the PSU in the world of the TPP.
+    
+    ##### Decision to Redirect
+    The TppBankingApi uses the provided PsuConsentSession to retrieve an eventualy suitable consent that will be used to forward the corresponding service request to the OpenBankingApi (1<sub>c</sub>) of the ASPSP.
+    If there is no suitable consent, the TPP might still send a consent initiation request to the OpenBankingApi (1<sub>c</sub>). Whether this request is sent or not
+    depends on the design of the target OpenBankingApi. Finally, the TppBankingApi will if necessary instruct the FinTechApi (2<sub>a</sub>) to redirect the PsuUgerAgent (2<sub>b</sub>) to the /consent/auth entry point of 
+    the ConsentAuthorisationApi (2<sub>c</sub>).
+    
+    ##### User Agen Type
+    This Api assumes that the PsuUserAgent is a modern browsers that :
+    * Automatically detects the 302 Found response code and processes the temporarily redirection action automatically.
+    * Stores httpOnly cookies sent with the redirect under the given domain and path.
+    
+    This Api also assumes any other PsuUserAgent like a native mobile or a desktop application can simulate this same behavior upon receiving 302 response code. 
+    
+    ##### Protecting the Redirect
+    A FinTechRedirectSession describes the process of sending the PsuUserAgent from the FinTechApi to the ConsentAuthorisationApi. The only valuable tiket
+    held by the bearer of a redirect link (location-url) is the location url. In order not to transport too many data in the redirect url,
+    data associated with a redirect will be stored in a [RedirectSession](https://adorsys.github.io/open-banking-gateway/doc/latest/architecture/dictionary#RedirectSession)
+    on the TppServer. A FinTechRedirectSession is then solelly protected by the redirectCode that is generated while storing redirect data and
+    added as a query parameter to the redirect url. 
+    
+    ###### The redirectCode
+    The redirectCode has following properties :
+    * The redirectCode is a one time string that contains information used to retrieve RedirectSession on the TppServer.
+    * The code is short lived (e.g 5 seconds) an will be rejected by the TppServer if expired.
+    * The record indexed by the redirectCode (RedirectSession) will also be deleted by the TppServer on first retrieval by the ConsentAuthorisationApi.
+    * The bearer of a redirect code can not be trusted, as the redirect call can be intercepted and misused.
+    * For now we assume the bearer of a redirectCode is untrusted.
+    
+    ###### FinTech Identity vs. Banking Identity
+    As the consent provided by the PSU on the TPP or Banking interface is associated wiht the Banking-Identity of the PSU, there is no garanty whatsoever, that
+    that the PSU providing his consent on the ConsentAuthorisationApi or on the OnlineBankingApi of the ASPSP is the same ast he one identified with the FinTechApi. 
+    By consequence, a PSU can be mielead into providing a consent that is used by an untended user.
+
+    In order to garanty uniqueness, both identities have to somehow be connected. There are many ways of making sure the PSU providing a consent
+    is the same as the one interacting with the FinTech :
+    * The usage of a common identity provider can provide a way to establish a relationship between both FinTechPSU and BankingPSU.
+    * The binding of the authorisation process to the UserAgent can make sure the FinTech that starts the authorization process is the one 
+    that completes it.
+    
+    ###### Common Identity Provider
+    Assuming the FinTechApi relies on the same identity provider like the ConsentAuthorisationApi to identify the PSU, an identification of the PSU by the 
+    ConsentAuthorisationApi prior to processing the consent authorization will garanty the identity of both FinTechPSU and BankingPSU. 
+    
+    As the common identity is known to the TPP (e.g. : sub claim), there is even no need to back redirect the PsuUserAgent to the FinTechApi after consent authorization is completed.
+    
+    ###### Binding Consent Authorization to UserAgent
+    The FinTechRedirectSessionCookie is a cookie generated by the FinTechApi and added to the RedirectResponse sent back to PsuUserAgent. This cookie is held
+    by the PsuUserAgent and returned the FinTechApi when the PsuUserAgent is sent back to the FinTechApi upon completion of the consent authorization process.
+    
+    The FinTechRedirectSessionCookie has following properties :
+    * The FinTechRedirectSessionCookie is bound to a single redirect process and the cookie path ist extended with the redirect-id.
+    * The redirect-id in the cookie path and in the okUrl/nokUrl helps restrict unnecessary transmission of this cookie to the FinTechServer.
+    * The lifespan of the FinTechRedirectSessionCookie is equal to the intended max duration of the started authorization session. So if the TPP 
+    expect the consent authorization to be completed after 2 hours, the duration of this cookie shall be set to 2 hours. See the 
+    endpoint /v1/{redirect-id}/fromConsentOk/{redirectSessionState} of the sample FinTechApi.
+    * The redirectSessionState will be added to the okUrl/nokUrl of the FinTechApi and used to authenticate the FinTechRedirectSessionCookie as
+    XSRF-Protection measure.
+    
+    Using the FinTechRedirectSessionCookie on the way back to the FinTechApi to identify the redirect session, reauthenticating the FinTechPsu will be sufficent to assume identity
+    between the FinTechPSU and the BankingPSU.
+    
+    #### Request processing by the ConsentAuthorisationApi
+    At the entry point (/consent/auth), the ConsentAuthorisationApi will use the redirectCode to retrieve the RedirectSession from the TppServer.
+    An analysis of the RedirectSession will help decide if the ConsentAuthorisationApi will proceed with an embedded approach (E<sub>1</sub>) or a redirect approach (R<sub>1</sub>).
+    
+    ##### Using auth-id for isolating consent authorisation processes from each order
+    In order to make sure that a consent request can not be used for the wrong purpose, and in order to allow a PSU
+    to start many parallel authorization processes, it is essential to be able to distinguish between different
+    consent authorization processes started by the same PSU. For this reason, we introduce the notion of auth-id.
+    
+    The auth-id will be used as a path parameter to group all requests associated with the same consent authorisation process.  
+    
+    ##### ConsentAuthSessionCookie and consentAuthState
+    Each authorisation session started will be associated with a proper ConsentAuthSessionCookie and a corresponding consentAuthState.
+    * The ConsentAuthorisationApi will generated a ConsentAuthSessionCookie and associate it with the first 
+    response to the PsuUserAgent (E<sub>1</sub>, R<sub>1</sub>). 
+    * The ConsentAuthorisationApi will also generate an consentAuthState that will be used to authenticate 
+    usage of the ConsentAuthSessionCookie. This is, all relevant requests to the ConsentAuthorisationApi will be expected to
+    contain the consentAuthState in the Authorization header parameter and also bring the ConsentAuthSessionCookie for authentication.
+    * All subsequent request to the ConsentAuthorisationApi must specify the consentAuthState. This is generally the case of the embedded approach that 
+    uses the generic endpoint /consent/embedded/auth to pass PSU credentialsto the ConsentAuthorisationApi.
+    
+    ##### The generic AuthorizeResponse
+    All responses sent by the ConsentAuthorisationApi to the UI are derived from the AuthorizeResponse object. 
+    This object presents :
+    * The consentAuthState as a XSRF parameter used to reauthenticate the ConsentAuthSessionCookie. It can also be used if required
+    to encrypt information stored in the corresponding ConsentAuthSessionCookie.
+    * The AuthorizeResponse object info also contains information used to display a qualified page to the PSU 
+    prio to eventually redirecting the PSU to the target ASPSP.
+    * Any session, account or payment information needed to manage the authorization process is stored in both AuthorizeResponse and encrypted in the ConsentAuthSessionCookie.
+    * The ConsentAuthSessionCookie is secure and httpOnly.
+    
+    #### Redirecting PSU to the ASPSP (R<sub>1</sub>)
+    In a redirect approach, the The retruned AuthorizeResponse object contains information needed
+    to present a suitable redirect info page to the PSU. Redirection can either be actively performed by the UIApplication
+    or performed as a result of a 30x redirect response to the PsuUserAgent. In any case, the redirection to the OnlineBanking
+    interface of the ASPSP must consider following security details.
+    
+    ##### Setting a TppConsentSessionCookie
+    The redirect response to the PsuUserAgent must set a TppConsentSessionCookie.
+    * This cookie contains information associated with this specific redirect session.
+    * This cookie can be used togehther with a corresponding consentAuthState to identify the BankingPSU at the ConsentAuthorisationApi.
+    * This cookie must have a life time equal to the expected duration of the corresponding redirect session at the target ASPSP OnlineBankingApi.
+    
+    ##### Desiging the BackRedirectURL (R<sub>6</sub>)
+    The BackRedirectURL (OkUrl, NokUrl, etc... depending of ASPSP API) is the URL used by the ASPSP to send the PsuUserAgent
+    back to the ConsentAuthorisationApi. Event though the structure of this URL might be constrained by the nature of the
+    ASPSP OpenBankingApi, the BackRedirectURL must contains atleast :
+    * A redirect-id (as a path parameter) used to isolate many redirect processes form each order.
+    * A consentAuthState (as a path or query parameter) used to protect the TppConsentSessionCookie as a XSRF parameter.
+    * The consentAuthState might if necessary be used to encrypt the attached ConsentAuthSessionCookie.
+    
+    #### Back-Redirecting PSU to the FinTechApi (4<sub>b</sub>)
+    Prior to redirecting the PSU back to the FinTechApi, consent information will be stored by the ConsentAuthorisationApi in a RedirectSession as well.
+    * The one time resulting redirectCode will be attached as a query parameter to the location URL leading back to the FinTechApi.
+    * After verifying the FinTechRedirectSessionCookie (4<sub>b</sub>), the FinTechApi must forward this redirectCode to the token endpoint of the TppBankingAPi (4<sub>c</sub>). 
+    * The TppBankingApi will then retrieve the RedirectSession using the redirectCode and proceed forward with the authorization process.
+    
+    #### Final Result of the Authorization Process
+    The final result of the authorization process is a PsuCosentSession that is returned by the token endpoint of the TppBankingAPi to
+    the FinTechApi (4<sub>c</sub>). This handle will (PsuCosentSession) will be stored by the FinTechApi and added a PSU identifying information to
+    each service request associated with this PSU. 
 tags:
 - name: Consent Authorization
-  description: Entry point for processing a consent request redirected by the TppBankingApi
+  description: |
+    Entry point for processing a consent request redirected by the TppBankingApi
     over the FinTechApi to this ConsentAuthorisationApi.
 paths:
   /consent/auth:
     get:
+      operationId: authEntryPointUsingGET
+      summary: |
+        Entry point for processing a consent request redirected by the TppBankingApi
+        over the FinTechApi to this ConsentAuthorisationApi.
       tags:
       - Consent Authorization
-      summary: Entry point for processing a consent request redirected by the TppBankingApi
-        over the FinTechApi to this ConsentAuthorisationApi.
-      description: This is the <b>entry point</b> for processing a consent redirected
-        by the TppBankingApi to this ConsentAuthorisationApi.<ul><b>TPP behavior prior
-        to redirecting to the ConsentAuthorisationApi</b><li>The code is a one time
-        string that contains information used to retrieve RedirectSession from the
-        BankingProtocol in a back channel.</li><li>The code is short lived (like 10
-        seconds). This is, BankingProtocol does not need to hold the RedirectSession
-        after expiration.</li><li>The code indexed record (RedirectSession) must also
-        be deleted by the TPP on first retrieval by the ConsentAuthorisationApi.</li></ul><ul><b>Initial
-        request processing ConsentAuthorisationApi</b><li>ConsentAuthorisationApi
-        will use the code to retrieve the RedirectSession from the back channel BankingProtocol.</li><li>ConsentAuthorisationApi
-        will generate an consentAuthState that is used to identify protect access
-        to the ConsentSession.</li><li>All subsequent request to the ConsentAuthorisationApi
-        must specify the consentAuthState.</li></ul><ul><b>Interacting with the PSU
-        user agent</b><li>The consentAuthState is a transient reference of the ConsentSession.
-        It is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.</li><li>The
-        retruned AuthorizeResponse object info is needed to display a qualified information
-        page to the PSU prio to eventually redirecting the PSU to the target ASPSP.</li><li>The
-        retruned AuthorizeResponse object allways carries the consentAuthState that
-        is needed in any subsequent request to the ConsentAuthorisationApi. Therefore
-        ConsentAuthorisationApi shall never store the consentAuthState the ConsentAuthSessionCookie</li><li>The
-        retruned AuthorizeResponse object is allways synchronized with the ConsentAuthSessionCookie
-        set with the same HTTP response object.</li><li>The consentAuthState contained
-        in the retruned AuthorizeResponse object is also used to decrypt information
-        stored in the ConsentAuthSessionCookie set with the same HTTP response object.</li><li>Any
-        session, account or payment information needed to manage the authorization
-        process is stored in both AuthorizeResponse and encrypted in the ConsentAuthSessionCookie</li><li>The
-        ConsentAuthSessionCookie is httpOnly</li></ul><ul><b>Redirecting PSU to the
-        ASPSP</b><li>The retruned AuthorizeResponse object contains information needed
-        to redirect the PSU to the target ASPSP.</li><li>The BackRedirectURL (OkUrl,
-        NokUrl, etc... depending of ASPSP API) contains the consentAuthState.</li></ul><ul><b>Back-Redirecting
-        PSU to the ConsentAuthorisationApi</b><li>The ASPSP BackRedirectURL used to
-        redirect the PSU to the ASPSP contains the consentAuthState</li><li>The consentAuthState
-        will the be used to retrieve the attached ConsentAuthSessionCookie containing
-        further consent information.</li></ul><ul><b>Back-Redirecting PSU to the FinTechApi</b><li>Prior
-        to redirecting the PSU back to the FinTechApi, consent information will in
-        a be stored in a RedirectSession object by the BankingProtocol.</li><li>The
-        one time resulting redirectCode will be used to redirect the PSU to the FinTechApi.</li><li>The
-        RedirectSession will then retrieve the RedirectSession using the redirectCode
-        and proceed forward with the authorization process.</li></ul>
-      operationId: authEntryPointUsingGET
+      description: |
+        This is the <b>entry point</b> for processing a consent redirected
+        by the TppBankingApi to this ConsentAuthorisationApi.
       parameters:
       - name: redirectCode
         in: query
@@ -67,253 +172,285 @@ paths:
         schema:
           type: string
       responses:
-        200:
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/AuthorizeResponse'
-        401:
-          description: Unauthorized
-          content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not Found
-          content: {}
-      deprecated: false
-  /consent/embedded/auth:
+        '200':
+          $ref: '#/components/responses/200_AuthorizeResponse'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+        '403':
+          $ref: '#/components/responses/403_Forbidden' 
+        '404':
+          $ref: '#/components/responses/404_NotFound' 
+
+  /consent/{auth-id}/embedded/auth:
     post:
       tags:
       - Consent Authorization
       summary: Generic challenge response end point for updating consent session with
         PSU authentication data while requesting remaining challenges for the ongoing
         authorization process.
-      description: Update consent session with PSU auth data whereby requesting remaining
-        challenges for the ongoing authorization process.<ul><b>Request contains:</b><li>consentSessionState
-        is retrieved from the response of the peceeding request.</li><li>The PsuAuthRequest
-        constaining necessary consent info and auth data.</li></ul><ul><b>Returns:</b><li>The
-        AuthorizeResponse constaining necessary consent info.</li></ul>
+      description: |
+        Update consent session with PSU auth data whereby requesting remaining
+        challenges for the ongoing authorization process. 
+        * Request contains the PsuAuthRequest constaining necessary consent information.
+        * Request Returns the AuthorizeResponse constaining necessary consent information.
       operationId: embeddedAuthUsingPOST
       parameters:
-      - name: Cookie
-        in: header
-        description: Cookie
-        schema:
-          type: string
+        #path
+        - $ref: "#/components/parameters/auth-id"
       requestBody:
-        description: request
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/PsuAuthRequest'
         required: true
       responses:
-        200:
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/AuthorizeResponse'
-        201:
-          description: Created
-          content: {}
-        401:
-          description: Unauthorized
-          content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not Found
-          content: {}
-      deprecated: false
+        '200':
+          $ref: '#/components/responses/200_AuthorizeResponse'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+        '403':
+          $ref: '#/components/responses/403_Forbidden' 
+        '404':
+          $ref: '#/components/responses/404_NotFound' 
       security:
-      - apiKey: []
-      x-codegen-request-body-name: request
-  /consent/from/aspsp/{consentSessionState}/nok:
+      - cookieAuth: []
+      - authState: []
+
+  /consent/{auth-id}/from/aspsp/{tppConsentSessionState}/nok:
     get:
       tags:
       - Consent Authorization
       summary: Redirecting back from ASPSP to TPP after a failed consent authorization.
       description: Redirecting back from ASPSP to TPP after a failed consent authorization.
         In any case, the session of the user will be closed and cookies will be deleted
-        with the response to this request.<ul><b>Request contains:</b><li>consentSessionState
-        is retrieved from the response of the peceeding request.</li><li>Instructions
-        on how to proceed with the next request is included in the ConsentAuthSessionCookie.</li></ul><ul><b>Returns:</b><li>302
-        Redirect</li><li>Redirect Location Header to FinTechApi.</li><li>Null ConsentAuthSessionCookie
-        (deletion).</li></ul>
+        with the response to this request.
+        * Request contains
+          * tppConsentSessionState retrieved from the response of the peceeding request.
+          * Instructions on how to proceed with the next request is included in the ConsentAuthSessionCookie.
+        * Request Returns
+          * 302 Redirect
+          * Redirect Location Header to FinTechApi.
+          * Null ConsentAuthSessionCookie (deletion).
       operationId: fromAspspNokUsingGET
       parameters:
-      - name: Cookie
-        in: header
-        description: Cookie
-        schema:
-          type: string
-      - name: consentSessionState
-        in: path
-        description: consentSessionState
-        required: true
-        schema:
-          type: string
+        #path
+        - $ref: "#/components/parameters/auth-id"
+        - $ref: "#/components/parameters/tppConsentSessionState"
       responses:
-        200:
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/AuthorizeResponse'
-        401:
-          description: Unauthorized
-          content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not Found
-          content: {}
-      deprecated: false
+        '200':
+          $ref: '#/components/responses/200_AuthorizeResponse'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+        '403':
+          $ref: '#/components/responses/403_Forbidden' 
+        '404':
+          $ref: '#/components/responses/404_NotFound' 
       security:
-      - apiKey: []
-  /consent/from/aspsp/{consentSessionState}/ok:
+      - tppConsentSessionCookie: []
+
+  /consent/{auth-id}/from/aspsp/{tppConsentSessionState}/ok:
     get:
       tags:
       - Consent Authorization
       summary: Redirecting back from ASPSP to ConsentAuthorisationApi after a successful
         consent authorization.
-      description: Redirecting back from ASPSP to ConsentAuthorisationApi after a
+      description: |
+        Redirecting back from ASPSP to ConsentAuthorisationApi after a
         successful consent authorization. In any case, the consent session of the
         user will be closed and cookies will be deleted with the response to this
-        request.<ul><b>Request contains:</b><li>consentSessionState included in the
-        link sent to the ASPSP in the consent initiation.</li><li>Instructions on
-        how to proceed with the next request is included in the ConsentAuthSessionCookie.</li></ul><ul><b>Returns:</b><li>302
-        Redirect</li><li>Redirect Location Header to FinTechApi.</li><li>Null ConsentAuthSessionCookie
-        (deletion).</li></ul>
+        request.
+        * Request contains
+          * ConsentSessionState included in the link sent to the ASPSP in the consent initiation.
+          * Instructions on how to proceed with the next request is included in the ConsentAuthSessionCookie.
+        * Request Returns
+          * 302 Redirect
+          * Redirect Location Header to FinTechApi.
+          * Null ConsentAuthSessionCookie (deletion).
       operationId: fromAspspOkUsingGET
       parameters:
-      - name: Cookie
-        in: header
-        description: Cookie
-        schema:
-          type: string
-      - name: consentSessionState
-        in: path
-        description: consentSessionState
-        required: true
-        schema:
-          type: string
+        #path
+        - $ref: "#/components/parameters/auth-id"
+        - $ref: "#/components/parameters/tppConsentSessionState"
       responses:
-        200:
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/AuthorizeResponse'
-        401:
-          description: Unauthorized
-          content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not Found
-          content: {}
-      deprecated: false
+        '200':
+          $ref: '#/components/responses/200_AuthorizeResponse'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+        '403':
+          $ref: '#/components/responses/403_Forbidden' 
+        '404':
+          $ref: '#/components/responses/404_NotFound' 
       security:
-      - apiKey: []
-  /consent/to/aspsp/deny:
+      - tppConsentSessionCookie: []
+
+  /consent/{auth-id}/to/aspsp/deny:
     post:
       tags:
       - Consent Authorization
       summary: Closes this session and redirects the PSU back to the FinTechApi or
         close the application window.
-      description: Closes this session and redirects the PSU back to the FinTechApi
+      description: |
+        Closes this session and redirects the PSU back to the FinTechApi
         or close the application window. In any case, the session of the user will
-        be closed and cookies will be deleted with the response to this request.<ul><b>Request
-        contains:</b><li>consentSessionState is retrieved from the AuthorizeResponse
-        of the peceeding request.</li><li>ConsentAuthSessionCookie.</li></ul><ul><b>Returns:</b><li>302
-        Redirect</li><li>Redirect Location Header to tpp.</li><li>Null ConsentAuthSessionCookie
-        (deletion).</li></ul>
+        be closed and cookies will be deleted with the response to this request.
+        * Request contains
+          * consentSessionState is retrieved from the AuthorizeResponse of the peceeding request.
+          * ConsentAuthSessionCookie.
+        * Request Returns
+          * 302 Redirect
+          * Redirect Location Header to tpp.
+          * Null ConsentAuthSessionCookie (deletion).
       operationId: denyRedirectUsingPOST
       parameters:
-      - name: Cookie
-        in: header
-        description: Cookie
-        schema:
-          type: string
+        #path
+        - $ref: "#/components/parameters/auth-id"
       requestBody:
-        description: request
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/DenyRedirectRequest'
         required: true
       responses:
-        200:
-          description: OK
-          content: {}
-        201:
-          description: Created
-          content: {}
-        401:
-          description: Unauthorized
-          content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not Found
-          content: {}
-      deprecated: false
+        '302':
+          $ref: '#/components/responses/302_Redirect_to_FinTechApi'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+        '403':
+          $ref: '#/components/responses/403_Forbidden' 
+        '404':
+          $ref: '#/components/responses/404_NotFound' 
       security:
-      - apiKey: []
-      x-codegen-request-body-name: request
-  /consent/to/aspsp/grant:
+      - cookieAuth: []
+      - authState: []
+
+  /consent/{auth-id}/to/aspsp/grant:
     post:
       tags:
       - Consent Authorization
       summary: Provides the ConsentAuthorisationApi with the opportunity to redirect
         the PSU to the ASPSP.
-      description: Provides the ConsentAuthorisationApi with the opportunity to redirect
-        the PSU to the ASPSP.<ul><b>Request contains:</b><li>consentSessionState is
-        retrieved from the AuthorizeResponse of the peceeding request.</li><li>ConsentAuthSessionCookie.</li></ul><ul><b>Returns:</b><li>302
-        Redirect</li><li>Redirect Location Header.</li><li>New ConsentAuthSessionCookie.</li></ul>
+      description: |
+        Provides the ConsentAuthorisationApi with the opportunity to redirect the PSU to the ASPSP.
       operationId: grantRedirectUsingPOST
       parameters:
-      - name: Cookie
-        in: header
-        description: Cookie
-        schema:
-          type: string
+        #path
+        - $ref: "#/components/parameters/auth-id"
       requestBody:
-        description: request
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/AuthorizeRequest'
         required: true
       responses:
-        200:
-          description: OK
-          content: {}
-        201:
-          description: Created
-          content: {}
-        401:
-          description: Unauthorized
-          content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not Found
-          content: {}
-      deprecated: false
+        '302':
+          $ref: '#/components/responses/302_Redirect_to_ASPSP'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+        '403':
+          $ref: '#/components/responses/403_Forbidden' 
+        '404':
+          $ref: '#/components/responses/404_NotFound' 
       security:
-      - apiKey: []
-      x-codegen-request-body-name: request
+      - cookieAuth: []
+      - authState: []
+
 components:
+  responses:
+    200_AuthorizeResponse:
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        Set-Cookie:
+          $ref: '#/components/headers/Set-Cookie'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              authorizeResponse:
+                $ref: '#/components/schemas/AuthorizeResponse'
+
+    302_Redirect_to_ASPSP:
+      description: Redirects UserAgent to the ASPSP online banking interface.
+      headers:
+        Location:
+          $ref: '#/components/headers/Location-ASPSP'
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        Set-Cookie:
+          $ref: '#/components/headers/Set-TppConsentSessionCookie'
+          description: |
+            Here the cookie set ic called a TppConsentSessionCookie. Looks like
+            TCSC_{auth-id}=ejts.adsfa.adfaj; Path=/consent/{auth-id}/from/aspsp. In the case XYZ is an
+            identifier used to keep track of different TCSCs. As a user can initiate more than one sca from one browser instance. 
+            * Note that the path of the TCSC is Path=/consent/{auth-id}/from/aspsp where auth-id is 
+            a local id like xyz. So TCSC_xyz are only sent to the server when a callback link
+              commes from the ASPSP.
+            * Also note that the callback link hast the structure /consent/{auth-id}/from/aspsp/{tppConsentSessionState}/ok where the
+              auth-id is a simple random string (xyz) and the tppConsentSessionState the key to validate the TppConsentSessionCookie.
+            * The way the callback link is passed to the ASPSP is dependent on the OpenBankingApi of the ASPSP.
+            * The TppConsentSessionCookie has an expiration date after which no callback will be accepted from the OpenBankingApi.
+    302_Redirect_to_FinTechApi:
+      description: Redirects UserAgent back to the FinTechAPI.
+      headers:
+        Location:
+          $ref: '#/components/headers/Location-FinTechApi'
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        Set-Cookie:
+          $ref: '#/components/headers/Reset-ConsentAuthSessionCookie'
+    401_Unauthorized:
+      description: |
+        Access credentials absent or invalid. This happens when
+        * Provided credential for login not matching.
+        * Endpoin expect a session cookie but none is present.
+        * Session cookie is present but associated stateString does not match.
+        
+        As a consequence, we reset existing FinTechLoginSessionState if any. 
+        Nevertheless we do not reset RedirectSessionCookie.
+      headers:
+        X-Request-ID:
+          $ref: "#/components/headers/X-Request-ID"
+      content:
+        application/json:
+          schema:
+           $ref: '#/components/schemas/errorResponse'
+    403_Forbidden:
+      description: |
+        The specified resource is not available for this user. User is still
+        authorize to access other endpoint. This is none of the credentials of 
+        the user need to be deleted.
+      headers:
+        X-Request-ID:
+          $ref: "#/components/headers/X-Request-ID"
+        Set-Cookie:
+          $ref: '#/components/headers/Set-Cookie'
+          description: |
+            As this is not an authorization process. This is the user 
+            credential can be extended in the course of processing this request
+            and will have to be returned with this response. The response body 
+            will cary the corresponding sessionState object.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/errorResponse'
+    404_NotFound:
+      description: The specified resource was not found
+      headers:
+        X-Request-ID:
+          $ref: "#/components/headers/X-Request-ID"
+        Set-Cookie:
+          $ref: '#/components/headers/Set-Cookie'
+          description: |
+            As this is not an authorization process. This is the user 
+            credential can be extended in the course of processing this request
+            and will have to be returned with this response. The response body 
+            will cary the corresponding sessionState object.
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/errorResponse'
+
   schemas:
     AccountStatus:
       type: string
