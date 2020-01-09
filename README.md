@@ -1,10 +1,11 @@
 # Open Banking Gateway
 Provides tools, adapters and connectors for transparent access to open banking apis. The initial effort focuses on the connectivity to banks that implement the European PSD2 directive either through one of the common market initiatives like :
-  * [The Berlin Group NextGenPSD2](https://www.berlin-group.org/psd2-access-to-bank-accounts),
-  * [The Open Banking UK](https://www.openbanking.org.uk/),
-  * [The Polish PSD2 API](https://polishapi.org/en/)
+* [The Berlin Group NextGenPSD2](https://www.berlin-group.org/psd2-access-to-bank-accounts)
+* [The Open Banking UK](https://www.openbanking.org.uk/)
+* [The Polish PSD2 API](https://polishapi.org/en/)
 
-or even through proprietary bank api like [the ING’s PSD2 API](https://developer.ing.com/openbanking/).
+Or even through proprietary bank api like 
+* [the ING’s PSD2 API](https://developer.ing.com/openbanking/)
 
 ## What this Project is about
 
@@ -26,18 +27,6 @@ The following picture displays the overall architecture of this banking gateway:
 * [Release notes](docs/releasenotes.md) 
 * [Roadmap for next features development](docs/roadmap.md)
 * [Initial Requirements](docs/README.md)
- 
-### Testing API with Postman json collections
- 
- For testing API of the banking gateway it is used Postman https://www.getpostman.com/
- Environment jsons with global parameter’s sets and Collections of jsons for imitation of processes flows are stored in /postman folder.
- To import Postman collections and environments follow next steps:
- 1. Download Postman jsons with collections and environments to your local machine.
- 2. Open Postman, press button “Import”.
- 3. Choose “Import file” to import one json or “Import folder” to import all jsons within the folder, then press button “Choose Files” or “Choose Folders” and open necessary files/folders.
- 4. To change settings of environments - go to “Manage Environments”, press the environment name and change variables.
- 
- To start testing with Postman collections it is necessary to have all services running.
  
  
 ## Authors & Contact
@@ -73,7 +62,8 @@ opba-banking-rest-api/target/generated-sources/open-api/src/main/java
 
 So the folders have to be made known to the ide.
 
-
+## Dictionary
+* [Dictionary](docs/architecture/dictionary.md)
 
 ## Contribution Guidelines
 
