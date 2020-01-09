@@ -5,7 +5,7 @@
     "method" : "GET",
     "headers" : {
       "X-Request-ID" : {
-        "equalTo" : "b575eefc-3232-11ea-b535-e2b5b1f1970b"
+        "matches" : "[0-9a-zA-z\\-]+"
       },
       "PSU-ID" : {
         "equalTo" : "anton.brueckner"

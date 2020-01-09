@@ -1,20 +1,15 @@
 package de.adorsys.opba.core.protocol.e2e;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.common.Slf4jNotifier;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.stubbing.StubImport;
-import com.github.tomakehurst.wiremock.stubbing.StubMapping;
-import de.adorsys.opba.core.protocol.BaseMockitoTest;
+import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
+import de.adorsys.opba.core.protocol.BankingProtocol;
+import de.adorsys.opba.core.protocol.e2e.stages.AccountListRequest;
+import de.adorsys.opba.core.protocol.e2e.stages.AccountListResult;
+import de.adorsys.opba.core.protocol.e2e.stages.mocks.MockServers;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import ru.lanwen.wiremock.config.WiremockConfigFactory;
-import ru.lanwen.wiremock.config.WiremockCustomizer;
-import ru.lanwen.wiremock.ext.WiremockResolver;
-import ru.lanwen.wiremock.ext.WiremockUriResolver;
 
 import static de.adorsys.opba.core.protocol.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.core.protocol.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
@@ -22,19 +17,22 @@ import static de.adorsys.opba.core.protocol.TestProfiles.ONE_TIME_POSTGRES_RAMFS
 /**
  * Happy-path test that uses wiremock-stubbed request-responses to drive banking-protocol.
  */
-@SpringBootTest
-@ExtendWith({
-        WiremockResolver.class,
-        WiremockUriResolver.class
-})
+@AutoConfigureMockMvc
+@SpringBootTest(classes = {BankingProtocol.class, JGivenConfig.class})
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
-class BasicE2EProtocolTest extends BaseMockitoTest {
+class BasicE2EProtocolTest extends SpringScenarioTest<MockServers, AccountListRequest, AccountListResult> {
 
     @Test
     @SneakyThrows
-    void testAccountsListWithConsentUsingRedirect(
-            @WiremockResolver.Wiremock(factory = Configurer.class, customizer = Customizer.class)
-                    WireMockServer server) {
+    void testAccountsListWithConsentUsingRedirect() {
+        given()
+                .redirect_sandbox_mock_running();
+        when()
+                .open_banking_list_accounts_called()
+                .and()
+                .open_banking_user_provided_necessary_details();
+        then()
+                .obg_reads_result_on_redirect();
     }
 
     @Test
@@ -47,26 +45,5 @@ class BasicE2EProtocolTest extends BaseMockitoTest {
 
     @Test
     void testTransactionsListWithConsentUsingEmbedded() {
-    }
-
-    public static class Customizer implements WiremockCustomizer {
-
-        @Override
-        public void customize(WireMockServer server) {
-            server.importStubs(StubImport.stubImport()
-                    .stub(StubMapping.buildFrom("mockedsandbox/restrecord/redirect/accounts/sandbox/"))
-                    .build()
-            );
-        }
-    }
-
-    public static class Configurer implements WiremockConfigFactory {
-
-        @Override
-        public WireMockConfiguration create() {
-            return WireMockConfiguration.options()
-                    .port(39393)
-                    .notifier(new Slf4jNotifier(true));
-        }
     }
 }

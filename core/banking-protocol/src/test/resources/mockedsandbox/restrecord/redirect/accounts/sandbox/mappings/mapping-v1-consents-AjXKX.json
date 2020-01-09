@@ -5,7 +5,7 @@
     "method" : "POST",
     "headers" : {
       "X-Request-ID" : {
-        "equalTo" : "b575eefc-3232-11ea-b535-e2b5b1f1970b"
+        "matches" : "[0-9a-zA-z\\-]+"
       },
       "PSU-ID" : {
         "equalTo" : "anton.brueckner"
@@ -15,6 +15,12 @@
       },
       "Content-Type" : {
         "equalTo" : "application/json; charset=UTF-8"
+      },
+      "TPP-Redirect-URI": {
+        "matches" : "http://localhost:8080/v1/consents/confirm/accounts/LIST_ACCOUNTS/.+"
+      },
+      "TPP-Nok-Redirect-URI": {
+        "matches" : "http://localhost:8080/v1/consents/failed/accounts/.+"
       }
     },
     "bodyPatterns" : [ {

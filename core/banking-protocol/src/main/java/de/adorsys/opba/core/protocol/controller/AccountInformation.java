@@ -61,7 +61,6 @@ public class AccountInformation {
         );
 
         return result;
-
     }
 
     // Use accountId received from /accounts
