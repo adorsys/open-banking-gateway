@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>List of Transactions - Open Banking Gateway Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "List of Transactions";
+    var mkdocs_page_input_path = "architecture/4-initiateAisConsent.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Open Banking Gateway Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Architecture</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../1-loginWithFinTech/">Login with FinTech Application</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../2-searchBank/">Search bank</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../3-selectBank/">Select bank</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">List of Transactions</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#list-of-transactions">List Of Transactions</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#definition">Definition</a></li>
+        
+            <li><a class="toctree-l4" href="#diagram">Diagram</a></li>
+        
+            <li><a class="toctree-l4" href="#use-cases">Use Cases</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5-redirectPsuToConsentAPI/">Redirect to Consent Authorization API</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5a-psuAuthEmbeddedConsent/">Authorize Consent Embedded Approach</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5b-psuAuthRedirectConsent/">Authorize Consent Redirect Approach</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../6-consume_api/">Consume Service</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../dictionary/">Dictionary</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../drafts/">Draft</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../roadmap/">Roadmap</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../ContributionGuidelines/">Contribution guidelines</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../releasenotes/">Release notes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../version_policy/">Version Policy</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Open Banking Gateway Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Architecture &raquo;</li>
+        
+      
+    
+    <li>List of Transactions</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/adorsys/open-banking-gateway/edit/master/docs/architecture/4-initiateAisConsent.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="list-of-transactions">List Of Transactions</h1>
+<p>General terms defined in the <a href="../dictionary/">dictionary</a></p>
+<h2 id="definition">Definition</h2>
+<p>Request the list of transactions for a given bank account. Initiates a consent request if necessary. Generally the consent request is not explicitly initiated by the PSU. When the PSU requests for a banking service, if the FinTech has an existing consent that covers the service, no new consent will be initiated.</p>
+<h2 id="diagram">Diagram</h2>
+<p><img alt="Session diagram" src="https://adorsys.github.io/open-banking-gateway/doc//architecture/diagrams/useCases/4-initiateAisConsent.png" />  </p>
+<h2 id="use-cases">Use Cases</h2>
+<h3 id="initconsent-010-fintechui-displays-bankprofile-to-psu">InitConsent-010 : FinTechUI displays BankProfile to PSU</h3>
+<p>The result of a bank selection is that the FinTechUI displays the <a href="../dictionary/#BankProfile">BankProfile</a> to the PSU. The bank profile also contains the list of services offered by the selected bank.</p>
+<h3 id="initconsent-020-psu-selects-a-service-like-listtransactions">InitConsent-020 : PSU selects a service (Like listTransactions)</h3>
+<p>The FinTechUI will forward the service selected to the FinTechApi. In this case listTransactions(BankProfile). The selection might be accompanied with some service specifications. For example in the case of listTransactions, this can be the iban of the target account. We will call this ListTransactionsSpec.</p>
+<h3 id="initconsent-030-fintechui-to-fintechapilisttransactions">InitConsent-030 : FinTechUI to FinTechApi.listTransactions</h3>
+<ul>
+<li>The attached <a href="../dictionary/#FinTechLoginSessionCookie">FinTechLoginSessionCookie</a> is used to maintain session between PSU and FinTech.</li>
+<li>The attached <a href="../dictionary/#UserAgentContext">UserAgentContext</a> describes details associated with the user agent of the PSU.</li>
+<li>The given <a href="../dictionary/#BankProfile">BankProfile</a> contains meta information associated with the selected Bank.</li>
+<li>The ListTransactionsSpec specifies details of the service requested by the PSU.</li>
+</ul>
+<h4 id="initconsent-031-load-psuconsentsession">InitConsent-031 : Load PsuConsentSession</h4>
+<p>A <a href="../dictionary/#PsuConsentSession">PsuConsentSession</a> is a reusable token, that can be used to request service with the TppBankingApi. It is reference to the PSU in the realm of the TPP.
+Whether a service request is covered by an existing PsuConsent is decided by the TppBankingApi. The Task of the FinTechApi is to load any existing PsuConsentSession and associate it with the PSU.</p>
+<h3 id="initconsent-040-fintechapi-to-tppbankingapilisttransactions">InitConsent-040 : FinTechApi to TppBankingApi.listTransactions</h3>
+<ul>
+<li>The associated <a href="../dictionary/#FinTechContext">FinTechContext</a> contains identification information associated with the FinTech.</li>
+<li>PsuConsentSession</li>
+<li>UserAgentContext</li>
+<li>BankProfile</li>
+<li>ListTransactionsSpec</li>
+</ul>
+<h4 id="initconsent-041-loads-the-bankingprotocol-from-the-given-bankprofile">InitConsent-041 : Loads the BankingProtocol from the given BankProfile</h4>
+<p>TppBankingApi selects the <a href="../dictionary/#BankingProtocol">BankingProtocol</a> based on the given BankProfile.</p>
+<h3 id="initconsent-050-tppbankingapi-to-bankingprotocollisttransactions">InitConsent-050 : TppBankingApi to BankingProtocol.listTransactions</h3>
+<p>The <a href="../dictionary/#BankingProtocol">BankingProtocol</a> associated with the given BankProfile decides on how to proceed with the request. 
+BankingProtocol can:</p>
+<h4 id="initconsent-051-load-tppconsentsession">InitConsent-051 : Load TppConsentSession</h4>
+<ul>
+<li>If there is existing consent associated with the PSU for the given service, the BankingProtocol will load the corresponding <a href="../dictionary/#TppConsentSession">TppConsentSession</a>. Information needed to load the TppConsentSession is contained in the given <a href="../dictionary/#PsuConsentSession">PsuConsentSession</a>.</li>
+<li>Use the loaded <a href="../dictionary/#TppConsentSession">TppConsentSession</a> to retrieve an existing consent and proceed to the ASPSP with the service request.</li>
+</ul>
+<h3 id="no-suitable-consent-present">No Suitable Consent Present</h3>
+<h4 id="initconsent-060-initiating-a-consent-with-the-aspsp">InitConsent-060 : Initiating a Consent with the ASPSP</h4>
+<p>If there is no suitable consent available, the BankingProtocol will first proceed with a consent initiation request.. This is, an initiated service request will either ends up in the expected service response or first redirect the PSU to the <a href="../dictionary/#ConsentAuthorisationApi">ConsentAuthorisationApi</a>.
+Whether this operation is necessary or not depends on the <a href="../dictionary/#AspspBankingApi">AspspBankingApi</a> interface. The selected banking protocol will know how to deal with this.
+The Associated <a href="../dictionary/#TppContext">TppContext</a> contains Tpp identifying information.</p>
+<h4 id="initconsent-061-consentinit-response">InitConsent-061 : ConsentInit Response</h4>
+<p>The response of the consent init request depends on the ASPSP implementation. It generally provides information needed to collect PSU identification information in the embedded case or information needed to redirect the PSU to the <a href="../dictionary/#OnlineBankingApi">OnlineBankingApi</a>.
+The result of a consent init session also carries an <a href="../dictionary/#TppConsentSession">TppConsentSession</a>, containing all information needed to be stored by the Tpp for the reference of the started consent session.</p>
+<h4 id="initconsent-062-bankingprotocol-calls-redirectsessionstoreapi-for-a-redirectcode">InitConsent-062 : BankingProtocol calls RedirectSessionStoreApi for a redirectCode</h4>
+<h4 id="initconsent-063-redirectsessionstoreapi">InitConsent-063 : RedirectSessionStoreApi</h4>
+<p>The <a href="../dictionary/#RedirectSessionStoreApi">RedirectSessionStoreApi</a> will encrypt and store the redirect session, indexing it with a redirectCode that can be used upon redirection by the ConsentAuthorisationApi to retrieve the corresponding <a href="../dictionary/#TppConsentSession">TppConsentSession</a>.</p>
+<h5 id="initconsent-063a-encryption">InitConsent-063a : Encryption</h5>
+<p>Encryption is performed to prevent unlawfull use of contained information in the Tpp's backend environment during the redirect session.</p>
+<h5 id="initconsent-063b-storage-an-expiration">InitConsent-063b : Storage an Expiration</h5>
+<p>Encrypted <a href="../dictionary/#TppConsentSession">TppConsentSession</a> shall only be stored for the duration of the redirect session.</p>
+<h5 id="initconsent-063c-auto-cleanup">InitConsent-063c : Auto Cleanup</h5>
+<p>Auto Cleanup process will make sure all expired redirect sessions are removed from that storage.</p>
+<h4 id="initconsent-064-redirectsessionstoreapi-returns-redirectcode-to-bankingprotocol">InitConsent-064 : RedirectSessionStoreApi returns redirectCode to BankingProtocol</h4>
+<p>The <a href="../dictionary/#redirectCode">redirectCode</a> is a one time string that contains information used to retrieve redirectInfo from the TPP Server in a back channel.
+The redirectCode is short lived (like 10 seconds). This is, TPP server does not need to hold the record indexed by this redirectCode for more than the given expiration time. Record must also be deleted by the TPP on first retrieval by the ConsentAPI.</p>
+<h4 id="initconsent-065-bankingprotocol-reproduces-psuconsentsession-from-the-tppconsentsession">InitConsent-065 : BankingProtocol reproduces PsuConsentSession from the TppConsentSession</h4>
+<h4 id="initconsent-066-resulting-redirect-information-is-returned-to-the-tppbankingapi">InitConsent-066 : Resulting Redirect Information is returned to the TppBankingApi</h4>
+<p>The attached <a href="../dictionary/#AspspRedirectInfo">AspspRedirectInfo</a> contains all information necessary to redirect the PSU to the <a href="../dictionary/#ConsentAuthorisationApi">ConsentAuthorisationApi</a>.</p>
+<h4 id="initconsent-067-tppbankingapi-returns-the-psuconsentsession-an-a-redirectcode-to-fintechapi">InitConsent-067 : TppBankingApi returns the PsuConsentSession an a redirectCode to FinTechApi</h4>
+<h4 id="initconsent-068-fintechconsentsessioncookie">InitConsent-068 : FinTechConsentSessionCookie</h4>
+<p>Available in the request header. This cookie shall be set for the Max time given to the PSU for the authorization of the corresponding consent. The cookie can be bound to the end point FinTechApi.consentAuthDone so it does no need to be transported to the server on other requests. </p>
+<h5 id="initconsent-068a-fintechconsentsessionstate">InitConsent-068a : finTechConsentSessionState</h5>
+<p>Will be used to read and validate the corresponding FinTechConsentSessionCookie.</p>
+<h4 id="initconsent-069-fintechapi-redirects-useragent-to-the-consentauthorisationapi">InitConsent-069 : FinTechApi redirects userAgent to the ConsentAuthorisationApi</h4>
+<ul>
+<li><a href="../dictionary/#PsuUserAgent">PsuUserAgent</a> redirection happens using a HTTP_302</li>
+<li>redirectCode is attached as a query parameter</li>
+<li>produced <a href="../dictionary/#FinTechLoginSessionCookie">FinTechLoginSessionCookie</a> is returned as a cookie to the <a href="../dictionary/#PsuUserAgent">PsuUserAgent</a></li>
+</ul>
+<h3 id="initconsent-070-suitable-consent-present">InitConsent-070 : Suitable Consent Present</h3>
+<h4 id="initconsent-071-forward-service-request-to-aspsp">InitConsent-071 : Forward Service Request to ASPSP</h4>
+<p>Service request is forwarded to the <a href="../dictionary/#AspspBankingApi">AspspBankingApi</a> together with a reference to the consent.
+The Associated <a href="../dictionary/#TppContext">TppContext</a> contains Tpp identifying information.</p>
+<h4 id="initconsent-072-returned-service-response-if-sent-and-displayed-to-the-psu">InitConsent-072 : Returned Service Response if sent and displayed to the PSU.</h4>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../5-redirectPsuToConsentAPI/" class="btn btn-neutral float-right" title="Redirect to Consent Authorization API">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../3-selectBank/" class="btn btn-neutral" title="Select bank"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/adorsys/open-banking-gateway/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../3-selectBank/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../5-redirectPsuToConsentAPI/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+
+</body>
+</html>

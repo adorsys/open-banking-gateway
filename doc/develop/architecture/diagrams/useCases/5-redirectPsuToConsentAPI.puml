@@ -1,0 +1,45 @@
+@startuml
+title PsuAuthorizeEmbeddedConsent
+autonumber 10 10 "<b><color blue>[Redirect-000]</color></b>"
+actor psu
+
+box "PsuUserAgent" #LightGray
+    participant "FinTechUI" as FinTechUI
+    participant "ConsentAuthorisationUI" as ConsentAuthorisationUI
+    participant "OnlineBankingUI" as OnlineBankingUI
+end box
+box "FinTechDC" #DarkSeaGreen
+    participant "FinTechApi" as FinTechApi
+end box
+box "TppDC" #LightGray
+    participant "TppBankingApi" as TppBankingApi
+    'participant "TppBankSearchApi" as TppBankSearchApi
+    participant "ConsentAuthorisationApi" as ConsentAuthorisationApi
+
+    participant "BankingProtocol" as BankingProtocol
+    participant "RedirectSessionStoreApi" as RedirectSessionStoreApi
+end box
+box "AspspDC" #LightSkyBlue
+	'participant "AspspBankingApi" as AspspBankingApi
+    'participant "OnlineBankingApi" as OnlineBankingApi
+end box
+== TPPAuthorize consent upon PSU transaction display request - method:endpoint[header](body)<params> return code[header](body) ==
+
+FinTechUI -> ConsentAuthorisationApi ++ : GET:ConsentAuthorisationApi.auth[UserAgentContext]()<redirectCode>
+autonumber 21 1 "<b><color blue>[Redirect-000]</color></b>"
+ConsentAuthorisationApi -> ConsentAuthorisationApi : selectProtocol(redirectCode)
+ConsentAuthorisationApi -> BankingProtocol ++ : redirectSession(redirectCode)
+BankingProtocol -> RedirectSessionStoreApi ++ : redirectSession(redirectCode)
+RedirectSessionStoreApi -> RedirectSessionStoreApi : loadDeryptDeleteRedirectSession\n(redirectCode):TppConsentSession
+return TppConsentSession
+return TppConsentSession
+ConsentAuthorisationApi -> ConsentAuthorisationApi : TppConsentSession.consentAuthState():consentAuthState
+ConsentAuthorisationApi -> ConsentAuthorisationApi : TppConsentSession.authorizeResponse(consentAuthState):AuthorizeResponse
+ConsentAuthorisationApi -> ConsentAuthorisationApi : TppConsentSession.consentAuthSessionCookie(consentAuthState):ConsentAuthSessionCookie
+autonumber 30 10 "<b><color blue>[Redirect-000]</color></b>"
+alt AuthorizeResponse.isEmbeddedFlow()
+ConsentAuthorisationApi --> ConsentAuthorisationUI : displayBankLoginPage[ConsentAuthSessionCookie](AuthorizeResponse)
+else AuthorizeResponse.isRedirectFlow()
+ConsentAuthorisationApi --> ConsentAuthorisationUI : displayRedirectInfoPage[ConsentAuthSessionCookie](AuthorizeResponse)
+end
+@enduml
