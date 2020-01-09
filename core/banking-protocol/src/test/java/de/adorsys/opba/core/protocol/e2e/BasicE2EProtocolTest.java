@@ -17,6 +17,7 @@ import ru.lanwen.wiremock.ext.WiremockResolver;
 import ru.lanwen.wiremock.ext.WiremockUriResolver;
 
 import static de.adorsys.opba.core.protocol.TestProfiles.MOCKED_SANDBOX;
+import static de.adorsys.opba.core.protocol.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
 
 /**
  * Happy-path test that uses wiremock-stubbed request-responses to drive banking-protocol.
@@ -26,7 +27,7 @@ import static de.adorsys.opba.core.protocol.TestProfiles.MOCKED_SANDBOX;
         WiremockResolver.class,
         WiremockUriResolver.class
 })
-@ActiveProfiles(profiles = {MOCKED_SANDBOX})
+@ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
 class BasicE2EProtocolTest extends BaseMockitoTest {
 
     @Test
