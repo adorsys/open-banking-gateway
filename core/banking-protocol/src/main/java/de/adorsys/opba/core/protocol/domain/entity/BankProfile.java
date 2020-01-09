@@ -8,11 +8,11 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
-
-import static javax.persistence.GenerationType.SEQUENCE;
+import javax.persistence.SequenceGenerator;
 
 @Entity
 @Getter
@@ -22,7 +22,8 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @NoArgsConstructor
 public class BankProfile {
     @Id
-    @GeneratedValue(strategy = SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_profile_id_generator")
+    @SequenceGenerator(name = "bank_profile_id_generator", sequenceName = "bank_profile_id_sequence")
     private Long id;
 
     @OneToOne
