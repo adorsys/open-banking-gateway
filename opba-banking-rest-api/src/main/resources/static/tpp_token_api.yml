@@ -10,7 +10,7 @@ externalDocs:
 
 paths:
 
-  /v1/token:
+  /v1/banking/token:
     post:
       tags:
       - TppToken
