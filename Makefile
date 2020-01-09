@@ -43,3 +43,5 @@ build_docs: clean_docs
 copy_puml:
 	# "makefile: copy_puml"
 	cd docs_for_site && mv site ..
+	cd ..
+	rm -rf docs_for_site
