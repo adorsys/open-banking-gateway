@@ -1,4 +1,4 @@
-package de.adorsys.opba.bankingapi.config;
+package de.adorsys.opba.tppbankingapi.config;
 
 import org.springframework.context.annotation.Import;
 

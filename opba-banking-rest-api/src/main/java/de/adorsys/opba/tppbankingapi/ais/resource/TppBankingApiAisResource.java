@@ -1,4 +1,4 @@
-package de.adorsys.opba.bankingapi.ais.resource;
+package de.adorsys.opba.tppbankingapi.ais.resource;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -7,11 +7,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.adorsys.opba.bankingapi.ais.model.AccountList;
-import de.adorsys.opba.bankingapi.ais.model.TransactionsResponse;
+import de.adorsys.opba.tppbankingapi.ais.model.AccountList;
+import de.adorsys.opba.tppbankingapi.ais.model.TransactionsResponse;
 
 @RestController
-public class AccountInformationServiceResource implements AccountInformationServiceAisApi {
+public class TppBankingApiAisResource implements AccountInformationServiceAisApi {
   @Override
   public ResponseEntity<AccountList> getAccounts(UUID xRequestID) {
     return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
