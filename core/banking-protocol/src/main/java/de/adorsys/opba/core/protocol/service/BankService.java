@@ -22,7 +22,7 @@ public class BankService {
     }
 
     public Optional<BankProfile> getBankProfile(Long bankId) {
-        return bankProfileRepository.getProfileByBankId(bankId);
+        return bankProfileRepository.findByBankId(bankId);
     }
 
     public List<Bank> getBanksFTS(String query, int maxResults) {

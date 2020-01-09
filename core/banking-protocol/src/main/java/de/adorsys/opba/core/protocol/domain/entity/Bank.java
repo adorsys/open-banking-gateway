@@ -8,9 +8,9 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import static javax.persistence.GenerationType.SEQUENCE;
+import javax.persistence.SequenceGenerator;
 
 @Entity
 @Getter
@@ -20,7 +20,8 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @NoArgsConstructor
 public class Bank {
     @Id
-    @GeneratedValue(strategy = SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_id_generator")
+    @SequenceGenerator(name = "bank_id_generator", sequenceName = "bank_id_sequence")
     private Long id;
 
     String name;
