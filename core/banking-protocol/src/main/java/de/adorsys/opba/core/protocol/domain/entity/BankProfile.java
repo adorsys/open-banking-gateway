@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
 @Entity
@@ -18,13 +20,18 @@ import javax.persistence.SequenceGenerator;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Bank {
+public class BankProfile {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_id_generator")
-    @SequenceGenerator(name = "bank_id_generator", sequenceName = "bank_id_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_profile_id_generator")
+    @SequenceGenerator(name = "bank_profile_id_generator", sequenceName = "bank_profile_id_sequence")
     private Long id;
 
-    String name;
-    String bic;
-    String bankCode;
+    @OneToOne
+    @MapsId
+    private Bank bank;
+
+    private String url;
+    private String adapterId;
+    private String idpUrl;
+    private String scaApproaches;
 }

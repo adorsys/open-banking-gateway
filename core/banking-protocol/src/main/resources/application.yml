@@ -1,9 +1,8 @@
 spring:
   datasource:
-    # example url jdbc:postgresql://localhost:5432/open_banking?currentSchema=banking_protocol
-    url: ${POSTGRESQL_URL}
-    username: ${POSTGRESQL_USER}
-    password: ${POSTGRESQL_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/open_banking?currentSchema=banking_protocol
+    username: postgres
+    password: docker
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.postgresql.Driver
     hikari:

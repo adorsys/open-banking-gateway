@@ -10,12 +10,12 @@ externalDocs:
 
 paths:
 
-  /v1/ais/accounts:
+  /v1/banking/ais/accounts:
     get:
       operationId: getAccounts
       summary: Provides list of available accounts
       tags:
-        - Account information service (AIS)
+        - TPP Banking API Account information service (AIS)
       description: >-
         Read the identifiers of the available payment accounts.
 
@@ -29,7 +29,9 @@ paths:
       parameters:
         #header
         #common header parameter
-        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Authorization"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-Consent-Session"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
       security:
         - BearerAuthOAuth: []
       responses:
@@ -38,15 +40,15 @@ paths:
         '303':
           $ref: '#/components/responses/303_REDIRECT'
         '401':
-          $ref: '#/components/responses/401_UNAUTHORIZED'
+          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
 
 
-  /v1/ais/accounts/{account-id}/transactions:
+  /v1/banking/ais/accounts/{account-id}/transactions:
     get:
       operationId: getTransactions
       summary: Provides list of transactions by given account
       tags:
-        - Account information service (AIS)
+        - TPP Banking API Account information service (AIS)
       description: >-
         This operation shows how to override the global security defined above,
         as we want to open it up for all users.
@@ -55,7 +57,9 @@ paths:
         - $ref: "#/components/parameters/account-id"
         #header
         #common header parameter
-        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Authorization"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-Consent-Session"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
         #query
         - $ref: "#/components/parameters/dateFrom"
         - $ref: "#/components/parameters/dateTo"
@@ -70,33 +74,10 @@ paths:
         '303':
           $ref: '#/components/responses/303_REDIRECT'
         '401':
-          $ref: '#/components/responses/401_UNAUTHORIZED'
+          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
 
 components:
-  headers:
-    X-Request-ID:
-      required: true
-      description: |
-        Unique ID that identifies this request through common workflow.
-        Shall be contained in HTTP Response as well.
-      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
-      schema:
-        type: string
-        format: uuid
-
   parameters:
-    X-Request-ID:
-      name: X-Request-ID
-      in: header
-      required: true
-      description: |
-        Unique ID that identifies this request through common workflow.
-        Shall be contained in HTTP Response as well.
-      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
-      schema:
-        type: string
-        format: uuid
-
     account-id:
       name: account-id
       in: path
@@ -194,7 +175,7 @@ components:
 
       headers:
         X-Request-ID:
-          $ref: "#/components/headers/X-Request-ID"
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
 
       content:
         application/json:
@@ -206,7 +187,7 @@ components:
         User authorisation session mandated. Agent shall redirect the user to the Authorisation URI provided in response.
       headers:
         X-Request-ID:
-          $ref: "#/components/headers/X-Request-ID"
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
       content:
         application/json:
           schema:
@@ -216,22 +197,11 @@ components:
       description: OK
       headers:
         X-Request-ID:
-          $ref: "#/components/headers/X-Request-ID"
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/accountList"
-
-    401_UNAUTHORIZED:
-      description: |
-        Unauthorised. Access token absent or invalid.
-      headers:
-        X-Request-ID:
-          $ref: "#/components/headers/X-Request-ID"
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/generalError"
 
   schemas:
     AuthChallenge:
@@ -508,16 +478,6 @@ components:
       type: string
       maxLength: 70
       example: "Debtor Name"
-
-    generalError:
-      type: object
-      properties:
-        code:
-          type: string
-          example: "ERROR_CODE"
-        message:
-          type: string
-          example: "Error description message"
 
     hrefType:
       description: Link to a resource.
