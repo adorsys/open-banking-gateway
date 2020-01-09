@@ -44,4 +44,4 @@ copy_puml:
 	# "makefile: copy_puml"
 	cd docs_for_site && mv site ..
 	cd ..
-	rm -rf docs_for_site
+	# rm -rf docs_for_site

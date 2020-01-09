@@ -28,8 +28,9 @@ The following picture displays the overall architecture of this banking gateway:
 * [Versioning, Release and Support policy](docs/version_policy.md)
 * [Release notes](docs/releasenotes.md) 
 * [Roadmap for next features development](docs/roadmap.md)
-* [Initial Requirements](docs/initial_requirements.md)
- 
+* [Initial Requirements](docs/architecture/drafts/initial_requirements.md)
+* [Initial Use Case definition](docs/architecture/uses_cases.md)
+
  
 ## Authors & Contact
 
