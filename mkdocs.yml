@@ -17,6 +17,7 @@ nav:
   - "Dictionary": architecture/dictionary.md
   - "Contribution guidelines": ContributionGuidelines.md
   - "Release notes": releasenotes.md
-  - "Initial Requirements": initialrequirements.md
+  - "Initial Requirements": architecture/drafts/initial_requirements.md
+  - "Initial Use Case definition": architecture/uses_cases.md
   - "Version Policy": version_policy.md
 theme: readthedocs
