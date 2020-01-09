@@ -7,11 +7,11 @@ import de.adorsys.opba.tppbankingapi.search.model.SearchMaxResult;
 import de.adorsys.opba.tppbankingapi.search.model.SearchStartIndex;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
-@Controller
+@RestController
 public class TppBankingApiBankSearchResource implements TppBankSearchApi {
     @Override
     public ResponseEntity<InlineResponse2001> bankProfileGET(String authorization, UUID xRequestID, String bankId) {
