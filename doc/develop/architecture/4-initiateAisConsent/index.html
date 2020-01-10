@@ -55,6 +55,21 @@
           
             <li class="toctree-l1">
 		
+    <a class="" href="../../roadmap/">Roadmap</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../releasenotes/">Release notes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../drafts/initial_requirements/">Initial Requirements</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
     <span class="caption-text">Architecture</span>
     <ul class="subnav">
                 <li class="">
@@ -107,33 +122,9 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="../dictionary/">Dictionary</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../drafts/">Draft</a>
+    <a class="" href="../drafts/initial_requirements/">Draft</a>
                 </li>
     </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../../roadmap/">Roadmap</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../../ContributionGuidelines/">Contribution guidelines</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../../releasenotes/">Release notes</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../../version_policy/">Version Policy</a>
 	    </li>
           
         </ul>
@@ -180,45 +171,77 @@
 <h2 id="definition">Definition</h2>
 <p>Request the list of transactions for a given bank account. Initiates a consent request if necessary. Generally the consent request is not explicitly initiated by the PSU. When the PSU requests for a banking service, if the FinTech has an existing consent that covers the service, no new consent will be initiated.</p>
 <h2 id="diagram">Diagram</h2>
-<p><img alt="Session diagram" src="https://adorsys.github.io/open-banking-gateway/doc//architecture/diagrams/useCases/4-initiateAisConsent.png" />  </p>
+<p><img alt="Session diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/4-initiateAisConsent.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" />  </p>
 <h2 id="use-cases">Use Cases</h2>
-<h3 id="initconsent-010-fintechui-displays-bankprofile-to-psu">InitConsent-010 : FinTechUI displays BankProfile to PSU</h3>
+<h3 id="initconsent-010-fintechuidisplaybankservices">InitConsent-010 FinTechUI.displayBankServices</h3>
 <p>The result of a bank selection is that the FinTechUI displays the <a href="../dictionary/#BankProfile">BankProfile</a> to the PSU. The bank profile also contains the list of services offered by the selected bank.</p>
-<h3 id="initconsent-020-psu-selects-a-service-like-listtransactions">InitConsent-020 : PSU selects a service (Like listTransactions)</h3>
-<p>The FinTechUI will forward the service selected to the FinTechApi. In this case listTransactions(BankProfile). The selection might be accompanied with some service specifications. For example in the case of listTransactions, this can be the iban of the target account. We will call this ListTransactionsSpec.</p>
-<h3 id="initconsent-030-fintechui-to-fintechapilisttransactions">InitConsent-030 : FinTechUI to FinTechApi.listTransactions</h3>
-<ul>
-<li>The attached <a href="../dictionary/#FinTechLoginSessionCookie">FinTechLoginSessionCookie</a> is used to maintain session between PSU and FinTech.</li>
-<li>The attached <a href="../dictionary/#UserAgentContext">UserAgentContext</a> describes details associated with the user agent of the PSU.</li>
-<li>The given <a href="../dictionary/#BankProfile">BankProfile</a> contains meta information associated with the selected Bank.</li>
-<li>The ListTransactionsSpec specifies details of the service requested by the PSU.</li>
-</ul>
-<h4 id="initconsent-031-load-psuconsentsession">InitConsent-031 : Load PsuConsentSession</h4>
-<p>A <a href="../dictionary/#PsuConsentSession">PsuConsentSession</a> is a reusable token, that can be used to request service with the TppBankingApi. It is reference to the PSU in the realm of the TPP.
-Whether a service request is covered by an existing PsuConsent is decided by the TppBankingApi. The Task of the FinTechApi is to load any existing PsuConsentSession and associate it with the PSU.</p>
-<h3 id="initconsent-040-fintechapi-to-tppbankingapilisttransactions">InitConsent-040 : FinTechApi to TppBankingApi.listTransactions</h3>
-<ul>
-<li>The associated <a href="../dictionary/#FinTechContext">FinTechContext</a> contains identification information associated with the FinTech.</li>
-<li>PsuConsentSession</li>
-<li>UserAgentContext</li>
-<li>BankProfile</li>
-<li>ListTransactionsSpec</li>
-</ul>
-<h4 id="initconsent-041-loads-the-bankingprotocol-from-the-given-bankprofile">InitConsent-041 : Loads the BankingProtocol from the given BankProfile</h4>
+<h3 id="initconsent-020-fintechuiselectservicelisttransactions">InitConsent-020 : FinTechUI.selectService(listTransactions)</h3>
+<p>The FinTechUI will forward the service selected to the FinTechApi. In this case listTransactions. The selection might be accompanied with some service specifications. For example in the case of listTransactions, this can be the iban of the target account. We will call this ListTransactionsSpec.</p>
+<h3 id="initconsent-030-fintechapilisttransactions">InitConsent-030 : FinTechApi.listTransactions</h3>
+<p>The FinTechUI issued a listTransactions request to the FinTechAPI with following information attached:</p>
+<h4 id="fintechloginsessioncookie"><a href="../dictionary/#FinTechLoginSessionCookie">FinTechLoginSessionCookie</a>:</h4>
+<p>Used to maintain session between PSU and FinTech.</p>
+<h4 id="sessionstate"><a href="../dictionary/#FinTechLoginSessionState">sessionState</a></h4>
+<p>Used to read FinTechLoginSessionCookie. Passed as a path param.</p>
+<h4 id="useragentcontext"><a href="../dictionary/#UserAgentContext">UserAgentContext</a></h4>
+<p>Describes details associated with the user agent of the PSU. Generally not visible in the API as they are automatically provided by the user agent. The purpose is to transfer context specific information on the PsuUserAgent and the request that might later be required by the ASPSP like:
+* IP-Address,
+* IP-Port,
+* Accept,
+* Accept-Charset,
+* Accept-Encoding,
+* Accept-Language,
+* Device-ID,
+* User-Agent,
+* PSU-Geo-Location,
+* Http-Method.</p>
+<h4 id="the-bank-id">The bank-id</h4>
+<p>Passed as a query parameter and referencing the given <a href="../dictionary/#BankProfile">BankProfile</a> contains meta information associated with the selected Bank.</p>
+<h4 id="the-account-id">The account-id</h4>
+<p>Sent as a query parameter and referencing the target bank account.</p>
+<h4 id="the-listtransactionsspec">The ListTransactionsSpec</h4>
+<p>Specifies details of the service requested by the PSU. These are all query parameter associated with the request like:
+  * dateFrom: Starting date (inclusive the date dateFrom) of the transaction list, mandated if no delta access is required.
+  * dateTo: End date (inclusive the data dateTo) of the transaction list, default is "now" if not given.
+  * deltaList: This data attribute is indicating that the AISP is in favor to get all transactions after the last report access for this PSU on the addressed account.
+  * entryReferenceFrom: This data attribute is indicating that the AISP is in favor to get all transactions after the transaction with identification entryReferenceFrom alternatively to the above defined period.
+  * bookingStatus: interested booking status.</p>
+<h4 id="initconsent-031-fintechapiloadpsuconsentsession">InitConsent-031 : FinTechApi.loadPsuConsentSession</h4>
+<p>A <a href="../dictionary/#PsuConsentSession">PsuConsentSession</a> is a reusable token, that can be used to request service with the TppBankingApi. It is a reference to the PSU in the world of the TPP.
+Whether a service request is covered by an existing PsuConsent is decided by the TppBankingApi. The Task of the FinTechApi is to load any existing PsuConsentSession and associate it with the PSU request to the TPP.</p>
+<h3 id="initconsent-040-tppbankingapilisttransactions">InitConsent-040 : TppBankingApi.listTransactions</h3>
+<p>Forward of the PSU request to TPP with following associated context informations:</p>
+<h4 id="fintechcontext"><a href="../dictionary/#FinTechContext">FinTechContext</a></h4>
+<p>contains identification information associated with the FinTech.</p>
+<h4 id="psuconsentsession">PsuConsentSession</h4>
+<p>See InitConsent-031</p>
+<h4 id="useragentcontext_1">UserAgentContext</h4>
+<p>Same as in InitConsent-030</p>
+<h4 id="the-account-id_1">The account-id</h4>
+<p>Same as in InitConsent-030</p>
+<h4 id="the-bank-id_1">The bank-id</h4>
+<p>Same as in InitConsent-030</p>
+<h4 id="listtransactionsspec">ListTransactionsSpec</h4>
+<p>Same as in InitConsent-030</p>
+<h4 id="initconsent-041-tppbankingapiloadbankingprotocol">InitConsent-041 TppBankingApi.loadBankingProtocol</h4>
 <p>TppBankingApi selects the <a href="../dictionary/#BankingProtocol">BankingProtocol</a> based on the given BankProfile.</p>
-<h3 id="initconsent-050-tppbankingapi-to-bankingprotocollisttransactions">InitConsent-050 : TppBankingApi to BankingProtocol.listTransactions</h3>
-<p>The <a href="../dictionary/#BankingProtocol">BankingProtocol</a> associated with the given BankProfile decides on how to proceed with the request. 
-BankingProtocol can:</p>
-<h4 id="initconsent-051-load-tppconsentsession">InitConsent-051 : Load TppConsentSession</h4>
+<h3 id="initconsent-050-bankingprotocollisttransactions">InitConsent-050 : BankingProtocol.listTransactions</h3>
+<p>The <a href="../dictionary/#BankingProtocol">BankingProtocol</a> associated with the given BankProfile decides on how to proceed with the request after loading and analyzing an eventually stored TppConsentSession.</p>
+<h4 id="initconsent-051-bankingprotocolloadtppconsentsession">InitConsent-051 : BankingProtocol.loadTppConsentSession</h4>
 <ul>
 <li>If there is existing consent associated with the PSU for the given service, the BankingProtocol will load the corresponding <a href="../dictionary/#TppConsentSession">TppConsentSession</a>. Information needed to load the TppConsentSession is contained in the given <a href="../dictionary/#PsuConsentSession">PsuConsentSession</a>.</li>
 <li>Use the loaded <a href="../dictionary/#TppConsentSession">TppConsentSession</a> to retrieve an existing consent and proceed to the ASPSP with the service request.</li>
 </ul>
 <h3 id="no-suitable-consent-present">No Suitable Consent Present</h3>
 <h4 id="initconsent-060-initiating-a-consent-with-the-aspsp">InitConsent-060 : Initiating a Consent with the ASPSP</h4>
-<p>If there is no suitable consent available, the BankingProtocol will first proceed with a consent initiation request.. This is, an initiated service request will either ends up in the expected service response or first redirect the PSU to the <a href="../dictionary/#ConsentAuthorisationApi">ConsentAuthorisationApi</a>.
-Whether this operation is necessary or not depends on the <a href="../dictionary/#AspspBankingApi">AspspBankingApi</a> interface. The selected banking protocol will know how to deal with this.
-The Associated <a href="../dictionary/#TppContext">TppContext</a> contains Tpp identifying information.</p>
+<p>If there is no suitable consent available, the BankingProtocol will first proceed with a consent initiation request. This is, an initiated service request will either ends up in the expected service response or first redirect the PSU to the <a href="../dictionary/#ConsentAuthorisationApi">ConsentAuthorisationApi</a>.
+Whether this operation is necessary or not depends on the <a href="../dictionary/#AspspBankingApi">AspspBankingApi</a> interface. The selected banking protocol will know how to deal with this.</p>
+<h5 id="useragentcontext_2">UserAgentContext</h5>
+<p>See <a href="../dictionary/#UserAgentContext">UserAgentContext</a></p>
+<h5 id="tppcontext">TppContext</h5>
+<p>The Associated <a href="../dictionary/#TppContext">TppContext</a> contains Tpp identifying information.</p>
+<h5 id="aisconsent">AisConsent</h5>
+<p>The AisConsent object contains information associated with the service request.</p>
 <h4 id="initconsent-061-consentinit-response">InitConsent-061 : ConsentInit Response</h4>
 <p>The response of the consent init request depends on the ASPSP implementation. It generally provides information needed to collect PSU identification information in the embedded case or information needed to redirect the PSU to the <a href="../dictionary/#OnlineBankingApi">OnlineBankingApi</a>.
 The result of a consent init session also carries an <a href="../dictionary/#TppConsentSession">TppConsentSession</a>, containing all information needed to be stored by the Tpp for the reference of the started consent session.</p>

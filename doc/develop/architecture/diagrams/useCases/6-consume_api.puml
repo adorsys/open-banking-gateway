@@ -28,7 +28,7 @@ end box
 
 FinTechUI -> FinTechApi ++ : GET:FinTech-Redirect-URI[UserAgentContext,\nFinTechConsentSessionCookie]()\n<redirectCode,finTechConsentSessionState>
 FinTechApi -> FinTechApi : validateRedirectCall\n(finTechConsentSessionState,FinTechConsentSessionCookie)
-FinTechApi -> TppBankingApi ++ : GET:code2Token[UserAgentContext,\nFinTechContext]\n(redirectCode)<>
+FinTechApi -> TppBankingApi ++ : GET:code2Token[UserAgentContext,\nFinTechContext]\n()<redirectCode>
 autonumber 40 1 "<b><color blue>[BankingService-000]"
 TppBankingApi -> BankingProtocol ++ : code2Token(redirectCode)
 BankingProtocol -> RedirectSessionStoreApi ++ : redirectSession(redirectCode)

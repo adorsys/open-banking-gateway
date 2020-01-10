@@ -1,6 +1,6 @@
 @startuml
 
-autonumber "<b><color blue>[Search-000]</color></b>"
+autonumber "<b><color blue>[RemoteSearch-000]</color></b>"
 actor psu
 
 box "PsuUserAgent" #LightGray
@@ -29,12 +29,12 @@ end box
 
 psu -> FinTechUI ++ : loadFinTechSeachScreen()
 return displaySearchScreen()
-psu -> FinTechUI ++ : enterKeyword(keyword)
+psu -> FinTechUI ++ : enterSearchString(    )
 loop while(furtherKeyWords)
-FinTechUI -> FinTechApi ++ : incrementalBankSearch[](keyword)<>
-FinTechApi -> TppBankSearchApi ++ : incrementalBankSearch[](keyword)<>
-return 200_OK[](List<BankDescriptor>)
-return 200_OK[](List<BankDescriptor>)
-return display(List<BankDescriptor>)
+FinTechUI -> FinTechApi ++ : GET:bankSearch[FinTechLoginSessionCookie]()\n<sessionState, keyword='',start=0,max=-1>
+FinTechApi -> TppBankSearchApi ++ : GET:bankSearch[]bankSearch[]()\n<keyword='',start=0,max=-1>
+return 200_BankSearchResult[](List<BankProfile>,\nsearchInput,searchStartIndex,\nsearchMaxResult,searchTotalResult)
+return 200_BankSearchResult[FinTechLoginSessionCookie]\n(sessionState,List<BankProfile>,\nsearchInput,searchStartIndex,\nsearchMaxResult,searchTotalResult))
+return displaySearchResult(List<BankProfile>)
 end
 @enduml

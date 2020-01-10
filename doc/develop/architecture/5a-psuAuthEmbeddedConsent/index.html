@@ -55,6 +55,21 @@
           
             <li class="toctree-l1">
 		
+    <a class="" href="../../roadmap/">Roadmap</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../releasenotes/">Release notes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../drafts/initial_requirements/">Initial Requirements</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
     <span class="caption-text">Architecture</span>
     <ul class="subnav">
                 <li class="">
@@ -107,33 +122,9 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="../dictionary/">Dictionary</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../drafts/">Draft</a>
+    <a class="" href="../drafts/initial_requirements/">Draft</a>
                 </li>
     </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../../roadmap/">Roadmap</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../../ContributionGuidelines/">Contribution guidelines</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../../releasenotes/">Release notes</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../../version_policy/">Version Policy</a>
 	    </li>
           
         </ul>
@@ -179,19 +170,19 @@
 <h2 id="description">Description</h2>
 <p>Implements the process of collecting consent authorization credentials in an interface provided by the TPP as described EBA-RTS embedded approach. The authorization is designed as a recursive list of ChallengeResponse sessions.</p>
 <h2 id="diagram">Diagram</h2>
-<p><img alt="Session diagram" src="https://adorsys.github.io/open-banking-gateway/doc//architecture/diagrams/useCases/5a-psuAuthEmbeddedConsent.png" />  </p>
+<p><img alt="Session diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/5a-psuAuthEmbeddedConsent.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" />  </p>
 <h2 id="use-cases">Use Cases</h2>
 <h3 id="authembedded-010-create-consentauthsessioncookie">AuthEmbedded-010 : Create ConsentAuthSessionCookie</h3>
 <p>If the TppConsentSession has an authChallenge, the interaction starts with the initialization of a <a href="../dictionary/#ConsentAuthSessionCookie">ConsentAuthSessionCookie</a>. The ConsentAuthSessionCookie is encrypted with a key stored in the <a href="../dictionary/#consentSessionState">consentSessionState</a>.</p>
 <h3 id="authembedded-020-redirect-to-embeddedauthinitscreen">AuthEmbedded-020 : Redirect to EmbeddedAuthInitScreen</h3>
 <p>After preparation of the ConsentAuthSessionCookie, the UserAgent is redirected to the EmbeddedAuthInitScreen of the ConsentAuthorisationUI.</p>
-<h3 id="authembedded-030-040-load-authchallenges">AuthEmbedded-030&amp;-040 : Load AuthChallenges</h3>
+<h3 id="authembedded-030-040-load-authchallenges">AuthEmbedded-030-040 : Load AuthChallenges</h3>
 <p>The generic endpoint at ConsentAuthorisationApi.embeddedAuth allows the ConsentAuthorisationUI to load AuthChallenges if any. The call returns the AuthorizeResponse that contains all information necessary to display returned challenges to the PSU. An ScaUIMetadaData object contain UI customization parameter.</p>
-<h3 id="authembedded-050-060-display-auth-screen-and-collect-psu-auth-data">AuthEmbedded-050&amp;-060 : Display Auth Screen and Collect PSU Auth Data</h3>
+<h3 id="authembedded-050-060-display-auth-screen-and-collect-psu-auth-data">AuthEmbedded-050-060 : Display Auth Screen and Collect PSU Auth Data</h3>
 <p>Using information contained in the AuthorizeResponse object, the ConsentAuthorisationUI will display the suitable AuthScreen to the PSU and use it to collect PsuAuthData.</p>
-<h3 id="authembedded-070-087-send-psuauthdata-to-consentauthorisationapi">AuthEmbedded-070..-087 : Send PsuAuthData to ConsentAuthorisationApi</h3>
+<h3 id="authembedded-070-087-send-psuauthdata-to-consentauthorisationapi">AuthEmbedded-070-087 : Send PsuAuthData to ConsentAuthorisationApi</h3>
 <p>The generic endpoint at ConsentAuthorisationApi.embeddedAuth will finally be called again to send authentication data entered by the PSU to the BankingProtocol.</p>
-<h3 id="authembedded-090-094-redirect-to-fintechapi">AuthEmbedded-090..-094 : Redirect to FinTechApi</h3>
+<h3 id="authembedded-090-094-redirect-to-fintechapi">AuthEmbedded-090-094 : Redirect to FinTechApi</h3>
 <p>As the TppConsentSession presents no more AuthChallenge, a RedirectSession is prepared and the PSU is redirected back to the FinTechApi.</p>
               
             </div>

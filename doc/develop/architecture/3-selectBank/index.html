@@ -55,6 +55,21 @@
           
             <li class="toctree-l1">
 		
+    <a class="" href="../../roadmap/">Roadmap</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../releasenotes/">Release notes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../drafts/initial_requirements/">Initial Requirements</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
     <span class="caption-text">Architecture</span>
     <ul class="subnav">
                 <li class="">
@@ -107,33 +122,9 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="../dictionary/">Dictionary</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../drafts/">Draft</a>
+    <a class="" href="../drafts/initial_requirements/">Draft</a>
                 </li>
     </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../../roadmap/">Roadmap</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../../ContributionGuidelines/">Contribution guidelines</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../../releasenotes/">Release notes</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="../../version_policy/">Version Policy</a>
 	    </li>
           
         </ul>
@@ -180,13 +171,18 @@
 <h2 id="definition">Definition</h2>
 <p>The bank selection allows to download the <a href="../dictionary/#BankProfile">BankProfile</a> of a bank and cache it in the consent session for reuse while processing the PSU request. It can also be used to display bank details to the PSU at selection.</p>
 <h2 id="diagram">Diagram</h2>
-<p><img alt="Session diagram" src="https://adorsys.github.io/open-banking-gateway/doc//architecture/diagrams/useCases/3-selectBank.png" />  </p>
+<p><img alt="Session diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/3-selectBank.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" />  </p>
 <h2 id="use-case-steps">Use Case Steps</h2>
-<p>Use cases for this API:
-1. PSU selects a bank from the list of banks displayed by the FinTechUI
-2. FinTechUI sends a load loadBankProfile request to FinTechAPI passing the bankId
-3. FinTechAPI sends a load loadBankProfile request to TppBeanSearchApi passing the bankId
-4. TppBankSearchApi returns the BankProfine object matching the given bankId.</p>
+<p>Use cases for this API:</p>
+<h3 id="selbnk-001-fintechuiselectbank">SelBnk-001 FinTechUI.selectBank</h3>
+<p>PSU selects a bank from the list of banks displayed by the FinTechUI</p>
+<h3 id="selbnk-002-fintechapiloadbankprofile">SelBnk-002 FinTechApi.loadBankProfile</h3>
+<p>FinTechUI sends a load loadBankProfile request to FinTechAPI passing the bankId</p>
+<h3 id="selbnk-003-tppbanksearchapiloadbankprofile">SelBnk-003 TppBankSearchApi.loadBankProfile</h3>
+<p>FinTechAPI sends a load loadBankProfile request to TppBankSearchApi passing the bankId</p>
+<h3 id="selbnk-004-005-return-200_bankprofile">SelBnk-004 &amp; 005 Return 200_BankProfile</h3>
+<p>TppBankSearchApi returns the BankProfine object matching the given bankId.</p>
+<h3 id="selbnk-005-fintechuidisplaybankprofile">SelBnk-005 FinTechUI.displayBankProfile</h3>
 <p>The displayed bank profile also displays banking api services offered by the selected bank.</p>
               
             </div>

@@ -67,14 +67,35 @@
         
             <li><a class="toctree-l3" href="#checkstyle">Checkstyle</a></li>
         
+            <li><a class="toctree-l3" href="#open-api">open api</a></li>
+        
+            <li><a class="toctree-l3" href="#dictionary">Dictionary</a></li>
+        
             <li><a class="toctree-l3" href="#contribution-guidelines">Contribution Guidelines</a></li>
         
             <li><a class="toctree-l3" href="#javadoc">JavaDoc</a></li>
+        
+            <li><a class="toctree-l3" href="#use-cases">Use Cases</a></li>
         
         </ul>
     
 
     </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="roadmap/">Roadmap</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="releasenotes/">Release notes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="architecture/drafts/initial_requirements/">Initial Requirements</a>
 	    </li>
           
             <li class="toctree-l1">
@@ -115,33 +136,9 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="architecture/dictionary/">Dictionary</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="architecture/drafts/">Draft</a>
+    <a class="" href="architecture/drafts/initial_requirements/">Draft</a>
                 </li>
     </ul>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="roadmap/">Roadmap</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="ContributionGuidelines/">Contribution guidelines</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="releasenotes/">Release notes</a>
-	    </li>
-          
-            <li class="toctree-l1">
-		
-    <a class="" href="version_policy/">Version Policy</a>
 	    </li>
           
         </ul>
@@ -180,11 +177,16 @@
             <div class="section">
               
                 <h1 id="open-banking-gateway">Open Banking Gateway</h1>
-<p>Provides tools, adapters and connectors for transparent access to open banking apis. The initial effort focuses on the connectivity to banks that implement the European PSD2 directive either through one of the common market initiatives like :
-  * <a href="https://www.berlin-group.org/psd2-access-to-bank-accounts">The Berlin Group NextGenPSD2</a>,
-  * <a href="https://www.openbanking.org.uk/">The Open Banking UK</a>,
-  * <a href="https://polishapi.org/en/">The Polish PSD2 API</a></p>
-<p>or even through proprietary bank api like <a href="https://developer.ing.com/openbanking/">the ING’s PSD2 API</a>.</p>
+<p>Provides tools, adapters and connectors for transparent access to open banking apis. The initial effort focuses on the connectivity to banks that implement the European PSD2 directive either through one of the common market initiatives like :</p>
+<ul>
+<li><a href="https://www.berlin-group.org/psd2-access-to-bank-accounts">The Berlin Group NextGenPSD2</a></li>
+<li><a href="https://www.openbanking.org.uk/">The Open Banking UK</a></li>
+<li><a href="https://polishapi.org/en/">The Polish PSD2 API</a></li>
+</ul>
+<p>Or even through proprietary bank api like </p>
+<ul>
+<li><a href="https://developer.ing.com/openbanking/">the ING’s PSD2 API</a></li>
+</ul>
 <h2 id="what-this-project-is-about">What this Project is about</h2>
 <h3 id="key-challenge-for-a-tpps">Key Challenge for a TPPs</h3>
 <p>PSD2 as the first regulatory driven Open Banking initiative offers many opportunities for both Banks and Third Party Providers. TPPs can use the account information and payment services provided by the banks in order to offer new innovative services to the end users. The more banks a TPP can interact with each other, the more end consumer can be provided with reacher banking solutions, which in turn simplifies and leverage commercial value chains.<br />
@@ -198,17 +200,8 @@ Being able to interact with different bank APIs can be a time and cost consuming
 <li><a href="version_policy/">Versioning, Release and Support policy</a></li>
 <li><a href="releasenotes/">Release notes</a> </li>
 <li><a href="roadmap/">Roadmap for next features development</a></li>
-<li><a href=".">Initial Requirements</a></li>
+<li><a href="architecture/drafts/initial_requirements/">Initial Requirements</a></li>
 </ul>
-<h3 id="testing-api-with-postman-json-collections">Testing API with Postman json collections</h3>
-<p>For testing API of the banking gateway it is used Postman https://www.getpostman.com/
- Environment jsons with global parameter’s sets and Collections of jsons for imitation of processes flows are stored in /postman folder.
- To import Postman collections and environments follow next steps:
- 1. Download Postman jsons with collections and environments to your local machine.
- 2. Open Postman, press button “Import”.
- 3. Choose “Import file” to import one json or “Import folder” to import all jsons within the folder, then press button “Choose Files” or “Choose Folders” and open necessary files/folders.
- 4. To change settings of environments - go to “Manage Environments”, press the environment name and change variables.</p>
-<p>To start testing with Postman collections it is necessary to have all services running.</p>
 <h2 id="authors-contact">Authors &amp; Contact</h2>
 <ul>
 <li><strong><a href="mailto:fpo@adorsys.de">Francis Pouatcha</a></strong> - <em>Initial work</em> - <a href="https://www.adorsys.de">adorsys</a></li>
@@ -221,6 +214,22 @@ Being able to interact with different bank APIs can be a time and cost consuming
 <p>The code uses <code>backend.checkstyle.xml</code> placed in the root of the project. To activate it with intellij 
 install the <code>CheckStyle-IDEA v5.34.0</code> Plugin and configure in <code>Other Settings -&gt; Checkstyle</code>
 the version <code>8.19</code> and add the configuration file <code>backend.checkstyle.xml</code>.</p>
+<h2 id="open-api">open api</h2>
+<p>The code generated from
+<pre>
+opba-consent-rest-api/src/main/resources/static/consent_api.yml
+opba-banking-rest-api/src/main/resources/static/banking_api_ais.yml
+</pre>
+is generated to
+<pre>
+opba-consent-rest-api/target/generated-sources/open-api/src/main/java
+opba-banking-rest-api/target/generated-sources/open-api/src/main/java
+</pre></p>
+<p>So the folders have to be made known to the ide.</p>
+<h2 id="dictionary">Dictionary</h2>
+<ul>
+<li><a href="architecture/dictionary/">Dictionary</a></li>
+</ul>
 <h2 id="contribution-guidelines">Contribution Guidelines</h2>
 <ul>
 <li><a href="ContributionGuidelines/">Contribution Guidelines</a> </li>
@@ -229,6 +238,10 @@ the version <code>8.19</code> and add the configuration file <code>backend.check
 <ul>
 <li><a href="https://adorsys.github.io/open-banking-gateway/javadoc/latest/index.html">JavaDoc</a></li>
 </ul>
+<h2 id="use-cases">Use Cases</h2>
+<ul>
+<li><a href="architecture/uses_cases/">Use Cases</a></li>
+</ul>
               
             </div>
           </div>
@@ -236,7 +249,7 @@ the version <code>8.19</code> and add the configuration file <code>backend.check
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="architecture/1-loginWithFinTech/" class="btn btn-neutral float-right" title="Login with FinTech Application">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="roadmap/" class="btn btn-neutral float-right" title="Roadmap">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
     </div>
@@ -266,7 +279,7 @@ the version <code>8.19</code> and add the configuration file <code>backend.check
       
       
       
-        <span style="margin-left: 15px"><a href="architecture/1-loginWithFinTech/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="roadmap/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
@@ -279,5 +292,5 @@ the version <code>8.19</code> and add the configuration file <code>backend.check
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2020-01-09 17:48:13
+Build Date UTC : 2020-01-10 12:40:34
 -->
