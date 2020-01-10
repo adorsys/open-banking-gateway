@@ -22,7 +22,7 @@ The following picture displays the overall architecture of this banking gateway:
 
 ## Releases and versions
 
-* [Versioning, Release and Support policy](docs/Version_Policy.md)
+* [Versioning, Release and Support policy](docs/version_policy.md)
 * [Release notes](docs/releasenotes.md) 
 * [Roadmap for next features development](docs/roadmap.md)
 * [Initial Requirements](docs/README.md)
@@ -52,12 +52,32 @@ For commercial support please contact **[adorsys Team](https://adorsys.de/en/psd
 
 This project is licensed under the Apache License version 2.0 - see the [LICENSE](LICENSE) file for details
 
-## checkstyle
+## Checkstyle
 
 The code uses <code>backend.checkstyle.xml</code> placed in the root of the project. To activate it with intellij 
 install the <code>CheckStyle-IDEA v5.34.0</code> Plugin and configure in <code>Other Settings -> Checkstyle</code>
 the version <code>8.19</code> and add the configuration file <code>backend.checkstyle.xml</code>.
 
+## open api
+
+The code generated from
+<pre>
+opba-consent-rest-api/src/main/resources/static/consent_api.yml
+opba-banking-rest-api/src/main/resources/static/banking_api_ais.yml
+</pre>
+is generated to
+<pre>
+opba-consent-rest-api/target/generated-sources/open-api/src/main/java
+opba-banking-rest-api/target/generated-sources/open-api/src/main/java
+</pre>
+
+So the folders have to be made known to the ide.
+
+
+
 ## Contribution Guidelines
 
 * [Contribution Guidelines](docs/ContributionGuidelines.md) 
+
+## JavaDoc
+* [JavaDoc](https://adorsys.github.io/open-banking-gateway/javadoc/latest/index.html)

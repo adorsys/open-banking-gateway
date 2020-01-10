@@ -13,7 +13,9 @@
     <name>opba-embedded-starter</name>
 
     <properties>
-        <ruleset.basedir>..</ruleset.basedir>
+      <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+      Change this if depth changes. Current: /open-banking-gateway/opba-embedded-starter -->
+      <main.basedir>${project.parent.basedir}</main.basedir>
     </properties>
 
     <dependencies>
@@ -21,6 +23,16 @@
             <groupId>de.adorsys.opba</groupId>
             <artifactId>opba-banking-rest-api</artifactId>
             <version>0.0.4-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-consent-rest-api</artifactId>
+            <version>0.0.4-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc-openapi-ui.version}</version>
         </dependency>
 
         <dependency>
@@ -53,7 +65,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.2.1.RELEASE</version>
+                <version>${spring-boot.version}</version>
+                <configuration>
+                 <mainClass>de.adorsys.obpa.starter.OpenBankingEmbeddedApplication</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>

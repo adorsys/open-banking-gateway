@@ -55,7 +55,7 @@ Further explanation in [checkstyle](../README.md#checkstyle)
 ## How to Release
 
 Release is being done using the [release scripts](https://github.com/borisskert/release-scripts) ( (C) by [Boris Skert](https://github.com/borisskert) ) located under scripts/release-scripts.
-For detailed info see [README for release-scripts](../scripts/release-scripts/README.md).
+For detailed info see [README for release-scripts](https://github.com/borisskert/release-scripts/README.md).
 
 ### Steps to make a release
 

@@ -1,11 +1,11 @@
 @startuml
 
-autonumber 100 "<b><color blue>[Search-000]</color></b>"
+autonumber 100 "<b><color blue>[LocalSearch-000]</color></b>"
 actor psu
 
 box "PsuUserAgent" #LightGray
     participant "FinTechUI" as FinTechUI
-    participant "LuceneSearch" as LuceneSearch
+    participant "LocalSearch" as LocalSearch
     'participant "ConsentAuthorisationUI" as ConsentAuthorisationUI
     'participant "OnlineBankingUI" as OnlineBankingUI
 end box
@@ -29,16 +29,16 @@ end box
 == PSU searches a bank by keyword : call[header](body)<params> return code[header](body) ==
 
 psu -> FinTechUI ++ : loadFinTechSeachScreen()
-FinTechUI -> FinTechApi ++ : GET:bankSearchIndex[]()<discriminator>
-FinTechApi -> TppBankSearchApi ++ : GET:bankSearchIndex[]()<discriminator>
-return 200_OK[](BankSearchIndex)
-return 200_OK[](BankSearchIndex)
+FinTechUI -> FinTechApi ++ : GET:bankSearch[FinTechLoginSessionCookie]()\n<sessionState, keyword='',start=0,max=-1>
+FinTechApi -> TppBankSearchApi ++ : GET:bankSearch[]bankSearch[]()\n<keyword='',start=0,max=-1>
+return 200_BankSearchResult[](List<BankProfile>,\nsearchInput,searchStartIndex,\nsearchMaxResult,searchTotalResult)
+return 200_BankSearchResult[FinTechLoginSessionCookie]\n(sessionState,List<BankProfile>,\nsearchInput,searchStartIndex,\nsearchMaxResult,searchTotalResult))
 return displaySearchScreen()
 psu -> FinTechUI ++ : enterKeyword(keyword)
 loop while(furtherKeyWords)
-FinTechUI -> LuceneSearch ++ : search(keyword)
-LuceneSearch -> LuceneSearch : search(keyWord,BankSearchIndex)
-return List<BankDescriptor>
-return display(List<BankDescriptor>)
+FinTechUI -> LocalSearch ++ : search(keyword)
+LocalSearch -> LocalSearch : search(keyWord,List<BankProfile>)
+return List<BankProfile>
+return displaySearchResult(List<BankProfile>)
 end
 @enduml

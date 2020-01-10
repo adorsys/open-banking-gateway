@@ -39,6 +39,6 @@ public class SandboxAppsStarter {
     }
 
     public void awaitForAllStarted() {
-        awaitForAllStarted(Durations.TWO_MINUTES);
+        awaitForAllStarted(Durations.FIVE_MINUTES);
     }
 }

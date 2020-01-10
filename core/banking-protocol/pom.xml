@@ -12,6 +12,12 @@
     <artifactId>banking-protocol</artifactId>
     <name>core/banking-protocol</name>
 
+    <properties>
+      <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+      Change this if depth changes. Current: /open-banking-gateway/core/banking-protocol -->
+      <main.basedir>${project.parent.parent.basedir}</main.basedir>
+    </properties>
+
     <dependencies>
         <!-- javadoc -->
         <dependency>
@@ -122,7 +128,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>${springdoc.version}</version>
+            <version>${springdoc-openapi-ui.version}</version>
         </dependency>
 
         <!-- Mappers/Validators -->
@@ -231,5 +237,38 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven.dependency.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>analyze</id>
+                        <goals>
+                            <goal>analyze-only</goal>
+                        </goals>
+                        <configuration>
+                            <failOnWarning>false</failOnWarning>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
 

@@ -14,6 +14,12 @@
 
     <packaging>pom</packaging>
 
+    <properties>
+        <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+        Change this if depth changes. Current: /open-banking-gateway/sandbox-test -->
+        <main.basedir>${project.parent.basedir}</main.basedir>
+    </properties>
+
     <modules>
         <module>e2e-tests</module>
     </modules>

@@ -12,8 +12,12 @@
 	<name>opba-banking-rest-api</name>
 
 	<properties>
-		<ruleset.basedir>..</ruleset.basedir>
-		<openapi-spec-file-location>${project.basedir}/src/main/resources/static/banking_api_ais.yml</openapi-spec-file-location>
+    <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+    Change this if depth changes. Current: /open-banking-gateway/opba-banking-rest-api -->
+		<main.basedir>${project.parent.basedir}</main.basedir>
+    <openapi-spec-file-location-banking_api_ais>${project.basedir}/src/main/resources/static/tpp_banking_api_ais.yml</openapi-spec-file-location-banking_api_ais>
+    <openapi-spec-file-location-tpp_bank_search_api>${project.basedir}/src/main/resources/static/tpp_banking_api_bank_search.yml</openapi-spec-file-location-tpp_bank_search_api>
+    <openapi-spec-file-location-tpp_token_api>${project.basedir}/src/main/resources/static/tpp_banking_api_token.yml</openapi-spec-file-location-tpp_token_api>
 	</properties>
 
 	<dependencies>
@@ -54,65 +58,124 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>io.swagger.codegen.v3</groupId>
-				<artifactId>swagger-codegen-maven-plugin</artifactId>
-				<version>3.0.11</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<inputSpec>${openapi-spec-file-location}</inputSpec>
-							<language>spring</language>
-							<output>${project.basedir}/generated/</output>
-							<configOptions>
-								<sourceFolder>src/main</sourceFolder>
-								<basePackage>de.adorsys.opba.bankingapi.ais</basePackage>
-								<configPackage>de.adorsys.opba.bankingapi.config</configPackage>
-								<modelPackage>de.adorsys.opba.bankingapi.ais.model</modelPackage>
-								<apiPackage>de.adorsys.opba.bankingapi.ais.resource</apiPackage>
-								<interfaceOnly>true</interfaceOnly>
-								<skipOverwrite>true</skipOverwrite>
-								<dateLibrary>java8</dateLibrary>
-								<java8>true</java8>
-								<implicitHeaders>false</implicitHeaders>
-								<delegatePattern>true</delegatePattern>
-								<useTags>true</useTags>
-								<library>spring-mvc</library>
-								<swaggerDocketConfig>false</swaggerDocketConfig>
-							</configOptions>
-							<generateApiTests>false</generateApiTests>
-							<generateModelTests>false</generateModelTests>
-						</configuration>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>io.swagger.codegen.v3</groupId>
-						<artifactId>swagger-codegen-generators</artifactId>
-						<version>1.0.11</version>
-					</dependency>
-				</dependencies>
-			</plugin>
+                <groupId>io.swagger.codegen.v3</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>${swagger-codegen-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>generate_banking_api_ais</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${openapi-spec-file-location-banking_api_ais}</inputSpec>
+                            <language>spring</language>
+                            <output>${project.build.directory}/generated-sources/open-api/</output>
+                            <configOptions>
+                                <sourceFolder>src/main/java</sourceFolder>
+                                <basePackage>de.adorsys.opba.tppbankingapi.ais</basePackage>
+                                <configPackage>de.adorsys.opba.tppbankingapi.config</configPackage>
+                                <modelPackage>de.adorsys.opba.tppbankingapi.ais.model</modelPackage>
+                                <apiPackage>de.adorsys.opba.tppbankingapi.ais.resource</apiPackage>
+                                <interfaceOnly>true</interfaceOnly>
+                                <skipOverwrite>true</skipOverwrite>
+                                <dateLibrary>java8</dateLibrary>
+                                <java8>true</java8>
+                                <implicitHeaders>false</implicitHeaders>
+                                <delegatePattern>true</delegatePattern>
+                                <useTags>true</useTags>
+                                <library>spring-mvc</library>
+                                <swaggerDocketConfig>false</swaggerDocketConfig>
+                            </configOptions>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate_tpp_bank_search_api</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${openapi-spec-file-location-tpp_bank_search_api}</inputSpec>
+                            <language>spring</language>
+                            <output>${project.build.directory}/generated-sources/open-api/</output>
+                            <configOptions>
+                                <sourceFolder>src/main/java</sourceFolder>
+                                <basePackage>de.adorsys.opba.tppbankingapi.search</basePackage>
+                                <configPackage>de.adorsys.opba.tppbankingapi.config</configPackage>
+                                <modelPackage>de.adorsys.opba.tppbankingapi.search.model</modelPackage>
+                                <apiPackage>de.adorsys.opba.tppbankingapi.search.resource</apiPackage>
+                                <interfaceOnly>true</interfaceOnly>
+                                <skipOverwrite>true</skipOverwrite>
+                                <dateLibrary>java8</dateLibrary>
+                                <java8>true</java8>
+                                <implicitHeaders>false</implicitHeaders>
+                                <delegatePattern>true</delegatePattern>
+                                <useTags>true</useTags>
+                                <library>spring-mvc</library>
+                                <swaggerDocketConfig>false</swaggerDocketConfig>
+                            </configOptions>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate_tpp_token_api</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${openapi-spec-file-location-tpp_token_api}</inputSpec>
+                            <language>spring</language>
+                            <output>${project.build.directory}/generated-sources/open-api/</output>
+                            <configOptions>
+                                <sourceFolder>src/main/java</sourceFolder>
+                                <basePackage>de.adorsys.opba.tppbankingapi.token</basePackage>
+                                <configPackage>de.adorsys.opba.tppbankingapi.config</configPackage>
+                                <modelPackage>de.adorsys.opba.tppbankingapi.token.model</modelPackage>
+                                <apiPackage>de.adorsys.opba.tppbankingapi.token.resource</apiPackage>
+                                <interfaceOnly>true</interfaceOnly>
+                                <skipOverwrite>true</skipOverwrite>
+                                <dateLibrary>java8</dateLibrary>
+                                <java8>true</java8>
+                                <implicitHeaders>false</implicitHeaders>
+                                <delegatePattern>true</delegatePattern>
+                                <useTags>true</useTags>
+                                <library>spring-mvc</library>
+                                <swaggerDocketConfig>false</swaggerDocketConfig>
+                            </configOptions>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                            <generateModelDocumentation>false</generateModelDocumentation>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>io.swagger.codegen.v3</groupId>
+                        <artifactId>swagger-codegen-generators</artifactId>
+                        <version>${swagger-codegen-generators.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>3.0.0</version>
+				<version>${build-helper-maven-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>add-generated-source</id>
@@ -122,7 +185,7 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>${project.basedir}/generated/src/main</source>
+								<source>${project.build.directory}/generated-sources/open-api/src/main/java</source>
 							</sources>
 						</configuration>
 					</execution>

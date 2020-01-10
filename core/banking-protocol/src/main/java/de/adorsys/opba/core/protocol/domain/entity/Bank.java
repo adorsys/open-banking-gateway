@@ -5,13 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Proxy;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.SequenceGenerator;
 
 @Entity
 @Getter
@@ -19,10 +18,10 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Proxy(lazy = false)
 public class Bank {
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_id_generator")
+    @SequenceGenerator(name = "bank_id_generator", sequenceName = "bank_id_sequence")
     private Long id;
 
     String name;
