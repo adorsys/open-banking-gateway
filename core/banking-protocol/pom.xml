@@ -236,6 +236,11 @@
             <artifactId>json-path-assert</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>spring-web-test-client</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

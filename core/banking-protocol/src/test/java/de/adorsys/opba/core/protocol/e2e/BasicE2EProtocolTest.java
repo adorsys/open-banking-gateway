@@ -7,7 +7,6 @@ import de.adorsys.opba.core.protocol.e2e.stages.AccountListResult;
 import de.adorsys.opba.core.protocol.e2e.stages.mocks.MockServers;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
@@ -15,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static de.adorsys.opba.core.protocol.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.core.protocol.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
  * Happy-path test that uses wiremock-stubbed request-responses to drive banking-protocol.
  */
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-@AutoConfigureMockMvc
-@SpringBootTest(classes = {BankingProtocol.class, JGivenConfig.class})
+@SpringBootTest(classes = {BankingProtocol.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
 class BasicE2EProtocolTest extends SpringScenarioTest<MockServers, AccountListRequest, AccountListResult> {
 
