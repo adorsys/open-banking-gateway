@@ -9,6 +9,7 @@ import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Slf4j
 @JGivenStage
 public class AccountListRequest extends Stage<AccountListRequest> {
 
@@ -186,6 +188,7 @@ public class AccountListRequest extends Stage<AccountListRequest> {
     }
 
     private void updateExecutionId() {
+        log.info("Parsing {} to get execution id", redirectUriToGetUserParams);
         execId = Iterables.getLast(
                 Splitter.on("/").split(Splitter.on("?").split(redirectUriToGetUserParams).iterator().next())
         );
