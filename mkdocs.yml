@@ -4,11 +4,8 @@ site_description: Provides tools, adapter and connector for transparent access t
 nav:
   - Home: README.md
   - "Roadmap": roadmap.md
-  - "Dictionary": architecture/dictionary.md
   - "Release notes": releasenotes.md
   - "Initial Requirements": architecture/drafts/initial_requirements.md
-  - "Initial Use Case definition": architecture/uses_cases.md
-  - "Version Policy": version_policy.md
   - "Architecture":
     - "Login with FinTech Application": architecture/1-loginWithFinTech.md
     - "Search bank": architecture/2-searchBank.md
