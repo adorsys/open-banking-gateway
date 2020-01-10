@@ -15,7 +15,7 @@
     <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
     Change this if depth changes. Current: /open-banking-gateway/open-banking-gateway -->
     <main.basedir>${project.parent.basedir}</main.basedir>
-    <openapi-spec-file-location>${project.basedir}/src/main/resources/static/consent_api.yml</openapi-spec-file-location>
+    <openapi-spec-file-location>${project.basedir}/src/main/resources/static/tpp_consent_api.yml</openapi-spec-file-location>
   </properties>
 
 
@@ -92,6 +92,9 @@
                 <useTags>true</useTags>
                 <library>spring-mvc</library>
                 <swaggerDocketConfig>false</swaggerDocketConfig>
+                <generateApiDocumentation>false</generateApiDocumentation>
+                <generateModelDocumentation>false</generateModelDocumentation>
+                <generateSupportingFiles>false</generateSupportingFiles>
                 <generateApiTests>false</generateApiTests>
                 <generateModelTests>false</generateModelTests>
               </configOptions>

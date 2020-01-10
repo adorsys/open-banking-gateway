@@ -3,7 +3,7 @@ package de.adorsys.obpa.starter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import de.adorsys.opba.bankingapi.config.EnableBankingApi;
+import de.adorsys.opba.tppbankingapi.config.EnableBankingApi;
 import de.adorsys.opba.consentapi.config.EnableConsentApi;
 
 @SpringBootApplication

@@ -1,0 +1,963 @@
+openapi: 3.0.1
+info:
+  title: Open Banking Gateway - Consent Authorization API.  
+  termsOfService: urn:tos
+  contact: {}
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+  version: "1.0"
+  description: |
+    ### Description
+    Interface used by the PsuUserAgent to present consent authorization services to the PSU. The consent authorization process is triggered by redirecting the PSU from
+    the [TppBankingApi](https://adorsys.github.io/open-banking-gateway/doc/latest/architecture/dictionary#TppBankingApi) (2<sub>a</sub>)
+    over the [FinTechApi](https://adorsys.github.io/open-banking-gateway/doc/latest/architecture/dictionary#FinTechApi) (2<sub>b</sub>)
+    to the /consent/{auth-id} entry point of this [ConsentAuthorisationApi](https://adorsys.github.io/open-banking-gateway/doc/latest/architecture/dictionary#ConsentAuthorisationApi) (2<sub>c</sub>).
+    The decision on whether the authorization process is embedded or redirected is taken by this ConsentAuthorisationApi.
+    
+    The following picture displays the overall architecture of this open banking consent authorisation api: 
+    
+    ![High level architecture](/img/open-banking-consent-authorisation-api.png)
+    
+    
+    #### User Agen Type
+    This Api assumes that the PsuUserAgent is a modern browsers that :
+    * automatically detects the "302 Found" response code and proceeds with the associated location url,
+    * stores httpOnly cookies sent with the redirect under the given domain and path as defined by [RFC 6265](https://tools.ietf.org/html/rfc6265).
+    
+    This Api also assumes any other PsuUserAgent like a native mobile or a desktop application can simulate this same behavior of amodern browser with respect to 30X and Cookies. 
+    
+    
+    #### Redirecting to the ConsentAuthorisationApi (2<sub>a</sub>)
+    Any service request of the FinTechUI to the FinTechApi (1<sub>a</sub>) will be forwarded to the TppBankingApi (1<sub>b</sub>).
+    This forward might contain a [PsuConsentSession](https://adorsys.github.io/open-banking-gateway/doc/latest/architecture/dictionary#PsuConsentSession)
+    that is used to identify the PSU in the world of the TPP.
+    
+    The TppBankingApi uses the provided PsuConsentSession to retrieve an eventualy suitable consent that will be used to forward the corresponding service request to the OpenBankingApi (1<sub>c</sub>) of the ASPSP.
+    If there is no suitable consent, the TPP might still send a consent initiation request to the OpenBankingApi (1<sub>c</sub>). Whether this request is sent or not
+    depends on the design of the target OpenBankingApi. Finally, the TppBankingApi will if necessary instruct the FinTechApi (2<sub>a</sub>) to redirect the PsuUgerAgent (2<sub>b</sub>) to the /consent/{auth-id} entry point of 
+    the ConsentAuthorisationApi (2<sub>c</sub>).
+        
+    #### Issolation Authorisation Request Processing
+    The auth-id parameter is used to make sure paralell authorization requests are not mixup.
+        
+    #### SessionCookies and XSRF
+    Each authorisation session started will be associated with a proper SessionCookie and a corresponding XSRF-TOKEN.
+    * The request that sets a session cookie (E<sub>1</sub>) also add the X-XSRF-TOKEN to the response header.
+    * The cookie path is always extended with the corresponding auth-id, so two Authorization processes can not share state. 
+    * Each authenticated request sent to the ConsentAuthorisationApi will provide the X-XSRF-TOKEN matching the sent SessionCookie.
+    
+    #### RedirectCookie and XSRF (R<sub>1</sub>)
+    In a redirect approach (Redirecting PSU to the ASPSP), the The retruned AuthorizeResponse object contains information needed
+    to present a suitable redirect info page to the PSU. Redirection can either be actively performed by the UIApplication
+    or performed as a result of a 30x redirect response to the PsuUserAgent. In both cases, a RedirectCookie will be associated with the 
+    PsuUserAgent and a corresponding XSRF-TOKEN named redirectState will be addedto the back redirect url.
+        
+    #### Final Result of the Authorization Process
+    The final result of the authorization process is a PsuCosentSession that is returned by the token endpoint of the TppBankingAPi to
+    the FinTechApi (4<sub>c</sub>). This handle will (PsuCosentSession) will be stored by the FinTechApi and added a PSU identifying information to
+    each service request associated with this PSU. 
+tags:
+- name: Consent Authorization
+  description: |
+    Entry point for processing a consent request redirected by the TppBankingApi
+    over the FinTechApi to this ConsentAuthorisationApi.
+paths:
+  /consent/{auth-id}:
+    get:
+      operationId: authUsingGET
+      summary: |
+        Redirect entry point for initiating a consent authorization process.
+      tags:
+      - Consent Authorization
+      description: |
+        This is the <b>entry point</b> for processing a consent redirected
+        by the TppBankingApi to this ConsentAuthorisationApi.
+        
+        At this entry point, the ConsentAuthorisationApi will use the redirectCode to retrieve the RedirectSession from the TppServer.
+        An analysis of the RedirectSession will help decide if the ConsentAuthorisationApi will proceed with an embedded approach (E<sub>1</sub>) or a redirect approach (R<sub>1</sub>).
+        
+      parameters:
+        #path
+        - $ref: '#/components/parameters/auth-id'
+        #query
+        - $ref: '#/components/parameters/redirectCode'
+      responses:
+        '200':
+          $ref: '#/components/responses/200_AuthorizeResponse'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+
+  /consent/{auth-id}/embedded:
+    post:
+      operationId: embeddedUsingPOST
+      tags:
+      - Consent Authorization
+      summary: |
+        Generic challenge response end point for updating consent session with
+        PSU authentication data while requesting remaining challenges for the ongoing
+        authorization process.
+      description: |
+        Update consent session with PSU auth data whereby requesting remaining
+        challenges for the ongoing authorization process. 
+      parameters:
+        #path
+        - $ref: '#/components/parameters/auth-id'
+        #headers
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+      requestBody:
+        content:
+          application/json:
+           schema:
+              $ref: '#/components/schemas/PsuAuthRequest'
+              
+      responses:
+        '200':
+          $ref: '#/components/responses/200_AuthorizeResponse'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+      security:
+      - sessionCookie: []
+
+  /consent/{auth-id}/toAspsp/grant:
+    post:
+      operationId: toAspspGrantUsingPOST
+      tags:
+      - Consent Authorization
+      summary: |
+        Provides the ConsentAuthorisationApi with the opportunity to redirect the PSU to the ASPSP.
+      description: |
+        Provides the ConsentAuthorisationApi with the opportunity to redirect the PSU to the ASPSP.
+      parameters:
+        #path
+        - $ref: '#/components/parameters/auth-id'
+        #headers
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorizeRequest'
+        required: true
+      responses:
+        '302':
+          $ref: '#/components/responses/302_Redirect_to_ASPSP'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+      security:
+      - sessionCookie: []
+
+  /consent/{auth-id}/toAspsp/deny:
+    post:
+      operationId: denyRedirectUsingPOST
+      tags:
+      - Consent Authorization
+      summary: |
+        Closes this session and redirects the PSU back to the FinTechApi or close the application window.
+      description: |
+        Closes this session and redirects the PSU back to the FinTechApi
+        or close the application window. In any case, the session of the user will
+        be closed and cookies will be deleted with the response to this request.
+      parameters:
+        #path
+        - $ref: "#/components/parameters/auth-id"
+        #headers
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DenyRedirectRequest'
+        required: true
+      responses:
+        '302':
+          $ref: '#/components/responses/302_Redirect_to_FinTechApi'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+      security:
+      - sessionCookie: []
+
+  /consent/{auth-id}/fromAspsp/{redirectState}/ok:
+    get:
+      operationId: fromAspspOkUsingGET
+      tags:
+      - Consent Authorization
+      summary: Redirecting back from ASPSP to ConsentAuthorisationApi after a successful
+        consent authorization.
+      description: |
+        Redirecting back from ASPSP to ConsentAuthorisationApi after a successful consent authorization.
+        In any case, the corresponding redirect session of the user will be closed and cookies will be deleted with the response to this request.
+
+        ##### Desiging the BackRedirectURL (R<sub>6</sub>)
+        The BackRedirectURL (OkUrl, NokUrl, etc... depending of ASPSP API) is the URL used by the ASPSP to send the PsuUserAgent
+        back to the ConsentAuthorisationApi. Event though the structure of this URL might be constrained by the nature of the
+        ASPSP OpenBankingApi, the BackRedirectURL must contains atleast :
+        * A redirect-id (as a path parameter) used to isolate many redirect processes form each order.
+        * A consentAuthState (as a path or query parameter) used to protect the TppConsentSessionCookie as a XSRF parameter.
+        * The consentAuthState might if necessary be used to encrypt the attached ConsentAuthSessionCookie.
+
+        ##### Back-Redirecting PSU to the FinTechApi (4<sub>b</sub>)
+        Prior to redirecting the PSU back to the FinTechApi, consent information will be stored by the ConsentAuthorisationApi in a RedirectSession as well.
+        * The one time resulting redirectCode will be attached as a query parameter to the location URL leading back to the FinTechApi.
+        * After verifying the FinTechRedirectSessionCookie (4<sub>b</sub>), the FinTechApi must forward this redirectCode to the token endpoint of the TppBankingAPi (4<sub>c</sub>). 
+        * The TppBankingApi will then retrieve the RedirectSession using the redirectCode and proceed forward with the authorization process.
+
+      parameters:
+        #path
+        - $ref: '#/components/parameters/auth-id'
+        - $ref: '#/components/parameters/redirectState'
+      responses:
+        '200':
+          $ref: '#/components/responses/200_AuthorizeResponse'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+      security:
+      - redirectCookie: []
+
+  /consent/{auth-id}/fromAspsp/{redirectState}/nok:
+    get:
+      operationId: fromAspspNokUsingGET
+      tags:
+      - Consent Authorization
+      summary: Redirecting back from ASPSP to TPP after a failed consent authorization.
+      description: |
+        Redirecting back from ASPSP to TPP after a failed consent authorization.
+        In any case, the corresponding redirect session of the user will be closed and cookies will be deleted with the response to this request.
+      parameters:
+        #path
+        - $ref: '#/components/parameters/auth-id'
+        - $ref: '#/components/parameters/redirectState'
+      responses:
+        '200':
+          $ref: '#/components/responses/200_AuthorizeResponse'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+      security:
+      - redirectCookie: []
+
+components:
+
+  securitySchemes:
+
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: sessionCookie
+
+    redirectCookie:
+      type: apiKey
+      in: cookie
+      name: redirectCookie
+
+  headers:
+
+    X-Request-ID:
+      required: true
+      description: |
+        Unique ID that identifies this request through common workflow.
+        Shall be contained in HTTP Response as well.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+
+    X-XSRF-TOKEN:
+      required: true
+      description: |
+        XSRF parameter used to validate a SessionCookie. The token matches the auth-id
+        included in the requestpath and prefixing the cookie.
+      example: abc123.faadsf93nlas32wx
+      schema:
+        type: string
+
+    Set-SessionCookie:
+      name: Set-Cookie
+      description: |
+        SessionCookie used to maintain the authorization session between the ConsentAuthorisationApi
+        and the ConsentAuthorisationUI. This cookie is validated using an X-XSRF-TOKEN sent with the request header.
+        Notice :
+        * The cookie path contains the auth-id so cookie is only sent when auth instance is active.
+        * Request consuming this cookie must present a consentAuthState from their authorization header.
+        * X-XSRF-TOKEN is provided by the response object that sets the cookie.
+      schema:
+        type: string
+        example: |
+          Assuming auth-id=abc123
+          "Set-Cookie: Session_abc123=ejxs.wersdzxxc23r.asdf; Path=/consent/abc123/; Max-Age=300" 
+
+    Set-RedirectCookie:
+      name: Set-Cookie
+      description: |
+        Cookie set before redirecting PSU to ASPSP. Assuming auth-id=abc123, cookie will look like
+        Redirect_abc123=ejts.adsfa.adfaj; Path=/consent/abc123/fromAspsp/. As a user can initiate more than one sca from the same browser instance. 
+        * The cookie path contains the auth-id so cookie is only sent when redirect url is active.
+        * The callback link hast the structure /consent/{auth-id}/fromAspsp/{redirectState}/ok where the redirectState is the XSRF parameter used to validate the RedirectCookie.
+        * The way the callback url is passed to the ASPSP is dependent on the OpenBankingApi of the ASPSP.
+        * The RedirectCookie has an expiration date after which that callback will no longer be accepted.
+        * Generaly an existing session cookie shall be seleted when PSU is redirected to ASPSP.
+      schema:
+        type: string
+        example: |
+          Assuming auth-id=abc123
+          "Redirect_abc123=ejxs.wersdzxxc23r.asdf; Path=/consent/abc123/fromAspsp/; Max-Age=1800, Session_abc123=ejxs.wersdzxxc23r.asdf; Path=/consent/abc123/; Max-Age=0" 
+
+    Reset-Cookies:
+      name: Set-Cookie
+      description: |
+        Delete all relevant cookies
+      schema:
+        type: string
+        example: |
+          Assuming auth-id=abc123
+          "Redirect_abc123=null; Path=/consent/abc123/; Max-Age=0, Session_abc123=null; Path=/consent/abc123/; Max-Age=0" 
+
+    Location-ASPSP:
+      name: Location
+      description: |
+        This is the 30X Location Header. It contains the url used to redirect PSU to the OnlineBanking of ASPSP.
+      schema:
+        type: string
+
+    Location-FinTechApi:
+      name: Location
+      description: |
+        This is the 30X Location Header. It contains the url used to redirect PSU back to the FinTech of ASPSP.
+      schema:
+        type: string
+
+  parameters:
+
+    auth-id:
+      name: auth-id
+      in: path
+      required: true
+      description: |
+        Used to distinguish between different consent authorization processes started by the same PSU.
+        Also included in the corresponding cookie path to limit visibility of the consent cookie to the
+        corresponding consent process.
+      example: abc123
+      schema:
+        type: string
+
+    redirectCode:
+      name: redirectCode
+      in: query
+      description: Code used to retrieve a redirect session.
+      example: "faadsf93nlas32wx"
+      schema:
+        type: string
+
+    redirectState:
+      name: redirectState
+      in: path
+      description: XSRF parameter used to validate an RedirectCookie.
+      required: true
+      example: faadsf93nlas32wx
+      schema:
+        type: string
+
+    X-Request-ID:
+      name: X-Request-ID
+      in: header
+      required: true
+      description: |
+        Unique ID that identifies this request through common workflow.
+        Shall be contained in HTTP Response as well.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+
+    X-XSRF-TOKEN:
+      name: X-XSRF-TOKEN
+      in: header
+      required: true
+      description: |
+        XSRF parameter used to validate a SessionCookie. The token matches the auth-id
+        included in the requestpath and prefixing the cookie.
+      example: abc123.faadsf93nlas32wx
+      schema:
+        type: string
+
+  responses:
+
+    200_AuthorizeResponse:
+      description: |
+        All responses sent by the ConsentAuthorisationApi to the UI are derived from the AuthorizeResponse object. 
+        This object presents :
+        * The consentAuthState as a XSRF parameter used to reauthenticate the ConsentAuthSessionCookie. It can also be used if required
+        to encrypt information stored in the corresponding ConsentAuthSessionCookie.
+        * The AuthorizeResponse object info also contains information used to display a qualified page to the PSU 
+        prio to eventually redirecting the PSU to the target ASPSP.
+        * Any session, account or payment information needed to manage the authorization process is stored in both AuthorizeResponse and encrypted in the ConsentAuthSessionCookie.
+        * The ConsentAuthSessionCookie is secure and httpOnly.
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        Set-Cookie:
+          $ref: '#/components/headers/Set-SessionCookie'
+        X-XSRF-TOKEN:
+          $ref: '#/components/headers/X-XSRF-TOKEN'
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              consentAuth:
+                $ref: '#/components/schemas/ConsentAuth'
+
+    302_Redirect_to_ASPSP:
+      description: |
+        Redirects UserAgent to the ASPSP online banking interface.
+
+        ##### Setting a RedirectCookie
+        The redirect response to the PsuUserAgent must set a RedirectCookie.
+        * This cookie contains information associated with this specific redirect session.
+        * The XSRF Token used to validate this the RedirectCookie is path parameter redirectState
+        * This RedirectCookie must have a life time equal to the expected duration of the corresponding redirect session at the target ASPSP OnlineBankingApi.
+        * Prior to redirecting any associated SessionCookie (sharing the same auth-id) will be deleted.
+        
+      headers:
+        Location:
+          $ref: '#/components/headers/Location-ASPSP'
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        Set-Cookie:
+          $ref: '#/components/headers/Set-RedirectCookie'
+
+    302_Redirect_to_FinTechApi:
+      description: |
+        Redirects UserAgent back to the FinTechAPI.
+      headers:
+        Location:
+          $ref: '#/components/headers/Location-FinTechApi'
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        Set-Cookie:
+          $ref: '#/components/headers/Reset-Cookies'
+
+    400_BadRequest:
+      description: Bad request
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        X-XSRF-TOKEN:
+          $ref: '#/components/headers/X-XSRF-TOKEN'
+        Set-Cookie:
+          $ref: '#/components/headers/Set-SessionCookie'
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/psuMessage'
+
+    401_Unauthorized:
+      description: |
+        Access credentials absent or invalid. This happens when
+        * Provided credential for login not matching.
+        * Endpoin expect a session cookie but none is present.
+        * Session cookie is present but associated stateString does not match.
+        
+        As a consequence, we reset existing FinTechLoginSessionState if any. 
+        Nevertheless we do not reset RedirectSessionCookie.
+      headers:
+        X-Request-ID:
+          $ref: "#/components/headers/X-Request-ID"
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/psuMessage'
+
+    404_NotFound:
+      description: The specified resource was not found
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        X-XSRF-TOKEN:
+          $ref: '#/components/headers/X-XSRF-TOKEN'
+        Set-Cookie:
+          $ref: '#/components/headers/Set-SessionCookie'
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/psuMessage'
+
+  schemas:
+
+    psuMessage:
+      title: PsuMessage
+      type: object
+      properties:
+        category:
+          required: true
+          type: string
+          enum:
+            - ERROR
+            - WARNING
+            - INFO
+        code:
+          required: true
+          type: string
+        path:
+          type: string
+        text:
+          type: string
+
+    AccountStatus:
+      type: string
+      enum:
+        - ENABLED
+        - DELETED
+        - BLOCKED
+
+    AccountType:
+      type: string
+      enum:
+        - CACC
+        - CASH
+        - CHAR
+        - CISH
+        - COMM
+        - CPAC
+        - LLSV
+        - LOAN
+        - MGLD
+        - MOMA
+        - NREX
+        - ODFT
+        - ONDP
+        - OTHR
+        - SACC
+        - SLRY
+        - SVGS
+        - TAXE
+        - TRAN
+        - TRAS
+
+    BalanceType:
+      type: string
+      enum:
+        - CLOSING_BOOKED
+        - EXPECTED
+        - AUTHORISED
+        - OPENING_BOOKED
+        - INTERIM_AVAILABLE
+        - FORWARD_AVAILABLE
+        - NONINVOICED
+
+    PaymentProduct:
+      type: string
+      enum:
+        - SEPA
+        - INSTANT_SEPA
+        - TARGET2
+        - CROSS_BORDER
+
+    PaymentStatus:
+      type: string
+      enum:
+        - ACCC
+        - ACCP
+        - ACSC
+        - ACSP
+        - ACTC
+        - ACWC
+        - ACWP
+        - RCVD
+        - PDNG
+        - RJCT
+        - CANC
+        - ACFC
+        - PATC
+
+    ScaStatus:
+      type: string
+      description: The sca status. Used to manage the consent authorization flows.
+      enum:
+        - received
+        - psuIdentified
+        - psuAuthenticated
+        - scaMethodSelected
+        - started
+        - finalised
+        - failed
+        - exempted
+
+    AccountBalance:
+      title: AccountBalance
+      type: object
+      properties:
+        amount:
+          $ref: '#/components/schemas/Amount'
+        balanceType:
+          $ref: '#/components/schemas/BalanceType'
+        iban:
+          type: string
+        lastChangeDateTime:
+          type: string
+          format: date-time
+        lastCommittedTransaction:
+          type: string
+        referenceDate:
+          type: string
+          format: date
+
+    AccountDetails:
+      title: AccountDetails
+      type: object
+      properties:
+        accountStatus:
+          $ref: '#/components/schemas/AccountStatus'
+        accountType:
+          $ref: '#/components/schemas/AccountType'
+        balances:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountBalance'
+        bban:
+          type: string
+        bic:
+          type: string
+        currency:
+          type: string
+        details:
+          type: string
+        iban:
+          type: string
+        id:
+          type: string
+        linkedAccounts:
+          type: string
+        maskedPan:
+          type: string
+        msisdn:
+          type: string
+        name:
+          type: string
+        pan:
+          type: string
+        product:
+          type: string
+        usageType:
+          type: string
+          enum:
+          - PRIV
+          - ORGA
+
+    AccountReference:
+      title: AccountReference
+      type: object
+      properties:
+        bban:
+          type: string
+        currency:
+          type: string
+        iban:
+          type: string
+        maskedPan:
+          type: string
+        msisdn:
+          type: string
+        pan:
+          type: string
+
+    Address:
+      title: Address
+      type: object
+      properties:
+        buildingNumber:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        postalCode:
+          type: string
+        street:
+          type: string
+
+    AisAccountAccessInfo:
+      title: AisAccountAccessInfo
+      type: object
+      properties:
+        accounts:
+          type: array
+          description: Access to accounts
+          items:
+            type: string
+        allPsd2:
+          type: string
+          description: Consent on all accounts, balances and transactions of psu
+          example: ALL_ACCOUNTS
+          enum:
+          - ALL_ACCOUNTS
+          - ALL_ACCOUNTS_WITH_BALANCES
+        availableAccounts:
+          type: string
+          description: Consent on all available accounts of psu
+          example: ALL_ACCOUNTS
+          enum:
+          - ALL_ACCOUNTS
+          - ALL_ACCOUNTS_WITH_BALANCES
+        balances:
+          type: array
+          description: Access to balances
+          items:
+            type: string
+        transactions:
+          type: array
+          description: Access to transactions
+          items:
+            type: string
+      description: Ais account access information
+
+    AisConsentRequest:
+      title: AisConsentRequest
+      required:
+      - access
+      - frequencyPerDay
+      - id
+      - recurringIndicator
+      - tppId
+      - userId
+      - validUntil
+      type: object
+      properties:
+        access:
+          $ref: '#/components/schemas/AisAccountAccessInfo'
+        frequencyPerDay:
+          type: integer
+          description: Maximum frequency for an access per day. For a once-off access,
+            this attribute is set to 1
+          format: int32
+          example: 4
+        id:
+          type: string
+          description: The consent id
+        recurringIndicator:
+          type: boolean
+          description: '''true'', if the consent is for recurring access to the account
+            data , ''false'', if the consent is for one access to the account data'
+          example: false
+        tppId:
+          type: string
+          description: ID of the corresponding TPP.
+          example: testTPP
+        userId:
+          type: string
+          description: Corresponding PSU
+        validUntil:
+          type: string
+          description: Consent`s expiration date. The content is the local ASPSP date
+            in ISODate Format
+          format: date
+          example: 2020-10-10
+      description: Ais consent request
+
+    Amount:
+      title: Amount
+      type: object
+      properties:
+        amount:
+          type: number
+        currency:
+          type: string
+
+    ConsentAuth:
+      title: ConsentAuth
+      type: object
+      description: Transport object for consent API request response 
+      properties:
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountDetails'
+        authMessageTemplate:
+          type: string
+        authenticationMethodId:
+          type: string
+          description: An identification provided by the ASPSP for the later identification
+            of the authentication method selection.
+          example: myAuthenticationID
+        bulkPayment:
+          $ref: '#/components/schemas/BulkPayment'
+        consent:
+          $ref: '#/components/schemas/AisConsentRequest'
+        consentAuthState:
+          type: string
+          description: This is the CSRF-State String of the ConsentAuthorisationApi.
+            It is a transient reference of the consent request. It encodes a key that
+            is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.
+        periodicPayment:
+          $ref: '#/components/schemas/PeriodicPayment'
+        psuCorporateId:
+          type: string
+        psuId:
+          type: string
+        scaMethods:
+          type: array
+          description: List of sca methods for selection if necessary.
+          items:
+            $ref: '#/components/schemas/ScaUserData'
+        scaStatus:
+          $ref: '#/components/schemas/ScaStatus'
+        singlePayment:
+          $ref: '#/components/schemas/SinglePayment'
+
+    AuthorizeRequest:
+      title: AuthorizeRequest
+      type: object
+      description: Contains information used to legitimate a request.
+      properties:
+        consentAuth:
+          $ref: '#/components/schemas/ConsentAuth'
+
+    DenyRedirectRequest:
+      title: DenyRedirectRequest
+      type: object
+      description: Denies a redirect to ASPSP requested by the ConsentAuthorisationApi
+      properties:
+        consentAuth:
+          $ref: '#/components/schemas/ConsentAuth'
+        backToFinTech:
+          type: boolean
+          description: Will indicate if PSU wants to be sent back to FinTechApi.
+        exitPage:
+          type: string
+          description: In case there is no redirect back to TPP desired, exit page
+            can be specified by ConsentAuthorisationApi
+        forgetConsent:
+          type: boolean
+          description: Set to true if consent object shall be forgotten or frozen.
+
+    PsuAuthRequest:
+      title: PsuAuthRequest
+      required:
+      - scaAuthenticationData
+      type: object
+      description: Contains information used to legitimate a request.
+      properties:
+        consentAuth:
+          $ref: '#/components/schemas/ConsentAuth'
+        scaAuthenticationData:
+          type: object
+          additionalProperties:
+            type: string
+          description: SCA authentication data, depending on the chosen authentication
+            method. If the data is binary, then it is base64 encoded.
+
+    BulkPayment:
+      title: BulkPayment
+      type: object
+      properties:
+        batchBookingPreferred:
+          type: boolean
+        debtorAccount:
+          $ref: '#/components/schemas/AccountReference'
+        paymentId:
+          type: string
+        paymentProduct:
+          $ref: '#/components/schemas/PaymentProduct'
+        paymentStatus:
+          $ref: '#/components/schemas/PaymentStatus'
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/SinglePayment'
+        requestedExecutionDate:
+          type: string
+          format: date
+
+    PeriodicPayment:
+      title: PeriodicPayment
+      type: object
+      properties:
+        paymentData:
+          $ref: '#/components/schemas/SinglePayment'
+        dayOfExecution:
+          type: integer
+          format: int32
+        endDate:
+          type: string
+          format: date
+        executionRule:
+          type: string
+        frequency:
+          type: string
+          enum:
+          - Daily
+          - Weekly
+          - EveryTwoWeeks
+          - Monthly
+          - EveryTwoMonths
+          - Quarterly
+          - SemiAnnual
+          - Annual
+        startDate:
+          type: string
+          format: date
+
+    ScaUserData:
+      title: ScaUserData
+      type: object
+      properties:
+        decoupled:
+          type: boolean
+        id:
+          type: string
+        methodValue:
+          type: string
+        scaMethod:
+          type: string
+          enum:
+          - EMAIL
+          - MOBILE
+          - CHIP_OTP
+          - PHOTO_OTP
+          - PUSH_OTP
+          - SMS_OTP
+          - APP_OTP
+        staticTan:
+          type: string
+        usesStaticTan:
+          type: boolean
+
+    SinglePayment:
+      title: SinglePayment
+      type: object
+      properties:
+        creditorAccount:
+          $ref: '#/components/schemas/AccountReference'
+        creditorAddress:
+          $ref: '#/components/schemas/Address'
+        creditorAgent:
+          type: string
+        creditorName:
+          type: string
+        debtorAccount:
+          $ref: '#/components/schemas/AccountReference'
+        endToEndIdentification:
+          type: string
+        instructedAmount:
+          $ref: '#/components/schemas/Amount'
+        paymentId:
+          type: string
+        paymentProduct:
+          $ref: '#/components/schemas/PaymentProduct'
+        paymentStatus:
+          $ref: '#/components/schemas/PaymentStatus'
+        remittanceInformationUnstructured:
+          type: string
+        requestedExecutionDate:
+          type: string
+          format: date
+        requestedExecutionTime:
+          type: string
