@@ -3,7 +3,7 @@ package de.adorsys.opba.core.protocol.e2e.stages;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.Stage;
-import com.tngtech.jgiven.annotation.ProvidedScenarioState;
+import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import lombok.SneakyThrows;
 import org.hamcrest.collection.IsIterableContainingInAnyOrder;
@@ -25,10 +25,10 @@ public class AccountListResult extends Stage<AccountListResult>  {
     @Autowired
     private MockMvc mvc;
 
-    @ProvidedScenarioState
+    @ExpectedScenarioState
     private String redirectOkUri;
 
-    @ProvidedScenarioState
+    @ExpectedScenarioState
     private String responseContent;
 
     @SneakyThrows

@@ -38,9 +38,11 @@ public class AccountListRequest extends Stage<AccountListRequest> {
     private String execId;
 
     @ProvidedScenarioState
+    @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
     private String redirectOkUri;
 
     @ProvidedScenarioState
+    @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
     private String responseContent;
 
     @Autowired
