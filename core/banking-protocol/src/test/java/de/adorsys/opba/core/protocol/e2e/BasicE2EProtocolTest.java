@@ -6,11 +6,12 @@ import de.adorsys.opba.core.protocol.e2e.stages.AccountListRequest;
 import de.adorsys.opba.core.protocol.e2e.stages.AccountListResult;
 import de.adorsys.opba.core.protocol.e2e.stages.mocks.MockServers;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import static de.adorsys.opba.core.protocol.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.core.protocol.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
@@ -18,7 +19,7 @@ import static de.adorsys.opba.core.protocol.TestProfiles.ONE_TIME_POSTGRES_RAMFS
 /**
  * Happy-path test that uses wiremock-stubbed request-responses to drive banking-protocol.
  */
-@Slf4j
+@Transactional(propagation = Propagation.NOT_SUPPORTED)
 @AutoConfigureMockMvc
 @SpringBootTest(classes = {BankingProtocol.class, JGivenConfig.class})
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
@@ -27,36 +28,26 @@ class BasicE2EProtocolTest extends SpringScenarioTest<MockServers, AccountListRe
     @Test
     @SneakyThrows
     void testAccountsListWithConsentUsingRedirect() {
-        try {
-            given()
-                    .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running();
-            when()
-                    .open_banking_list_accounts_called()
-                    .and()
-                    .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts();
-            then()
-                    .open_banking_reads_anton_brueckner_accounts_on_redirect();
-        } catch (Throwable ex) {
-            log.info("Caught {}", ex.getMessage(), ex);
-            throw ex;
-        }
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running();
+        when()
+                .open_banking_list_accounts_called()
+                .and()
+                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts();
+        then()
+                .open_banking_reads_anton_brueckner_accounts_on_redirect();
     }
 
     @Test
     void testTransactionsListWithConsentUsingRedirect() {
-        try {
-            given()
-                    .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running();
-            when()
-                    .open_banking_list_transactions_called_for_anton_brueckner()
-                    .and()
-                    .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions();
-            then()
-                    .open_banking_reads_anton_brueckner_transactions_on_redirect();
-        } catch (Throwable ex) {
-            log.info("Caught {}", ex.getMessage(), ex);
-            throw ex;
-        }
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running();
+        when()
+                .open_banking_list_transactions_called_for_anton_brueckner()
+                .and()
+                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions();
+        then()
+                .open_banking_reads_anton_brueckner_transactions_on_redirect();
     }
 
     @Test
