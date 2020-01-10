@@ -210,25 +210,25 @@
         <dependency>
             <groupId>com.github.tomakehurst</groupId>
             <artifactId>wiremock</artifactId>
-            <version>2.25.1</version>
+            <version>${wiremock.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.tngtech.jgiven</groupId>
             <artifactId>jgiven-core</artifactId>
-            <version>1.0.0-RC3</version>
+            <version>${jgiven.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.tngtech.jgiven</groupId>
             <artifactId>jgiven-spring-junit5</artifactId>
-            <version>1.0.0-RC3</version>
+            <version>${jgiven.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.tngtech.jgiven</groupId>
             <artifactId>jgiven-junit5</artifactId>
-            <version>1.0.0-RC3</version>
+            <version>${jgiven.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

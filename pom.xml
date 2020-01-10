@@ -109,6 +109,8 @@
         <junit.platform.commons.version>1.5.2</junit.platform.commons.version>
         <surefire.version>3.0.0-M3</surefire.version>
         <assertj.version>3.12.2</assertj.version>
+        <jgiven.version>1.0.0-RC3</jgiven.version>
+        <wiremock.version>2.25.1</wiremock.version>
         <testcontainers.version>1.12.4</testcontainers.version>
         <slf4j-simple.version>1.7.29</slf4j-simple.version>
         <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
