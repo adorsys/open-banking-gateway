@@ -29,7 +29,6 @@ The following picture displays the overall architecture of this banking gateway:
 * [Release notes](docs/releasenotes.md) 
 * [Roadmap for next features development](docs/roadmap.md)
 * [Initial Requirements](docs/architecture/drafts/initial_requirements.md)
-* [Initial Use Case definition](docs/architecture/uses_cases.md)
 
  
 ## Authors & Contact
@@ -74,3 +73,6 @@ So the folders have to be made known to the ide.
 
 ## JavaDoc
 * [JavaDoc](https://adorsys.github.io/open-banking-gateway/javadoc/latest/index.html)
+
+## Use Cases
+* [Use Cases](docs/architecture/uses_cases.md)
