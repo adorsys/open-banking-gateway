@@ -97,7 +97,7 @@ public class AccountListRequest extends Stage<AccountListRequest> {
     public AccountListRequest open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts() {
         provideParametersToBankingProtocol(
                 PARAMETERS_PROVIDE_MORE,
-                "mockedsandbox/restrecord/tpp-ui-input/params/anton-brueckner-account.txt"
+            "mockedsandbox/restrecord/tpp-ui-input/params/anton-brueckner-account.txt"
         );
 
         LoggedRequest consentInitiateRequest = wireMock
@@ -109,7 +109,7 @@ public class AccountListRequest extends Stage<AccountListRequest> {
     public AccountListRequest open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions() {
         provideParametersToBankingProtocol(
                 PARAMETERS_PROVIDE_MORE,
-                "mockedsandbox/restrecord/tpp-ui-input/params/anton-brueckner-transactions.txt"
+            "mockedsandbox/restrecord/tpp-ui-input/params/anton-brueckner-transactions.txt"
         );
 
         LoggedRequest consentInitiateRequest = wireMock
@@ -121,7 +121,7 @@ public class AccountListRequest extends Stage<AccountListRequest> {
     public AccountListRequest open_banking_user_max_musterman_provided_initial_parameters_to_list_accounts() {
         provideParametersToBankingProtocol(
                 PARAMETERS_PROVIDE_MORE,
-                "mockedsandbox/restrecord/tpp-ui-input/params/max-musterman-account.txt"
+            "mockedsandbox/restrecord/tpp-ui-input/params/max-musterman-account.txt"
         );
         return self();
     }
@@ -129,7 +129,7 @@ public class AccountListRequest extends Stage<AccountListRequest> {
     public AccountListRequest open_banking_user_max_musterman_provided_initial_parameters_to_list_transactions() {
         provideParametersToBankingProtocol(
                 PARAMETERS_PROVIDE_MORE,
-                "mockedsandbox/restrecord/tpp-ui-input/params/max-musterman-transactions.txt"
+            "mockedsandbox/restrecord/tpp-ui-input/params/max-musterman-transactions.txt"
         );
         return self();
     }
@@ -137,7 +137,7 @@ public class AccountListRequest extends Stage<AccountListRequest> {
     public AccountListRequest open_banking_user_max_musterman_provided_password() {
         provideParametersToBankingProtocol(
                 "/v1/parameters/provide-psu-password/",
-                "mockedsandbox/restrecord/tpp-ui-input/params/max-musterman-password.txt"
+            "mockedsandbox/restrecord/tpp-ui-input/params/max-musterman-password.txt"
         );
         return self();
     }
@@ -145,7 +145,7 @@ public class AccountListRequest extends Stage<AccountListRequest> {
     public AccountListRequest open_banking_user_max_musterman_selected_sca_challenge_type_email1() {
         provideParametersToBankingProtocol(
                 "/v1/parameters/select-sca-method/",
-                "mockedsandbox/restrecord/tpp-ui-input/params/max-musterman-selected-sca-email1.txt"
+            "mockedsandbox/restrecord/tpp-ui-input/params/max-musterman-selected-sca-email1.txt"
         );
         return self();
     }
@@ -153,7 +153,7 @@ public class AccountListRequest extends Stage<AccountListRequest> {
     public AccountListRequest open_banking_user_max_musterman_selected_sca_challenge_type_email2() {
         provideParametersToBankingProtocol(
                 "/v1/parameters/select-sca-method/",
-                "mockedsandbox/restrecord/tpp-ui-input/params/max-musterman-selected-sca-email2.txt"
+            "mockedsandbox/restrecord/tpp-ui-input/params/max-musterman-selected-sca-email2.txt"
         );
         return self();
     }
@@ -161,7 +161,7 @@ public class AccountListRequest extends Stage<AccountListRequest> {
     public AccountListRequest open_banking_user_max_musterman_provided_sca_challenge_result_and_no_redirect() {
         provideParametersToBankingProtocol(
                 "/v1/parameters/report-sca-result/",
-                "mockedsandbox/restrecord/tpp-ui-input/params/max-musterman-sca-challenge-result.txt",
+            "mockedsandbox/restrecord/tpp-ui-input/params/max-musterman-sca-challenge-result.txt",
                 HttpStatus.OK
         );
 
