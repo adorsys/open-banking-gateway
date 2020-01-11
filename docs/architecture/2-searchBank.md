@@ -17,7 +17,7 @@ Use cases for this API:
 2. FinTechUI displays a search screen to the PSU
 3. PSU enters any keyword in the search input field
 4. FinTechUI forward request to FinTechAPI
-5. FinTechAPI forward request to TppBeanSearchApi
+5. FinTechAPI forward request to TppBankSearchApi
 6. TppBankSearchApi returns a list of matching BankDescriptors to FinTechAPI
 7. FinTechAPI returns a list of matching BankDescriptors to FinTechBankSearchUI
 8. UI displays list of found bank descriptors to PSU
@@ -72,8 +72,8 @@ The following diagram describes additional steps performed in the local incremen
 Use cases for this API:
 1. PSU loads FinTechSearchScreen
 2. FinTechUI requests the BankSearchIndex from FinTechApi
-3. FinTechApi requests the BankSearchIndex from TppBeanSearchApi
-4. TppBeanSearchApi return BankSearchIndex to FinTechApi
+3. FinTechApi requests the BankSearchIndex from TppBankSearchApi
+4. TppBankSearchApi return BankSearchIndex to FinTechApi
 5. FinTechApi return BankSearchIndex to FinTechUI
 6. FinTechUI displays a search screen to the PSU
 7. PSU enters any keyword in the search input field

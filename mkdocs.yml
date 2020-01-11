@@ -3,6 +3,9 @@ repo_url: https://github.com/adorsys/open-banking-gateway
 site_description: Provides tools, adapter and connector for transparent access to open banking apis
 nav:
   - Home: README.md
+  - "Roadmap": roadmap.md
+  - "Release notes": releasenotes.md
+  - "Initial Requirements": architecture/drafts/initial_requirements.md
   - "Architecture":
     - "Login with FinTech Application": architecture/1-loginWithFinTech.md
     - "Search bank": architecture/2-searchBank.md
@@ -12,10 +15,5 @@ nav:
     - "Authorize Consent Embedded Approach": architecture/5a-psuAuthEmbeddedConsent.md
     - "Authorize Consent Redirect Approach": architecture/5b-psuAuthRedirectConsent.md
     - "Consume Service": architecture/6-consume_api.md
-    - "Dictionary": architecture/dictionary.md
-    - "Draft": architecture/drafts/README.md
-  - "Roadmap": roadmap.md
-  - "Contribution guidelines": ContributionGuidelines.md
-  - "Release notes": releasenotes.md
-  - "Version Policy": version_policy.md
+    - "Draft": architecture/drafts/initial_requirements.md
 theme: readthedocs
