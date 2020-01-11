@@ -3,8 +3,37 @@ openapi: 3.0.1
 info:
   title: Open Banking Gateway FinTech Example API
   description: |
-    This API provides FinTech possibilities to perform use-cases specific calls 
-    to the bank of PSU.
+    This is a sample API that show how develop FinTech use case that invoke banking APIs.
+
+    #### User Agent
+    This Api assumes that the PsuUserAgent is a modern browsers that
+    * automatically detects the "302 Found" response code and proceeds with the associated location url,
+    * stores httpOnly cookies sent with the redirect under the given domain and path as defined by [RFC 6265](https://tools.ietf.org/html/rfc6265).
+    
+    This Api also assumes any other PsuUserAgent like a native mobile or a desktop application can simulate this same behavior of a modern browser with respect to 30X and Cookies. 
+
+    #### SessionCookies and XSRF
+    After a PSU is authenticated with the FinTech environment (either through the simple login interface defined here, or through an identity provider),
+    the FinTechApi will establish a session with the FinTechUI. This is done by the mean of using a cookie called SessionCookie. 
+    This SessionCookie is protected by a corresponding XSRF-TOKEN.
+    * The request that sets a SessionCookie also carries a corresponding X-XSRF-TOKEN in the response header.
+    * It is the responsibility of the FinTechUI to parse this X-XSRF-TOKEN and send it back to the FinTechApi with each subsequen request. 
+
+    #### Redirecting to the ConsentAuthorisationApi
+    Any response of the FinTechApi that redirects the PSU to the ConsentAuthorisationApi makes sure following happens:
+    * that the exisitng SessionCookie is deleted, as there is no explicite login.
+    * that a RedirectCookie is set, so the user can be authenticated again when sent back to the FinTechApi.
+    * The url that sends the user back to the FinTechApi must carry a redirecState parameter that matches the corresponding redirect cookie.
+    
+    While redirecting the user to the ConsentAuthorisationApi, there is no certainty upon how long the consent session will take.
+    For this reason, it is better to set a separated RedirectSessionCookie that has a life set to the expected max dureation of the consent authorisation session.
+    
+    #### Reloading the FinTechUI
+    Reloading the FinTechUI, we will also loose the XSRF parameter that is used to validate the SessionCookie. This is why we
+    set RedirectCookie (that this time has a very short life span). The url reloading the FinTechUI must carry a redirectState
+    parameter that will be used to invoke the /afterReload endpoint of the FinTechApi. Thus leading to a new SessionCookie and
+    corresponding XSRF parameter.     
+    
 
 externalDocs:
   url: "https://adorsys.github.io/open-banking-gateway"
@@ -16,14 +45,18 @@ externalDocs:
   version: "1.0"
 
 tags:
-- name: FinTech
+- name: FinTechAuthorization
   description: Example Financial web service provided by the FinTech.
+- name: FinTechBankSearch
+  description: Example bank search funtionality fro the perspective of a FinTech.
+- name: FinTechAccountInformation
+  description: Example Account Information Service as defined by a FinTechApi.
 
 paths:
   /v1/login:
     post:
       tags:
-      - Authorization
+      - FinTechAuthorization
       operationId: loginPOST
       summary: Identifies the PSU in the Realm of the FinTechApi.
       description: |
@@ -44,27 +77,20 @@ paths:
       responses:
         '200':
           $ref: "#/components/responses/200_UserProfile"
-        '302':
-          $ref: '#/components/responses/302_Redirect'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
-        '403':
-          $ref: '#/components/responses/403_Forbidden' 
-        '404':
-          $ref: '#/components/responses/404_NotFound'
-           
-  /v1/search/{sessionState}/bankSearch:
+
+  /v1/search/bankSearch:
     get:
       tags:
-      - BankSearch
+      - FinTechBankSearch
       operationId: bankSearchGET
       summary: Issues an incremental bank search request to the FinTechApi.
       description: Issues an incremental bank search request to the FinTechApi.
       parameters:
-      #path
-      - $ref: "#/components/parameters/sessionState"
-      #header
+      #headers
       - $ref: "#/components/parameters/X-Request-ID"
+      - $ref: '#/components/parameters/X-XSRF-TOKEN'
       #query
       - name: keyword
         in: query
@@ -82,31 +108,24 @@ paths:
         schema:
           $ref: '#/components/schemas/searchMaxResult'
       security:
-        - cookieAuth: []
+        - sessionCookie: []
       responses:
         '200':
           $ref: "#/components/responses/200_BankSearchResult"
-        '302':
-          $ref: '#/components/responses/302_Redirect'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
-        '403':
-          $ref: '#/components/responses/403_Forbidden' 
-        '404':
-          $ref: '#/components/responses/404_NotFound'
 
-  /v1/search/{sessionState}/bankProfile:
+  /v1/search/bankProfile:
     get:
       tags:
-      - BankSearch
+      - FinTechBankSearch
       summary: Request the profile of the bank identified with id (bankId).
       description: Request the profile of the bank identified with id (bankId).
       operationId: bankProfileGET
       parameters:
-      #path
-      - $ref: "#/components/parameters/sessionState"
       #header
       - $ref: "#/components/parameters/X-Request-ID"
+      - $ref: '#/components/parameters/X-XSRF-TOKEN'
       - name: bankId
         in: query
         description: Identifier of the bank to be loaded.
@@ -114,23 +133,19 @@ paths:
         schema:
           type: string
       security:
-        - cookieAuth: []
+        - sessionCookie: []
       responses:
         '200':
           $ref: "#/components/responses/200_BankProfile"
-        '302':
-          $ref: '#/components/responses/302_Redirect'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
-        '403':
-          $ref: '#/components/responses/403_Forbidden' 
         '404':
           $ref: '#/components/responses/404_NotFound'
 
-  /v1/ais/{sessionState}/banks/{bank-id}/accounts:
+  /v1/ais/banks/{bank-id}/accounts:
     get:
       tags:
-        - Account Information
+      - FinTechAccountInformation
       operationId: aisAccountsGET
       summary: Provides list of available accounts for the given bank
       description: |
@@ -145,12 +160,12 @@ paths:
         are provided if a related consent has been already granted.
       parameters:
         #path
-        - $ref: "#/components/parameters/sessionState"
         - $ref: "#/components/parameters/bank-id"
         #header
         - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: '#/components/parameters/X-XSRF-TOKEN'
       security:
-        - cookieAuth: []
+        - sessionCookie: []
       responses:
         '200':
           $ref: "#/components/responses/200_AccountList"
@@ -158,21 +173,18 @@ paths:
           $ref: '#/components/responses/302_Redirect'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
-        '403':
-          $ref: '#/components/responses/403_Forbidden' 
         '404':
           $ref: '#/components/responses/404_NotFound' 
 
-  /v1/ais/{sessionState}/banks/{bank-id}/accounts/{account-id}/transactions:
+  /v1/ais/banks/{bank-id}/accounts/{account-id}/transactions:
     get:
       tags:
-        - Account Information
+      - FinTechAccountInformation
       operationId: aisTransactionsGET
       summary: Returns the list of transactions of the given account
       description: Returns the list of transactions of the given account.
       parameters:
         #path
-        - $ref: "#/components/parameters/sessionState"
         - $ref: "#/components/parameters/bank-id"
         - $ref: "#/components/parameters/account-id"
         #query
@@ -183,8 +195,9 @@ paths:
         - $ref: "#/components/parameters/deltaList"
         #header
         - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: '#/components/parameters/X-XSRF-TOKEN'
       security:
-        - cookieAuth: []
+        - sessionCookie: []
       responses:
         '200':
           $ref: '#/components/responses/200_AccountsTransactions'
@@ -192,15 +205,13 @@ paths:
           $ref: '#/components/responses/302_Redirect'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
-        '403':
-          $ref: '#/components/responses/403_Forbidden' 
         '404':
           $ref: '#/components/responses/404_NotFound' 
 
-  /v1/{redirect-id}/fromConsentOk/{redirectSessionState}:
+  /v1/{redirect-id}/fromConsentOk/{redirectState}:
     get:
       tags:
-        - Authorization
+      - FinTechAuthorization
       operationId: fromConsentOkGET
       summary: Entry point when PSU is redirected back to the FinTechApi.
       description: |
@@ -208,54 +219,87 @@ paths:
         ConsentAuthorisationApi.
       parameters:
         #path
-        - $ref: "#/components/parameters/redirectSessionState"
+        - $ref: "#/components/parameters/redirectState"
         - $ref: "#/components/parameters/redirect-id"
         #query
         - $ref: "#/components/parameters/redirectCode"
       security:
-        - cookieAuth: []
+        - redirectCookie: []
       responses:
         '302':
           $ref: '#/components/responses/302_ReloadUI'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
-        '403':
-          $ref: '#/components/responses/403_Forbidden' 
         '404':
           $ref: '#/components/responses/404_NotFound' 
 
+  /v1/afterReload/{redirectState}:
+    get:
+      tags:
+      - FinTechAuthorization
+      operationId: afterReloadGET
+      summary: Sent by FinTechUI to FinTechApi to load the proper session cookie after a redirect based UI reload.
+      description: |
+        Sent by FinTechUI to FinTechApi to load the proper session cookie after a redirect based UI reload.
+        The FinTechUI will parse the resirectSession from the reloadUrl.
+      parameters:
+        #path
+        - $ref: "#/components/parameters/redirectState"
+      security:
+        - redirectCookie: []
+      responses:
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
 
 components:
 
   securitySchemes:
-    cookieAuth:
+    sessionCookie:
       type: apiKey
       in: cookie
-      name: FTLSC
+      name: sessionCookie
       description: >
         This is the FinTechLoginSessionCookie used to maintain the login session
-        between the FinTechUI and the FinTechApi. If a cookie is sent, the 
-        FintechLoginRequest will contain a fintechLoginSessionState used to check
+        between the FinTechUI and the FinTechApi. If this cookie is sent, the 
+        FintechLoginRequest will contain a required X-XSRF-TOKEN used to check
         the cookie agains CSRF.
-        Cookie requires a FinTechLoginSessionState (FTLSS) parameter that is used to 
-        read the FinTechLoginSessionCookie. 
 
   headers:
 
-    Set-Cookie:
+    Set-SessionCookie:
       name: Set-Cookie
       description: |
-        FTLSC Cookie used to maintain the login session between the FinTechUI
-        and the FinTechApi. Cookie requires a FinTechLoginSessionState (FTLSS)
-        parameter that is used to read the cookie.
-        
-        I the case of a redirect, we might also include a RedirectSessionCookie.
-        A RedirectSessionCookie carries a name specific to each redirectSession
-        and can automaticaly login the user when the user is sent back to the
-        FintechApi.
+        SessionCookie used to maintain the login session between the FinTechUI
+        and the FinTechApi. This cookie is validated using an X-XSRF-TOKEN sent with the request header.
       schema:
         type: string
-        example: FTLSC=ejxs.wersdzxxc23r.asdf; Path=/, RDC=ejts.adsfa.adfaj; Path=/consentOk
+        example: Session=ejxs.wersdzxxc23r.asdf; Path=/
+
+    Set-RedirectCookie:
+      name: Set-Cookie
+      description: |
+        Cookie set before redirecting PSU. We distinguish two types of redirects :
+        * Redirecting to the ConsentAuthorizeApi
+          * The FinTechUI application to loose it's current state, as the browser windo loads the ConsentAuthorizeUI
+          * The RedirectCookie set will be sent back to the server when ConsentAuthorizeApi sends back user to the FinTechUI
+          * The url used to send back user to FinTechApi will there carry a redirectState as path parameter.
+        * Redirecting to reload the FinTechUI application.
+          * The FinTechUI application to loose it's current state as it is being reload by the browser window.
+          * The url loading the FinTechUI will must carry a redirectState
+          * The FinTechUI will then parse and use the redirectState param to invoke the afterReload endpoint of the FinTechApi. 
+      schema:
+        type: string
+        example: |
+          "RedirectSession=ejxs.wersdzxxc23r.asdf; Path=/" 
+
+    Reset-Cookies:
+      name: Set-Cookie
+      description: |
+        Delete all relevant cookies
+      schema:
+        type: string
+        example: |
+          "RedirectSession=null; Path=/; Max-Age=0, Session=null; Path=/; Max-Age=0" 
 
     X-Request-ID:
       name: X-Request-ID
@@ -266,6 +310,14 @@ components:
       schema:
         type: string
         format: uuid
+
+    X-XSRF-TOKEN:
+      required: true
+      description: |
+        XSRF parameter used to validate a SessionCookie.
+      example: faadsf93nlas32wx
+      schema:
+        type: string
 
     Location-Consent-Auth:
       name: Location
@@ -304,11 +356,13 @@ components:
         type: string
         format: uuid
 
-    sessionState:
-      name: sessionState
-      in: path
-      description: FinTechLoginSessionState
+    X-XSRF-TOKEN:
+      name: X-XSRF-TOKEN
+      in: header
       required: true
+      description: |
+        XSRF parameter used to validate a SessionCookie.
+      example: faadsf93nlas32wx
       schema:
         type: string
 
@@ -319,10 +373,12 @@ components:
       schema:
         type: string
 
-    redirectSessionState:
-      name: redirectSessionState
+    redirectState:
+      name: redirectState
       in: path
-      description: RedirectSessionState
+      description: |
+        XSRF parameter used to validate an RedirectCookie. This is
+        generaly transported as a path parameter.
       required: true
       schema:
         type: string
@@ -441,14 +497,14 @@ components:
         X-Request-ID:
           $ref: '#/components/headers/X-Request-ID'
         Set-Cookie:
-          $ref: '#/components/headers/Set-Cookie'
+          $ref: '#/components/headers/Set-SessionCookie'
+        X-XSRF-TOKEN:
+          $ref: '#/components/headers/X-XSRF-TOKEN'
       content:
         application/json:
           schema:
             type: object
             properties:
-              sessionState:
-                $ref: '#/components/schemas/sessionState'
               userProfile:
                 $ref: '#/components/schemas/userProfile'
 
@@ -458,14 +514,14 @@ components:
         X-Request-ID:
           $ref: '#/components/headers/X-Request-ID'
         Set-Cookie:
-          $ref: '#/components/headers/Set-Cookie'
+          $ref: '#/components/headers/Set-SessionCookie'
+        X-XSRF-TOKEN:
+          $ref: '#/components/headers/X-XSRF-TOKEN'
       content:
         application/json:
           schema:
             type: object
             properties:
-              sessionState:
-                $ref: '#/components/schemas/sessionState'
               bankProfile:
                 type: array
                 items:
@@ -485,14 +541,14 @@ components:
         X-Request-ID:
           $ref: '#/components/headers/X-Request-ID'
         Set-Cookie:
-          $ref: '#/components/headers/Set-Cookie'
+          $ref: '#/components/headers/Set-SessionCookie'
+        X-XSRF-TOKEN:
+          $ref: '#/components/headers/X-XSRF-TOKEN'
       content:
         application/json:
           schema:
             type: object
             properties:
-              sessionState:
-                $ref: '#/components/schemas/sessionState'
               userProfile:
                 type: array
                 items:
@@ -504,14 +560,14 @@ components:
         X-Request-ID:
           $ref: '#/components/headers/X-Request-ID'
         Set-Cookie:
-          $ref: '#/components/headers/Set-Cookie'
+          $ref: '#/components/headers/Set-SessionCookie'
+        X-XSRF-TOKEN:
+          $ref: '#/components/headers/X-XSRF-TOKEN'
       content:
         application/json:
           schema:
             type: object
             properties:
-              sessionState:
-                $ref: '#/components/schemas/sessionState'
               accountList:
                 $ref: '#/components/schemas/accountList'
 
@@ -521,17 +577,16 @@ components:
         X-Request-ID:
           $ref: '#/components/headers/X-Request-ID'
         Set-Cookie:
-          $ref: '#/components/headers/Set-Cookie'
+          $ref: '#/components/headers/Set-SessionCookie'
+        X-XSRF-TOKEN:
+          $ref: '#/components/headers/X-XSRF-TOKEN'
       content:
         application/json:
           schema:
             type: object
             properties:
-              sessionState:
-                $ref: '#/components/schemas/sessionState'
               accountList:
                 $ref: '#/components/schemas/transactionsResponse'
-
 
     302_Redirect:
       description: Redirects UserAgent to the ConsentAuthorisationApi.
@@ -541,7 +596,7 @@ components:
         X-Request-ID:
           $ref: '#/components/headers/X-Request-ID'
         Set-Cookie:
-          $ref: '#/components/headers/Set-Cookie'
+          $ref: '#/components/headers/Set-RedirectCookie'
           description: |
             Here the cookie set ic called a RedirectSessionCookie. Looks like
             RDSC_XYZ=ejts.adsfa.adfaj; Path=/fromConsentOk. In the case XYZ is an
@@ -551,25 +606,51 @@ components:
             * So RDSC are only sent to the server when a callback link
               commes from the ConsentAuthorisationApi
             * Also note that the callback link hast the structure
-              /v1/{redirect-id}/fromConsentOk/{redirectSessionState} where the
-              redirect-id is a simple random string (XYZ) and redirectSessionState
+              /v1/{redirect-id}/fromConsentOk/{redirectState} where the
+              redirect-id is a simple random string (XYZ) and redirectState
               the key to read theRedirectSessionCookie.
             * The callback link is not part of the location link. It is passed to
             the ConsentAuthorisationApi through the ConsentSession shared in the
             backend (BankingProtocol).
             * RedirectSessionCookie has an expiration date after which no callback
             will be accepted from the ConsentAuthorisationApi anyway.
+
     302_ReloadUI:
       description: |
         Reloads the FinTechUI with the authenticated context of the PSU. This 
         generaly happens after a back redirect from the ConsentAuthorisationApi.
+        
+        In orther to garanty integrity of the application, the redirect response
+        will be associated with a redirect-cookie and the corresponding location
+        url will carry a one time redirectState as path parameter.
+        
+        Reloaded UI will use this access an afterReload endpoint providing
+        URL and session state to obtain proper multi usage sessionCookie.
+        
       headers:
         Location:
           $ref: '#/components/headers/Location-FinTechUI'
         X-Request-ID:
           $ref: '#/components/headers/X-Request-ID'
         Set-Cookie:
-          $ref: '#/components/headers/Set-Cookie'
+          $ref: '#/components/headers/Set-RedirectCookie'
+
+    400_BadRequest:
+      description: Bad request
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        X-XSRF-TOKEN:
+          $ref: '#/components/headers/X-XSRF-TOKEN'
+        Set-Cookie:
+          $ref: '#/components/headers/Set-SessionCookie'
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/psuMessage'
+
     401_Unauthorized:
       description: |
         Access credentials absent or invalid. This happens when
@@ -582,45 +663,28 @@ components:
       headers:
         X-Request-ID:
           $ref: "#/components/headers/X-Request-ID"
+        Set-Cookie:
+          $ref: '#/components/headers/Reset-Cookies'
       content:
         application/json:
           schema:
            $ref: '#/components/schemas/errorResponse'
-    403_Forbidden:
-      description: |
-        The specified resource is not available for this user. User is still
-        authorize to access other endpoint. This is none of the credentials of 
-        the user need to be deleted.
-      headers:
-        X-Request-ID:
-          $ref: "#/components/headers/X-Request-ID"
-        Set-Cookie:
-          $ref: '#/components/headers/Set-Cookie'
-          description: |
-            As this is not an authorization process. This is the user 
-            credential can be extended in the course of processing this request
-            and will have to be returned with this response. The response body 
-            will cary the corresponding sessionState object.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/errorResponse'
+
     404_NotFound:
       description: The specified resource was not found
       headers:
         X-Request-ID:
-          $ref: "#/components/headers/X-Request-ID"
+          $ref: '#/components/headers/X-Request-ID'
+        X-XSRF-TOKEN:
+          $ref: '#/components/headers/X-XSRF-TOKEN'
         Set-Cookie:
-          $ref: '#/components/headers/Set-Cookie'
-          description: |
-            As this is not an authorization process. This is the user 
-            credential can be extended in the course of processing this request
-            and will have to be returned with this response. The response body 
-            will cary the corresponding sessionState object.
+          $ref: '#/components/headers/Set-SessionCookie'
       content:
-        'application/json':
+        application/json:
           schema:
-            $ref: '#/components/schemas/errorResponse'
+            type: array
+            items:
+              $ref: '#/components/schemas/psuMessage'
 
   schemas:
 
