@@ -8,7 +8,6 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0
   version: "1.0"
   description: |
-    ### Description
     Interface used by the PsuUserAgent to present consent authorization services to the PSU. The consent authorization process is triggered by redirecting the PSU from
     the [TppBankingApi](https://adorsys.github.io/open-banking-gateway/doc/latest/architecture/dictionary#TppBankingApi) (2<sub>a</sub>)
     over the [FinTechApi](https://adorsys.github.io/open-banking-gateway/doc/latest/architecture/dictionary#FinTechApi) (2<sub>b</sub>)
@@ -20,7 +19,7 @@ info:
     ![High level architecture](/img/open-banking-consent-authorisation-api.png)
     
     
-    #### User Agen Type
+    #### User Agent
     This Api assumes that the PsuUserAgent is a modern browsers that :
     * automatically detects the "302 Found" response code and proceeds with the associated location url,
     * stores httpOnly cookies sent with the redirect under the given domain and path as defined by [RFC 6265](https://tools.ietf.org/html/rfc6265).
@@ -353,7 +352,9 @@ components:
     redirectState:
       name: redirectState
       in: path
-      description: XSRF parameter used to validate an RedirectCookie.
+      description: |
+        XSRF parameter used to validate an RedirectCookie. This is
+        generaly transported as a path parameter.
       required: true
       example: faadsf93nlas32wx
       schema:
@@ -467,6 +468,8 @@ components:
       headers:
         X-Request-ID:
           $ref: "#/components/headers/X-Request-ID"
+        Set-Cookie:
+          $ref: '#/components/headers/Reset-Cookies'
       content:
         application/json:
           schema:
