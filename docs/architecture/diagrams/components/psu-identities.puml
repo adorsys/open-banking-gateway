@@ -1,0 +1,37 @@
+@startuml
+
+skinparam agent {
+    BorderColor #Black
+}
+skinparam component {
+    ArrowColor #Black
+}
+skinparam actor {
+    BackgroundColor #White
+    FontColor #Black
+    BorderColor #Black
+}
+
+actor PSU
+
+rectangle PsuUserDevice #LightGray {
+    agent FinTechApp #DarkSeaGreen
+    agent TppApp #LightGray
+    agent AspspApp #LightSkyBlue
+}
+
+agent FinTechServer #DarkSeaGreen
+agent TppServer #LightGray
+agent AspspServer #LightSkyBlue
+
+PSU --> FinTechApp : psu-id@fintech
+PSU --> TppApp : psu-id@tpp
+PSU --> AspspApp : psu-id@aspsp
+
+FinTechApp --> FinTechServer
+TppApp --> TppServer
+AspspApp --> AspspServer
+
+FinTechServer -> TppServer
+TppServer -> AspspServer
+@enduml
