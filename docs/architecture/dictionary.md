@@ -4,7 +4,6 @@
 - [App](dictionary.md#App)
 - [AspspBankingApi](dictionary.md#AspspBankingApi)
 - [BankDescriptor](dictionary.md#BankDescriptor)
-- [BankingProtocolSelector](dictionary.md#BankingProtocolSelector)
 - [BankingProtocol](dictionary.md#BankingProtocol)
 - [BankProfile](dictionary.md#BankProfile)
 - [Center](dictionary.md#Center)
@@ -113,6 +112,9 @@ For the purpose of kepping the overall architecture of this framework simple, we
 
 ### Security Considerations
 
+#### <a name="UserAgentContext"></a> UserAgentContext
+All information associated with the PsuUserAgent. Like PSU-IP-Address, PSU-IP-Port, PSU-Accept, PSU-Accept-Charset, PSU-Accept-Encoding, PSU-Accept-Language, PSU-Device-ID, PSU-User-Agent, PSU-Geo-Location, PSU-Http-Method. Many backend API require provisioning of the UserAgentContext to perform verification of the authenticity of the original PSU request and to customize the response produced for intermediary layers.
+
 #### <a name="Cookies"></a> Cookies
 The use of cookies provides the most elaborated way to protect a session established between a user agent and server application. We assume a user agent storing a cookie fulfills following requirements:
 - The user agent store cookies on the user device in the context of a user session. Means if two user are sharing the same user device, cookies stored by those user wont be mixed up with each order.
@@ -170,13 +172,13 @@ With the association of the consent and the psu-id@fintech, we want to make sure
 
 In this framework, we designed a two steps redirection FinTech -> TPP -> ASPSP knowing that this might make the process more cumbersome, but this design represents the superset of most of the cases found on the market. After thorough analysis of most scenarios, we noticed that the Consent2Identity association can only securely happen in one of these two ways:
 
-#### Step-2 Alt-1: Sharing of Identity Provided
+#### Step-2 Alt-1: Sharing of IDP (Identity Provider)
 If the __CRP__ (__FinTech__ -> TPP or __TPP__ -> ASPSP) shares the same identity provider with the CPP, a re-authentication of the PSU at the interface of the CPP (consent providing entity) will be sufficient to guaranty authenticity of the association. This means:
 * in the case FinTech -> TPP, psu-id@fintech=psu-id@tpp. 
 * in the case TPP -> ASPSP,psu-id@tpp=psu-id@aspsp.
 In both cases, encoding the target identity in the consent token is sufficient to guaranty the association, as the consent token in keyed by the source identity in the TPP database.     
 
-#### Step-2 Alt-2: No Sharing of Identity Provided
+#### Step-2 Alt-2: No Sharing of IDP (Identity Provider)
 If both __CRP (source)__ and __CPP (target)__ do no share identity provider, a back redirection from the __CPP__ to the __CRP__ must be used to finalized the consent association. Following sub-steps will be needed to ensure proper redirection:
 * Set the RedirectCookie before redirecting a user from the __CRP__ to the __CPP__.
 * Protect sharing of the __redirect back url__
@@ -191,10 +193,7 @@ In some OpenBanking approaches, validating the consent at the OnlineBanking inte
 
 In order to fix this problem, concerned OpenBBAnkingApi will have to be modified to separate consent authorization from service request. Once a consent is authorized (and identity association is finalized), the FinTech/TPP will have to explicitly re-send the service request to the ASPSP. 
 
-### Further Elements of Interest on the User Device
-
-#### <a name="UserAgentContext"></a> UserAgentContext
-All information associated with the PsuUserAgent. Like PSU-IP-Address, PSU-IP-Port, PSU-Accept, PSU-Accept-Charset, PSU-Accept-Encoding, PSU-Accept-Language, PSU-Device-ID, PSU-User-Agent, PSU-Geo-Location, PSU-Http-Method. Many backend API will require provisioning of the UserAgentContext to perform verification of the authenticity of the original PSU request and to customize the response produced for intermediary layers.
+### Applications Running on a User Device
 
 #### <a name="FinTechUI"></a> FinTechUI
 UI Application running on the PsuUserAgent and used by the PSU to access the FinTechApi
@@ -205,7 +204,7 @@ UI used by PSU to authorize consent in embedded case.
 #### <a name="OnlineBankingUI"></a> OnlineBankingUI
 This UI manages the interaction between the PSU and the ASPSP in redirect cases.
 
-## <a name="FinTechDC"></a> FinTechDC
+## <a name="FinTechDC"></a> FinTech Data Center
 Data center environment of the FinTech. Host the FinTechApi.
 
 ### <a name="FinTechApi"></a> FinTechApi
@@ -218,6 +217,9 @@ There is a X-XSRF-TOKEN String associated with the FinTechLoginSessionCookie. Th
 
 ## <a name="TppDC"></a> Tpp Data Center
 Data center environment of the TPP
+
+### <a name="TPP"></a> TPP
+A TPP is a Third Party Provider.
 
 ### <a name="TppBankingApi"></a> TppBankingApi
 Tpp backend providing access to ASPSP banking functionality. This interface is not directly accessed by the PSU but by the FinTechApi. FinTechApi will use a FinTechContext to authenticate with the TppBankingApi.
@@ -276,6 +278,9 @@ Consent Data might contain security sensitive data like account number or paymen
 
 Upon request, the RedirectSessionStoreApi will use the provided redirectCode to read and decrypt the consent session and will delete the consent session prior to returning it for the first time to the caller.
 
+### <a name="BankingProtocol"></a> BankingProtocol
+Component managing access to a banking interfaces. We will have to deal with many protocols like NextGenPSD2, HBCI, OpenBanking UK, PolishAPI. For design details, see [BankingProtocol](./drafts/initial_requirements.md)
+
 ## <a name="AspspDC"></a> Aspsp Data Center
 Data center environment of the ASPSP
 
@@ -299,5 +304,3 @@ Beside consent data, additional data might be held in the TppConsentSession:
 ### <a name="OnlineBankingApi"></a> OnlineBankingApi
 Generally the online banking application on an ASPSP. In redirect cases, the ASPSP OnlineBankingApi establishes a direct session with the PSU to allow the PSU to identify himself, review and authorize the consent. 
 
-## <a name="TPP"></a> TPP
-A TPP is a Third Party Provider.
