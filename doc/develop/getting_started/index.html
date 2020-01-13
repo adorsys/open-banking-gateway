@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../img/favicon.ico">
-  <title>ContributionGuidelines - Open Banking Gateway Documentation</title>
+  <title>How to start the project - Open Banking Gateway Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
@@ -17,8 +17,8 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "ContributionGuidelines";
-    var mkdocs_page_input_path = "ContributionGuidelines.md";
+    var mkdocs_page_name = "How to start the project";
+    var mkdocs_page_input_path = "getting_started.md";
     var mkdocs_page_url = null;
   </script>
   
@@ -133,10 +133,10 @@
     
       
     
-    <li>ContributionGuidelines</li>
+    <li>How to start the project</li>
     <li class="wy-breadcrumbs-aside">
       
-        <a href="https://github.com/adorsys/open-banking-gateway/edit/master/docs/ContributionGuidelines.md"
+        <a href="https://github.com/adorsys/open-banking-gateway/edit/master/docs/getting_started.md"
           class="icon icon-github"> Edit on GitHub</a>
       
     </li>
@@ -146,80 +146,15 @@
           <div role="main">
             <div class="section">
               
-                <h2 id="development-and-contributing">Development and contributing</h2>
-<h3 id="internal-development-process">Internal development process</h3>
-<p>Development is performed by 2-weeks sprints (We use kind of Scrum framework).
-We use <a href="http://nvie.com/posts/a-successful-git-branching-model/">Git flow</a> for development. 
-Leading branch is always <code>develop</code>.
-Each new feature/bugfix is done in its own branch. All features/bugs are documented in 
-<a href="https://app.zenhub.com/workspaces/open-banking-gateway-5dd3b3daf010250001260675">zenhub</a>.</p>
-<p>After finishing branch and seeing that branch has successfully been build by 
-<a href="https://travis-ci.com/adorsys/open-banking-gateway">travis</a>
-a pull request to branch develop must be created in 
-<a href="https://github.com/adorsys/open-banking-gateway">github</a>.</p>
-<p>Each developer of the team with approval rights can have a look at pull request and do the review.
-If no review is done for more than 24 hours, the developer is allowed to merge the branch to develop branch.
-Of course build in <a href="https://travis-ci.com/adorsys/open-banking-gateway">travis</a> must work after merge.</p>
-<p>The master branch is never touched. Never, except when release build is done. This is triggered by
-the project management. When release build is triggered the current develop is merged into master. 
-For that master never ever must be updated manually.</p>
-<h3 id="definition-of-ready">Definition of Ready</h3>
-<p>The task is ready to be put into a sprint when all following conditions are met:
-* All dependencies are clear and the work to work with them are clarified
-* Use-case is defined in the task
-* Acceptance criteria are defined</p>
-<h3 id="definition-of-done">Definition of Done</h3>
-<p>The Task could be accepted only when following requirements are met:
-* Code is reviewed (and approved) by another developer
-* API documentation in Swagger UI corresponds to acceptance criteria
-* At least one automated test for every Use-case exists</p>
-<p>nice to have</p>
+                <h1 id="how-to-start-the-project">How to start the project</h1>
 <ul>
-<li>Project documentation (Markdown files) contains the information how to run the demo of use case</li>
-<li>Javadocs for public methods are written (including parameter description). 
-  For REST interfaces Swagger-annotations are sufficient.</li>
+<li>Compile everything with <code>make all</code>. <ul>
+<li>Alternatively compile Java code with <code>mvn clean package</code> and frontend with <code>npm build</code> at <code>fintech-examples/fintech-ui</code></li>
 </ul>
-<h3 id="contributing">Contributing</h3>
-<p>Any person are free to join us by implementing some parts of code or fixing some bugs. For that separate  branch has to be created.</p>
-<h3 id="technical-conditions-for-the-implementations">Technical conditions for the implementations</h3>
-<h4 id="code-styling">Code styling</h4>
-<p>If you are using Intellij IDEs, like we do, please consider importing our code-style settings.
-Further explanation in <a href="#checkstyle">checkstyle</a></p>
-<h4 id="java">Java</h4>
-<ul>
-<li>Please use Optionals and corresponding streams instead of null-checks where possible</li>
-<li>We prefer using Mockito over EasyMock for unit-tests.</li>
-<li>We prefer SpringBoot autoconfiguration over manual Configuration where possible</li>
+</li>
+<li>Start frontends with <code>npm serve</code> from <code>fintech-examples/fintech-ui</code></li>
+<li>Start backends with <code>mvn spring-boot:run</code> from <code>opba-embedded-starter</code></li>
 </ul>
-<h4 id="open-api-30">Open API 3.0</h4>
-<p>We use API First approach, so that API files are the first source of a contract.</p>
-<p>The code generated from
-<pre>
-opba-consent-rest-api/src/main/resources/static/consent_api.yml
-opba-banking-rest-api/src/main/resources/static/banking_api_ais.yml
-</pre>
-is generated to
-<pre>
-opba-consent-rest-api/target/generated-sources/open-api/src/main/java
-opba-banking-rest-api/target/generated-sources/open-api/src/main/java
-</pre></p>
-<p>So the folders have to be made known to the IDE.</p>
-<h2 id="checkstyle">Checkstyle</h2>
-<p>The code uses <code>backend.checkstyle.xml</code> placed in the root of the project. To activate it with intellij 
-install the <code>CheckStyle-IDEA v5.34.0</code> Plugin and configure in <code>Other Settings -&gt; Checkstyle</code>
-the version <code>8.19</code> and add the configuration file <code>backend.checkstyle.xml</code>.</p>
-<h2 id="how-to-release">How to Release</h2>
-<p>Release is being done using the <a href="https://github.com/borisskert/release-scripts">release scripts</a> ( (C) by <a href="https://github.com/borisskert">Boris Skert</a> ) located under scripts/release-scripts.
-For detailed info see <a href="https://github.com/borisskert/release-scripts/README.md">README for release-scripts</a>.</p>
-<h3 id="steps-to-make-a-release">Steps to make a release</h3>
-<p><strong>Release is made from local copy! Ensure that you have enough rights to push to master and develop branches</strong></p>
-<pre><code class="bash">$ git submodule update --init --remote
-$ scripts/release-scripts/release.sh &lt;release-version&gt; &lt;next-develop-version&gt;
-</code></pre>
-
-<p>Example</p>
-<pre><code class="bash">$ scripts/release-scripts/release.sh 1.0 1.1
-</code></pre>
               
             </div>
           </div>

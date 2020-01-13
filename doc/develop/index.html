@@ -59,23 +59,11 @@
         
             <li><a class="toctree-l3" href="#what-this-project-is-about">What this Project is about</a></li>
         
-            <li><a class="toctree-l3" href="#releases-and-versions">Releases and versions</a></li>
+            <li><a class="toctree-l3" href="#documentation">Documentation</a></li>
         
             <li><a class="toctree-l3" href="#authors-contact">Authors &amp; Contact</a></li>
         
             <li><a class="toctree-l3" href="#license">License</a></li>
-        
-            <li><a class="toctree-l3" href="#checkstyle">Checkstyle</a></li>
-        
-            <li><a class="toctree-l3" href="#open-api">open api</a></li>
-        
-            <li><a class="toctree-l3" href="#dictionary">Dictionary</a></li>
-        
-            <li><a class="toctree-l3" href="#contribution-guidelines">Contribution Guidelines</a></li>
-        
-            <li><a class="toctree-l3" href="#javadoc">JavaDoc</a></li>
-        
-            <li><a class="toctree-l3" href="#use-cases">Use Cases</a></li>
         
         </ul>
     
@@ -193,55 +181,37 @@
 Being able to interact with different bank APIs can be a time and cost consuming challenge. Even though PSD2 sets a standard for bank interfaces, there is a lot of space for implementation options. A bank, therefore, can have it's own PSD2 compliant solution or implement one of the known market standards, like Open Banking UK, Berlin Group or STET. This open banking gateway will provide with a common interface with the aim of simplifying access to those APIs by third parties. </p>
 <h3 id="third-parties-contribution">Third Parties Contribution</h3>
 <p>This project is designed to enable contribution from different sources, as the open banking challenge will start with a magnitude of discrepancies in individual bank implementations, even for banks implementing a common standards.</p>
+<h3 id="big-picture">Big Picture</h3>
 <p>The following picture displays the overall architecture of this banking gateway:
 <img alt="High level architecture" src="img/open-banking-gateway-arch-05-12-2019.png" /></p>
-<h2 id="releases-and-versions">Releases and versions</h2>
+<h2 id="documentation">Documentation</h2>
+<p>Please take a look into our <a href="https://adorsys.github.io/open-banking-gateway/doc/develop/"><strong>documentation</strong></a> to know more about:</p>
+<h3 id="planned-and-released-versions">Planned and released versions</h3>
 <ul>
 <li><a href="version_policy/">Versioning, Release and Support policy</a></li>
 <li><a href="releasenotes/">Release notes</a> </li>
 <li><a href="roadmap/">Roadmap for next features development</a></li>
+</ul>
+<h3 id="architecture">Architecture</h3>
+<ul>
 <li><a href="architecture/drafts/initial_requirements/">Initial Requirements</a></li>
+<li><a href="architecture/dictionary/">Dictionary</a></li>
+<li><a href="architecture/uses_cases/">Use Cases</a></li>
+<li><a href="https://adorsys.github.io/open-banking-gateway/javadoc/latest/index.html">JavaDoc</a></li>
+</ul>
+<h3 id="how-to-contribute">How to contribute</h3>
+<ul>
+<li><a href="getting_started/">Getting started</a></li>
+<li><a href="ContributionGuidelines/">Contribution Guidelines</a> </li>
 </ul>
 <h2 id="authors-contact">Authors &amp; Contact</h2>
 <ul>
 <li><strong><a href="mailto:fpo@adorsys.de">Francis Pouatcha</a></strong> - <em>Initial work</em> - <a href="https://www.adorsys.de">adorsys</a></li>
 </ul>
 <p>See also the list of <a href="https://github.com/adorsys/open-banking-gateway/graphs/contributors">contributors</a> who participated in this project.</p>
-<p>For commercial support please contact <strong><a href="https://adorsys.de/en/psd2">adorsys Team</a></strong>.</p>
+<p>For commercial support please contact <strong><a href="https://adorsys.de/">adorsys Team</a></strong>.</p>
 <h2 id="license">License</h2>
 <p>This project is licensed under the Apache License version 2.0 - see the <a href="LICENSE">LICENSE</a> file for details</p>
-<h2 id="checkstyle">Checkstyle</h2>
-<p>The code uses <code>backend.checkstyle.xml</code> placed in the root of the project. To activate it with intellij 
-install the <code>CheckStyle-IDEA v5.34.0</code> Plugin and configure in <code>Other Settings -&gt; Checkstyle</code>
-the version <code>8.19</code> and add the configuration file <code>backend.checkstyle.xml</code>.</p>
-<h2 id="open-api">open api</h2>
-<p>The code generated from
-<pre>
-opba-consent-rest-api/src/main/resources/static/consent_api.yml
-opba-banking-rest-api/src/main/resources/static/banking_api_ais.yml
-</pre>
-is generated to
-<pre>
-opba-consent-rest-api/target/generated-sources/open-api/src/main/java
-opba-banking-rest-api/target/generated-sources/open-api/src/main/java
-</pre></p>
-<p>So the folders have to be made known to the ide.</p>
-<h2 id="dictionary">Dictionary</h2>
-<ul>
-<li><a href="architecture/dictionary/">Dictionary</a></li>
-</ul>
-<h2 id="contribution-guidelines">Contribution Guidelines</h2>
-<ul>
-<li><a href="ContributionGuidelines/">Contribution Guidelines</a> </li>
-</ul>
-<h2 id="javadoc">JavaDoc</h2>
-<ul>
-<li><a href="https://adorsys.github.io/open-banking-gateway/javadoc/latest/index.html">JavaDoc</a></li>
-</ul>
-<h2 id="use-cases">Use Cases</h2>
-<ul>
-<li><a href="architecture/uses_cases/">Use Cases</a></li>
-</ul>
               
             </div>
           </div>
@@ -292,5 +262,5 @@ opba-banking-rest-api/target/generated-sources/open-api/src/main/java
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2020-01-13 14:37:01
+Build Date UTC : 2020-01-13 18:20:10
 -->
