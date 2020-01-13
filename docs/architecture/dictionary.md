@@ -7,21 +7,13 @@
 - [BankingProtocolSelector](dictionary.md#BankingProtocolSelector)
 - [BankingProtocol](dictionary.md#BankingProtocol)
 - [BankProfile](dictionary.md#BankProfile)
-- [Center](dictionary.md#Center)
-- [Center](dictionary.md#Center)
 - [ConsentAuthorisationApi](dictionary.md#ConsentAuthorisationApi)
 - [ConsentAuthorisationUI](dictionary.md#ConsentAuthorisationUI)
-- [ConsentAuthSessionCookie](dictionary.md#ConsentAuthSessionCookie)
-- [consentAuthState](dictionary.md#consentAuthState)
 - [ConsentData](dictionary.md#ConsentData)
-- [Considerations](dictionary.md#Considerations)
 - [Dictionary](dictionary.md#Dictionary)
-- [Fintech2TppRedirectInfoPage](dictionary.md#Fintech2TppRedirectInfoPage)
 - [FinTechApi](dictionary.md#FinTechApi)
 - [FinTechContext](dictionary.md#FinTechContext)
 - [FinTechDC](dictionary.md#FinTechDC)
-- [FinTechLoginSessionCookie](dictionary.md#FinTechLoginSessionCookie)
-- [FinTechLoginSessionState](dictionary.md#FinTechLoginSessionState)
 - [FinTechUI](dictionary.md#FinTechUI)
 - [Information](dictionary.md#Information)
 - [OnlineBanking2ConsentAuthRedirectInfoPage](dictionary.md#OnlineBanking2ConsentAuthRedirectInfoPage)
@@ -34,6 +26,7 @@
 - [PsuUserAgent](dictionary.md#PsuUserAgent)
 - [PsuUserDevice](dictionary.md#PsuUserDevice)
 - [RedirectSession](dictionary.md#RedirectSession)
+- [SessionCookie](dictionary.md#SessionCookie)
 - [Sharing](dictionary.md#Sharing)
 - [TppBankingApi](dictionary.md#TppBankingApi)
 - [TppBankSearchApi](dictionary.md#TppBankSearchApi)
@@ -102,7 +95,7 @@ The UserAgent might be a native application running on a user mobile device or a
 For the purpose of kepping the overall architecture of this framework simple, we will require native applications to provide the same behavior as the WebBrowser described above.
 
 ### <a name="UserAgentContext"></a> UserAgentContext
-All information associated with the PsuUserAgent. Like PSU-IP-Address, PSU-IP-Port, PSU-Accept, PSU-Accept-Charset, PSU-Accept-Encoding, PSU-Accept-Language, PSU-Device-ID, PSU-User-Agent, PSU-Geo-Location, PSU-Http-Method. Many backend API will require provisioning of the UserAgentContext to perform verification of the authenticity of the original PSU request and to customize the response produced for intermediary layers.
+Independent on the type of PsuUgerAgent, OpenBanking interfaces will require transmission of a class of information associated with the PsuUserAgent so they can perform verification of the authenticity of the original PSU request and customize the response produced for intermediary layers. We group these data under the name "UserAgentContext". Following header names account among the UserAgentContext: IP-Address, IP-Port, Accept, Accept-Charset, Accept-Encoding, Accept-Language, Device-ID, User-Agent, Geo-Location, Http-Method.
 
 ### <a name="FinTechUI"></a> FinTechUI
 UI Application running on the PsuUserAgent and used by the PSU to access the FinTechApi
@@ -118,15 +111,6 @@ Data center environment of the FinTech. Host the FinTechApi.
 
 ### <a name="FinTechApi"></a> FinTechApi
 Financial web service provided by the FinTech.
-
-### <a name="FinTechLoginSessionCookie"></a> FinTechLoginSessionCookie
-This is a cookie used to maintain the login session between the FinTechUI and the FinTechApi. As this maintains the login state of the PSU in the FinTechUI, this session can be kept open for the life span of the interaction between the FinTechUI and the FinTechApi.
-
-### <a name="FinTechLoginSessionState"></a> FinTechLoginSessionState
-This is the CSRF-State String associated with the FinTechLoginSessionCookie. This information must be presented whenever the FinTechApi consumes the FinTechLoginSessionCookie. It encodes a key that is used to encrypt/decrypt information stored in the corresponding FinTechLoginSessionCookie.
-
-### <a name="Fintech2TppRedirectInfoPage"></a> Fintech2TppRedirectInfoPage
-This panel will be used to inform the PSU upon redirecting the PSU to the ConsentAuthorisationApi. This information step is recommended as changes in UI display between the FinTechUI and the ConsentAuthorisationUI might confuse the PSU.     
 
 ## <a name="TppDC"></a> Tpp Data Center
 Data center environment of the TPP
@@ -179,25 +163,11 @@ This is the identifier of the PSU in the FinTech2Tpp relationship. This identifi
 ### <a name="ConsentAuthorisationApi"></a> ConsentAuthorisationApi 
 Interface used by the PSU to authorize a consent.
 
-### <a name="ConsentAuthSessionCookie"></a> ConsentAuthSessionCookie
-This is the cookie object used to maintain the consent session between the ConsentAuthorisationUI and the ConsentAuthorisationApi. It will generated and set as a __httpOnly, Secure__
+### <a name="SessionCookie"></a> SessionCookie and XSRF
+We assume all three applications FinTeApi, ConsentAuthorisationApi, OnlineBakingApi maintain their own session information with corresponding UIs. We assume those APIs use cookies to maintain session with the corresponding user agents. In the context of this framework, those cookies are called SessionCookies. We also expect a following behavior from APIs and UserAgents:
 
-This cookie will generally contain the identifier of the TppContentSession and the cryptographic key used to read that TppContentSession.
-
-### <a name="consentAuthState"></a> consentAuthState
-This is the CSRF-State String associated with the ConsentAuthSessionCookie. It encodes a key that is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.
-
-This is: consentAuthState = state-id + consentEncryptionKey
-
-All requests to the ConsentAuthorisationApi must always provide the consentAuthState as a __X-XRSF-Token__ and set a ConsentAuthSessionCookie as a cookie. 
-
-Passing a consentAuthState to the UI.
-- For 30X Redirect Requests, this is passed to the UI as a URL query param part of the redirect URL.
-- For 20X Responses, this is part of the returned response body (AuthorizeResponse).
-
-The consentAuthState shall never be stored in the ConsentAuthSessionCookie. 
-
-As a redirect request carries the consentAuthState in parameter, a new consentAuthState shall be generated after each redirect and returned back to the client, as the old one is probably leaked into log files as part of a request URI.
+* A response that sets a SessionCookie also carries a corresponding X-XSRF-TOKEN in the response header.
+* A request that authenticates with a session cookie must also add the X-XSRF-TOKEN to the request header.
 
 ### <a name="RedirectSession"> RedirectSession
 Holds consent information for the duration of a redirect. Redirect patterns are described [below](dictionary.md#Redirection).
