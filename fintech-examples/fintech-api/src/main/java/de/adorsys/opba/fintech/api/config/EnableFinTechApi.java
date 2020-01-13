@@ -1,4 +1,4 @@
-package de.adorsys.opba.fintechapi.config;
+package de.adorsys.opba.fintech.api.config;
 
 import org.springframework.context.annotation.Import;
 
