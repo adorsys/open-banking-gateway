@@ -80,7 +80,7 @@
               <configOptions>
                 <sourceFolder>src/main/java</sourceFolder>
                 <basePackage>de.adorsys.opba.fintech.api</basePackage>
-                <configPackage>de.adorsys.opba.fintech.api.de.adorsys.opba.fintech.impl.config</configPackage>
+                <configPackage>de.adorsys.opba.fintech.api.config</configPackage>
                 <modelPackage>de.adorsys.opba.fintech.api.model</modelPackage>
                 <apiPackage>de.adorsys.opba.fintech.api.resource</apiPackage>
                 <interfaceOnly>true</interfaceOnly>
