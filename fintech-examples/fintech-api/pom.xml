@@ -90,9 +90,9 @@
                 <useTags>true</useTags>
                 <library>spring-mvc</library>
                 <swaggerDocketConfig>false</swaggerDocketConfig>
-                <generateApiTests>false</generateApiTests>
-                <generateModelTests>false</generateModelTests>
               </configOptions>
+              <generateApiTests>false</generateApiTests>
+              <generateModelTests>false</generateModelTests>
             </configuration>
           </execution>
         </executions>
