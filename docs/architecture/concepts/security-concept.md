@@ -1,4 +1,4 @@
-# PSU Security Design
+# PSU Access Security Design
 
 The purpose of this document if to analyze the security architecture of an OpenBanking based application from the perspective of an end user (PSU). 
 
@@ -14,7 +14,7 @@ Form the perspective of this analysis,
 
 ### <a name="PsuIdentifier"></a>Identities of a PSU
 
-In the context of OpenBanking, a PSU might be interacting with up to three different legal entities to consume a single banking service. In the service chain, we will generally find a [FinTech](dictionary.md#FinTech), a [TPP](dictionary.md#TPP) and the [ASPSP](dictionary.md#ASPSP). 
+In the context of OpenBanking, a PSU might be interacting with up to three different legal entities to consume a single banking service. In the service chain, we will generally find a [FinTech](security-concept.md#FinTech), a [TPP](security-concept.md#TPP) and the [ASPSP](security-concept.md#ASPSP). 
 
 The OpenBanking contract establishes a relationship between the __PSU__, the __TPP__ and the __ASPSP__. This contract is mapped in the following sentence: "__PSU__ __authorizes__ the __ASPSP__ to service requests from a designated __TPP__ on his behalf".
 
@@ -22,7 +22,7 @@ Market practice shows that special independent TPPs will be setup to service mul
 
 At the end, we have the following service chain: PSU -> FinTech -> TPP -> ASPSP that might also require following interactions (PSU -> FinTech), (PSU -> TPP), (PSU -> ASPSP), resulting in the PSU having to maintain up to 3 different identities. The following picture displays the 3 different PSU access paths and identities.
 
-![Component diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/components/psu-identities.puml&fmt=svg&vvv=1&sanitize=true)
+![High level architecture](../../img/open-banking-gateway-psu-interface.png)
  
 #### psu-id@fintech
 This is the identity of the PSU in the realm of the FinTech, as most FinTech application require the PSU to establish an identity before using the application. This is the most important identity as it covers the consumption of the core services. Further identities (tpp, aspsp) are only needed for authorization. 
@@ -200,7 +200,7 @@ Following sub-steps will be needed to ensure clean and secure back redirection:
 - The url for the __back redirection__ must have been protected against manipulation: 
   - In case there is an initiation step present between TPP and ASPSP, use this step must have been used to transfer the __back redirection url__ to the ASPSP (this is an example of the redirect approach of the NextGenPSD2 API).
   - In case there is no such initiation step (generally when OAuth is being used), make sure oAuth2 __back redirection url templates__ and __webOrigins__ are properly designed, as the concrete __back redirection url__ is transported in the __redirect_uri__ parameter of the consent request and exposed to attackers for manipulations.
-- Design the __back redirection url__ to contain a reference of the RedirectCookie (__auth-id__) and a corresponding XSRF-token (__redirectState__) for the validation of the RedirectCookie. A sample url can look like: /consent/{__auth-id__}/fromAspsp/{__redirectState__}/ok. See [Redirection and Data Sharing](dictionary.md#Redirection_Data_Sharing) for more detail.
+- Design the __back redirection url__ to contain a reference of the RedirectCookie (__auth-id__) and a corresponding XSRF-token (__redirectState__) for the validation of the RedirectCookie. A sample url can look like: /consent/{__auth-id__}/fromAspsp/{__redirectState__}/ok. See [Redirection and Data Sharing](security-concept.md#Redirection_Data_Sharing) for more detail.
 
 If a physical redirect can occur from the ASPSP (OnlineBankingApi) back to the TPP (ConsentAuthorisationApi), __a validation of the original RedirectCookie can be taken as a guaranty to declare equivalence between the psu-id@tpp and the psu-id@aspsp__.
 

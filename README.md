@@ -23,7 +23,7 @@ This project is designed to enable contribution from different sources, as the o
 ### Big Picture
 
 The following picture displays the overall architecture of this banking gateway:
-![High level architecture](docs/img/open-banking-gateway-arch-13-01-2020.jpg)
+![High level architecture](docs/img/open-banking-gateway-arch-13-01-2020.png)
 
 ## Documentation
 
@@ -36,9 +36,10 @@ Please take a look into our [**documentation**](https://adorsys.github.io/open-b
 * [Roadmap for next features development](docs/roadmap.md)
 
 ### Architecture 
-* [Initial Requirements](docs/architecture/drafts/initial_requirements.md)
 * [Dictionary](docs/architecture/dictionary.md)
 * [Use Cases](docs/architecture/uses_cases.md)
+* [Banking Protokol Design](docs/architecture/drafts/initial_requirements.md)
+* [PSU Access Security Design](docs/architecture/concepts/security-concept.md)
 * [JavaDoc](https://adorsys.github.io/open-banking-gateway/javadoc/latest/index.html)
 
 ### How to contribute
