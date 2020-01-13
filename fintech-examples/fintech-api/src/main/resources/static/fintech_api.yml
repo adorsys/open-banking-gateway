@@ -742,7 +742,7 @@ components:
           type: string
         lastLogin:
           type: string
-          format: date
+          format: date-time
 
     # Search and bank profile
     searchInput:

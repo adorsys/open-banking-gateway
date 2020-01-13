@@ -400,7 +400,7 @@
             </plugin>
 
         <!-- as cobertura still does not support lamda expressions, we get a lot of warnings of type:
-        Last useful checkpoint: "de.adorsys.opba.core.protocol.config.flowable.FlowableConfig.storeCustomClassesAsJson(String,int,ObjectMapper)"
+        Last useful checkpoint: "de.adorsys.opba.core.protocol.de.adorsys.opba.fintech.impl.config.flowable.FlowableConfig.storeCustomClassesAsJson(String,int,ObjectMapper)"
         Encountered " ">" "> "" at line 28, column 37.
         As it is not supported for 5 years, does not make sense to use it at all
         https://github.com/MoodCat/MoodCat.me-Core/issues/103

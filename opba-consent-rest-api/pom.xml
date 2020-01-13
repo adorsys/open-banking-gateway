@@ -80,7 +80,7 @@
               <configOptions>
                 <sourceFolder>src/main/java</sourceFolder>
                 <basePackage>de.adorsys.opba.consentapi</basePackage>
-                <configPackage>de.adorsys.opba.consentapi.config</configPackage>
+                <configPackage>de.adorsys.opba.consentapi.de.adorsys.opba.fintech.impl.config</configPackage>
                 <modelPackage>de.adorsys.opba.consentapi.model</modelPackage>
                 <apiPackage>de.adorsys.opba.consentapi.resource</apiPackage>
                 <interfaceOnly>true</interfaceOnly>
