@@ -56,7 +56,7 @@ group OnlineBankingConsent
     psu -> OnlineBankingUI ++ : confirmRedirect()
     OnlineBankingUI -> OnlineBankingApi ++ : GET:OnlineBankingApi.confirmRedirect[OnlineBankingConsentSessionCookie]()<consentId, authorizationId>
     deactivate OnlineBankingUI
-    OnlineBankingApi --> ConsentAuthorisationUI ++ : redirect302[OnlineBankingApi.TPP-Redirect-URI]\n()<consentAuthState>
+    OnlineBankingApi --> ConsentAuthorisationUI ++ : 302_Redirect[OnlineBankingApi.TPP-Redirect-URI]\n()<consentAuthState>
     deactivate OnlineBankingApi
 end
 autonumber resume
@@ -74,6 +74,6 @@ end
 BankingProtocol -> RedirectSessionStoreApi ++ : redirectSession(TppConsentSession, exp)
 RedirectSessionStoreApi -> RedirectSessionStoreApi : createEncryptStoreRedirectSession\n(TppConsentSession):redirectCode
 return 200_OK[](redirectCode)<>
-return 200_OK(TppConsentSession)
-return redirect302[ConsentAuthSessionCookie=null,\nFinTechApi.FinTech-Redirect-URI<redirectCode>]()
+return 303_SeeOther(TppConsentSession)
+return 302_Redirect[ConsentAuthSessionCookie=null,\nFinTechApi.FinTech-Redirect-URI<redirectCode>]()
 @enduml

@@ -48,10 +48,10 @@ alt TppConsentSession.noConsentPresent()
     RedirectSessionStoreApi -> RedirectSessionStoreApi : createEncryptStoreRedirectSession\n(TppConsentSession):redirectCode
     return 200_OK[](redirectCode)<>
     BankingProtocol -> BankingProtocol : TppConsentSession.psuConsentSession()\n:PsuConsentSession
-    return 200_OK(PsuConsentSession, AspspRedirectInfo)
-    return 200_Ok(PsuConsentSession,\nConsentAuthorisationApi\n.auth<redirectCode>)
+    return 303_SeeOther(PsuConsentSession, AspspRedirectInfo)
+    return 303_SeeOther(PsuConsentSession,\nConsentAuthorisationApi\n.auth<redirectCode>)
     FinTechApi -> FinTechApi : finTechConsentSessionCookie(PsuConsentSession,\nfinTechConsentSessionState):FinTechConsentSessionCookie
-    return redirect302[ConsentAuthorisationApi.auth<redirectCode,\nfinTechConsentSessionState>,\nFinTechConsentSessionCookie]()
+    return 302_Redirect[ConsentAuthorisationApi.auth<redirectCode,\nfinTechConsentSessionState>,\nFinTechConsentSessionCookie]()
 else TppConsentSession.consentPresent()
     autonumber 71 1 "<b><color blue>[InitConsent-000]"
     activate BankingProtocol

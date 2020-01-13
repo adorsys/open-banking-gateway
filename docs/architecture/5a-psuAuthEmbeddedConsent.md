@@ -18,15 +18,15 @@ If the TppConsentSession has an authChallenge, the interaction starts with the i
 
 After preparation of the ConsentAuthSessionCookie, the UserAgent is redirected to the EmbeddedAuthInitScreen of the ConsentAuthorisationUI.
 
-### AuthEmbedded-030&-040 : Load AuthChallenges
+### AuthEmbedded-030-040 : Load AuthChallenges
 The generic endpoint at ConsentAuthorisationApi.embeddedAuth allows the ConsentAuthorisationUI to load AuthChallenges if any. The call returns the AuthorizeResponse that contains all information necessary to display returned challenges to the PSU. An ScaUIMetadaData object contain UI customization parameter.
 
-### AuthEmbedded-050&-060 : Display Auth Screen and Collect PSU Auth Data
+### AuthEmbedded-050-060 : Display Auth Screen and Collect PSU Auth Data
 Using information contained in the AuthorizeResponse object, the ConsentAuthorisationUI will display the suitable AuthScreen to the PSU and use it to collect PsuAuthData.
 
-### AuthEmbedded-070..-087 : Send PsuAuthData to ConsentAuthorisationApi
+### AuthEmbedded-070-087 : Send PsuAuthData to ConsentAuthorisationApi
 The generic endpoint at ConsentAuthorisationApi.embeddedAuth will finally be called again to send authentication data entered by the PSU to the BankingProtocol.
 
-### AuthEmbedded-090..-094 : Redirect to FinTechApi
+### AuthEmbedded-090-094 : Redirect to FinTechApi
 As the TppConsentSession presents no more AuthChallenge, a RedirectSession is prepared and the PSU is redirected back to the FinTechApi.
     

@@ -15,8 +15,8 @@ Use cases for this API:
 PSU selects a bank from the list of banks displayed by the FinTechUI
 ### SelBnk-002 FinTechApi.loadBankProfile
 FinTechUI sends a load loadBankProfile request to FinTechAPI passing the bankId
-### SelBnk-003 TppBeanSearchApi.loadBankProfile
-FinTechAPI sends a load loadBankProfile request to TppBeanSearchApi passing the bankId
+### SelBnk-003 TppBankSearchApi.loadBankProfile
+FinTechAPI sends a load loadBankProfile request to TppBankSearchApi passing the bankId
 ### SelBnk-004 & 005 Return 200_BankProfile
 TppBankSearchApi returns the BankProfine object matching the given bankId.
 ### SelBnk-005 FinTechUI.displayBankProfile
