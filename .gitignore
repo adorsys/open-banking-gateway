@@ -64,4 +64,4 @@ target/sonar/
 */generated
 !generated/.swagger-codegen-ignore
 .checkstyle
-
+docs_for_site
