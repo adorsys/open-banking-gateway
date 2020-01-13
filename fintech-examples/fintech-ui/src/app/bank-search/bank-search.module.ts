@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { BankSearchRoutingModule } from './bank-search-routing.module';
 import { BankSearchComponent } from './components/bank-search/bank-search.component';
-import { ProfileComponent } from './components/profile/profile.component';
+import { ProfileComponent } from './common/profile/profile.component';
 import { SearchComponent } from './common/search/search.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
