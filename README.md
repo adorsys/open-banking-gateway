@@ -23,7 +23,7 @@ This project is designed to enable contribution from different sources, as the o
 ### Big Picture
 
 The following picture displays the overall architecture of this banking gateway:
-![High level architecture](docs/img/open-banking-gateway-arch-05-12-2019.png)
+![High level architecture](docs/img/open-banking-gateway-arch-13-01-2020.png)
 
 ## Documentation
 
