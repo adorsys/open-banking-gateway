@@ -65,3 +65,5 @@ target/sonar/
 !generated/.swagger-codegen-ignore
 .checkstyle
 
+jgiven-reports
+logs
