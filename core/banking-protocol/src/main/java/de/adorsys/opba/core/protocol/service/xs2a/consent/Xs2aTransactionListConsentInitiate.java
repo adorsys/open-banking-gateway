@@ -1,64 +1,63 @@
 package de.adorsys.opba.core.protocol.service.xs2a.consent;
 
-import com.google.common.collect.ImmutableList;
+import de.adorsys.opba.core.protocol.config.protocol.ProtocolConfiguration;
+import de.adorsys.opba.core.protocol.service.ContextUtil;
+import de.adorsys.opba.core.protocol.service.ValidatedExecution;
 import de.adorsys.opba.core.protocol.service.xs2a.context.TransactionListXs2aContext;
+import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.consent.ConsentInitiateHeaders;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.consent.ConsentsBody;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.consent.Xs2aConsentInitiate;
+import de.adorsys.opba.core.protocol.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.AccountAccess;
-import de.adorsys.xs2a.adapter.service.model.AccountReference;
 import de.adorsys.xs2a.adapter.service.model.ConsentCreationResponse;
-import de.adorsys.xs2a.adapter.service.model.Consents;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
-import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
 
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 
 @Service("xs2aTransactionListConsentInitiate")
 @RequiredArgsConstructor
-public class Xs2aTransactionListConsentInitiate implements JavaDelegate {
+public class Xs2aTransactionListConsentInitiate extends ValidatedExecution<TransactionListXs2aContext> {
 
     private final AccountInformationService ais;
+    private final Xs2aValidator validator;
+    private final ProtocolConfiguration configuration;
 
     @Override
-    @Transactional
-    public void execute(DelegateExecution delegateExecution) {
-        TransactionListXs2aContext context = delegateExecution.getVariable(CONTEXT, TransactionListXs2aContext.class);
+    protected void doPrepareContext(DelegateExecution execution, TransactionListXs2aContext context) {
+        context.setRedirectUriOk(
+                ContextUtil.evaluateSpelForCtx(configuration.getRedirect().getConsentAccounts().getOk(), execution, context)
+        );
+        context.setRedirectUriNok(
+                ContextUtil.evaluateSpelForCtx(configuration.getRedirect().getConsentAccounts().getNok(), execution, context)
+        );
+    }
 
+    @Override
+    protected void doValidate(DelegateExecution execution, TransactionListXs2aContext context) {
+        Xs2aConsentInitiate consent = consentInitiate(context);
+        validator.validate(execution, consent.getHeaders(), consent.getBody()); // flatten path
+    }
+
+    @Override
+    protected void doRealExecution(DelegateExecution execution, TransactionListXs2aContext context) {
+        Xs2aConsentInitiate consent = consentInitiate(context);
         Response<ConsentCreationResponse> consentInit = ais.createConsent(
-                context.toHeaders(),
-                consents(context)
+            consent.getHeaders().toHeaders(),
+            ConsentsBody.TO_XS2A.map(consent.getBody())
         );
 
-        context.setRedirectUriOk("http://localhost:8080/v1/consents/confirm/transactions/" + delegateExecution.getProcessInstanceId() + "/");
         context.setConsentId(consentInit.getBody().getConsentId());
-        delegateExecution.setVariable(CONTEXT, context);
+        execution.setVariable(CONTEXT, context);
     }
 
-    @SuppressWarnings("checkstyle:MagicNumber") // Hardcoded as it is POC, these should be read from context
-    private Consents consents(TransactionListXs2aContext ctx) {
-        Consents consents = new Consents();
-        AccountAccess access = new AccountAccess();
-        access.setAccounts(ImmutableList.of(reference(ctx)));
-        access.setBalances(ImmutableList.of(reference(ctx)));
-        access.setTransactions(ImmutableList.of(reference(ctx)));
-        consents.setAccess(access);
-        consents.setCombinedServiceIndicator(false);
-        consents.setRecurringIndicator(true);
-        consents.setFrequencyPerDay(10);
-        consents.setValidUntil(LocalDate.of(2021, 10, 10));
-
-        return consents;
-    }
-
-    private AccountReference reference(TransactionListXs2aContext ctx) {
-        AccountReference account = new AccountReference();
-        account.setIban(ctx.getIban());
-        account.setCurrency(ctx.getCurrency());
-        return account;
+    private Xs2aConsentInitiate consentInitiate(Xs2aContext context) {
+        return new Xs2aConsentInitiate(
+            ConsentInitiateHeaders.XS2A_HEADERS.map(context),
+            ConsentsBody.FROM_CTX.map(context)
+        );
     }
 }

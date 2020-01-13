@@ -1,0 +1,55 @@
+@startuml
+actor PSU
+node "Fintech" as fintech
+
+cloud TPP {
+    rectangle Tpp-front-facing-api as frontFace {
+      [Consent API] as consent
+      [Account API] as account
+
+      consent -[hidden]down-> account
+    }
+
+    rectangle Tpp-back-facing as backFace {
+      node "Tpp back facade" as facade
+      database TppDB
+
+      rectangle OBG-85 {
+        rectangle context [
+          Context
+          ---
+          ASPSP id
+          PSU id
+          PSU password
+          ...
+        ]
+
+        package BPMN {
+          [init consent] as initConsent
+          [authorize consent] as authorizeConsent
+
+          initConsent =right=> authorizeConsent
+        }
+      }
+    }
+}
+
+cloud ASPSP
+
+PSU <--> fintech : 1. Grant consent
+fintech <--> consent : 2
+consent <--> facade : 3. Invoke call / Ask for SCA challenge
+facade <-left- TppDB : 4. Bank and\nclient\nconfig
+facade --> context : 5. Fill\ncontext
+facade <--> BPMN : 6. Invoke call or \n Ask for SCA challenge
+BPMN <-left-> context : 7
+initConsent <-down-> ASPSP: 8
+authorizeConsent <-right-> ASPSP : 10
+consent <-up-> PSU : 9. SCA challenge
+
+'PSU -[hidden]left-> fintech
+'fintech -[hidden]left-> frontFace
+'PSU -[hidden]left-> backFace
+'PSU -[hidden]left-> frontFace
+frontFace -[hidden]left-> backFace
+@enduml

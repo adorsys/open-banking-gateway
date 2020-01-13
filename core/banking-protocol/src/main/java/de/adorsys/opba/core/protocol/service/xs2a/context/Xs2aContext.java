@@ -1,10 +1,15 @@
 package de.adorsys.opba.core.protocol.service.xs2a.context;
 
+import de.adorsys.opba.core.protocol.domain.dto.forms.ScaMethod;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.consent.ConsentsBody;
 import de.adorsys.xs2a.adapter.service.RequestHeaders;
+import de.adorsys.xs2a.adapter.service.model.AuthenticationObject;
 import de.adorsys.xs2a.adapter.service.model.StartScaProcessResponse;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -19,18 +24,14 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 
 // TODO - Make immutable, modify only with toBuilder
 @Data
-public class Xs2aContext {
-
-    // Application required
-    private long bankConfigId = 1;
-    // Redirect-required:
-    private String executionId;
+@EqualsAndHashCode(callSuper = true)
+public class Xs2aContext extends BaseContext {
 
     // Mandatory static
     private String psuId;
-    private String requestId;
     private String contentType = "application/json";
-    private String gatewayAspspId;
+    private String aspspId;
+    private ConsentsBody consent = new ConsentsBody(); // to avoid initialization in more-parameters
 
     // Mandatory dynamic
     private String psuIpAddress;
@@ -43,26 +44,27 @@ public class Xs2aContext {
     private StartScaProcessResponse startScaProcessResponse;
     private String consentId;
     private String authorizationId;
+    private String scaStatus;
+    private List<ScaMethod> availableSca;
+    private String userSelectScaId;
+    private AuthenticationObject scaSelected;
+    private String lastScaChallenge;
 
-    private String redirectUriOk = "http://localhost:3218/";
-    private String redirectUriNok = "http://localhost:8080/NOK";
+    // sensitive - do not persist?
+    private String psuPassword;
 
-    private Object result;
+    // TODO: protect from overriding using reflection
+    private String redirectUriOk;
 
-    public <T> T getResult() {
-        return (T) result;
-    }
-
-    public <T> T getResult(Class<T> clazz) {
-        return (T) result;
-    }
+    // TODO: protect from overriding reflection
+    private String redirectUriNok;
 
     public RequestHeaders toHeaders() {
         Map<String, String> allValues = new HashMap<>();
         allValues.put(PSU_ID, psuId);
-        allValues.put(X_REQUEST_ID, requestId);
+        allValues.put(X_REQUEST_ID, getSagaId());
         allValues.put(CONTENT_TYPE, contentType);
-        allValues.put(X_GTW_ASPSP_ID, gatewayAspspId);
+        allValues.put(X_GTW_ASPSP_ID, aspspId);
         allValues.put(TPP_REDIRECT_URI, redirectUriOk);
         allValues.put(TPP_NOK_REDIRECT_URI, redirectUriNok);
 
