@@ -87,10 +87,10 @@ components:
           schema:
             type: object
             properties:
-              bankProfile:
+              bankDescriptor:
                 type: array
                 items:
-                  $ref: '#/components/schemas/bankProfile'
+                  $ref: '#/components/schemas/bankDescriptor'
               keyword:
                 $ref: '#/components/schemas/searchInput'
               start:
@@ -110,11 +110,8 @@ components:
           schema:
             type: object
             properties:
-              userProfile:
-                type: array
-                items:
-                  $ref: '#/components/schemas/bankProfile'
-
+              bankProfileDescriptor:
+                $ref: '#/components/schemas/bankProfileDescriptor'
 
   schemas:
 
@@ -135,7 +132,19 @@ components:
       description: The total count of entities found for the given search input.
       schema:
         type: integer
-    bankProfile:
+    bankDescriptor:
+      title: Bank Descriptor
+      type: object
+      properties:
+        bankName:
+          type: string
+        bic:
+          type: string
+        bankCode:
+          type: string
+        uuid:
+          type: string
+    bankProfileDescriptor:
       title: Bank Profile
       type: object
       properties:
@@ -143,7 +152,7 @@ components:
           type: string
         bic:
           type: string
-        services:
+        serviceList:
           type: array
           items:
             # can be an enum
