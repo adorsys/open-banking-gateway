@@ -6,6 +6,7 @@ jdk:
 script:
   # tests are not done with mvn test - dont know why
   - mvn verify cobertura:cobertura
+  - make fintech-ui
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
