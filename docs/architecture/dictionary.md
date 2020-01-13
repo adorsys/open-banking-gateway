@@ -120,7 +120,7 @@ We will be using redirection to switch the user context from one application to 
 - OnlineBankingApi backTo-> ConsentAuthorisationApi
 - ConsentAuthorisationApi backTo-> FinTechApi
 
-#### Redirection and Data Sharing
+#### <a name="Redirection_Data_Sharing"></a>Redirection and Data Sharing
 We assume all three applications FinTechApi, ConsentAuthorisationApi, OnlineBankingApi are hosted on different domains. This is, we are not expecting cookies set by one application to be visible to another application (this might still happen on some local development environment, where everything runs on localhost). 
 
 We also do not advice adding persistent information to Location URL (__RedirectUrl__), as these are logged in files everywhere on infrastructure components in data centers.
@@ -142,35 +142,40 @@ Once a consent authorization process is initiated by the TppBankingApi (Over the
 Ensuring the equivalence of those identities can be represented as (assuming alice and bob are PSU):
 
 ```
-alice@fintech -> alice@tpp -> alice@aspsp where alice refers to the same natural person (resp. online banking account) in all those realms.
+alice@fintech ==> alice@tpp ==> alice@aspsp 
+
+// Where alice@fintech ==> alice@tpp neans The person identified at the FinTechApi as alice@fintech 
+// owns the necessary credentials used to identify at the ConsentAuthorisationApi as alice@tpp
 
 ```
-This is the most challenging task to be solved by this framework. This is, the integrity of the OpenBanking solution is broken when following equivalences are achieved:
+This is the most challenging task to be solved by this framework. This is, the integrity of the OpenBanking solution is broken when security breaches can be used to compromise equivalences like:
 
 ```
-bob@fintech -> alice@tpp -> alice@aspsp
+bob@fintech ==> alice@tpp ==> alice@aspsp 
+// although in reality  bob@fintech =/=> alice@tpp 
 
 ```
 In this case bob identifies with the FinTechApi (as bob@fintech) but manipulates alice to identify with the ConsentAuthorisationApi and provide her consent for the requested banking service. 
 
 ```
 
-bob@fintech -> bob@tpp -> alice@aspsp  
+bob@fintech ==> bob@tpp ==> alice@aspsp 
+// although in reality  bob@tpp =/=> alice@aspsp
 
 ```
 In this case bob identifies with the FinTechApi and the ConsentAuthorisationApi but manipulates alice to identify with the OnlieBankingApi and provide her consent for the requested banking service. 
 
-The biggest challenge we will be facing is to make sure that:
-- In case of an SCA redirect/oauth/decoupled, the natural person (online banking account) that provides a consent at the OnlineBankingApi of the ASPSP (alice@aspsp) is also the one that initiated the underlying banking service at the FinTech (alice@fintech)
-- In case of an SCA embedded, the natural person (online banking account) that provides her consent at the TTP ConsentAuthorisationApi (alice@tpp) is also the one that initiated the underlying banking service at the FinTechApi interface (alice@fintech).
+The biggest challenge we will be facing is to make sure:
+- In case of an SCA redirect/oauth/decoupled, the natural person (online banking account) that provides a consent at the OnlineBankingApi of the ASPSP (alice@aspsp) is also the one that initiated the underlying banking service at the FinTech (alice@fintech). Whereby "__is also the one__" is equivalent to "__owns the necessary credentials__".
+- In case of an SCA embedded, the natural person (online banking account) that provides her consent at the TTP ConsentAuthorisationApi (alice@tpp) is also the one that initiated the underlying banking service at the FinTechApi interface (alice@fintech). Whereby "__is also the one__" is equivalent to "__owns the necessary credentials__".
 
 #### Step-1: Identify PSU at the FinTechApi
-We always expect the PSU to be identified at the FinTechApi interface. So we assume that the psu-id@fintech is know. The integrity of the rest of the framework relys on the capability of the FinTech to protect the session associating the PSU to the FinTechApi.
+We always expect the PSU to be identified at the FinTechApi interface. So we assume that the psu-id@fintech is known. The integrity of the rest of the framework relys on the capability of the FinTech to protect the session associating the PSU to the FinTechApi.
 
 The service request itself is always initiated by the FinTechApi. Before initiation, we assume that the PSU (alice) has signed into the FinTechApi and her identity is known to the FinTechApi and thus associated with the service request forwarded to the TppBankingApi.
 
 #### Step-2: Store psu-id@fintech with the ConsentAuthorizationSession
-While processing a service request, if the TppBankingApi notice that the service request is not covered by a consent (either as a result of pre-checking the consent or from an error return by the OpenBankingApi), the TppBankingApi will trigger a new ConsentAuthorizationSession. 
+While processing a service request, if the TppBankingApi notices that the service request is not covered by a consent (either as a result of pre-checking the consent or from an error returned by the OpenBankingApi), the TppBankingApi will trigger a new ConsentAuthorizationSession. 
 
 Starting a new ConsentAuthorizationSession, we require the TppBankingApi to store the identity of service requesting PSU alice@fintech with the ConsentAuthorizationSession record before initiating a redirect to the ConsentAuthorisationApi.
 
@@ -178,75 +183,79 @@ This is, the ConsentAuthorizationSession record stored in the TPP Database will 
 
 ```
 [auth-id,redirectCode]=ConsentAuthorizationSession[auth-id,redirectCode, alice@fintech, ConsentData]
+// Where redirectCode is a one time key.
+// Where auth-id is the identifier of this ConsentAuthorizationSession
 
 ```
 
-where the redirect code can be used by the ConsentAuthorisationApi to retrieve the ConsentAuthorizationSession.
+where the redirectCode can be used by the ConsentAuthorisationApi once to retrieve the ConsentAuthorizationSession.
 
 #### Step-2: Identify PSU at the TPP ConsentAuthorisationApi 
-At first, redirecting a PSU from the FinTechApi to the TPP ConsentAuthorisationApi does not establish any relationship between the PSU and the TPP, even if we can use the redirectCode associated with the redirected url to retrieve ConsentAuthorisationSession. Off course the ConsentAuthorisationApi knows that the ConsentAuthorizationSession was initiated by alice@fintech, but this does not mean that the PSU controlling the current UserAgent is alice@fintech. 
+At first, redirecting a PSU from the FinTechApi to the TPP ConsentAuthorisationApi does not establish any relationship between the PSU and the TPP, even if we can use the redirectCode associated with the redirected url to retrieve ConsentAuthorisationSession. Off course the ConsentAuthorisationApi knows that the ConsentAuthorizationSession was initiated by alice@fintech, but this does not mean that the PSU controlling the current UserAgent (known as ConsentAuthorisationUI) is the same natural person as alice@fintech. 
 
-In order to proceed with the ConsentAuthorisationSession, the TPP ConsentAuthorisationApi will have to establish a proper identification process (implicit or explicit), resulting in a new PSU identity called (psu-id@tpp). And this one will also be associated with the ConsentAuthorisationSession.
+In order to proceed with the ConsentAuthorisationSession, the TPP ConsentAuthorisationApi will have to establish an identification of the natural person controlling the UserAgent(implicit or explicit), resulting in a new PSU identity called (psu-id@tpp). This PSU identity (psu-id@tpp) will also be associated with the ConsentAuthorisationSession.
 
-At this stage, the ConsentAuthorizationSession record stored in the TPP Database will have the form 
+At this stage, the ConsentAuthorizationSession record stored in the TPP Database will have the form: 
 
 ```
 [auth-id,redirectCode]=ConsentAuthorizationSession[auth-id,redirectCode, alice@fintech, alice123@tpp, ConsentData]
-alice@fintech =/= alice123@tpp. // Meaning that both identities are not yet verified equivalent (owned by the same natural person)
+// But with the assumption that alice@fintech =/=> alice123@tpp. 
+// Meaning that both identities are not yet verified equivalent (owned by the same natural person)
 
 ```
 
-Even though the ConsentAuthorizationSession in the TPP databasde is associated with two identites (alice@fintech and alice123@tpp), there is no proof what so ever that alice@fintech and alice123@tpp are controlled by the same natural person.
+Even though the ConsentAuthorizationSession in the TPP database is associated with two identities (alice@fintech and alice123@tpp), there is no proof what so ever that alice@fintech and alice123@tpp are controlled by the same natural person.
 
 The process continues with the addition of the psu-id@aspsp.
 
-In an Embedded-SCA case, the psu-id@aspsp is collected by the ConsentAuthorisationApi and forwarded to the OpenBankingApi of the ASPSP. In this case it is easy to assume uniqueness between both psu-id@tpp and psu-id@aspsp. This is we will have the following record after a successful consent authorisation at the ConsentAuthorisationApi:
+In an Embedded-SCA case, the psu-id@aspsp is collected by the ConsentAuthorisationApi and forwarded to the OpenBankingApi of the ASPSP. In this case it is easy to assume uniqueness between both psu-id@tpp and psu-id@aspsp. This will result in the following record after a successful embedded consent authorization at the ConsentAuthorisationApi:
 
 ```
 [auth-id,redirectCode]=ConsentAuthorizationSession[auth-id,redirectCode, alice@fintech, alice123@tpp, alice-s@aspsp, ConsentData]
-alice@fintech =/= alice123@tpp. // Meaning that both identities are not yet verified equivalent (owned by the same natural person)
-alice123@tpp ==> alice-s@aspsp. // Meaning alice123@tpp could provide the banking credentials of alice-s@aspsp.
+// alice@fintech =/=> alice123@tpp. // Meaning that both identities are not yet verified equivalent (owned by the same natural person)
+// alice123@tpp ==> alice-s@aspsp. // Meaning alice123@tpp could provide the banking credentials of alice-s@aspsp.
 
 ```
-Even in this embedded case, there is still a missing equivalence between alice@fintech and alice-s@aspsp.
+Even in this embedded case, there is still a missing equivalence between alice@fintech and alice-s@tpp.
 
-#### Step-3: Identify PSU at the ASPSP OnlineBankingApi 
+#### Step-3: Identify PSU at the ASPSP's OnlineBankingApi 
 
 In a Redirect-SCA case (oauth, redirect, decoupled), the PSU will have to be redirected by the ConsentAuthorisationApi to the OnlienBanking interface of the ASPSP. After a successful consent authorization at the OnlienBanking interface, the record could be updated by the mean of poling the authorization status of this ConsentAuthorizationSession at the OpenBankingApi of the ASPSP. In this case the ConsentAuthorizationSession will look like:   
 
 ```
-alice@fintech =/= alice123@tpp. // Meaning that both identities are not yet verified equivalent (owned by the same natural person)
-alice123@tpp =/= alice-s@aspsp. // Meaning that both identities are not yet verified equivalent (owned by the same natural person)
+[auth-id,redirectCode]=ConsentAuthorizationSession[auth-id,redirectCode, alice@fintech, alice123@tpp, alice-s@aspsp, ConsentData]
+// alice@fintech =/=> alice123@tpp. // Meaning that both identities are not yet verified equivalent (owned by the same natural person)
+// alice123@tpp =/=> alice-s@aspsp. // Meaning that both identities are not yet verified equivalent (owned by the same natural person)
 
 ```
 
 #### Step-4: Verify Equivalence between psu-id@aspsp and psu-id@tpp
 After a successful consent authorization at the OnlineBankingApi of the ASPSP, the framework has to ensure equivalence between the PSU identified at the TPP and the PSU identified at the ASPSP.
 
-In this framework, we designed a two steps redirection FinTech -> TPP -> ASPSP knowing that this might make the process more cumbersome, but this design represents the superset of most of the cases found on the market. After thorough analysis of most scenarios, we noticed that the identity equivalence process can only securely happen in one of these two ways:
+In this framework, we designed a two steps redirection FinTech -> TPP -> ASPSP knowing that this might make the process more cumbersome, but this design represents the superset of most of the cases found on the market. After thorough analysis of most scenarios, we noticed that the identity equivalence process can only securely happen in one of these ways:
 
 ##### Step-4 Alt-1: Sharing of IDP (Identity Provider)
-If TPP and ASPSP can rely on the same IDP to identify the PSU, the identity association process will be simple as the IDP will provide a common identifier subject(alice123@tpp)==subject(alice-s@aspsp).
+If TPP and ASPSP can rely on the same IDP to identify the PSU, the identity association process will be simple as the IDP will provide a common identifier. For example the subject claim of an id-token leading to subject(alice123@tpp)==subject(alice-s@aspsp).
 
 ##### Step-4 Alt-2: No Sharing of IDP (Identity Provider)
-If the TPP and ASPSP can not share the same identity provider, a back redirection from the ASPSP to the TPP must be used to help complete the identity verification. Note that the physical __back redirection__ will not be possible in the decouple approach.
+If the TPP and ASPSP can not share the same identity provider, a __back redirection__ from the ASPSP to the TPP must be used to help complete the identity verification. Note that the physical __back redirection__ will not be possible in the decouple approach.
 
-Following sub-steps will be needed to ensure proper redirection:
-- A RedirectCookie must have been set while redirecting a user from the TPP (ConsentAuthorisationApi) to the ASPSP (OnlineBankingApi).
+Following sub-steps will be needed to ensure clean and secure back redirection:
+- A RedirectCookie must have been set on the PsuUserAgent while redirecting a user from the TPP (ConsentAuthorisationApi) to the ASPSP (OnlineBankingApi).
 - The url for the __back redirection__ must have been protected against manipulation: 
   - In case there is an initiation step present between TPP and ASPSP, use this step to transfer the __back redirection url__ to the ASPSP (this is an example of the redirect approach of the NextGenPSD2 API).
   - In case there is no such initiation step (generally when OAuth is being used), make sure oAuth2 __back redirection url templates__ and __webOrigins__ are properly designed as the concrete __back redirection url__ is transported with the consent request and exposed to attackers manipulations.
-- Design the __back redirection url__ to contain a reference of the RedirectCookie (auth-id) and a corresponding XSRF-token (redirectState) for the validation of the RedirectCookie.
+- Design the __back redirection url__ to contain a reference of the RedirectCookie (auth-id) and a corresponding XSRF-token (redirectState) for the validation of the RedirectCookie. A sample url can look like: /consent/{auth-id}/fromAspsp/{redirectState}/ok. See [Redirection and Data Sharing](dictionary.md#Redirection_Data_Sharing) for more detail.
 
-If a physical redirect can occur from the ASPSP (OnlineBankingApi) back to the TPP (ConsentAuthorisationApi), a validation of the original RedirectCookie can be taken as a guaranty to declare equivalence between the psu-id@tpp and the psu-id@aspsp.
+If a physical redirect can occur from the ASPSP (OnlineBankingApi) back to the TPP (ConsentAuthorisationApi), __a validation of the original RedirectCookie can be taken as a guaranty to declare equivalence between the psu-id@tpp and the psu-id@aspsp__.
 
 ##### Step-4 Alt-3: No Sharing of IDP and Decoupled Approach
-For the decoupled approach, there is no way to provide physical a back redirect from the ASPSP to the TPP. So innovative data sharing methods are necessary to verify equivalence of both TPP and ASPSP PSU-identities. This framework suggests the sharing of a QR-Code image as a mean of ensuring that the natural person in control of the ConsentAuthorisationApi is the same as the one in control of the OnlineBankingMobileApp used to execute the decoupled consent authorization against the online banking API.
+For the decoupled approach, there is no way to provide a physical back redirect from the ASPSP to the TPP. So innovative data sharing methods are necessary to verify equivalence of both psu-id@tpp and psu-id@aspsp. This framework suggests the sharing of a QR-Code image as a mean of ensuring that the natural person in control of the ConsentAuthorisationApi is the same as the one in control of the OnlineBankingMobileApp used to execute the decoupled consent authorization against the OnlineBankingApi.
 - If the PSU is using a desktop to request the banking service, the decoupled consent authorization on the OnlineBankingMobileApp will starts by mean of the PSU scanning a QR-Code displayed on the user desktop by the ConsentAuthorisationUI.
-- If both ConsentAuthorisationUI and OnlineBankingMobileApp are running on the same user device, App to App physical redirection will be preferable. Turning this decoupled approach into a redirect approach. If App to App h=physical redirection is not possible, mobile device image sharing routines can be used to push the QR-Code produced by the ConsentAuthorisationApi to the decoupled OnlineBankingMobileApp.
+- If both ConsentAuthorisationUI and OnlineBankingMobileApp are running on the same user device, App to App physical redirection will be preferable. Turning this decoupled approach into a redirect approach. If App to App physical redirection is not possible, mobile device image sharing routines can be used to push the QR-Code produced by the ConsentAuthorisationApi to the decoupled OnlineBankingMobileApp.
 
 #### Step-5: Verify Equivalence between psu-id@tpp and psu-id@fintech
-We assume that there is a physical redirection possibility from the ConsentAuthorisationApi back to the FinTechApi. This assumption is based on the fact that there is a better synchronization between a TPP and FinTech using it's services. This is, the same principles described in Step-4 Alt-1: Sharing of IDP and Step-4 Alt-2: No Sharing of IDP applies.
+We assume that there is a physical redirection possibility from the ConsentAuthorisationApi back to the FinTechApi. This assumption is based on the fact that there is a better synchronization between a TPP and FinTech using it's services. This is, the same principles described in "Step-4 Alt-1" and "Step-4 Alt-2" apply.
 
 #### Consent Authorization, Identity Equivalence and Service Execution
 In some OpenBanking approaches, validating the consent at the OnlineBanking interface of the ASPSP directly finalizes authorization of the service request. The NextGenPSD2 specification finalizes a payment initiation with the act of a PSU authorizing the payment consent (either on the ASPSP or TPP interface). But at this stage, the identity equivalence verification described above might not have happened yet leaving the process incomplete.
@@ -352,7 +361,7 @@ This is a SessionCookie used to maintain the login session between the ConsentAu
 
 There is a X-XSRF-TOKEN String associated with the ConsentAuthSessionCookie. This information must be presented whenever the ConsentAuthorisationApi consumes the ConsentAuthSessionCookie. The X-XSRF-TOKEN encodes a key that is used to validate (evtl. encrypt/decrypt) information stored in the corresponding ConsentAuthSessionCookie.
 
-### <a name="RedirectSession"> RedirectSession
+### <a name="RedirectSession"></a> RedirectSession
 Holds consent information for the duration of a redirect. Redirect patterns are described [below](dictionary.md#Redirection).
 
 ### <a name="RedirectSessionStoreApi"></a> RedirectSessionStoreApi
