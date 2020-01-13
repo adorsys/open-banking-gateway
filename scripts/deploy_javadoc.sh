@@ -23,8 +23,8 @@ cd gh-pages || exit
   ln -s "$TRAVIS_TAG" latest
 )
 
-git config --global user.email "travis@travis-ci.org"
-git config --global user.name "travis-ci"
+git de.adorsys.opba.fintech.impl.config --global user.email "travis@travis-ci.org"
+git de.adorsys.opba.fintech.impl.config --global user.name "travis-ci"
 git add -f .
 git commit -m "Latest javadoc on successful travis build $TRAVIS_BUILD_NUMBER for tag $TRAVIS_TAG auto-pushed to gh-pages"
 git push -fq origin gh-pages > /dev/null
