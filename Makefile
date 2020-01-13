@@ -61,6 +61,6 @@ fintech-ui/node_modules:
 
 .PHONY : fintech-ui
 fintech-ui: fintech-ui/node_modules
-	cd fintech-ui && ng build
+	cd fintech-ui && npm run build
 
 
