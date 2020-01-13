@@ -7,6 +7,7 @@ import lombok.experimental.UtilityClass;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @UtilityClass
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Lombok generates private ctor.
 public class ResourceUtil {
 
     @SneakyThrows

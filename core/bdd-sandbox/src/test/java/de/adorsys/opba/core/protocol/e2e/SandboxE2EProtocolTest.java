@@ -21,6 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import static de.adorsys.opba.core.protocol.Const.SKIP_HEAVY_TESTS;
 import static de.adorsys.opba.core.protocol.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.core.protocol.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -28,7 +29,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 /**
  * Happy-path heavy test that uses Dynamic-Sandbox to drive banking-protocol.
  */
-@DisabledIfSystemProperty(named = "HEAVY_TEST", matches = "true")
+@DisabledIfSystemProperty(named = SKIP_HEAVY_TESTS, matches = "true")
 @EnableAutoConfiguration(exclude = {
         HypermediaAutoConfiguration.class,
         Xs2aCmsAutoConfiguration.class,

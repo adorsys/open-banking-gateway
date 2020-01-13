@@ -41,6 +41,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -99,6 +105,7 @@
                     <resourceBundles>
                         <resourceBundle>de.adorsys.opba:bdd-tests:${project.version}</resourceBundle>
                         <resourceBundle>de.adorsys.opba:banking-protocol:${project.version}</resourceBundle>
+                        <resourceBundle>de.adorsys.opba:e2e-tests:${project.version}</resourceBundle>
                     </resourceBundles>
                 </configuration>
                 <executions>

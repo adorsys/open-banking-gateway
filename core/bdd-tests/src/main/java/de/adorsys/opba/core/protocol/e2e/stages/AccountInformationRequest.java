@@ -38,6 +38,7 @@ import static io.restassured.config.RedirectConfig.redirectConfig;
 
 @Slf4j
 @JGivenStage
+@SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class AccountInformationRequest extends Stage<AccountInformationRequest> {
 
     public static final String PARAMETERS_PROVIDE_MORE = "/v1/parameters/provide-more/";
@@ -226,7 +227,7 @@ public class AccountInformationRequest extends Stage<AccountInformationRequest> 
             StandardCharsets.UTF_8.name()
         );
         List<AuthDto> parsedValue = new ObjectMapper()
-            .readValue(value, new TypeReference<List<AuthDto>>() {});
+            .readValue(value, new TypeReference<List<AuthDto>>() { });
 
         this.availableScas = parsedValue.stream().collect(
             Collectors.toMap(AuthDto::getValue, AuthDto::getKey)

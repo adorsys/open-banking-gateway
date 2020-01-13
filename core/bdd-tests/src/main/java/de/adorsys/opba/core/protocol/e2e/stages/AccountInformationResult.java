@@ -24,7 +24,10 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 
 @JGivenStage
+@SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class AccountInformationResult extends Stage<AccountInformationResult>  {
+
+    private static final int ANTON_BRUECKNER_BOOKED_TRANSACTIONS_COUNT = 8;
 
     @ExpectedScenarioState
     private String redirectOkUri;
@@ -76,7 +79,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
                                 "pG7GZlccRPsoBNudHnX25Q"
                         )
                     )
-                    .body("transactions.booked", hasSize(8));
+                    .body("transactions.booked", hasSize(ANTON_BRUECKNER_BOOKED_TRANSACTIONS_COUNT));
         return self();
     }
 
