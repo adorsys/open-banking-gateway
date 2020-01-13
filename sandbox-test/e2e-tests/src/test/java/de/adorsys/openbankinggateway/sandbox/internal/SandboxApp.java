@@ -256,7 +256,7 @@ public enum SandboxApp {
                     null,
                     (Object) new String[] {
                             "--spring.profiles.include=" + Joiner.on(",").join(activeProfilesForTest()),
-                            "--spring.de.adorsys.opba.fintech.impl.config.location=" + buildSpringConfigLocation(),
+                            "--spring.config.location=" + buildSpringConfigLocation(),
                             "--primary.profile=" + getPrimaryConfigFile()
                     }
             );

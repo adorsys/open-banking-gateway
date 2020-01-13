@@ -79,7 +79,7 @@
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
                                 <basePackage>de.adorsys.opba.tppbankingapi.ais</basePackage>
-                                <configPackage>de.adorsys.opba.tppbankingapi.de.adorsys.opba.fintech.impl.config</configPackage>
+                                <configPackage>de.adorsys.opba.tppbankingapi.config</configPackage>
                                 <modelPackage>de.adorsys.opba.tppbankingapi.ais.model</modelPackage>
                                 <apiPackage>de.adorsys.opba.tppbankingapi.ais.resource</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
@@ -111,7 +111,7 @@
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
                                 <basePackage>de.adorsys.opba.tppbankingapi.search</basePackage>
-                                <configPackage>de.adorsys.opba.tppbankingapi.de.adorsys.opba.fintech.impl.config</configPackage>
+                                <configPackage>de.adorsys.opba.tppbankingapi.config</configPackage>
                                 <modelPackage>de.adorsys.opba.tppbankingapi.search.model</modelPackage>
                                 <apiPackage>de.adorsys.opba.tppbankingapi.search.resource</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
@@ -143,7 +143,7 @@
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
                                 <basePackage>de.adorsys.opba.tppbankingapi.token</basePackage>
-                                <configPackage>de.adorsys.opba.tppbankingapi.de.adorsys.opba.fintech.impl.config</configPackage>
+                                <configPackage>de.adorsys.opba.tppbankingapi.config</configPackage>
                                 <modelPackage>de.adorsys.opba.tppbankingapi.token.model</modelPackage>
                                 <apiPackage>de.adorsys.opba.tppbankingapi.token.resource</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
