@@ -19,6 +19,7 @@
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
+            <column name="preferred_approach" type="VARCHAR(32)"/>
         </createTable>
         <createSequence sequenceName="bank_configuration_id_sequence" incrementBy="50"/>
 

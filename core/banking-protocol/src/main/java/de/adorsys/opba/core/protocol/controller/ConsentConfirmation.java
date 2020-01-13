@@ -1,7 +1,7 @@
 package de.adorsys.opba.core.protocol.controller;
 
+import de.adorsys.opba.core.protocol.domain.entity.ProtocolAction;
 import de.adorsys.opba.core.protocol.service.eventbus.ProcessEventHandlerRegistrar;
-import de.adorsys.opba.core.protocol.service.eventbus.ProcessResultEventHandler;
 import de.adorsys.opba.core.protocol.service.xs2a.Xs2aResultExtractor;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
@@ -24,51 +24,66 @@ import static de.adorsys.opba.core.protocol.controller.constants.ApiVersion.API_
 @RestController
 @RequestMapping(API_1)
 @RequiredArgsConstructor
+@SuppressWarnings("CPD-START") // FIXME
 public class ConsentConfirmation {
 
     private final RuntimeService runtimeService;
-    private final ProcessResultEventHandler handler;
     private final Xs2aResultExtractor extractor;
     private final ProcessEventHandlerRegistrar registrar;
 
 
-    // TODO: replace this hierarchy by waitng for some message Id instead
-    @GetMapping(CONSENTS + "/confirm/accounts/{resultProcessId}/{consentProcessId}")
+    @GetMapping(CONSENTS + "/confirm/accounts/{action}/sagas/{sagaId}")
     @Transactional
-    public CompletableFuture<ResponseEntity<List<AccountDetails>>> confirmedRedirectConsentAccounts(
-            @PathVariable String resultProcessId, @PathVariable String consentProcessId) {
+    public CompletableFuture<? extends ResponseEntity<?>> confirmedRedirectConsentAccounts(
+            @PathVariable ProtocolAction action,
+            @PathVariable String sagaId) {
 
-        ActivityInstance ai = runtimeService.createActivityInstanceQuery().processInstanceId(consentProcessId).unfinished().singleResult();
-        runtimeService.trigger(ai.getExecutionId());
+        runtimeService.trigger(executionToTrigger(sagaId));
+
+        if (ProtocolAction.LIST_ACCOUNTS == action) {
+            return accounts(sagaId);
+        } else if (ProtocolAction.LIST_TRANSACTIONS == action) {
+            return transactions(sagaId);
+        }
+
+        return CompletableFuture.completedFuture(ResponseEntity.notFound().build());
+    }
+
+    private CompletableFuture<ResponseEntity<List<AccountDetails>>> accounts(String sagaId) {
 
         CompletableFuture<ResponseEntity<List<AccountDetails>>> result = new CompletableFuture<>();
-
         registrar.addHandler(
-                resultProcessId,
+                sagaId,
                 response -> result.complete(ResponseEntity.ok(extractor.extractAccountList(response))),
                 result
         );
-
         return result;
     }
 
-    // TODO: replace this hierarchy by waitng for some message Id instead
-    @GetMapping(CONSENTS + "/confirm/transactions/{resultProcessId}/{consentProcessId}")
-    @Transactional
-    public CompletableFuture<ResponseEntity<TransactionsReport>> confirmedRedirectConsentTransactions(
-            @PathVariable String resultProcessId, @PathVariable String consentProcessId) {
-
-        ActivityInstance ai = runtimeService.createActivityInstanceQuery().processInstanceId(consentProcessId).unfinished().singleResult();
-        runtimeService.trigger(ai.getExecutionId());
+    private CompletableFuture<ResponseEntity<TransactionsReport>> transactions(String sagaId) {
 
         CompletableFuture<ResponseEntity<TransactionsReport>> result = new CompletableFuture<>();
-
         registrar.addHandler(
-                resultProcessId,
+                sagaId,
                 response -> result.complete(ResponseEntity.ok(extractor.extractTransactionsReport(response))),
                 result
         );
-
         return result;
+    }
+
+    private String executionToTrigger(String sagaId) {
+        String id = sagaId;
+        ActivityInstance activity;
+        // TODO limit depth... or find how to get execution immediately
+        do {
+            activity = runtimeService
+                    .createActivityInstanceQuery()
+                    .processInstanceId(id)
+                    .unfinished()
+                    .singleResult();
+            id = activity.getCalledProcessInstanceId();
+        } while (null != id);
+
+        return activity.getExecutionId();
     }
 }

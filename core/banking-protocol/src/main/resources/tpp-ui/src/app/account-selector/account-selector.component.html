@@ -1,0 +1,54 @@
+Choose account access
+<mat-radio-group class="account-radio-group" name="accessSelector">
+  <mat-radio-button #dedicated class="account-radio-button" value="dedicated" aria-label="Dedicated accounts access"></mat-radio-button>
+  <div class="nested"
+       (click)="!dedicated.checked ? $event.stopPropagation() : null;"
+       [class.disabled]="!dedicated.checked">
+    General account details access:
+    <hr/>
+    <div class="nested">
+      <div *ngFor="let template of accounts; let i = index" class="form-row">
+        <button mat-icon-button type="button" (click)="removeAccount(accountReference)">
+          <mat-icon>remove_circle</mat-icon>
+        </button>
+        <app-account-reference #accountReference elemId="{{template.elemId}}" prefix="consent.access.accounts[{{i}}]."></app-account-reference>
+      </div>
+      <button mat-icon-button type="button" (click)="addAccount()" >
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </div>
+    Account balance access:
+    <hr/>
+    <div class="nested">
+      <div *ngFor="let template of balances; let i = index" class="form-row">
+        <button mat-icon-button type="button" (click)="removeBalance(balanceReference)">
+          <mat-icon>remove_circle</mat-icon>
+        </button>
+        <app-account-reference #balanceReference elemId="{{template.elemId}}" prefix="consent.access.balances[{{i}}]."></app-account-reference>
+      </div>
+      <button mat-icon-button type="button" (click)="addBalance()">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </div>
+    Transaction list access:
+    <hr/>
+    <div class="nested">
+      <div *ngFor="let template of transactions; let i = index" class="form-row">
+        <button mat-icon-button type="button" (click)="removeTransaction(txReference)">
+          <mat-icon>remove_circle</mat-icon>
+        </button>
+        <app-account-reference #txReference elemId="{{template.elemId}}" prefix="consent.access.transactions[{{i}}]."></app-account-reference>
+      </div>
+      <button mat-icon-button type="button" (click)="addTransaction()">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div>
+    <mat-radio-button #all class="account-radio-button" value="all">All accounts access</mat-radio-button>
+    <mat-radio-group class="account-radio-group nested" name="consent.access.availableAccounts" [disabled]="!all.checked">
+      <mat-radio-button value="allAccounts">All accounts</mat-radio-button>
+      <mat-radio-button value="allAccountsWithBalances">All accounts with balances</mat-radio-button>
+    </mat-radio-group>
+  </div>
+</mat-radio-group>

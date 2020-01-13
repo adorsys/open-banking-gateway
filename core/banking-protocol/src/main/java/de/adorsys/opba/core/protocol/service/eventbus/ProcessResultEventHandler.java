@@ -1,6 +1,6 @@
 package de.adorsys.opba.core.protocol.service.eventbus;
 
-import de.adorsys.opba.core.protocol.domain.dto.ProcessResult;
+import de.adorsys.opba.core.protocol.domain.dto.messages.ProcessResult;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +8,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
+/**
+ * Allows consumer to be registered after event addressed to him is published.
+ * There can be only one undelivered message for unregistered consumer, multiple messages are
+ * not supported.
+ */
 @Service
 public class ProcessResultEventHandler {
 
