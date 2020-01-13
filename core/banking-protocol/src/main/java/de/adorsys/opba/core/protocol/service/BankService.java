@@ -17,15 +17,11 @@ public class BankService {
     private final BankProfileRepository bankProfileRepository;
     private final BankRepositoryImpl bankRepository;
 
-    public List<Bank> getBanks(String query, int maxResults) {
-        return bankRepository.getBanks(query, maxResults);
+    public Optional<BankProfile> getBankProfile(String bankId) {
+        return bankProfileRepository.findByBankUuid(bankId);
     }
 
-    public Optional<BankProfile> getBankProfile(Long bankId) {
-        return bankProfileRepository.findByBankId(bankId);
-    }
-
-    public List<Bank> getBanksFTS(String query, int maxResults) {
-        return bankRepository.getBanksFTS(query, maxResults);
+    public List<Bank> getBanks(String query, int startPos, int maxResults) {
+        return bankRepository.getBanks(query, startPos, maxResults);
     }
 }

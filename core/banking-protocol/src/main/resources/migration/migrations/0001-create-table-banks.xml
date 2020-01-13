@@ -11,6 +11,7 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="${table-prefix}bankPK"/>
             </column>
+            <column name="uuid" type="VARCHAR(255)"/>
             <column name="name" type="VARCHAR(255)"/>
             <column name="bic" type="VARCHAR(11)"/>
             <column name="bank_code" type="VARCHAR(8)"/>
@@ -30,19 +31,20 @@
             <column name="adapter_id" type="VARCHAR(255)"/>
             <column name="idp_url" type="VARCHAR(255)"/>
             <column name="sca_approaches" type="VARCHAR(255)"/>
-            <column name="bank_id" type="BIGINT"/>
+            <column name="bank_uuid" type="VARCHAR(255)"/>
+            <column name="services" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
 
     <changeSet id="add-relation-bank-to-bank-profile" author="mhr">
         <addForeignKeyConstraint constraintName="fk_bank"
                                  baseTableName="${table-prefix}bank_profile"
-                                 baseColumnNames="bank_id"
+                                 baseColumnNames="bank_uuid"
                                  referencedTableName="${table-prefix}bank"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="uuid"/>
         <addUniqueConstraint
-                columnNames="bank_id"
-                constraintName="u_bank_id"
+                columnNames="bank_uuid"
+                constraintName="u_bank_uuid"
                 tableName="opb_bank_profile" />
     </changeSet>
 
@@ -53,7 +55,7 @@
                 file="banks.csv"
                 catalogName=""
                 tableName="${table-prefix}bank">
-            <column header="uuid"                           type="skip"/>
+            <column header="uuid"       name="uuid"         type="STRING"/>
             <column header="name"       name="name"         type="STRING"/>
             <column header="bic"        name="bic"          type="STRING"/>
             <column header="url"                            type="skip"/>
@@ -72,7 +74,7 @@
                 file="banks.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_profile">
-            <column header="uuid"                                       type="skip"/>
+            <column header="uuid"       name="uuid"                     type="STRING"/>
             <column header="name"       name="name"                     type="skip"/>
             <column header="bic"        name="bic"                      type="skip"/>
             <column header="url"        name="url"                      type="STRING"/>
@@ -82,12 +84,6 @@
             <column header="aspsp_sca_approaches" name="sca_approaches" type="STRING"/>
         </loadData>
         <rollback />
-    </changeSet>
-
-    <changeSet id="fill_bank_id" author="mhr">
-        <sql dbms="postgresql" stripComments="true">
-            UPDATE opb_bank_profile SET bank_id = id WHERE true;
-        </sql>
     </changeSet>
 
     <changeSet id="load_csv_banks_random" author="mhr">
