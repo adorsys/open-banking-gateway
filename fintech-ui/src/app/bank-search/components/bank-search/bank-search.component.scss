@@ -5,31 +5,21 @@
   min-height: 100vh;
   background-color: #edf4f7;
 
-  .card {
-    min-height: 300px;
-    border: 0;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.19), 0 3px 3px rgba(0, 0, 0, 0.23);
+  .box-header {
+    &__title {
+      color: #212121;
+      font-size: 1.8rem;
+      font-weight: 400;
+      margin-bottom: 1rem;
+    }
+    &_text {
+      color: #737373;
+    }
   }
-}
 
-.box-header {
-  &__title {
-    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-    color: hsl(0, 0%, 13%);
-    font-size: 1.8rem;
-    font-weight: 400;
-    margin-bottom: 1rem;
+  .box-item {
+    max-width: 26rem;
   }
-  &__text {
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.4;
-    color: hsl(0, 0%, 45%);
-  }
-}
-
-.box-item {
-  max-width: 26rem;
 }
 
 .list-group-item:hover {
