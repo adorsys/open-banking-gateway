@@ -87,7 +87,7 @@
             <property name="max" value="40"/>
         </module>
         <module name="ParameterNumber">
-            <property name="max" value="4"/>
+            <property name="max" value="5"/>
             <property name="tokens" value="METHOD_DEF"/>
         </module>
         <module name="ParameterNumber">

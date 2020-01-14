@@ -3,7 +3,7 @@ package de.adorsys.opba.fintech.impl.controller;
 import de.adorsys.opba.fintech.api.model.InlineResponse2001;
 import de.adorsys.opba.fintech.api.resource.FinTechBankSearchApi;
 import de.adorsys.opba.fintech.impl.service.BankSearchService;
-import de.adorsys.opba.fintech.impl.service.X_XSRF_TokenService;
+import de.adorsys.opba.fintech.impl.service.FinTechTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,12 +21,12 @@ public class FinTechBankSearchImpl implements FinTechBankSearchApi {
     BankSearchService bankSearchService;
 
     @Autowired
-    X_XSRF_TokenService x_xsrf_tokenService;
+    FinTechTokenService finTechTokenService;
 
     @Override
-    public ResponseEntity<InlineResponse2001> bankSearchGET(UUID xRequestID, String X_XSRF_TOKEN, String keyword, Integer start, Integer max) {
+    public ResponseEntity<InlineResponse2001> bankSearchGET(UUID xRequestID, String fintechToken, String keyword, Integer start, Integer max) {
         log.info("search bank");
-        if (!x_xsrf_tokenService.validate(X_XSRF_TOKEN)) {
+        if (!finTechTokenService.validate(fintechToken)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>(bankSearchService.searchBank(keyword, start, max), HttpStatus.OK);
