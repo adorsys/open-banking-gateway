@@ -88,24 +88,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              bankDescriptor:
-                type: array
-                items:
-                  $ref: '#/components/schemas/bankDescriptor'
-              keyword:
-                type: String
-                description: The bank search input string
-              start:
-                type: integer
-                description: The index of the first result
-              max:
-                type: integer
-                description: The max number of entries to return with the response.
-              total:
-                type: integer
-                description: The total count of entities found for the given search input.
+            $ref: "#/components/schemas/bankSearchResponse"
 
     200_BankProfile:
       description: Response containing the service profile of a bank.
@@ -115,12 +98,36 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              bankProfileDescriptor:
-                $ref: '#/components/schemas/bankProfileDescriptor'
+            $ref: "#/components/schemas/bankProfileResponse"
 
   schemas:
+    # response DTOs
+    bankSearchResponse:
+      title: Bank Search Response
+      type: object
+      properties:
+        bankDescriptor:
+          type: array
+          items:
+            $ref: '#/components/schemas/bankDescriptor'
+        keyword:
+          type: String
+          description: The bank search input string
+        start:
+          type: integer
+          description: The index of the first result
+        max:
+          type: integer
+          description: The max number of entries to return with the response.
+        total:
+          type: integer
+          description: The total count of entities found for the given search input.
+
+    bankProfileResponse:
+      type: object
+      properties:
+        bankProfileDescriptor:
+          $ref: '#/components/schemas/bankProfileDescriptor'
 
     # Search and bank profile
     bankDescriptor:
