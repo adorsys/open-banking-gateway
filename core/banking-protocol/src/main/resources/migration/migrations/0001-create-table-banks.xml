@@ -11,7 +11,9 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="${table-prefix}bankPK"/>
             </column>
-            <column name="uuid" type="VARCHAR(255)"/>
+            <column name="uuid" type="VARCHAR(255)">
+                <constraints unique="true"/>
+            </column>
             <column name="name" type="VARCHAR(255)"/>
             <column name="bic" type="VARCHAR(11)"/>
             <column name="bank_code" type="VARCHAR(8)"/>
@@ -31,7 +33,9 @@
             <column name="adapter_id" type="VARCHAR(255)"/>
             <column name="idp_url" type="VARCHAR(255)"/>
             <column name="sca_approaches" type="VARCHAR(255)"/>
-            <column name="bank_uuid" type="VARCHAR(255)"/>
+            <column name="bank_uuid" type="VARCHAR(255)">
+                <constraints unique="true"/>
+            </column>
             <column name="services" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
@@ -42,10 +46,6 @@
                                  baseColumnNames="bank_uuid"
                                  referencedTableName="${table-prefix}bank"
                                  referencedColumnNames="uuid"/>
-        <addUniqueConstraint
-                columnNames="bank_uuid"
-                constraintName="u_bank_uuid"
-                tableName="opb_bank_profile" />
     </changeSet>
 
     <changeSet id="load_csv_bank" author="mhr">
@@ -74,7 +74,7 @@
                 file="banks.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_profile">
-            <column header="uuid"       name="uuid"                     type="STRING"/>
+            <column header="uuid"       name="bank_uuid"                type="STRING"/>
             <column header="name"       name="name"                     type="skip"/>
             <column header="bic"        name="bic"                      type="skip"/>
             <column header="url"        name="url"                      type="STRING"/>

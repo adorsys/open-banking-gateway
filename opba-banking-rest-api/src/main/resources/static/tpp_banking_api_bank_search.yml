@@ -24,19 +24,22 @@ paths:
       #query
         - name: keyword
           in: query
+          description: The bank search input string
           required: true
           schema:
-            $ref: '#/components/schemas/searchInput'
+            type: String
         - name: start
           in: query
+          description: The index of the first result
           required: false
           schema:
-            $ref: '#/components/schemas/searchStartIndex'
+            type: integer
         - name: max
           in: query
+          description: The max number of entries to return with the response.
           required: false
           schema:
-            $ref: '#/components/schemas/searchMaxResult'
+            type: integer
       security:
         - cookieAuth: []
       responses:
@@ -92,13 +95,17 @@ components:
                 items:
                   $ref: '#/components/schemas/bankDescriptor'
               keyword:
-                $ref: '#/components/schemas/searchInput'
+                type: String
+                description: The bank search input string
               start:
-                $ref: '#/components/schemas/searchStartIndex'
+                type: integer
+                description: The index of the first result
               max:
-                $ref: '#/components/schemas/searchMaxResult'
+                type: integer
+                description: The max number of entries to return with the response.
               total:
-                $ref: '#/components/schemas/searchTotalResult'
+                type: integer
+                description: The total count of entities found for the given search input.
 
     200_BankProfile:
       description: Response containing the service profile of a bank.
@@ -116,22 +123,6 @@ components:
   schemas:
 
     # Search and bank profile
-    searchInput:
-      description: The bank search input string
-      schema:
-        type: string
-    searchStartIndex:
-      description: The index of the first result
-      schema:
-        type: integer
-    searchMaxResult:
-      description: The max number of entries to return with the response.
-      schema:
-        type: integer
-    searchTotalResult:
-      description: The total count of entities found for the given search input.
-      schema:
-        type: integer
     bankDescriptor:
       title: Bank Descriptor
       type: object
