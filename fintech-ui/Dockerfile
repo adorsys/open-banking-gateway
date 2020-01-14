@@ -1,17 +1,56 @@
-FROM nginx:1.17.3
+#############
+### build ###
+#############
+
+# base image
+FROM node:12.14.0 as build-stage
 LABEL maintainer="https://github.com/adorsys/open-banking-gateway"
 
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf.template
-COPY entry.sh /opt/entry.sh
-ADD dist/fintech-ui /usr/share/nginx/html
+# set working directory
+WORKDIR /app
 
-RUN chgrp -R root /var/cache/nginx && \
-    find /var/cache/nginx -type d -exec chmod 775 {} \; && \
-    find /var/cache/nginx -type f -exec chmod 664 {} \; && \
-    chmod 775 /var/run && \
-    chmod 775 /opt/entry.sh && \
-    chmod -R 777 /etc/nginx/conf.d
+# install and cache app dependencies
+COPY package*.json /app/
+RUN HUSKY_SKIP_INSTALL=1 npm ci --silent
 
+# add app
+COPY . /app/
+
+# build arguments
+ARG configuration=production
+
+# environment variables
+ENV NGINX_ACCESS_LOG_DEBUG combined
+ENV NGINX_ERROR_LOG_DEBUG error
+
+# generate build
+RUN npm run build -- --output-path=./dist --configuration $configuration
+
+############
+### prod ###
+############
+
+# base image
+FROM nginx:1.17.6
+LABEL maintainer="https://github.com/adorsys/open-banking-gateway"
+
+# install ruby
+RUN \
+  apt-get update && \
+  apt-get install -y ruby
+
+# copy artifact build from the 'build environment'
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+
+# copy nginx configuration
+COPY ./nginx.conf.erb /etc/nginx/conf.d/default.conf.erb
+
+# copy entry.sh file
+COPY ./entry.sh /opt/entry.sh
+RUN chmod 775 /opt/entry.sh
+
+# expose port 4200
 EXPOSE 4200
 
+# execute entry.sh file
 ENTRYPOINT /opt/entry.sh
