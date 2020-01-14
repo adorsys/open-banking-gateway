@@ -1,7 +1,5 @@
 package de.adorsys.opba.fintech.impl.controller;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.fintech.api.model.InlineResponse200;
 import de.adorsys.opba.fintech.api.model.LoginRequest;
 import de.adorsys.opba.fintech.api.model.UserProfile;
@@ -24,20 +22,13 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
     AuthorizeService authorizeService;
 
     @Override
-    public Optional<ObjectMapper> getObjectMapper() {
-        log.info("getObjecteMapper is called");
-        ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return Optional.of(mapper);
-    }
-
-    @Override
     public ResponseEntity<InlineResponse200> loginPOST(LoginRequest loginRequest, UUID xRequestID) {
         log.info("loginPost is called");
         Optional<UserProfile> userProfile = authorizeService.findUser(loginRequest);
         if (userProfile.isPresent()) {
             InlineResponse200 response = new InlineResponse200();
             response.setUserProfile(userProfile.get());
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
