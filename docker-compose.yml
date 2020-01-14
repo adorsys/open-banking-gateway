@@ -1,0 +1,16 @@
+version: "3"
+
+networks:
+  opba-net:
+
+services:
+  fintech-ui:
+    restart: on-failure
+    build:
+      context: fintech-ui
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    networks:
+      - opba-net
+

@@ -8,7 +8,7 @@ import { Bank } from '../../models/bank.model';
   styleUrls: ['./bank-search.component.scss']
 })
 export class BankSearchComponent implements OnInit {
-  private searchedBanks: Bank[];
+  public searchedBanks: Bank[];
 
   constructor(private bankSearchService: BankSearchService) {}
 
