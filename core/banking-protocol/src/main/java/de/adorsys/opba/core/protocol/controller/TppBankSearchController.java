@@ -40,9 +40,6 @@ public class TppBankSearchController implements TppBankSearchApi {
             max = DEFAULT_MAX;
         }
         List<Bank> banks = bankService.getBanks(keyword, start, max);
-        if (banks.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
 
         InlineResponse200 inlineResponse200 = new InlineResponse200();
         banks.forEach(it -> inlineResponse200.addBankDescriptorItem(toBankDescriptor(it)));
