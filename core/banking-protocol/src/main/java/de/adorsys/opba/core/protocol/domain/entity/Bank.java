@@ -1,6 +1,5 @@
 package de.adorsys.opba.core.protocol.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,7 +28,6 @@ public class Bank implements Serializable {
     @SequenceGenerator(name = "bank_id_generator", sequenceName = "bank_id_sequence")
     private Long id;
 
-    @JsonIgnore
     @OneToOne(mappedBy = "bank", cascade = CascadeType.ALL,
             fetch = FetchType.LAZY, optional = false)
     private transient BankProfile bankProfile;
