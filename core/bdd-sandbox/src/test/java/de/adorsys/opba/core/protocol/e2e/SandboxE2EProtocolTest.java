@@ -34,7 +34,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         HypermediaAutoConfiguration.class,
         Xs2aCmsAutoConfiguration.class,
         ManagementWebSecurityAutoConfiguration.class,
-        SecurityAutoConfiguration.class
+        SecurityAutoConfiguration.class,
 })
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {BankingProtocol.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
