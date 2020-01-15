@@ -39,7 +39,6 @@ class TestBankSearchPerformance extends BaseMockitoTest {
 
     private final CountDownLatch latch = new CountDownLatch(ITERATIONS);
     private final AtomicInteger counter = new AtomicInteger();
-    private final AtomicInteger counterFTS = new AtomicInteger();
 
     private static List<String> searchStrings = generateTestData();
 
@@ -54,27 +53,13 @@ class TestBankSearchPerformance extends BaseMockitoTest {
     }
 
     @Test
-    void TestBankSearch() throws Exception {
+    void testBankSearch() throws Exception {
         StatisticService statisticService = new StatisticService();
         ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
 
         log.info("Starting test endpoints...");
         Runnable runnable = getBanksEndpoint(statisticService, searchStrings);
         searchStrings.forEach(s -> executorService.execute(runnable));
-
-        latch.await();
-        printResults(statisticService);
-    }
-
-    @Test
-    void TestBankSearchFTS() throws Exception {
-        StatisticService statisticService = new StatisticService();
-        ExecutorService executorService = Executors.newFixedThreadPool(N_THREADS);
-
-        log.info("Starting test FTS endpoints...");
-        Runnable runnableFTS = getBanksFTSEndpoint(statisticService, searchStrings);
-
-        searchStrings.forEach(s -> executorService.execute(runnableFTS));
 
         latch.await();
         printResults(statisticService);
@@ -104,32 +89,12 @@ class TestBankSearchPerformance extends BaseMockitoTest {
             long start = System.currentTimeMillis();
             try {
                 MvcResult mvcResult = mockMvc.perform(
-                        get("/v1/banks")
-                                .param("q", searchString)
-                                .param("max_results", "10"))
-                        .andExpect(status().isOk())
-                        .andReturn();
-                long end = System.currentTimeMillis();
-                TestResult testResult = new TestResult(start, end, searchString, mvcResult.getResponse().getContentAsString());
-                statisticService.getTestResult().add(testResult);
-                latch.countDown();
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-            }
-        };
-    }
-
-    @NotNull
-    private Runnable getBanksFTSEndpoint(StatisticService statisticService, List<String> searchStrings) {
-        return () -> {
-            int cnt = counterFTS.incrementAndGet();
-            String searchString = searchStrings.get(cnt - 1);
-            long start = System.currentTimeMillis();
-            try {
-                MvcResult mvcResult = mockMvc.perform(
-                        get("/v1/banks/fts")
-                                .param("q", "deu")
-                                .param("max_results", "10"))
+                        get("/v1/banking/search/bankSearch")
+                                .header("Authorization", "123")
+                                .header("X-Request-ID", "01f4ec8e-8fb8-4e37-8912-bae6ff227231")
+                                .param("keyword", searchString)
+                                .param("max", "10")
+                                .param("start", "0"))
                         .andExpect(status().isOk())
                         .andReturn();
                 long end = System.currentTimeMillis();

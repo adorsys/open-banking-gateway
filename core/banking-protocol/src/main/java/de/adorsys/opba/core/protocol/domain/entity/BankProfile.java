@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.MapsId;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
@@ -26,12 +27,13 @@ public class BankProfile {
     @SequenceGenerator(name = "bank_profile_id_generator", sequenceName = "bank_profile_id_sequence")
     private Long id;
 
-    @OneToOne
-    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bank_uuid", referencedColumnName = "uuid")
     private Bank bank;
 
     private String url;
     private String adapterId;
     private String idpUrl;
     private String scaApproaches;
+    private String services;
 }

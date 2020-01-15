@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface BankProfileRepository extends JpaRepository<BankProfile, Long> {
 
-    Optional<BankProfile> findByBankId(Long bankId);
+    Optional<BankProfile> findByBankUuid(String bankId);
 }

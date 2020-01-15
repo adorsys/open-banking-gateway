@@ -24,19 +24,22 @@ paths:
       #query
         - name: keyword
           in: query
+          description: The bank search input string
           required: true
           schema:
-            $ref: '#/components/schemas/searchInput'
+            type: String
         - name: start
           in: query
+          description: The index of the first result
           required: false
           schema:
-            $ref: '#/components/schemas/searchStartIndex'
+            type: integer
         - name: max
           in: query
+          description: The max number of entries to return with the response.
           required: false
           schema:
-            $ref: '#/components/schemas/searchMaxResult'
+            type: integer
       security:
         - cookieAuth: []
       responses:
@@ -85,20 +88,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              bankProfile:
-                type: array
-                items:
-                  $ref: '#/components/schemas/bankProfile'
-              keyword:
-                $ref: '#/components/schemas/searchInput'
-              start:
-                $ref: '#/components/schemas/searchStartIndex'
-              max:
-                $ref: '#/components/schemas/searchMaxResult'
-              total:
-                $ref: '#/components/schemas/searchTotalResult'
+            $ref: "#/components/schemas/bankSearchResponse"
 
     200_BankProfile:
       description: Response containing the service profile of a bank.
@@ -108,34 +98,51 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              userProfile:
-                type: array
-                items:
-                  $ref: '#/components/schemas/bankProfile'
-
+            $ref: "#/components/schemas/bankProfileResponse"
 
   schemas:
+    # response DTOs
+    bankSearchResponse:
+      title: Bank Search Response
+      type: object
+      properties:
+        bankDescriptor:
+          type: array
+          items:
+            $ref: '#/components/schemas/bankDescriptor'
+        keyword:
+          type: String
+          description: The bank search input string
+        start:
+          type: integer
+          description: The index of the first result
+        max:
+          type: integer
+          description: The max number of entries to return with the response.
+        total:
+          type: integer
+          description: The total count of entities found for the given search input.
+
+    bankProfileResponse:
+      type: object
+      properties:
+        bankProfileDescriptor:
+          $ref: '#/components/schemas/bankProfileDescriptor'
 
     # Search and bank profile
-    searchInput:
-      description: The bank search input string
-      schema:
-        type: string
-    searchStartIndex:
-      description: The index of the first result
-      schema:
-        type: integer
-    searchMaxResult:
-      description: The max number of entries to return with the response.
-      schema:
-        type: integer
-    searchTotalResult:
-      description: The total count of entities found for the given search input.
-      schema:
-        type: integer
-    bankProfile:
+    bankDescriptor:
+      title: Bank Descriptor
+      type: object
+      properties:
+        bankName:
+          type: string
+        bic:
+          type: string
+        bankCode:
+          type: string
+        uuid:
+          type: string
+    bankProfileDescriptor:
       title: Bank Profile
       type: object
       properties:
@@ -143,7 +150,7 @@ components:
           type: string
         bic:
           type: string
-        services:
+        serviceList:
           type: array
           items:
             # can be an enum
