@@ -251,7 +251,8 @@ public enum SandboxApp {
                     (Object) new String[] {
                             "--spring.profiles.include=" + Joiner.on(",").join(activeProfilesForTest()),
                             "--spring.config.location=" + buildSpringConfigLocation(),
-                            "--primary.profile=" + getPrimaryConfigFile()
+                            "--primary.profile=" + getPrimaryConfigFile(),
+                            "--logging.level.root=WARN"
                     }
             );
         } catch (IllegalAccessException | InvocationTargetException ex) {
