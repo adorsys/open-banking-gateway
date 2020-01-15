@@ -526,18 +526,18 @@ components:
           schema:
             type: object
             properties:
-              bankProfile:
+              bankDescriptor :
                 type: array
                 items:
-                  $ref: '#/components/schemas/bankProfile'
+                  $ref: '#/components/schemas/bankDescriptor'
               keyword:
-                $ref: '#/components/schemas/searchInput'
+                type: string
               start:
-                $ref: '#/components/schemas/searchStartIndex'
+                type: integer
               max:
-                $ref: '#/components/schemas/searchMaxResult'
+                type: integer
               total:
-                $ref: '#/components/schemas/searchTotalResult'
+                type: integer
 
     200_BankProfile:
       description: Response containing the service profile of a bank.
@@ -749,6 +749,20 @@ components:
           format: date-time
 
     # Search and bank profile
+    bankDescriptor:
+      title: Bank Descriptor
+      type: object
+      properties:
+        bankName:
+          type: string
+        bic:
+          type: string
+        bankCode:
+          type: string
+        uuid:
+          type: string
+
+
     searchInput:
       description: The bank search input string
       schema:

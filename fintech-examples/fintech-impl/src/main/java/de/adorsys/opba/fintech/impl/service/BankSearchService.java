@@ -1,35 +1,33 @@
 package de.adorsys.opba.fintech.impl.service;
 
-import de.adorsys.opba.fintech.api.model.BankProfile;
 import de.adorsys.opba.fintech.api.model.InlineResponse2001;
+import de.adorsys.opba.fintech.impl.service.entities.ContextInformation;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @Slf4j
 public class BankSearchService {
-    public InlineResponse2001 searchBank(String keyword, Integer start, Integer max) {
-        log.info("keyword:" + keyword.toString());
-        log.info("start:" + start.toString());
-        log.info("max:" + max.toString());
+
+    @SneakyThrows
+    public InlineResponse2001 searchBank(ContextInformation contextInformation, String keyword, Integer start, Integer max) {
         InlineResponse2001 response = new InlineResponse2001();
 
-        List<BankProfile> list = new ArrayList<>();
-        for (int i = 0; i < Integer.parseInt(max.toString()); i++) {
-            BankProfile bp = new BankProfile();
-            bp.setBankName(keyword + "_Affe");
-            bp.setBic("" + i);
-            String[] serviceNames = {"listAccounts", "listTransactions", "initiatePayment"};
-            List<String> services = Arrays.asList(serviceNames);
-            bp.setServices(services);
-            list.add(bp);
+        /*
+        TppBankSearchApi tppBankSearchApi = new TppBankSearchApi();
+        BankSearchResponse bankSearchResponse = tppBankSearchApi.bankSearchGET(contextInformation.getFintechID(), contextInformation.getXRequestID(), keyword, start, max);
+
+        List<BankDescriptor>outList = new ArrayList<>();
+
+        bankSearchResponse.getBankDescriptor().forEach(r -> {
+            BankDescriptor bankDescriptor = new BankDescriptor();
+            bankDescriptor.setBankCode(r.);
         }
 
-        response.setBankProfile(list);
+
+         List<BankDescriptor> bankDescriptor = bankSearchResponse.getBankDescriptor();
+         */
         return response;
     }
 }
