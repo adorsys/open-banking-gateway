@@ -47,7 +47,14 @@ COPY ./nginx.conf.erb /etc/nginx/conf.d/default.conf.erb
 
 # copy entry.sh file
 COPY ./entry.sh /opt/entry.sh
-RUN chmod 775 /opt/entry.sh
+
+# set permissions
+RUN chgrp -R root /var/cache/nginx && \
+    find /var/cache/nginx -type d -exec chmod 775 {} \; && \
+    find /var/cache/nginx -type f -exec chmod 664 {} \; && \
+    chmod 775 /var/run && \
+    chmod 775 /opt/entry.sh && \
+    chmod -R 777 /etc/nginx/conf.d
 
 # expose port 4200
 EXPOSE 4200
