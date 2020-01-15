@@ -1,6 +1,7 @@
 openapi: 3.0.1
 
 info:
+  version: "1.0.0"
   title: Open Banking Gateway FinTech Example API
   description: |
     This is a sample API that show how develop FinTech use case that invoke banking APIs.
@@ -742,7 +743,7 @@ components:
           type: string
         lastLogin:
           type: string
-          format: date
+          format: date-time
 
     # Search and bank profile
     searchInput:

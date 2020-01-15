@@ -45,12 +45,37 @@ Any person are free to join us by implementing some parts of code or fixing some
 
 #### Code styling
 If you are using Intellij IDEs, like we do, please consider importing our code-style settings.
-Further explanation in [checkstyle](../README.md#checkstyle)
+Further explanation in [checkstyle](#checkstyle)
 
 #### Java
 * Please use Optionals and corresponding streams instead of null-checks where possible
 * We prefer using Mockito over EasyMock for unit-tests.
 * We prefer SpringBoot autoconfiguration over manual Configuration where possible
+
+#### Open API 3.0
+
+We use API First approach, so that API files are the first source of a contract.
+
+The code generated from
+<pre>
+opba-consent-rest-api/src/main/resources/static/consent_api.yml
+opba-banking-rest-api/src/main/resources/static/banking_api_ais.yml
+</pre>
+is generated to
+<pre>
+opba-consent-rest-api/target/generated-sources/open-api/src/main/java
+opba-banking-rest-api/target/generated-sources/open-api/src/main/java
+</pre>
+
+So the folders have to be made known to the IDE.
+
+
+## Checkstyle
+
+The code uses <code>backend.checkstyle.xml</code> placed in the root of the project. To activate it with intellij 
+install the <code>CheckStyle-IDEA v5.34.0</code> Plugin and configure in <code>Other Settings -> Checkstyle</code>
+the version <code>8.19</code> and add the configuration file <code>backend.checkstyle.xml</code>.
+
 
 ## How to Release
 
