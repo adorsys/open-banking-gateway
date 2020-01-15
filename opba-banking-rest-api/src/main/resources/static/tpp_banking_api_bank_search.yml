@@ -27,7 +27,7 @@ paths:
           description: The bank search input string
           required: true
           schema:
-            type: String
+            type: string
         - name: start
           in: query
           description: The index of the first result
