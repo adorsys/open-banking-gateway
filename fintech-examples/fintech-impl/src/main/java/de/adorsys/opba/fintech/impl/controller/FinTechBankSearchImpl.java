@@ -2,6 +2,7 @@ package de.adorsys.opba.fintech.impl.controller;
 
 import de.adorsys.opba.fintech.api.model.InlineResponse2001;
 import de.adorsys.opba.fintech.api.resource.FinTechBankSearchApi;
+import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.BankSearchService;
 import de.adorsys.opba.fintech.impl.service.FinTechTokenService;
 import de.adorsys.opba.fintech.impl.service.entities.ContextInformation;
@@ -28,16 +29,17 @@ public class FinTechBankSearchImpl implements FinTechBankSearchApi {
     @Autowired
     FinTechTokenService finTechTokenService;
 
+    @Autowired
+    AuthorizeService authorizeService;
     @Override
     public ResponseEntity<InlineResponse2001> bankSearchGET(UUID xRequestID, String fintechToken, String keyword, Integer start, Integer max) {
+        if (!authorizeService.isAuthorized(fintechToken)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         TppBankSearchApi tppBankSearchApi = new TppBankSearchApi();
         tppBankSearchApi.getApiClient().setBasePath(tppUrl);
 
         ContextInformation contextInformation = new ContextInformation(xRequestID);
-        log.info("search bank");
-        if (!finTechTokenService.validate(fintechToken)) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
         return new ResponseEntity<>(bankSearchService.searchBank(tppBankSearchApi, contextInformation, keyword, start, max), HttpStatus.OK);
     }
 }
