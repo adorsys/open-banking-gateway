@@ -1,18 +1,19 @@
 package de.adorsys.opba.core.protocol.domain.entity;
 
+import de.adorsys.opba.tppbankingapi.search.model.BankDescriptor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import java.io.Serializable;
 
@@ -23,17 +24,23 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Bank implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    public static final Bank.ToBankDescriptor TO_BANK_DESCRIPTOR = Mappers.getMapper(Bank.ToBankDescriptor.class);
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_id_generator")
     @SequenceGenerator(name = "bank_id_generator", sequenceName = "bank_id_sequence")
     private Long id;
 
-    @OneToOne(mappedBy = "bank", cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY, optional = false)
-    private transient BankProfile bankProfile;
-
     String uuid;
     String name;
     String bic;
     String bankCode;
+
+    @Mapper
+    public interface ToBankDescriptor {
+        @Mapping(source = "name", target = "bankName")
+        BankDescriptor map(Bank bank);
+    }
 }
