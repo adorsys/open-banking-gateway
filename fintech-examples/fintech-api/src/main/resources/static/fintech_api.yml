@@ -553,10 +553,8 @@ components:
           schema:
             type: object
             properties:
-              userProfile:
-                type: array
-                items:
-                  $ref: '#/components/schemas/bankProfile'
+              bankProfile:
+                $ref: '#/components/schemas/bankProfile'
 
     200_AccountList:
       description: Response containing the list of bank accounts.
@@ -783,6 +781,8 @@ components:
       title: Bank Profile
       type: object
       properties:
+        bankId:
+          type: string
         bankName:
           type: string
         bic:
