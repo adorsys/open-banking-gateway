@@ -7,7 +7,7 @@ services:
   fintech-ui:
     restart: on-failure
     build:
-      context: fintech-ui
+      context: fintech-examples/fintech-ui
       dockerfile: Dockerfile
     ports:
       - "4200:4200"
