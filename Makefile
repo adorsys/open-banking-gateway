@@ -57,10 +57,10 @@ java: clean_java
 	mvn -DskipTests install
 
 fintech-ui/node_modules:
-	cd fintech-ui && npm install
+	cd fintech-examples/fintech-ui && npm install
 
 .PHONY : fintech-ui
 fintech-ui: fintech-ui/node_modules
-	cd fintech-ui && npm run build
+	cd fintech-examples/fintech-ui && npm run build
 
 
