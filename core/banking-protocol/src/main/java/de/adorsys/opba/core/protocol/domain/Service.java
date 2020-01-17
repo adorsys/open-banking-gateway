@@ -14,14 +14,14 @@ public enum Service {
     TRANSACTIONS("List transactions"),
     PAYMENT("Initiate payment");
 
-    private static final Map<String, Service> codeIndex = Maps.newHashMapWithExpectedSize(Service.values().length);
+    private static final Map<String, Service> CODE_INDEX = Maps.newHashMapWithExpectedSize(Service.values().length);
     static {
         for (Service status : Service.values()) {
-            codeIndex.put(status.getCode().toLowerCase(), status);
+            CODE_INDEX.put(status.getCode().toLowerCase(), status);
         }
     }
     public static Optional<Service> lookupByCode(String name) {
-        return Optional.ofNullable(codeIndex.get(name.trim().toLowerCase()));
+        return Optional.ofNullable(CODE_INDEX.get(name.trim().toLowerCase()));
     }
 
     private String code;
