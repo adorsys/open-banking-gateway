@@ -20,6 +20,7 @@ public class Mapper {
         fintechBankProfile.setBic(tppBankProfile.getBic());
         fintechBankProfile.setBankName(tppBankProfile.getBankName());
         fintechBankProfile.setServices(tppBankProfile.getServiceList());
+        fintechBankProfile.setBankId(tppBankProfile.getBankUuid());
         return fintechBankProfile;
     }
 }

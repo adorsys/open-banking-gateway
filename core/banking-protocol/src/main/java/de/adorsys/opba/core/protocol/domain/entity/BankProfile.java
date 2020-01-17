@@ -1,5 +1,7 @@
 package de.adorsys.opba.core.protocol.domain.entity;
 
+import de.adorsys.opba.core.protocol.domain.Service;
+import de.adorsys.opba.core.protocol.domain.converter.ServiceConverter;
 import de.adorsys.opba.tppbankingapi.search.model.BankProfileDescriptor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +13,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +22,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Getter
@@ -44,17 +48,17 @@ public class BankProfile implements Serializable {
     private String adapterId;
     private String idpUrl;
     private String scaApproaches;
-    private String services;
+
+    @Convert(converter = ServiceConverter.class)
+    private List<Service> services;
 
     @Mapper
     public interface ToBankProfileDescriptor {
         @Mapping(source = "bank.name", target = "bankName")
         @Mapping(source = "bank.bic", target = "bic")
         @Mapping(source = "bank.uuid", target = "bankUuid")
-        @Mapping(expression = "java("
-                + "java.util.Arrays.asList("
-                + "bankProfile.getServices() == null ? new String[0] : bankProfile.getServices().split(\",\")"
-                + "))",
+        @Mapping(expression = "java(bankProfile.getServices().stream()"
+                + ".map(s -> s.getCode()).collect(java.util.stream.Collectors.toList()))",
                 target = "serviceList")
         BankProfileDescriptor map(BankProfile bankProfile);
     }

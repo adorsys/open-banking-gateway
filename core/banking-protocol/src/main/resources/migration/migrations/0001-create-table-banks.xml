@@ -107,4 +107,10 @@
         </sql>
     </changeSet>
 
+    <changeSet id="fill_services" author="mhr">
+        <sql dbms="postgresql" stripComments="true">
+            UPDATE opb_bank_profile SET services = 'List accounts, List transactions, Initiate payment' WHERE true ;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>

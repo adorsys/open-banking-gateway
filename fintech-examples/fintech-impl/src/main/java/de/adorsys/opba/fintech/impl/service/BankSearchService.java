@@ -21,13 +21,16 @@ public class BankSearchService {
     @SneakyThrows
     public InlineResponse2001 searchBank(TppBankSearchApi tppBankSearchApi, ContextInformation contextInformation, String keyword, Integer start, Integer max) {
         BankSearchResponse bankSearchResponse = tppBankSearchApi.bankSearchGET(contextInformation.getFintechID(), contextInformation.getXRequestID(), keyword, start, max);
-        return new InlineResponse2001().bankDescriptor(bankSearchResponse.getBankDescriptor().stream().map(bankDescriptor -> Mapper.fromTppToFintech(bankDescriptor)).collect(Collectors.toList()));
+        InlineResponse2001 inlineResponse2001 = new InlineResponse2001().bankDescriptor(bankSearchResponse.getBankDescriptor().stream().map(bankDescriptor -> Mapper.fromTppToFintech(bankDescriptor)).collect(Collectors.toList()));
+        inlineResponse2001.setKeyword(bankSearchResponse.getKeyword());
+        inlineResponse2001.setMax(bankSearchResponse.getMax());
+        inlineResponse2001.setStart(bankSearchResponse.getStart());
+        inlineResponse2001.setTotal(bankSearchResponse.getTotal());
+        return inlineResponse2001;
     }
 
     @SneakyThrows
     public InlineResponse2002 searchBankProfile(TppBankSearchApi tppBankSearchApi, ContextInformation contextInformation, String bankId) {
-        BankProfile bankProfile = Mapper.fromTppToFintech(tppBankSearchApi.bankProfileGET(contextInformation.getFintechID(), contextInformation.getXRequestID(), bankId).getBankProfileDescriptor());
-        bankProfile.setBankId(bankId);
-        return new InlineResponse2002().bankProfile(bankProfile);
+        return new InlineResponse2002().bankProfile(Mapper.fromTppToFintech(tppBankSearchApi.bankProfileGET(contextInformation.getFintechID(), contextInformation.getXRequestID(), bankId).getBankProfileDescriptor()));
     }
 }
