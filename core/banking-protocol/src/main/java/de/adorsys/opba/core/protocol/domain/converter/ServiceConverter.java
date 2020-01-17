@@ -5,9 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,12 +22,9 @@ public class ServiceConverter implements AttributeConverter<List<Service>, Strin
 
     @Override
     public List<Service> convertToEntityAttribute(String s) {
-        List<Service> res = new ArrayList<>();
-
-        if (StringUtils.isEmpty(s)) {
-            return res;
-        }
-        Stream.of(StringUtils.split(s, ",")).forEach(str -> Service.lookupByCode(str).ifPresent(res::add));
-        return res;
+        return Stream.of(StringUtils.split(s, ","))
+                .map(Service::lookupByCode)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 }

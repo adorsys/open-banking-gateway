@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Getter
 @AllArgsConstructor
@@ -20,8 +19,8 @@ public enum Service {
             CODE_INDEX.put(status.getCode().toLowerCase(), status);
         }
     }
-    public static Optional<Service> lookupByCode(String name) {
-        return Optional.ofNullable(CODE_INDEX.get(name.trim().toLowerCase()));
+    public static Service lookupByCode(String name) {
+        return CODE_INDEX.get(name.trim().toLowerCase());
     }
 
     private String code;
