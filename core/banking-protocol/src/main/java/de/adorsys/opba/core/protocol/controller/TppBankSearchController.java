@@ -7,6 +7,7 @@ import de.adorsys.opba.tppbankingapi.search.model.BankProfileResponse;
 import de.adorsys.opba.tppbankingapi.search.model.BankSearchResponse;
 import de.adorsys.opba.tppbankingapi.search.resource.TppBankSearchApi;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*") //FIXME move CORS at gateway/load balancer level
@@ -30,6 +32,7 @@ public class TppBankSearchController implements TppBankSearchApi {
     @Override
     public ResponseEntity<BankSearchResponse> bankSearchGET(String authorization, UUID xRequestID, String keyword,
                                                             Integer start, Integer max) {
+        log.debug("Bank search get request. keyword:{}, start:{}, max:{}, xRequestID:{}", keyword, start, max, xRequestID);
         if (start == null) {
             start = defaultStart;
         }
@@ -43,6 +46,7 @@ public class TppBankSearchController implements TppBankSearchApi {
         response.setKeyword(keyword);
         response.setMax(max);
         response.setStart(start);
+        log.debug("Bank search response: {}", response);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -50,6 +54,7 @@ public class TppBankSearchController implements TppBankSearchApi {
     public ResponseEntity<BankProfileResponse> bankProfileGET(String authorization,
                                                               UUID xRequestID,
                                                               String bankId) {
+        log.debug("Bank profile request. bankId:{}, xRequestID:{}", xRequestID, bankId);
         Optional<BankProfile> bankProfile = bankService.getBankProfile(bankId);
         if (!bankProfile.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -57,6 +62,7 @@ public class TppBankSearchController implements TppBankSearchApi {
 
         BankProfileResponse response = new BankProfileResponse();
         response.setBankProfileDescriptor(BankProfile.TO_BANK_PROFILE_DESCRIPTOR.map(bankProfile.get()));
+        log.debug("Bank profile response: {}", response);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
