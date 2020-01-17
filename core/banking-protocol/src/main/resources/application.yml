@@ -47,3 +47,8 @@ xs2a-profile:
 
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
+
+bank-search:
+  start: 0
+  max: 10
+

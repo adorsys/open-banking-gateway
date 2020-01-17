@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Bank } from '../models/bank.model';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
