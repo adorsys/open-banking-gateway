@@ -36,7 +36,6 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
             responseHeaders.set(X_REQUEST_ID, xRequestID.toString());
             responseHeaders.set(X_XSRF_TOKEN, userEntity.get().getXsrfID());
             responseHeaders.set(HttpHeaders.SET_COOKIE, userEntity.get().getCookie());
-
             return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

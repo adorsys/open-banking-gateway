@@ -1,6 +1,5 @@
 package de.adorsys.opba.fintech.impl.service;
 
-import de.adorsys.opba.fintech.api.model.BankProfile;
 import de.adorsys.opba.fintech.api.model.InlineResponse2001;
 import de.adorsys.opba.fintech.api.model.InlineResponse2002;
 import de.adorsys.opba.fintech.impl.service.entities.ContextInformation;
@@ -21,7 +20,8 @@ public class BankSearchService {
     @SneakyThrows
     public InlineResponse2001 searchBank(TppBankSearchApi tppBankSearchApi, ContextInformation contextInformation, String keyword, Integer start, Integer max) {
         BankSearchResponse bankSearchResponse = tppBankSearchApi.bankSearchGET(contextInformation.getFintechID(), contextInformation.getXRequestID(), keyword, start, max);
-        InlineResponse2001 inlineResponse2001 = new InlineResponse2001().bankDescriptor(bankSearchResponse.getBankDescriptor().stream().map(bankDescriptor -> Mapper.fromTppToFintech(bankDescriptor)).collect(Collectors.toList()));
+        InlineResponse2001 inlineResponse2001 =
+                new InlineResponse2001().bankDescriptor(bankSearchResponse.getBankDescriptor().stream().map(bankDescriptor -> Mapper.fromTppToFintech(bankDescriptor)).collect(Collectors.toList()));
         inlineResponse2001.setKeyword(bankSearchResponse.getKeyword());
         inlineResponse2001.setMax(bankSearchResponse.getMax());
         inlineResponse2001.setStart(bankSearchResponse.getStart());
@@ -31,6 +31,7 @@ public class BankSearchService {
 
     @SneakyThrows
     public InlineResponse2002 searchBankProfile(TppBankSearchApi tppBankSearchApi, ContextInformation contextInformation, String bankId) {
-        return new InlineResponse2002().bankProfile(Mapper.fromTppToFintech(tppBankSearchApi.bankProfileGET(contextInformation.getFintechID(), contextInformation.getXRequestID(), bankId).getBankProfileDescriptor()));
+        return new InlineResponse2002().bankProfile(
+                Mapper.fromTppToFintech(tppBankSearchApi.bankProfileGET(contextInformation.getFintechID(), contextInformation.getXRequestID(), bankId).getBankProfileDescriptor()));
     }
 }
