@@ -1,4 +1,4 @@
-package de.adorsys.openbankinggateway.sandbox;
+package de.adorsys.opba.testsandbox;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

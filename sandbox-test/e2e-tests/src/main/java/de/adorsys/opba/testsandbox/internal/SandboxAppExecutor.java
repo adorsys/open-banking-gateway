@@ -1,4 +1,4 @@
-package de.sandbox.openbankinggateway.sandbox.internal;
+package de.adorsys.opba.testsandbox.internal;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -9,8 +9,8 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static de.sandbox.openbankinggateway.sandbox.internal.SandboxApp.SandboxRunnable;
-import static de.sandbox.openbankinggateway.sandbox.internal.SandboxApp.values;
+import static de.adorsys.opba.testsandbox.internal.SandboxApp.SandboxRunnable;
+import static de.adorsys.opba.testsandbox.internal.SandboxApp.values;
 
 /**
  * Special executor service to deal with intricacies while starting spring-boot microservices within
@@ -42,7 +42,7 @@ public class SandboxAppExecutor extends ThreadPoolExecutor {
     @Getter
     static class TaggedFuture<T> extends FutureTask<T> {
 
-        private final de.sandbox.openbankinggateway.sandbox.internal.SandboxApp app;
+        private final SandboxApp app;
 
         TaggedFuture(@NotNull Runnable runnable, T result) {
             super(runnable, result);

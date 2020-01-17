@@ -1,4 +1,4 @@
-package de.sandbox.openbankinggateway.sandbox.internal;
+package de.adorsys.opba.testsandbox.internal;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

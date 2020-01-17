@@ -1,7 +1,6 @@
-package de.adorsys.openbankinggateway.sandbox;
+package de.adorsys.opba.testsandbox;
 
-import de.sandbox.openbankinggateway.sandbox.SandboxAppsStarter;
-import de.sandbox.openbankinggateway.sandbox.internal.SandboxApp;
+import de.adorsys.opba.testsandbox.internal.SandboxApp;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

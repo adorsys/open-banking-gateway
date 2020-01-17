@@ -1,4 +1,4 @@
-package de.sandbox.openbankinggateway.sandbox.internal;
+package de.adorsys.opba.testsandbox.internal;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ class SandboxAppsThreadFactory implements ThreadFactory {
 
     public static class ClassLoaderCapturingThread extends Thread {
 
-        private final de.sandbox.openbankinggateway.sandbox.internal.SandboxApp app;
+        private final SandboxApp app;
 
         ClassLoaderCapturingThread(Runnable runnable) {
             super(runnable);
@@ -60,11 +60,11 @@ class SandboxAppsThreadFactory implements ThreadFactory {
         }
 
         @SneakyThrows
-        private de.sandbox.openbankinggateway.sandbox.internal.SandboxApp computeApp(Runnable runnable) {
+        private SandboxApp computeApp(Runnable runnable) {
             // One thread - one task assumption
             Field f = runnable.getClass().getDeclaredField("firstTask");
             f.setAccessible(true);
-            return ((de.sandbox.openbankinggateway.sandbox.internal.SandboxAppExecutor.TaggedFuture) f.get(runnable)).getApp();
+            return ((SandboxAppExecutor.TaggedFuture) f.get(runnable)).getApp();
         }
 
         private void disableTomcatWar(ClassLoader loader) {

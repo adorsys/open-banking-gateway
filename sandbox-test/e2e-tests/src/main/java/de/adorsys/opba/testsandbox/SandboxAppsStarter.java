@@ -1,8 +1,8 @@
-package de.sandbox.openbankinggateway.sandbox;
+package de.adorsys.opba.testsandbox;
 
 import com.google.common.collect.ImmutableSet;
-import de.sandbox.openbankinggateway.sandbox.internal.SandboxApp;
-import de.sandbox.openbankinggateway.sandbox.internal.SandboxAppExecutor;
+import de.adorsys.opba.testsandbox.internal.SandboxAppExecutor;
+import de.adorsys.opba.testsandbox.internal.SandboxApp;
 import lombok.SneakyThrows;
 import org.awaitility.Durations;
 

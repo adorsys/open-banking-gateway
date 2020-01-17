@@ -7,7 +7,7 @@ import de.adorsys.opba.core.protocol.e2e.stages.AccountInformationRequest;
 import de.adorsys.opba.core.protocol.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.core.protocol.e2e.stages.real.RealServers;
 import de.adorsys.psd2.sandbox.cms.starter.Xs2aCmsAutoConfiguration;
-import de.sandbox.openbankinggateway.sandbox.SandboxAppsStarter;
+import de.adorsys.opba.testsandbox.SandboxAppsStarter;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
