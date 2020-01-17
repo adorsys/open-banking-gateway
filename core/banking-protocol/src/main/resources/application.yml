@@ -33,7 +33,7 @@ protocol:
       report-sca-result: 'http://localhost:5500/parameters/report-sca-result/#{execution.getId()}?q=#{urlSafe(context.getScaSelected().getAuthenticationType() + ":" + context.getScaSelected().getName())}'
 
 pkcs12:
-  keyStore: sample-qwac.keystore
+  keyStore: core/banking-protocol/src/main/resources/sample-qwac.keystore
   password: password
 
 xs2a-profile:
