@@ -7,16 +7,22 @@ import { Bank } from '../../models/bank.model';
   templateUrl: './bank-search.component.html',
   styleUrls: ['./bank-search.component.scss']
 })
-export class BankSearchComponent implements OnInit {
-  public searchedBanks: Bank[];
+export class BankSearchComponent {
+  searchedBanks: Bank[];
+  selectedBank: string;
 
   constructor(private bankSearchService: BankSearchService) {}
 
-  ngOnInit() {
-    this.bankSearchService.getBanks().subscribe((banks: Bank[]) => (this.searchedBanks = banks));
-  }
-
   onSearch(keyword: string) {
     this.bankSearchService.searchBanks(keyword).subscribe((banks: Bank[]) => (this.searchedBanks = banks));
+  }
+
+  onBankSelect(bankId: string) {
+    this.selectedBank = bankId;
+  }
+
+  bankUnselect() {
+    this.searchedBanks = [];
+    this.selectedBank = null;
   }
 }

@@ -5,18 +5,30 @@
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt
     </p>
   </div>
-  <div class="card box-item mr-4 w-100">
-    <div class="card-body">
-      <app-search (keyword)="onSearch($event)"></app-search>
-      <div class="list-group border-0">
-        <button
-          *ngFor="let bank of searchedBanks"
-          type="button"
-          class="list-group-item list-group-item-action border-0"
-        >
-          {{ bank.name }}
-        </button>
+
+  <ng-template [ngIf]="!selectedBank" [ngIfElse]="profile">
+    <div class="card box-item mr-4 w-100">
+      <div class="card-body">
+        <app-search (keyword)="onSearch($event)"></app-search>
+        <div class="list-group border-0">
+          <button
+            *ngFor="let bank of searchedBanks"
+            (click)="onBankSelect(bank.id)"
+            type="button"
+            class="list-group-item list-group-item-action border-0"
+          >
+            {{ bank.name }}
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </ng-template>
+
+  <ng-template #profile>
+    <div class="card box-item mr-4 w-100">
+      <div class="card-body">
+        <app-profile [bankId]="selectedBank" (bankUnselect)="bankUnselect()"></app-profile>
+      </div>
+    </div>
+  </ng-template>
 </div>
