@@ -10,7 +10,7 @@ services:
       context: fintech-examples/fintech-ui
       dockerfile: Dockerfile
     ports:
-      - "4200:4200"
+      - "4400:4400"
     networks:
       - opba-net
 
