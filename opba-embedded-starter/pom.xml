@@ -26,12 +26,13 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys.opba</groupId>
-            <artifactId>opba-consent-rest-api</artifactId>
+            <artifactId>opba-banking-rest-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>de.adorsys.opba</groupId>
-            <artifactId>banking-protocol</artifactId>
+            <artifactId>opba-consent-rest-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -86,7 +87,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                 <mainClass>de.adorsys.obpa.starter.OpenBankingEmbeddedApplication</mainClass>
+                 <mainClass>de.adorsys.opba.starter.OpenBankingEmbeddedApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>
