@@ -1,0 +1,31 @@
+{
+  "id" : "821d40e1-adf5-3321-8740-483635ddacf1",
+  "request" : {
+    "url" : "/v1/parameters/provide-more/6a5334bf-3233-11ea-b535-e2b5b1f1970b",
+    "method" : "POST",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/x-www-form-urlencoded"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalTo" : "consent.recurringIndicator=false&consent.frequencyPerDay=12&psuId=max.musterman&consent.validUntil=2020-01-31&accessSelector=all&consent.access.availableAccounts=allAccounts"
+    } ]
+  },
+  "response" : {
+    "status" : 301,
+    "bodyFileName" : "body-v1-parameters-provide-more-1276.txt",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Access-Control-Allow-Origin" : "*",
+      "Location" : "http://localhost:5500/parameters/provide-psu-password/722e7700-3233-11ea-b535-e2b5b1f1970b",
+      "Date" : "Wed, 08 Jan 2020 16:25:13 GMT",
+      "Keep-Alive" : "timeout=60",
+      "Connection" : "keep-alive"
+    }
+  },
+  "uuid" : "821d40e1-adf5-3321-8740-483635ddacf1"
+}

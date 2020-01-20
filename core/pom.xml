@@ -21,6 +21,9 @@
 
     <modules>
         <module>banking-protocol</module>
+        <module>bdd-tests</module>
+        <module>bdd-sandbox</module>
+        <module>bdd-wiremock</module>
     </modules>
 </project>
 

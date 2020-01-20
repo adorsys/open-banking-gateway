@@ -1,0 +1,31 @@
+{
+  "id" : "4257b1d0-b142-3d98-819d-70ecf6dded41",
+  "request" : {
+    "url" : "/v1/parameters/provide-more/34ee6163-3233-11ea-b535-e2b5b1f1970b",
+    "method" : "POST",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/x-www-form-urlencoded"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalTo" : "consent.recurringIndicator=false&consent.frequencyPerDay=12&psuId=anton.brueckner&consent.validUntil=2020-01-31&accessSelector=dedicated&consent.access.transactions%5B0%5D.iban=DE80760700240271232400&consent.access.transactions%5B0%5D.currency=EUR"
+    } ]
+  },
+  "response" : {
+    "status" : 301,
+    "bodyFileName" : "body-v1-parameters-provide-more-12781.txt",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Access-Control-Allow-Origin" : "*",
+      "Location" : "http://localhost:4400/account-information/login?encryptedConsentId=P937HnJRX_NOET7Vx-kmhASgVs-B0sC1unn6emAwa2mb9yrWeUMow5bIaUPU--Mrda2Q8V_Vf4IqIfhCjTMdosz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q&redirectId=01421490-6136-48c6-acb5-f7e3f8db0bd6",
+      "Date" : "Wed, 08 Jan 2020 16:23:52 GMT",
+      "Keep-Alive" : "timeout=60",
+      "Connection" : "keep-alive"
+    }
+  },
+  "uuid" : "4257b1d0-b142-3d98-819d-70ecf6dded41"
+}
