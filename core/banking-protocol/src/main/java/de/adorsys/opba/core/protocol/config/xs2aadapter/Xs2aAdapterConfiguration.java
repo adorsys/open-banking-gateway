@@ -1,5 +1,6 @@
 package de.adorsys.opba.core.protocol.config.xs2aadapter;
 
+import com.google.common.io.Resources;
 import de.adorsys.xs2a.adapter.http.ApacheHttpClientFactory;
 import de.adorsys.xs2a.adapter.http.HttpClientFactory;
 import de.adorsys.xs2a.adapter.mapper.PaymentInitiationScaStatusResponseMapper;
@@ -80,7 +81,9 @@ public class Xs2aAdapterConfiguration {
             @Value("${pkcs12.password}") char[] keystorePassword
     ) {
         return new Pkcs12KeyStore(
-                Paths.get(keystorePath).toAbsolutePath().toString(),
+                Paths.get(keystorePath).toFile().exists()
+                        ? Paths.get(keystorePath).toAbsolutePath().toString()
+                        : Paths.get(Resources.getResource(keystorePath).toURI()).toAbsolutePath().toString(),
                 keystorePassword
         );
     }
