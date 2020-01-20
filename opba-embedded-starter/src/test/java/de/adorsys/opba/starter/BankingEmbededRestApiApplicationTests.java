@@ -1,4 +1,4 @@
-package de.adorsys.obpa.starter;
+package de.adorsys.opba.starter;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
