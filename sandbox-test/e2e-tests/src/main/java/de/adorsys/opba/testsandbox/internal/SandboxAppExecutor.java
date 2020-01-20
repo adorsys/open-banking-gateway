@@ -22,14 +22,14 @@ public class SandboxAppExecutor extends ThreadPoolExecutor {
 
     private static final long SECONDS_IN_MINUTE = 60L;
 
-    public SandboxAppExecutor() {
+    public SandboxAppExecutor(StarterContext ctx) {
         super(
                 values().length,
                 values().length,
                 SECONDS_IN_MINUTE,
                 TimeUnit.SECONDS,
                 new SynchronousQueue<>(),
-                new SandboxAppsThreadFactory()
+                new SandboxAppsThreadFactory(ctx)
         );
     }
 
