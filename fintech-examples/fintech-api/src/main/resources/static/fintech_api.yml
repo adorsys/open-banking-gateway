@@ -10,7 +10,7 @@ info:
     This Api assumes that the PsuUserAgent is a modern browsers that
     * automatically detects the "302 Found" response code and proceeds with the associated location url,
     * stores httpOnly cookies sent with the redirect under the given domain and path as defined by [RFC 6265](https://tools.ietf.org/html/rfc6265).
-    
+
     This Api also assumes any other PsuUserAgent like a native mobile or a desktop application can simulate this same behavior of a modern browser with respect to 30X and Cookies. 
 
     #### SessionCookies and XSRF
@@ -25,16 +25,16 @@ info:
     * that the exisitng SessionCookie is deleted, as there is no explicite login.
     * that a RedirectCookie is set, so the user can be authenticated again when sent back to the FinTechApi.
     * The url that sends the user back to the FinTechApi must carry a redirecState parameter that matches the corresponding redirect cookie.
-    
+
     While redirecting the user to the ConsentAuthorisationApi, there is no certainty upon how long the consent session will take.
     For this reason, it is better to set a separated RedirectSessionCookie that has a life set to the expected max dureation of the consent authorisation session.
-    
+
     #### Reloading the FinTechUI
     Reloading the FinTechUI, we will also loose the XSRF parameter that is used to validate the SessionCookie. This is why we
     set RedirectCookie (that this time has a very short life span). The url reloading the FinTechUI must carry a redirectState
     parameter that will be used to invoke the /afterReload endpoint of the FinTechApi. Thus leading to a new SessionCookie and
     corresponding XSRF parameter.     
-    
+
 
 externalDocs:
   url: "https://adorsys.github.io/open-banking-gateway"
@@ -46,18 +46,18 @@ externalDocs:
   version: "1.0"
 
 tags:
-- name: FinTechAuthorization
-  description: Example Financial web service provided by the FinTech.
-- name: FinTechBankSearch
-  description: Example bank search funtionality fro the perspective of a FinTech.
-- name: FinTechAccountInformation
-  description: Example Account Information Service as defined by a FinTechApi.
+  - name: FinTechAuthorization
+    description: Example Financial web service provided by the FinTech.
+  - name: FinTechBankSearch
+    description: Example bank search funtionality fro the perspective of a FinTech.
+  - name: FinTechAccountInformation
+    description: Example Account Information Service as defined by a FinTechApi.
 
 paths:
   /v1/login:
     post:
       tags:
-      - FinTechAuthorization
+        - FinTechAuthorization
       operationId: loginPOST
       summary: Identifies the PSU in the Realm of the FinTechApi.
       description: |
@@ -84,30 +84,33 @@ paths:
   /v1/search/bankSearch:
     get:
       tags:
-      - FinTechBankSearch
+        - FinTechBankSearch
       operationId: bankSearchGET
       summary: Issues an incremental bank search request to the FinTechApi.
       description: Issues an incremental bank search request to the FinTechApi.
       parameters:
-      #headers
-      - $ref: "#/components/parameters/X-Request-ID"
-      - $ref: '#/components/parameters/X-XSRF-TOKEN'
-      #query
-      - name: keyword
-        in: query
-        required: true
-        schema:
-          $ref: '#/components/schemas/searchInput'
-      - name: start
-        in: query
-        required: false
-        schema:
-          $ref: '#/components/schemas/searchStartIndex'
-      - name: max
-        in: query
-        required: false
-        schema:
-          $ref: '#/components/schemas/searchMaxResult'
+        #headers
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        #query
+        - name: keyword
+          in: query
+          required: true
+          schema:
+#           $ref: '#/components/schemas/searchInput'
+            type: string
+        - name: start
+          in: query
+          required: false
+          schema:
+#           $ref: '#/components/schemas/searchStartIndex'
+            type: integer
+        - name: max
+          in: query
+          required: false
+          schema:
+#           $ref: '#/components/schemas/searchMaxResult'
+            type: integer
       security:
         - sessionCookie: []
       responses:
@@ -119,20 +122,20 @@ paths:
   /v1/search/bankProfile:
     get:
       tags:
-      - FinTechBankSearch
+        - FinTechBankSearch
       summary: Request the profile of the bank identified with id (bankId).
       description: Request the profile of the bank identified with id (bankId).
       operationId: bankProfileGET
       parameters:
-      #header
-      - $ref: "#/components/parameters/X-Request-ID"
-      - $ref: '#/components/parameters/X-XSRF-TOKEN'
-      - name: bankId
-        in: query
-        description: Identifier of the bank to be loaded.
-        required: true
-        schema:
-          type: string
+        #header
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - name: bankId
+          in: query
+          description: Identifier of the bank to be loaded.
+          required: true
+          schema:
+            type: string
       security:
         - sessionCookie: []
       responses:
@@ -146,12 +149,12 @@ paths:
   /v1/ais/banks/{bank-id}/accounts:
     get:
       tags:
-      - FinTechAccountInformation
+        - FinTechAccountInformation
       operationId: aisAccountsGET
       summary: Provides list of available accounts for the given bank
       description: |
         Read the identifiers of the available payment accounts.
-        
+
         If required by the bank, PSU consent will be obtained before returning 
         the list of bank accounts.
 
@@ -175,12 +178,12 @@ paths:
         '401':
           $ref: '#/components/responses/401_Unauthorized'
         '404':
-          $ref: '#/components/responses/404_NotFound' 
+          $ref: '#/components/responses/404_NotFound'
 
   /v1/ais/banks/{bank-id}/accounts/{account-id}/transactions:
     get:
       tags:
-      - FinTechAccountInformation
+        - FinTechAccountInformation
       operationId: aisTransactionsGET
       summary: Returns the list of transactions of the given account
       description: Returns the list of transactions of the given account.
@@ -207,12 +210,12 @@ paths:
         '401':
           $ref: '#/components/responses/401_Unauthorized'
         '404':
-          $ref: '#/components/responses/404_NotFound' 
+          $ref: '#/components/responses/404_NotFound'
 
   /v1/{redirect-id}/fromConsentOk/{redirectState}:
     get:
       tags:
-      - FinTechAuthorization
+        - FinTechAuthorization
       operationId: fromConsentOkGET
       summary: Entry point when PSU is redirected back to the FinTechApi.
       description: |
@@ -232,12 +235,12 @@ paths:
         '401':
           $ref: '#/components/responses/401_Unauthorized'
         '404':
-          $ref: '#/components/responses/404_NotFound' 
+          $ref: '#/components/responses/404_NotFound'
 
   /v1/afterReload/{redirectState}:
     get:
       tags:
-      - FinTechAuthorization
+        - FinTechAuthorization
       operationId: afterReloadGET
       summary: Sent by FinTechUI to FinTechApi to load the proper session cookie after a redirect based UI reload.
       description: |
@@ -523,18 +526,18 @@ components:
           schema:
             type: object
             properties:
-              bankProfile:
+              bankDescriptor :
                 type: array
                 items:
-                  $ref: '#/components/schemas/bankProfile'
+                  $ref: '#/components/schemas/bankDescriptor'
               keyword:
-                $ref: '#/components/schemas/searchInput'
+                type: string
               start:
-                $ref: '#/components/schemas/searchStartIndex'
+                type: integer
               max:
-                $ref: '#/components/schemas/searchMaxResult'
+                type: integer
               total:
-                $ref: '#/components/schemas/searchTotalResult'
+                type: integer
 
     200_BankProfile:
       description: Response containing the service profile of a bank.
@@ -550,10 +553,8 @@ components:
           schema:
             type: object
             properties:
-              userProfile:
-                type: array
-                items:
-                  $ref: '#/components/schemas/bankProfile'
+              bankProfile:
+                $ref: '#/components/schemas/bankProfile'
 
     200_AccountList:
       description: Response containing the list of bank accounts.
@@ -620,14 +621,14 @@ components:
       description: |
         Reloads the FinTechUI with the authenticated context of the PSU. This 
         generaly happens after a back redirect from the ConsentAuthorisationApi.
-        
+
         In orther to garanty integrity of the application, the redirect response
         will be associated with a redirect-cookie and the corresponding location
         url will carry a one time redirectState as path parameter.
-        
+
         Reloaded UI will use this access an afterReload endpoint providing
         URL and session state to obtain proper multi usage sessionCookie.
-        
+
       headers:
         Location:
           $ref: '#/components/headers/Location-FinTechUI'
@@ -658,7 +659,7 @@ components:
         * Provided credential for login not matching.
         * Endpoin expect a session cookie but none is present.
         * Session cookie is present but associated stateString does not match.
-        
+
         As a consequence, we reset existing FinTechLoginSessionState if any. 
         Nevertheless we do not reset RedirectSessionCookie.
       headers:
@@ -669,7 +670,7 @@ components:
       content:
         application/json:
           schema:
-           $ref: '#/components/schemas/errorResponse'
+            $ref: '#/components/schemas/errorResponse'
 
     404_NotFound:
       description: The specified resource was not found
@@ -746,6 +747,20 @@ components:
           format: date-time
 
     # Search and bank profile
+    bankDescriptor:
+      title: Bank Descriptor
+      type: object
+      properties:
+        bankName:
+          type: string
+        bic:
+          type: string
+        bankCode:
+          type: string
+        uuid:
+          type: string
+
+
     searchInput:
       description: The bank search input string
       schema:
@@ -766,6 +781,8 @@ components:
       title: Bank Profile
       type: object
       properties:
+        bankId:
+          type: string
         bankName:
           type: string
         bic:

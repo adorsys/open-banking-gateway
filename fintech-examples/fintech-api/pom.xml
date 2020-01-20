@@ -83,6 +83,7 @@
                 <configPackage>de.adorsys.opba.fintech.api.config</configPackage>
                 <modelPackage>de.adorsys.opba.fintech.api.model</modelPackage>
                 <apiPackage>de.adorsys.opba.fintech.api.resource</apiPackage>
+                <invokerPackage>de.adorsys.opba.fintech.client</invokerPackage>
                 <interfaceOnly>true</interfaceOnly>
                 <skipOverwrite>true</skipOverwrite>
                 <dateLibrary>java8</dateLibrary>
