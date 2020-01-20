@@ -382,6 +382,7 @@
                 <version>${surefire.version}</version>
                 <configuration>
                     <argLine>${surefireArgLine}</argLine>
+                    <trimStackTrace>false</trimStackTrace>
                 </configuration>
             </plugin>
 
@@ -392,6 +393,7 @@
                 <version>3.0.0-M3</version>
                 <configuration>
                     <classpathDependencyScopeExclude>provided</classpathDependencyScopeExclude>
+                    <trimStackTrace>false</trimStackTrace>
                 </configuration>
                 <executions>
                     <execution>

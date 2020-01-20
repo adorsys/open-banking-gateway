@@ -69,6 +69,10 @@
             <groupId>io.rest-assured</groupId>
             <artifactId>spring-web-test-client</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
