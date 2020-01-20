@@ -18,6 +18,7 @@ import io.restassured.response.Response;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.awaitility.Durations;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,7 @@ import static de.adorsys.opba.core.protocol.e2e.ResourceUtil.readResource;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_URI;
 import static io.restassured.RestAssured.config;
 import static io.restassured.config.RedirectConfig.redirectConfig;
+import static org.awaitility.Awaitility.await;
 
 @Slf4j
 @JGivenStage
@@ -119,8 +121,10 @@ public class AccountInformationRequest extends Stage<AccountInformationRequest> 
             "restrecord/tpp-ui-input/params/anton-brueckner-account.txt"
         );
 
-        LoggedRequest consentInitiateRequest = wireMock
-                .findAll(postRequestedFor(urlMatching("/v1/consents.*"))).get(0);
+        LoggedRequest consentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
+                .until(() ->
+                        wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
+                ).get(0);
         redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
         return self();
     }
@@ -131,8 +135,10 @@ public class AccountInformationRequest extends Stage<AccountInformationRequest> 
             "restrecord/tpp-ui-input/params/anton-brueckner-transactions.txt"
         );
 
-        LoggedRequest consentInitiateRequest = wireMock
-                .findAll(postRequestedFor(urlMatching("/v1/consents.*"))).get(0);
+        LoggedRequest consentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
+                .until(() ->
+                        wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
+                ).get(0);
         redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
         return self();
     }
