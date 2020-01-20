@@ -1,0 +1,25 @@
+{
+  "id" : "7f9ef94d-08a0-3562-83d6-ff03b108db24",
+  "request" : {
+    "url" : "/v1/consents/confirm/accounts/LIST_TRANSACTIONS/sagas/34ee6161-3233-11ea-b535-e2b5b1f1970b",
+    "method" : "GET",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-v1-consents-confirm-accounts-LIST_TRANSACTIONS-sagas-56757.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Content-Type" : "application/json",
+      "Transfer-Encoding" : "chunked",
+      "Date" : "Wed, 08 Jan 2020 16:24:06 GMT",
+      "Keep-Alive" : "timeout=60",
+      "Connection" : "keep-alive"
+    }
+  },
+  "uuid" : "7f9ef94d-08a0-3562-83d6-ff03b108db24"
+}

@@ -1,0 +1,31 @@
+{
+  "id" : "608432b9-9b77-3143-9158-7943275e6037",
+  "request" : {
+    "url" : "/v1/parameters/provide-more/b75eddcf-3233-11ea-b535-e2b5b1f1970b",
+    "method" : "POST",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/x-www-form-urlencoded"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalTo" : "consent.recurringIndicator=false&consent.frequencyPerDay=12&consent.validUntil=2020-01-31&psuId=max.musterman&accessSelector=dedicated&consent.access.transactions%5B0%5D.iban=DE38760700240320465700&consent.access.transactions%5B0%5D.currency=EUR"
+    } ]
+  },
+  "response" : {
+    "status" : 301,
+    "bodyFileName" : "body-v1-parameters-provide-more-37946.txt",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Access-Control-Allow-Origin" : "*",
+      "Location" : "http://localhost:5500/parameters/provide-psu-password/c2a7d099-3233-11ea-b535-e2b5b1f1970b",
+      "Date" : "Wed, 08 Jan 2020 16:27:28 GMT",
+      "Keep-Alive" : "timeout=60",
+      "Connection" : "keep-alive"
+    }
+  },
+  "uuid" : "608432b9-9b77-3143-9158-7943275e6037"
+}
