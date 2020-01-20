@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
+import org.awaitility.Durations;
 import org.testcontainers.containers.FixedHostPortGenericContainer;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -41,6 +42,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static org.awaitility.Awaitility.await;
+
 /**
  * This class launches spring-fat jar in its own class loader (we assume {@link SandboxApp#runnable()}
  * is called in own thread). This way all services are launched in same JVM and we can easily manipulate
@@ -55,18 +58,21 @@ import java.util.stream.Collectors;
  * 1. DB_TYPE = LOCAL_POSTGRES - will connect to local postgres db on port 5432
  * 2. (DEFAULT) DB_TYPE = TEST_CONTAINERS_POSTGRES - will start Postgres using TestContainers and use port 15432 for it
  * (you need to prepare schema and users - see prepare-postgres.sql)
+ *
+ * Startup order is roughly adherent to:
+ * https://github.com/adorsys/XS2A-Sandbox/blob/master/docker-compose.yml
  */
 @Slf4j
 @Getter
 public enum SandboxApp {
 
-    LEDGERS_GATEWAY("gateway-app-5.4.jar"), // adorsys/xs2a-connector-examples
+    LEDGERS_APP("ledgers-app-2.1.jar"), // adorsys/ledgers
+    LEDGERS_GATEWAY("gateway-app-5.4.jar", false, LEDGERS_APP), // adorsys/xs2a-connector-examples
     ASPSP_PROFILE("aspsp-profile-server-5.4-exec.jar"), // adorsys/xs2a-aspsp-profile
     CONSENT_MGMT("cms-standalone-service-5.4.jar"), // adorsys/xs2a-consent-management
-    ONLINE_BANKING("online-banking-app-1.8.jar"), // adorsys/xs2a-online-banking
-    TPP_REST("tpp-rest-server-1.8.jar"), // adorsys/xs2a-tpp-rest-server
+    ONLINE_BANKING("online-banking-app-1.8.jar", false, LEDGERS_APP), // adorsys/xs2a-online-banking
+    TPP_REST("tpp-rest-server-1.8.jar", false, LEDGERS_APP), // adorsys/xs2a-tpp-rest-server
     CERT_GENERATOR("certificate-generator-1.8.jar"), // adorsys/xs2a-certificate-generator
-    LEDGERS_APP("ledgers-app-2.1.jar"), // adorsys/ledgers
     ONLINE_BANKING_UI("adorsys/xs2a-online-banking-ui:1.8", true); // adorsys/xs2a-online-banking-ui
 
     public static final String DB_TYPE = "DB_TYPE";
@@ -87,23 +93,34 @@ public enum SandboxApp {
     private final boolean dockerized;
     private final String jarOrDockerFile;
     private final String mainClass;
+    private final SandboxApp dependsOn;
 
     SandboxApp(String jarOrDockerFile) {
         this.jarOrDockerFile = jarOrDockerFile;
         this.mainClass = null;
         this.dockerized = false;
+        this.dependsOn = null;
     }
 
     SandboxApp(String jarOrDockerFile, String mainClass) {
         this.jarOrDockerFile = jarOrDockerFile;
         this.mainClass = mainClass;
         this.dockerized = false;
+        this.dependsOn = null;
     }
 
     SandboxApp(String jarOrDockerImage, boolean dockerized) {
         this.jarOrDockerFile = jarOrDockerImage;
         this.mainClass = null;
         this.dockerized = dockerized;
+        this.dependsOn = null;
+    }
+
+    SandboxApp(String jarOrDockerImage, boolean dockerized, SandboxApp dependsOn) {
+        this.jarOrDockerFile = jarOrDockerImage;
+        this.mainClass = null;
+        this.dockerized = dockerized;
+        this.dependsOn = dependsOn;
     }
 
     @SneakyThrows
@@ -154,6 +171,13 @@ public enum SandboxApp {
     }
 
     private void doRun() {
+        if (null != dependsOn) {
+            await()
+                    .atMost(Durations.FIVE_MINUTES)
+                    .pollDelay(Durations.ONE_SECOND)
+                    .until(dependsOn::isReadyToUse);
+        }
+
         if (dockerized) {
             doRunDocker();
         } else {
