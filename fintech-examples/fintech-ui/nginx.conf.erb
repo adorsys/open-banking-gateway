@@ -7,9 +7,9 @@ server {
   access_log /var/log/nginx/access.log <%= ENV['NGINX_ACCESS_LOG_DEBUG'] %>;
   error_log /var/log/nginx/error.log <%= ENV['NGINX_ERROR_LOG_DEBUG'] %>;
 
-  <% if ENV['ONLINE_BANKING_SERVER_URL'] && !ENV['ONLINE_BANKING_SERVER_URL'].empty? %>
+  <% if ENV['BACKEND_URL'] && !ENV['BACKEND_URL'].empty? %>
   location /fintech-api-proxy/ {
-        proxy_pass <%= ENV['ONLINE_BANKING_SERVER_URL'] %>/;
+        proxy_pass <%= ENV['BACKEND_URL'] %>/;
 
         proxy_set_header          Host            $host;
         proxy_set_header          X-Real-IP       $remote_addr;
