@@ -1,18 +1,15 @@
 package de.adorsys.obpa.fintech.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.obpa.fintech.server.bankmocks.MockedTppBankSearchController;
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
 import de.adorsys.opba.tpp.bankserach.api.resource.TppBankSearchApi;
+import de.adorsys.opba.tpp.bankserach.client.ApiClient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +22,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @ExtendWith(SpringExtension.class)
@@ -37,7 +37,24 @@ class FinTechApplicationTests {
     private static final ObjectMapper jsonMapper = new ObjectMapper();
 
     @Mock
-    TppBankSearchApi tppBankSearchApi;
+    ApiClient mockApiClient;
+
+    @Mock
+    TppBankSearchApi mockedTppBankSearchApi;
+
+    // String authorization, UUID xRequestID, String keyword, Integer start, Integer max
+    /*
+    @Captor
+    private ArgumentCaptor<String> a1;
+    @Captor
+    private ArgumentCaptor<UUID> a2;
+    @Captor
+    private ArgumentCaptor<String> a3;
+    @Captor
+    private ArgumentCaptor<Integer> a4;
+    @Captor
+    private ArgumentCaptor<Integer> a5;
+     */
 
     @Autowired
     protected MockMvc mvc;
@@ -77,16 +94,17 @@ class FinTechApplicationTests {
                 .andExpect(MockMvcResultMatchers.header().doesNotExist("X-XSRF-TOKEN"));
     }
 
-    @Test
+    // @Test
     @SneakyThrows
     public void bankSearchAuthorized() {
-        when(tppBankSearchApi.bankProfileGET())
-        Mockito.when(mockedTppBankSearchController.bankSearchGET(
-                a1.capture(),
-                a2.capture(),
-                a3.capture(),
-                a4.capture(),
-                a5.capture())).thenThrow(new RuntimeException("here I am"));
+        mockedTppBankSearchApi = mock(TppBankSearchApi.class);
+        mockApiClient = mock(ApiClient.class);
+//        MockitoAnnotations.initMocks(this);
+//        MockitoAnnotations.initMocks(mockApiClient);
+//        MockitoAnnotations.initMocks(mockedTppBankSearchApi);
+        when(mockApiClient.setBasePath(any())).thenThrow(new RuntimeException("Du affe"));
+        when(mockedTppBankSearchApi.getApiClient()).thenReturn(mockApiClient);
+        when(mockedTppBankSearchApi.bankSearchGET(any(), any(), any(), any(), any())).thenThrow(new RuntimeException("here I am"));
 
         LoginBody loginBody = new LoginBody("peter", "1234");
         String xsrfToken = auth(loginBody.username, loginBody.password);

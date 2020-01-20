@@ -36,12 +36,7 @@ public class FinTechBankSearchImpl implements FinTechBankSearchApi {
     @SuppressWarnings("PMD.UnusedPrivateMethod")
     private void init() {
         tppBankSearchApi = new TppBankSearchApi();
-        if (tppUrl.length() > 0) {
-            log.debug("set tpp url to " + tppUrl);
-            tppBankSearchApi.getApiClient().setBasePath(tppUrl);
-        } else {
-            log.debug("dont set tpp url");
-        }
+        tppBankSearchApi.getApiClient().setBasePath(tppUrl);
     }
 
     @Override
