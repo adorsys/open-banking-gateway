@@ -1,13 +1,15 @@
 # Release Notes
 
-## release 0.0.4
 
+## release 0.0.5
 * Login Page creation for the Demo Frontend
 * Change Test data with productive data for the TppBankSearchApi
 * Update the general project's documentation
 * Getting Started documentation
 * Definition of the FinTechApi, BankingApi and ConsentAuthorisationApi
 * Integration of Bank search API and FintechUI
+
+## release 0.0.4
 
 ## release 0.0.3
 
