@@ -171,23 +171,30 @@ public enum SandboxApp {
     }
 
     private void doRun() {
-        if (null != dependsOn) {
-            await()
-                    .atMost(Durations.FIVE_MINUTES)
-                    .pollDelay(Durations.ONE_SECOND)
-                    .until(dependsOn::isReadyToUse);
-        }
+        String oldName = Thread.currentThread().getName();
+        Thread.currentThread().setName(name());
+        try {
+            log.info("Starting {}", this.name());
+            if (null != dependsOn) {
+                log.info("Waiting for {}", dependsOn.name());
+                await()
+                        .atMost(Durations.FIVE_MINUTES)
+                        .pollDelay(Durations.ONE_SECOND)
+                        .until(dependsOn::isReadyToUse);
+                log.info("Dependency {} is ready", dependsOn.name());
+            }
 
-        if (dockerized) {
-            doRunDocker();
-        } else {
-            doRunJar();
+            if (dockerized) {
+                doRunDocker();
+            } else {
+                doRunJar();
+            }
+        } finally {
+            Thread.currentThread().setName(oldName);
         }
     }
 
     private void doRunDocker() {
-        String oldName = Thread.currentThread().getName();
-        Thread.currentThread().setName(name());
         try {
             Map<String, String> envVars = new HashMap<>();
             // sandbox/application-test-common.yml
@@ -219,8 +226,6 @@ public enum SandboxApp {
             this.dockerContainer.set(container);
         } catch (IOException | RuntimeException ex) {
             log.error("{} from {} Dockerfile has terminated exceptionally", name(), jarOrDockerFile, ex);
-        } finally {
-            Thread.currentThread().setName(oldName);
         }
     }
 
@@ -265,8 +270,6 @@ public enum SandboxApp {
     }
 
     private void doRunJar() {
-        String oldName = Thread.currentThread().getName();
-        Thread.currentThread().setName(name());
         try {
             ClassloaderWithJar classloaderWithJar = new ClassloaderWithJar(jarOrDockerFile);
             buildSpringConfigLocation();
@@ -283,8 +286,6 @@ public enum SandboxApp {
             log.error("Failed to invoke main() method for {} of {}", name(), jarOrDockerFile, ex);
         } catch (RuntimeException ex) {
             log.error("{} from {} jar has terminated exceptionally", name(), jarOrDockerFile, ex);
-        } finally {
-            Thread.currentThread().setName(oldName);
         }
     }
 
