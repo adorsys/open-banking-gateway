@@ -3,15 +3,19 @@ package de.adorsys.obpa.fintech.server;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.obpa.fintech.server.bankmocks.MockedTppBankSearchController;
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
+import de.adorsys.opba.tpp.bankserach.api.resource.TppBankSearchApi;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,18 +31,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @EnableFinTechImplConfig
-@ComponentScan("de.adorsys.obpa.fintech.server.bankmocks")
+// @ComponentScan("de.adorsys.obpa.fintech.server.bankmocks")
 class FinTechApplicationTests {
 
     private static final ObjectMapper jsonMapper = new ObjectMapper();
 
-    @Autowired
-    MockedTppBankSearchController c;
+    @Mock
+    TppBankSearchApi tppBankSearchApi;
 
     @Autowired
     protected MockMvc mvc;
 
-	@Test
+    @Test
     @SneakyThrows
     public void loginPostOk() {
         auth("peter", "1234");
@@ -76,8 +80,15 @@ class FinTechApplicationTests {
     @Test
     @SneakyThrows
     public void bankSearchAuthorized() {
+        when(tppBankSearchApi.bankProfileGET())
+        Mockito.when(mockedTppBankSearchController.bankSearchGET(
+                a1.capture(),
+                a2.capture(),
+                a3.capture(),
+                a4.capture(),
+                a5.capture())).thenThrow(new RuntimeException("here I am"));
 
-	LoginBody loginBody = new LoginBody("peter", "1234");
+        LoginBody loginBody = new LoginBody("peter", "1234");
         String xsrfToken = auth(loginBody.username, loginBody.password);
         this.mvc
                 .perform(MockMvcRequestBuilders.get("/v1/search/bankSearch")
