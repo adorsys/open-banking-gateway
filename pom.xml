@@ -31,6 +31,7 @@
         <module>core</module>
         <module>sandbox-test</module>
         <module>opba-banking-rest-api</module>
+        <module>opba-banking-protocol-api</module>
         <module>opba-embedded-starter</module>
         <module>fintech-examples</module>
         <module>last-module-codecoverage</module>
@@ -124,14 +125,6 @@
     </properties>
 
     <repositories>
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>http://repo.spring.io/milestone</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
         <repository>
             <id>snapshots-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
