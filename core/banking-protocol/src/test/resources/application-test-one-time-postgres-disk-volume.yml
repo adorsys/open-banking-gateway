@@ -4,5 +4,3 @@ spring:
     username: postgres
     password: docker
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-pkcs12:
-  keyStore: src/main/resources/sample-qwac.keystore
