@@ -10,7 +10,7 @@ IMAGE_NAME=$REGISTRY_DOMAIN/$PROJECT_NAME/$SERVICE_NAME:$IMAGE_TAG
 LATEST_IMAGE_NAME=$REGISTRY_DOMAIN/$PROJECT_NAME/$SERVICE_NAME:latest
 
 docker login -u github-image-pusher -p "$OPENSHIFT_TOKEN" $REGISTRY_DOMAIN
-JAR_NAME=banking-protocol-$PROJECT_VERSION.jar
+JAR_NAME=banking-protocol-$PROJECT_VERSION-boot.jar
 docker build -t "$IMAGE_NAME" --build-arg JAR_FILE="$JAR_NAME" ./core/banking-protocol
 docker tag "$IMAGE_NAME" "$LATEST_IMAGE_NAME"
 docker push "$IMAGE_NAME"
