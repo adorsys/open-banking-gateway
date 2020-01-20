@@ -1,0 +1,31 @@
+{
+  "id" : "af07e245-ccf4-3a4e-8922-79dc489760b2",
+  "request" : {
+    "url" : "/v1/parameters/select-sca-method/722e7700-3233-11ea-b535-e2b5b1f1970b",
+    "method" : "POST",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/x-www-form-urlencoded"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalTo" : "scaMethodId=P_yg0sa8QUQmSLRPt_sryM"
+    } ]
+  },
+  "response" : {
+    "status" : 301,
+    "bodyFileName" : "body-v1-parameters-select-sca-43853.txt",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Access-Control-Allow-Origin" : "*",
+      "Location" : "http://localhost:5500/parameters/report-sca-result/722e7700-3233-11ea-b535-e2b5b1f1970b?q=EMAIL:max.musterman2@mail.de",
+      "Date" : "Wed, 08 Jan 2020 16:25:21 GMT",
+      "Keep-Alive" : "timeout=60",
+      "Connection" : "keep-alive"
+    }
+  },
+  "uuid" : "af07e245-ccf4-3a4e-8922-79dc489760b2"
+}
