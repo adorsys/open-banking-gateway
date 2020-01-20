@@ -4,6 +4,7 @@ import de.adorsys.opba.core.protocol.domain.dto.forms.PsuPassword;
 import de.adorsys.opba.core.protocol.domain.dto.forms.ScaChallengeResult;
 import de.adorsys.opba.core.protocol.domain.dto.forms.ScaSelectedMethod;
 import de.adorsys.opba.core.protocol.domain.entity.ProtocolAction;
+import de.adorsys.opba.core.protocol.service.ContextUpdateService;
 import de.adorsys.opba.core.protocol.service.eventbus.ProcessEventHandlerRegistrar;
 import de.adorsys.opba.core.protocol.service.json.JsonPathBasedObjectUpdater;
 import de.adorsys.opba.core.protocol.service.xs2a.Xs2aResultExtractor;
@@ -29,7 +30,6 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 import static de.adorsys.opba.core.protocol.controller.constants.ApiPaths.MORE_PARAMETERS;
 import static de.adorsys.opba.core.protocol.controller.constants.ApiPaths.MORE_PARAMETERS_PSU_PASSWORD;
 import static de.adorsys.opba.core.protocol.controller.constants.ApiPaths.MORE_PARAMETERS_REPORT_SCA_RESULT;
@@ -46,6 +46,7 @@ public class MoreParameters {
     private final Xs2aResultExtractor extractor;
     private final ProcessEventHandlerRegistrar registrar;
     private final JsonPathBasedObjectUpdater updater;
+    private final ContextUpdateService ctxUpdater;
 
     @PostMapping(value = MORE_PARAMETERS + "/{executionId}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @Transactional
@@ -53,9 +54,10 @@ public class MoreParameters {
             @PathVariable String executionId,
             @RequestBody @Valid @NotNull LinkedMultiValueMap<@NotBlank String, String> pathAndValueUpdates) {
 
-        BaseContext ctx = (BaseContext) runtimeService.getVariable(executionId, CONTEXT);
-        ctx = updater.updateObjectUsingJsonPath(ctx, pathAndValueUpdates.toSingleValueMap());
-        runtimeService.setVariable(executionId, CONTEXT, ctx);
+        BaseContext ctx = ctxUpdater.updateContext(
+                executionId,
+                toUpdate -> updater.updateObjectUsingJsonPath(toUpdate, pathAndValueUpdates.toSingleValueMap()));
+
         runtimeService.trigger(executionId);
 
         if (ProtocolAction.LIST_ACCOUNTS == ctx.getAction()) {
@@ -74,9 +76,12 @@ public class MoreParameters {
             @PathVariable String executionId,
             @Valid PsuPassword password) {
 
-        Xs2aContext ctx = (Xs2aContext) runtimeService.getVariable(executionId, CONTEXT);
-        ctx.setPsuPassword(password.getPsuPassword());
-        runtimeService.setVariable(executionId, CONTEXT, ctx);
+        Xs2aContext ctx = ctxUpdater.updateContext(
+                executionId,
+                toUpdate -> {
+                    toUpdate.setPsuPassword(password.getPsuPassword());
+                    return toUpdate;
+                });
         runtimeService.trigger(executionId);
 
         if (ProtocolAction.LIST_ACCOUNTS == ctx.getAction()) {
@@ -95,9 +100,12 @@ public class MoreParameters {
             @PathVariable String executionId,
             @Valid ScaSelectedMethod methodSelected) {
 
-        Xs2aContext ctx = (Xs2aContext) runtimeService.getVariable(executionId, CONTEXT);
-        ctx.setUserSelectScaId(methodSelected.getScaMethodId());
-        runtimeService.setVariable(executionId, CONTEXT, ctx);
+        Xs2aContext ctx = ctxUpdater.updateContext(
+                executionId,
+                toUpdate -> {
+                    toUpdate.setUserSelectScaId(methodSelected.getScaMethodId());
+                    return toUpdate;
+                });
         runtimeService.trigger(executionId);
 
         if (ProtocolAction.LIST_ACCOUNTS == ctx.getAction()) {
@@ -116,9 +124,12 @@ public class MoreParameters {
             @PathVariable String executionId,
             @Valid ScaChallengeResult scaChallengeResult) {
 
-        Xs2aContext ctx = (Xs2aContext) runtimeService.getVariable(executionId, CONTEXT);
-        ctx.setLastScaChallenge(scaChallengeResult.getScaChallengeResult());
-        runtimeService.setVariable(executionId, CONTEXT, ctx);
+        Xs2aContext ctx = ctxUpdater.updateContext(
+                executionId,
+                toUpdate -> {
+                    toUpdate.setLastScaChallenge(scaChallengeResult.getScaChallengeResult());
+                    return toUpdate;
+                });
         runtimeService.trigger(executionId);
 
         if (ProtocolAction.LIST_ACCOUNTS == ctx.getAction()) {
