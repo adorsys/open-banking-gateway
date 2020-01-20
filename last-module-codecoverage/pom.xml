@@ -5,13 +5,19 @@
     <parent>
         <artifactId>open-banking-gateway</artifactId>
         <groupId>de.adorsys.opba</groupId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.adorsys.opba</groupId>
     <artifactId>last-module-codecoverage</artifactId>
     <name>last-module-codecoverage</name>
+
+    <properties>
+        <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+        Change this if depth changes. Current: /open-banking-gateway/last-module-codecoverage -->
+        <main.basedir>${project.parent.basedir}</main.basedir>
+    </properties>
 
     <dependencies>
         <dependency>

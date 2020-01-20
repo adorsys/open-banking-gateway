@@ -1,0 +1,1 @@
+consent.recurringIndicator=false&consent.frequencyPerDay=12&consent.validUntil=2020-01-31&psuId=max.musterman&accessSelector=dedicated&consent.access.transactions%5B0%5D.iban=DE38760700240320465700&consent.access.transactions%5B0%5D.currency=EUR

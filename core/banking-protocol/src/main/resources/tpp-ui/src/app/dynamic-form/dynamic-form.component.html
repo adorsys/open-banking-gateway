@@ -1,0 +1,13 @@
+<script src="../account-selector/account-selector.component.ts"></script>
+<div>
+  <form ngNoForm method="post" action="{{submissionUri}}">
+
+    <div *ngFor="let template of controlTemplates" class="form-row">
+      <dynamic-form-control [control]="template" [form]="form"></dynamic-form-control>
+    </div>
+
+    <div class="form-row">
+      <button type="submit" [disabled]="!form.valid">Save</button>
+    </div>
+  </form>
+</div>

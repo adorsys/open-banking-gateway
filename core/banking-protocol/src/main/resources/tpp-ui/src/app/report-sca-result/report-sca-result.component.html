@@ -1,0 +1,11 @@
+<div>
+  <form ngNoForm method="post" action="{{submissionUri}}">
+
+    <label for="scaChallengeResult">SCA challenge result for: <br> {{label}}</label>
+    <input id="scaChallengeResult" name="scaChallengeResult" type="password">
+
+    <div class="form-row">
+      <button type="submit" [disabled]="!form.valid">Save</button>
+    </div>
+  </form>
+</div>

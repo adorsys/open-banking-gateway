@@ -20,6 +20,18 @@ spring:
     parameters:
       table-prefix: opb_
       fill-with-mock-data: true
+
+protocol:
+  redirect:
+    consent-accounts:
+      ok: 'http://localhost:8080/v1/consents/confirm/accounts/#{context.getAction()}/sagas/#{execution.getRootProcessInstanceId()}'
+      nok: 'http://localhost:8080/v1/consents/failed/accounts/#{context.getAction()}/sagas/#{execution.getRootProcessInstanceId()}'
+    parameters:
+      provide-more: 'http://localhost:5500/parameters/provide-more/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}'
+      provide-psu-password: 'http://localhost:5500/parameters/provide-psu-password/#{execution.getId()}'
+      select-sca-method: 'http://localhost:5500/parameters/select-sca-method/#{execution.getId()}?q=#{urlSafe(context.getAvailableSca().toString())}'
+      report-sca-result: 'http://localhost:5500/parameters/report-sca-result/#{execution.getId()}?q=#{urlSafe(context.getScaSelected().getAuthenticationType() + ":" + context.getScaSelected().getName())}'
+
 pkcs12:
   keyStore: sample-qwac.keystore
   password: password
@@ -28,10 +40,15 @@ xs2a-profile:
   id: 53c47f54-b9a4-465a-8f77-bc6cd5f0cf46
   aspspName: adorsys xs2a
   bic: ADORSYS
-  url: http://localhost:10014
+  url: http://localhost:20014
   adapterId: adorsys-integ-adapter
   idpUrl:
   aspspScaApproaches:
 
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
+
+bank-search:
+  start: 0
+  max: 10
+

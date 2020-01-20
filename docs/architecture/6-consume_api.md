@@ -7,7 +7,7 @@ As long as this token is valid, token will be used to perform corresponding serv
 
 ## Diagram
 
-![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/gh-pages/docs/architecture/diagrams/useCases/6-consume_api.puml&fmt=svg&vvv=1&sanitize=true)  
+![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/6-consume_api.puml&fmt=svg&vvv=1&sanitize=true)  
 
 ## Use Cases
 

@@ -1,4 +1,4 @@
-@startuml PsuAuthorizeEmbeddedConsent
+@startuml
 title PsuAuthorizeEmbeddedConsent
 autonumber 10 10 "<b><color blue>[AuthEmbedded-000]</color></b>"
 actor psu
@@ -53,7 +53,7 @@ activate BankingProtocol
 BankingProtocol -> RedirectSessionStoreApi ++ : redirectSession(TppConsentSession, exp)
 RedirectSessionStoreApi -> RedirectSessionStoreApi : createEncryptStoreRedirectSession\n(TppConsentSession):redirectCode
 return redirectCode
-BankingProtocol --> ConsentAuthorisationApi ++ : redirect302To(FinTechApi.FinTech-Redirect-URI)<redirectCode>
-ConsentAuthorisationApi --> FinTechUI ++ : redirect302[ConsentAuthSessionCookie=null,\nFinTechApi.FinTech-Redirect-URI<redirectCode>]()
+BankingProtocol --> ConsentAuthorisationApi ++ : 303_SeeOther(FinTechApi.FinTech-Redirect-URI)<redirectCode>
+ConsentAuthorisationApi --> FinTechUI ++ : 302_Redirect[ConsentAuthSessionCookie=null,\nFinTechApi.FinTech-Redirect-URI<redirectCode>]()
 end
 @enduml

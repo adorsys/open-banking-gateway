@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.adorsys.opba</groupId>
         <artifactId>open-banking-gateway</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
     </parent>
 
     <!-- POC that we can run whole sandbox within single JVM and H2 database for performance and debugging easiness -->
@@ -13,6 +13,12 @@
     <name>sandbox-test</name>
 
     <packaging>pom</packaging>
+
+    <properties>
+        <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+        Change this if depth changes. Current: /open-banking-gateway/sandbox-test -->
+        <main.basedir>${project.parent.basedir}</main.basedir>
+    </properties>
 
     <modules>
         <module>e2e-tests</module>

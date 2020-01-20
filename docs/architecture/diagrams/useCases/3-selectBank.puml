@@ -27,11 +27,11 @@ end box
 
 == PSU selects bank from ListOf_BankDescriptors : call[header](body)<params> return code[header](body) ==
 
-psu -> FinTechUI ++ : selectBank(BankDescriptor)
-FinTechUI -> FinTechApi ++ : loadBankProfile[](bankId)<>
+psu -> FinTechUI ++ : selectBank(BankProfile)
+FinTechUI -> FinTechApi ++ : loadBankProfile[FinTechLoginSessionCookie]\n(bankId)<sessionState>()
 FinTechApi -> TppBankSearchApi ++ : loadBankProfile[](bankId)<>
-return 200_OK[](BankProfile)
-return 200_OK[](BankProfile)
+return 200_BankProfile[](BankProfile)
+return 200_BankProfile[](BankProfile)
 return displayBankProfile(BankProfile)
 
 @enduml

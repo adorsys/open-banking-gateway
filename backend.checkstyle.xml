@@ -22,10 +22,6 @@
         <property name="fileNamePattern" value=".+/generated\-sources/.+"/>
     </module>
 
-    <module name="SuppressionFilter">
-        <property name="file" value="./suppressions.xml"/>
-    </module>
-
     <!-- Checks whether files end with a new line.                        -->
     <!-- See http://checkstyle.sourceforge.net/config_misc.html#NewlineAtEndOfFile -->
     <module name="NewlineAtEndOfFile"/>
@@ -90,10 +86,12 @@
         <module name="MethodLength">
             <property name="max" value="40"/>
         </module>
+        <!-- no more checking for number of parameters, requested by DGOlden
         <module name="ParameterNumber">
             <property name="max" value="4"/>
             <property name="tokens" value="METHOD_DEF"/>
         </module>
+        -->
         <module name="ParameterNumber">
             <property name="max" value="8"/>
             <property name="tokens" value="CTOR_DEF"/>

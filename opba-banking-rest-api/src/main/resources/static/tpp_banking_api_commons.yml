@@ -1,0 +1,85 @@
+openapi: 3.0.1
+info:
+  title: An include file to define common attributes
+  version: 1.0.0
+paths: {}
+
+components:
+  headers:
+    X-Request-ID:
+      required: true
+      description: |
+        Unique ID that identifies this request through common workflow.
+        Shall be contained in HTTP Response as well.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+
+  parameters:
+    Authorization:
+      name: Authorization
+      in: header
+      required: true
+      description: |
+        Unique Token that identifies FinTech Session for this request.
+      example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik15IGNvb2wgRmludGVjaCBBcHAiLCJpYXQiOjE1MTYyMzkwMjJ9.NfpSq7hot-1x3rZOaqRaSJzNnMw6ltX-9eqxcCQnGbI"
+      schema:
+        type: string
+
+    PSU-Consent-Session:
+      name: PSU-Consent-Session
+      in: header
+      required: false
+      description: |
+        Unique Token that identifies PSU Consent Session for this request, if it is already available for given PSU by Fintech through previous requests.
+        This Token is not designed to be parsed at Fintech side.
+      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicHN1IjoiSm9obl9Eb2UiLCJjb25zZW50SWQiOiI3OGUyODUwMy0xMzZkLTRkODYtYjg0NC1lNWY1NTgyNTc2ZTUiLCJpYXQiOjE1MTYyMzkwMjJ9.4BHXUW9CH63ZTkxKktFFrVGCUuFltFyivHxk3LVg2bs"
+      schema:
+        type: string
+
+    X-Request-ID:
+      name: X-Request-ID
+      in: header
+      required: true
+      description: |
+        Unique ID that identifies this request through common workflow.
+        Shall be contained in HTTP Response as well.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+
+  responses:
+    401_UNAUTHORIZED:
+      description: |
+        Unauthorised. Access token absent or invalid.
+      headers:
+        X-Request-ID:
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
+      content:
+        application/json:
+          schema:
+            $ref: "./tpp_banking_api_commons.yml#/components/schemas/generalError"
+
+    404_NOT_FOUND:
+      description: |
+        Resource not found or path parameter is wrong.
+      headers:
+        X-Request-ID:
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
+      content:
+        application/json:
+          schema:
+            $ref: "./tpp_banking_api_commons.yml#/components/schemas/generalError"
+
+  schemas:
+    generalError:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "ERROR_CODE"
+        message:
+          type: string
+          example: "Error description message"

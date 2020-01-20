@@ -1,10 +1,13 @@
 # Open Banking Gateway
 Provides tools, adapters and connectors for transparent access to open banking apis. The initial effort focuses on the connectivity to banks that implement the European PSD2 directive either through one of the common market initiatives like :
-  * [The Berlin Group NextGenPSD2](https://www.berlin-group.org/psd2-access-to-bank-accounts),
-  * [The Open Banking UK](https://www.openbanking.org.uk/),
-  * [The Polish PSD2 API](https://polishapi.org/en/)
 
-or even through proprietary bank api like [the ING’s PSD2 API](https://developer.ing.com/openbanking/).
+* [The Berlin Group NextGenPSD2](https://www.berlin-group.org/psd2-access-to-bank-accounts)
+* [The Open Banking UK](https://www.openbanking.org.uk/)
+* [The Polish PSD2 API](https://polishapi.org/en/)
+
+Or even through proprietary bank api like 
+
+* [the ING’s PSD2 API](https://developer.ing.com/openbanking/)
 
 ## What this Project is about
 
@@ -17,28 +20,32 @@ Being able to interact with different bank APIs can be a time and cost consuming
 
 This project is designed to enable contribution from different sources, as the open banking challenge will start with a magnitude of discrepancies in individual bank implementations, even for banks implementing a common standards.
 
+### Big Picture
+
 The following picture displays the overall architecture of this banking gateway:
-![High level architecture](docs/img/open-banking-gateway-arch-05-12-2019.png)
+![High level architecture](docs/img/open-banking-gateway-arch-14-01-2020.png)
 
-## Releases and versions
+## Documentation
 
-* [Versioning, Release and Support policy](docs/Version_Policy.md)
+Please take a look into our [**documentation**](https://adorsys.github.io/open-banking-gateway/doc/develop/) to know more about:
+
+### Planned and released versions
+
+* [Versioning, Release and Support policy](docs/version_policy.md)
 * [Release notes](docs/releasenotes.md) 
 * [Roadmap for next features development](docs/roadmap.md)
-* [Initial Requirements](docs/README.md)
- 
-### Testing API with Postman json collections
- 
- For testing API of the banking gateway it is used Postman https://www.getpostman.com/
- Environment jsons with global parameter’s sets and Collections of jsons for imitation of processes flows are stored in /postman folder.
- To import Postman collections and environments follow next steps:
- 1. Download Postman jsons with collections and environments to your local machine.
- 2. Open Postman, press button “Import”.
- 3. Choose “Import file” to import one json or “Import folder” to import all jsons within the folder, then press button “Choose Files” or “Choose Folders” and open necessary files/folders.
- 4. To change settings of environments - go to “Manage Environments”, press the environment name and change variables.
- 
- To start testing with Postman collections it is necessary to have all services running.
- 
+
+### Architecture 
+* [Dictionary](docs/architecture/dictionary.md)
+* [Use Cases](docs/architecture/uses_cases.md)
+* [Banking Protokol Design](docs/architecture/drafts/initial_requirements.md)
+* [PSU Access Security Design](docs/architecture/concepts/psu-security-concept.md)
+* [JavaDoc](https://adorsys.github.io/open-banking-gateway/javadoc/latest/index.html)
+
+### How to contribute
+
+* [Getting started](docs/getting_started.md)
+* [Contribution Guidelines](docs/ContributionGuidelines.md) 
  
 ## Authors & Contact
 
@@ -46,18 +53,9 @@ The following picture displays the overall architecture of this banking gateway:
 
 See also the list of [contributors](https://github.com/adorsys/open-banking-gateway/graphs/contributors) who participated in this project.
 
-For commercial support please contact **[adorsys Team](https://adorsys.de/en/psd2)**.
+For commercial support please contact **[adorsys Team](https://adorsys.de/)**.
 
 ## License
 
 This project is licensed under the Apache License version 2.0 - see the [LICENSE](LICENSE) file for details
 
-## checkstyle
-
-The code uses <code>backend.checkstyle.xml</code> placed in the root of the project. To activate it with intellij 
-install the <code>CheckStyle-IDEA v5.34.0</code> Plugin and configure in <code>Other Settings -> Checkstyle</code>
-the version <code>8.19</code> and add the configuration file <code>backend.checkstyle.xml</code>.
-
-## Contribution Guidelines
-
-* [Contribution Guidelines](docs/ContributionGuidelines.md) 

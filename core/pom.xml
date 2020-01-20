@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.adorsys.opba</groupId>
         <artifactId>open-banking-gateway</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
     </parent>
 
     <!-- Core module that implements main business logic -->
@@ -13,8 +13,17 @@
     <name>core</name>
     <packaging>pom</packaging>
 
+    <properties>
+      <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+      Change this if depth changes. Current: /open-banking-gateway/core -->
+      <main.basedir>${project.parent.basedir}</main.basedir>
+    </properties>
+
     <modules>
         <module>banking-protocol</module>
+        <module>bdd-tests</module>
+        <module>bdd-sandbox</module>
+        <module>bdd-wiremock</module>
     </modules>
 </project>
 

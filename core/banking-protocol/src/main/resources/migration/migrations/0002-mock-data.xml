@@ -7,7 +7,7 @@
         </preConditions>
         <comment>Fills tables with mock data</comment>
        <sql>
-           insert into ${table-prefix}bank_configuration (id) values (1);
+           insert into ${table-prefix}bank_configuration (id, preferred_approach) values (1, 'REDIRECT');
            insert into ${table-prefix}bank_protocol (id, configuration_id, action, process_name) values (1, 1, 'LIST_ACCOUNTS', 'xs2a-list-accounts');
            insert into ${table-prefix}bank_protocol (id, configuration_id, action, process_name) values (2, 1, 'LIST_TRANSACTIONS', 'xs2a-list-transactions');
        </sql>
