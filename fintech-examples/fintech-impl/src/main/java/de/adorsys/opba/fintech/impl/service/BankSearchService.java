@@ -6,6 +6,7 @@ import de.adorsys.opba.fintech.impl.service.entities.ContextInformation;
 import de.adorsys.opba.fintech.impl.service.mapper.Mapper;
 import de.adorsys.opba.tpp.bankserach.api.model.BankSearchResponse;
 import de.adorsys.opba.tpp.bankserach.api.resource.TppBankSearchApi;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,11 @@ import java.util.stream.Collectors;
 
 @Configuration
 @Slf4j
+@Setter
 public class BankSearchService {
 
     @Autowired
-    private TppBankSearchApi tppBankSearchApi = null;
+    private TppBankSearchApi tppBankSearchApi;
 
     @SneakyThrows
     public InlineResponse2001 searchBank(ContextInformation contextInformation, String keyword, Integer start, Integer max) {
