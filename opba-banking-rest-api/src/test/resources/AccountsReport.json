@@ -1,0 +1,26 @@
+{
+  "accounts": [
+    {
+      "resourceId": "qNNkUAGMSacvgSdQ63psXc",
+      "iban": "DE63370205000005023307",
+      "currency": "EUR",
+      "name": "marion.mueller",
+      "product": "Girokonto",
+      "cashAccountType": "CASH",
+      "status": "enabled",
+      "linkedAccounts": "MVIRHR-0SB8vXJg2y9qCQM",
+      "usage": "PRIV"
+    },
+    {
+      "resourceId": "MVIRHR-0SB8vXJg2y9qCQM",
+      "iban": "DE98370205000005023453",
+      "currency": "USD",
+      "name": "marion.mueller",
+      "product": "Cash24",
+      "cashAccountType": "CASH",
+      "status": "enabled",
+      "linkedAccounts": "qNNkUAGMSacvgSdQ63psXc",
+      "usage": "PRIV"
+    }
+  ]
+}
