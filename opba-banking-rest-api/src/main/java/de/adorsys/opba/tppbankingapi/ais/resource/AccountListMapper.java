@@ -1,7 +1,7 @@
 package de.adorsys.opba.tppbankingapi.ais.resource;
 
-import de.adorsys.opba.tppbanking.services.ais.account.Account;
-import de.adorsys.opba.tppbanking.services.ais.account.AccountsReport;
+import de.adorsys.opba.protocol.services.ais.account.Account;
+import de.adorsys.opba.protocol.services.ais.account.AccountsReport;
 import de.adorsys.opba.tppbankingapi.ais.model.AccountDetails;
 import de.adorsys.opba.tppbankingapi.ais.model.AccountList;
 import de.adorsys.opba.tppbankingapi.ais.model.AccountStatus;

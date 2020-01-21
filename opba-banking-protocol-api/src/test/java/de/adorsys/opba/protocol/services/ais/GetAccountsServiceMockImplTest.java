@@ -1,10 +1,10 @@
-package de.adorsys.opba.tppbanking.services.ais;
+package de.adorsys.opba.protocol.services.ais;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.opba.tppbanking.services.ais.account.AccountsReport;
-import de.adorsys.opba.tppbanking.services.ais.account.GetAccountsService;
-import de.adorsys.opba.tppbanking.services.ais.account.GetAccountsServiceMockImpl;
-import de.adorsys.opba.tppbanking.services.psuconsentsession.PsuConsentSession;
+import de.adorsys.opba.protocol.services.ais.account.AccountsReport;
+import de.adorsys.opba.protocol.services.ais.account.GetAccountsService;
+import de.adorsys.opba.protocol.services.ais.account.GetAccountsServiceMockImpl;
+import de.adorsys.opba.protocol.services.psuconsentsession.PsuConsentSession;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +22,7 @@ class GetAccountsServiceMockImplTest {
 
     @Test
     void getAccountsFor() {
-        Optional<AccountsReport> accounts = getAccountsServiceMock.getAccountsFor(new PsuConsentSession());
+        Optional<AccountsReport> accounts = getAccountsServiceMock.getAccountsFor(new PsuConsentSession("someId"));
         assertTrue(accounts.isPresent());
         assertNotNull(accounts.get().getAccounts());
         assertEquals(2, accounts.get().getAccounts().size());
