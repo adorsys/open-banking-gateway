@@ -8,8 +8,8 @@
         <version>0.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>opba-banking-protocol-api</artifactId>
-    <name>Open Banking Protocol API Services</name>
+    <artifactId>opba-banking-protocol-facade</artifactId>
+    <name>Open Banking Protocol Facade API Services</name>
 
     <properties>
         <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
