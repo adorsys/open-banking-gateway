@@ -2,13 +2,10 @@ package de.adorsys.opba.core.protocol.e2e.stages;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.BeforeStage;
-import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.annotation.ScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
@@ -18,7 +15,6 @@ import io.restassured.response.Response;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.awaitility.Durations;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,30 +26,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static de.adorsys.opba.core.protocol.e2e.ResourceUtil.readResource;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_URI;
 import static io.restassured.RestAssured.config;
 import static io.restassured.config.RedirectConfig.redirectConfig;
-import static org.awaitility.Awaitility.await;
 
 @Slf4j
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
-public class AccountInformationRequest extends Stage<AccountInformationRequest> {
+public class AccountInformationRequestCommon<SELF extends AccountInformationRequestCommon<SELF>> extends Stage<SELF> {
 
     public static final String PARAMETERS_PROVIDE_MORE = "/v1/parameters/provide-more/";
 
     @ProvidedScenarioState
-    private String redirectUriToGetUserParams;
+    protected String redirectUriToGetUserParams;
 
     @ProvidedScenarioState
     private String execId;
 
     @ProvidedScenarioState
     @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
-    private String redirectOkUri;
+    protected String redirectOkUri;
 
     @ProvidedScenarioState
     @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
@@ -61,9 +53,6 @@ public class AccountInformationRequest extends Stage<AccountInformationRequest> 
 
     @ScenarioState
     private Map<String, String> availableScas;
-
-    @ExpectedScenarioState
-    private WireMockServer wireMock;
 
     @LocalServerPort
     private int serverPort;
@@ -75,7 +64,7 @@ public class AccountInformationRequest extends Stage<AccountInformationRequest> 
         config = config().redirect(redirectConfig().followRedirects(false));
     }
 
-    public AccountInformationRequest open_banking_list_accounts_called() {
+    public SELF open_banking_list_accounts_called() {
         this.redirectUriToGetUserParams = RestAssured
                 .when()
                     .get("/v1/accounts")
@@ -87,7 +76,7 @@ public class AccountInformationRequest extends Stage<AccountInformationRequest> 
         return self();
     }
 
-    public AccountInformationRequest open_banking_list_transactions_called_for_anton_brueckner() {
+    public SELF open_banking_list_transactions_called_for_anton_brueckner() {
         this.redirectUriToGetUserParams = RestAssured
                 .when()
                     .get("/v1/transactions/cmD4EYZeTkkhxRuIV1diKA")
@@ -99,11 +88,11 @@ public class AccountInformationRequest extends Stage<AccountInformationRequest> 
         return self();
     }
 
-    public AccountInformationRequest open_banking_list_transactions_called_for_max_musterman() {
+    public SELF open_banking_list_transactions_called_for_max_musterman() {
         return open_banking_list_transactions_called_for_max_musterman("oN7KTVuJSVotMvPPPavhVo");
     }
 
-    public AccountInformationRequest open_banking_list_transactions_called_for_max_musterman(String resourceId) {
+    public SELF open_banking_list_transactions_called_for_max_musterman(String resourceId) {
         this.redirectUriToGetUserParams = RestAssured
                 .when()
                 .get("/v1/transactions/" + resourceId)
@@ -115,35 +104,25 @@ public class AccountInformationRequest extends Stage<AccountInformationRequest> 
         return self();
     }
 
-    public AccountInformationRequest open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts() {
+    public SELF open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts() {
         provideParametersToBankingProtocol(
                 PARAMETERS_PROVIDE_MORE,
             "restrecord/tpp-ui-input/params/anton-brueckner-account.txt"
         );
 
-        LoggedRequest consentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
-                .until(() ->
-                        wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
-                ).get(0);
-        redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
         return self();
     }
 
-    public AccountInformationRequest open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions() {
+    public SELF open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions() {
         provideParametersToBankingProtocol(
                 PARAMETERS_PROVIDE_MORE,
             "restrecord/tpp-ui-input/params/anton-brueckner-transactions.txt"
         );
 
-        LoggedRequest consentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
-                .until(() ->
-                        wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
-                ).get(0);
-        redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
         return self();
     }
 
-    public AccountInformationRequest open_banking_user_max_musterman_provided_initial_parameters_to_list_accounts() {
+    public SELF open_banking_user_max_musterman_provided_initial_parameters_to_list_accounts() {
         provideParametersToBankingProtocol(
                 PARAMETERS_PROVIDE_MORE,
             "restrecord/tpp-ui-input/params/max-musterman-account.txt"
@@ -151,7 +130,7 @@ public class AccountInformationRequest extends Stage<AccountInformationRequest> 
         return self();
     }
 
-    public AccountInformationRequest open_banking_user_max_musterman_provided_initial_parameters_to_list_transactions() {
+    public SELF open_banking_user_max_musterman_provided_initial_parameters_to_list_transactions() {
         provideParametersToBankingProtocol(
                 PARAMETERS_PROVIDE_MORE,
             "restrecord/tpp-ui-input/params/max-musterman-transactions.txt"
@@ -159,7 +138,7 @@ public class AccountInformationRequest extends Stage<AccountInformationRequest> 
         return self();
     }
 
-    public AccountInformationRequest open_banking_user_max_musterman_provided_password() {
+    public SELF open_banking_user_max_musterman_provided_password() {
         provideParametersToBankingProtocol(
                 "/v1/parameters/provide-psu-password/",
             "restrecord/tpp-ui-input/params/max-musterman-password.txt"
@@ -168,7 +147,7 @@ public class AccountInformationRequest extends Stage<AccountInformationRequest> 
         return self();
     }
 
-    public AccountInformationRequest open_banking_user_max_musterman_selected_sca_challenge_type_email1() {
+    public SELF open_banking_user_max_musterman_selected_sca_challenge_type_email1() {
         provideParametersToBankingProtocolWithBody(
                 "/v1/parameters/select-sca-method/",
             selectedScaBody("EMAIL:max.musterman@mail.de"),
@@ -177,7 +156,7 @@ public class AccountInformationRequest extends Stage<AccountInformationRequest> 
         return self();
     }
 
-    public AccountInformationRequest open_banking_user_max_musterman_selected_sca_challenge_type_email2() {
+    public SELF open_banking_user_max_musterman_selected_sca_challenge_type_email2() {
         provideParametersToBankingProtocolWithBody(
                 "/v1/parameters/select-sca-method/",
             selectedScaBody("EMAIL:max.musterman2@mail.de"),
@@ -186,7 +165,7 @@ public class AccountInformationRequest extends Stage<AccountInformationRequest> 
         return self();
     }
 
-    public AccountInformationRequest open_banking_user_max_musterman_provided_sca_challenge_result_and_no_redirect() {
+    public SELF open_banking_user_max_musterman_provided_sca_challenge_result_and_no_redirect() {
         provideParametersToBankingProtocol(
                 "/v1/parameters/report-sca-result/",
             "restrecord/tpp-ui-input/params/max-musterman-sca-challenge-result.txt",
