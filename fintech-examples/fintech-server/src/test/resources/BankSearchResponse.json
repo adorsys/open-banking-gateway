@@ -1,0 +1,20 @@
+{
+  "bankDescriptor": [
+    {
+      "bankName": "Synergistic coherent algorithm",
+      "bic": "XGNUZ32J3L2",
+      "bankCode": "12343174",
+      "uuid": null
+    },
+    {
+      "bankName": "Focused asymmetric project",
+      "bic": "PIZYHD5UPQY",
+      "bankCode": "12345916",
+      "uuid": null
+    }
+  ],
+  "keyword": "1234",
+  "start": 1,
+  "max": 2,
+  "total": null
+}

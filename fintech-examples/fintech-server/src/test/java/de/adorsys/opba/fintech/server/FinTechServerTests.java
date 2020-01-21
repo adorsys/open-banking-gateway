@@ -1,8 +1,10 @@
 package de.adorsys.opba.fintech.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
 import de.adorsys.opba.fintech.impl.service.BankSearchService;
+import de.adorsys.opba.tpp.bankserach.api.model.BankSearchResponse;
 import de.adorsys.opba.tpp.bankserach.api.resource.TppBankSearchApi;
 import de.adorsys.opba.tpp.bankserach.client.ApiClient;
 import lombok.AllArgsConstructor;
@@ -26,6 +28,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.nio.charset.Charset;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -33,11 +36,24 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @EnableFinTechImplConfig
 class FinTechServerTests {
+    private static final String BANKSEARCHRESPONSE_FILE = "BankSearchResponse.json";
 
     private static final ObjectMapper jsonMapper = new ObjectMapper();
 
@@ -94,7 +110,7 @@ class FinTechServerTests {
     @SneakyThrows
     public void bankSearchAuthorized() {
         bankSearchService.setTppBankSearchApi(mockedTppBankSearchApi);
-        Mockito.when(mockedTppBankSearchApi.bankSearchGET(any(), any(), any(), any(), any())).thenThrow(new RuntimeException("here I am"));
+        Mockito.when(mockedTppBankSearchApi.bankSearchGET(any(), any(), any(), any(), any())).thenReturn(createBankSearchResponse(BANKSEARCHRESPONSE_FILE));
 
         LoginBody loginBody = new LoginBody("peter", "1234");
         String xsrfToken = auth(loginBody.username, loginBody.password);
@@ -109,6 +125,21 @@ class FinTechServerTests {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    @Test
+    @SneakyThrows
+    public void bankSearchUnAuthorized() {
+        String xsrfToken = "unvalidtoken";
+        this.mvc
+                .perform(MockMvcRequestBuilders.get("/v1/search/bankSearch")
+                        .header("X-Request-ID", UUID.randomUUID().toString())
+                        .header("X-XSRF-TOKEN", xsrfToken)
+                        .param("keyword", "affe")
+                        .param("start", "0")
+                        .param("max", "2"))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+    }
+
     @AllArgsConstructor
     @Getter
     private static class LoginBody {
@@ -116,4 +147,14 @@ class FinTechServerTests {
         String password;
     }
 
+    @SneakyThrows
+    private String readFile(String fileName) {
+        ClassLoader classLoader = getClass().getClassLoader();
+        return IOUtils.toString(classLoader.getResourceAsStream(fileName), Charset.forName("UTF-8"));
+    }
+
+    private BankSearchResponse createBankSearchResponse(String filename) {
+        Gson g = new Gson();
+        return g.fromJson(readFile(filename), BankSearchResponse.class);
+    }
 }
