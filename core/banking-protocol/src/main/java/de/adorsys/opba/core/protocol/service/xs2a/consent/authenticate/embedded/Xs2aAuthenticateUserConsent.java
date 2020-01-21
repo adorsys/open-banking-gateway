@@ -7,20 +7,26 @@ import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.PsuData;
 import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthentication;
 import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
+
+import static de.adorsys.opba.core.protocol.constant.GlobalConst.SPRING_KEYWORD;
+import static de.adorsys.opba.core.protocol.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 
 @Service("xs2aAuthenticateUserConsent")
 @RequiredArgsConstructor
 public class Xs2aAuthenticateUserConsent extends ValidatedExecution<Xs2aContext> {
 
+    private final Xs2aAuthenticateUserConsent.FromCtx toBody;
+    private final Xs2aStandardHeaders.FromCtx toHeaders;
     private final RuntimeService runtimeService;
     private final AccountInformationService ais;
 
@@ -30,8 +36,8 @@ public class Xs2aAuthenticateUserConsent extends ValidatedExecution<Xs2aContext>
         Response<UpdatePsuAuthenticationResponse> authResponse = ais.updateConsentsPsuData(
                 context.getConsentId(),
                 context.getAuthorizationId(),
-                Xs2aStandardHeaders.FROM_CTX.map(context).toHeaders(),
-                authentication(context)
+                toHeaders.map(context).toHeaders(),
+                toBody.map(context)
         );
 
         ContextUtil.getAndUpdateContext(
@@ -62,11 +68,10 @@ public class Xs2aAuthenticateUserConsent extends ValidatedExecution<Xs2aContext>
         runtimeService.trigger(execution.getId());
     }
 
-    private UpdatePsuAuthentication authentication(Xs2aContext context) {
-        UpdatePsuAuthentication psuAuthentication = new UpdatePsuAuthentication();
-        PsuData data = new PsuData();
-        data.setPassword(context.getPsuPassword());
-        psuAuthentication.setPsuData(data);
-        return psuAuthentication;
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
+    public interface FromCtx {
+
+        @Mapping(target = "psuData.password", source = "psuPassword")
+        UpdatePsuAuthentication map(Xs2aContext ctx);
     }
 }

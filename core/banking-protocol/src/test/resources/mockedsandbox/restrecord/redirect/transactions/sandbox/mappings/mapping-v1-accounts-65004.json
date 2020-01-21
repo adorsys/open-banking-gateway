@@ -9,9 +9,6 @@
       },
       "PSU-ID" : {
         "equalTo" : "anton.brueckner"
-      },
-      "PSU-IP-Address" : {
-        "equalTo" : "1.1.1.1"
       }
     }
   },

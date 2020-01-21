@@ -20,6 +20,7 @@ import static de.adorsys.xs2a.adapter.service.ResponseHeaders.ASPSP_SCA_APPROACH
 @RequiredArgsConstructor
 public class StartAuthorization extends ValidatedExecution<Xs2aContext> {
 
+    private final Xs2aAuthorizationHeaders.FromCtx toHeaders;
     private final BankConfigurationRepository bic;
     private final AccountInformationService ais;
 
@@ -27,7 +28,7 @@ public class StartAuthorization extends ValidatedExecution<Xs2aContext> {
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
         Response<StartScaProcessResponse> scaStart = ais.startConsentAuthorisation(
                 context.getConsentId(),
-                Xs2aAuthorizationHeaders.FROM_CTX.map(context).toHeaders()
+                toHeaders.map(context).toHeaders()
         );
 
         context.setAspspScaApproach(scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH));

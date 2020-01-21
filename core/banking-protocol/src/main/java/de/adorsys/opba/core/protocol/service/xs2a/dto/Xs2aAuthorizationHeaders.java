@@ -5,18 +5,17 @@ import de.adorsys.xs2a.adapter.service.RequestHeaders;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 import java.util.Map;
 
+import static de.adorsys.opba.core.protocol.constant.GlobalConst.SPRING_KEYWORD;
+import static de.adorsys.opba.core.protocol.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_NOK_REDIRECT_URI;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_URI;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Xs2aAuthorizationHeaders extends Xs2aStandardHeaders {
-
-    public static final Xs2aAuthorizationHeaders.FromCtx FROM_CTX = Mappers.getMapper(Xs2aAuthorizationHeaders.FromCtx.class);
 
     private String redirectUriOk;
     private String redirectUriNok;
@@ -30,7 +29,7 @@ public class Xs2aAuthorizationHeaders extends Xs2aStandardHeaders {
         return RequestHeaders.fromMap(allValues);
     }
 
-    @Mapper
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface FromCtx {
         Xs2aAuthorizationHeaders map(Xs2aContext ctx);
     }

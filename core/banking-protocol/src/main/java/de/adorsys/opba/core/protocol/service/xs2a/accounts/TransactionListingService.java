@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TransactionListingService extends ValidatedExecution<TransactionListXs2aContext> {
 
+    private final Xs2aWithConsentIdHeaders.FromCtx toHeaders;
     private final AccountInformationService ais;
 
     @Override
@@ -24,7 +25,7 @@ public class TransactionListingService extends ValidatedExecution<TransactionLis
     protected void doRealExecution(DelegateExecution execution, TransactionListXs2aContext context) {
         Response<TransactionsReport> accounts = ais.getTransactionList(
                 context.getResourceId(),
-                Xs2aWithConsentIdHeaders.FROM_CTX.map(context).toHeaders(),
+                toHeaders.map(context).toHeaders(),
                 RequestParams.fromMap(ImmutableMap.of("bookingStatus", "BOTH", "withBalance", String.valueOf(context.isWithBalance()), "dateFrom", "2018-01-01", "dateTo", "2020-09-30"))
         );
 
