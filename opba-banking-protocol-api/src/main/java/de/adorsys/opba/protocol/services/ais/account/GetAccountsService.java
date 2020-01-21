@@ -1,6 +1,6 @@
-package de.adorsys.opba.tppbanking.services.ais.account;
+package de.adorsys.opba.protocol.services.ais.account;
 
-import de.adorsys.opba.tppbanking.services.psuconsentsession.PsuConsentSession;
+import de.adorsys.opba.protocol.services.psuconsentsession.PsuConsentSession;
 
 import java.util.Optional;
 

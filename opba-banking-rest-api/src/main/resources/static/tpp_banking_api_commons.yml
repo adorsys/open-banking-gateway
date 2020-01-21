@@ -6,6 +6,14 @@ paths: {}
 
 components:
   headers:
+    Location:
+      required: true
+      description: |
+        URL where User have to be redirected to in order to perform next step.
+      example: "https://example.com/someservice/some-id/somepage?param=value"
+      schema:
+        type: string
+
     X-Request-ID:
       required: true
       description: |
@@ -24,6 +32,26 @@ components:
       description: |
         Unique Token that identifies FinTech Session for this request.
       example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik15IGNvb2wgRmludGVjaCBBcHAiLCJpYXQiOjE1MTYyMzkwMjJ9.NfpSq7hot-1x3rZOaqRaSJzNnMw6ltX-9eqxcCQnGbI"
+      schema:
+        type: string
+
+    Bank-ID:
+      name: Bank-ID
+      in: header
+      required: false
+      description: |
+        A bank identifier, provided by TPP Bank Search API. To be provided by FinTech only if PsuConsentSession is missing.
+      example: "1234-0XGJK"
+      schema:
+        type: string
+
+    Fintech-User-ID:
+      name: Fintech-User-ID
+      in: header
+      required: false
+      description: |
+        An End-User identifier, known by FinTech. To be provided by FinTech only if PsuConsentSession is missing.
+      example: "1234-0XGJK"
       schema:
         type: string
 

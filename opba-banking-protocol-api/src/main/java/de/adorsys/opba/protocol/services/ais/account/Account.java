@@ -1,4 +1,4 @@
-package de.adorsys.opba.tppbanking.services.ais.account;
+package de.adorsys.opba.protocol.services.ais.account;
 
 import lombok.Data;
 

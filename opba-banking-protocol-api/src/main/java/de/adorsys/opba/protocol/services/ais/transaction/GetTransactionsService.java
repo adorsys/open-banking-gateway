@@ -1,4 +1,4 @@
-package de.adorsys.opba.tppbanking.services.ais.transaction;
+package de.adorsys.opba.protocol.services.ais.transaction;
 
 import org.springframework.stereotype.Service;
 
