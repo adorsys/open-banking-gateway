@@ -1,4 +1,4 @@
-package de.adorsys.opba.core.protocol.service.xs2a.consent.authorize.embedded;
+package de.adorsys.opba.core.protocol.service.xs2a.consent.authenticate.embedded;
 
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
 import de.adorsys.opba.core.protocol.service.xs2a.RedirectExecutor;

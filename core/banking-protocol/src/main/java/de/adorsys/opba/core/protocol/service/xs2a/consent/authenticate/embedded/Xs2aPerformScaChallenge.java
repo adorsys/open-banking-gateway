@@ -1,4 +1,4 @@
-package de.adorsys.opba.core.protocol.service.xs2a.consent.authorize.redirect;
+package de.adorsys.opba.core.protocol.service.xs2a.consent.authenticate.embedded;
 
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
 import de.adorsys.opba.core.protocol.service.xs2a.RedirectExecutor;
@@ -8,20 +8,16 @@ import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
-@Service("xs2aDoRedirectForScaChallenge")
+@Service("xs2aPerformScaChallenge")
 @RequiredArgsConstructor
-public class Xs2aDoScaRedirect extends ValidatedExecution<Xs2aContext> {
+public class Xs2aPerformScaChallenge extends ValidatedExecution<Xs2aContext> {
 
     private final RuntimeService runtimeService;
     private final RedirectExecutor redirectExecutor;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        redirectExecutor.redirect(
-                execution,
-                context,
-                context.getStartScaProcessResponse().getLinks().get("scaRedirect").getHref()
-        );
+        redirectExecutor.redirect(execution, context, redir -> redir.getParameters().getReportScaResult());
     }
 
     @Override

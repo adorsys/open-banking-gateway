@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.core.protocol.service.ContextUtil;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aWithConsentIdHeaders;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.RequestParams;
 import de.adorsys.xs2a.adapter.service.Response;
@@ -21,7 +22,7 @@ public class AccountListingService extends ValidatedExecution<Xs2aContext> {
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
         Response<AccountListHolder> accounts = ais.getAccountList(
-                context.toHeaders(),
+                Xs2aWithConsentIdHeaders.FROM_CTX.map(context).toHeaders(),
                 RequestParams.fromMap(ImmutableMap.of("withBalance", String.valueOf(context.isWithBalance())))
         );
 
