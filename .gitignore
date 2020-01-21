@@ -64,6 +64,7 @@ target/sonar/
 */generated
 !generated/.swagger-codegen-ignore
 .checkstyle
+**/bin
 
 docs_for_site
 
