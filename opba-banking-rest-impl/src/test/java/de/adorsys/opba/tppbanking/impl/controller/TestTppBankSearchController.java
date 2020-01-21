@@ -1,7 +1,6 @@
 package de.adorsys.opba.tppbanking.impl.controller;
 
 import de.adorsys.opba.tppbanking.impl.BaseMockitoTest;
-import de.adorsys.opba.tppbanking.impl.TestProfiles;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,8 +10,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static de.adorsys.opba.tppbanking.impl.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
+
 @SpringBootTest
-@ActiveProfiles(TestProfiles.ONE_TIME_POSTGRES_RAMFS)
+@ActiveProfiles(ONE_TIME_POSTGRES_RAMFS)
 @AutoConfigureMockMvc
 class TestTppBankSearchController extends BaseMockitoTest {
 

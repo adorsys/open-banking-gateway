@@ -1,7 +1,6 @@
 package de.adorsys.opba.tppbanking.impl.controller;
 
 import de.adorsys.opba.tppbanking.impl.BaseMockitoTest;
-import de.adorsys.opba.tppbanking.impl.TestProfiles;
 import de.adorsys.opba.tppbanking.impl.dto.TestResult;
 import de.adorsys.opba.tppbanking.impl.services.StatisticService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +25,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static de.adorsys.opba.tppbanking.impl.TestProfiles.ONE_TIME_POSTGRES_ON_DISK;
+
 @SpringBootTest
 @Slf4j
-@ActiveProfiles(TestProfiles.ONE_TIME_POSTGRES_ON_DISK)
+@ActiveProfiles(ONE_TIME_POSTGRES_ON_DISK)
 @AutoConfigureMockMvc
 class TestBankSearchPerformance extends BaseMockitoTest {
 
