@@ -6,15 +6,12 @@ import de.adorsys.opba.fintech.api.resource.FinTechBankSearchApi;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.BankSearchService;
 import de.adorsys.opba.fintech.impl.service.entities.ContextInformation;
-import de.adorsys.opba.tpp.bankserach.api.resource.TppBankSearchApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.PostConstruct;
 import java.util.UUID;
 
 @Slf4j
