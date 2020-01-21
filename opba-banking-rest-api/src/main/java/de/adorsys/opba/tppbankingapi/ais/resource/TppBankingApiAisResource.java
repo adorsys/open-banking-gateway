@@ -30,11 +30,11 @@ public class TppBankingApiAisResource implements TppBankingApiAccountInformation
 
     @Override
     public ResponseEntity getAccounts(String authorization,
+                                                   String fintechUserID,
                                                    String fintechRedirectURLOK,
                                                    String fintechRedirectURLNOK,
                                                    UUID xRequestID,
                                                    String bankID,
-                                                   String finTechUserID,
                                                    String psuConsentSession) {
 
         Optional<PsuConsentSession> existingPsuConsentSession = StringUtils.isNotBlank(psuConsentSession)
@@ -52,7 +52,7 @@ public class TppBankingApiAisResource implements TppBankingApiAccountInformation
         } else {
             PsuConsentSession newPsuConsentSession =
                     psuConsentSessionLoadingService.establishNewPsuConsentSession(bankID,
-                            finTechUserID, fintechRedirectURLOK, fintechRedirectURLNOK, TppBankingService.AIS_ACCOUNT_LIST);
+                            fintechUserID, fintechRedirectURLOK, fintechRedirectURLNOK, TppBankingService.AIS_ACCOUNT_LIST);
             return ResponseEntity
                     .status(HttpStatus.SEE_OTHER)
                     .header(HttpHeaders.X_REQUEST_ID, xRequestID.toString())
@@ -64,12 +64,12 @@ public class TppBankingApiAisResource implements TppBankingApiAccountInformation
 
     @Override
     public ResponseEntity<TransactionsResponse> getTransactions(String accountId,
+                                                                String fintechUserID,
                                                                 String authorization,
                                                                 String fintechRedirectURLOK,
                                                                 String fintechRedirectURLNOK,
                                                                 UUID xRequestID,
                                                                 String bankID,
-                                                                String finTechUserID,
                                                                 String psuConsentSession,
                                                                 LocalDate dateFrom,
                                                                 LocalDate dateTo,
