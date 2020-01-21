@@ -16,11 +16,11 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=docker
       - PKCS12_KEYSTORE=/pkcs12/sample-qwac.keystore
-    build: /Users/maxim/IdeaProjects/open-banking-gateway/core/banking-protocol
+    build: /Users/maxim/IdeaProjects/open-banking-gateway/opba-embedded-starter
     ports:
       - "8080:8080"
     volumes:
       - ../../main/resources/:/pkcs12/
-    entrypoint: "java -jar banking-protocol-0.0.4-SNAPSHOT.jar"
+    entrypoint: "java -jar open-banking-gateway-0.0.6-SNAPSHOT.jar"
     depends_on:
       - postgres
