@@ -81,7 +81,9 @@ public class Xs2aAdapterConfiguration {
             @Value("${pkcs12.password}") char[] keystorePassword
     ) {
         return new Pkcs12KeyStore(
-                Paths.get(Resources.getResource(keystorePath).toURI()).toAbsolutePath().toString(),
+                Paths.get(keystorePath).toFile().exists()
+                        ? Paths.get(keystorePath).toAbsolutePath().toString()
+                        : Paths.get(Resources.getResource(keystorePath).toURI()).toAbsolutePath().toString(),
                 keystorePassword
         );
     }

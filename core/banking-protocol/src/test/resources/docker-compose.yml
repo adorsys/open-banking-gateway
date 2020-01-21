@@ -10,3 +10,17 @@ services:
       - "5432:5432"
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  open-banking-gateway:
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/open_banking?currentSchema=banking_protocol
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=docker
+      - PKCS12_KEYSTORE=/pkcs12/sample-qwac.keystore
+    build: /Users/maxim/IdeaProjects/open-banking-gateway/core/banking-protocol
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../../main/resources/:/pkcs12/
+    entrypoint: "java -jar banking-protocol-0.0.4-SNAPSHOT.jar"
+    depends_on:
+      - postgres

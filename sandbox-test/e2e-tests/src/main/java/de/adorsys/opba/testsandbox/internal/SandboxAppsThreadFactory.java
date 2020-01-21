@@ -1,9 +1,9 @@
 package de.adorsys.opba.testsandbox.internal;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.boot.loader.LaunchedURLClassLoader;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -22,34 +22,37 @@ import java.util.concurrent.ThreadFactory;
  * TODO: Most probably it should be removed and all stuff should be done using custom Thread class.
  */
 @Slf4j
+@RequiredArgsConstructor
 class SandboxAppsThreadFactory implements ThreadFactory {
+
+    private final StarterContext ctx;
 
     @Override
     public Thread newThread(@NotNull Runnable runnable) {
-        return new ClassLoaderCapturingThread(runnable);
+        return new ClassLoaderCapturingThread(runnable, ctx);
     }
 
     public static class ClassLoaderCapturingThread extends Thread {
 
         private final SandboxApp app;
+        private final StarterContext ctx;
 
-        ClassLoaderCapturingThread(Runnable runnable) {
+        ClassLoaderCapturingThread(Runnable runnable, StarterContext ctx) {
             super(runnable);
             this.app = computeApp(runnable);
+            this.ctx = ctx;
         }
 
         @Override
         @SneakyThrows
         public void setContextClassLoader(ClassLoader loader) {
-            if (!app.getLoader().compareAndSet(null, loader)) {
-                if (loader instanceof LaunchedURLClassLoader) {
-                    throw new IllegalStateException("ClassLoader for " + app.name() + " already exists");
-                }
-                // in other case it is tomcat or other nested stuff which should be ignored
-            } else {
-                // Disable tomcat access to shared VM variable once when started
-                disableTomcatWar(loader);
+            if (null == loader) {
+                return;
             }
+
+            ctx.getLoader().put(app, loader);
+            // Disable tomcat access to shared VM variable once when started
+            disableTomcatWar(loader);
 
             super.setContextClassLoader(
                     new URLClassLoader(
