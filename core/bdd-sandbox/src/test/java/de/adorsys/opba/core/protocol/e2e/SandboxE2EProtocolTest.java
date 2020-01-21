@@ -60,13 +60,13 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<RealServers, WebDriverBa
 
     @BeforeAll
     static void startSandbox() {
-        //executor.runAll();
-        //executor.awaitForAllStarted();
+        executor.runAll();
+        executor.awaitForAllStarted();
     }
 
     @AfterAll
     static void stopSandbox() {
-        //executor.shutdown();
+        executor.shutdown();
     }
 
     // See https://github.com/spring-projects/spring-boot/issues/14879 for the 'why setting port'
