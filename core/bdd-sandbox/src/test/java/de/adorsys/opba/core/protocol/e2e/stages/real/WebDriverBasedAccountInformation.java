@@ -2,17 +2,24 @@ package de.adorsys.opba.core.protocol.e2e.stages.real;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.core.protocol.e2e.stages.AccountInformationRequestCommon;
+import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
+import org.flowable.engine.RuntimeService;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 
 @JGivenStage
 public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccountInformation<SELF>> extends AccountInformationRequestCommon<SELF> {
 
     private static final int WAIT_TIMEOUT_S = 10;
+
+    @Autowired
+    private RuntimeService runtimeService;
 
     public SELF sandbox_anton_brueckner_navigates_to_bank_auth_page(WebDriver driver) {
         driver.get(redirectUriToGetUserParams);
@@ -50,10 +57,19 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    public SELF sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(WebDriver driver) {
+    public SELF sandbox_anton_brueckner_see_redirect_back_to_tpp_button(WebDriver driver) {
         waitForLoad(driver);
         wait(driver).until(elementToBeClickable(By.className("btn-primary")));
-        driver.findElement(By.className("btn-primary")).click();
+        String waitingExecutionId = runtimeService.createActivityInstanceQuery()
+                .unfinished()
+                .orderByActivityInstanceStartTime()
+                .desc()
+                .list()
+                .get(0)
+                .getExecutionId();
+
+        Xs2aContext ctx = (Xs2aContext) runtimeService.getVariable(waitingExecutionId, CONTEXT);
+        this.redirectOkUri = ctx.getRedirectUriOk();
         return self();
     }
 

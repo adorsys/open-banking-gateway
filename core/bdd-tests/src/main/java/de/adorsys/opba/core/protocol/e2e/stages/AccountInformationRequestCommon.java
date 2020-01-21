@@ -41,7 +41,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     protected String redirectUriToGetUserParams;
 
     @ProvidedScenarioState
-    private String execId;
+    protected String execId;
 
     @ProvidedScenarioState
     @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!

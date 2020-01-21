@@ -97,7 +97,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<RealServers, WebDriverBa
                 .and()
                 .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
                 .and()
-                .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(firefoxDriver);
+                .sandbox_anton_brueckner_see_redirect_back_to_tpp_button(firefoxDriver);
 
         then()
                 .open_banking_reads_anton_brueckner_accounts_on_redirect();
