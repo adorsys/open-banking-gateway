@@ -48,9 +48,10 @@ components:
     Fintech-User-ID:
       name: Fintech-User-ID
       in: header
-      required: false
+      required: true
       description: |
-        An End-User identifier, known by FinTech. To be provided by FinTech only if PsuConsentSession is missing.
+        An End-User identifier, known by FinTech, that unique for each physical person.
+        To be provided by FinTech with every request in order to validate the mapping of service request to the particular user.
       example: "1234-0XGJK"
       schema:
         type: string
