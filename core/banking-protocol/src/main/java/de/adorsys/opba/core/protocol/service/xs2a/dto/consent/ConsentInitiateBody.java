@@ -19,7 +19,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ConsentsBody {
+public class ConsentInitiateBody {
 
     public static final ToXs2aApi TO_XS2A = Mappers.getMapper(ToXs2aApi.class);
     public static final FromCtx FROM_CTX = Mappers.getMapper(FromCtx.class);
@@ -88,14 +88,14 @@ public class ConsentsBody {
 
     @Mapper
     public interface ToXs2aApi {
-        Consents map(ConsentsBody cons);
+        Consents map(ConsentInitiateBody cons);
     }
 
     @Mapper
     public interface FromCtx {
 
-        default ConsentsBody map(Xs2aContext cons) {
-            return null == cons.getConsent() ? new ConsentsBody() : cons.getConsent();
+        default ConsentInitiateBody map(Xs2aContext cons) {
+            return null == cons.getConsent() ? new ConsentInitiateBody() : cons.getConsent();
         }
     }
 }

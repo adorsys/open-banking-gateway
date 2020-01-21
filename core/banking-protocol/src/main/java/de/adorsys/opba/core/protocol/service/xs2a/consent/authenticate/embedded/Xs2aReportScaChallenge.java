@@ -1,8 +1,9 @@
-package de.adorsys.opba.core.protocol.service.xs2a.consent.authorize.embedded;
+package de.adorsys.opba.core.protocol.service.xs2a.consent.authenticate.embedded;
 
 import de.adorsys.opba.core.protocol.service.ContextUtil;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.Response;
 import de.adorsys.xs2a.adapter.service.model.ScaStatusResponse;
@@ -24,7 +25,7 @@ public class Xs2aReportScaChallenge extends ValidatedExecution<Xs2aContext> {
         Response<ScaStatusResponse> authResponse = ais.updateConsentsPsuData(
                 context.getConsentId(),
                 context.getAuthorizationId(),
-                context.toHeaders(),
+                Xs2aStandardHeaders.FROM_CTX.map(context).toHeaders(),
                 authentication(context)
         );
 

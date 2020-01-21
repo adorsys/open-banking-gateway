@@ -10,7 +10,7 @@ import javax.validation.Valid;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Xs2aConsentInitiate {
+public class ConsentInitiate {
 
     @NonNull
     @Valid
@@ -18,5 +18,5 @@ public class Xs2aConsentInitiate {
 
     @NonNull
     @Valid
-    private ConsentsBody body;
+    private ConsentInitiateBody body;
 }

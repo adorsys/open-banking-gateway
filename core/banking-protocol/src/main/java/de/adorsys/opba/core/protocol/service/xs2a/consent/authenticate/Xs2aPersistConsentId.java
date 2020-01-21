@@ -1,4 +1,4 @@
-package de.adorsys.opba.core.protocol.service.xs2a.consent.authorize;
+package de.adorsys.opba.core.protocol.service.xs2a.consent.authenticate;
 
 import de.adorsys.opba.core.protocol.domain.entity.Consent;
 import de.adorsys.opba.core.protocol.repository.jpa.ConsentRepository;
