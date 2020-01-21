@@ -4,19 +4,18 @@ import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.service.RequestHeaders;
 import lombok.Data;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.adorsys.opba.core.protocol.constant.GlobalConst.SPRING_KEYWORD;
+import static de.adorsys.opba.core.protocol.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_GTW_ASPSP_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 
 @Data
 public class Xs2aStandardHeaders {
-
-    public static final Xs2aStandardHeaders.FromCtx FROM_CTX = Mappers.getMapper(Xs2aStandardHeaders.FromCtx.class);
 
     private String psuId;
     private String sagaId;
@@ -32,7 +31,7 @@ public class Xs2aStandardHeaders {
         return RequestHeaders.fromMap(allValues);
     }
 
-    @Mapper
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface FromCtx {
         Xs2aStandardHeaders map(Xs2aContext ctx);
     }

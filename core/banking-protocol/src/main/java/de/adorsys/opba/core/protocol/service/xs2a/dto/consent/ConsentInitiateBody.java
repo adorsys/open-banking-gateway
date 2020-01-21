@@ -9,7 +9,6 @@ import de.adorsys.xs2a.adapter.service.model.Consents;
 import lombok.Getter;
 import lombok.Setter;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -17,12 +16,12 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
+import static de.adorsys.opba.core.protocol.constant.GlobalConst.SPRING_KEYWORD;
+import static de.adorsys.opba.core.protocol.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
+
 @Getter
 @Setter
 public class ConsentInitiateBody {
-
-    public static final ToXs2aApi TO_XS2A = Mappers.getMapper(ToXs2aApi.class);
-    public static final FromCtx FROM_CTX = Mappers.getMapper(FromCtx.class);
 
     @Valid
     @ValidationInfo(ui = @FrontendCode("accountaccess.class"), ctx = @ContextCode("consent.access"))
@@ -56,7 +55,7 @@ public class ConsentInitiateBody {
         private AccountAccess.AvailableAccountsEnum availableAccounts;
         private AccountAccess.AllPsd2Enum allPsd2;
 
-        @Mapper
+        @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
         public interface ToXs2aApi {
             Consents map(AccountAccessBody cons);
         }
@@ -80,18 +79,22 @@ public class ConsentInitiateBody {
         @NotBlank(message = "{no.ctx.currency}")
         private String currency;
 
-        @Mapper
+        @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
         public interface ToXs2aApi {
             AccountAccess map(AccountReferenceBody cons);
         }
     }
 
-    @Mapper
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface ToXs2aApi {
+        default Consents map(Xs2aContext cons) {
+            return map(cons.getConsent());
+        }
+
         Consents map(ConsentInitiateBody cons);
     }
 
-    @Mapper
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface FromCtx {
 
         default ConsentInitiateBody map(Xs2aContext cons) {

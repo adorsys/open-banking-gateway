@@ -17,12 +17,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AccountListingService extends ValidatedExecution<Xs2aContext> {
 
+    private final Xs2aWithConsentIdHeaders.FromCtx toHeaders;
     private final AccountInformationService ais;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
         Response<AccountListHolder> accounts = ais.getAccountList(
-                Xs2aWithConsentIdHeaders.FROM_CTX.map(context).toHeaders(),
+                toHeaders.map(context).toHeaders(),
                 RequestParams.fromMap(ImmutableMap.of("withBalance", String.valueOf(context.isWithBalance())))
         );
 
