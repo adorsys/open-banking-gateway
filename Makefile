@@ -2,7 +2,7 @@ PUML_URLS_PATTERN=http://www\.plantuml\.com.*develop/docs/\(.*\).puml&fmt=svg&vv
 PUML_URLS_REPLACE=https://adorsys.github.io/open-banking-gateway/doc/${TRAVIS_TAG}/\1.png
 
 .PHONY : all
-all: java fintech-ui
+all: java fintech-ui site
 
 site: 	clean_docs \
 	prepare_docs \
@@ -50,11 +50,15 @@ copy_puml:
 
 .PHONY : clean_java
 clean_java:
-	mvn clean
+	mvn -T1C clean
 
 .PHONY : java
-java: clean_java
-	mvn -DskipTests install
+java: clean_java java_tests
+	mvn -T1C -DskipTests install
+
+.PHONY : java_tests
+java_tests:
+	mvn verify
 
 fintech-ui/node_modules:
 	cd fintech-examples/fintech-ui && npm install
