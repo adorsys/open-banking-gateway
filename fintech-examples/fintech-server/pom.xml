@@ -74,7 +74,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                 <mainClass>de.adorsys.obpa.fintech.server.FinTechApplication</mainClass>
+                 <mainClass>de.adorsys.opba.fintech.server.FinTechServer</mainClass>
                 </configuration>
             </plugin>
         </plugins>

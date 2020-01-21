@@ -1,4 +1,4 @@
-package de.adorsys.obpa.fintech.server.bankmocks;
+package de.adorsys.opba.fintech.server.bankmocks;
 
 import de.adorsys.opba.tpp.bankserach.api.model.BankSearchResponse;
 import de.adorsys.opba.tpp.bankserach.api.resource.TppBankSearchApi;

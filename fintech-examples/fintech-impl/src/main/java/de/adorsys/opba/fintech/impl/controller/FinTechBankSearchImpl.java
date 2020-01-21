@@ -21,23 +21,11 @@ import java.util.UUID;
 @RestController
 public class FinTechBankSearchImpl implements FinTechBankSearchApi {
 
-    @Value("${tpp.url}")
-    private String tppUrl;
-
     @Autowired
     private BankSearchService bankSearchService;
 
     @Autowired
     private AuthorizeService authorizeService;
-
-    private TppBankSearchApi tppBankSearchApi = null;
-
-    @PostConstruct
-    @SuppressWarnings("PMD.UnusedPrivateMethod")
-    private void init() {
-        tppBankSearchApi = new TppBankSearchApi();
-        tppBankSearchApi.getApiClient().setBasePath(tppUrl);
-    }
 
     @Override
     public ResponseEntity<InlineResponse2001> bankSearchGET(UUID xRequestID, String fintechToken, String keyword, Integer start, Integer max) {
@@ -45,7 +33,7 @@ public class FinTechBankSearchImpl implements FinTechBankSearchApi {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         ContextInformation contextInformation = new ContextInformation(xRequestID);
-        return new ResponseEntity<>(bankSearchService.searchBank(tppBankSearchApi, contextInformation, keyword, start, max), HttpStatus.OK);
+        return new ResponseEntity<>(bankSearchService.searchBank(contextInformation, keyword, start, max), HttpStatus.OK);
     }
 
     @Override
@@ -54,6 +42,6 @@ public class FinTechBankSearchImpl implements FinTechBankSearchApi {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         ContextInformation contextInformation = new ContextInformation(xRequestID);
-        return new ResponseEntity<>(bankSearchService.searchBankProfile(tppBankSearchApi, contextInformation, bankId), HttpStatus.OK);
+        return new ResponseEntity<>(bankSearchService.searchBankProfile(contextInformation, bankId), HttpStatus.OK);
     }
 }

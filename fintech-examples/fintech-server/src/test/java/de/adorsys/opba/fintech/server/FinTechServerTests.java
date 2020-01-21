@@ -1,4 +1,4 @@
-package de.adorsys.obpa.fintech.server;
+package de.adorsys.opba.fintech.server;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @AutoConfigureMockMvc
 @EnableFinTechImplConfig
 // @ComponentScan("de.adorsys.obpa.fintech.server.bankmocks")
-class FinTechApplicationTests {
+class FinTechServerTests {
 
     private static final ObjectMapper jsonMapper = new ObjectMapper();
 
