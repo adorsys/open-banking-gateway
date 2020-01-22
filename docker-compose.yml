@@ -1,9 +1,39 @@
-version: "3"
+version: "3.3"
 
 networks:
   opba-net:
 
 services:
+  postgres:
+    image: "postgres"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=open_banking
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./opba-banking-rest-impl/src/test/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - opba-net
+
+  open-banking-gateway:
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/open_banking?currentSchema=banking_protocol
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=docker
+#      - PKCS12_KEYSTORE=/pkcs12/sample-qwac.keystore
+    build: opba-embedded-starter
+    ports:
+      - "8080:8080"
+#    volumes:
+#      - ../../main/resources/:/pkcs12/
+    entrypoint: "java -jar open-banking-gateway-0.0.6-SNAPSHOT.jar"
+    depends_on:
+      - postgres
+    networks:
+      - opba-net
+
   fintech-ui:
     restart: on-failure
     build:
