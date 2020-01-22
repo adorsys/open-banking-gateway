@@ -4,7 +4,8 @@ import de.adorsys.opba.core.protocol.service.xs2a.annotations.ContextCode;
 import de.adorsys.opba.core.protocol.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.core.protocol.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
-import de.adorsys.xs2a.adapter.service.model.TransactionAuthorisation;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.DtoMapper;
+import de.adorsys.xs2a.adapter.service.model.SelectPsuAuthenticationMethod;
 import lombok.Data;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,22 +16,21 @@ import static de.adorsys.opba.core.protocol.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 
 @Data
-public class ProvideScaChallengeResult {
+public class SelectScaChallengeBody {
 
-    @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("lastScaChallenge"))
-    @NotBlank(message = "{no.sca.challenge.result}")
-    private String scaChallenge;
+    @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("userSelectScaId"))
+    @NotBlank(message = "{no.sca.challenge.method.selected}")
+    private String authenticationMethodId;
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-    public interface ToXs2aApi {
-
-        @Mapping(target = "scaAuthenticationData", source = "scaChallenge")
-        TransactionAuthorisation map(ProvideScaChallengeResult cons);
+    public interface ToXs2aApi extends DtoMapper<SelectScaChallengeBody, SelectPsuAuthenticationMethod> {
+        SelectPsuAuthenticationMethod map(SelectScaChallengeBody cons);
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-    public interface FromCtx {
-        @Mapping(target = "scaChallenge", source = "lastScaChallenge")
-        ProvideScaChallengeResult map(Xs2aContext ctx);
+    public interface FromCtx extends DtoMapper<Xs2aContext, SelectScaChallengeBody> {
+
+        @Mapping(target = "authenticationMethodId", source = "userSelectScaId")
+        SelectScaChallengeBody map(Xs2aContext ctx);
     }
 }

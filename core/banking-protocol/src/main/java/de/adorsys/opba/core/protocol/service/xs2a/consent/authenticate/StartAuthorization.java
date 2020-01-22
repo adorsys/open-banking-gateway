@@ -4,8 +4,13 @@ import de.adorsys.opba.core.protocol.domain.entity.BankConfiguration;
 import de.adorsys.opba.core.protocol.repository.jpa.BankConfigurationRepository;
 import de.adorsys.opba.core.protocol.service.ContextUtil;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
+import de.adorsys.opba.core.protocol.service.dto.ValidatedParametersHeaders;
+import de.adorsys.opba.core.protocol.service.mapper.ParamsHeadersMapperTemplate;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
-import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aAuthorizationHeaders;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.DtoMapper;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aInitialConsentParameters;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aStandardHeaders;
+import de.adorsys.opba.core.protocol.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.Response;
 import de.adorsys.xs2a.adapter.service.model.StartScaProcessResponse;
@@ -20,15 +25,23 @@ import static de.adorsys.xs2a.adapter.service.ResponseHeaders.ASPSP_SCA_APPROACH
 @RequiredArgsConstructor
 public class StartAuthorization extends ValidatedExecution<Xs2aContext> {
 
-    private final Xs2aAuthorizationHeaders.FromCtx toHeaders;
+    private final Extractor extractor;
+    private final Xs2aValidator validator;
     private final BankConfigurationRepository bic;
     private final AccountInformationService ais;
 
     @Override
+    protected void doValidate(DelegateExecution execution, Xs2aContext context) {
+        validator.validate(execution, extractor.forValidation(context));
+    }
+
+    @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+        ValidatedParametersHeaders<Xs2aInitialConsentParameters, Xs2aStandardHeaders> params =
+                extractor.forExecution(context);
         Response<StartScaProcessResponse> scaStart = ais.startConsentAuthorisation(
-                context.getConsentId(),
-                toHeaders.map(context).toHeaders()
+                params.getParameters().getConsentId(),
+                params.getHeaders().toHeaders()
         );
 
         context.setAspspScaApproach(scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH));
@@ -44,5 +57,18 @@ public class StartAuthorization extends ValidatedExecution<Xs2aContext> {
         ContextUtil.getAndUpdateContext(execution, (Xs2aContext ctx) -> {
             ctx.setAspspScaApproach(config.getPreferredApproach().name());
         });
+    }
+
+    @Service
+    public static class Extractor extends ParamsHeadersMapperTemplate<
+            Xs2aContext,
+            Xs2aStandardHeaders,
+            Xs2aInitialConsentParameters> {
+
+        public Extractor(
+                DtoMapper<Xs2aContext, Xs2aStandardHeaders> toHeaders,
+                DtoMapper<Xs2aContext, Xs2aInitialConsentParameters> toParameters) {
+            super(toHeaders, toParameters);
+        }
     }
 }
