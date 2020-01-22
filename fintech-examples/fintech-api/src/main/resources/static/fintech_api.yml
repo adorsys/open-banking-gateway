@@ -11,14 +11,14 @@ info:
     * automatically detects the "302 Found" response code and proceeds with the associated location url,
     * stores httpOnly cookies sent with the redirect under the given domain and path as defined by [RFC 6265](https://tools.ietf.org/html/rfc6265).
 
-    This Api also assumes any other PsuUserAgent like a native mobile or a desktop application can simulate this same behavior of a modern browser with respect to 30X and Cookies. 
+    This Api also assumes any other PsuUserAgent like a native mobile or a desktop application can simulate this same behavior of a modern browser with respect to 30X and Cookies.
 
     #### SessionCookies and XSRF
     After a PSU is authenticated with the FinTech environment (either through the simple login interface defined here, or through an identity provider),
-    the FinTechApi will establish a session with the FinTechUI. This is done by the mean of using a cookie called SessionCookie. 
+    the FinTechApi will establish a session with the FinTechUI. This is done by the mean of using a cookie called SessionCookie.
     This SessionCookie is protected by a corresponding XSRF-TOKEN.
     * The request that sets a SessionCookie also carries a corresponding X-XSRF-TOKEN in the response header.
-    * It is the responsibility of the FinTechUI to parse this X-XSRF-TOKEN and send it back to the FinTechApi with each subsequen request. 
+    * It is the responsibility of the FinTechUI to parse this X-XSRF-TOKEN and send it back to the FinTechApi with each subsequen request.
 
     #### Redirecting to the ConsentAuthorisationApi
     Any response of the FinTechApi that redirects the PSU to the ConsentAuthorisationApi makes sure following happens:
@@ -33,7 +33,7 @@ info:
     Reloading the FinTechUI, we will also loose the XSRF parameter that is used to validate the SessionCookie. This is why we
     set RedirectCookie (that this time has a very short life span). The url reloading the FinTechUI must carry a redirectState
     parameter that will be used to invoke the /afterReload endpoint of the FinTechApi. Thus leading to a new SessionCookie and
-    corresponding XSRF parameter.     
+    corresponding XSRF parameter.
 
 
 externalDocs:
@@ -61,8 +61,8 @@ paths:
       operationId: loginPOST
       summary: Identifies the PSU in the Realm of the FinTechApi.
       description: |
-        Simple login interface used to establish a session between 
-        PSU and FinTech. Real application will delegate login to an oAuth2 
+        Simple login interface used to establish a session between
+        PSU and FinTech. Real application will delegate login to an oAuth2
         Identity provider.
       parameters:
         #header
@@ -155,12 +155,12 @@ paths:
       description: |
         Read the identifiers of the available payment accounts.
 
-        If required by the bank, PSU consent will be obtained before returning 
+        If required by the bank, PSU consent will be obtained before returning
         the list of bank accounts.
 
-        Returns all identifiers of the accounts, to which an account access has 
-        been granted to by the PSU. In addition, relevant information about the 
-        accounts and hyperlinks to corresponding account information resources 
+        Returns all identifiers of the accounts, to which an account access has
+        been granted to by the PSU. In addition, relevant information about the
+        accounts and hyperlinks to corresponding account information resources
         are provided if a related consent has been already granted.
       parameters:
         #path
@@ -219,7 +219,7 @@ paths:
       operationId: fromConsentOkGET
       summary: Entry point when PSU is redirected back to the FinTechApi.
       description: |
-        Entry point when PSU is redirected back to the FinTechApi by the 
+        Entry point when PSU is redirected back to the FinTechApi by the
         ConsentAuthorisationApi.
       parameters:
         #path
@@ -264,7 +264,7 @@ components:
       name: sessionCookie
       description: >
         This is the FinTechLoginSessionCookie used to maintain the login session
-        between the FinTechUI and the FinTechApi. If this cookie is sent, the 
+        between the FinTechUI and the FinTechApi. If this cookie is sent, the
         FintechLoginRequest will contain a required X-XSRF-TOKEN used to check
         the cookie agains CSRF.
 
@@ -290,11 +290,11 @@ components:
         * Redirecting to reload the FinTechUI application.
           * The FinTechUI application to loose it's current state as it is being reload by the browser window.
           * The url loading the FinTechUI will must carry a redirectState
-          * The FinTechUI will then parse and use the redirectState param to invoke the afterReload endpoint of the FinTechApi. 
+          * The FinTechUI will then parse and use the redirectState param to invoke the afterReload endpoint of the FinTechApi.
       schema:
         type: string
         example: |
-          "RedirectSession=ejxs.wersdzxxc23r.asdf; Path=/" 
+          "RedirectSession=ejxs.wersdzxxc23r.asdf; Path=/"
 
     Reset-Cookies:
       name: Set-Cookie
@@ -303,7 +303,7 @@ components:
       schema:
         type: string
         example: |
-          "RedirectSession=null; Path=/; Max-Age=0, Session=null; Path=/; Max-Age=0" 
+          "RedirectSession=null; Path=/; Max-Age=0, Session=null; Path=/; Max-Age=0"
 
     X-Request-ID:
       name: X-Request-ID
@@ -326,8 +326,8 @@ components:
     Location-Consent-Auth:
       name: Location
       description: |
-        This is the 30X Location Header. It contains a redirect link for 
-        the /auth endpoint of the ConsentAuthorisationApi. This link must 
+        This is the 30X Location Header. It contains a redirect link for
+        the /auth endpoint of the ConsentAuthorisationApi. This link must
         contain a redirectCode as a query parameter.
       schema:
         type: string
@@ -336,7 +336,7 @@ components:
     Location-FinTechUI:
       name: Location
       description: |
-        Entry point for loading the FinTechUI from the FinTechApi. This is 
+        Entry point for loading the FinTechUI from the FinTechApi. This is
         generaly invoked when another application redirects an authenticated
         user to the FinTechApi. The FinTechApi has to use the request parameters
         generaly a SessionCookie and a SessionState to authenticate the user and
@@ -353,7 +353,7 @@ components:
       in: header
       required: true
       description: |
-        Unique ID that identifies this request through common workflow. Must be 
+        Unique ID that identifies this request through common workflow. Must be
         contained in HTTP Response as well.
       example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
       schema:
@@ -603,7 +603,7 @@ components:
             Here the cookie set ic called a RedirectSessionCookie. Looks like
             RDSC_XYZ=ejts.adsfa.adfaj; Path=/fromConsentOk. In the case XYZ is an
             identifier used to keep track of different RDCs. As a user can
-            initiate more than one sca from one browser instance. 
+            initiate more than one sca from one browser instance.
             * Note that the path of the RDC is Path=/v1/XYZ/fromConsentOk/.
             * So RDSC are only sent to the server when a callback link
               commes from the ConsentAuthorisationApi
@@ -619,7 +619,7 @@ components:
 
     302_ReloadUI:
       description: |
-        Reloads the FinTechUI with the authenticated context of the PSU. This 
+        Reloads the FinTechUI with the authenticated context of the PSU. This
         generaly happens after a back redirect from the ConsentAuthorisationApi.
 
         In orther to garanty integrity of the application, the redirect response
@@ -660,7 +660,7 @@ components:
         * Endpoin expect a session cookie but none is present.
         * Session cookie is present but associated stateString does not match.
 
-        As a consequence, we reset existing FinTechLoginSessionState if any. 
+        As a consequence, we reset existing FinTechLoginSessionState if any.
         Nevertheless we do not reset RedirectSessionCookie.
       headers:
         X-Request-ID:
