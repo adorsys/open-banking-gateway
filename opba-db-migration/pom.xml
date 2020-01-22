@@ -97,10 +97,7 @@
                 </executions>
                 <configuration>
                     <includes>
-                        <include>*.yml</include>
-                        <include>*.sql</include>
-                        <include>*.properties</include>
-                        <include>*.keystore</include>
+                        <include>application-migration.yml</include>
                     </includes>
                 </configuration>
             </plugin>

@@ -1,8 +1,8 @@
 package de.adorsys.opba.core.protocol;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.retry.annotation.EnableRetry;
@@ -25,6 +25,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class BankingProtocol {
 
     public static void main(String[] args) {
-        SpringApplication.run(BankingProtocol.class, args);
+        new SpringApplicationBuilder(BankingProtocol.class)
+                .properties("spring.comfig.name:application,application-migration",
+                        "spring.config.location:classpath:application.yml,classpath:application-migration.yml")
+                .build().run(args);
     }
 }

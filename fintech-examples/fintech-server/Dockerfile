@@ -8,6 +8,4 @@ WORKDIR $APP_HOME
 
 COPY target/${JAR_FILE} ${JAR_FILE}
 
-EXPOSE 8080
-
 ENTRYPOINT ["sh", "-c", "java -jar \"${JAR_FILE}\""]

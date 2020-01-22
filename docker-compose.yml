@@ -25,7 +25,7 @@ services:
       - PKCS12_KEYSTORE=/pkcs12/sample-qwac.keystore
     build: opba-embedded-starter
     ports:
-      - "8080:8080"
+      - "8085:8085"
     volumes:
       - ./core/banking-protocol/src/main/resources/:/pkcs12/
     entrypoint: "java -jar open-banking-gateway-0.0.6-SNAPSHOT.jar"

@@ -118,23 +118,43 @@
         <finalName>${project.artifactId}-${project.version}</finalName>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-remote-resources-plugin</artifactId>
                 <version>${maven-remote-resources-plugin.version}</version>
+                <configuration>
+                    <resourceBundles>
+                        <resourceBundle>de.adorsys.opba:opba-db-migration:${project.version}</resourceBundle>
+                    </resourceBundles>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>bundle</goal>
+                            <goal>process</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <includes>
-                        <include>*.yml</include>
-                        <include>*.sql</include>
-                        <include>*.properties</include>
-                        <include>*.keystore</include>
-                    </includes>
-                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven-resources-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <id>copy-resources</id>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/classes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.directory}/maven-shared-archive-resources</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
