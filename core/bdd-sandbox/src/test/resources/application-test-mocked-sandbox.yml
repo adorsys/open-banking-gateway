@@ -3,3 +3,7 @@ xs2a-profile:
 spring:
   main:
     allow-bean-definition-overriding: true
+
+test:
+  retry:
+    max: 10

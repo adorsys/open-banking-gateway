@@ -7,6 +7,8 @@ import com.tngtech.jgiven.annotation.BeforeStage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -48,7 +50,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
 
     @SneakyThrows
     public AccountInformationResult open_banking_reads_anton_brueckner_accounts_on_redirect() {
-        RestAssured
+        ExtractableResponse<Response> response = RestAssured
                 .when()
                     .get(URI.create(redirectOkUri).getPath())
                 .then()
@@ -56,7 +58,52 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
                     .body("iban", contains("DE80760700240271232400"))
                     .body("iban", hasSize(1))
                     .body("currency", contains("EUR"))
-                    .body("currency", hasSize(1));
+                    .body("currency", hasSize(1))
+                .extract();
+
+        this.responseContent = response.body().asString();
+        return self();
+    }
+
+    @SneakyThrows
+    public AccountInformationResult open_banking_reads_anton_brueckner_transactions_validated_by_iban() {
+        ExtractableResponse<Response> response = RestAssured
+                .when()
+                    .get(URI.create(redirectOkUri).getPath())
+                .then()
+                    .statusCode(HttpStatus.OK.value())
+                .extract();
+        this.responseContent = response.body().asString();
+        DocumentContext body = JsonPath.parse(responseContent);
+
+        assertThat(body).extracting(it -> it.read("$.transactions.booked[*].creditorAccount.iban")).asList()
+                .containsOnly(
+                        "DE67760700240243265400",
+                        "DE23760700240234367800",
+                        "DE80760700240271232400",
+                        "DE84100100100568753108",
+                        "DE38760700240320465700"
+                );
+
+        assertThat(body).extracting(it -> it.read("$.transactions.booked[*].debtorAccount.iban")).asList()
+                .containsOnly("DE80760700240271232400", "DE38760700240320465700");
+
+        assertThat(body)
+                .extracting(it -> it.read("$.transactions.booked[*].transactionAmount.amount"))
+                .asList()
+                .extracting(it -> new BigDecimal((String) it))
+                .usingElementComparator(BIG_DECIMAL_COMPARATOR)
+                // Looks like returned order by Sandbox is not stable
+                .containsExactlyInAnyOrder(
+                        new BigDecimal("-150.00"),
+                        new BigDecimal("-100.00"),
+                        new BigDecimal("-2300.00"),
+                        new BigDecimal("-250.00"),
+                        new BigDecimal("2300.00"),
+                        new BigDecimal("-900.00"),
+                        new BigDecimal("-700.00"),
+                        new BigDecimal("30000.00")
+                );
         return self();
     }
 
