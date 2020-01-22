@@ -76,10 +76,10 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF open_banking_list_transactions_called_for_anton_brueckner() {
+    public SELF open_banking_list_transactions_called_for_anton_brueckner(String resourceId) {
         this.redirectUriToGetUserParams = RestAssured
                 .when()
-                    .get("/v1/transactions/cmD4EYZeTkkhxRuIV1diKA")
+                    .get("/v1/transactions/" + resourceId)
                 .then()
                     .statusCode(HttpStatus.MOVED_PERMANENTLY.value())
                 .extract()

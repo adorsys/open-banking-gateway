@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import static de.adorsys.opba.core.protocol.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.core.protocol.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
 import static de.adorsys.opba.testsandbox.Const.ENABLE_HEAVY_TESTS;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
@@ -60,6 +59,10 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<RealServers, WebDriverBa
 
     @BeforeAll
     static void startSandbox() {
+        if (null != System.getenv("NO_SANDBOX_START")) {
+            return;
+        }
+
         executor.runAll();
         executor.awaitForAllStarted();
     }
@@ -79,13 +82,21 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<RealServers, WebDriverBa
 
     @Test
     public void testAccountsListWithConsentUsingRedirect(FirefoxDriver firefoxDriver) {
+        redirectListAntonBruecknerAccounts(firefoxDriver);
+    }
+
+    @Test
+    public void testTransactionListWithConsentUsingRedirect(FirefoxDriver firefoxDriver) {
+        String accountResourceId = JsonPath
+                .parse(redirectListAntonBruecknerAccounts(firefoxDriver)).read("$.[0].resourceId");
+
         given()
                 .enabled_redirect_sandbox_mode();
 
         when()
-                .open_banking_list_accounts_called()
+                .open_banking_list_transactions_called_for_anton_brueckner(accountResourceId)
                 .and()
-                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts()
+                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions()
                 .and()
                 .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
                 .and()
@@ -100,10 +111,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<RealServers, WebDriverBa
                 .sandbox_anton_brueckner_see_redirect_back_to_tpp_button(firefoxDriver);
 
         then()
-                .open_banking_reads_anton_brueckner_accounts_on_redirect();
-
-        firefoxDriver.get("https://bonigarcia.github.io/selenium-jupiter/");
-        assertThat(firefoxDriver.getTitle()).contains("JUnit 5 extension for Selenium");
+                .open_banking_reads_anton_brueckner_transactions_validated_by_iban();
     }
 
     @Test
@@ -147,6 +155,33 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<RealServers, WebDriverBa
 
         AccountInformationResult result = then()
                 .open_banking_has_max_musterman_accounts();
+
+        return result.getResponseContent();
+    }
+
+    private String redirectListAntonBruecknerAccounts(FirefoxDriver firefoxDriver) {
+        given()
+                .enabled_redirect_sandbox_mode();
+
+        when()
+                .open_banking_list_accounts_called()
+                .and()
+                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts()
+                .and()
+                .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_inputs_username_and_password(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_confirms_consent_information(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_selects_sca_method(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_see_redirect_back_to_tpp_button(firefoxDriver);
+
+        AccountInformationResult result = then()
+                .open_banking_reads_anton_brueckner_accounts_on_redirect();
 
         return result.getResponseContent();
     }
