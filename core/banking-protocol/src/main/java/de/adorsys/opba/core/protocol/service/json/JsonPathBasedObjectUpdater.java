@@ -7,6 +7,7 @@ import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
+import de.adorsys.opba.core.protocol.config.protocol.ProtocolConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -30,14 +31,13 @@ import static com.jayway.jsonpath.Option.SUPPRESS_EXCEPTIONS;
 @RequiredArgsConstructor
 public class JsonPathBasedObjectUpdater {
 
-    private static final int MAX_ARRAY_SIZE = 32;
-
     private final Configuration jsonConfig = Configuration.builder()
             .jsonProvider(new JacksonJsonNodeJsonProvider())
             .options(DEFAULT_PATH_LEAF_TO_NULL, SUPPRESS_EXCEPTIONS)
             .build();
 
     private final ObjectMapper mapper;
+    private final ProtocolConfiguration configuration;
 
     @SneakyThrows
     public <T> T updateObjectUsingJsonPath(T object, Map<String, String> jsonPathToItsValue) {
@@ -45,7 +45,6 @@ public class JsonPathBasedObjectUpdater {
         DocumentContext docCtx = JsonPath.parse(tree, jsonConfig);
         Map<String, Integer> foundArraySizes = new HashMap<>();
 
-        // TODO: limit array sizes to reasonable maximum to prevent memory exhaustion
         jsonPathToItsValue.forEach((path, value) -> analyzeArraySizes(path, docCtx, foundArraySizes));
         jsonPathToItsValue.forEach((path, value) -> safeSet(path, docCtx, value, foundArraySizes));
         return (T) mapper.treeToValue(tree, object.getClass());
@@ -110,8 +109,8 @@ public class JsonPathBasedObjectUpdater {
         }
 
         int position = Integer.parseInt(matcher.group(2));
-        if (position > MAX_ARRAY_SIZE) {
-            throw new IllegalArgumentException("Array size is too large");
+        if (position >= configuration.getRedirect().getParameters().getMaxArraySize()) {
+            throw new IllegalArgumentException("Array size is too large: " + segment);
         }
 
         return new ArraySegment(

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.mapstruct.Mapper;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Map;
 
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.SPRING_KEYWORD;
@@ -17,7 +18,10 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_URI;
 @EqualsAndHashCode(callSuper = true)
 public class Xs2aAuthorizationHeaders extends Xs2aStandardHeaders {
 
+    @NotBlank // can't be provided manually
     private String redirectUriOk;
+
+    @NotBlank // can't be provided manually
     private String redirectUriNok;
 
     public RequestHeaders toHeaders() {
