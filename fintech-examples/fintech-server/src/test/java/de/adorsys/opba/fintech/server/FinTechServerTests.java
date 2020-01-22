@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,10 +25,12 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 
@@ -38,7 +39,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @AutoConfigureMockMvc
 @EnableFinTechImplConfig
 class FinTechServerTests {
-    private static final String BANKSEARCHRESPONSE_FILE = "BankSearchResponse.json";
+    private static final String BANKSEARCHRESPONSE_PREFIX = "BankSearchResponse";
+    private static final String BANKSEARCHRESPONSE_POSTFIX = ".json";
 
     private static final ObjectMapper jsonMapper = new ObjectMapper();
 
@@ -94,20 +96,35 @@ class FinTechServerTests {
     @Test
     @SneakyThrows
     public void bankSearchAuthorized() {
+        final String keyword = "affe";
+        final Integer start = 1;
+        final Integer max = 2;
+
         bankSearchService.setTppBankSearchApi(mockedTppBankSearchApi);
-        Mockito.when(mockedTppBankSearchApi.bankSearchGET(any(), any(), any(), any(), any())).thenReturn(createBankSearchResponse(BANKSEARCHRESPONSE_FILE));
+
+        when(mockedTppBankSearchApi.bankSearchGET(any(), any(), eq(keyword), eq(start), eq(max)))
+                .thenReturn(createBankSearchResponse(getFilename(keyword, start, max)));
 
         LoginBody loginBody = new LoginBody("peter", "1234");
         String xsrfToken = auth(loginBody.username, loginBody.password);
+
         this.mvc
                 .perform(MockMvcRequestBuilders.get("/v1/search/bankSearch")
                         .header("X-Request-ID", UUID.randomUUID().toString())
                         .header("X-XSRF-TOKEN", xsrfToken)
-                        .param("keyword", "affe")
-                        .param("start", "0")
-                        .param("max", "2"))
+                        .param("keyword", keyword)
+                        .param("start", start.toString())
+                        .param("max", max.toString()))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    private String getFilename(String keyword, Integer start, Integer max) {
+        return BANKSEARCHRESPONSE_PREFIX
+                + "-" + keyword
+                + "-" + start
+                + "-" + max
+                + BANKSEARCHRESPONSE_POSTFIX;
     }
 
     @Test
@@ -135,7 +152,7 @@ class FinTechServerTests {
     @SneakyThrows
     private String readFile(String fileName) {
         ClassLoader classLoader = getClass().getClassLoader();
-        return IOUtils.toString(classLoader.getResourceAsStream(fileName), Charset.forName("UTF-8"));
+        return IOUtils.toString(classLoader.getResourceAsStream(fileName), StandardCharsets.UTF_8);
     }
 
     private BankSearchResponse createBankSearchResponse(String filename) {
