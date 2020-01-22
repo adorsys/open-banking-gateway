@@ -1,6 +1,5 @@
 package de.adorsys.opba.fintech.server;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
 import de.adorsys.opba.fintech.impl.service.BankSearchService;
@@ -12,6 +11,8 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -46,15 +50,12 @@ class FinTechServerTests {
     private static final String FIN_TECH_AUTH_URL = "/v1/login";
     private static final String FIN_TECH_BANK_SEARCH_URL = "/v1/search/bankSearch";
     private static final String FIN_TECH_BANK_PROFILE_URL = "/v1/search/bankProfile";
-    private static final String TPP_BANK_SEARCH_URL = "/v1/search/bank-search";
-    private static final String TPP_BANK_PROFILE_URL = "/v1/search/bank-profile";
 
-    private static final String BANK_SEARCH_RESPONSE_PREFIX = "BankSearchResponse";
-    private static final String BANK_PROFILE_RESPONSE_PREFIX = "BankProfileResponse";
+    private static final String BANK_SEARCH_RESPONSE_PREFIX = "TPP_BankSearchResponse";
+    private static final String BANK_PROFILE_RESPONSE_PREFIX = "TPP_BankProfileResponse";
     private static final String POSTFIX = ".json";
 
     private static final Gson gson = new Gson();
-    private static final ObjectMapper jsonMapper = new ObjectMapper();
 
     @BeforeEach
     public void setup() {
@@ -148,8 +149,8 @@ class FinTechServerTests {
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
-        BankSearchResponse result = gson.fromJson(mvcResult.getResponse().getContentAsString(), BankSearchResponse.class);
-        return result.getBankDescriptor().get(0).getUuid();
+
+        return new JSONObject(mvcResult.getResponse().getContentAsString()).getJSONArray("bankDescriptor").getJSONObject(0).get("uuid").toString();
     }
 
     @Test
@@ -200,24 +201,36 @@ class FinTechServerTests {
             bankUUID = bankSearch(keyword, start, max, xsrfToken);
         }
 
+        List<String> services = null;
         {
             log.info("DO Bank Profile ({}) ============================== ", bankUUID);
             when(mockedTppBankSearchApi.bankProfileGET(any(), any(), eq(bankUUID)))
                     .thenReturn(gson.fromJson(readFile(getFilenameBankProfile(bankUUID)), BankProfileResponse.class));
 
-            MvcResult mvcResult = this.mvc
-                    .perform(MockMvcRequestBuilders.get(FIN_TECH_BANK_PROFILE_URL)
-                            .header("X-Request-ID", UUID.randomUUID().toString())
-                            .header("X-XSRF-TOKEN", xsrfToken)
-                            .param("bankId", bankUUID))
-                    .andDo(print())
-                    .andExpect(MockMvcResultMatchers.status().isOk())
-                    .andReturn();
-            BankProfileResponse result = gson.fromJson(mvcResult.getResponse().getContentAsString(), BankProfileResponse.class);
-            Assertions.assertEquals(result.getBankProfileDescriptor().getBankUuid(),bankUUID);
+            services = bankProfile(xsrfToken, bankUUID);
+            Assertions.assertTrue(services.containsAll(Arrays.asList(new String[]{"List accounts", "List transactions", "Initiate payment"})));
         }
         log.info(" i have done it");
     }
+
+    private List<String> bankProfile(String xsrfToken, String bankUUID) throws Exception {
+        MvcResult mvcResult = this.mvc
+                .perform(MockMvcRequestBuilders.get(FIN_TECH_BANK_PROFILE_URL)
+                        .header("X-Request-ID", UUID.randomUUID().toString())
+                        .header("X-XSRF-TOKEN", xsrfToken)
+                        .param("bankId", bankUUID))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        List<String> result = new ArrayList<>();
+        JSONArray jsonArray = new JSONObject(mvcResult.getResponse().getContentAsString()).getJSONObject("bankProfile").getJSONArray("services");
+        for (int i = 0; i < jsonArray.length(); i++) {
+            result.add(jsonArray.getString(i));
+        }
+        return result;
+    }
+
 
     @AllArgsConstructor
     @Getter
