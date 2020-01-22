@@ -4,6 +4,7 @@ import de.adorsys.opba.core.protocol.service.xs2a.annotations.ContextCode;
 import de.adorsys.opba.core.protocol.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.core.protocol.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.DtoMapper;
 import de.adorsys.opba.core.protocol.service.xs2a.dto.WithBasicInfo;
 import de.adorsys.xs2a.adapter.service.RequestHeaders;
 import lombok.Getter;
@@ -44,7 +45,7 @@ public class ConsentInitiateHeaders extends WithBasicInfo {
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-    public interface FromCtx {
+    public interface FromCtx extends DtoMapper<Xs2aContext, ConsentInitiateHeaders> {
         ConsentInitiateHeaders map(Xs2aContext ctx);
     }
 }

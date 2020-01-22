@@ -4,6 +4,7 @@ import de.adorsys.opba.core.protocol.service.xs2a.annotations.ContextCode;
 import de.adorsys.opba.core.protocol.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.core.protocol.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.DtoMapper;
 import de.adorsys.xs2a.adapter.service.model.AccountAccess;
 import de.adorsys.xs2a.adapter.service.model.Consents;
 import lombok.Getter;
@@ -86,7 +87,7 @@ public class ConsentInitiateBody {
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-    public interface ToXs2aApi {
+    public interface ToXs2aApi extends DtoMapper<ConsentInitiateBody, Consents> {
         default Consents map(Xs2aContext cons) {
             return map(cons.getConsent());
         }
@@ -95,7 +96,7 @@ public class ConsentInitiateBody {
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-    public interface FromCtx {
+    public interface FromCtx extends DtoMapper<Xs2aContext, ConsentInitiateBody> {
 
         default ConsentInitiateBody map(Xs2aContext cons) {
             return null == cons.getConsent() ? new ConsentInitiateBody() : cons.getConsent();

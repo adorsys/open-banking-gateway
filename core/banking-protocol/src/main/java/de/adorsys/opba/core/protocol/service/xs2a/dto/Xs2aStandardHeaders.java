@@ -43,7 +43,7 @@ public class Xs2aStandardHeaders {
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-    public interface FromCtx {
+    public interface FromCtx extends DtoMapper<Xs2aContext, Xs2aStandardHeaders> {
         Xs2aStandardHeaders map(Xs2aContext ctx);
     }
 }
