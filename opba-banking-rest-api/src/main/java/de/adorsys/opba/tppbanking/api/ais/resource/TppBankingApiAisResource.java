@@ -11,6 +11,8 @@ import de.adorsys.opba.protocol.services.ais.account.AccountsReport;
 import de.adorsys.opba.protocol.services.psuconsentsession.PsuConsentSessionLoadingService;
 import de.adorsys.opba.protocol.services.psuconsentsession.redirect.RedirectionService;
 import de.adorsys.opba.tppbankingapi.HttpHeaders;
+import de.adorsys.opba.tppbankingapi.ais.resource.AccountListMapper;
+import de.adorsys.opba.tppbankingapi.ais.resource.TppBankingApiAccountInformationServiceAisApi;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
