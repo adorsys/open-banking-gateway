@@ -20,7 +20,3 @@ spring:
     parameters:
       table-prefix: opb_
       fill-with-mock-data: true
-
-bank-search:
-  start: 0
-  max: 10
