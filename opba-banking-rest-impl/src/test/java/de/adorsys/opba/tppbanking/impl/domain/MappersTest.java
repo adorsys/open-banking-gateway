@@ -4,12 +4,13 @@ import de.adorsys.opba.tppbanking.impl.domain.entity.Bank;
 import de.adorsys.opba.tppbanking.impl.domain.entity.BankProfile;
 import de.adorsys.opba.tppbankingapi.search.model.BankDescriptor;
 import de.adorsys.opba.tppbankingapi.search.model.BankProfileDescriptor;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MappersTest {
 
@@ -19,10 +20,10 @@ class MappersTest {
     void bankSearchMapperTest() {
         BankDescriptor bankDescriptor = Bank.TO_BANK_DESCRIPTOR.map(TEST_BANK);
 
-        Assertions.assertEquals(bankDescriptor.getBankName(), TEST_BANK.getName());
-        Assertions.assertEquals(bankDescriptor.getBankCode(), TEST_BANK.getBankCode());
-        Assertions.assertEquals(bankDescriptor.getBic(), TEST_BANK.getBic());
-        Assertions.assertEquals(bankDescriptor.getUuid(), TEST_BANK.getUuid());
+        assertEquals(bankDescriptor.getBankName(), TEST_BANK.getName());
+        assertEquals(bankDescriptor.getBankCode(), TEST_BANK.getBankCode());
+        assertEquals(bankDescriptor.getBic(), TEST_BANK.getBic());
+        assertEquals(bankDescriptor.getUuid(), TEST_BANK.getUuid());
 
     }
 
@@ -34,11 +35,11 @@ class MappersTest {
 
         BankProfileDescriptor bankProfileDescriptor = BankProfile.TO_BANK_PROFILE_DESCRIPTOR.map(bankProfile);
 
-        Assertions.assertEquals(bankProfileDescriptor.getBankName(), bankProfile.getBank().getName());
-        Assertions.assertEquals(bankProfileDescriptor.getBic(), bankProfile.getBank().getBic());
-        Assertions.assertEquals(bankProfileDescriptor.getBankUuid(), bankProfile.getBank().getUuid());
+        assertEquals(bankProfileDescriptor.getBankName(), bankProfile.getBank().getName());
+        assertEquals(bankProfileDescriptor.getBic(), bankProfile.getBank().getBic());
+        assertEquals(bankProfileDescriptor.getBankUuid(), bankProfile.getBank().getUuid());
         List<String> services = bankProfile.getServices().stream().map(Service::getCode).collect(Collectors.toList());
-        Assertions.assertEquals(bankProfileDescriptor.getServiceList(), services);
+        assertEquals(bankProfileDescriptor.getServiceList(), services);
     }
 
 }

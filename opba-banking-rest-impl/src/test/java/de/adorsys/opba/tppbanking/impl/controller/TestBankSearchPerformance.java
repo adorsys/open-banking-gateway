@@ -12,8 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.testcontainers.shaded.org.apache.commons.lang.RandomStringUtils;
 
 import java.util.ArrayList;
@@ -26,6 +24,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static de.adorsys.opba.tppbanking.impl.TestProfiles.ONE_TIME_POSTGRES_ON_DISK;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @Slf4j
@@ -81,13 +81,13 @@ class TestBankSearchPerformance extends BaseMockitoTest {
             long start = System.currentTimeMillis();
             try {
                 MvcResult mvcResult = mockMvc.perform(
-                        MockMvcRequestBuilders.get("/v1/banking/search/bank-search")
+                        get("/v1/banking/search/bank-search")
                                 .header("Authorization", "123")
                                 .header("X-Request-ID", "01f4ec8e-8fb8-4e37-8912-bae6ff227231")
                                 .param("keyword", searchString)
                                 .param("max", "10")
                                 .param("start", "0"))
-                        .andExpect(MockMvcResultMatchers.status().isOk())
+                        .andExpect(status().isOk())
                         .andReturn();
                 long end = System.currentTimeMillis();
                 TestResult testResult = new TestResult(start, end, searchString, mvcResult.getResponse().getContentAsString());
