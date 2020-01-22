@@ -38,12 +38,12 @@ info:
 
 externalDocs:
   url: "https://adorsys.github.io/open-banking-gateway"
-  termsOfService: urn:tos
-  contact: {}
-  license:
+  x-termsOfService: urn:tos
+  x-contact: {}
+  x-license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0
-  version: "1.0"
+  x-version: "1.0"
 
 tags:
   - name: FinTechAuthorization
