@@ -93,7 +93,8 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
                 .asList()
                 .extracting(it -> new BigDecimal((String) it))
                 .usingElementComparator(BIG_DECIMAL_COMPARATOR)
-                .containsExactlyInAnyOrder( // Looks like returned order by Sandbox is not stable
+                // Looks like returned order by Sandbox is not stable
+                .containsExactlyInAnyOrder(
                         new BigDecimal("-150.00"),
                         new BigDecimal("-100.00"),
                         new BigDecimal("-2300.00"),
