@@ -1,7 +1,7 @@
 package de.adorsys.opba.starter;
 
 import de.adorsys.opba.consentapi.config.EnableConsentApi;
-import de.adorsys.opba.tppbanking.impl.config.EnableBankingPersistence;
+import de.adorsys.opba.tppbankingapi.config.EnableBankingPersistence;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
