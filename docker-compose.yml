@@ -22,15 +22,25 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/open_banking?currentSchema=banking_protocol
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=docker
-#      - PKCS12_KEYSTORE=/pkcs12/sample-qwac.keystore
+      - PKCS12_KEYSTORE=/pkcs12/sample-qwac.keystore
     build: opba-embedded-starter
     ports:
       - "8080:8080"
-#    volumes:
-#      - ../../main/resources/:/pkcs12/
+    volumes:
+      - ./core/banking-protocol/src/main/resources/:/pkcs12/
     entrypoint: "java -jar open-banking-gateway-0.0.6-SNAPSHOT.jar"
     depends_on:
       - postgres
+    networks:
+      - opba-net
+
+  fintech-server:
+    environment:
+      - TPP_URL=http://open-banking-gateway:8080
+    build: fintech-examples/fintech-server
+    ports:
+      - "8086:8086"
+    entrypoint: "java -jar fintech-server-0.0.6-SNAPSHOT.jar"
     networks:
       - opba-net
 
