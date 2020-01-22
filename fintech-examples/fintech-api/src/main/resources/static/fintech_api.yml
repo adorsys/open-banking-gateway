@@ -709,16 +709,17 @@ components:
     psuMessage:
       title: PsuMessage
       type: object
+      required:
+        - category
+        - code
       properties:
         category:
-          required: true
           type: string
           enum:
             - ERROR
             - WARNING
             - INFO
         code:
-          required: true
           type: string
         path:
           type: string
@@ -729,12 +730,13 @@ components:
     loginRequest:
       title: Login Request
       type: object
+      required:
+        - username
+        - password
       properties:
         username:
-          required: true
           type: string
         password:
-          required: true
           type: string
     userProfile:
       title: User Profile
