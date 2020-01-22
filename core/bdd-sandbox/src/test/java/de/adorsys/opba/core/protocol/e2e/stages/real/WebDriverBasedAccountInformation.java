@@ -9,7 +9,10 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.RetryOperations;
+
+import java.time.Duration;
 
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
@@ -17,13 +20,14 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClick
 @JGivenStage
 public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccountInformation<SELF>> extends AccountInformationRequestCommon<SELF> {
 
-    private static final int WAIT_TIMEOUT_S = 10;
-
     @Autowired
     private RuntimeService runtimeService;
 
     @Autowired
     private RetryOperations withRetry;
+
+    @Value("${test.webdriver.timeout}")
+    private Duration timeout;
 
     public SELF sandbox_anton_brueckner_navigates_to_bank_auth_page(WebDriver driver) {
         driver.get(redirectUriToGetUserParams);
@@ -31,7 +35,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     public SELF sandbox_anton_brueckner_inputs_username_and_password(WebDriver driver) {
-        waitForLoad(driver);
+        waitForPageLoad(driver);
         clickOnButton(driver, By.name("login"));
         sendText(driver, By.name("login"), "anton.brueckner");
         sendText(driver, By.name("pin"), "12345");
@@ -40,27 +44,26 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     public SELF sandbox_anton_brueckner_confirms_consent_information(WebDriver driver) {
-        waitForLoad(driver);
+        waitForPageLoad(driver);
         clickOnButton(driver, By.xpath("//button[@type='submit']"));
         return self();
     }
 
     public SELF sandbox_anton_brueckner_selects_sca_method(WebDriver driver) {
-        waitForLoad(driver);
+        waitForPageLoad(driver);
         clickOnButton(driver, By.xpath("//button[@type='submit']"));
         return self();
     }
 
     public SELF sandbox_anton_brueckner_provides_sca_challenge_result(WebDriver driver) {
-        waitForLoad(driver);
+        waitForPageLoad(driver);
         sendText(driver, By.name("authCode"), "123456");
         clickOnButton(driver, By.xpath("//button[@type='submit']"));
         return self();
     }
 
     public SELF sandbox_anton_brueckner_see_redirect_back_to_tpp_button(WebDriver driver) {
-        waitForLoad(driver);
-        wait(driver).until(elementToBeClickable(By.className("btn-primary")));
+        waitForPageLoad(driver);
         String waitingExecutionId = runtimeService.createActivityInstanceQuery()
                 .unfinished()
                 .orderByActivityInstanceStartTime()
@@ -74,12 +77,12 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    private static WebDriverWait wait(WebDriver driver) {
-        return new WebDriverWait(driver, WAIT_TIMEOUT_S);
+    private WebDriverWait wait(WebDriver driver) {
+        return new WebDriverWait(driver, timeout.getSeconds());
     }
 
-    private static void waitForLoad(WebDriver driver) {
-        new WebDriverWait(driver, 30)
+    private void waitForPageLoad(WebDriver driver) {
+        new WebDriverWait(driver, timeout.getSeconds())
                 .until(wd -> ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));
     }
 
