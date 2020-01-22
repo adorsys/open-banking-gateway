@@ -56,8 +56,5 @@ RUN chgrp -R root /var/cache/nginx && \
     chmod 775 /opt/entry.sh && \
     chmod -R 777 /etc/nginx/conf.d
 
-# expose port 4200
-EXPOSE 4200
-
 # execute entry.sh file
 ENTRYPOINT /opt/entry.sh
