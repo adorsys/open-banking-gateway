@@ -4,28 +4,31 @@ import de.adorsys.opba.core.protocol.service.ContextUtil;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aStandardHeaders;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.consent.authenticate.embedded.ProvideScaChallengeResult;
+import de.adorsys.opba.core.protocol.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.Response;
 import de.adorsys.xs2a.adapter.service.model.ScaStatusResponse;
-import de.adorsys.xs2a.adapter.service.model.TransactionAuthorisation;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
-
-import static de.adorsys.opba.core.protocol.constant.GlobalConst.SPRING_KEYWORD;
-import static de.adorsys.opba.core.protocol.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 
 @Service("xs2aReportScaChallenge")
 @RequiredArgsConstructor
 public class Xs2aReportScaChallenge extends ValidatedExecution<Xs2aContext> {
 
-    private final Xs2aReportScaChallenge.FromCtx toBody;
+    private final ProvideScaChallengeResult.FromCtx toValidatableBody;
+    private final ProvideScaChallengeResult.ToXs2aApi toBody;
     private final Xs2aStandardHeaders.FromCtx toHeaders;
+    private final Xs2aValidator validator;
     private final RuntimeService runtimeService;
     private final AccountInformationService ais;
+
+    @Override
+    protected void doValidate(DelegateExecution execution, Xs2aContext context) {
+        validator.validate(execution, toHeaders.map(context), toValidatableBody.map(context));
+    }
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
@@ -33,7 +36,7 @@ public class Xs2aReportScaChallenge extends ValidatedExecution<Xs2aContext> {
                 context.getConsentId(),
                 context.getAuthorizationId(),
                 toHeaders.map(context).toHeaders(),
-                toBody.map(context)
+                toBody.map(toValidatableBody.map(context))
         );
 
         ContextUtil.getAndUpdateContext(
@@ -45,12 +48,5 @@ public class Xs2aReportScaChallenge extends ValidatedExecution<Xs2aContext> {
     @Override
     protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
         runtimeService.trigger(execution.getId());
-    }
-
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-    public interface FromCtx {
-
-        @Mapping(target = "scaAuthenticationData", source = "lastScaChallenge")
-        TransactionAuthorisation map(Xs2aContext ctx);
     }
 }
