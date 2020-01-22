@@ -765,20 +765,20 @@ components:
 
     searchInput:
       description: The bank search input string
-      schema:
-        type: string
+      # schema:
+      #   type: string
     searchStartIndex:
       description: The index of the first result
-      schema:
-        type: integer
+      # schema:
+      #   type: integer
     searchMaxResult:
       description: The max number of entries to return with the response.
-      schema:
-        type: integer
+      # schema:
+      #   type: integer
     searchTotalResult:
       description: The total count of entities found for the given search input.
-      schema:
-        type: integer
+      # schema:
+      #   type: integer
     bankProfile:
       title: Bank Profile
       type: object
