@@ -36,6 +36,7 @@
         <module>fintech-examples</module>
         <module>last-module-codecoverage</module>
         <module>opba-banking-rest-impl</module>
+        <module>opba-db-migration</module>
     </modules>
 
     <url>https://github.com/adorsys/open-banking-gateway</url>
