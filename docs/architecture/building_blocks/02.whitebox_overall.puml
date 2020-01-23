@@ -1,0 +1,38 @@
+@startuml
+
+skinparam componentStyle uml2
+
+actor PSU
+component "PSU User Agent" as PsuUserAgent
+component FinTech
+
+component "Banking Gateway" as opba {
+    interface "TPP Bank search API" as BankSearchAPI
+    interface "TPP Consent Auth API" as PsuConsentAuthAPI
+    interface "TPP Banking Rest API" as BankingAPI
+
+    component "BankingProtocol" as BankingProtocol
+    component "BankSearch"
+    component "TppBankingApi"
+    component "ConsentAuthAPI"
+
+    TppBankingApi ..> BankingProtocol
+    BankSearch ..> BankingProtocol
+    ConsentAuthAPI ..> BankingProtocol
+
+    BankingAPI ..> TppBankingApi
+    BankSearchAPI ..> BankSearch
+    PsuConsentAuthAPI ..> ConsentAuthAPI
+}
+
+component ASPSP
+
+FinTech ..> BankingAPI
+FinTech ..> BankSearchAPI
+PsuUserAgent ..> PsuConsentAuthAPI
+PsuUserAgent ..> FinTech
+PSU ..> PsuUserAgent
+
+BankingProtocol ..> ASPSP
+
+@enduml

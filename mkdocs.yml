@@ -8,6 +8,7 @@ nav:
   - "Initial Requirements": architecture/drafts/initial_requirements.md
   - "Architecture":
       - "Application context": architecture/building_blocks/01.Application_context.md
+      - "Component diagrams": architecture/building_blocks/02.Component_diagrams.md
   - "Concepts":
       - "PSU Security Concept": architecture/concepts/psu-security-concept.md
   - "Use cases":
