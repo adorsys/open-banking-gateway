@@ -25,7 +25,7 @@ box "AspspDC" #LightSkyBlue
     participant "OnlineBankingApi" as OnlineBankingApi
 end box
 
-FinTechUI -> ConsentAuthorisationApi ++ : GET:ConsentAuthorisationApi.auth[UserAgentContext]()<redirectCode>
+FinTechUI -> ConsentAuthorisationApi ++ : GET:ConsentAuthorisationApi.auth[UserAgentContext]()<q:redirectCode>
 ConsentAuthorisationApi -> BankingProtocolFacade ++ : redirectSession(redirectCode)
 deactivate ConsentAuthorisationApi
 BankingProtocolFacade -> BankingProtocolFacade : selectBankingProtocol(redirectCode):BankingProtocol
@@ -34,53 +34,61 @@ BankingProtocol -> BankingProtocol : loadAuthSession(redirectCode)
 deactivate BankingProtocolFacade
 deactivate BankingProtocol
 alt PreAuthentication.embedded
-    BankingProtocol --> BankingProtocolFacade ++ : ThrowIdentifyPSU
-    BankingProtocolFacade --> ConsentAuthorisationApi ++ : ThrowIdentifyPSU
+    autonumber 60 1 "<b><color blue>[InitConsent-000]</color></b>"
+    BankingProtocol --> BankingProtocolFacade ++ : ThrowIdentifyPSU(protocolId,seviceSessionId, serviceSessionKey,authId)
+    BankingProtocolFacade --> ConsentAuthorisationApi ++ : ThrowIdentifyPSU(protocolId,seviceSessionId, serviceSessionKey,authId)
     deactivate BankingProtocolFacade
-    ConsentAuthorisationApi -> ConsentAuthorisationApi : getCookie(state):\nSessionCookie
-    ConsentAuthorisationApi --> ConsentAuthorisationUI ++ : redirect302[SessionCookie,\nConsentAuthorisationUI.embeddedAuthInitScreen]()<state>
+    ConsentAuthorisationApi -> ConsentAuthorisationApi : createSessionCookie(protocolId,seviceSessionId, serviceSessionKey,authId):\nSessionCookie,state
+    ConsentAuthorisationApi --> ConsentAuthorisationUI ++ : redirect302[SessionCookie,\nConsentAuthorisationUI.psuIdScreen]()<q:state>
     deactivate ConsentAuthorisationApi
-    ConsentAuthorisationUI --> psu : displayIdentificationScreen()
+    ConsentAuthorisationUI --> psu : displayPsuIdScreen()
     deactivate ConsentAuthorisationUI
-    psu -> ConsentAuthorisationUI ++ : updatePsuIdentification\n(psu-id@tpp,psu-id@aspsp)
+    psu -> ConsentAuthorisationUI ++ : enterPsuId\n(psu-id@tpp,psu-id@aspsp)
     ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : updatePsuIdentification\n[SessionCookie, X-XSRF-TOKEN](psu-id@tpp,psu-id@aspsp)
-    ConsentAuthorisationApi -> BankingProtocolFacade ++ : updatePsuIdentification(psu-id@tpp,psu-id@aspsp)
-    BankingProtocolFacade -> BankingProtocol : updatePsuIdentification(psu-id@tpp,psu-id@aspsp)
+    ConsentAuthorisationApi -> ConsentAuthorisationApi : validateSessionCookie(SessionCookie,XSRF-Token)\n:protocolId,seviceSessionId,serviceSessionKey,authId
+    ConsentAuthorisationApi -> BankingProtocolFacade ++ : updatePsuIdentification(psu-id@tpp,psu-id@aspsp,\nprotocolId,seviceSessionId,serviceSessionKey,authId)
+    BankingProtocolFacade -> BankingProtocolFacade : selectBankingProtocol(protocolId):BankingProtocol
+    BankingProtocolFacade -> BankingProtocol : updatePsuIdentification(psu-id@tpp,psu-id@aspsp,\nseviceSessionId,serviceSessionKey,authId)
     deactivate ConsentAuthorisationUI
     deactivate ConsentAuthorisationApi
     deactivate BankingProtocolFacade
 else PreAuthentication.oAuthPreStep
-    BankingProtocol --> BankingProtocolFacade ++ : ThrowAuthenticatePSU
-    BankingProtocolFacade --> ConsentAuthorisationApi ++ : ThrowAuthenticatePSU
+    autonumber 80 1 "<b><color blue>[InitConsent-000]</color></b>"
+    BankingProtocol --> BankingProtocolFacade ++ : ThrowAuthenticatePSU(protocolId,\nseviceSessionId, serviceSessionKey,authId, idpUrl)
+    BankingProtocolFacade --> ConsentAuthorisationApi ++ : ThrowAuthenticatePSU(protocolId,\nseviceSessionId, serviceSessionKey,authId, idpUrl)
     deactivate BankingProtocolFacade
-    ConsentAuthorisationApi --> ConsentAuthorisationUI ++ : displayRedirectInfoPage[SessionCookie, X-XSRF-TOKEN](AuthorizeResponse)
+    ConsentAuthorisationApi -> ConsentAuthorisationApi : createSessionCookie(protocolId,seviceSessionId, serviceSessionKey,authId,idpUrl):\nSessionCookie,state
+    ConsentAuthorisationApi --> ConsentAuthorisationUI ++ : redirect302[SessionCookie,\nConsentAuthorisationUI.redirectInfoPage]()<q:state>
     deactivate ConsentAuthorisationApi
     ConsentAuthorisationUI --> psu : displayRedirectInfoPage()
     deactivate ConsentAuthorisationUI
-    psu -> ConsentAuthorisationUI ++ : confirmRedirect()
+    psu -> ConsentAuthorisationUI ++ : confirmRedirect[SessionCookie, X-XSRF-TOKEN]()
     ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : confirmRedirect()
-    return redirect302[RedirectCookie,\nOnlineBankingApi.redirectEntryPoint]\n()<Redirect-Uri, state>
+    ConsentAuthorisationApi -> ConsentAuthorisationApi : validateSessionCookie(SessionCookie,XSRF-Token)\n:protocolId,seviceSessionId,serviceSessionKey,authId,idpUrl
+    ConsentAuthorisationApi -> ConsentAuthorisationApi : createRedirectCookie(protocolId,seviceSessionId,serviceSessionKey,authId,idpUrl)\n:RedirectCookie,state
+    return redirect302[RedirectCookie,\nOnlineBankingApi.redirectEntryPoint]\n()<redirect-uri, state>
     deactivate ConsentAuthorisationUI
-    ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:Redirect-URI[UserAgentContext,\nRedirectCookie]()\n<code,state>
-    ConsentAuthorisationApi -> ConsentAuthorisationApi : validateRedirectCall\n(state,RedirectCookie)
-    ConsentAuthorisationApi -> BankingProtocolFacade ++ : code2Token(code)
-    BankingProtocolFacade -> BankingProtocol ++ : code2Token(code)
+    ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:fromIdpAuth[UserAgentContext,\nRedirectCookie]()\n<p:authId,q:code,q:state>
+    ConsentAuthorisationApi -> ConsentAuthorisationApi : validateRedirectCookie(state,RedirectCookie)\n:protocolId,seviceSessionId,serviceSessionKey,authId,idpUrl
+    ConsentAuthorisationApi -> BankingProtocolFacade ++ : code2Token(code,protocolId,seviceSessionId,serviceSessionKey,authId,idpUrl)
+    BankingProtocolFacade -> BankingProtocolFacade : selectBankingProtocol(protocolId):BankingProtocol
+    BankingProtocolFacade -> BankingProtocol ++ : code2Token(code,seviceSessionId,serviceSessionKey,authId,idpUrl)
     BankingProtocol -> OnlineBankingApi ++ : GET:code2Token[\nTppContext]()<code>
     return token
-    BankingProtocol -> BankingProtocol : psu-id(token):psu-id@tpp,psu-id@aspsp
+    BankingProtocol -> BankingProtocol : psuId(token):psu-id@tpp,psu-id@aspsp
     deactivate ConsentAuthorisationApi
     deactivate BankingProtocolFacade
 end
+autonumber 100 10 "<b><color blue>[InitConsent-000]</color></b>"
 BankingProtocol -> AspspBankingApi ++ : initiateConsent[UserAgentContext,\nTppContext,psu-id@aspsp](AisConsent) 
-return 200_OK(TppConsentSession,\nAspspRedirectInfo)
-BankingProtocol --> BankingProtocolFacade ++ : return 200_OK(TppConsentSession,\nAspspRedirectInfo)
-BankingProtocolFacade --> ConsentAuthorisationApi ++ : return 200_OK(TppConsentSession,\nAspspRedirectInfo)
-ConsentAuthorisationApi -> ConsentAuthorisationApi : TppConsentSession.state():state
-ConsentAuthorisationApi -> ConsentAuthorisationApi : TppConsentSession.authorizeResponse(state):AuthorizeResponse
-ConsentAuthorisationApi -> ConsentAuthorisationApi : TppConsentSession.sessionCookie(state):SessionCookie
+return 200_OK(AisConsent,\nAspspRedirectInfo,\nAspspChallenges)
+BankingProtocol -> BankingProtocol : addToServiceSession(AisConsent,\nAspspRedirectInfo,\nAspspChallenges)
+BankingProtocol --> BankingProtocolFacade ++ : return ServiceSession
+BankingProtocolFacade --> ConsentAuthorisationApi ++ : return ServiceSession
+ConsentAuthorisationApi -> ConsentAuthorisationApi : prepareResponse(ServiceSession):xsrfToken,AuthorizeResponse,SessionCookie
 alt AuthorizeResponse.isEmbeddedFlow()
-ConsentAuthorisationApi --> ConsentAuthorisationUI : displayBankLoginPage[SessionCookie](AuthorizeResponse)
+ConsentAuthorisationApi --> ConsentAuthorisationUI : displayBankLoginPage[SessionCookie,X-XSRF-Token](AuthorizeResponse)
 else AuthorizeResponse.isRedirectFlow()
-ConsentAuthorisationApi --> ConsentAuthorisationUI : displayRedirectInfoPage[SessionCookie](AuthorizeResponse)
+ConsentAuthorisationApi --> ConsentAuthorisationUI : displayRedirectInfoPage[SessionCookie,X-XSRF-Token](AuthorizeResponse)
 end
 @enduml
