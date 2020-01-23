@@ -1,9 +1,9 @@
-package de.adorsys.opba.config;
+package de.adorsys.opba.config.migration;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackageClasses = de.adorsys.opba.config.hibernate.PrefixAndSnakeCasePhysicalNamingStrategy.class)
+@ComponentScan(basePackages = "de.adorsys.opba.config.migration")
 public class MigrationConfig {
 }
