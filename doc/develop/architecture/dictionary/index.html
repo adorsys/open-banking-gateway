@@ -74,6 +74,32 @@
     <ul class="subnav">
                 <li class="">
                     
+    <a class="" href="../building_blocks/01.Application_context/">Application context</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Concepts</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../concepts/psu-security-concept/">PSU Security Concept</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Use cases</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../use_cases/">Use cases</a>
+                </li>
+                <li class="">
+                    
     <a class="" href="../1-loginWithFinTech/">Login with FinTech Application</a>
                 </li>
                 <li class="">
@@ -104,11 +130,12 @@
                     
     <a class="" href="../6-consume_api/">Consume Service</a>
                 </li>
-                <li class="">
-                    
-    <a class="" href="../drafts/initial_requirements/">Draft</a>
-                </li>
     </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../drafts/initial_requirements/">Draft</a>
 	    </li>
           
         </ul>
@@ -150,6 +177,7 @@
 <ul>
 <li><a href="./#AisConsentSpec">AisConsentSpec</a></li>
 <li><a href="./#App">App</a></li>
+<li><a href="./#ASPSP">ASPSP</a></li>
 <li><a href="./#AspspBankingApi">AspspBankingApi</a></li>
 <li><a href="./#BankDescriptor">BankDescriptor</a></li>
 <li><a href="./#BankingProtocolSelector">BankingProtocolSelector</a></li>
@@ -159,6 +187,7 @@
 <li><a href="./#ConsentAuthorisationUI">ConsentAuthorisationUI</a></li>
 <li><a href="./#ConsentData">ConsentData</a></li>
 <li><a href="./#Dictionary">Dictionary</a></li>
+<li><a href="./#FinTech">FinTech</a></li>
 <li><a href="./#FinTechApi">FinTechApi</a></li>
 <li><a href="./#FinTechContext">FinTechContext</a></li>
 <li><a href="./#FinTechDC">FinTechDC</a></li>
@@ -169,6 +198,7 @@
 <li><a href="./#OnlineBankingConsentSessionCookie">OnlineBankingConsentSessionCookie</a></li>
 <li><a href="./#OnlineBankingLoginSessionCookie">OnlineBankingLoginSessionCookie</a></li>
 <li><a href="./#OnlineBankingUI">OnlineBankingUI</a></li>
+<li><a href="./#PSU">PSU</a></li>
 <li><a href="./#PsuConsentSession">PsuConsentSession</a></li>
 <li><a href="./#PsuIdentifier">PsuIdentifier</a></li>
 <li><a href="./#PsuUserAgent">PsuUserAgent</a></li>
@@ -291,6 +321,9 @@ For the purpose of kepping the overall architecture of this framework simple, we
 <p>UI used by PSU to authoraise consent in embedded case.</p>
 <h3 id="onlinebankingui"><a name="OnlineBankingUI"></a> OnlineBankingUI</h3>
 <p>This UI manages the interaction between the PSU and the ASPSP in redirect cases.</p>
+<h2 id="fintech"><a name="FinTech"></a> FinTech</h2>
+<p>Organisation that uses Online Banking Services provided by TPP to service PSU with additional services.
+FinTech may or may not have own TPP License.</p>
 <h2 id="fintechdc"><a name="FinTechDC"></a> FinTechDC</h2>
 <p>Data center environment of the FinTech. Host the FinTechApi.</p>
 <h3 id="fintechapi"><a name="FinTechApi"></a> FinTechApi</h3>
@@ -324,6 +357,8 @@ For the purpose of kepping the overall architecture of this framework simple, we
 - allPsd2[allAccounts]</p>
 <h3 id="fintechcontext"><a name="FinTechContext"></a> FinTechContext</h3>
 <p>Information used to identify the FinTech application at the TppBankingApi. For example a FinTech SSL client certificate or an APIKey or an oAuth2 Password Grant Credential.</p>
+<h3 id="psu"><a name="PSU"></a> PSU</h3>
+<p>A Payment Services User is a natural or legal person making use of a payment service as a payee, payer or both.</p>
 <h3 id="psuconsentsession"><a name="PsuConsentSession"></a> PsuConsentSession</h3>
 <p>Information associated with the consent as exchanged between the FinTechApi and the TppBankingApi. Generally contains:
 - Data needed to customize psu access at the ConsentAuthorisationApi (showInfoPanel, fintechStateHash)
@@ -349,6 +384,8 @@ For the purpose of kepping the overall architecture of this framework simple, we
 <p>Help select a banking protocol.</p>
 <h2 id="aspsp-data-center"><a name="AspspDC"></a> Aspsp Data Center</h2>
 <p>Data center environment of the ASPSP</p>
+<h2 id="aspsp"><a name="ASPSP"></a> ASPSP</h2>
+<p>Account Servicing Payment Service Providers provide and maintain a payment account for a payer as defined by the PSRs and, in the context of the Open Banking Ecosystem are entities that publish Read/Write APIs to permit, with customer consent, payments initiated by third party providers and/or make their customers’ account transaction data available to third party providers via their API end points.</p>
 <h3 id="aspspbankingapi"><a name="AspspBankingApi"></a> AspspBankingApi</h3>
 <p>Api banking provided by ASPSP. This interface is not directly accessed by the PSU but by the TppBankingApi. TppBankingApi will use a TppContext to authenticate with the TppBankingApi.</p>
 <h3 id="tppcontext"><a name="TppContext"></a> TppContext</h3>
@@ -370,7 +407,8 @@ For the purpose of kepping the overall architecture of this framework simple, we
 <h3 id="onlinebankingloginsessioncookie"><a name="OnlineBankingLoginSessionCookie"></a> OnlineBankingLoginSessionCookie</h3>
 <p>This Cookie will be used by the ASPSP to keep a login session of the PSU over the life span of consent session. This will prevent the PSU from performing the login step for upcoming consent sessions.</p>
 <h2 id="tpp"><a name="TPP"></a> TPP</h2>
-<p>A TPP is a Third Party Provider.</p>
+<p>A TPP is a Third Party Provider - a legal entity that holds a TPP License provided by NCA (PISP, AISP etc). and operates with corresponding QWAC Certificate.
+TPP may serve FinTech companies with XS2A Services.</p>
               
             </div>
           </div>

@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../../../img/favicon.ico">
-  <title>PSU Access Security Design - Open Banking Gateway Documentation</title>
+  <title>PSU Security Concept - Open Banking Gateway Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../../../css/theme.css" type="text/css" />
@@ -17,7 +17,7 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "PSU Access Security Design";
+    var mkdocs_page_name = "PSU Security Concept";
     var mkdocs_page_input_path = "architecture/concepts/psu-security-concept.md";
     var mkdocs_page_url = null;
   </script>
@@ -74,6 +74,101 @@
     <ul class="subnav">
                 <li class="">
                     
+    <a class="" href="../../building_blocks/01.Application_context/">Application context</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Concepts</span>
+    <ul class="subnav">
+                <li class=" current">
+                    
+    <a class="current" href="./">PSU Security Concept</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#psu-access-security-design">PSU Access Security Design</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#core-participants">Core Participants</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#security-considerations">Security Considerations</a></li>
+    
+
+    <li class="toctree-l3"><a href="#redirection-and-xsrf">Redirection and XSRF</a></li>
+    
+
+    <li class="toctree-l3"><a href="#redirection-and-data-sharing">Redirection and Data Sharing</a></li>
+    
+
+    <li class="toctree-l3"><a href="#step-1-identify-psu-at-the-fintechapi">Step-1: Identify PSU at the FinTechApi</a></li>
+    
+
+    <li class="toctree-l3"><a href="#step-2-store-psu-idfintech-with-the-consentauthorizationsession">Step-2: Store psu-id@fintech with the ConsentAuthorizationSession</a></li>
+    
+
+    <li class="toctree-l3"><a href="#step-2-identify-psu-at-the-tpp-consentauthorisationapi">Step-2: Identify PSU at the TPP ConsentAuthorisationApi</a></li>
+    
+
+    <li class="toctree-l3"><a href="#step-3a-consentauthorisation-at-the-tpps-consentauthorisationapi-embedded-sca">Step-3a: ConsentAuthorisation at the TPP's ConsentAuthorisationApi (Embedded-sca)</a></li>
+    
+
+    <li class="toctree-l3"><a href="#step-3b-identify-psu-at-the-aspsps-onlinebankingapi-redirect-sca">Step-3b: Identify PSU at the ASPSP's OnlineBankingApi (Redirect-sca)</a></li>
+    
+
+    <li class="toctree-l3"><a href="#step-4-verify-equivalence-between-psu-idaspsp-and-psu-idtpp-redirect-sca">Step-4: Verify Equivalence between psu-id@aspsp and psu-id@tpp (Redirect-sca)</a></li>
+    
+
+    <li class="toctree-l3"><a href="#alt-1-sharing-of-identity-provider">Alt-1: Sharing of Identity Provider</a></li>
+    
+
+    <li class="toctree-l3"><a href="#alt-2-no-sharing-of-identity-provider">Alt-2: No Sharing of Identity Provider</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#make-sure-the-physical-back-redirection-sends-the-psu-to-the-source-psuuseragent">Make sure the physical back redirection sends the PSU to the Source PsuUserAgent</a></li>
+        
+            <li><a class="toctree-l4" href="#verify-redirect-state-once-in-the-source-psuuseragent">Verify Redirect State once in the Source PsuUserAgent</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#alt-3-no-sharing-of-idp-and-decoupled-sca">Alt-3: No Sharing of IDP and Decoupled-sca</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#manual-code-transfer">Manual Code Transfer</a></li>
+        
+            <li><a class="toctree-l4" href="#qr-scan">QR-Scan</a></li>
+        
+            <li><a class="toctree-l4" href="#push-notifications">Push notifications</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#limitation-of-identity-equivalence-for-existing-openbanking-flows">Limitation of Identity Equivalence for Existing OpenBanking Flows</a></li>
+    
+
+    </ul>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Use cases</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../use_cases/">Use cases</a>
+                </li>
+                <li class="">
+                    
     <a class="" href="../../1-loginWithFinTech/">Login with FinTech Application</a>
                 </li>
                 <li class="">
@@ -104,11 +199,12 @@
                     
     <a class="" href="../../6-consume_api/">Consume Service</a>
                 </li>
-                <li class="">
-                    
-    <a class="" href="../../drafts/initial_requirements/">Draft</a>
-                </li>
     </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../drafts/initial_requirements/">Draft</a>
 	    </li>
           
         </ul>
@@ -132,8 +228,12 @@
     <li><a href="../../..">Docs</a> &raquo;</li>
     
       
+        
+          <li>Concepts &raquo;</li>
+        
+      
     
-    <li>PSU Access Security Design</li>
+    <li>PSU Security Concept</li>
     <li class="wy-breadcrumbs-aside">
       
         <a href="https://github.com/adorsys/open-banking-gateway/edit/master/docs/architecture/concepts/psu-security-concept.md"
@@ -320,6 +420,15 @@ bob@fintech ==&gt; bob@tpp ==&gt; alice@aspsp
           </div>
           <footer>
   
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../use_cases/" class="btn btn-neutral float-right" title="Use cases">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../../building_blocks/01.Application_context/" class="btn btn-neutral" title="Application context"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
 
   <hr/>
 
@@ -344,6 +453,10 @@ bob@fintech ==&gt; bob@tpp ==&gt; alice@aspsp
           <a href="https://github.com/adorsys/open-banking-gateway/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
+        <span><a href="../../building_blocks/01.Application_context/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../../use_cases/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
