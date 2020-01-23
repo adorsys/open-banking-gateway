@@ -1,3 +1,6 @@
+![build](https://travis-ci.com/adorsys/open-banking-gateway.svg?branch=develop)
+[![codecov](https://codecov.io/gh/adorsys/open-banking-gateway/branch/develop/graph/badge.svg)](https://codecov.io/gh/adorsys/open-banking-gateway)
+
 # Open Banking Gateway
 Provides tools, adapters and connectors for transparent access to open banking apis. The initial effort focuses on the connectivity to banks that implement the European PSD2 directive either through one of the common market initiatives like :
 
