@@ -1,0 +1,4 @@
+server:
+  port: 8086
+tpp:
+  url: http://localhost:8086

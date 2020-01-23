@@ -1,0 +1,20 @@
+{
+  "bankDescriptor": [
+    {
+      "bankName": "Raiffeisenbank Geiselh?ring-Pfaffenberg",
+      "bic": "GENODEF1GPF",
+      "bankCode": "74369088",
+      "uuid": "af062b06-ee6e-45f9-9163-b97320c6881a"
+    },
+    {
+      "bankName": "Raiffeisenbank Aschaffenburg",
+      "bic": "GENODEF1HAC",
+      "bankCode": "79568518",
+      "uuid": "e83c8c44-1fa0-4795-b60d-65dcff71d6a5"
+    }
+  ],
+  "keyword": "affe",
+  "start": 1,
+  "max": 2,
+  "total": null
+}

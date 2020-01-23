@@ -2,8 +2,8 @@ package de.adorsys.opba.core.protocol.e2e;
 
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
 import de.adorsys.opba.core.protocol.BankingProtocol;
-import de.adorsys.opba.core.protocol.e2e.stages.AccountInformationRequest;
 import de.adorsys.opba.core.protocol.e2e.stages.AccountInformationResult;
+import de.adorsys.opba.core.protocol.e2e.stages.mocks.WiremockAccountInformationRequest;
 import de.adorsys.opba.core.protocol.e2e.stages.mocks.MockServers;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {BankingProtocol.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
-class WiremockE2EProtocolTest extends SpringScenarioTest<MockServers, AccountInformationRequest, AccountInformationResult> {
+class WiremockE2EProtocolTest extends SpringScenarioTest<MockServers, WiremockAccountInformationRequest<? extends WiremockAccountInformationRequest<?>>, AccountInformationResult> {
 
     @Test
     @SneakyThrows
@@ -32,7 +32,9 @@ class WiremockE2EProtocolTest extends SpringScenarioTest<MockServers, AccountInf
         when()
                 .open_banking_list_accounts_called()
                 .and()
-                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts();
+                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts()
+                .and()
+                .open_banking_redirect_uri_extracted();
         then()
                 .open_banking_reads_anton_brueckner_accounts_on_redirect();
     }
@@ -42,9 +44,11 @@ class WiremockE2EProtocolTest extends SpringScenarioTest<MockServers, AccountInf
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running();
         when()
-                .open_banking_list_transactions_called_for_anton_brueckner()
+                .open_banking_list_transactions_called_for_anton_brueckner("cmD4EYZeTkkhxRuIV1diKA")
                 .and()
-                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions();
+                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions()
+                .and()
+                .open_banking_redirect_uri_extracted();
         then()
                 .open_banking_reads_anton_brueckner_transactions_on_redirect();
     }

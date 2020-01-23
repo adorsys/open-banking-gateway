@@ -7,13 +7,18 @@ nav:
   - "Release notes": releasenotes.md
   - "Initial Requirements": architecture/drafts/initial_requirements.md
   - "Architecture":
-    - "Login with FinTech Application": architecture/1-loginWithFinTech.md
-    - "Search bank": architecture/2-searchBank.md
-    - "Select bank": architecture/3-selectBank.md
-    - "List of Transactions": architecture/4-initiateAisConsent.md
-    - "Redirect to Consent Authorization API": architecture/5-redirectPsuToConsentAPI.md
-    - "Authorize Consent Embedded Approach": architecture/5a-psuAuthEmbeddedConsent.md
-    - "Authorize Consent Redirect Approach": architecture/5b-psuAuthRedirectConsent.md
-    - "Consume Service": architecture/6-consume_api.md
-    - "Draft": architecture/drafts/initial_requirements.md
+      - "Application context": architecture/building_blocks/01.Application_context.md
+  - "Concepts":
+      - "PSU Security Concept": architecture/concepts/psu-security-concept.md
+  - "Use cases":
+      - "Use cases": architecture/use_cases.md
+      - "Login with FinTech Application": architecture/1-loginWithFinTech.md
+      - "Search bank": architecture/2-searchBank.md
+      - "Select bank": architecture/3-selectBank.md
+      - "List of Transactions": architecture/4-initiateAisConsent.md
+      - "Redirect to Consent Authorization API": architecture/5-redirectPsuToConsentAPI.md
+      - "Authorize Consent Embedded Approach": architecture/5a-psuAuthEmbeddedConsent.md
+      - "Authorize Consent Redirect Approach": architecture/5b-psuAuthRedirectConsent.md
+      - "Consume Service": architecture/6-consume_api.md
+  - "Draft": architecture/drafts/initial_requirements.md
 theme: readthedocs

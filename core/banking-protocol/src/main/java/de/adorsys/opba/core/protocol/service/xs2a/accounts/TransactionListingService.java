@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.core.protocol.service.ContextUtil;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
 import de.adorsys.opba.core.protocol.service.xs2a.context.TransactionListXs2aContext;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aWithConsentIdHeaders;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.RequestParams;
 import de.adorsys.xs2a.adapter.service.Response;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TransactionListingService extends ValidatedExecution<TransactionListXs2aContext> {
 
+    private final Xs2aWithConsentIdHeaders.FromCtx toHeaders;
     private final AccountInformationService ais;
 
     @Override
@@ -23,7 +25,7 @@ public class TransactionListingService extends ValidatedExecution<TransactionLis
     protected void doRealExecution(DelegateExecution execution, TransactionListXs2aContext context) {
         Response<TransactionsReport> accounts = ais.getTransactionList(
                 context.getResourceId(),
-                context.toHeaders(),
+                toHeaders.map(context).toHeaders(),
                 RequestParams.fromMap(ImmutableMap.of("bookingStatus", "BOTH", "withBalance", String.valueOf(context.isWithBalance()), "dateFrom", "2018-01-01", "dateTo", "2020-09-30"))
         );
 
