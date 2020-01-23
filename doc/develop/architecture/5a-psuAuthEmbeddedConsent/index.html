@@ -197,7 +197,7 @@
 <h2 id="description">Description</h2>
 <p>Implements the process of collecting consent authorization credentials in an interface provided by the TPP as described EBA-RTS embedded approach. The authorization is designed as a recursive list of ChallengeResponse sessions.</p>
 <h2 id="diagram">Diagram</h2>
-<p><img alt="Session diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/5a-psuAuthEmbeddedConsent.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" />  </p>
+<p><img alt="Session diagram" src="../../architecture/diagrams/useCases/5a-psuAuthEmbeddedConsent.png" />  </p>
 <h2 id="use-cases">Use Cases</h2>
 <h3 id="authembedded-010-create-consentauthsessioncookie">AuthEmbedded-010 : Create ConsentAuthSessionCookie</h3>
 <p>If the TppConsentSession has an authChallenge, the interaction starts with the initialization of a <a href="../dictionary/#ConsentAuthSessionCookie">ConsentAuthSessionCookie</a>. The ConsentAuthSessionCookie is encrypted with a key stored in the <a href="../dictionary/#consentSessionState">consentSessionState</a>.</p>

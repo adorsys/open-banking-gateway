@@ -243,9 +243,9 @@ contains bank profile, in future it can be switched to rule engine or entire BPM
 call <a href="#obtaining-ais-consent-swimlane">obtaining consent</a> flow.</p>
 <p><img alt="Implementation draft diagram - generic request" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-generic.puml&amp;fmt=svg&amp;vvv=2&amp;sanitize=true" /></p>
 <h2 id="obtaining-ais-consent-swimlane">Obtaining AIS Consent swimlane</h2>
-<p><img alt="Implementation draft diagram - consent" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-consent.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" /></p>
+<p><img alt="Implementation draft diagram - consent" src="../implementation-v0-consent.png" /></p>
 <h2 id="getting-transaction-list-using-ais-consent-swimlane">Getting transaction list using AIS Consent swimlane</h2>
-<p><img alt="Implementation draft diagram - Tx list" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-tx-list.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" /></p>
+<p><img alt="Implementation draft diagram - Tx list" src="../implementation-v0-tx-list.png" /></p>
 <h2 id="full-swimlane-e2e-for-getting-transaction-list">Full swimlane e2e for getting transaction list</h2>
 <details><summary>Get transaction list by FinTech</summary>
 
@@ -256,7 +256,7 @@ call <a href="#obtaining-ais-consent-swimlane">obtaining consent</a> flow.</p>
 1. After consent was established FinTech can store it and get 'Transaction list' without PSU intervention
 1. If consent has expired FinTech should inform user and perform step 1 again 
 
-![Implementation draft diagram - Tx list full](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-full-flow-tx-list.puml&fmt=svg&vvv=1&sanitize=true)
+![Implementation draft diagram - Tx list full](../../architecture/drafts/implementation-v0-full-flow-tx-list.png)
 
 </details>
 
@@ -279,7 +279,7 @@ FinTech with OpenBankingGw API &lt;--&gt; TPP with OpenBankingGw Impl (See diagr
 1. <code>PUT /payments</code> to initiate payment
 ...</p>
 <h2 id="in-short">In short</h2>
-<p><img alt="Implementation draft diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-bird-view.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" /></p>
+<p><img alt="Implementation draft diagram" src="../implementation-v0-bird-view.png" /></p>
 <h2 id="with-details">With details</h2>
 <p><img alt="Detailed Implementation draft diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-draft-v0.puml&amp;fmt=svg&amp;vvv=17&amp;sanitize=true" /></p>
 <h1 id="api-sketch">API sketch</h1>
@@ -299,7 +299,7 @@ FinTech with OpenBankingGw API &lt;--&gt; TPP with OpenBankingGw Impl (See diagr
 <h4 id="tpp-acquires-mandatory-parameters-before-request">TPP acquires mandatory parameters before request</h4>
 <p><img alt="Implementation draft diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/payment-static-param.puml&amp;fmt=svg&amp;vvv=2&amp;sanitize=true" /></p>
 <h4 id="tpp-acquires-mandatory-parameters-during-request">TPP acquires mandatory parameters during request</h4>
-<p><img alt="Implementation draft diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/payment-dynamic-param.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" /></p>
+<p><img alt="Implementation draft diagram" src="../payment-dynamic-param.png" /></p>
               
             </div>
           </div>

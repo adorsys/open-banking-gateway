@@ -198,7 +198,7 @@
 <p>This workflow starts with the redirect link leaving from either <a href="../5b-psuAuthRedirectConsent/">Authorize Consent Redirect Approach</a> or <a href="../5a-psuAuthEmbeddedConsent/">Authorize Consent Embedded Approach</a>. This redirect link will be used by the FinTechApi to retrieve a corresponding Token that can be used to request services on behalf of the PSU.</p>
 <p>As long as this token is valid, token will be used to perform corresponding service request on behalf on the PSU. </p>
 <h2 id="diagram">Diagram</h2>
-<p><img alt="Session diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/6-consume_api.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" />  </p>
+<p><img alt="Session diagram" src="../../architecture/diagrams/useCases/6-consume_api.png" />  </p>
 <h2 id="use-cases">Use Cases</h2>
 <h3 id="bankingservice-010-fintechapifromconsentok">BankingService-010 : FinTechApi.fromConsentOk</h3>
 <p>The redirect request coming from the <a href="../dictionary/#ConsentAuthorisationApi">ConsentAuthorisationApi</a> contains a redirectCode. This request will be forwarded by the FinTechApi to the TppBankingApi. The request contains following information:</p>
