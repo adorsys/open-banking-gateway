@@ -1,3 +1,29 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/open_banking?currentSchema=banking_protocol
+    username: postgres
+    password: docker
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      schema: banking_protocol
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: de.adorsys.opba.config.hibernate.PrefixAndSnakeCasePhysicalNamingStrategy
+      # DDL is handled by Liquibase
+      ddl-auto: validate
+    open-in-view: false
+  liquibase:
+    enabled: true
+    change-log: classpath:migration/master.xml
+    parameters:
+      table-prefix: opb_
+      fill-with-mock-data: true
+
 protocol:
   redirect:
     consent-accounts:

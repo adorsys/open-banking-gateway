@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @Slf4j
-@ActiveProfiles({ONE_TIME_POSTGRES_ON_DISK})
+@ActiveProfiles(ONE_TIME_POSTGRES_ON_DISK)
 @AutoConfigureMockMvc
 class TestBankSearchPerformance extends BaseMockitoTest {
 

@@ -1,6 +1,7 @@
 package de.adorsys.opba.core.protocol.e2e;
 
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
+import de.adorsys.opba.config.EnableMigration;
 import de.adorsys.opba.core.protocol.BankingProtocol;
 import de.adorsys.opba.core.protocol.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.core.protocol.e2e.stages.mocks.WiremockAccountInformationRequest;
@@ -12,7 +13,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import static de.adorsys.opba.core.protocol.TestProfiles.MIGRATION;
 import static de.adorsys.opba.core.protocol.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.core.protocol.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -22,7 +22,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {BankingProtocol.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
-@ActiveProfiles(profiles = {MIGRATION, ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
+@ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
+@EnableMigration
 class WiremockE2EProtocolTest extends SpringScenarioTest<MockServers, WiremockAccountInformationRequest<? extends WiremockAccountInformationRequest<?>>, AccountInformationResult> {
 
     @Test

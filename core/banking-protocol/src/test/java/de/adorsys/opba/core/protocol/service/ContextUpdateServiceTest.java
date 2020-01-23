@@ -17,7 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@ActiveProfiles(value = {ONE_TIME_POSTGRES_RAMFS})
+@ActiveProfiles(ONE_TIME_POSTGRES_RAMFS)
 class ContextUpdateServiceTest extends BaseMockitoTest {
 
     @MockBean
