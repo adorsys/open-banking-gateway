@@ -1,12 +1,15 @@
 package de.adorsys.opba.core.protocol.service.xs2a.accounts;
 
-import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.core.protocol.service.ContextUtil;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
+import de.adorsys.opba.core.protocol.service.dto.ValidatedQueryHeaders;
+import de.adorsys.opba.core.protocol.service.mapper.QueryHeadersMapperTemplate;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
-import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aWithConsentIdHeaders;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.DtoMapper;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aStandardHeaders;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aWithBalanceParameters;
+import de.adorsys.opba.core.protocol.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
-import de.adorsys.xs2a.adapter.service.RequestParams;
 import de.adorsys.xs2a.adapter.service.Response;
 import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +20,21 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AccountListingService extends ValidatedExecution<Xs2aContext> {
 
-    private final Xs2aWithConsentIdHeaders.FromCtx toHeaders;
+    private final Extractor extractor;
+    private final Xs2aValidator validator;
     private final AccountInformationService ais;
 
     @Override
+    protected void doValidate(DelegateExecution execution, Xs2aContext context) {
+        validator.validate(execution, extractor.forValidation(context));
+    }
+
+    @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+        ValidatedQueryHeaders<Xs2aWithBalanceParameters, Xs2aStandardHeaders> params = extractor.forExecution(context);
         Response<AccountListHolder> accounts = ais.getAccountList(
-                toHeaders.map(context).toHeaders(),
-                RequestParams.fromMap(ImmutableMap.of("withBalance", String.valueOf(context.isWithBalance())))
+                params.getHeaders().toHeaders(),
+                params.getQuery().toParameters()
         );
 
         ContextUtil.setResult(execution, accounts.getBody());
@@ -33,5 +43,18 @@ public class AccountListingService extends ValidatedExecution<Xs2aContext> {
     @Override
     protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
         ContextUtil.setResult(execution, new AccountListHolder());
+    }
+
+    @Service
+    public static class Extractor extends QueryHeadersMapperTemplate<
+                    Xs2aContext,
+                    Xs2aWithBalanceParameters,
+                    Xs2aStandardHeaders> {
+
+        public Extractor(
+                DtoMapper<Xs2aContext, Xs2aStandardHeaders> toHeaders,
+                DtoMapper<Xs2aContext, Xs2aWithBalanceParameters> toQuery) {
+            super(toHeaders, toQuery);
+        }
     }
 }

@@ -7,10 +7,13 @@ import javax.validation.Valid;
 
 @Data
 @RequiredArgsConstructor
-public class ParametersHeadersToValidate<P, H> {
+public class PathQueryHeadersToValidate<P, Q, H> {
 
     @Valid
-    private final P parameters;
+    private final P path;
+
+    @Valid
+    private final Q query;
 
     @Valid
     private final H headers;
