@@ -18,7 +18,6 @@ import java.util.UUID;
 @RestController
 public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
-    private static final String X_XSRF_TOKEN = "X-XSRF-TOKEN";
     private static final String X_REQUEST_ID = "X-Request-ID";
 
     @Autowired
@@ -34,7 +33,6 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set(X_REQUEST_ID, xRequestID.toString());
-            responseHeaders.set(X_XSRF_TOKEN, userEntity.get().getXsrfID());
             responseHeaders.set(HttpHeaders.SET_COOKIE, userEntity.get().getCookie());
             return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
         }
