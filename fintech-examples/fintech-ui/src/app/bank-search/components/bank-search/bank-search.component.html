@@ -5,8 +5,8 @@
         <h4 class="card-title">Search your bank</h4>
         <app-search (keyword)="onSearch($event)"></app-search>
         <div class="scrollable">
-          <button (click)="onBankSelect(bank.id)" *ngFor="let bank of cardList" class="bank-list" type="button">
-            {{ bank.headline }}
+          <button (click)="onBankSelect(bank.uuid)" *ngFor="let bank of searchedBanks" class="bank-list" type="button">
+            {{ bank.bankName }}
           </button>
         </div>
       </div>
