@@ -13,7 +13,7 @@ spring:
   jpa:
     hibernate:
       naming:
-        physical-strategy: de.adorsys.opba.config.hibernate.PrefixAndSnakeCasePhysicalNamingStrategy
+        physical-strategy: de.adorsys.opba.config.migration.hibernate.PrefixAndSnakeCasePhysicalNamingStrategy
       # DDL is handled by Liquibase
       ddl-auto: validate
     open-in-view: false

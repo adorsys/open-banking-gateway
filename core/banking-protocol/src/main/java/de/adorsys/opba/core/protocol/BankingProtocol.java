@@ -1,6 +1,6 @@
 package de.adorsys.opba.core.protocol;
 
-import de.adorsys.opba.config.EnableMigration;
+import de.adorsys.opba.config.migration.EnableMigration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;

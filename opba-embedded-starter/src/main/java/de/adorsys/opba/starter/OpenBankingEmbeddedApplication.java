@@ -1,6 +1,6 @@
 package de.adorsys.opba.starter;
 
-import de.adorsys.opba.config.EnableMigration;
+import de.adorsys.opba.config.migration.EnableMigration;
 import de.adorsys.opba.consentapi.config.EnableConsentApi;
 import de.adorsys.opba.tppbankingapi.config.EnableBankingPersistence;
 import org.springframework.boot.SpringApplication;

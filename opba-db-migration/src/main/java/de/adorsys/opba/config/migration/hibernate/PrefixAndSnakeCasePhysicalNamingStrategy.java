@@ -1,4 +1,4 @@
-package de.adorsys.opba.config.hibernate;
+package de.adorsys.opba.config.migration.hibernate;
 
 import com.google.common.base.CaseFormat;
 import org.hibernate.boot.model.naming.Identifier;

@@ -1,4 +1,4 @@
-package de.adorsys.opba.config;
+package de.adorsys.opba.config.migration;
 
 import org.springframework.context.annotation.Import;
 
