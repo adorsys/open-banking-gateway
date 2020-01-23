@@ -28,8 +28,10 @@ replace_puml_urls:
 	# "makefile: replace_puml_urls"
 	cp mkdocs.yml docs_for_site
 	cp README.md docs_for_site/docs/README.md
-	sed -i 's/docs\///g' docs_for_site/docs/README.md
-	find docs_for_site -type f -name "*.md" -exec sed -i  's/\.\.\/README.md/README.md/g' {} \;
+# trick with bak-files works for sed of GNU and BSD, therefore the command is macos and linux compatible
+	sed -i.bak 's/docs\///g' docs_for_site/docs/README.md && rm -rf docs_for_site/docs/README.md.bak
+	find docs_for_site -type f -name "*.md" -exec sed -i.bak 's/\.\.\/README.md/README.md/g' {} \;
+	find docs_for_site -type f -name "*.md.bak" -exec rm -rf {} \;
 	# find docs_for_site -type f -name "*.md" -exec sed -i 's%${PUML_URLS_PATTERN}%${PUML_URLS_REPLACE}%' {} \;
 
 .PHONY : convert_puml
