@@ -1,0 +1,69 @@
+@startuml 
+
+autonumber 10 10 "<b><color blue>[LoT-000]</color></b>"
+actor psu
+
+box "PsuUserAgent" #LightGray
+    participant "FinTechUI" as FinTechUI
+    'participant "ConsentAuthorisationUI" as ConsentAuthorisationUI
+    'participant "OnlineBankingUI" as OnlineBankingUI
+end box
+box "FinTechDC" #DarkSeaGreen
+    participant "FinTechApi" as FinTechApi
+end box
+box "TppDC" #LightGray
+    participant "TppBankingApi" as TppBankingApi
+    participant "BankingProtocolFacade" as BankingProtocolFacade
+    'participant "TppBankSearchApi" as TppBankSearchApi
+    'participant "ConsentAuthorisationApi" as ConsentAuthorisationApi
+
+    participant "BankingProtocol" as BankingProtocol
+    participant "RedirectSessionStoreApi" as RedirectSessionStoreApi
+end box
+box "AspspDC" #LightSkyBlue
+	participant "AspspBankingApi" as AspspBankingApi
+    'participant "OnlineBankingApi" as OnlineBankingApi
+end box
+
+== Initiate consent upon PSU transaction display request : call[header](body)<params> return code[header](body) ==
+
+FinTechUI --> psu : displayBankAccount(BankAccount)
+psu -> FinTechUI ++ : selectService(listOfTransactions)
+FinTechUI -> FinTechApi ++ : GET:listOfTransactions\n[SessionCookie,X-XSRF-TOKEN]()\n<p:bank-id, p:account-id, \nq:dateFrom, q:dateTo,\nq:entryReferenceFrom,\nq:bookingStatus, q:deltaList>
+autonumber 40 1 "<b><color blue>[LoT-000]"
+FinTechApi -> TppBankingApi ++ : listOfTransactions[UserAgentContext,\nFintech-User-ID:psu-id@fintech,\nService-Session-ID:service-session-id,\nBank-ID:bank-id,\nFintech-Redirect-URL-OK<p:auth-id,q:state>:url,\nFintech-Redirect-URL-NOK<p:auth-id,q:state>:url,\nAuthorization:FinTechContext]()\n<p:account-id, \nq:dateFrom, q:dateTo ,\nq:entryReferenceFrom,\nq:bookingStatus, q:deltaList>
+autonumber 41 1 "<b><color blue>[LoT-000]"
+TppBankingApi -> TppBankingApi : checkAuthorization(FinTechContext):finTechId
+autonumber 50 1 "<b><color blue>[LoT-000]"
+TppBankingApi -> BankingProtocolFacade ++ : listOfTransactions(userAgentContext,\nfintechUserID,\nserviceSessionID,bankID,\nfintechRedirectURLOK,\nfintechRedirectURLNOK,\nfintechId,accountId,\ndateFrom,dateTo,\nentryReferenceFrom,\nbookingStatus, deltaList)
+BankingProtocolFacade -> BankingProtocolFacade : selectBankingProtocol(ServiceSessionId, \nBankId, "listOfTransactions"):BankingProtocol
+autonumber 60 1 "<b><color blue>[LoT-000]"
+BankingProtocolFacade -> BankingProtocol ++ : listOfTransactions(userAgentContext,\nfintechUserID,\nserviceSessionID,bankID,\nfintechRedirectURLOK,\nfintechRedirectURLNOK,\nfintechId,accountId,\ndateFrom,dateTo,\nentryReferenceFrom,\nbookingStatus, deltaList)
+BankingProtocol -> BankingProtocol : loadMatchingConsent(fintechUserID,\nserviceSessionID, bankID, finTechId,\n"listOfTransactions"):TppConsentSession
+BankingProtocol -> BankingProtocol : storeServiceSession\n(serviceSessionID, ServiceSession,\nTppConsentSession):serviceSessionKey
+alt TppConsentSession.noConsentPresent()
+    autonumber 70 1 "<b><color blue>[LoT-000]"
+    BankingProtocol -> BankingProtocol : newAuthSession\n(serviceSessionID,serviceSessionKey, exp)\n:authId,redirectCode // sign&encrypted
+    return ThrowRedirectException(authId,\nserviceSessionKey,\nConsentAuthorisationApi.auth<q:redirectCode>)
+    return ThrowRedirectException(authId,\nserviceSessionKey,\nConsentAuthorisationApi.auth<q:redirectCode>)
+    return 303_SeeOther(authId,\nserviceSessionKey,\nConsentAuthorisationApi.auth<q:redirectCode>)
+    FinTechApi -> FinTechApi : expireSessionCookie(SessionCookie):SessionCookie
+    FinTechApi -> FinTechApi : createRedirectCookie\n(serviceSessionID,serviceSessionKey,redirectExp)\n:RedirectCookie,state
+    return 302_Redirect\n[ConsentAuthorisationApi.auth<q:redirectCode>,\nRedirectCookie, SessionCookie]()
+else TppConsentSession.consentPresent()
+    autonumber 80 1 "<b><color blue>[LoA-000]"
+    activate BankingProtocol
+    BankingProtocol -> BankingProtocol : loadAisConsent(TppConsentSession)\n:AisConsent
+    BankingProtocol -> AspspBankingApi ++ : listOfTransactions[UserAgentContext,\nTpp-Redirect-URL-OK<p:auth-id,q:state>:url,\nTpp-Redirect-URL-NOK<p:auth-id,q:state>:url](AisConsent)\n<p:aspsp-account-id, \nq:dateFrom, q:dateTo ,\nq:entryReferenceFrom,\nq:bookingStatus, q:deltaList>
+    return 200_Transactions[](ListOftransactionsResponse)
+    BankingProtocol --> BankingProtocolFacade ++: ListOftransactionsResponse
+    deactivate BankingProtocol
+    BankingProtocolFacade --> TppBankingApi ++: ListOftransactionsResponse
+    deactivate BankingProtocolFacade
+    TppBankingApi --> FinTechApi ++ : 200_Transactions[](ListOftransactionsResponse)
+    deactivate TppBankingApi
+    FinTechApi --> FinTechUI : 200_Transactions\n[SessionCookie,X-XSRF-TOKEN]\n(ListOftransactionsResponse)
+    deactivate FinTechApi
+    return displaylistOfAccounts(ListOftransactionsResponse)
+end
+@enduml
