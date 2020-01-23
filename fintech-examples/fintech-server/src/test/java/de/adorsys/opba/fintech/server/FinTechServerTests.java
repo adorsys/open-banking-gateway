@@ -14,14 +14,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -31,18 +30,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @EnableFinTechImplConfig
@@ -72,21 +68,15 @@ class FinTechServerTests {
     @Test
     @SneakyThrows
     public void loginPostOk() {
-        auth("peter", "1234");
+        authOk("peter", "1234");
     }
 
     @Test
     @SneakyThrows
     public void loginPostUnAuthorized() {
-        final LoginBody loginBody = new LoginBody("peter", "12345");
-        this.mvc
-                .perform(post(FIN_TECH_AUTH_URL)
-                        .header("X-Request-ID", UUID.randomUUID().toString())
-                        .content(gson.toJson(loginBody))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isUnauthorized())
-                .andExpect(header().doesNotExist("X-XSRF-TOKEN"));
+        MvcResult result = plainauth("peter", "12345");
+        assertEquals(HttpStatus.UNAUTHORIZED.value(), result.getResponse().getStatus());
+        assertNull(result.getResponse().getHeader("X-XSRF-TOKEN"));
     }
 
     @Test
@@ -100,23 +90,15 @@ class FinTechServerTests {
                 .thenReturn(gson.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class));
 
         LoginBody loginBody = new LoginBody("peter", "1234");
-        String xsrfToken = auth(loginBody.username, loginBody.password);
-        bankSearch(keyword, start, max, xsrfToken);
+        String xsrfToken = authOk(loginBody.username, loginBody.password);
+        bankSearchOk(keyword, start, max, xsrfToken);
     }
 
     @Test
     @SneakyThrows
     public void bankSearchUnAuthorized() {
-        String xsrfToken = "unvalidtoken";
-        this.mvc
-                .perform(get(FIN_TECH_BANK_SEARCH_URL)
-                        .header("X-Request-ID", UUID.randomUUID().toString())
-                        .header("X-XSRF-TOKEN", xsrfToken)
-                        .param("keyword", "affe")
-                        .param("start", "0")
-                        .param("max", "2"))
-                .andDo(print())
-                .andExpect(status().isUnauthorized());
+        MvcResult result = plainBankSearch("affe", 0, 2, "invalidToken");
+        assertEquals(HttpStatus.UNAUTHORIZED.value(), result.getResponse().getStatus());
     }
 
     /**
@@ -134,7 +116,7 @@ class FinTechServerTests {
             final String password = "1234";
             log.info("DO Authorization ({}, {}) ==============================", user, password);
             LoginBody loginBody = new LoginBody(user, password);
-            xsrfToken = auth(loginBody.username, loginBody.password);
+            xsrfToken = authOk(loginBody.username, loginBody.password);
         }
 
         String bankUUID = null;
@@ -147,7 +129,7 @@ class FinTechServerTests {
             when(mockedTppBankSearchApi.bankSearchGET(any(), any(), eq(keyword), eq(start), eq(max)))
                     .thenReturn(gson.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class));
 
-            bankUUID = bankSearch(keyword, start, max, xsrfToken);
+            bankUUID = bankSearchOk(keyword, start, max, xsrfToken);
         }
 
         List<String> services = null;
@@ -163,7 +145,6 @@ class FinTechServerTests {
     }
 
     /**
-     *
      * @param xsrfToken
      * @param bankUUID
      * @return List of Services of Bank
@@ -188,28 +169,31 @@ class FinTechServerTests {
     }
 
     /**
-     *
      * @param username
      * @param password
      * @return XSRF Token
      */
     @SneakyThrows
-    private String auth(String username, String password) {
+    private String authOk(String username, String password) {
+        MvcResult result = plainauth(username, password);
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertNotNull(result.getResponse().getHeader("X-XSRF-TOKEN"));
+        return result.getResponse().getHeader("X-XSRF-TOKEN");
+    }
+
+    @SneakyThrows
+    private MvcResult plainauth(String username, String password) {
         LoginBody loginBody = new LoginBody(username, password);
-        MvcResult result = this.mvc
+        return this.mvc
                 .perform(post(FIN_TECH_AUTH_URL)
                         .header("X-Request-ID", UUID.randomUUID().toString())
                         .content(gson.toJson(loginBody))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(header().exists("X-XSRF-TOKEN"))
                 .andReturn();
-        return result.getResponse().getHeader("X-XSRF-TOKEN");
     }
 
     /**
-     *
      * @param keyword
      * @param start
      * @param max
@@ -217,8 +201,15 @@ class FinTechServerTests {
      * @return first BankUUID of found list
      */
     @SneakyThrows
-    private String bankSearch(String keyword, Integer start, Integer max, String xsrfToken) {
-        MvcResult mvcResult = this.mvc
+    private String bankSearchOk(String keyword, Integer start, Integer max, String xsrfToken) {
+        MvcResult result = plainBankSearch(keyword, start, max, xsrfToken);
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        return new JSONObject(result.getResponse().getContentAsString()).getJSONArray("bankDescriptor").getJSONObject(0).get("uuid").toString();
+    }
+
+    @SneakyThrows
+    private MvcResult plainBankSearch(String keyword, Integer start, Integer max, String xsrfToken) {
+        return this.mvc
                 .perform(get(FIN_TECH_BANK_SEARCH_URL)
                         .header("X-Request-ID", UUID.randomUUID().toString())
                         .header("X-XSRF-TOKEN", xsrfToken)
@@ -226,12 +217,8 @@ class FinTechServerTests {
                         .param("start", start.toString())
                         .param("max", max.toString()))
                 .andDo(print())
-                .andExpect(status().isOk())
                 .andReturn();
-
-        return new JSONObject(mvcResult.getResponse().getContentAsString()).getJSONArray("bankDescriptor").getJSONObject(0).get("uuid").toString();
     }
-
 
 
     @AllArgsConstructor
@@ -259,5 +246,4 @@ class FinTechServerTests {
                 + "-" + bankUUID
                 + POSTFIX;
     }
-
 }
