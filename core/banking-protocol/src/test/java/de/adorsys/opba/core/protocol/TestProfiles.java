@@ -8,5 +8,4 @@ public class TestProfiles {
 
     public static final String ONE_TIME_POSTGRES_RAMFS = "test-one-time-postgres-ramfs";
     public static final String MOCKED_SANDBOX = "test-mocked-sandbox";
-    public static final String MIGRATION = "migration";
 }

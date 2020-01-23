@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
-import static de.adorsys.opba.core.protocol.TestProfiles.MIGRATION;
 import static de.adorsys.opba.core.protocol.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 import static org.mockito.Mockito.doThrow;
@@ -18,7 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@ActiveProfiles(value = {MIGRATION, ONE_TIME_POSTGRES_RAMFS})
+@ActiveProfiles(value = {ONE_TIME_POSTGRES_RAMFS})
 class ContextUpdateServiceTest extends BaseMockitoTest {
 
     @MockBean

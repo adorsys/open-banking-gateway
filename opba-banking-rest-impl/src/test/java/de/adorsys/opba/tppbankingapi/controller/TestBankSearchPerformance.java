@@ -23,14 +23,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static de.adorsys.opba.tppbankingapi.TestProfiles.MIGRATION;
 import static de.adorsys.opba.tppbankingapi.TestProfiles.ONE_TIME_POSTGRES_ON_DISK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @Slf4j
-@ActiveProfiles({MIGRATION, ONE_TIME_POSTGRES_ON_DISK})
+@ActiveProfiles({ONE_TIME_POSTGRES_ON_DISK})
 @AutoConfigureMockMvc
 class TestBankSearchPerformance extends BaseMockitoTest {
 

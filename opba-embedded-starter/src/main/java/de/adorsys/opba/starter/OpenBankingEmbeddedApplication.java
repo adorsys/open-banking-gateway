@@ -3,8 +3,8 @@ package de.adorsys.opba.starter;
 import de.adorsys.opba.config.EnableMigration;
 import de.adorsys.opba.consentapi.config.EnableConsentApi;
 import de.adorsys.opba.tppbankingapi.config.EnableBankingPersistence;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
@@ -16,10 +16,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 public class OpenBankingEmbeddedApplication {
 
     public static void main(String[] args) {
-        new SpringApplicationBuilder(OpenBankingEmbeddedApplication.class)
-                .properties("spring.comfig.name:application,application-migration",
-                        "spring.config.location:classpath:application.yml,classpath:application-migration.yml")
-                .build().run(args);
+        SpringApplication.run(OpenBankingEmbeddedApplication.class, args);
     }
 
 }
