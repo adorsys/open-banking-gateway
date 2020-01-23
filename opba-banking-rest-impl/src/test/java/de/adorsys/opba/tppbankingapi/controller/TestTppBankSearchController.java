@@ -8,14 +8,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static de.adorsys.opba.tppbankingapi.TestProfiles.MIGRATION;
 import static de.adorsys.opba.tppbankingapi.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@ActiveProfiles({MIGRATION, ONE_TIME_POSTGRES_RAMFS})
+@ActiveProfiles({ONE_TIME_POSTGRES_RAMFS})
 @AutoConfigureMockMvc
 class TestTppBankSearchController extends BaseMockitoTest {
 
