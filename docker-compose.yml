@@ -11,7 +11,7 @@ services:
       - POSTGRES_PASSWORD=docker
       - POSTGRES_DB=open_banking
     ports:
-      - "5432:5432"
+      - "5432:15432"
     volumes:
       - ./opba-banking-rest-impl/src/test/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
@@ -25,7 +25,7 @@ services:
       - PKCS12_KEYSTORE=/pkcs12/sample-qwac.keystore
     build: opba-embedded-starter
     ports:
-      - "8085:8085"
+      - "8085:18085"
     volumes:
       - ./core/banking-protocol/src/main/resources/:/pkcs12/
     entrypoint: "java -jar open-banking-gateway-0.0.6-SNAPSHOT.jar"
@@ -36,10 +36,10 @@ services:
 
   fintech-server:
     environment:
-      - TPP_URL=http://open-banking-gateway:8080
+      - TPP_URL=http://open-banking-gateway:8085
     build: fintech-examples/fintech-server
     ports:
-      - "8086:8086"
+      - "8086:18086"
     entrypoint: "java -jar fintech-server-0.0.6-SNAPSHOT.jar"
     networks:
       - opba-net
@@ -50,7 +50,7 @@ services:
       context: fintech-examples/fintech-ui
       dockerfile: Dockerfile
     ports:
-      - "4200:4200"
+      - "4200:14200"
     networks:
       - opba-net
 

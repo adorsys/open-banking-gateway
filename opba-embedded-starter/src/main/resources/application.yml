@@ -1,5 +1,5 @@
 server:
-  port: 8086
+  port: 8085
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/open_banking?currentSchema=banking_protocol
