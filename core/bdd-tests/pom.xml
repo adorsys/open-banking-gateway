@@ -10,7 +10,7 @@
 
     <!-- BDD Tests common step definitions, etc. -->
     <artifactId>bdd-tests</artifactId>
-    <name>core/banking-protocol/bdd-tests</name>
+    <name>core/bdd-tests</name>
 
     <properties>
       <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
