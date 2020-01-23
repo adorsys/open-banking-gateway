@@ -31,9 +31,11 @@
         <module>core</module>
         <module>sandbox-test</module>
         <module>opba-banking-rest-api</module>
+        <module>opba-banking-protocol-facade</module>
         <module>opba-embedded-starter</module>
         <module>fintech-examples</module>
         <module>last-module-codecoverage</module>
+        <module>opba-banking-rest-impl</module>
     </modules>
 
     <url>https://github.com/adorsys/open-banking-gateway</url>
@@ -112,6 +114,7 @@
         <jgiven.version>1.0.0-RC3</jgiven.version>
         <wiremock.version>2.25.1</wiremock.version>
         <testcontainers.version>1.12.4</testcontainers.version>
+        <selenium-jupiter.version>3.3.4</selenium-jupiter.version>
         <slf4j-simple.version>1.7.29</slf4j-simple.version>
         <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
         <!-- other properties -->
@@ -129,14 +132,6 @@
     </properties>
 
     <repositories>
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>http://repo.spring.io/milestone</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
         <repository>
             <id>snapshots-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>

@@ -73,7 +73,7 @@ public class Xs2aValidator {
         }
 
         if (!fieldValue.isAnnotationPresent(ValidationInfo.class)) {
-            throw new IllegalStateException("Field is" + name + " not annotated with @ValidationInfo");
+            throw new IllegalStateException("Field " + name + " not annotated with @ValidationInfo");
         }
 
         return fieldValue.getAnnotationsByType(ValidationInfo.class)[0];

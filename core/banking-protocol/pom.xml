@@ -20,13 +20,6 @@
 
     <dependencies>
 
-        <!-- api -->
-        <dependency>
-            <groupId>de.adorsys.opba</groupId>
-            <artifactId>opba-banking-rest-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- javadoc -->
         <dependency>
             <groupId>javax.interceptor</groupId>

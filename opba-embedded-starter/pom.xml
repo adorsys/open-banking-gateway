@@ -22,13 +22,33 @@
         <dependency>
             <groupId>de.adorsys.opba</groupId>
             <artifactId>opba-banking-rest-api</artifactId>
-            <version>0.0.6-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-banking-rest-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
             <artifactId>opba-consent-rest-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-banking-protocol-facade</artifactId>
             <version>0.0.6-SNAPSHOT</version>
         </dependency>
+
+        <!-- DB Access -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
@@ -61,14 +81,23 @@
     </dependencies>
 
     <build>
+        <finalName>${project.parent.artifactId}-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                 <mainClass>de.adorsys.obpa.starter.OpenBankingEmbeddedApplication</mainClass>
+                    <mainClass>de.adorsys.opba.starter.OpenBankingEmbeddedApplication</mainClass>
+                    <executable>true</executable>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

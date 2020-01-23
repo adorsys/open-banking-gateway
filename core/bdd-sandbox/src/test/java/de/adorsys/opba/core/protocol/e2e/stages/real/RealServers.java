@@ -32,4 +32,15 @@ public class RealServers extends Stage<RealServers> {
                 .then()
                     .statusCode(HttpStatus.OK.value());
     }
+
+    public void enabled_redirect_sandbox_mode() {
+        RestAssured
+                .given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body("[\"REDIRECT\",\"EMBEDDED\",\"DECOUPLED\"]")
+                .when()
+                .put(ASPSP_PROFILE_BASE_URI + "/api/v1/aspsp-profile/for-debug/sca-approaches")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+    }
 }

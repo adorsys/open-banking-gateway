@@ -9,9 +9,6 @@
       },
       "PSU-ID" : {
         "equalTo" : "max.musterman"
-      },
-      "PSU-IP-Address" : {
-        "equalTo" : "1.1.1.1"
       }
     }
   },

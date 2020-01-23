@@ -11,4 +11,7 @@ public class GlobalConst {
 
     public static final String REQUEST_SAGA = "request-saga";
     public static final String VALIDATION_ERROR_CODE = "VALIDATION";
+
+    public static final String XS2A_MAPPERS_PACKAGE = "de.adorsys.opba.core.protocol.service.xs2a.mappers";
+    public static final String SPRING_KEYWORD = "spring";
 }

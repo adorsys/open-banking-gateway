@@ -3,27 +3,34 @@ package de.adorsys.opba.core.protocol.e2e;
 import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
 import de.adorsys.opba.core.protocol.BankingProtocol;
-import de.adorsys.opba.core.protocol.e2e.stages.AccountInformationRequest;
+import de.adorsys.opba.core.protocol.config.protocol.ProtocolConfiguration;
 import de.adorsys.opba.core.protocol.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.core.protocol.e2e.stages.real.RealServers;
-import de.adorsys.psd2.sandbox.cms.starter.Xs2aCmsAutoConfiguration;
+import de.adorsys.opba.core.protocol.e2e.stages.real.WebDriverBasedAccountInformation;
 import de.adorsys.opba.testsandbox.SandboxAppsStarter;
+import de.adorsys.psd2.sandbox.cms.starter.Xs2aCmsAutoConfiguration;
+import io.github.bonigarcia.seljup.SeleniumExtension;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.hateoas.HypermediaAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import static de.adorsys.opba.testsandbox.Const.ENABLE_HEAVY_TESTS;
 import static de.adorsys.opba.core.protocol.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.core.protocol.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
+import static de.adorsys.opba.testsandbox.Const.ENABLE_HEAVY_TESTS;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
@@ -36,15 +43,26 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         ManagementWebSecurityAutoConfiguration.class,
         SecurityAutoConfiguration.class,
 })
+@ExtendWith(SeleniumExtension.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {BankingProtocol.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
-class SandboxE2EProtocolTest extends SpringScenarioTest<RealServers, AccountInformationRequest, AccountInformationResult> {
+class SandboxE2EProtocolTest extends SpringScenarioTest<RealServers, WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>, AccountInformationResult> {
 
     private static final SandboxAppsStarter executor = new SandboxAppsStarter();
 
+    @LocalServerPort
+    private int port;
+
+    @Autowired
+    private ProtocolConfiguration configuration;
+
     @BeforeAll
     static void startSandbox() {
+        if (null != System.getenv("NO_SANDBOX_START")) {
+            return;
+        }
+
         executor.runAll();
         executor.awaitForAllStarted();
     }
@@ -52,6 +70,48 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<RealServers, AccountInfo
     @AfterAll
     static void stopSandbox() {
         executor.shutdown();
+    }
+
+    // See https://github.com/spring-projects/spring-boot/issues/14879 for the 'why setting port'
+    @BeforeEach
+    void setBaseUrl() {
+        ProtocolConfiguration.Redirect.Consent consent = configuration.getRedirect().getConsentAccounts();
+        consent.setOk(consent.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
+        consent.setNok(consent.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
+    }
+
+    @Test
+    public void testAccountsListWithConsentUsingRedirect(FirefoxDriver firefoxDriver) {
+        redirectListAntonBruecknerAccounts(firefoxDriver);
+    }
+
+    @Test
+    public void testTransactionListWithConsentUsingRedirect(FirefoxDriver firefoxDriver) {
+        String accountResourceId = JsonPath
+                .parse(redirectListAntonBruecknerAccounts(firefoxDriver)).read("$.[0].resourceId");
+
+        given()
+                .enabled_redirect_sandbox_mode();
+
+        when()
+                .open_banking_list_transactions_called_for_anton_brueckner(accountResourceId)
+                .and()
+                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions()
+                .and()
+                .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_inputs_username_and_password(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_confirms_consent_information(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_selects_sca_method(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_see_redirect_back_to_tpp_button(firefoxDriver);
+
+        then()
+                .open_banking_reads_anton_brueckner_transactions_validated_by_iban();
     }
 
     @Test
@@ -95,6 +155,33 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<RealServers, AccountInfo
 
         AccountInformationResult result = then()
                 .open_banking_has_max_musterman_accounts();
+
+        return result.getResponseContent();
+    }
+
+    private String redirectListAntonBruecknerAccounts(FirefoxDriver firefoxDriver) {
+        given()
+                .enabled_redirect_sandbox_mode();
+
+        when()
+                .open_banking_list_accounts_called()
+                .and()
+                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts()
+                .and()
+                .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_inputs_username_and_password(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_confirms_consent_information(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_selects_sca_method(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
+                .and()
+                .sandbox_anton_brueckner_see_redirect_back_to_tpp_button(firefoxDriver);
+
+        AccountInformationResult result = then()
+                .open_banking_reads_anton_brueckner_accounts_on_redirect();
 
         return result.getResponseContent();
     }

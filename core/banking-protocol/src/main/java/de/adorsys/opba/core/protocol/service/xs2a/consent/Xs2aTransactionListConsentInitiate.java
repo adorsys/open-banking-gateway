@@ -3,18 +3,19 @@ package de.adorsys.opba.core.protocol.service.xs2a.consent;
 import de.adorsys.opba.core.protocol.config.protocol.ProtocolConfiguration;
 import de.adorsys.opba.core.protocol.service.ContextUtil;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
+import de.adorsys.opba.core.protocol.service.dto.ValidatedHeadersBody;
 import de.adorsys.opba.core.protocol.service.xs2a.context.TransactionListXs2aContext;
-import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.core.protocol.service.xs2a.dto.consent.ConsentInitiateHeaders;
-import de.adorsys.opba.core.protocol.service.xs2a.dto.consent.ConsentsBody;
-import de.adorsys.opba.core.protocol.service.xs2a.dto.consent.Xs2aConsentInitiate;
 import de.adorsys.opba.core.protocol.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.Response;
 import de.adorsys.xs2a.adapter.service.model.ConsentCreationResponse;
+import de.adorsys.xs2a.adapter.service.model.Consents;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 
@@ -22,6 +23,7 @@ import static de.adorsys.opba.core.protocol.constant.GlobalConst.CONTEXT;
 @RequiredArgsConstructor
 public class Xs2aTransactionListConsentInitiate extends ValidatedExecution<TransactionListXs2aContext> {
 
+    private final ConsentInitiateExtractor extractor;
     private final AccountInformationService ais;
     private final Xs2aValidator validator;
     private final ProtocolConfiguration configuration;
@@ -38,26 +40,24 @@ public class Xs2aTransactionListConsentInitiate extends ValidatedExecution<Trans
 
     @Override
     protected void doValidate(DelegateExecution execution, TransactionListXs2aContext context) {
-        Xs2aConsentInitiate consent = consentInitiate(context);
-        validator.validate(execution, consent.getHeaders(), consent.getBody()); // flatten path
+        validator.validate(execution, extractor.forValidation(context)); // flatten path
     }
 
     @Override
     protected void doRealExecution(DelegateExecution execution, TransactionListXs2aContext context) {
-        Xs2aConsentInitiate consent = consentInitiate(context);
+        ValidatedHeadersBody<ConsentInitiateHeaders, Consents> params = extractor.forExecution(context);
         Response<ConsentCreationResponse> consentInit = ais.createConsent(
-            consent.getHeaders().toHeaders(),
-            ConsentsBody.TO_XS2A.map(consent.getBody())
+                params.getHeaders().toHeaders(),
+                params.getBody()
         );
 
         context.setConsentId(consentInit.getBody().getConsentId());
         execution.setVariable(CONTEXT, context);
     }
 
-    private Xs2aConsentInitiate consentInitiate(Xs2aContext context) {
-        return new Xs2aConsentInitiate(
-            ConsentInitiateHeaders.XS2A_HEADERS.map(context),
-            ConsentsBody.FROM_CTX.map(context)
-        );
+    @Override
+    protected void doMockedExecution(DelegateExecution execution, TransactionListXs2aContext context) {
+        context.setConsentId("MOCK-" + UUID.randomUUID().toString());
+        execution.setVariable(CONTEXT, context);
     }
 }
