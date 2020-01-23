@@ -7,14 +7,11 @@ import javax.validation.Valid;
 
 @Data
 @RequiredArgsConstructor
-public class ParametersHeadersBodyToValidate<P, H, B> {
+public class PathHeadersToValidate<P, H> {
 
     @Valid
-    private final P parameters;
+    private final P path;
 
     @Valid
     private final H headers;
-
-    @Valid
-    private final B body;
 }

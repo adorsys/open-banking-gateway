@@ -1,9 +1,9 @@
 package de.adorsys.opba.core.protocol.service.xs2a.consent.authenticate.embedded;
 
-import de.adorsys.opba.core.protocol.service.mapper.ParamsHeadersBodyMapperTemplate;
+import de.adorsys.opba.core.protocol.service.mapper.PathHeadersBodyMapperTemplate;
 import de.adorsys.opba.core.protocol.service.ContextUtil;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
-import de.adorsys.opba.core.protocol.service.dto.ValidatedParametersHeadersBody;
+import de.adorsys.opba.core.protocol.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.core.protocol.service.xs2a.dto.DtoMapper;
 import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aAuthorizedConsentParameters;
@@ -35,12 +35,12 @@ public class Xs2aReportScaChallenge extends ValidatedExecution<Xs2aContext> {
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        ValidatedParametersHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, TransactionAuthorisation> params =
+        ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, TransactionAuthorisation> params =
                 extractor.forExecution(context);
 
         Response<ScaStatusResponse> authResponse = ais.updateConsentsPsuData(
-                params.getParameters().getConsentId(),
-                params.getParameters().getAuthorizationId(),
+                params.getPath().getConsentId(),
+                params.getPath().getAuthorizationId(),
                 params.getHeaders().toHeaders(),
                 params.getBody()
         );
@@ -57,12 +57,12 @@ public class Xs2aReportScaChallenge extends ValidatedExecution<Xs2aContext> {
     }
 
     @Service
-    public static class Extractor extends ParamsHeadersBodyMapperTemplate<
-                    Xs2aContext,
-                    Xs2aStandardHeaders,
-                    Xs2aAuthorizedConsentParameters,
-                    ProvideScaChallengeResultBody,
-                    TransactionAuthorisation> {
+    public static class Extractor extends PathHeadersBodyMapperTemplate<
+                        Xs2aContext,
+                        Xs2aAuthorizedConsentParameters,
+                        Xs2aStandardHeaders,
+                        ProvideScaChallengeResultBody,
+                        TransactionAuthorisation> {
 
         public Extractor(
                 DtoMapper<Xs2aContext, ProvideScaChallengeResultBody> toValidatableBody,
