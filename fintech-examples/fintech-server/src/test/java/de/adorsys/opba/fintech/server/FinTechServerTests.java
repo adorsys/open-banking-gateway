@@ -76,7 +76,7 @@ class FinTechServerTests {
     public void loginPostUnAuthorized() {
         MvcResult result = plainauth("peter", "12345");
         assertEquals(HttpStatus.UNAUTHORIZED.value(), result.getResponse().getStatus());
-        assertNull(result.getResponse().getHeader("X-XSRF-TOKEN"));
+        assertNull(result.getResponse().getCookie("XSRF-TOKEN"));
     }
 
     @Test
@@ -177,8 +177,8 @@ class FinTechServerTests {
     private String authOk(String username, String password) {
         MvcResult result = plainauth(username, password);
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        assertNotNull(result.getResponse().getHeader("X-XSRF-TOKEN"));
-        return result.getResponse().getHeader("X-XSRF-TOKEN");
+        assertNotNull(result.getResponse().getCookie("XSRF-TOKEN"));
+        return result.getResponse().getCookie("XSRF-TOKEN").getValue();
     }
 
     @SneakyThrows
