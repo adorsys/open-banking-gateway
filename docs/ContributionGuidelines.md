@@ -52,6 +52,10 @@ Further explanation in [checkstyle](#checkstyle)
 * We prefer using Mockito over EasyMock for unit-tests.
 * We prefer SpringBoot autoconfiguration over manual Configuration where possible
 
+# Adding new modules
+
+When adding new modules or changing other modules ensure you are adding them to `last-module-codecoverage` too.
+
 #### Open API 3.0
 
 We use API First approach, so that API files are the first source of a contract.
