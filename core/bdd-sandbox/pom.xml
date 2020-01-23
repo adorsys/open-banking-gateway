@@ -10,7 +10,7 @@
 
     <!-- BDD Tests for protocol running on top of Sandbox -->
     <artifactId>bdd-sandbox</artifactId>
-    <name>core/banking-protocol/bdd-sandbox</name>
+    <name>core/bdd-sandbox</name>
 
     <properties>
       <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.

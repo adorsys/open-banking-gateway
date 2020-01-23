@@ -10,7 +10,7 @@
 
     <!-- BDD Tests for protocol running on top of Wiremock-based response-request fixtures -->
     <artifactId>bdd-wiremock</artifactId>
-    <name>core/banking-protocol/bdd-wiremock</name>
+    <name>core/bdd-wiremock</name>
 
     <properties>
       <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
