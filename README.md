@@ -37,7 +37,7 @@ Please take a look into our [**documentation**](https://adorsys.github.io/open-b
 
 ### Architecture 
 * [Dictionary](docs/architecture/dictionary.md)
-* [Use Cases](docs/architecture/uses_cases.md)
+* [Use Cases](docs/architecture/use_cases.md)
 * [Banking Protokol Design](docs/architecture/drafts/initial_requirements.md)
 * [PSU Access Security Design](docs/architecture/concepts/psu-security-concept.md)
 * [JavaDoc](https://adorsys.github.io/open-banking-gateway/javadoc/latest/index.html)
