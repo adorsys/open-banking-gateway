@@ -387,33 +387,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-        <!-- as cobertura still does not support lamda expressions, we get a lot of warnings of type:
-        Last useful checkpoint: "de.adorsys.opba.core.protocol.config.flowable.FlowableConfig.storeCustomClassesAsJson(String,int,ObjectMapper)"
-        Encountered " ">" "> "" at line 28, column 37.
-        As it is not supported for 5 years, does not make sense to use it at all
-        https://github.com/MoodCat/MoodCat.me-Core/issues/103
-        -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>${cobertura-maven-plugin.version}</version>
-                <configuration>
-                    <quiet>true</quiet>
-                    <formats>
-                        <format>html</format>
-                        <format>xml</format>
-                    </formats>
-                    <check />
-                    <encoding>UTF-8</encoding>
-                    <instrumentation>
-                        <includes>
-                            <include>target/generated-sources/**/src/main/java</include>
-                        </includes>
-                    </instrumentation>
-                </configuration>
-            </plugin>
-
         </plugins>
     </build>
 
