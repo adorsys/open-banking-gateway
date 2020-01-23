@@ -1,4 +1,4 @@
-# List Of Transactions
+# List Of Accounts
 General terms defined in the [dictionary](dictionary.md)
 
 ## Definition
