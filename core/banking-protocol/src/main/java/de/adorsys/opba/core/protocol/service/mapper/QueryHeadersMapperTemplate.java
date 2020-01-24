@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class QueryHeadersMapperTemplate<C extends BaseContext, Q, H> {
 
-    private final DtoMapper<C, H> toHeaders;
-    private final DtoMapper<C, Q> toQuery;
+    private final DtoMapper<? super C, H> toHeaders;
+    private final DtoMapper<? super C, Q> toQuery;
 
     public QueryHeadersToValidate<Q, H> forValidation(C context) {
         return new QueryHeadersToValidate<>(

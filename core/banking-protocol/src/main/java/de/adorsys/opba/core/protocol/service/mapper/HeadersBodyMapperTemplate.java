@@ -9,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class HeadersBodyMapperTemplate<C extends BaseContext, H, V, B> {
 
-    private final DtoMapper<C, V> toValidatableBody;
+    private final DtoMapper<? super C, V> toValidatableBody;
     private final DtoMapper<V, B> toBody;
-    private final DtoMapper<C, H> toHeaders;
+    private final DtoMapper<? super C, H> toHeaders;
 
     public HeadersBodyToValidate<H, V> forValidation(C context) {
         return new HeadersBodyToValidate<>(
