@@ -1,7 +1,7 @@
 {
   "id" : "464fddb3-3f6f-3aeb-91df-45af81c07f76",
   "request" : {
-    "url" : "/v1/accounts/cmD4EYZeTkkhxRuIV1diKA/transactions?dateTo=2020-09-30&bookingStatus=BOTH&withBalance=false&dateFrom=2018-01-01",
+    "url" : "/v1/accounts/cmD4EYZeTkkhxRuIV1diKA/transactions?dateTo=2020-09-30&bookingStatus=BOTH&dateFrom=2018-01-01",
     "method" : "GET",
     "headers" : {
       "Accept" : {

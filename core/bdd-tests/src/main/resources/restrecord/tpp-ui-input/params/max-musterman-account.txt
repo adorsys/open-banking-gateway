@@ -1,1 +1,1 @@
-consent.recurringIndicator=false&consent.frequencyPerDay=12&psuId=max.musterman&consent.validUntil=2030-01-31&accessSelector=all&consent.access.availableAccounts=allAccounts&withBalance=false
+consent.recurringIndicator=false&consent.frequencyPerDay=12&psuId=max.musterman&consent.validUntil=2030-01-31&accessSelector=all&consent.access.availableAccounts=allAccounts

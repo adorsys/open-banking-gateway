@@ -1,7 +1,7 @@
 {
   "id" : "1e97f446-1392-3cc8-b42c-6f8f6cbd0a86",
   "request" : {
-    "url" : "/v1/accounts?withBalance=false",
+    "url" : "/v1/accounts",
     "method" : "GET",
     "headers" : {
       "X-Request-ID" : {
