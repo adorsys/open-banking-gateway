@@ -116,22 +116,18 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="../4-initiateAisConsent/">List of Transactions</a>
+    <a class="" href="../4-initiateAisConsent.md">List of Transactions</a>
                 </li>
                 <li class=" current">
                     
     <a class="current" href="./">Redirect to Consent Authorization API</a>
     <ul class="subnav">
             
-    <li class="toctree-l3"><a href="#redirect-psu-to-consent-api">Redirect PSU to consent API</a></li>
+    <li class="toctree-l3"><a href="#initiate-aisconsent">Initiate AisConsent</a></li>
     
         <ul>
         
-            <li><a class="toctree-l4" href="#redirect-010-consentauthorisationapi">Redirect-010 ConsentAuthorisationApi</a></li>
-        
             <li><a class="toctree-l4" href="#diagram">Diagram</a></li>
-        
-            <li><a class="toctree-l4" href="#request-processing-consentauthorisationapi">Request processing ConsentAuthorisationApi</a></li>
         
         </ul>
     
@@ -197,31 +193,204 @@
           <div role="main">
             <div class="section">
               
-                <h1 id="redirect-psu-to-consent-api">Redirect PSU to consent API</h1>
-<h2 id="redirect-010-consentauthorisationapi">Redirect-010 <a href="../dictionary/#ConsentAuthorisationApi">ConsentAuthorisationApi</a></h2>
-<p>The redirect starts with a get request to ConsentAuthorisationApi.auth. The entryPoint of the ConsentAuthorisationApi, for processing a consent initiated on the TppBankingApi side.</p>
+                <h1 id="initiate-aisconsent">Initiate AisConsent</h1>
 <h2 id="diagram">Diagram</h2>
 <p><img alt="Session diagram" src="../../architecture/diagrams/useCases/5-redirectPsuToConsentAPI.png" />  </p>
-<h2 id="request-processing-consentauthorisationapi">Request processing ConsentAuthorisationApi</h2>
-<h3 id="redirect-021-retrieve-corresponding-bankingprotocol">Redirect-021 Retrieve Corresponding BankingProtocol</h3>
-<p>ConsentAuthorisationApi will use the given redirectCode to load the matching BankingProtocol. This means that the protocol selection information must be encoded in the redirectCode. See <a href="https://github.com/adorsys/open-banking-gateway/issues/54">Issue #54</a>.</p>
-<h3 id="22-26-retrieve-associated-tppconsentsession">2.2 .. 2.6 Retrieve associated TppConsentSession</h3>
-<p>ConsentAuthorisationApi will let BankingProtocol use the redirectCode to retrieve the TppConsentSession
-.</p>
-<h3 id="interacting-with-the-psuuseragent">Interacting with the PsuUserAgent</h3>
-<h4 id="27-consentauthstate">2.7 consentAuthState</h4>
-<p>The CSRF-State String is called: <a href="../dictionary/#consentAuthState">consentAuthState</a></p>
-<h4 id="28-authorizeresponse">2.8 AuthorizeResponse</h4>
-<p>The AuthorizeResponse returned to the ConsentAuthorisationUI is used to display info to the PSU.</p>
-<p>This AuthorizeResponse object is always synchronized with the ConsentAuthSessionCookie set with the same HTTP response object.</p>
-<p>Any session, account or payment information needed to manage the authorization process is stored in both AuthorizeResponse (for display) and in the encrypted in the ConsentAuthSessionCookie.
-The consentCookieString is httpOnly</p>
-<h4 id="29-consentauthsessioncookie">2.9 ConsentAuthSessionCookie</h4>
-<p>The <a href="../dictionary/#ConsentAuthSessionCookie">ConsentAuthSessionCookie</a> is used to maintain session between ConsentAuthorisationUI and ConsentAuthorisationApi. It will generated and set as a <strong>httpOnly, Secure</strong></p>
-<h3 id="3-displaying-consent-authorize-ui">3. Displaying Consent Authorize UI</h3>
-<h3 id="4-redirecting-psu-to-the-aspsp">4. Redirecting PSU to the ASPSP</h3>
-<p>The returned AuthorizeResponse object info information needed to redirect the PSU to the target ASPSP.
-BackRedirectURL (OKUrl, NOKURL, etc... dependent of ASPSP API) contains the consentAuthState.</p>
+<h3 id="initconsent-010-consentauthorisationapi">InitConsent-010 <a href="../dictionary/#ConsentAuthorisationApi">ConsentAuthorisationApi</a></h3>
+<p>The redirect starts with a get request to ConsentAuthorisationApi.auth. The entryPoint of the ConsentAuthorisationApi for processing a consent initiated on the TppBankingApi side.</p>
+<h3 id="initconsent-020-bankingprotocolfacaderedirectsessionredirectcode">InitConsent-020 BankingProtocolFacade.redirectSession(redirectCode)</h3>
+<p>The ConsentAuthorisationApi forwards the redirect call to the BankingProtocolFacade.</p>
+<h3 id="initconsent-030-bankingprotocolfacadeselectbankingprotocolredirectcode">InitConsent-030 BankingProtocolFacade.selectBankingProtocol(redirectCode)</h3>
+<p>BankingProtocolFacade will use the given redirectCode to load the matching BankingProtocol. This means that the protocol selection information must be encoded in the redirectCode. See <a href="https://github.com/adorsys/open-banking-gateway/issues/54">Issue #54</a>.</p>
+<h3 id="initconsent-040-bankingprotocolredirectsessionredirectcode">InitConsent-040 BankingProtocol.redirectSession(redirectCode)</h3>
+<p>The BankingProtocolFacade forwards the redirect call to the BankingProtocol.</p>
+<h3 id="initconsent-050-bankingprotocolloadauthsessionredirectcode">InitConsent-050 BankingProtocol.loadAuthSession(redirectCode)</h3>
+<p>BankingProtocol uses the redirectCode to retrieve the AuthSession.</p>
+<h3 id="preauthentication-required">PreAuthentication Required</h3>
+<p>Some OpenBanking protocols required the PsuId to be provided with the very initial consent initiation request. In some cases, the OpenBanking protocol will specify a way to collect the PSU identity. This is the approach taken by the AuthPreStep as defined by the NextGenPSD2 protocol. In some other cases, the OpenBanking will not define any way of collecting this PSU identity. In such a case, the PsuIdentity will be collected using a UI defined by the TPP.
+Depending on which interface is taken to collect the PsuIdentity, we will have to mark if this collected identity is authenticated or not. If the identity collection interface allow the provision of a password and verifycation of the association between the given identity and the password, we call this an authenticated identity. If the interface only provide a collection of the PsuIdentity without proof of ownership of this identity, will call this an unauthenticated identity.</p>
+<h3 id="initconsent-060-bankingprotocolthrowidentifypsu">InitConsent-060 BankingProtocol:ThrowIdentifyPSU</h3>
+<ul>
+<li>Inputs: (protocolId, seviceSessionId, serviceSessionKey,authId)
+If the protocol requires a PsuIdentity and does not specify an identity provider (e.g.: oAuth2) used to collect that identity, we assume the BankingProtocol is requesting the ConsentAuthorisationApi to collect the identity unauthenticated. In this case, the BankingProtocol will throw an ThrowIdentifyPSU exception to instruct the BankingProtocolFacade to collect the identity of the PSU. The thrown exception carries following parameters:</li>
+<li>The protocolId: The protocolId contains information necessary to rediscover the banking protocol.</li>
+<li>The seviceSessionId and the serviceSessionKey : contains information later used by the BankingProtocol to laod the ServiceSession.</li>
+<li>The authId: references this authorization instance in the scope of a service session, as a service request can involve more that one authorization session.</li>
+</ul>
+<h3 id="initconsent-061-bankingprotocolfacadethrowidentifypsu">InitConsent-061 BankingProtocolFacade:ThrowIdentifyPSU</h3>
+<ul>
+<li>Inputs: (protocolId, seviceSessionId, serviceSessionKey,authId)
+The BankingProtocolFacade instructs the ConsentAuthorisationApi to collect the identity of the PSU. </li>
+</ul>
+<h3 id="initconsent-062-consentauthorisationapicreatesessioncookie">InitConsent-062 ConsentAuthorisationApi.createSessionCookie</h3>
+<ul>
+<li>Inputs: (protocolId,seviceSessionId, serviceSessionKey,authId)</li>
+<li>Returns: SessionCookie,state
+The ConsentAuthorisationApi creates a SessionCookie containing information provided in the call, generates a state parameter to protect the SessionCookie and redirects the call to the psuIdScreen of the ConsentAuthorisationUI.</li>
+</ul>
+<h3 id="initconsent-063-consentauthorisationuiredirect302">InitConsent-063 ConsentAuthorisationUI.redirect302</h3>
+<ul>
+<li>Specification: redirect302[SessionCookie,ConsentAuthorisationUI.psuIdScreen()<q:state>
+The ConsentAuthorisationApi instructs the PsuUserDevice to redirect the PSU to the psuIdScreen of the ConsentAuthorisationUI.</li>
+</ul>
+<h3 id="initconsent-064-consentauthorisationuidisplaypsuidscreen">InitConsent-064 ConsentAuthorisationUI:displayPsuIdScreen</h3>
+<p>The ConsentAuthorisationUI displays the psuIdScreen to the PSU.</p>
+<h3 id="initconsent-065-consentauthorisationuienterpsuid">InitConsent-065 ConsentAuthorisationUI.enterPsuId</h3>
+<p>The PSU enters the aspsp's PsuId in the filed provided by the ConsentAuthorisationUI.</p>
+<h3 id="initconsent-066-consentauthorisationapiupdatepsuidentification">InitConsent-066 ConsentAuthorisationApi.updatePsuIdentification</h3>
+<ul>
+<li>Spec: updatePsuIdentification<a href="psu-id@tpp,psu-id@aspsp">SessionCookie, X-XSRF-TOKEN</a>
+The ConsentAuthorisationUI sends the the collected data to the ConsentAuthorisationApi.</li>
+</ul>
+<h3 id="initconsent-067-consentauthorisationapivalidatesessioncookie">InitConsent-067 ConsentAuthorisationApi.validateSessionCookie</h3>
+<ul>
+<li>Inputs: (SessionCookie,xsrfToken)</li>
+<li>Results: protocolId,seviceSessionId,serviceSessionKey,authId
+The ConsentAuthorisationApi uses the provided xsrfToken to validate authenticity of the SessionCookie and the extract processing information out of the cookie.</li>
+</ul>
+<h3 id="initconsent-068-bankingprotocolfacadeupdatepsuidentification">InitConsent-068 BankingProtocolFacade.updatePsuIdentification</h3>
+<ul>
+<li>Spec: updatePsuIdentification(psu-id@tpp,psu-id@aspsp,protocolId,seviceSessionId,serviceSessionKey,authId)
+The ConsentAuthorisationApi forwards the call to the BankingProtocolFacade.</li>
+</ul>
+<h3 id="initconsent-069-bankingprotocolfacadeselectbankingprotocol">InitConsent-069 BankingProtocolFacade.selectBankingProtocol</h3>
+<ul>
+<li>Spec: selectBankingProtocol(protocolId):BankingProtocol
+The BankingProtocolFacade uses the provided protocolId to select the target BankingProtocol.</li>
+</ul>
+<h3 id="initconsent-070-bankingprotocolupdatepsuidentification">InitConsent-070 BankingProtocol.updatePsuIdentification</h3>
+<ul>
+<li>Spec: updatePsuIdentification(psu-id@tpp,psu-id@aspsp,seviceSessionId,serviceSessionKey,authId)
+The BankingProtocolFacade forwards the call to the BankingProtocol.</li>
+</ul>
+<h3 id="initconsent-080-bankingprotocolthrowauthenticatepsu">InitConsent-080 BankingProtocol:ThrowAuthenticatePSU</h3>
+<ul>
+<li>Inputs: (protocolId,seviceSessionId, serviceSessionKey,authId, idpUrl)
+If the protocol requires a PsuIdentity and do specify an identity provider (e.g.: oAuth2) used to collect that identity, we assume the idp is going to authenticate the PSU and therefore, the BankingProtocol will throw an ThrowAuthenticatePSU exception to instruct the BankingProtocolFacade to send the PSU to the specified Idp. The thrown exception carries following parameters:</li>
+<li>The protocolId: The protocolId contains information necessary to re-discover the banking protocol.</li>
+<li>The seviceSessionId and the serviceSessionKey : contains information later used by the BankingProtocol to laod the ServiceSession.</li>
+<li>The authId: references this authorization instance in the scope of a service session, as a service request can involve more that one authorization session.</li>
+<li>The idpUrl the url of the idp used to collect the psu identity on behalf of the ASPSP.</li>
+</ul>
+<h3 id="initconsent-081-bankingprotocolfacadethrowauthenticatepsu">InitConsent-081 BankingProtocolFacade:ThrowAuthenticatePSU</h3>
+<ul>
+<li>Inputs: (protocolId,seviceSessionId, serviceSessionKey,authId,idpUrl)
+The BankingProtocolFacade instructs the ConsentAuthorisationApi to collect the identity of the PSU. </li>
+</ul>
+<h3 id="initconsent-082-consentauthorisationapicreatesessioncookie">InitConsent-082 ConsentAuthorisationApi.createSessionCookie</h3>
+<ul>
+<li>Inputs: (protocolId,seviceSessionId, serviceSessionKey,authId,idpUrl)</li>
+<li>Returns: SessionCookie,state
+The ConsentAuthorisationApi creates a SessionCookie containing information provided in the call, generates a state parameter to protect the SessionCookie and redirects the call to the redirectInfoPage of the ConsentAuthorisationUI.</li>
+</ul>
+<h3 id="initconsent-083-consentauthorisationuiredirect302">InitConsent-083 ConsentAuthorisationUI.redirect302</h3>
+<ul>
+<li>Specification: redirect302[SessionCookie,ConsentAuthorisationUI.psuIdScreen()<q:state>
+The ConsentAuthorisationApi instructs the PsuUserDevice to redirect the PSU to the redirectInfoPage of the ConsentAuthorisationUI.</li>
+</ul>
+<h3 id="initconsent-084-consentauthorisationuidisplayredirectinfopage">InitConsent-084 ConsentAuthorisationUI:displayRedirectInfoPage</h3>
+<p>The ConsentAuthorisationUI displays the redirectInfoPage to the PSU.</p>
+<h3 id="initconsent-085-consentauthorisationuiconfirmredirect">InitConsent-085 ConsentAuthorisationUI.confirmRedirect</h3>
+<p>The PSU confirms the redirect to the idp of the ASPSP.</p>
+<h3 id="initconsent-086-consentauthorisationapiconfirmredirect">InitConsent-086 ConsentAuthorisationApi.confirmRedirect</h3>
+<ul>
+<li>Spec: confirmRedirect<a href="psu-id@tpp,psu-id@aspsp">SessionCookie, X-XSRF-TOKEN</a>
+The ConsentAuthorisationUI sends a redirect confirmation to the ConsentAuthorisationApi.</li>
+</ul>
+<h3 id="initconsent-087-consentauthorisationapivalidatesessioncookie">InitConsent-087 ConsentAuthorisationApi.validateSessionCookie</h3>
+<ul>
+<li>Inputs: (SessionCookie,xsrfToken)</li>
+<li>Results: protocolId,seviceSessionId,serviceSessionKey,authId,idpUrl
+The ConsentAuthorisationApi uses the provided xsrfToken to validate authenticity of the SessionCookie and the extract processing information out of the cookie.</li>
+</ul>
+<h3 id="initconsent-088-consentauthorisationapicreateredirectcookie">InitConsent-088 ConsentAuthorisationApi.createRedirectCookie</h3>
+<ul>
+<li>Inputs: (protocolId,seviceSessionId,serviceSessionKey,authId,idpUrl)</li>
+<li>Results: RedirectCookie,state
+The ConsentAuthorisationApi creates a RedirectCookie containing those processing information and following specification:</li>
+<li>path: ConsentAuthorisationUI.fromIdpAuth<p:authId></li>
+<li>exp: expected time needed by the PSU to authenticate with the idp of the ASPSP</li>
+<li>redirect-uri: ConsentAuthorisationUI.fromIdpAuth<p:authId>. This the uri that is going to be used by the idp to redirect the PSU back to the TPP.</li>
+<li>state: this is the state used to verify authenticity of the RedirectCookie. </li>
+</ul>
+<h3 id="initconsent-089-consentauthorisationapiredirect302">InitConsent-089 ConsentAuthorisationApi:redirect302</h3>
+<ul>
+<li>Spec: redirect302[RedirectCookie,\nOnlineBankingApi.redirectEntryPoint]\n()<redirect-uri, state>
+The ConsentAuthorisationApi instructs the ConsentAuthorisationUI to redirect the PSU to the idp of the ASPSP.</li>
+</ul>
+<h3 id="initconsent-090-bankingprotocolfacadefromidpauth">InitConsent-090 BankingProtocolFacade.fromIdpAuth</h3>
+<ul>
+<li>Spec: fromIdpAuth<a href="">UserAgentContext,\nRedirectCookie</a>\n<p:authId,q:code,q:state>
+With this call, the idp of the APSPS redirects the PsuUserDevice to the ConsentAuthorisationUI of the TPP. This call will </li>
+</ul>
+<h3 id="initconsent-091-consentauthorisationapivalidateredirectcookie">InitConsent-091 ConsentAuthorisationApi.validateRedirectCookie</h3>
+<ul>
+<li>Inputs: (RedirectCookie,state)</li>
+<li>Results: protocolId,seviceSessionId,serviceSessionKey,authId,idpUrl
+The ConsentAuthorisationApi uses the provided state parameter to validate authenticity of the RedirectCookie and then extract processing information out of the cookie.</li>
+</ul>
+<h3 id="initconsent-092-bankingprotocolfacadecode2token">InitConsent-092 BankingProtocolFacade.code2Token</h3>
+<ul>
+<li>Inputs: (code,protocolId,seviceSessionId,serviceSessionKey,authId,idpUrl)
+The ConsentAuthorisationApi forwards the call to the BankingProtocolFacade.</li>
+</ul>
+<h3 id="initconsent-093-bankingprotocolfacadeselectbankingprotocol">InitConsent-093 BankingProtocolFacade.selectBankingProtocol</h3>
+<ul>
+<li>Spec: selectBankingProtocol(protocolId):BankingProtocol
+The BankingProtocolFacade uses the provided protocolId to select the target BankingProtocol.</li>
+</ul>
+<h3 id="initconsent-094-bankingprotocolcode2token">InitConsent-094 BankingProtocol.code2Token</h3>
+<ul>
+<li>Spec: code2Token(code,seviceSessionId,serviceSessionKey,authId,idpUrl)
+The BankingProtocolFacade forwards the call to the target BankingProtocol.</li>
+</ul>
+<h3 id="initconsent-095-onlinebankingapicode2token">InitConsent-095 OnlineBankingApi.code2Token</h3>
+<ul>
+<li>Spec: GET:code2Token<a href="">\nTppContext</a><code>
+The BankingProtocol calls the token endpoint of the idp of the ASPSP to request the token matching the returned authorization code.</li>
+</ul>
+<h3 id="initconsent-096-onlinebankingapitoken">InitConsent-096 OnlineBankingApi:token</h3>
+<p>The idp of the ASPSP returns a token to the banking protocol. </p>
+<h3 id="initconsent-096-bankingprotocolpsuid">InitConsent-096 BankingProtocol.psuId</h3>
+<p>the banking protocol extracts the needed psu-id from the returned token. </p>
+<h3 id="initconsent-100-aspspbankingapiinitiateconsent">InitConsent-100 AspspBankingApi.initiateConsent</h3>
+<ul>
+<li>Spec: initiateConsent<a href="AisConsent">UserAgentContext,\nTppContext,psu-id@aspsp</a> 
+The BankingProtocol sends an initiate consent request to the OpenBanking interface of the ASPSP (aka AspspBankingApi). </li>
+</ul>
+<h3 id="initconsent-110-aspspbankingapi200_ok">InitConsent-110 AspspBankingApi:200_OK</h3>
+<ul>
+<li>Spec: 200_OK(AisConsent,\nAspspRedirectInfo,\nAspspChallenges)
+The OpenBanking interface of the ASPSP returns information necessary to start the consent authorization process.</li>
+<li>AisConsent : a reference to the started ASPSP consent session</li>
+<li>AspspRedirectInfo: Information neede in case the TPP has to redirect the PSU to the OnlineBankingApi of the ASPSP</li>
+<li>AspspChallenges: Challenges and SCA meta information in case the TPP will have to collect PSU credentials at the ConsentAuthorisationApi.</li>
+</ul>
+<h3 id="initconsent-120-bankingprotocoladdtoservicesession">InitConsent-120 BankingProtocol.addToServiceSession</h3>
+<ul>
+<li>Spec: addToServiceSession(AisConsent,\nAspspRedirectInfo,\nAspspChallenges)
+The BankingProtocol stores the response of the call in the ServiceSession that also includes information like: protocolId, seviceSessionId, serviceSessionKey, authId.</li>
+</ul>
+<h3 id="initconsent-130-bankingprotocolservicesession">InitConsent-130 BankingProtocol:ServiceSession</h3>
+<p>The BankingProtocol also returns the ServiceSession containing information necessary to start the consent authorization process.</p>
+<h3 id="initconsent-140-bankingprotocolfacadeservicesession">InitConsent-140 BankingProtocolFacade:ServiceSession</h3>
+<p>The BankingProtocolFacade returns the ServiceSession containing information necessary to start the consent authorization process.</p>
+<h3 id="initconsent-150-consentauthorisationapiprepareresponse">InitConsent-150 ConsentAuthorisationApi.prepareResponse</h3>
+<p>-Specs: prepareResponse(ServiceSession):xsrfToken,AuthorizeResponse,SessionCookie
+The ConsentAuthorisationApi prepares the response, producing:
+- AuthorizeResponse : that will be sent back to the ConsentAuthorisationUI and used to manage interaction with the PSU and the ConsentAuthorisationUI.
+- SessionCookie : that will be used to authenticate the interaction between the ConsentAuthorisationUI and the ConsentAuthorisationApi
+- xsrfToken : used to authenticate SessionCookie </p>
+<h3 id="initconsent-160-consentauthorisationuidisplaybankloginpage">InitConsent-160 ConsentAuthorisationUI.displayBankLoginPage</h3>
+<ul>
+<li>Spec: displayBankLoginPage<a href="AuthorizeResponse">SessionCookie,X-XSRF-Token</a>
+If the AuthorizeResponse indicates that the consent authorization is going to happen at the interface of the TPP (ConsentAuthorisationApi), the initial screen for the processing of challenges will be displayed.</li>
+</ul>
+<h3 id="initconsent-170-consentauthorisationuidisplayredirectinfopage">InitConsent-170 ConsentAuthorisationUI.displayRedirectInfoPage</h3>
+<ul>
+<li>Spec: displayRedirectInfoPage<a href="AuthorizeResponse">SessionCookie,X-XSRF-Token</a>
+If the AuthorizeResponse indicates that the consent authorization process is going to happen at the interface of the ASPSP, the redirect info page will be displayed to the PSU, waiting for a confirmation to be redirected to the ASPSP online banking interface.</li>
+</ul>
               
             </div>
           </div>
@@ -232,7 +401,7 @@ BackRedirectURL (OKUrl, NOKURL, etc... dependent of ASPSP API) contains the cons
         <a href="../5a-psuAuthEmbeddedConsent/" class="btn btn-neutral float-right" title="Authorize Consent Embedded Approach">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../4-initiateAisConsent/" class="btn btn-neutral" title="List of Transactions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../3-selectBank/" class="btn btn-neutral" title="Select bank"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -260,7 +429,7 @@ BackRedirectURL (OKUrl, NOKURL, etc... dependent of ASPSP API) contains the cons
           <a href="https://github.com/adorsys/open-banking-gateway/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
       
       
-        <span><a href="../4-initiateAisConsent/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../3-selectBank/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
         <span style="margin-left: 15px"><a href="../5a-psuAuthEmbeddedConsent/" style="color: #fcfcfc">Next &raquo;</a></span>

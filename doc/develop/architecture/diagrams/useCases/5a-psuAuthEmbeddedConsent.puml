@@ -26,11 +26,11 @@ end box
 == TPPAuthorize consent upon PSU transaction display request - method:endpoint[header](body)<params> return code[header](body) ==
 activate ConsentAuthorisationApi
 alt TppConsentSession.hasAuthChallenge()
-ConsentAuthorisationApi -> ConsentAuthorisationApi : TppConsentSession.getCookie(consentSessionState):\nConsentAuthSessionCookie
-ConsentAuthorisationApi --> ConsentAuthorisationUI : redirect302[ConsentAuthSessionCookie,\nConsentAuthorisationUI.embeddedAuthInitScreen]()<consentSessionState>
+ConsentAuthorisationApi -> ConsentAuthorisationApi : TppConsentSession.getCookie(state):\nSessionCookie
+ConsentAuthorisationApi --> ConsentAuthorisationUI : redirect302[SessionCookie,\nConsentAuthorisationUI.embeddedAuthInitScreen]()<state>
 deactivate ConsentAuthorisationApi
 activate ConsentAuthorisationUI
-ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:ConsentAuthorisationApi.embeddedAuth\n[ConsentAuthSessionCookie, UserAgentContext]()<consentSessionState>
+ConsentAuthorisationUI -> ConsentAuthorisationApi ++ : GET:ConsentAuthorisationApi.embeddedAuth\n[SessionCookie, UserAgentContext]()<state>
 return 200_OK[ConsentAuthSessionCookie]\n(ConsentAuthorizeResponse{Transactions[],AisConsent,ScaUIMetadaData})
 loop #LightCyan while(ConsentAuthorizeResponse.hasAuthChallenge())
     ConsentAuthorisationUI --> psu : displayAuthScreen(ScaUIMetadaData)
