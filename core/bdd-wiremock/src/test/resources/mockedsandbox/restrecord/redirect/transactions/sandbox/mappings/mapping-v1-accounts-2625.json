@@ -12,6 +12,9 @@
       },
       "PSU-ID" : {
         "equalTo" : "anton.brueckner"
+      },
+      "Consent-ID" : {
+        "matches" : "[=_0-9a-zA-z\\-]+"
       }
     }
   },

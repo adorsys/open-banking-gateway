@@ -3,13 +3,14 @@ package de.adorsys.opba.core.protocol.service.xs2a.dto;
 import de.adorsys.opba.core.protocol.service.xs2a.annotations.ContextCode;
 import de.adorsys.opba.core.protocol.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.core.protocol.service.xs2a.annotations.ValidationInfo;
-import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
+import de.adorsys.opba.core.protocol.service.xs2a.context.TransactionListXs2aContext;
 import de.adorsys.xs2a.adapter.service.RequestParams;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.mapstruct.Mapper;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.SPRING_KEYWORD;
@@ -24,11 +25,11 @@ public class Xs2aTransactionParameters extends Xs2aWithBalanceParameters {
     private String bookingStatus;
 
     @ValidationInfo(ui = @FrontendCode("textbox.date"), ctx = @ContextCode("dateFrom"))
-    @NotBlank(message = "{no.ctx.dateFrom}")
+    @NotNull(message = "{no.ctx.dateFrom}")
     private LocalDate dateFrom;
 
     @ValidationInfo(ui = @FrontendCode("textbox.date"), ctx = @ContextCode("dateTo"))
-    @NotBlank(message = "{no.ctx.dateTo}")
+    @NotNull(message = "{no.ctx.dateTo}")
     private LocalDate dateTo;
 
     // TODO - MapStruct?
@@ -43,7 +44,7 @@ public class Xs2aTransactionParameters extends Xs2aWithBalanceParameters {
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-    public interface FromCtx extends DtoMapper<Xs2aContext, Xs2aTransactionParameters> {
-        Xs2aTransactionParameters map(Xs2aContext ctx);
+    public interface FromCtx extends DtoMapper<TransactionListXs2aContext, Xs2aTransactionParameters> {
+        Xs2aTransactionParameters map(TransactionListXs2aContext ctx);
     }
 }

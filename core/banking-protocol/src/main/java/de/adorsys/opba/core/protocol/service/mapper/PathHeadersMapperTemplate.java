@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PathHeadersMapperTemplate<C extends BaseContext, P, H> {
 
-    private final DtoMapper<C, H> toHeaders;
-    private final DtoMapper<C, P> toPath;
+    private final DtoMapper<? super C, H> toHeaders;
+    private final DtoMapper<? super C, P> toPath;
 
     public PathHeadersToValidate<P, H> forValidation(C context) {
         return new PathHeadersToValidate<>(

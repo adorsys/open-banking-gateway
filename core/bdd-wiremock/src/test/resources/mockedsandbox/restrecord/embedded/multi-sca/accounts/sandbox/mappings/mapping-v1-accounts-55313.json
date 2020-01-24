@@ -9,6 +9,9 @@
       },
       "PSU-ID" : {
         "equalTo" : "max.musterman"
+      },
+      "Consent-ID" : {
+        "matches" : "[=_0-9a-zA-z\\-]+"
       }
     }
   },

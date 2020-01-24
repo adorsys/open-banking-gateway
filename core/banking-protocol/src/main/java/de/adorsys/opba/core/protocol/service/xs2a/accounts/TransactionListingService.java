@@ -8,8 +8,8 @@ import de.adorsys.opba.core.protocol.service.xs2a.context.TransactionListXs2aCon
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.core.protocol.service.xs2a.dto.DtoMapper;
 import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aResourceParameters;
-import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aTransactionParameters;
+import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aWithConsentIdHeaders;
 import de.adorsys.opba.core.protocol.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.Response;
@@ -34,7 +34,7 @@ public class TransactionListingService extends ValidatedExecution<TransactionLis
     @Override
     @SuppressWarnings("checkstyle:MagicNumber") // Hardcoded as it is POC, these should be read from context
     protected void doRealExecution(DelegateExecution execution, TransactionListXs2aContext context) {
-        ValidatedPathQueryHeaders<Xs2aResourceParameters, Xs2aTransactionParameters, Xs2aStandardHeaders> params =
+        ValidatedPathQueryHeaders<Xs2aResourceParameters, Xs2aTransactionParameters, Xs2aWithConsentIdHeaders> params =
                 extractor.forExecution(context);
 
         Response<TransactionsReport> accounts = ais.getTransactionList(
@@ -53,15 +53,15 @@ public class TransactionListingService extends ValidatedExecution<TransactionLis
 
     @Service
     public static class Extractor extends PathQueryHeadersMapperTemplate<
-                    Xs2aContext,
+                    TransactionListXs2aContext,
                     Xs2aResourceParameters,
                     Xs2aTransactionParameters,
-                    Xs2aStandardHeaders> {
+                    Xs2aWithConsentIdHeaders> {
 
         public Extractor(
-                DtoMapper<Xs2aContext, Xs2aStandardHeaders> toHeaders,
-                DtoMapper<Xs2aContext, Xs2aResourceParameters> toPath,
-                DtoMapper<Xs2aContext, Xs2aTransactionParameters> toQuery) {
+                DtoMapper<Xs2aContext, Xs2aWithConsentIdHeaders> toHeaders,
+                DtoMapper<TransactionListXs2aContext, Xs2aResourceParameters> toPath,
+                DtoMapper<TransactionListXs2aContext, Xs2aTransactionParameters> toQuery) {
             super(toHeaders, toPath, toQuery);
         }
     }
