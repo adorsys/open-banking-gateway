@@ -1,14 +1,9 @@
 package de.adorsys.opba.core.protocol.service.xs2a.dto;
 
-import de.adorsys.opba.core.protocol.service.xs2a.annotations.ContextCode;
-import de.adorsys.opba.core.protocol.service.xs2a.annotations.FrontendCode;
-import de.adorsys.opba.core.protocol.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.service.RequestParams;
 import lombok.Data;
 import org.mapstruct.Mapper;
-
-import javax.validation.constraints.NotNull;
 
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.core.protocol.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
@@ -16,8 +11,7 @@ import static de.adorsys.opba.core.protocol.constant.GlobalConst.XS2A_MAPPERS_PA
 @Data
 public class Xs2aWithBalanceParameters {
 
-    @ValidationInfo(ui = @FrontendCode("textbox.boolean"), ctx = @ContextCode("withBalance"))
-    @NotNull(message = "{no.ctx.withBalance}")
+    // Optional
     private Boolean withBalance;
 
     // TODO - MapStruct?

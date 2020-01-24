@@ -11,7 +11,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class ResourceUtil {
 
     @SneakyThrows
-    public static String readResource(String path) {
-        return Resources.asCharSource(Resources.getResource(path), UTF_8).read();
+    public static String readResourceSkipLastEol(String path) {
+        return Resources.asCharSource(Resources.getResource(path), UTF_8).read().replaceAll("\n$", "");
     }
 }
