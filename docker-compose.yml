@@ -14,7 +14,7 @@ services:
       #HOST:CONTAINER
       - "15432:5432"
     volumes:
-      - ./opba-banking-rest-impl/src/test/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./opba-db-migration/src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - opba-net
 
@@ -35,16 +35,6 @@ services:
     networks:
       - opba-net
 
-  fintech-server:
-    environment:
-      - TPP_URL=http://open-banking-gateway:8085
-    build: fintech-examples/fintech-server
-    ports:
-      - "18086:8086"
-    entrypoint: "java -jar fintech-server-0.0.6-SNAPSHOT.jar"
-    networks:
-      - opba-net
-
   fintech-ui:
     environment:
       - BACKEND_URL=http://fintech-server:8086
@@ -54,6 +44,16 @@ services:
       dockerfile: Dockerfile
     ports:
       - "14200:4200"
+    networks:
+      - opba-net
+
+  fintech-server:
+    environment:
+      - TPP_URL=http://open-banking-gateway:8085
+    build: fintech-examples/fintech-server
+    ports:
+      - "18086:8086"
+    entrypoint: "java -jar fintech-server-0.0.6-SNAPSHOT.jar"
     networks:
       - opba-net
 
