@@ -1,10 +1,10 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
-import de.adorsys.opba.tppbankingapi.domain.entity.BankProfile;
-import de.adorsys.opba.tppbankingapi.search.model.BankProfileResponse;
-import de.adorsys.opba.tppbankingapi.search.model.BankSearchResponse;
-import de.adorsys.opba.tppbankingapi.search.resource.TppBankSearchApi;
 import de.adorsys.opba.tppbankingapi.domain.entity.Bank;
+import de.adorsys.opba.tppbankingapi.domain.entity.BankProfile;
+import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileResponse;
+import de.adorsys.opba.tppbankingapi.search.model.generated.BankSearchResponse;
+import de.adorsys.opba.tppbankingapi.search.resource.generated.TppBankSearchApi;
 import de.adorsys.opba.tppbankingapi.service.BankService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

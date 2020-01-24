@@ -86,6 +86,9 @@
                             </goals>
                         </execution>
                     </executions>
+                    <configuration>
+                        <excludes>**/generated/**</excludes>
+                    </configuration>
                 </plugin>
 
             <plugin>
