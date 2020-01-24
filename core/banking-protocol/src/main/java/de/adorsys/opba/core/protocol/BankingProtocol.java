@@ -1,5 +1,6 @@
 package de.adorsys.opba.core.protocol;
 
+import de.adorsys.opba.config.migration.EnableMigration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableRetry
 @EntityScan(basePackages = "de.adorsys.opba.core.protocol.domain.entity")
 @EnableJpaRepositories(basePackages = "de.adorsys.opba.core.protocol.repository.jpa")
+@EnableMigration
 @EnableConfigurationProperties
 @EnableTransactionManagement
 @SpringBootApplication(

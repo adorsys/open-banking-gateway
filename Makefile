@@ -1,5 +1,5 @@
 PUML_URLS_PATTERN=http://www\.plantuml\.com.*develop/docs/\(.*\).puml&fmt=svg&vvv=1&sanitize=true
-PUML_URLS_REPLACE=https://adorsys.github.io/open-banking-gateway/doc/${TRAVIS_TAG}/\1.png
+PUML_URLS_REPLACE=../../\1.png
 
 .PHONY : all
 all: java fintech-ui site
@@ -32,7 +32,7 @@ replace_puml_urls:
 	sed -i.bak 's/docs\///g' docs_for_site/docs/README.md && rm -rf docs_for_site/docs/README.md.bak
 	find docs_for_site -type f -name "*.md" -exec sed -i.bak 's/\.\.\/README.md/README.md/g' {} \;
 	find docs_for_site -type f -name "*.md.bak" -exec rm -rf {} \;
-	# find docs_for_site -type f -name "*.md" -exec sed -i 's%${PUML_URLS_PATTERN}%${PUML_URLS_REPLACE}%' {} \;
+	find docs_for_site -type f -name "*.md" -exec sed -i 's%${PUML_URLS_PATTERN}%${PUML_URLS_REPLACE}%' {} \;
 
 .PHONY : convert_puml
 convert_puml:
