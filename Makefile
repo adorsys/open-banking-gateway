@@ -1,10 +1,16 @@
-PUML_URLS_PATTERN=http://www\.plantuml\.com.*develop/docs/\(.*\).puml&fmt=svg&vvv=1&sanitize=true
-PUML_URLS_REPLACE=../../\1.png
+PUML_URLS_PATTERN=/develop/
+PUML_URLS_REPLACE=/${TRAVIS_TAG}/
+#PUML_URLS_PATTERN=http://www\.plantuml\.com.*develop/docs/\(.*\).puml&fmt=svg&vvv=1&sanitize=true
+#PUML_URLS_REPLACE=../../\1.png
+
 
 .PHONY : all
-all: java fintech-ui site
+all: clean java fintech-ui site
 
-site: 	clean_docs \
+.PHONY : clean
+clean: clean_docs clean_java
+
+site: clean_docs \
 	prepare_docs \
 	replace_puml_urls \
 	convert_puml \
@@ -13,7 +19,7 @@ site: 	clean_docs \
 
 .PHONY : clean_docs
 clean_docs:
-	# "makefile: clean"
+	# "makefile: clean_docs"
 	rm -rf site
 
 .PHONY : prepare_docs
@@ -31,8 +37,8 @@ replace_puml_urls:
 # trick with bak-files works for sed of GNU and BSD, therefore the command is macos and linux compatible
 	sed -i.bak 's/docs\///g' docs_for_site/docs/README.md && rm -rf docs_for_site/docs/README.md.bak
 	find docs_for_site -type f -name "*.md" -exec sed -i.bak 's/\.\.\/README.md/README.md/g' {} \;
+	[ -z "${TRAVIS_TAG}" ] && find docs_for_site -type f -name "*.md" -exec sed -i.bak 's%${PUML_URLS_PATTERN}%${PUML_URLS_REPLACE}%' {} \;
 	find docs_for_site -type f -name "*.md.bak" -exec rm -rf {} \;
-	find docs_for_site -type f -name "*.md" -exec sed -i 's%${PUML_URLS_PATTERN}%${PUML_URLS_REPLACE}%' {} \;
 
 .PHONY : convert_puml
 convert_puml:
