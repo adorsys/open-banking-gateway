@@ -1,6 +1,10 @@
 export class Bank {
-  id: string;
-  name: string;
+  uuid: string;
+  bankName: string;
   bic: string;
   bankCode: number;
+}
+
+export class BankDescriptor {
+  bankDescriptor: Bank[];
 }
