@@ -1,24 +1,24 @@
 package de.adorsys.opba.tppbankingapi.ais.resource;
 
-import java.time.LocalDate;
-import java.util.Optional;
-import java.util.UUID;
-
 import de.adorsys.opba.protocol.services.TppBankingService;
+import de.adorsys.opba.protocol.services.ais.account.AccountsReport;
 import de.adorsys.opba.protocol.services.ais.account.GetAccountsService;
 import de.adorsys.opba.protocol.services.psuconsentsession.PsuConsentSession;
-import de.adorsys.opba.protocol.services.ais.account.AccountsReport;
 import de.adorsys.opba.protocol.services.psuconsentsession.PsuConsentSessionLoadingService;
 import de.adorsys.opba.protocol.services.psuconsentsession.redirect.RedirectionService;
 import de.adorsys.opba.tppbankingapi.HttpHeaders;
+import de.adorsys.opba.tppbankingapi.ais.model.generated.AccountList;
+import de.adorsys.opba.tppbankingapi.ais.model.generated.TransactionsResponse;
+import de.adorsys.opba.tppbankingapi.ais.resource.generated.TppBankingApiAccountInformationServiceAisApi;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.adorsys.opba.tppbankingapi.ais.model.AccountList;
-import de.adorsys.opba.tppbankingapi.ais.model.TransactionsResponse;
+import java.time.LocalDate;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor

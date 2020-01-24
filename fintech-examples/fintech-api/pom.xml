@@ -79,11 +79,11 @@
               <generateModelTests>false</generateModelTests>
               <configOptions>
                 <sourceFolder>src/main/java</sourceFolder>
-                <basePackage>de.adorsys.opba.fintech.api</basePackage>
-                <configPackage>de.adorsys.opba.fintech.api.config</configPackage>
-                <modelPackage>de.adorsys.opba.fintech.api.model</modelPackage>
-                <apiPackage>de.adorsys.opba.fintech.api.resource</apiPackage>
-                <invokerPackage>de.adorsys.opba.fintech.client</invokerPackage>
+                <basePackage>de.adorsys.opba.fintech.api.generated</basePackage>
+                <configPackage>de.adorsys.opba.fintech.api.config.generated</configPackage>
+                <modelPackage>de.adorsys.opba.fintech.api.model.generated</modelPackage>
+                <apiPackage>de.adorsys.opba.fintech.api.resource.generated</apiPackage>
+                <invokerPackage>de.adorsys.opba.fintech.client.generated</invokerPackage>
                 <interfaceOnly>true</interfaceOnly>
                 <skipOverwrite>true</skipOverwrite>
                 <dateLibrary>java8</dateLibrary>

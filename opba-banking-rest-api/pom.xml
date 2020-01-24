@@ -95,10 +95,10 @@
                             <output>${project.build.directory}/generated-sources/open-api/</output>
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
-                                <basePackage>de.adorsys.opba.tppbankingapi.ais</basePackage>
-                                <configPackage>de.adorsys.opba.tppbankingapi.config</configPackage>
-                                <modelPackage>de.adorsys.opba.tppbankingapi.ais.model</modelPackage>
-                                <apiPackage>de.adorsys.opba.tppbankingapi.ais.resource</apiPackage>
+                                <basePackage>de.adorsys.opba.tppbankingapi.ais.generated</basePackage>
+                                <configPackage>de.adorsys.opba.tppbankingapi.config.generated</configPackage>
+                                <modelPackage>de.adorsys.opba.tppbankingapi.ais.model.generated</modelPackage>
+                                <apiPackage>de.adorsys.opba.tppbankingapi.ais.resource.generated</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>
@@ -127,10 +127,10 @@
                             <output>${project.build.directory}/generated-sources/open-api/</output>
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
-                                <basePackage>de.adorsys.opba.tppbankingapi.search</basePackage>
-                                <configPackage>de.adorsys.opba.tppbankingapi.config</configPackage>
-                                <modelPackage>de.adorsys.opba.tppbankingapi.search.model</modelPackage>
-                                <apiPackage>de.adorsys.opba.tppbankingapi.search.resource</apiPackage>
+                                <basePackage>de.adorsys.opba.tppbankingapi.search.generated</basePackage>
+                                <configPackage>de.adorsys.opba.tppbankingapi.config.generated</configPackage>
+                                <modelPackage>de.adorsys.opba.tppbankingapi.search.model.generated</modelPackage>
+                                <apiPackage>de.adorsys.opba.tppbankingapi.search.resource.generated</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>
@@ -159,10 +159,10 @@
                             <output>${project.build.directory}/generated-sources/open-api/</output>
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
-                                <basePackage>de.adorsys.opba.tppbankingapi.token</basePackage>
-                                <configPackage>de.adorsys.opba.tppbankingapi.config</configPackage>
-                                <modelPackage>de.adorsys.opba.tppbankingapi.token.model</modelPackage>
-                                <apiPackage>de.adorsys.opba.tppbankingapi.token.resource</apiPackage>
+                                <basePackage>de.adorsys.opba.tppbankingapi.token.generated</basePackage>
+                                <configPackage>de.adorsys.opba.tppbankingapi.config.generated</configPackage>
+                                <modelPackage>de.adorsys.opba.tppbankingapi.token.model.generated</modelPackage>
+                                <apiPackage>de.adorsys.opba.tppbankingapi.token.resource.generated</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>
