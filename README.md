@@ -1,4 +1,4 @@
-![build](https://travis-ci.com/adorsys/open-banking-gateway.svg?branch=develop)
+[![Build Status](https://travis-ci.com/adorsys/open-banking-gateway.svg?branch=develop)](https://travis-ci.com/adorsys/open-banking-gateway)
 [![codecov](https://codecov.io/gh/adorsys/open-banking-gateway/branch/develop/graph/badge.svg)](https://codecov.io/gh/adorsys/open-banking-gateway)
 
 # Open Banking Gateway

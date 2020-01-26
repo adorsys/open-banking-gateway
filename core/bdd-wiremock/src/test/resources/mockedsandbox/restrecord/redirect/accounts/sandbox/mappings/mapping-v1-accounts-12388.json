@@ -1,7 +1,7 @@
 {
   "id" : "616a8d65-cf94-393a-9445-0c2cc0d84445",
   "request" : {
-    "url" : "/v1/accounts?withBalance=false",
+    "url" : "/v1/accounts",
     "method" : "GET",
     "headers" : {
       "X-Request-ID" : {
@@ -9,6 +9,9 @@
       },
       "PSU-ID" : {
         "equalTo" : "anton.brueckner"
+      },
+      "Consent-ID" : {
+        "matches" : "[=_0-9a-zA-z\\-]+"
       }
     }
   },

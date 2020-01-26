@@ -1,7 +1,7 @@
 {
   "id" : "3e68203e-6386-31ef-a146-abc1703f75c1",
   "request" : {
-    "url" : "/v1/accounts/oN7KTVuJSVotMvPPPavhVo/transactions?dateTo=2020-09-30&bookingStatus=BOTH&withBalance=false&dateFrom=2018-01-01",
+    "url" : "/v1/accounts/oN7KTVuJSVotMvPPPavhVo/transactions?dateTo=2020-09-30&bookingStatus=BOTH&dateFrom=2018-01-01",
     "method" : "GET",
     "headers" : {
       "Accept" : {
@@ -12,6 +12,9 @@
       },
       "PSU-ID" : {
         "equalTo" : "max.musterman"
+      },
+      "Consent-ID" : {
+        "matches" : "[=_0-9a-zA-z\\-]+"
       }
     }
   },

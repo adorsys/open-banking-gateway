@@ -5,9 +5,9 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class ValidatedParametersHeadersBody<P, H, B> {
+public class ValidatedPathHeadersBody<P, H, B> {
 
-    private final P parameters;
+    private final P path;
     private final H headers;
     private final B body;
 }
