@@ -46,8 +46,8 @@ alt TppConsentSession.noConsentPresent()
     'BankingProtocol -> AspspBankingApi ++ : initiateConsent[UserAgentContext,\nTppContext](AisConsent) 
     'return 200_OK(TppConsentSession,\nAspspRedirectInfo)
     BankingProtocol -> BankingProtocol : newAuthSession\n(serviceSessionID,serviceSessionKey, exp)\n:authId,redirectCode // sign&encrypted
-    return ThrowRedirectException(authId,\nserviceSessionKey,\nConsentAuthorisationApi.auth<q:redirectCode>)
-    return ThrowRedirectException(authId,\nserviceSessionKey,\nConsentAuthorisationApi.auth<q:redirectCode>)
+    return BankingProtocolResponse<Redirect>(authId,\nserviceSessionKey,\nConsentAuthorisationApi.auth<q:redirectCode>)
+    return BankingProtocolResponse<Redirect>(authId,\nserviceSessionKey,\nConsentAuthorisationApi.auth<q:redirectCode>)
     return 303_SeeOther(authId,\nserviceSessionKey,\nConsentAuthorisationApi.auth<q:redirectCode>)
     FinTechApi -> FinTechApi : expireSessionCookie(SessionCookie):SessionCookie
     FinTechApi -> FinTechApi : createRedirectCookie\n(serviceSessionID,serviceSessionKey,redirectExp)\n:RedirectCookie,state
@@ -58,9 +58,9 @@ else TppConsentSession.consentPresent()
     BankingProtocol -> BankingProtocol : loadAisConsent(TppConsentSession)\n:AisConsent
     BankingProtocol -> AspspBankingApi ++ : listOfAccounts[UserAgentContext,\nTppContext](AisConsent) 
     return 200_Accounts[](ListOfAccountsResponse)
-    BankingProtocol --> BankingProtocolFacade ++: ListOfAccountsResponse
+    BankingProtocol --> BankingProtocolFacade ++: BankingProtocolResponse<ListOfAccounts>
     deactivate BankingProtocol
-    BankingProtocolFacade --> TppBankingApi ++: ListOfAccountsResponse
+    BankingProtocolFacade --> TppBankingApi ++: BankingProtocolResponse<ListOfAccounts>
     deactivate BankingProtocolFacade
     TppBankingApi --> FinTechApi ++ : 200_Accounts[](ListOfAccountsResponse)
     deactivate TppBankingApi

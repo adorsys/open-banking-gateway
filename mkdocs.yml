@@ -16,7 +16,8 @@ nav:
       - "Login with FinTech Application": architecture/1-loginWithFinTech.md
       - "Search bank": architecture/2-searchBank.md
       - "Select bank": architecture/3-selectBank.md
-      - "List of Transactions": architecture/4-initiateAisConsent.md
+      - "List of Accounts": architecture/4a-aisListOfAccounts.md
+      - "List of Transactions": architecture/4b-aisListOfTransactionså.md
       - "Redirect to Consent Authorization API": architecture/5-redirectPsuToConsentAPI.md
       - "Authorize Consent Embedded Approach": architecture/5a-psuAuthEmbeddedConsent.md
       - "Authorize Consent Redirect Approach": architecture/5b-psuAuthRedirectConsent.md
