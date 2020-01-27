@@ -8,7 +8,7 @@ import lombok.Setter;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,8 +48,10 @@ public class AuthorizeService {
             // password matched
             // create new session
             String xsrfToken = UUID.randomUUID().toString();
-            userEntity.addCookie(SESSION_COOKIE_NAME + "=" + xsrfToken);
-            userEntity.addCookie(XSRF_TOKEN_COOKIE_NAME + "=" + xsrfToken);
+            userEntity.setCookies(Arrays.asList(
+                    SESSION_COOKIE_NAME + "=" + xsrfToken + "; Path=/;",
+                    XSRF_TOKEN_COOKIE_NAME + "=" + xsrfToken + "; Path=/;"
+            ));
 
             // Entity will now be found be xrefid too
             xsrfIDtoEntityMap.put(xsrfToken, userEntity);
@@ -75,7 +77,6 @@ public class AuthorizeService {
                 UserEntity.builder().userProfile(userProfile)
                         .password(UNIVERSAL_PASSWORD)
                         .lastLogin(userProfile.getLastLogin())
-                        .cookies(new ArrayList<>())
                         .build());
     }
 
@@ -90,9 +91,6 @@ public class AuthorizeService {
         private final String password;
         private OffsetDateTime lastLogin;
         private final UserProfile userProfile;
-        private List<String> cookies = new ArrayList<>();
-        public void addCookie(String cookie) {
-            cookies.add(cookie);
-        }
+        private List<String> cookies;
     }
 }
