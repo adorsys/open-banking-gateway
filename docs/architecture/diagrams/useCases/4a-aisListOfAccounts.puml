@@ -33,13 +33,12 @@ autonumber 30 1 "<b><color blue>[LoA-000]"
 FinTechUI -> FinTechApi ++ : GET:listOfAccounts\n[SessionCookie,\nX-XSRF-TOKEN,\nX-Request-ID]()<p:bank-id, q:withBalance>
 FinTechApi -> FinTechApi : checkAuthorization(SessionCookie,\nX-XSRF-TOKEN):psu-id@fintech
 FinTechApi -> FinTechApi : userAgentContext():UserAgentContext
-FinTechApi -> FinTechApi : generateStateParam():state
+FinTechApi -> FinTechApi : buildUrlTemplates():[state,\nFintech-Redirect-URL-OK-TPL<p:$AUTH-ID,q:state>,\nFintech-Redirect-URL-NOK-TPL<p:$AUTH-ID,q:state>]
 alt repeatingServiceRequest
-    FinTechApi -> FinTechApi : loadServiceSession(psu-id@fintech,\n"listOfAccounts"):service-session-id
+    FinTechApi -> FinTechApi : loadServiceSession(psu-id@fintech,\n"listOfAccounts",X-Request-ID)\n:service-session-id
 end
 autonumber 40 1 "<b><color blue>[LoA-000]"
-FinTechApi -> TppBankingApi ++ : listOfAccounts\n[UserAgentContext,\nFintech-User-ID:psu-id@fintech,\nService-Session-ID:service-session-id,\nBank-ID:bank-id,\nFintech-Redirect-URL-OK-TPL<p:$AUTH-ID,q:state>,\nFintech-Redirect-URL-NOK-TPL<p:$AUTH-ID,q:state>,\nAuthorization:FinTechContext]()<q:withBalance>
-autonumber 41 1 "<b><color blue>[LoA-000]"
+FinTechApi -> TppBankingApi ++ : listOfAccounts\n[UserAgentContext,\nFintech-User-ID:psu-id@fintech,\nService-Session-ID:service-session-id,\nBank-ID:bank-id, X-Request-ID,\nFintech-Redirect-URL-OK-TPL<p:$AUTH-ID,q:state>,\nFintech-Redirect-URL-NOK-TPL<p:$AUTH-ID,q:state>,\nAuthorization:FinTechContext]()<q:withBalance>
 TppBankingApi -> TppBankingApi : checkAuthorization(FinTechContext):finTechId
 TppBankingApi -> TppBankingApi : serviceSpec(withBalance):ServiceSpec
 TppBankingApi -> TppBankingApi : serviceContext(\nService-Id="listOfAccounts",\nFintech-User-ID=psu-id@fintech,\nService-Session-ID=service-session-id,\nBank-ID=bank-id,\nFinTech-ID=finTechId,\nFintech-Redirect-URL-OK-TPL<p:$AUTH-ID,q:state>,\nFintech-Redirect-URL-NOK-TPL<p:$AUTH-ID,q:state>,\nService-Spec=ServiceSpec,\nUser-Agent-Context=UserAgentContext)\n:ServiceContext
