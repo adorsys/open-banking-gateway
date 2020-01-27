@@ -48,8 +48,8 @@ public class AuthorizeService {
             // password matched
             // create new session
             String xsrfToken = UUID.randomUUID().toString();
-            userEntity.addCookie(XSRF_TOKEN_COOKIE_NAME + "=" + xsrfToken);
             userEntity.addCookie(SESSION_COOKIE_NAME + "=" + xsrfToken);
+            userEntity.addCookie(XSRF_TOKEN_COOKIE_NAME + "=" + xsrfToken);
 
             // Entity will now be found be xrefid too
             xsrfIDtoEntityMap.put(xsrfToken, userEntity);
