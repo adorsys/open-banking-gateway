@@ -18,7 +18,7 @@ import { CookieService } from 'ngx-cookie-service';
     HttpClientModule,
     ReactiveFormsModule,
     HttpClientXsrfModule.withOptions({
-      cookieName: 'XSRF-TOKEN', // this is optional
+      cookieName: 'XSRF-TOKEN',
       headerName: 'X-XSRF-TOKEN'
     })
   ],

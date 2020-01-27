@@ -40,4 +40,8 @@ export class AuthService {
   isLoggedIn(): boolean {
     return this.cookieService.check(this.XSRF_TOKEN);
   }
+
+  getX_XSRF_TOKEN(): string {
+    return this.cookieService.get(this.XSRF_TOKEN);
+  }
 }
