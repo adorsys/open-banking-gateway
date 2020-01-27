@@ -54,12 +54,15 @@ label {
 .form-control,
 .form-control:focus {
   border-radius: 0;
-  background-color: $form-control;
+  background-color: $primary-30;
 }
 
 .btn {
-  margin-left: auto;
-  margin-right: auto;
-  width: 70%;
   align-content: center;
+
+  &-center {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+  }
 }
