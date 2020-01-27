@@ -1,27 +1,30 @@
 package de.adorsys.opba.core.protocol.service.mapper;
 
-import de.adorsys.opba.core.protocol.service.dto.HeadersBodyToValidate;
-import de.adorsys.opba.core.protocol.service.dto.ValidatedHeadersBody;
+import de.adorsys.opba.core.protocol.service.dto.PathHeadersBodyToValidate;
+import de.adorsys.opba.core.protocol.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.core.protocol.service.xs2a.context.BaseContext;
 import de.adorsys.opba.core.protocol.service.xs2a.dto.DtoMapper;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class HeadersBodyMapperTemplate<C extends BaseContext, H, V, B> {
+public class PathHeadersBodyMapperTemplate<C extends BaseContext, P, H, V, B> {
 
     private final DtoMapper<? super C, V> toValidatableBody;
     private final DtoMapper<V, B> toBody;
     private final DtoMapper<? super C, H> toHeaders;
+    private final DtoMapper<? super C, P> toPath;
 
-    public HeadersBodyToValidate<H, V> forValidation(C context) {
-        return new HeadersBodyToValidate<>(
+    public PathHeadersBodyToValidate<P, H, V> forValidation(C context) {
+        return new PathHeadersBodyToValidate<>(
+                toPath.map(context),
                 toHeaders.map(context),
                 toValidatableBody.map(context)
         );
     }
 
-    public ValidatedHeadersBody<H, B> forExecution(C context) {
-        return new ValidatedHeadersBody<>(
+    public ValidatedPathHeadersBody<P, H, B> forExecution(C context) {
+        return new ValidatedPathHeadersBody<>(
+                toPath.map(context),
                 toHeaders.map(context),
                 toBody.map(toValidatableBody.map(context))
         );

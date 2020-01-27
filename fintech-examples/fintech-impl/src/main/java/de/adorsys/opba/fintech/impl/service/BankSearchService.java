@@ -1,11 +1,11 @@
 package de.adorsys.opba.fintech.impl.service;
 
-import de.adorsys.opba.fintech.api.model.InlineResponse2001;
-import de.adorsys.opba.fintech.api.model.InlineResponse2002;
+import de.adorsys.opba.fintech.api.model.generated.InlineResponse2001;
+import de.adorsys.opba.fintech.api.model.generated.InlineResponse2002;
 import de.adorsys.opba.fintech.impl.service.entities.ContextInformation;
 import de.adorsys.opba.fintech.impl.service.mapper.Mapper;
-import de.adorsys.opba.tpp.bankserach.api.model.BankSearchResponse;
-import de.adorsys.opba.tpp.bankserach.api.resource.TppBankSearchApi;
+import de.adorsys.opba.tpp.bankserach.api.model.generated.BankSearchResponse;
+import de.adorsys.opba.tpp.bankserach.api.resource.generated.TppBankSearchApi;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

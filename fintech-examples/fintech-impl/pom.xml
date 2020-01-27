@@ -84,11 +84,11 @@
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
-                                <basePackage>de.adorsys.opba.tpp.bankserach.api</basePackage>
-                                <configPackage>de.adorsys.opba.tpp.bankserach.api.config</configPackage>
-                                <modelPackage>de.adorsys.opba.tpp.bankserach.api.model</modelPackage>
-                                <apiPackage>de.adorsys.opba.tpp.bankserach.api.resource</apiPackage>
-                                <invokerPackage>de.adorsys.opba.tpp.bankserach.client</invokerPackage>
+                                <basePackage>de.adorsys.opba.tpp.bankserach.api.generated</basePackage>
+                                <configPackage>de.adorsys.opba.tpp.bankserach.api.config.generated</configPackage>
+                                <modelPackage>de.adorsys.opba.tpp.bankserach.api.model.generated</modelPackage>
+                                <apiPackage>de.adorsys.opba.tpp.bankserach.api.resource.generated</apiPackage>
+                                <invokerPackage>de.adorsys.opba.tpp.bankserach.client.generated</invokerPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>

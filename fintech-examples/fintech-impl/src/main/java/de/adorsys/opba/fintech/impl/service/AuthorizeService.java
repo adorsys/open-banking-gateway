@@ -1,7 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
-import de.adorsys.opba.fintech.api.model.LoginRequest;
-import de.adorsys.opba.fintech.api.model.UserProfile;
+import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
+import de.adorsys.opba.fintech.api.model.generated.UserProfile;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

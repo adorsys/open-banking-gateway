@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static de.adorsys.opba.core.protocol.e2e.ResourceUtil.readResource;
+import static de.adorsys.opba.core.protocol.e2e.ResourceUtil.readResourceSkipLastEol;
 import static io.restassured.RestAssured.config;
 import static io.restassured.config.RedirectConfig.redirectConfig;
 
@@ -181,7 +181,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     private void provideParametersToBankingProtocol(String uriPath, String resource, HttpStatus status) {
-        provideParametersToBankingProtocolWithBody(uriPath, readResource(resource), status);
+        provideParametersToBankingProtocolWithBody(uriPath, readResourceSkipLastEol(resource), status);
     }
 
     private void provideParametersToBankingProtocolWithBody(String uriPath, String body, HttpStatus status) {

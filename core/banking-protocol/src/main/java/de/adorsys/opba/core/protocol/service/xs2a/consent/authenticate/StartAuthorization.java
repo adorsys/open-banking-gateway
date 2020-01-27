@@ -4,8 +4,8 @@ import de.adorsys.opba.core.protocol.domain.entity.BankConfiguration;
 import de.adorsys.opba.core.protocol.repository.jpa.BankConfigurationRepository;
 import de.adorsys.opba.core.protocol.service.ContextUtil;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
-import de.adorsys.opba.core.protocol.service.dto.ValidatedParametersHeaders;
-import de.adorsys.opba.core.protocol.service.mapper.ParamsHeadersMapperTemplate;
+import de.adorsys.opba.core.protocol.service.dto.ValidatedPathHeaders;
+import de.adorsys.opba.core.protocol.service.mapper.PathHeadersMapperTemplate;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.core.protocol.service.xs2a.dto.DtoMapper;
 import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aInitialConsentParameters;
@@ -37,10 +37,10 @@ public class StartAuthorization extends ValidatedExecution<Xs2aContext> {
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        ValidatedParametersHeaders<Xs2aInitialConsentParameters, Xs2aStandardHeaders> params =
+        ValidatedPathHeaders<Xs2aInitialConsentParameters, Xs2aStandardHeaders> params =
                 extractor.forExecution(context);
         Response<StartScaProcessResponse> scaStart = ais.startConsentAuthorisation(
-                params.getParameters().getConsentId(),
+                params.getPath().getConsentId(),
                 params.getHeaders().toHeaders()
         );
 
@@ -60,10 +60,10 @@ public class StartAuthorization extends ValidatedExecution<Xs2aContext> {
     }
 
     @Service
-    public static class Extractor extends ParamsHeadersMapperTemplate<
-            Xs2aContext,
-            Xs2aStandardHeaders,
-            Xs2aInitialConsentParameters> {
+    public static class Extractor extends PathHeadersMapperTemplate<
+                Xs2aContext,
+                Xs2aInitialConsentParameters,
+                Xs2aStandardHeaders> {
 
         public Extractor(
                 DtoMapper<Xs2aContext, Xs2aStandardHeaders> toHeaders,

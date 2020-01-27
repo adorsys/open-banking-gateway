@@ -1,8 +1,8 @@
 package de.adorsys.opba.fintech.impl.controller;
 
-import de.adorsys.opba.fintech.api.model.InlineResponse2001;
-import de.adorsys.opba.fintech.api.model.InlineResponse2002;
-import de.adorsys.opba.fintech.api.resource.FinTechBankSearchApi;
+import de.adorsys.opba.fintech.api.model.generated.InlineResponse2001;
+import de.adorsys.opba.fintech.api.model.generated.InlineResponse2002;
+import de.adorsys.opba.fintech.api.resource.generated.FinTechBankSearchApi;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.BankSearchService;
 import de.adorsys.opba.fintech.impl.service.entities.ContextInformation;

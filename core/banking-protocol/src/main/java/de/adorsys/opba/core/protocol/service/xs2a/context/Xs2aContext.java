@@ -24,7 +24,7 @@ public class Xs2aContext extends BaseContext {
     private String psuIpAddress;
 
     // Optional consent-specific
-    private boolean withBalance;
+    private Boolean withBalance;
 
     // In-process
     private String aspspScaApproach;

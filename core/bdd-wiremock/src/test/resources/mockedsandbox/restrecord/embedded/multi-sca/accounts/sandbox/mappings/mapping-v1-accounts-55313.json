@@ -1,7 +1,7 @@
 {
   "id" : "2e9813f3-49cf-3a89-ad4d-68bb0b571c1c",
   "request" : {
-    "url" : "/v1/accounts?withBalance=false",
+    "url" : "/v1/accounts",
     "method" : "GET",
     "headers" : {
       "X-Request-ID" : {
@@ -9,6 +9,9 @@
       },
       "PSU-ID" : {
         "equalTo" : "max.musterman"
+      },
+      "Consent-ID" : {
+        "matches" : "[=_0-9a-zA-z\\-]+"
       }
     }
   },

@@ -2,9 +2,9 @@ package de.adorsys.opba.fintech.server;
 
 import com.google.gson.Gson;
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
-import de.adorsys.opba.tpp.bankserach.api.model.BankProfileResponse;
-import de.adorsys.opba.tpp.bankserach.api.model.BankSearchResponse;
-import de.adorsys.opba.tpp.bankserach.api.resource.TppBankSearchApi;
+import de.adorsys.opba.tpp.bankserach.api.model.generated.BankProfileResponse;
+import de.adorsys.opba.tpp.bankserach.api.model.generated.BankSearchResponse;
+import de.adorsys.opba.tpp.bankserach.api.resource.generated.TppBankSearchApi;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -30,7 +30,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;

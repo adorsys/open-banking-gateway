@@ -1,6 +1,6 @@
 package de.adorsys.opba.tppbankingapi.domain.entity;
 
-import de.adorsys.opba.tppbankingapi.search.model.BankDescriptor;
+import de.adorsys.opba.tppbankingapi.search.model.generated.BankDescriptor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

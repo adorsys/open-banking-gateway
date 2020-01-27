@@ -1,6 +1,6 @@
 package de.adorsys.opba.fintech.impl.config;
 
-import de.adorsys.opba.tpp.bankserach.api.resource.TppBankSearchApi;
+import de.adorsys.opba.tpp.bankserach.api.resource.generated.TppBankSearchApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
