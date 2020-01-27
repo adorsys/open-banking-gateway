@@ -29,11 +29,9 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
         Optional<AuthorizeService.UserEntity> userEntity = authorizeService.findUser(loginRequest);
         if (userEntity.isPresent()) {
             InlineResponse200 response = new InlineResponse200();
-            response.setUserProfile(userEntity.get().getUserProfile());
-
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set(X_REQUEST_ID, xRequestID.toString());
-            responseHeaders.set(HttpHeaders.SET_COOKIE, userEntity.get().getCookie());
+            userEntity.get().getCookies().forEach(cookie -> responseHeaders.set(HttpHeaders.SET_COOKIE, cookie));
             return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

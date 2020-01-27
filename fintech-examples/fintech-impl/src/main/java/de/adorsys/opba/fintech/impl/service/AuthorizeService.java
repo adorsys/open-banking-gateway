@@ -8,7 +8,9 @@ import lombok.Setter;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,7 +21,8 @@ import java.util.UUID;
  */
 @Configuration
 public class AuthorizeService {
-    private static final String X_XSRF_TOKEN_COOKIE_NAME = "XSRF-TOKEN";
+    private static final String XSRF_TOKEN_COOKIE_NAME = "XSRF-TOKEN";
+    private static final String SESSION_COOKIE_NAME = "SESSION-COOKIE";
 
     private static final String UNIVERSAL_PASSWORD = "1234";
     private final Map<String, UserEntity> userIDtoEntityMap = new HashMap<>();
@@ -45,7 +48,8 @@ public class AuthorizeService {
             // password matched
             // create new session
             String xsrfToken = UUID.randomUUID().toString();
-            userEntity.setCookie(X_XSRF_TOKEN_COOKIE_NAME + "=" + xsrfToken);
+            userEntity.addCookie(XSRF_TOKEN_COOKIE_NAME + "=" + xsrfToken);
+            userEntity.addCookie(SESSION_COOKIE_NAME + "=" + xsrfToken);
 
             // Entity will now be found be xrefid too
             xsrfIDtoEntityMap.put(xsrfToken, userEntity);
@@ -71,6 +75,7 @@ public class AuthorizeService {
                 UserEntity.builder().userProfile(userProfile)
                         .password(UNIVERSAL_PASSWORD)
                         .lastLogin(userProfile.getLastLogin())
+                        .cookies(new ArrayList<>())
                         .build());
     }
 
@@ -85,6 +90,9 @@ public class AuthorizeService {
         private final String password;
         private OffsetDateTime lastLogin;
         private final UserProfile userProfile;
-        private String cookie;
+        private List<String> cookies = new ArrayList<>();
+        public void addCookie(String cookie) {
+            cookies.add(cookie);
+        }
     }
 }
