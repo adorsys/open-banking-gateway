@@ -29,7 +29,7 @@ services:
       - "18085:8085"
     volumes:
       - ./core/banking-protocol/src/main/resources/:/pkcs12/
-    entrypoint: "java -jar open-banking-gateway-0.0.6-SNAPSHOT.jar"
+    entrypoint: "/bin/sh -c 'java -jar open-banking-gateway-*.jar'"
     depends_on:
       - postgres
     networks:
@@ -53,7 +53,7 @@ services:
     build: fintech-examples/fintech-server
     ports:
       - "18086:8086"
-    entrypoint: "java -jar fintech-server-0.0.6-SNAPSHOT.jar"
+    entrypoint: "/bin/sh -c 'java -jar fintech-server-*.jar'"
     networks:
       - opba-net
 
