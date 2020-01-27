@@ -1,28 +1,27 @@
-.box-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: #edf4f7;
+@import 'src/assets/themes/variables';
 
-  .box-header {
-    &__title {
-      color: #212121;
-      font-size: 1.8rem;
-      font-weight: 400;
-      margin-bottom: 1rem;
-    }
-    &_text {
-      color: #737373;
-    }
+//TODO: move this code in a template component (list-item.component)
+.list-item {
+  position: relative;
+  display: block;
+  padding: 0.75rem 1.25rem;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 5px;
+  width: 100%;
+  text-align: start;
+
+  &:not(:last-of-type) {
+    margin-bottom: 10px;
   }
 
-  .box-item {
-    max-width: 26rem;
+  &:last-child {
+    margin-bottom: 2rem;
   }
-}
 
-.list-group-item:hover {
-  background-color: #edf4f7;
-  transition: 0.5s ease-in-out;
+  &:hover {
+    background-color: $form-control;
+    border-color: $form-control;
+    transition: 0.2s ease-in-out;
+  }
 }

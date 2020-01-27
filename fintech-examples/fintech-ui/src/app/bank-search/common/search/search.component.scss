@@ -1,11 +1,13 @@
+@import 'src/assets/themes/variables';
+
 .search {
   margin-bottom: 10px;
+
   .form-control {
     font-style: italic;
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
     padding-left: 2.375rem;
-    background-color: #fbfbfc;
   }
 
   .form-control-feedback {
@@ -17,6 +19,6 @@
     padding-top: 18px;
     text-align: center;
     pointer-events: none;
-    color: #a7a7a7;
+    color: $primary;
   }
 }
