@@ -5,15 +5,16 @@ import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   public URL = `${environment.FINTECH_API}`;
-  private X_XSRF_TOKEN = 'x-xsrf-token';
+  private XSRF_TOKEN = 'XSRF-TOKEN';
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router, private cookieService: CookieService, private http: HttpClient) {}
 
   login(credentials: Credentials): Observable<any> {
     return this.http
@@ -25,34 +26,18 @@ export class AuthService {
       })
       .pipe(
         map(loginResponse => {
-          const token = loginResponse.headers.get(this.X_XSRF_TOKEN);
-          if (token && token.length > 0) {
-            this.setCookie(token);
-            return true;
-          }
-          return false;
+          console.log(loginResponse);
+          this.isLoggedIn();
         })
       );
   }
 
   logout(): void {
-    localStorage.removeItem(this.X_XSRF_TOKEN);
+    this.cookieService.deleteAll();
     this.router.navigate(['/login']);
   }
 
   isLoggedIn(): boolean {
-    if (this.getX_XSRF_TOKEN()) {
-      return this.getX_XSRF_TOKEN().length > 0;
-    }
-
-    return false;
-  }
-
-  setCookie(token: string) {
-    localStorage.setItem(this.X_XSRF_TOKEN, token);
-  }
-
-  getX_XSRF_TOKEN(): string {
-    return localStorage.getItem(this.X_XSRF_TOKEN);
+    return this.cookieService.check(this.XSRF_TOKEN);
   }
 }
