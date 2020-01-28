@@ -1,4 +1,11 @@
 server:
   port: 8086
+  servlet:
+    session:
+      cookie:
+        secure: false
+        maxAge: 300
+        httpOnly: false
+        path: /
 tpp:
     url: http://localhost:18085
