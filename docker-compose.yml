@@ -34,7 +34,7 @@ services:
       - postgres
     networks:
       - opba-net
-
+git
   fintech-ui:
     environment:
       - BACKEND_URL=http://fintech-server:8086
