@@ -31,8 +31,8 @@ public class BankProtocol {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "configuration_id", nullable = false)
-    private BankConfiguration configuration;
+    @JoinColumn(name = "bank_uuid", referencedColumnName = "bank_uuid", nullable = false)
+    private BankProfile bankProfile;
 
     @Enumerated(EnumType.STRING)
     private ProtocolAction action;

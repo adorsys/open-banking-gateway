@@ -29,12 +29,11 @@ services:
       - "18085:8085"
     volumes:
       - ./core/banking-protocol/src/main/resources/:/pkcs12/
-    entrypoint: "/bin/sh -c 'java -jar open-banking-gateway-*.jar'"
     depends_on:
       - postgres
     networks:
       - opba-net
-git
+
   fintech-ui:
     environment:
       - BACKEND_URL=http://fintech-server:8086
@@ -53,7 +52,6 @@ git
     build: fintech-examples/fintech-server
     ports:
       - "18086:8086"
-    entrypoint: "/bin/sh -c 'java -jar fintech-server-*.jar'"
     networks:
       - opba-net
 

@@ -15,19 +15,11 @@
         </createTable>
         <createSequence sequenceName="consent_id_sequence" incrementBy="50"/>
 
-        <createTable tableName="${table-prefix}bank_configuration">
-            <column name="id" type="BIGINT">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="preferred_approach" type="VARCHAR(32)"/>
-        </createTable>
-        <createSequence sequenceName="bank_configuration_id_sequence" incrementBy="50"/>
-
         <createTable tableName="${table-prefix}bank_protocol">
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="configuration_id" type="BIGINT">
+            <column name="bank_uuid" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
             <column name="action" type="VARCHAR(32)">
@@ -37,14 +29,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="configuration_id"
-                                 baseTableName="${table-prefix}bank_protocol"
-                                 constraintName="fk_bank_protocol_bank_configuration"
-                                 deferrable="true"
-                                 initiallyDeferred="true"
-                                 onUpdate="RESTRICT"
-                                 referencedColumnNames="id"
-                                 referencedTableName="${table-prefix}bank_configuration"/>
         <createSequence sequenceName="bank_protocol_id_sequence" incrementBy="50"/>
     </changeSet>
 </databaseChangeLog>
