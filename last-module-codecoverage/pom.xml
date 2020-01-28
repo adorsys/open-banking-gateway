@@ -69,6 +69,21 @@
             <artifactId>opba-embedded-starter</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>fintech-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>fintech-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>fintech-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- Excluding sandbox-test as it is testing framework setup -->
     </dependencies>
 
@@ -137,7 +152,7 @@
                             <parameters>
                                 <parameter>
                                     <name>lowerlimit</name>
-                                    <value>0</value>
+                                    <value>83</value>
                                 </parameter>
                                 <parameter>
                                     <name>outputdir</name>
