@@ -2,12 +2,13 @@ package de.adorsys.opba.tppbankingapi.ais.resource;
 
 import de.adorsys.opba.protocol.services.ais.account.Account;
 import de.adorsys.opba.protocol.services.ais.account.AccountsReport;
-import de.adorsys.opba.tppbankingapi.ais.model.AccountDetails;
-import de.adorsys.opba.tppbankingapi.ais.model.AccountList;
+import de.adorsys.opba.tppbankingapi.ais.model.generated.AccountDetails;
+import de.adorsys.opba.tppbankingapi.ais.model.generated.AccountList;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class AccountListMapperTest {
     public static final AccountListMapper ACCOUNT_LIST_MAPPER = Mappers.getMapper(AccountListMapper.class);

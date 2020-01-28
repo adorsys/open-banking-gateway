@@ -1,8 +1,8 @@
 package de.adorsys.opba.fintech.impl.controller;
 
-import de.adorsys.opba.fintech.api.model.InlineResponse200;
-import de.adorsys.opba.fintech.api.model.LoginRequest;
-import de.adorsys.opba.fintech.api.resource.FinTechAuthorizationApi;
+import de.adorsys.opba.fintech.api.model.generated.InlineResponse200;
+import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
+import de.adorsys.opba.fintech.api.resource.generated.FinTechAuthorizationApi;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

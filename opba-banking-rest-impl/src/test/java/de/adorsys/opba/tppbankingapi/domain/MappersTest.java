@@ -2,8 +2,8 @@ package de.adorsys.opba.tppbankingapi.domain;
 
 import de.adorsys.opba.tppbankingapi.domain.entity.Bank;
 import de.adorsys.opba.tppbankingapi.domain.entity.BankProfile;
-import de.adorsys.opba.tppbankingapi.search.model.BankDescriptor;
-import de.adorsys.opba.tppbankingapi.search.model.BankProfileDescriptor;
+import de.adorsys.opba.tppbankingapi.search.model.generated.BankDescriptor;
+import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileDescriptor;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

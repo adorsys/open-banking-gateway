@@ -1,12 +1,12 @@
 package de.adorsys.opba.fintech.impl.service.mapper;
 
-import de.adorsys.opba.fintech.api.model.BankDescriptor;
-import de.adorsys.opba.fintech.api.model.BankProfile;
-import de.adorsys.opba.tpp.bankserach.api.model.BankProfileDescriptor;
+import de.adorsys.opba.fintech.api.model.generated.BankDescriptor;
+import de.adorsys.opba.fintech.api.model.generated.BankProfile;
+import de.adorsys.opba.tpp.bankserach.api.model.generated.BankProfileDescriptor;
 
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor")
 public class Mapper {
-    public static BankDescriptor fromTppToFintech(de.adorsys.opba.tpp.bankserach.api.model.BankDescriptor tppBankDescriptor) {
+    public static BankDescriptor fromTppToFintech(de.adorsys.opba.tpp.bankserach.api.model.generated.BankDescriptor tppBankDescriptor) {
         BankDescriptor fintechBankDescrptor = new BankDescriptor();
         fintechBankDescrptor.setBankCode(tppBankDescriptor.getBankCode());
         fintechBankDescrptor.setBankName(tppBankDescriptor.getBankName());
