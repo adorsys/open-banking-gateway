@@ -78,7 +78,7 @@
         <build-helper-maven-plugin.version>3.0.0</build-helper-maven-plugin.version>
 
         <!-- Framework libs -->
-        <spring-boot.version>2.2.2.RELEASE</spring-boot.version>
+        <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
         <guava.version>28.1-jre</guava.version>
         <apache.commons-lang3.version>3.9</apache.commons-lang3.version>
         <fasterxml.version>2.10.1</fasterxml.version>
@@ -134,6 +134,7 @@
         <javax.ws.rs-api.version>2.1.1</javax.ws.rs-api.version>
         <glassfish.jersey-client.version>2.30</glassfish.jersey-client.version>
         <jersey-hk2.version>2.28</jersey-hk2.version>
+        <h2.database.version>1.4.200</h2.database.version>
     </properties>
 
     <repositories>
