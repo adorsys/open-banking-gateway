@@ -3,9 +3,11 @@ package de.adorsys.opba.fintech.impl.service;
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.api.model.generated.UserProfile;
 import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
+import de.adorsys.opba.fintech.impl.database.entities.UserProfileEntity;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -17,6 +19,7 @@ import java.util.UUID;
  */
 @Configuration
 public class AuthorizeService {
+
     private static final String SESSION_COOKIE_NAME = "SESSION-COOKIE";
     private static final String XSRF_TOKEN_COOKIE_NAME = "XSRF-TOKEN";
     private static final String UNIVERSAL_PASSWORD = "1234";
@@ -64,14 +67,14 @@ public class AuthorizeService {
         if (userIDtoEntityMap.containsKey(loginRequest.getUsername())) {
             return;
         }
-        UserProfile userProfile = new UserProfile();
+        UserProfileEntity userProfile = new UserProfileEntity();
         userProfile.setName(loginRequest.getUsername());
         userProfile.setLastLogin(null);
         userIDtoEntityMap.put(loginRequest.getUsername(),
                 UserEntity.builder().userProfile(userProfile)
                         .password(UNIVERSAL_PASSWORD)
                         .lastLogin(userProfile.getLastLogin())
-                        .cookies(new HashMap<>())
+                        .cookies(new ArrayList<>())
                         .build());
     }
 
