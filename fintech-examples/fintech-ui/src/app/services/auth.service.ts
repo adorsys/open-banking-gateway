@@ -26,8 +26,8 @@ export class AuthService {
       })
       .pipe(
         map(loginResponse => {
-          console.log(loginResponse);
-          this.isLoggedIn();
+          // if login response is ok and cookie exist then the login was successful
+          return loginResponse.ok && this.cookieService.check(this.XSRF_TOKEN);
         })
       );
   }

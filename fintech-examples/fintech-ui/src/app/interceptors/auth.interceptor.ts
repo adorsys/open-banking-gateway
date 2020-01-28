@@ -24,8 +24,9 @@ export class AuthInterceptor implements HttpInterceptor {
         setHeaders: {
           'X-Request-ID': '99391c7e-ad88-49ec-a2ad-99ddcb1f7721', // TODO: to be defined
           'Content-Type': 'application/json',
-          Accept: 'application/json'
-          // 'x-xsrf-token': this.authService.getX_XSRF_TOKEN()
+          Accept: 'application/json',
+          // TODO: is supposed to be sent automatically when X-XSRF cookie exists, check why not
+          'X-XSRF-TOKEN': this.authService.getX_XSRF_TOKEN()
         }
       });
     }
