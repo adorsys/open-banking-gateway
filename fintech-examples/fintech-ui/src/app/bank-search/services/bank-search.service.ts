@@ -14,7 +14,7 @@ export class BankSearchService {
   constructor(private http: HttpClient) {}
 
   searchBanks(keyword: string): Observable<BankDescriptor> {
-    return this.http.get<BankDescriptor>(this.URL + 'search/bankSearch', {
+    return this.http.get<BankDescriptor>(this.URL + '/search/bankSearch', {
       params: {
         keyword,
         max_results: '5'
