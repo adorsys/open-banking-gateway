@@ -2,6 +2,7 @@ package de.adorsys.opba.fintech.server;
 
 import com.google.gson.Gson;
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
+import de.adorsys.opba.fintech.impl.service.entities.TempEntity;
 import de.adorsys.opba.tpp.bankserach.api.model.generated.BankProfileResponse;
 import de.adorsys.opba.tpp.bankserach.api.model.generated.BankSearchResponse;
 import de.adorsys.opba.tpp.bankserach.api.resource.generated.TppBankSearchApi;
@@ -16,24 +17,26 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -46,6 +49,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @EnableFinTechImplConfig
 @Slf4j
+@ComponentScan(basePackageClasses = {UserRepository.class})
+@EntityScan(basePackageClasses = {TempEntity.class})
 class FinTechServerTests {
     private static final String FIN_TECH_AUTH_URL = "/v1/login";
     private static final String FIN_TECH_BANK_SEARCH_URL = "/v1/search/bankSearch";
@@ -67,6 +72,25 @@ class FinTechServerTests {
 
     @Autowired
     protected MockMvc mvc;
+
+    @Autowired
+    protected UserRepository userRepository;
+
+    @Test
+    public void testDatabase() {
+        doTransaction();
+    }
+
+    @Transactional
+    public void doTransaction() {
+        TempEntity te = TempEntity.builder()
+                .lastLogin(OffsetDateTime.now())
+                .password("affe")
+                .xsrfToken("1")
+                .build();
+        userRepository.save(te);
+        userRepository.findAll().forEach(en -> log.info(en.toString()));
+    }
 
     @Test
     @SneakyThrows

@@ -5,6 +5,7 @@ import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAuthorizationApi;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
+import de.adorsys.opba.fintech.impl.service.entities.UserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -31,7 +32,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
     @Override
     public ResponseEntity<InlineResponse200> loginPOST(LoginRequest loginRequest, UUID xRequestID) {
         log.info("loginPost is called");
-        Optional<AuthorizeService.UserEntity> userEntity = authorizeService.findUser(loginRequest);
+        Optional<UserEntity> userEntity = authorizeService.findUser(loginRequest);
         if (userEntity.isPresent()) {
 
             InlineResponse200 response = new InlineResponse200();
