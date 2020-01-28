@@ -1,0 +1,27 @@
+@import 'src/assets/themes/variables';
+
+.sidebar {
+  background-color: white;
+  padding: 1rem;
+
+  .nav-item {
+    background-color: $primary-10;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 3px;
+  }
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    height: 100vh;
+  }
+
+  .nav-item {
+    padding: 0.5rem;
+
+    &:not(:last-of-type) {
+      margin-bottom: 10px;
+    }
+  }
+}

@@ -20,16 +20,17 @@ body {
   &-frame {
     margin: 120px auto 0;
     max-width: 450px;
-    min-height: 400px;
+    height: auto;
   }
 
   &-body {
-    padding: 4rem;
+    padding: 3rem;
+    color: $dark-80;
   }
 
   &-title {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     font-size: 1.8rem;
   }
 }
@@ -38,7 +39,6 @@ body {
   margin-bottom: 2rem;
 }
 
-// TODO: make this config in _bootstrap file
 label {
   margin-bottom: 0;
   color: $primary;

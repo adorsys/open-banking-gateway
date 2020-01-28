@@ -1,0 +1,22 @@
+<div class="box-container">
+  <ng-template [ngIfElse]="search" [ngIf]="!bankSearch">
+    <div class="list-item list-item--{{ config?.shadow }}">
+      <div class="row align-items-center justify-content-between px-3">
+        <div class="d-inline-block">
+          <h3 class="list-item__headline list-item__headline--{{ config?.headline }}">{{ card?.headline }}</h3>
+          <h4 class="list-item__subheadline list-item__subheadline--{{ config?.subheadline }}">
+            {{ card?.subheadline }}
+          </h4>
+        </div>
+        <div *ngIf="card?.accountBalance" class="list-item__balance text-right">
+          <span>{{ card.accountBalance | currency: 'EUR':'symbol':'1.0' }}</span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #search>
+    <div class="list-item">
+      <span class="list-item__subheadline">{{ card?.headline }}</span>
+    </div>
+  </ng-template>
+</div>
