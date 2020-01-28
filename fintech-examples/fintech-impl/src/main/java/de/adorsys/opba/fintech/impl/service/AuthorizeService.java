@@ -2,10 +2,7 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.api.model.generated.UserProfile;
-import de.adorsys.opba.fintech.impl.service.entities.UserEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.OffsetDateTime;

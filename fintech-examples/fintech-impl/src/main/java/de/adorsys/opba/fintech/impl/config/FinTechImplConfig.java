@@ -1,6 +1,6 @@
 package de.adorsys.opba.fintech.impl.config;
 
-import de.adorsys.opba.fintech.impl.service.entities.TempEntity;
+import de.adorsys.opba.fintech.impl.database.entities.TempEntity;
 import de.adorsys.opba.tpp.bankserach.api.resource.generated.TppBankSearchApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
