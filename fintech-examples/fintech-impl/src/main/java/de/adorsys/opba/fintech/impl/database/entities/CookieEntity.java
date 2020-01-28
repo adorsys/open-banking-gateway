@@ -11,21 +11,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.time.OffsetDateTime;
 
-
+@Builder
 @Getter
 @Setter
-@Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class TempEntity {
+public class CookieEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long primaryKey;
-    private String password;
-    private OffsetDateTime lastLogin;
-    private String xsrfToken;
+    private Long id;
+
+    private String name;
+    private String value;
 }

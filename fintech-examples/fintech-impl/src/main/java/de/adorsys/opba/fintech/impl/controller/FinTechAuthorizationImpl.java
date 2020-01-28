@@ -40,9 +40,9 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set(X_REQUEST_ID, xRequestID.toString());
-            userEntity.get().getCookies().forEach((key, value) -> {
+            userEntity.get().getCookies().forEach(cookie -> {
                 responseHeaders.set(HttpHeaders.SET_COOKIE,
-                        ResponseCookie.from(key, value)
+                        ResponseCookie.from(cookie.getName(), cookie.getValue())
                                 .httpOnly(cookieConfigProperties.isHttpOnly())
                                 .sameSite(cookieConfigProperties.getSameSite())
                                 .secure(cookieConfigProperties.isSecure())

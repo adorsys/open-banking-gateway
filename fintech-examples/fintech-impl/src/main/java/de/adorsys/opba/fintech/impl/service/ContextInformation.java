@@ -1,4 +1,4 @@
-package de.adorsys.opba.fintech.impl.service.entities;
+package de.adorsys.opba.fintech.impl.service;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,5 +1,6 @@
 package de.adorsys.opba.fintech.impl.config;
 
+import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
 import de.adorsys.opba.tpp.bankserach.api.resource.generated.TppBankSearchApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -9,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan("de.adorsys.opba.fintech.impl")
-@EntityScan(basePackageClasses = {TempEntity.class})
+@EntityScan(basePackageClasses = {UserEntity.class})
 public class FinTechImplConfig {
 
     @Value("${tpp.url}")

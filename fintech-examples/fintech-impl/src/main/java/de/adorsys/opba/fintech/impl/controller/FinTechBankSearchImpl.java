@@ -5,7 +5,7 @@ import de.adorsys.opba.fintech.api.model.generated.InlineResponse2002;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechBankSearchApi;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.BankSearchService;
-import de.adorsys.opba.fintech.impl.service.entities.ContextInformation;
+import de.adorsys.opba.fintech.impl.service.ContextInformation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
