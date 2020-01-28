@@ -16,6 +16,11 @@ const routes: Routes = [
     canActivate: [GuestGuard]
   },
   {
+    path: 'dashboard',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
+  },
+  {
     path: 'search',
     canActivate: [AuthGuard],
     loadChildren: () => import('./bank-search/bank-search.module').then(m => m.BankSearchModule)
@@ -23,11 +28,6 @@ const routes: Routes = [
   {
     path: '**',
     redirectTo: ''
-  },
-  {
-    path: 'dashboard',
-    canActivate: [AuthGuard],
-    loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
   }
 ];
 
