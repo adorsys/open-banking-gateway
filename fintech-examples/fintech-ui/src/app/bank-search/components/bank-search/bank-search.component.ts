@@ -11,33 +11,6 @@ export class BankSearchComponent {
   searchedBanks: Bank[];
   selectedBank: string;
 
-  cardList = [
-    {
-      headline: 'Telecom'
-    },
-    {
-      headline: 'Telecom'
-    },
-    {
-      headline: 'Telecom'
-    },
-    {
-      headline: 'Telecom'
-    },
-    {
-      headline: 'Telecom'
-    },
-    {
-      headline: 'Telecom'
-    },
-    {
-      headline: 'Telecom'
-    },
-    {
-      headline: 'Telecom'
-    }
-  ];
-
   constructor(private bankSearchService: BankSearchService) {}
 
   onSearch(keyword: string) {

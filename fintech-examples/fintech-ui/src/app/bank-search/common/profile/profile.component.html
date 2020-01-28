@@ -3,13 +3,12 @@
     <i (click)="goBack()" class="fa fa-angle-left"></i>
   </div>
   <div class="col">
-    <h4>{{ profile?.bank.name }}</h4>
+    <h4>{{ profile?.bankName }}</h4>
   </div>
 </div>
 
 <div class="border-top my-3"></div>
 
 <div class="list-group">
-  <a href="#" class="list-group-item list-group-item-action disabled">Initiate payment</a>
-  <a href="#" class="list-group-item list-group-item-action">List accounts</a>
+  <a *ngFor="let service of profile?.services" href="#" class="list-group-item list-group-item-action">{{ service }}</a>
 </div>
