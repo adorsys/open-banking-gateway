@@ -7,9 +7,8 @@
         </preConditions>
         <comment>Fills tables with mock data</comment>
        <sql>
-           insert into ${table-prefix}bank_configuration (id, preferred_approach) values (1, 'REDIRECT');
-           insert into ${table-prefix}bank_protocol (id, configuration_id, action, process_name) values (1, 1, 'LIST_ACCOUNTS', 'xs2a-list-accounts');
-           insert into ${table-prefix}bank_protocol (id, configuration_id, action, process_name) values (2, 1, 'LIST_TRANSACTIONS', 'xs2a-list-transactions');
+           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, process_name) values (1, '8025d980-1ba3-43ff-ac69-c97ffc9d76e1', 'LIST_ACCOUNTS', 'xs2a-list-accounts');
+           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, process_name) values (2, '8025d980-1ba3-43ff-ac69-c97ffc9d76e1', 'LIST_TRANSACTIONS', 'xs2a-list-transactions');
        </sql>
     </changeSet>
 </databaseChangeLog>

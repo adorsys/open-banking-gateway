@@ -1,7 +1,6 @@
 package de.adorsys.opba.db.domain.entity;
 
-import de.adorsys.opba.db.domain.Service;
-import de.adorsys.opba.db.domain.converter.ServiceConverter;
+import de.adorsys.opba.db.domain.Approach;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileDescriptor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,16 +12,21 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Getter
@@ -49,17 +53,24 @@ public class BankProfile implements Serializable {
     private String idpUrl;
     private String scaApproaches;
 
-    @Convert(converter = ServiceConverter.class)
-    private List<Service> services;
+    @Enumerated(EnumType.STRING)
+    private Approach preferredApproach;
+
+//    @Convert(converter = ServiceConverter.class)
+//    private List<Service> services;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bankProfile")
+    @MapKey(name = "action")
+    private Map<ProtocolAction, BankProtocol> actions = new HashMap<>();
 
     @Mapper
     public interface ToBankProfileDescriptor {
         @Mapping(source = "bank.name", target = "bankName")
         @Mapping(source = "bank.bic", target = "bic")
         @Mapping(source = "bank.uuid", target = "bankUuid")
-        @Mapping(expression = "java(bankProfile.getServices().stream()"
-                + ".map(s -> s.getCode()).collect(java.util.stream.Collectors.toList()))",
-                target = "serviceList")
+//        @Mapping(expression = "java(bankProfile.getServices().stream()"
+//                + ".map(s -> s.getCode()).collect(java.util.stream.Collectors.toList()))",
+//                target = "serviceList")
         BankProfileDescriptor map(BankProfile bankProfile);
     }
 }
