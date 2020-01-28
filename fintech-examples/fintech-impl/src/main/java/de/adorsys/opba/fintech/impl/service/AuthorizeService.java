@@ -2,6 +2,7 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.api.model.generated.UserProfile;
+import de.adorsys.opba.fintech.impl.service.entities.UserEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,7 +41,7 @@ public class AuthorizeService {
         }
 
         UserEntity userEntity = userIDtoEntityMap.get(loginRequest.getUsername());
-        UserProfile userProfile = userEntity.password.equalsIgnoreCase(loginRequest.getPassword()) ? userEntity.getUserProfile() : null;
+        UserProfile userProfile = userEntity.getPassword().equalsIgnoreCase(loginRequest.getPassword()) ? userEntity.getUserProfile() : null;
         if (userProfile != null) {
             // password matched
             // create new session
@@ -53,7 +54,7 @@ public class AuthorizeService {
             xsrfIDtoEntityMap.put(xsrfToken, userEntity);
 
             // before now returning user profile, last login has to be changed
-            userProfile.lastLogin(userEntity.lastLogin);
+            userProfile.lastLogin(userEntity.getLastLogin());
             userEntity.setLastLogin(OffsetDateTime.now());
             return Optional.of(userEntity);
         }
@@ -79,21 +80,5 @@ public class AuthorizeService {
 
     public boolean isAuthorized(String fintechToken) {
         return xsrfIDtoEntityMap.containsKey(fintechToken);
-    }
-
-    @Getter
-    @Setter
-    @Builder
-    public static final class UserEntity {
-        private final String password;
-        private OffsetDateTime lastLogin;
-        private final UserProfile userProfile;
-        private String xsrfToken;
-        private Map<String, String> cookies;
-
-        public UserEntity addCookie(String key, String value) {
-            cookies.put(key, value);
-            return this;
-        }
     }
 }

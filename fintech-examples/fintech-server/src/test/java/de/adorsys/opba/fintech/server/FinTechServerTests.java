@@ -2,7 +2,6 @@ package de.adorsys.opba.fintech.server;
 
 import com.google.gson.Gson;
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
-import de.adorsys.opba.fintech.impl.config.FinTechImplConfig;
 import de.adorsys.opba.tpp.bankserach.api.model.generated.BankProfileResponse;
 import de.adorsys.opba.tpp.bankserach.api.model.generated.BankSearchResponse;
 import de.adorsys.opba.tpp.bankserach.api.resource.generated.TppBankSearchApi;
@@ -17,19 +16,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,8 +42,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = FinTechServerTests.TestConfig.class)
+@SpringBootTest
 @AutoConfigureMockMvc
+@EnableFinTechImplConfig
 @Slf4j
 class FinTechServerTests {
     private static final String FIN_TECH_AUTH_URL = "/v1/login";
@@ -63,11 +58,7 @@ class FinTechServerTests {
     private static final Gson gson = new Gson();
 
     @MockBean
-    private TestConfig.MockFeign mockFeign;
-
-    @SuppressWarnings("PMD.UnusedPrivateField")
-    @MockBean
-    private TppBankSearchApi mockedTppBankSearchApi;
+    TppBankSearchApi mockedTppBankSearchApi;
 
     @BeforeEach
     public void setup() {
@@ -76,6 +67,25 @@ class FinTechServerTests {
 
     @Autowired
     protected MockMvc mvc;
+
+    @Autowired
+    protected UserRepository userRepository;
+
+    @Test
+    public void testDatabase() {
+        doTransaction();
+    }
+
+    @Transactional
+    public void doTransaction() {
+        TempEntity te = TempEntity.builder()
+                .lastLogin(OffsetDateTime.now())
+                .password("affe")
+                .xsrfToken("1")
+                .build();
+        userRepository.save(te);
+        userRepository.findAll().forEach(en -> log.info(en.toString()));
+    }
 
     @Test
     @SneakyThrows
@@ -98,8 +108,8 @@ class FinTechServerTests {
         final Integer start = 1;
         final Integer max = 2;
 
-        when(mockFeign.bankSearchGET(any(), any(), eq(keyword), eq(start), eq(max)))
-                .thenReturn(ResponseEntity.ok(gson.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class)));
+        when(mockedTppBankSearchApi.bankSearchGET(any(), any(), eq(keyword), eq(start), eq(max)))
+                .thenReturn(gson.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class));
 
         LoginBody loginBody = new LoginBody("peter", "1234");
         String xsrfToken = authOk(loginBody.username, loginBody.password);
@@ -138,8 +148,8 @@ class FinTechServerTests {
             final Integer max = 2;
             log.info("DO Bank Search ({}, {}, {}) ==============================", keyword, start, max);
 
-            when(mockFeign.bankSearchGET(any(), any(), eq(keyword), eq(start), eq(max)))
-                    .thenReturn(ResponseEntity.ok(gson.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class)));
+            when(mockedTppBankSearchApi.bankSearchGET(any(), any(), eq(keyword), eq(start), eq(max)))
+                    .thenReturn(gson.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class));
 
             bankUUID = bankSearchOk(keyword, start, max, xsrfToken);
         }
@@ -147,8 +157,8 @@ class FinTechServerTests {
         List<String> services = null;
         {
             log.info("DO Bank Profile ({}) ============================== ", bankUUID);
-            when(mockFeign.bankProfileGET(any(), any(), eq(bankUUID)))
-                    .thenReturn(ResponseEntity.ok(gson.fromJson(readFile(getFilenameBankProfile(bankUUID)), BankProfileResponse.class)));
+            when(mockedTppBankSearchApi.bankProfileGET(any(), any(), eq(bankUUID)))
+                    .thenReturn(gson.fromJson(readFile(getFilenameBankProfile(bankUUID)), BankProfileResponse.class));
 
             services = bankProfile(xsrfToken, bankUUID);
             assertTrue(services.containsAll(Arrays.asList(new String[]{"List accounts", "List transactions", "Initiate payment"})));
@@ -257,28 +267,5 @@ class FinTechServerTests {
         return BANK_PROFILE_RESPONSE_PREFIX
                 + "-" + bankUUID
                 + POSTFIX;
-    }
-
-    @EnableFinTechImplConfig
-    @SpringBootApplication
-    public static class TestConfig {
-
-        @Bean
-        public MockFeign mockFeign() {
-            return new MockFeign();
-        }
-
-        public class MockFeign implements FinTechImplConfig.TppBankSearchClient {
-
-            @Override
-            public ResponseEntity<BankProfileResponse> bankProfileGET(String authorization, UUID xRequestID, @NotNull @Valid String bankId) {
-                return null;
-            }
-
-            @Override
-            public ResponseEntity<BankSearchResponse> bankSearchGET(String authorization, UUID xRequestID, @NotNull @Valid String keyword, @Valid Integer start, @Valid Integer max) {
-                return null;
-            }
-        }
     }
 }
