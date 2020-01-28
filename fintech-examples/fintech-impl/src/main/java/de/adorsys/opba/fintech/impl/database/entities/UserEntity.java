@@ -1,4 +1,4 @@
-package de.adorsys.opba.fintech.impl.service.entities;
+package de.adorsys.opba.fintech.impl.database.entities;
 
 import de.adorsys.opba.fintech.api.model.generated.UserProfile;
 import lombok.Builder;

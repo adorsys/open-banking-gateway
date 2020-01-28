@@ -1,4 +1,4 @@
-package de.adorsys.opba.fintech.impl.service.entities;
+package de.adorsys.opba.fintech.impl.database.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
