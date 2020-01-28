@@ -1,7 +1,7 @@
 package de.adorsys.opba.core.protocol.service.xs2a.consent.authenticate;
 
-import de.adorsys.opba.core.protocol.domain.entity.BankConfiguration;
-import de.adorsys.opba.core.protocol.repository.jpa.BankConfigurationRepository;
+import de.adorsys.opba.db.domain.entity.BankConfiguration;
+import de.adorsys.opba.db.repository.jpa.BankConfigurationRepository;
 import de.adorsys.opba.core.protocol.service.ContextUtil;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
 import de.adorsys.opba.core.protocol.service.dto.ValidatedPathHeaders;

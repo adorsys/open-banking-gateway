@@ -1,9 +1,9 @@
 package de.adorsys.opba.tppbankingapi.service;
 
-import de.adorsys.opba.tppbankingapi.domain.entity.Bank;
-import de.adorsys.opba.tppbankingapi.domain.entity.BankProfile;
-import de.adorsys.opba.tppbankingapi.repository.jpa.BankProfileRepository;
-import de.adorsys.opba.tppbankingapi.repository.BankRepositoryImpl;
+import de.adorsys.opba.db.domain.entity.Bank;
+import de.adorsys.opba.db.domain.entity.BankProfile;
+import de.adorsys.opba.db.repository.jpa.BankProfileRepository;
+import de.adorsys.opba.db.repository.BankRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

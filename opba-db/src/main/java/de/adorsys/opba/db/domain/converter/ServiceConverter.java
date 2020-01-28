@@ -1,6 +1,6 @@
-package de.adorsys.opba.tppbankingapi.domain.converter;
+package de.adorsys.opba.db.domain.converter;
 
-import de.adorsys.opba.tppbankingapi.domain.Service;
+import de.adorsys.opba.db.domain.Service;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.AttributeConverter;

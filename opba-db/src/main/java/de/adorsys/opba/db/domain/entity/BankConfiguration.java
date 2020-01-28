@@ -1,6 +1,6 @@
-package de.adorsys.opba.core.protocol.domain.entity;
+package de.adorsys.opba.db.domain.entity;
 
-import de.adorsys.opba.core.protocol.domain.Approach;
+import de.adorsys.opba.db.domain.Approach;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

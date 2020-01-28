@@ -1,7 +1,7 @@
 package de.adorsys.opba.core.protocol.service.xs2a.context;
 
 import de.adorsys.opba.core.protocol.domain.dto.ValidationIssue;
-import de.adorsys.opba.core.protocol.domain.entity.ProtocolAction;
+import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import lombok.Data;
 
 import java.util.HashSet;

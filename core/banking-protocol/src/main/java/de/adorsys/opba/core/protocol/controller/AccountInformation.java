@@ -27,8 +27,8 @@ import static de.adorsys.opba.core.protocol.constant.GlobalConst.REQUEST_SAGA;
 import static de.adorsys.opba.core.protocol.controller.constants.ApiPaths.ACCOUNTS;
 import static de.adorsys.opba.core.protocol.controller.constants.ApiPaths.TRANSACTIONS;
 import static de.adorsys.opba.core.protocol.controller.constants.ApiVersion.API_1;
-import static de.adorsys.opba.core.protocol.domain.entity.ProtocolAction.LIST_ACCOUNTS;
-import static de.adorsys.opba.core.protocol.domain.entity.ProtocolAction.LIST_TRANSACTIONS;
+import static de.adorsys.opba.db.domain.entity.ProtocolAction.LIST_ACCOUNTS;
+import static de.adorsys.opba.db.domain.entity.ProtocolAction.LIST_TRANSACTIONS;
 
 @RestController
 @RequestMapping(API_1)
