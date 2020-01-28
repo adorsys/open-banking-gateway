@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { BankSearchService } from '../../services/bank-search.service';
 import { Bank, BankDescriptor } from '../../models/bank.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-bank-search',
@@ -11,7 +12,7 @@ export class BankSearchComponent {
   searchedBanks: Bank[];
   selectedBank: string;
 
-  constructor(private bankSearchService: BankSearchService) {}
+  constructor(private bankSearchService: BankSearchService, private router: Router) {}
 
   onSearch(keyword: string) {
     this.bankSearchService.searchBanks(keyword).subscribe((bankDescriptor: BankDescriptor) => {
@@ -21,6 +22,7 @@ export class BankSearchComponent {
 
   onBankSelect(bankId: string) {
     this.selectedBank = bankId;
+    this.router.navigate(['/dashboard']);
   }
 
   bankUnselect() {
