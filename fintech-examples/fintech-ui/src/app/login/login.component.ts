@@ -22,7 +22,6 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.authService.login(this.loginForm.value).subscribe(success => {
-      console.log(success);
       if (success) {
         this.router.navigate(['/search']);
       }

@@ -15,7 +15,10 @@ export class ProfileComponent implements OnInit {
   constructor(private bankProfileService: BankProfileService) {}
 
   ngOnInit() {
-    this.bankProfileService.getBankProfile(this.bankId).subscribe((profile: BankProfile) => (this.profile = profile));
+    this.bankProfileService.getBankProfile(this.bankId).subscribe((profile: BankProfile) => {
+      console.log(profile);
+      this.profile = profile;
+    });
   }
 
   goBack() {
