@@ -1,27 +1,22 @@
 @import 'src/assets/themes/variables';
 
-//TODO: move this code in a template component (list-item.component)
-.list-item {
-  position: relative;
-  display: block;
-  padding: 0.75rem 1.25rem;
-  background-color: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 5px;
+.scrollable {
+  overflow: scroll;
+  overflow-x: hidden;
+  height: 350px;
+}
+
+.bank-list {
+  padding: 0.75rem 1.25rem 0.75rem 2.25rem;
+  background-color: white;
+  border: none;
   width: 100%;
+  border-radius: 5px;
   text-align: start;
-
-  &:not(:last-of-type) {
-    margin-bottom: 10px;
-  }
-
-  &:last-child {
-    margin-bottom: 2rem;
-  }
+  margin-bottom: 10px;
 
   &:hover {
-    background-color: $primary-30;
-    border-color: $primary-30;
+    background-color: $primary-10;
     transition: 0.2s ease-in-out;
   }
 }

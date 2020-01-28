@@ -4,12 +4,11 @@
       <div class="card-body">
         <h4 class="card-title">Search your bank!</h4>
         <app-search (keyword)="onSearch($event)"></app-search>
-        <div class="border-0">
-          <button (click)="onBankSelect(bank.id)" *ngFor="let bank of searchedBanks" class="list-item" type="button">
-            {{ bank }}
+        <div class="scrollable">
+          <button (click)="onBankSelect(bank.id)" *ngFor="let bank of cardList" class="bank-list" type="button">
+            {{ bank.headline }}
           </button>
         </div>
-        <button class="btn btn-primary btn-center btn-block" type="submit">Next</button>
       </div>
     </div>
   </ng-template>
