@@ -3,8 +3,8 @@ package de.adorsys.opba.core.protocol.service.xs2a.consent;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import org.springframework.stereotype.Service;
 
-import static de.adorsys.opba.core.protocol.domain.Approach.EMBEDDED;
-import static de.adorsys.opba.core.protocol.domain.Approach.REDIRECT;
+import static de.adorsys.opba.db.domain.Approach.EMBEDDED;
+import static de.adorsys.opba.db.domain.Approach.REDIRECT;
 
 @Service("xs2aConsentInfo")
 public class Xs2aConsentInfo {

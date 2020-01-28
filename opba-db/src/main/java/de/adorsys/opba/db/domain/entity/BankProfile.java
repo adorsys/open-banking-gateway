@@ -1,7 +1,7 @@
-package de.adorsys.opba.tppbankingapi.domain.entity;
+package de.adorsys.opba.db.domain.entity;
 
-import de.adorsys.opba.tppbankingapi.domain.Service;
-import de.adorsys.opba.tppbankingapi.domain.converter.ServiceConverter;
+import de.adorsys.opba.db.domain.Service;
+import de.adorsys.opba.db.domain.converter.ServiceConverter;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileDescriptor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

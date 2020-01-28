@@ -1,7 +1,7 @@
 package de.adorsys.opba.core.protocol.e2e;
 
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
-import de.adorsys.opba.config.migration.EnableMigration;
+import de.adorsys.opba.db.config.EnableMigration;
 import de.adorsys.opba.core.protocol.BankingProtocol;
 import de.adorsys.opba.core.protocol.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.core.protocol.e2e.stages.mocks.WiremockAccountInformationRequest;

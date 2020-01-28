@@ -1,6 +1,6 @@
-package de.adorsys.opba.tppbankingapi.repository;
+package de.adorsys.opba.db.repository;
 
-import de.adorsys.opba.tppbankingapi.domain.entity.Bank;
+import de.adorsys.opba.db.domain.entity.Bank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;

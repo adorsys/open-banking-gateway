@@ -1,4 +1,4 @@
-package de.adorsys.opba.core.protocol.domain.entity;
+package de.adorsys.opba.db.domain.entity;
 
 public enum ProtocolAction {
 

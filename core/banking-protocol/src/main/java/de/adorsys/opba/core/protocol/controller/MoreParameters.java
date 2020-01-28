@@ -3,7 +3,7 @@ package de.adorsys.opba.core.protocol.controller;
 import de.adorsys.opba.core.protocol.domain.dto.forms.PsuPassword;
 import de.adorsys.opba.core.protocol.domain.dto.forms.ScaChallengeResult;
 import de.adorsys.opba.core.protocol.domain.dto.forms.ScaSelectedMethod;
-import de.adorsys.opba.core.protocol.domain.entity.ProtocolAction;
+import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.core.protocol.service.ContextUpdateService;
 import de.adorsys.opba.core.protocol.service.eventbus.ProcessEventHandlerRegistrar;
 import de.adorsys.opba.core.protocol.service.json.JsonPathBasedObjectUpdater;

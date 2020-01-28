@@ -1,6 +1,6 @@
 package de.adorsys.opba.core.protocol.service.protocol;
 
-import de.adorsys.opba.core.protocol.repository.jpa.BankConfigurationRepository;
+import de.adorsys.opba.db.repository.jpa.BankConfigurationRepository;
 import de.adorsys.opba.core.protocol.service.xs2a.context.BaseContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

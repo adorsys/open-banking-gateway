@@ -4,7 +4,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EnableBankingApi
-@EntityScan(basePackages = "de.adorsys.opba.tppbankingapi.domain.entity")
-@EnableJpaRepositories(basePackages = "de.adorsys.opba.tppbankingapi.repository.jpa")
+@EntityScan(basePackages = "de.adorsys.opba.db.domain.entity")
+@EnableJpaRepositories(basePackages = "de.adorsys.opba.db.repository.jpa")
 public class BankingPersistenceConfig {
 }

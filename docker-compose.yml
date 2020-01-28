@@ -14,7 +14,7 @@ services:
       #HOST:CONTAINER
       - "15432:5432"
     volumes:
-      - ./opba-db-migration/src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./opba-db/src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - opba-net
 

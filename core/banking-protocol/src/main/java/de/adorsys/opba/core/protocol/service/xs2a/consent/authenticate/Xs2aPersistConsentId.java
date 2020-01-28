@@ -1,7 +1,7 @@
 package de.adorsys.opba.core.protocol.service.xs2a.consent.authenticate;
 
-import de.adorsys.opba.core.protocol.domain.entity.Consent;
-import de.adorsys.opba.core.protocol.repository.jpa.ConsentRepository;
+import de.adorsys.opba.db.domain.entity.Consent;
+import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import de.adorsys.opba.core.protocol.service.ValidatedExecution;
 import de.adorsys.opba.core.protocol.service.xs2a.context.Xs2aContext;
 import lombok.RequiredArgsConstructor;

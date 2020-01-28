@@ -1,4 +1,4 @@
-package de.adorsys.opba.tppbankingapi.domain;
+package de.adorsys.opba.db.domain;
 
 import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
