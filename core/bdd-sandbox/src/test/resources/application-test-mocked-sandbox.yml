@@ -1,5 +1,3 @@
-xs2a-profile:
-  url: http://localhost:20014
 spring:
   main:
     allow-bean-definition-overriding: true
