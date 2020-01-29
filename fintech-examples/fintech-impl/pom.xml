@@ -10,10 +10,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
-        Change this if depth changes. Current: /open-banking-gateway/fintech-examples/fintech-server -->
+        <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+        Change this if depth changes. Current: /open-banking-gateway/core -->
         <main.basedir>${project.parent.parent.basedir}</main.basedir>
-        <banksearch-file-location>${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_bank_search.yml</banksearch-file-location>
+        <banksearch-file-location>
+            ${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_bank_search.yml
+        </banksearch-file-location>
     </properties>
 
 
@@ -51,6 +53,40 @@
         </dependency>
 
 
+        <!-- TEST -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring-framework-spring-tests.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.database.version}</version>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -66,7 +102,7 @@
                         </goals>
                         <configuration>
                             <inputSpec>${banksearch-file-location}</inputSpec>
-                            <language>spring</language>
+                            <language>java</language>
                             <output>${project.build.directory}/generated-sources/open-api/</output>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
@@ -80,12 +116,11 @@
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>
-                                <java8>false</java8>
-                                <useTags>true</useTags>
-                                <defaultInterfaces>false</defaultInterfaces>
+                                <java8>true</java8>
                                 <implicitHeaders>false</implicitHeaders>
-                                <generateForOpenFeign>true</generateForOpenFeign>
-                                <library>spring-cloud</library>
+                                <delegatePattern>true</delegatePattern>
+                                <useTags>true</useTags>
+                                <library>jersey2</library>
                                 <swaggerDocketConfig>false</swaggerDocketConfig>
                             </configOptions>
                         </configuration>

@@ -8,28 +8,26 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 @EnableFinTechImplConfig
 @SpringBootTest
 @SpringBootApplication
 public class DatabaseTest {
+
     @Autowired
     protected UserRepository userRepository;
 
     @Test
-    public void testDatabase() {
-        doTransaction();
-    }
-
-    @Transactional
-    public void doTransaction() {
-
+    public void testSimpleSearch() {
         userRepository.save(create("peter", "1"));
         userRepository.save(create("maksym", "2"));
         userRepository.save(create("valentyn", "3"));
@@ -40,8 +38,34 @@ public class DatabaseTest {
         assertFalse(userRepository.findById("maksim").isPresent());
         assertTrue(userRepository.findByXsrfToken("1").isPresent());
         assertFalse(userRepository.findByXsrfToken("4").isPresent());
-
     }
+
+    @Test
+    public void testDeleteInOneTx() {
+        userRepository.save(create("peter", "1"));
+        UserEntity userEntity = userRepository.findById("peter").get();
+        userEntity.setCookies(new ArrayList<>());
+        userRepository.save(userEntity);
+    }
+
+    @Test
+    public void testDeleteInTwoTx() {
+        testDeleteInTwoTx1();
+        testDeleteInTwoTx2();
+    }
+
+    @Transactional(propagation = Propagation.NEVER)
+    void testDeleteInTwoTx1() {
+        userRepository.save(create("peter", "1"));
+    }
+
+    @Transactional(propagation = Propagation.NEVER)
+    void testDeleteInTwoTx2() {
+        UserEntity userEntity = userRepository.findById("peter").get();
+        userEntity.setCookies(new ArrayList<>());
+        userRepository.save(userEntity);
+    }
+
 
     private UserEntity create(String username, String xsrf) {
         UserEntity userEntity = UserEntity.builder()
