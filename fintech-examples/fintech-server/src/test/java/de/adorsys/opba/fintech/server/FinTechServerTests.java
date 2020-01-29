@@ -21,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -90,7 +91,7 @@ class FinTechServerTests {
         final Integer max = 2;
 
         when(mockedTppBankSearchApi.bankSearchGET(any(), any(), eq(keyword), eq(start), eq(max)))
-                .thenReturn(gson.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class));
+                .thenReturn(ResponseEntity.ok(gson.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class)));
 
         LoginBody loginBody = new LoginBody("peter", "1234");
         String xsrfToken = authOk(loginBody.username, loginBody.password);
@@ -130,7 +131,7 @@ class FinTechServerTests {
             log.info("DO Bank Search ({}, {}, {}) ==============================", keyword, start, max);
 
             when(mockedTppBankSearchApi.bankSearchGET(any(), any(), eq(keyword), eq(start), eq(max)))
-                    .thenReturn(gson.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class));
+                    .thenReturn(ResponseEntity.ok(gson.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class)));
 
             bankUUID = bankSearchOk(keyword, start, max, xsrfToken);
         }
@@ -139,7 +140,7 @@ class FinTechServerTests {
         {
             log.info("DO Bank Profile ({}) ============================== ", bankUUID);
             when(mockedTppBankSearchApi.bankProfileGET(any(), any(), eq(bankUUID)))
-                    .thenReturn(gson.fromJson(readFile(getFilenameBankProfile(bankUUID)), BankProfileResponse.class));
+                    .thenReturn(ResponseEntity.ok(gson.fromJson(readFile(getFilenameBankProfile(bankUUID)), BankProfileResponse.class)));
 
             services = bankProfile(xsrfToken, bankUUID);
             assertTrue(services.containsAll(Arrays.asList(new String[]{"List accounts", "List transactions", "Initiate payment"})));
