@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BankProfileRepository extends JpaRepository<BankProfile, Long> {
+public interface BankProfileJpaRepository extends JpaRepository<BankProfile, Long> {
 
     Optional<BankProfile> findByBankUuid(String bankId);
 

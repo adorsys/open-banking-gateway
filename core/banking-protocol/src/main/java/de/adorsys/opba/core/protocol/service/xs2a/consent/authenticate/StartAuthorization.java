@@ -10,7 +10,7 @@ import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aInitialConsentParamete
 import de.adorsys.opba.core.protocol.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.core.protocol.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.opba.db.domain.entity.BankProfile;
-import de.adorsys.opba.db.repository.jpa.BankProfileRepository;
+import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.Response;
 import de.adorsys.xs2a.adapter.service.model.StartScaProcessResponse;
@@ -27,7 +27,7 @@ public class StartAuthorization extends ValidatedExecution<Xs2aContext> {
 
     private final Extractor extractor;
     private final Xs2aValidator validator;
-    private final BankProfileRepository bankProfileRepository;
+    private final BankProfileJpaRepository bankProfileJpaRepository;
     private final AccountInformationService ais;
 
     @Override
@@ -52,7 +52,7 @@ public class StartAuthorization extends ValidatedExecution<Xs2aContext> {
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
-        BankProfile config = bankProfileRepository.getOne(context.getBankConfigId());
+        BankProfile config = bankProfileJpaRepository.getOne(context.getBankConfigId());
 
         ContextUtil.getAndUpdateContext(execution, (Xs2aContext ctx) -> {
             ctx.setAspspScaApproach(config.getPreferredApproach().name());
