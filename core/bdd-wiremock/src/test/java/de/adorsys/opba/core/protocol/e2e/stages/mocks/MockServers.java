@@ -6,8 +6,11 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.AfterScenario;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
+import de.adorsys.opba.db.domain.entity.BankProfile;
+import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,8 +21,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JGivenStage
 public class MockServers extends Stage<MockServers> {
 
-//    @Autowired
-//    private AspspHardcodedRecord aspspHardcodedRecord;
+    @Autowired
+    private BankProfileJpaRepository bankProfileJpaRepository;
 
     @ProvidedScenarioState
     private WireMockServer sandbox;
@@ -61,7 +64,9 @@ public class MockServers extends Stage<MockServers> {
     private void startWireMock(WireMockConfiguration config) {
         sandbox = new WireMockServer(config);
         sandbox.start();
-//        aspspHardcodedRecord.setUrl("http://localhost:" + sandbox.port());
+        BankProfile bankProfile = bankProfileJpaRepository.findById(1L).get();
+        bankProfile.setUrl("http://localhost:" + sandbox.port());
+        bankProfileJpaRepository.save(bankProfile);
 
         assertThat(sandbox).isNotNull();
         assertThat(sandbox.isRunning()).isTrue();
