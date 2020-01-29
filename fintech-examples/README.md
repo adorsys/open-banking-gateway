@@ -29,9 +29,8 @@ can be set in the <code>application.yml</code> file.
 ```
 server:
   port: 8086
-  servlet:
-    session:
-      cookie:
+  controller:
+     cookie:
         secure: false
         maxAge: 300
         httpOnly: false
