@@ -1,11 +1,10 @@
 @import './assets/themes/variables';
 
 @import '~bootstrap/scss/bootstrap';
-
+@import './assets/themes/fonts';
 * {
   margin: 0;
   padding: 0;
-  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
 body {
@@ -31,7 +30,8 @@ body {
   &-title {
     text-align: center;
     margin-bottom: 2rem;
-    font-size: 1.8rem;
+    font-size: 2rem;
+    font-family: geometric-SemiBold, sans-serif;
   }
 }
 
@@ -42,12 +42,11 @@ body {
 label {
   margin-bottom: 0;
   color: $primary;
-  font-size: 0.85rem;
 }
 
 .form-control,
 .btn {
-  height: 44px;
+  height: 48px;
   border: none;
 }
 

@@ -19,14 +19,14 @@
 
     &--small {
       font-size: 0.8rem;
-      color: $grey;
+      color: $primary;
     }
   }
 
   &__subheadline {
     font-size: 0.85rem;
+    margin-bottom: 0;
     color: $primary;
-    font-weight: 400;
 
     &--large {
       font-size: 1.1rem;

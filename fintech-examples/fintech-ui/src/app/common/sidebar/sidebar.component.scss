@@ -2,19 +2,31 @@
 
 .sidebar {
   background-color: white;
-  padding: 1rem;
+  padding: 0 1rem;
 
   .nav-item {
     background-color: $primary-10;
-    margin-left: 10px;
-    margin-right: 10px;
     border-radius: 3px;
+  }
+
+  .nav-link {
+    display: flex;
+    align-content: flex-start;
+    align-items: center;
+
+    .nav__title {
+      padding-left: 10px;
+    }
   }
 }
 
 @media (min-width: 768px) {
   .sidebar {
     height: 100vh;
+
+    .nav {
+      margin-top: 3rem;
+    }
   }
 
   .nav-item {
@@ -23,5 +35,21 @@
     &:not(:last-of-type) {
       margin-bottom: 10px;
     }
+  }
+}
+
+@media (max-width: 767px) {
+  .nav-item {
+    margin-left: 1rem;
+  }
+
+  .nav {
+    margin: 1rem 0;
+  }
+}
+
+@media (max-width: 434px) {
+  .nav-item {
+    margin-bottom: 0.8rem;
   }
 }

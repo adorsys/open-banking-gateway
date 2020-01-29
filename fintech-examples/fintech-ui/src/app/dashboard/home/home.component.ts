@@ -10,7 +10,7 @@ export class HomeComponent implements OnInit {
     {
       headline: 'Telecom',
       subheadline: 'Monatliche Abrechnung Mobilfunkvertrag',
-      accountBalance: '128'
+      accountBalance: '-2128'
     },
     {
       headline: 'Telecom',
@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
     {
       headline: 'Telecom',
       subheadline: 'Monatliche Abrechnung Mobilfunkvertrag',
-      accountBalance: '128'
+      accountBalance: '-128'
     },
     {
       headline: 'Telecom',
