@@ -16,8 +16,7 @@ export class BankSearchService {
   searchBanks(keyword: string): Observable<BankDescriptor> {
     return this.http.get<BankDescriptor>(this.URL + '/search/bankSearch', {
       params: {
-        keyword,
-        max_results: '5'
+        keyword
       }
     });
   }

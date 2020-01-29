@@ -31,9 +31,8 @@ describe('BankSearchService', () => {
     const keyword = 'deutsche';
     bankSearchService.searchBanks(keyword).subscribe();
 
-    const req = httpTestingController.expectOne(API_PATH + '/v1/banks/fts?q=deutsche&max_results=5');
-    expect(req.request.params.get('q')).toEqual('deutsche');
-    expect(req.request.params.get('max_results')).toEqual('5');
+    const req = httpTestingController.expectOne(API_PATH + '/search/bankSearch?keyword=deutsche');
+    expect(req.request.params.get('keyword')).toEqual('deutsche');
     expect(req.cancelled).toBeFalsy();
     expect(req.request.method).toEqual('GET');
     req.flush([]);

@@ -3,6 +3,8 @@ import { TestBed } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -10,8 +12,8 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      providers: [AuthService]
+      imports: [RouterTestingModule, HttpClientTestingModule],
+      providers: [AuthService, CookieService]
     });
 
     authService = TestBed.get(AuthService);
