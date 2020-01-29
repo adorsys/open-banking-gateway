@@ -1,7 +1,7 @@
 package de.adorsys.opba.db.repository;
 
 import de.adorsys.opba.db.domain.entity.BankProfile;
-import de.adorsys.opba.db.repository.jpa.BankProfileRepository;
+import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.xs2a.adapter.service.AspspSearchService;
 import de.adorsys.xs2a.adapter.service.model.Aspsp;
 import lombok.RequiredArgsConstructor;
@@ -15,37 +15,37 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BankProfileRepositoryImpl implements AspspSearchService {
 
-    private final BankProfileRepository bankProfileRepository;
+    private final BankProfileJpaRepository bankProfileJpaRepository;
 
     @Override
     public Optional<Aspsp> findById(String s) {
-        return bankProfileRepository.findByBankUuid(s).map(BankProfile.TO_ASPSP::map);
+        return bankProfileJpaRepository.findByBankUuid(s).map(BankProfile.TO_ASPSP::map);
     }
 
     @Override
     public List<Aspsp> findByBic(String s, String s1, int i) {
-        return bankProfileRepository.findByBankBic(s).stream()
+        return bankProfileJpaRepository.findByBankBic(s).stream()
                 .map(BankProfile.TO_ASPSP::map)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Aspsp> findByBankCode(String s, String s1, int i) {
-        return bankProfileRepository.findByBankBankCode(s).stream()
+        return bankProfileJpaRepository.findByBankBankCode(s).stream()
                 .map(BankProfile.TO_ASPSP::map)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Aspsp> findByName(String s, String s1, int i) {
-        return bankProfileRepository.findByBankName(s).stream()
+        return bankProfileJpaRepository.findByBankName(s).stream()
                 .map(BankProfile.TO_ASPSP::map)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Aspsp> findAll(String s, int i) {
-        return bankProfileRepository.findAll().stream()
+        return bankProfileJpaRepository.findAll().stream()
                 .map(BankProfile.TO_ASPSP::map)
                 .collect(Collectors.toList());
     }

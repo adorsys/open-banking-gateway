@@ -3,7 +3,7 @@ package de.adorsys.opba.tppbankingapi.service;
 import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.BankProfile;
 import de.adorsys.opba.db.repository.BankRepositoryImpl;
-import de.adorsys.opba.db.repository.jpa.BankProfileRepository;
+import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +14,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BankService {
 
-    private final BankProfileRepository bankProfileRepository;
+    private final BankProfileJpaRepository bankProfileJpaRepository;
     private final BankRepositoryImpl bankRepository;
 
     public Optional<BankProfile> getBankProfile(String bankId) {
-        return bankProfileRepository.findByBankUuid(bankId);
+        return bankProfileJpaRepository.findByBankUuid(bankId);
     }
 
     public List<Bank> getBanks(String query, int startPos, int maxResults) {
