@@ -2,10 +2,11 @@ package de.adorsys.opba.fintech.impl.controller;
 
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse200;
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
+import de.adorsys.opba.fintech.api.model.generated.UserProfile;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAuthorizationApi;
+import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
-import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -32,15 +33,21 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
     @Override
     public ResponseEntity<InlineResponse200> loginPOST(LoginRequest loginRequest, UUID xRequestID) {
         log.info("loginPost is called");
-        Optional<UserEntity> userEntity = authorizeService.findUser(loginRequest);
-        if (userEntity.isPresent()) {
+        Optional<UserEntity> optionalUserEntity = authorizeService.login(loginRequest);
+        if (optionalUserEntity.isPresent()) {
+            UserEntity userEntity = optionalUserEntity.get();
 
             InlineResponse200 response = new InlineResponse200();
-            response.setUserProfile(userEntity.get().getUserProfile());
+            UserProfile userProfile = new UserProfile();
+            userProfile.setName(userEntity.getName());
+            if (!userEntity.getLogins().isEmpty()) {
+                userProfile.setLastLogin(userEntity.getLastLogin());
+            }
+            response.setUserProfile(userProfile);
 
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set(X_REQUEST_ID, xRequestID.toString());
-            userEntity.get().getCookies().forEach(cookie -> {
+            userEntity.getCookies().forEach(cookie -> {
                 responseHeaders.set(HttpHeaders.SET_COOKIE,
                         ResponseCookie.from(cookie.getName(), cookie.getValue())
                                 .httpOnly(cookieConfigProperties.isHttpOnly())
