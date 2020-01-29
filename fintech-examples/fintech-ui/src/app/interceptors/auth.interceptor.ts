@@ -1,4 +1,4 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Observable, throwError as observableThrowError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { fromPromise } from 'rxjs/internal-compatibility';
@@ -18,15 +18,17 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private async handleRequest(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
+    const headers = new HttpHeaders()
+      // TODO: to be defined
+      .set('X-Request-ID', '99391c7e-ad88-49ec-a2ad-99ddcb1f7721')
+      .set('Content-Type', 'application/json')
+      // TODO: is supposed to be sent automatically when X-XSRF cookie exists, check why not
+      .set('X-XSRF-TOKEN', this.authService.getX_XSRF_TOKEN());
+
     if (this.authService.isLoggedIn()) {
       request = request.clone({
         withCredentials: true,
-        setHeaders: {
-          'X-Request-ID': '99391c7e-ad88-49ec-a2ad-99ddcb1f7721', // TODO: to be defined
-          'Content-Type': 'application/json',
-          // TODO: is supposed to be sent automatically when X-XSRF cookie exists, check why not
-          'X-XSRF-TOKEN': this.authService.getX_XSRF_TOKEN()
-        }
+        headers
       });
     }
     return next.handle(request).toPromise();
