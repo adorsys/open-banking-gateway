@@ -27,3 +27,4 @@ public class Consent {
 
     private String consentCode;
 }
+

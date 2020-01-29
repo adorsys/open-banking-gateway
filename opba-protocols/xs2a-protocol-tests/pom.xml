@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>de.adorsys.opba</groupId>
+        <artifactId>opba-protocols</artifactId>
+        <version>0.0.6-SNAPSHOT</version>
+    </parent>
+
+    <!-- Core module that implements main business logic -->
+    <artifactId>xs2a-protocol-tests</artifactId>
+    <name>opba-protocols/xs2a-protocol-tests</name>
+    <packaging>pom</packaging>
+
+    <properties>
+      <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
+      Change this if depth changes. Current: /open-banking-gateway/opba-protocols/xs2a-protocol-tests -->
+      <main.basedir>${project.parent.parent.basedir}</main.basedir>
+    </properties>
+
+    <modules>
+        <module>xs2a-bdd-tests-common</module>
+        <module>xs2a-bdd-sandbox</module>
+        <module>xs2a-bdd-wiremock</module>
+    </modules>
+</project>
+

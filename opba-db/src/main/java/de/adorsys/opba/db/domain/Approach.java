@@ -5,3 +5,4 @@ public enum Approach {
     REDIRECT,
     EMBEDDED
 }
+
