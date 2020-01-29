@@ -29,10 +29,12 @@ public class UserEntity {
     private String password;
     private String xsrfToken;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    // TODO orphanRemoval should be true, but thatn deleting  fails. Dont know hot to
+    // test with different transactions yet
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
     private List<LoginEntity> logins = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
     private List<CookieEntity> cookies = new ArrayList<>();
 
     public UserEntity addCookie(String key, String value) {

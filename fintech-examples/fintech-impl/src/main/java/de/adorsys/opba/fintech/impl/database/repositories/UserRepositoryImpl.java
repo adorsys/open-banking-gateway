@@ -3,7 +3,6 @@ package de.adorsys.opba.fintech.impl.database.repositories;
 import com.google.common.collect.Iterables;
 import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -25,7 +24,6 @@ public class UserRepositoryImpl
     }
 
     @Override
-    @Transactional
     public Optional<UserEntity> findByXsrfToken(String xsrfToken) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<UserEntity> cQuery = builder.createQuery(getDomainClass());

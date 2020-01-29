@@ -62,7 +62,7 @@ public class AuthorizeService {
     }
 
     private void generateUserIfUserDoesNotExistYet(LoginRequest loginRequest) {
-        if (userRepository.findById(loginRequest.getUsername()) != null) {
+        if (userRepository.findById(loginRequest.getUsername()).isPresent()) {
             return;
         }
         userRepository.save(

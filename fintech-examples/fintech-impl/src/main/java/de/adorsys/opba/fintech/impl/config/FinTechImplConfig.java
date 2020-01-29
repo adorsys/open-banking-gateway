@@ -20,7 +20,6 @@ import javax.persistence.EntityManager;
 @ComponentScan("de.adorsys.opba.fintech.impl")
 @EntityScan(basePackageClasses = {UserEntity.class})
 
-
 public class FinTechImplConfig {
 
     @Value("${tpp.url}")
