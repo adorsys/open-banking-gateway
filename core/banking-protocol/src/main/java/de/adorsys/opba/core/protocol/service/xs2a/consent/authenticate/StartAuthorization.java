@@ -52,7 +52,7 @@ public class StartAuthorization extends ValidatedExecution<Xs2aContext> {
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
-        BankProfile config = bankProfileJpaRepository.getOne(context.getBankConfigId());
+        BankProfile config = bankProfileJpaRepository.findByBankUuid(context.getAspspId()).get();
 
         ContextUtil.getAndUpdateContext(execution, (Xs2aContext ctx) -> {
             ctx.setAspspScaApproach(config.getPreferredApproach().name());

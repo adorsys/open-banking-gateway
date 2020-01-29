@@ -11,8 +11,7 @@ import java.util.Set;
 public class BaseContext {
 
     private ContextMode mode;
-    // Application required
-    private long bankConfigId = 1;
+    private String aspspId;
     private ProtocolAction action;
     private String sagaId;
 
