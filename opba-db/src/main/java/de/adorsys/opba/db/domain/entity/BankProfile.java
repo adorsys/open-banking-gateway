@@ -2,6 +2,8 @@ package de.adorsys.opba.db.domain.entity;
 
 import de.adorsys.opba.db.domain.Approach;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileDescriptor;
+import de.adorsys.xs2a.adapter.service.model.Aspsp;
+import de.adorsys.xs2a.adapter.service.model.AspspScaApproach;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +26,8 @@ import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,10 +38,13 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "bank_profile", uniqueConstraints = {@UniqueConstraint(columnNames = "bank_uuid", name = "opb_bank_profile_bank_uuid_key")})
 public class BankProfile implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public static final BankProfile.ToBankProfileDescriptor TO_BANK_PROFILE_DESCRIPTOR = Mappers.getMapper(BankProfile.ToBankProfileDescriptor.class);
+    public static final BankProfile.ToAspsp TO_ASPSP = Mappers.getMapper(BankProfile.ToAspsp.class);
+    public static final BankProfile.ToBankProfileDescriptor TO_BANK_PROFILE_DESCRIPTOR =
+            Mappers.getMapper(BankProfile.ToBankProfileDescriptor.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_profile_id_generator")
@@ -51,13 +58,12 @@ public class BankProfile implements Serializable {
     private String url;
     private String adapterId;
     private String idpUrl;
-    private String scaApproaches;
+
+    @Enumerated(EnumType.STRING)
+    private AspspScaApproach scaApproaches;
 
     @Enumerated(EnumType.STRING)
     private Approach preferredApproach;
-
-//    @Convert(converter = ServiceConverter.class)
-//    private List<Service> services;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "bankProfile")
     @MapKey(name = "action")
@@ -68,9 +74,18 @@ public class BankProfile implements Serializable {
         @Mapping(source = "bank.name", target = "bankName")
         @Mapping(source = "bank.bic", target = "bic")
         @Mapping(source = "bank.uuid", target = "bankUuid")
-//        @Mapping(expression = "java(bankProfile.getServices().stream()"
-//                + ".map(s -> s.getCode()).collect(java.util.stream.Collectors.toList()))",
-//                target = "serviceList")
+        @Mapping(expression = "java(bankProfile.getActions().entrySet().stream()"
+                + ".map(e -> e.getKey().name())"
+                + ".collect(java.util.stream.Collectors.toList()))",
+                target = "serviceList")
         BankProfileDescriptor map(BankProfile bankProfile);
+    }
+
+    @Mapper
+    public interface ToAspsp {
+        @Mapping(source = "bank.name", target = "name")
+        @Mapping(source = "bank.bic", target = "bic")
+        @Mapping(source = "bank.uuid", target = "bankCode")
+        Aspsp map(BankProfile bankProfile);
     }
 }

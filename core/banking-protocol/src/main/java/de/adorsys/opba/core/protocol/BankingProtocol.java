@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
                 "de.adorsys.opba.core.protocol.config",
                 "de.adorsys.opba.core.protocol.controller",
                 "de.adorsys.opba.core.protocol.service",
-                "de.adorsys.opba.core.protocol.repository"
+                "de.adorsys.opba.db"
         }
 )
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Spring entry point

@@ -6,10 +6,8 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.AfterScenario;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.core.protocol.config.hardcoded.AspspHardcodedRecord;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,8 +18,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JGivenStage
 public class MockServers extends Stage<MockServers> {
 
-    @Autowired
-    private AspspHardcodedRecord aspspHardcodedRecord;
+//    @Autowired
+//    private AspspHardcodedRecord aspspHardcodedRecord;
 
     @ProvidedScenarioState
     private WireMockServer sandbox;
@@ -63,7 +61,7 @@ public class MockServers extends Stage<MockServers> {
     private void startWireMock(WireMockConfiguration config) {
         sandbox = new WireMockServer(config);
         sandbox.start();
-        aspspHardcodedRecord.setUrl("http://localhost:" + sandbox.port());
+//        aspspHardcodedRecord.setUrl("http://localhost:" + sandbox.port());
 
         assertThat(sandbox).isNotNull();
         assertThat(sandbox.isRunning()).isTrue();

@@ -21,6 +21,12 @@
             <artifactId>opba-banking-rest-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>de.adorsys.xs2a.adapter</groupId>
+            <artifactId>adapters</artifactId>
+            <version>${xs2a-adapter.version}</version>
+            <type>pom</type>
+        </dependency>
 
         <!-- Spring -->
         <dependency>

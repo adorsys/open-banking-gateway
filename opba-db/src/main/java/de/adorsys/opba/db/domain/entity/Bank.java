@@ -15,6 +15,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 
 @Entity
@@ -23,6 +25,7 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "bank", uniqueConstraints = {@UniqueConstraint(columnNames = "uuid", name = "opb_bank_uuid_key")})
 public class Bank implements Serializable {
     private static final long serialVersionUID = 1L;
 
