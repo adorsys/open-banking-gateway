@@ -9,7 +9,9 @@
           </h4>
         </div>
         <div *ngIf="card?.accountBalance" class="list-item__balance text-right">
-          <span>{{ card.accountBalance | currency: 'EUR':'symbol':'1.0' }}</span>
+          <span [class.text-danger]="card?.accountBalance < 0">{{
+            card.accountBalance | currency: 'EUR':'symbol':'1.0'
+          }}</span>
         </div>
       </div>
     </div>
