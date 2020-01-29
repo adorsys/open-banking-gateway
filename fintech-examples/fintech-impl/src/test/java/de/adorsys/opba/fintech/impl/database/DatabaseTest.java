@@ -2,7 +2,6 @@ package de.adorsys.opba.fintech.impl.database;
 
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
 import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
-import de.adorsys.opba.fintech.impl.database.entities.UserProfileEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @EnableFinTechImplConfig
@@ -29,20 +29,32 @@ public class DatabaseTest {
 
     @Transactional
     public void doTransaction() {
-        UserProfileEntity userProfileEntity = new UserProfileEntity();
-        userProfileEntity.setName("affe");
-        userProfileEntity.setLastLogin(OffsetDateTime.now());
-        UserEntity te = UserEntity.builder()
-                .lastLogin(OffsetDateTime.now())
-                .password("affe")
-                .xsrfToken("1")
-                .userProfile(userProfileEntity)
-                .cookies(new ArrayList<>())
-                .build();
-        te.addCookie("cookie1", "value1");
-        te.addCookie("cookie2", "value2");
-        te.addCookie("cookie3", "value3");
-        userRepository.save(te);
+
+        userRepository.save(create("peter", "1"));
+        userRepository.save(create("maksym", "2"));
+        userRepository.save(create("valentyn", "3"));
+
         userRepository.findAll().forEach(en -> log.info(en.toString()));
+
+        assertTrue(userRepository.findById("maksym").isPresent());
+        assertFalse(userRepository.findById("maksim").isPresent());
+        assertTrue(userRepository.findByXsrfToken("1").isPresent());
+        assertFalse(userRepository.findByXsrfToken("4").isPresent());
+
+    }
+
+    private UserEntity create(String username, String xsrf) {
+        UserEntity userEntity = UserEntity.builder()
+                .name(username)
+                .password("affe")
+                .xsrfToken(xsrf)
+                .build();
+        userEntity.addLogin(OffsetDateTime.now());
+        userEntity.addCookie("cookie1", "value1");
+        userEntity.addCookie("cookie2", "value2");
+        userEntity.addCookie("cookie3", "value3");
+
+
+        return userEntity;
     }
 }
