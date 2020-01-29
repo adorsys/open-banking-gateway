@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.CONTENT_TYPE;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_ID;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_GTW_BANK_CODE;
+import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_GTW_ASPSP_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 
 @Getter
@@ -38,7 +38,7 @@ public class WithBasicInfo {
     public Map<String, String> asMap() {
         Map<String, String> allValues = new HashMap<>();
         allValues.put(PSU_ID, psuId);
-        allValues.put(X_GTW_BANK_CODE, aspspId);
+        allValues.put(X_GTW_ASPSP_ID, aspspId);
         allValues.put(X_REQUEST_ID, requestId);
         allValues.put(CONTENT_TYPE, contentType);
         return allValues;

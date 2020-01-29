@@ -17,7 +17,6 @@ public class Xs2aContext extends BaseContext {
     // Mandatory static
     private String psuId;
     private String contentType = "application/json";
-    private String aspspId;
     private ConsentInitiateBody consent = new ConsentInitiateBody(); // to avoid initialization in more-parameters
 
     // Mandatory dynamic
