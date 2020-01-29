@@ -12,7 +12,7 @@
     <name>fintech-examples/fintech-server</name>
 
     <properties>
-        <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+      <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
         Change this if depth changes. Current: /open-banking-gateway/fintech-examples/fintech-server -->
         <main.basedir>${project.parent.parent.basedir}</main.basedir>
     </properties>

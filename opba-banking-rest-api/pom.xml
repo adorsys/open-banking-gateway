@@ -12,7 +12,7 @@
     <name>opba-banking-rest-api</name>
 
   <properties>
-    <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+    <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
     Change this if depth changes. Current: /open-banking-gateway/opba-banking-rest-api -->
     <main.basedir>${project.parent.basedir}</main.basedir>
     <openapi-spec-file-location-banking_api_ais>${project.basedir}/src/main/resources/static/tpp_banking_api_ais.yml</openapi-spec-file-location-banking_api_ais>
@@ -21,12 +21,6 @@
   </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>de.adorsys.opba</groupId>
-            <artifactId>opba-banking-protocol-facade</artifactId>
-            <version>0.0.6-SNAPSHOT</version>
-        </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -108,6 +102,8 @@
                                 <useTags>true</useTags>
                                 <library>spring-mvc</library>
                                 <swaggerDocketConfig>false</swaggerDocketConfig>
+                                <async>true</async>
+                                <responseWrapper>java.util.concurrent.CompletableFuture</responseWrapper>
                             </configOptions>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateModelDocumentation>false</generateModelDocumentation>
