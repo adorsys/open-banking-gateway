@@ -1,9 +1,9 @@
 package de.adorsys.opba.db.domain.entity;
 
 import de.adorsys.opba.db.domain.Approach;
+import de.adorsys.opba.db.domain.converter.ScaApproachConverter;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileDescriptor;
 import de.adorsys.xs2a.adapter.service.model.Aspsp;
-import de.adorsys.xs2a.adapter.service.model.AspspScaApproach;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +14,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -30,6 +31,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -59,8 +61,8 @@ public class BankProfile implements Serializable {
     private String adapterId;
     private String idpUrl;
 
-    @Enumerated(EnumType.STRING)
-    private AspspScaApproach scaApproaches;
+    @Convert(converter = ScaApproachConverter.class)
+    private List<Approach> scaApproaches;
 
     @Enumerated(EnumType.STRING)
     private Approach preferredApproach;
@@ -74,8 +76,8 @@ public class BankProfile implements Serializable {
         @Mapping(source = "bank.name", target = "bankName")
         @Mapping(source = "bank.bic", target = "bic")
         @Mapping(source = "bank.uuid", target = "bankUuid")
-        @Mapping(expression = "java(bankProfile.getActions().entrySet().stream()"
-                + ".map(e -> e.getKey().name())"
+        @Mapping(expression = "java(bankProfile.getActions().keySet().stream()"
+                + ".map(Enum::name)"
                 + ".collect(java.util.stream.Collectors.toList()))",
                 target = "serviceList")
         BankProfileDescriptor map(BankProfile bankProfile);
@@ -86,6 +88,11 @@ public class BankProfile implements Serializable {
         @Mapping(source = "bank.name", target = "name")
         @Mapping(source = "bank.bic", target = "bic")
         @Mapping(source = "bank.uuid", target = "bankCode")
+        @Mapping(expression = "java("
+                + "bankProfile.getScaApproaches().stream()"
+                + ".map(a -> de.adorsys.xs2a.adapter.service.model.AspspScaApproach.valueOf(a.name()))"
+                + ".collect(java.util.stream.Collectors.toList()))",
+                target = "scaApproaches")
         Aspsp map(BankProfile bankProfile);
     }
 }

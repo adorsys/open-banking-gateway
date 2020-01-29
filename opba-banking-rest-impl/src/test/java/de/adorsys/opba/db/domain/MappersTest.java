@@ -2,9 +2,16 @@ package de.adorsys.opba.db.domain;
 
 import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.BankProfile;
+import de.adorsys.opba.db.domain.entity.BankProtocol;
+import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankDescriptor;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileDescriptor;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,16 +34,19 @@ class MappersTest {
     void bankProfileMapperTest() {
         BankProfile bankProfile = new BankProfile();
         bankProfile.setBank(TEST_BANK);
-//        bankProfile.setServices(Arrays.asList(Service.ACCOUNTS, Service.TRANSACTIONS, Service.PAYMENT));
+        Map<ProtocolAction, BankProtocol> actionMap = new HashMap<>();
+        actionMap.put(ProtocolAction.LIST_TRANSACTIONS, new BankProtocol());
+        actionMap.put(ProtocolAction.LIST_ACCOUNTS, new BankProtocol());
+        actionMap.put(ProtocolAction.INITIATE_PAYMENT, new BankProtocol());
+        bankProfile.setActions(actionMap);
 
         BankProfileDescriptor bankProfileDescriptor = BankProfile.TO_BANK_PROFILE_DESCRIPTOR.map(bankProfile);
 
         assertEquals(bankProfileDescriptor.getBankName(), bankProfile.getBank().getName());
         assertEquals(bankProfileDescriptor.getBic(), bankProfile.getBank().getBic());
         assertEquals(bankProfileDescriptor.getBankUuid(), bankProfile.getBank().getUuid());
-//        List<String> services = bankProfile.getServices().stream().map(Service::getCode).collect(Collectors.toList());
-//        assertEquals(bankProfileDescriptor.getServiceList(), services);
-        // TODO FIX ME
+        List<String> services = bankProfile.getActions().keySet().stream().map(Enum::name).collect(Collectors.toList());
+        assertEquals(bankProfileDescriptor.getServiceList(), services);
     }
 
 }
