@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import { BankDescriptor } from '../models/bank.model';
-import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
 import { environment } from '../../../environments/environment';
+import { BankDescriptor } from '../models/bank.model';
 
 @Injectable({
   providedIn: 'root'
