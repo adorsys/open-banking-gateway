@@ -12,7 +12,7 @@ SERVICE_NAME="open-banking-gateway"
 IMAGE_NAME=$REGISTRY_DOMAIN/$PROJECT_NAME/$SERVICE_NAME:$IMAGE_TAG
 LATEST_IMAGE_NAME=$REGISTRY_DOMAIN/$PROJECT_NAME/$SERVICE_NAME:latest
 JAR_NAME=$SERVICE_NAME-$PROJECT_VERSION.jar
-docker build -t "$IMAGE_NAME" --build-arg JAR_FILE="$JAR_NAME" ./opba-embedded-starter
+docker build -t "$IMAGE_NAME" ./opba-embedded-starter
 docker tag "$IMAGE_NAME" "$LATEST_IMAGE_NAME"
 docker push "$IMAGE_NAME"
 docker push "$LATEST_IMAGE_NAME"
@@ -21,7 +21,7 @@ SERVICE_NAME="fintech-server"
 IMAGE_NAME=$REGISTRY_DOMAIN/$PROJECT_NAME/$SERVICE_NAME:$IMAGE_TAG
 LATEST_IMAGE_NAME=$REGISTRY_DOMAIN/$PROJECT_NAME/$SERVICE_NAME:latest
 JAR_NAME=$SERVICE_NAME-$PROJECT_VERSION.jar
-docker build -t "$IMAGE_NAME" --build-arg JAR_FILE="$JAR_NAME" ./fintech-examples/fintech-server
+docker build -t "$IMAGE_NAME" ./fintech-examples/fintech-server
 docker tag "$IMAGE_NAME" "$LATEST_IMAGE_NAME"
 docker push "$IMAGE_NAME"
 docker push "$LATEST_IMAGE_NAME"

@@ -89,13 +89,13 @@ Put service parameter in a serviceSpec map for further processing.
 Put all objects associated with the call into a generic ServiceContext object.
 
 ### LoT-050 .. LoT-052 BankingProtocolFacade.service
-See [ListOfAccounts]((4a-aisListOfAccounts.md#LoA-050).)
+See [ListOfAccounts](4a-aisListOfAccounts.md#LoA-050)
 
 ### LoT-060 .. LoT-067 : BankingProtocol.service
-See [ListOfAccounts]((4a-aisListOfAccounts.md#LoA-060).)
+See [ListOfAccounts](4a-aisListOfAccounts.md#LoA-060)
 
 ### LoA-070 .. -080 : No Suitable Consent Present. Redirect
-See [ListOfAccounts]((4a-aisListOfAccounts.md#LoA-070).)
+See [ListOfAccounts](4a-aisListOfAccounts.md#LoA-070)
 
 ### <a name="LoA-090"></a>LoA-090 Suitable Consent Present
 If there is a suitable consent reference in the database of the TPP, this will be loaded and used to forward request to the ASPSP.
