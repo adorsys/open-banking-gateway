@@ -9,17 +9,15 @@ import de.adorsys.opba.tpp.bankserach.api.model.generated.BankSearchResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
-@Configuration
+@Service
 @Slf4j
 @RequiredArgsConstructor
 public class BankSearchService {
 
-    @Autowired
     private final FinTechImplConfig.TppBankSearchClient tppBankSearchClient;
 
     @SneakyThrows

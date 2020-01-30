@@ -5,7 +5,7 @@ import de.adorsys.opba.fintech.api.model.generated.UserProfile;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import java.util.UUID;
  * This is just a dummy authorization.
  * All users are accepted. Password allways has to be 1234, otherwise login fails
  */
-@Configuration
+@Service
 public class AuthorizeService {
     private static final String SESSION_COOKIE_NAME = "SESSION-COOKIE";
     private static final String XSRF_TOKEN_COOKIE_NAME = "XSRF-TOKEN";

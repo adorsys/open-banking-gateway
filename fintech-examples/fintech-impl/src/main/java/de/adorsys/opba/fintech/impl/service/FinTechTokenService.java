@@ -1,8 +1,8 @@
 package de.adorsys.opba.fintech.impl.service;
 
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
-@Configuration
+@Service
 public class FinTechTokenService {
     private static final int TOKEN_LENGTH = 16;
 
