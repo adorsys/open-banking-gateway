@@ -37,7 +37,7 @@ replace_puml_urls:
 # trick with bak-files works for sed of GNU and BSD, therefore the command is macos and linux compatible
 	sed -i.bak 's/docs\///g' docs_for_site/docs/README.md && rm -rf docs_for_site/docs/README.md.bak
 	find docs_for_site -type f -name "*.md" -exec sed -i.bak 's/\.\.\/README.md/README.md/g' {} \;
-	[ -z "${TRAVIS_TAG}" ] && find docs_for_site -type f -name "*.md" -exec sed -i.bak 's%${PUML_URLS_PATTERN}%${PUML_URLS_REPLACE}%' {} \;
+	[ ! -z "${TRAVIS_TAG}" ] && find docs_for_site -type f -name "*.md" -exec sed -i.bak 's%${PUML_URLS_PATTERN}%${PUML_URLS_REPLACE}%' {} \;
 	find docs_for_site -type f -name "*.md.bak" -exec rm -rf {} \;
 
 .PHONY : convert_puml
