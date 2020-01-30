@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.xs2a.entrypoint.ais;
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.protocol.api.ListTransactions;
+import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
 import de.adorsys.opba.protocol.api.dto.result.Result;
 import de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper;
@@ -37,8 +38,8 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
     private final Xs2aListTransactionsEntrypoint.FromRequest mapper;
 
     @Override
-    public CompletableFuture<Result<TransactionsResponse>> list(ListTransactionsRequest request) {
-        TransactionListXs2aContext context = mapper.map(request);
+    public CompletableFuture<Result<TransactionsResponse>> list(ServiceContext<ListTransactionsRequest> serviceContext) {
+        TransactionListXs2aContext context = mapper.map(serviceContext.getRequest());
         context.setAction(ProtocolAction.LIST_TRANSACTIONS);
 
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(

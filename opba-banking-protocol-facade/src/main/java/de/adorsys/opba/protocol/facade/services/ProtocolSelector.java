@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class RoutingService {
+public class ProtocolSelector {
 
     private final BankProtocolRepository protocolRepository;
 

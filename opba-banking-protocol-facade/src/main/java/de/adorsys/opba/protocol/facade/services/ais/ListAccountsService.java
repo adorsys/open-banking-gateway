@@ -1,9 +1,10 @@
 package de.adorsys.opba.protocol.facade.services.ais;
 
 import de.adorsys.opba.protocol.api.ListAccounts;
+import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.dto.result.Result;
-import de.adorsys.opba.protocol.facade.services.RoutingService;
+import de.adorsys.opba.protocol.facade.services.ProtocolSelector;
 import de.adorsys.opba.tppbankingapi.ais.model.generated.AccountList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,9 @@ public class ListAccountsService {
 
     // bean name - bean-impl.
     private final Map<String, ? extends ListAccounts> accountListProviders;
-    private final RoutingService router;
+    private final ProtocolSelector selector;
 
     public CompletableFuture<Result<AccountList>> list(ListAccountsRequest request) {
-        return router.protocolFor(request.getBankID(), LIST_ACCOUNTS, accountListProviders).list(request);
+        return selector.protocolFor(request.getBankID(), LIST_ACCOUNTS, accountListProviders).list(ServiceContext.<ListAccountsRequest>builder().request(request).build());
     }
 }

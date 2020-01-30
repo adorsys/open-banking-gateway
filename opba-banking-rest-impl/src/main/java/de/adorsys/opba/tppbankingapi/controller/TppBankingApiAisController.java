@@ -32,47 +32,56 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     private final ErrorResultMapper<ErrorResult, GeneralError> errorMapper;
 
     @Override
-    @SuppressWarnings("unchecked") // Implements parent interface + errors + redirects
-    public CompletableFuture getAccounts(String authorization,
-                                         String fintechUserID,
-                                         String fintechRedirectURLOK,
-                                         String fintechRedirectURLNOK,
-                                         UUID xRequestID,
-                                         String bankID,
-                                         String psuConsentSession) {
-
+    public CompletableFuture getAccounts(
+            String authorization,
+            String fintechUserID,
+            String fintechRedirectURLOK,
+            String fintechRedirectURLNOK,
+            UUID xRequestID,
+            String bankID,
+            String serviceSessionID,
+            String validationSessionID,
+            String authSessionID
+    ) {
         return accounts.list(
                 ListAccountsRequest.builder()
                         .uaContext(userAgentContext)
+                        .serviceSessionId(serviceSessionID)
+                        .validationSessionId(validationSessionID)
+                        .authSessionId(authSessionID)
                         .authorization(authorization)
                         .fintechUserID(fintechUserID)
                         .fintechRedirectURLOK(fintechRedirectURLOK)
                         .fintechRedirectURLNOK(fintechRedirectURLNOK)
                         .xRequestID(xRequestID)
                         .bankID(bankID)
-                        .psuConsentSession(psuConsentSession)
                         .build()
         ).thenApply(res -> mapper.translate(res, errorMapper));
     }
 
     @Override
-    @SuppressWarnings("unchecked") // Implements parent interface + errors + redirects
-    public CompletableFuture getTransactions(String accountId,
-                                             String fintechUserID,
-                                             String authorization,
-                                             String fintechRedirectURLOK,
-                                             String fintechRedirectURLNOK,
-                                             UUID xRequestID,
-                                             String bankID,
-                                             String psuConsentSession,
-                                             LocalDate dateFrom,
-                                             LocalDate dateTo,
-                                             String entryReferenceFrom,
-                                             String bookingStatus,
-                                             Boolean deltaList) {
+    public CompletableFuture getTransactions(
+            String accountId,
+            String authorization,
+            String fintechUserID,
+            String fintechRedirectURLOK,
+            String fintechRedirectURLNOK,
+            UUID xRequestID, String bankID,
+            String serviceSessionID,
+            String validationSessionID,
+            String authSessionID,
+            LocalDate dateFrom,
+            LocalDate dateTo,
+            String entryReferenceFrom,
+            String bookingStatus,
+            Boolean deltaList
+    ) {
         return transactions.list(
                 ListTransactionsRequest.builder()
                         .uaContext(userAgentContext)
+                        .serviceSessionId(serviceSessionID)
+                        .validationSessionId(validationSessionID)
+                        .authSessionId(authSessionID)
                         .accountId(accountId)
                         .fintechUserID(fintechUserID)
                         .authorization(authorization)
@@ -80,7 +89,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                         .fintechRedirectURLNOK(fintechRedirectURLNOK)
                         .xRequestID(xRequestID)
                         .bankID(bankID)
-                        .psuConsentSession(psuConsentSession)
                         .dateFrom(dateFrom)
                         .dateTo(dateTo)
                         .entryReferenceFrom(entryReferenceFrom)

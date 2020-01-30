@@ -19,13 +19,16 @@ import java.util.UUID;
 public class ListAccountsRequest {
 
     private UserAgentContext uaContext;
+    private String serviceSessionId;
+    private String validationSessionId;
+    private String authSessionId;
+    private UUID xRequestID;
+
     private String authorization;
     private String fintechUserID;
     private String fintechRedirectURLOK;
     private String fintechRedirectURLNOK;
-    private UUID xRequestID;
     private String bankID;
-    private String psuConsentSession;
 
     @Builder.Default
     private Map<ExtraRequestParam, Object> extras = new EnumMap<>(ExtraRequestParam.class);
