@@ -5,5 +5,5 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ResponseResult extends ProcessResult {
+public class Response extends InternalProcessResult {
 }

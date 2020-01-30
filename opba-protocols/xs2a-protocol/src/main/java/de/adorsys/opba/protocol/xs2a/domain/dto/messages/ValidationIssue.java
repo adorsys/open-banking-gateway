@@ -7,13 +7,13 @@ import lombok.NonNull;
 import java.net.URI;
 
 @Getter
-public class ValidationIssueResult extends ProcessResult {
+public class ValidationIssue extends InternalProcessResult {
 
     @NonNull
     private URI provideMoreParamsDialog;
 
     @Builder
-    public ValidationIssueResult(String processId, Object result, URI provideMoreParamsDialog) {
+    public ValidationIssue(String processId, Object result, URI provideMoreParamsDialog) {
         super(processId, result);
         this.provideMoreParamsDialog = provideMoreParamsDialog;
     }

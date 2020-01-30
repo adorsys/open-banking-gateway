@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProcessResult {
+public abstract class InternalProcessResult {
 
     private String processId;
     private Object result;

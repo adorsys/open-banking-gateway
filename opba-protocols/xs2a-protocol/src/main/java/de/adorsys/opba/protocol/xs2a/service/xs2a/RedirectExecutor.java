@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a;
 
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.RedirectResult;
+import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Redirect;
 import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class RedirectExecutor {
             DelegateExecution execution,
             Xs2aContext context,
             String destinationSpel) {
-        RedirectResult redirect = new RedirectResult();
+        Redirect redirect = new Redirect();
         redirect.setProcessId(execution.getRootProcessInstanceId());
         redirect.setRedirectUri(
                 ContextUtil.evaluateSpelForCtx(

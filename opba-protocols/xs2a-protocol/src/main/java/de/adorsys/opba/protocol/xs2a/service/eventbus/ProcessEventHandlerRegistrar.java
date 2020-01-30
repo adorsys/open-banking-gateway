@@ -1,8 +1,9 @@
 package de.adorsys.opba.protocol.xs2a.service.eventbus;
 
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.RedirectResult;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ResponseResult;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ValidationIssueResult;
+import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Redirect;
+import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Response;
+import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ValidationIssue;
+import de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
@@ -22,56 +23,50 @@ public class ProcessEventHandlerRegistrar {
 
     @Deprecated // FIXME - kept only for tests using endpoints
     public <T> void addHandler(String processId,
-                               Consumer<ResponseResult> onSuccess,
+                               Consumer<Response> onSuccess,
                                CompletableFuture<ResponseEntity<T>> result
     ) {
         handler.add(
                 processId,
                 procResult -> {
-                    if (procResult instanceof ResponseResult) {
-                        doSuccess(onSuccess, (ResponseResult) procResult);
-                    } else if (procResult instanceof RedirectResult) {
-                        doRedirect(result, (RedirectResult) procResult);
-                    } else if (procResult instanceof ValidationIssueResult) {
-                        doFixValidation(result, (ValidationIssueResult) procResult);
+                    if (procResult instanceof Response) {
+                        doSuccess(onSuccess, (Response) procResult);
+                    } else if (procResult instanceof Redirect) {
+                        doRedirect(result, (Redirect) procResult);
+                    } else if (procResult instanceof ValidationIssue) {
+                        doFixValidation(result, (ValidationIssue) procResult);
                     }
                 });
     }
 
-    public <T> void addHandler(
-            String processId,
-            Consumer<ResponseResult> onSuccess,
-            Consumer<RedirectResult> onRedirect,
-            Consumer<ValidationIssueResult> onValidationIssue,
-            Consumer<Void> onError
-    ) {
+    public <T> void addHandler(String processId, OutcomeMapper<T> mapper) {
         handler.add(
                 processId,
                 procResult -> {
-                    if (procResult instanceof ResponseResult) {
-                        onSuccess.accept((ResponseResult) procResult);
-                    } else if (procResult instanceof RedirectResult) {
-                        onRedirect.accept((RedirectResult) procResult);
-                    } else if (procResult instanceof ValidationIssueResult) {
-                        onValidationIssue.accept((ValidationIssueResult) procResult);
+                    if (procResult instanceof Response) {
+                        mapper.onSuccess((Response) procResult);
+                    } else if (procResult instanceof Redirect) {
+                        mapper.onRedirect((Redirect) procResult);
+                    } else if (procResult instanceof ValidationIssue) {
+                        mapper.onValidationProblem((ValidationIssue) procResult);
                     } else {
-                        onError.accept(null);
+                        mapper.onError();
                     }
                 });
     }
 
-    private <T> void doSuccess(Consumer<ResponseResult> onSuccess, ResponseResult procResult) {
+    private <T> void doSuccess(Consumer<Response> onSuccess, Response procResult) {
         onSuccess.accept(procResult);
     }
 
-    private <T> void doRedirect(CompletableFuture<ResponseEntity<T>> result, RedirectResult redirResult) {
+    private <T> void doRedirect(CompletableFuture<ResponseEntity<T>> result, Redirect redirResult) {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirResult.getRedirectUri()));
         result.complete(new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY));
     }
 
     @SneakyThrows
-    private <T> void doFixValidation(CompletableFuture<ResponseEntity<T>> result, ValidationIssueResult validResult) {
+    private <T> void doFixValidation(CompletableFuture<ResponseEntity<T>> result, ValidationIssue validResult) {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(validResult.getProvideMoreParamsDialog());
         result.complete(new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY));

@@ -4,7 +4,7 @@ import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.protocol.xs2a.controller.constants.ApiPaths;
 import de.adorsys.opba.protocol.xs2a.controller.constants.ApiVersion;
 import de.adorsys.opba.protocol.xs2a.service.eventbus.ProcessEventHandlerRegistrar;
-import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aResultExtractor;
+import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import java.util.concurrent.CompletableFuture;
 public class ConsentConfirmation {
 
     private final RuntimeService runtimeService;
-    private final Xs2aResultExtractor extractor;
+    private final Xs2aResultBodyExtractor extractor;
     private final ProcessEventHandlerRegistrar registrar;
 
 

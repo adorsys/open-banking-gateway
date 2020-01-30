@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class RedirectResult extends ProcessResult {
+public class Redirect extends InternalProcessResult {
 
     private String redirectUri;
 }

@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.config.flowable;
 
 import com.google.common.collect.ImmutableSet;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ResponseResult;
+import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.common.engine.api.delegate.event.FlowableEngineEntityEvent;
 import org.flowable.engine.delegate.event.AbstractFlowableEngineEventListener;
@@ -23,7 +23,7 @@ public class FlowableJobEventListener extends AbstractFlowableEngineEventListene
 
     @Override
     protected void processCompleted(FlowableEngineEntityEvent event) {
-        ResponseResult result = new ResponseResult();
+        Response result = new Response();
         result.setProcessId(event.getProcessInstanceId());
         applicationEventPublisher.publishEvent(result);
     }
