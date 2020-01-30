@@ -1,5 +1,6 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
+import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
 import de.adorsys.opba.protocol.api.dto.result.ErrorResult;
@@ -45,17 +46,19 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     ) {
         return accounts.list(
                 ListAccountsRequest.builder()
-                        .uaContext(userAgentContext)
-                        .serviceSessionId(serviceSessionID)
-                        .validationSessionId(validationSessionID)
-                        .authSessionId(authSessionID)
-                        .authorization(authorization)
-                        .fintechUserID(fintechUserID)
-                        .fintechRedirectURLOK(fintechRedirectURLOK)
-                        .fintechRedirectURLNOK(fintechRedirectURLNOK)
-                        .xRequestID(xRequestID)
-                        .bankID(bankID)
-                        .build()
+                        .facadeServiceable(FacadeServiceableRequest.builder()
+                                .uaContext(userAgentContext)
+                                .serviceSessionId(serviceSessionID)
+                                .validationSessionId(validationSessionID)
+                                .authSessionId(authSessionID)
+                                .authorization(authorization)
+                                .fintechUserID(fintechUserID)
+                                .fintechRedirectURLOK(fintechRedirectURLOK)
+                                .fintechRedirectURLNOK(fintechRedirectURLNOK)
+                                .xRequestID(xRequestID)
+                                .bankID(bankID)
+                                .build()
+                        ).build()
         ).thenApply(res -> mapper.translate(res, errorMapper));
     }
 
@@ -78,17 +81,19 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     ) {
         return transactions.list(
                 ListTransactionsRequest.builder()
-                        .uaContext(userAgentContext)
-                        .serviceSessionId(serviceSessionID)
-                        .validationSessionId(validationSessionID)
-                        .authSessionId(authSessionID)
-                        .accountId(accountId)
-                        .fintechUserID(fintechUserID)
-                        .authorization(authorization)
-                        .fintechRedirectURLOK(fintechRedirectURLOK)
-                        .fintechRedirectURLNOK(fintechRedirectURLNOK)
-                        .xRequestID(xRequestID)
-                        .bankID(bankID)
+                        .facadeServiceable(FacadeServiceableRequest.builder()
+                                .uaContext(userAgentContext)
+                                .serviceSessionId(serviceSessionID)
+                                .validationSessionId(validationSessionID)
+                                .authSessionId(authSessionID)
+                                .authorization(authorization)
+                                .fintechUserID(fintechUserID)
+                                .fintechRedirectURLOK(fintechRedirectURLOK)
+                                .fintechRedirectURLNOK(fintechRedirectURLNOK)
+                                .xRequestID(xRequestID)
+                                .bankID(bankID)
+                                .build()
+                        )
                         .dateFrom(dateFrom)
                         .dateTo(dateTo)
                         .entryReferenceFrom(entryReferenceFrom)
