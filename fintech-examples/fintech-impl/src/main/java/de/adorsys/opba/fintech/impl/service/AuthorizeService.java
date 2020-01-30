@@ -5,7 +5,7 @@ import de.adorsys.opba.fintech.api.model.generated.UserProfile;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 import java.util.HashMap;
@@ -17,10 +17,10 @@ import java.util.UUID;
  * This is just a dummy authorization.
  * All users are accepted. Password allways has to be 1234, otherwise login fails
  */
-@Configuration
+@Service
 public class AuthorizeService {
-    private static final String X_XSRF_TOKEN_COOKIE_NAME = "XSRF-TOKEN";
-
+    private static final String SESSION_COOKIE_NAME = "SESSION-COOKIE";
+    private static final String XSRF_TOKEN_COOKIE_NAME = "XSRF-TOKEN";
     private static final String UNIVERSAL_PASSWORD = "1234";
     private final Map<String, UserEntity> userIDtoEntityMap = new HashMap<>();
     private final Map<String, UserEntity> xsrfIDtoEntityMap = new HashMap<>();
@@ -45,7 +45,9 @@ public class AuthorizeService {
             // password matched
             // create new session
             String xsrfToken = UUID.randomUUID().toString();
-            userEntity.setCookie(X_XSRF_TOKEN_COOKIE_NAME + "=" + xsrfToken);
+
+            userEntity.addCookie(SESSION_COOKIE_NAME, xsrfToken)
+                    .addCookie(XSRF_TOKEN_COOKIE_NAME, xsrfToken);
 
             // Entity will now be found be xrefid too
             xsrfIDtoEntityMap.put(xsrfToken, userEntity);
@@ -71,6 +73,7 @@ public class AuthorizeService {
                 UserEntity.builder().userProfile(userProfile)
                         .password(UNIVERSAL_PASSWORD)
                         .lastLogin(userProfile.getLastLogin())
+                        .cookies(new HashMap<>())
                         .build());
     }
 
@@ -85,6 +88,12 @@ public class AuthorizeService {
         private final String password;
         private OffsetDateTime lastLogin;
         private final UserProfile userProfile;
-        private String cookie;
+        private String xsrfToken;
+        private Map<String, String> cookies;
+
+        public UserEntity addCookie(String key, String value) {
+            cookies.put(key, value);
+            return this;
+        }
     }
 }

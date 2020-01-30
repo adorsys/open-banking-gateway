@@ -2,29 +2,27 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse2001;
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse2002;
+import de.adorsys.opba.fintech.impl.config.FinTechImplConfig;
 import de.adorsys.opba.fintech.impl.service.entities.ContextInformation;
 import de.adorsys.opba.fintech.impl.service.mapper.Mapper;
 import de.adorsys.opba.tpp.bankserach.api.model.generated.BankSearchResponse;
-import de.adorsys.opba.tpp.bankserach.api.resource.generated.TppBankSearchApi;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
-@Configuration
+@Service
 @Slf4j
 @RequiredArgsConstructor
 public class BankSearchService {
 
-    @Autowired
-    private final TppBankSearchApi tppBankSearchApi;
+    private final FinTechImplConfig.TppBankSearchClient tppBankSearchClient;
 
     @SneakyThrows
     public InlineResponse2001 searchBank(ContextInformation contextInformation, String keyword, Integer start, Integer max) {
-        BankSearchResponse bankSearchResponse = tppBankSearchApi.bankSearchGET(contextInformation.getFintechID(), contextInformation.getXRequestID(), keyword, start, max);
+        BankSearchResponse bankSearchResponse = tppBankSearchClient.bankSearchGET(contextInformation.getFintechID(), contextInformation.getXRequestID(), keyword, start, max).getBody();
         InlineResponse2001 inlineResponse2001 =
                 new InlineResponse2001().bankDescriptor(bankSearchResponse.getBankDescriptor().stream().map(bankDescriptor -> Mapper.fromTppToFintech(bankDescriptor)).collect(Collectors.toList()));
         inlineResponse2001.setKeyword(bankSearchResponse.getKeyword());
@@ -37,6 +35,6 @@ public class BankSearchService {
     @SneakyThrows
     public InlineResponse2002 searchBankProfile(ContextInformation contextInformation, String bankId) {
         return new InlineResponse2002().bankProfile(
-                Mapper.fromTppToFintech(tppBankSearchApi.bankProfileGET(contextInformation.getFintechID(), contextInformation.getXRequestID(), bankId).getBankProfileDescriptor()));
+                Mapper.fromTppToFintech(tppBankSearchClient.bankProfileGET(contextInformation.getFintechID(), contextInformation.getXRequestID(), bankId).getBody().getBankProfileDescriptor()));
     }
 }
