@@ -25,10 +25,11 @@
             <column name="action" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
-            <column name="process_name" type="VARCHAR(256)">
+            <column name="protocol_bean_name" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
         <createSequence sequenceName="bank_protocol_id_sequence" incrementBy="50"/>
+        <addUniqueConstraint tableName="${table-prefix}bank_protocol" columnNames="bank_uuid,action"/>
     </changeSet>
 </databaseChangeLog>

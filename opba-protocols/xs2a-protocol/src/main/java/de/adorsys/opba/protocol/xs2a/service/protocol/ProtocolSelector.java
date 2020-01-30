@@ -14,13 +14,13 @@ public class ProtocolSelector {
 
     @Transactional
     public String getProtocolForValidation(BaseContext ctx) {
-        return bankProfileJpaRepository.findByBankUuid(ctx.getAspspId()).get()
-                .getActions().get(ctx.getAction()).getProcessName();
+        // FIXME: Read flow name from db or config
+        return "FOO";
     }
 
     @Transactional
     public String getProtocolForExecution(BaseContext ctx) {
-        return bankProfileJpaRepository.findByBankUuid(ctx.getAspspId()).get()
-                .getActions().get(ctx.getAction()).getProcessName();
+        // FIXME: Read flow name from db or config
+        return "FOO";
     }
 }

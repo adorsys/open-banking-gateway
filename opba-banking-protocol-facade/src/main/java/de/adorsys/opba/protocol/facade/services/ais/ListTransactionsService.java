@@ -1,5 +1,7 @@
 package de.adorsys.opba.protocol.facade.services.ais;
 
+import de.adorsys.opba.db.domain.entity.ProtocolAction;
+import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
 import de.adorsys.opba.protocol.api.ListTransactions;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
 import de.adorsys.opba.protocol.api.dto.result.Result;
@@ -15,10 +17,13 @@ import java.util.concurrent.CompletableFuture;
 public class ListTransactionsService {
 
     // bean name - bean-impl.
-    private final Map<String, ? extends ListTransactions> accountListProviders;
+    private final Map<String, ? extends ListTransactions> transactionListProviders;
+    private final BankProtocolRepository protocolRepository;
 
     public CompletableFuture<Result<TransactionsResponse>> list(ListTransactionsRequest request) {
-        // FIXME - xs2aListTransactions - This is a stub - waiting for 1st subtask (OBG-209):
-        return accountListProviders.get("xs2aListTransactions").list(request);
+        return protocolRepository.findByBankProfileUuidAndAction(request.getBankID(), ProtocolAction.LIST_TRANSACTIONS)
+                .map(protocol -> transactionListProviders.get(protocol.getProtocolBeanName()))
+                .map(action -> action.list(request))
+                .orElseThrow(() -> new IllegalStateException("No ais transaction list bean for " + request.getBankID()));
     }
 }
