@@ -3,12 +3,12 @@ package de.adorsys.opba.fintech.impl.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Component;
 
 @Data
-@Component
-@ConfigurationProperties(prefix = "server.servlet.session.cookie")
+@Configuration
+@ConfigurationProperties(prefix = "server.controller.cookie")
 public class CookieConfigProperties {
     private static final Integer MAX_AGE_DEFAULT = 300;
     private boolean secure = false;

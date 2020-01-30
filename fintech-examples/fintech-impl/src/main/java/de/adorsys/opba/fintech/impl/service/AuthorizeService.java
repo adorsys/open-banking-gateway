@@ -19,7 +19,7 @@ import java.util.UUID;
  */
 @Configuration
 public class AuthorizeService {
-    private static final boolean CHECK_SESSION_COOKIE_TOO = false;
+    private static final boolean CHECK_SESSION_COOKIE_TODO = false;
     private static final String SESSION_COOKIE_NAME = "SESSION-COOKIE";
     private static final String XSRF_TOKEN_COOKIE_NAME = "XSRF-TOKEN";
     private static final String UNIVERSAL_PASSWORD = "1234";
@@ -79,7 +79,7 @@ public class AuthorizeService {
             return false;
         }
 
-        if (!CHECK_SESSION_COOKIE_TOO) {
+        if (!CHECK_SESSION_COOKIE_TODO) {
             return true;
         }
             for (CookieEntity cookie : optionalUserEntity.get().getCookies()) {
