@@ -1,5 +1,7 @@
 package de.adorsys.opba.protocol.facade.services.ais;
 
+import de.adorsys.opba.db.domain.entity.ProtocolAction;
+import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
 import de.adorsys.opba.protocol.api.ListAccounts;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.dto.result.Result;
@@ -16,9 +18,12 @@ public class ListAccountsService {
 
     // bean name - bean-impl.
     private final Map<String, ? extends ListAccounts> accountListProviders;
+    private final BankProtocolRepository protocolRepository;
 
     public CompletableFuture<Result<AccountList>> list(ListAccountsRequest request) {
-        // FIXME - xs2aListAccounts - This is a stub - waiting for 1st subtask (OBG-209):
-        return accountListProviders.get("xs2aListAccounts").list(request);
+        return protocolRepository.findByBankProfileUuidAndAction(request.getBankID(), ProtocolAction.LIST_ACCOUNTS)
+                .map(protocol -> accountListProviders.get(protocol.getProtocolBeanName()))
+                .map(action -> action.list(request))
+                .orElseThrow(() -> new IllegalStateException("No ais account list bean for " + request.getBankID()));
     }
 }

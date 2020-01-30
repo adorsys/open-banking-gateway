@@ -37,5 +37,5 @@ public class BankProtocol {
     @Enumerated(EnumType.STRING)
     private ProtocolAction action;
 
-    private String processName;
+    private String protocolBeanName;
 }
