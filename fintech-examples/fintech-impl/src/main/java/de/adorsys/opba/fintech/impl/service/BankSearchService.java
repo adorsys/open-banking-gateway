@@ -4,7 +4,7 @@ import de.adorsys.opba.fintech.api.model.generated.InlineResponse2001;
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse2002;
 import de.adorsys.opba.fintech.impl.config.FinTechImplConfig;
 import de.adorsys.opba.fintech.impl.service.mapper.Mapper;
-import de.adorsys.opba.tpp.bankserach.api.model.generated.BankSearchResponse;
+import de.adorsys.opba.tpp.banksearch.api.model.generated.BankSearchResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

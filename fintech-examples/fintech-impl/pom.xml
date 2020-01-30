@@ -13,7 +13,12 @@
         <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
         Change this if depth changes. Current: /open-banking-gateway/core -->
         <main.basedir>${project.parent.parent.basedir}</main.basedir>
-        <banksearch-file-location>${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_bank_search.yml</banksearch-file-location>
+        <tpp-bank-search-location>
+            ${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_bank_search.yml
+        </tpp-bank-search-location>
+        <tpp-ais-location>
+            ${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml
+        </tpp-ais-location>
     </properties>
 
 
@@ -49,6 +54,24 @@
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
         </dependency>
+
+        <!-- MOCKS not in test, but mock in main -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${google.gson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+
 
 
         <!-- TEST -->
@@ -99,22 +122,54 @@
                 <version>${swagger-codegen-maven-plugin.version}</version>
                 <executions>
                     <execution>
+                        <id>bankSearch</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${banksearch-file-location}</inputSpec>
+                            <inputSpec>${tpp-bank-search-location}</inputSpec>
                             <language>spring</language>
                             <output>${project.build.directory}/generated-sources/open-api/</output>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
-                                <basePackage>de.adorsys.opba.tpp.bankserach.api.generated</basePackage>
-                                <configPackage>de.adorsys.opba.tpp.bankserach.api.config.generated</configPackage>
-                                <modelPackage>de.adorsys.opba.tpp.bankserach.api.model.generated</modelPackage>
-                                <apiPackage>de.adorsys.opba.tpp.bankserach.api.resource.generated</apiPackage>
-                                <invokerPackage>de.adorsys.opba.tpp.bankserach.client.generated</invokerPackage>
+                                <basePackage>de.adorsys.opba.tpp.banksearch.api.generated</basePackage>
+                                <configPackage>de.adorsys.opba.tpp.banksearch.api.config.generated</configPackage>
+                                <modelPackage>de.adorsys.opba.tpp.banksearch.api.model.generated</modelPackage>
+                                <apiPackage>de.adorsys.opba.tpp.banksearch.api.resource.generated</apiPackage>
+                                <invokerPackage>de.adorsys.opba.tpp.banksearch.client.generated</invokerPackage>
+                                <interfaceOnly>true</interfaceOnly>
+                                <skipOverwrite>true</skipOverwrite>
+                                <dateLibrary>java8</dateLibrary>
+                                <java8>false</java8>
+                                <useTags>true</useTags>
+                                <defaultInterfaces>false</defaultInterfaces>
+                                <implicitHeaders>false</implicitHeaders>
+                                <generateForOpenFeign>true</generateForOpenFeign>
+                                <library>spring-cloud</library>
+                                <swaggerDocketConfig>false</swaggerDocketConfig>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>ais</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${tpp-ais-location}</inputSpec>
+                            <language>spring</language>
+                            <output>${project.build.directory}/generated-sources/open-api/</output>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <configOptions>
+                                <sourceFolder>src/main/java</sourceFolder>
+                                <basePackage>de.adorsys.opba.tpp.ais.api.generated</basePackage>
+                                <configPackage>de.adorsys.opba.tpp.ais.api.config.generated</configPackage>
+                                <modelPackage>de.adorsys.opba.tpp.ais.api.model.generated</modelPackage>
+                                <apiPackage>de.adorsys.opba.tpp.ais.api.resource.generated</apiPackage>
+                                <invokerPackage>de.adorsys.opba.tpp.ais.client.generated</invokerPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>
