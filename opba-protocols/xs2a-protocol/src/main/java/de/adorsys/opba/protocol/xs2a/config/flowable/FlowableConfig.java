@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.config.flowable;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import org.flowable.spring.SpringProcessEngineConfiguration;
@@ -21,10 +22,12 @@ public class FlowableConfig {
     @Bean
     EngineConfigurationConfigurer<SpringProcessEngineConfiguration> customizeListenerAndJsonSerializer(
         @Value("${opba.flowable.serializeOnly:de.adorsys}") String serializableClassesPrefix,
-        ObjectMapper mapper,
         @Value("${opba.flowable.maxVarLen:2048}") int maxLength,
         FlowableJobEventListener eventListener
     ) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
         return processConfiguration -> {
             processConfiguration.setCustomPreVariableTypes(
                 new ArrayList<>(
