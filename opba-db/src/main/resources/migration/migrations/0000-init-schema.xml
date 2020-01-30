@@ -31,5 +31,54 @@
         </createTable>
         <createSequence sequenceName="bank_protocol_id_sequence" incrementBy="50"/>
         <addUniqueConstraint tableName="${table-prefix}bank_protocol" columnNames="bank_uuid,action"/>
+
+        <createTable tableName="${table-prefix}session">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="session_type" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="context" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="${table-prefix}session_type">
+            <column name="id" type="smallint">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="type" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="details" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="session_type"
+                                 baseTableName="${table-prefix}session"
+                                 constraintName="fk_session_session_type"
+                                 deferrable="true"
+                                 initiallyDeferred="true"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="${table-prefix}session_type"/>
+
+        <insert tableName="${table-prefix}session_type">
+            <column name="id">1</column>
+            <column name="type">SERVICE</column>
+            <column name="details">See de.adorsys.opba.db.domain.entity.sessions.SessionTypes.SERVICE for reference</column>
+        </insert>
+        <insert tableName="${table-prefix}session_type">
+            <column name="id">2</column>
+            <column name="type">VALIDATION</column>
+            <column name="details">See de.adorsys.opba.db.domain.entity.sessions.SessionTypes.VALIDATION</column>
+        </insert>
+        <insert tableName="${table-prefix}session_type">
+            <column name="id">3</column>
+            <column name="type">AUTHENTICATION</column>
+            <column name="details">See de.adorsys.opba.db.domain.entity.sessions.SessionTypes.AUTHENTICATION</column>
+        </insert>
     </changeSet>
 </databaseChangeLog>
