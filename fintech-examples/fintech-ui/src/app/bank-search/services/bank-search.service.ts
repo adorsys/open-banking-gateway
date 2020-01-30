@@ -9,12 +9,12 @@ import { environment } from '../../../environments/environment';
 })
 export class BankSearchService {
   // path resolved by proxy
-  public URL = `${environment.FINTECH_API}`;
+  readonly URL = `${environment.FINTECH_API}`;
 
   constructor(private http: HttpClient) {}
 
   searchBanks(keyword: string): Observable<BankDescriptor> {
-    return this.http.get<BankDescriptor>(this.URL + 'search/bankSearch', {
+    return this.http.get<BankDescriptor>(this.URL + '/search/bankSearch', {
       params: {
         keyword,
         max_results: '5'

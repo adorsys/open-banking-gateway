@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  FINTECH_API: 'fintech-api-proxy'
+  FINTECH_API: '/fintech-api-proxy/v1'
 };
 
 /*

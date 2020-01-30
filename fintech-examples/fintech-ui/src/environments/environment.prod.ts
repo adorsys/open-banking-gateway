@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  FINTECH_API: '/fintech-api-proxy/v1'
 };

@@ -37,11 +37,15 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.X_XSRF_TOKEN);
+    this.openLoginPage();
+  }
+
+  openLoginPage() {
     this.router.navigate(['/login']);
   }
 
   isLoggedIn(): boolean {
-    return this.getX_XSRF_TOKEN().length > 0;
+    return this.getX_XSRF_TOKEN() && this.getX_XSRF_TOKEN().length > 0;
   }
 
   setCookie(token: string) {
