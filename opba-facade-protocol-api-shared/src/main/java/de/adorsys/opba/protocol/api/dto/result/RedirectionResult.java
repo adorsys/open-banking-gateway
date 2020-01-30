@@ -7,7 +7,7 @@ import java.net.URI;
 
 @Data
 @AllArgsConstructor
-public class RedirectionResult<T> implements Result<T> {
+public abstract class RedirectionResult<T> implements Result<T> {
 
     private URI redirectionTo;
 }
