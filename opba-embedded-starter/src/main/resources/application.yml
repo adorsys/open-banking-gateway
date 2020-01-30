@@ -2,7 +2,7 @@ server:
   port: 8085
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:15432/open_banking?currentSchema=banking_protocol
+    url: jdbc:postgresql://localhost:5432/open_banking?currentSchema=banking_protocol
     username: postgres
     password: docker
     type: com.zaxxer.hikari.HikariDataSource
