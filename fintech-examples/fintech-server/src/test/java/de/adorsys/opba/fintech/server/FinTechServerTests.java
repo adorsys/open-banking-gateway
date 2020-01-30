@@ -65,6 +65,7 @@ class FinTechServerTests {
     @MockBean
     private TestConfig.MockFeign mockFeign;
 
+    @SuppressWarnings("PMD.UnusedPrivateField")
     @MockBean
     private TppBankSearchApi mockedTppBankSearchApi;
 
