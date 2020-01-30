@@ -20,9 +20,10 @@ public class ProcessEventHandlerRegistrar {
 
     private final ProcessResultEventHandler handler;
 
+    @Deprecated // FIXME - kept only for tests using endpoints
     public <T> void addHandler(String processId,
-                           Consumer<ResponseResult> onSuccess,
-                           CompletableFuture<ResponseEntity<T>> result
+                               Consumer<ResponseResult> onSuccess,
+                               CompletableFuture<ResponseEntity<T>> result
     ) {
         handler.add(
                 processId,
@@ -33,6 +34,28 @@ public class ProcessEventHandlerRegistrar {
                         doRedirect(result, (RedirectResult) procResult);
                     } else if (procResult instanceof ValidationIssueResult) {
                         doFixValidation(result, (ValidationIssueResult) procResult);
+                    }
+                });
+    }
+
+    public <T> void addHandler(
+            String processId,
+            Consumer<ResponseResult> onSuccess,
+            Consumer<RedirectResult> onRedirect,
+            Consumer<ValidationIssueResult> onValidationIssue,
+            Consumer<Void> onError
+    ) {
+        handler.add(
+                processId,
+                procResult -> {
+                    if (procResult instanceof ResponseResult) {
+                        onSuccess.accept((ResponseResult) procResult);
+                    } else if (procResult instanceof RedirectResult) {
+                        onRedirect.accept((RedirectResult) procResult);
+                    } else if (procResult instanceof ValidationIssueResult) {
+                        onValidationIssue.accept((ValidationIssueResult) procResult);
+                    } else {
+                        onError.accept(null);
                     }
                 });
     }
