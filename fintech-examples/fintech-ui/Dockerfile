@@ -48,13 +48,13 @@ COPY ./nginx.conf.erb /etc/nginx/conf.d/default.conf.erb
 # copy entry.sh file
 COPY ./entry.sh /opt/entry.sh
 
-# support running as arbitrary user which belogs to the root group
-RUN chmod g+rwx /var/cache/nginx /var/run /var/log/nginx && \
+# set permissions
+RUN chgrp -R root /var/cache/nginx && \
+    find /var/cache/nginx -type d -exec chmod 775 {} \; && \
+    find /var/cache/nginx -type f -exec chmod 664 {} \; && \
+    chmod 775 /var/run && \
     chmod 775 /opt/entry.sh && \
     chmod -R 777 /etc/nginx/conf.d
-
-# comment user directive as master process is run as user in OpenShift anyhow
-RUN sed -i.bak 's/^user/#user/' /etc/nginx/nginx.conf
 
 # expose port 4200
 EXPOSE 4200
