@@ -8,12 +8,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-@SpringBootApplication
 @EnableConsentApi
 @EnableBankingApi
 @EnableXs2aProtocol
-@EnableConfigurationProperties
 @EnableBankingPersistence
+@SpringBootApplication
+@EnableConfigurationProperties
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Springboot starter class is not an utility class
 public class OpenBankingEmbeddedApplication {
 

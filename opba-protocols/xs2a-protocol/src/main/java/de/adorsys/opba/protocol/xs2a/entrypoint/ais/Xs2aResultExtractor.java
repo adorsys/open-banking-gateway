@@ -1,6 +1,8 @@
-package de.adorsys.opba.protocol.xs2a.service.xs2a;
+package de.adorsys.opba.protocol.xs2a.entrypoint.ais;
 
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ProcessResult;
+import de.adorsys.opba.tppbankingapi.ais.model.generated.AccountList;
+import de.adorsys.opba.tppbankingapi.ais.model.generated.TransactionsResponse;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
 import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
@@ -20,7 +22,8 @@ public class Xs2aResultExtractor {
 
     private final RuntimeService runtimeService;
 
-    public List<AccountDetails> extractAccountList(ProcessResult result) {
+    @Deprecated // FIXME - kept only for tests using endpoints
+    public List<AccountDetails> extractAccountListOld(ProcessResult result) {
         ProcessInstance updated =
                 runtimeService.createProcessInstanceQuery()
                         .processInstanceId(result.getProcessId())
@@ -29,10 +32,27 @@ public class Xs2aResultExtractor {
         return getResult(exec, AccountListHolder.class).getAccounts();
     }
 
-    public TransactionsReport extractTransactionsReport(ProcessResult result) {
+    @Deprecated // FIXME - kept only for tests using endpoints
+    public TransactionsReport extractTransactionsReportOld(ProcessResult result) {
         ProcessInstance updated = runtimeService.createProcessInstanceQuery()
                 .processInstanceId(result.getProcessId()).singleResult();
         ExecutionEntity exec = (ExecutionEntity) updated;
         return getResult(exec, TransactionsReport.class);
+    }
+
+    public AccountList extractAccountList(ProcessResult result) {
+        ProcessInstance updated =
+                runtimeService.createProcessInstanceQuery()
+                        .processInstanceId(result.getProcessId())
+                        .singleResult();
+        ExecutionEntity exec = (ExecutionEntity) updated;
+        return getResult(exec, AccountList.class);
+    }
+
+    public TransactionsResponse extractTransactionsReport(ProcessResult result) {
+        ProcessInstance updated = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(result.getProcessId()).singleResult();
+        ExecutionEntity exec = (ExecutionEntity) updated;
+        return getResult(exec, TransactionsResponse.class);
     }
 }

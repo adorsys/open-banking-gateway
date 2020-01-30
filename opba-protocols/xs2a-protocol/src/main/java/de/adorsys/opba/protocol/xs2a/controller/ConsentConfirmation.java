@@ -4,7 +4,7 @@ import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.protocol.xs2a.controller.constants.ApiPaths;
 import de.adorsys.opba.protocol.xs2a.controller.constants.ApiVersion;
 import de.adorsys.opba.protocol.xs2a.service.eventbus.ProcessEventHandlerRegistrar;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.Xs2aResultExtractor;
+import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aResultExtractor;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +53,7 @@ public class ConsentConfirmation {
         CompletableFuture<ResponseEntity<List<AccountDetails>>> result = new CompletableFuture<>();
         registrar.addHandler(
                 sagaId,
-                response -> result.complete(ResponseEntity.ok(extractor.extractAccountList(response))),
+                response -> result.complete(ResponseEntity.ok(extractor.extractAccountListOld(response))),
                 result
         );
         return result;
@@ -64,7 +64,7 @@ public class ConsentConfirmation {
         CompletableFuture<ResponseEntity<TransactionsReport>> result = new CompletableFuture<>();
         registrar.addHandler(
                 sagaId,
-                response -> result.complete(ResponseEntity.ok(extractor.extractTransactionsReport(response))),
+                response -> result.complete(ResponseEntity.ok(extractor.extractTransactionsReportOld(response))),
                 result
         );
         return result;
