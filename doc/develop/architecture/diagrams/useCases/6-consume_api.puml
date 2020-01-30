@@ -1,0 +1,53 @@
+@startuml
+
+autonumber 10 10 "<b><color blue>[BankingService-000]"
+actor psu
+
+box "PsuUserAgent" #LightGray
+    participant "FinTechUI" as FinTechUI
+    'participant "ConsentAuthorisationUI" as ConsentAuthorisationUI
+    'participant "OnlineBankingUI" as OnlineBankingUI
+end box
+box "FinTechDC" #DarkSeaGreen
+    participant "FinTechApi" as FinTechApi
+end box
+box "TppDC" #LightGray
+    participant "TppBankingApi" as TppBankingApi
+    'participant "TppBankSearchApi" as TppBankSearchApi
+    'participant "ConsentAuthorisationApi" as ConsentAuthorisationApi
+
+    participant "BankingProtocol" as BankingProtocol
+    participant "RedirectSessionStoreApi" as RedirectSessionStoreApi
+end box
+box "AspspDC" #LightSkyBlue
+	participant "AspspBankingApi" as AspspBankingApi
+    'participant "OnlineBankingApi" as OnlineBankingApi
+end box
+
+== Execute PSU transaction display request : call[header](body)<params> return code[header](body) ==
+
+FinTechUI -> FinTechApi ++ : GET:FinTech-Redirect-URI[UserAgentContext,\nFinTechConsentSessionCookie]()\n<redirectCode,finTechConsentSessionState>
+FinTechApi -> FinTechApi : validateRedirectCall\n(finTechConsentSessionState,FinTechConsentSessionCookie)
+FinTechApi -> TppBankingApi ++ : GET:code2Token[UserAgentContext,\nFinTechContext]\n()<redirectCode>
+autonumber 40 1 "<b><color blue>[BankingService-000]"
+TppBankingApi -> BankingProtocol ++ : code2Token(redirectCode)
+BankingProtocol -> RedirectSessionStoreApi ++ : redirectSession(redirectCode)
+RedirectSessionStoreApi -> RedirectSessionStoreApi : loadDeryptDeleteRedirectSession\n(redirectCode):TppConsentSession
+return TppConsentSession
+return TppConsentSession
+TppBankingApi -> TppBankingApi: TppConsentSession.PsuConsentSession()
+return PsuConsentSession
+autonumber 50 10 "<b><color blue>[BankingService-000]"
+FinTechApi -> FinTechApi : storePsuConsent(PsuConsentSession)
+loop FinTech2TppConsentToken.isValid()
+    autonumber 60 1 "<b><color blue>[BankingService-000]"
+    FinTechApi -> TppBankingApi ++ : POST:listTransactions[PsuConsentSession](requestSpec)
+    TppBankingApi -> BankingProtocol ++ : listTransactions[TppConsentSession]\n(requestSpec) 
+    BankingProtocol -> AspspBankingApi ++ : listTransactions[TppContext](AisConsent, requestSpec) 
+    return 200_OK[](Transactions)
+    return 200_OK[](Transactions)
+    return 200_OK[](Transactions)
+end
+return 200_OK[](Transactions)
+FinTechUI --> psu : displayTransactions()
+@enduml

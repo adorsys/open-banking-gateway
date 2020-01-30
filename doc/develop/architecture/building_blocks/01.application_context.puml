@@ -1,0 +1,15 @@
+@startuml
+
+skinparam componentStyle uml2
+
+actor "End User" as PSU
+component "Fintech\nService" as Fintech
+component "Open\nBanking Gateway\n\n(acts as TPP)\n\n\n\\n\n" as TPP #white
+component "Bank of PSU\n\n(acts as ASPSP)" as ASPSP #orange
+
+Fintech .> TPP : use XS2A Service\nto Bank
+TPP <. PSU : authorise access\nof Fintech\nto Bank XS2A Service
+TPP .> ASPSP: access XS2A API\nof Bank
+Fintech <.. PSU : ask for\na service
+
+@enduml
