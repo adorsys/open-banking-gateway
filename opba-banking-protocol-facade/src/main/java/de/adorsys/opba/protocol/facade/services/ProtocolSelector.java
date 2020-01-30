@@ -17,7 +17,7 @@ public class ProtocolSelector {
 
     private final BankProtocolRepository protocolRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public <A> A protocolFor(ServiceContext<?> ctx, ProtocolAction protocolAction, Map<String, A> actionBeans) {
         Optional<BankProtocol> bankProtocol;
 

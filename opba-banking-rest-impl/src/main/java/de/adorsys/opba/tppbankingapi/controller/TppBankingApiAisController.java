@@ -47,7 +47,8 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         return accounts.list(
                 ListAccountsRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
-                                .uaContext(userAgentContext)
+                                // Get rid of CGILIB here by copying:
+                                .uaContext(userAgentContext.toBuilder().build())
                                 .serviceSessionId(serviceSessionID)
                                 .validationSessionId(validationSessionID)
                                 .authSessionId(authSessionID)
@@ -82,7 +83,8 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         return transactions.list(
                 ListTransactionsRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
-                                .uaContext(userAgentContext)
+                                // Get rid of CGILIB here by copying:
+                                .uaContext(userAgentContext.toBuilder().build())
                                 .serviceSessionId(serviceSessionID)
                                 .validationSessionId(validationSessionID)
                                 .authSessionId(authSessionID)
