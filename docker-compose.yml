@@ -14,7 +14,7 @@ services:
       #HOST:CONTAINER
       - "15432:5432"
     volumes:
-      - ./opba-db-migration/src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./opba-db/src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - opba-net
 
@@ -29,7 +29,6 @@ services:
       - "18085:8085"
     volumes:
       - ./core/banking-protocol/src/main/resources/:/pkcs12/
-    entrypoint: "/bin/sh -c 'java -jar open-banking-gateway-*.jar'"
     depends_on:
       - postgres
     networks:
@@ -53,7 +52,6 @@ services:
     build: fintech-examples/fintech-server
     ports:
       - "18086:8086"
-    entrypoint: "/bin/sh -c 'java -jar fintech-server-*.jar'"
     networks:
       - opba-net
 

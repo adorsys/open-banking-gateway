@@ -17,6 +17,11 @@ const routes: Routes = [
     path: 'search',
     canActivate: [AuthGuard],
     loadChildren: () => import('./bank-search/bank-search.module').then(m => m.BankSearchModule)
+  },
+  {
+    path: 'dashboard',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
   }
 ];
 

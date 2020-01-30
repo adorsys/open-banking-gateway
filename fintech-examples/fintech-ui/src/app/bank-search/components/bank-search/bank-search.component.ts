@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { BankSearchService } from '../../services/bank-search.service';
 import { Bank } from '../../models/bank.model';
 
@@ -10,6 +10,33 @@ import { Bank } from '../../models/bank.model';
 export class BankSearchComponent {
   searchedBanks: Bank[];
   selectedBank: string;
+
+  cardList = [
+    {
+      headline: 'Telecom'
+    },
+    {
+      headline: 'Telecom'
+    },
+    {
+      headline: 'Telecom'
+    },
+    {
+      headline: 'Telecom'
+    },
+    {
+      headline: 'Telecom'
+    },
+    {
+      headline: 'Telecom'
+    },
+    {
+      headline: 'Telecom'
+    },
+    {
+      headline: 'Telecom'
+    }
+  ];
 
   constructor(private bankSearchService: BankSearchService) {}
 

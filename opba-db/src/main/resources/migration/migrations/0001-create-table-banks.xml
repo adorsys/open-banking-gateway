@@ -1,0 +1,127 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create-sequence-bank" author="mhr" >
+        <createSequence sequenceName="bank_id_sequence" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="create-table-bank" author="mhr">
+        <createTable tableName="${table-prefix}bank">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="${table-prefix}bankPK"/>
+            </column>
+            <column name="uuid" type="VARCHAR(36)">
+                <constraints unique="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="bic" type="VARCHAR(11)"/>
+            <column name="bank_code" type="VARCHAR(8)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-sequence-bank-profile" author="mhr">
+        <createSequence sequenceName="bank_profile_id_sequence" incrementBy="50"/>
+    </changeSet>
+
+    <changeSet id="create-table-bank-profile" author="mhr">
+        <createTable tableName="${table-prefix}bank_profile">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="${table-prefix}bank_profilePK"/>
+            </column>
+            <column name="url" type="VARCHAR(255)"/>
+            <column name="adapter_id" type="VARCHAR(255)"/>
+            <column name="idp_url" type="VARCHAR(255)"/>
+            <column name="sca_approaches" type="VARCHAR(255)"/>
+            <column name="bank_uuid" type="VARCHAR(36)">
+                <constraints unique="true"/>
+            </column>
+            <column name="preferred_approach" type="VARCHAR(32)"/>
+        </createTable>
+        <addNotNullConstraint tableName="${table-prefix}bank_profile" columnName="bank_uuid" columnDataType="VARCHAR(255)"/>
+    </changeSet>
+
+    <changeSet id="add-relation-bank-profile-protocol" author="mhr">
+        <addForeignKeyConstraint baseColumnNames="bank_uuid"
+                                 baseTableName="${table-prefix}bank_protocol"
+                                 constraintName="fk_bank_protocol_bank_profile"
+                                 deferrable="true"
+                                 initiallyDeferred="true"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="bank_uuid"
+                                 referencedTableName="${table-prefix}bank_profile"/>
+    </changeSet>
+
+    <changeSet id="add-relation-bank-to-bank-profile" author="mhr">
+        <addForeignKeyConstraint constraintName="fk_bank"
+                                 baseTableName="${table-prefix}bank_profile"
+                                 baseColumnNames="bank_uuid"
+                                 referencedTableName="${table-prefix}bank"
+                                 referencedColumnNames="uuid"/>
+    </changeSet>
+
+    <changeSet id="load_csv_bank" author="mhr">
+        <loadData
+                encoding="utf8"
+                relativeToChangelogFile="true"
+                file="banks.csv"
+                catalogName=""
+                tableName="${table-prefix}bank">
+            <column header="uuid"       name="uuid"         type="STRING"/>
+            <column header="name"       name="name"         type="STRING"/>
+            <column header="bic"        name="bic"          type="STRING"/>
+            <column header="url"                            type="skip"/>
+            <column header="adapter_id"                     type="skip"/>
+            <column header="bank_code"  name="bank_code"    type="STRING"/>
+            <column header="idp_url"                        type="skip"/>
+            <column header="aspsp_sca_approaches"           type="skip"/>
+        </loadData>
+        <rollback />
+    </changeSet>
+
+    <changeSet id="load_csv_bank_profile" author="mhr">
+        <loadData
+                encoding="utf8"
+                relativeToChangelogFile="true"
+                file="banks.csv"
+                catalogName=""
+                tableName="${table-prefix}bank_profile">
+            <column header="uuid"       name="bank_uuid"                type="STRING"/>
+            <column header="name"       name="name"                     type="skip"/>
+            <column header="bic"        name="bic"                      type="skip"/>
+            <column header="url"        name="url"                      type="STRING"/>
+            <column header="adapter_id" name="adapter_id"               type="STRING"/>
+            <column header="bank_code"  name="bank_code"                type="skip"/>
+            <column header="idp_url"    name="idp_url"                  type="STRING"/>
+            <column header="aspsp_sca_approaches" name="sca_approaches" type="STRING"/>
+        </loadData>
+        <rollback />
+    </changeSet>
+
+    <changeSet id="load_csv_banks_random" author="mhr">
+        <loadData
+                encoding="utf8"
+                relativeToChangelogFile="true"
+                file="banks_random_data.csv"
+                catalogName=""
+                tableName="${table-prefix}bank">
+            <column header="name"       name="name"         type="STRING"/>
+            <column header="bic"        name="bic"          type="STRING"/>
+            <column header="bank_code"  name="bank_code"    type="STRING"/>
+        </loadData>
+        <rollback />
+    </changeSet>
+    
+    <changeSet id="create_index" author="mhr">
+        <sql dbms="postgresql" stripComments="true">
+            CREATE INDEX bank_trgm_idx ON opb_bank USING gin ( (name || ' ' || bic || ' ' || bank_code) gin_trgm_ops);
+        </sql>
+    </changeSet>
+
+    <changeSet id="fill_services" author="mhr">
+        <sql dbms="postgresql" stripComments="true">
+            UPDATE opb_bank_profile SET preferred_approach = 'REDIRECT' WHERE true ;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

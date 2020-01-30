@@ -1,7 +1,7 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
-import de.adorsys.opba.tppbankingapi.domain.entity.Bank;
-import de.adorsys.opba.tppbankingapi.domain.entity.BankProfile;
+import de.adorsys.opba.tppbankingapi.search.model.generated.BankDescriptor;
+import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileDescriptor;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileResponse;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankSearchResponse;
 import de.adorsys.opba.tppbankingapi.search.resource.generated.TppBankSearchApi;
@@ -39,10 +39,10 @@ public class TppBankSearchController implements TppBankSearchApi {
         if (max == null) {
             max = defaultMax;
         }
-        List<Bank> banks = bankService.getBanks(keyword, start, max);
+        List<BankDescriptor> banks = bankService.getBanks(keyword, start, max);
 
         BankSearchResponse response = new BankSearchResponse();
-        banks.forEach(it -> response.addBankDescriptorItem(Bank.TO_BANK_DESCRIPTOR.map(it)));
+        response.bankDescriptor(banks);
         response.setKeyword(keyword);
         response.setMax(max);
         response.setStart(start);
@@ -55,13 +55,13 @@ public class TppBankSearchController implements TppBankSearchApi {
                                                               UUID xRequestID,
                                                               String bankId) {
         log.debug("Bank profile request. bankId:{}, xRequestID:{}", xRequestID, bankId);
-        Optional<BankProfile> bankProfile = bankService.getBankProfile(bankId);
+        Optional<BankProfileDescriptor> bankProfile = bankService.getBankProfile(bankId);
         if (!bankProfile.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         BankProfileResponse response = new BankProfileResponse();
-        response.setBankProfileDescriptor(BankProfile.TO_BANK_PROFILE_DESCRIPTOR.map(bankProfile.get()));
+        response.setBankProfileDescriptor(bankProfile.get());
         log.debug("Bank profile response: {}", response);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

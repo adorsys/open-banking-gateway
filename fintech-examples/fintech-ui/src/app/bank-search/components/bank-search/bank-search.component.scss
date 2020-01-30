@@ -1,28 +1,22 @@
-.box-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: #edf4f7;
+@import 'src/assets/themes/variables';
 
-  .box-header {
-    &__title {
-      color: #212121;
-      font-size: 1.8rem;
-      font-weight: 400;
-      margin-bottom: 1rem;
-    }
-    &_text {
-      color: #737373;
-    }
-  }
-
-  .box-item {
-    max-width: 26rem;
-  }
+.scrollable {
+  overflow: scroll;
+  overflow-x: hidden;
+  height: 350px;
 }
 
-.list-group-item:hover {
-  background-color: #edf4f7;
-  transition: 0.5s ease-in-out;
+.bank-list {
+  padding: 0.75rem 1.25rem 0.75rem 2.25rem;
+  background-color: white;
+  border: none;
+  width: 100%;
+  border-radius: 5px;
+  text-align: start;
+  margin-bottom: 10px;
+
+  &:hover {
+    background-color: $primary-10;
+    transition: 0.2s ease-in-out;
+  }
 }
