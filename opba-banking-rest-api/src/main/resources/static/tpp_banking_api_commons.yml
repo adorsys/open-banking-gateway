@@ -56,14 +56,33 @@ components:
       schema:
         type: string
 
-    PSU-Consent-Session:
-      name: PSU-Consent-Session
+    Service-Session-ID:
+      name: Service-Session-ID
       in: header
       required: false
       description: |
-        Unique Token that identifies PSU Consent Session for this request, if it is already available for given PSU by Fintech through previous requests.
-        This Token is not designed to be parsed at Fintech side.
-      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicHN1IjoiSm9obl9Eb2UiLCJjb25zZW50SWQiOiI3OGUyODUwMy0xMzZkLTRkODYtYjg0NC1lNWY1NTgyNTc2ZTUiLCJpYXQiOjE1MTYyMzkwMjJ9.4BHXUW9CH63ZTkxKktFFrVGCUuFltFyivHxk3LVg2bs"
+        Unique ID that identifies Service Session for this request, if it is already available for given PSU by Fintech through previous requests.
+      example: "19391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+
+    Validation-Session-ID:
+      name: Validation-Session-ID
+      in: header
+      required: false
+      description: |
+        Unique ID that identifies Validation Session (asking user for extra parameters) for this request, if it is already available for given PSU by Fintech through previous requests.
+      example: "29391c7e-ad88-49ec-a2ad-99ddcb1f7722"
+      schema:
+        type: string
+
+    Auth-Session-ID:
+      name: Auth-Session-ID
+      in: header
+      required: false
+      description: |
+        Unique ID that identifies Authentication Session (consent approval) for this request, if it is already available for given PSU by Fintech through previous requests.
+      example: "39391c7e-ad88-49ec-a2ad-99ddcb1f7723"
       schema:
         type: string
 

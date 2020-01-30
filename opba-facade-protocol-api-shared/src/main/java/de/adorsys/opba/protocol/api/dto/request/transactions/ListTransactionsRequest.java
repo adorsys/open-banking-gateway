@@ -20,14 +20,17 @@ import java.util.UUID;
 public class ListTransactionsRequest {
 
     private UserAgentContext uaContext;
+    private String serviceSessionId;
+    private String validationSessionId;
+    private String authSessionId;
+    private UUID xRequestID;
+
     private String accountId;
     private String fintechUserID;
     private String authorization;
     private String fintechRedirectURLOK;
     private String fintechRedirectURLNOK;
-    private UUID xRequestID;
     private String bankID;
-    private String psuConsentSession;
     private LocalDate dateFrom;
     private LocalDate dateTo;
     private String entryReferenceFrom;
