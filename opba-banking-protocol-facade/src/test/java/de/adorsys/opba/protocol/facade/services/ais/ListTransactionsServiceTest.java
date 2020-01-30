@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.facade.services.ais;
 
 import de.adorsys.opba.db.config.EnableBankingPersistence;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
-import de.adorsys.opba.protocol.api.dto.result.RedirectionResult;
+import de.adorsys.opba.protocol.api.dto.result.ValidationErrorResult;
 import de.adorsys.opba.protocol.xs2a.EnableXs2aProtocol;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ class ListTransactionsServiceTest {
     void testXs2aWired() {
         assertThat(listTransactionsService.list(
                 ListTransactionsRequest.builder().bankID("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46").build()).get()
-        ).isInstanceOf(RedirectionResult.class);
+        ).isInstanceOf(ValidationErrorResult.class);
     }
 
     @EnableXs2aProtocol

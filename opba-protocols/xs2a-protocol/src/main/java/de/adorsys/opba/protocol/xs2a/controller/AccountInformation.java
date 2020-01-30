@@ -6,7 +6,7 @@ import de.adorsys.opba.protocol.xs2a.controller.constants.ApiPaths;
 import de.adorsys.opba.protocol.xs2a.controller.constants.ApiVersion;
 import de.adorsys.opba.protocol.xs2a.service.eventbus.ProcessEventHandlerRegistrar;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.ContextFactory;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.Xs2aResultExtractor;
+import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aResultExtractor;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
@@ -54,7 +54,7 @@ public class AccountInformation {
 
         registrar.addHandler(
                 instance.getProcessInstanceId(),
-                response -> result.complete(ResponseEntity.ok(extractor.extractAccountList(response))),
+                response -> result.complete(ResponseEntity.ok(extractor.extractAccountListOld(response))),
                 result
         );
 
@@ -79,7 +79,7 @@ public class AccountInformation {
 
         registrar.addHandler(
                 instance.getProcessInstanceId(),
-                response -> result.complete(ResponseEntity.ok(extractor.extractTransactionsReport(response))),
+                response -> result.complete(ResponseEntity.ok(extractor.extractTransactionsReportOld(response))),
                 result
         );
 
