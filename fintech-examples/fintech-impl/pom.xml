@@ -10,8 +10,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
-        Change this if depth changes. Current: /open-banking-gateway/core -->
+        <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
+        Change this if depth changes. Current: /open-banking-gateway/fintech-examples/fintech-server -->
         <main.basedir>${project.parent.parent.basedir}</main.basedir>
         <tpp-bank-search-location>
             ${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_bank_search.yml

@@ -1,13 +1,13 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
-  <div class="card">
+  <div class="card card-frame">
     <div class="card-body">
-      <h4 class="card-title">Login</h4>
+      <h4 class="card-title">Hello!</h4>
       <div class="form__margin">
         <div class="form-group">
+          <label for="username">Username</label>
           <input
             [ngClass]="{ 'is-invalid': username?.errors && username?.dirty }"
             autocomplete="off"
-            placeholder="Username"
             class="form-control"
             formControlName="username"
             id="username"
@@ -19,10 +19,10 @@
         </div>
 
         <div class="form-group">
+          <label for="password">Password</label>
           <input
             [ngClass]="{ 'is-invalid': password?.errors && password?.dirty }"
             autocomplete="off"
-            placeholder="Password"
             class="form-control"
             formControlName="password"
             id="password"
@@ -33,7 +33,7 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-primary btn-block mb-3" type="submit">Login</button>
+      <button class="btn btn-primary btn-center btn-block mb-3" type="submit">Login</button>
     </div>
   </div>
 </form>
