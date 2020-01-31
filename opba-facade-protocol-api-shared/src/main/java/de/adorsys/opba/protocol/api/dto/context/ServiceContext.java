@@ -1,10 +1,10 @@
 package de.adorsys.opba.protocol.api.dto.context;
 
-import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.UUID;
 
@@ -15,14 +15,16 @@ import java.util.UUID;
 public class ServiceContext<T> {
 
     private Long bankProtocolId;
+    private String bankId;
 
+    @NonNull
     private UUID serviceSessionId;
+
     private UUID authSessionId;
 
-    /**
-     * These parameters should take precedence on those defined in {@link ServiceContext#request}.
-     */
-    private FacadeServiceableRequest facadeServiceable;
 
+    @NonNull
     private T request;
+
+    private String authContext;
 }
