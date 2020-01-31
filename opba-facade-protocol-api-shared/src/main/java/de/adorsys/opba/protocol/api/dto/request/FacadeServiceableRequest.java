@@ -20,7 +20,6 @@ public class FacadeServiceableRequest {
 
     private UUID xRequestID;
     private String serviceSessionId;
-    private String validationSessionId;
     private String authSessionId;
 
     private String authorization;
