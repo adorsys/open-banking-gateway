@@ -1,23 +1,12 @@
 <div class="box-container">
-  <div class="box-item mx-4">
-    <h4 class="box-header__title">Please search your bank</h4>
-    <p class="box-header_text">
-      Lorem ipsum dolor sit amet, consetetur sadipscing elitr sed diam nonumy eirmod tempor invidunt
-    </p>
-  </div>
-
   <ng-template [ngIf]="!selectedBank" [ngIfElse]="profile">
-    <div class="card box-item mr-4 w-100">
+    <div class="card card-frame">
       <div class="card-body">
+        <h4 class="card-title">Search your bank</h4>
         <app-search (keyword)="onSearch($event)"></app-search>
-        <div class="list-group border-0">
-          <button
-            *ngFor="let bank of searchedBanks"
-            (click)="onBankSelect(bank.id)"
-            type="button"
-            class="list-group-item list-group-item-action border-0"
-          >
-            {{ bank.name }}
+        <div class="scrollable">
+          <button (click)="onBankSelect(bank.id)" *ngFor="let bank of cardList" class="bank-list" type="button">
+            {{ bank.headline }}
           </button>
         </div>
       </div>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="25px" height="26px" viewBox="0 0 25 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>icons8-sent</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="202001-konto" transform="translate(-35.000000, -241.000000)" fill="#687AA8" fill-rule="nonzero">
+            <g id="organisms-/-sidenav">
+                <g id="icons8-sent" transform="translate(35.000000, 241.000000)">
+                    <path d="M24,0 L0.352649485,10.5765983 C0.141677876,10.6706877 0.00721284602,10.8950543 0.000257594552,11.1363088 C-0.00669765692,11.3775633 0.127767966,11.5874549 0.334102543,11.6960193 L8.60603849,16 L24,0 Z M25,1 L9,17.0355487 L13.3039807,25.6522411 C13.4101327,25.8623456 13.6296745,26 13.8636912,26 L13.8829916,26 C14.1242461,25.9927549 14.3268999,25.8526856 14.4234017,25.6329212 L25,1 Z" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

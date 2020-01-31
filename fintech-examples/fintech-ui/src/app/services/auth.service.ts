@@ -21,6 +21,6 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     // TODO: must be implemented
-    return false;
+    return true;
   }
 }
