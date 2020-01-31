@@ -14,7 +14,7 @@ public class TppListAccountsMock {
     private static final Gson GSON = new Gson();
 
     public AccountList getAccountList() {
-        return GSON.fromJson(readFile("TPP_LIST_ACCOUNTS"), AccountList.class);
+        return GSON.fromJson(readFile("TPP_LIST_ACCOUNTS.json"), AccountList.class);
     }
 
     @SneakyThrows
