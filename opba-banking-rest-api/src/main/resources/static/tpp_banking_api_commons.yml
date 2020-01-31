@@ -56,24 +56,14 @@ components:
       schema:
         type: string
 
-    Service-Session-ID:
-      name: Service-Session-ID
+    PSU-Consent-Session:
+      name: PSU-Consent-Session
       in: header
       required: false
       description: |
-        Unique ID that identifies Service Session for this request, if it is already available for given PSU by Fintech through previous requests.
-      example: "19391c7e-ad88-49ec-a2ad-99ddcb1f7721"
-      schema:
-        type: string
-
-    Redirect-Code:
-      name: Redirect-Code
-      in: header
-      required: false
-      description: |
-        Unique ID/Token that identifies Authentication Session Step (consent approval, more parameters requests) for this request.
-        Is not intended to be parseable by Fintech.
-      example: "39391c7e-ad88-49ec-a2ad-99ddcb1f7723"
+        Unique Token that identifies PSU Consent Session for this request, if it is already available for given PSU by Fintech through previous requests.
+        This Token is not designed to be parsed at Fintech side.
+      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicHN1IjoiSm9obl9Eb2UiLCJjb25zZW50SWQiOiI3OGUyODUwMy0xMzZkLTRkODYtYjg0NC1lNWY1NTgyNTc2ZTUiLCJpYXQiOjE1MTYyMzkwMjJ9.4BHXUW9CH63ZTkxKktFFrVGCUuFltFyivHxk3LVg2bs"
       schema:
         type: string
 
