@@ -30,8 +30,11 @@ public class Mapper {
         return fintechBankProfile;
     }
 
-    public static AccountStatus fromTppToFintech(de.adorsys.opba.tpp.ais.api.model.generated.AccountStatus ttpAccountStatus) {
-        return AccountStatus.fromValue(ttpAccountStatus.toString());
+    public static AccountStatus fromTppToFintech(de.adorsys.opba.tpp.ais.api.model.generated.AccountStatus tppAccountStatus) {
+        if (tppAccountStatus == null) {
+            return null;
+        }
+        return AccountStatus.fromValue(tppAccountStatus.toString());
     }
 
     public static AccountList fromTppToFintech(de.adorsys.opba.tpp.ais.api.model.generated.AccountList tppAccountList) {

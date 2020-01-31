@@ -1,7 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse2003;
-import de.adorsys.opba.fintech.impl.config.FinTechImplConfig;
+import de.adorsys.opba.fintech.impl.config.TppAisClient;
 import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
 import de.adorsys.opba.fintech.impl.service.mapper.Mapper;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListAccountsMock;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AccountService {
 
-    private final FinTechImplConfig.TppAisClient tppAisClient;
+    private final TppAisClient tppAisClient;
 
     public InlineResponse2003 listAccounts(ContextInformation contextInformation, UserEntity userEntity, String bankId) {
 
