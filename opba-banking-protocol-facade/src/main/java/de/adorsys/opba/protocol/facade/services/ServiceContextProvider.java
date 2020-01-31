@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Strings;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
+import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
@@ -23,13 +24,18 @@ public class ServiceContextProvider {
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
+    private final AuthenticationSessionRepository authSessions;
     private final ServiceSessionRepository serviceSessions;
 
     @Transactional
     @SneakyThrows
     public <T extends FacadeServiceableGetter> ServiceContext<T> provide(T request) {
-        ServiceSession session = extractOrCreateServiceSession(request);
-        AuthSession authSession = extractAndValidateAuthSession(request, session);
+        if (null == request.getFacadeServiceable()) {
+            throw new IllegalArgumentException("No serviceable body");
+        }
+
+        AuthSession authSession = extractAndValidateAuthSession(request);
+        ServiceSession session = extractOrCreateServiceSession(request, authSession);
 
         return ServiceContext.<T>builder()
                 .facadeServiceable(request.getFacadeServiceable())
@@ -40,11 +46,12 @@ public class ServiceContextProvider {
     }
 
     @SneakyThrows
-    private <T extends FacadeServiceableGetter> ServiceSession extractOrCreateServiceSession(T request) {
-        if (null != request.getFacadeServiceable().getServiceSessionId()) {
-            UUID sessionId = UUID.fromString(request.getFacadeServiceable().getServiceSessionId());
-            return serviceSessions.findById(sessionId).
-                    orElseThrow(() -> new IllegalStateException("No service session " + sessionId));
+    private <T extends FacadeServiceableGetter> ServiceSession extractOrCreateServiceSession(
+            T request,
+            AuthSession authSession
+    ) {
+        if (null != authSession) {
+            return authSession.getParent();
         } else {
             ServiceSession session = new ServiceSession();
             session.setContext(MAPPER.writeValueAsString(request));
@@ -54,13 +61,12 @@ public class ServiceContextProvider {
 
     @SneakyThrows
     private <T extends FacadeServiceableGetter> AuthSession extractAndValidateAuthSession(
-            T request,
-            ServiceSession session) {
-        if (null == session.getAuthSession()) {
+            T request) {
+        if (null == request.getFacadeServiceable().getAuthenticationSessionId()) {
             return handleNoAuthSession(request);
         }
 
-        return validateAuthSession(request, session.getAuthSession());
+        return validateAuthSession(request);
     }
 
     private <T extends FacadeServiceableGetter> AuthSession handleNoAuthSession(T request) {
@@ -71,10 +77,14 @@ public class ServiceContextProvider {
         return null;
     }
 
-    private <T extends FacadeServiceableGetter> AuthSession validateAuthSession(T request, AuthSession session) {
+    private <T extends FacadeServiceableGetter> AuthSession validateAuthSession(T request) {
         if (Strings.isNullOrEmpty(request.getFacadeServiceable().getRedirectCode())) {
             throw new IllegalArgumentException("Missing redirect code");
         }
+
+        UUID sessionId = UUID.fromString(request.getFacadeServiceable().getAuthenticationSessionId());
+        AuthSession session = authSessions.findById(sessionId)
+                .orElseThrow(() -> new IllegalStateException("No auth session " + sessionId));
 
         if (!Objects.equals(session.getRedirectCode(), request.getFacadeServiceable().getRedirectCode())) {
             throw new IllegalArgumentException("Wrong redirect code");

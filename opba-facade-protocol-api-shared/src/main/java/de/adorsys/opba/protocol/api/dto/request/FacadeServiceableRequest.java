@@ -19,7 +19,7 @@ public class FacadeServiceableRequest {
     private UserAgentContext uaContext;
 
     private UUID xRequestID;
-    private String serviceSessionId;
+    private String authenticationSessionId;
     private String redirectCode;
 
     private String authorization;
