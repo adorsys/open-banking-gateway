@@ -43,13 +43,13 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
             String serviceSessionID,
             String authSessionID
     ) {
-        return accounts.list(
+        return accounts.execute(
                 ListAccountsRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
                                 // Get rid of CGILIB here by copying:
                                 .uaContext(userAgentContext.toBuilder().build())
                                 .serviceSessionId(serviceSessionID)
-                                .authSessionId(authSessionID)
+                                .redirectCode(authSessionID)
                                 .authorization(authorization)
                                 .fintechUserID(fintechUserID)
                                 .fintechRedirectURLOK(fintechRedirectURLOK)
@@ -77,13 +77,13 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
             String bookingStatus,
             Boolean deltaList
     ) {
-        return transactions.list(
+        return transactions.execute(
                 ListTransactionsRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
                                 // Get rid of CGILIB here by copying:
                                 .uaContext(userAgentContext.toBuilder().build())
                                 .serviceSessionId(serviceSessionID)
-                                .authSessionId(authSessionID)
+                                .redirectCode(authSessionID)
                                 .authorization(authorization)
                                 .fintechUserID(fintechUserID)
                                 .fintechRedirectURLOK(fintechRedirectURLOK)

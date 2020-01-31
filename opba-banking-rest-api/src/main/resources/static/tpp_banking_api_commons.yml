@@ -66,12 +66,13 @@ components:
       schema:
         type: string
 
-    Auth-Session-ID:
-      name: Auth-Session-ID
+    Redirect-Code:
+      name: Redirect-Code
       in: header
       required: false
       description: |
-        Unique ID that identifies Authentication Session (consent approval) for this request, if it is already available for given PSU by Fintech through previous requests.
+        Unique ID/Token that identifies Authentication Session Step (consent approval, more parameters requests) for this request.
+        Is not intended to be parseable by Fintech.
       example: "39391c7e-ad88-49ec-a2ad-99ddcb1f7723"
       schema:
         type: string
