@@ -1,6 +1,30 @@
 # FinTech Examples
 
-Example FinTech application provide in this sub module. To view the API:
+Example FinTech application provide in this sub module. 
+##fintech-api
+Contains an example-api, how calls from the fintech-ui to the fintech-server may look.
+The example-api is an open-api file to be found in 
+```
+fintech-api/src/main/resources/static
+```
+From this files the server stubs are generated to the 
+<code>target/generated-sources/open-api/src/main/java</code>
+folder.
+
+##fintech-impl
+Contains an example implementation of the api. Here the REST calls coming from the 
+Fintech-UI are handled. For that the <i>TPPServer</i>s API is called. The imiplementation contains the 
+Controllers to handle the Rest Calls and the Client Stubs, to
+call the <i>TPPServer</i>.
+To generate the client Stubs <code>spring-feign</code>
+is used.
+
+## fintech server
+The server simply packs the impl to an application.
+ 
+
+
+To view the API:
 
 ```
 > mvn clean install
