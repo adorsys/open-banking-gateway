@@ -24,7 +24,7 @@ class ListAccountsServiceTest {
     @Test
     @SneakyThrows
     void testXs2aWired() {
-        assertThat(listAccountsService.list(
+        assertThat(listAccountsService.execute(
                 ListAccountsRequest.builder()
                         .facadeServiceable(
                                 FacadeServiceableRequest.builder()

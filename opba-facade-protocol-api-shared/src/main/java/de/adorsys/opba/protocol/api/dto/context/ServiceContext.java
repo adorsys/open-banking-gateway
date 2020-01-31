@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -13,6 +15,9 @@ import lombok.NoArgsConstructor;
 public class ServiceContext<T> {
 
     private Long bankProtocolId;
+
+    private UUID serviceSessionId;
+    private UUID authSessionId;
 
     /**
      * These parameters should take precedence on those defined in {@link ServiceContext#request}.

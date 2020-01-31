@@ -38,7 +38,7 @@ public class Xs2aListAccountsEntrypoint implements ListAccounts {
     private final Xs2aListAccountsEntrypoint.FromRequest mapper;
 
     @Override
-    public CompletableFuture<Result<AccountList>> list(ServiceContext<ListAccountsRequest> serviceContext) {
+    public CompletableFuture<Result<AccountList>> execute(ServiceContext<ListAccountsRequest> serviceContext) {
         Xs2aContext context = mapper.map(serviceContext.getRequest());
         context.setAction(ProtocolAction.LIST_ACCOUNTS);
 

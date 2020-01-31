@@ -38,7 +38,7 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
     private final Xs2aListTransactionsEntrypoint.FromRequest mapper;
 
     @Override
-    public CompletableFuture<Result<TransactionsResponse>> list(ServiceContext<ListTransactionsRequest> serviceContext) {
+    public CompletableFuture<Result<TransactionsResponse>> execute(ServiceContext<ListTransactionsRequest> serviceContext) {
         TransactionListXs2aContext context = mapper.map(serviceContext.getRequest());
         context.setAction(ProtocolAction.LIST_TRANSACTIONS);
 
