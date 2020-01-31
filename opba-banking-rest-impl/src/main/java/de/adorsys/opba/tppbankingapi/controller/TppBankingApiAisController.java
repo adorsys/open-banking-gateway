@@ -40,16 +40,13 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
             String fintechRedirectURLNOK,
             UUID xRequestID,
             String bankID,
-            String serviceSessionID,
-            String authSessionID
+            String psUConsentSession
     ) {
         return accounts.execute(
                 ListAccountsRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
                                 // Get rid of CGILIB here by copying:
                                 .uaContext(userAgentContext.toBuilder().build())
-                                .serviceSessionId(serviceSessionID)
-                                .redirectCode(authSessionID)
                                 .authorization(authorization)
                                 .fintechUserID(fintechUserID)
                                 .fintechRedirectURLOK(fintechRedirectURLOK)
@@ -68,9 +65,9 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
             String fintechUserID,
             String fintechRedirectURLOK,
             String fintechRedirectURLNOK,
-            UUID xRequestID, String bankID,
-            String serviceSessionID,
-            String authSessionID,
+            UUID xRequestID,
+            String bankID,
+            String psUConsentSession,
             LocalDate dateFrom,
             LocalDate dateTo,
             String entryReferenceFrom,
@@ -82,8 +79,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                         .facadeServiceable(FacadeServiceableRequest.builder()
                                 // Get rid of CGILIB here by copying:
                                 .uaContext(userAgentContext.toBuilder().build())
-                                .serviceSessionId(serviceSessionID)
-                                .redirectCode(authSessionID)
                                 .authorization(authorization)
                                 .fintechUserID(fintechUserID)
                                 .fintechRedirectURLOK(fintechRedirectURLOK)
