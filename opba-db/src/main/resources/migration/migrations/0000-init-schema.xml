@@ -72,11 +72,6 @@
         </insert>
         <insert tableName="${table-prefix}session_type">
             <column name="id">2</column>
-            <column name="type">VALIDATION</column>
-            <column name="details">See de.adorsys.opba.db.domain.entity.sessions.SessionTypes.VALIDATION</column>
-        </insert>
-        <insert tableName="${table-prefix}session_type">
-            <column name="id">3</column>
             <column name="type">AUTHENTICATION</column>
             <column name="details">See de.adorsys.opba.db.domain.entity.sessions.SessionTypes.AUTHENTICATION</column>
         </insert>

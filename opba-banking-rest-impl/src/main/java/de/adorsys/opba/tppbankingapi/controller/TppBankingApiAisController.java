@@ -41,7 +41,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
             UUID xRequestID,
             String bankID,
             String serviceSessionID,
-            String validationSessionID,
             String authSessionID
     ) {
         return accounts.list(
@@ -50,7 +49,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                                 // Get rid of CGILIB here by copying:
                                 .uaContext(userAgentContext.toBuilder().build())
                                 .serviceSessionId(serviceSessionID)
-                                .validationSessionId(validationSessionID)
                                 .authSessionId(authSessionID)
                                 .authorization(authorization)
                                 .fintechUserID(fintechUserID)
@@ -72,7 +70,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
             String fintechRedirectURLNOK,
             UUID xRequestID, String bankID,
             String serviceSessionID,
-            String validationSessionID,
             String authSessionID,
             LocalDate dateFrom,
             LocalDate dateTo,
@@ -86,7 +83,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                                 // Get rid of CGILIB here by copying:
                                 .uaContext(userAgentContext.toBuilder().build())
                                 .serviceSessionId(serviceSessionID)
-                                .validationSessionId(validationSessionID)
                                 .authSessionId(authSessionID)
                                 .authorization(authorization)
                                 .fintechUserID(fintechUserID)
