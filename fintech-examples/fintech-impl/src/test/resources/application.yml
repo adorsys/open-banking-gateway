@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test
+    username: SA
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+
+tpp:
+  url: http://localhost:8086
+
+
+
+
+
