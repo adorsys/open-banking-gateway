@@ -36,6 +36,7 @@
             <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
+            <!-- Can't be null as is initial service request -->
             <column name="context" type="TEXT">
                 <constraints nullable="false"/>
             </column>

@@ -43,7 +43,6 @@ public class ServiceContextProvider {
                 .bankId(request.getFacadeServiceable().getBankID())
                 .authSessionId(null == authSession ? null : authSession.getId())
                 .request(request)
-                .serviceSessionContext(session.getContext())
                 .authContext(null == authSession ? null : authSession.getContext())
                 .build();
     }
