@@ -28,11 +28,12 @@
 
     <modules>
         <module>opba-consent-rest-api</module>
+        <module>opba-consent-rest-impl</module>
         <module>opba-banking-rest-api</module>
+        <module>opba-banking-rest-impl</module>
         <module>opba-banking-protocol-facade</module>
         <module>opba-embedded-starter</module>
         <module>fintech-examples</module>
-        <module>opba-banking-rest-impl</module>
         <module>opba-db</module>
         <module>opba-protocols</module>
         <module>opba-facade-protocol-api-shared</module>
