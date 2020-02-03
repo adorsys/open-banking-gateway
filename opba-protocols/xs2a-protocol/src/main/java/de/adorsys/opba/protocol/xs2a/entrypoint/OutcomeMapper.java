@@ -32,7 +32,7 @@ public class OutcomeMapper<T> {
         );
     }
 
-    public void onValidationProblem( ValidationIssue validationIssue) {
+    public void onValidationProblem(ValidationIssue validationIssue) {
         channel.complete(
                 new ContextBasedValidationErrorResult<>(
                         validationIssue.getProvideMoreParamsDialog(), validationIssue.getExecutionId()
@@ -48,7 +48,7 @@ public class OutcomeMapper<T> {
 
         private final String executionId;
 
-        public ContextBasedAuthorizationRequiredResult(URI redirectionTo, String executionId) {
+        ContextBasedAuthorizationRequiredResult(URI redirectionTo, String executionId) {
             super(redirectionTo);
             this.executionId = executionId;
         }
@@ -63,7 +63,7 @@ public class OutcomeMapper<T> {
 
         private final String executionId;
 
-        public ContextBasedValidationErrorResult(URI redirectionTo, String executionId) {
+        ContextBasedValidationErrorResult(URI redirectionTo, String executionId) {
             super(redirectionTo);
             this.executionId = executionId;
         }
