@@ -43,6 +43,8 @@ public class ServiceContextProvider {
                 .bankId(request.getFacadeServiceable().getBankID())
                 .authSessionId(null == authSession ? null : authSession.getId())
                 .request(request)
+                .serviceSessionContext(session.getContext())
+                .authContext(null == authSession ? null : authSession.getContext())
                 .build();
     }
 
@@ -63,7 +65,7 @@ public class ServiceContextProvider {
     @SneakyThrows
     private <T extends FacadeServiceableGetter> AuthSession extractAndValidateAuthSession(
             T request) {
-        if (null == request.getFacadeServiceable().getAuthenticationSessionId()) {
+        if (null == request.getFacadeServiceable().getAuthorizationSessionId()) {
             return handleNoAuthSession(request);
         }
 
@@ -83,7 +85,7 @@ public class ServiceContextProvider {
             throw new IllegalArgumentException("Missing redirect code");
         }
 
-        UUID sessionId = UUID.fromString(request.getFacadeServiceable().getAuthenticationSessionId());
+        UUID sessionId = UUID.fromString(request.getFacadeServiceable().getAuthorizationSessionId());
         AuthSession session = authSessions.findById(sessionId)
                 .orElseThrow(() -> new IllegalStateException("No auth session " + sessionId));
 

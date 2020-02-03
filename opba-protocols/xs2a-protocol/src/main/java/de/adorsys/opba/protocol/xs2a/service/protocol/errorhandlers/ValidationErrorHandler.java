@@ -27,6 +27,7 @@ public class ValidationErrorHandler implements JavaDelegate {
         eventPublisher.publishEvent(
                 ValidationIssue.builder()
                         .processId(ctx.getSagaId())
+                        .executionId(execution.getId())
                         .provideMoreParamsDialog(
                                 ContextUtil.evaluateSpelForCtx(
                                         configuration.getRedirect().getParameters().getProvideMore(),

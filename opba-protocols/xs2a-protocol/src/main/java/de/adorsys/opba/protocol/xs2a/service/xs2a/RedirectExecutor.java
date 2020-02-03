@@ -9,6 +9,7 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
 import java.util.function.Function;
 
 @Service
@@ -29,16 +30,19 @@ public class RedirectExecutor {
             DelegateExecution execution,
             Xs2aContext context,
             String destinationSpel) {
-        Redirect redirect = new Redirect();
-        redirect.setProcessId(execution.getRootProcessInstanceId());
-        redirect.setRedirectUri(
-                ContextUtil.evaluateSpelForCtx(
-                        destinationSpel,
-                        execution,
-                        context
+        Redirect.RedirectBuilder redirect = Redirect.builder();
+        redirect.processId(execution.getRootProcessInstanceId());
+        redirect.executionId(execution.getId());
+        redirect.redirectUri(
+                URI.create(
+                        ContextUtil.evaluateSpelForCtx(
+                                destinationSpel,
+                                execution,
+                                context
+                        )
                 )
         );
 
-        applicationEventPublisher.publishEvent(redirect);
+        applicationEventPublisher.publishEvent(redirect.build());
     }
 }

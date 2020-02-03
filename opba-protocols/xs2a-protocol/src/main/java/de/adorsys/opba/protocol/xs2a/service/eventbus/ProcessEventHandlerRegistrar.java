@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
@@ -61,7 +60,7 @@ public class ProcessEventHandlerRegistrar {
 
     private <T> void doRedirect(CompletableFuture<ResponseEntity<T>> result, Redirect redirResult) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(redirResult.getRedirectUri()));
+        headers.setLocation(redirResult.getRedirectUri());
         result.complete(new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY));
     }
 

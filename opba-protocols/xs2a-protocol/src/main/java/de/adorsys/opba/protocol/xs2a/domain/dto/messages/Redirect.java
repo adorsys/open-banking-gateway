@@ -1,11 +1,22 @@
 package de.adorsys.opba.protocol.xs2a.domain.dto.messages;
 
-import lombok.Data;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NonNull;
 
-@Data
+import java.net.URI;
+
+@Getter
 @EqualsAndHashCode(callSuper = true)
 public class Redirect extends InternalProcessResult {
 
-    private String redirectUri;
+    @NonNull
+    private URI redirectUri;
+
+    @Builder
+    public Redirect(String processId, String executionId, Object result, URI redirectUri) {
+        super(processId, executionId, result);
+        this.redirectUri = redirectUri;
+    }
 }
