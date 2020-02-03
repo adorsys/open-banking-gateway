@@ -4,6 +4,14 @@ import java.util.Optional;
 
 public interface Result<T> {
 
+    default String serviceSessionContext() {
+        return null;
+    }
+
+    default String authContext() {
+        return null;
+    }
+
     default Optional<T> result() {
         return Optional.empty();
     }

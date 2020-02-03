@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 // TODO Validation
 @Setter
@@ -21,6 +22,8 @@ import java.util.Map;
 public class AuthorizationRequest implements FacadeServiceableGetter {
 
     private FacadeServiceableRequest facadeServiceable;
+
+    private Map<String, String> scaAuthenticationData = new ConcurrentHashMap<>();
 
     @Builder.Default
     private Map<ExtraAuthRequestParam, Object> extras = new EnumMap<>(ExtraAuthRequestParam.class);

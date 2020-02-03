@@ -26,5 +26,6 @@ public class ServiceContext<T> {
     @NonNull
     private T request;
 
+    private String serviceSessionContext;
     private String authContext;
 }

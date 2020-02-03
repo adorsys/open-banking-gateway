@@ -23,8 +23,11 @@ public class FlowableJobEventListener extends AbstractFlowableEngineEventListene
 
     @Override
     protected void processCompleted(FlowableEngineEntityEvent event) {
-        Response result = new Response();
-        result.setProcessId(event.getProcessInstanceId());
-        applicationEventPublisher.publishEvent(result);
+        applicationEventPublisher.publishEvent(
+                Response.builder()
+                        .processId(event.getProcessInstanceId())
+                        .executionId(event.getExecutionId())
+                        .build()
+        );
     }
 }
