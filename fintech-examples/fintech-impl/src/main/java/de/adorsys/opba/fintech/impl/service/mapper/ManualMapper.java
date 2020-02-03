@@ -1,9 +1,9 @@
 package de.adorsys.opba.fintech.impl.service.mapper;
 
 import de.adorsys.opba.fintech.api.model.generated.AccountList;
-import de.adorsys.opba.fintech.api.model.generated.AccountReport;
 import de.adorsys.opba.fintech.api.model.generated.BankDescriptor;
 import de.adorsys.opba.fintech.api.model.generated.BankProfile;
+import de.adorsys.opba.fintech.api.model.generated.TransactionsResponse;
 import de.adorsys.opba.tpp.banksearch.api.model.generated.BankProfileDescriptor;
 import org.mapstruct.factory.Mappers;
 
@@ -21,7 +21,7 @@ public class ManualMapper {
         return Mappers.getMapper(AccountListMapper.class).map(tppAccountList);
     }
 
-    public static AccountReport fromTppToFintech(de.adorsys.opba.tpp.ais.api.model.generated.AccountReport tppAccountReport) {
-        return Mappers.getMapper(AccountReportMapper.class).map(tppAccountReport);
+    public static TransactionsResponse fromTppToFintech(de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse transactionsResponse) {
+        return Mappers.getMapper(TransactionsResponseMapper.class).map(transactionsResponse);
     }
 }
