@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.facade.services;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Strings;
@@ -22,6 +23,8 @@ import java.util.UUID;
 public class ServiceContextProvider {
 
     private static final ObjectMapper MAPPER = new ObjectMapper()
+            .findAndRegisterModules()
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
     private final AuthenticationSessionRepository authSessions;
