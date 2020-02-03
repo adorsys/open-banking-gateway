@@ -1,12 +1,10 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse2004;
-import de.adorsys.opba.fintech.api.model.generated.TransactionsResponse;
 import de.adorsys.opba.fintech.impl.config.TppAisClient;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.service.mapper.ManualMapper;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListTransactionsMock;
-import de.adorsys.opba.tpp.ais.api.model.generated.AccountReport;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +30,9 @@ public class TransactionService {
                                                String accountId, LocalDate dateFrom, LocalDate dateTo,
                                                String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
 
-        AccountReport accountReport = null;
+        de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse transactionsResponse = null;
         if (!mockTppAIS) {
-            accountReport = tppAisClient.getTransactions(
+            transactionsResponse = tppAisClient.getTransactions(
                     accountId,
                     contextInformation.getFintechID(),
                     sessionEntity.getLoginUserName(),
@@ -47,18 +45,15 @@ public class TransactionService {
                     dateTo,
                     entryReferenceFrom,
                     bookingStatus,
-                    deltaList).getBody().getTransactions();
+                    deltaList).getBody();
         }
 
         if (mockTppAIS) {
-            accountReport = new TppListTransactionsMock().getTransactionList();
+            transactionsResponse = new TppListTransactionsMock().getTransactionsResponse();
         }
 
         InlineResponse2004 inlineResponse2004 = new InlineResponse2004();
-        de.adorsys.opba.fintech.api.model.generated.AccountReport finTechAccountReport = ManualMapper.fromTppToFintech(accountReport);
-        TransactionsResponse transactionsResponse = new TransactionsResponse();
-        transactionsResponse.setTransactions(finTechAccountReport);
-        inlineResponse2004.setAccountList(transactionsResponse);
+        inlineResponse2004.setAccountList(ManualMapper.fromTppToFintech(transactionsResponse));
         return inlineResponse2004;
     }
 }

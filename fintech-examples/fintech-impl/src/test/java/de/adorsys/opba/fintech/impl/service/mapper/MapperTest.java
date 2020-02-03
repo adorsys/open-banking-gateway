@@ -4,6 +4,7 @@ import de.adorsys.opba.fintech.api.model.generated.BankProfile;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountReport;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionDetails;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionList;
+import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import de.adorsys.opba.tpp.banksearch.api.model.generated.BankProfileDescriptor;
 import org.junit.jupiter.api.Test;
 
@@ -27,16 +28,18 @@ public class MapperTest {
     }
 
     @Test
-    public void testAccountReportMapper() {
+    public void testTransactionsResponseMapper() {
         final String creditorName = "peter";
-        AccountReport accountReport = new AccountReport();
         TransactionList transactionList = new TransactionList();
         TransactionDetails transactionDetails = new TransactionDetails();
         transactionDetails.setCreditorName(creditorName);
         transactionList.add(transactionDetails);
+        TransactionsResponse transactionsResponse = new TransactionsResponse();
+        AccountReport accountReport = new AccountReport();
         accountReport.setBooked(transactionList);
+        transactionsResponse.setTransactions(accountReport);
 
-        de.adorsys.opba.fintech.api.model.generated.AccountReport finTechAccountReport = ManualMapper.fromTppToFintech(accountReport);
-        assertEquals(creditorName, finTechAccountReport.getBooked().get(0).getCreditorName());
+        de.adorsys.opba.fintech.api.model.generated.TransactionsResponse finTechTransactionsResponse = ManualMapper.fromTppToFintech(transactionsResponse);
+        assertEquals(creditorName, finTechTransactionsResponse.getTransactions().getBooked().get(0).getCreditorName());
     }
 }
