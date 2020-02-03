@@ -20,5 +20,4 @@ public class OpenBankingEmbeddedApplication {
     public static void main(String[] args) {
         SpringApplication.run(OpenBankingEmbeddedApplication.class, args);
     }
-
 }
