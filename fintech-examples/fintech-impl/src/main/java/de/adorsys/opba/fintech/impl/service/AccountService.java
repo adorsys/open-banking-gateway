@@ -3,7 +3,7 @@ package de.adorsys.opba.fintech.impl.service;
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse2003;
 import de.adorsys.opba.fintech.impl.config.TppAisClient;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
-import de.adorsys.opba.fintech.impl.service.mapper.Mapper;
+import de.adorsys.opba.fintech.impl.service.mapper.ManualMapper;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListAccountsMock;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
 import lombok.NoArgsConstructor;
@@ -42,7 +42,7 @@ public class AccountService {
             accountList = new TppListAccountsMock().getAccountList();
         }
         InlineResponse2003 response = new InlineResponse2003();
-        response.setAccountList(Mapper.fromTppToFintech(accountList));
+        response.setAccountList(ManualMapper.fromTppToFintech(accountList));
         return response;
     }
 }
