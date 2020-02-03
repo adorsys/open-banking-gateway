@@ -47,7 +47,7 @@ COPY docker-root /
 # install ruby
 RUN  microdnf install --nodocs -y ruby && microdnf clean all \
     && chown -R 1001:0 /etc/nginx/conf.d /entry.sh \
-    && chmod 555 /entry.sh \
+    && chmod 700 /entry.sh \
     && chmod 700 /etc/nginx/conf.d
 
 USER 1001
