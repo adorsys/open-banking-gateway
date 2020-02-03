@@ -25,14 +25,52 @@ public class OutcomeMapper<T> {
     }
 
     public void onRedirect(Redirect redirectResult) {
-        channel.complete(new AuthorizationRequiredResult<>(URI.create(redirectResult.getRedirectUri())));
+        channel.complete(
+                new ContextBasedAuthorizationRequiredResult<>(
+                        redirectResult.getRedirectUri(), redirectResult.getExecutionId()
+                )
+        );
     }
 
-    public void onValidationProblem(ValidationIssue validationIssue) {
-        channel.complete(new ValidationErrorResult<>(validationIssue.getProvideMoreParamsDialog()));
+    public void onValidationProblem( ValidationIssue validationIssue) {
+        channel.complete(
+                new ContextBasedValidationErrorResult<>(
+                        validationIssue.getProvideMoreParamsDialog(), validationIssue.getExecutionId()
+                )
+        );
     }
 
     public void onError() {
         channel.complete(new ErrorResult<>());
+    }
+
+    private static class ContextBasedAuthorizationRequiredResult<T> extends AuthorizationRequiredResult<T> {
+
+        private final String executionId;
+
+        public ContextBasedAuthorizationRequiredResult(URI redirectionTo, String executionId) {
+            super(redirectionTo);
+            this.executionId = executionId;
+        }
+
+        @Override
+        public String authContext() {
+            return executionId;
+        }
+    }
+
+    private static class ContextBasedValidationErrorResult<T> extends ValidationErrorResult<T> {
+
+        private final String executionId;
+
+        public ContextBasedValidationErrorResult(URI redirectionTo, String executionId) {
+            super(redirectionTo);
+            this.executionId = executionId;
+        }
+
+        @Override
+        public String authContext() {
+            return executionId;
+        }
     }
 }

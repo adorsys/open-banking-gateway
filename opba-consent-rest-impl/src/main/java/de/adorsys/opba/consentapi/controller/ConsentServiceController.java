@@ -26,9 +26,12 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
         return updateAuthorizationService.execute(
                 AuthorizationRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
-                                .authorization(authId)
+                                .authorizationSessionId(authId)
+                                .xRequestID(xRequestID)
                                 .build()
-                        ).build()
+                        )
+                        .scaAuthenticationData(body.getScaAuthenticationData())
+                        .build()
         );
     }
 }
