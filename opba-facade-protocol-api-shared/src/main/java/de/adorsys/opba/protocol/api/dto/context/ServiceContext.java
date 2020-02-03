@@ -22,10 +22,8 @@ public class ServiceContext<T> {
 
     private UUID authSessionId;
 
-
     @NonNull
     private T request;
 
-    private String serviceSessionContext;
     private String authContext;
 }
