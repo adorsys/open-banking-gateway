@@ -1,6 +1,6 @@
 package de.adorsys.opba.fintech.impl.config;
 
-import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
+import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepositoryImpl;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -18,7 +18,7 @@ import javax.persistence.EntityManager;
         basePackages = "de.adorsys.opba.fintech.impl.database.repositories",
         repositoryBaseClass = UserRepositoryImpl.class)
 @ComponentScan("de.adorsys.opba.fintech.impl")
-@EntityScan(basePackageClasses = {UserEntity.class})
+@EntityScan(basePackageClasses = {SessionEntity.class})
 
 public class FinTechImplConfig {
 

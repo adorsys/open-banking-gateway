@@ -1,7 +1,7 @@
 package de.adorsys.opba.fintech.impl.database.repositories;
 
 import com.google.common.collect.Iterables;
-import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
+import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.persistence.EntityManager;
@@ -13,27 +13,27 @@ import java.util.List;
 import java.util.Optional;
 
 public class UserRepositoryImpl
-        extends SimpleJpaRepository<UserEntity, String>
+        extends SimpleJpaRepository<SessionEntity, String>
         implements UserRepository {
 
     private EntityManager entityManager;
 
     public UserRepositoryImpl(EntityManager entityManager) {
-        super(UserEntity.class, entityManager);
+        super(SessionEntity.class, entityManager);
         this.entityManager = entityManager;
     }
 
     @Override
-    public Optional<UserEntity> findByXsrfToken(String xsrfToken) {
+    public Optional<SessionEntity> findByXsrfToken(String xsrfToken) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<UserEntity> cQuery = builder.createQuery(getDomainClass());
-        Root<UserEntity> root = cQuery.from(getDomainClass());
+        CriteriaQuery<SessionEntity> cQuery = builder.createQuery(getDomainClass());
+        Root<SessionEntity> root = cQuery.from(getDomainClass());
         cQuery
                 .select(root)
                 .where(builder
                         .like(root.<String>get("xsrfToken"), xsrfToken));
-        TypedQuery<UserEntity> query = entityManager.createQuery(cQuery);
-        List<UserEntity> resultList = query.getResultList();
+        TypedQuery<SessionEntity> query = entityManager.createQuery(cQuery);
+        List<SessionEntity> resultList = query.getResultList();
         if (resultList.isEmpty()) {
             return Optional.empty();
         }
