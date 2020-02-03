@@ -1,23 +1,15 @@
 import { Injectable } from '@angular/core';
-import { BankDescriptor } from '../models/bank.model';
-import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { FinTechBankSearchService } from '../../api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BankSearchService {
-  // path resolved by proxy
-  public URL = `${environment.FINTECH_API}`;
+  constructor(private finTechBankSearchService: FinTechBankSearchService) {}
 
-  constructor(private http: HttpClient) {}
-
-  searchBanks(keyword: string): Observable<BankDescriptor> {
-    return this.http.get<BankDescriptor>(this.URL + '/search/bankSearch', {
-      params: {
-        keyword
-      }
-    });
+  searchBanks(keyword: string) {
+    // required headers are set in http interceptor
+    // that's the reason for empty strings
+    return this.finTechBankSearchService.bankSearchGET('', '', keyword);
   }
 }

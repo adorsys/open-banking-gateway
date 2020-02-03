@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { BankProfile } from '../../../api';
 import { BankProfileService } from '../../services/bank-profile.service';
-import { BankProfile } from '../../models/bank-profile.model';
 
 @Component({
   selector: 'app-profile',

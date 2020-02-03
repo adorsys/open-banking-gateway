@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { BankSearchService } from '../../services/bank-search.service';
-import { Bank, BankDescriptor } from '../../models/bank.model';
 import { Router } from '@angular/router';
+import { BankDescriptor } from '../../../api';
 
 @Component({
   selector: 'app-bank-search',
@@ -9,13 +9,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./bank-search.component.scss']
 })
 export class BankSearchComponent {
-  searchedBanks: Bank[];
+  searchedBanks: BankDescriptor[];
   selectedBank: string;
 
   constructor(private bankSearchService: BankSearchService, private router: Router) {}
 
   onSearch(keyword: string) {
-    this.bankSearchService.searchBanks(keyword).subscribe((bankDescriptor: BankDescriptor) => {
+    this.bankSearchService.searchBanks(keyword).subscribe(bankDescriptor => {
       this.searchedBanks = bankDescriptor.bankDescriptor;
     });
   }

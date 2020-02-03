@@ -1,29 +1,26 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Credentials } from '../models/credentials.model';
 import { Router } from '@angular/router';
-import { environment } from '../../environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { FinTechAuthorizationService } from '../api';
+import { Credentials } from '../models/credentials.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  public URL = `${environment.FINTECH_API}`;
   private XSRF_TOKEN = 'XSRF-TOKEN';
 
-  constructor(private router: Router, private cookieService: CookieService, private http: HttpClient) {}
+  constructor(
+    private router: Router,
+    private cookieService: CookieService,
+    private finTechAuthorizationService: FinTechAuthorizationService
+  ) {}
 
-  login(credentials: Credentials): Observable<any> {
-    return this.http
-      .post<any>(this.URL + '/login', credentials, {
-        headers: new HttpHeaders({
-          'X-Request-ID': '99391c7e-ad88-49ec-a2ad-99ddcb1f7721'
-        }),
-        observe: 'response'
-      })
+  login(credentials: Credentials): Observable<boolean> {
+    return this.finTechAuthorizationService
+      .loginPOST('99391c7e-ad88-49ec-a2ad-99ddcb1f7721', credentials, 'response')
       .pipe(
         map(loginResponse => {
           // if login response is ok and cookie exist then the login was successful
