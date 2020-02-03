@@ -31,12 +31,12 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     @Test
     public void testListAccounts() {
         BankProfileTestResult result = getBankProfileTestResult();
-        List<String> ibans = listAccounts(result.getXsrfToken(), result.getBankUUID());
-        assertTrue(ibans.containsAll(Arrays.asList(new String[]{"FR7612345987650123456789014", "AFFE12345987650123456789014"})));
+        List<String> accountIDs = listAccountIDs(result.getXsrfToken(), result.getBankUUID());
+        assertTrue(accountIDs.containsAll(Arrays.asList(new String[]{"firstAccount", "secondAccount"})));
     }
 
     @SneakyThrows
-    List<String> listAccounts(String xsrfToken, String bankUUID) {
+    List<String> listAccountIDs(String xsrfToken, String bankUUID) {
         MvcResult mvcResult = this.mvc
                 .perform(get(FIN_TECH_LIST_ACCOUNTS_URL, bankUUID)
                         .header("X-Request-ID", UUID.randomUUID().toString())
@@ -45,14 +45,14 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<String> ibans = new ArrayList<>();
+        List<String> accountIDs = new ArrayList<>();
         JSONArray accounts = new JSONObject(mvcResult.getResponse().getContentAsString())
                 .getJSONObject("accountList")
                 .getJSONArray("accounts");
         for (int i = 0; i < accounts.length(); i++) {
-            ibans.add(accounts.getJSONObject(i).getString("iban"));
+            accountIDs.add(accounts.getJSONObject(i).getString("resourceId"));
         }
-        return ibans;
+        return accountIDs;
     }
 
 
