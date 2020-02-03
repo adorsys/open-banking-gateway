@@ -4,7 +4,7 @@ import de.adorsys.opba.fintech.api.model.generated.InlineResponse2004;
 import de.adorsys.opba.fintech.api.model.generated.TransactionsResponse;
 import de.adorsys.opba.fintech.impl.config.TppAisClient;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
-import de.adorsys.opba.fintech.impl.service.mapper.Mapper;
+import de.adorsys.opba.fintech.impl.service.mapper.ManualMapper;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListTransactionsMock;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountReport;
 import lombok.NoArgsConstructor;
@@ -55,7 +55,7 @@ public class TransactionService {
         }
 
         InlineResponse2004 inlineResponse2004 = new InlineResponse2004();
-        de.adorsys.opba.fintech.api.model.generated.AccountReport finTechAccountReport = Mapper.fromTppToFintech(accountReport);
+        de.adorsys.opba.fintech.api.model.generated.AccountReport finTechAccountReport = ManualMapper.fromTppToFintech(accountReport);
         TransactionsResponse transactionsResponse = new TransactionsResponse();
         transactionsResponse.setTransactions(finTechAccountReport);
         inlineResponse2004.setAccountList(transactionsResponse);
