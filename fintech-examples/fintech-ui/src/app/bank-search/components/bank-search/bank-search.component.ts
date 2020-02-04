@@ -9,15 +9,19 @@ import { BankDescriptor } from '../../../api';
   styleUrls: ['./bank-search.component.scss']
 })
 export class BankSearchComponent {
-  searchedBanks: BankDescriptor[];
+  searchedBanks: BankDescriptor[] = [];
   selectedBank: string;
 
   constructor(private bankSearchService: BankSearchService, private router: Router) {}
 
   onSearch(keyword: string) {
-    this.bankSearchService.searchBanks(keyword).subscribe(bankDescriptor => {
-      this.searchedBanks = bankDescriptor.bankDescriptor;
-    });
+    if (keyword && keyword.trim()) {
+      this.bankSearchService.searchBanks(keyword).subscribe(bankDescriptor => {
+        this.searchedBanks = bankDescriptor.bankDescriptor;
+      });
+    } else {
+      this.bankUnselect();
+    }
   }
 
   onBankSelect(bankId: string) {
@@ -25,7 +29,7 @@ export class BankSearchComponent {
     this.router.navigate(['/dashboard']);
   }
 
-  bankUnselect() {
+  private bankUnselect() {
     this.searchedBanks = [];
     this.selectedBank = null;
   }
