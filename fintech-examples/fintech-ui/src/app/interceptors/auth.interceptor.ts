@@ -1,8 +1,7 @@
 import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Observable, throwError as observableThrowError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { fromPromise } from 'rxjs/internal-compatibility';
 import { Injectable } from '@angular/core';
+import { EMPTY, Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
 @Injectable()
@@ -10,14 +9,22 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return fromPromise(this.handleRequest(request, next)).pipe(
-      catchError(errors => {
-        return observableThrowError(errors);
+    return this.handleRequest(request, next).pipe(
+      catchError(httpErrorResponse => {
+        if (httpErrorResponse.status === 401) {
+          this.authService.logout();
+          return EMPTY;
+        } else if (httpErrorResponse.status === 403) {
+          // this.authService.openAccessForbiddenDialog();
+          return EMPTY;
+        } else {
+          return throwError(httpErrorResponse.error);
+        }
       })
     );
   }
 
-  private async handleRequest(request: HttpRequest<any>, next: HttpHandler): Promise<HttpEvent<any>> {
+  private handleRequest(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const headers = new HttpHeaders()
       // TODO: to be defined
       .set('X-Request-ID', '99391c7e-ad88-49ec-a2ad-99ddcb1f7721')
@@ -31,6 +38,6 @@ export class AuthInterceptor implements HttpInterceptor {
         headers
       });
     }
-    return next.handle(request).toPromise();
+    return next.handle(request);
   }
 }
