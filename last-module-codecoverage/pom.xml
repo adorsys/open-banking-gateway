@@ -24,6 +24,11 @@
         <!-- Excluding fintech-examples as they are not production code -->
         <dependency>
             <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-rest-api-shared</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
             <artifactId>opba-banking-protocol-facade</artifactId>
             <version>${project.version}</version>
         </dependency>

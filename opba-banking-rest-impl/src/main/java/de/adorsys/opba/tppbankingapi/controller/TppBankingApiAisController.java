@@ -6,11 +6,11 @@ import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsReq
 import de.adorsys.opba.protocol.api.dto.result.ErrorResult;
 import de.adorsys.opba.protocol.facade.services.ais.ListAccountsService;
 import de.adorsys.opba.protocol.facade.services.ais.ListTransactionsService;
+import de.adorsys.opba.restapi.shared.service.ErrorResultMapper;
+import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
+import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.tppbankingapi.ais.model.generated.GeneralError;
 import de.adorsys.opba.tppbankingapi.ais.resource.generated.TppBankingApiAccountInformationServiceAisApi;
-import de.adorsys.opba.tppbankingapi.service.ErrorResultMapper;
-import de.adorsys.opba.tppbankingapi.service.FacadeResponseMapper;
-import de.adorsys.opba.tppbankingapi.useragent.UserAgentContext;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.springframework.web.bind.annotation.RestController;

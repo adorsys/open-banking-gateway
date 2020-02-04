@@ -42,7 +42,7 @@ public class ProtocolSelector {
                 .map(protocol -> actionBeans.get(protocol.getProtocolBeanName()))
                 .orElseThrow(() ->
                         new IllegalStateException(
-                                "No action bean for " + protocolAction.name() + " of: " + bankIdString(ctx)
+                                "No action bean for " + protocolAction.name() + " of: " + ctx.loggableBankId()
                         )
                 );
     }
@@ -54,13 +54,5 @@ public class ProtocolSelector {
         session.setProtocol(protocol);
         sessions.save(session);
         return protocol;
-    }
-
-    private String bankIdString(ServiceContext<?> ctx) {
-        return String.format(
-                "[protocol id: %s / bank uuid: %s]",
-                ctx.getBankProtocolId(),
-                ctx.getBankId()
-        );
     }
 }

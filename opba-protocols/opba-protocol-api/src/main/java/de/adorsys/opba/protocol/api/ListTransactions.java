@@ -1,8 +1,8 @@
 package de.adorsys.opba.protocol.api;
 
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
-import de.adorsys.opba.tppbankingapi.ais.model.generated.TransactionsResponse;
+import de.adorsys.opba.protocol.api.dto.result.body.TransactionListBody;
 
 @FunctionalInterface
-public interface ListTransactions extends Action<ListTransactionsRequest, TransactionsResponse> {
+public interface ListTransactions extends Action<ListTransactionsRequest, TransactionListBody> {
 }

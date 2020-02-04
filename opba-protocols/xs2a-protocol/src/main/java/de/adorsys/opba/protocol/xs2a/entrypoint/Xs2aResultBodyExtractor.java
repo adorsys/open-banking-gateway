@@ -1,8 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint;
 
+import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
+import de.adorsys.opba.protocol.api.dto.result.body.TransactionListBody;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.InternalProcessResult;
-import de.adorsys.opba.tppbankingapi.ais.model.generated.AccountList;
-import de.adorsys.opba.tppbankingapi.ais.model.generated.TransactionsResponse;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
 import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
@@ -40,19 +40,19 @@ public class Xs2aResultBodyExtractor {
         return getResult(exec, TransactionsReport.class);
     }
 
-    public AccountList extractAccountList(InternalProcessResult result) {
+    public AccountListBody extractAccountList(InternalProcessResult result) {
         ProcessInstance updated =
                 runtimeService.createProcessInstanceQuery()
                         .processInstanceId(result.getProcessId())
                         .singleResult();
         ExecutionEntity exec = (ExecutionEntity) updated;
-        return getResult(exec, AccountList.class);
+        return getResult(exec, AccountListBody.class);
     }
 
-    public TransactionsResponse extractTransactionsReport(InternalProcessResult result) {
+    public TransactionListBody extractTransactionsReport(InternalProcessResult result) {
         ProcessInstance updated = runtimeService.createProcessInstanceQuery()
                 .processInstanceId(result.getProcessId()).singleResult();
         ExecutionEntity exec = (ExecutionEntity) updated;
-        return getResult(exec, TransactionsResponse.class);
+        return getResult(exec, TransactionListBody.class);
     }
 }

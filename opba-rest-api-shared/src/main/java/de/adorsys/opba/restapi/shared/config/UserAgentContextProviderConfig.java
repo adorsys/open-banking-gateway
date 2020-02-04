@@ -1,6 +1,6 @@
-package de.adorsys.opba.tppbankingapi.config;
+package de.adorsys.opba.restapi.shared.config;
 
-import de.adorsys.opba.tppbankingapi.useragent.UserAgentContext;
+import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -9,16 +9,16 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static de.adorsys.opba.tppbankingapi.HttpHeaders.UserAgentContext.PSU_ACCEPT;
-import static de.adorsys.opba.tppbankingapi.HttpHeaders.UserAgentContext.PSU_ACCEPT_CHARSET;
-import static de.adorsys.opba.tppbankingapi.HttpHeaders.UserAgentContext.PSU_ACCEPT_ENCODING;
-import static de.adorsys.opba.tppbankingapi.HttpHeaders.UserAgentContext.PSU_ACCEPT_LANGUAGE;
-import static de.adorsys.opba.tppbankingapi.HttpHeaders.UserAgentContext.PSU_DEVICE_ID;
-import static de.adorsys.opba.tppbankingapi.HttpHeaders.UserAgentContext.PSU_GEO_LOCATION;
-import static de.adorsys.opba.tppbankingapi.HttpHeaders.UserAgentContext.PSU_HTTP_METHOD;
-import static de.adorsys.opba.tppbankingapi.HttpHeaders.UserAgentContext.PSU_IP_ADDRESS;
-import static de.adorsys.opba.tppbankingapi.HttpHeaders.UserAgentContext.PSU_IP_PORT;
-import static de.adorsys.opba.tppbankingapi.HttpHeaders.UserAgentContext.PSU_USER_AGENT;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_ACCEPT;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_ACCEPT_CHARSET;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_ACCEPT_ENCODING;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_ACCEPT_LANGUAGE;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_DEVICE_ID;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_GEO_LOCATION;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_HTTP_METHOD;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP_ADDRESS;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP_PORT;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_USER_AGENT;
 
 @Configuration
 public class UserAgentContextProviderConfig {
