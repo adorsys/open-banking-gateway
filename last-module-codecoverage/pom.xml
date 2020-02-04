@@ -116,7 +116,6 @@
                 <configuration>
                     <excludes>
                         <exclude>**/generated/**</exclude>
-                        <exclude>**/*MapperImpl.class</exclude>
                     </excludes>
                 </configuration>
             </plugin>
