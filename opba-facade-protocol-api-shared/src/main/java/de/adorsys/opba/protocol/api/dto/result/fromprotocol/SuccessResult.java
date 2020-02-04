@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.api.dto.result;
+package de.adorsys.opba.protocol.api.dto.result.fromprotocol;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

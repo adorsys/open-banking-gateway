@@ -1,10 +1,10 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint;
 
-import de.adorsys.opba.protocol.api.dto.result.AuthorizationRequiredResult;
-import de.adorsys.opba.protocol.api.dto.result.ErrorResult;
-import de.adorsys.opba.protocol.api.dto.result.Result;
-import de.adorsys.opba.protocol.api.dto.result.SuccessResult;
-import de.adorsys.opba.protocol.api.dto.result.ValidationErrorResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.AuthorizationRequiredResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ErrorResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.SuccessResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ValidationErrorResult;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Redirect;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Response;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ValidationIssue;

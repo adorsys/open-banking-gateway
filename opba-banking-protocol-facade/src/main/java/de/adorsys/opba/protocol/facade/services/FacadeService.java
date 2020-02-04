@@ -4,8 +4,9 @@ import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.protocol.api.Action;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
-import de.adorsys.opba.protocol.api.dto.result.Result;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.body.ResultBody;
+import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +21,10 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
     private final Map<String, ? extends A> actionProviders;
     private final ProtocolSelector selector;
     private final ServiceContextProvider provider;
-    private final ResultHandler handler;
+    private final ProtocolResultHandler handler;
 
     @Transactional
-    public CompletableFuture<Result<O>> execute(I request) {
+    public CompletableFuture<FacadeResult<O>> execute(I request) {
         ServiceContext<I> ctx = contextFor(request);
         A protocol = selectAndSetProtocolTo(ctx);
         CompletableFuture<Result<O>> result = protocol.execute(ctx);
@@ -48,7 +49,7 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
         );
     }
 
-    protected Result<O> handleResult(Result<O> result, UUID serviceSessionId) {
+    protected FacadeResult<O> handleResult(Result<O> result, UUID serviceSessionId) {
         return handler.handleResult(result, serviceSessionId);
     }
 }
