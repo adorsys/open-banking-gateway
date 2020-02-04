@@ -1,0 +1,11 @@
+{
+  "/fintech-api-proxy/*": {
+    "target": "https://obg-dev-fintechui.cloud.adorsys.de/fintech-api-proxy",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/fintech-api-proxy": ""
+    }
+  }
+}
