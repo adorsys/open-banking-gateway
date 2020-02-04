@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.xs2a.entrypoint.authorization;
 import de.adorsys.opba.protocol.api.UpdateAuthorization;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.authentication.AuthorizationRequest;
-import de.adorsys.opba.protocol.api.dto.result.Result;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper;
 import de.adorsys.opba.protocol.xs2a.service.ContextUpdateService;

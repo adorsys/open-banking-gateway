@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.config.profiles;
+package de.adorsys.opba.starter.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;

@@ -1,14 +1,14 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
+import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
-import de.adorsys.opba.protocol.api.dto.result.ErrorResult;
+import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeErrorResult;
 import de.adorsys.opba.protocol.facade.services.ais.ListAccountsService;
 import de.adorsys.opba.protocol.facade.services.ais.ListTransactionsService;
 import de.adorsys.opba.restapi.shared.service.ErrorResultMapper;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
-import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.tppbankingapi.ais.model.generated.GeneralError;
 import de.adorsys.opba.tppbankingapi.ais.resource.generated.TppBankingApiAccountInformationServiceAisApi;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     private final ListAccountsService accounts;
     private final ListTransactionsService transactions;
     private final FacadeResponseMapper mapper;
-    private final ErrorResultMapper<ErrorResult, GeneralError> errorMapper;
+    private final ErrorResultMapper<FacadeErrorResult, GeneralError> errorMapper;
 
     @Override
     public CompletableFuture getAccounts(
@@ -97,7 +97,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = API_MAPPERS_PACKAGE)
-    public interface ToErrorResponse extends ErrorResultMapper<ErrorResult, GeneralError> {
-        GeneralError map(ErrorResult error);
+    public interface ToErrorResponse extends ErrorResultMapper<FacadeErrorResult, GeneralError> {
+        GeneralError map(FacadeErrorResult error);
     }
 }
