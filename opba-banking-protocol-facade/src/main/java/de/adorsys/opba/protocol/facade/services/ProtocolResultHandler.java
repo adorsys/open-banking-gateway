@@ -38,13 +38,19 @@ public class ProtocolResultHandler {
     }
 
     private <O> FacadeResult<O> handleRedirect(Result<O> result, UUID serviceSessionId) {
-        updateAuthContext(result, serviceSessionId);
-        return (FacadeRedirectResult<O>) FacadeRedirectResult.FROM_PROTOCOL.map((RedirectionResult) result);
+        AuthSession session = updateAuthContext(result, serviceSessionId);
+
+        FacadeRedirectResult<O> mappedResult =
+                (FacadeRedirectResult<O>) FacadeRedirectResult.FROM_PROTOCOL.map((RedirectionResult) result);
+
+        mappedResult.setAuthorizationSessionId(session.getId().toString());
+
+        return mappedResult;
     }
 
-    private <O> void updateAuthContext(Result<O> result, UUID serviceSessionId) {
+    private <O> AuthSession updateAuthContext(Result<O> result, UUID serviceSessionId) {
         // Auth session is 1-1 to service session, using id as foreign key
-        authenticationSessions.findByParentId(serviceSessionId)
+        return authenticationSessions.findByParentId(serviceSessionId)
                 .map(it -> updateExistingAuthSession(result, it))
                 .orElseGet(() -> createNewAuthSession(result, serviceSessionId));
     }

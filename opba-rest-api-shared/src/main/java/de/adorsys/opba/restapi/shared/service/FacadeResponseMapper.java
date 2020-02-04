@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
+
 @Service
 @RequiredArgsConstructor
 public class FacadeResponseMapper {
@@ -35,7 +37,10 @@ public class FacadeResponseMapper {
                 .status(HttpStatus.SEE_OTHER)
                 .header(HttpHeaders.X_REQUEST_ID, "FOO")
                 .header(HttpHeaders.PSU_CONSENT_SESSION, "BAR")
-                .location(result.getRedirectionTo())
+                // FIXME: Authorization session should be in headers!
+                .location(
+                        URI.create(result.getRedirectionTo().toASCIIString() + "&authorizationSessionId=" + result.getAuthorizationSessionId())
+                )
                 .body("Please use redirect link in Location header");
     }
 

@@ -11,19 +11,15 @@ import {Consts} from "../consts";
 export class ParametersInputComponent implements OnInit {
 
   @Input() inputs: DynamicFormControlBase<any>[] = [];
-  submissionUri: string = Consts.API_V1_URL_BASE + "parameters/provide-more/";
+  submissionUri: string = Consts.API_V1_URL_BASE + 'consent/';
 
   constructor(private activatedRoute: ActivatedRoute) {  }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(
-      params => {
-        this.submissionUri = this.submissionUri + params['executionId']
-      }
-    );
     this.activatedRoute.queryParams.subscribe(
       params => {
-        this.inputs = JSON.parse(params['q']).map(it => new DynamicFormControlBase(it.ctxCode, it.uiCode, it.message))
+        this.submissionUri = this.submissionUri + params['authorizationSessionId'] + '/embedded';
+        this.inputs = JSON.parse(params['q']).map(it => new DynamicFormControlBase(it.ctxCode, it.uiCode, it.message));
       }
     );
   }
