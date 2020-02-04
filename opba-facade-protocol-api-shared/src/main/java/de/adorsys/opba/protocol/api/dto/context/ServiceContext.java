@@ -26,4 +26,12 @@ public class ServiceContext<T> {
     private T request;
 
     private String authContext;
+
+    public String loggableBankId() {
+        return String.format(
+                "[protocol id: %s / bank uuid: %s]",
+                getBankProtocolId(),
+                getBankId()
+        );
+    }
 }

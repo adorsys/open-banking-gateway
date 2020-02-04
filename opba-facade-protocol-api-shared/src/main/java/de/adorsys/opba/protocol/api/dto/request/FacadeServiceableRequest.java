@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.api.dto.request;
 
-import de.adorsys.opba.tppbankingapi.useragent.UserAgentContext;
+import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

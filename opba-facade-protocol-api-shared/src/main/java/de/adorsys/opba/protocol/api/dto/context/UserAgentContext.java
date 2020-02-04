@@ -1,4 +1,4 @@
-package de.adorsys.opba.tppbankingapi.useragent;
+package de.adorsys.opba.protocol.api.dto.context;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
