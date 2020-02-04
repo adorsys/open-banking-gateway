@@ -1,4 +1,4 @@
-package de.adorsys.opba.fintech.impl.mapper.generated;
+package de.adorsys.opba.fintech.impl.mapper;
 
 import de.adorsys.opba.fintech.api.model.generated.TransactionsResponse;
 import org.mapstruct.Mapper;

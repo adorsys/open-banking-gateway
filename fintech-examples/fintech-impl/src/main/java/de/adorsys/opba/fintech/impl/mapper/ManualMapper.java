@@ -4,10 +4,6 @@ import de.adorsys.opba.fintech.api.model.generated.AccountList;
 import de.adorsys.opba.fintech.api.model.generated.BankDescriptor;
 import de.adorsys.opba.fintech.api.model.generated.BankProfile;
 import de.adorsys.opba.fintech.api.model.generated.TransactionsResponse;
-import de.adorsys.opba.fintech.impl.mapper.generated.AccountListMapper;
-import de.adorsys.opba.fintech.impl.mapper.generated.BankDescriptorMapper;
-import de.adorsys.opba.fintech.impl.mapper.generated.BankProfileDescriptorMapper;
-import de.adorsys.opba.fintech.impl.mapper.generated.TransactionsResponseMapper;
 import de.adorsys.opba.tpp.banksearch.api.model.generated.BankProfileDescriptor;
 import org.mapstruct.factory.Mappers;
 
