@@ -31,6 +31,10 @@ export class AuthService {
 
   logout(): void {
     this.cookieService.deleteAll();
+    this.openLoginPage();
+  }
+
+  openLoginPage() {
     this.router.navigate(['/login']);
   }
 
