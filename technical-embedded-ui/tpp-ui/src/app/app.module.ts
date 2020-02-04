@@ -24,6 +24,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-adapter';
 import { ThreeStateCheckboxComponent } from './three-state-checkbox/three-state-checkbox.component';
+import { InitialRequestComponent } from './initial-request/initial-request.component';
 
 export const AppDateFormats = {
   parse: {
@@ -48,7 +49,8 @@ export const AppDateFormats = {
     ReportScaResultComponent,
     AccountSelectorComponent,
     AccountReferenceComponent,
-    ThreeStateCheckboxComponent
+    ThreeStateCheckboxComponent,
+    InitialRequestComponent
   ],
     imports: [
         BrowserModule,

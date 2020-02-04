@@ -5,7 +5,7 @@ import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsReq
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionListBody;
 import de.adorsys.opba.protocol.facade.services.FacadeService;
 import de.adorsys.opba.protocol.facade.services.ProtocolSelector;
-import de.adorsys.opba.protocol.facade.services.ResultHandler;
+import de.adorsys.opba.protocol.facade.services.ProtocolResultHandler;
 import de.adorsys.opba.protocol.facade.services.ServiceContextProvider;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ public class ListTransactionsService extends FacadeService<ListTransactionsReque
             Map<String, ? extends ListTransactions> actionProviders,
             ProtocolSelector selector,
             ServiceContextProvider provider,
-            ResultHandler handler) {
+            ProtocolResultHandler handler) {
         super(LIST_TRANSACTIONS, actionProviders, selector, provider, handler);
     }
 }
