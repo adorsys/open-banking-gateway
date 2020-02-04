@@ -1,4 +1,4 @@
-package de.adorsys.opba.fintech.impl.service.mapper;
+package de.adorsys.opba.fintech.impl.mapper;
 
 import de.adorsys.opba.fintech.api.model.generated.BankProfile;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountReport;
