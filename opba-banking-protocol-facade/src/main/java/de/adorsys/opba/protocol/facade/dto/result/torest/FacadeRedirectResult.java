@@ -12,6 +12,7 @@ public class FacadeRedirectResult<T> implements FacadeResult<T> {
 
     public static final RedirectFromProtocol FROM_PROTOCOL = Mappers.getMapper(RedirectFromProtocol.class);
 
+    private String authorizationSessionId;
     private URI redirectionTo;
 
     @Mapper

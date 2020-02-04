@@ -62,7 +62,7 @@ tags:
     Entry point for processing a consent request redirected by the TppBankingApi
     over the FinTechApi to this ConsentAuthorisationApi.
 paths:
-  /consent/{auth-id}:
+  /v1/consent/{auth-id}:
     get:
       operationId: authUsingGET
       summary: |
@@ -87,7 +87,7 @@ paths:
         '401':
           $ref: '#/components/responses/401_Unauthorized'
 
-  /consent/{auth-id}/embedded:
+  /v1/consent/{auth-id}/embedded:
     post:
       operationId: embeddedUsingPOST
       tags:
@@ -119,7 +119,7 @@ paths:
       security:
       - sessionCookie: []
 
-  /consent/{auth-id}/toAspsp/grant:
+  /v1/consent/{auth-id}/toAspsp/grant:
     post:
       operationId: toAspspGrantUsingPOST
       tags:
@@ -148,7 +148,7 @@ paths:
       security:
       - sessionCookie: []
 
-  /consent/{auth-id}/toAspsp/deny:
+  /v1/consent/{auth-id}/toAspsp/deny:
     post:
       operationId: denyRedirectUsingPOST
       tags:
@@ -179,7 +179,7 @@ paths:
       security:
       - sessionCookie: []
 
-  /consent/{auth-id}/fromAspsp/{redirectState}/ok:
+  /v1/consent/{auth-id}/fromAspsp/{redirectState}/ok:
     get:
       operationId: fromAspspOkUsingGET
       tags:
@@ -216,7 +216,7 @@ paths:
       security:
       - redirectCookie: []
 
-  /consent/{auth-id}/fromAspsp/{redirectState}/nok:
+  /v1/consent/{auth-id}/fromAspsp/{redirectState}/nok:
     get:
       operationId: fromAspspNokUsingGET
       tags:
