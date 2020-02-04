@@ -5,6 +5,7 @@ import de.adorsys.opba.protocol.api.Action;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.result.Result;
+import de.adorsys.opba.protocol.api.dto.result.body.ResultBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +14,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
-public abstract class FacadeService<I extends FacadeServiceableGetter, O, A extends Action<I, O>> {
+public abstract class FacadeService<I extends FacadeServiceableGetter, O extends ResultBody, A extends Action<I, O>> {
 
     private final ProtocolAction action;
     private final Map<String, ? extends A> actionProviders;

@@ -6,12 +6,12 @@ import de.adorsys.opba.protocol.api.ListTransactions;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
 import de.adorsys.opba.protocol.api.dto.result.Result;
+import de.adorsys.opba.protocol.api.dto.result.body.TransactionListBody;
 import de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
 import de.adorsys.opba.protocol.xs2a.service.eventbus.ProcessEventHandlerRegistrar;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
-import de.adorsys.opba.tppbankingapi.ais.model.generated.TransactionsResponse;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.runtime.ProcessInstance;
@@ -38,7 +38,7 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
     private final Xs2aListTransactionsEntrypoint.FromRequest mapper;
 
     @Override
-    public CompletableFuture<Result<TransactionsResponse>> execute(ServiceContext<ListTransactionsRequest> serviceContext) {
+    public CompletableFuture<Result<TransactionListBody>> execute(ServiceContext<ListTransactionsRequest> serviceContext) {
         TransactionListXs2aContext context = mapper.map(serviceContext.getRequest());
         context.setAction(ProtocolAction.LIST_TRANSACTIONS);
 
@@ -47,7 +47,7 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
                 new ConcurrentHashMap<>(ImmutableMap.of(CONTEXT, context))
         );
 
-        CompletableFuture<Result<TransactionsResponse>> result = new CompletableFuture<>();
+        CompletableFuture<Result<TransactionListBody>> result = new CompletableFuture<>();
 
         registrar.addHandler(
                 instance.getProcessInstanceId(),

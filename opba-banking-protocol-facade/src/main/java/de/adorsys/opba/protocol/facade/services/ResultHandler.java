@@ -6,6 +6,7 @@ import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
 import de.adorsys.opba.protocol.api.dto.result.RedirectionResult;
 import de.adorsys.opba.protocol.api.dto.result.Result;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,23 +30,32 @@ public class ResultHandler {
     }
 
     private <R extends Result<?>> R handleRedirect(R result, UUID serviceSessionId) {
-        // Auth session is 1-1 to service session, using id as foreign key
-        AuthSession authSession = authenticationSessions.findByParentId(serviceSessionId)
-                .map(it -> {
-                    it.setRedirectCode(UUID.randomUUID().toString());
-                    it.setContext(result.authContext());
-                    return authenticationSessions.save(it);
-                })
-                .orElseGet(() ->
-                        authenticationSessions.save(
-                                AuthSession.builder()
-                                        .parent(entityManager.find(ServiceSession.class, serviceSessionId))
-                                        .context(result.authContext())
-                                        .redirectCode(UUID.randomUUID().toString())
-                                        .build()
-                        )
-                );
-
+        updateAuthContext(result, serviceSessionId);
         return result;
+    }
+
+    private <R extends Result<?>> void updateAuthContext(R result, UUID serviceSessionId) {
+        // Auth session is 1-1 to service session, using id as foreign key
+        authenticationSessions.findByParentId(serviceSessionId)
+                .map(it -> updateExistingAuthSession(result, it))
+                .orElseGet(() -> createNewAuthSession(result, serviceSessionId));
+    }
+
+    @NotNull
+    private <R extends Result<?>> AuthSession createNewAuthSession(R result, UUID serviceSessionId) {
+        return authenticationSessions.save(
+                AuthSession.builder()
+                        .parent(entityManager.find(ServiceSession.class, serviceSessionId))
+                        .context(result.authContext())
+                        .redirectCode(UUID.randomUUID().toString())
+                        .build()
+        );
+    }
+
+    @NotNull
+    private <R extends Result<?>> AuthSession updateExistingAuthSession(R result, AuthSession it) {
+        it.setRedirectCode(UUID.randomUUID().toString());
+        it.setContext(result.authContext());
+        return authenticationSessions.save(it);
     }
 }

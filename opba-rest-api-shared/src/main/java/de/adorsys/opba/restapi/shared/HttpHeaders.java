@@ -1,4 +1,4 @@
-package de.adorsys.opba.tppbankingapi;
+package de.adorsys.opba.restapi.shared;
 
 import lombok.experimental.UtilityClass;
 

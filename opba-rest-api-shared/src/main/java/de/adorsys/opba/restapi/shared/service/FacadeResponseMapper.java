@@ -1,10 +1,10 @@
-package de.adorsys.opba.tppbankingapi.service;
+package de.adorsys.opba.restapi.shared.service;
 
 import de.adorsys.opba.protocol.api.dto.result.ErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.RedirectionResult;
 import de.adorsys.opba.protocol.api.dto.result.Result;
 import de.adorsys.opba.protocol.api.dto.result.SuccessResult;
-import de.adorsys.opba.tppbankingapi.HttpHeaders;
+import de.adorsys.opba.restapi.shared.HttpHeaders;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
