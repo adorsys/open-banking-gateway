@@ -7,7 +7,7 @@
     </div>
 
     <div class="form-row">
-      <button type="submit" [disabled]="!form.valid">Save</button>
+      <button type="button" [disabled]="!form.valid" (click)="save()">Save</button>
     </div>
   </form>
 </div>

@@ -40,7 +40,8 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
             String fintechRedirectURLNOK,
             UUID xRequestID,
             String bankID,
-            String psUConsentSession
+            String psUConsentSession,
+            UUID serviceSessionId
     ) {
         return accounts.execute(
                 ListAccountsRequest.builder()
@@ -51,6 +52,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                                 .fintechUserID(fintechUserID)
                                 .fintechRedirectURLOK(fintechRedirectURLOK)
                                 .fintechRedirectURLNOK(fintechRedirectURLNOK)
+                                .serviceSessionId(serviceSessionId)
                                 .xRequestID(xRequestID)
                                 .bankID(bankID)
                                 .build()
@@ -68,6 +70,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
             UUID xRequestID,
             String bankID,
             String psUConsentSession,
+            UUID serviceSessionId,
             LocalDate dateFrom,
             LocalDate dateTo,
             String entryReferenceFrom,
@@ -83,6 +86,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                                 .fintechUserID(fintechUserID)
                                 .fintechRedirectURLOK(fintechRedirectURLOK)
                                 .fintechRedirectURLNOK(fintechRedirectURLNOK)
+                                .serviceSessionId(serviceSessionId)
                                 .xRequestID(xRequestID)
                                 .bankID(bankID)
                                 .build()
