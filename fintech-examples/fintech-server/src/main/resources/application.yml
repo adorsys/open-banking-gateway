@@ -9,11 +9,10 @@ server:
 tpp:
     url: http://localhost:18085
 
-real:
-  tpp:
-    ais:
-      transactions: false
-      accounts: false
+mock:
+  tppais:
+      listtransactions: true
+      listaccounts: true
 
 spring:
   datasource:
