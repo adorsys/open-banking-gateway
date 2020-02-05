@@ -16,22 +16,15 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class AccountService {
-    @Value("${real.tpp.ais.accounts}")
-    String realTppAISString;
-
-    Boolean isMockTppAIS() {
-        boolean result = realTppAISString != null && realTppAISString.equalsIgnoreCase("true") ? false : true;
-        log.info("mock tpp for accounts:{}", result);
-        return result;
-    }
-
-    // Todo with RequiredArgsConstructor
+    @Value("${mock.tppais.listaccounts}")
+    String mockTppAisString;
 
     private final TppAisClient tppAisClient;
 
     public InlineResponse2003 listAccounts(ContextInformation contextInformation, SessionEntity sessionEntity, String bankId) {
 
-        if (isMockTppAIS()) {
+        if (mockTppAisString != null && mockTppAisString.equalsIgnoreCase("true") ? true : false) {
+            log.warn("Mocking call to list accounts");
             return createInlineResponse2003(new TppListAccountsMock().getAccountList());
         }
 
