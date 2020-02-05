@@ -4,13 +4,17 @@ import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeRedirectResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeSuccessResult;
-import de.adorsys.opba.restapi.shared.HttpHeaders;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_ID;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.PSU_CONSENT_SESSION;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.SEE_OTHER;
 
 @Service
 @RequiredArgsConstructor
@@ -33,26 +37,30 @@ public class FacadeResponseMapper {
     }
 
     private ResponseEntity<?> handleRedirect(FacadeRedirectResult result) {
-        return ResponseEntity
-                .status(HttpStatus.SEE_OTHER)
-                .header(HttpHeaders.X_REQUEST_ID, "FOO")
-                .header(HttpHeaders.PSU_CONSENT_SESSION, "BAR")
-                // FIXME: Authorization session should be in headers!
-                .location(
-                        URI.create(result.getRedirectionTo().toASCIIString() + "&authorizationSessionId=" + result.getAuthorizationSessionId())
-                )
+        ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(SEE_OTHER));
+
+        return response
+                .header(AUTHORIZATION_SESSION_ID, result.getAuthorizationSessionId())
+                .header(PSU_CONSENT_SESSION, "BAR")
+                .location(result.getRedirectionTo())
                 .body("Please use redirect link in Location header");
     }
 
     private <E> ResponseEntity<E> handleError(FacadeErrorResult result, ErrorResultMapper<FacadeErrorResult, E> toError) {
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(toError.map(result));
+        ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(INTERNAL_SERVER_ERROR));
+
+        return response.body(toError.map(result));
     }
 
     private <T> ResponseEntity<T> handleSuccess(FacadeSuccessResult<T> result) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(result.getBody());
+        ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(OK));
+        return response.body(result.getBody());
+    }
+
+    private ResponseEntity.BodyBuilder putDefaultHeaders(FacadeResult result, ResponseEntity.BodyBuilder builder) {
+        builder
+                .header(X_REQUEST_ID, result.getXRequestId().toString())
+                .header(SERVICE_SESSION_ID, result.getServiceSessionId());
+        return builder;
     }
 }

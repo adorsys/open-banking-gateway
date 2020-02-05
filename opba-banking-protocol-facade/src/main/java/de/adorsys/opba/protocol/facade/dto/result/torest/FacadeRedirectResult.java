@@ -6,12 +6,15 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 import java.net.URI;
+import java.util.UUID;
 
 @Data
 public class FacadeRedirectResult<T> implements FacadeResult<T> {
 
     public static final RedirectFromProtocol FROM_PROTOCOL = Mappers.getMapper(RedirectFromProtocol.class);
 
+    private UUID xRequestId;
+    private String serviceSessionId;
     private String authorizationSessionId;
     private URI redirectionTo;
 

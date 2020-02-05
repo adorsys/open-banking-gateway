@@ -43,15 +43,5 @@ pkcs12:
   keyStore: sample-qwac.keystore
   password: password
 
-xs2a-profile:
-  id: 53c47f54-b9a4-465a-8f77-bc6cd5f0cf46
-  aspspName: adorsys xs2a
-  bic: ADORSYS
-  url: http://localhost:20014
-  adapterId: adorsys-integ-adapter
-  idpUrl:
-  aspspScaApproaches:
-
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
-debug: true
