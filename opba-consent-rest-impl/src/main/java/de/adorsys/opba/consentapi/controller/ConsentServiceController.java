@@ -22,10 +22,12 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
             UUID xRequestID,
             String xXsrfToken,
             String authId,
-            PsuAuthRequest body) {
+            PsuAuthRequest body,
+            String redirectCode) {
         return updateAuthorizationService.execute(
                 AuthorizationRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
+                                .redirectCode(redirectCode)
                                 .authorizationSessionId(authId)
                                 .xRequestID(xRequestID)
                                 .build()

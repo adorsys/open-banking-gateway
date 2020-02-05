@@ -42,7 +42,8 @@ public class ServiceContextProvider {
 
         return ServiceContext.<T>builder()
                 .serviceSessionId(session.getId())
-                .bankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
+                .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
+                .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
                 .bankId(request.getFacadeServiceable().getBankID())
                 .authSessionId(null == authSession ? null : authSession.getId())
                 .request(request)

@@ -61,7 +61,7 @@
 
             <!-- Is nullable as authentication context can be managed by protocol implementor -->
             <column name="context" type="TEXT"/>
-
+            <column name="protocol_id" type="BIGINT"/>
             <column name="version" type="INT">
                 <constraints nullable="false"/>
             </column>

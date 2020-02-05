@@ -13,6 +13,7 @@ public class FacadeRedirectResult<T> implements FacadeResult<T> {
 
     public static final RedirectFromProtocol FROM_PROTOCOL = Mappers.getMapper(RedirectFromProtocol.class);
 
+    private String redirectCode;
     private UUID xRequestId;
     private String serviceSessionId;
     private String authorizationSessionId;
