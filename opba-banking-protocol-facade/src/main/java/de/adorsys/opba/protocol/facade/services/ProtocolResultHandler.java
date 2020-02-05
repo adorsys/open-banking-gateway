@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.facade.services;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
+import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.RedirectionResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.SuccessResult;
@@ -25,25 +26,36 @@ public class ProtocolResultHandler {
     private final AuthenticationSessionRepository authenticationSessions;
 
     @Transactional
-    public <O> FacadeResult<O> handleResult(Result<O> result, UUID serviceSessionId) {
+    public <O> FacadeResult<O> handleResult(Result<O> result, UUID xRequestId, ServiceContext session) {
         if (result instanceof SuccessResult) {
-            return (FacadeSuccessResult<O>) FacadeSuccessResult.FROM_PROTOCOL.map((SuccessResult) result);
+            return handleSuccess((SuccessResult<O>) result, xRequestId, session);
         }
 
         if (result instanceof RedirectionResult) {
-            return handleRedirect(result, serviceSessionId);
+            return handleRedirect(result, xRequestId, session);
         }
 
         throw new IllegalStateException("Can't handle protocol result: " + result.getClass());
     }
 
-    private <O> FacadeResult<O> handleRedirect(Result<O> result, UUID serviceSessionId) {
-        AuthSession session = updateAuthContext(result, serviceSessionId);
+    @NotNull
+    private <O> FacadeResult<O> handleSuccess(SuccessResult<O> result, UUID xRequestId, ServiceContext session) {
+        FacadeSuccessResult<O> mappedResult =
+                (FacadeSuccessResult<O>) FacadeSuccessResult.FROM_PROTOCOL.map(result);
+        mappedResult.setServiceSessionId(session.getServiceSessionId().toString());
+        mappedResult.setXRequestId(xRequestId);
+        return mappedResult;
+    }
+
+    private <O> FacadeResult<O> handleRedirect(Result<O> result, UUID xRequestId, ServiceContext session) {
+        AuthSession authSession = updateAuthContext(result, session.getServiceSessionId());
 
         FacadeRedirectResult<O> mappedResult =
                 (FacadeRedirectResult<O>) FacadeRedirectResult.FROM_PROTOCOL.map((RedirectionResult) result);
 
-        mappedResult.setAuthorizationSessionId(session.getId().toString());
+        mappedResult.setAuthorizationSessionId(authSession.getId().toString());
+        mappedResult.setServiceSessionId(authSession.getParent().getId().toString());
+        mappedResult.setXRequestId(xRequestId);
 
         return mappedResult;
     }
