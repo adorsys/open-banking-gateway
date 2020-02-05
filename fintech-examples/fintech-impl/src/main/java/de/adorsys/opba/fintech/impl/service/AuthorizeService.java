@@ -2,6 +2,7 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.impl.database.entities.CookieEntity;
+import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEmbeddable;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,11 @@ public class AuthorizeService {
         sessionEntity.addCookie(XSRF_TOKEN_COOKIE_NAME, sessionEntity.getXsrfToken());
 
         sessionEntity.addLogin(OffsetDateTime.now());
+
+        // TODO api has to be changed to get URLs
+        sessionEntity.setRedirectListAccounts(new RedirectUrlsEmbeddable("laOk", "laNotOk"));
+        sessionEntity.setRedirectListTransactions(new RedirectUrlsEmbeddable("ltOk", "ltNotOk"));
+
         userRepository.save(sessionEntity);
         return Optional.of(sessionEntity);
     }
