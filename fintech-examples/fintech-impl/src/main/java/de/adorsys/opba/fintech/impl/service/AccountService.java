@@ -21,7 +21,7 @@ public class AccountService {
 
     private final TppAisClient tppAisClient;
 
-    public InlineResponse2003 listAccounts(ContextInformation contextInformation, SessionEntity sessionEntity, String bankId) {
+    public InlineResponse2003 listAccounts(ContextInformation contextInformation, SessionEntity sessionEntity, String bankId, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
         if (mockTppAisString != null && mockTppAisString.equalsIgnoreCase("true") ? true : false) {
             log.warn("Mocking call to list accounts");
             return createInlineResponse2003(new TppListAccountsMock().getAccountList());
@@ -31,8 +31,8 @@ public class AccountService {
             return createInlineResponse2003(tppAisClient.getAccounts(
                     contextInformation.getFintechID(),
                     sessionEntity.getLoginUserName(),
-                    sessionEntity.getRedirectListAccounts().getOkURL(),
-                    sessionEntity.getRedirectListAccounts().getNotOkURL(),
+                    fintechRedirectURLOK,
+                    fintechRedirectURLNOK,
                     contextInformation.getXRequestID(),
                     bankId,
                     null).getBody());

@@ -168,6 +168,9 @@ paths:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
+        - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
+
       security:
         - sessionCookie: []
       responses:
@@ -197,9 +200,12 @@ paths:
         - $ref: "#/components/parameters/entryReferenceFrom"
         - $ref: "#/components/parameters/bookingStatus"
         - $ref: "#/components/parameters/deltaList"
+
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
+        - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
       security:
         - sessionCookie: []
       responses:
@@ -347,6 +353,36 @@ components:
         example: http://localhost:8080/finTechUi?sessionState=ejxs.wersdzxxc23r.asdf
 
   parameters:
+
+    Fintech-Redirect-URL-OK:
+      name: Fintech-Redirect-URL-OK
+      in: header
+      desription: |
+        This header provides the desired URL where PSU will be redirected back after authorisation session in case of
+        successful authorisation. This URL might contain unique Identifier of this User and/or Session,
+        recognisable by FinTech.
+        Since authorisation may be mandated by the bank at any time, this header to be included to all
+        service requests, even if PsuConsentSession already exists.
+      required: true
+      schema:
+        type: string
+      example: "https://example.com/myservice/sf3-3r33-3535?authResult=success"
+
+    Fintech-Redirect-URL-NOK:
+      name: Fintech-Redirect-URL-NOK
+      in: header
+      desription: |
+        This header provides the desired URL where PSU will be redirected back  after authorisation session in case of
+        unsuccessful authorisation (i.e. PSU's authorisation reject, technical failure, lack of credentials etc.).
+        This URL might contain unique Identifier of this User and/or Session,
+        recognisable by FinTech.
+        Since authorisation may be mandated by the bank at any time, this header to be included to all
+        service requests, even if PsuConsentSession already exists.
+      required: true
+      schema:
+        type: string
+      example: "https://example.com/myservice/sf3-3r33-3535/failure"
+
 
     X-Request-ID:
       name: X-Request-ID

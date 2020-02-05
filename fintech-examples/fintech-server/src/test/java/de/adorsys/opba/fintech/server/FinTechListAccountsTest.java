@@ -40,7 +40,9 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
         MvcResult mvcResult = this.mvc
                 .perform(get(FIN_TECH_LIST_ACCOUNTS_URL, bankUUID)
                         .header("X-Request-ID", UUID.randomUUID().toString())
-                        .header("X-XSRF-TOKEN", xsrfToken))
+                        .header("X-XSRF-TOKEN", xsrfToken)
+                        .header("Fintech-Redirect-URL-OK", "ok")
+                        .header("Fintech-Redirect-URL-NOK", "notok"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();

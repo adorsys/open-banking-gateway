@@ -34,7 +34,9 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
         MvcResult mvcResult = this.mvc
                 .perform(get(FIN_TECH_LIST_TRANSACTIONS_URL, bankUUID, accountID)
                         .header("X-Request-ID", UUID.randomUUID().toString())
-                        .header("X-XSRF-TOKEN", xsrfToken))
+                        .header("X-XSRF-TOKEN", xsrfToken)
+                        .header("Fintech-Redirect-URL-OK", "ok")
+                        .header("Fintech-Redirect-URL-NOK", "notok"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();

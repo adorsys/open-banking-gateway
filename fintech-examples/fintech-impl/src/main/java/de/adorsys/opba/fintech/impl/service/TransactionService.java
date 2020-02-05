@@ -22,7 +22,8 @@ public class TransactionService {
 
     private final TppAisClient tppAisClient;
 
-    public InlineResponse2004 listTransactions(ContextInformation contextInformation, SessionEntity sessionEntity, String bankId,
+    public InlineResponse2004 listTransactions(ContextInformation contextInformation, SessionEntity sessionEntity,
+                                               String fintechRedirectURLOK, String fintechRedirectURLNOK, String bankId,
                                                String accountId, LocalDate dateFrom, LocalDate dateTo,
                                                String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
 
@@ -35,8 +36,8 @@ public class TransactionService {
                 accountId,
                 contextInformation.getFintechID(),
                 sessionEntity.getLoginUserName(),
-                sessionEntity.getRedirectListTransactions().getOkURL(),
-                sessionEntity.getRedirectListTransactions().getNotOkURL(),
+                fintechRedirectURLOK,
+                fintechRedirectURLNOK,
                 contextInformation.getXRequestID(),
                 bankId,
                 sessionEntity.getPsuConsentSession(),
