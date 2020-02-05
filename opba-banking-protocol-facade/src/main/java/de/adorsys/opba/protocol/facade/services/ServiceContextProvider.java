@@ -59,6 +59,11 @@ public class ServiceContextProvider {
             return authSession.getParent();
         } else {
             ServiceSession session = new ServiceSession();
+
+            if (null != request.getFacadeServiceable().getServiceSessionId()) {
+                session.setId(request.getFacadeServiceable().getServiceSessionId());
+            }
+
             session.setContext(MAPPER.writeValueAsString(request));
             return serviceSessions.save(session);
         }
