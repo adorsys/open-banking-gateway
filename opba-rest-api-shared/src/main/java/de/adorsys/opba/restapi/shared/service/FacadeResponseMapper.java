@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.PSU_CONSENT_SESSION;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -41,6 +42,7 @@ public class FacadeResponseMapper {
 
         return response
                 .header(AUTHORIZATION_SESSION_ID, result.getAuthorizationSessionId())
+                .header(REDIRECT_CODE, result.getRedirectCode())
                 .header(PSU_CONSENT_SESSION, "BAR")
                 .location(result.getRedirectionTo())
                 .body("Please use redirect link in Location header");

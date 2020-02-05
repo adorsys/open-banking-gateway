@@ -8,7 +8,9 @@ const PROXY_CONFIG = {
     secure: false,
     changeOrigin: true,
     onProxyRes: (proxyRes, req, res) => {
-      proxyRes.headers['location'] = proxyRes.headers['location'] + '&authorizationSessionId=' + proxyRes.headers['authorization-session-id'];
+      if (proxyRes.headers['location']) {
+        proxyRes.headers['location'] = proxyRes.headers['location'] + '&authorizationSessionId=' + proxyRes.headers['authorization-session-id'] + '&redirectCode=' + proxyRes.headers['redirect-code'];
+      }
     }
   }
 };

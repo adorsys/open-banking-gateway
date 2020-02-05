@@ -18,7 +18,7 @@ export class ParametersInputComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
       params => {
-        this.submissionUri = this.submissionUri + params['authorizationSessionId'] + '/embedded';
+        this.submissionUri = this.submissionUri + params['authorizationSessionId'] + '/embedded?redirectCode=' + params['redirectCode'];
         this.inputs = JSON.parse(params['q']).map(it => new DynamicFormControlBase(it.ctxCode, it.uiCode, it.message));
       }
     );

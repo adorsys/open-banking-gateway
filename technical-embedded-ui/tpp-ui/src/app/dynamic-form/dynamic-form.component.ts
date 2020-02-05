@@ -27,7 +27,7 @@ export class DynamicFormComponent implements OnInit {
       formObj,
       {headers: {
         'X-Request-ID': this.uuidv4(),
-        'X-XSRF-TOKEN': this.uuidv4()
+        'X-XSRF-TOKEN': this.uuidv4(),
       }}
     ).subscribe(res => {
     });

@@ -1,8 +1,10 @@
 package de.adorsys.opba.protocol.facade.services;
 
+import de.adorsys.opba.db.domain.entity.BankProtocol;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
+import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.RedirectionResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
@@ -18,10 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.UUID;
 
+import static de.adorsys.opba.db.domain.entity.ProtocolAction.UPDATE_AUTHORIZATION;
+
 @Service
 @RequiredArgsConstructor
 public class ProtocolResultHandler {
 
+    private final BankProtocolRepository protocolRepository;
     private final EntityManager entityManager;
     private final AuthenticationSessionRepository authenticationSessions;
 
@@ -48,7 +53,7 @@ public class ProtocolResultHandler {
     }
 
     private <O> FacadeResult<O> handleRedirect(Result<O> result, UUID xRequestId, ServiceContext session) {
-        AuthSession authSession = updateAuthContext(result, session.getServiceSessionId());
+        AuthSession authSession = updateAuthContext(result, session);
 
         FacadeRedirectResult<O> mappedResult =
                 (FacadeRedirectResult<O>) FacadeRedirectResult.FROM_PROTOCOL.map((RedirectionResult) result);
@@ -56,22 +61,30 @@ public class ProtocolResultHandler {
         mappedResult.setAuthorizationSessionId(authSession.getId().toString());
         mappedResult.setServiceSessionId(authSession.getParent().getId().toString());
         mappedResult.setXRequestId(xRequestId);
+        mappedResult.setRedirectCode(authSession.getRedirectCode());
 
         return mappedResult;
     }
 
-    private <O> AuthSession updateAuthContext(Result<O> result, UUID serviceSessionId) {
+    private <O> AuthSession updateAuthContext(Result<O> result, ServiceContext session) {
         // Auth session is 1-1 to service session, using id as foreign key
-        return authenticationSessions.findByParentId(serviceSessionId)
+        return authenticationSessions.findByParentId(session.getServiceSessionId())
                 .map(it -> updateExistingAuthSession(result, it))
-                .orElseGet(() -> createNewAuthSession(result, serviceSessionId));
+                .orElseGet(() -> createNewAuthSession(result, session));
     }
 
     @NotNull
-    private <O> AuthSession createNewAuthSession(Result<O> result, UUID serviceSessionId) {
+    private <O> AuthSession createNewAuthSession(Result<O> result, ServiceContext session) {
+        BankProtocol authProtocol = protocolRepository
+                .findByBankProfileUuidAndAction(session.getBankId(), UPDATE_AUTHORIZATION)
+                .orElseThrow(
+                        () -> new IllegalStateException("Missing update authorization handler for " + session.getBankId())
+                );
+
         return authenticationSessions.save(
                 AuthSession.builder()
-                        .parent(entityManager.find(ServiceSession.class, serviceSessionId))
+                        .parent(entityManager.find(ServiceSession.class, session.getServiceSessionId()))
+                        .protocol(authProtocol)
                         .context(result.authContext())
                         .redirectCode(UUID.randomUUID().toString())
                         .build()

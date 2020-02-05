@@ -102,6 +102,8 @@ paths:
       parameters:
         #path
         - $ref: '#/components/parameters/auth-id'
+        #query
+        - $ref: '#/components/parameters/redirectCode'
         #headers
         - $ref: '#/components/parameters/X-Request-ID'
         - $ref: '#/components/parameters/X-XSRF-TOKEN'

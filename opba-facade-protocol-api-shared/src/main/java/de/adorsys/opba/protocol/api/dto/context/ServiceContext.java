@@ -14,7 +14,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ServiceContext<T> {
 
-    private Long bankProtocolId;
+    private Long serviceBankProtocolId;
+    private Long authorizationBankProtocolId;
+
     private String bankId;
 
     @NonNull
@@ -30,7 +32,7 @@ public class ServiceContext<T> {
     public String loggableBankId() {
         return String.format(
                 "[protocol id: %s / bank uuid: %s]",
-                getBankProtocolId(),
+                getServiceBankProtocolId(),
                 getBankId()
         );
     }
