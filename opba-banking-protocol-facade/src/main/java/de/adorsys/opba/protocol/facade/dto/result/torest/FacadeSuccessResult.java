@@ -5,11 +5,15 @@ import lombok.Data;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
+import java.util.UUID;
+
 @Data
 public class FacadeSuccessResult<T> implements FacadeResult<T> {
 
     public static final SuccessFromProtocol FROM_PROTOCOL = Mappers.getMapper(SuccessFromProtocol.class);
 
+    private UUID xRequestId;
+    private String serviceSessionId;
     private T body;
 
     @Mapper

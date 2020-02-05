@@ -32,7 +32,8 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
         return result.thenApply(
                 res -> handleResult(
                         res,
-                        ctx.getServiceSessionId()
+                        request.getFacadeServiceable().getXRequestID(),
+                        ctx
                 )
         );
     }
@@ -49,7 +50,7 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
         );
     }
 
-    protected FacadeResult<O> handleResult(Result<O> result, UUID serviceSessionId) {
-        return handler.handleResult(result, serviceSessionId);
+    protected FacadeResult<O> handleResult(Result<O> result, UUID xRequestId, ServiceContext<I> ctx) {
+        return handler.handleResult(result, xRequestId, ctx);
     }
 }
