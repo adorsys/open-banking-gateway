@@ -9,6 +9,12 @@ server:
 tpp:
     url: http://localhost:18085
 
+real:
+  tpp:
+    ais:
+      transactions: false
+      accounts: false
+
 spring:
   datasource:
     url: jdbc:h2:mem:test

@@ -6,41 +6,51 @@ import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.mapper.ManualMapper;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListAccountsMock;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
-import lombok.NoArgsConstructor;
+import feign.FeignException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class AccountService {
-    @Value("real.tpp.ais")
+    @Value("${real.tpp.ais.accounts}")
     String realTppAISString;
-    Boolean mockTppAIS = realTppAISString != null && realTppAISString.equalsIgnoreCase("true") ? false : true;
+
+    Boolean isMockTppAIS() {
+        boolean result = realTppAISString != null && realTppAISString.equalsIgnoreCase("true") ? false : true;
+        log.info("mock tpp for accounts:{}", result);
+        return result;
+    }
 
     // Todo with RequiredArgsConstructor
 
-    @Autowired
-    TppAisClient tppAisClient;
+    private final TppAisClient tppAisClient;
 
     public InlineResponse2003 listAccounts(ContextInformation contextInformation, SessionEntity sessionEntity, String bankId) {
 
-        AccountList accountList = null;
-        if (!mockTppAIS) {
-            accountList = tppAisClient.getAccounts(
+        if (isMockTppAIS()) {
+            return createInlineResponse2003(new TppListAccountsMock().getAccountList());
+        }
+
+        try {
+            return createInlineResponse2003(tppAisClient.getAccounts(
                     contextInformation.getFintechID(),
                     sessionEntity.getLoginUserName(),
-                    "okUrl",
-                    "notOkUrl",
+                    sessionEntity.getRedirectListAccounts().getOkURL(),
+                    sessionEntity.getRedirectListAccounts().getNotOkURL(),
                     contextInformation.getXRequestID(),
                     bankId,
-                    null).getBody();
+                    null).getBody());
+        } catch (FeignException ex) {
+            log.error("got exception for status code " + ex.status());
+            throw ex;
         }
-        if (mockTppAIS) {
-            accountList = new TppListAccountsMock().getAccountList();
-        }
+    }
+
+    private InlineResponse2003 createInlineResponse2003(AccountList accountList) {
         InlineResponse2003 response = new InlineResponse2003();
         response.setAccountList(ManualMapper.fromTppToFintech(accountList));
         return response;
