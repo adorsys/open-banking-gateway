@@ -2,6 +2,7 @@ import { Component, Input, OnInit }  from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DynamicFormControlBase } from './dynamic-form-control-base';
 import {DynamicFormFactory} from "./dynamic-form-factory";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'dynamic-form',
@@ -13,9 +14,18 @@ export class DynamicFormComponent implements OnInit {
   @Input() submissionUri: string;
   form: FormGroup;
 
-  constructor(private formFactory: DynamicFormFactory) {  }
+  constructor(private client: HttpClient, private formFactory: DynamicFormFactory) {  }
 
   ngOnInit() {
     this.form = this.formFactory.toFormGroup(this.controlTemplates);
+  }
+
+  save() {
+    const formObj = this.form.getRawValue();
+    this.client.post(
+      this.submissionUri,
+      formObj
+    ).subscribe(res => {
+    });
   }
 }
