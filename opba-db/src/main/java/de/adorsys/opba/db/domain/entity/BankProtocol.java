@@ -1,5 +1,6 @@
 package de.adorsys.opba.db.domain.entity;
 
+import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,5 +45,8 @@ public class BankProtocol {
     private String protocolBeanName;
 
     @OneToMany(mappedBy = "protocol", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<ServiceSession> sessions;
+    private Collection<ServiceSession> serviceSessions;
+
+    @OneToMany(mappedBy = "protocol", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<AuthSession> authSessions;
 }

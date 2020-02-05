@@ -37,11 +37,12 @@ public class Xs2aUpdateAuthorization implements UpdateAuthorization {
         );
 
         CompletableFuture<Result<UpdateAuthBody>> result = new CompletableFuture<>();
-
         registrar.addHandler(
                 runtimeService.createExecutionQuery().executionId(executionId).singleResult().getProcessInstanceId(),
                 new OutcomeMapper<>(result, res -> new UpdateAuthBody())
         );
+
+        runtimeService.trigger(executionId);
 
         return result;
     }
