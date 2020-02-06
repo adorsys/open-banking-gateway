@@ -22,14 +22,23 @@ export class DynamicFormComponent implements OnInit {
 
   save() {
     const formObj = this.form.getRawValue();
+    console.log(formObj)
+    for (const propName in formObj) {
+      if (formObj[propName] === null || formObj[propName] === undefined || formObj[propName].length === 0) {
+        delete formObj[propName];
+      }
+    }
+
     this.client.post(
       this.submissionUri,
-      formObj,
+      {scaAuthenticationData: formObj}, // scaAuthenticationData is not really correct
       {headers: {
         'X-Request-ID': this.uuidv4(),
         'X-XSRF-TOKEN': this.uuidv4(),
       }}
     ).subscribe(res => {
+    }, error => {
+      window.location.href = error.url;
     });
   }
 
