@@ -1,7 +1,7 @@
 package de.adorsys.opba.fintech.impl.database;
 
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
-import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
+import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -43,9 +43,9 @@ public class DatabaseTest {
     @Test
     public void testDeleteInOneTx() {
         userRepository.save(create("peter", "1"));
-        UserEntity userEntity = userRepository.findById("peter").get();
-        userEntity.setCookies(new ArrayList<>());
-        userRepository.save(userEntity);
+        SessionEntity sessionEntity = userRepository.findById("peter").get();
+        sessionEntity.setCookies(new ArrayList<>());
+        userRepository.save(sessionEntity);
     }
 
     @Test
@@ -61,24 +61,24 @@ public class DatabaseTest {
 
     @Transactional(propagation = Propagation.NEVER)
     void testDeleteInTwoTx2() {
-        UserEntity userEntity = userRepository.findById("peter").get();
-        userEntity.setCookies(new ArrayList<>());
-        userRepository.save(userEntity);
+        SessionEntity sessionEntity = userRepository.findById("peter").get();
+        sessionEntity.setCookies(new ArrayList<>());
+        userRepository.save(sessionEntity);
     }
 
 
-    private UserEntity create(String username, String xsrf) {
-        UserEntity userEntity = UserEntity.builder()
-                .name(username)
+    private SessionEntity create(String username, String xsrf) {
+        SessionEntity sessionEntity = SessionEntity.builder()
+                .loginUserName(username)
                 .password("affe")
                 .xsrfToken(xsrf)
                 .build();
-        userEntity.addLogin(OffsetDateTime.now());
-        userEntity.addCookie("cookie1", "value1");
-        userEntity.addCookie("cookie2", "value2");
-        userEntity.addCookie("cookie3", "value3");
+        sessionEntity.addLogin(OffsetDateTime.now());
+        sessionEntity.addCookie("cookie1", "value1");
+        sessionEntity.addCookie("cookie2", "value2");
+        sessionEntity.addCookie("cookie3", "value3");
 
 
-        return userEntity;
+        return sessionEntity;
     }
 }
