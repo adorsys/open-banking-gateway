@@ -1,0 +1,11 @@
+<div
+  (@feedbackAnimation.done)="animationDone()"
+  [@feedbackAnimation]="animationState"
+  [ngClass]="options?.severity"
+  class="feedback-message-container"
+>
+  <span class="message">{{ message }}</span>
+  <button (click)="animateClose()" *ngIf="options?.closable" class="close-button">
+    <i class="material-icons">x</i>
+  </button>
+</div>
