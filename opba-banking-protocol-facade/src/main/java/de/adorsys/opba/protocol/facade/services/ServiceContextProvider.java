@@ -10,6 +10,7 @@ import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
+import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,7 @@ public class ServiceContextProvider {
 
     private final AuthenticationSessionRepository authSessions;
     private final ServiceSessionRepository serviceSessions;
+    private final EncryptionService encryptionService;
 
     @Transactional
     @SneakyThrows

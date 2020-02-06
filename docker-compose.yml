@@ -28,7 +28,7 @@ services:
     ports:
       - "18085:8085"
     volumes:
-      - ./core/banking-protocol/src/main/resources/:/pkcs12/
+      - ./opba-protocols/xs2a-protocol/src/main/resources/:/pkcs12/
     depends_on:
       - postgres
     networks:
