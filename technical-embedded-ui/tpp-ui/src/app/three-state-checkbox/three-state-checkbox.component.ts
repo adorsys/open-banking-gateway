@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from "@angular/forms";
+import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'three-state-checkbox',
@@ -15,9 +15,12 @@ export class ThreeStateCheckboxComponent implements OnInit {
   state = null;
   tape = [null, true, false];
 
+  checkbox = new FormControl();
+
   constructor() { }
 
   ngOnInit() {
+    this.form.removeControl(this.controlName); // FIXME, unknown why needed
+    this.form.addControl(this.controlName, this.checkbox);
   }
-
 }
