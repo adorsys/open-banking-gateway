@@ -24,8 +24,9 @@ feign:
     follow-redirects: false
   client:
     config:
-      default:
+      tppAisClient:
         followRedirects: false
+        follow-redirects: false
 
 spring:
   datasource:
