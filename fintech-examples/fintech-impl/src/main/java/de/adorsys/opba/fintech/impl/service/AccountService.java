@@ -9,6 +9,7 @@ import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,8 @@ public class AccountService {
     private final TppAisClient tppAisClient;
 
     public InlineResponse2003 listAccounts(ContextInformation contextInformation, SessionEntity sessionEntity, String bankId) {
-        if (mockTppAisString != null && mockTppAisString.equalsIgnoreCase("true") ? true : false) {
+
+        if (BooleanUtils.toBoolean(mockTppAisString)) {
             log.warn("Mocking call to list accounts");
             return createInlineResponse2003(new TppListAccountsMock().getAccountList());
         }

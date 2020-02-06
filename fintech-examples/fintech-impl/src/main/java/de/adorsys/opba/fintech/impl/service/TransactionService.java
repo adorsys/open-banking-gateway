@@ -8,6 +8,7 @@ import de.adorsys.opba.fintech.impl.service.mocks.TppListTransactionsMock;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class TransactionService {
                                                String accountId, LocalDate dateFrom, LocalDate dateTo,
                                                String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
 
-        if (mockTppAisString != null && mockTppAisString.equalsIgnoreCase("true") ? true : false) {
+        if (BooleanUtils.toBoolean(mockTppAisString)) {
             log.warn("mocking call for list transactions");
             return createInlineResponse2004(new TppListTransactionsMock().getTransactionsResponse());
         }
