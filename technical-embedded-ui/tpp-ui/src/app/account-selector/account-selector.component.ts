@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormControl, FormGroup} from "@angular/forms";
 import {AccountReferenceComponent} from "../account-reference-selector/account-reference.component";
 
 @Component({
@@ -15,9 +15,12 @@ export class AccountSelectorComponent implements OnInit {
   balances: AccountReferenceComponent[] = [];
   transactions: AccountReferenceComponent[] = [];
 
+  allAccounts = new FormControl();
+
   constructor() {}
 
   ngOnInit() {
+    this.form.addControl('consent.access.availableAccounts', this.allAccounts);
   }
 
   addAccount() {
@@ -26,6 +29,7 @@ export class AccountSelectorComponent implements OnInit {
 
   removeAccount(acc: AccountReferenceComponent) {
     this.accounts = this.accounts.filter(it => it.elemId != acc.elemId);
+    acc.remove();
   }
 
   addBalance() {
@@ -34,6 +38,7 @@ export class AccountSelectorComponent implements OnInit {
 
   removeBalance(acc: AccountReferenceComponent) {
     this.balances = this.balances.filter(it => it.elemId != acc.elemId);
+    acc.remove();
   }
 
   addTransaction() {
@@ -42,5 +47,6 @@ export class AccountSelectorComponent implements OnInit {
 
   removeTransaction(acc: AccountReferenceComponent) {
     this.transactions = this.transactions.filter(it => it.elemId != acc.elemId);
+    acc.remove();
   }
 }
