@@ -7,12 +7,25 @@ server:
       httpOnly: false
       path: /
 tpp:
-    url: http://localhost:18085
+  url: http://localhost:18085
 
 mock:
   tppais:
-      listtransactions: true
-      listaccounts: true
+    listtransactions: true
+    listaccounts: false
+
+java:
+  net:
+    HttpURLConnection:
+      followRedirects: false
+
+feign:
+  httpclient:
+    follow-redirects: false
+  client:
+    config:
+      default:
+        followRedirects: false
 
 spring:
   datasource:
@@ -20,3 +33,4 @@ spring:
     username: SA
     password:
     driver-class-name: org.h2.Driver
+

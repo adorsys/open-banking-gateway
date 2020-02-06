@@ -6,10 +6,10 @@ import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.mapper.ManualMapper;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListAccountsMock;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,18 +27,21 @@ public class AccountService {
             return createInlineResponse2003(new TppListAccountsMock().getAccountList());
         }
 
-        try {
-            return createInlineResponse2003(tppAisClient.getAccounts(
-                    contextInformation.getFintechID(),
-                    sessionEntity.getLoginUserName(),
-                    fintechRedirectURLOK,
-                    fintechRedirectURLNOK,
-                    contextInformation.getXRequestID(),
-                    bankId,
-                    null).getBody());
-        } catch (FeignException ex) {
-            log.error("got exception for status code " + ex.status());
-            throw ex;
+        ResponseEntity<AccountList> accounts = tppAisClient.getAccounts(
+                contextInformation.getFintechID(),
+                sessionEntity.getLoginUserName(),
+                fintechRedirectURLOK,
+                fintechRedirectURLNOK,
+                contextInformation.getXRequestID(),
+                bankId,
+                null);
+        switch (accounts.getStatusCode()) {
+            case OK:
+                return createInlineResponse2003(accounts.getBody());
+            case SEE_OTHER:
+            case UNAUTHORIZED:
+            default:
+                throw new RuntimeException("DID NOT EXPECT RETURNCODE:" + accounts.getStatusCode());
         }
     }
 

@@ -41,19 +41,15 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<String> ammountList = new ArrayList<>();
-        log.info("=============");
-        log.info(mvcResult.getResponse().getContentAsString());
-        log.info("=============");
-
+        List<String> amountList = new ArrayList<>();
         JSONArray booked = new JSONObject(mvcResult.getResponse().getContentAsString())
                 .getJSONObject("accountList")
                 .getJSONObject("transactions")
                 .getJSONArray("booked");
         for (int i = 0; i < booked.length(); i++) {
-            ammountList.add(booked.getJSONObject(i).getJSONObject("transactionAmount").getString("amount"));
+            amountList.add(booked.getJSONObject(i).getJSONObject("transactionAmount").getString("amount"));
         }
-        return ammountList;
+        return amountList;
 
 
     }

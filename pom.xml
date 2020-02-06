@@ -135,6 +135,7 @@
         <glassfish.jersey-client.version>2.30</glassfish.jersey-client.version>
         <jersey-hk2.version>2.28</jersey-hk2.version>
         <h2.database.version>1.4.200</h2.database.version>
+        <spring-web.version>5.2.3.RELEASE</spring-web.version>
     </properties>
 
     <repositories>
