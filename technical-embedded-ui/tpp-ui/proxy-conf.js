@@ -12,7 +12,8 @@ const PROXY_CONFIG = {
 
         // -> store auth session
         if (proxyRes.headers['location'].includes("localhost:5500")) {
-          proxyRes.headers['location'] = proxyRes.headers['location'] + '&authorizationSessionId=' + proxyRes.headers['authorization-session-id'] + '&redirectCode=' + proxyRes.headers['redirect-code'];
+          let queryStart = proxyRes.headers['location'].includes('?') ? '' : '?stub=Stubbed';
+          proxyRes.headers['location'] = proxyRes.headers['location'] + queryStart + '&authorizationSessionId=' + proxyRes.headers['authorization-session-id'] + '&redirectCode=' + proxyRes.headers['redirect-code'];
         }
 
         // -> avoid cors on sandbox

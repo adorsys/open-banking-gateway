@@ -3,6 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { DynamicFormControlBase } from './dynamic-form-control-base';
 import {DynamicFormFactory} from "./dynamic-form-factory";
 import {HttpClient} from "@angular/common/http";
+import {Helpers} from "../app.component";
 
 @Component({
   selector: 'dynamic-form',
@@ -33,8 +34,8 @@ export class DynamicFormComponent implements OnInit {
       this.submissionUri,
       {scaAuthenticationData: formObj}, // scaAuthenticationData is not really correct
       {headers: {
-        'X-Request-ID': this.uuidv4(),
-        'X-XSRF-TOKEN': this.uuidv4(),
+        'X-Request-ID': Helpers.uuidv4(),
+        'X-XSRF-TOKEN': Helpers.uuidv4(),
       }}
     ).subscribe(res => {
     }, error => {
@@ -43,13 +44,6 @@ export class DynamicFormComponent implements OnInit {
       } else {
         window.location.href = error.url;
       }
-    });
-  }
-
-  uuidv4(): string {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-      let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
     });
   }
 }
