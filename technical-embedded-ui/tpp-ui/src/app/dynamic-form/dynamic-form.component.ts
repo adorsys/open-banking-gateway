@@ -38,7 +38,11 @@ export class DynamicFormComponent implements OnInit {
       }}
     ).subscribe(res => {
     }, error => {
-      window.location.href = error.url;
+      if (error.url.includes('redirToSandbox=')) {
+        window.location.href = error.url.substr(error.url.indexOf('redirToSandbox=') + 'redirToSandbox='.length);
+      } else {
+        window.location.href = error.url;
+      }
     });
   }
 
