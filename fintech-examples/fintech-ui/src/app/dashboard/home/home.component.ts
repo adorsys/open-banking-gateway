@@ -1,11 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { AisService } from '../services/ais.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
+  private accountsSubscription: Subscription;
+
   cardList = [
     {
       headline: 'Telecom',
@@ -29,24 +33,7 @@ export class HomeComponent implements OnInit {
     }
   ];
 
-  cardList2 = [
-    {
-      headline: 'All Accounts',
-      subheadline: '1.485,90'
-    },
-    {
-      headline: 'Girokonto',
-      subheadline: '1.277,90'
-    },
-    {
-      headline: 'Haushaltskonto',
-      subheadline: '48,00'
-    },
-    {
-      headline: 'DE94500105174894965666',
-      subheadline: '-129,90'
-    }
-  ];
+  cardList2 = [];
 
   config = {
     headline: 'small',
@@ -54,7 +41,20 @@ export class HomeComponent implements OnInit {
     shadow: 'shadow'
   };
 
-  constructor() {}
+  constructor(private aisService: AisService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.accountsSubscription = this.aisService.getAccounts().subscribe(accountList => {
+      accountList.accounts.forEach(account => {
+        this.cardList2.push({
+          headline: account.iban,
+          subheadline: account.name ? account.name : ''
+        });
+      });
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.accountsSubscription.unsubscribe();
+  }
 }

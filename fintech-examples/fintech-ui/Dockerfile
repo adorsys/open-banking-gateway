@@ -24,40 +24,39 @@ ENV NGINX_ACCESS_LOG_DEBUG combined
 ENV NGINX_ERROR_LOG_DEBUG error
 
 # generate build
-RUN npm run build -- --output-path=./dist --configuration $configuration
+RUN npm run build -- --output-path=./dist --configuration $configuration \
+    && chown -R 1001:0 ./dist
 
 ############
 ### prod ###
 ############
 
 # base image
-FROM nginx:1.17.6
+FROM adorsys/nginx:ubi
 LABEL maintainer="https://github.com/adorsys/open-banking-gateway"
 
-# install ruby
-RUN \
-  apt-get update && \
-  apt-get install -y ruby
 
 # copy artifact build from the 'build environment'
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 
+USER 0
+
 # copy nginx configuration
-COPY ./nginx.conf.erb /etc/nginx/conf.d/default.conf.erb
+COPY docker-root /
 
-# copy entry.sh file
-COPY ./entry.sh /opt/entry.sh
+# install ruby
+RUN  microdnf install --nodocs -y ruby && microdnf clean all \
+    && chown -R 1001:0 /etc/nginx/conf.d /entry.sh \
+    && chmod 555 /entry.sh \
+    && chmod 777 -R /etc/nginx/conf.d
 
-# set permissions
-RUN chgrp -R root /var/cache/nginx && \
-    find /var/cache/nginx -type d -exec chmod 775 {} \; && \
-    find /var/cache/nginx -type f -exec chmod 664 {} \; && \
-    chmod 775 /var/run && \
-    chmod 775 /opt/entry.sh && \
-    chmod -R 777 /etc/nginx/conf.d
+USER 1001
+
 
 # expose port 4200
 EXPOSE 4200
 
 # execute entry.sh file
-ENTRYPOINT /opt/entry.sh
+ENTRYPOINT ["/entry.sh"]
+
+CMD ["nginx", "-g", "daemon off;"]

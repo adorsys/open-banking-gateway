@@ -1,23 +1,23 @@
 <div class="box-container">
-  <ng-template [ngIf]="!selectedBank" [ngIfElse]="profile">
-    <div class="card card-frame">
-      <div class="card-body">
-        <h4 class="card-title">Search your bank</h4>
-        <app-search (keyword)="onSearch($event)"></app-search>
-        <div class="scrollable">
-          <button (click)="onBankSelect(bank.id)" *ngFor="let bank of cardList" class="bank-list" type="button">
-            {{ bank.headline }}
-          </button>
-        </div>
+  <!--  <ng-template [ngIf]="!selectedBank" [ngIfElse]="profile">-->
+  <div class="card card-frame">
+    <div class="card-body">
+      <h4 class="card-title">Search your bank</h4>
+      <app-search (keyword)="onSearch($event)"></app-search>
+      <div class="scrollable">
+        <button (click)="onBankSelect(bank.uuid)" *ngFor="let bank of searchedBanks" class="bank-list" type="button">
+          {{ bank.bankName }}
+        </button>
       </div>
     </div>
-  </ng-template>
+  </div>
+  <!--  </ng-template>-->
 
-  <ng-template #profile>
-    <div class="card box-item mr-4 w-100">
-      <div class="card-body">
-        <app-profile [bankId]="selectedBank" (bankUnselect)="bankUnselect()"></app-profile>
-      </div>
-    </div>
-  </ng-template>
+  <!--  <ng-template #profile>-->
+  <!--    <div class="card box-item mr-4 w-100">-->
+  <!--      <div class="card-body">-->
+  <!--        <app-profile [bankId]="selectedBank" (bankUnselect)="bankUnselect()"></app-profile>-->
+  <!--      </div>-->
+  <!--    </div>-->
+  <!--  </ng-template>-->
 </div>

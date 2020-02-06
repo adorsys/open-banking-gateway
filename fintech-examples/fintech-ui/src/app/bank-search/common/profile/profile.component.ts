@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { BankProfile } from '../../../api';
 import { BankProfileService } from '../../services/bank-profile.service';
-import { BankProfile } from '../../models/bank-profile.model';
 
 @Component({
   selector: 'app-profile',
@@ -15,7 +15,10 @@ export class ProfileComponent implements OnInit {
   constructor(private bankProfileService: BankProfileService) {}
 
   ngOnInit() {
-    this.bankProfileService.getBankProfile(this.bankId).subscribe((profile: BankProfile) => (this.profile = profile));
+    this.bankProfileService.getBankProfile(this.bankId).subscribe((profile: BankProfile) => {
+      console.log(profile);
+      this.profile = profile;
+    });
   }
 
   goBack() {

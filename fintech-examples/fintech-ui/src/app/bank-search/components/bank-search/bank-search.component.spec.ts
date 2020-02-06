@@ -4,6 +4,7 @@ import { BankSearchComponent } from './bank-search.component';
 import { SearchComponent } from '../../common/search/search.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('BankSearchComponent', () => {
   let component: BankSearchComponent;
@@ -11,7 +12,7 @@ describe('BankSearchComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, HttpClientTestingModule],
+      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
       declarations: [BankSearchComponent, SearchComponent]
     }).compileComponents();
   }));

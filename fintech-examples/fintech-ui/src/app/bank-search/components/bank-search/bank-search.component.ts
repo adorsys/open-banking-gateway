@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { BankSearchService } from '../../services/bank-search.service';
-import { Bank } from '../../models/bank.model';
+import { Router } from '@angular/router';
+import { BankDescriptor } from '../../../api';
 
 @Component({
   selector: 'app-bank-search',
@@ -8,47 +9,27 @@ import { Bank } from '../../models/bank.model';
   styleUrls: ['./bank-search.component.scss']
 })
 export class BankSearchComponent {
-  searchedBanks: Bank[];
+  searchedBanks: BankDescriptor[] = [];
   selectedBank: string;
 
-  cardList = [
-    {
-      headline: 'Telecom'
-    },
-    {
-      headline: 'Telecom'
-    },
-    {
-      headline: 'Telecom'
-    },
-    {
-      headline: 'Telecom'
-    },
-    {
-      headline: 'Telecom'
-    },
-    {
-      headline: 'Telecom'
-    },
-    {
-      headline: 'Telecom'
-    },
-    {
-      headline: 'Telecom'
-    }
-  ];
-
-  constructor(private bankSearchService: BankSearchService) {}
+  constructor(private bankSearchService: BankSearchService, private router: Router) {}
 
   onSearch(keyword: string) {
-    this.bankSearchService.searchBanks(keyword).subscribe((banks: Bank[]) => (this.searchedBanks = banks));
+    if (keyword && keyword.trim()) {
+      this.bankSearchService.searchBanks(keyword).subscribe(bankDescriptor => {
+        this.searchedBanks = bankDescriptor.bankDescriptor;
+      });
+    } else {
+      this.bankUnselect();
+    }
   }
 
   onBankSelect(bankId: string) {
     this.selectedBank = bankId;
+    this.router.navigate(['/dashboard']);
   }
 
-  bankUnselect() {
+  private bankUnselect() {
     this.searchedBanks = [];
     this.selectedBank = null;
   }
