@@ -1,6 +1,7 @@
 package de.adorsys.opba.db.domain.entity.sessions;
 
 import de.adorsys.opba.db.domain.entity.BankProtocol;
+import de.adorsys.opba.db.domain.entity.Consent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,8 +17,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
+import java.util.Collection;
 import java.util.UUID;
 
 @Getter
@@ -42,6 +45,9 @@ public class ServiceSession {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private BankProtocol protocol;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "serviceSession")
+    private Collection<Consent> consents;
 
     @Version
     private int version;
