@@ -1,0 +1,20 @@
+@startuml
+legend center
+  List accounts
+  when consent is
+  missing
+endlegend
+
+[list accounts] as lsAccounts
+cloud "Authorization" {
+    [please redirect for authorization] as authRedir
+    [please provide account access] as accountAccess
+    [please bank account password] as accountPassword
+    [please provide bank SCA challenge] as scaChallenge
+}
+
+lsAccounts --> authRedir : 202 (Accepted) status, {href: http://account-access/}
+authRedir --> accountAccess : 303 status, {location: http://account-access/}
+accountAccess --> accountPassword : 303 status, {location: http://account-password/}
+accountPassword --> scaChallenge : 303 status, {location: http://sca-challenge/}
+@enduml
