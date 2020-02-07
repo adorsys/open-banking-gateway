@@ -32,7 +32,9 @@ export class InitialRequestComponent implements OnInit {
   }
 
   submit() {
-    this.client.get(this.getUri, {headers: {
+    this.client.get(this.getUri, {
+      observe: 'response',
+      headers: {
         'Fintech-Redirect-URL-OK': this.fintechRedirectUriOk,
         'Fintech-Redirect-URL-NOK': this.fintechRedirectUriNok,
         'Fintech-User-ID': this.fintechUserId,
@@ -40,8 +42,7 @@ export class InitialRequestComponent implements OnInit {
         'X-Request-ID': this.requestId,
         'Bank-ID': this.bankId
     }}).subscribe(res => {
-    }, error => {
-      window.location.href = error.url;
+      window.location.href = res.headers.get('Location');
     });
   }
 }

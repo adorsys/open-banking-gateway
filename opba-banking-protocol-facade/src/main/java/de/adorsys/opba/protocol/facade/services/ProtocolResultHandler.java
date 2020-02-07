@@ -7,13 +7,12 @@ import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
-import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationRequiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
-import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeAuthorizationRequiredResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
+import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeSuccessResult;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.Optional;
 import java.util.UUID;
 
 import static de.adorsys.opba.db.domain.entity.ProtocolAction.UPDATE_AUTHORIZATION;
@@ -56,16 +56,16 @@ public class ProtocolResultHandler {
     }
 
     private <O> FacadeResult<O> handleRedirect(RedirectionResult<O> result, UUID xRequestId, ServiceContext session) {
-        if (result instanceof AuthorizationRequiredResult) {
-            handleAuthorizationRedirect((AuthorizationRequiredResult<O>) result, xRequestId, session);
+        if (!authSessionFromDb(session).isPresent()) {
+            return handleAuthorizationStart(result, xRequestId, session);
         }
 
         return defaultHandleRedirect(result, xRequestId, session);
     }
 
-    private <O> FacadeResult<O> handleAuthorizationRedirect(AuthorizationRequiredResult<O> result, UUID xRequestId, ServiceContext session) {
-        FacadeAuthorizationRequiredResult<O> mappedResult =
-            (FacadeAuthorizationRequiredResult<O>) FacadeAuthorizationRequiredResult.FROM_PROTOCOL.map(result);
+    private <O> FacadeResult<O> handleAuthorizationStart(RedirectionResult<O> result, UUID xRequestId, ServiceContext session) {
+        FacadeStartAuthorizationResult<O> mappedResult =
+            (FacadeStartAuthorizationResult<O>) FacadeStartAuthorizationResult.FROM_PROTOCOL.map(result);
 
         addAuthorizationSessionData(result, xRequestId, session, mappedResult);
         return mappedResult;
@@ -89,9 +89,13 @@ public class ProtocolResultHandler {
 
     private <O> AuthSession updateAuthContext(Result<O> result, ServiceContext session) {
         // Auth session is 1-1 to service session, using id as foreign key
-        return authenticationSessions.findByParentId(session.getServiceSessionId())
+        return authSessionFromDb(session)
                 .map(it -> updateExistingAuthSession(result, it))
                 .orElseGet(() -> createNewAuthSession(result, session));
+    }
+
+    private Optional<AuthSession> authSessionFromDb(ServiceContext session) {
+        return authenticationSessions.findByParentId(session.getServiceSessionId());
     }
 
     @NotNull
