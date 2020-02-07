@@ -45,7 +45,7 @@ public class FacadeResponseMapper {
                 .header(REDIRECT_CODE, result.getRedirectCode())
                 .header(PSU_CONSENT_SESSION, "BAR")
                 .location(result.getRedirectionTo())
-                .body("Please use redirect link in Location header");
+                .body("Please use redirect link in 'Location' header");
     }
 
     private <E> ResponseEntity<E> handleError(FacadeErrorResult result, ErrorResultMapper<FacadeErrorResult, E> toError) {

@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Data
+// FIXME Entire class must be protected https://github.com/adorsys/open-banking-gateway/issues/251
 public class BaseContext {
 
     private ContextMode mode;

@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.eventbus;
 
+import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ConsentAcquired;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Redirect;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Response;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ValidationIssue;
@@ -48,7 +49,10 @@ public class ProcessEventHandlerRegistrar {
                         mapper.onRedirect((Redirect) procResult);
                     } else if (procResult instanceof ValidationIssue) {
                         mapper.onValidationProblem((ValidationIssue) procResult);
-                    } else {
+                    } else if (procResult instanceof ConsentAcquired) {
+                        mapper.onConsentAcquired((ConsentAcquired) procResult);
+                    }
+                    else {
                         mapper.onError();
                     }
                 });
