@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.api.dto.result.fromprotocol;
+package de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog;
 
 import java.net.URI;
 

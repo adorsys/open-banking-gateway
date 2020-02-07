@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.facade.dto.result.torest;
 
-import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.ConsentAcquiredResult;
 import lombok.Data;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -9,7 +9,7 @@ import java.net.URI;
 import java.util.UUID;
 
 @Data
-public class FacadeRedirectResult<T> implements FacadeResult<T> {
+public class FacadeConsentAcquiredResult<T> implements FacadeResult<T> {
 
     public static final RedirectFromProtocol FROM_PROTOCOL = Mappers.getMapper(RedirectFromProtocol.class);
 
@@ -21,6 +21,6 @@ public class FacadeRedirectResult<T> implements FacadeResult<T> {
 
     @Mapper
     public interface RedirectFromProtocol {
-        FacadeRedirectResult map(RedirectionResult result);
+        FacadeConsentAcquiredResult map(ConsentAcquiredResult result);
     }
 }

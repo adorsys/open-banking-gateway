@@ -20,7 +20,7 @@ public class Xs2aContext extends BaseContext {
     private ConsentInitiateBody consent = new ConsentInitiateBody(); // to avoid initialization in more-parameters
 
     // Mandatory dynamic
-    private String psuIpAddress;
+    private String psuIpAddress; // FIXME https://github.com/adorsys/open-banking-gateway/issues/251
 
     // Optional consent-specific
     private Boolean withBalance;
@@ -39,9 +39,9 @@ public class Xs2aContext extends BaseContext {
     // sensitive - do not persist?
     private String psuPassword;
 
-    // TODO: protect from overriding using reflection
+    // TODO: protect from overriding using reflection https://github.com/adorsys/open-banking-gateway/issues/251
     private String redirectUriOk;
 
-    // TODO: protect from overriding reflection
+    // TODO: protect from overriding reflection https://github.com/adorsys/open-banking-gateway/issues/251
     private String redirectUriNok;
 }
