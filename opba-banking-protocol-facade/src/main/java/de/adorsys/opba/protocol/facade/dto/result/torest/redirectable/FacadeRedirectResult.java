@@ -1,23 +1,16 @@
-package de.adorsys.opba.protocol.facade.dto.result.torest;
+package de.adorsys.opba.protocol.facade.dto.result.torest.redirectable;
 
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionResult;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import java.net.URI;
-import java.util.UUID;
-
 @Data
-public class FacadeRedirectResult<T> implements FacadeResult<T> {
+@EqualsAndHashCode(callSuper = true)
+public class FacadeRedirectResult<T> extends FacadeResultRedirectable<T> {
 
     public static final RedirectFromProtocol FROM_PROTOCOL = Mappers.getMapper(RedirectFromProtocol.class);
-
-    private String redirectCode;
-    private UUID xRequestId;
-    private String serviceSessionId;
-    private String authorizationSessionId;
-    private URI redirectionTo;
 
     @Mapper
     public interface RedirectFromProtocol {
