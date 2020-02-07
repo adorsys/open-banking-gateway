@@ -61,7 +61,7 @@ services:
       - SERVER_CONTROLLER_COOKIE_PATH=/
 
       - MOCK_TPPAIS_LISTTRANSACTIONS=true
-      - MOCK_TPPAIS_LISTACCOUNTS=true
+      - MOCK_TPPAIS_LISTACCOUNTS=false
 
     build: fintech-examples/fintech-server
     ports:

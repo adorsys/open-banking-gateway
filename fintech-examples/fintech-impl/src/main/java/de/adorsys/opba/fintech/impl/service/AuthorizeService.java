@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.adorsys.opba.fintech.impl.tppclients.CookieNames.SESSION_COOKIE;
+import static de.adorsys.opba.fintech.impl.tppclients.CookieNames.XSRF_TOKEN_COOKIE;
+
 /**
  * This is just a dummy authorization.
  * All users are accepted. Password allways has to be 1234, otherwise login fails
@@ -20,8 +23,6 @@ import java.util.UUID;
 @Configuration
 public class AuthorizeService {
     private static final boolean CHECK_SESSION_COOKIE_TODO = false;
-    private static final String SESSION_COOKIE_NAME = "SESSION-COOKIE";
-    private static final String XSRF_TOKEN_COOKIE_NAME = "XSRF-TOKEN";
     private static final String UNIVERSAL_PASSWORD = "1234";
 
     @Autowired
@@ -53,13 +54,17 @@ public class AuthorizeService {
 
         // delete old cookies, if available
         sessionEntity.setCookies(new ArrayList<>());
-        sessionEntity.addCookie(SESSION_COOKIE_NAME, UUID.randomUUID().toString());
-        sessionEntity.addCookie(XSRF_TOKEN_COOKIE_NAME, sessionEntity.getXsrfToken());
+        sessionEntity.addCookie(SESSION_COOKIE, UUID.randomUUID().toString());
+        sessionEntity.addCookie(XSRF_TOKEN_COOKIE, sessionEntity.getXsrfToken());
 
         sessionEntity.addLogin(OffsetDateTime.now());
 
         userRepository.save(sessionEntity);
         return Optional.of(sessionEntity);
+    }
+
+    public SessionEntity getByXsrfToken(String xsrfToken) {
+        return userRepository.findByXsrfToken(xsrfToken).get();
     }
 
     private void generateUserIfUserDoesNotExistYet(LoginRequest loginRequest) {
@@ -84,7 +89,7 @@ public class AuthorizeService {
             return true;
         }
         for (CookieEntity cookie : optionalUserEntity.get().getCookies()) {
-            if (cookie.getName().equals(SESSION_COOKIE_NAME)) {
+            if (cookie.getName().equals(SESSION_COOKIE)) {
                 return cookie.getValue().equals(sessionCookieContent);
             }
         }

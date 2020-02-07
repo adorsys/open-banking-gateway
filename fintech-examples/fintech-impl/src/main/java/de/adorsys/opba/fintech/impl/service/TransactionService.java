@@ -1,7 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse2004;
-import de.adorsys.opba.fintech.impl.config.TppAisClient;
+import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.mapper.ManualMapper;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListTransactionsMock;

@@ -1,5 +1,5 @@
 server:
-  port: 8086
+  port: 18086
   controller:
     cookie:
       secure: false
@@ -7,26 +7,12 @@ server:
       httpOnly: false
       path: /
 tpp:
-  url: http://localhost:18085
+  url: http://localhost:8085
 
 mock:
   tppais:
     listtransactions: true
     listaccounts: false
-
-java:
-  net:
-    HttpURLConnection:
-      followRedirects: false
-
-feign:
-  httpclient:
-    follow-redirects: false
-  client:
-    config:
-      tppAisClient:
-        followRedirects: false
-        follow-redirects: false
 
 spring:
   datasource:

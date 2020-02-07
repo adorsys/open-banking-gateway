@@ -136,6 +136,7 @@
         <jersey-hk2.version>2.28</jersey-hk2.version>
         <h2.database.version>1.4.200</h2.database.version>
         <spring-web.version>5.2.3.RELEASE</spring-web.version>
+        <feign-http-client.version>10.7.4</feign-http-client.version>
     </properties>
 
     <repositories>

@@ -1,4 +1,4 @@
-package de.adorsys.opba.fintech.impl.config;
+package de.adorsys.opba.fintech.impl.tppclients;
 
 import de.adorsys.opba.tpp.ais.api.resource.generated.TppBankingApiAccountInformationServiceAisApi;
 import org.springframework.cloud.openfeign.FeignClient;

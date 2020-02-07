@@ -4,7 +4,6 @@ import de.adorsys.opba.fintech.api.model.generated.InlineResponse2003;
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse2004;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAccountInformationApi;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
-import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import de.adorsys.opba.fintech.impl.service.AccountService;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.ContextInformation;
@@ -31,18 +30,15 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
     @Autowired
     TransactionService transactionService;
 
-    @Autowired
-    UserRepository userRepository;
-
     @Override
     public ResponseEntity<InlineResponse2003> aisAccountsGET(String bankId, UUID xRequestID, String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
         if (!authorizeService.isAuthorized(xsrfToken, null)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         ContextInformation contextInformation = new ContextInformation(xRequestID);
-        SessionEntity sessionEntity = userRepository.findByXsrfToken(xsrfToken).get();
+        SessionEntity sessionEntity = authorizeService.getByXsrfToken(xsrfToken);
 
-        return new ResponseEntity<>(accountService.listAccounts(contextInformation, sessionEntity, bankId, fintechRedirectURLOK, fintechRedirectURLNOK), HttpStatus.OK);
+        return accountService.listAccounts(contextInformation, sessionEntity, bankId, fintechRedirectURLOK, fintechRedirectURLNOK);
     }
 
     @Override
@@ -55,7 +51,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
         }
 
         ContextInformation contextInformation = new ContextInformation(xRequestID);
-        SessionEntity sessionEntity = userRepository.findByXsrfToken(xsrfToken).get();
+        SessionEntity sessionEntity = authorizeService.getByXsrfToken(xsrfToken);
 
         return new ResponseEntity<>(transactionService.listTransactions(contextInformation, sessionEntity, fintechRedirectURLOK,
                 fintechRedirectURLNOK, bankId, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList), HttpStatus.OK);

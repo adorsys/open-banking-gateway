@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import javax.persistence.EntityManager;
 
 @Configuration
-@EnableFeignClients
+@EnableFeignClients(basePackages = "de.adorsys.opba.fintech.impl.tppclients")
 @EnableJpaRepositories(
         basePackages = "de.adorsys.opba.fintech.impl.database.repositories",
         repositoryBaseClass = UserRepositoryImpl.class)
@@ -27,5 +27,6 @@ public class FinTechImplConfig {
     UserRepository userRepository(EntityManager entityManager) {
         return new UserRepositoryImpl(entityManager);
     }
+
 }
 

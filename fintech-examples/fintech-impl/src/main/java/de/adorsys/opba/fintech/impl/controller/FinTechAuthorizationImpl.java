@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_ID;
+
 @Slf4j
 @RestController
 public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
-
-    private static final String X_REQUEST_ID = "X-Request-ID";
 
     @Autowired
     AuthorizeService authorizeService;
