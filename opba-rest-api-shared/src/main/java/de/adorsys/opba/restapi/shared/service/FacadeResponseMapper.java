@@ -1,9 +1,10 @@
 package de.adorsys.opba.restapi.shared.service;
 
-import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeErrorResult;
-import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeRedirectResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
-import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeSuccessResult;
+import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeAuthorizationRequiredResult;
+import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
+import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeErrorResult;
+import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeSuccessResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.PSU_CONSENT_SESSION;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
+import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.SEE_OTHER;
@@ -22,8 +24,8 @@ import static org.springframework.http.HttpStatus.SEE_OTHER;
 public class FacadeResponseMapper {
 
     public <T, E> ResponseEntity<?> translate(FacadeResult<T> result, ErrorResultMapper<FacadeErrorResult, E> toError) {
-        if (result instanceof FacadeRedirectResult) {
-            return handleRedirect((FacadeRedirectResult) result);
+        if (result instanceof FacadeResultRedirectable) {
+            return handleRedirect((FacadeResultRedirectable) result);
         }
 
         if (result instanceof FacadeErrorResult) {
@@ -37,15 +39,33 @@ public class FacadeResponseMapper {
         throw new IllegalArgumentException("Unknown result type: " + result.getClass());
     }
 
-    private ResponseEntity<?> handleRedirect(FacadeRedirectResult result) {
+    private ResponseEntity<?> handleRedirect(FacadeResultRedirectable result) {
+        if (result instanceof FacadeAuthorizationRequiredResult) {
+            return handleInitialAuthorizationRedirect((FacadeAuthorizationRequiredResult) result);
+        }
+
+        return defaultHandleRedirect(result);
+    }
+
+    private ResponseEntity<?> handleInitialAuthorizationRedirect(FacadeAuthorizationRequiredResult result) {
+        ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(ACCEPTED));
+
+        return responseForRedirection(result, response);
+    }
+
+    private ResponseEntity<?> defaultHandleRedirect(FacadeResultRedirectable result) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(SEE_OTHER));
 
+        return responseForRedirection(result, response);
+    }
+
+    private ResponseEntity<String> responseForRedirection(FacadeResultRedirectable result, ResponseEntity.BodyBuilder response) {
         return response
-                .header(AUTHORIZATION_SESSION_ID, result.getAuthorizationSessionId())
-                .header(REDIRECT_CODE, result.getRedirectCode())
-                .header(PSU_CONSENT_SESSION, "BAR")
-                .location(result.getRedirectionTo())
-                .body("Please use redirect link in 'Location' header");
+            .header(AUTHORIZATION_SESSION_ID, result.getAuthorizationSessionId())
+            .header(REDIRECT_CODE, result.getRedirectCode())
+            .header(PSU_CONSENT_SESSION, "BAR")
+            .location(result.getRedirectionTo())
+            .body("Please use redirect link in 'Location' header");
     }
 
     private <E> ResponseEntity<E> handleError(FacadeErrorResult result, ErrorResultMapper<FacadeErrorResult, E> toError) {

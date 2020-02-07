@@ -1,6 +1,7 @@
-package de.adorsys.opba.protocol.facade.dto.result.torest;
+package de.adorsys.opba.protocol.facade.dto.result.torest.staticres;
 
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
+import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import lombok.Data;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
