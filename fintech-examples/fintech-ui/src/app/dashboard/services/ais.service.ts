@@ -8,9 +8,9 @@ import { FinTechAccountInformationService } from '../../api';
 export class AisService {
   constructor(private finTechAccountInformationService: FinTechAccountInformationService) {}
 
-  getAccounts() {
+  getAccounts(bankId: string) {
     return this.finTechAccountInformationService
-      .aisAccountsGET('bankId', '', '')
+      .aisAccountsGET(bankId, '', '')
       .pipe(map(response => response.accountList));
   }
 
