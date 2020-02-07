@@ -27,7 +27,9 @@
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentFinder.consentExists()}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-A5B46C98-B9ED-452D-A7EF-230E76A141A7" sourceRef="accountList" targetRef="listTransactions"></sequenceFlow>
-    <sequenceFlow id="sid-C7B84E74-6D92-41FD-92B3-E963311FAC95" sourceRef="authorizeConsent" targetRef="accountList"></sequenceFlow>
+    <serviceTask id="callFintechWebhook" name="Calls FinTech webhook to notify completed authorization" flowable:delegateExpression="${xs2aReportToFintechConsentAuthorized}"></serviceTask>
+    <sequenceFlow id="sid-62E27F2F-7BD1-4ADE-A2DF-515550120D59" sourceRef="authorizeConsent" targetRef="callFintechWebhook"></sequenceFlow>
+    <sequenceFlow id="sid-1E621113-582D-4432-8A34-937D3D57FFE9" sourceRef="callFintechWebhook" targetRef="end"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-list-transactions">
     <bpmndi:BPMNPlane bpmnElement="xs2a-list-transactions" id="BPMNPlane_xs2a-list-transactions">
@@ -44,7 +46,7 @@
         <omgdc:Bounds height="80.0" width="100.0" x="289.75" y="310.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="authorizeConsent" id="BPMNShape_authorizeConsent">
-        <omgdc:Bounds height="80.0" width="100.0" x="463.6363535873163" y="310.0"></omgdc:Bounds>
+        <omgdc:Bounds height="80.0" width="100.0" x="525.0" y="310.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
         <omgdc:Bounds height="28.0" width="28.0" x="804.5454371074018" y="135.09090672642736"></omgdc:Bounds>
@@ -52,18 +54,25 @@
       <bpmndi:BPMNShape bpmnElement="accountList" id="BPMNShape_accountList">
         <omgdc:Bounds height="80.0" width="100.0" x="463.6363535873163" y="109.09090672642736"></omgdc:Bounds>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="callFintechWebhook" id="BPMNShape_callFintechWebhook">
+        <omgdc:Bounds height="80.0" width="100.0" x="768.5454371074018" y="310.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-1E621113-582D-4432-8A34-937D3D57FFE9" id="BPMNEdge_sid-1E621113-582D-4432-8A34-937D3D57FFE9">
+        <omgdi:waypoint x="818.5454371074018" y="310.0"></omgdi:waypoint>
+        <omgdi:waypoint x="818.5454371074018" y="163.04083073967897"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="consentAvailable" id="BPMNEdge_consentAvailable">
         <omgdi:waypoint x="215.0" y="259.0"></omgdi:waypoint>
         <omgdi:waypoint x="215.0" y="149.0"></omgdi:waypoint>
         <omgdi:waypoint x="463.63635358728783" y="149.07568642164273"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-42764015-F0E2-4E8D-A156-87420CF9FC28" id="BPMNEdge_sid-42764015-F0E2-4E8D-A156-87420CF9FC28">
-        <omgdi:waypoint x="389.6999999998765" y="350.0"></omgdi:waypoint>
-        <omgdi:waypoint x="463.63635358708586" y="350.0"></omgdi:waypoint>
+        <omgdi:waypoint x="389.70000000000005" y="350.0"></omgdi:waypoint>
+        <omgdi:waypoint x="525.0" y="350.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-C7B84E74-6D92-41FD-92B3-E963311FAC95" id="BPMNEdge_sid-C7B84E74-6D92-41FD-92B3-E963311FAC95">
-        <omgdi:waypoint x="513.6363535873163" y="310.0"></omgdi:waypoint>
-        <omgdi:waypoint x="513.6363535873163" y="189.04090672642735"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="sid-62E27F2F-7BD1-4ADE-A2DF-515550120D59" id="BPMNEdge_sid-62E27F2F-7BD1-4ADE-A2DF-515550120D59">
+        <omgdi:waypoint x="624.9499999996028" y="350.0"></omgdi:waypoint>
+        <omgdi:waypoint x="768.545437107294" y="350.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-F617FA73-A930-45E8-80DA-2B6C6393D5AB" id="BPMNEdge_sid-F617FA73-A930-45E8-80DA-2B6C6393D5AB">
         <omgdi:waypoint x="727.2227136769552" y="149.09090672642736"></omgdi:waypoint>

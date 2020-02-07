@@ -17,13 +17,17 @@
     </callActivity>
     <endEvent id="end" name="end"></endEvent>
     <sequenceFlow id="sid-42764015-F0E2-4E8D-A156-87420CF9FC28" sourceRef="createConsent" targetRef="authorizeConsent"></sequenceFlow>
-    <sequenceFlow id="sid-3A749CD7-874E-4F43-B07D-9853A8C96C70" sourceRef="authorizeConsent" targetRef="listAccounts"></sequenceFlow>
     <sequenceFlow id="sid-F617FA73-A930-45E8-80DA-2B6C6393D5AB" sourceRef="listAccounts" targetRef="end"></sequenceFlow>
     <sequenceFlow id="sid-E3EA7F14-BD1C-4FC7-9939-1096C5773255" sourceRef="start" targetRef="consentPresent"></sequenceFlow>
     <sequenceFlow id="consentMissing" name="Consent missing" sourceRef="consentPresent" targetRef="createConsent"></sequenceFlow>
     <sequenceFlow id="consentAvailable" name="Consent available" sourceRef="consentPresent" targetRef="listAccounts">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentFinder.consentExists()}]]></conditionExpression>
     </sequenceFlow>
+    <serviceTask id="callFintechWebhook" name="Calls FinTech webhook to notify completed authorization" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aReportToFintechConsentAuthorized}">
+      <documentation>Calls FinTech webhook to notify that user has completed authorization</documentation>
+    </serviceTask>
+    <sequenceFlow id="sid-343CAAE1-65F9-47EA-AAF7-AE1EA764236C" sourceRef="authorizeConsent" targetRef="callFintechWebhook"></sequenceFlow>
+    <sequenceFlow id="sid-07B49F7F-408A-46BB-9C62-F332612A4597" sourceRef="callFintechWebhook" targetRef="end"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-list-accounts">
     <bpmndi:BPMNPlane bpmnElement="xs2a-list-accounts" id="BPMNPlane_xs2a-list-accounts">
@@ -40,23 +44,30 @@
         <omgdc:Bounds height="80.0" width="100.0" x="289.75" y="210.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="authorizeConsent" id="BPMNShape_authorizeConsent">
-        <omgdc:Bounds height="80.0" width="100.0" x="465.0" y="210.0"></omgdc:Bounds>
+        <omgdc:Bounds height="80.0" width="100.0" x="450.0" y="210.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
         <omgdc:Bounds height="28.0" width="28.0" x="660.0" y="101.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="callFintechWebhook" id="BPMNShape_callFintechWebhook">
+        <omgdc:Bounds height="80.0" width="100.0" x="624.0" y="210.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-07B49F7F-408A-46BB-9C62-F332612A4597" id="BPMNEdge_sid-07B49F7F-408A-46BB-9C62-F332612A4597">
+        <omgdi:waypoint x="674.0" y="210.0"></omgdi:waypoint>
+        <omgdi:waypoint x="674.0" y="128.9499294319871"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="consentAvailable" id="BPMNEdge_consentAvailable">
         <omgdi:waypoint x="215.0" y="159.0"></omgdi:waypoint>
         <omgdi:waypoint x="215.0" y="115.0"></omgdi:waypoint>
         <omgdi:waypoint x="465.0" y="115.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-42764015-F0E2-4E8D-A156-87420CF9FC28" id="BPMNEdge_sid-42764015-F0E2-4E8D-A156-87420CF9FC28">
-        <omgdi:waypoint x="389.70000000000005" y="250.0"></omgdi:waypoint>
-        <omgdi:waypoint x="465.0" y="250.0"></omgdi:waypoint>
+        <omgdi:waypoint x="389.69999999987095" y="250.0"></omgdi:waypoint>
+        <omgdi:waypoint x="450.0" y="250.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-3A749CD7-874E-4F43-B07D-9853A8C96C70" id="BPMNEdge_sid-3A749CD7-874E-4F43-B07D-9853A8C96C70">
-        <omgdi:waypoint x="515.0" y="210.0"></omgdi:waypoint>
-        <omgdi:waypoint x="515.0" y="154.95"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="sid-343CAAE1-65F9-47EA-AAF7-AE1EA764236C" id="BPMNEdge_sid-343CAAE1-65F9-47EA-AAF7-AE1EA764236C">
+        <omgdi:waypoint x="549.95" y="250.0"></omgdi:waypoint>
+        <omgdi:waypoint x="623.9999999999948" y="250.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-F617FA73-A930-45E8-80DA-2B6C6393D5AB" id="BPMNEdge_sid-F617FA73-A930-45E8-80DA-2B6C6393D5AB">
         <omgdi:waypoint x="564.95" y="115.0"></omgdi:waypoint>
