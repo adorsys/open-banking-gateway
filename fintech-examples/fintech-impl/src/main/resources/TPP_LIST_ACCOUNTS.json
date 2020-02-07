@@ -1,7 +1,7 @@
 {
   "accounts": [
     {
-      "resourceId": "string",
+      "resourceId": "firstAccount",
       "iban": "FR7612345987650123456789014",
       "bban": "BARC12345612345678",
       "pan": "5409050000000000",
@@ -34,7 +34,7 @@
       }
     },
     {
-      "resourceId": "string",
+      "resourceId": "secondAccount",
       "iban": "AFFE12345987650123456789014",
       "bban": "BARC12345612345678",
       "pan": "5409050000000000",

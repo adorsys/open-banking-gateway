@@ -49,14 +49,20 @@ services:
   fintech-server:
     environment:
       - TPP_URL=http://open-banking-gateway:8085
+
       - SPRING_DATASOURCE_URL=jdbc:h2:mem:test
       - SPRING_DATASOURCE_USERNAME=SA
       - SPRING_DATASOURCE_PASSWORD=
       - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.h2.Driver
-      - SERVER_SERVLET_SESSION_COOKIE_SECURE=false
-      - SERVER_SERVLET_SESSION_COOKIE_MAXAGE=200
-      - SERVER_SERVLET_SESSION_COOKIE_HTTPONLY=false
-      - SERVER_SERVLET_SESSION_COOKIE_PATH=/
+
+      - SERVER_CONTROLLER_COOKIE_SECURE=false
+      - SERVER_CONTROLLER_COOKIE_MAXAGE=200
+      - SERVER_CONTROLLER_COOKIE_HTTPONLY=false
+      - SERVER_CONTROLLER_COOKIE_PATH=/
+
+      - MOCK_TPPAIS_LISTTRANSACTIONS=true
+      - MOCK_TPPAIS_LISTACCOUNTS=true
+
     build: fintech-examples/fintech-server
     ports:
       - "18086:8086"
