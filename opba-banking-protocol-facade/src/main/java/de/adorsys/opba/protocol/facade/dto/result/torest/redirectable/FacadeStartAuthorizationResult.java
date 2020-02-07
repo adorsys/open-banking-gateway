@@ -8,12 +8,12 @@ import org.mapstruct.factory.Mappers;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class FacadeAuthorizationRequiredResult<T> extends FacadeResultRedirectable<T> {
+public class FacadeStartAuthorizationResult<T> extends FacadeResultRedirectable<T> {
 
     public static final RedirectFromProtocol FROM_PROTOCOL = Mappers.getMapper(RedirectFromProtocol.class);
 
     @Mapper
     public interface RedirectFromProtocol {
-        FacadeAuthorizationRequiredResult map(RedirectionResult result);
+        FacadeStartAuthorizationResult map(RedirectionResult result);
     }
 }

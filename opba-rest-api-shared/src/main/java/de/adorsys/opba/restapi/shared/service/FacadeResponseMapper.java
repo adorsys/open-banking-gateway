@@ -1,7 +1,7 @@
 package de.adorsys.opba.restapi.shared.service;
 
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
-import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeAuthorizationRequiredResult;
+import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
 import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeSuccessResult;
@@ -40,14 +40,14 @@ public class FacadeResponseMapper {
     }
 
     private ResponseEntity<?> handleRedirect(FacadeResultRedirectable result) {
-        if (result instanceof FacadeAuthorizationRequiredResult) {
-            return handleInitialAuthorizationRedirect((FacadeAuthorizationRequiredResult) result);
+        if (result instanceof FacadeStartAuthorizationResult) {
+            return handleInitialAuthorizationRedirect((FacadeStartAuthorizationResult) result);
         }
 
         return defaultHandleRedirect(result);
     }
 
-    private ResponseEntity<?> handleInitialAuthorizationRedirect(FacadeAuthorizationRequiredResult result) {
+    private ResponseEntity<?> handleInitialAuthorizationRedirect(FacadeStartAuthorizationResult result) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(ACCEPTED));
 
         return responseForRedirection(result, response);
@@ -65,7 +65,7 @@ public class FacadeResponseMapper {
             .header(REDIRECT_CODE, result.getRedirectCode())
             .header(PSU_CONSENT_SESSION, "BAR")
             .location(result.getRedirectionTo())
-            .body("Please use redirect link in 'Location' header");
+            .body("{\"msg\": \"Please use redirect link in 'Location' header\"}");
     }
 
     private <E> ResponseEntity<E> handleError(FacadeErrorResult result, ErrorResultMapper<FacadeErrorResult, E> toError) {
