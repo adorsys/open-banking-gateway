@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 public class BaseContext {
@@ -15,6 +16,8 @@ public class BaseContext {
     private String aspspId;
     private ProtocolAction action;
     private String sagaId;
+    // Used to find existing consent:
+    private UUID serviceSessionId;
 
     private final Set<ValidationIssue> violations = new HashSet<>();
 

@@ -63,6 +63,10 @@ class JsonCustomSerializer implements VariableType {
     @Override
     @SneakyThrows
     public Object getValue(ValueFields valueFields) {
+        if (null == valueFields.getTextValue()) {
+            return null;
+        }
+
         JsonNode value = mapper.readTree(valueFields.getTextValue());
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
 
