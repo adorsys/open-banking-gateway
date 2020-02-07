@@ -41,3 +41,4 @@ Following environments are involved in the consent initiation process.
 | Fintech2TppConsentSession | Information associated with the consent as returned by the Tpp to the FinTech. Containing authCode, TppConsentSessionApiUrl |
 
 
+![Flow example](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/feature/OBG-194-wiring-xs2a-protocol-contd/opba-consent-rest-api/flow.puml&fmt=svg&vvv=1&sanitize=true)
