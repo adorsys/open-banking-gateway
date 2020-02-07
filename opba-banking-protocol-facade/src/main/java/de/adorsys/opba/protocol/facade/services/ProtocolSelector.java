@@ -14,8 +14,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static de.adorsys.opba.db.domain.entity.ProtocolAction.*;
-
 @Service
 @RequiredArgsConstructor
 public class ProtocolSelector {
@@ -36,7 +34,7 @@ public class ProtocolSelector {
                     protocolAction
             );
         } else {
-            Long id = protocolAction == UPDATE_AUTHORIZATION ? ctx.getAuthorizationBankProtocolId() : ctx.getServiceBankProtocolId();
+            Long id = protocolAction == ProtocolAction.UPDATE_AUTHORIZATION ? ctx.getAuthorizationBankProtocolId() : ctx.getServiceBankProtocolId();
             bankProtocol = protocolRepository.findById(id);
         }
 
