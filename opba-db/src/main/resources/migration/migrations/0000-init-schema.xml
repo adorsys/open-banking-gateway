@@ -9,6 +9,9 @@
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
+            <column name="service_session_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
             <column name="consent_code" type="VARCHAR(256)">
                 <constraints nullable="false"/>
             </column>
@@ -69,6 +72,12 @@
         <addForeignKeyConstraint constraintName="fk_auth_session_service_session"
                                  baseTableName="${table-prefix}auth_session"
                                  baseColumnNames="id"
+                                 referencedTableName="${table-prefix}service_session"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint constraintName="fk_consent_service_session"
+                                 baseTableName="${table-prefix}consent"
+                                 baseColumnNames="service_session_id"
                                  referencedTableName="${table-prefix}service_session"
                                  referencedColumnNames="id"/>
     </changeSet>

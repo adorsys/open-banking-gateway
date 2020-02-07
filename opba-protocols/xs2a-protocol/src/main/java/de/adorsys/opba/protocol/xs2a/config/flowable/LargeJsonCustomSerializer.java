@@ -63,6 +63,10 @@ class LargeJsonCustomSerializer extends SerializableType {
     @Override
     @SneakyThrows
     public Object deserialize(byte[] bytes, ValueFields valueFields) {
+        if (null == bytes) {
+            return null;
+        }
+
         JsonNode value = mapper.readTree(bytes);
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
 
