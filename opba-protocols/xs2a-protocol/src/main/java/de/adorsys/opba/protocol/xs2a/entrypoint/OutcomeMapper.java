@@ -4,7 +4,7 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationRequiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
-import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.ConsentAcquiredResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ConsentAcquired;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Redirect;
@@ -44,7 +44,8 @@ public class OutcomeMapper<T> {
 
     public void onConsentAcquired(ConsentAcquired acquired) {
         channel.complete(
-            new ConsentAcquiredResult<>()
+            // Facade knows redirection target
+            new ConsentAcquiredResult<>(null)
         );
     }
 

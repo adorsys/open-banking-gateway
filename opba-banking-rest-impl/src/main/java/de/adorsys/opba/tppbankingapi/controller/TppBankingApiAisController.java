@@ -4,7 +4,7 @@ import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
-import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeErrorResult;
+import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeErrorResult;
 import de.adorsys.opba.protocol.facade.services.ais.ListAccountsService;
 import de.adorsys.opba.protocol.facade.services.ais.ListTransactionsService;
 import de.adorsys.opba.restapi.shared.service.ErrorResultMapper;
