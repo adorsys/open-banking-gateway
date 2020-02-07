@@ -1,10 +1,12 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint;
 
-import de.adorsys.opba.protocol.api.dto.result.fromprotocol.AuthorizationRequiredResult;
-import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
-import de.adorsys.opba.protocol.api.dto.result.fromprotocol.SuccessResult;
-import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ValidationErrorResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationRequiredResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.ConsentAcquiredResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
+import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ConsentAcquired;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Redirect;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Response;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ValidationIssue;
@@ -37,6 +39,12 @@ public class OutcomeMapper<T> {
                 new ContextBasedValidationErrorResult<>(
                         validationIssue.getProvideMoreParamsDialog(), validationIssue.getExecutionId()
                 )
+        );
+    }
+
+    public void onConsentAcquired(ConsentAcquired acquired) {
+        channel.complete(
+            new ConsentAcquiredResult<>()
         );
     }
 

@@ -41,6 +41,7 @@ public class Xs2aListAccountsEntrypoint implements ListAccounts {
     public CompletableFuture<Result<AccountListBody>> execute(ServiceContext<ListAccountsRequest> serviceContext) {
         Xs2aContext context = mapper.map(serviceContext.getRequest());
         context.setAction(ProtocolAction.LIST_ACCOUNTS);
+        context.setServiceSessionId(serviceContext.getServiceSessionId());
 
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(
                 REQUEST_SAGA,
@@ -59,7 +60,6 @@ public class Xs2aListAccountsEntrypoint implements ListAccounts {
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface FromRequest extends DtoMapper<ListAccountsRequest, Xs2aContext> {
 
-        @Mapping(source = "facadeServiceable.serviceSessionId", target = "serviceSessionId")
         @Mapping(source = "facadeServiceable.bankID", target = "aspspId")
         @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress")
         @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType", nullValuePropertyMappingStrategy = IGNORE)

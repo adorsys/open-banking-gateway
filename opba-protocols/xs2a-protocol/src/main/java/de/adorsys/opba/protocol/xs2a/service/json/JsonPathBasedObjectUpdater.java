@@ -40,6 +40,7 @@ public class JsonPathBasedObjectUpdater {
     private final ProtocolConfiguration configuration;
 
     @SneakyThrows
+    // FIXME https://github.com/adorsys/open-banking-gateway/issues/251
     public <T> T updateObjectUsingJsonPath(T object, Map<String, String> jsonPathToItsValue) {
         TreeNode tree = mapper.valueToTree(object);
         DocumentContext docCtx = JsonPath.parse(tree, jsonConfig);
