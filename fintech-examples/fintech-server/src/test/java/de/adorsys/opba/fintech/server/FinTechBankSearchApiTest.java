@@ -3,6 +3,7 @@ package de.adorsys.opba.fintech.server;
 import com.google.gson.Gson;
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
 import de.adorsys.opba.fintech.server.config.TestConfig;
+import de.adorsys.opba.fintech.server.feignmocks.TppAisClientFeignMock;
 import de.adorsys.opba.fintech.server.feignmocks.TppBankSearchClientFeignMock;
 import de.adorsys.opba.tpp.banksearch.api.model.generated.BankProfileResponse;
 import de.adorsys.opba.tpp.banksearch.api.model.generated.BankSearchResponse;

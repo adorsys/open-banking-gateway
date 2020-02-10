@@ -53,7 +53,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
         ContextInformation contextInformation = new ContextInformation(xRequestID);
         SessionEntity sessionEntity = authorizeService.getByXsrfToken(xsrfToken);
 
-        return new ResponseEntity<>(transactionService.listTransactions(contextInformation, sessionEntity, fintechRedirectURLOK,
-                fintechRedirectURLNOK, bankId, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList), HttpStatus.OK);
+        return transactionService.listTransactions(contextInformation, sessionEntity, fintechRedirectURLOK,
+                fintechRedirectURLNOK, bankId, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList);
     }
 }

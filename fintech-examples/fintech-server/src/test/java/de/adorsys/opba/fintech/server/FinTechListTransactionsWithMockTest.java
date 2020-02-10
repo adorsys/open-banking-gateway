@@ -1,15 +1,10 @@
 package de.adorsys.opba.fintech.server;
 
-import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
-import de.adorsys.opba.fintech.server.config.TestConfig;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
@@ -22,24 +17,22 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = TestConfig.class)
-@AutoConfigureMockMvc
-@EnableFinTechImplConfig
 @Slf4j
-public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
-    private static final String FIN_TECH_LIST_ACCOUNTS_URL = "/v1/ais/banks/{bank-id}/accounts";
+public class FinTechListTransactionsWithMockTest extends FinTechListAccountsWithMockTest {
+    private static final String FIN_TECH_LIST_TRANSACTIONS_URL = "/v1/ais/banks/{bank-id}/accounts/{account-id}/transactions";
 
     @Test
-    public void testListAccounts() {
+    public void testListTransactions() {
         BankProfileTestResult result = getBankProfileTestResult();
         List<String> accountIDs = listAccountIDs(result.getXsrfToken(), result.getBankUUID());
-        assertTrue(accountIDs.containsAll(Arrays.asList(new String[]{"firstAccount", "secondAccount"})));
+        List<String> amounts = listAmounts(result.getXsrfToken(), result.getBankUUID(), accountIDs.get(0));
+        assertTrue(amounts.containsAll(Arrays.asList(new String[]{"123"})));
     }
 
     @SneakyThrows
-    List<String> listAccountIDs(String xsrfToken, String bankUUID) {
+    List<String> listAmounts(String xsrfToken, String bankUUID, String accountID) {
         MvcResult mvcResult = this.mvc
-                .perform(get(FIN_TECH_LIST_ACCOUNTS_URL, bankUUID)
+                .perform(get(FIN_TECH_LIST_TRANSACTIONS_URL, bankUUID, accountID)
                         .header("X-Request-ID", UUID.randomUUID().toString())
                         .header("X-XSRF-TOKEN", xsrfToken)
                         .header("Fintech-Redirect-URL-OK", "ok")
@@ -48,15 +41,17 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        List<String> accountIDs = new ArrayList<>();
-        JSONArray accounts = new JSONObject(mvcResult.getResponse().getContentAsString())
+        List<String> amountList = new ArrayList<>();
+        JSONArray booked = new JSONObject(mvcResult.getResponse().getContentAsString())
                 .getJSONObject("accountList")
-                .getJSONArray("accounts");
-        for (int i = 0; i < accounts.length(); i++) {
-            accountIDs.add(accounts.getJSONObject(i).getString("resourceId"));
+                .getJSONObject("transactions")
+                .getJSONArray("booked");
+        for (int i = 0; i < booked.length(); i++) {
+            amountList.add(booked.getJSONObject(i).getJSONObject("transactionAmount").getString("amount"));
         }
-        return accountIDs;
-    }
+        return amountList;
 
+
+    }
 
 }

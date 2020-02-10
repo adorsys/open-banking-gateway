@@ -23,7 +23,7 @@ import static org.springframework.http.HttpStatus.SEE_OTHER;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class AccountService {
+public class AccountService extends HandleAcceptedService {
     @Value("${mock.tppais.listaccounts}")
     String mockTppAisString;
 
@@ -32,9 +32,8 @@ public class AccountService {
     public ResponseEntity listAccounts(ContextInformation contextInformation, SessionEntity sessionEntity, String bankId, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
         if (mockTppAisString != null && mockTppAisString.equalsIgnoreCase("true") ? true : false) {
             log.warn("Mocking call to list accounts");
-            return createInlineResponse2003(new TppListAccountsMock().getAccountList());
+            return createREsponse(new TppListAccountsMock().getAccountList());
         }
-
         ResponseEntity<AccountList> accounts = tppAisClient.getAccounts(
                 contextInformation.getFintechID(),
                 sessionEntity.getLoginUserName(),
@@ -45,31 +44,17 @@ public class AccountService {
                 null);
         switch (accounts.getStatusCode()) {
             case OK:
-                return createInlineResponse2003(accounts.getBody());
-            case CREATED:
-                String authSessionID = accounts.getHeaders().getFirst(AUTHORIZATION_SESSION_ID);
-                String redirectCode = accounts.getHeaders().getFirst(REDIRECT_CODE);
-                String psuConsentSession = accounts.getHeaders().getFirst(PSU_CONSENT_SESSION);
-                URI location = accounts.getHeaders().getLocation();
-                log.info("call was accepted, but redirect has to be done for authSessionID:{} redirectCode:{} psuConsentSession:{} location:{}",
-                        authSessionID,
-                        redirectCode,
-                        psuConsentSession,
-                        location);
-                return ResponseEntity.status(SEE_OTHER)
-                        .header(AUTHORIZATION_SESSION_ID, authSessionID)
-                        .header(REDIRECT_CODE, redirectCode)
-                        .header(PSU_CONSENT_SESSION, psuConsentSession)
-                        .location(location)
-                        .build();
-            case SEE_OTHER:
+                return createREsponse(accounts.getBody());
+            case ACCEPTED:
+                return handleAccepted(accounts.getHeaders());
             case UNAUTHORIZED:
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             default:
                 throw new RuntimeException("DID NOT EXPECT RETURNCODE:" + accounts.getStatusCode());
         }
     }
 
-    private ResponseEntity createInlineResponse2003(AccountList accountList) {
+    private ResponseEntity createREsponse(AccountList accountList) {
         InlineResponse2003 response = new InlineResponse2003();
         response.setAccountList(ManualMapper.fromTppToFintech(accountList));
         return new ResponseEntity<>(response, HttpStatus.OK);
