@@ -43,6 +43,12 @@
             <column name="context" type="TEXT">
                 <constraints nullable="false"/>
             </column>
+            <column name="fintech_ok_uri" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fintech_nok_uri" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
             <column name="protocol_id" type="BIGINT"/>
             <column name="version" type="INT">
                 <constraints nullable="false"/>

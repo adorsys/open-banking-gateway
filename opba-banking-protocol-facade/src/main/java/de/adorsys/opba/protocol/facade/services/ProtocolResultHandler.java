@@ -6,10 +6,14 @@ import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
+import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
+import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
@@ -20,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,9 +39,17 @@ public class ProtocolResultHandler {
     private final AuthenticationSessionRepository authenticationSessions;
 
     @Transactional
-    public <O> FacadeResult<O> handleResult(Result<O> result, UUID xRequestId, ServiceContext session) {
+    public <O, R extends FacadeServiceableGetter> FacadeResult<O> handleResult(Result<O> result, UUID xRequestId, ServiceContext<R> session) {
         if (result instanceof SuccessResult) {
             return handleSuccess((SuccessResult<O>) result, xRequestId, session);
+        }
+
+        if (result instanceof ConsentAcquiredResult) {
+            return handleConsentAcquired((ConsentAcquiredResult<O>) result, xRequestId, session);
+        }
+
+        if (result instanceof ErrorResult) {
+            return handleError((ErrorResult<O>) result, xRequestId, session);
         }
 
         if (result instanceof RedirectionResult) {
@@ -47,7 +60,9 @@ public class ProtocolResultHandler {
     }
 
     @NotNull
-    private <O> FacadeResult<O> handleSuccess(SuccessResult<O> result, UUID xRequestId, ServiceContext session) {
+    private <O, R extends FacadeServiceableGetter> FacadeResult<O> handleSuccess(
+        SuccessResult<O> result, UUID xRequestId, ServiceContext<R> session
+    ) {
         FacadeSuccessResult<O> mappedResult =
                 (FacadeSuccessResult<O>) FacadeSuccessResult.FROM_PROTOCOL.map(result);
         mappedResult.setServiceSessionId(session.getServiceSessionId().toString());
@@ -55,7 +70,30 @@ public class ProtocolResultHandler {
         return mappedResult;
     }
 
-    private <O> FacadeResult<O> handleRedirect(RedirectionResult<O> result, UUID xRequestId, ServiceContext session) {
+    private <O, R extends FacadeServiceableGetter> FacadeResult<O> handleError(
+        ErrorResult<O> result, UUID xRequestId, ServiceContext<R> session
+    ) {
+        FacadeRedirectErrorResult<O> mappedResult =
+            (FacadeRedirectErrorResult<O>) FacadeRedirectErrorResult.ERROR_FROM_PROTOCOL.map(result);
+
+        addAuthorizationSessionData(result, xRequestId, session, mappedResult);
+        mappedResult.setRedirectionTo(URI.create(session.getFintechRedirectNokUri()));
+        return mappedResult;
+    }
+
+    private <O, R extends FacadeServiceableGetter> FacadeResult<O> handleConsentAcquired(
+        ConsentAcquiredResult<O> result, UUID xRequestId, ServiceContext<R> session
+    ) {
+        FacadeRedirectResult<O> mappedResult = (FacadeRedirectResult<O>) FacadeRedirectResult.FROM_PROTOCOL.map(result);
+
+        addAuthorizationSessionData(result, xRequestId, session, mappedResult);
+        mappedResult.setRedirectionTo(URI.create(session.getFintechRedirectOkUri()));
+        return mappedResult;
+    }
+
+    private <O, R extends FacadeServiceableGetter> FacadeResult<O> handleRedirect(
+        RedirectionResult<O> result, UUID xRequestId, ServiceContext<R> session
+    ) {
         if (!authSessionFromDb(session).isPresent()) {
             return handleAuthorizationStart(result, xRequestId, session);
         }

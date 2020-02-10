@@ -48,6 +48,8 @@ public class ServiceContextProvider {
                 .authSessionId(null == authSession ? null : authSession.getId())
                 .request(request)
                 .authContext(null == authSession ? null : authSession.getContext())
+                .fintechRedirectOkUri(session.getFintechOkUri())
+                .fintechRedirectNokUri(session.getFintechNokUri())
                 .build();
     }
 
@@ -66,6 +68,8 @@ public class ServiceContextProvider {
             }
 
             session.setContext(MAPPER.writeValueAsString(request));
+            session.setFintechOkUri(request.getFacadeServiceable().getFintechRedirectURLOK());
+            session.setFintechNokUri(request.getFacadeServiceable().getFintechRedirectURLNOK());
             return serviceSessions.save(session);
         }
     }
