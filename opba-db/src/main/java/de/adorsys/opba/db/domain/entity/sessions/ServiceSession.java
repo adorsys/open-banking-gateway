@@ -59,6 +59,8 @@ public class ServiceSession {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "serviceSession")
     private Collection<Consent> consents;
 
+    private byte[] password;
+
     @Version
     private int version;
 }

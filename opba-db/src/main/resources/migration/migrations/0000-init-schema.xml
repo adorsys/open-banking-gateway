@@ -76,6 +76,7 @@
             <column name="version" type="INT">
                 <constraints nullable="false"/>
             </column>
+            <column name="password" type="BLOB"/>
         </createTable>
         <addForeignKeyConstraint constraintName="fk_service_session_bank_protocol"
                                  baseTableName="${table-prefix}service_session"

@@ -45,6 +45,11 @@
             <artifactId>tink</artifactId>
             <version>${tink.version}</version>
         </dependency>
+        <dependency>
+            <groupId>de.adorsys.keymanagement</groupId>
+            <artifactId>juggler-bouncycastle</artifactId>
+            <version>0.0.6</version>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>
