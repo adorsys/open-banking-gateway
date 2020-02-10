@@ -4,23 +4,16 @@ import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
-import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeErrorResult;
 import de.adorsys.opba.protocol.facade.services.ais.ListAccountsService;
 import de.adorsys.opba.protocol.facade.services.ais.ListTransactionsService;
-import de.adorsys.opba.restapi.shared.service.ErrorResultMapper;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
-import de.adorsys.opba.tppbankingapi.ais.model.generated.GeneralError;
 import de.adorsys.opba.tppbankingapi.ais.resource.generated.TppBankingApiAccountInformationServiceAisApi;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.Mapper;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-
-import static de.adorsys.opba.tppbankingapi.Const.API_MAPPERS_PACKAGE;
-import static de.adorsys.opba.tppbankingapi.Const.SPRING_KEYWORD;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +23,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     private final ListAccountsService accounts;
     private final ListTransactionsService transactions;
     private final FacadeResponseMapper mapper;
-    private final ErrorResultMapper<FacadeErrorResult, GeneralError> errorMapper;
 
     @Override
     public CompletableFuture getAccounts(
@@ -57,7 +49,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                                 .bankID(bankID)
                                 .build()
                         ).build()
-        ).thenApply(res -> mapper.translate(res, errorMapper));
+        ).thenApply(mapper::translate);
     }
 
     @Override
@@ -97,11 +89,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                         .bookingStatus(bookingStatus)
                         .deltaList(deltaList)
                         .build()
-        ).thenApply(res -> mapper.translate(res, errorMapper));
-    }
-
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = API_MAPPERS_PACKAGE)
-    public interface ToErrorResponse extends ErrorResultMapper<FacadeErrorResult, GeneralError> {
-        GeneralError map(FacadeErrorResult error);
+        ).thenApply(mapper::translate);
     }
 }
