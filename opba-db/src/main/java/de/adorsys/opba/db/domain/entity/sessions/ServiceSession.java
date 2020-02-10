@@ -13,7 +13,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
@@ -32,7 +31,6 @@ import java.util.UUID;
 public class ServiceSession {
 
     @Id
-    @GeneratedValue
     private UUID id;
 
     @Lob

@@ -36,26 +36,27 @@ public class EncryptionService {
     @SneakyThrows
     public byte[] encryptPassword(byte[] key) {
         byte[] encryptedPassword = aeadSystem.encrypt(key, null);
-        return Base64.getEncoder().encode(encryptedPassword);
+        return encryptedPassword;
+//        return Base64.getEncoder().encode(encryptedPassword);
     }
 
     @SneakyThrows
     public byte[] decryptPassword(byte[] encryptedPassword) {
-        byte[] decoded = Base64.getDecoder().decode(encryptedPassword);
-        return aeadSystem.decrypt(decoded, null);
+//        byte[] decoded = Base64.getDecoder().decode(encryptedPassword);
+        return aeadSystem.decrypt(encryptedPassword, null);
     }
 
     @SneakyThrows
     public String encrypt(byte[] data, byte[] key) {
         AesGcmJce agjEncryption = new AesGcmJce(key);
-        byte[] encrypted = agjEncryption.encrypt(data, null);
+        byte[] encrypted = agjEncryption.encrypt(data, "aad".getBytes());
         return new String(encrypted);
     }
 
     @SneakyThrows
     public byte[] decrypt(byte[] encrypted, byte[] key) {
         AesGcmJce agjDecryption = new AesGcmJce(key);
-        return agjDecryption.decrypt(encrypted, null);
+        return agjDecryption.decrypt(encrypted, "aad".getBytes());
     }
 
     public ProvidedKey deriveKey(String password) {
