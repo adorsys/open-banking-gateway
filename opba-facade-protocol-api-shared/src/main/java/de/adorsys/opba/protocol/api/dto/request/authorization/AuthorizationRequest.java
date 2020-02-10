@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.api.dto.request.authentication;
+package de.adorsys.opba.protocol.api.dto.request.authorization;
 
 import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;

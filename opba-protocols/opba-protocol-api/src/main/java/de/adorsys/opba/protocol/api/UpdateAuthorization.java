@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.api;
 
-import de.adorsys.opba.protocol.api.dto.request.authentication.AuthorizationRequest;
+import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 
 @FunctionalInterface

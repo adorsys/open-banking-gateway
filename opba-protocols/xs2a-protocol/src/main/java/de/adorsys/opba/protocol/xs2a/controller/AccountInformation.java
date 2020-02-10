@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.REQUEST_SAGA;
 
+@Deprecated
 @RestController
 @RequestMapping(ApiVersion.API_1)
 @RequiredArgsConstructor
