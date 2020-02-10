@@ -27,7 +27,7 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
     public CompletableFuture<FacadeResult<O>> execute(I request) {
         ServiceContext<I> ctx = contextFor(request);
         A protocol = selectAndSetProtocolTo(ctx);
-        CompletableFuture<Result<O>> result = protocol.execute(ctx);
+        CompletableFuture<Result<O>> result = execute(protocol, ctx);
 
         return result.thenApply(
                 res -> handleResult(
@@ -52,5 +52,9 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
 
     protected FacadeResult<O> handleResult(Result<O> result, UUID xRequestId, ServiceContext<I> ctx) {
         return handler.handleResult(result, xRequestId, ctx);
+    }
+
+    protected CompletableFuture<Result<O>> execute(A protocol, ServiceContext<I> ctx) {
+        return protocol.execute(ctx);
     }
 }

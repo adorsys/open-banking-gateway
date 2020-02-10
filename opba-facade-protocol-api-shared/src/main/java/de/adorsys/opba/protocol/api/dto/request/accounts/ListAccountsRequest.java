@@ -12,7 +12,7 @@ import lombok.Setter;
 import java.util.EnumMap;
 import java.util.Map;
 
-// TODO Validation
+// TODO Validation, Immutability
 @Setter
 @Getter
 @Builder

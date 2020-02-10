@@ -46,6 +46,9 @@ public class ServiceContextProvider {
                 .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
                 .bankId(request.getFacadeServiceable().getBankID())
                 .authSessionId(null == authSession ? null : authSession.getId())
+                // Currently 1-1 auth-session to service session
+                .futureAuthSessionId(session.getId())
+                .futureRedirectCode(UUID.randomUUID())
                 .request(request)
                 .authContext(null == authSession ? null : authSession.getContext())
                 .fintechRedirectOkUri(session.getFintechOkUri())
