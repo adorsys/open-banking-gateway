@@ -32,6 +32,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+@Deprecated
 @RestController
 @RequestMapping(ApiVersion.API_1)
 @RequiredArgsConstructor

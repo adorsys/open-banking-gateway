@@ -51,14 +51,13 @@ public class ProcessEventHandlerRegistrar {
                         mapper.onValidationProblem((ValidationIssue) procResult);
                     } else if (procResult instanceof ConsentAcquired) {
                         mapper.onConsentAcquired((ConsentAcquired) procResult);
-                    }
-                    else {
+                    } else {
                         mapper.onError();
                     }
                 });
     }
 
-    private <T> void doSuccess(Consumer<Response> onSuccess, Response procResult) {
+    private void doSuccess(Consumer<Response> onSuccess, Response procResult) {
         onSuccess.accept(procResult);
     }
 

@@ -8,6 +8,7 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.MockServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockAccountInformationRequest;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -21,6 +22,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 /**
  * Happy-path test that uses wiremock-stubbed request-responses to drive banking-protocol.
  */
+@Disabled // FIXME https://github.com/adorsys/open-banking-gateway/issues/253
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {Xs2aProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})

@@ -15,6 +15,7 @@ import io.github.bonigarcia.seljup.SeleniumExtension;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,6 +39,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 /**
  * Happy-path heavy test that uses Dynamic-Sandbox to drive banking-protocol.
  */
+@Disabled // FIXME https://github.com/adorsys/open-banking-gateway/issues/253
 @EnabledIfEnvironmentVariable(named = ENABLE_HEAVY_TESTS, matches = "true")
 @EnableAutoConfiguration(exclude = {
         HypermediaAutoConfiguration.class,
