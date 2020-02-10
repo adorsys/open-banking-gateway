@@ -1,13 +1,16 @@
 package de.adorsys.opba.restapi.shared.service;
 
+import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
-import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
+import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeSuccessResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.PSU_CONSENT_SESSION;
@@ -59,13 +62,13 @@ public class FacadeResponseMapper {
         return responseForRedirection(result, response);
     }
 
-    private ResponseEntity<String> responseForRedirection(FacadeResultRedirectable result, ResponseEntity.BodyBuilder response) {
+    private ResponseEntity<Map<String, String>> responseForRedirection(FacadeResultRedirectable result, ResponseEntity.BodyBuilder response) {
         return response
             .header(AUTHORIZATION_SESSION_ID, result.getAuthorizationSessionId())
             .header(REDIRECT_CODE, result.getRedirectCode())
             .header(PSU_CONSENT_SESSION, "BAR")
             .location(result.getRedirectionTo())
-            .body("{\"msg\": \"Please use redirect link in 'Location' header\"}");
+            .body(ImmutableMap.of("msg", "Please use redirect link in 'Location' header"));
     }
 
     private <E> ResponseEntity<E> handleError(FacadeErrorResult result, ErrorResultMapper<FacadeErrorResult, E> toError) {
