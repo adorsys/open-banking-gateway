@@ -7,7 +7,10 @@ import com.google.crypto.tink.JsonKeysetReader;
 import com.google.crypto.tink.KeysetHandle;
 import com.google.crypto.tink.aead.AeadConfig;
 import com.google.crypto.tink.subtle.AesGcmJce;
+import de.adorsys.keymanagement.api.types.template.DefaultNamingStrategy;
+import de.adorsys.keymanagement.api.types.template.NameAndPassword;
 import de.adorsys.keymanagement.api.types.template.generated.Pbe;
+import de.adorsys.keymanagement.api.types.template.generated.PbeKeyEncryptionTemplate;
 import de.adorsys.keymanagement.api.types.template.provided.ProvidedKey;
 import de.adorsys.keymanagement.juggler.services.BCJuggler;
 import de.adorsys.keymanagement.juggler.services.DaggerBCJuggler;
@@ -57,11 +60,12 @@ public class EncryptionService {
 
     public ProvidedKey deriveKey(String password) {
         BCJuggler juggler = DaggerBCJuggler.builder().build();
-        return juggler.generateKeys().secretRaw(
-            Pbe.with()
-                .password(password::toCharArray)
-                .algo("AES")
-                .build()
+        return juggler.generateKeys().secret(
+                Pbe.builder()
+                        .data(password.toCharArray())
+                        .encryptionTemplate(PbeKeyEncryptionTemplate.builder().algo("PBEWithSHA256And256BitAES-CBC-BC").saltLen(8).iterCount(1024).build())
+                        .keyTemplate(new NameAndPassword(new DefaultNamingStrategy("alias", null), password::toCharArray))
+                        .build()
         );
     }
 }
