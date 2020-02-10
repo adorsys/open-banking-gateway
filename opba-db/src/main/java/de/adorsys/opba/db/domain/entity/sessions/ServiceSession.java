@@ -40,6 +40,16 @@ public class ServiceSession {
     @Column(nullable = false)
     private String context;
 
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(nullable = false)
+    private String fintechOkUri;
+
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(nullable = false)
+    private String fintechNokUri;
+
     @OneToOne(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private AuthSession authSession;
 

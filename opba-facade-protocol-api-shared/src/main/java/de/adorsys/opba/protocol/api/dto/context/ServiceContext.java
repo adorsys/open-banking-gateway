@@ -29,6 +29,12 @@ public class ServiceContext<T> {
 
     private String authContext;
 
+    @NonNull
+    private String fintechRedirectOkUri;
+
+    @NonNull
+    private String fintechRedirectNokUri;
+
     public String loggableBankId() {
         return String.format(
                 "[protocol id: %s / bank uuid: %s]",

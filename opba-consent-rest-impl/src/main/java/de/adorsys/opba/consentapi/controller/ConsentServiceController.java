@@ -4,11 +4,8 @@ import de.adorsys.opba.consentapi.model.generated.PsuAuthRequest;
 import de.adorsys.opba.consentapi.resource.generated.ConsentAuthorizationApi;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.authentication.AuthorizationRequest;
-import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeErrorResult;
 import de.adorsys.opba.protocol.facade.services.authorization.UpdateAuthorizationService;
-import de.adorsys.opba.restapi.shared.service.ErrorResultMapper;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
-import de.adorsys.opba.tppbankingapi.ais.model.generated.GeneralError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +18,6 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
 
     private final FacadeResponseMapper mapper;
     private final UpdateAuthorizationService updateAuthorizationService;
-    private final ErrorResultMapper<FacadeErrorResult, GeneralError> errorMapper;
 
     @Override
     public CompletableFuture embeddedUsingPOST(
@@ -40,6 +36,6 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                         )
                         .scaAuthenticationData(body.getScaAuthenticationData())
                         .build()
-        ).thenApply(res -> mapper.translate(res, errorMapper));
+        ).thenApply(mapper::translate);
     }
 }
