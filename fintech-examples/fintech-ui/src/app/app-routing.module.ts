@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { GuestGuard } from './guards/guest.guard';
+import { RedirectPageComponent } from './common/redirect-page/redirect-page.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,11 @@ const routes: Routes = [
     path: 'search',
     canActivate: [AuthGuard],
     loadChildren: () => import('./bank-search/bank-search.module').then(m => m.BankSearchModule)
+  },
+  {
+    path: 'redirect',
+    // canActivate: [AuthGuard],
+    component: RedirectPageComponent
   },
   {
     path: '**',
