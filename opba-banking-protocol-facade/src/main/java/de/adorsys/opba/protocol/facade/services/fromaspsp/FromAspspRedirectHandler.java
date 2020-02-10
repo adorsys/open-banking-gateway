@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.facade.services.fromaspsp;
 
-import de.adorsys.opba.protocol.api.FromAspspRedirect;
+import de.adorsys.opba.protocol.api.authorization.FromAspspRedirect;
 import de.adorsys.opba.protocol.api.dto.request.authorization.fromaspsp.FromAspspRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.facade.services.FacadeService;

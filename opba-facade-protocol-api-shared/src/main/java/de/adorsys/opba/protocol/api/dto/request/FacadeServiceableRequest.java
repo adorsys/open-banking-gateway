@@ -4,29 +4,25 @@ import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.UUID;
 
-@Setter
 @Getter
-@Builder
-@NoArgsConstructor
+@Builder(toBuilder = true)
 @AllArgsConstructor
 public class FacadeServiceableRequest {
 
-    private UserAgentContext uaContext;
+    private final UserAgentContext uaContext;
 
-    private UUID xRequestID;
-    private UUID serviceSessionId;
-    private String authorizationSessionId;
-    private String redirectCode;
+    private final UUID xRequestID;
+    private final UUID serviceSessionId;
+    private final String authorizationSessionId;
+    private final String redirectCode;
 
-    private String authorization;
-    private String bankID;
+    private final String authorization;
+    private final String bankID;
 
-    private String fintechUserID;
-    private String fintechRedirectURLOK;
-    private String fintechRedirectURLNOK;
+    private final String fintechUserID;
+    private final String fintechRedirectURLOK;
+    private final String fintechRedirectURLNOK;
 }

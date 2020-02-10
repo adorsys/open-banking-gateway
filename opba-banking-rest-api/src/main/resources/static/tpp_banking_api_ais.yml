@@ -44,7 +44,7 @@ paths:
         '200':
           $ref: "#/components/responses/200_AccountList"
         '202':
-          $ref: '#/components/responses/202_AUTHORIZATION_ACCEPTED'
+          $ref: '#/components/responses/202_AUTHORIZATION_REQUIRED'
         '303':
           $ref: '#/components/responses/303_AUTHORIZATION_REDIRECT'
         '401':
@@ -85,7 +85,7 @@ paths:
         '200':
           $ref: "#/components/responses/200_AccountsTransactions"
         '202':
-          $ref: '#/components/responses/202_AUTHORIZATION_ACCEPTED'
+          $ref: '#/components/responses/202_AUTHORIZATION_REQUIRED'
         '303':
           $ref: '#/components/responses/303_AUTHORIZATION_REDIRECT'
         '401':
@@ -226,7 +226,7 @@ components:
           schema:
             $ref: "#/components/schemas/transactionsResponse"
 
-    202_AUTHORIZATION_ACCEPTED:
+    202_AUTHORIZATION_REQUIRED:
       description: |
         User authorisation session mandated. Agent shall redirect the user to the Authorisation URI provided in response
         using 'Location' header. This is soft redirection, so that FinTech should inform user about redirection.
@@ -235,6 +235,7 @@ components:
           $ref: "./tpp_banking_api_commons.yml#/components/headers/Location"
         X-Request-ID:
           $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
+      # content - Although content might be present, one should consider it as informative json value that is not actionable
 
     303_AUTHORIZATION_REDIRECT:
       description: |

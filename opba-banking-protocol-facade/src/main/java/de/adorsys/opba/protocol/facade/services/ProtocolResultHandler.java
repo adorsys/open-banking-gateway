@@ -128,7 +128,7 @@ public class ProtocolResultHandler {
     private <O> AuthSession updateAuthContext(Result<O> result, ServiceContext session) {
         // Auth session is 1-1 to service session, using id as foreign key
         return authSessionFromDb(session)
-                .map(it -> updateExistingAuthSession(result, it))
+                .map(it -> updateExistingAuthSession(result, session, it))
                 .orElseGet(() -> createNewAuthSession(result, session));
     }
 
@@ -149,14 +149,14 @@ public class ProtocolResultHandler {
                         .parent(entityManager.find(ServiceSession.class, session.getServiceSessionId()))
                         .protocol(authProtocol)
                         .context(result.authContext())
-                        .redirectCode(UUID.randomUUID().toString())
+                        .redirectCode(session.getFutureRedirectCode().toString())
                         .build()
         );
     }
 
     @NotNull
-    private <O> AuthSession updateExistingAuthSession(Result<O> result, AuthSession it) {
-        it.setRedirectCode(UUID.randomUUID().toString());
+    private <O> AuthSession updateExistingAuthSession(Result<O> result, ServiceContext session, AuthSession it) {
+        it.setRedirectCode(session.getFutureRedirectCode().toString());
         it.setContext(result.authContext());
         return authenticationSessions.save(it);
     }

@@ -2,11 +2,12 @@ package de.adorsys.opba.protocol.xs2a.entrypoint.ais;
 
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.db.domain.entity.ProtocolAction;
-import de.adorsys.opba.protocol.api.ListTransactions;
+import de.adorsys.opba.protocol.api.ais.ListTransactions;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
-import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionListBody;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
+import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
 import de.adorsys.opba.protocol.xs2a.service.eventbus.ProcessEventHandlerRegistrar;
@@ -36,12 +37,13 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
     private final Xs2aResultBodyExtractor extractor;
     private final ProcessEventHandlerRegistrar registrar;
     private final Xs2aListTransactionsEntrypoint.FromRequest mapper;
+    private final ExtendWithServiceContext extender;
 
     @Override
     public CompletableFuture<Result<TransactionListBody>> execute(ServiceContext<ListTransactionsRequest> serviceContext) {
         TransactionListXs2aContext context = mapper.map(serviceContext.getRequest());
         context.setAction(ProtocolAction.LIST_TRANSACTIONS);
-        context.setServiceSessionId(serviceContext.getServiceSessionId());
+        extender.extend(context, serviceContext);
 
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(
                 REQUEST_SAGA,

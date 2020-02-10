@@ -20,8 +20,8 @@ export class InitialRequestComponent implements OnInit {
   bankId: string;
 
   constructor(private client: HttpClient) {
-    this.fintechRedirectUriOk = 'http://localhost';
-    this.fintechRedirectUriNok = 'http://localhost';
+    this.fintechRedirectUriOk = 'http://localhost:5500/ok';
+    this.fintechRedirectUriNok = 'http://localhost:5500/nok';
     this.fintechUserId = 'John Doe';
     this.authorization = '12345';
     this.requestId = '43da4e2f-72cb-43bb-8afd-683104de57f9';

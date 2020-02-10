@@ -27,8 +27,8 @@ spring:
 protocol:
   redirect:
     consent-accounts:
-      ok:  ${gateway-base-url}/v1/consents/confirm/accounts/#{context.getAction()}/sagas/#{execution.getRootProcessInstanceId()}
-      nok: ${gateway-base-url}/v1/consents/failed/accounts/#{context.getAction()}/sagas/#{execution.getRootProcessInstanceId()}
+      ok:  ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+      nok: ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
     parameters:
       max-array-size: 32
       provide-more: 'http://localhost:5500/parameters/provide-more/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}'
