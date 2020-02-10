@@ -4,9 +4,10 @@
   "scripts": {
     "ng": "ng",
     "openapi-gen": "openapi-generator generate -g typescript-angular -o src/app/api -i ../fintech-api/src/main/resources/static/fintech_api.yml",
-    "start": "ng serve --proxy-config=proxy.conf.json",
-    "start:dev": "ng serve --proxy-config=proxy-dev.conf.json",
-    "start:docker": "ng serve --proxy-config=proxy-docker.conf.json",
+    "start": "npm run serve",
+    "serve": "ng serve --proxy-config=proxy.conf.json",
+    "serve:dev": "ng serve --proxy-config=proxy-dev.conf.json",
+    "serve:docker": "ng serve --proxy-config=proxy-docker.conf.json",
     "build": "ng build",
     "build:prod": "ng build --prod",
     "test": "ng test",
@@ -18,6 +19,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "~8.2.14",
+    "@angular/cdk": "^8.2.3",
     "@angular/common": "~8.2.14",
     "@angular/compiler": "~8.2.14",
     "@angular/core": "~8.2.14",

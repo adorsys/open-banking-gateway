@@ -1,7 +1,11 @@
 @import 'src/assets/themes/variables';
 
-.list-item {
-  padding: 0.75rem 1.25rem;
+.list-container {
+  @extend %layout-padding;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
   background-color: #fff;
   border-radius: 3px;
   width: 100%;
@@ -10,15 +14,16 @@
 
   &--shadow {
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1rem;
   }
+}
 
+.list-item {
   &__headline {
     font-size: 1.1rem;
-    margin-bottom: 4px;
+    margin-bottom: 0;
 
     &--small {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: $primary;
     }
   }
@@ -30,7 +35,6 @@
 
     &--large {
       font-size: 1.1rem;
-      color: $primary;
     }
   }
 }

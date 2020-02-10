@@ -34,6 +34,7 @@ public class FinTechListAccountsWithMockTest extends FinTechBankSearchApiTest {
     public void testListAccounts() {
         BankProfileTestResult result = getBankProfileTestResult();
         List<String> accountIDs = listAccountIDs(result.getXsrfToken(), result.getBankUUID());
+        accountIDs.forEach(a -> log.info("found: {}", a));
         assertTrue(accountIDs.containsAll(Arrays.asList(new String[]{"firstAccount", "secondAccount"})));
     }
 

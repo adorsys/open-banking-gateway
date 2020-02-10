@@ -6,6 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TppListAccountsMock extends MockBaseClass {
     public AccountList getAccountList() {
-        return GSON.fromJson(readFile("TPP_LIST_ACCOUNTS.json"), AccountList.class);
+        return GSON.fromJson(readFile("MOCK_TPP_LIST_ACCOUNTS.json"), AccountList.class);
     }
 }

@@ -1,9 +1,7 @@
 package de.adorsys.opba.fintech.server;
 
-import com.google.gson.Gson;
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
 import de.adorsys.opba.fintech.server.config.TestConfig;
-import de.adorsys.opba.fintech.server.feignmocks.TppAisClientFeignMock;
 import de.adorsys.opba.fintech.server.feignmocks.TppBankSearchClientFeignMock;
 import de.adorsys.opba.tpp.banksearch.api.model.generated.BankProfileResponse;
 import de.adorsys.opba.tpp.banksearch.api.model.generated.BankSearchResponse;
@@ -22,10 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -34,10 +32,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -47,17 +49,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @EnableFinTechImplConfig
 @Slf4j
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     private static final String FIN_TECH_AUTH_URL = "/v1/login";
     private static final String FIN_TECH_BANK_SEARCH_URL = "/v1/search/bankSearch";
     private static final String FIN_TECH_BANK_PROFILE_URL = "/v1/search/bankProfile";
 
-    protected static final Gson GSON = new Gson();
-
-    JpaRepository<String, String> r;
-
     @MockBean
-    protected TppBankSearchClientFeignMock mockTppBankSearch;
+    protected TppBankSearchClientFeignMock tppBankSearchClientFeignMock;
 
     @SuppressWarnings("PMD.UnusedPrivateField")
     @MockBean
@@ -92,7 +91,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
         final Integer start = 1;
         final Integer max = 2;
 
-        when(mockTppBankSearch.bankSearchGET(any(), any(), eq(keyword), eq(start), eq(max)))
+        when(tppBankSearchClientFeignMock.bankSearchGET(any(), any(), eq(keyword), eq(start), eq(max)))
                 .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class)));
 
         LoginBody loginBody = new LoginBody("peter", "1234");
@@ -145,7 +144,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
             final Integer max = 2;
             log.info("DO Bank Search ({}, {}, {}) ==============================", keyword, start, max);
 
-            when(mockTppBankSearch.bankSearchGET(any(), any(), eq(keyword), eq(start), eq(max)))
+            when(tppBankSearchClientFeignMock.bankSearchGET(any(), any(), eq(keyword), eq(start), eq(max)))
                     .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class)));
 
             result.setBankUUID(bankSearchOk(keyword, start, max, result.getXsrfToken()));
@@ -153,7 +152,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
 
         {
             log.info("DO Bank Profile ({}) ============================== ", result.getBankUUID());
-            when(mockTppBankSearch.bankProfileGET(any(), any(), eq(result.getBankUUID())))
+            when(tppBankSearchClientFeignMock.bankProfileGET(any(), any(), eq(result.getBankUUID())))
                     .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankProfile(result.getBankUUID())), BankProfileResponse.class)));
 
             result.setServices(bankProfile(result.getXsrfToken(), result.getBankUUID()));

@@ -50,8 +50,5 @@ public class FinTechListTransactionsWithMockTest extends FinTechListAccountsWith
             amountList.add(booked.getJSONObject(i).getJSONObject("transactionAmount").getString("amount"));
         }
         return amountList;
-
-
     }
-
 }

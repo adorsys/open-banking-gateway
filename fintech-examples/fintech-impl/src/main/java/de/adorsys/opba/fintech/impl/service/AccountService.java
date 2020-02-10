@@ -13,18 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
-
-import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.AUTHORIZATION_SESSION_ID;
-import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.PSU_CONSENT_SESSION;
-import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.REDIRECT_CODE;
-import static org.springframework.http.HttpStatus.SEE_OTHER;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class AccountService extends HandleAcceptedService {
-    @Value("${mock.tppais.listaccounts}")
+    @Value("${mock.tppais.listaccounts:#{null}}")
     String mockTppAisString;
 
     private final TppAisClient tppAisClient;
@@ -32,7 +25,7 @@ public class AccountService extends HandleAcceptedService {
     public ResponseEntity listAccounts(ContextInformation contextInformation, SessionEntity sessionEntity, String bankId, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
         if (mockTppAisString != null && mockTppAisString.equalsIgnoreCase("true") ? true : false) {
             log.warn("Mocking call to list accounts");
-            return createREsponse(new TppListAccountsMock().getAccountList());
+            return createResponse(new TppListAccountsMock().getAccountList());
         }
         ResponseEntity<AccountList> accounts = tppAisClient.getAccounts(
                 contextInformation.getFintechID(),
@@ -44,7 +37,7 @@ public class AccountService extends HandleAcceptedService {
                 null);
         switch (accounts.getStatusCode()) {
             case OK:
-                return createREsponse(accounts.getBody());
+                return createResponse(accounts.getBody());
             case ACCEPTED:
                 return handleAccepted(accounts.getHeaders());
             case UNAUTHORIZED:
@@ -54,7 +47,7 @@ public class AccountService extends HandleAcceptedService {
         }
     }
 
-    private ResponseEntity createREsponse(AccountList accountList) {
+    private ResponseEntity createResponse(AccountList accountList) {
         InlineResponse2003 response = new InlineResponse2003();
         response.setAccountList(ManualMapper.fromTppToFintech(accountList));
         return new ResponseEntity<>(response, HttpStatus.OK);
