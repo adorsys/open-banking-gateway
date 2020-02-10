@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.facade.services.authorization;
 
 import de.adorsys.opba.protocol.api.UpdateAuthorization;
-import de.adorsys.opba.protocol.api.dto.request.authentication.AuthorizationRequest;
+import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.facade.services.FacadeService;
 import de.adorsys.opba.protocol.facade.services.ProtocolSelector;

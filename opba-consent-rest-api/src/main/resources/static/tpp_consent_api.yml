@@ -210,6 +210,8 @@ paths:
         #path
         - $ref: '#/components/parameters/auth-id'
         - $ref: '#/components/parameters/redirectState'
+        #query
+        - $ref: '#/components/parameters/redirectCode'
       responses:
         '200':
           $ref: '#/components/responses/200_AuthorizeResponse'
@@ -231,6 +233,8 @@ paths:
         #path
         - $ref: '#/components/parameters/auth-id'
         - $ref: '#/components/parameters/redirectState'
+        #query
+        - $ref: '#/components/parameters/redirectCode'
       responses:
         '200':
           $ref: '#/components/responses/200_AuthorizeResponse'
@@ -346,7 +350,8 @@ components:
     redirectCode:
       name: redirectCode
       in: query
-      description: Code used to retrieve a redirect session.
+      description: Code used to retrieve a redirect session. This is
+        generaly transported as a query parameter
       example: "faadsf93nlas32wx"
       schema:
         type: string

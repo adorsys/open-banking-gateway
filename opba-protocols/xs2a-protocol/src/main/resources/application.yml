@@ -27,15 +27,15 @@ spring:
 protocol:
   redirect:
     consent-accounts:
-      ok:  ${protocol.base-url}/v1/consents/confirm/accounts/#{context.getAction()}/sagas/#{execution.getRootProcessInstanceId()}
-      nok: ${protocol.base-url}/v1/consents/failed/accounts/#{context.getAction()}/sagas/#{execution.getRootProcessInstanceId()}
+      ok:  ${gateway-base-url}/v1/consents/confirm/accounts/#{context.getAction()}/sagas/#{execution.getRootProcessInstanceId()}
+      nok: ${gateway-base-url}/v1/consents/failed/accounts/#{context.getAction()}/sagas/#{execution.getRootProcessInstanceId()}
     parameters:
       max-array-size: 32
       provide-more: 'http://localhost:5500/parameters/provide-more/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}'
       provide-psu-password: 'http://localhost:5500/parameters/provide-psu-password/#{execution.getId()}'
       select-sca-method: 'http://localhost:5500/parameters/select-sca-method/#{execution.getId()}?q=#{urlSafe(context.getAvailableSca().toString())}'
       report-sca-result: 'http://localhost:5500/parameters/report-sca-result/#{execution.getId()}?q=#{urlSafe(context.getScaSelected().getAuthenticationType() + ":" + context.getScaSelected().getName())}'
-  base-url: http://localhost:${server.port}
+  gateway-base-url: http://localhost:8085
 
 pkcs12:
   keyStore: sample-qwac.keystore
