@@ -23,9 +23,9 @@ public class ProtocolSelector {
 
     @Transactional(readOnly = true)
     public <A> A selectAndPersistProtocolFor(
-            ServiceContext<?> ctx,
-            ProtocolAction protocolAction,
-            Map<String, A> actionBeans) {
+        ServiceContext<?> ctx,
+        ProtocolAction protocolAction,
+        Map<String, A> actionBeans) {
         Optional<BankProtocol> bankProtocol;
 
         if (null == ctx.getServiceBankProtocolId()) {
@@ -34,7 +34,7 @@ public class ProtocolSelector {
                     protocolAction
             );
         } else {
-            Long id = protocolAction == ProtocolAction.UPDATE_AUTHORIZATION ? ctx.getAuthorizationBankProtocolId() : ctx.getServiceBankProtocolId();
+            Long id = isForAuthorization(protocolAction) ? ctx.getAuthorizationBankProtocolId() : ctx.getServiceBankProtocolId();
             bankProtocol = protocolRepository.findById(id);
         }
 
@@ -55,5 +55,9 @@ public class ProtocolSelector {
         session.setProtocol(protocol);
         sessions.save(session);
         return protocol;
+    }
+
+    private boolean isForAuthorization(ProtocolAction action) {
+        return action == ProtocolAction.UPDATE_AUTHORIZATION;
     }
 }

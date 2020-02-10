@@ -20,6 +20,16 @@ public class BaseContext {
     // Used to find existing consent:
     private UUID serviceSessionId;
 
+    /**
+     * Read-only. This is for redirects from ASPSP, Facade provides this value.
+     */
+    private String authorizationSessionIdIfOpened;
+
+    /**
+     * Read-only. This is for redirects from ASPSP, Facade provides this value.
+     */
+    private String redirectCodeIfAuthContinued;
+
     private final Set<ValidationIssue> violations = new HashSet<>();
 
     public String getRequestId() {

@@ -2,38 +2,46 @@ package de.adorsys.opba.protocol.api.dto.context;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.UUID;
 
-@Data
-@Builder
-@NoArgsConstructor
+@Getter
+@Builder(toBuilder = true)
 @AllArgsConstructor
 public class ServiceContext<T> {
 
-    private Long serviceBankProtocolId;
-    private Long authorizationBankProtocolId;
+    private final Long serviceBankProtocolId;
+    private final Long authorizationBankProtocolId;
 
-    private String bankId;
-
-    @NonNull
-    private UUID serviceSessionId;
-
-    private UUID authSessionId;
+    private final String bankId;
 
     @NonNull
-    private T request;
+    private final UUID serviceSessionId;
 
-    private String authContext;
+    private final UUID authSessionId;
+
+    /**
+     * Will be used as redirect code only when authorization session is opened or continued.
+     */
+    private final UUID futureRedirectCode;
+
+    /**
+     * Will be used as new authorization session id only when authorization session is opened.
+     */
+    private final UUID futureAuthSessionId;
 
     @NonNull
-    private String fintechRedirectOkUri;
+    private final T request;
+
+    private final String authContext;
 
     @NonNull
-    private String fintechRedirectNokUri;
+    private final String fintechRedirectOkUri;
+
+    @NonNull
+    private final String fintechRedirectNokUri;
 
     public String loggableBankId() {
         return String.format(
