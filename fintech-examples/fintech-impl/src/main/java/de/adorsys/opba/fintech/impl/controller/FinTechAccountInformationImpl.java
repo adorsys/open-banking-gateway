@@ -1,7 +1,7 @@
 package de.adorsys.opba.fintech.impl.controller;
 
-import de.adorsys.opba.fintech.api.model.generated.InlineResponse2003;
-import de.adorsys.opba.fintech.api.model.generated.InlineResponse2004;
+import de.adorsys.opba.fintech.api.model.generated.AccountList;
+import de.adorsys.opba.fintech.api.model.generated.TransactionsResponse;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAccountInformationApi;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.service.AccountService;
@@ -31,7 +31,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
     TransactionService transactionService;
 
     @Override
-    public ResponseEntity<InlineResponse2003> aisAccountsGET(String bankId, UUID xRequestID, String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
+    public ResponseEntity<AccountList> aisAccountsGET(String bankId, UUID xRequestID, String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
         if (!authorizeService.isAuthorized(xsrfToken, null)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -42,10 +42,10 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
     }
 
     @Override
-    public ResponseEntity<InlineResponse2004> aisTransactionsGET(String bankId, String accountId, UUID xRequestID,
-                                                                 String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK,
-                                                                 LocalDate dateFrom, LocalDate dateTo,
-                                                                 String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
+    public ResponseEntity<TransactionsResponse> aisTransactionsGET(String bankId, String accountId, UUID xRequestID,
+                                                                            String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK,
+                                                                            LocalDate dateFrom, LocalDate dateTo,
+                                                                            String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
         if (!authorizeService.isAuthorized(xsrfToken, null)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }

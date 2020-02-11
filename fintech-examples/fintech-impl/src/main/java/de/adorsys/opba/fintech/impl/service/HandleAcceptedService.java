@@ -9,7 +9,7 @@ import java.net.URI;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.AUTHORIZATION_SESSION_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.PSU_CONSENT_SESSION;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.REDIRECT_CODE;
-import static org.springframework.http.HttpStatus.SEE_OTHER;
+import static org.springframework.http.HttpStatus.FOUND;
 
 @Slf4j
 public class HandleAcceptedService {
@@ -23,7 +23,7 @@ public class HandleAcceptedService {
                 redirectCode,
                 psuConsentSession,
                 location);
-        return ResponseEntity.status(SEE_OTHER)
+        return ResponseEntity.status(FOUND)
                 .header(AUTHORIZATION_SESSION_ID, authSessionID)
                 .header(REDIRECT_CODE, redirectCode)
                 .header(PSU_CONSENT_SESSION, psuConsentSession)

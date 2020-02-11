@@ -1,6 +1,5 @@
 package de.adorsys.opba.fintech.impl.service;
 
-import de.adorsys.opba.fintech.api.model.generated.InlineResponse2004;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.mapper.ManualMapper;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListTransactionsMock;
@@ -32,7 +31,7 @@ public class TransactionService extends HandleAcceptedService {
 
         if (BooleanUtils.toBoolean(mockTppAisString)) {
             log.warn("mocking call for list transactions");
-            return createInlineResponse2004(new TppListTransactionsMock().getTransactionsResponse());
+            new ResponseEntity<>(ManualMapper.fromTppToFintech(new TppListTransactionsMock().getTransactionsResponse()), HttpStatus.OK);
         }
 
         ResponseEntity<TransactionsResponse> transactions = tppAisClient.getTransactions(
@@ -51,7 +50,7 @@ public class TransactionService extends HandleAcceptedService {
                 deltaList);
         switch (transactions.getStatusCode()) {
             case OK:
-                return createInlineResponse2004(transactions.getBody());
+                return new ResponseEntity<>(ManualMapper.fromTppToFintech(transactions.getBody()), HttpStatus.OK);
             case ACCEPTED:
                 return handleAccepted(transactions.getHeaders());
             case UNAUTHORIZED:
@@ -59,11 +58,5 @@ public class TransactionService extends HandleAcceptedService {
             default:
                 throw new RuntimeException("DID NOT EXPECT RETURNCODE:" + transactions.getStatusCode());
         }
-    }
-
-    private ResponseEntity createInlineResponse2004(TransactionsResponse transactionsResponse) {
-        InlineResponse2004 response = new InlineResponse2004();
-        response.setAccountList(ManualMapper.fromTppToFintech(transactionsResponse));
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

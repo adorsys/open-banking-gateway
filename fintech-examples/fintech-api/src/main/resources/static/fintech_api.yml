@@ -97,19 +97,16 @@ paths:
           in: query
           required: true
           schema:
-#           $ref: '#/components/schemas/searchInput'
             type: string
         - name: start
           in: query
           required: false
           schema:
-#           $ref: '#/components/schemas/searchStartIndex'
             type: integer
         - name: max
           in: query
           required: false
           schema:
-#           $ref: '#/components/schemas/searchMaxResult'
             type: integer
       security:
         - sessionCookie: []
@@ -177,7 +174,7 @@ paths:
         '200':
           $ref: "#/components/responses/200_AccountList"
         '302':
-          $ref: '#/components/responses/302_Redirect'
+          $ref: '#/components/responses/302_Found'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
         '404':
@@ -212,7 +209,7 @@ paths:
         '200':
           $ref: '#/components/responses/200_AccountsTransactions'
         '302':
-          $ref: '#/components/responses/302_Redirect'
+          $ref: '#/components/responses/302_Found'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
         '404':
@@ -604,10 +601,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              accountList:
-                $ref: '#/components/schemas/accountList'
+            $ref: '#/components/schemas/accountList'
 
     200_AccountsTransactions:
       description: Response with transactions for given account
@@ -621,12 +615,9 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              accountList:
-                $ref: '#/components/schemas/transactionsResponse'
+            $ref: '#/components/schemas/transactionsResponse'
 
-    302_Redirect:
+    302_Found:
       description: Redirects UserAgent to the ConsentAuthorisationApi.
       headers:
         Location:
@@ -799,14 +790,6 @@ components:
           type: string
 
 
-    searchInput:
-      description: The bank search input string
-    searchStartIndex:
-      description: The index of the first result
-    searchMaxResult:
-      description: The max number of entries to return with the response.
-    searchTotalResult:
-      description: The total count of entities found for the given search input.
     bankProfile:
       title: Bank Profile
       type: object
