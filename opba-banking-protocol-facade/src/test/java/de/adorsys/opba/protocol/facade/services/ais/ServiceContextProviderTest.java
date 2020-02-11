@@ -55,6 +55,8 @@ public class ServiceContextProviderTest {
                                 .bankID(testBankID)
                                 .xRequestID(id)
                                 .sessionPassword(password)
+                                .fintechRedirectURLOK("http://google.com")
+                                .fintechRedirectURLNOK("http://microsoft.com")
                                 .build()
                 ).build();
 

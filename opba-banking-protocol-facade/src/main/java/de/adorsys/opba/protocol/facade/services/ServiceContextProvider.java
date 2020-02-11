@@ -37,7 +37,8 @@ public class ServiceContextProvider {
     @Transactional
     @SneakyThrows
     public <T extends FacadeServiceableGetter> ServiceContext<T> provide(T request) {
-        if (null == request.getFacadeServiceable()) {
+        FacadeServiceableRequest facadeServiceable = request.getFacadeServiceable();
+        if (null == facadeServiceable) {
             throw new IllegalArgumentException("No serviceable body");
         }
 
@@ -46,7 +47,7 @@ public class ServiceContextProvider {
 
         byte[] decryptedPassword = encryptionService.decryptPassword(session.getPassword());
         byte[] decryptedData = encryptionService.decrypt(session.getContext().getBytes(), new String(decryptedPassword));
-        FacadeServiceableRequest decryptedContext = MAPPER.readValue(decryptedData, FacadeServiceableRequest.class);
+        FacadeServiceableRequest facadeServiceableDecrypted = MAPPER.readValue(decryptedData, FacadeServiceableRequest.class);
 
         return ServiceContext.<T>builder()
                 .serviceSessionId(session.getId())
