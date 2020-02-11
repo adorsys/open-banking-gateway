@@ -46,4 +46,6 @@ public class Xs2aContext extends BaseContext {
     private String redirectUriNok;
 
     private boolean redirectConsentOk;
+
+    private BaseContext initialRequest;
 }
