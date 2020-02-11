@@ -7,6 +7,7 @@ import com.google.crypto.tink.JsonKeysetReader;
 import com.google.crypto.tink.KeysetHandle;
 import com.google.crypto.tink.aead.AeadConfig;
 import com.google.crypto.tink.subtle.AesGcmJce;
+import de.adorsys.opba.protocol.api.services.EncryptionService;
 import lombok.SneakyThrows;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,13 @@ import java.security.Security;
 import java.util.Base64;
 
 @Service
-public class EncryptionService {
+public class EncryptionServiceImpl implements EncryptionService {
 
     private Aead aeadSystem;
     private Provider provider;
 
     @SneakyThrows
-    public EncryptionService() {
+    public EncryptionServiceImpl() {
         AeadConfig.register();
         String path = Paths.get(Resources.getResource("keyset.json").toURI()).toAbsolutePath().toString();
         KeysetHandle systemKeysetHandle = CleartextKeysetHandle.read(JsonKeysetReader.withPath(path));
@@ -39,18 +40,21 @@ public class EncryptionService {
         provider = Security.getProvider(BouncyCastleProvider.PROVIDER_NAME);
     }
 
+    @Override
     @SneakyThrows
     public byte[] encryptPassword(String password) {
         byte[] encryptedPassword = aeadSystem.encrypt(password.getBytes(), null);
         return Base64.getEncoder().encode(encryptedPassword);
     }
 
+    @Override
     @SneakyThrows
     public byte[] decryptPassword(byte[] encryptedPassword) {
         byte[] decoded = Base64.getDecoder().decode(encryptedPassword);
         return aeadSystem.decrypt(decoded, null);
     }
 
+    @Override
     @SneakyThrows
     public byte[] encrypt(byte[] data, String password) {
         SecretKey key = deriveKey(password);
@@ -59,6 +63,7 @@ public class EncryptionService {
         return Base64.getEncoder().encode(encrypted);
     }
 
+    @Override
     @SneakyThrows
     public byte[] decrypt(byte[] encrypted, String password) {
         SecretKey key = deriveKey(password);

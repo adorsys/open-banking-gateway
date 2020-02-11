@@ -1,13 +1,14 @@
 package de.adorsys.opba.protocol.facade.services.ais;
 
-import de.adorsys.opba.protocol.facade.services.EncryptionService;
+import de.adorsys.opba.protocol.api.services.EncryptionService;
+import de.adorsys.opba.protocol.facade.services.EncryptionServiceImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EncryptionServiceTest {
 
-    EncryptionService encryptionService = new EncryptionService();
+    EncryptionService encryptionService = new EncryptionServiceImpl();
 
     @Test
     void encryptDecryptPasswordTest() {
