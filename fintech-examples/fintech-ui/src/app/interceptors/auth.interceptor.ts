@@ -1,6 +1,6 @@
 import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
@@ -10,16 +10,8 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return this.handleRequest(request, next).pipe(
-      catchError(httpErrorResponse => {
-        if (httpErrorResponse.status === 401) {
-          this.authService.logout();
-          return EMPTY;
-        } else if (httpErrorResponse.status === 403) {
-          // this.authService.openAccessForbiddenDialog();
-          return EMPTY;
-        } else {
-          return throwError(httpErrorResponse.error);
-        }
+      catchError(errors => {
+        return throwError(errors);
       })
     );
   }

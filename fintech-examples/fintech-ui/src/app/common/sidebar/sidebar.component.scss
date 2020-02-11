@@ -10,6 +10,7 @@
   }
 
   .nav-link {
+    @extend %layout-padding;
     display: flex;
     align-content: flex-start;
     align-items: center;

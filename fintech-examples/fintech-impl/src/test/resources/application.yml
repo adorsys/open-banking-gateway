@@ -14,6 +14,11 @@ tpp:
   url: http://localhost:8086
 
 
+mock:
+  tppais:
+    listtransactions: true
+    listaccounts: true
+
 
 
 

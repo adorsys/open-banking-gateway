@@ -2,7 +2,8 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.impl.database.entities.CookieEntity;
-import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
+import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEmbeddable;
+import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -32,33 +33,38 @@ public class AuthorizeService {
      * @return empty, if user not found or password not valid. otherwise optional of userprofile
      */
     @Transactional
-    public Optional<UserEntity> login(LoginRequest loginRequest) {
+    public Optional<SessionEntity> login(LoginRequest loginRequest) {
         // this is for demo only. all users are allowed. But password has to be 1234
         // otherwise login is not possible
         generateUserIfUserDoesNotExistYet(loginRequest);
 
         // find user by id
-        Optional<UserEntity> optionalUserEntity = userRepository.findById(loginRequest.getUsername());
+        Optional<SessionEntity> optionalUserEntity = userRepository.findById(loginRequest.getUsername());
         if (!optionalUserEntity.isPresent()) {
             return Optional.empty();
         }
 
-        UserEntity userEntity = optionalUserEntity.get();
-        if (!userEntity.getPassword().equals(loginRequest.getPassword())) {
+        SessionEntity sessionEntity = optionalUserEntity.get();
+        if (!sessionEntity.getPassword().equals(loginRequest.getPassword())) {
             return Optional.empty();
         }
 
         // password is ok, so log in
-        userEntity.setXsrfToken(UUID.randomUUID().toString());
+        sessionEntity.setXsrfToken(UUID.randomUUID().toString());
 
         // delete old cookies, if available
-        userEntity.setCookies(new ArrayList<>());
-        userEntity.addCookie(SESSION_COOKIE_NAME, UUID.randomUUID().toString());
-        userEntity.addCookie(XSRF_TOKEN_COOKIE_NAME, userEntity.getXsrfToken());
+        sessionEntity.setCookies(new ArrayList<>());
+        sessionEntity.addCookie(SESSION_COOKIE_NAME, UUID.randomUUID().toString());
+        sessionEntity.addCookie(XSRF_TOKEN_COOKIE_NAME, sessionEntity.getXsrfToken());
 
-        userEntity.addLogin(OffsetDateTime.now());
-        userRepository.save(userEntity);
-        return Optional.of(userEntity);
+        sessionEntity.addLogin(OffsetDateTime.now());
+
+        // TODO api has to be changed to get URLs
+        sessionEntity.setRedirectListAccounts(new RedirectUrlsEmbeddable("laOk", "laNotOk"));
+        sessionEntity.setRedirectListTransactions(new RedirectUrlsEmbeddable("ltOk", "ltNotOk"));
+
+        userRepository.save(sessionEntity);
+        return Optional.of(sessionEntity);
     }
 
     private void generateUserIfUserDoesNotExistYet(LoginRequest loginRequest) {
@@ -66,15 +72,15 @@ public class AuthorizeService {
             return;
         }
         userRepository.save(
-                UserEntity.builder()
-                        .name(loginRequest.getUsername())
+                SessionEntity.builder()
+                        .loginUserName(loginRequest.getUsername())
                         .password(UNIVERSAL_PASSWORD)
                         .build());
     }
 
     @Transactional
     public boolean isAuthorized(String xsrfToken, String sessionCookieContent) {
-        Optional<UserEntity> optionalUserEntity = userRepository.findByXsrfToken(xsrfToken);
+        Optional<SessionEntity> optionalUserEntity = userRepository.findByXsrfToken(xsrfToken);
         if (!optionalUserEntity.isPresent()) {
             return false;
         }

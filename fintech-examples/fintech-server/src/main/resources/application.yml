@@ -9,6 +9,11 @@ server:
 tpp:
     url: http://localhost:18085
 
+mock:
+  tppais:
+      listtransactions: true
+      listaccounts: true
+
 spring:
   datasource:
     url: jdbc:h2:mem:test
