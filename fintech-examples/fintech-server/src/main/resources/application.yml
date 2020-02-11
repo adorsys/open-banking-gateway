@@ -6,6 +6,8 @@ server:
       maxAge: 300
       httpOnly: false
       path: /
+      sameSite: none
+      # sameSite: Strict|Lax|none
 tpp:
   url: http://localhost:8085
 

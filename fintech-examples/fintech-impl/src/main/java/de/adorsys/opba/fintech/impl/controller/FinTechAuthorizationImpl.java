@@ -15,8 +15,11 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_ID;
 
@@ -47,16 +50,20 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set(X_REQUEST_ID, xRequestID.toString());
-            sessionEntity.getCookies().forEach(cookie -> {
-                responseHeaders.set(HttpHeaders.SET_COOKIE,
-                        ResponseCookie.from(cookie.getName(), cookie.getValue())
-                                .httpOnly(cookieConfigProperties.isHttpOnly())
-                                .sameSite(cookieConfigProperties.getSameSite())
-                                .secure(cookieConfigProperties.isSecure())
-                                .path(cookieConfigProperties.getPath())
-                                .maxAge(cookieConfigProperties.getMaxAge())
-                                .build().toString());
-            });
+            ArrayList<String> cookies = sessionEntity
+                    .getCookies()
+                    .stream()
+                    .map(cookie ->
+                            ResponseCookie.from(cookie.getName(), cookie.getValue())
+                                    .httpOnly(cookieConfigProperties.isHttpOnly())
+                                    .sameSite(cookieConfigProperties.getSameSite())
+                                    .secure(cookieConfigProperties.isSecure())
+                                    .path(cookieConfigProperties.getPath())
+                                    .maxAge(cookieConfigProperties.getMaxAge())
+                                    .build().toString())
+                    .collect(Collectors.toCollection(ArrayList::new));
+            responseHeaders.addAll(HttpHeaders.SET_COOKIE, cookies);
+
             return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
