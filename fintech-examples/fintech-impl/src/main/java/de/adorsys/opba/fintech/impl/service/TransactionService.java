@@ -41,6 +41,7 @@ public class TransactionService {
                 contextInformation.getXRequestID(),
                 bankId,
                 sessionEntity.getPsuConsentSession(),
+                null,
                 dateFrom,
                 dateTo,
                 entryReferenceFrom,

@@ -37,6 +37,7 @@ public class AccountService {
                     sessionEntity.getRedirectListAccounts().getNotOkURL(),
                     contextInformation.getXRequestID(),
                     bankId,
+                    null,
                     null).getBody());
         } catch (FeignException ex) {
             log.error("got exception for status code " + ex.status());
