@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.facade.services;
 
 import de.adorsys.opba.db.domain.entity.BankProtocol;
+import de.adorsys.opba.db.domain.entity.BankSubProtocol;
 import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
@@ -40,7 +41,7 @@ public class ProtocolSelector {
 
         return bankProtocol
                 .map(protocol -> setProtocolOnSession(protocol, ctx.getServiceSessionId()))
-                .map(protocol -> actionBeans.get(protocol.getProtocolBeanName()))
+                .map(protocol -> findActionBean(protocol, actionBeans, protocolAction))
                 .orElseThrow(() ->
                         new IllegalStateException(
                                 "No action bean for " + protocolAction.name() + " of: " + ctx.loggableBankId()
@@ -59,5 +60,19 @@ public class ProtocolSelector {
 
     private boolean isForAuthorization(ProtocolAction action) {
         return action == ProtocolAction.UPDATE_AUTHORIZATION;
+    }
+
+    private <A> A findActionBean(BankProtocol forProtocol, Map<String, A> actionBeans, ProtocolAction action) {
+        if (actionBeans.containsKey(forProtocol.getProtocolBeanName())) {
+            return actionBeans.get(forProtocol.getProtocolBeanName());
+        }
+
+        Optional<BankSubProtocol> subProtocol = forProtocol.getSubProtocols().stream()
+                .filter(it -> it.getAction() == action)
+                .findFirst();
+
+        return subProtocol
+                .map(sub -> actionBeans.get(sub.getSubProtocolBeanName()))
+                .orElse(null);
     }
 }
