@@ -57,16 +57,15 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     }
 
     @SneakyThrows
-    List<String> listAccountsForOk(BankProfileTestResult result)  {
+    List<String> listAccountsForOk(BankProfileTestResult result) {
         when(tppAisClientFeignMock.getAccounts(any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile("TPP_LIST_ACCOUNTS.json"), AccountList.class)));
 
         MvcResult mvcResult = plainListAccounts(result.getXsrfToken(), result.getBankUUID());
         assertEquals(OK.value(), mvcResult.getResponse().getStatus());
-
+        log.info("GOT RESULT STRING: {}", mvcResult.getResponse().getContentAsString());
         List<String> accountIDs = new ArrayList<>();
         JSONArray accounts = new JSONObject(mvcResult.getResponse().getContentAsString())
-                .getJSONObject("accountList")
                 .getJSONArray("accounts");
         for (int i = 0; i < accounts.length(); i++) {
             accountIDs.add(accounts.getJSONObject(i).getString("resourceId"));

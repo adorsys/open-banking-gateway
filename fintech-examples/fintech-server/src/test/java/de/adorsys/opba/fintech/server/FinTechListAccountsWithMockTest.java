@@ -52,7 +52,6 @@ public class FinTechListAccountsWithMockTest extends FinTechBankSearchApiTest {
 
         List<String> accountIDs = new ArrayList<>();
         JSONArray accounts = new JSONObject(mvcResult.getResponse().getContentAsString())
-                .getJSONObject("accountList")
                 .getJSONArray("accounts");
         for (int i = 0; i < accounts.length(); i++) {
             accountIDs.add(accounts.getJSONObject(i).getString("resourceId"));

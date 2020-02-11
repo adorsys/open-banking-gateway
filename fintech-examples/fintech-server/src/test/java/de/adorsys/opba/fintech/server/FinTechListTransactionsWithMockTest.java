@@ -43,7 +43,6 @@ public class FinTechListTransactionsWithMockTest extends FinTechListAccountsWith
 
         List<String> amountList = new ArrayList<>();
         JSONArray booked = new JSONObject(mvcResult.getResponse().getContentAsString())
-                .getJSONObject("accountList")
                 .getJSONObject("transactions")
                 .getJSONArray("booked");
         for (int i = 0; i < booked.length(); i++) {

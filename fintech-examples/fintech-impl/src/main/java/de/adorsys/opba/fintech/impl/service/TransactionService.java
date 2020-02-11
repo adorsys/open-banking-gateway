@@ -31,7 +31,7 @@ public class TransactionService extends HandleAcceptedService {
 
         if (BooleanUtils.toBoolean(mockTppAisString)) {
             log.warn("mocking call for list transactions");
-            new ResponseEntity<>(ManualMapper.fromTppToFintech(new TppListTransactionsMock().getTransactionsResponse()), HttpStatus.OK);
+            return new ResponseEntity<>(ManualMapper.fromTppToFintech(new TppListTransactionsMock().getTransactionsResponse()), HttpStatus.OK);
         }
 
         ResponseEntity<TransactionsResponse> transactions = tppAisClient.getTransactions(
