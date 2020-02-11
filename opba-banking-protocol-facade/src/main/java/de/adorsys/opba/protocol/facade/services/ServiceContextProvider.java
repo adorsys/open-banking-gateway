@@ -44,6 +44,10 @@ public class ServiceContextProvider {
         AuthSession authSession = extractAndValidateAuthSession(request);
         ServiceSession session = extractOrCreateServiceSession(request, authSession);
 
+        byte[] decryptedPassword = encryptionService.decryptPassword(session.getPassword());
+        byte[] decryptedData = encryptionService.decrypt(session.getContext().getBytes(), new String(decryptedPassword));
+        FacadeServiceableRequest decryptedContext = MAPPER.readValue(decryptedData, FacadeServiceableRequest.class);
+
         return ServiceContext.<T>builder()
                 .serviceSessionId(session.getId())
                 .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
