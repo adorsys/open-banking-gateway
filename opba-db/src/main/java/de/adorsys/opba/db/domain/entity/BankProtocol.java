@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -46,9 +44,8 @@ public class BankProtocol {
 
     private String protocolBeanName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "parent_id")
-    private BankProtocol parent;
+    @OneToMany(mappedBy = "protocol", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<BankSubProtocol> subProtocols;
 
     @OneToMany(mappedBy = "protocol", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<ServiceSession> serviceSessions;
