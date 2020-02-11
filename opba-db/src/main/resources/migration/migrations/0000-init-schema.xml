@@ -35,6 +35,28 @@
         <createSequence sequenceName="bank_protocol_id_sequence" incrementBy="50"/>
         <addUniqueConstraint tableName="${table-prefix}bank_protocol" columnNames="bank_uuid,action"/>
 
+        <createTable tableName="${table-prefix}bank_sub_protocol">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="protocol_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sub_protocol_bean_name" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="bank_sub_protocol_id_sequence" incrementBy="50"/>
+        <addUniqueConstraint tableName="${table-prefix}bank_sub_protocol" columnNames="protocol_id,action"/>
+        <addForeignKeyConstraint constraintName="fk_bank_sub_protocol_bank_protocol"
+                                 baseTableName="${table-prefix}bank_sub_protocol"
+                                 baseColumnNames="protocol_id"
+                                 referencedTableName="${table-prefix}bank_protocol"
+                                 referencedColumnNames="id"/>
+
         <createTable tableName="${table-prefix}service_session">
             <column name="id" type="UUID">
                 <constraints primaryKey="true"/>

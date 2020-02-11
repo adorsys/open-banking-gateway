@@ -17,6 +17,4 @@ public interface BankProtocolRepository extends CrudRepository<BankProtocol, Lon
             @Param("uuid") String uuid,
             @Param("action") ProtocolAction action
     );
-
-    Optional<BankProtocol> findByParentIdAndAction(Long parentId, ProtocolAction action);
 }

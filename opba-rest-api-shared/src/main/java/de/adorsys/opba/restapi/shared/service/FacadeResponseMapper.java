@@ -82,7 +82,7 @@ public class FacadeResponseMapper {
 
     private ResponseEntity.BodyBuilder putDefaultHeaders(FacadeResult<?> result, ResponseEntity.BodyBuilder builder) {
         builder
-                .header(X_REQUEST_ID, result.getXRequestId().toString())
+                .header(X_REQUEST_ID, null == result.getXRequestId() ? null : result.getXRequestId().toString())
                 .header(SERVICE_SESSION_ID, result.getServiceSessionId());
         return builder;
     }
