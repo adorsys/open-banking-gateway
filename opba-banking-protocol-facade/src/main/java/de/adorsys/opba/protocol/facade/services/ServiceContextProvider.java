@@ -12,10 +12,12 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -44,7 +46,7 @@ public class ServiceContextProvider {
                 .serviceSessionId(session.getId())
                 .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
                 .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
-                .bankId(request.getFacadeServiceable().getBankID())
+                .bankId(request.getFacadeServiceable().getBankId())
                 .authSessionId(null == authSession ? null : authSession.getId())
                 // Currently 1-1 auth-session to service session
                 .futureAuthSessionId(session.getId())
@@ -56,7 +58,6 @@ public class ServiceContextProvider {
                 .build();
     }
 
-    @SneakyThrows
     private <T extends FacadeServiceableGetter> ServiceSession extractOrCreateServiceSession(
             T request,
             AuthSession authSession
@@ -64,17 +65,31 @@ public class ServiceContextProvider {
         if (null != authSession) {
             return authSession.getParent();
         } else {
-            ServiceSession session = new ServiceSession();
-
-            if (null != request.getFacadeServiceable().getServiceSessionId()) {
-                session.setId(request.getFacadeServiceable().getServiceSessionId());
-            }
-
-            session.setContext(MAPPER.writeValueAsString(request));
-            session.setFintechOkUri(request.getFacadeServiceable().getFintechRedirectURLOK());
-            session.setFintechNokUri(request.getFacadeServiceable().getFintechRedirectURLNOK());
-            return serviceSessions.save(session);
+            return findServiceSessionByIdOrCreate(request);
         }
+    }
+
+    @NotNull
+    @SneakyThrows
+    private <T extends FacadeServiceableGetter> ServiceSession findServiceSessionByIdOrCreate(T request) {
+        if (null != request.getFacadeServiceable().getServiceSessionId()) {
+            Optional<ServiceSession> existingSession = serviceSessions
+                    .findById(request.getFacadeServiceable().getServiceSessionId());
+            if (existingSession.isPresent()) {
+                return existingSession.get();
+            }
+        }
+
+        ServiceSession session = new ServiceSession();
+
+        if (null != request.getFacadeServiceable().getServiceSessionId()) {
+            session.setId(request.getFacadeServiceable().getServiceSessionId());
+        }
+
+        session.setContext(MAPPER.writeValueAsString(request));
+        session.setFintechOkUri(request.getFacadeServiceable().getFintechRedirectUrlOk());
+        session.setFintechNokUri(request.getFacadeServiceable().getFintechRedirectUrlNok());
+        return serviceSessions.save(session);
     }
 
     @SneakyThrows

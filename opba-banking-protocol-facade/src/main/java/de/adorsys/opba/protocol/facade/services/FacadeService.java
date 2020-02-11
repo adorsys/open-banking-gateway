@@ -32,7 +32,7 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
         return result.thenApply(
                 res -> handleResult(
                         res,
-                        request.getFacadeServiceable().getXRequestID(),
+                        request.getFacadeServiceable().getRequestId(),
                         ctx
                 )
         );
