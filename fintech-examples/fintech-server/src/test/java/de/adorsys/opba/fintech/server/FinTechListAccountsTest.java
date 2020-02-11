@@ -105,4 +105,24 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
                 .andReturn();
     }
 
+    @Override
+    public void bankProfileAuthorized() {
+    }
+
+    @Override
+    public void bankSearchAuthorized() {
+    }
+
+    @Override
+    public void bankSearchUnAuthorized() {
+    }
+
+    @Override
+    public void loginPostOk() {
+    }
+
+    @Override
+    public void loginPostUnAuthorized() {
+    }
+
 }

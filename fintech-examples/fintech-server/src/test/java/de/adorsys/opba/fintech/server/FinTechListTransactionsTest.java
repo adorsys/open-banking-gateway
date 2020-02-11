@@ -82,4 +82,12 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
                 .andDo(print())
                 .andReturn();
     }
+
+    @Override
+    public void testListAccountsFor200() {
+    }
+
+    @Override
+    public void testListAccountsFor303() {
+    }
 }

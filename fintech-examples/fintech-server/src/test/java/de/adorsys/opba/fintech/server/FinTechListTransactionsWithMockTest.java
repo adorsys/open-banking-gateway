@@ -50,4 +50,9 @@ public class FinTechListTransactionsWithMockTest extends FinTechListAccountsWith
         }
         return amountList;
     }
+
+    @Override
+    public void testListAccounts() {
+    }
+
 }
