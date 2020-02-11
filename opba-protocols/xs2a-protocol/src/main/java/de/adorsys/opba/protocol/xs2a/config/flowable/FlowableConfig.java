@@ -24,24 +24,29 @@ public class FlowableConfig {
     EngineConfigurationConfigurer<SpringProcessEngineConfiguration> customizeListenerAndJsonSerializer(
         @Value("${opba.flowable.serializeOnly:de.adorsys}") String serializableClassesPrefix,
         @Value("${opba.flowable.maxVarLen:2048}") int maxLength,
+        Xs2aObjectMapper mapper,
         FlowableJobEventListener eventListener
     ) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.findAndRegisterModules();
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
         return processConfiguration -> {
             processConfiguration.setCustomPreVariableTypes(
                 new ArrayList<>(
                     ImmutableList.of(
-                        new JsonCustomSerializer(mapper, serializableClassesPrefix, maxLength),
-                        new LargeJsonCustomSerializer(mapper, serializableClassesPrefix, maxLength)
+                        new JsonCustomSerializer(mapper.getMapper(), serializableClassesPrefix, maxLength),
+                        new LargeJsonCustomSerializer(mapper.getMapper(), serializableClassesPrefix, maxLength)
                     )
                 )
             );
             processConfiguration.setEnableEventDispatcher(true);
             processConfiguration.setEventListeners(ImmutableList.of(eventListener));
         };
+    }
+
+    @Bean
+    Xs2aObjectMapper mapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.findAndRegisterModules();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return new Xs2aObjectMapper(mapper);
     }
 }

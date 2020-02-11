@@ -34,7 +34,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                         .facadeServiceable(FacadeServiceableRequest.builder()
                                 .redirectCode(redirectCode)
                                 .authorizationSessionId(authId)
-                                .xRequestID(xRequestID)
+                                .requestId(xRequestID)
                                 .build()
                         )
                         .scaAuthenticationData(body.getScaAuthenticationData())

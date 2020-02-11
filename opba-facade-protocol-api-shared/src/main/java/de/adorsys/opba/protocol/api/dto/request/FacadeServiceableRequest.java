@@ -14,15 +14,15 @@ public class FacadeServiceableRequest {
 
     private final UserAgentContext uaContext;
 
-    private final UUID xRequestID;
+    private final UUID requestId;
     private final UUID serviceSessionId;
     private final String authorizationSessionId;
     private final String redirectCode;
 
     private final String authorization;
-    private final String bankID;
+    private final String bankId;
 
-    private final String fintechUserID;
-    private final String fintechRedirectURLOK;
-    private final String fintechRedirectURLNOK;
+    private final String fintechUserId;
+    private final String fintechRedirectUrlOk;
+    private final String fintechRedirectUrlNok;
 }

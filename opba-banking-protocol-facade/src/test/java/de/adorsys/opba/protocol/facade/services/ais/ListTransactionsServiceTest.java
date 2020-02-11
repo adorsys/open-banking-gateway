@@ -28,7 +28,7 @@ class ListTransactionsServiceTest {
                 ListTransactionsRequest.builder()
                         .facadeServiceable(
                                 FacadeServiceableRequest.builder()
-                                        .bankID("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46")
+                                        .bankId("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46")
                                         .build()
                         ).build()
                 ).get()
