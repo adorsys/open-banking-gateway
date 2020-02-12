@@ -13,10 +13,16 @@ import org.springframework.context.annotation.Configuration;
 
 import java.nio.file.Paths;
 import java.security.Provider;
+import java.security.SecureRandom;
 import java.security.Security;
 
 @Configuration
-public class FacadeConfig {
+public class EncryptionConfig {
+    public static final SecureRandom SECURE_RANDOM = new SecureRandom();
+    public static final int SALT_LENGTH = 8;
+    public static final int ITER_COUNT = 1024;
+    public static final String ALGO = "PBEWithSHA256And256BitAES-CBC-BC";
+
     @Bean
     @SneakyThrows
     public Aead systemAeadConfig() {

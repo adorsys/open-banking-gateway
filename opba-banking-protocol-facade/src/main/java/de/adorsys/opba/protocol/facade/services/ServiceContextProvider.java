@@ -23,6 +23,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.adorsys.opba.protocol.facade.config.EncryptionConfig.ALGO;
+import static de.adorsys.opba.protocol.facade.config.EncryptionConfig.ITER_COUNT;
+import static de.adorsys.opba.protocol.facade.utils.EncryptionUtils.getNewSalt;
+
 @Service
 @RequiredArgsConstructor
 public class ServiceContextProvider {
@@ -99,6 +103,26 @@ public class ServiceContextProvider {
         session.setFintechOkUri(request.getFacadeServiceable().getFintechRedirectUrlOk());
         session.setFintechNokUri(request.getFacadeServiceable().getFintechRedirectUrlNok());
         return serviceSessions.save(session);
+    }
+
+    private byte[] secretKeyReadFromDbOrGenerate(Optional<ServiceSession> savedSession, String sessionPassword, byte[] salt) {
+        if (savedSession.isPresent() && ArrayUtils.isNotEmpty(savedSession.get().getSecretKey())) {
+            return savedSession.get().getSecretKey();
+        }
+
+        if (StringUtils.isBlank(sessionPassword)) {
+            throw new RuntimeException("No password. Can't generate secret key");
+        }
+
+        // recreate deleted key from password with parameters from db
+        if (savedSession.isPresent()) {
+            ServiceSession session = savedSession.get();
+            SecretKey key = encryptionService.generateKey(sessionPassword, session.getAlgo(), session.getSalt(), session.getIterCount());
+            return key.getEncoded();
+        }
+        // generate new key with parameters from config
+        SecretKey key = encryptionService.generateKey(sessionPassword, ALGO, salt, ITER_COUNT);
+        return key.getEncoded();
     }
 
     @SneakyThrows

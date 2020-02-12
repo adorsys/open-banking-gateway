@@ -69,9 +69,10 @@ public class ServiceContextProviderTest {
         Optional<ServiceSession> savedSession = serviceSessionRepository.findById(id);
         assertThat(savedSession).isPresent();
 
-        SecretKey key = encryptionService.deriveKey(password);
-        assertThat(encryptionService.decryptSecretKey(savedSession.get().getSecretKey())).isEqualTo(key.getEncoded());
-        byte[] decryptedData = encryptionService.decrypt(savedSession.get().getContext().getBytes(), key.getEncoded());
+        ServiceSession ss = savedSession.get();
+        SecretKey key = encryptionService.generateKey(password, ss.getAlgo(), ss.getSalt(), ss.getIterCount());
+        assertThat(encryptionService.decryptSecretKey(ss.getSecretKey())).isEqualTo(key.getEncoded());
+        byte[] decryptedData = encryptionService.decrypt(ss.getContext().getBytes(), key.getEncoded());
         assertThat(decryptedData).isEqualTo(MAPPER.writeValueAsBytes(request.getFacadeServiceable()));
 
         ListAccountsRequest request2 = ListAccountsRequest.builder()

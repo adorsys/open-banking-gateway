@@ -4,7 +4,7 @@ import javax.crypto.SecretKey;
 
 public interface EncryptionService {
 
-    byte[] encryptSecretKey(SecretKey key);
+    byte[] encryptSecretKey(byte[] key);
 
     byte[] decryptSecretKey(byte[] encryptedKey);
 
@@ -12,5 +12,5 @@ public interface EncryptionService {
 
     byte[] decrypt(byte[] encrypted, byte[] key);
 
-    SecretKey deriveKey(String password);
+    SecretKey generateKey(String password, String algo, byte[] salt, int iterCount);
 }

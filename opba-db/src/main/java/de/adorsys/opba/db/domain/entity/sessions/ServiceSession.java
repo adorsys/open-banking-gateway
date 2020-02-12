@@ -62,6 +62,14 @@ public class ServiceSession {
     @Column(nullable = false)
     private byte[] secretKey;
 
+    private String algo;
+
+    @Lob
+    @Basic
+    private byte[] salt;
+
+    private int iterCount;
+
     @Version
     private int version;
 }

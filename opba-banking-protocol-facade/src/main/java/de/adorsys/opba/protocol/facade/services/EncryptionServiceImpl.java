@@ -15,8 +15,6 @@ import java.util.Base64;
 @Service
 public class EncryptionServiceImpl implements EncryptionService {
 
-    public static final int SALT = 8;
-    public static final int ITER_COUNT = 1024;
     private final Aead aeadSystem;
     private final Provider provider;
 
@@ -28,8 +26,8 @@ public class EncryptionServiceImpl implements EncryptionService {
 
     @Override
     @SneakyThrows
-    public byte[] encryptSecretKey(SecretKey key) {
-        byte[] encryptedPassword = aeadSystem.encrypt(key.getEncoded(), null);
+    public byte[] encryptSecretKey(byte[] key) {
+        byte[] encryptedPassword = aeadSystem.encrypt(key, null);
         return Base64.getEncoder().encode(encryptedPassword);
     }
 
@@ -57,10 +55,9 @@ public class EncryptionServiceImpl implements EncryptionService {
     }
 
     @SneakyThrows
-    public SecretKey deriveKey(String password) {
-        byte[] salt = new byte[SALT];
-        PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), salt, ITER_COUNT);
-        SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBEWithSHA256And256BitAES-CBC-BC", provider);
+    public SecretKey generateKey(String password, String algo, byte[] salt, int iterCount) {
+        PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), salt, iterCount);
+        SecretKeyFactory keyFac = SecretKeyFactory.getInstance(algo, provider);
         return keyFac.generateSecret(pbeKeySpec);
     }
 }
