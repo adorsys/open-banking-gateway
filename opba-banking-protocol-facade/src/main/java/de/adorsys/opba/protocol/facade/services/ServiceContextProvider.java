@@ -59,7 +59,7 @@ public class ServiceContextProvider {
                 .serviceSessionId(session.getId())
                 .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
                 .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
-                .bankId(request.getFacadeServiceable().getBankId())
+                .bankId(facadeServiceable.getBankId() == null ? facadeServiceableDecrypted.getBankId() : facadeServiceable.getBankId())
                 .authSessionId(null == authSession ? null : authSession.getId())
                 // Currently 1-1 auth-session to service session
                 .futureAuthSessionId(session.getId())
@@ -85,23 +85,39 @@ public class ServiceContextProvider {
     @NotNull
     @SneakyThrows
     private <T extends FacadeServiceableGetter> ServiceSession findServiceSessionByIdOrCreate(T request) {
-        if (null != request.getFacadeServiceable().getServiceSessionId()) {
-            Optional<ServiceSession> existingSession = serviceSessions
-                    .findById(request.getFacadeServiceable().getServiceSessionId());
-            if (existingSession.isPresent()) {
-                return existingSession.get();
+        FacadeServiceableRequest facadeServiceable = request.getFacadeServiceable();
+        String sessionPassword = facadeServiceable.getSessionPassword();
+
+        Optional<ServiceSession> existingSession = Optional.empty();
+        if (null != facadeServiceable.getServiceSessionId()) {
+            existingSession = serviceSessions.findById(facadeServiceable.getServiceSessionId());
+        }
+
+        byte[] salt = getNewSalt();
+        byte[] key = secretKeyReadFromDbOrGenerate(existingSession, sessionPassword, salt);
+        byte[] encryptedKey = encryptionService.encryptSecretKey(key);
+
+        if (existingSession.isPresent()) {
+            ServiceSession session = existingSession.get();
+            if (Strings.isNullOrEmpty(new String(session.getSecretKey()))) {
+                session.setSecretKey(encryptedKey);
             }
+            return session;
         }
 
         ServiceSession session = new ServiceSession();
-
-        if (null != request.getFacadeServiceable().getServiceSessionId()) {
-            session.setId(request.getFacadeServiceable().getServiceSessionId());
+        if (null != facadeServiceable.getServiceSessionId()) {
+            session.setId(facadeServiceable.getServiceSessionId());
         }
-
-        session.setContext(MAPPER.writeValueAsString(request));
-        session.setFintechOkUri(request.getFacadeServiceable().getFintechRedirectUrlOk());
-        session.setFintechNokUri(request.getFacadeServiceable().getFintechRedirectUrlNok());
+        byte[] serializedData = MAPPER.writeValueAsBytes(facadeServiceable);
+        byte[] encryptedData = encryptionService.encrypt(serializedData, key);
+        session.setContext(new String(encryptedData));
+        session.setFintechOkUri(facadeServiceable.getFintechRedirectUrlOk());
+        session.setFintechNokUri(facadeServiceable.getFintechRedirectUrlNok());
+        session.setSecretKey(encryptedKey);
+        session.setAlgo(ALGO);
+        session.setSalt(salt);
+        session.setIterCount(ITER_COUNT);
         return serviceSessions.save(session);
     }
 

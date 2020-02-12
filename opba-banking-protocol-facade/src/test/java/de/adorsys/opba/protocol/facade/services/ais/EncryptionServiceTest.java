@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.facade.services.EncryptionServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import javax.crypto.SecretKey;
 
@@ -14,6 +15,7 @@ import static de.adorsys.opba.protocol.facade.config.EncryptionConfig.ITER_COUNT
 import static de.adorsys.opba.protocol.facade.utils.EncryptionUtils.getNewSalt;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ActiveProfiles("test")
 @SpringBootTest(classes = {EncryptionConfig.class, EncryptionServiceImpl.class})
 public class EncryptionServiceTest {
 
