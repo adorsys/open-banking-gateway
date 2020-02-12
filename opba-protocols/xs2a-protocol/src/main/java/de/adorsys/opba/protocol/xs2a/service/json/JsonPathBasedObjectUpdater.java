@@ -1,12 +1,12 @@
 package de.adorsys.opba.protocol.xs2a.service.json;
 
 import com.fasterxml.jackson.core.TreeNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.NullNode;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
+import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aObjectMapper;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,7 +36,7 @@ public class JsonPathBasedObjectUpdater {
             .options(DEFAULT_PATH_LEAF_TO_NULL, SUPPRESS_EXCEPTIONS)
             .build();
 
-    private final ObjectMapper mapper;
+    private final Xs2aObjectMapper mapper;
     private final ProtocolConfiguration configuration;
 
     @SneakyThrows

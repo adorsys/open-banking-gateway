@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.context;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.protocol.xs2a.domain.dto.ValidationIssue;
 import lombok.Data;
@@ -33,7 +32,6 @@ public class BaseContext {
 
     private final Set<ValidationIssue> violations = new HashSet<>();
 
-    @JsonIgnore // Jackson may try to serialize this as field
     public String getRequestId() {
         return this.sagaId;
     }
