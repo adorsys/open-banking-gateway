@@ -1,14 +1,19 @@
 package de.adorsys.opba.protocol.facade.services.ais;
 
 import de.adorsys.opba.protocol.api.services.EncryptionService;
+import de.adorsys.opba.protocol.facade.config.FacadeConfig;
 import de.adorsys.opba.protocol.facade.services.EncryptionServiceImpl;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootTest(classes = {FacadeConfig.class, EncryptionServiceImpl.class})
 public class EncryptionServiceTest {
 
-    EncryptionService encryptionService = new EncryptionServiceImpl();
+    @Autowired
+    EncryptionService encryptionService;
 
     @Test
     void encryptDecryptPasswordTest() {

@@ -58,7 +58,7 @@ public class ServiceSession {
     private Collection<Consent> consents;
 
     @Lob
-    @Basic(fetch = FetchType.LAZY)
+    @Basic
     @Column(nullable = false)
     private byte[] password;
 
