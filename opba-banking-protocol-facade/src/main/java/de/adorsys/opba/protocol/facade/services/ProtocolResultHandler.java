@@ -139,9 +139,9 @@ public class ProtocolResultHandler {
     @NotNull
     private <O> AuthSession createNewAuthSession(Result<O> result, ServiceContext session) {
         BankProtocol authProtocol = protocolRepository
-                .findByBankProfileUuidAndAction(session.getBankId(), UPDATE_AUTHORIZATION)
+                .findByBankProfileUuidAndAction(session.getBankID(), UPDATE_AUTHORIZATION)
                 .orElseThrow(
-                        () -> new IllegalStateException("Missing update authorization handler for " + session.getBankId())
+                        () -> new IllegalStateException("Missing update authorization handler for " + session.getBankID())
                 );
 
         return authenticationSessions.save(

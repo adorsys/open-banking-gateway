@@ -31,7 +31,7 @@ public class ProtocolSelector {
 
         if (null == ctx.getServiceBankProtocolId()) {
             bankProtocol = protocolRepository.findByBankProfileUuidAndAction(
-                    ctx.getBankId(),
+                    ctx.getBankID(),
                     protocolAction
             );
         } else {

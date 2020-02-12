@@ -52,8 +52,8 @@ public class ServiceContextProviderTest {
         ListAccountsRequest request = ListAccountsRequest.builder()
                 .facadeServiceable(
                         FacadeServiceableRequest.builder()
-                                .bankId(testBankID)
-                                .xRequestId(id)
+                                .bankID(testBankID)
+                                .xRequestID(id)
                                 .sessionPassword(password)
                                 .fintechRedirectURLOK("http://google.com")
                                 .fintechRedirectURLNOK("http://microsoft.com")
@@ -61,7 +61,7 @@ public class ServiceContextProviderTest {
                 ).build();
 
         ServiceContext<FacadeServiceableGetter> providedContext = serviceContextProvider.provide(request);
-        assertThat(providedContext.getBankId()).isEqualTo(testBankID);
+        assertThat(providedContext.getBankID()).isEqualTo(testBankID);
         assertThat(providedContext.getRequest().getFacadeServiceable().getSessionPassword()).isEqualTo(password);
 
         assertThat(serviceSessionRepository.count()).isEqualTo(1L);
@@ -77,12 +77,12 @@ public class ServiceContextProviderTest {
         ListAccountsRequest request2 = ListAccountsRequest.builder()
                 .facadeServiceable(
                         FacadeServiceableRequest.builder()
-                                .xRequestID(id)
+                                .serviceSessionId(ss.getId())
                                 .build()
                 ).build();
         ServiceContext<FacadeServiceableGetter> providedContext2 = serviceContextProvider.provide(request2);
 
-        assertThat(providedContext2.getBankId()).isEqualTo(testBankID);
+        assertThat(providedContext2.getBankID()).isEqualTo(testBankID);
     }
 
     @EnableXs2aProtocol

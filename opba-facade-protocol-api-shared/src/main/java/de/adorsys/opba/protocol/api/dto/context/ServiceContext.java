@@ -15,7 +15,7 @@ public class ServiceContext<T> {
     private final Long serviceBankProtocolId;
     private final Long authorizationBankProtocolId;
 
-    private final String bankId;
+    private final String bankID;
 
     @NonNull
     private final UUID serviceSessionId;
@@ -47,7 +47,7 @@ public class ServiceContext<T> {
         return String.format(
                 "[protocol id: %s / bank uuid: %s]",
                 getServiceBankProtocolId(),
-                getBankId()
+                getBankID()
         );
     }
 }
