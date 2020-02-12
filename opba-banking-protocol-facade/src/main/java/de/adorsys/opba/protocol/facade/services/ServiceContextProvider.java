@@ -106,11 +106,11 @@ public class ServiceContextProvider {
     }
 
     private byte[] secretKeyReadFromDbOrGenerate(Optional<ServiceSession> savedSession, String sessionPassword, byte[] salt) {
-        if (savedSession.isPresent() && ArrayUtils.isNotEmpty(savedSession.get().getSecretKey())) {
+        if (savedSession.isPresent() && !Strings.isNullOrEmpty(new String(savedSession.get().getSecretKey()))) {
             return savedSession.get().getSecretKey();
         }
 
-        if (StringUtils.isBlank(sessionPassword)) {
+        if (Strings.isNullOrEmpty(sessionPassword)) {
             throw new RuntimeException("No password. Can't generate secret key");
         }
 

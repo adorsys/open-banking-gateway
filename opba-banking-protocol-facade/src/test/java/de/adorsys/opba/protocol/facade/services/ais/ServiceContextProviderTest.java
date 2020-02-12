@@ -21,7 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.crypto.SecretKey;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,8 +52,8 @@ public class ServiceContextProviderTest {
         ListAccountsRequest request = ListAccountsRequest.builder()
                 .facadeServiceable(
                         FacadeServiceableRequest.builder()
-                                .bankID(testBankID)
-                                .xRequestID(id)
+                                .bankId(testBankID)
+                                .xRequestId(id)
                                 .sessionPassword(password)
                                 .fintechRedirectURLOK("http://google.com")
                                 .fintechRedirectURLNOK("http://microsoft.com")
@@ -66,10 +65,10 @@ public class ServiceContextProviderTest {
         assertThat(providedContext.getRequest().getFacadeServiceable().getSessionPassword()).isEqualTo(password);
 
         assertThat(serviceSessionRepository.count()).isEqualTo(1L);
-        Optional<ServiceSession> savedSession = serviceSessionRepository.findById(id);
-        assertThat(savedSession).isPresent();
+        Iterable<ServiceSession> all = serviceSessionRepository.findAll();
+        assertThat(all.iterator().hasNext()).isTrue();
+        ServiceSession ss = all.iterator().next();
 
-        ServiceSession ss = savedSession.get();
         SecretKey key = encryptionService.generateKey(password, ss.getAlgo(), ss.getSalt(), ss.getIterCount());
         assertThat(encryptionService.decryptSecretKey(ss.getSecretKey())).isEqualTo(key.getEncoded());
         byte[] decryptedData = encryptionService.decrypt(ss.getContext().getBytes(), key.getEncoded());
