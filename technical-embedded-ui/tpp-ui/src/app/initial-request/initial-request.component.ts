@@ -27,13 +27,14 @@ export class InitialRequestComponent implements OnInit {
     this.authorization.setValue('12345');
     this.requestId.setValue('43da4e2f-72cb-43bb-8afd-683104de57f9');
     this.bankId.setValue('53c47f54-b9a4-465a-8f77-bc6cd5f0cf46');
+    this.serviceSessionId.setValue('');
   }
 
   ngOnInit() {
   }
 
   submit() {
-    const headerVals = new HttpHeaders({
+    const headerVals = {
       'Fintech-Redirect-URL-OK': this.fintechRedirectUriOk.value,
       'Fintech-Redirect-URL-NOK': this.fintechRedirectUriNok.value,
       'Fintech-User-ID': this.fintechUserId.value,
@@ -41,7 +42,7 @@ export class InitialRequestComponent implements OnInit {
       'X-Request-ID': this.requestId.value,
       'Bank-ID': this.bankId.value,
       'Service-Session-ID': this.serviceSessionId.value
-    });
+    };
 
     this.client.get(this.getUri, {
       headers: headerVals,
