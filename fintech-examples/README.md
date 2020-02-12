@@ -61,7 +61,7 @@ server:
         maxAge: 300
         httpOnly: false
         path: /
-        sameSite: anyValue
+        sameSite: none
 tpp:
     url: http://localhost:18085
 
