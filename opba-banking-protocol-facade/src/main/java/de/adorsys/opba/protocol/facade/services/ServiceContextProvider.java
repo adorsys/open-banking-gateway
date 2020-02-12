@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.crypto.SecretKey;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,8 +47,8 @@ public class ServiceContextProvider {
         AuthSession authSession = extractAndValidateAuthSession(request);
         ServiceSession session = extractOrCreateServiceSession(request, authSession);
 
-        byte[] decryptedPassword = encryptionService.decryptPassword(session.getPassword());
-        byte[] decryptedData = encryptionService.decrypt(session.getContext().getBytes(), new String(decryptedPassword));
+        byte[] decryptedSecretKey = encryptionService.decryptSecretKey(session.getSecretKey());
+        byte[] decryptedData = encryptionService.decrypt(session.getContext().getBytes(), decryptedSecretKey);
         FacadeServiceableRequest facadeServiceableDecrypted = MAPPER.readValue(decryptedData, FacadeServiceableRequest.class);
 
         return ServiceContext.<T>builder()

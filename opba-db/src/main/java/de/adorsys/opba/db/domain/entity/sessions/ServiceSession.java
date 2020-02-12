@@ -60,7 +60,7 @@ public class ServiceSession {
     @Lob
     @Basic
     @Column(nullable = false)
-    private byte[] password;
+    private byte[] secretKey;
 
     @Version
     private int version;

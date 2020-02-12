@@ -20,6 +20,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import javax.crypto.SecretKey;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -68,8 +69,9 @@ public class ServiceContextProviderTest {
         Optional<ServiceSession> savedSession = serviceSessionRepository.findById(id);
         assertThat(savedSession).isPresent();
 
-        assertThat(new String(encryptionService.decryptPassword(savedSession.get().getPassword()))).isEqualTo(password);
-        byte[] decryptedData = encryptionService.decrypt(savedSession.get().getContext().getBytes(), password);
+        SecretKey key = encryptionService.deriveKey(password);
+        assertThat(encryptionService.decryptSecretKey(savedSession.get().getSecretKey())).isEqualTo(key.getEncoded());
+        byte[] decryptedData = encryptionService.decrypt(savedSession.get().getContext().getBytes(), key.getEncoded());
         assertThat(decryptedData).isEqualTo(MAPPER.writeValueAsBytes(request.getFacadeServiceable()));
 
         ListAccountsRequest request2 = ListAccountsRequest.builder()

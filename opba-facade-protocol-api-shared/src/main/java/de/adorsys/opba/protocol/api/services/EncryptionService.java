@@ -1,12 +1,16 @@
 package de.adorsys.opba.protocol.api.services;
 
+import javax.crypto.SecretKey;
+
 public interface EncryptionService {
 
-    byte[] encryptPassword(String password);
+    byte[] encryptSecretKey(SecretKey key);
 
-    byte[] decryptPassword(byte[] encryptedPassword);
+    byte[] decryptSecretKey(byte[] encryptedKey);
 
-    byte[] encrypt(byte[] data, String password);
+    byte[] encrypt(byte[] data, byte[] key);
 
-    byte[] decrypt(byte[] encrypted, String password);
+    byte[] decrypt(byte[] encrypted, byte[] key);
+
+    SecretKey deriveKey(String password);
 }

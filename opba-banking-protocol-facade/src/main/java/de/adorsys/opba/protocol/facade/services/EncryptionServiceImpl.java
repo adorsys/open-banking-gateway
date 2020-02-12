@@ -28,38 +28,36 @@ public class EncryptionServiceImpl implements EncryptionService {
 
     @Override
     @SneakyThrows
-    public byte[] encryptPassword(String password) {
-        byte[] encryptedPassword = aeadSystem.encrypt(password.getBytes(), null);
+    public byte[] encryptSecretKey(SecretKey key) {
+        byte[] encryptedPassword = aeadSystem.encrypt(key.getEncoded(), null);
         return Base64.getEncoder().encode(encryptedPassword);
     }
 
     @Override
     @SneakyThrows
-    public byte[] decryptPassword(byte[] encryptedPassword) {
-        byte[] decoded = Base64.getDecoder().decode(encryptedPassword);
+    public byte[] decryptSecretKey(byte[] encryptedKey) {
+        byte[] decoded = Base64.getDecoder().decode(encryptedKey);
         return aeadSystem.decrypt(decoded, null);
     }
 
     @Override
     @SneakyThrows
-    public byte[] encrypt(byte[] data, String password) {
-        SecretKey key = deriveKey(password);
-        AesGcmJce agjEncryption = new AesGcmJce(key.getEncoded());
+    public byte[] encrypt(byte[] data, byte[] key) {
+        AesGcmJce agjEncryption = new AesGcmJce(key);
         byte[] encrypted = agjEncryption.encrypt(data, null);
         return Base64.getEncoder().encode(encrypted);
     }
 
     @Override
     @SneakyThrows
-    public byte[] decrypt(byte[] encrypted, String password) {
-        SecretKey key = deriveKey(password);
-        AesGcmJce agjDecryption = new AesGcmJce(key.getEncoded());
+    public byte[] decrypt(byte[] encrypted, byte[] key) {
+        AesGcmJce agjDecryption = new AesGcmJce(key);
         byte[] decoded = Base64.getDecoder().decode(encrypted);
         return agjDecryption.decrypt(decoded, null);
     }
 
     @SneakyThrows
-    private SecretKey deriveKey(String password) {
+    public SecretKey deriveKey(String password) {
         byte[] salt = new byte[SALT];
         PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), salt, ITER_COUNT);
         SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBEWithSHA256And256BitAES-CBC-BC", provider);

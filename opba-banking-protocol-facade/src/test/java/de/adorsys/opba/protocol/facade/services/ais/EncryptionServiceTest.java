@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.crypto.SecretKey;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = {FacadeConfig.class, EncryptionServiceImpl.class})
@@ -18,11 +20,13 @@ public class EncryptionServiceTest {
     @Test
     void encryptDecryptPasswordTest() {
         String password = "QwE!@#";
-        byte[] encryptedPassword = encryptionService.encryptPassword(password);
+        SecretKey secretKey = encryptionService.deriveKey(password);
+        byte[] encryptedSecretKey = encryptionService.encryptSecretKey(secretKey);
 
-        byte[] decryptedPassword = encryptionService.decryptPassword(encryptedPassword);
+        byte[] decryptedSecretKey = encryptionService.decryptSecretKey(encryptedSecretKey);
 
-        assertThat(decryptedPassword).isEqualTo(password.getBytes());
+        SecretKey newlyCreatedFromPassword = encryptionService.deriveKey(password);
+        assertThat(decryptedSecretKey).isEqualTo(newlyCreatedFromPassword.getEncoded());
     }
 
     @Test
@@ -30,9 +34,11 @@ public class EncryptionServiceTest {
         String password = "password";
         String data = "data to encrypt";
 
-        byte[] encryptedData = encryptionService.encrypt(data.getBytes(), password);
+        SecretKey key = encryptionService.deriveKey(password);
 
-        byte[] decryptedData = encryptionService.decrypt(encryptedData, password);
+        byte[] encryptedData = encryptionService.encrypt(data.getBytes(), key.getEncoded());
+
+        byte[] decryptedData = encryptionService.decrypt(encryptedData, key.getEncoded());
 
         assertThat(decryptedData).isEqualTo(data.getBytes());
     }
