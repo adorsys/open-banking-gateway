@@ -216,7 +216,7 @@ As launcher of FinTechUI NativeApp is on the user device, the browser running th
 The redirect alternative to choose API (Alt-1 & Alt-2) vs. UI (Alt-3 & Alt-4) is dependent on the architecture of the final environment.
 - Selecting the API redirect approach :
   - (-) might require the FinTechApi to turn off CORS
-  - (-) will require two Endpoints at the FinTechAPI, the afterRedirect(4<sub>b(__s,a,r__)|4<sub>d(__s,a__)) and the afterUIReload(4<sub>f(__x,c__)|4<sub>f(__s,a,r__)). And like we see those EndPoints will have to be dealt with differently depending on whether call back is in Alt-1 or Alt-2.  
+  - (-) will require two Endpoints at the FinTechAPI, the afterRedirect(4<sub>b(__s,a,r__) or 4<sub>d(__s,a__)) and the afterUIReload(4<sub>f(__x,c__) or 4<sub>f(__s,a,r__)). And like we see those EndPoints will have to be dealt with differently depending on whether call back is in Alt-1 or Alt-2.  
 - Selecting the UI approach :
   - (-) might require the FinTechUI to turn off CORS. Although we are more confortable turning off CORS on static content files than doing this on the API interface.
   - (+) will simplify the FinTechApi interface by providing a single EndPoint afterRedirect(4<sub>d(__s,a,r__)) for both Alt-3 and Alt-4.
