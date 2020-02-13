@@ -43,6 +43,8 @@ FacadeService <-[#green] ServiceContextProvider : ServiceContext
 FacadeService [#green]-> ProtocolSelector : Select bank protocol by using authorization session id
 ProtocolSelector [#green]-> Database : Read authorization session
 Database [#green]-> ProtocolSelector: Bank protocol id from authorization session
+ProtocolSelector [#green]-> Database : Read bank protocol using its id
+Database [#green]-> ProtocolSelector : BankProtocol
 ProtocolSelector [#green]-> FacadeService : BankProtocol
 FacadeService [#green]-> Spring : Find bean - Bean(BankProtocol.protocolBeanName) extends Action
 FacadeService <-[#green] Spring : It is Xs2aUpdateAuthorization service bean

@@ -37,7 +37,7 @@ endbox
 
 boundary ASPSP
 == ASPSP reports consent authorization OK ==
-ASPSP [#magenta]-> User : Done
+ASPSP [#magenta]-> User : Done, optionally redirect
 ASPSP [#magenta]-> TppBackend : GET /from/aspsp/ok webhook
 TppBackend [#magenta]-> ConsentServiceController : fromAspspOkUsingGET
 ConsentServiceController [#magenta]-> FacadeService : Facade.execute()
@@ -46,6 +46,8 @@ FacadeService <-[#magenta] ServiceContextProvider : ServiceContext
 FacadeService [#magenta]-> ProtocolSelector : Select bank protocol by using authorization session id
 ProtocolSelector [#magenta]-> Database : Read authorization session
 Database [#magenta]-> ProtocolSelector: Bank protocol id from authorization session
+ProtocolSelector [#magenta]-> Database : Read bank protocol using its id
+Database [#magenta]-> ProtocolSelector : BankProtocol
 ProtocolSelector [#magenta]-> FacadeService : BankProtocol
 FacadeService [#magenta]-> Spring : Find bean - Bean(BankProtocol.protocolBeanName) extends Action
 FacadeService <-[#magenta] Spring : It is Xs2aFromAspspRedirect service bean
