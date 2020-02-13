@@ -6,6 +6,8 @@ import de.adorsys.opba.protocol.facade.config.EncryptionProperties;
 import de.adorsys.opba.protocol.facade.services.EncryptionServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -15,12 +17,14 @@ import static de.adorsys.opba.protocol.facade.utils.EncryptionUtils.getNewSalt;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
-@SpringBootTest(classes = {EncryptionConfig.class, EncryptionServiceImpl.class})
-@RequiredArgsConstructor
+@SpringBootTest(classes = {EncryptionConfig.class, EncryptionServiceImpl.class, EncryptionProperties.class})
+@EnableConfigurationProperties
 public class EncryptionServiceTest {
 
-    private final EncryptionService encryptionService;
-    private final EncryptionProperties properties;
+    @Autowired
+    private EncryptionService encryptionService;
+    @Autowired
+    private EncryptionProperties properties;
 
     @Test
     void encryptDecryptPasswordTest() {

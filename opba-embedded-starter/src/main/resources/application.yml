@@ -51,6 +51,5 @@ facade:
     iterationCount: 1024
     keySetPath: example-keyset.json
 
-
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/

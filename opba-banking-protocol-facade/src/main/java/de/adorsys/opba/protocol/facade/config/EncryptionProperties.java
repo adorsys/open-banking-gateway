@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @Validated
 @Configuration
-@ConfigurationProperties(prefix = "encryption")
+@ConfigurationProperties(prefix = "facade.encryption")
 public class EncryptionProperties {
     @NotNull
     private String providerName;

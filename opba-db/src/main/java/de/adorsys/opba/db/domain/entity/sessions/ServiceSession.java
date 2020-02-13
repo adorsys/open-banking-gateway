@@ -60,14 +60,14 @@ public class ServiceSession {
     private Collection<Consent> consents;
 
     @Lob
-    @Basic
+    @Basic(fetch = FetchType.LAZY)
     @Column(nullable = false)
     private byte[] secretKey;
 
     private String algo;
 
     @Lob
-    @Basic
+    @Basic(fetch = FetchType.LAZY)
     private byte[] salt;
 
     private int iterCount;
