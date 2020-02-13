@@ -1,0 +1,64 @@
+@startuml
+legend top left
+  <b>Embedded initial authorization phase</b>
+endlegend
+
+actor User
+
+collections TppBackend
+
+box "TPP API"
+control TppBankingApiAisController
+control ConsentServiceController
+participant FacadeResponseMapper
+endbox
+
+box "OPBA-Facade"
+collections FacadeService
+database Database
+participant ServiceContextProvider
+participant ProtocolSelector
+participant Spring
+participant ProtocolResultHandler
+endbox
+
+box "XS2A-Protocol"
+participant Xs2aListAccountsEntrypoint
+participant Xs2aUpdateAuthorization
+participant Xs2aFromAspspRedirect
+participant Xs2aResultBodyExtractor
+collections Xs2aServices
+participant OutcomeMapper
+endbox
+
+boundary ASPSP
+
+== User authorizes this request (embedded to provide i.e. PSU id) ==
+loop Until user input has not enough parameters
+User [#green]-> TppBackend : POST /consent/embedded\n(Consent valid until, which accounts, etc.)
+TppBackend [#green]-> ConsentServiceController : embeddedUsingPOST
+ConsentServiceController [#green]-> FacadeService : Facade.execute()
+FacadeService [#green]-> ServiceContextProvider : Create facade context from request
+FacadeService <-[#green] ServiceContextProvider : ServiceContext
+FacadeService [#green]-> ProtocolSelector : Select bank protocol by using authorization session id
+ProtocolSelector [#green]-> Database : Read authorization session
+Database [#green]-> ProtocolSelector: Bank protocol id from authorization session
+ProtocolSelector [#green]-> FacadeService : BankProtocol
+FacadeService [#green]-> Spring : Find bean - Bean(BankProtocol.protocolBeanName) extends Action
+FacadeService <-[#green] Spring : It is Xs2aUpdateAuthorization service bean
+Xs2aUpdateAuthorization [#green]-> Xs2aServices : Update context with users' input
+end
+Xs2aServices [#green]-> Xs2aServices : User input OK
+Xs2aServices [#green]-> Xs2aServices : Switch to real execution mode
+Xs2aServices [#green]-> ASPSP : Initiate consent
+ASPSP [#green]-> Xs2aServices : Redirect authorization required
+Xs2aServices [#green]-> Xs2aListAccountsEntrypoint : Redirect to ASPSP required
+Xs2aListAccountsEntrypoint [#green]-> OutcomeMapper : Translate 'Redirect to ASPSP required'
+OutcomeMapper [#green]-> Xs2aListAccountsEntrypoint : ContextBasedAuthorizationRequiredResult
+Xs2aListAccountsEntrypoint [#green]-> FacadeService : ContextBasedAuthorizationRequiredResult
+FacadeService [#green]-> ProtocolResultHandler : Translate FacadeStartAuthorizationResult -> FacadeRedirectResult
+TppBankingApiAisController [#green]-> FacadeResponseMapper : translate FacadeRedirectResult
+FacadeResponseMapper [#green]-> TppBankingApiAisController : This is 303 code with redirection to ASPSP authorization page
+TppBankingApiAisController [#green]-> TppBackend : 303 Redirect to ASPSP
+TppBackend [#green]-> User : 303 ASPSP 'Login page'
+@enduml

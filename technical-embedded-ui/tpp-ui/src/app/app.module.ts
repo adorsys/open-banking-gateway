@@ -25,6 +25,9 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatMomentDateModule, MomentDateAdapter} from '@angular/material-moment-adapter';
 import { ThreeStateCheckboxComponent } from './three-state-checkbox/three-state-checkbox.component';
 import { InitialRequestComponent } from './initial-request/initial-request.component';
+import { FromAspspComponent } from './from-aspsp/from-aspsp.component';
+import { EmbeddedStartComponent } from './embedded-start/embedded-start.component';
+import { FintechCallbackOkComponent } from './fintech-callback-ok/fintech-callback-ok.component';
 
 export const AppDateFormats = {
   parse: {
@@ -50,7 +53,10 @@ export const AppDateFormats = {
     AccountSelectorComponent,
     AccountReferenceComponent,
     ThreeStateCheckboxComponent,
-    InitialRequestComponent
+    InitialRequestComponent,
+    FromAspspComponent,
+    EmbeddedStartComponent,
+    FintechCallbackOkComponent
   ],
     imports: [
         BrowserModule,

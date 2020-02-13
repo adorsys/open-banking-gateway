@@ -5,6 +5,7 @@ import de.adorsys.opba.protocol.xs2a.testsandbox.internal.SandboxAppExecutor;
 import de.adorsys.opba.protocol.xs2a.testsandbox.internal.SandboxApp;
 import de.adorsys.opba.protocol.xs2a.testsandbox.internal.StarterContext;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.awaitility.Durations;
 
 import java.time.Duration;
@@ -13,11 +14,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static de.adorsys.opba.protocol.xs2a.testsandbox.internal.SandboxApp.SANDBOX_LOG_LEVEL;
 import static org.awaitility.Awaitility.await;
 
 /**
  * Allows to start all sandbox (they imitate bank / ASPSP) applications.
  */
+@Slf4j
 public class SandboxAppsStarter implements AutoCloseable {
 
     public static final Set<SandboxApp> ALL = ImmutableSet.copyOf(SandboxApp.values());
@@ -46,7 +49,22 @@ public class SandboxAppsStarter implements AutoCloseable {
     }
 
     public void awaitForAllStarted(Duration atMost) {
-        await().atMost(atMost).pollDelay(Durations.ONE_SECOND).until(() -> SandboxApp.allReadyToUse(context));
+        try {
+            await().atMost(atMost).pollDelay(Durations.ONE_SECOND).until(() -> SandboxApp.allReadyToUse(context));
+        } catch (Throwable ex) {
+            log.error("Sandbox start failed");
+            reportSandboxFailedApps();
+            log.error("Re-run it with environment variable {}=INFO for more details", SANDBOX_LOG_LEVEL);
+            throw ex;
+        }
+    }
+
+    private void reportSandboxFailedApps() {
+        ALL.forEach(it -> {
+            if (!it.isReadyToUse(context)) {
+                log.error("Sandbox application {} has failed", it.name());
+            }
+        });
     }
 
     public void awaitForAllStarted() {

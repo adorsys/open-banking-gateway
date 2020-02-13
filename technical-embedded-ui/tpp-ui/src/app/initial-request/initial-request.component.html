@@ -1,3 +1,4 @@
+<h1>Fintech calls TPP to get account list with following parameters</h1>
 <div>
   <form ngNoForm method="post">
 
@@ -24,13 +25,27 @@
     <label for="bankId">Bank id</label>
     <input id="bankId" name="bankId" type="text" [formControl]="bankId">
 
+    <hr>
     <br>
-    <label for="serviceSessionId">(Optional) Service session id</label>
+    Supply if consent available to get result or you want to use your own session UUID:
+    <br>
+    <label for="serviceSessionId">(Optional) Service session id: </label>
     <input id="serviceSessionId" name="serviceSessionId" type="text" [formControl]="serviceSessionId">
 
     <br>
     <div class="form-row">
-      <button type="button" [disabled]="!form.valid" (click)="submit()">Save</button>
+      <button type="button" [disabled]="!form.valid" (click)="submit()">Call TPP for list accounts</button>
     </div>
   </form>
+
+  <br/>
+  <a href="assets/docs/rendered/flow.svg">Link to entire end-to-end flow</a>
+  <div *ngIf="!serviceSessionId.value">
+    <h2>What happens in backend during this request</h2>
+    <img src="assets/docs/rendered/initial.svg" width="1920px"/>
+  </div>
+  <div *ngIf="serviceSessionId.value">
+    <h2>What happens in backend during this request (if consent is present)</h2>
+    <img src="assets/docs/rendered/get-result.svg" width="1920px"/>
+  </div>
 </div>

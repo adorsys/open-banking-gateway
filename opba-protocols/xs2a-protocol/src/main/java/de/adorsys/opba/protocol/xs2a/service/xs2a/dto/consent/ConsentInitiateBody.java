@@ -12,6 +12,7 @@ import lombok.Setter;
 import org.mapstruct.Mapper;
 
 import javax.validation.Valid;
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -35,6 +36,7 @@ public class ConsentInitiateBody {
 
     @ValidationInfo(ui = @FrontendCode("date.string"), ctx = @ContextCode("consent.validUntil"))
     @NotNull(message = "{no.ctx.validUntil}")
+    @FutureOrPresent(message = "{future.ctx.validUntil}")
     private LocalDate validUntil;
 
     @ValidationInfo(ui = @FrontendCode("textbox.integer"), ctx = @ContextCode("consent.frequencyPerDay"))
