@@ -42,9 +42,15 @@ protocol:
 pkcs12:
   keyStore: sample-qwac.keystore
   password: password
-security:
-  provider:
-    name: BC
+
+facade:
+  encryption:
+    providerName: BC
+    algorithm: PBEWithSHA256And256BitAES-CBC-BC
+    saltLength: 8
+    iterationCount: 1024
+    keySetPath: example-keyset.json
+
 
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/

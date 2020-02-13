@@ -13,4 +13,8 @@ public interface EncryptionService {
     byte[] decrypt(byte[] encrypted, byte[] key);
 
     SecretKey generateKey(String password, String algo, byte[] salt, int iterCount);
+
+    SecretKey generateKey(String password, byte[] salt);
+
+    SecretKey generateKey(String password);
 }

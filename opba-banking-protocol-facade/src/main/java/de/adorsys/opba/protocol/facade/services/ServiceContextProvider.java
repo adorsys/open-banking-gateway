@@ -12,6 +12,7 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
+import de.adorsys.opba.protocol.facade.config.EncryptionProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -23,8 +24,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-import static de.adorsys.opba.protocol.facade.config.EncryptionConfig.ALGO;
-import static de.adorsys.opba.protocol.facade.config.EncryptionConfig.ITER_COUNT;
 import static de.adorsys.opba.protocol.facade.utils.EncryptionUtils.getNewSalt;
 
 @Service
@@ -39,6 +38,7 @@ public class ServiceContextProvider {
     private final AuthenticationSessionRepository authSessions;
     private final ServiceSessionRepository serviceSessions;
     private final EncryptionService encryptionService;
+    private final EncryptionProperties properties;
 
     @Transactional
     @SneakyThrows
@@ -93,7 +93,7 @@ public class ServiceContextProvider {
             existingSession = serviceSessions.findById(facadeServiceable.getServiceSessionId());
         }
 
-        byte[] salt = getNewSalt();
+        byte[] salt = getNewSalt(properties.getSaltLength());
         byte[] key = secretKeyReadFromDbOrGenerate(existingSession, sessionPassword, salt);
         byte[] encryptedKey = encryptionService.encryptSecretKey(key);
 
@@ -115,9 +115,9 @@ public class ServiceContextProvider {
         session.setFintechOkUri(facadeServiceable.getFintechRedirectUrlOk());
         session.setFintechNokUri(facadeServiceable.getFintechRedirectUrlNok());
         session.setSecretKey(encryptedKey);
-        session.setAlgo(ALGO);
+        session.setAlgo(properties.getAlgorithm());
         session.setSalt(salt);
-        session.setIterCount(ITER_COUNT);
+        session.setIterCount(properties.getIterationCount());
         return serviceSessions.save(session);
     }
 
@@ -137,7 +137,7 @@ public class ServiceContextProvider {
             return key.getEncoded();
         }
         // generate new key with parameters from config
-        SecretKey key = encryptionService.generateKey(sessionPassword, ALGO, salt, ITER_COUNT);
+        SecretKey key = encryptionService.generateKey(sessionPassword, salt);
         return key.getEncoded();
     }
 
