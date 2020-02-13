@@ -1,6 +1,6 @@
 site_name: Open Banking Gateway Documentation
 repo_url: https://github.com/adorsys/open-banking-gateway
-site_description: Provides tools, adapter and connector for transparent access to open banking apis
+site_description: Provides tools, adapter and connector for transparent access to open banking APIs
 strict: true
 nav:
   - Home: README.md

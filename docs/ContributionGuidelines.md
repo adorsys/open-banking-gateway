@@ -1,4 +1,4 @@
-## Development and contributing
+# Development and contributing
 
 ### Internal development process
 Development is performed by 2-weeks sprints (We use kind of Scrum framework).
