@@ -1,4 +1,4 @@
-## **Roadmap**
+## Roadmap
 
 Our project started on November 1st 2019 and the Open Banking Gateway team offers development with two branches: 
 
