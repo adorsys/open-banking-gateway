@@ -1,13 +1,13 @@
 ## **Roadmap**
 
-Our project starts on November 1st 2019 and the Banking Gateway team offers development with two branch: 
+Our project started on November 1st 2019 and the Open Banking Gateway team offers development with two branches: 
 
-* **Develop branch** :This is the branch from which a release is built and there, everything from all the other branches always collects. 
-* **Master branch**: This branch is always with a new release number and Here, certain development branches are considered so good that they are included in master.
+* **Develop branch** : This is the branch from which a release is built and used to collect all the other branches. 
+* **Master branch**: generally matches the last released stable version.
 
-This project is planned until the end of 2020 and our current timetable (MVP1) is until April 2020, by which time the following targets should be achieved:
-* Demo Frontend used to test the Banking Gateway
-* Integration of german banks with **Redirect** and **Embedded** Approaches 
+This project is planned until the end of 2020 and our current timetable plans MVP1 for April 2020, by which time the following targets should be achieved:
+* Demo Frontend used to test the Open Banking Gateway
+* Integration of German banks with **Redirect** and **Embedded** Approaches 
 * **TppBankSearchApi** providing only German banks 
 * **TppBankingApi** providing the following banking endpoints:
     * Get transaction information
@@ -19,7 +19,7 @@ This project is planned until the end of 2020 and our current timetable (MVP1) i
 | release date       | version           |
 | ------------- |:-------------|
 | ***20.12.2019***      | ***0.0.3*** | 
-|            |  Write Sequence diagram uses cases based<br/><br/>Validation of  flowable BPMN engine<br/><br/>Backend Proof of Concept <br/><br/>Implementation of TppBankSearchApi <br/><br/>Create CI/CD code quality checks <br/><br/>Write Contributions guidelines| 
+|            |  Sequence diagram describing use cases<br/><br/>Validation of  flowable BPMN engine<br/><br/>Backend Proof of Concept <br/><br/>Implementation of TppBankSearchApi <br/><br/>Create CI/CD and code quality checks <br/><br/>Write Contributions guidelines| 
 |***16.01.2020***     |***0.0.4***    |
 |            |Login Page creation for the Demo Frontend<br/><br/>Change Test data with productive data for the TppBankSearchApi<br/><br/>Update the general project's documentation<br/><br/>Getting Started documentation<br/><br/>Definition of the FinTechApi, BankingApi and ConsentAuthorisationApi<br/><br/>Integration of Bank search API and FintechUI<br/><br/>       |
 | ***29.01.2020***      | ***0.0.5*** | 
