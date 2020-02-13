@@ -74,6 +74,8 @@ public enum SandboxApp {
     CERT_GENERATOR("certificate-generator-1.8.jar"); // adorsys/xs2a-certificate-generator
 
 
+    public static final String SANDBOX_LOG_LEVEL = "SANDBOX_LOG_LEVEL";
+
     public static final String DB_TYPE = "DB_TYPE";
     public static final String TEST_CONTAINERS_POSTGRES = "test-containers-postgres";
 
@@ -212,6 +214,7 @@ public enum SandboxApp {
             declaredVars.fields().forEachRemaining(entry -> readYamlVariableToMap(entry, commonConfig, envVars));
             FixedHostPortGenericContainer container = new FixedHostPortGenericContainer(jarOrDockerFile);
 
+            int containerPort = Integer.parseInt(readVariableFromConfig(appConfig.at("/port"), commonConfig));
             // Hack for linux as it does not have `host.docker.internal` so directly placing into host network
             if (System.getProperty("os.name").toLowerCase().contains("linux")) {
                 container.withExtraHost(
@@ -219,15 +222,14 @@ public enum SandboxApp {
                     new InetSocketAddress(0).getAddress().getHostAddress()
                 );
                 container.withNetworkMode("host");
+            } else {
+                container.withFixedExposedPort(containerPort, containerPort);
             }
 
             container.withEnv(envVars).waitingFor(Wait.defaultWaitStrategy());
             container.start();
             ctx.getDockerContainer().put(this, container);
-            ctx.getDockerPorts().put(
-                    this,
-                    Integer.parseInt(readVariableFromConfig(appConfig.at("/port"), commonConfig))
-            );
+            ctx.getDockerPorts().put(this, containerPort);
         } catch (IOException | RuntimeException ex) {
             log.error("{} from {} Dockerfile has terminated exceptionally", name(), jarOrDockerFile, ex);
         }
@@ -284,7 +286,7 @@ public enum SandboxApp {
                             "--spring.config.location=" + buildSpringConfigLocation(ctx),
                             "--primary.profile=" + getPrimaryConfigFile(),
                             "--testcontainers.postgres.port=" + ctx.getDbPort().get(),
-                            "--logging.level.root=WARN"
+                            "--logging.level.root=" + getSandboxLogLevel()
                     }
             );
         } catch (IllegalAccessException | InvocationTargetException ex) {
@@ -397,6 +399,14 @@ public enum SandboxApp {
         });
     }
 
+    private static String getSandboxLogLevel() {
+        String level = System.getenv(SANDBOX_LOG_LEVEL);
+        if (null == level) {
+            return "WARN";
+        }
+
+        return level;
+    }
     @Data
     private static class ClassloaderWithJar {
 

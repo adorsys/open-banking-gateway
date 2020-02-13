@@ -21,7 +21,7 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 @Data
 public class Xs2aStandardHeaders {
 
-    @NotBlank(message = "{no.psu.id}")
+    @NotBlank(message = "{no.ctx.psuId}")
     @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("psuId"))
     private String psuId;
 

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.net.URI;
 
 @Slf4j
-@Service("handleAndClearValidationErrors")
+@Service("handleValidationErrors")
 @RequiredArgsConstructor
 public class ValidationErrorHandler implements JavaDelegate {
 
@@ -37,8 +37,5 @@ public class ValidationErrorHandler implements JavaDelegate {
                         )
                         .build()
         );
-
-        ctx.getViolations().clear();
-        ContextUtil.updateContext(execution, ctx);
     }
 }
