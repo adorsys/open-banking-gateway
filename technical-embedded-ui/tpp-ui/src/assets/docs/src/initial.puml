@@ -39,6 +39,8 @@ TppBankingApiAisController [#blue]-> FacadeService : Facade.execute()
 FacadeService [#blue]-> ServiceContextProvider : Create facade context from request
 FacadeService <-[#blue] ServiceContextProvider : ServiceContext
 FacadeService [#blue]-> ProtocolSelector : Select bank protocol from request type and bank id
+ProtocolSelector [#blue]-> Database : Read bank protocol using bank uuid and action id
+Database [#blue]-> ProtocolSelector : BankProtocol
 ProtocolSelector [#blue]-> FacadeService : BankProtocol
 FacadeService [#blue]-> Spring : Find bean - Bean(BankProtocol.protocolBeanName) extends Action
 FacadeService <-[#blue] Spring : It is Xs2aListAccountsEntrypoint service bean
