@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.facade;
+package de.adorsys.opba.protocol.facade.dto;
 
 import lombok.Value;
 

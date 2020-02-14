@@ -1,7 +1,6 @@
-package de.adorsys.opba.protocol.facade;
+package de.adorsys.opba.protocol.facade.services;
 
 import de.adorsys.opba.protocol.api.services.EncryptionService;
-import de.adorsys.opba.protocol.facade.services.EncryptionServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
