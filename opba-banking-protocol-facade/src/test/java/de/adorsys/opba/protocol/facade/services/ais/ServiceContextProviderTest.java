@@ -12,7 +12,7 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.SecretKeyService;
-import de.adorsys.opba.protocol.facade.FacadeEncryptionService;
+import de.adorsys.opba.protocol.facade.services.FacadeEncryptionService;
 import de.adorsys.opba.protocol.facade.services.ServiceContextProvider;
 import de.adorsys.opba.protocol.xs2a.EnableXs2aProtocol;
 import lombok.SneakyThrows;

@@ -12,3 +12,7 @@ facade:
     saltLength: 8
     iterationCount: 1024
     keySetPath: example-keyset.json
+
+pkcs12:
+  keyStore: sample-qwac.keystore
+  password: password

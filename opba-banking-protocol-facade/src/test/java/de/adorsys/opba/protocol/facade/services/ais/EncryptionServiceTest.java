@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.facade.services.ais;
 
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.SecretKeyService;
-import de.adorsys.opba.protocol.facade.FacadeEncryptionService;
+import de.adorsys.opba.protocol.facade.services.FacadeEncryptionService;
 import de.adorsys.opba.protocol.facade.config.EncryptionConfig;
 import de.adorsys.opba.protocol.facade.config.EncryptionProperties;
 import de.adorsys.opba.protocol.facade.services.EncryptionServiceImpl;
