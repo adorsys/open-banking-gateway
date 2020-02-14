@@ -1,22 +1,18 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-redirect-card',
   templateUrl: './redirect-card.component.html',
   styleUrls: ['./redirect-card.component.scss']
 })
-export class RedirectCardComponent implements OnInit {
+export class RedirectCardComponent {
   @Output() cancelRedirect: EventEmitter<boolean> = new EventEmitter();
-  @Output() proceedRedirect: EventEmitter<string> = new EventEmitter();
-
-  bankId = 'a17cf87f-e1a2-433c-ac85-9be2ab6bdf65';
+  @Output() proceedRedirect: EventEmitter<boolean> = new EventEmitter();
 
   constructor() {}
 
-  ngOnInit() {}
-
   proceed(): void {
-    this.proceedRedirect.emit(this.bankId);
+    this.proceedRedirect.emit(true);
   }
 
   cancel(): void {

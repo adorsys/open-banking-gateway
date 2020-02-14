@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { BankSearchService } from '../../services/bank-search.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BankDescriptor } from '../../../api';
 
 @Component({
@@ -12,7 +12,7 @@ export class BankSearchComponent {
   searchedBanks: BankDescriptor[] = [];
   selectedBank: string;
 
-  constructor(private bankSearchService: BankSearchService, private router: Router) {}
+  constructor(private bankSearchService: BankSearchService, private route: ActivatedRoute, private router: Router) {}
 
   onSearch(keyword: string) {
     if (keyword && keyword.trim()) {
@@ -26,7 +26,7 @@ export class BankSearchComponent {
 
   onBankSelect(bankId: string) {
     this.selectedBank = bankId;
-    this.router.navigate(['/dashboard', bankId]);
+    this.router.navigate(['redirect', bankId], { relativeTo: this.route });
   }
 
   private bankUnselect() {

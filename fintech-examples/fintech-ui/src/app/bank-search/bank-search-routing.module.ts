@@ -9,7 +9,7 @@ const routes: Routes = [
     component: BankSearchComponent
   },
   {
-    path: 'redirect',
+    path: 'redirect/:id',
     component: RedirectPageComponent
   }
 ];
