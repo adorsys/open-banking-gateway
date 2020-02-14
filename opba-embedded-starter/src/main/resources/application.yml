@@ -2,7 +2,7 @@ server:
   port: 8085
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/open_banking?currentSchema=banking_protocol
+    url: jdbc:postgresql://localhost:15432/open_banking?currentSchema=banking_protocol
     username: postgres
     password: docker
     type: com.zaxxer.hikari.HikariDataSource
@@ -42,6 +42,14 @@ protocol:
 pkcs12:
   keyStore: sample-qwac.keystore
   password: password
+
+facade:
+  encryption:
+    providerName: BC
+    algorithm: PBEWithSHA256And256BitAES-CBC-BC
+    saltLength: 8
+    iterationCount: 1024
+    keySetPath: example-keyset.json
 
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/

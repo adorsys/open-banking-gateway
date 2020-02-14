@@ -32,6 +32,7 @@
             <column name="protocol_bean_name" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
+            <column name="parent_id" type="BIGINT"/>
         </createTable>
         <createSequence sequenceName="bank_protocol_id_sequence" incrementBy="50"/>
         <addUniqueConstraint tableName="${table-prefix}bank_protocol" columnNames="bank_uuid,action"/>
@@ -76,6 +77,10 @@
             <column name="version" type="INT">
                 <constraints nullable="false"/>
             </column>
+            <column name="secret_key" type="BLOB"/>
+            <column name="algo" type="VARCHAR(255)"/>
+            <column name="salt" type="BLOB"/>
+            <column name="iter_count" type="INTEGER"/>
         </createTable>
         <addForeignKeyConstraint constraintName="fk_service_session_bank_protocol"
                                  baseTableName="${table-prefix}service_session"
