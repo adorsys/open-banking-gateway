@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Provides tools, adapter and connector for transparent access to open banking apis">
+  <meta name="description" content="Provides tools, adapter and connector for transparent access to open banking APIs">
   
   <link rel="shortcut icon" href="img/favicon.ico">
   <title>Home - Open Banking Gateway Documentation</title>
@@ -230,24 +230,16 @@
                 <p><a href="https://travis-ci.com/adorsys/open-banking-gateway"><img alt="Build Status" src="https://travis-ci.com/adorsys/open-banking-gateway.svg?branch=develop" /></a>
 <a href="https://codecov.io/gh/adorsys/open-banking-gateway"><img alt="codecov" src="https://codecov.io/gh/adorsys/open-banking-gateway/branch/develop/graph/badge.svg" /></a></p>
 <h1 id="open-banking-gateway">Open Banking Gateway</h1>
-<p>Provides tools, adapters and connectors for transparent access to open banking apis. The initial effort focuses on the connectivity to banks that implement the European PSD2 directive either through one of the common market initiatives like :</p>
-<ul>
-<li><a href="https://www.berlin-group.org/psd2-access-to-bank-accounts">The Berlin Group NextGenPSD2</a></li>
-<li><a href="https://www.openbanking.org.uk/">The Open Banking UK</a></li>
-<li><a href="https://polishapi.org/en/">The Polish PSD2 API</a></li>
-</ul>
-<p>Or even through proprietary bank api like </p>
-<ul>
-<li><a href="https://developer.ing.com/openbanking/">the ING’s PSD2 API</a></li>
-</ul>
+<p>Provides tools, adapters and connectors for transparent access to open banking apis. The initial effort focuses on the connectivity to banks that implement the European PSD2 directive either through one of the common market initiatives like : <a href="https://www.berlin-group.org/psd2-access-to-bank-accounts">The Berlin Group NextGenPSD2</a>, <a href="https://www.openbanking.org.uk/">The Open Banking UK</a>, <a href="https://polishapi.org/en/">The Polish PSD2 API</a> or even through proprietary bank api like  <a href="https://developer.ing.com/openbanking/">the ING’s PSD2 API</a>.</p>
 <h2 id="what-this-project-is-about">What this Project is about</h2>
 <h3 id="tackle-the-key-challenge-for-third-party-providers-of-payment-services">Tackle the Key Challenge for Third Party Providers of Payment Services</h3>
-<p>PSD2 as the first regulator driven Open Banking initiative offers many opportunities for both Banks, known as traditional provider of payment services, and other Third Party Providers of payment services (TPPs). TPPs can use account information and payment services provided by banks to offer new innovative services to end users. The more banks a TPPs can interact with each other, the more end consumer can be provided with reacher banking solutions, which in turn simplifies and leverage commercial value chains.</p>
-<p>Being able to interact with different bank APIs can be a time and cost consuming challenge. Even though PSD2 sets a standard for bank interfaces, there is a lot of space for implementation options. A bank, therefore, can have it's own PSD2 compliant solution or implement one of the known market standards, like Open Banking UK, Berlin Group's NextGenPSD2 or STET. </p>
+<p>The European PSD2 as the first regulator driven Open Banking initiative offers many opportunities for both banks, known as traditional provider of payment services (called ASPSPs in this context) and other Third Party Providers of payment services (TPPs). TPPs can use account information and payment services provided by banks to offer new innovative services to bank account holders. The more banks and TPPs can interact with each other, the more payment account holders can be provided with reacher banking solutions, which in turn simplifies and leverage commercial value chains.</p>
+<p>Being able to interact with different banking APIs can be a time and cost consuming challenge. Even though the PSD2 requires European banks to provide APIs and despite the effort of market initiatives to provide common standard interfaces, there is still a multitude of divergent authorization schemes involved and a lot of space for implementation options. A bank can even decide not to join one of the known market initiatives and define it's own PSD2 compliant API. </p>
 <p>The purpose of this open banking gateway is to provide the community with a common and simple interface for accessing major Open Banking APIs.</p>
-<h3 id="introduce-the-fintech-as-a-major-role">Introduce the FinTech as a Major Role</h3>
-<p>Being a regulator driven initiative, PSD2 mandate the regulation of TPPs. With this additional detail, the market is experiencing a distinction between regulated TPPs and non regulated FinTechs. This framework therefore designed taking in consideration the existence of the category of payment service providers called FinTech that used APIs exposed by a regulated TPP to access payment services exposed by banks.</p>
+<h3 id="introducing-the-fintech-as-a-major-role">Introducing the FinTech as a Major Role</h3>
+<p>Being a regulator driven initiative, PSD2 mandates the regulation of TPPs. With this additional detail, the market is experiencing a distinction between regulated TPPs and non regulated FinTechs. This framework is therefore designed taking in consideration the existence of the category of payment service providers called FinTech that used APIs exposed by a regulated TPP to access payment services exposed by banks.</p>
 <h3 id="address-security-issues-associated-with-psu-access-to-multiple-interfaces">Address Security Issues associated with PSU Access to Multiple Interfaces</h3>
+<p>In the Open Banking Context, a payment service user (PSU or banking account holder) might have to deal with up to 3 different user interface to initiate, authorize and get the requested banking service executed. There being redirected back and forth from one UserAgent (resp. device) to another. This intensive use of redirection in Open Banking bearing a lot of risk of impersonating the PSU, we set a goal of this Framework to dissect the complexity involved with those redirection processes and open forums for discussion of possible solutions and sample implementations. Following papers are the first attempt to capture the problem (<a href="architecture/concepts/psu-device-redirection/">UserAgent Redirection</a>, <a href="architecture/concepts/psu-security-concept/">PSU Access Security Design</a>).  </p>
 <h2 id="big-picture">Big Picture</h2>
 <p>The following picture displays the overall architecture of this banking gateway:
 <img alt="High level architecture" src="img/open-banking-gateway-arch-14-01-2020.png" /></p>
@@ -264,6 +256,7 @@
 <li><a href="architecture/dictionary/">Dictionary</a></li>
 <li><a href="architecture/use_cases/">Use Cases</a></li>
 <li><a href="architecture/drafts/initial_requirements/">Banking Protokol Design</a></li>
+<li><a href="architecture/concepts/psu-device-redirection/">User Agent Redirection</a></li>
 <li><a href="architecture/concepts/psu-security-concept/">PSU Access Security Design</a></li>
 <li><a href="https://adorsys.github.io/open-banking-gateway/javadoc/latest/index.html">JavaDoc</a></li>
 </ul>
@@ -332,5 +325,5 @@
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2020-02-14 10:16:22
+Build Date UTC : 2020-02-14 16:01:55
 -->
