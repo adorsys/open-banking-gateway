@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { BankSearchComponent } from './components/bank-search/bank-search.component';
-import { AuthGuard } from '../guards/auth.guard';
-import { RedirectCardComponent } from '../common/redirect-card/redirect-card.component';
+import { RedirectPageComponent } from './components/redirect-page/redirect-page.component';
 
 const routes: Routes = [
   {
@@ -11,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: 'redirect',
-    component: RedirectCardComponent
+    component: RedirectPageComponent
   }
 ];
 
