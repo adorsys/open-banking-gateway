@@ -4,3 +4,11 @@ spring:
     username: postgres
     password: docker
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+
+facade:
+  encryption:
+    providerName: BC
+    algorithm: PBEWithSHA256And256BitAES-CBC-BC
+    saltLength: 8
+    iterationCount: 1024
+    keySetPath: example-keyset.json
