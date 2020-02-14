@@ -37,31 +37,36 @@ endbox
 
 boundary ASPSP
 == ASPSP reports consent authorization OK ==
-ASPSP [#magenta]-> User : Done, optionally redirect
-ASPSP [#magenta]-> TppBackend : GET /from/aspsp/ok webhook
-TppBackend [#magenta]-> ConsentServiceController : fromAspspOkUsingGET
-ConsentServiceController [#magenta]-> FacadeService : Facade.execute()
-FacadeService [#magenta]-> ServiceContextProvider : Create facade context from request
-FacadeService <-[#magenta] ServiceContextProvider : ServiceContext
-FacadeService [#magenta]-> ProtocolSelector : Select bank protocol by using authorization session id
-ProtocolSelector [#magenta]-> Database : Read authorization session
-Database [#magenta]-> ProtocolSelector: Bank protocol id from authorization session
-ProtocolSelector [#magenta]-> Database : Read bank protocol using its id
-Database [#magenta]-> ProtocolSelector : BankProtocol
-ProtocolSelector [#magenta]-> FacadeService : BankProtocol
-FacadeService [#magenta]-> Spring : Find bean - Bean(BankProtocol.protocolBeanName) extends Action
-FacadeService <-[#magenta] Spring : It is Xs2aFromAspspRedirect service bean
-Xs2aFromAspspRedirect [#magenta]-> Xs2aServices : Bank approved consent
-Xs2aServices [#magenta]-> Database : Persist consent and its context
-Xs2aServices [#magenta]-> Xs2aFromAspspRedirect : Consent acquired
-Xs2aFromAspspRedirect [#magenta]-> OutcomeMapper : Translate 'Consent acquired'
-OutcomeMapper [#magenta]-> Xs2aFromAspspRedirect : ConsentAcquiredResult
-Xs2aFromAspspRedirect [#magenta]-> FacadeService : ConsentAcquiredResult
-FacadeService [#magenta]-> ProtocolResultHandler : Translate ConsentAcquiredResult -> FacadeRedirectResult
-TppBankingApiAisController [#magenta]-> FacadeResponseMapper : translate FacadeRedirectResult
-FacadeResponseMapper [#magenta]-> TppBankingApiAisController : This is 303 code with redirection to FinTech
-TppBankingApiAisController [#magenta]-> TppBackend : 303 Redirect to FinTech
-TppBackend [#magenta]-> User : 303 FinTech 'Thanks for consent' page
+ASPSP [#magenta]-> TppBackend ++ : <b>GET /from/aspsp/ok webhook</b>
+deactivate ASPSP
+TppBackend [#magenta]-> ConsentServiceController ++ : fromAspspOkUsingGET
+ConsentServiceController [#magenta]-> FacadeService ++ : Facade.execute()
+FacadeService [#magenta]-> ServiceContextProvider ++ : Create facade context from request
+FacadeService <-[#magenta] ServiceContextProvider -- : ServiceContext
+FacadeService [#magenta]-> ProtocolSelector ++ : Select bank protocol by using authorization session id
+ProtocolSelector [#magenta]-> Database ++ : Read authorization session
+Database [#magenta]-> ProtocolSelector -- : AuthorizationSession
+ProtocolSelector [#magenta]-> Database ++ : Read bank protocol using AuthorizationSession.bankProtocolId
+Database [#magenta]-> ProtocolSelector -- : BankProtocol
+ProtocolSelector [#magenta]-> FacadeService -- : BankProtocol
+FacadeService [#magenta]-> Spring ++ : Find bean - Bean(BankProtocol.protocolBeanName) extends Action
+FacadeService <-[#magenta] Spring -- : It is Xs2aFromAspspRedirect service bean
+FacadeService [#magenta]-> Xs2aFromAspspRedirect ++ : Xs2aListAccountsEntrypoint.execute(ServiceContext)
+Xs2aFromAspspRedirect [#magenta]-> Xs2aServices ++ : Bank approved consent
+Xs2aServices [#magenta]-> Database ++ : Persist consent and its context
+Database [#magenta]-> Xs2aServices -- : Done
+Xs2aServices [#magenta]-> Xs2aFromAspspRedirect -- : Consent acquired
+Xs2aFromAspspRedirect [#magenta]-> OutcomeMapper ++ : Translate 'Consent acquired'
+OutcomeMapper [#magenta]-> Xs2aFromAspspRedirect -- : ConsentAcquiredResult
+Xs2aFromAspspRedirect [#magenta]-> FacadeService -- : ConsentAcquiredResult
+FacadeService [#magenta]-> ProtocolResultHandler ++ : Translate ConsentAcquiredResult -> FacadeRedirectResult
+ProtocolResultHandler [#magenta]-> FacadeService -- : FacadeRedirectResult
+FacadeService [#magenta]-> ConsentServiceController --
+ConsentServiceController [#magenta]-> FacadeResponseMapper ++ : translate FacadeRedirectResult
+FacadeResponseMapper [#magenta]-> ConsentServiceController -- : This is 303 code with redirection to FinTech
+ConsentServiceController [#magenta]-> TppBackend -- : 303 Redirect to FinTech
+deactivate ConsentServiceController
+TppBackend [#magenta]-> User -- : 303 FinTech 'Thanks for consent' page
 
 == Fintech receives notification that consent is received ==
 User [#orange]-> FinTech
