@@ -4,11 +4,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ListItemComponent } from './list-item/list-item.component';
 import { HttpClientModule } from '@angular/common/http';
 import { InfoModule } from '../errorsHandler/info/info.module';
-import { RedirectPageComponent } from './redirect-page/redirect-page.component';
+import { RedirectCardComponent } from './redirect-card/redirect-card.component';
 
 @NgModule({
-  declarations: [ListItemComponent, RedirectPageComponent],
+  declarations: [ListItemComponent, RedirectCardComponent],
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule, InfoModule],
-  exports: [CommonModule, ReactiveFormsModule, HttpClientModule, InfoModule, ListItemComponent]
+  exports: [CommonModule, ReactiveFormsModule, HttpClientModule, InfoModule, ListItemComponent, RedirectCardComponent]
 })
 export class ShareModule {}

@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-redirect-page',
-  templateUrl: './redirect-page.component.html',
-  styleUrls: ['./redirect-page.component.scss']
+  templateUrl: './redirect-card.component.html',
+  styleUrls: ['./redirect-card.component.scss']
 })
-export class RedirectPageComponent implements OnInit {
+export class RedirectCardComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit() {}
