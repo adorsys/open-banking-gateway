@@ -4,12 +4,10 @@ import com.google.crypto.tink.subtle.AesGcmJce;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
 
 import java.util.Base64;
 
-@Service
 @RequestScope
 @RequiredArgsConstructor
 public class EncryptionServiceImpl implements EncryptionService {

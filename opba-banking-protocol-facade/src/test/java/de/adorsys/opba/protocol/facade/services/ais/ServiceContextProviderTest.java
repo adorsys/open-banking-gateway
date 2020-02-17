@@ -11,8 +11,8 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
-import de.adorsys.opba.protocol.api.services.SecretKeyService;
-import de.adorsys.opba.protocol.facade.services.FacadeEncryptionService;
+import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
+import de.adorsys.opba.protocol.facade.services.FacadeEncryptionServiceFactory;
 import de.adorsys.opba.protocol.facade.services.ServiceContextProvider;
 import de.adorsys.opba.protocol.xs2a.EnableXs2aProtocol;
 import lombok.SneakyThrows;
@@ -43,10 +43,10 @@ public class ServiceContextProviderTest {
     ServiceSessionRepository serviceSessionRepository;
 
     @Autowired
-    FacadeEncryptionService facadeEncryptionService;
+    FacadeEncryptionServiceFactory facadeEncryptionServiceFactory;
 
     @Autowired
-    SecretKeyService secretKeyService;
+    SecretKeyOperations secretKeyOperations;
 
     @Test
     @SneakyThrows
@@ -75,10 +75,10 @@ public class ServiceContextProviderTest {
         assertThat(all.iterator().hasNext()).isTrue();
         ServiceSession ss = all.iterator().next();
 
-        byte[] key = secretKeyService.generateKey(password, ss.getAlgo(), ss.getSalt(), ss.getIterCount());
-        assertThat(secretKeyService.decrypt(ss.getSecretKey())).isEqualTo(key);
+        byte[] key = secretKeyOperations.generateKey(password, ss.getAlgo(), ss.getSalt(), ss.getIterCount());
+        assertThat(secretKeyOperations.decrypt(ss.getSecretKey())).isEqualTo(key);
 
-        EncryptionService encryptionService = facadeEncryptionService.provideEncryptionService(key);
+        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(key);
         byte[] decryptedData = encryptionService.decrypt(ss.getContext().getBytes());
         assertThat(decryptedData).isEqualTo(MAPPER.writeValueAsBytes(request.getFacadeServiceable()));
 

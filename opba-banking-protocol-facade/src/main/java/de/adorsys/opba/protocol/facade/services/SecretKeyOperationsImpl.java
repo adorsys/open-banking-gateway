@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.facade.services;
 
 import com.google.crypto.tink.Aead;
-import de.adorsys.opba.protocol.api.services.SecretKeyService;
+import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
 import de.adorsys.opba.protocol.facade.config.EncryptionProperties;
 import de.adorsys.opba.protocol.facade.config.FacadeSecurityProvider;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import static de.adorsys.opba.protocol.facade.utils.EncryptionUtils.getNewSalt;
 
 @Service
 @RequiredArgsConstructor
-public class SecretKeyServiceImpl implements SecretKeyService {
+public class SecretKeyOperationsImpl implements SecretKeyOperations {
 
     private final Aead aeadSystem;
     private final FacadeSecurityProvider provider;

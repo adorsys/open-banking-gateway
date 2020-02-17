@@ -61,7 +61,6 @@ public class ServiceSession {
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Column(nullable = false)
     private byte[] secretKey;
 
     private String algo;
