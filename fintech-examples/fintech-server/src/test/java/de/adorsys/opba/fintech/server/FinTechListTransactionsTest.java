@@ -33,7 +33,7 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
     public void testListTransactionsForOk() {
         BankProfileTestResult result = getBankProfileTestResult();
         List<String> accountIDs = listAccountsForOk(result);
-        when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
+        when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile("TPP_LIST_TRANSACTIONS.json"), TransactionsResponse.class)));
         List<String> amounts = listAmounts(result.getXsrfToken(), result.getBankUUID(), accountIDs.get(0));
         assertTrue(amounts.containsAll(Arrays.asList(new String[]{"1000"})));
@@ -51,7 +51,7 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
 
         BankProfileTestResult result = getBankProfileTestResult();
         List<String> accountIDs = listAccountsForOk(result);
-        when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
+        when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(accepted);
         MvcResult mvcResult = plainListAmounts(result.getXsrfToken(), result.getBankUUID(), accountIDs.get(0));
         assertEquals(HttpStatus.FOUND.value(), mvcResult.getResponse().getStatus());

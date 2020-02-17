@@ -25,6 +25,7 @@ public class AccountService extends HandleAcceptedService {
             log.warn("Mocking call to list accounts");
             return new ResponseEntity<>(new TppListAccountsMock().getAccountList(), HttpStatus.OK);
         }
+
         ResponseEntity<AccountList> accounts = tppAisClient.getAccounts(
                 contextInformation.getFintechID(),
                 sessionEntity.getLoginUserName(),
@@ -32,6 +33,7 @@ public class AccountService extends HandleAcceptedService {
                 fintechRedirectURLNOK,
                 contextInformation.getXRequestID(),
                 bankId,
+                null,
                 null);
         switch (accounts.getStatusCode()) {
             case OK:

@@ -58,7 +58,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
 
     @SneakyThrows
     List<String> listAccountsForOk(BankProfileTestResult result) {
-        when(tppAisClientFeignMock.getAccounts(any(), any(), any(), any(), any(), any(), any()))
+        when(tppAisClientFeignMock.getAccounts(any(), any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile("TPP_LIST_ACCOUNTS.json"), AccountList.class)));
 
         MvcResult mvcResult = plainListAccounts(result.getXsrfToken(), result.getBankUUID());
@@ -83,7 +83,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
                 .location(new URI("affe"))
                 .build();
         BankProfileTestResult result = getBankProfileTestResult();
-        when(tppAisClientFeignMock.getAccounts(any(), any(), any(), any(), any(), any(), any()))
+        when(tppAisClientFeignMock.getAccounts(any(), any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(accepted);
 
         MvcResult mvcResult = plainListAccounts(result.getXsrfToken(), result.getBankUUID());
