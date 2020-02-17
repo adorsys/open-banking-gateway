@@ -12,10 +12,9 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
-import de.adorsys.opba.protocol.api.services.SecretKeyService;
-import de.adorsys.opba.protocol.facade.dto.ContextWithKey;
-import de.adorsys.opba.protocol.facade.dto.KeyDTO;
+import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
 import de.adorsys.opba.protocol.facade.config.EncryptionProperties;
+import de.adorsys.opba.protocol.facade.dto.KeyDto;
 import de.adorsys.opba.protocol.facade.utils.ArrUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -26,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import static de.adorsys.opba.protocol.facade.utils.EncryptionUtils.getNewSalt;
 
@@ -41,29 +39,20 @@ public class ServiceContextProvider {
 
     private final AuthenticationSessionRepository authSessions;
     private final ServiceSessionRepository serviceSessions;
-    private final FacadeEncryptionService facadeEncryptionService;
+    private final FacadeEncryptionServiceFactory facadeEncryptionServiceFactory;
     private final EncryptionProperties properties;
-    private final SecretKeyService secretKeyService;
+    private final SecretKeyOperations secretKeyOperations;
 
     @Transactional
     @SneakyThrows
     public <T extends FacadeServiceableGetter> ServiceContext<T> provide(T request) {
-        FacadeServiceableRequest facadeServiceable = request.getFacadeServiceable();
-        if (null == facadeServiceable) {
+        if (null == request.getFacadeServiceable()) {
             throw new IllegalArgumentException("No serviceable body");
         }
-
-        UUID serviceSessionId = facadeServiceable.getServiceSessionId();
-        String sessionPassword = facadeServiceable.getSessionPassword();
-        KeyDTO keyDTO = getSessionSecretKey(serviceSessionId, sessionPassword);
-        EncryptionService encryptionService = facadeEncryptionService.provideEncryptionService(keyDTO.getKey());
-
         AuthSession authSession = extractAndValidateAuthSession(request);
-
-        Supplier<ContextWithKey> supplier = () -> getEncryptedContext(facadeServiceable, encryptionService, keyDTO);
-        ServiceSession session = extractOrCreateServiceSession(request, authSession, supplier);
-
+        ServiceSessionWithEncryption session = extractOrCreateServiceSession(request, authSession);
         return ServiceContext.<T>builder()
+                .encryptionService(session.getEncryption())
                 .serviceSessionId(session.getId())
                 .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
                 .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
@@ -79,33 +68,22 @@ public class ServiceContextProvider {
                 .build();
     }
 
-    @NotNull
-    @SneakyThrows
-    private ContextWithKey getEncryptedContext(FacadeServiceableRequest facadeServiceable,
-                                               EncryptionService encryptionService,
-                                               KeyDTO keyDTO) {
-        String encryptedContext = new String(encryptionService.encrypt(MAPPER.writeValueAsBytes(facadeServiceable)));
-        return new ContextWithKey(encryptedContext, keyDTO);
-    }
-
-    private <T extends FacadeServiceableGetter> ServiceSession extractOrCreateServiceSession(
+    private <T extends FacadeServiceableGetter> ServiceSessionWithEncryption extractOrCreateServiceSession(
             T request,
-            AuthSession authSession,
-            Supplier<ContextWithKey> encryptedContext
+            AuthSession authSession
     ) {
         if (null != authSession) {
-            return authSession.getParent();
+            KeyDto keyDto = getSessionSecretKey(request);
+            EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(keyDto.getKey());
+            return new ServiceSessionWithEncryption(authSession.getParent(), encryptionService);
         } else {
-            return findServiceSessionByIdOrCreate(request, encryptedContext);
+            return createServiceSession(request);
         }
     }
 
     @NotNull
     @SneakyThrows
-    private <T extends FacadeServiceableGetter> ServiceSession findServiceSessionByIdOrCreate(
-            T request,
-            Supplier<ContextWithKey> contextWithKey
-    ) {
+    private <T extends FacadeServiceableGetter> ServiceSessionWithEncryption createServiceSession(T request) {
         FacadeServiceableRequest facadeServiceable = request.getFacadeServiceable();
         UUID serviceSessionId = facadeServiceable.getServiceSessionId();
 
@@ -114,26 +92,26 @@ public class ServiceContextProvider {
             session.setId(serviceSessionId);
         }
 
-        session.setContext(contextWithKey.get().getEncryptedContext());
+        KeyDto keyDto = getSessionSecretKey(request);
+        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(keyDto.getKey());
+        String encryptedContext = new String(encryptionService.encrypt(MAPPER.writeValueAsBytes(facadeServiceable)));
+
+        session.setContext(encryptedContext);
         session.setFintechOkUri(facadeServiceable.getFintechRedirectUrlOk());
         session.setFintechNokUri(facadeServiceable.getFintechRedirectUrlNok());
-        session.setSecretKey(secretKeyService.encrypt(contextWithKey.get().getKeyDTO().getKey()));
+        session.setSecretKey(secretKeyOperations.encrypt(keyDto.getKey()));
         session.setAlgo(properties.getAlgorithm());
-        session.setSalt(contextWithKey.get().getKeyDTO().getSalt());
+        session.setSalt(keyDto.getSalt());
         session.setIterCount(properties.getIterationCount());
-        return serviceSessions.save(session);
+        return new ServiceSessionWithEncryption(serviceSessions.save(session), encryptionService);
     }
 
-    private KeyDTO getSessionSecretKey(UUID serviceSessionId, String sessionPassword) {
-
-        // new secret key
+    private <T extends FacadeServiceableGetter> KeyDto getSessionSecretKey(T request) {
+        FacadeServiceableRequest facadeServiceable = request.getFacadeServiceable();
+        UUID serviceSessionId = facadeServiceable.getServiceSessionId();
+        String sessionPassword = facadeServiceable.getSessionPassword();
         if (null == serviceSessionId) {
-            if (Strings.isNullOrEmpty(sessionPassword)) {
-                throw new RuntimeException("No password. Can't generate secret key");
-            }
-            byte[] salt = getNewSalt(properties.getSaltLength());
-            byte[] key = secretKeyService.generateKey(sessionPassword, salt);
-            return new KeyDTO(key, salt);
+            return newSecretKey(sessionPassword);
         }
 
         Optional<ServiceSession> existingSession = serviceSessions.findById(serviceSessionId);
@@ -141,17 +119,42 @@ public class ServiceContextProvider {
             throw new RuntimeException("Session not found");
         }
 
-        // existing saved key
-        byte[] secretKey = existingSession.get().getSecretKey();
-        if (!ArrUtils.isEmpty(secretKey)) {
-            byte[] decryptedKey = secretKeyService.decrypt(secretKey);
-            return new KeyDTO(decryptedKey, null);
+        if (!Strings.isNullOrEmpty(sessionPassword)) {
+            return recreateSecretKey(sessionPassword, existingSession.get());
         }
 
-        // recreate deleted key from password with parameters from db
-        ServiceSession session = existingSession.get();
-        byte[] key = secretKeyService.generateKey(sessionPassword, session.getAlgo(), session.getSalt(), session.getIterCount());
-        return new KeyDTO(key, null);
+        return savedKey(existingSession.get());
+    }
+
+    @NotNull
+    private KeyDto savedKey(ServiceSession session) {
+        byte[] secretKey = session.getSecretKey();
+        if (!ArrUtils.isEmpty(secretKey)) {
+            byte[] decryptedKey = secretKeyOperations.decrypt(secretKey);
+            return new KeyDto(decryptedKey, null);
+        }
+
+        throw new RuntimeException("Can't find secret key. Please provide password to recreate secret key");
+    }
+
+    @NotNull
+    private KeyDto recreateSecretKey(String sessionPassword, ServiceSession session) {
+        byte[] key = secretKeyOperations.generateKey(
+                sessionPassword,
+                session.getAlgo(),
+                session.getSalt(),
+                session.getIterCount());
+        return new KeyDto(key, null);
+    }
+
+    @NotNull
+    private KeyDto newSecretKey(String sessionPassword) {
+        if (Strings.isNullOrEmpty(sessionPassword)) {
+            throw new RuntimeException("No password. Can't generate secret key");
+        }
+        byte[] salt = getNewSalt(properties.getSaltLength());
+        byte[] key = secretKeyOperations.generateKey(sessionPassword, salt);
+        return new KeyDto(key, salt);
     }
 
     @SneakyThrows

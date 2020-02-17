@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.api.services;
 
-public interface SecretKeyService {
+public interface SecretKeyOperations {
 
     byte[] encrypt(byte[] key);
 

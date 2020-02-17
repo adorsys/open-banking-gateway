@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.api.dto.context;
 
+import de.adorsys.opba.protocol.api.services.EncryptionService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,6 +43,8 @@ public class ServiceContext<T> {
 
     @NonNull
     private final String fintechRedirectNokUri;
+
+    private final EncryptionService encryptionService;
 
     public String loggableBankId() {
         return String.format(

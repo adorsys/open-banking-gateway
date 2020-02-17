@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class FacadeEncryptionService {
+public class FacadeEncryptionServiceFactory {
 
     public EncryptionService provideEncryptionService(byte[] key) {
         return new EncryptionServiceImpl(key);
