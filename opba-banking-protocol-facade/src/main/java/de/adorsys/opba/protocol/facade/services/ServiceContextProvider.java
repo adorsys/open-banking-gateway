@@ -14,6 +14,7 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
 import de.adorsys.opba.protocol.facade.config.EncryptionProperties;
+import de.adorsys.opba.protocol.facade.dto.KeyAndSaltDto;
 import de.adorsys.opba.protocol.facade.dto.KeyDto;
 import de.adorsys.opba.protocol.facade.utils.ArrUtils;
 import lombok.RequiredArgsConstructor;
@@ -92,16 +93,16 @@ public class ServiceContextProvider {
             session.setId(serviceSessionId);
         }
 
-        KeyDto keyDto = getSessionSecretKey(request);
-        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(keyDto.getKey());
+        KeyAndSaltDto keyAndSaltDto = (KeyAndSaltDto) getSessionSecretKey(request);
+        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(keyAndSaltDto.getKey());
         String encryptedContext = new String(encryptionService.encrypt(MAPPER.writeValueAsBytes(facadeServiceable)));
 
         session.setContext(encryptedContext);
         session.setFintechOkUri(facadeServiceable.getFintechRedirectUrlOk());
         session.setFintechNokUri(facadeServiceable.getFintechRedirectUrlNok());
-        session.setSecretKey(secretKeyOperations.encrypt(keyDto.getKey()));
+        session.setSecretKey(secretKeyOperations.encrypt(keyAndSaltDto.getKey()));
         session.setAlgo(properties.getAlgorithm());
-        session.setSalt(keyDto.getSalt());
+        session.setSalt(keyAndSaltDto.getSalt());
         session.setIterCount(properties.getIterationCount());
         return new ServiceSessionWithEncryption(serviceSessions.save(session), encryptionService);
     }
@@ -131,7 +132,7 @@ public class ServiceContextProvider {
         byte[] secretKey = session.getSecretKey();
         if (!ArrUtils.isEmpty(secretKey)) {
             byte[] decryptedKey = secretKeyOperations.decrypt(secretKey);
-            return new KeyDto(decryptedKey, null);
+            return new KeyDto(decryptedKey);
         }
 
         throw new RuntimeException("Can't find secret key. Please provide password to recreate secret key");
@@ -144,17 +145,17 @@ public class ServiceContextProvider {
                 session.getAlgo(),
                 session.getSalt(),
                 session.getIterCount());
-        return new KeyDto(key, null);
+        return new KeyDto(key);
     }
 
     @NotNull
-    private KeyDto newSecretKey(String sessionPassword) {
+    private KeyAndSaltDto newSecretKey(String sessionPassword) {
         if (Strings.isNullOrEmpty(sessionPassword)) {
             throw new RuntimeException("No password. Can't generate secret key");
         }
         byte[] salt = getNewSalt(properties.getSaltLength());
         byte[] key = secretKeyOperations.generateKey(sessionPassword, salt);
-        return new KeyDto(key, salt);
+        return new KeyAndSaltDto(key, salt);
     }
 
     @SneakyThrows
