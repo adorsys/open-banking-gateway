@@ -1,11 +1,14 @@
 package de.adorsys.opba.db.domain.entity;
 
+import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
+import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -14,7 +17,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import java.util.Collection;
 
 // TODO - do we need sequence?
 @Entity
@@ -37,5 +42,14 @@ public class BankProtocol {
     @Enumerated(EnumType.STRING)
     private ProtocolAction action;
 
-    private String processName;
+    private String protocolBeanName;
+
+    @OneToMany(mappedBy = "protocol", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<BankSubProtocol> subProtocols;
+
+    @OneToMany(mappedBy = "protocol", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<ServiceSession> serviceSessions;
+
+    @OneToMany(mappedBy = "protocol", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<AuthSession> authSessions;
 }

@@ -1,24 +1,26 @@
 package de.adorsys.opba.protocol.facade.services.ais;
 
-import de.adorsys.opba.protocol.api.ListTransactions;
+import de.adorsys.opba.protocol.api.ais.ListTransactions;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
-import de.adorsys.opba.protocol.api.dto.result.Result;
-import de.adorsys.opba.tppbankingapi.ais.model.generated.TransactionsResponse;
-import lombok.RequiredArgsConstructor;
+import de.adorsys.opba.protocol.api.dto.result.body.TransactionListBody;
+import de.adorsys.opba.protocol.facade.services.FacadeService;
+import de.adorsys.opba.protocol.facade.services.ProtocolSelector;
+import de.adorsys.opba.protocol.facade.services.ProtocolResultHandler;
+import de.adorsys.opba.protocol.facade.services.ServiceContextProvider;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+
+import static de.adorsys.opba.db.domain.entity.ProtocolAction.LIST_TRANSACTIONS;
 
 @Service
-@RequiredArgsConstructor
-public class ListTransactionsService {
+public class ListTransactionsService extends FacadeService<ListTransactionsRequest, TransactionListBody, ListTransactions> {
 
-    // bean name - bean-impl.
-    private final Map<String, ? extends ListTransactions> accountListProviders;
-
-    public CompletableFuture<Result<TransactionsResponse>> list(ListTransactionsRequest request) {
-        // FIXME - xs2aListTransactions - This is a stub - waiting for 1st subtask (OBG-209):
-        return accountListProviders.get("xs2aListTransactions").list(request);
+    public ListTransactionsService(
+        Map<String, ? extends ListTransactions> actionProviders,
+        ProtocolSelector selector,
+        ServiceContextProvider provider,
+        ProtocolResultHandler handler) {
+        super(LIST_TRANSACTIONS, actionProviders, selector, provider, handler);
     }
 }

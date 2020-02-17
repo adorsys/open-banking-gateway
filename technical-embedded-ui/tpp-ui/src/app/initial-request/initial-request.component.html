@@ -1,0 +1,36 @@
+<div>
+  <form ngNoForm method="post">
+
+    <label for="fintechRedirectUriOk">Fintech-Redirect-URL-OK</label>
+    <input id="fintechRedirectUriOk" name="fintechRedirectUriOk" type="text" [formControl]="fintechRedirectUriOk">
+
+    <br/>
+    <label for="fintechRedirectUriNok">Fintech-Redirect-URL-NOK</label>
+    <input id="fintechRedirectUriNok" name="fintechRedirectUriNok" type="text" [formControl]="fintechRedirectUriNok">
+
+    <br/>
+    <label for="fintechUserId">Fintech-User-ID</label>
+    <input id="fintechUserId" name="fintechUserId" type="text" [formControl]="fintechUserId">
+
+    <br/>
+    <label for="authorization">Authorization</label>
+    <input id="authorization" name="authorization" type="text" [formControl]="authorization">
+
+    <br/>
+    <label for="requestId">Request id</label>
+    <input id="requestId" name="requestId" type="text" [formControl]="requestId">
+
+    <br>
+    <label for="bankId">Bank id</label>
+    <input id="bankId" name="bankId" type="text" [formControl]="bankId">
+
+    <br>
+    <label for="serviceSessionId">(Optional) Service session id</label>
+    <input id="serviceSessionId" name="serviceSessionId" type="text" [formControl]="serviceSessionId">
+
+    <br>
+    <div class="form-row">
+      <button type="button" [disabled]="!form.valid" (click)="submit()">Save</button>
+    </div>
+  </form>
+</div>

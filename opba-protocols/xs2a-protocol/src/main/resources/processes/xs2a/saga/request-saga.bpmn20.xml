@@ -4,13 +4,13 @@
     <documentation>Saga that manages full cycle of request - from getting user initial input to providing additional data that is required by ASPSP during runtime</documentation>
     <startEvent id="start" name="start" flowable:formFieldValidation="true"></startEvent>
     <endEvent id="end" name="end"></endEvent>
-    <callActivity id="execution" name="Perform real bank call sequence" flowable:async="true" calledElement="${protocolSelector.getProtocolForExecution(CONTEXT)}" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false">
+    <callActivity id="execution" name="Perform real bank call sequence" flowable:async="true" calledElement="${flowNameSelector.getNameForExecution(CONTEXT)}" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false">
       <extensionElements>
         <flowable:out source="CONTEXT" target="CONTEXT"></flowable:out>
         <flowable:out source="RESULT" target="RESULT"></flowable:out>
       </extensionElements>
     </callActivity>
-    <callActivity id="validation" name="Perform validation process sequence" flowable:async="true" calledElement="${protocolSelector.getProtocolForValidation(CONTEXT)}" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false">
+    <callActivity id="validation" name="Perform validation process sequence" flowable:async="true" calledElement="${flowNameSelector.getNameForValidation(CONTEXT)}" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false">
       <extensionElements>
         <flowable:out source="CONTEXT" target="CONTEXT"></flowable:out>
         <flowable:out source="RESULT" target="RESULT"></flowable:out>

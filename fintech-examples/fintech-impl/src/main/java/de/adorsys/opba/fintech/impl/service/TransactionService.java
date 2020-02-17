@@ -43,6 +43,7 @@ public class TransactionService extends HandleAcceptedService {
                 contextInformation.getXRequestID(),
                 bankId,
                 sessionEntity.getPsuConsentSession(),
+                null,
                 dateFrom,
                 dateTo,
                 entryReferenceFrom,

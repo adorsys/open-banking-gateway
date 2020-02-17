@@ -1,33 +1,29 @@
 package de.adorsys.opba.protocol.api.dto.request.transactions;
 
 import de.adorsys.opba.protocol.api.dto.parameters.ExtraRequestParam;
-import de.adorsys.opba.tppbankingapi.useragent.UserAgentContext;
+import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
+import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.UUID;
 
-// TODO Validation
-@Data
+// TODO Validation, Immutability
+@Setter
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListTransactionsRequest {
+public class ListTransactionsRequest implements FacadeServiceableGetter {
 
-    private UserAgentContext uaContext;
+    private FacadeServiceableRequest facadeServiceable;
+
     private String accountId;
-    private String fintechUserID;
-    private String authorization;
-    private String fintechRedirectURLOK;
-    private String fintechRedirectURLNOK;
-    private UUID xRequestID;
-    private String bankID;
-    private String psuConsentSession;
     private LocalDate dateFrom;
     private LocalDate dateTo;
     private String entryReferenceFrom;

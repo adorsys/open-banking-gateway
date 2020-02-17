@@ -1,5 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.config.flowable;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import org.flowable.spring.SpringProcessEngineConfiguration;
@@ -21,21 +24,36 @@ public class FlowableConfig {
     @Bean
     EngineConfigurationConfigurer<SpringProcessEngineConfiguration> customizeListenerAndJsonSerializer(
         @Value("${opba.flowable.serializeOnly:de.adorsys}") String serializableClassesPrefix,
-        ObjectMapper mapper,
         @Value("${opba.flowable.maxVarLen:2048}") int maxLength,
+        Xs2aObjectMapper mapper,
         FlowableJobEventListener eventListener
     ) {
         return processConfiguration -> {
             processConfiguration.setCustomPreVariableTypes(
                 new ArrayList<>(
                     ImmutableList.of(
-                        new JsonCustomSerializer(mapper, serializableClassesPrefix, maxLength),
-                        new LargeJsonCustomSerializer(mapper, serializableClassesPrefix, maxLength)
+                        new JsonCustomSerializer(mapper.getMapper(), serializableClassesPrefix, maxLength),
+                        new LargeJsonCustomSerializer(mapper.getMapper(), serializableClassesPrefix, maxLength)
                     )
                 )
             );
             processConfiguration.setEnableEventDispatcher(true);
             processConfiguration.setEventListeners(ImmutableList.of(eventListener));
         };
+    }
+
+    @Bean
+    Xs2aObjectMapper mapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.findAndRegisterModules();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        // Ignoring getters and setters as we are using 'rich' domain model:
+        mapper.setVisibility(mapper.getSerializationConfig().getDefaultVisibilityChecker()
+                .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
+                .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withCreatorVisibility(JsonAutoDetect.Visibility.ANY));
+        return new Xs2aObjectMapper(mapper);
     }
 }

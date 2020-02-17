@@ -28,4 +28,8 @@ public class Xs2aConsentInfo {
     public boolean isConsentFinalized(Xs2aContext ctx) {
         return "finalised".equalsIgnoreCase(ctx.getScaStatus());
     }
+
+    public boolean isOkRedirectConsent(Xs2aContext ctx) {
+        return ctx.isRedirectConsentOk();
+    }
 }

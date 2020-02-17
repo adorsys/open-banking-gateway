@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.eventbus;
 
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ProcessResult;
+import de.adorsys.opba.protocol.xs2a.domain.dto.messages.InternalProcessResult;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +18,11 @@ public class ProcessResultEventHandler {
 
     private final Object lock = new Object();
 
-    private final Map<String, Consumer<ProcessResult>> subscribers = new HashMap<>();
-    private final Map<String, ProcessResult> deadLetterQueue = new HashMap<>();
+    private final Map<String, Consumer<InternalProcessResult>> subscribers = new HashMap<>();
+    private final Map<String, InternalProcessResult> deadLetterQueue = new HashMap<>();
 
-    public void add(String processId, Consumer<ProcessResult> subscriber) {
-        ProcessResult delayedMessage;
+    public void add(String processId, Consumer<InternalProcessResult> subscriber) {
+        InternalProcessResult delayedMessage;
 
         synchronized (lock) {
             delayedMessage = deadLetterQueue.remove(processId);
@@ -36,8 +36,8 @@ public class ProcessResultEventHandler {
     }
 
     @EventListener
-    public void handleEvent(ProcessResult result) {
-        Consumer<ProcessResult> consumer;
+    public void handleEvent(InternalProcessResult result) {
+        Consumer<InternalProcessResult> consumer;
 
         synchronized (lock) {
             consumer = subscribers.remove(result.getProcessId());

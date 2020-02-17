@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.protocol.errorhandlers;
 
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ValidationIssueResult;
+import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ValidationIssue;
 import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +25,9 @@ public class ValidationErrorHandler implements JavaDelegate {
     public void execute(DelegateExecution execution) {
         BaseContext ctx = ContextUtil.getContext(execution, BaseContext.class);
         eventPublisher.publishEvent(
-                ValidationIssueResult.builder()
+                ValidationIssue.builder()
                         .processId(ctx.getSagaId())
+                        .executionId(execution.getId())
                         .provideMoreParamsDialog(
                                 ContextUtil.evaluateSpelForCtx(
                                         configuration.getRedirect().getParameters().getProvideMore(),

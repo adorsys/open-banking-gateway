@@ -23,7 +23,7 @@
     <serviceTask id="embeddedScaChallenge" name="Inform user about SCA challenge. Suspends to wait for reply" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aPerformScaChallenge}" flowable:triggerable="true"></serviceTask>
     <exclusiveGateway id="isMultipleScaAvailable" name="Multiple SCA available?" default="oneScaAvailable"></exclusiveGateway>
     <exclusiveGateway id="isScaFinalized" name="SCA finalized?" default="moreScaChallenges"></exclusiveGateway>
-    <serviceTask id="persistConsent" name="Persist consent" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aPersistConsentId}"></serviceTask>
+    <serviceTask id="persistConsent" name="Persist consent for session" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aPersistConsentId}"></serviceTask>
     <sequenceFlow id="sid-101CF541-E32B-48F4-A96E-D38A65FEAEC1" sourceRef="persistConsent" targetRef="end"></sequenceFlow>
     <sequenceFlow id="oneScaAvailable" name="One SCA" sourceRef="isMultipleScaAvailable" targetRef="embeddedScaChallenge"></sequenceFlow>
     <sequenceFlow id="moreScaChallenges" name="More challenges" sourceRef="isScaFinalized" targetRef="embeddedScaChallenge"></sequenceFlow>
@@ -41,17 +41,22 @@
       <documentation>ASPSP selected embedded SCA</documentation>
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isEmbedded(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-8643930F-623B-4411-AF42-03F4D1BD01C8" sourceRef="notifyUserWithRedirect" targetRef="persistConsent"></sequenceFlow>
     <sequenceFlow id="sid-C9002EF3-5531-4787-8754-96515CEFCE8C" sourceRef="askUserForPassword" targetRef="authenticateUser"></sequenceFlow>
-    <sequenceFlow id="multipleScaAvaliable" name="Multiple SCA" sourceRef="isMultipleScaAvailable" targetRef="selectScaMethod">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isMultipleScaAvailable(CONTEXT)}]]></conditionExpression>
-    </sequenceFlow>
     <serviceTask id="sendChallengeResult" name="Sends SCA challenge result" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aReportScaChallenge}"></serviceTask>
     <sequenceFlow id="sid-BC0026EE-A538-4399-8BA7-080F7C2383C9" sourceRef="sendChallengeResult" targetRef="isScaFinalized"></sequenceFlow>
     <sequenceFlow id="sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6" sourceRef="embeddedScaChallenge" targetRef="sendChallengeResult"></sequenceFlow>
     <serviceTask id="reportSelectedScaMethod" name="Notify ASPS with selected SCA method" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aReportSelectedScaMethod}"></serviceTask>
     <sequenceFlow id="sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB" sourceRef="reportSelectedScaMethod" targetRef="embeddedScaChallenge"></sequenceFlow>
     <sequenceFlow id="sid-F1C336CA-1C21-44CA-9CB4-C1E83F5ED1CE" sourceRef="selectScaMethod" targetRef="reportSelectedScaMethod"></sequenceFlow>
+    <exclusiveGateway id="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A" default="sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643"></exclusiveGateway>
+    <sequenceFlow id="sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE" sourceRef="notifyUserWithRedirect" targetRef="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A"></sequenceFlow>
+    <sequenceFlow id="multipleScaAvaliable" name="Multiple SCA" sourceRef="isMultipleScaAvailable" targetRef="selectScaMethod">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isMultipleScaAvailable(CONTEXT)}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="isOkConsent" name="Consent OK" sourceRef="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A" targetRef="persistConsent">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isOkRedirectConsent(CONTEXT)}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643" sourceRef="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A" targetRef="end"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
@@ -100,6 +105,9 @@
       <bpmndi:BPMNShape bpmnElement="reportSelectedScaMethod" id="BPMNShape_reportSelectedScaMethod">
         <omgdc:Bounds height="80.0" width="100.0" x="945.0" y="64.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A" id="BPMNShape_sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A">
+        <omgdc:Bounds height="40.0" width="40.0" x="975.0" y="455.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="sid-1139B3D0-261B-4594-B84F-638928669262" id="BPMNEdge_sid-1139B3D0-261B-4594-B84F-638928669262">
         <omgdi:waypoint x="119.94999891869115" y="340.0"></omgdi:waypoint>
         <omgdi:waypoint x="185.0" y="340.0"></omgdi:waypoint>
@@ -113,6 +121,12 @@
         <omgdi:waypoint x="284.9499999999989" y="339.1666666666667"></omgdi:waypoint>
         <omgdi:waypoint x="335.327868852459" y="338.32704918032783"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="isOkConsent" id="BPMNEdge_isOkConsent">
+        <omgdi:waypoint x="994.7606322839869" y="455.2380536899969"></omgdi:waypoint>
+        <omgdi:waypoint x="994.760632283987" y="427.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1485.0" y="427.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1485.0" y="379.95000000000005"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB" id="BPMNEdge_sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB">
         <omgdi:waypoint x="1044.95" y="104.0"></omgdi:waypoint>
         <omgdi:waypoint x="1090.0" y="104.0"></omgdi:waypoint>
@@ -122,6 +136,10 @@
         <omgdi:waypoint x="410.0" y="215.0"></omgdi:waypoint>
         <omgdi:waypoint x="410.0" y="104.0"></omgdi:waypoint>
         <omgdi:waypoint x="479.9999999999978" y="104.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE" id="BPMNEdge_sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE">
+        <omgdi:waypoint x="879.9499999999999" y="475.0"></omgdi:waypoint>
+        <omgdi:waypoint x="975.0" y="475.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="multipleScaAvaliable" id="BPMNEdge_multipleScaAvaliable">
         <omgdi:waypoint x="765.0" y="215.0"></omgdi:waypoint>
@@ -164,10 +182,11 @@
         <omgdi:waypoint x="645.0" y="104.0"></omgdi:waypoint>
         <omgdi:waypoint x="645.0" y="195.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-8643930F-623B-4411-AF42-03F4D1BD01C8" id="BPMNEdge_sid-8643930F-623B-4411-AF42-03F4D1BD01C8">
-        <omgdi:waypoint x="879.9499999999999" y="475.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1485.0" y="475.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1485.0" y="379.95000000000005"></omgdi:waypoint>
+      <bpmndi:BPMNEdge bpmnElement="sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643" id="BPMNEdge_sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643">
+        <omgdi:waypoint x="996.359375" y="493.59049403901736"></omgdi:waypoint>
+        <omgdi:waypoint x="996.359375" y="528.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1599.0" y="528.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1599.0" y="353.94992478766744"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6" id="BPMNEdge_sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6">
         <omgdi:waypoint x="1139.95" y="235.0"></omgdi:waypoint>

@@ -27,12 +27,14 @@
     <description>Provides Access to Banking API</description>
 
     <modules>
+        <module>opba-rest-api-shared</module>
         <module>opba-consent-rest-api</module>
+        <module>opba-consent-rest-impl</module>
         <module>opba-banking-rest-api</module>
+        <module>opba-banking-rest-impl</module>
         <module>opba-banking-protocol-facade</module>
         <module>opba-embedded-starter</module>
         <module>fintech-examples</module>
-        <module>opba-banking-rest-impl</module>
         <module>opba-db</module>
         <module>opba-protocols</module>
         <module>opba-facade-protocol-api-shared</module>
@@ -98,6 +100,7 @@
         <bouncycastle.version>1.64</bouncycastle.version>
         <liquibase.version>3.8.0</liquibase.version>
         <mapstruct.version>1.3.1.Final</mapstruct.version>
+        <hibernate.version>5.4.9.Final</hibernate.version> <!-- Currently only for bytecode enhancer plugin, can't inherit Spring BOM -->
 
         <!-- Flowable BPMN -->
         <flowable.version>6.4.2</flowable.version>

@@ -1,6 +1,5 @@
 # Release Notes
 
-
 ## release 0.0.5
 * Login Page creation for the Demo Frontend
 * Change Test data with productive data for the TppBankSearchApi

@@ -9,7 +9,7 @@ import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaSelectedMethod;
 import de.adorsys.opba.protocol.xs2a.service.ContextUpdateService;
 import de.adorsys.opba.protocol.xs2a.service.eventbus.ProcessEventHandlerRegistrar;
 import de.adorsys.opba.protocol.xs2a.service.json.JsonPathBasedObjectUpdater;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.Xs2aResultExtractor;
+import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
@@ -32,6 +32,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+@Deprecated
 @RestController
 @RequestMapping(ApiVersion.API_1)
 @RequiredArgsConstructor
@@ -39,7 +40,7 @@ import java.util.concurrent.CompletableFuture;
 public class MoreParameters {
 
     private final RuntimeService runtimeService;
-    private final Xs2aResultExtractor extractor;
+    private final Xs2aResultBodyExtractor extractor;
     private final ProcessEventHandlerRegistrar registrar;
     private final JsonPathBasedObjectUpdater updater;
     private final ContextUpdateService ctxUpdater;
@@ -143,7 +144,7 @@ public class MoreParameters {
         CompletableFuture<ResponseEntity<List<AccountDetails>>> result = new CompletableFuture<>();
         registrar.addHandler(
                 sagaId,
-                response -> result.complete(ResponseEntity.ok(extractor.extractAccountList(response))),
+                response -> result.complete(ResponseEntity.ok(extractor.extractAccountListOld(response))),
                 result
         );
         return result;
@@ -154,7 +155,7 @@ public class MoreParameters {
         CompletableFuture<ResponseEntity<TransactionsReport>> result = new CompletableFuture<>();
         registrar.addHandler(
                 sagaId,
-                response -> result.complete(ResponseEntity.ok(extractor.extractTransactionsReport(response))),
+                response -> result.complete(ResponseEntity.ok(extractor.extractTransactionsReportOld(response))),
                 result
         );
         return result;

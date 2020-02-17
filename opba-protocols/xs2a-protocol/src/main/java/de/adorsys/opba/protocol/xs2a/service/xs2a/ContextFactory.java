@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 // TODO - Drop/refactor as dialog approach is working now
 @Service
+@Deprecated
 public class ContextFactory {
 
     @SuppressWarnings("PMD.AvoidUsingHardCodedIP") // This is a POC hardcoded values

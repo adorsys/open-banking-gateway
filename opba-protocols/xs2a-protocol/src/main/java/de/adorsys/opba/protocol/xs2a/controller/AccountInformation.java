@@ -6,7 +6,7 @@ import de.adorsys.opba.protocol.xs2a.controller.constants.ApiPaths;
 import de.adorsys.opba.protocol.xs2a.controller.constants.ApiVersion;
 import de.adorsys.opba.protocol.xs2a.service.eventbus.ProcessEventHandlerRegistrar;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.ContextFactory;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.Xs2aResultExtractor;
+import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.REQUEST_SAGA;
 
+@Deprecated
 @RestController
 @RequestMapping(ApiVersion.API_1)
 @RequiredArgsConstructor
@@ -35,7 +36,7 @@ public class AccountInformation {
 
     private final RuntimeService runtimeService;
     private final ContextFactory contextFactory;
-    private final Xs2aResultExtractor extractor;
+    private final Xs2aResultBodyExtractor extractor;
     private final ProcessEventHandlerRegistrar registrar;
 
     @GetMapping(ApiPaths.ACCOUNTS)
@@ -54,7 +55,7 @@ public class AccountInformation {
 
         registrar.addHandler(
                 instance.getProcessInstanceId(),
-                response -> result.complete(ResponseEntity.ok(extractor.extractAccountList(response))),
+                response -> result.complete(ResponseEntity.ok(extractor.extractAccountListOld(response))),
                 result
         );
 
@@ -79,7 +80,7 @@ public class AccountInformation {
 
         registrar.addHandler(
                 instance.getProcessInstanceId(),
-                response -> result.complete(ResponseEntity.ok(extractor.extractTransactionsReport(response))),
+                response -> result.complete(ResponseEntity.ok(extractor.extractTransactionsReportOld(response))),
                 result
         );
 

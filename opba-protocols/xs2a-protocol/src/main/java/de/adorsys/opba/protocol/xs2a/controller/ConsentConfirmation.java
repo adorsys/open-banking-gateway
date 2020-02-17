@@ -4,7 +4,7 @@ import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.protocol.xs2a.controller.constants.ApiPaths;
 import de.adorsys.opba.protocol.xs2a.controller.constants.ApiVersion;
 import de.adorsys.opba.protocol.xs2a.service.eventbus.ProcessEventHandlerRegistrar;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.Xs2aResultExtractor;
+import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+@Deprecated
 @RestController
 @RequestMapping(ApiVersion.API_1)
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ import java.util.concurrent.CompletableFuture;
 public class ConsentConfirmation {
 
     private final RuntimeService runtimeService;
-    private final Xs2aResultExtractor extractor;
+    private final Xs2aResultBodyExtractor extractor;
     private final ProcessEventHandlerRegistrar registrar;
 
 
@@ -53,7 +54,7 @@ public class ConsentConfirmation {
         CompletableFuture<ResponseEntity<List<AccountDetails>>> result = new CompletableFuture<>();
         registrar.addHandler(
                 sagaId,
-                response -> result.complete(ResponseEntity.ok(extractor.extractAccountList(response))),
+                response -> result.complete(ResponseEntity.ok(extractor.extractAccountListOld(response))),
                 result
         );
         return result;
@@ -64,7 +65,7 @@ public class ConsentConfirmation {
         CompletableFuture<ResponseEntity<TransactionsReport>> result = new CompletableFuture<>();
         registrar.addHandler(
                 sagaId,
-                response -> result.complete(ResponseEntity.ok(extractor.extractTransactionsReport(response))),
+                response -> result.complete(ResponseEntity.ok(extractor.extractTransactionsReportOld(response))),
                 result
         );
         return result;
