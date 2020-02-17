@@ -1,2 +1,2 @@
 protocol:
-  gateway-base-url: http://localhost:5500/from-aspsp
+  gateway-base-url: ${protocol.embedded-ui-base-url}/from-aspsp

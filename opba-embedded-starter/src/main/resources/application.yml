@@ -21,6 +21,7 @@ spring:
     change-log: classpath:migration/master.xml
     parameters:
       table-prefix: opb_
+      adorsys-sandbox-url: http://localhost:20014
       fill-with-mock-data: true
 bank-search:
   start: 0
@@ -33,11 +34,12 @@ protocol:
       nok: ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
     parameters:
       max-array-size: 32
-      provide-more: 'http://localhost:5500/parameters/provide-more/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}'
-      provide-psu-password: 'http://localhost:5500/parameters/provide-psu-password/#{execution.getId()}'
-      select-sca-method: 'http://localhost:5500/parameters/select-sca-method/#{execution.getId()}?q=#{urlSafe(context.getAvailableSca().toString())}'
-      report-sca-result: 'http://localhost:5500/parameters/report-sca-result/#{execution.getId()}?q=#{urlSafe(context.getScaSelected().getAuthenticationType() + ":" + context.getScaSelected().getName())}'
+      provide-more: ${protocol.embedded-ui-base-url}/parameters/provide-more/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}
+      provide-psu-password: ${protocol.embedded-ui-base-url}/parameters/provide-psu-password/#{execution.getId()}
+      select-sca-method: ${protocol.embedded-ui-base-url}/parameters/select-sca-method/#{execution.getId()}?q=#{urlSafe(context.getAvailableSca().toString())}
+      report-sca-result: ${protocol.embedded-ui-base-url}/parameters/report-sca-result/#{execution.getId()}?q=#{urlSafe(context.getScaSelected().getAuthenticationType() + ":" + context.getScaSelected().getName())}
   gateway-base-url: http://localhost:8085
+  embedded-ui-base-url: http://localhost:5500
 
 pkcs12:
   keyStore: sample-qwac.keystore
