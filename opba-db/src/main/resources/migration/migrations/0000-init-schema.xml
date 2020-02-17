@@ -76,9 +76,7 @@
             <column name="version" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="secret_key" type="BLOB">
-                <constraints nullable="false"/>
-            </column>
+            <column name="secret_key" type="BLOB"/>
             <column name="algo" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>

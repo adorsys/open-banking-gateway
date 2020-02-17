@@ -16,7 +16,6 @@ import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
 import de.adorsys.opba.protocol.facade.config.EncryptionProperties;
 import de.adorsys.opba.protocol.facade.dto.KeyAndSaltDto;
 import de.adorsys.opba.protocol.facade.dto.KeyDto;
-import de.adorsys.opba.protocol.facade.utils.ArrUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.facade.utils.EncryptionUtils.getNewSalt;
@@ -110,33 +108,27 @@ public class ServiceContextProvider {
 
     private <T extends FacadeServiceableGetter> KeyAndSaltDto getSessionSecretKey(T request) {
         FacadeServiceableRequest facadeServiceable = request.getFacadeServiceable();
-        UUID serviceSessionId = facadeServiceable.getServiceSessionId();
+        UUID sessionId = facadeServiceable.getServiceSessionId();
         String sessionPassword = facadeServiceable.getSessionPassword();
-        if (null == serviceSessionId) {
+        if (null == sessionId) {
             return newSecretKey(sessionPassword);
         }
 
-        Optional<ServiceSession> existingSession = serviceSessions.findById(serviceSessionId);
-        if (!existingSession.isPresent()) {
-            throw new RuntimeException("Session not found");
-        }
+        ServiceSession existingSession = serviceSessions.findById(sessionId)
+                .orElseThrow(() -> new IllegalStateException("Session not found for id:" + sessionId));
 
         if (!Strings.isNullOrEmpty(sessionPassword)) {
-            return recreateSecretKey(sessionPassword, existingSession.get());
+            return recreateSecretKey(sessionPassword, existingSession);
         }
 
-        return savedKey(existingSession.get());
+        return savedKey(existingSession);
     }
 
     @NotNull
     private KeyAndSaltDto savedKey(ServiceSession session) {
         byte[] secretKey = session.getSecretKey();
-        if (!ArrUtils.isEmpty(secretKey)) {
-            byte[] decryptedKey = secretKeyOperations.decrypt(secretKey);
-            return new KeyAndSaltDto(decryptedKey);
-        }
-
-        throw new RuntimeException("Can't find secret key. Please provide password to recreate secret key");
+        byte[] decryptedKey = secretKeyOperations.decrypt(secretKey);
+        return new KeyAndSaltDto(decryptedKey);
     }
 
     @NotNull
@@ -152,7 +144,7 @@ public class ServiceContextProvider {
     @NotNull
     private KeyAndSaltDto newSecretKey(String sessionPassword) {
         if (Strings.isNullOrEmpty(sessionPassword)) {
-            throw new RuntimeException("No password. Can't generate secret key");
+            throw new IllegalStateException("No password. Can't generate secret key");
         }
         byte[] salt = getNewSalt(properties.getSaltLength());
         byte[] key = secretKeyOperations.generateKey(sessionPassword, salt);
