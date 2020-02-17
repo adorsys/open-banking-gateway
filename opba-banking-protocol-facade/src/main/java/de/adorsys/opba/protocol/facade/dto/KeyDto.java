@@ -1,9 +1,10 @@
 package de.adorsys.opba.protocol.facade.dto;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@Value
+@Getter
+@AllArgsConstructor
 public class KeyDto {
     final byte[] key;
-    final byte[] salt;
 }
