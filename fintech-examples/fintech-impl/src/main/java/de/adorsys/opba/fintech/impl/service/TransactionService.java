@@ -19,7 +19,7 @@ import java.time.LocalDate;
 @Slf4j
 @RequiredArgsConstructor
 public class TransactionService extends HandleAcceptedService {
-    @Value("${mock.tppais.listtransactions:#{null}}")
+    @Value("${mock.tppais.listtransactions:false}")
     String mockTppAisString;
 
     private final TppAisClient tppAisClient;

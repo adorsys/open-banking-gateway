@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class AccountService extends HandleAcceptedService {
-    @Value("${mock.tppais.listaccounts:#{null}}")
+    @Value("${mock.tppais.listaccounts:false}")
     String mockTppAisString;
 
     private final TppAisClient tppAisClient;
