@@ -2,7 +2,7 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse2001;
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse2002;
-import de.adorsys.opba.fintech.impl.config.TppBankSearchClient;
+import de.adorsys.opba.fintech.impl.tppclients.TppBankSearchClient;
 import de.adorsys.opba.fintech.impl.mapper.ManualMapper;
 import de.adorsys.opba.tpp.banksearch.api.model.generated.BankSearchResponse;
 import lombok.RequiredArgsConstructor;

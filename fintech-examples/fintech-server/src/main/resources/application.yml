@@ -1,18 +1,20 @@
 server:
-  port: 8086
+  port: 18086
   controller:
     cookie:
       secure: false
       maxAge: 300
       httpOnly: false
       path: /
+      sameSite: none
+      # sameSite: Strict|Lax|none
 tpp:
-    url: http://localhost:18085
+  url: http://localhost:8085
 
 mock:
   tppais:
-      listtransactions: true
-      listaccounts: true
+    listtransactions: true
+    listaccounts: false
 
 spring:
   datasource:
@@ -20,3 +22,4 @@ spring:
     username: SA
     password:
     driver-class-name: org.h2.Driver
+

@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -39,19 +36,6 @@ public class SessionEntity {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
     private List<CookieEntity> cookies = new ArrayList<>();
-
-    @AttributeOverrides({
-            @AttributeOverride(name = "okURL", column = @Column(name = "TRANS_OK_URL")),
-            @AttributeOverride(name = "notOkURL", column = @Column(name = "TRANS_NOT_OK_URL"))
-    })
-    RedirectUrlsEmbeddable redirectListTransactions;
-
-    @AttributeOverrides({
-            @AttributeOverride(name = "okURL", column = @Column(name = "ACCOUNTS_OK_URL")),
-            @AttributeOverride(name = "notOkURL", column = @Column(name = "ACCOUNTS_NOT_OK_URL"))
-    })
-    @Column(name = "b")
-    RedirectUrlsEmbeddable redirectListAccounts;
 
     String psuConsentSession;
 

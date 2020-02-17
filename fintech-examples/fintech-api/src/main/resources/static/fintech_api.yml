@@ -97,19 +97,16 @@ paths:
           in: query
           required: true
           schema:
-#           $ref: '#/components/schemas/searchInput'
             type: string
         - name: start
           in: query
           required: false
           schema:
-#           $ref: '#/components/schemas/searchStartIndex'
             type: integer
         - name: max
           in: query
           required: false
           schema:
-#           $ref: '#/components/schemas/searchMaxResult'
             type: integer
       security:
         - sessionCookie: []
@@ -168,13 +165,16 @@ paths:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
+        - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
+
       security:
         - sessionCookie: []
       responses:
         '200':
           $ref: "#/components/responses/200_AccountList"
         '302':
-          $ref: '#/components/responses/302_Redirect'
+          $ref: '#/components/responses/302_Found'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
         '404':
@@ -197,16 +197,19 @@ paths:
         - $ref: "#/components/parameters/entryReferenceFrom"
         - $ref: "#/components/parameters/bookingStatus"
         - $ref: "#/components/parameters/deltaList"
+
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
+        - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
       security:
         - sessionCookie: []
       responses:
         '200':
           $ref: '#/components/responses/200_AccountsTransactions'
         '302':
-          $ref: '#/components/responses/302_Redirect'
+          $ref: '#/components/responses/302_Found'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
         '404':
@@ -347,6 +350,36 @@ components:
         example: http://localhost:8080/finTechUi?sessionState=ejxs.wersdzxxc23r.asdf
 
   parameters:
+
+    Fintech-Redirect-URL-OK:
+      name: Fintech-Redirect-URL-OK
+      in: header
+      desription: |
+        This header provides the desired URL where PSU will be redirected back after authorisation session in case of
+        successful authorisation. This URL might contain unique Identifier of this User and/or Session,
+        recognisable by FinTech.
+        Since authorisation may be mandated by the bank at any time, this header to be included to all
+        service requests, even if PsuConsentSession already exists.
+      required: true
+      schema:
+        type: string
+      example: "https://example.com/myservice/sf3-3r33-3535?authResult=success"
+
+    Fintech-Redirect-URL-NOK:
+      name: Fintech-Redirect-URL-NOK
+      in: header
+      desription: |
+        This header provides the desired URL where PSU will be redirected back  after authorisation session in case of
+        unsuccessful authorisation (i.e. PSU's authorisation reject, technical failure, lack of credentials etc.).
+        This URL might contain unique Identifier of this User and/or Session,
+        recognisable by FinTech.
+        Since authorisation may be mandated by the bank at any time, this header to be included to all
+        service requests, even if PsuConsentSession already exists.
+      required: true
+      schema:
+        type: string
+      example: "https://example.com/myservice/sf3-3r33-3535/failure"
+
 
     X-Request-ID:
       name: X-Request-ID
@@ -568,10 +601,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              accountList:
-                $ref: '#/components/schemas/accountList'
+            $ref: '#/components/schemas/accountList'
 
     200_AccountsTransactions:
       description: Response with transactions for given account
@@ -585,12 +615,9 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              accountList:
-                $ref: '#/components/schemas/transactionsResponse'
+            $ref: '#/components/schemas/transactionsResponse'
 
-    302_Redirect:
+    302_Found:
       description: Redirects UserAgent to the ConsentAuthorisationApi.
       headers:
         Location:
@@ -763,14 +790,6 @@ components:
           type: string
 
 
-    searchInput:
-      description: The bank search input string
-    searchStartIndex:
-      description: The index of the first result
-    searchMaxResult:
-      description: The max number of entries to return with the response.
-    searchTotalResult:
-      description: The total count of entities found for the given search input.
     bankProfile:
       title: Bank Profile
       type: object

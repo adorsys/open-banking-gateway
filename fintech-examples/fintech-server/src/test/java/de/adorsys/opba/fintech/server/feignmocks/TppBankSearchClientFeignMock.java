@@ -1,6 +1,6 @@
 package de.adorsys.opba.fintech.server.feignmocks;
 
-import de.adorsys.opba.fintech.impl.config.TppBankSearchClient;
+import de.adorsys.opba.fintech.impl.tppclients.TppBankSearchClient;
 import de.adorsys.opba.tpp.banksearch.api.model.generated.BankProfileResponse;
 import de.adorsys.opba.tpp.banksearch.api.model.generated.BankSearchResponse;
 import org.springframework.http.ResponseEntity;

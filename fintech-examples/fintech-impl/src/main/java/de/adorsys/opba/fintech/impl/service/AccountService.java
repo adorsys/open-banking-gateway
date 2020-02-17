@@ -1,53 +1,49 @@
 package de.adorsys.opba.fintech.impl.service;
 
-import de.adorsys.opba.fintech.api.model.generated.InlineResponse2003;
-import de.adorsys.opba.fintech.impl.config.TppAisClient;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
-import de.adorsys.opba.fintech.impl.mapper.ManualMapper;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListAccountsMock;
+import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class AccountService {
-    @Value("${mock.tppais.listaccounts}")
+public class AccountService extends HandleAcceptedService {
+    @Value("${mock.tppais.listaccounts:false}")
     String mockTppAisString;
 
     private final TppAisClient tppAisClient;
 
-    public InlineResponse2003 listAccounts(ContextInformation contextInformation, SessionEntity sessionEntity, String bankId) {
-
-        if (BooleanUtils.toBoolean(mockTppAisString)) {
+    public ResponseEntity listAccounts(ContextInformation contextInformation, SessionEntity sessionEntity, String bankId, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
+        if (mockTppAisString != null && mockTppAisString.equalsIgnoreCase("true") ? true : false) {
             log.warn("Mocking call to list accounts");
-            return createInlineResponse2003(new TppListAccountsMock().getAccountList());
+            return new ResponseEntity<>(new TppListAccountsMock().getAccountList(), HttpStatus.OK);
         }
 
-        try {
-            return createInlineResponse2003(tppAisClient.getAccounts(
-                    contextInformation.getFintechID(),
-                    sessionEntity.getLoginUserName(),
-                    sessionEntity.getRedirectListAccounts().getOkURL(),
-                    sessionEntity.getRedirectListAccounts().getNotOkURL(),
-                    contextInformation.getXRequestID(),
-                    bankId,
-                    null,
-                    null).getBody());
-        } catch (FeignException ex) {
-            log.error("got exception for status code " + ex.status());
-            throw ex;
+        ResponseEntity<AccountList> accounts = tppAisClient.getAccounts(
+                contextInformation.getFintechID(),
+                sessionEntity.getLoginUserName(),
+                fintechRedirectURLOK,
+                fintechRedirectURLNOK,
+                contextInformation.getXRequestID(),
+                bankId,
+                null,
+                null);
+        switch (accounts.getStatusCode()) {
+            case OK:
+                return new ResponseEntity<>(accounts.getBody(), HttpStatus.OK);
+            case ACCEPTED:
+                return handleAccepted(accounts.getHeaders());
+            case UNAUTHORIZED:
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            default:
+                throw new RuntimeException("DID NOT EXPECT RETURNCODE:" + accounts.getStatusCode());
         }
-    }
-
-    private InlineResponse2003 createInlineResponse2003(AccountList accountList) {
-        InlineResponse2003 response = new InlineResponse2003();
-        response.setAccountList(ManualMapper.fromTppToFintech(accountList));
-        return response;
     }
 }

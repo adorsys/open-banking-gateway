@@ -1,10 +1,9 @@
 package de.adorsys.opba.fintech.impl.controller;
 
-import de.adorsys.opba.fintech.api.model.generated.InlineResponse2003;
-import de.adorsys.opba.fintech.api.model.generated.InlineResponse2004;
+import de.adorsys.opba.fintech.api.model.generated.AccountList;
+import de.adorsys.opba.fintech.api.model.generated.TransactionsResponse;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAccountInformationApi;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
-import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import de.adorsys.opba.fintech.impl.service.AccountService;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.ContextInformation;
@@ -31,31 +30,30 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
     @Autowired
     TransactionService transactionService;
 
-    @Autowired
-    UserRepository userRepository;
-
     @Override
-    public ResponseEntity<InlineResponse2003> aisAccountsGET(String bankId, UUID xRequestID, String xsrfToken) {
+    public ResponseEntity<AccountList> aisAccountsGET(String bankId, UUID xRequestID, String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
         if (!authorizeService.isAuthorized(xsrfToken, null)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         ContextInformation contextInformation = new ContextInformation(xRequestID);
-        SessionEntity sessionEntity = userRepository.findByXsrfToken(xsrfToken).get();
+        SessionEntity sessionEntity = authorizeService.getByXsrfToken(xsrfToken);
 
-        return new ResponseEntity<>(accountService.listAccounts(contextInformation, sessionEntity, bankId), HttpStatus.OK);
+        return accountService.listAccounts(contextInformation, sessionEntity, bankId, fintechRedirectURLOK, fintechRedirectURLNOK);
     }
 
-    public ResponseEntity<InlineResponse2004> aisTransactionsGET(String bankId, String accountId, UUID xRequestID,
-                                                                 String xsrfToken, LocalDate dateFrom, LocalDate dateTo,
-                                                                 String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
+    @Override
+    public ResponseEntity<TransactionsResponse> aisTransactionsGET(String bankId, String accountId, UUID xRequestID,
+                                                                            String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK,
+                                                                            LocalDate dateFrom, LocalDate dateTo,
+                                                                            String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
         if (!authorizeService.isAuthorized(xsrfToken, null)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         ContextInformation contextInformation = new ContextInformation(xRequestID);
-        SessionEntity sessionEntity = userRepository.findByXsrfToken(xsrfToken).get();
+        SessionEntity sessionEntity = authorizeService.getByXsrfToken(xsrfToken);
 
-        return new ResponseEntity<>(transactionService.listTransactions(contextInformation, sessionEntity, bankId, accountId,
-                dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList), HttpStatus.OK);
+        return transactionService.listTransactions(contextInformation, sessionEntity, fintechRedirectURLOK,
+                fintechRedirectURLNOK, bankId, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList);
     }
 }

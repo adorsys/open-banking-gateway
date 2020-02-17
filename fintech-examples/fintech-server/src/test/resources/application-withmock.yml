@@ -9,3 +9,10 @@ spring:
     username: SA
     password:
     driver-class-name: org.h2.Driver
+
+# this activates mocks in server, has
+# nothing to do with mocks for tests
+mock:
+  tppais:
+    listtransactions: true
+    listaccounts: true

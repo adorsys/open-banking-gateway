@@ -2,7 +2,6 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.impl.database.entities.CookieEntity;
-import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEmbeddable;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.adorsys.opba.fintech.impl.tppclients.CookieNames.SESSION_COOKIE;
+import static de.adorsys.opba.fintech.impl.tppclients.CookieNames.XSRF_TOKEN_COOKIE;
+
 /**
  * This is just a dummy authorization.
  * All users are accepted. Password allways has to be 1234, otherwise login fails
@@ -21,8 +23,6 @@ import java.util.UUID;
 @Configuration
 public class AuthorizeService {
     private static final boolean CHECK_SESSION_COOKIE_TODO = false;
-    private static final String SESSION_COOKIE_NAME = "SESSION-COOKIE";
-    private static final String XSRF_TOKEN_COOKIE_NAME = "XSRF-TOKEN";
     private static final String UNIVERSAL_PASSWORD = "1234";
 
     @Autowired
@@ -54,17 +54,17 @@ public class AuthorizeService {
 
         // delete old cookies, if available
         sessionEntity.setCookies(new ArrayList<>());
-        sessionEntity.addCookie(SESSION_COOKIE_NAME, UUID.randomUUID().toString());
-        sessionEntity.addCookie(XSRF_TOKEN_COOKIE_NAME, sessionEntity.getXsrfToken());
+        sessionEntity.addCookie(SESSION_COOKIE, UUID.randomUUID().toString());
+        sessionEntity.addCookie(XSRF_TOKEN_COOKIE, sessionEntity.getXsrfToken());
 
         sessionEntity.addLogin(OffsetDateTime.now());
 
-        // TODO api has to be changed to get URLs
-        sessionEntity.setRedirectListAccounts(new RedirectUrlsEmbeddable("laOk", "laNotOk"));
-        sessionEntity.setRedirectListTransactions(new RedirectUrlsEmbeddable("ltOk", "ltNotOk"));
-
         userRepository.save(sessionEntity);
         return Optional.of(sessionEntity);
+    }
+
+    public SessionEntity getByXsrfToken(String xsrfToken) {
+        return userRepository.findByXsrfToken(xsrfToken).get();
     }
 
     private void generateUserIfUserDoesNotExistYet(LoginRequest loginRequest) {
@@ -88,11 +88,11 @@ public class AuthorizeService {
         if (!CHECK_SESSION_COOKIE_TODO) {
             return true;
         }
-            for (CookieEntity cookie : optionalUserEntity.get().getCookies()) {
-                if (cookie.getName().equals(SESSION_COOKIE_NAME)) {
-                    return cookie.getValue().equals(sessionCookieContent);
-                }
+        for (CookieEntity cookie : optionalUserEntity.get().getCookies()) {
+            if (cookie.getName().equals(SESSION_COOKIE)) {
+                return cookie.getValue().equals(sessionCookieContent);
             }
-            return false;
+        }
+        return false;
     }
 }
