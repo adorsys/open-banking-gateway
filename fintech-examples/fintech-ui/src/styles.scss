@@ -33,6 +33,11 @@ body {
     font-size: 2rem;
     font-family: geometric-SemiBold, sans-serif;
   }
+
+  &-img {
+    width: 136px;
+    height: 136px;
+  }
 }
 
 .form__margin {
@@ -63,5 +68,10 @@ label {
     margin-left: auto;
     margin-right: auto;
     width: 70%;
+  }
+
+  &-link {
+    color: $primary;
+    opacity: 0.6;
   }
 }

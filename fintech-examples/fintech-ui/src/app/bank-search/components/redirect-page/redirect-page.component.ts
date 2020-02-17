@@ -16,7 +16,7 @@ export class RedirectPageComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate([''], { relativeTo: this.route });
+    this.router.navigate(['']);
   }
 
   proceed(): void {
