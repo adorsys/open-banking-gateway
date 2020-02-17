@@ -31,7 +31,7 @@ describe('BankSearchService', () => {
     const keyword = 'deutsche';
     bankSearchService.searchBanks(keyword).subscribe();
 
-    const req = httpTestingController.expectOne(API_PATH + '/search/bankSearch?keyword=deutsche');
+    const req = httpTestingController.expectOne(API_PATH + '/v1/search/bankSearch?keyword=deutsche');
     expect(req.request.params.get('keyword')).toEqual('deutsche');
     expect(req.cancelled).toBeFalsy();
     expect(req.request.method).toEqual('GET');
