@@ -13,6 +13,9 @@ Ensure you have:
 ## Building and running:
 
 ### Without FinTech part using 'Technical UI' to drive backend:
+
+This section is primarily for project-developers. 'Technical-UI' is the stub UI to drive backend.
+
   1. `cd technical-ui`
-  1. `01.build.sh` - build docker images of required infrastructure
-  1. `02.start-dev-mode.sh` or `docker-compose up -e PROFILES=dev,no-encryption` in current directory - start the project (in development mode)
+  1. `01.build.sh` - build docker images of the required infrastructure
+  1. `02.start-dev-mode.sh` or `docker-compose up -e OPBA_PROFILES=dev,no-encryption` in current directory - start the project (in development mode)
