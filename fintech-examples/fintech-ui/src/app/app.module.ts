@@ -20,6 +20,7 @@ export function apiConfigFactory(): Configuration {
     basePath: environment.FINTECH_API,
     withCredentials: true
   };
+
   return new Configuration(params);
 }
 
