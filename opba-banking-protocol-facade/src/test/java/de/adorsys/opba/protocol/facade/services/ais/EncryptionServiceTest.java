@@ -28,8 +28,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class EncryptionServiceTest {
 
     @Autowired
-    private FacadeEncryptionServiceFactory facadeEncryptionServiceFactory;
-    @Autowired
     private SecretKeyOperations secretKeyOperations;
     @Autowired
     private EncryptionProperties properties;
@@ -54,7 +52,7 @@ public class EncryptionServiceTest {
         String data = "data to encrypt";
 
         byte[] key = secretKeyOperations.generateKey(password);
-        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(key);
+        EncryptionService encryptionService = FacadeEncryptionServiceFactory.provideEncryptionService(key);
         byte[] encryptedData = encryptionService.encrypt(data.getBytes());
 
         byte[] decryptedData = encryptionService.decrypt(encryptedData);

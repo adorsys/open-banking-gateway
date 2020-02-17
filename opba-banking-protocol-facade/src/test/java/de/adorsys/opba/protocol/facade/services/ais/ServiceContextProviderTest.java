@@ -43,9 +43,6 @@ public class ServiceContextProviderTest {
     ServiceSessionRepository serviceSessionRepository;
 
     @Autowired
-    FacadeEncryptionServiceFactory facadeEncryptionServiceFactory;
-
-    @Autowired
     SecretKeyOperations secretKeyOperations;
 
     @Test
@@ -73,20 +70,20 @@ public class ServiceContextProviderTest {
         assertThat(serviceSessionRepository.count()).isEqualTo(1L);
         Iterable<ServiceSession> all = serviceSessionRepository.findAll();
         assertThat(all.iterator().hasNext()).isTrue();
-        ServiceSession ss = all.iterator().next();
+        ServiceSession session = all.iterator().next();
 
-        byte[] key = secretKeyOperations.generateKey(password, ss.getAlgo(), ss.getSalt(), ss.getIterCount());
-        assertThat(secretKeyOperations.decrypt(ss.getSecretKey())).isEqualTo(key);
+        byte[] key = secretKeyOperations.generateKey(password, session.getAlgo(), session.getSalt(), session.getIterCount());
+        assertThat(secretKeyOperations.decrypt(session.getSecretKey())).isEqualTo(key);
 
-        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(key);
-        byte[] decryptedData = encryptionService.decrypt(ss.getContext().getBytes());
+        EncryptionService encryptionService = FacadeEncryptionServiceFactory.provideEncryptionService(key);
+        byte[] decryptedData = encryptionService.decrypt(session.getContext().getBytes());
         assertThat(decryptedData).isEqualTo(MAPPER.writeValueAsBytes(request.getFacadeServiceable()));
 
         ListAccountsRequest request2 = ListAccountsRequest.builder()
                 .facadeServiceable(
                         FacadeServiceableRequest.builder()
                                 .bankId(testBankID)
-                                .serviceSessionId(ss.getId())
+                                .serviceSessionId(session.getId())
                                 .fintechRedirectUrlOk("http://google.com")
                                 .fintechRedirectUrlNok("http://microsoft.com")
                                 .build()

@@ -10,6 +10,10 @@ import lombok.ToString;
 public class KeyAndSaltDto extends KeyDto {
     private byte[] salt;
 
+    public KeyAndSaltDto(byte[] key) {
+        super(key);
+    }
+
     public KeyAndSaltDto(byte[] key, byte[] salt) {
         super(key);
         this.salt = salt;
