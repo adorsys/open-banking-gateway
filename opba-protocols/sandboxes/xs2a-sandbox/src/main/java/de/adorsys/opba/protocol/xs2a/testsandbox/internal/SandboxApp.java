@@ -64,14 +64,14 @@ import static org.awaitility.Awaitility.await;
 @Getter
 public enum SandboxApp {
 
-    ONLINE_BANKING_UI("adorsys/xs2a-online-banking-ui:1.8", true), // adorsys/xs2a-online-banking-ui
-    LEDGERS_APP("ledgers-app-2.1.jar"), // adorsys/ledgers
-    LEDGERS_GATEWAY("gateway-app-5.4.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP)), // adorsys/xs2a-connector-examples
-    ASPSP_PROFILE("aspsp-profile-server-5.4-exec.jar"), // adorsys/xs2a-aspsp-profile
-    CONSENT_MGMT("cms-standalone-service-5.4.jar"), // adorsys/xs2a-consent-management
-    ONLINE_BANKING("online-banking-app-1.8.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP)), // adorsys/xs2a-online-banking
-    TPP_REST("tpp-rest-server-1.8.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP)), // adorsys/xs2a-tpp-rest-server
-    CERT_GENERATOR("certificate-generator-1.8.jar"); // adorsys/xs2a-certificate-generator
+    ONLINE_BANKING_UI("adorsys/xs2a-online-banking-ui:2.9", true), // adorsys/xs2a-online-banking-ui
+    LEDGERS_APP("ledgers-app-2.8.jar"), // adorsys/ledgers
+    LEDGERS_GATEWAY("gateway-app-5.10.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP)), // adorsys/xs2a-connector-examples
+    ASPSP_PROFILE("aspsp-profile-server-5.10-exec.jar"), // adorsys/xs2a-aspsp-profile
+    CONSENT_MGMT("cms-standalone-service-5.10.jar"), // adorsys/xs2a-consent-management
+    ONLINE_BANKING("online-banking-app-2.9.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP)), // adorsys/xs2a-online-banking
+    TPP_REST("tpp-rest-server-2.9.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP)), // adorsys/xs2a-tpp-rest-server
+    CERT_GENERATOR("certificate-generator-2.9.jar"); // adorsys/xs2a-certificate-generator
 
 
     public static final String SANDBOX_LOG_LEVEL = "SANDBOX_LOG_LEVEL";
