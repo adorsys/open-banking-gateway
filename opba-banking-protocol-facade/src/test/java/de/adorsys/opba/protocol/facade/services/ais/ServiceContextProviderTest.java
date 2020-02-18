@@ -45,6 +45,9 @@ public class ServiceContextProviderTest {
     @Autowired
     SecretKeyOperations secretKeyOperations;
 
+    @Autowired
+    FacadeEncryptionServiceFactory facadeEncryptionServiceFactory;
+
     @Test
     @SneakyThrows
     @Transactional
@@ -75,7 +78,7 @@ public class ServiceContextProviderTest {
         byte[] key = secretKeyOperations.generateKey(password, session.getAlgo(), session.getSalt(), session.getIterCount());
         assertThat(secretKeyOperations.decrypt(session.getSecretKey())).isEqualTo(key);
 
-        EncryptionService encryptionService = FacadeEncryptionServiceFactory.provideEncryptionService(key);
+        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(key);
         byte[] decryptedData = encryptionService.decrypt(session.getContext().getBytes());
         assertThat(decryptedData).isEqualTo(MAPPER.writeValueAsBytes(request.getFacadeServiceable()));
 

@@ -31,6 +31,8 @@ public class EncryptionServiceTest {
     private SecretKeyOperations secretKeyOperations;
     @Autowired
     private EncryptionProperties properties;
+    @Autowired
+    private FacadeEncryptionServiceFactory facadeEncryptionServiceFactory;
 
     @Test
     void encryptDecryptPasswordTest() {
@@ -52,7 +54,7 @@ public class EncryptionServiceTest {
         String data = "data to encrypt";
 
         byte[] key = secretKeyOperations.generateKey(password);
-        EncryptionService encryptionService = FacadeEncryptionServiceFactory.provideEncryptionService(key);
+        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(key);
         byte[] encryptedData = encryptionService.encrypt(data.getBytes());
 
         byte[] decryptedData = encryptionService.decrypt(encryptedData);
