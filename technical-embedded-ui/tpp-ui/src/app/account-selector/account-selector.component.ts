@@ -20,7 +20,7 @@ export class AccountSelectorComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    this.form.addControl('consent.access.availableAccounts', this.allAccounts);
+    this.form.addControl('consent.access.allAccountsAccess', this.allAccounts);
   }
 
   addAccount() {
