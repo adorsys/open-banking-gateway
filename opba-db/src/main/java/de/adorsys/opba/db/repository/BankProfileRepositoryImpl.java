@@ -2,7 +2,7 @@ package de.adorsys.opba.db.repository;
 
 import de.adorsys.opba.db.domain.entity.BankProfile;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
-import de.adorsys.xs2a.adapter.service.AspspSearchService;
+import de.adorsys.xs2a.adapter.service.AspspReadOnlyRepository;
 import de.adorsys.xs2a.adapter.service.model.Aspsp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class BankProfileRepositoryImpl implements AspspSearchService {
+public class BankProfileRepositoryImpl implements AspspReadOnlyRepository {
 
     private final BankProfileJpaRepository bankProfileJpaRepository;
 
