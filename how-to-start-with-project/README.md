@@ -26,19 +26,20 @@ This section is primarily for project-developers. 'Technical-UI' is the stub UI 
 ### Run from IDE
 In case you have `node.js (with npm), angular-cli` installed and want to run application directly from IDE, follow steps below
 
-#### Starting only Sandbox
+##### 1. Starting only Sandbox first
 
 Sandbox can be started using this docker-compose file [sandbox-docker-compose](../how-to-start-with-project/sandbox-only/docker-compose.yml)
 
  `cd ../sandbox-only; docker compose up`
 
-#### Starting backend and technical-ui
+##### 2. Starting backend and technical-ui next
 
  1. Start Postgres: `docker run --rm --name opba-pg-docker -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres`
  This database will have admin user postgres/docker when started using aforementioned command and it will be available at `localhost:5432`.
  1. Prepare Postgres (should be done only once) - execute: [open-banking-init.sql](../opba-db/src/main/resources/init.sql) 
-   and [sandbox-init.sql](../opba-protocols/sandboxes/xs2a-sandbox/src/main/resources/sandbox/prepare-postgres.sql)
- 1. Run OpenBanking backend (Spring-boot application) [OpenBankingEmbeddedApplication](../opba-embedded-starter/src/main/java/de/adorsys/opba/starter/OpenBankingEmbeddedApplication.java)
+ and [sandbox-init.sql](../opba-protocols/sandboxes/xs2a-sandbox/src/main/resources/sandbox/prepare-postgres.sql)
+ 1. Run OpenBanking backend (Spring-boot application) [OpenBankingEmbeddedApplication](../opba-embedded-starter/src/main/java/de/adorsys/opba/starter/OpenBankingEmbeddedApplication.java) 
+ with profiles `dev,no-encryption,technical-ui`
  1. Prepare and run technical-ui:
     - Install node modules at [tpp-ui](../technical-embedded-ui/tpp-ui/) 
     
