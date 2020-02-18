@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
+import static de.adorsys.opba.protocol.xs2a.testsandbox.Const.*;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -17,7 +18,7 @@ import static org.hamcrest.core.StringContains.containsString;
 
 
 @Slf4j
-@EnabledIfEnvironmentVariable(named = Const.ENABLE_HEAVY_TESTS, matches = "true")
+@EnabledIfEnvironmentVariable(named = ENABLE_HEAVY_TESTS, matches = TRUE_BOOL)
 class BasicTest extends BaseMockitoTest {
 
     private static final SandboxAppsStarter executor = new SandboxAppsStarter();
@@ -56,7 +57,7 @@ class BasicTest extends BaseMockitoTest {
      */
     @Test
     @SneakyThrows
-    @EnabledIfSystemProperty(named = "START_SANDBOX", matches = "true")
+    @EnabledIfSystemProperty(named = "START_SANDBOX", matches = TRUE_BOOL)
     void startTheSandbox() {
         executor.awaitForAllStarted();
 

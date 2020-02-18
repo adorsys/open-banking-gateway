@@ -7,4 +7,5 @@ import lombok.experimental.UtilityClass;
 public class Const {
 
     public static final String ENABLE_HEAVY_TESTS = "ENABLE_HEAVY_TESTS";
+    public static final String TRUE_BOOL = "true";
 }
