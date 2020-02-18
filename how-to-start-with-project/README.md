@@ -20,17 +20,18 @@ This section is primarily for project-developers. 'Technical-UI' is the stub UI 
 
  1. Open banking backend - `OpenBankingEmbeddedApplication` Spring-boot application.
  1. Open banking technical UI - `technical-embedded-ui` developer-only UI to drive backend.
- 1. Sandbox (XS2A-Dynamic-Sandbox) that mocks ASPSP (bank).
+ 1. XS2A Sandbox (XS2A-Dynamic-Sandbox) that mocks ASPSP (bank).
  1. Postgres database (shared or separate (when using docker-compose) for Sandbox and Open banking backend)
 
 ### Run from IDE
-In case you have `node.js (with npm), angular-cli` installed and want to run application directly from IDE, follow steps below
+In case you have `node.js (with npm), angular-cli` installed locally in addition to JDK and Docker, and you want to run 
+application directly from IDE, you can follow steps below:
 
-##### 1. Starting only Sandbox first
+##### 1. Starting only XS2A-Sandbox first
 
-Sandbox can be started using this docker-compose file [sandbox-docker-compose](../how-to-start-with-project/sandbox-only/docker-compose.yml)
+Sandbox can be started using this docker-compose file [xs2a-sandbox-docker-compose](../how-to-start-with-project/xs2a-sandbox-only/docker-compose.yml)
 
- `cd ../sandbox-only; docker compose up`
+ `cd ../xs2a-sandbox-only; docker compose up`
 
 ##### 2. Starting backend and technical-ui next
 
