@@ -31,8 +31,8 @@ export ENABLE_HEAVY_TESTS=true
 echo "SANDBOX HAS PID: [$!], watch $LOGS_SANDBOX for logs"
 echo "SANDBOX HAS PID: [$!]" >> "$LOGS_SANDBOX"
 
-echo ">>> 5. Starting Open-Banking backend"
-./mvnw -Prun-embedded -pl opba-embedded-starter -am spring-boot:run -DskipTests &>"$LOGS_OPBA" &
+echo ">>> 5. Starting Open-Banking backend (profiles dev,no-encryption,technical-ui)"
+./mvnw -Prun-embedded -pl opba-embedded-starter -am spring-boot:run -Dspring-boot.run.profiles=dev,no-encryption,technical-ui -DskipTests &>"$LOGS_OPBA" &
 echo "OPEN-BANKING HAS PID: [$!], watch $LOGS_OPBA for logs"
 echo "OPEN-BANKING HAS PID: [$!]" >> "$LOGS_OPBA"
 
