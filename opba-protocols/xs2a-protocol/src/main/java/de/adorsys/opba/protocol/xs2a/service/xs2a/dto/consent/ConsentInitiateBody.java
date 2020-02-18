@@ -8,8 +8,13 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import de.adorsys.xs2a.adapter.service.model.AccountAccess;
 import de.adorsys.xs2a.adapter.service.model.Consents;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.ValueMapping;
+import org.mapstruct.ValueMappings;
 
 import javax.validation.Valid;
 import javax.validation.constraints.FutureOrPresent;
@@ -55,12 +60,13 @@ public class ConsentInitiateBody {
         private List<@Valid AccountReferenceBody> balances;
         private List<@Valid AccountReferenceBody> transactions;
 
-        private AccountAccess.AvailableAccountsEnum availableAccounts;
+        private AccountAccessType allAccountsAccess;
         private AccountAccess.AllPsd2Enum allPsd2;
 
-        @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-        public interface ToXs2aApi {
-            Consents map(AccountAccessBody cons);
+        @RequiredArgsConstructor
+        public enum AccountAccessType {
+            allAccounts,
+            allAccountsWithBalances;
         }
     }
 
@@ -90,10 +96,25 @@ public class ConsentInitiateBody {
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface ToXs2aApi extends DtoMapper<ConsentInitiateBody, Consents> {
+
         default Consents map(Xs2aContext cons) {
             return map(cons.getConsent());
         }
 
+        @ValueMappings({
+                @ValueMapping(source = "allAccounts", target = "ALLACCOUNTS"),
+                @ValueMapping(source = "allAccountsWithBalances", target = MappingConstants.NULL)
+        })
+        AccountAccess.AvailableAccountsEnum accounts(AccountAccessBody.AccountAccessType type);
+
+        @ValueMappings({
+                @ValueMapping(source = "allAccounts", target = MappingConstants.NULL),
+                @ValueMapping(source = "allAccountsWithBalances", target = "ALLACCOUNTS")
+        })
+        AccountAccess.AvailableAccountsWithBalance accountsWithBalance(AccountAccessBody.AccountAccessType type);
+
+        @Mapping(source = "cons.access.allAccountsAccess", target = "access.availableAccounts")
+        @Mapping(source = "cons.access.allAccountsAccess", target = "access.availableAccountsWithBalance")
         Consents map(ConsentInitiateBody cons);
     }
 
