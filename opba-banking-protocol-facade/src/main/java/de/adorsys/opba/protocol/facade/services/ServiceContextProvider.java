@@ -40,6 +40,7 @@ public class ServiceContextProvider {
     private final ServiceSessionRepository serviceSessions;
     private final EncryptionProperties properties;
     private final SecretKeyOperations secretKeyOperations;
+    private final FacadeEncryptionServiceFactory facadeEncryptionServiceFactory;
 
     @Transactional
     @SneakyThrows
@@ -72,7 +73,7 @@ public class ServiceContextProvider {
     ) {
         if (null != authSession) {
             KeyDto keyDto = getSessionSecretKey(request);
-            EncryptionService encryptionService = FacadeEncryptionServiceFactory
+            EncryptionService encryptionService = facadeEncryptionServiceFactory
                     .provideEncryptionService(keyDto.getKey());
             return new ServiceSessionWithEncryption(authSession.getParent(), encryptionService);
         } else {
@@ -92,7 +93,7 @@ public class ServiceContextProvider {
         }
 
         KeyAndSaltDto keyAndSaltDto = getSessionSecretKey(request);
-        EncryptionService encryptionService = FacadeEncryptionServiceFactory
+        EncryptionService encryptionService = facadeEncryptionServiceFactory
                 .provideEncryptionService(keyAndSaltDto.getKey());
         String encryptedContext = new String(encryptionService.encrypt(MAPPER.writeValueAsBytes(facadeServiceable)));
 
