@@ -62,7 +62,6 @@ services:
     ports:
       - 20016:8093
     depends_on:
-      - opba-banking-gateway
       - x2sa-sandbox-onlinebankingui
       - x2sa-sandbox-ledgersapp
     volumes:
