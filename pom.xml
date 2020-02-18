@@ -425,6 +425,30 @@
 
     <profiles>
         <profile>
+            <id>run-embedded</id>
+            <build>
+                <plugins>
+                    <!-- Disabled Spring so that it is seen from parent-->
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <!-- Important one -->
+                            <skip>true</skip>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>repackage</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
             <id>release</id>
             <build>
                 <plugins>

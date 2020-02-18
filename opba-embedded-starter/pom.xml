@@ -104,6 +104,7 @@
                 <configuration>
                     <mainClass>de.adorsys.opba.starter.OpenBankingEmbeddedApplication</mainClass>
                     <executable>true</executable>
+                    <skip>false</skip>
                 </configuration>
                 <executions>
                     <execution>

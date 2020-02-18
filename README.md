@@ -25,6 +25,11 @@ In the Open Banking Context, a payment service user (PSU or banking account hold
 The following picture displays the overall architecture of this banking gateway:
 ![High level architecture](docs/img/open-banking-gateway-arch-14-01-2020.png)
 
+
+## Information for developers:
+ 
+ - Starting with project: [How to start with project](how-to-start-with-project) 
+
 ## Documentation
 
 Please take a look into our [**documentation**](https://adorsys.github.io/open-banking-gateway/doc/develop/) to know more about:
