@@ -85,4 +85,10 @@ Sandbox can be started using this docker-compose file [xs2a-sandbox-docker-compo
 
 ## Notes
 
-### Example of filled form:
+### Example of filled form for anton.brueckner:
+
+![Embedded authorization form](images/embedded-anton-brueckner.png)
+
+**anton.brueckner** has:
+ - TAN: 12345 
+ - SCA code: 123456
