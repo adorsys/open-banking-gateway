@@ -2,21 +2,20 @@ import { TestBed } from '@angular/core/testing';
 
 import { BankProfileService } from './bank-profile.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { BankSearchService } from './bank-search.service';
+import { FinTechBankSearchService } from '../../api';
 
 describe('BankProfileService', () => {
-  let httpTestingController: HttpTestingController;
+  let finTechBankSearchService: FinTechBankSearchService;
   let bankProfileService: BankProfileService;
-  const API_PATH = 'fintech-api-proxy'; // TODO: refactor and use `${environment.fintechApi}`;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [BankSearchService]
+      providers: [BankProfileService, FinTechBankSearchService]
     });
 
-    httpTestingController = TestBed.get(HttpTestingController);
     bankProfileService = TestBed.get(BankProfileService);
+    finTechBankSearchService = TestBed.get(FinTechBankSearchService);
   });
 
   it('should be created', () => {
