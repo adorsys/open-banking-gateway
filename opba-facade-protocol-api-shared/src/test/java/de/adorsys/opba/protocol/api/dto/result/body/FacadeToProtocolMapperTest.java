@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.api.dto.result.body;
 
 import de.adorsys.opba.tppbankingapi.ais.model.generated.AccountList;
+import de.adorsys.opba.tppbankingapi.ais.model.generated.AccountStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -17,6 +18,7 @@ public class FacadeToProtocolMapperTest {
         {
             AccountListDetailBody account = AccountListDetailBody.builder()
                     .iban(IBAN)
+                    .status(AccountStatus.DELETED.name())
                     .build();
 
             List<AccountListDetailBody> accountDetails = new ArrayList<>();
@@ -26,5 +28,6 @@ public class FacadeToProtocolMapperTest {
         }
         AccountList protocolEntity = Mappers.getMapper(FacadeToProtocolMapper.class).mapFromFacadeToProtocol(facadeEntity);
         Assertions.assertEquals(IBAN, protocolEntity.getAccounts().get(0).getIban());
+        Assertions.assertEquals(AccountStatus.DELETED.name(), protocolEntity.getAccounts().get(0).getStatus().name());
     }
 }

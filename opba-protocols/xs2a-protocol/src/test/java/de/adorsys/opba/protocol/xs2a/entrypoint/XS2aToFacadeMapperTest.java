@@ -5,6 +5,7 @@ import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
 import de.adorsys.xs2a.adapter.service.model.Amount;
 import de.adorsys.xs2a.adapter.service.model.Balance;
+import de.adorsys.xs2a.adapter.service.model.CashAccountType;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
@@ -31,6 +32,7 @@ public class XS2aToFacadeMapperTest {
             AccountDetails account = new AccountDetails();
             account.setIban(IBAN);
             account.setBalances(balances);
+            account.setCashAccountType(CashAccountType.CASH);
 
             List<AccountDetails> accounts = new ArrayList<>();
             accounts.add(account);
@@ -39,5 +41,6 @@ public class XS2aToFacadeMapperTest {
         }
         AccountListBody facadeEntity = Mappers.getMapper(XS2aToFacadeMapper.class).mapFromXs2aToFacade(xs2aEntity);
         Assert.assertEquals(IBAN, facadeEntity.getAccounts().get(0).getIban());
+        Assert.assertEquals(CashAccountType.CASH.name(), facadeEntity.getAccounts().get(0).getCashAccountType());
     }
 }
