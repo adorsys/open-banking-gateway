@@ -1,11 +1,9 @@
 package de.adorsys.opba.protocol.xs2a.service;
 
 import com.google.common.net.UrlEscapers;
-import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.common.TemplateParserContext;
@@ -17,18 +15,11 @@ import java.util.function.Consumer;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.RESULT;
 
-@Slf4j
 @UtilityClass
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Lombok generates private ctor.
 public class ContextUtil {
 
     public static <T> T getResult(DelegateExecution execution, Class<T> resultType) {
-        Object result = execution.getVariable(RESULT, Object.class);
-        if (result instanceof AccountListHolder) {
-            return (T) (new XS2aToFacadeMapper().getFacadeEntity((AccountListHolder) result));
-        }
-
-        log.debug("CONTEXT UTIL IS used for other class:{}", resultType);
         return execution.getVariable(RESULT, resultType);
     }
 
