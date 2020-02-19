@@ -92,3 +92,9 @@ Sandbox can be started using this docker-compose file [xs2a-sandbox-docker-compo
 **anton.brueckner** has:
  - TAN: 12345 
  - SCA code: 123456
+ 
+ ### Troubleshooting
+ 
+  - Unable to connect to 'open_banking' database in `/tmp/open-banking.log` file. 
+     - Most probably you need to do `rm -rf $HOME/docker/volumes/postgres` folder with postgres volume data,
+       as `POSTGRES_DB=open_banking` was not applied.
