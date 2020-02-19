@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.facade.dto;
+package de.adorsys.opba.protocol.api.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

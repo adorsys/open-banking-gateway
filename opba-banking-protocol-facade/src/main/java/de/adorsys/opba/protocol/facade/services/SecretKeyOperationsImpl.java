@@ -1,21 +1,24 @@
 package de.adorsys.opba.protocol.facade.services;
 
 import com.google.crypto.tink.Aead;
+import de.adorsys.opba.protocol.api.dto.KeyWithParamsDto;
 import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
 import de.adorsys.opba.protocol.facade.config.EncryptionProperties;
 import de.adorsys.opba.protocol.facade.config.FacadeSecurityProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.util.Base64;
 
-import static de.adorsys.opba.protocol.facade.utils.EncryptionUtils.getNewSalt;
+import static de.adorsys.opba.protocol.facade.config.EncryptionConfig.SECURE_RANDOM;
 
 @Service
 @RequiredArgsConstructor
+@Profile("!no-enc")
 public class SecretKeyOperationsImpl implements SecretKeyOperations {
 
     private final Aead aeadSystem;
@@ -38,21 +41,23 @@ public class SecretKeyOperationsImpl implements SecretKeyOperations {
 
     @Override
     @SneakyThrows
-    public byte[] generateKey(String password, String algo, byte[] salt, int iterCount) {
+    public KeyWithParamsDto generateKey(String password, String algo, byte[] salt, int iterCount) {
         PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), salt, iterCount);
         SecretKeyFactory keyFac = SecretKeyFactory.getInstance(algo, provider.getProvider());
-        return keyFac.generateSecret(pbeKeySpec).getEncoded();
+        byte[] key = keyFac.generateSecret(pbeKeySpec).getEncoded();
+        return new KeyWithParamsDto(key, salt, algo, properties.getSaltLength(), iterCount);
     }
 
     @Override
     @SneakyThrows
-    public byte[] generateKey(String password, byte[] salt) {
+    public KeyWithParamsDto generateKey(String password) {
+        byte[] salt = getNewSalt(properties.getSaltLength());
         return generateKey(password, properties.getAlgorithm(), salt, properties.getIterationCount());
     }
 
-    @Override
-    @SneakyThrows
-    public byte[] generateKey(String password) {
-        return generateKey(password, getNewSalt(properties.getSaltLength()));
+    private byte[] getNewSalt(int saltLength) {
+        byte[] salt = new byte[saltLength];
+        SECURE_RANDOM.nextBytes(salt);
+        return salt;
     }
 }
