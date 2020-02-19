@@ -1,5 +1,10 @@
 # How to start with project
- 
+
+# Open Banking Frontend 
+TBD
+
+# Open Banking Backend and Technical-UI
+
 ## Prerequisites
 
 Ensure you have:
@@ -102,3 +107,7 @@ Sandbox can be started using this docker-compose file [xs2a-sandbox-docker-compo
   - Unable to connect to 'open_banking' database in `/tmp/open-banking.log` file. 
      - Most probably you need to do `rm -rf $HOME/docker/volumes/postgres` folder with postgres volume data,
        as `POSTGRES_DB=open_banking` was not applied.
+
+
+# Deployment examples: FinTech server and UI
+TBD
