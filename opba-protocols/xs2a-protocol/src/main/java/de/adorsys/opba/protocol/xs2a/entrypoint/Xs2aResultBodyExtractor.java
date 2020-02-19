@@ -3,7 +3,6 @@ package de.adorsys.opba.protocol.xs2a.entrypoint;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionListBody;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.InternalProcessResult;
-import de.adorsys.opba.protocol.xs2a.service.XS2aToFacadeMapper;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
 import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
@@ -11,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.impl.persistence.entity.ExecutionEntity;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.protocol.xs2a.service.ContextUtil.getResult;
@@ -28,7 +28,7 @@ public class Xs2aResultBodyExtractor {
                         .singleResult();
         ExecutionEntity exec = (ExecutionEntity) updated;
 
-        return new XS2aToFacadeMapper().getFacadeEntity(getResult(exec, AccountListHolder.class));
+        return Mappers.getMapper(XS2aToFacadeMapper.class).mapFromXs2aToFacade(getResult(exec, AccountListHolder.class));
     }
 
     public TransactionListBody extractTransactionsReport(InternalProcessResult result) {
