@@ -26,5 +26,10 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-banking-rest-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>
