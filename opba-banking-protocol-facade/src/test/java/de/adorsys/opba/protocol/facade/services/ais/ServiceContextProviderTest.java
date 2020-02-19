@@ -25,25 +25,26 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.net.URI;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = ApplicationTest.class)
 public class ServiceContextProviderTest {
 
-    @Autowired
-    ProtocolResultHandler handler;
-
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .findAndRegisterModules()
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    public static final String PASSWORD = "password";
+    public static final String PROTOCOL_DEFINED_DATA_TO_STORE_IN_CONTEXT = "some context data";
+
+    @Autowired
+    ProtocolResultHandler handler;
 
     @Autowired
     ServiceContextProvider serviceContextProvider;
@@ -58,6 +59,9 @@ public class ServiceContextProviderTest {
     SecretKeyOperations secretKeyOperations;
 
     @Autowired
+    TransactionTemplate transactionTemplate;
+
+    @Autowired
     FacadeEncryptionServiceFactory facadeEncryptionServiceFactory;
 
     @Test
@@ -65,13 +69,12 @@ public class ServiceContextProviderTest {
     void saveSessionTest() {
         UUID id = UUID.randomUUID();
         String testBankID = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
-        String password = "password";
         ListAccountsRequest request = ListAccountsRequest.builder()
                 .facadeServiceable(
                         FacadeServiceableRequest.builder()
                                 .bankId(testBankID)
                                 .requestId(id)
-                                .sessionPassword(password)
+                                .sessionPassword(PASSWORD)
                                 .fintechRedirectUrlOk("http://google.com")
                                 .fintechRedirectUrlNok("http://microsoft.com")
                                 .build()
@@ -83,50 +86,15 @@ public class ServiceContextProviderTest {
         Result<URI> result = new ConsentAcquiredResult<>(redirectionTo);
         FacadeRedirectResult<URI> uriFacadeResult = (FacadeRedirectResult) handler.handleResult(result, id, providedContext);
 
-        assertThat(providedContext.getRequest().getFacadeServiceable().getSessionPassword()).isEqualTo(password);
+        assertThat(providedContext.getRequest().getFacadeServiceable().getSessionPassword()).isEqualTo(PASSWORD);
 
-        assertThat(serviceSessionRepository.count()).isEqualTo(1L);
-        Iterable<ServiceSession> all = serviceSessionRepository.findAll();
-        assertThat(all.iterator().hasNext()).isTrue();
-        ServiceSession session = all.iterator().next();
-
-        // check that key is recoverable with password
-        KeyWithParamsDto keyWithParams = secretKeyOperations.generateKey(
-                password,
-                session.getAlgo(),
-                session.getSalt(),
-                session.getIterCount()
-        );
-        assertThat(secretKeyOperations.decrypt(session.getSecretKey())).isEqualTo(keyWithParams.getKey());
-
-        // check that in context stored first request parameters facadServicable
-        String context = session.getContext();
-        byte[] decryptedContext = encryptionService.decrypt(context.getBytes());
-        FacadeServiceableRequest decryptedFacadeServiceble = MAPPER.readValue(decryptedContext, FacadeServiceableRequest.class);
-        assertAll("Test obj1 with obj2 equality",
-                () -> assertEquals(decryptedFacadeServiceble.getBankId(), request.getFacadeServiceable().getBankId()),
-                () -> assertEquals(decryptedFacadeServiceble.getRedirectCode(), request.getFacadeServiceable().getRedirectCode()),
-                () -> assertEquals(decryptedFacadeServiceble.getAuthorizationSessionId(), request.getFacadeServiceable().getAuthorizationSessionId()),
-                () -> assertEquals(decryptedFacadeServiceble.getAuthorization(), request.getFacadeServiceable().getAuthorization()),
-                () -> assertEquals(decryptedFacadeServiceble.getServiceSessionId(), request.getFacadeServiceable().getServiceSessionId()),
-                () -> assertEquals(decryptedFacadeServiceble.getSessionPassword(), request.getFacadeServiceable().getSessionPassword()),
-                () -> assertEquals(decryptedFacadeServiceble.getFintechRedirectUrlOk(), request.getFacadeServiceable().getFintechRedirectUrlOk()),
-                () -> assertEquals(decryptedFacadeServiceble.getFintechRedirectUrlNok(), request.getFacadeServiceable().getFintechRedirectUrlNok()));
-
-        // storing some data to context using provided encryption service
-        String protocolDefinedDataToStoreInContext = "some context data";
-        String encryptedContext = new String(encryptionService.encrypt(
-                MAPPER.writeValueAsBytes(protocolDefinedDataToStoreInContext))
-        );
-        session.setContext(encryptedContext);
-        session.setProtocol(protocolRepository.findById(3L).orElseThrow(() -> new IllegalArgumentException("protocol 3 not found")));
-        serviceSessionRepository.save(session);
+        UUID sessionId = transactionTemplate.execute(t -> checkSavedSession(encryptionService, request.getFacadeServiceable()));
 
         // check that stored data is encrypted
         ListAccountsRequest request2 = ListAccountsRequest.builder()
                 .facadeServiceable(
                         FacadeServiceableRequest.builder()
-                                .serviceSessionId(session.getId())
+                                .serviceSessionId(sessionId)
                                 .fintechRedirectUrlOk("http://google.com")
                                 .fintechRedirectUrlNok("http://microsoft.com")
                                 .authorizationSessionId(uriFacadeResult.getAuthorizationSessionId())
@@ -136,12 +104,50 @@ public class ServiceContextProviderTest {
         ServiceContext<FacadeServiceableGetter> providedContext2 = serviceContextProvider.provide(request2);
         EncryptionService encryptionService2 = providedContext2.getEncryptionService();
 
-        ServiceSession sessionForCheck = serviceSessionRepository.findById(session.getId()).orElseThrow(
-                () -> new IllegalArgumentException("Session not found:" + session.getId())
+        transactionTemplate.execute(t -> secondRequestCheck(sessionId, encryptionService2));
+    }
+
+    @SneakyThrows
+    private UUID checkSavedSession(EncryptionService encryptionService, FacadeServiceableRequest facadeServiceable) {
+
+        ServiceSession session = serviceSessionRepository.findAll().iterator().next();
+
+        // check that key is recoverable with password
+        KeyWithParamsDto keyWithParams = secretKeyOperations.generateKey(
+                PASSWORD,
+                session.getAlgo(),
+                session.getSalt(),
+                session.getIterCount()
         );
-        assertThat(sessionForCheck.getContext()).isNotEqualTo(protocolDefinedDataToStoreInContext);
+        assertThat(secretKeyOperations.decrypt(session.getSecretKey())).isEqualTo(keyWithParams.getKey());
+
+        // check that in context stored first request parameters facadServicable
+        String context = session.getContext();
+        byte[] decryptedContext = encryptionService.decrypt(context.getBytes());
+        FacadeServiceableRequest decryptedFacadeServiceble =
+                MAPPER.readValue(decryptedContext, FacadeServiceableRequest.class);
+        assertThat(decryptedFacadeServiceble).isEqualToComparingFieldByField(facadeServiceable);
+
+        // storing some data to context using provided encryption service
+        String encryptedContext = new String(encryptionService.encrypt(
+                MAPPER.writeValueAsBytes(PROTOCOL_DEFINED_DATA_TO_STORE_IN_CONTEXT))
+        );
+        session.setContext(encryptedContext);
+        session.setProtocol(protocolRepository.findById(3L).orElseThrow(
+                () -> new IllegalArgumentException("protocol 3 not found")));
+        serviceSessionRepository.save(session);
+        return session.getId();
+    }
+
+    @SneakyThrows
+    private Void secondRequestCheck(UUID sessionId, EncryptionService encryptionService2) {
+        ServiceSession sessionForCheck = serviceSessionRepository.findById(sessionId).orElseThrow(
+                () -> new IllegalArgumentException("Session not found:" + sessionId)
+        );
+        assertThat(sessionForCheck.getContext()).isNotEqualTo(PROTOCOL_DEFINED_DATA_TO_STORE_IN_CONTEXT);
 
         byte[] decryptedData = encryptionService2.decrypt(sessionForCheck.getContext().getBytes());
-        assertThat(MAPPER.readValue(decryptedData, String.class)).isEqualTo(protocolDefinedDataToStoreInContext);
+        assertThat(MAPPER.readValue(decryptedData, String.class)).isEqualTo(PROTOCOL_DEFINED_DATA_TO_STORE_IN_CONTEXT);
+        return null;
     }
 }
