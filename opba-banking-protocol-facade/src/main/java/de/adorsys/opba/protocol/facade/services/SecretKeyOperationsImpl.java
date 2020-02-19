@@ -14,11 +14,12 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.util.Base64;
 
+import static de.adorsys.opba.protocol.api.Profiles.NO_ENCRYPTION;
 import static de.adorsys.opba.protocol.facade.config.EncryptionConfig.SECURE_RANDOM;
 
 @Service
 @RequiredArgsConstructor
-@Profile("!no-enc")
+@Profile("!" + NO_ENCRYPTION)
 public class SecretKeyOperationsImpl implements SecretKeyOperations {
 
     private final Aead aeadSystem;

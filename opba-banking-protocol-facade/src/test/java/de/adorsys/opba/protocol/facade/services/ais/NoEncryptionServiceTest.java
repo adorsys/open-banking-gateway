@@ -9,9 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import static de.adorsys.opba.protocol.api.Profiles.NO_ENCRYPTION;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles("no-enc")
+@ActiveProfiles(NO_ENCRYPTION)
 @SpringBootTest(classes = ApplicationTest.class)
 public class NoEncryptionServiceTest {
     public static final byte[] TEST_DATA = "123".getBytes();

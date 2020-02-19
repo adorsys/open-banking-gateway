@@ -74,15 +74,15 @@ public class ServiceContextProviderTest {
         assertThat(all.iterator().hasNext()).isTrue();
         ServiceSession session = all.iterator().next();
 
-        KeyWithParamsDto keyWithParamsDto = secretKeyOperations.generateKey(
+        KeyWithParamsDto keyWithParams = secretKeyOperations.generateKey(
                 password,
                 session.getAlgo(),
                 session.getSalt(),
                 session.getIterCount()
         );
-        assertThat(secretKeyOperations.decrypt(session.getSecretKey())).isEqualTo(keyWithParamsDto.getKey());
+        assertThat(secretKeyOperations.decrypt(session.getSecretKey())).isEqualTo(keyWithParams.getKey());
 
-        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(keyWithParamsDto.getKey());
+        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(keyWithParams.getKey());
         byte[] decryptedData = encryptionService.decrypt(session.getContext().getBytes());
         assertThat(decryptedData).isEqualTo(MAPPER.writeValueAsBytes(request.getFacadeServiceable()));
 

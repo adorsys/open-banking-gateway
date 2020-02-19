@@ -68,9 +68,9 @@ public class ServiceContextProvider {
             AuthSession authSession
     ) {
         if (null != authSession) {
-            KeyDto keyDto = getSessionSecretKey(request);
+            KeyDto key = getSessionSecretKey(request);
             EncryptionService encryptionService = facadeEncryptionServiceFactory
-                    .provideEncryptionService(keyDto.getKey());
+                    .provideEncryptionService(key.getKey());
             return new ServiceSessionWithEncryption(authSession.getParent(), encryptionService);
         } else {
             return createServiceSession(request);
@@ -88,18 +88,18 @@ public class ServiceContextProvider {
             session.setId(serviceSessionId);
         }
 
-        KeyWithParamsDto keyWithParamsDto = getSessionSecretKey(request);
+        KeyWithParamsDto keyWithParams = getSessionSecretKey(request);
         EncryptionService encryptionService = facadeEncryptionServiceFactory
-                .provideEncryptionService(keyWithParamsDto.getKey());
+                .provideEncryptionService(keyWithParams.getKey());
         String encryptedContext = new String(encryptionService.encrypt(MAPPER.writeValueAsBytes(facadeServiceable)));
 
         session.setContext(encryptedContext);
         session.setFintechOkUri(facadeServiceable.getFintechRedirectUrlOk());
         session.setFintechNokUri(facadeServiceable.getFintechRedirectUrlNok());
-        session.setSecretKey(secretKeyOperations.encrypt(keyWithParamsDto.getKey()));
-        session.setAlgo(keyWithParamsDto.getAlgorithm());
-        session.setSalt(keyWithParamsDto.getSalt());
-        session.setIterCount(keyWithParamsDto.getIterationCount());
+        session.setSecretKey(secretKeyOperations.encrypt(keyWithParams.getKey()));
+        session.setAlgo(keyWithParams.getAlgorithm());
+        session.setSalt(keyWithParams.getSalt());
+        session.setIterCount(keyWithParams.getIterationCount());
         return new ServiceSessionWithEncryption(serviceSessions.save(session), encryptionService);
     }
 
