@@ -2,24 +2,20 @@ import { TestBed } from '@angular/core/testing';
 
 import { BankSearchService } from './bank-search.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { FinTechBankSearchService } from '../../api';
 
 describe('BankSearchService', () => {
-  let httpTestingController: HttpTestingController;
+  let finTechBankSearchService: FinTechBankSearchService;
   let bankSearchService: BankSearchService;
-  const API_PATH = 'fintech-api-proxy'; // TODO: refactor and use `${environment.fintechApi}`;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [BankSearchService]
+      providers: [BankSearchService, FinTechBankSearchService]
     });
 
-    httpTestingController = TestBed.get(HttpTestingController);
     bankSearchService = TestBed.get(BankSearchService);
-  });
-
-  afterEach(() => {
-    httpTestingController.verify();
+    finTechBankSearchService = TestBed.get(FinTechBankSearchService);
   });
 
   it('should be created', () => {
@@ -27,14 +23,9 @@ describe('BankSearchService', () => {
   });
 
   it('should test searchBanks method', () => {
-    // login credential is not correct
-    const keyword = 'deutsche';
-    bankSearchService.searchBanks(keyword).subscribe();
+    const finTechBankSearchServiceSpy = spyOn(finTechBankSearchService, 'bankSearchGET');
+    bankSearchService.searchBanks('deutsche');
 
-    const req = httpTestingController.expectOne(API_PATH + '/v1/search/bankSearch?keyword=deutsche');
-    expect(req.request.params.get('keyword')).toEqual('deutsche');
-    expect(req.cancelled).toBeFalsy();
-    expect(req.request.method).toEqual('GET');
-    req.flush([]);
+    expect(finTechBankSearchServiceSpy).toHaveBeenCalledWith('', '', 'deutsche');
   });
 });
