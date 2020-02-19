@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 
+import static de.adorsys.opba.protocol.api.Profiles.NO_ENCRYPTION;
+
 @Service
 @RequiredArgsConstructor
 public class FacadeEncryptionServiceFactory {
@@ -14,7 +16,7 @@ public class FacadeEncryptionServiceFactory {
     private final Environment env;
 
     public EncryptionService provideEncryptionService(byte[] key) {
-        if (Arrays.asList(env.getActiveProfiles()).contains("no-enc")) {
+        if (Arrays.asList(env.getActiveProfiles()).contains(NO_ENCRYPTION)) {
             return new NoEncryptionServiceImpl();
         }
         return new EncryptionServiceImpl(key);

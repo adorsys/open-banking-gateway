@@ -9,11 +9,13 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import static de.adorsys.opba.protocol.api.Profiles.NO_ENCRYPTION;
+
 @Data
 @Validated
 @Configuration
 @ConfigurationProperties(prefix = "facade.encryption")
-@Profile("!no-enc")
+@Profile("!" + NO_ENCRYPTION)
 public class EncryptionProperties {
     @NotNull
     private String providerName;

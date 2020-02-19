@@ -8,26 +8,28 @@ import com.google.crypto.tink.KeysetHandle;
 import com.google.crypto.tink.aead.AeadConfig;
 import lombok.SneakyThrows;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import javax.validation.constraints.NotNull;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.security.Security;
 
+import static de.adorsys.opba.protocol.api.Profiles.NO_ENCRYPTION;
+
 @Configuration
 public class EncryptionConfig {
     public static final SecureRandom SECURE_RANDOM = new SecureRandom();
-    @Value("${facade.encryption.providerName:BC}") String providerName;
-    @Value("${facade.encryption.keySetPath:example-keyset.json}") String keySetPath;
 
     @Bean
     @SneakyThrows
-    @Profile("!no-enc")
-    public Aead systemAeadConfig() {
+    @Profile("!" + NO_ENCRYPTION)
+    public Aead systemAeadConfig(EncryptionProperties properties) {
         AeadConfig.register();
+        @NotNull String keySetPath = properties.getKeySetPath();
         String path = Paths.get(keySetPath).toFile().exists()
                 ? Paths.get(keySetPath).toAbsolutePath().toString()
                 : Paths.get(Resources.getResource(keySetPath).toURI()).toAbsolutePath().toString();
@@ -36,8 +38,9 @@ public class EncryptionConfig {
     }
 
     @Bean
-    @Profile("!no-enc")
-    public FacadeSecurityProvider securityProvider() {
+    @Profile("!" + NO_ENCRYPTION)
+    public FacadeSecurityProvider securityProvider(EncryptionProperties properties) {
+        @NotNull String providerName = properties.getProviderName();
         if (null == Security.getProperty(providerName)) {
             Security.addProvider(new BouncyCastleProvider());
         }
@@ -46,7 +49,7 @@ public class EncryptionConfig {
     }
 
     @Bean
-    @Profile("no-enc")
+    @ConditionalOnMissingBean(Aead.class)
     public Aead systemAeadNoEncryptionConfig() {
         return new Aead() {
             @Override
@@ -62,7 +65,7 @@ public class EncryptionConfig {
     }
 
     @Bean
-    @Profile("no-enc")
+    @ConditionalOnMissingBean(FacadeSecurityProvider.class)
     public FacadeSecurityProvider securityProviderNoEncryption() {
         return new FacadeSecurityProvider(null);
     }

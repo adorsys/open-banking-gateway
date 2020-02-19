@@ -27,16 +27,16 @@ public class EncryptionServiceTest {
     void encryptDecryptPasswordTest() {
         String password = "QwE!@#";
 
-        KeyWithParamsDto keyWithParamsDto = secretKeyOperations.generateKey(password);
-        byte[] encryptedSecretKey = secretKeyOperations.encrypt(keyWithParamsDto.getKey());
+        KeyWithParamsDto keyWithParams = secretKeyOperations.generateKey(password);
+        byte[] encryptedSecretKey = secretKeyOperations.encrypt(keyWithParams.getKey());
 
         byte[] decryptedSecretKey = secretKeyOperations.decrypt(encryptedSecretKey);
 
         KeyWithParamsDto reCreatedFromPassword = secretKeyOperations.generateKey(
                 password,
-                keyWithParamsDto.getAlgorithm(),
-                keyWithParamsDto.getSalt(),
-                keyWithParamsDto.getIterationCount());
+                keyWithParams.getAlgorithm(),
+                keyWithParams.getSalt(),
+                keyWithParams.getIterationCount());
         assertThat(decryptedSecretKey).isEqualTo(reCreatedFromPassword.getKey());
     }
 
