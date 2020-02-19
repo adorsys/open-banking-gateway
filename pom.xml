@@ -119,7 +119,6 @@
         <testcontainers.version>1.12.4</testcontainers.version>
         <selenium-jupiter.version>3.3.4</selenium-jupiter.version>
         <slf4j-simple.version>1.7.29</slf4j-simple.version>
-        <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
         <!-- other properties -->
         <lombok-maven-plugin.version>1.18.6.0</lombok-maven-plugin.version>
         <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
