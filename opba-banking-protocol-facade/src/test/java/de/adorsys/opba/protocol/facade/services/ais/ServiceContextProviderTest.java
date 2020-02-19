@@ -3,22 +3,21 @@ package de.adorsys.opba.protocol.facade.services.ais;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import de.adorsys.opba.db.config.EnableBankingPersistence;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
+import de.adorsys.opba.protocol.api.dto.KeyWithParamsDto;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
+import de.adorsys.opba.protocol.facade.config.ApplicationTest;
 import de.adorsys.opba.protocol.facade.services.FacadeEncryptionServiceFactory;
 import de.adorsys.opba.protocol.facade.services.ServiceContextProvider;
-import de.adorsys.opba.protocol.xs2a.EnableXs2aProtocol;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +27,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ActiveProfiles("test")
-@SpringBootTest(classes = ServiceContextProviderTest.TestConfig.class)
+@SpringBootTest(classes = ApplicationTest.class)
 public class ServiceContextProviderTest {
 
     private static final ObjectMapper MAPPER = new ObjectMapper()
@@ -75,10 +74,15 @@ public class ServiceContextProviderTest {
         assertThat(all.iterator().hasNext()).isTrue();
         ServiceSession session = all.iterator().next();
 
-        byte[] key = secretKeyOperations.generateKey(password, session.getAlgo(), session.getSalt(), session.getIterCount());
-        assertThat(secretKeyOperations.decrypt(session.getSecretKey())).isEqualTo(key);
+        KeyWithParamsDto keyWithParamsDto = secretKeyOperations.generateKey(
+                password,
+                session.getAlgo(),
+                session.getSalt(),
+                session.getIterCount()
+        );
+        assertThat(secretKeyOperations.decrypt(session.getSecretKey())).isEqualTo(keyWithParamsDto.getKey());
 
-        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(key);
+        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(keyWithParamsDto.getKey());
         byte[] decryptedData = encryptionService.decrypt(session.getContext().getBytes());
         assertThat(decryptedData).isEqualTo(MAPPER.writeValueAsBytes(request.getFacadeServiceable()));
 
@@ -94,11 +98,5 @@ public class ServiceContextProviderTest {
         ServiceContext<FacadeServiceableGetter> providedContext2 = serviceContextProvider.provide(request2);
 
         assertThat(providedContext2.getRequest().getFacadeServiceable().getBankId()).isEqualTo(testBankID);
-    }
-
-    @EnableXs2aProtocol
-    @EnableBankingPersistence
-    @SpringBootApplication(scanBasePackages = "de.adorsys.opba.protocol.facade")
-    public static class TestConfig {
     }
 }
