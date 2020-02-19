@@ -7,7 +7,7 @@
     <!-- please do not remove but replace log level, thx peter -->
     <logger name="de.adorsys.opba.protocol.api.dto.result.body.FacadeToProtocolMapper" level="debug"/>
     <logger name="de.adorsys.opba.protocol.xs2a.service.ContextUtil" level="debug"/>
-    <logger name="de.adorsys.opba.protocol.xs2a.service.XS2aToFacadeMapper" level="debug"/>
+    <logger name="de.adorsys.opba.protocol.xs2a.entrypoint.XS2aToFacadeMapper" level="debug"/>
 
     <root level="info">
         <appender-ref ref="STDOUT" />

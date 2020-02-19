@@ -31,5 +31,22 @@
             <artifactId>opba-banking-rest-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <!-- Mappers -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+
+        <!-- TEST -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
 </project>
