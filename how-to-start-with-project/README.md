@@ -18,13 +18,16 @@ This section is primarily for project-developers. 'Technical-UI' is the stub UI 
 
 ### Application components:
 
- 1. Open banking backend - `OpenBankingEmbeddedApplication` Spring-boot application.
- 1. Open banking technical UI - `technical-embedded-ui` developer-only UI to drive backend.
- 1. XS2A Sandbox (XS2A-Dynamic-Sandbox) that mocks ASPSP (bank).
- 1. Postgres database (shared or separate (when using docker-compose) for Sandbox and Open banking backend)
+ 1. Open banking backend - 
+ [OpenBankingEmbeddedApplication](../opba-embedded-starter/src/main/java/de/adorsys/opba/starter/OpenBankingEmbeddedApplication.java) 
+ Spring-boot application.
+ 1. Open banking technical UI - [technical-embedded-ui](../technical-embedded-ui) developer-only UI to drive backend.
+ 1. [XS2A Sandbox (XS2A-Dynamic-Sandbox)](../how-to-start-with-project/xs2a-sandbox-only/docker-compose.yml) that mocks ASPSP (bank).
+ 1. Postgres database (for Sandbox and Open banking backend). 
+ **Note that open-banking database data will be persisted across runs in '$HOME/docker/volumes/postgres' if you use scripts below**
 
 ### Run from IDE
-In case you have `node.js (with npm), angular-cli` installed locally in addition to JDK and Docker, and you want to run 
+In case you have `Node.js (with npm) 12+, angular-cli` installed locally in addition to JDK and Docker, and you want to run 
 application directly from IDE, you can follow steps below:
 
 ##### 1. Starting only XS2A-Sandbox first
@@ -53,14 +56,14 @@ Sandbox can be started using this docker-compose file [xs2a-sandbox-docker-compo
 
 ### Running with docker-compose
 
-  1. `cd technical-ui`
+  1. `cd` to [technical-ui](technical-ui)
   1. Run [01.build.sh](technical-ui/01.build.sh) - build docker images of the required infrastructure
   1. Run [02.launch-from-docker.sh](technical-ui/02.launch-from-docker.sh) or `docker-compose up -e OPBA_PROFILES=dev,no-encryption` in current directory - start the project (in development mode)
   1. Open `http://localhost:5500/initial` in your browser
   
 ### Running manually (sandbox starts in one JVM - less resource usage, also you can debug everything easier)
   
-  1. `cd technical-ui`
+  1. `cd` to [technical-ui](technical-ui)
   1. Run [01.build.sh](technical-ui/01.build.sh) - build docker images of the required infrastructure (just for technical UI to be served without NPM and Angular-CLI)
   1. Run [02.launch-from-terminal.sh](technical-ui/02.launch-from-terminal.sh)
   1. Open `http://localhost:5500/initial` in your browser
@@ -68,7 +71,8 @@ Sandbox can be started using this docker-compose file [xs2a-sandbox-docker-compo
   **Or instead, same manually**:
   
   1. Start Postgres: `docker run --rm --name opba-pg-docker -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres`. 
-  This database will have admin user postgres/docker when started using aforementioned command.
+  This database will have admin user postgres/docker when started using aforementioned command. Its data will be persisted
+  across runs in `$HOME/docker/volumes/postgres`.
   1. Prepare Postgres (should be done only once) - execute: [open-banking-init.sql](../opba-db/src/main/resources/init.sql) 
   and [sandbox-init.sql](../opba-protocols/sandboxes/xs2a-sandbox/src/main/resources/sandbox/prepare-postgres.sql)
   1. Import maven project into your IDE. 
