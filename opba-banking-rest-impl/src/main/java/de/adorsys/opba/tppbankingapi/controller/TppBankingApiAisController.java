@@ -47,6 +47,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                                 .serviceSessionId(serviceSessionId)
                                 .requestId(xRequestID)
                                 .bankId(bankID)
+//                                .sessionPassword()
                                 .build()
                         ).build()
         ).thenApply(mapper::translate);
