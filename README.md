@@ -28,7 +28,7 @@ The following picture displays the overall architecture of this banking gateway:
 
 ## Information for developers:
  
- - Starting with project: [How to start with project](how-to-start-with-project) 
+ - Starting with project: [How to start with project](https://github.com/adorsys/open-banking-gateway/tree/develop/how-to-start-with-project) 
 
 ## Documentation
 
