@@ -122,7 +122,9 @@
     
     <changeSet id="create_index" author="mhr">
         <sql dbms="postgresql" stripComments="true">
-            CREATE INDEX bank_trgm_idx ON opb_bank USING gin ( (name || ' ' || bic || ' ' || bank_code) gin_trgm_ops);
+            CREATE INDEX bank_trgm_idx1 ON opb_bank USING gin (name gin_trgm_ops);
+            CREATE INDEX bank_trgm_idx2 ON opb_bank USING gin (bic gin_trgm_ops);
+            CREATE INDEX bank_trgm_idx3 ON opb_bank USING gin (bank_code gin_trgm_ops);
         </sql>
     </changeSet>
 
