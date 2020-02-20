@@ -52,4 +52,18 @@ class TestTppBankSearchController extends BaseMockitoTest {
                 .andExpect(jsonPath("$.bankProfileDescriptor.bic").value("GENODE51FUL"))
                 .andReturn();
     }
+
+    @Test
+    void testSimilarityThreshold() throws Exception {
+        mockMvc.perform(
+                get("/v1/banking/search/bank-search")
+                        .header("Authorization", "123")
+                        .header("X-Request-ID", "01f4ec8e-8fb8-4e37-8912-bae6ff227231")
+                        .param("keyword", "Sandbox")
+                        .param("max", "10")
+                        .param("start", "0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.bankDescriptor.length()").value("0"))
+                .andReturn();
+    }
 }
