@@ -1,10 +1,8 @@
 package de.adorsys.opba.protocol.api.dto;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 public class KeyWithParamsDto extends KeyDto {
     private byte[] salt;
     private String algorithm;

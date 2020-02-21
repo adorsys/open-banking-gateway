@@ -28,6 +28,7 @@ public class AccountService extends HandleAcceptedService {
 
         ResponseEntity<AccountList> accounts = tppAisClient.getAccounts(
                 contextInformation.getFintechID(),
+                contextInformation.getServiceSessionPassword(),
                 sessionEntity.getLoginUserName(),
                 fintechRedirectURLOK,
                 fintechRedirectURLNOK,
