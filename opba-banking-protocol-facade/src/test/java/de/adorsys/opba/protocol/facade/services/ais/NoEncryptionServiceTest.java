@@ -12,6 +12,9 @@ import org.springframework.test.context.ActiveProfiles;
 import static de.adorsys.opba.protocol.api.Profiles.NO_ENCRYPTION;
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Note: This test keeps DB in dirty state - doesn't cleanup after itself.
+ */
 @ActiveProfiles(NO_ENCRYPTION)
 @SpringBootTest(classes = ApplicationTest.class)
 public class NoEncryptionServiceTest {
