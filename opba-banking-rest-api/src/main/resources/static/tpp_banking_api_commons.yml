@@ -35,6 +35,16 @@ components:
       schema:
         type: string
 
+    ServiceSessionPassword:
+      name: Service-Session-Password
+      in: header
+      required: true
+      description: |
+        Password to encrypt users' context
+      example: "qwerty"
+      schema:
+        type: string
+
     Bank-ID:
       name: Bank-ID
       in: header

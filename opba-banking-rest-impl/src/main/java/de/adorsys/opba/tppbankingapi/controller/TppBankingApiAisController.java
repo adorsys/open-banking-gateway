@@ -27,6 +27,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     @Override
     public CompletableFuture getAccounts(
             String authorization,
+            String serviceSessionPassword,
             String fintechUserID,
             String fintechRedirectURLOK,
             String fintechRedirectURLNOK,
@@ -41,6 +42,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                                 // Get rid of CGILIB here by copying:
                                 .uaContext(userAgentContext.toBuilder().build())
                                 .authorization(authorization)
+                                .sessionPassword(serviceSessionPassword)
                                 .fintechUserId(fintechUserID)
                                 .fintechRedirectUrlOk(fintechRedirectURLOK)
                                 .fintechRedirectUrlNok(fintechRedirectURLNOK)
@@ -56,6 +58,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     public CompletableFuture getTransactions(
             String accountId,
             String authorization,
+            String serviceSessionPassword,
             String fintechUserID,
             String fintechRedirectURLOK,
             String fintechRedirectURLNOK,
@@ -75,6 +78,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                                 // Get rid of CGILIB here by copying:
                                 .uaContext(userAgentContext.toBuilder().build())
                                 .authorization(authorization)
+                                .sessionPassword(serviceSessionPassword)
                                 .fintechUserId(fintechUserID)
                                 .fintechRedirectUrlOk(fintechRedirectURLOK)
                                 .fintechRedirectUrlNok(fintechRedirectURLNOK)

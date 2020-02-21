@@ -17,6 +17,7 @@ export class InitialRequestComponent implements OnInit {
   fintechRedirectUriOk = new FormControl();
   fintechRedirectUriNok = new FormControl();
   authorization = new FormControl();
+  serviceSessionPassword = new FormControl();
   requestId = new FormControl();
   bankId = new FormControl();
   serviceSessionId = new FormControl();
@@ -25,7 +26,8 @@ export class InitialRequestComponent implements OnInit {
     this.fintechRedirectUriOk.setValue('http://localhost:5500/fintech-callback/ok');
     this.fintechRedirectUriNok.setValue('http://localhost:5500/fintech-callback/nok');
     this.fintechUserId.setValue('Anton_Brueckner');
-    this.authorization.setValue('qwerty');
+    this.authorization.setValue('MY-SUPER-FINTECH-ID');
+    this.serviceSessionPassword.setValue('qwerty');
     this.requestId.setValue('43da4e2f-72cb-43bb-8afd-683104de57f9');
     this.bankId.setValue('53c47f54-b9a4-465a-8f77-bc6cd5f0cf46');
     this.serviceSessionId.setValue('');
@@ -47,6 +49,7 @@ export class InitialRequestComponent implements OnInit {
       'Fintech-User-ID': this.fintechUserId.value,
       'Authorization': this.authorization.value,
       'X-Request-ID': this.requestId.value,
+      'Service-Session-Password': this.serviceSessionPassword.value,
       'Bank-ID': this.bankId.value,
       'Service-Session-ID': this.serviceSessionId.value
     };
