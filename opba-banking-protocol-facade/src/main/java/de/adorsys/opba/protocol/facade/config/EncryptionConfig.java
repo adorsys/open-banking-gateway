@@ -7,13 +7,13 @@ import com.google.crypto.tink.JsonKeysetReader;
 import com.google.crypto.tink.KeysetHandle;
 import com.google.crypto.tink.aead.AeadConfig;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import javax.validation.constraints.NotNull;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.security.Security;
@@ -21,6 +21,7 @@ import java.security.Security;
 import static de.adorsys.opba.protocol.api.Profiles.NO_ENCRYPTION;
 
 @Configuration
+@Slf4j
 public class EncryptionConfig {
     public static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
@@ -29,7 +30,7 @@ public class EncryptionConfig {
     @Profile("!" + NO_ENCRYPTION)
     public Aead systemAeadConfig(EncryptionProperties properties) {
         AeadConfig.register();
-        @NotNull String keySetPath = properties.getKeySetPath();
+        String keySetPath = properties.getKeySetPath();
         String path = Paths.get(keySetPath).toFile().exists()
                 ? Paths.get(keySetPath).toAbsolutePath().toString()
                 : Paths.get(Resources.getResource(keySetPath).toURI()).toAbsolutePath().toString();
@@ -40,7 +41,8 @@ public class EncryptionConfig {
     @Bean
     @Profile("!" + NO_ENCRYPTION)
     public FacadeSecurityProvider securityProvider(EncryptionProperties properties) {
-        @NotNull String providerName = properties.getProviderName();
+        log.warn("Open banking is working without encryption!");
+        String providerName = properties.getProviderName();
         if (null == Security.getProperty(providerName)) {
             Security.addProvider(new BouncyCastleProvider());
         }
@@ -51,6 +53,7 @@ public class EncryptionConfig {
     @Bean
     @ConditionalOnMissingBean(Aead.class)
     public Aead systemAeadNoEncryptionConfig() {
+        log.warn("Open banking is working without encryption!");
         return new Aead() {
             @Override
             public byte[] encrypt(byte[] plaintext, byte[] associatedData) {

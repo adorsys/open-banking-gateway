@@ -48,6 +48,7 @@ public class EncryptionServiceTest {
         KeyDto key = secretKeyOperations.generateKey(password);
         EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(key.getKey());
         byte[] encryptedData = encryptionService.encrypt(data.getBytes());
+        assertThat(encryptedData).isNotEqualTo(data.getBytes());
 
         byte[] decryptedData = encryptionService.decrypt(encryptedData);
 
