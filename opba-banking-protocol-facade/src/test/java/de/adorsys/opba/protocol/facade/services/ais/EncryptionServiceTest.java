@@ -13,6 +13,9 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Note: This test keeps DB in dirty state - doesn't cleanup after itself.
+ */
 @ActiveProfiles("test")
 @SpringBootTest(classes = ApplicationTest.class)
 public class EncryptionServiceTest {
