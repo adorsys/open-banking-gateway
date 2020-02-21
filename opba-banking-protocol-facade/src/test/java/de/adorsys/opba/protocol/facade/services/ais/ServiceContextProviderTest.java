@@ -133,8 +133,7 @@ public class ServiceContextProviderTest {
                 MAPPER.writeValueAsBytes(PROTOCOL_DEFINED_DATA_TO_STORE_IN_CONTEXT))
         );
         session.setContext(encryptedContext);
-        session.setProtocol(protocolRepository.findById(3L).orElseThrow(
-                () -> new IllegalArgumentException("protocol 3 not found")));
+        session.setProtocol(protocolRepository.findAll().iterator().next());
         serviceSessionRepository.save(session);
         return session.getId();
     }
