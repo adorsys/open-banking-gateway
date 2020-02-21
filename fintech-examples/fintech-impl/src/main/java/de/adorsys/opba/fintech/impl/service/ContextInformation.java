@@ -10,4 +10,5 @@ import java.util.UUID;
 public class ContextInformation {
     private final UUID xRequestID;
     private final String fintechID = "my-fintech-id";
+    private final String serviceSessionPassword = "very-secret-password";
 }

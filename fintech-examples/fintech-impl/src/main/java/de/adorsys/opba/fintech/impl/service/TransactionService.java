@@ -37,6 +37,7 @@ public class TransactionService extends HandleAcceptedService {
         ResponseEntity<TransactionsResponse> transactions = tppAisClient.getTransactions(
                 accountId,
                 contextInformation.getFintechID(),
+                contextInformation.getServiceSessionPassword(),
                 sessionEntity.getLoginUserName(),
                 fintechRedirectURLOK,
                 fintechRedirectURLNOK,
