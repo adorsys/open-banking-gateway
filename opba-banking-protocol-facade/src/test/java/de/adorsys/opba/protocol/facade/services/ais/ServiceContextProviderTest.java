@@ -112,7 +112,10 @@ public class ServiceContextProviderTest {
         ServiceContext<FacadeServiceableGetter> providedContext2 = serviceContextProvider.provide(request2);
         EncryptionService encryptionService2 = providedContext2.getEncryptionService();
 
-        secondRequestCheck(sessionId, encryptionService2);
+        txTemplate.execute(callback -> {
+            secondRequestCheck(sessionId, encryptionService2);
+            return null;
+        });
     }
 
     @SneakyThrows

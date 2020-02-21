@@ -6,9 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class KeyDto {
-    final byte[] key;
 
-    public KeyDto() {
-        key = null;
-    }
+    protected final byte[] key;
 }
