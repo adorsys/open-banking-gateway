@@ -71,6 +71,10 @@ java_tests:
 fintech-ui/node_modules:
 	cd fintech-examples/fintech-ui && npm install
 
+.PHONY : fintech-ui-test
+fintech-ui-test: fintech-ui/node_modules
+	cd fintech-examples/fintech-ui && ng test --watch false --single-run true
+
 .PHONY : fintech-ui
 fintech-ui: fintech-ui/node_modules
 	cd fintech-examples/fintech-ui && npm run build:prod
