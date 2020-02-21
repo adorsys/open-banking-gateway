@@ -31,6 +31,13 @@ This section is primarily for project-developers. 'Technical-UI' is the stub UI 
  1. Postgres database (for Sandbox and Open banking backend). 
  **Note that open-banking database data will be persisted across runs in '$HOME/docker/volumes/postgres' if you use scripts below**
 
+### Running backend:
+ 
+There are different ways to run backend:
+ 1. [Run from IDE](#run-from-ide) - if you want to have access to each component
+ 1. [Run from terminal using docker-compose](#running-with-docker-compose) - if you are fine with using simple docker-compose file
+ 1. [Run from terminal using maven](#running-with-maven) - if you want less resource usage
+
 ### Run from IDE
 In case you have `Node.js (with npm) 12+, angular-cli` installed locally in addition to JDK and Docker, and you want to run 
 application directly from IDE, you can follow steps below:
@@ -40,6 +47,10 @@ application directly from IDE, you can follow steps below:
 Sandbox can be started using this docker-compose file [xs2a-sandbox-docker-compose](../how-to-start-with-project/xs2a-sandbox-only/docker-compose.yml)
 
  `cd ../xs2a-sandbox-only; docker compose up`
+
+**Alternatively to docker-compose** you can use 
+[BasicTest#startTheSandbox](../opba-protocols/sandboxes/xs2a-sandbox/src/test/java/de/adorsys/opba/protocol/xs2a/testsandbox/BasicTest.java)
+which consumes less resources and has advantage of using single JVM for Sandbox.
 
 ##### 2. Starting backend and technical-ui next
 
@@ -52,7 +63,7 @@ Sandbox can be started using this docker-compose file [xs2a-sandbox-docker-compo
  1. Prepare and run technical-ui:
     - Install node modules at [tpp-ui](../technical-embedded-ui/tpp-ui/) 
     
-    `cd ../technical-embedded-ui/tpp-ui; ng serve --port 5500`
+    `cd ../technical-embedded-ui/tpp-ui; npm install`
     - Run technical-ui via [node package.json](../technical-embedded-ui/tpp-ui/package.json)
     
     ` ng serve --port 5500`
@@ -66,7 +77,8 @@ Sandbox can be started using this docker-compose file [xs2a-sandbox-docker-compo
   1. Run [02.launch-from-docker.sh](technical-ui/02.launch-from-docker.sh) or `docker-compose up -e OPBA_PROFILES=dev,no-encryption` in current directory - start the project (in development mode)
   1. Open `http://localhost:5500/initial` in your browser
   
-### Running manually (sandbox starts in one JVM - less resource usage, also you can debug everything easier)
+### Running with maven 
+**(Sandbox starts in one JVM - less resource usage, also you can debug everything easier)**
   
   1. `cd` to [technical-ui](technical-ui)
   1. Run [01.build.sh](technical-ui/01.build.sh) - build docker images of the required infrastructure (just for technical UI to be served without NPM and Angular-CLI)
