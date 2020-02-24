@@ -24,7 +24,8 @@ export class DynamicFormControlBase<T> {
   constructor(
     id: string,
     code: string,
-    message: string
+    message: string,
+    public target: Target
   ) {
     this.id = id;
     this.code = code || '';
@@ -54,4 +55,9 @@ export class DynamicFormControlBase<T> {
       throw new SyntaxError("Wrong type validator " + this.type);
     }
   }
+}
+
+export enum Target {
+  CONTEXT = 'CONTEXT',
+  AIS_CONSENT = 'AIS_CONSENT'
 }

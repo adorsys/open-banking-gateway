@@ -1,8 +1,8 @@
 <div class="container">
   <mat-form-field>
-    <input matInput placeholder="Account IBAN" [formControl]="iban" name="{{prefix}}iban"/>
+    <input matInput placeholder="Account IBAN" [ngModel]="ibanValue" (ngModelChange)="change($event)"/>
   </mat-form-field>
   <mat-form-field>
-    <input matInput placeholder="Account currency" [formControl]="currency" name="{{prefix}}currency"/>
+    <input matInput placeholder="Account currency" [formControl]="currency"/>
   </mat-form-field>
 </div>
