@@ -54,10 +54,9 @@ which consumes less resources and has advantage of using single JVM for Sandbox.
 
 ##### 2. Starting backend and technical-ui next
 
- 1. Start Postgres: `docker run --rm --name opba-pg-docker -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres`
+ 1. Start Postgres: `docker run --rm --name opba-pg-docker -e POSTGRES_PASSWORD=docker -e POSTGRES_DB=open_banking -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres`
  This database will have admin user postgres/docker when started using aforementioned command and it will be available at `localhost:5432`.
  1. Prepare Postgres (should be done only once) - execute: [open-banking-init.sql](../opba-db/src/main/resources/init.sql) 
- and [sandbox-init.sql](../opba-protocols/sandboxes/xs2a-sandbox/src/main/resources/sandbox/prepare-postgres.sql)
  1. Run OpenBanking backend (Spring-boot application) [OpenBankingEmbeddedApplication](../opba-embedded-starter/src/main/java/de/adorsys/opba/starter/OpenBankingEmbeddedApplication.java) 
  with profiles `dev,no-encryption,technical-ui`
  1. Prepare and run technical-ui:
@@ -87,11 +86,10 @@ which consumes less resources and has advantage of using single JVM for Sandbox.
   
   **Or instead, same manually**:
   
-  1. Start Postgres: `docker run --rm --name opba-pg-docker -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres`. 
+  1. Start Postgres: `docker run --rm --name opba-pg-docker -e POSTGRES_PASSWORD=docker -e POSTGRES_DB=open_banking -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres. 
   This database will have admin user postgres/docker when started using aforementioned command. Its data will be persisted
   across runs in `$HOME/docker/volumes/postgres`.
   1. Prepare Postgres (should be done only once) - execute: [open-banking-init.sql](../opba-db/src/main/resources/init.sql) 
-  and [sandbox-init.sql](../opba-protocols/sandboxes/xs2a-sandbox/src/main/resources/sandbox/prepare-postgres.sql)
   1. Import maven project into your IDE. 
   1. Run [BasicTest#startTheSandbox](../opba-protocols/sandboxes/xs2a-sandbox/src/test/java/de/adorsys/opba/protocol/xs2a/testsandbox/BasicTest.java). 
   This 'test' simply starts entire sandbox jars in single JVM (so you can run this test in debug mode to see what happens in Sandbox).
