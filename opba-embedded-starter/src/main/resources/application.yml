@@ -26,6 +26,11 @@ spring:
 bank-search:
   start: 0
   max: 10
+  keyword:
+    threshold:
+      name: 0.6
+      bic: 0.8
+      bank_code: 0.8
 
 protocol:
   redirect:
