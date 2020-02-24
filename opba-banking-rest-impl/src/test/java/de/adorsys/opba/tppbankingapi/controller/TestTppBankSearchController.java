@@ -34,8 +34,8 @@ class TestTppBankSearchController extends BaseMockitoTest {
                 .andExpect(jsonPath("$.bankDescriptor.length()").value("10"))
                 .andExpect(jsonPath("$.bankDescriptor[0].bankName").value("Commerzbank"))
                 .andExpect(jsonPath("$.bankDescriptor[0].bic").value("COBADEFFXXX"))
-                .andExpect(jsonPath("$.bankDescriptor[0].bankCode").value("36040039"))
-                .andExpect(jsonPath("$.bankDescriptor[0].uuid").value("dd624199-d071-4c95-b554-179b0e92c707"))
+                .andExpect(jsonPath("$.bankDescriptor[0].bankCode").value("35640064"))
+                .andExpect(jsonPath("$.bankDescriptor[0].uuid").value("291b2ca1-b35f-463e-ad94-2a1a26c09304"))
                 .andReturn();
     }
 

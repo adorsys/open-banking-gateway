@@ -4,3 +4,5 @@ spring:
     username: postgres
     password: docker
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+bank-search:
+  query:

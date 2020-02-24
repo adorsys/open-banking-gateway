@@ -16,3 +16,5 @@ facade:
 pkcs12:
   keyStore: sample-qwac.keystore
   password: password
+bank-search:
+  query:
