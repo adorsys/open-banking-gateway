@@ -20,7 +20,7 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 @Setter
 public class WithBasicInfo {
 
-    @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("psuId"))
+    @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("PSU_ID"))
     @NotBlank(message = "{no.ctx.psuId}")
     private String psuId;
 

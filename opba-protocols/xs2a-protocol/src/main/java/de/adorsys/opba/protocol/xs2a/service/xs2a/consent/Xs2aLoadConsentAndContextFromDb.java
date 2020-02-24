@@ -16,7 +16,7 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 
 @Service("xs2aLoadConsentAndContextFromDb")
 @RequiredArgsConstructor
-public class Xs2aLoadConsentFromDb  extends ValidatedExecution<Xs2aContext> {
+public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aContext> {
 
     private final Xs2aObjectMapper mapper;
     private final ConsentRepository consentRepository;

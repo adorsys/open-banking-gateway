@@ -26,5 +26,6 @@ public class FacadeServiceableRequest {
     private final String fintechRedirectUrlOk;
     private final String fintechRedirectUrlNok;
 
-    private final String sessionPassword;
+    @Builder.Default // FIXME - you shouldn't see it
+    private final String sessionPassword = "1234";
 }

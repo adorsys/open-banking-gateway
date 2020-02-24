@@ -65,7 +65,7 @@ import static org.awaitility.Awaitility.await;
 public enum SandboxApp {
 
     ONLINE_BANKING_UI("adorsys/xs2a-online-banking-ui:2.9", true), // adorsys/xs2a-online-banking-ui
-    LEDGERS_APP("ledgers-app-2.8.jar"), // adorsys/ledgers
+    LEDGERS_APP("ledgers-app-2.9.jar"), // adorsys/ledgers
     LEDGERS_GATEWAY("gateway-app-5.10.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP)), // adorsys/xs2a-connector-examples
     ASPSP_PROFILE("aspsp-profile-server-5.10-exec.jar"), // adorsys/xs2a-aspsp-profile
     CONSENT_MGMT("cms-standalone-service-5.10.jar"), // adorsys/xs2a-consent-management

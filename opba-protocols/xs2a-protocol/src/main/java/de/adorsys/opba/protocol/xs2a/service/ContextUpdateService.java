@@ -15,6 +15,8 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 /**
  * Service that deals with optimistic lock exceptions when updating context. They happen when API received
  * user input but we received outdated variable from database.
+ * Note that due to the how JsonCustomSerializer is implemented this class will always read correct context.
+ * If you create and persist Xs2aListAccountsContext it will be always read here as Xs2aListAccountsContext.
  */
 @Service
 @RequiredArgsConstructor

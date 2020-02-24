@@ -1,19 +1,27 @@
 package de.adorsys.opba.protocol.xs2a.domain.dto;
 
-import lombok.AllArgsConstructor;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.TargetObject;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NonNull;
 
-@Data
+@Getter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@EqualsAndHashCode(of = {"ctxCode", "target"})
 public class ValidationIssue {
 
-    private String uiCode;
-    private String ctxCode;
-    private String message;
+    @NonNull
+    private final String uiCode;
+
+    @NonNull
+    private final String ctxCode;
+
+    @NonNull
+    private final String message;
+
+    @NonNull
+    private final TargetObject target;
 
     @Override
     public String toString() {
@@ -21,6 +29,7 @@ public class ValidationIssue {
                 + "\"uiCode\":\"" + uiCode + "\""
                 + ", \"ctxCode\":\"" + ctxCode + "\""
                 + ", \"message\":\"" + message + "\""
+                + ", \"target\":\"" + target + "\""
                 + "}";
     }
 }

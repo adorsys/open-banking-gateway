@@ -59,6 +59,7 @@ public class Xs2aValidator {
         return ValidationIssue.builder()
                 .uiCode(info.ui().value())
                 .ctxCode(computeCtxCode(violation, info))
+                .target(info.ctx().target())
                 .message(violation.getMessage())
                 .build();
     }
