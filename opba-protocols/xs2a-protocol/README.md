@@ -49,4 +49,5 @@ Note `CONTEXT` in above snippet.
 
 ## IntelliJ and language injection
 
-1. Ensure that the directory with generated xml is not excluded. If is -> Right click -> Mark Directory As -> Not Excluded.
+1. Ensure that the directory with generated xml is not excluded. If is -> `Right click on directory` -> `Mark Directory As` -> `Not Excluded`.
+![Unexclude folder](docs/unexclude_dir.gif)
