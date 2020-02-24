@@ -46,3 +46,7 @@ I.e. the only proper way to communicate between processes is:
 Note `CONTEXT` in above snippet. 
 
 !TODO: Add XSLT validator for that.
+
+## IntelliJ and language injection
+
+1. Ensure that the directory with generated xml is not excluded. If is -> Right click -> Mark Directory As -> Not Excluded.
