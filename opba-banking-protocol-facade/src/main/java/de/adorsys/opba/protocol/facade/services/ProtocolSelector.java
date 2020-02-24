@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -63,16 +64,18 @@ public class ProtocolSelector {
     }
 
     private <A> A findActionBean(BankProtocol forProtocol, Map<String, A> actionBeans, ProtocolAction action) {
-        if (actionBeans.containsKey(forProtocol.getProtocolBeanName())) {
-            return actionBeans.get(forProtocol.getProtocolBeanName());
-        }
 
-        Optional<BankSubProtocol> subProtocol = forProtocol.getSubProtocols().stream()
-                .filter(it -> it.getAction() == action)
-                .findFirst();
+        return actionBeans.getOrDefault(forProtocol.getProtocolBeanName(),
+                                        findActionBeanFromSubProtocols(forProtocol.getSubProtocols(), actionBeans, action));
+    }
+
+    private <A> A findActionBeanFromSubProtocols(Collection<BankSubProtocol> subProtocols, Map<String, A> actionBeans, ProtocolAction action) {
+        Optional<BankSubProtocol> subProtocol = subProtocols.stream()
+                                                        .filter(it -> it.getAction() == action)
+                                                        .findFirst();
 
         return subProtocol
-                .map(sub -> actionBeans.get(sub.getSubProtocolBeanName()))
-                .orElse(null);
+                       .map(sub -> actionBeans.get(sub.getSubProtocolBeanName()))
+                       .orElse(null);
     }
 }

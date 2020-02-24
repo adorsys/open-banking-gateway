@@ -79,17 +79,16 @@ public class ServiceContextProvider {
     }
 
     private ServiceSessionWithEncryption readOrCreateServiceSessionFromRequest(FacadeServiceableRequest facadeServiceable) {
-        UUID seviceSessionId = facadeServiceable.getServiceSessionId();
+        UUID serviceSessionId = facadeServiceable.getServiceSessionId();
 
-        if (null == seviceSessionId) {
+        if (null == serviceSessionId) {
             return createServiceSession(facadeServiceable);
         }
 
-        return serviceSessions.findById(seviceSessionId)
+        return serviceSessions.findById(serviceSessionId)
             .map(it -> serviceSessionWithEncryption(it, facadeServiceable))
             .orElseGet(() -> createServiceSession(facadeServiceable));
     }
-
 
     @NotNull
     @SneakyThrows

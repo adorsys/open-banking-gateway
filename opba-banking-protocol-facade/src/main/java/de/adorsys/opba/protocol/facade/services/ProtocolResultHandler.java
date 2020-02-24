@@ -94,7 +94,7 @@ public class ProtocolResultHandler {
     private <O, R extends FacadeServiceableGetter> FacadeResult<O> handleRedirect(
         RedirectionResult<O> result, UUID xRequestId, ServiceContext<R> session
     ) {
-        if (!authSessionFromDb(session).isPresent()) {
+        if (!authSessionFromDb(session.getServiceSessionId()).isPresent()) {
             return handleAuthorizationStart(result, xRequestId, session);
         }
 
@@ -127,13 +127,13 @@ public class ProtocolResultHandler {
 
     private <O> AuthSession updateAuthContext(Result<O> result, ServiceContext session) {
         // Auth session is 1-1 to service session, using id as foreign key
-        return authSessionFromDb(session)
+        return authSessionFromDb(session.getServiceSessionId())
                 .map(it -> updateExistingAuthSession(result, session, it))
                 .orElseGet(() -> createNewAuthSession(result, session));
     }
 
-    private Optional<AuthSession> authSessionFromDb(ServiceContext session) {
-        return authenticationSessions.findByParentId(session.getServiceSessionId());
+    private Optional<AuthSession> authSessionFromDb(UUID serviceSessionId) {
+        return authenticationSessions.findByParentId(serviceSessionId);
     }
 
     @NotNull
