@@ -86,7 +86,7 @@ which consumes less resources and has advantage of using single JVM for Sandbox.
   
   **Or instead, same manually**:
   
-  1. Start Postgres: `docker run --rm --name opba-pg-docker -e POSTGRES_PASSWORD=docker -e POSTGRES_DB=open_banking -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres. 
+  1. Start Postgres: `docker run --rm --name opba-pg-docker -e POSTGRES_PASSWORD=docker -e POSTGRES_DB=open_banking -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres`. 
   This database will have admin user postgres/docker when started using aforementioned command. Its data will be persisted
   across runs in `$HOME/docker/volumes/postgres`.
   1. Prepare Postgres (should be done only once) - execute: [open-banking-init.sql](../opba-db/src/main/resources/init.sql) 
