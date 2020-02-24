@@ -26,12 +26,17 @@ spring:
 bank-search:
   start: 0
   max: 10
-  keyword:
-    threshold:
-      name: 0.6
-      bic: 0.8
-      bank_code: 0.8
-
+  query: "SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, name) as sml
+          FROM opb_bank WHERE word_similarity(:keyword, name) >= 0.6
+        UNION
+         SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bic) as sml
+          FROM opb_bank WHERE word_similarity(:keyword, bic) >= 0.8
+        UNION
+         SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bank_code) as sml
+          FROM opb_bank WHERE word_similarity(:keyword, bank_code) >= 0.8
+        ORDER BY sml DESC
+        LIMIT :max
+        OFFSET :start"
 protocol:
   redirect:
     consent-accounts:
