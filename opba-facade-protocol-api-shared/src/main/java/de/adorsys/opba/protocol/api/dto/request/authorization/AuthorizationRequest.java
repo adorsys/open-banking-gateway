@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AuthorizationRequest implements FacadeServiceableGetter {
 
     private FacadeServiceableRequest facadeServiceable;
+    private AisConsent aisConsent;
 
     private Map<String, String> scaAuthenticationData = new ConcurrentHashMap<>();
 

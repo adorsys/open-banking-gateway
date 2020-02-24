@@ -11,7 +11,7 @@ import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
 import de.adorsys.opba.protocol.xs2a.service.eventbus.ProcessEventHandlerRegistrar;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
@@ -41,7 +41,7 @@ public class Xs2aListAccountsEntrypoint implements ListAccounts {
 
     @Override
     public CompletableFuture<Result<AccountListBody>> execute(ServiceContext<ListAccountsRequest> serviceContext) {
-        Xs2aContext context = mapper.map(serviceContext.getRequest());
+        AccountListXs2aContext context = mapper.map(serviceContext.getRequest());
         context.setAction(ProtocolAction.LIST_ACCOUNTS);
         extender.extend(context, serviceContext);
 
@@ -60,11 +60,11 @@ public class Xs2aListAccountsEntrypoint implements ListAccounts {
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-    public interface FromRequest extends DtoMapper<ListAccountsRequest, Xs2aContext> {
+    public interface FromRequest extends DtoMapper<ListAccountsRequest, AccountListXs2aContext> {
 
         @Mapping(source = "facadeServiceable.bankId", target = "aspspId")
         @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress")
         @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType", nullValuePropertyMappingStrategy = IGNORE)
-        Xs2aContext map(ListAccountsRequest ctx);
+        AccountListXs2aContext map(ListAccountsRequest ctx);
     }
 }

@@ -11,7 +11,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ContextCode {
 
     /**
-     * Direct path in context class.
+     * Direct path in context class or other type of field identifier. Is used for de-duplication and frontend rendering.
+     * Also they can be used to read current context values (FUTURE dev).
      */
     String value() default "";
 
@@ -19,4 +20,10 @@ public @interface ContextCode {
      * Prefix how to reach field in context class that will be appended with validation error path.
      */
     String prefix() default "";
+
+    /**
+     * Whether the field belongs to AIS consent object. In such case its value/prefix is ignored.
+     * Used for frontend rendering.
+     */
+    TargetObject target() default TargetObject.CONTEXT;
 }

@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a;
 
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.TransactionListXs2aContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import org.springframework.stereotype.Service;
 

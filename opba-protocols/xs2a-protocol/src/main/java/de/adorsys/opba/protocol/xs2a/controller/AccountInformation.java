@@ -7,7 +7,7 @@ import de.adorsys.opba.protocol.xs2a.controller.constants.ApiVersion;
 import de.adorsys.opba.protocol.xs2a.service.eventbus.ProcessEventHandlerRegistrar;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.ContextFactory;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.TransactionListXs2aContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.TransactionsReport;

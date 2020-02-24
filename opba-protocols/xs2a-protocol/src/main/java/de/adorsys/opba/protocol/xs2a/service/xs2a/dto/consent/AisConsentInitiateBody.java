@@ -3,18 +3,14 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ContextCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.Xs2aAisContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import de.adorsys.xs2a.adapter.service.model.AccountAccess;
 import de.adorsys.xs2a.adapter.service.model.Consents;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.ValueMapping;
-import org.mapstruct.ValueMappings;
 
 import javax.validation.Valid;
 import javax.validation.constraints.FutureOrPresent;
@@ -25,26 +21,27 @@ import java.util.List;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
+import static de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.TargetObject.AIS_CONSENT;
 
 @Getter
 @Setter
-public class ConsentInitiateBody {
+public class AisConsentInitiateBody {
 
     @Valid
-    @ValidationInfo(ui = @FrontendCode("accountaccess.class"), ctx = @ContextCode("consent.access"))
+    @ValidationInfo(ui = @FrontendCode("accountaccess.class"), ctx = @ContextCode(value = "access", target = AIS_CONSENT))
     @NotNull(message = "{no.ctx.accountaccess}")
     private AccountAccessBody access;
 
-    @ValidationInfo(ui = @FrontendCode("boolean.boolean"), ctx = @ContextCode("consent.recurringIndicator"))
+    @ValidationInfo(ui = @FrontendCode("boolean.boolean"), ctx = @ContextCode(value = "recurringIndicator", target = AIS_CONSENT))
     @NotNull(message = "{no.ctx.recurringIndicator}")
     private Boolean recurringIndicator;
 
-    @ValidationInfo(ui = @FrontendCode("date.string"), ctx = @ContextCode("consent.validUntil"))
+    @ValidationInfo(ui = @FrontendCode("date.string"), ctx = @ContextCode(value = "validUntil", target = AIS_CONSENT))
     @NotNull(message = "{no.ctx.validUntil}")
     @FutureOrPresent(message = "{future.ctx.validUntil}")
     private LocalDate validUntil;
 
-    @ValidationInfo(ui = @FrontendCode("textbox.integer"), ctx = @ContextCode("consent.frequencyPerDay"))
+    @ValidationInfo(ui = @FrontendCode("textbox.integer"), ctx = @ContextCode(value = "frequencyPerDay", target = AIS_CONSENT))
     @NotNull(message = "{no.ctx.frequencyPerDay}")
     private Integer frequencyPerDay;
 
@@ -53,6 +50,7 @@ public class ConsentInitiateBody {
 
     @Getter
     @Setter
+    // FIXME: should use conditional validator - access accounts/balances/transactions OR availableAccounts/allPsd2
     public static class AccountAccessBody {
 
         // These fields are conditionally-validated
@@ -60,21 +58,15 @@ public class ConsentInitiateBody {
         private List<@Valid AccountReferenceBody> balances;
         private List<@Valid AccountReferenceBody> transactions;
 
-        private AccountAccessType allAccountsAccess;
-        private AccountAccess.AllPsd2Enum allPsd2;
-
-        @RequiredArgsConstructor
-        public enum AccountAccessType {
-            allAccounts,
-            allAccountsWithBalances;
-        }
+        private String availableAccounts;
+        private String allPsd2;
     }
 
     @Getter
     @Setter
     public static class AccountReferenceBody {
 
-        @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode(prefix = "consent"))
+        @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode(prefix = "ais", target = AIS_CONSENT))
         @NotBlank(message = "{no.ctx.iban}")
         private String iban;
 
@@ -82,10 +74,6 @@ public class ConsentInitiateBody {
         private String pan;
         private String maskedPan;
         private String msisdn;
-
-        // TODO check if it is necessary
-        @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode(prefix = "consent"))
-        @NotBlank(message = "{no.ctx.currency}")
         private String currency;
 
         @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
@@ -95,34 +83,38 @@ public class ConsentInitiateBody {
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-    public interface ToXs2aApi extends DtoMapper<ConsentInitiateBody, Consents> {
+    public interface ToXs2aApi extends DtoMapper<AisConsentInitiateBody, Consents> {
 
-        default Consents map(Xs2aContext cons) {
-            return map(cons.getConsent());
+        default Consents map(Xs2aAisContext cons) {
+            return map(cons.getAisConsent());
         }
 
-        @ValueMappings({
-                @ValueMapping(source = "allAccounts", target = "ALLACCOUNTS"),
-                @ValueMapping(source = "allAccountsWithBalances", target = MappingConstants.NULL)
-        })
-        AccountAccess.AvailableAccountsEnum accounts(AccountAccessBody.AccountAccessType type);
+        default AccountAccess.AvailableAccountsEnum accounts(String availableAccounts) {
+            if ("ALL_ACCOUNTS".equals(availableAccounts)) {
+                return AccountAccess.AvailableAccountsEnum.ALLACCOUNTS;
+            }
 
-        @ValueMappings({
-                @ValueMapping(source = "allAccounts", target = MappingConstants.NULL),
-                @ValueMapping(source = "allAccountsWithBalances", target = "ALLACCOUNTS")
-        })
-        AccountAccess.AvailableAccountsWithBalance accountsWithBalance(AccountAccessBody.AccountAccessType type);
+            return null;
+        }
 
-        @Mapping(source = "cons.access.allAccountsAccess", target = "access.availableAccounts")
-        @Mapping(source = "cons.access.allAccountsAccess", target = "access.availableAccountsWithBalance")
-        Consents map(ConsentInitiateBody cons);
+        default AccountAccess.AvailableAccountsWithBalance accountsWithBalance(String availableAccounts) {
+            if ("ALL_ACCOUNTS_WITH_BALANCES".equals(availableAccounts)) {
+                return AccountAccess.AvailableAccountsWithBalance.ALLACCOUNTS;
+            }
+
+            return null;
+        }
+
+        @Mapping(source = "cons.access.availableAccounts", target = "access.availableAccounts")
+        @Mapping(source = "cons.access.availableAccounts", target = "access.availableAccountsWithBalance")
+        Consents map(AisConsentInitiateBody cons);
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-    public interface FromCtx extends DtoMapper<Xs2aContext, ConsentInitiateBody> {
+    public interface FromCtx extends DtoMapper<Xs2aAisContext, AisConsentInitiateBody> {
 
-        default ConsentInitiateBody map(Xs2aContext cons) {
-            return null == cons.getConsent() ? new ConsentInitiateBody() : cons.getConsent();
+        default AisConsentInitiateBody map(Xs2aAisContext cons) {
+            return null == cons.getAisConsent() ? new AisConsentInitiateBody() : cons.getAisConsent();
         }
     }
 }

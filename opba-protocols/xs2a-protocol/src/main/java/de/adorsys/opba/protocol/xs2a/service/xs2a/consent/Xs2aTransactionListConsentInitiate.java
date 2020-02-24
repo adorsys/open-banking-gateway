@@ -4,7 +4,7 @@ import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
 import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedHeadersBody;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.TransactionListXs2aContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
@@ -23,7 +23,7 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 @RequiredArgsConstructor
 public class Xs2aTransactionListConsentInitiate extends ValidatedExecution<TransactionListXs2aContext> {
 
-    private final ConsentInitiateExtractor extractor;
+    private final AisConsentInitiateExtractor extractor;
     private final AccountInformationService ais;
     private final Xs2aValidator validator;
     private final ProtocolConfiguration configuration;

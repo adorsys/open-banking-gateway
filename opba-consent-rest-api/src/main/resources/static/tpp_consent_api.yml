@@ -734,10 +734,7 @@ components:
       required:
       - access
       - frequencyPerDay
-      - id
       - recurringIndicator
-      - tppId
-      - userId
       - validUntil
       type: object
       properties:
@@ -749,21 +746,11 @@ components:
             this attribute is set to 1
           format: int32
           example: 4
-        id:
-          type: string
-          description: The consent id
         recurringIndicator:
           type: boolean
           description: '''true'', if the consent is for recurring access to the account
             data , ''false'', if the consent is for one access to the account data'
           example: false
-        tppId:
-          type: string
-          description: ID of the corresponding TPP.
-          example: testTPP
-        userId:
-          type: string
-          description: Corresponding PSU
         validUntil:
           type: string
           description: Consent`s expiration date. The content is the local ASPSP date
@@ -863,6 +850,11 @@ components:
             type: string
           description: SCA authentication data, depending on the chosen authentication
             method. If the data is binary, then it is base64 encoded.
+        extras:
+          type: object
+          additionalProperties:
+            type: string
+          description: ASPSP customary authorization parameters required to i.e. initiate consent.
 
     BulkPayment:
       title: BulkPayment

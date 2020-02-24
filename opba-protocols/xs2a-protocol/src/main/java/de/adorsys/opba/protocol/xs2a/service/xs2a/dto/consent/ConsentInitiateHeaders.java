@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ContextCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.Xs2aAisContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.WithBasicInfo;
 import de.adorsys.xs2a.adapter.service.RequestHeaders;
@@ -24,7 +24,7 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_URI;
 @Setter
 public class ConsentInitiateHeaders extends WithBasicInfo {
 
-    @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("psuIpAddress"))
+    @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("PSU_IP_ADDRESS"))
     @NotBlank(message = "{no.ctx.psuIpAddress}")
     private String psuIpAddress;
 
@@ -45,7 +45,7 @@ public class ConsentInitiateHeaders extends WithBasicInfo {
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-    public interface FromCtx extends DtoMapper<Xs2aContext, ConsentInitiateHeaders> {
-        ConsentInitiateHeaders map(Xs2aContext ctx);
+    public interface FromAisCtx extends DtoMapper<Xs2aAisContext, ConsentInitiateHeaders> {
+        ConsentInitiateHeaders map(Xs2aAisContext ctx);
     }
 }

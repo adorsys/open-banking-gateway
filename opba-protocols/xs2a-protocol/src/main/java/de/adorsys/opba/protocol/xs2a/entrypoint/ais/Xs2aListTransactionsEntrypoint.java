@@ -11,7 +11,7 @@ import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
 import de.adorsys.opba.protocol.xs2a.service.eventbus.ProcessEventHandlerRegistrar;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.TransactionListXs2aContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;

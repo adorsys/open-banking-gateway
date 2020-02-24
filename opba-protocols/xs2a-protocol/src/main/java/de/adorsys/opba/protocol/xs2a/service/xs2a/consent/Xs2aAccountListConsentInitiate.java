@@ -4,7 +4,7 @@ import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
 import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedHeadersBody;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
@@ -21,15 +21,15 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 
 @Service("xs2aAccountListConsentInitiate")
 @RequiredArgsConstructor
-public class Xs2aAccountListConsentInitiate extends ValidatedExecution<Xs2aContext> {
+public class Xs2aAccountListConsentInitiate extends ValidatedExecution<AccountListXs2aContext> {
 
-    private final ConsentInitiateExtractor extractor;
+    private final AisConsentInitiateExtractor extractor;
     private final AccountInformationService ais;
     private final Xs2aValidator validator;
     private final ProtocolConfiguration configuration;
 
     @Override
-    protected void doPrepareContext(DelegateExecution execution, Xs2aContext context) {
+    protected void doPrepareContext(DelegateExecution execution, AccountListXs2aContext context) {
         context.setRedirectUriOk(
                 ContextUtil.evaluateSpelForCtx(configuration.getRedirect().getConsentAccounts().getOk(), execution, context)
         );
@@ -39,12 +39,12 @@ public class Xs2aAccountListConsentInitiate extends ValidatedExecution<Xs2aConte
     }
 
     @Override
-    protected void doValidate(DelegateExecution execution, Xs2aContext context) {
+    protected void doValidate(DelegateExecution execution, AccountListXs2aContext context) {
         validator.validate(execution, extractor.forValidation(context)); // flatten path
     }
 
     @Override
-    protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+    protected void doRealExecution(DelegateExecution execution, AccountListXs2aContext context) {
         ValidatedHeadersBody<ConsentInitiateHeaders, Consents> params = extractor.forExecution(context);
         Response<ConsentCreationResponse> consentInit = ais.createConsent(
                 params.getHeaders().toHeaders(),
@@ -56,7 +56,7 @@ public class Xs2aAccountListConsentInitiate extends ValidatedExecution<Xs2aConte
     }
 
     @Override
-    protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
+    protected void doMockedExecution(DelegateExecution execution, AccountListXs2aContext context) {
         context.setConsentId("MOCK-" + UUID.randomUUID().toString());
         execution.setVariable(CONTEXT, context);
     }
