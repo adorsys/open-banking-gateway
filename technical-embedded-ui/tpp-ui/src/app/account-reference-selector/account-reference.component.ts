@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
@@ -11,31 +11,26 @@ export class AccountReferenceComponent implements OnInit {
   iban: FormControl = new FormControl();
   currency: FormControl = new FormControl();
 
+  @Input() ibanValue: string;
   @Input() form: FormGroup;
-  @Input() elemId: number;
-  @Input() prefix = '';
+  @Output() ibanValueChange = new EventEmitter();
 
-  ibanName: string;
-  currencyName: string;
 
   constructor() { }
 
-  static buildWithId(elemId: number): AccountReferenceComponent {
-    const result = new AccountReferenceComponent();
-    result.elemId = elemId;
-    return result;
-  }
 
   remove() {
-    this.form.removeControl(this.ibanName);
-    this.form.removeControl(this.currencyName);
+    this.form.removeControl(this.ibanValue + '.iban');
+    this.form.removeControl(this.ibanValue + '.currency');
+  }
+
+  change(newValue) {
+    this.ibanValue = newValue;
+    this.ibanValueChange.emit(newValue);
   }
 
   ngOnInit() {
-    this.ibanName = this.prefix + 'iban';
-    this.currencyName = this.prefix + 'currency';
-
-    this.form.addControl(this.ibanName, this.iban);
-    this.form.addControl(this.currencyName, this.currency);
+    this.form.addControl(this.ibanValue + '.iban', this.iban);
+    this.form.addControl(this.ibanValue + '.currency', this.currency);
   }
 }

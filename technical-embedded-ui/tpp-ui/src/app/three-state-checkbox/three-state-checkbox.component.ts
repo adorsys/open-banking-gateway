@@ -1,8 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
+import {Globals} from "../globals";
 
 @Component({
-  selector: 'three-state-checkbox',
+  selector: 'app-three-state-checkbox',
   templateUrl: './three-state-checkbox.component.html',
   styleUrls: ['./three-state-checkbox.component.css']
 })
@@ -17,10 +18,16 @@ export class ThreeStateCheckboxComponent implements OnInit {
 
   checkbox = new FormControl();
 
-  constructor() { }
+  constructor(private globals: Globals) { }
 
   ngOnInit() {
     this.form.removeControl(this.controlName); // FIXME, unknown why needed
     this.form.addControl(this.controlName, this.checkbox);
+
+    this.globals.userInfo.subscribe(it => {
+      if (it.id === this.controlName) {
+        this.state = it.value;
+      }
+    });
   }
 }

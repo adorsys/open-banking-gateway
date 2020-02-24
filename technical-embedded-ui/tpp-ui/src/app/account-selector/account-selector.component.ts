@@ -1,6 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
 import {AccountReferenceComponent} from "../account-reference-selector/account-reference.component";
+import {Globals} from "../globals";
+import {AccountAccessBody, AisConsentBody} from "../app-ais-consent/app-ais-consent.component";
 
 @Component({
   selector: 'app-account-selector',
@@ -10,43 +12,99 @@ import {AccountReferenceComponent} from "../account-reference-selector/account-r
 export class AccountSelectorComponent implements OnInit {
 
   @Input() form: FormGroup;
+  @Input() aisConsent: AisConsentBody;
 
-  accounts: AccountReferenceComponent[] = [];
-  balances: AccountReferenceComponent[] = [];
-  transactions: AccountReferenceComponent[] = [];
-
+  allChecked = {checked: false};
+  dedicatedChecked = {checked: false};
   allAccounts = new FormControl();
 
-  constructor() {}
+  constructor(private globals: Globals) {}
 
   ngOnInit() {
-    this.form.addControl('consent.access.allAccountsAccess', this.allAccounts);
+    this.aisConsent.access = new AccountAccessBody();
+    this.form.addControl('aisConsent.access.allAccountsAccess', this.allAccounts);
+
+    this.globals.userInfo.subscribe(it => {
+      if (it.id === 'ais.allAccounts') {
+        this.allChecked.checked = true;
+        this.aisConsent.access.availableAccounts = it.value;
+      }
+
+      if (it.id === 'ais.accounts') {
+        this.dedicatedChecked.checked = true;
+        const acc = this.addAccount();
+        this.aisConsent.access.accounts[acc] = it.value;
+      }
+
+      if (it.id === 'ais.balances') {
+        this.dedicatedChecked.checked = true;
+        const bal = this.addBalance();
+        this.aisConsent.access.balances[bal] = it.value;
+      }
+
+      if (it.id === 'ais.transactions') {
+        this.dedicatedChecked.checked = true;
+        const txn = this.addTransaction();
+        this.aisConsent.access.transactions[txn] = it.value;
+      }
+
+      if (it.id === 'ais.recurringIndicator') {
+        this.aisConsent.recurringIndicator = it.value;
+      }
+
+      if (it.id === 'ais.combinedServiceIndicator') {
+        this.aisConsent.combinedServiceIndicator = it.value;
+      }
+
+      if (it.id === 'ais.frequencyPerDay') {
+        this.aisConsent.frequencyPerDay = it.value;
+      }
+
+      if (it.id === 'ais.validUntil') {
+        this.aisConsent.validUntil = it.value;
+      }
+    });
   }
 
-  addAccount() {
-    this.accounts.push(AccountReferenceComponent.buildWithId(this.accounts.length));
+  addAccount() : number {
+    if (!this.aisConsent.access.accounts) {
+      this.aisConsent.access.accounts = [];
+    }
+
+    this.aisConsent.access.accounts.push("");
+    return this.aisConsent.access.accounts.length - 1;
   }
 
   removeAccount(acc: AccountReferenceComponent) {
-    this.accounts = this.accounts.filter(it => it.elemId != acc.elemId);
+    this.aisConsent.access.accounts.splice(this.aisConsent.access.accounts.indexOf(acc.ibanValue), 1);
     acc.remove();
   }
 
-  addBalance() {
-    this.balances.push(AccountReferenceComponent.buildWithId(this.balances.length));
+  addBalance(): number {
+    if (!this.aisConsent.access.balances) {
+      this.aisConsent.access.balances = [];
+    }
+
+    this.aisConsent.access.balances.push("");
+    return this.aisConsent.access.balances.length - 1;
   }
 
-  removeBalance(acc: AccountReferenceComponent) {
-    this.balances = this.balances.filter(it => it.elemId != acc.elemId);
-    acc.remove();
+  removeBalance(bal: AccountReferenceComponent) {
+    this.aisConsent.access.balances.splice(this.aisConsent.access.balances.indexOf(bal.ibanValue), 1);
+    bal.remove();
   }
 
-  addTransaction() {
-    this.transactions.push(AccountReferenceComponent.buildWithId(this.transactions.length));
+  addTransaction(): number {
+    if (!this.aisConsent.access.transactions) {
+      this.aisConsent.access.transactions = [];
+    }
+
+    this.aisConsent.access.transactions.push("");
+    return this.aisConsent.access.transactions.length - 1;
   }
 
-  removeTransaction(acc: AccountReferenceComponent) {
-    this.transactions = this.transactions.filter(it => it.elemId != acc.elemId);
-    acc.remove();
+  removeTransaction(txn: AccountReferenceComponent) {
+    this.aisConsent.access.transactions.splice(this.aisConsent.access.transactions.indexOf(txn.ibanValue), 1);
+    txn.remove();
   }
 }
