@@ -105,6 +105,9 @@
         <!-- Flowable BPMN -->
         <flowable.version>6.4.2</flowable.version>
 
+        <!-- Special libs -->
+        <maven.replacer.version>1.5.3</maven.replacer.version>
+
         <!-- Adorsys libs -->
         <xs2a-adapter.version>0.0.7</xs2a-adapter.version>
 

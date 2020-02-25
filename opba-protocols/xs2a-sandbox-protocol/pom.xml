@@ -1,0 +1,116 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>de.adorsys.opba</groupId>
+        <artifactId>opba-protocols</artifactId>
+        <version>0.0.6-SNAPSHOT</version>
+    </parent>
+
+    <!-- BPMN based engine to talk to XS2A-compliant banks -->
+    <artifactId>xs2a-sandbox-protocol</artifactId>
+    <name>opba-protocols/xs2a-sandbox-protocol</name>
+
+    <properties>
+      <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
+      Change this if depth changes. Current: /open-banking-gateway/opba-protocols/xs2a-protocol -->
+      <main.basedir>${project.parent.parent.basedir}</main.basedir>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>xs2a-protocol</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+        <plugins>
+            <!-- FLOW CUSTOMIZATION BEGIN (import remote, rename beans, remove processed original resources)-->
+            <!-- Importing XS2A flows: -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-remote-resources-plugin</artifactId>
+                <version>${maven-remote-resources-plugin.version}</version>
+                <configuration>
+                    <resourceBundles>
+                        <resourceBundle>de.adorsys.opba:xs2a-protocol:${project.version}</resourceBundle>
+                    </resourceBundles>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Protocol customization: -->
+            <!--
+            This plugin performs replacement of flowable-called beans with protocol customary ones.
+            We customize only 'xs2a-list-transactions.bpmn20.xml' flow as it is the only one that needs custom beans.
+            -->
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>${maven.replacer.version}</version>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <filesToInclude>${project.basedir}/target/classes/processes/xs2a/accounts/xs2a-list-transactions.bpmn20.xml</filesToInclude>
+                    <tokenValueMap>${project.basedir}/src/main/resources/context.properties</tokenValueMap>
+                    <inputFilePattern>(.*)/([A-Za-z0-9\.\-]+)$</inputFilePattern>
+                    <outputFilePattern>$1/sandbox-$2</outputFilePattern>
+                </configuration>
+            </plugin>
+            <!-- Remove original imported XS2A flow resource file that is superseded by resource with replacement -->
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                    <filesets>
+                        <fileset>
+                            <directory>target/classes/processes/xs2a/accounts</directory>
+                            <includes>xs2a-list-transactions.bpmn20.xml</includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+            <!-- FLOW CUSTOMIZATION END -->
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven.dependency.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>analyze</id>
+                        <goals>
+                            <goal>analyze-only</goal>
+                        </goals>
+                        <configuration>
+                            <failOnWarning>false</failOnWarning>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+

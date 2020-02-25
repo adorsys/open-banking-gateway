@@ -1,9 +1,13 @@
+# What is this
+
+This is the default implementation of XS2A protocol.
+
 # How to start local environment
 
 ## 1. Run/Create postgres docker container for banking protocol
 
 ```shell script
-docker run --rm  --name pg-docker -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data   postgres --max_prepared_transactions=100
+docker run --rm  --name pg-docker -e POSTGRES_PASSWORD=docker -e POSTGRES_DB=open_banking -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data   postgres --max_prepared_transactions=100
 ```
 Run [init.sql](core/banking-protocol/src/test/resources/init.sql) on it using user `postgres` and password `docker`
 to create schema banking_protocol and text-extensions.
@@ -46,6 +50,12 @@ I.e. the only proper way to communicate between processes is:
 Note `CONTEXT` in above snippet. 
 
 !TODO: Add XSLT validator for that.
+
+## Protocol customization
+
+To customize beans that are getting called in XS2A-protocol (for example to implement bank protocol tha calls some 
+custom beans, but follows XS2A flow) one can check [xs2a-sandbox-protocol](../xs2a-sandbox-protocol) directory.
+Customization is done by replacing bean names in generated xml files.
 
 ## IntelliJ and language injection
 
