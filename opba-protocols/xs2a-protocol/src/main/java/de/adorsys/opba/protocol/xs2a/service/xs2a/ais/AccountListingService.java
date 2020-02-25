@@ -13,11 +13,9 @@ import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.Response;
 import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
-@Slf4j
 @Service("xs2aAccountListing")
 @RequiredArgsConstructor
 public class AccountListingService extends ValidatedExecution<Xs2aContext> {
@@ -33,7 +31,6 @@ public class AccountListingService extends ValidatedExecution<Xs2aContext> {
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        log.debug("do real for:{}", context.toString());
         ValidatedQueryHeaders<Xs2aWithBalanceParameters, Xs2aWithConsentIdHeaders> params = extractor.forExecution(context);
         Response<AccountListHolder> accounts = ais.getAccountList(
                 params.getHeaders().toHeaders(),
