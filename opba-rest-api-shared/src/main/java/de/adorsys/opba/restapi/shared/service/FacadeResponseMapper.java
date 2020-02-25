@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedi
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeSuccessResult;
+import de.adorsys.opba.tppbankingapi.mapper.FacadeToRestMapperBase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ import static org.springframework.http.HttpStatus.SEE_OTHER;
 @RequiredArgsConstructor
 public class FacadeResponseMapper {
 
-    public <T> ResponseEntity<?> translate(FacadeResult<T> result) {
+    public <T> ResponseEntity<?> translate(FacadeResult<T> result, FacadeToRestMapperBase<T, ?> mapper) {
         if (result instanceof FacadeRedirectErrorResult) {
             return handleError((FacadeRedirectErrorResult) result);
         }
@@ -35,7 +36,7 @@ public class FacadeResponseMapper {
         }
 
         if (result instanceof FacadeSuccessResult) {
-            return handleSuccess((FacadeSuccessResult<T>) result);
+            return handleSuccess((FacadeSuccessResult<T>, mapper) result);
         }
 
         throw new IllegalArgumentException("Unknown result type: " + result.getClass());
@@ -75,7 +76,7 @@ public class FacadeResponseMapper {
         return putExtraRedirectHeaders(result, response).build();
     }
 
-    private <T> ResponseEntity<T> handleSuccess(FacadeSuccessResult<T> result) {
+    private <T> ResponseEntity<T> handleSuccess(FacadeSuccessResult<T> result, FacadeToRestMapperBase<T, ?> mapper) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(OK));
         return response.body(result.getBody());
     }
