@@ -3,16 +3,18 @@ package de.adorsys.opba.protocol.xs2a.entrypoint;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionListBody;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.InternalProcessResult;
-import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
-import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
+import de.adorsys.xs2a.adapter.service.model.Transactions;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.impl.persistence.entity.ExecutionEntity;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
+import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
+import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 import static de.adorsys.opba.protocol.xs2a.service.ContextUtil.getResult;
 
 @Service
@@ -28,13 +30,20 @@ public class Xs2aResultBodyExtractor {
                         .singleResult();
         ExecutionEntity exec = (ExecutionEntity) updated;
 
-        return Mappers.getMapper(Xs2aToFacadeMapper.class).mapFromXs2aToFacade(getResult(exec, AccountListHolder.class));
+        return Mappers.getMapper(Xs2aToFacadeMapper.class).map(getResult(exec, AccountListHolder.class));
     }
 
     public TransactionListBody extractTransactionsReport(InternalProcessResult result) {
         ProcessInstance updated = runtimeService.createProcessInstanceQuery()
                 .processInstanceId(result.getProcessId()).singleResult();
         ExecutionEntity exec = (ExecutionEntity) updated;
-        return getResult(exec, TransactionListBody.class);
+        return Mappers.getMapper(Xs2aToFacadeMapper.class).map(getResult(exec, Transactions.class));
+    }
+
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
+    public interface Xs2aToFacadeMapper {
+
+        AccountListBody map(AccountListHolder accountList);
+        TransactionListBody map(Transactions transactions);
     }
 }

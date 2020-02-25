@@ -5,9 +5,10 @@
         </encoder>
     </appender>
     <!-- please do not remove but replace log level, thx peter -->
-    <logger name="de.adorsys.opba.tppbankingapi.mapper.FacadeToRestMapper" level="debug"/>
+    <logger name="de.adorsys.opba.tppbankingapi.mapper.generated.AccountListFacadeToRestMapper" level="debug"/>
+    <logger name="de.adorsys.opba.tppbankingapi.mapper.generated.TransactionsFacadeToRestMapperImpl" level="debug"/>
     <logger name="de.adorsys.opba.protocol.xs2a.service.ContextUtil" level="debug"/>
-    <logger name="de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aToFacadeMapper" level="debug"/>
+    <logger name="de.adorsys.opba.protocol.xs2a.service.mappers.generated.Xs2aResultBodyExtractor$Xs2aToFacadeMapperImpl" level="debug"/>
 
     <root level="info">
         <appender-ref ref="STDOUT" />

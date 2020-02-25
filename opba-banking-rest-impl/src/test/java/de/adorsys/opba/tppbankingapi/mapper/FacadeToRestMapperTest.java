@@ -26,7 +26,7 @@ public class FacadeToRestMapperTest {
         accountDetails.add(account);
         AccountListBody facadeEntity = AccountListBody.builder().accounts(accountDetails).build();
 
-        AccountList restEntity = Mappers.getMapper(FacadeToRestMapper.class).mapFromFacadeToRest(facadeEntity);
+        AccountList restEntity = Mappers.getMapper(AccountListFacadeToRestMapper.class).mapFromFacadeToRest(facadeEntity);
         assertEquals(IBAN, restEntity.getAccounts().get(0).getIban());
         assertEquals(DELETED, restEntity.getAccounts().get(0).getStatus().name());
     }
