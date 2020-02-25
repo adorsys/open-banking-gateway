@@ -19,13 +19,9 @@
     <sequenceFlow id="sid-42764015-F0E2-4E8D-A156-87420CF9FC28" sourceRef="createConsent" targetRef="authorizeConsent"></sequenceFlow>
     <sequenceFlow id="sid-F617FA73-A930-45E8-80DA-2B6C6393D5AB" sourceRef="listTransactions" targetRef="end"></sequenceFlow>
     <sequenceFlow id="consentMissing" name="Consent missing" sourceRef="consentPresent" targetRef="createConsent"></sequenceFlow>
-    <serviceTask id="accountList" name="Call account list (XS2A sandbox quirk)" flowable:async="true" flowable:delegateExpression="${xs2aAccountListing}">
-      <documentation>We need to list accounts first for XS2A-Sandbox, because transactions permissions do propagate there only after this</documentation>
-    </serviceTask>
-    <sequenceFlow id="consentAvailable" name="Consent available" sourceRef="consentPresent" targetRef="accountList">
+    <sequenceFlow id="consentAvailable" name="Consent available" sourceRef="consentPresent" targetRef="listTransactions">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentFinder.consentExists(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-A5B46C98-B9ED-452D-A7EF-230E76A141A7" sourceRef="accountList" targetRef="listTransactions"></sequenceFlow>
     <serviceTask id="callFintechWebhook" name="Calls FinTech webhook to notify completed authorization" flowable:delegateExpression="${xs2aReportToFintechConsentAuthorized}"></serviceTask>
     <serviceTask id="loadConsent" name="Load consent and its context from database" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aLoadConsentAndContextFromDb}"></serviceTask>
     <sequenceFlow id="sid-DF90264E-0BAF-47EF-B3A7-99677AB6A36C" sourceRef="loadConsent" targetRef="consentPresent"></sequenceFlow>
@@ -44,7 +40,7 @@
         <omgdc:Bounds height="40.0" width="40.0" x="238.22728144629912" y="269.90909327357264"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="listTransactions" id="BPMNShape_listTransactions">
-        <omgdc:Bounds height="79.99999999999999" width="100.0" x="670.4999951232564" y="120.00000000000001"></omgdc:Bounds>
+        <omgdc:Bounds height="80.0" width="100.0" x="525.0" y="120.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="createConsent" id="BPMNShape_createConsent">
         <omgdc:Bounds height="80.0" width="100.0" x="332.9772814462991" y="320.90909327357264"></omgdc:Bounds>
@@ -54,9 +50,6 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
         <omgdc:Bounds height="28.0" width="28.0" x="936.0" y="146.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="accountList" id="BPMNShape_accountList">
-        <omgdc:Bounds height="80.0" width="100.0" x="506.8636350336154" y="120.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="callFintechWebhook" id="BPMNShape_callFintechWebhook">
         <omgdc:Bounds height="80.0" width="100.0" x="900.0" y="320.90909327357264"></omgdc:Bounds>
@@ -69,12 +62,12 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="sid-1E621113-582D-4432-8A34-937D3D57FFE9" id="BPMNEdge_sid-1E621113-582D-4432-8A34-937D3D57FFE9">
         <omgdi:waypoint x="950.0" y="320.90909327357264"></omgdi:waypoint>
-        <omgdi:waypoint x="950.0" y="193.94988477499507"></omgdi:waypoint>
+        <omgdi:waypoint x="950.0" y="173.94992401329452"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="consentAvailable" id="BPMNEdge_consentAvailable">
-        <omgdi:waypoint x="258.1926180744033" y="269.9361516299532"></omgdi:waypoint>
-        <omgdi:waypoint x="258.0" y="159.0"></omgdi:waypoint>
-        <omgdi:waypoint x="506.8636350336154" y="159.83269961902735"></omgdi:waypoint>
+        <omgdi:waypoint x="258.1923517125043" y="269.9363597129333"></omgdi:waypoint>
+        <omgdi:waypoint x="258.0" y="160.0"></omgdi:waypoint>
+        <omgdi:waypoint x="524.9999999998795" y="160.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-42764015-F0E2-4E8D-A156-87420CF9FC28" id="BPMNEdge_sid-42764015-F0E2-4E8D-A156-87420CF9FC28">
         <omgdi:waypoint x="432.92728144617865" y="360.90909327357264"></omgdi:waypoint>
@@ -85,21 +78,17 @@
         <omgdi:waypoint x="89.9999999999917" y="289.90909327357264"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-62E27F2F-7BD1-4ADE-A2DF-515550120D59" id="BPMNEdge_sid-62E27F2F-7BD1-4ADE-A2DF-515550120D59">
-        <omgdi:waypoint x="668.177281446198" y="360.90909327357264"></omgdi:waypoint>
-        <omgdi:waypoint x="735.0" y="360.90909327357264"></omgdi:waypoint>
+        <omgdi:waypoint x="668.177281446299" y="360.90909327357264"></omgdi:waypoint>
+        <omgdi:waypoint x="734.9999999998251" y="360.90909327357264"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-F617FA73-A930-45E8-80DA-2B6C6393D5AB" id="BPMNEdge_sid-F617FA73-A930-45E8-80DA-2B6C6393D5AB">
-        <omgdi:waypoint x="770.4499951232191" y="160.0"></omgdi:waypoint>
+        <omgdi:waypoint x="624.9499999999999" y="160.0"></omgdi:waypoint>
         <omgdi:waypoint x="936.0" y="160.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="consentMissing" id="BPMNEdge_consentMissing">
         <omgdi:waypoint x="258.16263773115077" y="309.79461116771216"></omgdi:waypoint>
         <omgdi:waypoint x="258.0" y="360.0"></omgdi:waypoint>
         <omgdi:waypoint x="332.9772814462991" y="360.54538986161964"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-A5B46C98-B9ED-452D-A7EF-230E76A141A7" id="BPMNEdge_sid-A5B46C98-B9ED-452D-A7EF-230E76A141A7">
-        <omgdi:waypoint x="606.8136350336015" y="160.0"></omgdi:waypoint>
-        <omgdi:waypoint x="670.4999951232343" y="160.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-5B63C648-7DC1-4D26-9A84-79534B5A7FE0" id="BPMNEdge_sid-5B63C648-7DC1-4D26-9A84-79534B5A7FE0">
         <omgdi:waypoint x="834.9499999999999" y="360.90909327357264"></omgdi:waypoint>

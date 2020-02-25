@@ -41,13 +41,9 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
 
     @Override
     public CompletableFuture<Result<TransactionListBody>> execute(ServiceContext<ListTransactionsRequest> serviceContext) {
-        TransactionListXs2aContext context = mapper.map(serviceContext.getRequest());
-        context.setAction(ProtocolAction.LIST_TRANSACTIONS);
-        extender.extend(context, serviceContext);
-
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(
                 REQUEST_SAGA,
-                new ConcurrentHashMap<>(ImmutableMap.of(CONTEXT, context))
+                new ConcurrentHashMap<>(ImmutableMap.of(CONTEXT, prepareContext(serviceContext)))
         );
 
         CompletableFuture<Result<TransactionListBody>> result = new CompletableFuture<>();
@@ -58,6 +54,13 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
         );
 
         return result;
+    }
+
+    protected TransactionListXs2aContext prepareContext(ServiceContext<ListTransactionsRequest> serviceContext) {
+        TransactionListXs2aContext context = mapper.map(serviceContext.getRequest());
+        context.setAction(ProtocolAction.LIST_TRANSACTIONS);
+        extender.extend(context, serviceContext);
+        return context;
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
