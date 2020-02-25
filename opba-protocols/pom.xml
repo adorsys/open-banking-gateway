@@ -22,6 +22,7 @@
     <modules>
         <module>sandboxes</module>
         <module>xs2a-protocol</module>
+        <module>xs2a-sandbox-protocol</module>
         <module>xs2a-protocol-tests</module>
         <module>opba-protocol-api</module>
     </modules>

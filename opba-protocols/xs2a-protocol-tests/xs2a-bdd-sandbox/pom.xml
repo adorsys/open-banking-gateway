@@ -28,7 +28,7 @@
 
         <dependency>
             <groupId>de.adorsys.opba</groupId>
-            <artifactId>xs2a-protocol</artifactId>
+            <artifactId>xs2a-sandbox-protocol</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
