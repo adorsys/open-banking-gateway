@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.service.xs2a.ais.accounts;
+package de.adorsys.opba.protocol.xs2a.service.xs2a.ais;
 
 import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
