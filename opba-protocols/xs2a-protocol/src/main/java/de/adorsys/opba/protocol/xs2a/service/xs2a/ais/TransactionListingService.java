@@ -1,9 +1,12 @@
-package de.adorsys.opba.protocol.xs2a.service.xs2a.ais.transactions;
+package de.adorsys.opba.protocol.xs2a.service.xs2a.ais;
 
 import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathQueryHeaders;
+import de.adorsys.opba.protocol.xs2a.service.mapper.PathQueryHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aResourceParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aTransactionParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aWithConsentIdHeaders;
@@ -19,7 +22,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TransactionListingService extends ValidatedExecution<TransactionListXs2aContext> {
 
-    private final TransactionListingServiceExtractor extractor;
+    private final Extractor extractor;
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
 
@@ -50,10 +53,10 @@ public class TransactionListingService extends ValidatedExecution<TransactionLis
 
     @Service
     public static class Extractor extends PathQueryHeadersMapperTemplate<
-                    TransactionListXs2aContext,
-                    Xs2aResourceParameters,
-                    Xs2aTransactionParameters,
-                    Xs2aWithConsentIdHeaders> {
+                TransactionListXs2aContext,
+                Xs2aResourceParameters,
+                Xs2aTransactionParameters,
+                Xs2aWithConsentIdHeaders> {
 
         public Extractor(
                 DtoMapper<Xs2aContext, Xs2aWithConsentIdHeaders> toHeaders,

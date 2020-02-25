@@ -1,8 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.ais.sandbox;
 
-import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.accounts.AccountListingService;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.transactions.TransactionListingService;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.transactions.TransactionListingServiceExtractor;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.AccountListingService;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.TransactionListingService;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
@@ -15,7 +14,7 @@ public class SandboxTransactionListingService extends TransactionListingService 
     private final AccountListingService accountListingService;
 
     public SandboxTransactionListingService(
-            TransactionListingServiceExtractor extractor,
+            TransactionListingService.Extractor extractor,
             Xs2aValidator validator,
             AccountInformationService ais,
             AccountListingService accountListingService) {
