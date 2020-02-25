@@ -48,6 +48,19 @@
     <ng-container *ngIf="action === Action.TRANSACTIONS">
       <label for="accountId">Account ID (resource id) to list txn's for</label>
       <input id="accountId" name="accountId" type="text" [formControl]="accountId">
+      <br/>
+      <input matInput [matDatepicker]="dpf" placeholder="Date from" [formControl]="dateFrom">
+      <mat-datepicker-toggle matSuffix [for]="dpf"></mat-datepicker-toggle>
+      <mat-datepicker #dpf></mat-datepicker>
+      <br/>
+      <input matInput [matDatepicker]="dpt" placeholder="Date to" [formControl]="dateTo">
+      <mat-datepicker-toggle matSuffix [for]="dpt"></mat-datepicker-toggle>
+      <mat-datepicker #dpt></mat-datepicker>
+      <br/>
+      <label for="booking-selector">Bookings:</label>
+      <select id="booking-selector" [(ngModel)]="bookingStatus">
+        <option *ngFor="let b of BookingStatus | keyvalue" [ngValue]="b.value">{{b.key}}</option>
+      </select>
     </ng-container>
     <hr>
 
