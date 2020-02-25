@@ -41,13 +41,9 @@ public class Xs2aListAccountsEntrypoint implements ListAccounts {
 
     @Override
     public CompletableFuture<Result<AccountListBody>> execute(ServiceContext<ListAccountsRequest> serviceContext) {
-        AccountListXs2aContext context = mapper.map(serviceContext.getRequest());
-        context.setAction(ProtocolAction.LIST_ACCOUNTS);
-        extender.extend(context, serviceContext);
-
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(
                 REQUEST_SAGA,
-                new ConcurrentHashMap<>(ImmutableMap.of(CONTEXT, context))
+                new ConcurrentHashMap<>(ImmutableMap.of(CONTEXT, prepareContext(serviceContext)))
         );
 
         CompletableFuture<Result<AccountListBody>> result = new CompletableFuture<>();
@@ -58,6 +54,14 @@ public class Xs2aListAccountsEntrypoint implements ListAccounts {
         );
         return result;
     }
+
+    protected Xs2aContext prepareContext(ServiceContext<ListAccountsRequest> serviceContext) {
+        Xs2aContext context = mapper.map(serviceContext.getRequest());
+        context.setAction(ProtocolAction.LIST_ACCOUNTS);
+        extender.extend(context, serviceContext);
+        return context;
+    }
+
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface FromRequest extends DtoMapper<ListAccountsRequest, AccountListXs2aContext> {

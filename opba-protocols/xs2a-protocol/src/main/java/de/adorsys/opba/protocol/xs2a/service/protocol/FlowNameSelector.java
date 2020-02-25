@@ -17,6 +17,6 @@ public class FlowNameSelector {
     }
 
     private String actionName(BaseContext ctx) {
-        return "xs2a-" + ctx.getAction().name().toLowerCase().replaceAll("_", "-");
+        return ctx.getFlowByAction().get(ctx.getAction());
     }
 }
