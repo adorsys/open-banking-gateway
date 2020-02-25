@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,6 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Note: This test keeps DB in dirty state - doesn't cleanup after itself.
  */
 @ActiveProfiles("test")
+/*
+As we redefine list accounts for adorsys-sandbox bank to sandbox customary one
+(and it doesn't make sense to import sandbox module here) moving it back to plain xs2a bean:
+ */
+@Sql(statements = "UPDATE opb_bank_protocol SET protocol_bean_name = 'xs2aListTransactions' WHERE protocol_bean_name = 'xs2aSandboxListTransactions'")
 @SpringBootTest(classes = ListTransactionsServiceTest.TestConfig.class)
 class ListTransactionsServiceTest {
 
