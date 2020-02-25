@@ -1,6 +1,7 @@
 package de.adorsys.opba.restapi.shared.service;
 
 import com.google.common.collect.ImmutableMap;
+import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
@@ -26,7 +27,7 @@ import static org.springframework.http.HttpStatus.SEE_OTHER;
 @RequiredArgsConstructor
 public class FacadeResponseMapper {
 
-    public <T> ResponseEntity<?> translate(FacadeResult<T> result, FacadeToRestMapperBase<T, ?> mapper) {
+    public <T> ResponseEntity<?> translate(FacadeResult<T> result, FacadeToRestMapperBase<?, T> mapper) {
         if (result instanceof FacadeRedirectErrorResult) {
             return handleError((FacadeRedirectErrorResult) result);
         }
@@ -36,7 +37,7 @@ public class FacadeResponseMapper {
         }
 
         if (result instanceof FacadeSuccessResult) {
-            return handleSuccess((FacadeSuccessResult<T>, mapper) result);
+            return handleSuccess((FacadeSuccessResult<T>) result, mapper);
         }
 
         throw new IllegalArgumentException("Unknown result type: " + result.getClass());
@@ -76,9 +77,9 @@ public class FacadeResponseMapper {
         return putExtraRedirectHeaders(result, response).build();
     }
 
-    private <T> ResponseEntity<T> handleSuccess(FacadeSuccessResult<T> result, FacadeToRestMapperBase<T, ?> mapper) {
+    private <T> ResponseEntity<?> handleSuccess(FacadeSuccessResult<T> result, FacadeToRestMapperBase<?, T> mapper) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(OK));
-        return response.body(result.getBody());
+        return  response.body(mapper.mapFromFacadeToRest(result.getBody()));
     }
 
     private ResponseEntity.BodyBuilder putDefaultHeaders(FacadeResult<?> result, ResponseEntity.BodyBuilder builder) {

@@ -7,6 +7,8 @@ import de.adorsys.opba.consentapi.service.mapper.AisExtrasMapper;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.fromaspsp.FromAspspRequest;
+import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
+import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.authorization.UpdateAuthorizationService;
 import de.adorsys.opba.protocol.facade.services.fromaspsp.FromAspspRedirectHandler;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
@@ -45,7 +47,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                         .scaAuthenticationData(body.getScaAuthenticationData())
                         .extras(extrasMapper.map(body.getExtras()))
                         .build()
-        ).thenApply(mapper::translate);
+        ).thenApply((FacadeResult<UpdateAuthBody> result) -> mapper.translate(result, null));
     }
 
     @Override
@@ -63,7 +65,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                 )
                 .isOk(true)
                 .build()
-        ).thenApply(mapper::translate);
+        ).thenApply((FacadeResult<UpdateAuthBody> result) -> mapper.translate(result, null));
     }
 
     @Override
@@ -81,6 +83,6 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                 )
                 .isOk(false)
                 .build()
-        ).thenApply(mapper::translate);
+        ).thenApply((FacadeResult<UpdateAuthBody> result) -> mapper.translate(result, null));
     }
 }

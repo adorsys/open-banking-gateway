@@ -6,7 +6,7 @@ import de.adorsys.opba.tppbankingapi.ais.model.generated.AccountList;
 import org.mapstruct.Mapper;
 
 @Mapper(implementationPackage = Const.API_MAPPERS_PACKAGE)
-public interface FacadeToRestMapper extends FacadeToRestMapperBase<AccountListBody, AccountList> {
+public interface FacadeToRestMapper extends FacadeToRestMapperBase<AccountList, AccountListBody> {
     AccountList mapFromFacadeToRest(AccountListBody facadeEntity);
 }
 
