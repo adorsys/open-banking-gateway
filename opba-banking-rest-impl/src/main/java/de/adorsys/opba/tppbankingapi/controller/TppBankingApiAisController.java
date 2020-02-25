@@ -87,6 +87,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                                 .bankId(bankID)
                                 .build()
                         )
+                        .accountId(accountId)
                         .dateFrom(dateFrom)
                         .dateTo(dateTo)
                         .entryReferenceFrom(entryReferenceFrom)

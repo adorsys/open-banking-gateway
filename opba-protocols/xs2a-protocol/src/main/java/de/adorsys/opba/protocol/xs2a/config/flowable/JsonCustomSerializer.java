@@ -8,16 +8,17 @@ import lombok.SneakyThrows;
 import org.flowable.variable.api.types.ValueFields;
 import org.flowable.variable.api.types.VariableType;
 
+import java.util.List;
 import java.util.Map;
 
-// TODO: Secure serialized values with some encryption.
+// TODO: Secure serialized values with some encryption, remove code duplication.
 @RequiredArgsConstructor
 class JsonCustomSerializer implements VariableType {
 
     static final String JSON = "as_json";
 
     private final ObjectMapper mapper;
-    private final String allowOnlyClassesWithPrefix;
+    private final List<String> allowOnlyClassesWithPrefix;
     private final int maxLength;
 
     @Override
@@ -37,7 +38,7 @@ class JsonCustomSerializer implements VariableType {
             return true;
         }
 
-        if (!o.getClass().getCanonicalName().startsWith(allowOnlyClassesWithPrefix)) {
+        if (!CanSerializeUtil.canSerialize(o.getClass().getCanonicalName(), allowOnlyClassesWithPrefix)) {
             return false;
         }
 
@@ -70,7 +71,7 @@ class JsonCustomSerializer implements VariableType {
         JsonNode value = mapper.readTree(valueFields.getTextValue());
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
 
-        if (!classNameAndValue.getKey().startsWith(allowOnlyClassesWithPrefix)) {
+        if (!CanSerializeUtil.canSerialize(classNameAndValue.getKey(), allowOnlyClassesWithPrefix)) {
             throw new IllegalArgumentException("Class deserialization not allowed " + classNameAndValue.getKey());
         }
 

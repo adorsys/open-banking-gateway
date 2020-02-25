@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.context;
 
+import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.db.domain.entity.Consent;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aObjectMapper;
@@ -22,7 +23,12 @@ public class Xs2aPersistContext extends ValidatedExecution<Xs2aContext> {
         Consent consent = consents.findByServiceSessionId(context.getServiceSessionId())
                 .orElseThrow(() -> new IllegalStateException("No consent for session"));
 
-        consent.setContext(mapper.getMapper().writeValueAsString(context));
+        consent.setContext(mapper.getMapper().writeValueAsString(
+                ImmutableMap.of(
+                        context.getClass().getCanonicalName(),
+                        context
+                ))
+        );
         consents.save(consent);
     }
 }

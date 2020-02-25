@@ -8,16 +8,17 @@ import lombok.SneakyThrows;
 import org.flowable.variable.api.types.ValueFields;
 import org.flowable.variable.service.impl.types.SerializableType;
 
+import java.util.List;
 import java.util.Map;
 
-// TODO: Secure serialized values with some encryption.
+// TODO: Secure serialized values with some encryption, remove code duplication.
 @RequiredArgsConstructor
 class LargeJsonCustomSerializer extends SerializableType {
 
     static final String JSON = "as_large_json";
 
     private final ObjectMapper mapper;
-    private final String allowOnlyClassesWithPrefix;
+    private final List<String> allowOnlyClassesWithPrefix;
     private final int minLength;
 
     @Override
@@ -37,7 +38,7 @@ class LargeJsonCustomSerializer extends SerializableType {
             return true;
         }
 
-        if (!o.getClass().getCanonicalName().startsWith(allowOnlyClassesWithPrefix)) {
+        if (!CanSerializeUtil.canSerialize(o.getClass().getCanonicalName(), allowOnlyClassesWithPrefix)) {
             return false;
         }
 
@@ -70,7 +71,7 @@ class LargeJsonCustomSerializer extends SerializableType {
         JsonNode value = mapper.readTree(bytes);
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
 
-        if (!classNameAndValue.getKey().startsWith(allowOnlyClassesWithPrefix)) {
+        if (!CanSerializeUtil.canSerialize(classNameAndValue.getKey(), allowOnlyClassesWithPrefix)) {
             throw new IllegalArgumentException("Class deserialization not allowed " + classNameAndValue.getKey());
         }
 
