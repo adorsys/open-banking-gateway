@@ -73,7 +73,10 @@
                     <outputFilePattern>$1/sandbox-$2</outputFilePattern>
                 </configuration>
             </plugin>
-            <!-- Remove original imported XS2A flow resource file that is superseded by resource with replacement -->
+            <!--
+            Remove ALL original imported XS2A flow resource files. Keep only one that is overriding.
+            Flowable will still be able to see original flows.
+             -->
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
                 <executions>
@@ -88,8 +91,9 @@
                     <excludeDefaultDirectories>true</excludeDefaultDirectories>
                     <filesets>
                         <fileset>
-                            <directory>target/classes/processes/xs2a/accounts</directory>
-                            <includes>xs2a-list-transactions.bpmn20.xml</includes>
+                            <directory>target/classes/processes</directory>
+                            <includes>**/*.xml</includes>
+                            <excludes>**/sandbox*.xml</excludes>
                         </fileset>
                     </filesets>
                 </configuration>
