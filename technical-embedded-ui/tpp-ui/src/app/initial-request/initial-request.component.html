@@ -1,4 +1,12 @@
-<h1>Fintech calls TPP to get account list with following parameters</h1>
+<h1>Fintech calls TPP to get {{action.toString()}} list with following parameters</h1>
+
+<hr/>
+<label for="action-selector">List for:</label>
+<select id="action-selector" [(ngModel)]="action">
+  <option *ngFor="let a of Action | keyvalue" [ngValue]="a.value">{{a.key}}</option>
+</select>
+<hr/>
+
 <div>
   <form ngNoForm method="post">
 
@@ -37,8 +45,15 @@
     <input id="serviceSessionId" name="serviceSessionId" type="text" [formControl]="serviceSessionId">
 
     <br>
+    <ng-container *ngIf="action === Action.TRANSACTIONS">
+      <label for="accountId">Account ID (resource id) to list txn's for</label>
+      <input id="accountId" name="accountId" type="text" [formControl]="accountId">
+    </ng-container>
+    <hr>
+
+    <br>
     <div class="form-row">
-      <button type="button" [disabled]="!form.valid" (click)="submit()">Call TPP for list accounts</button>
+      <button type="button" [disabled]="!form.valid" (click)="submit()">Call TPP for list {{action}}</button>
     </div>
   </form>
 

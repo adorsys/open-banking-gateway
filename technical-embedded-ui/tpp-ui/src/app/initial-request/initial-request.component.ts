@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {Consts} from '../consts';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {ActivatedRoute} from "@angular/router";
 
 @Component({
@@ -10,8 +10,11 @@ import {ActivatedRoute} from "@angular/router";
   styleUrls: ['./initial-request.component.css']
 })
 export class InitialRequestComponent implements OnInit {
+  Action = Action;
 
-  getUri: string = Consts.API_V1_URL_BASE + 'banking/ais/accounts';
+  getUri: string = Consts.API_V1_URL_BASE + 'banking/ais/accounts/';
+  action = Action.ACCOUNTS;
+
   form: FormGroup = new FormGroup({});
   fintechUserId = new FormControl();
   fintechRedirectUriOk = new FormControl();
@@ -21,6 +24,7 @@ export class InitialRequestComponent implements OnInit {
   requestId = new FormControl();
   bankId = new FormControl();
   serviceSessionId = new FormControl();
+  accountId = new FormControl();
 
   constructor(private activatedRoute: ActivatedRoute, private client: HttpClient) {
     this.fintechRedirectUriOk.setValue('http://localhost:5500/fintech-callback/ok');
@@ -54,11 +58,18 @@ export class InitialRequestComponent implements OnInit {
       'Service-Session-ID': this.serviceSessionId.value
     };
 
-    this.client.get(this.getUri, {
-      headers: headerVals,
-      observe: 'response'
-    }).subscribe(res => {
+    this.client.get(
+      this.getUri + (this.action === Action.TRANSACTIONS && this.accountId.value ? this.accountId.value + '/transactions' : ''),
+      {
+        headers: headerVals,
+        observe: 'response'
+      }).subscribe(res => {
       window.location.href = res.headers.get('Location');
     });
   }
+}
+
+export enum Action {
+  ACCOUNTS = 'accounts',
+  TRANSACTIONS = 'transactions'
 }

@@ -4,8 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
-import de.adorsys.opba.protocol.api.dto.result.body.TransactionListBody;
-import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
 import de.adorsys.opba.protocol.xs2a.service.eventbus.ProcessEventHandlerRegistrar;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 @Service("xs2aSandboxListTransactions")
 public class Xs2aSandboxListTransactionsEntrypoint extends Xs2aListTransactionsEntrypoint {
@@ -26,11 +23,6 @@ public class Xs2aSandboxListTransactionsEntrypoint extends Xs2aListTransactionsE
                                                  FromRequest mapper,
                                                  ExtendWithServiceContext extender) {
         super(runtimeService, extractor, registrar, mapper, extender);
-    }
-
-    @Override
-    public CompletableFuture<Result<TransactionListBody>> execute(ServiceContext<ListTransactionsRequest> serviceContext) {
-        return super.execute(serviceContext);
     }
 
     @Override
