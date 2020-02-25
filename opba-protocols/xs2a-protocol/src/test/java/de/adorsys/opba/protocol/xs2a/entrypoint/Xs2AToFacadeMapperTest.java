@@ -13,7 +13,7 @@ import org.mapstruct.factory.Mappers;
 import java.util.ArrayList;
 import java.util.List;
 
-public class XS2aToFacadeMapperTest {
+public class Xs2AToFacadeMapperTest {
     static String IBAN = "DE23445343434";
     static String AMOUNTVALUE = "123,32";
 
@@ -39,7 +39,7 @@ public class XS2aToFacadeMapperTest {
 
             xs2aEntity.setAccounts(accounts);
         }
-        AccountListBody facadeEntity = Mappers.getMapper(XS2aToFacadeMapper.class).mapFromXs2aToFacade(xs2aEntity);
+        AccountListBody facadeEntity = Mappers.getMapper(Xs2aToFacadeMapper.class).mapFromXs2aToFacade(xs2aEntity);
         Assert.assertEquals(IBAN, facadeEntity.getAccounts().get(0).getIban());
         Assert.assertEquals(CashAccountType.CASH.name(), facadeEntity.getAccounts().get(0).getCashAccountType());
     }

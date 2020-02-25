@@ -28,7 +28,7 @@ public class Xs2aResultBodyExtractor {
                         .singleResult();
         ExecutionEntity exec = (ExecutionEntity) updated;
 
-        return Mappers.getMapper(XS2aToFacadeMapper.class).mapFromXs2aToFacade(getResult(exec, AccountListHolder.class));
+        return Mappers.getMapper(Xs2aToFacadeMapper.class).mapFromXs2aToFacade(getResult(exec, AccountListHolder.class));
     }
 
     public TransactionListBody extractTransactionsReport(InternalProcessResult result) {

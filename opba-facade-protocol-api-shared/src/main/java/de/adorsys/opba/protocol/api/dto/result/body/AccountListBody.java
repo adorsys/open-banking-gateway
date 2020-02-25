@@ -13,6 +13,7 @@ public class AccountListBody implements ResultBody {
 
     @Override
     public Object getBody() {
-        return Mappers.getMapper(FacadeToProtocolMapper.class).mapFromFacadeToProtocol(this);
+        return this;
+//        return Mappers.getMapper(FacadeToProtocolMapper.class).mapFromFacadeToProtocol(this);
     }
 }
