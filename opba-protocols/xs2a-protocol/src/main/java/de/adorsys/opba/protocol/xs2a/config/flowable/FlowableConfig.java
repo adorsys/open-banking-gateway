@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.flowable.spring.boot.EngineConfigurationConfigurer;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,17 +22,18 @@ public class FlowableConfig {
      */
     @Bean
     EngineConfigurationConfigurer<SpringProcessEngineConfiguration> customizeListenerAndJsonSerializer(
-        @Value("${opba.flowable.serializeOnly:de.adorsys}") String serializableClassesPrefix,
-        @Value("${opba.flowable.maxVarLen:2048}") int maxLength,
+        Xs2aFlowableProperties flowableProperties,
         Xs2aObjectMapper mapper,
         FlowableJobEventListener eventListener
     ) {
+        int maxLength = flowableProperties.getMaxLength();
+
         return processConfiguration -> {
             processConfiguration.setCustomPreVariableTypes(
                 new ArrayList<>(
                     ImmutableList.of(
-                        new JsonCustomSerializer(mapper.getMapper(), serializableClassesPrefix, maxLength),
-                        new LargeJsonCustomSerializer(mapper.getMapper(), serializableClassesPrefix, maxLength)
+                        new JsonCustomSerializer(mapper.getMapper(), flowableProperties.getSerializeOnlyPackages(), maxLength),
+                        new LargeJsonCustomSerializer(mapper.getMapper(), flowableProperties.getSerializeOnlyPackages(), maxLength)
                     )
                 )
             );
