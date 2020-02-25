@@ -4,11 +4,18 @@ import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
+import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
+import de.adorsys.opba.protocol.api.dto.result.body.TransactionListBody;
+import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.ais.ListAccountsService;
 import de.adorsys.opba.protocol.facade.services.ais.ListTransactionsService;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
+import de.adorsys.opba.tppbankingapi.ais.model.generated.AccountList;
 import de.adorsys.opba.tppbankingapi.ais.resource.generated.TppBankingApiAccountInformationServiceAisApi;
+import de.adorsys.opba.tppbankingapi.mapper.FacadeToRestMapper;
+import de.adorsys.opba.tppbankingapi.mapper.FacadeToRestMapperBase;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -51,7 +58,9 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                                 .bankId(bankID)
                                 .build()
                         ).build()
-        ).thenApply(mapper::translate);
+        ).thenApply((FacadeResult<AccountListBody> result) -> mapper.translate(result, Mappers.getMapper(FacadeToRestMapper.class)));
+
+
     }
 
     @Override
@@ -94,6 +103,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                         .bookingStatus(bookingStatus)
                         .deltaList(deltaList)
                         .build()
-        ).thenApply(mapper::translate);
+        ).thenApply((FacadeResult<TransactionListBody> result) -> mapper.translate(result, null));
     }
 }
