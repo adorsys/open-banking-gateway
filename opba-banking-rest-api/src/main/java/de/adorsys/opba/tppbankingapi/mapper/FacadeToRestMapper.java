@@ -1,5 +1,5 @@
 package de.adorsys.opba.tppbankingapi.mapper;
 
-public interface FacadeToRestMapperBase<R,F> {
+public interface FacadeToRestMapper<R, F> {
     R mapFromFacadeToRest(F facadeEntity);
 }

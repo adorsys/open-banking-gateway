@@ -39,7 +39,7 @@ public class Xs2AToFacadeMapperTest {
 
             xs2aEntity.setAccounts(accounts);
         }
-        AccountListBody facadeEntity = Mappers.getMapper(Xs2aToFacadeMapper.class).mapFromXs2aToFacade(xs2aEntity);
+        AccountListBody facadeEntity = Mappers.getMapper(Xs2aResultBodyExtractor.Xs2aToFacadeMapper.class).map(xs2aEntity);
         Assert.assertEquals(IBAN, facadeEntity.getAccounts().get(0).getIban());
         Assert.assertEquals(CashAccountType.CASH.name(), facadeEntity.getAccounts().get(0).getCashAccountType());
     }
