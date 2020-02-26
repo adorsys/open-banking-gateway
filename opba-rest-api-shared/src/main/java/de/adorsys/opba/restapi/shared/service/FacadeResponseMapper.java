@@ -25,7 +25,7 @@ import static org.springframework.http.HttpStatus.SEE_OTHER;
 @RequiredArgsConstructor
 public class FacadeResponseMapper {
 
-    public <T> ResponseEntity<?> translate(FacadeResult<T> result, FacadeToRestMapper<?, T> mapper) {
+    public <T, F> ResponseEntity<?> translate(FacadeResult<F> result, FacadeResponseBodyToRestBodyMapper<T, F> mapper) {
         if (result instanceof FacadeRedirectErrorResult) {
             return handleError((FacadeRedirectErrorResult) result);
         }
@@ -35,7 +35,7 @@ public class FacadeResponseMapper {
         }
 
         if (result instanceof FacadeSuccessResult) {
-            return handleSuccess((FacadeSuccessResult<T>) result, mapper);
+            return handleSuccess((FacadeSuccessResult<F>) result, mapper);
         }
 
         throw new IllegalArgumentException("Unknown result type: " + result.getClass());
@@ -75,7 +75,7 @@ public class FacadeResponseMapper {
         return putExtraRedirectHeaders(result, response).build();
     }
 
-    private <T> ResponseEntity<?> handleSuccess(FacadeSuccessResult<T> result, FacadeToRestMapper<?, T> mapper) {
+    private <T, F> ResponseEntity<T> handleSuccess(FacadeSuccessResult<F> result, FacadeResponseBodyToRestBodyMapper<T, F> mapper) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(OK));
         return response.body(mapper.map(result.getBody()));
     }
@@ -92,7 +92,13 @@ public class FacadeResponseMapper {
         return builder;
     }
 
-    public interface FacadeToRestMapper<R, F> {
+    @FunctionalInterface
+    public interface FacadeResponseBodyToRestBodyMapper<R, F> {
         R map(F facadeEntity);
+    }
+
+    @FunctionalInterface
+    public interface NoOpMapper<T> extends FacadeResponseBodyToRestBodyMapper<T, T> {
+        T map(T facadeEntity);
     }
 }
