@@ -7,6 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static de.adorsys.opba.protocol.api.dto.headers.ResponseHeaders.X_ERROR_CODE;
@@ -18,7 +19,7 @@ public class FacadeRedirectErrorResult<T> extends FacadeResultRedirectable<T> {
 
     public static final ErrorFromProtocol ERROR_FROM_PROTOCOL = Mappers.getMapper(ErrorFromProtocol.class);
 
-    private Map<String, String> headers;
+    private Map<String, String> headers = new HashMap<>();
 
     @Mapper
     public interface ErrorFromProtocol {
