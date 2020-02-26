@@ -12,6 +12,7 @@ import com.tngtech.jgiven.integration.spring.JGivenStage;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +25,17 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.AUTHORIZATION;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.BANK_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_NOK;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_OK;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_USER_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResourceSkipLastEol;
 import static io.restassured.RestAssured.config;
 import static io.restassured.config.RedirectConfig.redirectConfig;
@@ -34,6 +44,14 @@ import static io.restassured.config.RedirectConfig.redirectConfig;
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class AccountInformationRequestCommon<SELF extends AccountInformationRequestCommon<SELF>> extends Stage<SELF> {
+
+    private static final String DEFAULT_AUTHORIZATION = "MY-SUPER-FINTECH-ID";
+    private static final String SANDBOX_BANK_ID = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
+    private static final String FINTECH_REDIR_OK = "http://localhost:5500/fintech-callback/ok";
+    private static final String FINTECH_REDIR_NOK = "http://localhost:5500/fintech-callback/nok";
+    private static final String SESSION_PASSWORD = "qwerty";
+    private static final String ANTON_BRUECKNER = "anton.brueckner";
+    private static final String MAX_MUSTERMAN = "max.musterman";
 
     public static final String PARAMETERS_PROVIDE_MORE = "/v1/parameters/provide-more/";
 
@@ -65,7 +83,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF open_banking_list_accounts_called_for_anton_brueckner() {
-        this.redirectUriToGetUserParams = RestAssured
+        this.redirectUriToGetUserParams = withInitialHeaders(ANTON_BRUECKNER)
                 .when()
                     .get("/v1/banking/ais/accounts")
                 .then()
@@ -77,19 +95,19 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF open_banking_list_accounts_called_for_max_musterman() {
-        this.redirectUriToGetUserParams = RestAssured
+        this.redirectUriToGetUserParams = withInitialHeaders(MAX_MUSTERMAN)
                 .when()
-                .get("/v1/banking/ais/accounts")
+                    .get("/v1/banking/ais/accounts")
                 .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
-                .extract()
+                    .statusCode(HttpStatus.ACCEPTED.value())
+                    .extract()
                 .header(HttpHeaders.LOCATION);
         updateExecutionId();
         return self();
     }
 
     public SELF open_banking_list_transactions_called_for_anton_brueckner(String resourceId) {
-        this.redirectUriToGetUserParams = RestAssured
+        this.redirectUriToGetUserParams = withInitialHeaders(ANTON_BRUECKNER)
                 .when()
                     .get("/v1/transactions/" + resourceId)
                 .then()
@@ -105,12 +123,12 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF open_banking_list_transactions_called_for_max_musterman(String resourceId) {
-        this.redirectUriToGetUserParams = RestAssured
+        this.redirectUriToGetUserParams = withInitialHeaders(MAX_MUSTERMAN)
                 .when()
-                .get("/v1/transactions/" + resourceId)
+                    .get("/v1/transactions/" + resourceId)
                 .then()
-                .statusCode(HttpStatus.MOVED_PERMANENTLY.value())
-                .extract()
+                    .statusCode(HttpStatus.MOVED_PERMANENTLY.value())
+                    .extract()
                 .header(HttpHeaders.LOCATION);
         updateExecutionId();
         return self();
@@ -185,6 +203,19 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         );
 
         return self();
+    }
+
+    private RequestSpecification withInitialHeaders(String fintechUserId) {
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, DEFAULT_AUTHORIZATION)
+                .header(BANK_ID, SANDBOX_BANK_ID)
+                .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
+                .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
+                .header(FINTECH_USER_ID, fintechUserId)
+                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
+                .header(X_REQUEST_ID, UUID.randomUUID().toString());
     }
 
     private void provideParametersToBankingProtocol(String uriPath, String resource) {
