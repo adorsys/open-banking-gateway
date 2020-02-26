@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedi
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeSuccessResult;
+import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -90,15 +91,5 @@ public class FacadeResponseMapper {
     private ResponseEntity.BodyBuilder putExtraRedirectHeaders(FacadeResultRedirectable<?> result, ResponseEntity.BodyBuilder builder) {
         result.getHeaders().forEach(builder::header);
         return builder;
-    }
-
-    @FunctionalInterface
-    public interface FacadeResponseBodyToRestBodyMapper<R, F> {
-        R map(F facadeEntity);
-    }
-
-    @FunctionalInterface
-    public interface NoOpMapper<T> extends FacadeResponseBodyToRestBodyMapper<T, T> {
-        T map(T facadeEntity);
     }
 }

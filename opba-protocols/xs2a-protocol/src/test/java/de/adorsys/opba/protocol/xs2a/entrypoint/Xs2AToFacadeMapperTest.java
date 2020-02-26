@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint;
 
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
-import de.adorsys.opba.protocol.xs2a.service.mappers.generated.Xs2aResultBodyExtractor$Xs2aToFacadeMapperImpl;
+import de.adorsys.opba.protocol.xs2a.mapper.generated.Xs2aToFacadeMapperImpl;
 import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
 import de.adorsys.xs2a.adapter.service.model.Amount;
@@ -39,7 +39,7 @@ public class Xs2AToFacadeMapperTest {
 
             xs2aEntity.setAccounts(accounts);
         }
-        AccountListBody facadeEntity = new Xs2aResultBodyExtractor$Xs2aToFacadeMapperImpl().map(xs2aEntity);
+        AccountListBody facadeEntity = new Xs2aToFacadeMapperImpl().map(xs2aEntity);
         Assert.assertEquals(IBAN, facadeEntity.getAccounts().get(0).getIban());
         Assert.assertEquals(CashAccountType.CASH.name(), facadeEntity.getAccounts().get(0).getCashAccountType());
     }

@@ -28,6 +28,7 @@ export class InitialRequestComponent implements OnInit {
   requestId = new FormControl();
   bankId = new FormControl();
   serviceSessionId = new FormControl();
+  resultstructure = "";
 
   // transaction
   accountId = new FormControl();
@@ -66,6 +67,7 @@ export class InitialRequestComponent implements OnInit {
       'Bank-ID': this.bankId.value,
       'Service-Session-ID': this.serviceSessionId.value
     };
+    console.log("SEND REQUEST");
 
     let parameters = {};
     if (this.action === Action.TRANSACTIONS) {
@@ -82,7 +84,14 @@ export class InitialRequestComponent implements OnInit {
         observe: 'response',
         params: parameters
       }).subscribe(res => {
-        window.location.href = res.headers.get('Location');
+      console.log("status:" + res.status);
+        switch(res.status) {
+          case 200: console.log("no redirect: " + res.body.toString());
+          break;
+          default:
+          console.log("redirect to ",res.headers.get('Location'));
+          window.location.href = res.headers.get('Location');
+      }
     });
   }
 }
