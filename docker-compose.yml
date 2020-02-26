@@ -38,7 +38,7 @@ services:
 
   fintech-ui:
     environment:
-      - BACKEND_URL=http://fintech-server:18086
+      - BACKEND_URL=http://fintech-server:8086
     restart: on-failure
     build:
       context: fintech-examples/fintech-ui
