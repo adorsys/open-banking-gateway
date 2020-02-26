@@ -64,14 +64,26 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         config = config().redirect(redirectConfig().followRedirects(false));
     }
 
-    public SELF open_banking_list_accounts_called() {
+    public SELF open_banking_list_accounts_called_for_anton_brueckner() {
         this.redirectUriToGetUserParams = RestAssured
                 .when()
-                    .get("/v1/accounts")
+                    .get("/v1/banking/ais/accounts")
                 .then()
-                    .statusCode(HttpStatus.MOVED_PERMANENTLY.value())
+                    .statusCode(HttpStatus.ACCEPTED.value())
                     .extract()
                     .header(HttpHeaders.LOCATION);
+        updateExecutionId();
+        return self();
+    }
+
+    public SELF open_banking_list_accounts_called_for_max_musterman() {
+        this.redirectUriToGetUserParams = RestAssured
+                .when()
+                .get("/v1/banking/ais/accounts")
+                .then()
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract()
+                .header(HttpHeaders.LOCATION);
         updateExecutionId();
         return self();
     }

@@ -43,7 +43,3 @@ pkcs12:
 
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
-
-# Unused in the protocol, but imported through opba-db and expected to be injected by spring
-bank-search:
-  query:
