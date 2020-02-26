@@ -44,7 +44,7 @@ public class Xs2aUpdateAuthorization implements UpdateAuthorization {
         if (null == extras) {
             return;
         }
-        
+
         if (extras.containsKey(ExtraAuthRequestParam.PSU_ID)) {
             context.setPsuId((String) extras.get(ExtraAuthRequestParam.PSU_ID));
         }
