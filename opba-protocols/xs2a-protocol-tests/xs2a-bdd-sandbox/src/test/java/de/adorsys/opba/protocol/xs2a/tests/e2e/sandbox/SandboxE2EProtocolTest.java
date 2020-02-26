@@ -4,7 +4,7 @@ import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
 import de.adorsys.opba.db.config.EnableBankingPersistence;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
-import de.adorsys.opba.protocol.xs2a.tests.Xs2aProtocolApplication;
+import de.adorsys.opba.protocol.xs2a.tests.Xs2aSandboxProtocolApplication;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.SandboxServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
@@ -15,7 +15,6 @@ import io.github.bonigarcia.seljup.SeleniumExtension;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +38,6 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 /**
  * Happy-path heavy test that uses Dynamic-Sandbox to drive banking-protocol.
  */
-@Disabled // FIXME https://github.com/adorsys/open-banking-gateway/issues/253
 @EnabledIfEnvironmentVariable(named = ENABLE_HEAVY_TESTS, matches = "true")
 @EnableAutoConfiguration(exclude = {
         HypermediaAutoConfiguration.class,
@@ -50,7 +48,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @EnableBankingPersistence
 @ExtendWith(SeleniumExtension.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-@SpringBootTest(classes = {Xs2aProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
+@SpringBootTest(classes = {Xs2aSandboxProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
 class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>, AccountInformationResult> {
 
