@@ -55,8 +55,8 @@ public class Xs2aListAccountsEntrypoint implements ListAccounts {
         return result;
     }
 
-    protected Xs2aContext prepareContext(ServiceContext<ListAccountsRequest> serviceContext) {
-        Xs2aContext context = mapper.map(serviceContext.getRequest());
+    protected AccountListXs2aContext prepareContext(ServiceContext<ListAccountsRequest> serviceContext) {
+        AccountListXs2aContext context = mapper.map(serviceContext.getRequest());
         context.setAction(ProtocolAction.LIST_ACCOUNTS);
         extender.extend(context, serviceContext);
         return context;
