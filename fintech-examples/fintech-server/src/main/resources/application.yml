@@ -1,5 +1,5 @@
 server:
-  port: 18086
+  port: 8086
   controller:
     cookie:
       secure: false
