@@ -75,11 +75,6 @@ public class AisConsentInitiateBody {
         private String maskedPan;
         private String msisdn;
         private String currency;
-
-        @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-        public interface ToXs2aApi {
-            AccountAccess map(AccountReferenceBody cons);
-        }
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)

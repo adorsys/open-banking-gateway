@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+// TODO: We need to decide if we want to have i18n on backend side. Probably, we don't.
 @Configuration
 public class I18NConfig {
 
