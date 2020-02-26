@@ -24,11 +24,13 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=docker
       - PKCS12_KEYSTORE=/pkcs12/sample-qwac.keystore
+      - FACADE_ENCRYPTION_KEYSETPATH=/keysetpath/example-keyset.json
     build: opba-embedded-starter
     ports:
       - "18085:8085"
     volumes:
       - ./opba-protocols/xs2a-protocol/src/main/resources/:/pkcs12/
+      - ./opba-banking-protocol-facade/src/main/resources/:/keysetpath/
     depends_on:
       - postgres
     networks:
@@ -36,7 +38,7 @@ services:
 
   fintech-ui:
     environment:
-      - BACKEND_URL=http://fintech-server:8086
+      - BACKEND_URL=http://fintech-server:18086
     restart: on-failure
     build:
       context: fintech-examples/fintech-ui
@@ -65,8 +67,7 @@ services:
 
     build: fintech-examples/fintech-server
     ports:
-      - "18086:8086"
-    entrypoint: "/bin/sh -c 'java -jar fintech-server-*.jar'"
+      - "18086:18086"
     networks:
       - opba-net
 
