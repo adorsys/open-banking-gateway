@@ -73,7 +73,7 @@ fintech-ui/node_modules:
 
 .PHONY : fintech-ui-test
 fintech-ui-test: fintech-ui/node_modules
-	cd fintech-examples/fintech-ui && ng test --watch false --single-run true
+	cd fintech-examples/fintech-ui && ng test --watch=false --browsers ChromeHeadless
 
 .PHONY : fintech-ui
 fintech-ui: fintech-ui/node_modules
