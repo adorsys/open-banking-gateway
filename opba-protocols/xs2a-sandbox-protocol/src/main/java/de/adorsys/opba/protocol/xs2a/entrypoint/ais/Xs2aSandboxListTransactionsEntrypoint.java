@@ -7,7 +7,7 @@ import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsReq
 import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
 import de.adorsys.opba.protocol.xs2a.service.eventbus.ProcessEventHandlerRegistrar;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.TransactionListXs2aContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
 import org.flowable.engine.RuntimeService;
 import org.springframework.stereotype.Service;
 
