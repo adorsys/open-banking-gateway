@@ -45,8 +45,8 @@ public class ServiceContextProviderTest {
             .findAndRegisterModules()
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-    public static final String PASSWORD = "password";
-    public static final String PROTOCOL_DEFINED_DATA_TO_STORE_IN_CONTEXT = "some context data";
+    private static final String PASSWORD = "password";
+    private static final String PROTOCOL_DEFINED_DATA_TO_STORE_IN_CONTEXT = "some context data";
 
     @Autowired
     private ProtocolResultHandler handler;
