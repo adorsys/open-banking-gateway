@@ -10,7 +10,7 @@ import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.ais.ListAccountsService;
 import de.adorsys.opba.protocol.facade.services.ais.ListTransactionsService;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
-import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper.FacadeToRestMapper;
+import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper.FacadeResponseBodyToRestBodyMapper;
 import de.adorsys.opba.tppbankingapi.Const;
 import de.adorsys.opba.tppbankingapi.ais.model.generated.AccountList;
 import de.adorsys.opba.tppbankingapi.ais.model.generated.TransactionList;
@@ -63,7 +63,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                                 .build()
                         ).build()
         ).thenApply((FacadeResult<AccountListBody> result) ->
-                mapper.translate(result, Mappers.getMapper(AccountListFacadeToRestMapper.class)));
+                mapper.translate(result, Mappers.getMapper(AccountListFacadeResponseBodyToRestBodyMapper.class)));
 
 
     }
@@ -109,16 +109,16 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                         .deltaList(deltaList)
                         .build()
         ).thenApply((FacadeResult<TransactionListBody> result) ->
-                mapper.translate(result, Mappers.getMapper(TransactionsFacadeToRestMapper.class)));
+                mapper.translate(result, Mappers.getMapper(TransactionsFacadeResponseBodyToRestBodyMapper.class)));
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
-    public interface AccountListFacadeToRestMapper extends FacadeToRestMapper<AccountList, AccountListBody> {
+    public interface AccountListFacadeResponseBodyToRestBodyMapper extends FacadeResponseBodyToRestBodyMapper<AccountList, AccountListBody> {
         AccountList map(AccountListBody facadeEntity);
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
-    public interface TransactionsFacadeToRestMapper extends FacadeToRestMapper<TransactionList, TransactionListBody> {
+    public interface TransactionsFacadeResponseBodyToRestBodyMapper extends FacadeResponseBodyToRestBodyMapper<TransactionList, TransactionListBody> {
         TransactionList map(TransactionListBody facadeEntity);
     }
 }

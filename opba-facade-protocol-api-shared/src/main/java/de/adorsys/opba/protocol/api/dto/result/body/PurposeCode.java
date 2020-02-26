@@ -1,8 +1,10 @@
 package de.adorsys.opba.protocol.api.dto.result.body;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Value;
 
-@Data
+@Value
+@Builder
 public class PurposeCode {
     private String code;
 }

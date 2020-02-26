@@ -13,6 +13,7 @@ import de.adorsys.opba.protocol.facade.services.authorization.UpdateAuthorizatio
 import de.adorsys.opba.protocol.facade.services.fromaspsp.FromAspspRedirectHandler;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -47,7 +48,8 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                         .scaAuthenticationData(body.getScaAuthenticationData())
                         .extras(extrasMapper.map(body.getExtras()))
                         .build()
-        ).thenApply((FacadeResult<UpdateAuthBody> result) -> mapper.translate(result, null));
+        ).thenApply((FacadeResult<UpdateAuthBody> result) ->
+                mapper.translate(result, Mappers.getMapper(FacadeResponseMapper.NoOpMapper.class)));
     }
 
     @Override
@@ -65,7 +67,8 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                 )
                 .isOk(true)
                 .build()
-        ).thenApply((FacadeResult<UpdateAuthBody> result) -> mapper.translate(result, null));
+        ).thenApply((FacadeResult<UpdateAuthBody> result) ->
+                mapper.translate(result, Mappers.getMapper(FacadeResponseMapper.NoOpMapper.class)));
     }
 
     @Override
@@ -83,6 +86,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                 )
                 .isOk(false)
                 .build()
-        ).thenApply((FacadeResult<UpdateAuthBody> result) -> mapper.translate(result, null));
+        ).thenApply((FacadeResult<UpdateAuthBody> result) ->
+                mapper.translate(result, Mappers.getMapper(FacadeResponseMapper.NoOpMapper.class)));
     }
 }
