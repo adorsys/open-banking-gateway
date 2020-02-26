@@ -38,7 +38,7 @@ class WiremockE2EProtocolTest extends SpringScenarioTest<MockServers, WiremockAc
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running();
         when()
-                .open_banking_list_accounts_called()
+                .open_banking_list_accounts_called_for_anton_brueckner()
                 .and()
                 .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts()
                 .and()
@@ -66,7 +66,7 @@ class WiremockE2EProtocolTest extends SpringScenarioTest<MockServers, WiremockAc
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_accounts_running();
         when()
-                .open_banking_list_accounts_called()
+                .open_banking_list_accounts_called_for_max_musterman()
                 .and()
                 .open_banking_user_max_musterman_provided_initial_parameters_to_list_accounts()
                 .and()

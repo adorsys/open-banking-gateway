@@ -41,7 +41,6 @@ public class EncryptionConfig {
     @Bean
     @Profile("!" + NO_ENCRYPTION)
     public FacadeSecurityProvider securityProvider(EncryptionProperties properties) {
-        log.warn("Open banking is working without encryption!");
         String providerName = properties.getProviderName();
         if (null == Security.getProperty(providerName)) {
             Security.addProvider(new BouncyCastleProvider());
@@ -53,7 +52,7 @@ public class EncryptionConfig {
     @Bean
     @ConditionalOnMissingBean(Aead.class)
     public Aead systemAeadNoEncryptionConfig() {
-        log.warn("Open banking is working without encryption!");
+        log.warn("[DEVELOPMENT-CONFIG] Open banking is working WITHOUT ENCRYPTION!");
         return new Aead() {
             @Override
             public byte[] encrypt(byte[] plaintext, byte[] associatedData) {

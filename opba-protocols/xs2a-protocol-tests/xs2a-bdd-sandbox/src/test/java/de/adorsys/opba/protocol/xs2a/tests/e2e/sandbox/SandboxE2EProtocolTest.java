@@ -146,7 +146,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
         given()
             .enabled_embedded_sandbox_mode();
         when()
-            .open_banking_list_accounts_called()
+            .open_banking_list_accounts_called_for_max_musterman()
             .and()
             .open_banking_user_max_musterman_provided_initial_parameters_to_list_accounts()
             .and()
@@ -167,7 +167,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
                 .enabled_redirect_sandbox_mode();
 
         when()
-                .open_banking_list_accounts_called()
+                .open_banking_list_accounts_called_for_anton_brueckner()
                 .and()
                 .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts()
                 .and()
