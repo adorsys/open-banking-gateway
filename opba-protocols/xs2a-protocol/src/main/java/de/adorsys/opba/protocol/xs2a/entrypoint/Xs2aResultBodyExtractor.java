@@ -3,18 +3,22 @@ package de.adorsys.opba.protocol.xs2a.entrypoint;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionListBody;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.InternalProcessResult;
+import de.adorsys.opba.protocol.xs2a.mapper.Xs2aToFacadeMapper;
+import de.adorsys.xs2a.adapter.service.model.AccountDetails;
 import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
 import de.adorsys.xs2a.adapter.service.model.Transactions;
+import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.impl.persistence.entity.ExecutionEntity;
 import org.flowable.engine.runtime.ProcessInstance;
-import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
+import java.util.List;
+
 import static de.adorsys.opba.protocol.xs2a.service.ContextUtil.getResult;
 
 @Service
@@ -40,10 +44,5 @@ public class Xs2aResultBodyExtractor {
         return Mappers.getMapper(Xs2aToFacadeMapper.class).map(getResult(exec, List.class));
     }
 
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-    public interface Xs2aToFacadeMapper {
 
-        AccountListBody map(AccountListHolder accountList);
-        TransactionListBody map(List<Transactions> transactions);
-    }
 }
