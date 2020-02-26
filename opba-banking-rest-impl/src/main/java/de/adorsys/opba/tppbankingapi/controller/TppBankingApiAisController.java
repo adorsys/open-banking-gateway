@@ -10,16 +10,21 @@ import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.ais.ListAccountsService;
 import de.adorsys.opba.protocol.facade.services.ais.ListTransactionsService;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
+import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper.FacadeToRestMapper;
+import de.adorsys.opba.tppbankingapi.Const;
+import de.adorsys.opba.tppbankingapi.ais.model.generated.AccountList;
+import de.adorsys.opba.tppbankingapi.ais.model.generated.TransactionList;
 import de.adorsys.opba.tppbankingapi.ais.resource.generated.TppBankingApiAccountInformationServiceAisApi;
-import de.adorsys.opba.tppbankingapi.mapper.AccountListFacadeToRestMapper;
-import de.adorsys.opba.tppbankingapi.mapper.TransactionsFacadeToRestMapper;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+
+import static de.adorsys.opba.tppbankingapi.Const.SPRING_KEYWORD;
 
 @RestController
 @RequiredArgsConstructor
@@ -105,5 +110,15 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                         .build()
         ).thenApply((FacadeResult<TransactionListBody> result) ->
                 mapper.translate(result, Mappers.getMapper(TransactionsFacadeToRestMapper.class)));
+    }
+
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
+    public interface AccountListFacadeToRestMapper extends FacadeToRestMapper<AccountList, AccountListBody> {
+        AccountList map(AccountListBody facadeEntity);
+    }
+
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
+    public interface TransactionsFacadeToRestMapper extends FacadeToRestMapper<TransactionList, TransactionListBody> {
+        TransactionList map(TransactionListBody facadeEntity);
     }
 }

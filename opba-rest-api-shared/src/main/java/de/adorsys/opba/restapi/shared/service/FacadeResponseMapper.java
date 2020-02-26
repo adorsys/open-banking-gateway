@@ -6,7 +6,6 @@ import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedi
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeSuccessResult;
-import de.adorsys.opba.tppbankingapi.mapper.FacadeToRestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -78,7 +77,7 @@ public class FacadeResponseMapper {
 
     private <T> ResponseEntity<?> handleSuccess(FacadeSuccessResult<T> result, FacadeToRestMapper<?, T> mapper) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(OK));
-        return  response.body(mapper.mapFromFacadeToRest(result.getBody()));
+        return response.body(mapper.map(result.getBody()));
     }
 
     private ResponseEntity.BodyBuilder putDefaultHeaders(FacadeResult<?> result, ResponseEntity.BodyBuilder builder) {
@@ -91,5 +90,9 @@ public class FacadeResponseMapper {
     private ResponseEntity.BodyBuilder putExtraRedirectHeaders(FacadeResultRedirectable<?> result, ResponseEntity.BodyBuilder builder) {
         result.getHeaders().forEach(builder::header);
         return builder;
+    }
+
+    public interface FacadeToRestMapper<R, F> {
+        R map(F facadeEntity);
     }
 }

@@ -37,13 +37,13 @@ public class Xs2aResultBodyExtractor {
         ProcessInstance updated = runtimeService.createProcessInstanceQuery()
                 .processInstanceId(result.getProcessId()).singleResult();
         ExecutionEntity exec = (ExecutionEntity) updated;
-        return Mappers.getMapper(Xs2aToFacadeMapper.class).map(getResult(exec, Transactions.class));
+        return Mappers.getMapper(Xs2aToFacadeMapper.class).map(getResult(exec, List.class));
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface Xs2aToFacadeMapper {
 
         AccountListBody map(AccountListHolder accountList);
-        TransactionListBody map(Transactions transactions);
+        TransactionListBody map(List<Transactions> transactions);
     }
 }

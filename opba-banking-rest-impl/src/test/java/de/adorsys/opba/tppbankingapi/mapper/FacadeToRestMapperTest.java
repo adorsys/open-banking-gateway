@@ -3,7 +3,7 @@ package de.adorsys.opba.tppbankingapi.mapper;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListDetailBody;
 import de.adorsys.opba.tppbankingapi.ais.model.generated.AccountList;
-import de.adorsys.opba.tppbankingapi.mapper.generated.AccountListFacadeToRestMapperImpl;
+import de.adorsys.opba.tppbankingapi.mappers.generated.TppBankingApiAisController$AccountListFacadeToRestMapperImpl;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class FacadeToRestMapperTest {
         accountDetails.add(account);
         AccountListBody facadeEntity = AccountListBody.builder().accounts(accountDetails).build();
 
-        AccountList restEntity = new AccountListFacadeToRestMapperImpl().mapFromFacadeToRest(facadeEntity);
+        AccountList restEntity = new TppBankingApiAisController$AccountListFacadeToRestMapperImpl().map(facadeEntity);
         assertEquals(IBAN, restEntity.getAccounts().get(0).getIban());
         assertEquals(DELETED, restEntity.getAccounts().get(0).getStatus().name());
     }
