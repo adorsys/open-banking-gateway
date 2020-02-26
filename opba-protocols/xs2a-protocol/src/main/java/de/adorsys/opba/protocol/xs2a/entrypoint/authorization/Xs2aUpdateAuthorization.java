@@ -15,6 +15,10 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import static de.adorsys.opba.protocol.api.dto.parameters.ScaConst.PSU_PASSWORD;
+import static de.adorsys.opba.protocol.api.dto.parameters.ScaConst.SCA_CHALLENGE_DATA;
+import static de.adorsys.opba.protocol.api.dto.parameters.ScaConst.SCA_CHALLENGE_ID;
+
 @Service("xs2aUpdateAuthorization")
 @RequiredArgsConstructor
 public class Xs2aUpdateAuthorization implements UpdateAuthorization {
@@ -32,6 +36,7 @@ public class Xs2aUpdateAuthorization implements UpdateAuthorization {
             (Xs2aContext toUpdate) -> {
                 toUpdate = mapper.updateContext(toUpdate, serviceContext.getRequest());
                 updateWithExtras(toUpdate, serviceContext.getRequest().getExtras());
+                updateWithScaChallenges(toUpdate, serviceContext.getRequest().getScaAuthenticationData());
                 toUpdate = extender.extend(toUpdate, serviceContext);
                 return toUpdate;
             }
@@ -51,6 +56,24 @@ public class Xs2aUpdateAuthorization implements UpdateAuthorization {
 
         if (extras.containsKey(ExtraAuthRequestParam.PSU_IP_ADDRESS)) {
             context.setPsuIpAddress((String) extras.get(ExtraAuthRequestParam.PSU_IP_ADDRESS));
+        }
+    }
+
+    private void updateWithScaChallenges(Xs2aContext context, Map<String, String> scaChallenges) {
+        if (null == scaChallenges) {
+            return;
+        }
+
+        if (null != scaChallenges.get(PSU_PASSWORD)) {
+            context.setPsuPassword(scaChallenges.get(PSU_PASSWORD));
+        }
+
+        if (null != scaChallenges.get(SCA_CHALLENGE_DATA)) {
+            context.setLastScaChallenge(scaChallenges.get(SCA_CHALLENGE_DATA));
+        }
+
+        if (null != scaChallenges.get(SCA_CHALLENGE_ID)) {
+            context.setUserSelectScaId(scaChallenges.get(SCA_CHALLENGE_ID));
         }
     }
 }
