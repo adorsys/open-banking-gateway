@@ -67,7 +67,7 @@ services:
 
     build: fintech-examples/fintech-server
     ports:
-      - "18086:18086"
+      - "18086:8086"
     networks:
       - opba-net
 
