@@ -24,7 +24,6 @@ public class Xs2aUpdateAuthorization implements UpdateAuthorization {
     private final ExtendWithServiceContext extender;
     private final UpdateAuthMapper mapper;
 
-
     @Override
     public CompletableFuture<Result<UpdateAuthBody>> execute(ServiceContext<AuthorizationRequest> serviceContext) {
         String executionId = serviceContext.getAuthContext();
@@ -42,6 +41,10 @@ public class Xs2aUpdateAuthorization implements UpdateAuthorization {
     }
 
     private void updateWithExtras(Xs2aContext context, Map<ExtraAuthRequestParam, Object> extras) {
+        if (null == extras) {
+            return;
+        }
+        
         if (extras.containsKey(ExtraAuthRequestParam.PSU_ID)) {
             context.setPsuId((String) extras.get(ExtraAuthRequestParam.PSU_ID));
         }
