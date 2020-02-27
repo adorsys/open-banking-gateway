@@ -24,7 +24,7 @@
       }
     },
     "bodyPatterns" : [ {
-      "equalToJson" : "{\"access\":{\"transactions\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}]},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":12}",
+      "equalToJson" : "{\"access\":{\"transactions\":[{\"iban\":\"DE80760700240271232400\"}]},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":12}",
       "ignoreArrayOrder" : true,
       "ignoreExtraElements" : true
     } ]

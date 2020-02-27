@@ -21,7 +21,7 @@ export class ProvidePsuPasswordComponent implements OnInit {
   save() {
     this.client.post(
       this.submissionUri,
-      {scaAuthenticationData: {psuPassword: this.psuPassword.value}}, // scaAuthenticationData is not really correct
+      {scaAuthenticationData: {PSU_PASSWORD: this.psuPassword.value}}, // scaAuthenticationData is not really correct
       {headers: {
           'X-Request-ID': Helpers.uuidv4(),
           'X-XSRF-TOKEN': Helpers.uuidv4(),
