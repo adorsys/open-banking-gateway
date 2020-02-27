@@ -4,7 +4,6 @@ import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
 import de.adorsys.opba.db.config.EnableBankingPersistence;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
-import de.adorsys.opba.protocol.xs2a.tests.Xs2aSandboxProtocolApplication;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.SandboxServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
@@ -169,7 +168,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
         when()
                 .open_banking_list_accounts_called_for_anton_brueckner()
                 .and()
-                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts()
+                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
                 .and()
                 .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
                 .and()

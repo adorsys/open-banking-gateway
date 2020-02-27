@@ -102,7 +102,6 @@
                 <configuration>
                     <resourceBundles>
                         <resourceBundle>de.adorsys.opba:xs2a-bdd-tests-common:${project.version}</resourceBundle>
-                        <resourceBundle>de.adorsys.opba:xs2a-protocol:${project.version}</resourceBundle>
                     </resourceBundles>
                 </configuration>
                 <executions>

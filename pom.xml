@@ -34,6 +34,7 @@
         <module>opba-banking-rest-impl</module>
         <module>opba-banking-protocol-facade</module>
         <module>opba-embedded-starter</module>
+        <module>opba-embedded-starter-tests</module>
         <module>fintech-examples</module>
         <module>opba-db</module>
         <module>opba-protocols</module>
