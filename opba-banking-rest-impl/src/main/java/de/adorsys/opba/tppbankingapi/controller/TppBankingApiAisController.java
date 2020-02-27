@@ -5,7 +5,7 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
-import de.adorsys.opba.protocol.api.dto.result.body.TransactionListBody;
+import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.ais.ListAccountsService;
 import de.adorsys.opba.protocol.facade.services.ais.ListTransactionsService;
@@ -14,7 +14,6 @@ import de.adorsys.opba.tppbankingapi.ais.resource.generated.TppBankingApiAccount
 import de.adorsys.opba.tppbankingapi.mapper.AccountListFacadeResponseBodyToRestBodyMapper;
 import de.adorsys.opba.tppbankingapi.mapper.TransactionsFacadeResponseBodyToRestBodyMapper;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -29,6 +28,8 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     private final ListAccountsService accounts;
     private final ListTransactionsService transactions;
     private final FacadeResponseMapper mapper;
+    private final AccountListFacadeResponseBodyToRestBodyMapper accountListRestMapper;
+    private final TransactionsFacadeResponseBodyToRestBodyMapper transactionsRestMapper;
 
     @Override
     public CompletableFuture getAccounts(
@@ -57,10 +58,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                                 .bankId(bankID)
                                 .build()
                         ).build()
-        ).thenApply((FacadeResult<AccountListBody> result) ->
-                mapper.translate(result, Mappers.getMapper(AccountListFacadeResponseBodyToRestBodyMapper.class)));
-
-
+        ).thenApply((FacadeResult<AccountListBody> result) -> mapper.translate(result, accountListRestMapper));
     }
 
     @Override
@@ -103,8 +101,6 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                         .bookingStatus(bookingStatus)
                         .deltaList(deltaList)
                         .build()
-        ).thenApply((FacadeResult<TransactionListBody> result) ->
-                mapper.translate(result, Mappers.getMapper(TransactionsFacadeResponseBodyToRestBodyMapper.class)));
+        ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
     }
-
 }
