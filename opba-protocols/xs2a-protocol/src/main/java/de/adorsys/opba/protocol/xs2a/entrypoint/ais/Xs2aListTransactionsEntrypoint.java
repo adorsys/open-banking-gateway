@@ -41,10 +41,6 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
 
     @Override
     public CompletableFuture<Result<TransactionsResponseBody>> execute(ServiceContext<ListTransactionsRequest> serviceContext) {
-        TransactionListXs2aContext context = mapper.map(serviceContext.getRequest());
-        context.setAction(ProtocolAction.LIST_TRANSACTIONS);
-        extender.extend(context, serviceContext);
-
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(
                 REQUEST_SAGA,
                 new ConcurrentHashMap<>(ImmutableMap.of(CONTEXT, prepareContext(serviceContext)))

@@ -8,7 +8,6 @@ import java.time.LocalDate;
 @Value
 @Builder
 public class TransactionDetailsBody {
-
   private String transactionId;
   private String entryReference;
   private String endToEndId;
@@ -26,8 +25,5 @@ public class TransactionDetailsBody {
   private String ultimateDebtor;
   private String remittanceInformationUnstructured;
   private String remittanceInformationStructured;
-//  private PurposeCode purposeCode;
-//  private TransactionDetailsBody bankTransactionCode;
   private String proprietaryBankTransactionCode;
-
  }
