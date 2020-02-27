@@ -2,12 +2,11 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
-import de.adorsys.opba.protocol.xs2a.constant.GlobalConst;
 import org.flowable.engine.RuntimeService;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,18 +61,9 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    public SELF sandbox_anton_brueckner_see_redirect_back_to_tpp_button(WebDriver driver) {
+    public SELF sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(WebDriver driver) {
         waitForPageLoad(driver);
-        String waitingExecutionId = runtimeService.createActivityInstanceQuery()
-                .unfinished()
-                .orderByActivityInstanceStartTime()
-                .desc()
-                .list()
-                .get(0)
-                .getExecutionId();
-
-        Xs2aContext ctx = (Xs2aContext) runtimeService.getVariable(waitingExecutionId, GlobalConst.CONTEXT);
-        this.redirectOkUri = ctx.getRedirectUriOk();
+        clickOnButton(driver, By.className("btn-primary"));
         return self();
     }
 
@@ -88,8 +78,10 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
 
     private void clickOnButton(WebDriver driver, By identifier) {
         withRetry.execute(context -> {
-            wait(driver).until(elementToBeClickable(identifier));
-            driver.findElement(identifier).click();
+            swallowReachedErrorPagException(() -> {
+                wait(driver).until(elementToBeClickable(identifier));
+                driver.findElement(identifier).click();
+            });
             return null;
         });
     }
@@ -100,5 +92,17 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
             driver.findElement(identifier).sendKeys(text);
             return null;
         });
+    }
+
+    private void swallowReachedErrorPagException(Runnable action) {
+        try {
+            action.run();
+        } catch (WebDriverException ex) {
+            if (null != ex.getMessage() && ex.getMessage().contains("Reached error page")) {
+                return;
+            }
+
+            throw ex;
+        }
     }
 }
