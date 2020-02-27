@@ -136,7 +136,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
                 .and()
                 .open_banking_user_max_musterman_selected_sca_challenge_type_email1()
                 .and()
-                .open_banking_user_max_musterman_provided_sca_challenge_result_and_no_redirect();
+                .open_banking_user_max_musterman_provided_sca_challenge_result_and_redirect_to_fintech_ok();
         then()
                 .open_banking_has_max_musterman_transactions_validated_by_iban();
     }
@@ -153,7 +153,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
             .and()
             .open_banking_user_max_musterman_selected_sca_challenge_type_email2()
             .and()
-            .open_banking_user_max_musterman_provided_sca_challenge_result_and_no_redirect();
+            .open_banking_user_max_musterman_provided_sca_challenge_result_and_redirect_to_fintech_ok();
 
         AccountInformationResult result = then()
                 .open_banking_has_max_musterman_accounts();

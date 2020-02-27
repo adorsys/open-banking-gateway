@@ -30,6 +30,7 @@ import static io.restassured.config.RedirectConfig.redirectConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.BigDecimalComparator.BIG_DECIMAL_COMPARATOR;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
 @JGivenStage
@@ -76,7 +77,11 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
                     .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
                     .statusCode(HttpStatus.OK.value())
-                // BODY validation here
+                    .body("accounts[0].iban", equalTo("DE80760700240271232400"))
+                    .body("accounts[0].resourceId", equalTo("cmD4EYZeTkkhxRuIV1diKA"))
+                    .body("accounts[0].currency", equalTo("EUR"))
+                    .body("accounts[0].name", equalTo("Anton Brueckner"))
+                    .body("accounts", hasSize(1))
                 .extract();
 
         this.responseContent = response.body().asString();

@@ -14,7 +14,6 @@ import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -26,7 +25,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResourceSkipLastEol;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
@@ -38,6 +37,8 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 import static io.restassured.RestAssured.config;
 import static io.restassured.config.RedirectConfig.redirectConfig;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpHeaders.LOCATION;
 
 @Slf4j
 @JGivenStage
@@ -111,7 +112,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .when()
                     .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
-                    .statusCode(HttpStatus.MOVED_PERMANENTLY.value())
+                    .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
         updateExecutionId(response);
@@ -140,7 +141,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent() {
-        authenticateInternalEmbeddedConsent(
+        startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
             "restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"
         );
@@ -149,7 +150,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions() {
-        authenticateInternalEmbeddedConsent(
+        startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
             "restrecord/tpp-ui-input/params/anton-brueckner-transactions.txt"
         );
@@ -158,15 +159,15 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF open_banking_user_max_musterman_provided_initial_parameters_to_list_accounts() {
-        authenticateInternalEmbeddedConsent(
+        startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-            "restrecord/tpp-ui-input/params/max-musterman-account.txt"
+                "restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent.json"
         );
         return self();
     }
 
     public SELF open_banking_user_max_musterman_provided_initial_parameters_to_list_transactions() {
-        authenticateInternalEmbeddedConsent(
+        startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
             "restrecord/tpp-ui-input/params/max-musterman-transactions.txt"
         );
@@ -174,9 +175,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF open_banking_user_max_musterman_provided_password() {
-        authenticateInternalEmbeddedConsent(
-                "/v1/parameters/provide-psu-password/",
-            "restrecord/tpp-ui-input/params/max-musterman-password.txt"
+        startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                "restrecord/tpp-ui-input/params/max-musterman-password.json"
         );
         updateAvailableScas();
         return self();
@@ -184,41 +185,42 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF open_banking_user_max_musterman_selected_sca_challenge_type_email1() {
         provideParametersToBankingProtocolWithBody(
-                "/v1/parameters/select-sca-method/",
+                AUTHORIZE_CONSENT_ENDPOINT,
             selectedScaBody("EMAIL:max.musterman@mail.de"),
-            HttpStatus.MOVED_PERMANENTLY
+            HttpStatus.SEE_OTHER
         );
         return self();
     }
 
     public SELF open_banking_user_max_musterman_selected_sca_challenge_type_email2() {
         provideParametersToBankingProtocolWithBody(
-                "/v1/parameters/select-sca-method/",
+                AUTHORIZE_CONSENT_ENDPOINT,
             selectedScaBody("EMAIL:max.musterman2@mail.de"),
-            HttpStatus.MOVED_PERMANENTLY
+            HttpStatus.SEE_OTHER
         );
         return self();
     }
 
-    public SELF open_banking_user_max_musterman_provided_sca_challenge_result_and_no_redirect() {
-        authenticateInternalEmbeddedConsent(
-                "/v1/parameters/report-sca-result/",
-            "restrecord/tpp-ui-input/params/max-musterman-sca-challenge-result.txt",
-                HttpStatus.OK
+    public SELF open_banking_user_max_musterman_provided_sca_challenge_result_and_redirect_to_fintech_ok() {
+        ExtractableResponse<Response> response = provideParametersToBankingProtocolWithBody(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/max-musterman-sca-challenge-result.json"),
+                HttpStatus.SEE_OTHER
         );
 
+        assertThat(response.header(LOCATION)).contains("localhost").contains("/ok");
         return self();
     }
 
-    private void authenticateInternalEmbeddedConsent(String uriPath, String resource) {
+    private void startInitialInternalConsentAuthorization(String uriPath, String resource) {
         ExtractableResponse<Response> response =
-                authenticateInternalEmbeddedConsent(uriPath, resource, HttpStatus.SEE_OTHER);
+                startInitialInternalConsentAuthorization(uriPath, resource, HttpStatus.SEE_OTHER);
         updateExecutionId(response);
         updateRedirectCode(response);
     }
 
-    private ExtractableResponse<Response> authenticateInternalEmbeddedConsent(String uriPath, String resource, HttpStatus status) {
-        return provideParametersToBankingProtocolWithBody(uriPath, readResourceSkipLastEol(resource), status);
+    private ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resource, HttpStatus status) {
+        return provideParametersToBankingProtocolWithBody(uriPath, readResource(resource), status);
     }
 
     private ExtractableResponse<Response> provideParametersToBankingProtocolWithBody(String uriPath, String body, HttpStatus status) {
@@ -236,12 +238,13 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .extract();
 
         this.responseContent = response.body().asString();
-        this.redirectUriToGetUserParams = response.header(HttpHeaders.LOCATION);
+        this.redirectUriToGetUserParams = response.header(LOCATION);
+        updateRedirectCode(response);
         return response;
     }
 
     private void updateNextConsentAuthorizationUrl(ExtractableResponse<Response> response) {
-        this.redirectUriToGetUserParams = response.header(HttpHeaders.LOCATION);
+        this.redirectUriToGetUserParams = response.header(LOCATION);
     }
 
     private void updateExecutionId(ExtractableResponse<Response> response) {
@@ -267,7 +270,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     private String selectedScaBody(String scaName) {
-        return "scaMethodId=" + this.availableScas.get(scaName);
+        return String.format("{\"scaAuthenticationData\":{\"scaMethodId\":\"%s\"}}", this.availableScas.get(scaName));
     }
 
     @Data
