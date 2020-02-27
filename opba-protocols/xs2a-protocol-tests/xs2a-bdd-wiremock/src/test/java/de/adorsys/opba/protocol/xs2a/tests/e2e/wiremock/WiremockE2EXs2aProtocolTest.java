@@ -1,7 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock;
 
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
-import de.adorsys.opba.protocol.xs2a.tests.Xs2aProtocolApplication;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.MockServers;
@@ -30,7 +29,7 @@ As we redefine list accounts for adorsys-sandbox bank to sandbox customary one
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {Xs2aProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
-class WiremockE2EProtocolTest extends SpringScenarioTest<MockServers, WiremockAccountInformationRequest<? extends WiremockAccountInformationRequest<?>>, AccountInformationResult> {
+class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, WiremockAccountInformationRequest<? extends WiremockAccountInformationRequest<?>>, AccountInformationResult> {
 
     @Test
     @SneakyThrows
@@ -40,7 +39,7 @@ class WiremockE2EProtocolTest extends SpringScenarioTest<MockServers, WiremockAc
         when()
                 .open_banking_list_accounts_called_for_anton_brueckner()
                 .and()
-                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts()
+                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
                 .and()
                 .open_banking_redirect_uri_extracted();
         then()

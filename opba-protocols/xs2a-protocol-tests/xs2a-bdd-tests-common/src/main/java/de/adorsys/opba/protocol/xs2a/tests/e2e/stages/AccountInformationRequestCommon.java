@@ -2,8 +2,6 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Iterables;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.BeforeStage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
@@ -33,10 +31,12 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.BANK_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_NOK;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_OK;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_USER_ID;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResourceSkipLastEol;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 import static io.restassured.RestAssured.config;
 import static io.restassured.config.RedirectConfig.redirectConfig;
 
@@ -53,13 +53,17 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     private static final String ANTON_BRUECKNER = "anton.brueckner";
     private static final String MAX_MUSTERMAN = "max.musterman";
 
-    public static final String PARAMETERS_PROVIDE_MORE = "/v1/parameters/provide-more/";
+    public static final String AUTHORIZE_CONSENT_ENDPOINT = "/v1/consent/{serviceSessionId}/embedded";
+    public static final String REDIRECT_CODE_QUERY = "redirectCode";
 
     @ProvidedScenarioState
     protected String redirectUriToGetUserParams;
 
     @ProvidedScenarioState
-    protected String execId;
+    protected String serviceSessionId;
+
+    @ProvidedScenarioState
+    protected String redirectCode;
 
     @ProvidedScenarioState
     @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
@@ -83,38 +87,43 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF open_banking_list_accounts_called_for_anton_brueckner() {
-        this.redirectUriToGetUserParams = withInitialHeaders(ANTON_BRUECKNER)
+        ExtractableResponse<Response> response = withInitialHeaders(ANTON_BRUECKNER)
                 .when()
                     .get("/v1/banking/ais/accounts")
                 .then()
                     .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract()
-                    .header(HttpHeaders.LOCATION);
-        updateExecutionId();
+                    .extract();
+        updateExecutionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
         return self();
     }
 
     public SELF open_banking_list_accounts_called_for_max_musterman() {
-        this.redirectUriToGetUserParams = withInitialHeaders(MAX_MUSTERMAN)
+        ExtractableResponse<Response> response = withInitialHeaders(MAX_MUSTERMAN)
                 .when()
                     .get("/v1/banking/ais/accounts")
                 .then()
                     .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract()
-                .header(HttpHeaders.LOCATION);
-        updateExecutionId();
+                    .extract();
+
+        updateExecutionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
         return self();
     }
 
     public SELF open_banking_list_transactions_called_for_anton_brueckner(String resourceId) {
-        this.redirectUriToGetUserParams = withInitialHeaders(ANTON_BRUECKNER)
+        ExtractableResponse<Response> response = withInitialHeaders(ANTON_BRUECKNER)
                 .when()
                     .get("/v1/transactions/" + resourceId)
                 .then()
                     .statusCode(HttpStatus.MOVED_PERMANENTLY.value())
-                .extract()
-                    .header(HttpHeaders.LOCATION);
-        updateExecutionId();
+                .extract();
+
+        updateExecutionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
         return self();
     }
 
@@ -123,29 +132,31 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF open_banking_list_transactions_called_for_max_musterman(String resourceId) {
-        this.redirectUriToGetUserParams = withInitialHeaders(MAX_MUSTERMAN)
+        ExtractableResponse<Response> response = withInitialHeaders(MAX_MUSTERMAN)
                 .when()
                     .get("/v1/transactions/" + resourceId)
                 .then()
                     .statusCode(HttpStatus.MOVED_PERMANENTLY.value())
-                    .extract()
-                .header(HttpHeaders.LOCATION);
-        updateExecutionId();
+                    .extract();
+
+        updateExecutionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
         return self();
     }
 
-    public SELF open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts() {
-        provideParametersToBankingProtocol(
-                PARAMETERS_PROVIDE_MORE,
-            "restrecord/tpp-ui-input/params/anton-brueckner-account.txt"
+    public SELF open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent() {
+        authenticateInternalEmbeddedConsent(
+                AUTHORIZE_CONSENT_ENDPOINT,
+            "restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"
         );
 
         return self();
     }
 
     public SELF open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions() {
-        provideParametersToBankingProtocol(
-                PARAMETERS_PROVIDE_MORE,
+        authenticateInternalEmbeddedConsent(
+                AUTHORIZE_CONSENT_ENDPOINT,
             "restrecord/tpp-ui-input/params/anton-brueckner-transactions.txt"
         );
 
@@ -153,23 +164,23 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF open_banking_user_max_musterman_provided_initial_parameters_to_list_accounts() {
-        provideParametersToBankingProtocol(
-                PARAMETERS_PROVIDE_MORE,
+        authenticateInternalEmbeddedConsent(
+                AUTHORIZE_CONSENT_ENDPOINT,
             "restrecord/tpp-ui-input/params/max-musterman-account.txt"
         );
         return self();
     }
 
     public SELF open_banking_user_max_musterman_provided_initial_parameters_to_list_transactions() {
-        provideParametersToBankingProtocol(
-                PARAMETERS_PROVIDE_MORE,
+        authenticateInternalEmbeddedConsent(
+                AUTHORIZE_CONSENT_ENDPOINT,
             "restrecord/tpp-ui-input/params/max-musterman-transactions.txt"
         );
         return self();
     }
 
     public SELF open_banking_user_max_musterman_provided_password() {
-        provideParametersToBankingProtocol(
+        authenticateInternalEmbeddedConsent(
                 "/v1/parameters/provide-psu-password/",
             "restrecord/tpp-ui-input/params/max-musterman-password.txt"
         );
@@ -196,7 +207,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF open_banking_user_max_musterman_provided_sca_challenge_result_and_no_redirect() {
-        provideParametersToBankingProtocol(
+        authenticateInternalEmbeddedConsent(
                 "/v1/parameters/report-sca-result/",
             "restrecord/tpp-ui-input/params/max-musterman-sca-challenge-result.txt",
                 HttpStatus.OK
@@ -218,34 +229,46 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .header(X_REQUEST_ID, UUID.randomUUID().toString());
     }
 
-    private void provideParametersToBankingProtocol(String uriPath, String resource) {
-        provideParametersToBankingProtocol(uriPath, resource, HttpStatus.MOVED_PERMANENTLY);
-        updateExecutionId();
+    private void authenticateInternalEmbeddedConsent(String uriPath, String resource) {
+        ExtractableResponse<Response> response =
+                authenticateInternalEmbeddedConsent(uriPath, resource, HttpStatus.MOVED_PERMANENTLY);
+        updateExecutionId(response);
+        updateRedirectCode(response);
     }
 
-    private void provideParametersToBankingProtocol(String uriPath, String resource, HttpStatus status) {
-        provideParametersToBankingProtocolWithBody(uriPath, readResourceSkipLastEol(resource), status);
+    private ExtractableResponse<Response> authenticateInternalEmbeddedConsent(String uriPath, String resource, HttpStatus status) {
+        return provideParametersToBankingProtocolWithBody(uriPath, readResourceSkipLastEol(resource), status);
     }
 
-    private void provideParametersToBankingProtocolWithBody(String uriPath, String body, HttpStatus status) {
+    private ExtractableResponse<Response> provideParametersToBankingProtocolWithBody(String uriPath, String body, HttpStatus status) {
         ExtractableResponse<Response> response = RestAssured
                 .given()
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(body)
                 .when()
-                    .post(uriPath + execId)
+                    .post(uriPath, serviceSessionId)
                 .then()
                     .statusCode(status.value())
                 .extract();
 
         this.responseContent = response.body().asString();
         this.redirectUriToGetUserParams = response.header(HttpHeaders.LOCATION);
+        return response;
     }
 
-    private void updateExecutionId() {
-        execId = Iterables.getLast(
-                Splitter.on("/").split(Splitter.on("?").split(redirectUriToGetUserParams).iterator().next())
-        );
+    private void updateNextConsentAuthorizationUrl(ExtractableResponse<Response> response) {
+        this.redirectUriToGetUserParams = response.header(HttpHeaders.LOCATION);
+    }
+
+    private void updateExecutionId(ExtractableResponse<Response> response) {
+        serviceSessionId = response.header(SERVICE_SESSION_ID);
+    }
+
+    private void updateRedirectCode(ExtractableResponse<Response> response) {
+        redirectCode = response.header(REDIRECT_CODE);
     }
 
     @SneakyThrows
