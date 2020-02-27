@@ -52,10 +52,6 @@ export class AccountSelectorComponent implements OnInit {
         this.aisConsent.recurringIndicator = it.value;
       }
 
-      if (it.id === 'ais.combinedServiceIndicator') {
-        this.aisConsent.combinedServiceIndicator = it.value;
-      }
-
       if (it.id === 'ais.frequencyPerDay') {
         this.aisConsent.frequencyPerDay = it.value;
       }
