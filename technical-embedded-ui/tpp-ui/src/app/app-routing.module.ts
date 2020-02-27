@@ -17,7 +17,7 @@ const routes: Routes = [
   {path: 'parameters/provide-psu-password/:executionId', component: ProvidePsuPasswordComponent},
   {path: 'parameters/select-sca-method/:executionId', component: SelectScaMethodComponent},
   {path: 'parameters/report-sca-result/:executionId', component: ReportScaResultComponent},
-  {path: '**', component: InitialRequestComponent}
+  {path: '', component: InitialRequestComponent}
 ];
 
 @NgModule({
