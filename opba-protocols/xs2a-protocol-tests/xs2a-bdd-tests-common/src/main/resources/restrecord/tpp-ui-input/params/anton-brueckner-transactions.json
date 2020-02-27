@@ -8,7 +8,7 @@
       "recurringIndicator": true,
       "combinedServiceIndicator": false,
       "access": {
-        "accounts": ["DE80760700240271232400"],
+        "transactions": ["DE80760700240271232400"],
         "bookingStatus": "BOTH",
         "dateFrom": "2018-01-01",
         "dateTo": "2020-09-30"
