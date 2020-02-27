@@ -70,6 +70,13 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     }
 
     @SneakyThrows
+    @Transactional
+    public AccountInformationResult open_banking_has_consent_for_max_musterman_account_list() {
+        assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isNotEmpty();
+        return self();
+    }
+
+    @SneakyThrows
     public AccountInformationResult open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session() {
         ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
                     .header(SERVICE_SESSION_ID, serviceSessionId)
@@ -82,6 +89,25 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
                     .body("accounts[0].currency", equalTo("EUR"))
                     .body("accounts[0].name", equalTo("Anton Brueckner"))
                     .body("accounts", hasSize(1))
+                .extract();
+
+        this.responseContent = response.body().asString();
+        return self();
+    }
+
+    @SneakyThrows
+    public AccountInformationResult open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session() {
+        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .when()
+                .get(AIS_ACCOUNTS_ENDPOINT)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("accounts[0].iban", equalTo("DE38760700240320465700"))
+                .body("accounts[0].resourceId", equalTo("oN7KTVuJSVotMvPPPavhVo"))
+                .body("accounts[0].currency", equalTo("EUR"))
+                .body("accounts[0].name", equalTo("Max Musterman"))
+                .body("accounts", hasSize(1))
                 .extract();
 
         this.responseContent = response.body().asString();
@@ -150,16 +176,6 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
                         )
                     )
                     .body("transactions.booked", hasSize(ANTON_BRUECKNER_BOOKED_TRANSACTIONS_COUNT));
-        return self();
-    }
-
-    @SneakyThrows
-    public AccountInformationResult open_banking_has_max_musterman_accounts() {
-        DocumentContext body = JsonPath.parse(responseContent);
-
-        assertThat(body).extracting(it -> it.read("$.[*].iban")).asList().containsExactly("DE38760700240320465700");
-        assertThat(body).extracting(it -> it.read("$.[*].currency")).asList().containsExactly("EUR");
-
         return self();
     }
 
