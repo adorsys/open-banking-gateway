@@ -10,7 +10,6 @@ import com.tngtech.jgiven.integration.spring.JGivenStage;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -26,14 +25,14 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.AUTHORIZATION;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.BANK_ID;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_NOK;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_OK;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_USER_ID;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResourceSkipLastEol;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
@@ -45,15 +44,6 @@ import static io.restassured.config.RedirectConfig.redirectConfig;
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class AccountInformationRequestCommon<SELF extends AccountInformationRequestCommon<SELF>> extends Stage<SELF> {
 
-    private static final String DEFAULT_AUTHORIZATION = "MY-SUPER-FINTECH-ID";
-    private static final String SANDBOX_BANK_ID = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
-    private static final String FINTECH_REDIR_OK = "http://localhost:5500/fintech-callback/ok";
-    private static final String FINTECH_REDIR_NOK = "http://localhost:5500/fintech-callback/nok";
-    private static final String SESSION_PASSWORD = "qwerty";
-    private static final String ANTON_BRUECKNER = "anton.brueckner";
-    private static final String MAX_MUSTERMAN = "max.musterman";
-
-    public static final String AUTHORIZE_CONSENT_ENDPOINT = "/v1/consent/{serviceSessionId}/embedded";
     public static final String REDIRECT_CODE_QUERY = "redirectCode";
 
     @ProvidedScenarioState
@@ -87,9 +77,10 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF open_banking_list_accounts_called_for_anton_brueckner() {
-        ExtractableResponse<Response> response = withInitialHeaders(ANTON_BRUECKNER)
+        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
+                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
-                    .get("/v1/banking/ais/accounts")
+                    .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
                     .statusCode(HttpStatus.ACCEPTED.value())
                     .extract();
@@ -100,9 +91,10 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF open_banking_list_accounts_called_for_max_musterman() {
-        ExtractableResponse<Response> response = withInitialHeaders(MAX_MUSTERMAN)
+        ExtractableResponse<Response> response = withDefaultHeaders(MAX_MUSTERMAN)
+                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
-                    .get("/v1/banking/ais/accounts")
+                    .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
                     .statusCode(HttpStatus.ACCEPTED.value())
                     .extract();
@@ -114,9 +106,10 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF open_banking_list_transactions_called_for_anton_brueckner(String resourceId) {
-        ExtractableResponse<Response> response = withInitialHeaders(ANTON_BRUECKNER)
+        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
+                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
-                    .get("/v1/transactions/" + resourceId)
+                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
                     .statusCode(HttpStatus.MOVED_PERMANENTLY.value())
                 .extract();
@@ -132,9 +125,10 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF open_banking_list_transactions_called_for_max_musterman(String resourceId) {
-        ExtractableResponse<Response> response = withInitialHeaders(MAX_MUSTERMAN)
+        ExtractableResponse<Response> response = withDefaultHeaders(MAX_MUSTERMAN)
+                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
-                    .get("/v1/transactions/" + resourceId)
+                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
                     .statusCode(HttpStatus.MOVED_PERMANENTLY.value())
                     .extract();
@@ -216,22 +210,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    private RequestSpecification withInitialHeaders(String fintechUserId) {
-        return RestAssured
-                .given()
-                .header(AUTHORIZATION, DEFAULT_AUTHORIZATION)
-                .header(BANK_ID, SANDBOX_BANK_ID)
-                .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
-                .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
-                .header(FINTECH_USER_ID, fintechUserId)
-                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
-                .header(X_REQUEST_ID, UUID.randomUUID().toString());
-    }
-
     private void authenticateInternalEmbeddedConsent(String uriPath, String resource) {
         ExtractableResponse<Response> response =
-                authenticateInternalEmbeddedConsent(uriPath, resource, HttpStatus.MOVED_PERMANENTLY);
+                authenticateInternalEmbeddedConsent(uriPath, resource, HttpStatus.SEE_OTHER);
         updateExecutionId(response);
         updateRedirectCode(response);
     }

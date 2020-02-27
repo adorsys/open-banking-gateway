@@ -6,22 +6,28 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.BeforeStage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
+import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.UUID;
 
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static io.restassured.RestAssured.config;
 import static io.restassured.config.RedirectConfig.redirectConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.BigDecimalComparator.BIG_DECIMAL_COMPARATOR;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -38,8 +44,14 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     @ExpectedScenarioState
     private String responseContent;
 
+    @ExpectedScenarioState
+    protected String serviceSessionId;
+
     @LocalServerPort
     private int serverPort;
+
+    @Autowired
+    private ConsentRepository consents;
 
     @BeforeStage
     void setupRestAssured() {
@@ -49,16 +61,20 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     }
 
     @SneakyThrows
-    public AccountInformationResult open_banking_reads_anton_brueckner_accounts_on_redirect() {
-        ExtractableResponse<Response> response = RestAssured
+    public AccountInformationResult open_banking_has_consent_for_anton_brueckner_account_list() {
+        assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isNotEmpty();
+        return self();
+    }
+
+    @SneakyThrows
+    public AccountInformationResult open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session() {
+        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
+                    .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
-                    .get(URI.create(redirectOkUri).getPath())
+                    .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
                     .statusCode(HttpStatus.OK.value())
-                    .body("iban", contains("DE80760700240271232400"))
-                    .body("iban", hasSize(1))
-                    .body("currency", contains("EUR"))
-                    .body("currency", hasSize(1))
+                // BODY validation here
                 .extract();
 
         this.responseContent = response.body().asString();
