@@ -5,7 +5,7 @@ import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.protocol.api.ais.ListTransactions;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.transactions.ListTransactionsRequest;
-import de.adorsys.opba.protocol.api.dto.result.body.TransactionListBody;
+import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper;
@@ -40,13 +40,17 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
     private final ExtendWithServiceContext extender;
 
     @Override
-    public CompletableFuture<Result<TransactionListBody>> execute(ServiceContext<ListTransactionsRequest> serviceContext) {
+    public CompletableFuture<Result<TransactionsResponseBody>> execute(ServiceContext<ListTransactionsRequest> serviceContext) {
+        TransactionListXs2aContext context = mapper.map(serviceContext.getRequest());
+        context.setAction(ProtocolAction.LIST_TRANSACTIONS);
+        extender.extend(context, serviceContext);
+
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(
                 REQUEST_SAGA,
                 new ConcurrentHashMap<>(ImmutableMap.of(CONTEXT, prepareContext(serviceContext)))
         );
 
-        CompletableFuture<Result<TransactionListBody>> result = new CompletableFuture<>();
+        CompletableFuture<Result<TransactionsResponseBody>> result = new CompletableFuture<>();
 
         registrar.addHandler(
                 instance.getProcessInstanceId(),
