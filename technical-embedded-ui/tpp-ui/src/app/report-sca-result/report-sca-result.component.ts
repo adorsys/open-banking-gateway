@@ -22,7 +22,7 @@ export class ReportScaResultComponent implements OnInit {
   save() {
     this.client.post(
       this.submissionUri,
-      {scaAuthenticationData: {lastScaChallenge: this.scaResult.value}}, // scaAuthenticationData is not really correct
+      {scaAuthenticationData: {scaChallengeResult: this.scaResult.value}}, // scaAuthenticationData is not really correct
       {headers: {
           'X-Request-ID': Helpers.uuidv4(),
           'X-XSRF-TOKEN': Helpers.uuidv4(),

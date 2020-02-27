@@ -8,6 +8,6 @@ import lombok.experimental.UtilityClass;
 public class ScaConst {
 
     public static final String PSU_PASSWORD = "psuPassword";
-    public static final String SCA_CHALLENGE_DATA = "lastScaChallenge";
-    public static final String SCA_CHALLENGE_ID = "userSelectScaId";
+    public static final String SCA_CHALLENGE_DATA = "scaChallengeResult";
+    public static final String SCA_CHALLENGE_ID = "scaMethodId";
 }
