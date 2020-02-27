@@ -20,10 +20,9 @@ export class AppAisConsentComponent implements OnInit {
 export class AisConsentBody {
 
   access: AccountAccessBody;
-  recurringIndicator: boolean = false;
+  recurringIndicator = false;
   validUntil: string;
   frequencyPerDay: number;
-  combinedServiceIndicator: boolean = false;
 }
 
 export class AccountAccessBody {
