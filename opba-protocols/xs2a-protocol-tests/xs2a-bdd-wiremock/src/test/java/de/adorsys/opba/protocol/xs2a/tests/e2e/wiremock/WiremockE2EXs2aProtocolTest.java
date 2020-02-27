@@ -94,7 +94,8 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .and()
                 .open_banking_user_max_musterman_provided_sca_challenge_result_and_redirect_to_fintech_ok();
         then()
-                .open_banking_has_max_musterman_accounts();
+                .open_banking_has_consent_for_max_musterman_account_list()
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
     }
 
     @Test
