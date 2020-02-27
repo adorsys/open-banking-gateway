@@ -1,13 +1,17 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock;
 
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
+import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.MockServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockAccountInformationRequest;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
@@ -31,6 +35,20 @@ As we redefine list accounts for adorsys-sandbox bank to sandbox customary one
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
 class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, WiremockAccountInformationRequest<? extends WiremockAccountInformationRequest<?>>, AccountInformationResult> {
 
+    @LocalServerPort
+    private int port;
+
+    @Autowired
+    private ProtocolConfiguration configuration;
+
+    // See https://github.com/spring-projects/spring-boot/issues/14879 for the 'why setting port'
+    @BeforeEach
+    void setBaseUrl() {
+        ProtocolConfiguration.Redirect.Consent consent = configuration.getRedirect().getConsentAccounts();
+        consent.setOk(consent.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
+        consent.setNok(consent.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
+    }
+
     @Test
     @SneakyThrows
     void testAccountsListWithConsentUsingRedirect() {
@@ -41,9 +59,10 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .and()
                 .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
                 .and()
-                .open_banking_redirect_uri_extracted();
+                .open_banking_redirect_from_aspsp_ok_webhook_called();
         then()
-                .open_banking_reads_anton_brueckner_accounts_on_redirect();
+                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
     }
 
     @Test
@@ -55,7 +74,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .and()
                 .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions()
                 .and()
-                .open_banking_redirect_uri_extracted();
+                .open_banking_redirect_from_aspsp_ok_webhook_called();
         then()
                 .open_banking_reads_anton_brueckner_transactions_on_redirect();
     }

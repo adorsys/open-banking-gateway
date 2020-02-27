@@ -67,6 +67,8 @@
     </developers>
 
     <properties>
+        <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+
         <!-- Hard reference to main lib. -->
         <main.basedir>${project.basedir}</main.basedir>
         <!-- Common properties -->
@@ -93,7 +95,7 @@
         <springdoc-openapi-ui.version>1.2.21</springdoc-openapi-ui.version> <!-- springfox replacement for OpenApi 3 -->
         <springfox.version>2.9.2</springfox.version>
         <jetbrains.annotations.version>17.0.0</jetbrains.annotations.version>
-        <lombok.version>1.18.10</lombok.version>
+        <lombok.version>1.18.12</lombok.version>
         <xml-maven-plugin.version>1.0.2</xml-maven-plugin.version>
         <checkstyle-plugin.version>3.1.0</checkstyle-plugin.version>
         <spotbugs-plugin.version>3.1.12.2</spotbugs-plugin.version>
@@ -278,7 +280,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>

@@ -11,7 +11,7 @@
         "availableAccounts": "ALL_ACCOUNTS"
       },
       "frequencyPerDay": 12,
-      "validUntil": "2030-01-01"
+      "validUntil": "2030-01-31"
     }
   }
 }

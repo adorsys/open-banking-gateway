@@ -17,14 +17,14 @@
         "equalTo" : "application/json; charset=UTF-8"
       },
       "TPP-Redirect-URI": {
-        "matches" : "http://localhost:8080/v1/consents/confirm/accounts/LIST_ACCOUNTS/.+"
+        "matches" : "http://localhost:\\d+/v1/consent/.+/fromAspsp/.+/ok\\?.+"
       },
       "TPP-Nok-Redirect-URI": {
-        "matches" : "http://localhost:8080/v1/consents/failed/accounts/.+"
+        "matches" : "http://localhost:\\d+/v1/consent/.+/fromAspsp/.+/nok\\?.+"
       }
     },
     "bodyPatterns" : [ {
-      "equalToJson" : "{\"access\":{\"availableAccounts\":\"allAccounts\"},\"recurringIndicator\":false,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":12}",
+      "equalToJson" : "{\"access\":{\"availableAccounts\":\"allAccounts\"},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":12}",
       "ignoreArrayOrder" : true,
       "ignoreExtraElements" : true
     } ]

@@ -183,7 +183,8 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
                 .sandbox_anton_brueckner_see_redirect_back_to_tpp_button(firefoxDriver);
 
         AccountInformationResult result = then()
-                .open_banking_reads_anton_brueckner_accounts_on_redirect();
+                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
 
         return result.getResponseContent();
     }

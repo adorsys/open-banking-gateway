@@ -15,10 +15,16 @@
       },
       "Content-Type" : {
         "equalTo" : "application/json; charset=UTF-8"
+      },
+      "TPP-Redirect-URI": {
+        "matches" : "http://localhost:\\d+/v1/consent/.+/fromAspsp/.+/ok\\?.+"
+      },
+      "TPP-Nok-Redirect-URI": {
+        "matches" : "http://localhost:\\d+/v1/consent/.+/fromAspsp/.+/nok\\?.+"
       }
     },
     "bodyPatterns" : [ {
-      "equalToJson" : "{\"access\":{\"transactions\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}]},\"recurringIndicator\":false,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":12}",
+      "equalToJson" : "{\"access\":{\"transactions\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}]},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":12}",
       "ignoreArrayOrder" : true,
       "ignoreExtraElements" : true
     } ]
