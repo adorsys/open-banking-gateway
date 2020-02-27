@@ -156,7 +156,8 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
             .open_banking_user_max_musterman_provided_sca_challenge_result_and_redirect_to_fintech_ok();
 
         AccountInformationResult result = then()
-                .open_banking_has_max_musterman_accounts();
+                .open_banking_has_consent_for_max_musterman_account_list()
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
 
         return result.getResponseContent();
     }

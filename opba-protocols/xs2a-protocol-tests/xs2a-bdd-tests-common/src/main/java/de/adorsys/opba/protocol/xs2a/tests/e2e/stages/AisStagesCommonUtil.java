@@ -20,7 +20,7 @@ public class AisStagesCommonUtil {
 
     public static final String AUTHORIZE_CONSENT_ENDPOINT = "/v1/consent/{serviceSessionId}/embedded";
     public static final String AIS_ACCOUNTS_ENDPOINT = "/v1/banking/ais/accounts";
-    public static final String AIS_TRANSACTIONS_ENDPOINT = "/v1/banking/ais/transactions/{resourceId}";
+    public static final String AIS_TRANSACTIONS_ENDPOINT = "/v1/banking/ais/accounts/{resourceId}/transactions";
 
     public static final String DEFAULT_AUTHORIZATION = "MY-SUPER-FINTECH-ID";
     public static final String SANDBOX_BANK_ID = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
