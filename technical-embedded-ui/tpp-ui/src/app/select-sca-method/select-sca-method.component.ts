@@ -22,7 +22,7 @@ export class SelectScaMethodComponent implements OnInit {
   save() {
     this.client.post(
       this.submissionUri,
-      {scaAuthenticationData: {scaMethodId: this.scaMethod.value}}, // scaAuthenticationData is not really correct
+      {scaAuthenticationData: {SCA_CHALLENGE_ID: this.scaMethod.value}}, // scaAuthenticationData is not really correct
       {headers: {
           'X-Request-ID': Helpers.uuidv4(),
           'X-XSRF-TOKEN': Helpers.uuidv4(),

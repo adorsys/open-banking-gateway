@@ -152,7 +152,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-            "restrecord/tpp-ui-input/params/anton-brueckner-transactions.txt"
+                "restrecord/tpp-ui-input/params/anton-brueckner-transactions.json"
         );
 
         return self();

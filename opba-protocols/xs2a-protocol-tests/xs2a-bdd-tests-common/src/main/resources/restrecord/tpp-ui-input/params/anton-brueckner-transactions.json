@@ -1,0 +1,20 @@
+{
+  "extras": {
+    "PSU_ID": "anton.brueckner",
+    "PSU_IP_ADDRESS": "1.1.1.1"
+  },
+  "consentAuth": {
+    "consent": {
+      "recurringIndicator": true,
+      "combinedServiceIndicator": false,
+      "access": {
+        "accounts": ["DE80760700240271232400"],
+        "bookingStatus": "BOTH",
+        "dateFrom": "2018-01-01",
+        "dateTo": "2020-09-30"
+      },
+      "frequencyPerDay": 12,
+      "validUntil": "2030-01-31"
+    }
+  }
+}

@@ -1,1 +1,0 @@
-consent.recurringIndicator=false&consent.frequencyPerDay=12&psuId=anton.brueckner&consent.validUntil=2030-01-31&accessSelector=dedicated&consent.access.transactions%5B0%5D.iban=DE80760700240271232400&consent.access.transactions%5B0%5D.currency=EUR&bookingStatus=BOTH&dateFrom=2018-01-01&dateTo=2020-09-30
