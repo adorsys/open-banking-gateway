@@ -15,6 +15,7 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.net.URI;
@@ -61,6 +62,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     }
 
     @SneakyThrows
+    @Transactional
     public AccountInformationResult open_banking_has_consent_for_anton_brueckner_account_list() {
         assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isNotEmpty();
         return self();

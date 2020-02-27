@@ -110,7 +110,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
                 .and()
                 .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
                 .and()
-                .sandbox_anton_brueckner_see_redirect_back_to_tpp_button(firefoxDriver);
+                .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(firefoxDriver);
 
         then()
                 .open_banking_reads_anton_brueckner_transactions_validated_by_iban();
@@ -180,7 +180,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
                 .and()
                 .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
                 .and()
-                .sandbox_anton_brueckner_see_redirect_back_to_tpp_button(firefoxDriver);
+                .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(firefoxDriver);
 
         AccountInformationResult result = then()
                 .open_banking_has_consent_for_anton_brueckner_account_list()
