@@ -87,7 +87,7 @@ export class InitialRequestComponent implements OnInit {
       console.log("status:" + res.status);
         switch(res.status) {
           case 200: console.log("no redirect:")
-            this.resultstructure = JSON.stringify(res.body);
+            this.resultstructure = JSON.stringify(res.body, null, 2);
           break;
           default:
           console.log("redirect to ",res.headers.get('Location'));
