@@ -46,7 +46,7 @@ public class EncryptionConfig {
             Security.addProvider(new BouncyCastleProvider());
         }
 
-        return new FacadeSecurityProvider((BouncyCastleProvider) Security.getProvider(providerName));
+        return new FacadeSecurityProvider(Security.getProvider(providerName));
     }
 
     @Bean

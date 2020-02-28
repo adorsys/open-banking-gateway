@@ -118,6 +118,7 @@
                         <include>restrecord/**/*.*</include>
                         <include>**/*.yml</include>
                         <include>**/*.sql</include>
+                        <include>**/*.json</include>
                     </includes>
                 </configuration>
             </plugin>
