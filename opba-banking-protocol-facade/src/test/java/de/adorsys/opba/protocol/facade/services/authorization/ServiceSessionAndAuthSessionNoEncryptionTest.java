@@ -45,15 +45,15 @@ import static org.mockito.Mockito.doAnswer;
 /**
  * Note: This test keeps DB in dirty state - doesn't cleanup after itself.
  */
-@ActiveProfiles("test")
+@ActiveProfiles("test, no-encryption")
 @SpringBootTest(classes = ApplicationTest.class)
-public class ServiceSessionAndAuthSessionTest {
+public class ServiceSessionAndAuthSessionNoEncryptionTest {
     private static final String PASSWORD = "password";
     private static final String TEST_BANK_ID = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
     private static final UUID REQUEST_ID = UUID.fromString("e3865c6b-70f2-4c1e-ad31-d7c2ff160858");
     private static final String REDIRECT_URL_OK = "http://google.com";
     private static final String REDIRECT_URL_NO_OK = "http://microsoft.com";
-    private static final String ALGO = "PBEWithSHA256And256BitAES-CBC-BC";
+    private static final String NOOP_ALGO = "NOOP";
 
     @Autowired
     private ListAccountsService listAccountsService;
@@ -169,21 +169,6 @@ public class ServiceSessionAndAuthSessionTest {
         assertAllSessions(sessionId);
     }
 
-    @Test
-    @SneakyThrows
-    void serviceSession_noEncryption_success() {
-        UUID sessionId = UUID.randomUUID();
-        AuthorizationRequiredResult authorizationRequiredResult = buildAuthorizationRequiredResult();
-
-        createAndAssertListAccountRequestForBruecker(sessionId, authorizationRequiredResult);
-
-        await().atMost(Durations.ONE_SECOND)
-                .pollDelay(Durations.ONE_HUNDRED_MILLISECONDS)
-                .until(() -> authenticationSessions.findAll().iterator().hasNext());
-
-        assertAllSessions(sessionId);
-    }
-
     @SneakyThrows
     private FacadeStartAuthorizationResult createAndAssertListAccountRequestForBruecker(UUID sessionId, RedirectionResult redirectionResult) {
         doAnswer(invocation -> CompletableFuture.completedFuture(redirectionResult))
@@ -245,7 +230,8 @@ public class ServiceSessionAndAuthSessionTest {
         assertThat(serviceSessionFromDB.getId()).isEqualTo(serviceSessionFromAuth.getId());
         assertThat(serviceSessionFromDB.getAuthSession().getId()).isEqualTo(authenticationSession.getId());
         assertThat(serviceSessionFromDB.getAuthSession().getRedirectCode()).isEqualTo(authenticationSession.getRedirectCode());
-        assertThat(serviceSessionFromDB.getAlgo()).isEqualTo(ALGO);
+        assertThat(serviceSessionFromDB.getAlgo()).isEqualTo(NOOP_ALGO);
+
     }
 
     private void assertErrorResponse(FacadeRedirectErrorResult errorResponse, ErrorResult<AuthorizationRequiredResult> errorResult, UUID sessionId) {
@@ -262,6 +248,6 @@ public class ServiceSessionAndAuthSessionTest {
     }
 
     private ValidationErrorResult buildValidationErrorResultResult() {
-        return new ValidationErrorResult(URI.create("http://localhost:5500/parameters/provide-more/761b551d-5980-11ea-a703-acde48001122?q=%5B%7B%22uiCode%22:%22boolean.boolean%22,%20%22ctxCode%22:%22consent.recurringIndicator%22,%20%22message%22:%22%7Bno.ctx.recurringIndicator%7D%22%7D,%20%7B%22uiCode%22:%22date.string%22,%20%22ctxCode%22:%22consent.validUntil%22,%20%22message%22:%22%7Bfuture.ctx.validUntil%7D%22%7D%5D"));
+        return new ValidationErrorResult(URI.create("http://localhost:5500/parameters/provide-more/8bce1a14-5a43-11ea-893e-acde48001122?q=%5B%7B%22uiCode%22:%22textbox.integer%22,%20%22ctxCode%22:%22frequencyPerDay%22,%20%22message%22:%22%7Bno.ctx.frequencyPerDay%7D%22,%20%22target%22:%22AIS_CONSENT%22%7D,%20%7B%22uiCode%22:%22textbox.string%22,%20%22ctxCode%22:%22PSU_ID%22,%20%22message%22:%22PSU%20id%20(username%20to%20login%20to%20bank%20account)%22,%20%22target%22:%22CONTEXT%22%7D,%20%7B%22uiCode%22:%22textbox.string%22,%20%22ctxCode%22:%22PSU_IP_ADDRESS%22,%20%22message%22:%22%7Bno.ctx.psuIpAddress%7D%22,%20%22target%22:%22CONTEXT%22%7D,%20%7B%22uiCode%22:%22accountaccess.class%22,%20%22ctxCode%22:%22access%22,%20%22message%22:%22%7Bno.ctx.accountaccess%7D%22,%20%22target%22:%22AIS_CONSENT%22%7D,%20%7B%22uiCode%22:%22boolean.boolean%22,%20%22ctxCode%22:%22recurringIndicator%22,%20%22message%22:%22%7Bno.ctx.recurringIndicator%7D%22,%20%22target%22:%22AIS_CONSENT%22%7D,%20%7B%22uiCode%22:%22date.string%22,%20%22ctxCode%22:%22validUntil%22,%20%22message%22:%22%7Bno.ctx.validUntil%7D%22,%20%22target%22:%22AIS_CONSENT%22%7D%5D"));
     }
 }
