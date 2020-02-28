@@ -119,6 +119,7 @@
                         <include>**/*.yml</include>
                         <include>**/*.sql</include>
                         <include>**/*.json</include>
+                        <include>sample-qwac.keystore</include>
                     </includes>
                 </configuration>
             </plugin>
