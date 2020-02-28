@@ -17,6 +17,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -34,6 +36,11 @@ As we redefine list accounts for adorsys-sandbox bank to sandbox customary one
 @SpringBootTest(classes = {Xs2aProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
 class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, WiremockAccountInformationRequest<? extends WiremockAccountInformationRequest<?>>, AccountInformationResult> {
+
+    private static final String ANTON_BRUECKNER_RESOURCE_ID = "cmD4EYZeTkkhxRuIV1diKA";
+    private static final LocalDate DATE_FROM = LocalDate.parse("2018-01-01");
+    private static final LocalDate DATE_TO = LocalDate.parse("2020-09-30");
+    private static final String BOTH_BOOKING = "BOTH";
 
     @LocalServerPort
     private int port;
@@ -70,13 +77,16 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running();
         when()
-                .open_banking_list_transactions_called_for_anton_brueckner("cmD4EYZeTkkhxRuIV1diKA")
+                .open_banking_list_transactions_called_for_anton_brueckner(ANTON_BRUECKNER_RESOURCE_ID)
                 .and()
                 .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions()
                 .and()
                 .open_banking_redirect_from_aspsp_ok_webhook_called();
         then()
-                .open_banking_reads_anton_brueckner_transactions_on_redirect();
+                .open_banking_has_consent_for_anton_brueckner_transaction_list()
+                .open_banking_can_read_anton_brueckner_transactions_data_using_consent_bound_to_service_session(
+                    ANTON_BRUECKNER_RESOURCE_ID, DATE_FROM, DATE_TO, BOTH_BOOKING
+                );
     }
 
     @Test
