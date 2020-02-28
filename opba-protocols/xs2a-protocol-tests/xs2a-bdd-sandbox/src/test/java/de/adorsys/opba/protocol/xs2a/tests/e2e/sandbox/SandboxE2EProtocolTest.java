@@ -132,7 +132,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
 
     @Test
     void testTransactionsListWithConsentUsingEmbedded() {
-        String accountResourceId = JsonPath.parse(embeddedListMaxMustermanAccounts()).read("$.[0].resourceId");
+        String accountResourceId = JsonPath.parse(embeddedListMaxMustermanAccounts()).read("$.accounts[0].resourceId");
 
         given()
                 .enabled_embedded_sandbox_mode();
@@ -148,7 +148,9 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
                 .open_banking_user_max_musterman_provided_sca_challenge_result_and_redirect_to_fintech_ok();
         then()
                 .open_banking_has_consent_for_max_musterman_transaction_list()
-                .open_banking_has_max_musterman_transactions_validated_by_iban();
+                .open_banking_reads_max_musterman_transactions_validated_by_iban(
+                    accountResourceId, DATE_FROM, DATE_TO, BOTH_BOOKING
+                );
     }
 
     private String embeddedListMaxMustermanAccounts() {

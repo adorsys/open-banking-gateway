@@ -253,7 +253,21 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     }
 
     @SneakyThrows
-    public AccountInformationResult open_banking_has_max_musterman_transactions_validated_by_iban() {
+    public AccountInformationResult open_banking_reads_max_musterman_transactions_validated_by_iban(
+        String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+    ) {
+        ExtractableResponse<Response> response = withDefaultHeaders(MAX_MUSTERMAN)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .queryParam("dateFrom", dateFrom.format(ISO_DATE))
+                .queryParam("dateTo", dateTo.format(ISO_DATE))
+                .queryParam("bookingStatus", bookingStatus)
+            .when()
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+            .then()
+                .statusCode(HttpStatus.OK.value())
+            .extract();
+
+        this.responseContent = response.body().asString();
         DocumentContext body = JsonPath.parse(responseContent);
 
         assertThat(body).extracting(it -> it.read("$.transactions.booked[*].creditorAccount.iban")).asList()
