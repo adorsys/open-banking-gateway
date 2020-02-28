@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * This is a very basic test to ensure application starts up and components are bundled properly.
  * Protocols are tested in their own packages exhaustively.
  */
-
+@ActiveProfiles("test")
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = OpenBankingEmbeddedApplication.class, webEnvironment = RANDOM_PORT)
 class BasicOpenBankingStartupTest {
