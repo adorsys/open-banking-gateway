@@ -46,9 +46,6 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     private static final String ANTON_BRUECKNER_IBAN = "DE80760700240271232400";
     private static final String MAX_MUSTERMAN_IBAN = "DE38760700240320465700";
 
-    @ExpectedScenarioState
-    private String redirectOkUri;
-
     @Getter
     @ExpectedScenarioState
     private String responseContent;
@@ -153,16 +150,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     public AccountInformationResult open_banking_reads_anton_brueckner_transactions_validated_by_iban(
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
-        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
-                        .header(SERVICE_SESSION_ID, serviceSessionId)
-                        .queryParam("dateFrom", dateFrom.format(ISO_DATE))
-                        .queryParam("dateTo", dateTo.format(ISO_DATE))
-                        .queryParam("bookingStatus", bookingStatus)
-                .when()
-                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
-                .then()
-                    .statusCode(HttpStatus.OK.value())
-                .extract();
+        ExtractableResponse<Response> response = getTransactionListFor(ANTON_BRUECKNER, resourceId, dateFrom, dateTo, bookingStatus);
 
         this.responseContent = response.body().asString();
         DocumentContext body = JsonPath.parse(responseContent);
@@ -196,6 +184,21 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
                         new BigDecimal("30000.00")
                 );
         return self();
+    }
+
+    private ExtractableResponse<Response> getTransactionListFor(
+        String psuId, String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+    ) {
+        return withDefaultHeaders(psuId)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .queryParam("dateFrom", dateFrom.format(ISO_DATE))
+                .queryParam("dateTo", dateTo.format(ISO_DATE))
+                .queryParam("bookingStatus", bookingStatus)
+            .when()
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+            .then()
+                .statusCode(HttpStatus.OK.value())
+            .extract();
     }
 
     public AccountInformationResult open_banking_can_read_anton_brueckner_transactions_data_using_consent_bound_to_service_session(
@@ -256,16 +259,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     public AccountInformationResult open_banking_reads_max_musterman_transactions_validated_by_iban(
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
-        ExtractableResponse<Response> response = withDefaultHeaders(MAX_MUSTERMAN)
-                .header(SERVICE_SESSION_ID, serviceSessionId)
-                .queryParam("dateFrom", dateFrom.format(ISO_DATE))
-                .queryParam("dateTo", dateTo.format(ISO_DATE))
-                .queryParam("bookingStatus", bookingStatus)
-            .when()
-                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
-            .then()
-                .statusCode(HttpStatus.OK.value())
-            .extract();
+        ExtractableResponse<Response> response = getTransactionListFor(MAX_MUSTERMAN, resourceId, dateFrom, dateTo, bookingStatus);
 
         this.responseContent = response.body().asString();
         DocumentContext body = JsonPath.parse(responseContent);
