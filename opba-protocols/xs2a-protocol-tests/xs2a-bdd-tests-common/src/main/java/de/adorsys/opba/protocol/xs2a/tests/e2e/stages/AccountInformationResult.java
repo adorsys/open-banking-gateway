@@ -18,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.net.URI;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -151,13 +150,20 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     }
 
     @SneakyThrows
-    public AccountInformationResult open_banking_reads_anton_brueckner_transactions_validated_by_iban() {
-        ExtractableResponse<Response> response = RestAssured
+    public AccountInformationResult open_banking_reads_anton_brueckner_transactions_validated_by_iban(
+        String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+    ) {
+        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
+                        .header(SERVICE_SESSION_ID, serviceSessionId)
+                        .queryParam("dateFrom", dateFrom.format(ISO_DATE))
+                        .queryParam("dateTo", dateTo.format(ISO_DATE))
+                        .queryParam("bookingStatus", bookingStatus)
                 .when()
-                    .get(URI.create(redirectOkUri).getPath())
+                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
                     .statusCode(HttpStatus.OK.value())
                 .extract();
+
         this.responseContent = response.body().asString();
         DocumentContext body = JsonPath.parse(responseContent);
 
@@ -225,14 +231,14 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         withDefaultHeaders(MAX_MUSTERMAN)
-            .header(SERVICE_SESSION_ID, serviceSessionId)
-            .queryParam("dateFrom", dateFrom.format(ISO_DATE))
-            .queryParam("dateTo", dateTo.format(ISO_DATE))
-            .queryParam("bookingStatus", bookingStatus)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .queryParam("dateFrom", dateFrom.format(ISO_DATE))
+                .queryParam("dateTo", dateTo.format(ISO_DATE))
+                .queryParam("bookingStatus", bookingStatus)
             .when()
-            .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
             .then()
-            .statusCode(HttpStatus.OK.value())
+                .statusCode(HttpStatus.OK.value())
             .body("transactions.booked.transactionId",
                 containsInAnyOrder(
                     "VHF5-8R1RCcskezln6CJAY",

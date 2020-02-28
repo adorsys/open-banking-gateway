@@ -29,6 +29,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
 import static de.adorsys.opba.protocol.xs2a.testsandbox.Const.ENABLE_HEAVY_TESTS;
@@ -50,6 +52,10 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SpringBootTest(classes = {Xs2aSandboxProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
 class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>, AccountInformationResult> {
+
+    private static final LocalDate DATE_FROM = LocalDate.parse("2018-01-01");
+    private static final LocalDate DATE_TO = LocalDate.parse("2020-09-30");
+    private static final String BOTH_BOOKING = "BOTH";
 
     private static final SandboxAppsStarter executor = new SandboxAppsStarter();
 
@@ -90,7 +96,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
     @Test
     public void testTransactionListWithConsentUsingRedirect(FirefoxDriver firefoxDriver) {
         String accountResourceId = JsonPath
-                .parse(redirectListAntonBruecknerAccounts(firefoxDriver)).read("$.[0].resourceId");
+                .parse(redirectListAntonBruecknerAccounts(firefoxDriver)).read("$.accounts[0].resourceId");
 
         given()
                 .enabled_redirect_sandbox_mode();
@@ -113,7 +119,10 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
                 .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(firefoxDriver);
 
         then()
-                .open_banking_reads_anton_brueckner_transactions_validated_by_iban();
+                .open_banking_has_consent_for_anton_brueckner_transaction_list()
+                .open_banking_reads_anton_brueckner_transactions_validated_by_iban(
+                    accountResourceId, DATE_FROM, DATE_TO, BOTH_BOOKING
+                );
     }
 
     @Test
@@ -138,6 +147,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
                 .and()
                 .open_banking_user_max_musterman_provided_sca_challenge_result_and_redirect_to_fintech_ok();
         then()
+                .open_banking_has_consent_for_max_musterman_transaction_list()
                 .open_banking_has_max_musterman_transactions_validated_by_iban();
     }
 
