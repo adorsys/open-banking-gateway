@@ -72,7 +72,7 @@ public class UpdateAuthorizationServiceTest {
     @Test
     @SneakyThrows
     void testServiceSessionAndAuthSessionWithConsent_success() {
-        // STEP 1: Create
+        // STEP 1
         ValidationErrorResult validationErrorResult = buildValidationErrorResultResult();
 
         doAnswer(invocation -> CompletableFuture.completedFuture(validationErrorResult))
@@ -138,7 +138,7 @@ public class UpdateAuthorizationServiceTest {
     private AuthorizationRequest buildAuthRequest(FacadeStartAuthorizationResult listAccountsResponse) {
         Map<String, String> authData = new HashMap<>();
         authData.put("consent.frequencyPerDay", "5");
-        authData.put("psuIpAddress", "1.1.1.1");
+        authData.put("psuIpAddress", "1.1.1.1"); // NOPMD Hard code the IP address in test is not a problem
         authData.put("psuId", "anton.brueckner");
         authData.put("consent.validUntil", "2020-02-26T22:00:00.000Z");
         authData.put("consent.access.allAccountsAccess", "allAccountsWithBalances");
