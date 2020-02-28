@@ -43,7 +43,7 @@ import static org.mockito.Mockito.doAnswer;
  */
 @ActiveProfiles("test")
 @SpringBootTest(classes = ApplicationTest.class)
-public class UpdateAuthorizationServiceTest {
+public class ServiceSessionAndAuthSessionTest {
     private static final String PASSWORD = "password";
     private static final String TEST_BANK_ID = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
     private static final UUID SESSION_ID = UUID.fromString("b8d41fa0-1b99-40f6-9c6d-01d92b67fe06");
@@ -71,7 +71,7 @@ public class UpdateAuthorizationServiceTest {
 
     @Test
     @SneakyThrows
-    void testServiceSessionAndAuthSessionWithConsent_success() {
+    void serviceSessionAndAuthSessionWithConsent_success() {
         // STEP 1
         ValidationErrorResult validationErrorResult = buildValidationErrorResultResult();
 
@@ -110,12 +110,12 @@ public class UpdateAuthorizationServiceTest {
 
     @Test
     @SneakyThrows
-    void testServiceSession_protocolError() {
-        ErrorResult<AuthorizationRequiredResult> err = new ErrorResult<>();
-        err.setCode("400");
-        err.setMessage("The addressed resource is unknown relative to the TPP");
+    void serviceSession_protocolError() {
+        ErrorResult<AuthorizationRequiredResult> errorResult = new ErrorResult<>();
+        errorResult.setCode("400");
+        errorResult.setMessage("The addressed resource is unknown relative to the TPP");
 
-        doAnswer(invocation -> CompletableFuture.completedFuture(err))
+        doAnswer(invocation -> CompletableFuture.completedFuture(errorResult))
                 .when(xs2aListAccountsEntrypoint)
                 .execute(any());
 
@@ -125,12 +125,57 @@ public class UpdateAuthorizationServiceTest {
         assertThat(UUID.fromString(errorResponse.getServiceSessionId())).isEqualTo(SESSION_ID);
         assertThat(errorResponse.getXRequestId()).isEqualTo(REQUEST_ID);
         assertThat(errorResponse.getRedirectionTo().toString()).isEqualTo(REDIRECT_URL_NO_OK);
-        assertThat(errorResponse.getHeaders().get(ResponseHeaders.X_ERROR_CODE)).isEqualTo(err.getCode());
-        assertThat(errorResponse.getHeaders().get(ResponseHeaders.X_ERROR_MESSAGE)).isEqualTo(err.getMessage());
+        assertThat(errorResponse.getHeaders().get(ResponseHeaders.X_ERROR_CODE)).isEqualTo(errorResult.getCode());
+        assertThat(errorResponse.getHeaders().get(ResponseHeaders.X_ERROR_MESSAGE)).isEqualTo(errorResult.getMessage());
 
         await().atMost(Durations.ONE_SECOND)
                 .pollDelay(Durations.ONE_HUNDRED_MILLISECONDS)
                 .until(() -> authenticationSessions.findAll().iterator().hasNext());
+
+        assertAllSessions();
+    }
+
+    @Test
+    @SneakyThrows
+    void authSession_protocolError() {
+        // STEP 1
+        ValidationErrorResult validationErrorResult = buildValidationErrorResultResult();
+
+        doAnswer(invocation -> CompletableFuture.completedFuture(validationErrorResult))
+                .when(xs2aListAccountsEntrypoint)
+                .execute(any());
+
+        FacadeStartAuthorizationResult listAccountsResponse = (FacadeStartAuthorizationResult) listAccountsService.execute(buildListAccountRequest()).get();
+
+        assertThat(UUID.fromString(listAccountsResponse.getAuthorizationSessionId())).isEqualTo(SESSION_ID);
+        assertThat(UUID.fromString(listAccountsResponse.getServiceSessionId())).isEqualTo(SESSION_ID);
+        assertThat(listAccountsResponse.getRedirectionTo()).isEqualTo(validationErrorResult.getRedirectionTo());
+
+        await().atMost(Durations.ONE_SECOND)
+                .pollDelay(Durations.ONE_HUNDRED_MILLISECONDS)
+                .until(() -> authenticationSessions.findAll().iterator().hasNext());
+
+        assertAllSessions();
+
+        // STEP 2
+        ErrorResult<AuthorizationRequiredResult> errorResult = new ErrorResult<>();
+        errorResult.setCode("400");
+        errorResult.setMessage("The addressed resource is unknown relative to the TPP");
+
+        AuthorizationRequiredResult authorizationRequiredResult = buildAuthorizationRequiredResult();
+
+        doAnswer(invocation -> CompletableFuture.completedFuture(errorResult))
+                .when(xs2aUpdateAuthorization)
+                .execute(any());
+
+        FacadeRedirectErrorResult errorResponse = (FacadeRedirectErrorResult) updateAuthorizationService.execute(buildAuthRequest(listAccountsResponse)).get();
+
+        assertThat(UUID.fromString(errorResponse.getAuthorizationSessionId())).isEqualTo(SESSION_ID);
+        assertThat(UUID.fromString(errorResponse.getServiceSessionId())).isEqualTo(SESSION_ID);
+        assertThat(errorResponse.getXRequestId()).isEqualTo(REQUEST_ID);
+        assertThat(errorResponse.getRedirectionTo().toString()).isEqualTo(REDIRECT_URL_NO_OK);
+        assertThat(errorResponse.getHeaders().get(ResponseHeaders.X_ERROR_CODE)).isEqualTo(errorResult.getCode());
+        assertThat(errorResponse.getHeaders().get(ResponseHeaders.X_ERROR_MESSAGE)).isEqualTo(errorResult.getMessage());
 
         assertAllSessions();
     }
