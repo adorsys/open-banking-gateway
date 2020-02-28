@@ -87,7 +87,7 @@ services:
       - opba-net
 
   x2sa-sandbox-ledgersgateway:
-    image: adorsys/xs2a-connector-examples:5.10
+    image: adorsys/xs2a-connector-examples:5.11
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-ledgeres-gateway,postgres,mock-qwac,remote
@@ -120,7 +120,7 @@ services:
       - opba-net
 
   x2sa-sandbox-consentmgmt:
-    image: adorsys/xs2a-consent-management:5.10
+    image: adorsys/xs2a-consent-management:5.11
     environment:
       <<: *sandbox-hosts
       SPRING_PROFILES_INCLUDE: test-db-local-postgres,test-common,test-consent-mgmt
@@ -152,7 +152,7 @@ services:
       - opba-net
 
   x2sa-sandbox-aspspprofile:
-    image: adorsys/xs2a-aspsp-profile:5.10
+    image: adorsys/xs2a-aspsp-profile:5.11
     environment:
       <<: *sandbox-hosts
       PRIMARY_PROFILE: /configs/application-test-aspsp-profile.yml

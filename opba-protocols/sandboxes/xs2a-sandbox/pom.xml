@@ -51,20 +51,20 @@
         <dependency>
             <groupId>de.adorsys.ledgers</groupId>
             <artifactId>gateway-app</artifactId>
-            <version>5.10</version>
+            <version>5.11</version>
         </dependency>
         <!-- adorsys/xs2a-aspsp-profile:5.3+ AspspProfileApplication -->
         <dependency>
             <groupId>de.adorsys.psd2</groupId>
             <artifactId>aspsp-profile-server</artifactId>
-            <version>5.10</version>
+            <version>5.11</version>
             <classifier>exec</classifier>
         </dependency>
         <!-- adorsys/xs2a-consent-management:5.3 -->
         <dependency>
             <groupId>de.adorsys.psd2</groupId>
             <artifactId>cms-standalone-service</artifactId>
-            <version>5.10</version>
+            <version>5.11</version>
         </dependency>
 
         <!-- https://github.com/adorsys/XS2A-Sandbox -->
