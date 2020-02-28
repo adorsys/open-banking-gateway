@@ -25,6 +25,7 @@ import java.util.UUID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static io.restassured.RestAssured.config;
@@ -41,6 +42,7 @@ import static org.hamcrest.Matchers.hasSize;
 public class AccountInformationResult extends Stage<AccountInformationResult>  {
 
     private static final int ANTON_BRUECKNER_BOOKED_TRANSACTIONS_COUNT = 8;
+    private static final int MAX_MUSTERMAN_BOOKED_TRANSACTIONS_COUNT = 5;
 
     @ExpectedScenarioState
     private String redirectOkUri;
@@ -173,7 +175,6 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
         return self();
     }
 
-    @SneakyThrows
     public AccountInformationResult open_banking_can_read_anton_brueckner_transactions_data_using_consent_bound_to_service_session(
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
@@ -203,18 +204,28 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     }
 
     @SneakyThrows
-    public AccountInformationResult open_banking_has_max_musterman_transactions() {
-        DocumentContext body = JsonPath.parse(responseContent);
-
-        assertThat(body).extracting(it -> it.read("$.transactions.booked[*].transactionId")).asList()
-                .containsExactlyInAnyOrder(
-                        "VHF5-8R1RCcskezln6CJAY",
-                        "etA9KGhIT9ohX9dYXrhzc8",
-                        "LjwVWzBBQtwpyQ6WBBTiwk",
-                        "pkOyTAHDTb0uCF2R55HKKo",
-                        "F3qVhSXlQswswIN2nk1rBo"
-                );
-
+    public AccountInformationResult open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
+        String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+    ) {
+        withDefaultHeaders(MAX_MUSTERMAN)
+            .header(SERVICE_SESSION_ID, serviceSessionId)
+            .queryParam("dateFrom", dateFrom.format(ISO_DATE))
+            .queryParam("dateTo", dateTo.format(ISO_DATE))
+            .queryParam("bookingStatus", bookingStatus)
+            .when()
+            .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("transactions.booked.transactionId",
+                containsInAnyOrder(
+                    "VHF5-8R1RCcskezln6CJAY",
+                    "etA9KGhIT9ohX9dYXrhzc8",
+                    "LjwVWzBBQtwpyQ6WBBTiwk",
+                    "pkOyTAHDTb0uCF2R55HKKo",
+                    "F3qVhSXlQswswIN2nk1rBo"
+                )
+            )
+            .body("transactions.booked", hasSize(MAX_MUSTERMAN_BOOKED_TRANSACTIONS_COUNT));
         return self();
     }
 

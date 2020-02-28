@@ -131,7 +131,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .when()
                     .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
-                    .statusCode(HttpStatus.MOVED_PERMANENTLY.value())
+                    .statusCode(HttpStatus.ACCEPTED.value())
                     .extract();
 
         updateServiceSessionId(response);
@@ -169,7 +169,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF open_banking_user_max_musterman_provided_initial_parameters_to_list_transactions() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-            "restrecord/tpp-ui-input/params/max-musterman-transactions.txt"
+            "restrecord/tpp-ui-input/params/max-musterman-transactions.json"
         );
         return self();
     }

@@ -38,6 +38,7 @@ As we redefine list accounts for adorsys-sandbox bank to sandbox customary one
 class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, WiremockAccountInformationRequest<? extends WiremockAccountInformationRequest<?>>, AccountInformationResult> {
 
     private static final String ANTON_BRUECKNER_RESOURCE_ID = "cmD4EYZeTkkhxRuIV1diKA";
+    private static final String MAX_MUSTERMAN_RESOURCE_ID = "oN7KTVuJSVotMvPPPavhVo";
     private static final LocalDate DATE_FROM = LocalDate.parse("2018-01-01");
     private static final LocalDate DATE_TO = LocalDate.parse("2020-09-30");
     private static final String BOTH_BOOKING = "BOTH";
@@ -123,6 +124,9 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .and()
                 .open_banking_user_max_musterman_provided_sca_challenge_result_and_redirect_to_fintech_ok();
         then()
-                .open_banking_has_max_musterman_transactions();
+                .open_banking_has_consent_for_max_musterman_transaction_list()
+                .open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
+                    MAX_MUSTERMAN_RESOURCE_ID, DATE_FROM, DATE_TO, BOTH_BOOKING
+                );
     }
 }
