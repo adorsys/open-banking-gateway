@@ -74,7 +74,9 @@ public class AisConsentInitiateBody {
         private String pan;
         private String maskedPan;
         private String msisdn;
-        private String currency;
+
+        // FIXME: https://github.com/adorsys/open-banking-gateway/issues/316
+        private String currency = "EUR";
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
