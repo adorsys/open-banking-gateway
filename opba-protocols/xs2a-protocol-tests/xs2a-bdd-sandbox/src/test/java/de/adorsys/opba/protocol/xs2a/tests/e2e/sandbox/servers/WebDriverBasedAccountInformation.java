@@ -2,7 +2,6 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
-import org.flowable.engine.RuntimeService;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -18,9 +17,6 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClick
 
 @JGivenStage
 public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccountInformation<SELF>> extends AccountInformationRequestCommon<SELF> {
-
-    @Autowired
-    private RuntimeService runtimeService;
 
     @Autowired
     private RetryOperations withRetry;
@@ -63,7 +59,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
 
     public SELF sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(WebDriver driver) {
         waitForPageLoad(driver);
-        clickOnButton(driver, By.className("btn-primary"));
+        clickOnButton(driver, By.className("btn-primary"), true);
         return self();
     }
 
@@ -77,13 +73,24 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     private void clickOnButton(WebDriver driver, By identifier) {
+        clickOnButton(driver, identifier, false);
+    }
+
+    private void clickOnButton(WebDriver driver, By identifier, boolean allowReachedErrorPage) {
         withRetry.execute(context -> {
-            swallowReachedErrorPagException(() -> {
-                wait(driver).until(elementToBeClickable(identifier));
-                driver.findElement(identifier).click();
-            });
+            if (allowReachedErrorPage) {
+                swallowReachedErrorPageException(() -> performClick(driver, identifier));
+            } else {
+                performClick(driver, identifier);
+            }
+
             return null;
         });
+    }
+
+    private void performClick(WebDriver driver, By identifier) {
+        wait(driver).until(elementToBeClickable(identifier));
+        driver.findElement(identifier).click();
     }
 
     private void sendText(WebDriver driver, By identifier, String text) {
@@ -94,7 +101,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         });
     }
 
-    private void swallowReachedErrorPagException(Runnable action) {
+    private void swallowReachedErrorPageException(Runnable action) {
         try {
             action.run();
         } catch (WebDriverException ex) {

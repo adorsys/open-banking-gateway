@@ -19,14 +19,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static io.restassured.RestAssured.config;
 import static io.restassured.config.RedirectConfig.redirectConfig;
+import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.BigDecimalComparator.BIG_DECIMAL_COMPARATOR;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -77,6 +80,20 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     }
 
     @SneakyThrows
+    @Transactional
+    public AccountInformationResult open_banking_has_consent_for_anton_brueckner_transaction_list() {
+        assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isNotEmpty();
+        return self();
+    }
+
+    @SneakyThrows
+    @Transactional
+    public AccountInformationResult open_banking_has_consent_for_max_musterman_transaction_list() {
+        assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isNotEmpty();
+        return self();
+    }
+
+    @SneakyThrows
     public AccountInformationResult open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session() {
         ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
                     .header(SERVICE_SESSION_ID, serviceSessionId)
@@ -98,17 +115,17 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     @SneakyThrows
     public AccountInformationResult open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session() {
         ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
-                .header(SERVICE_SESSION_ID, serviceSessionId)
+                    .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
-                .get(AIS_ACCOUNTS_ENDPOINT)
+                    .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
-                .statusCode(HttpStatus.OK.value())
-                .body("accounts[0].iban", equalTo("DE38760700240320465700"))
-                .body("accounts[0].resourceId", equalTo("oN7KTVuJSVotMvPPPavhVo"))
-                .body("accounts[0].currency", equalTo("EUR"))
-                .body("accounts[0].name", equalTo("Max Musterman"))
-                .body("accounts", hasSize(1))
-                .extract();
+                    .statusCode(HttpStatus.OK.value())
+                    .body("accounts[0].iban", equalTo("DE38760700240320465700"))
+                    .body("accounts[0].resourceId", equalTo("oN7KTVuJSVotMvPPPavhVo"))
+                    .body("accounts[0].currency", equalTo("EUR"))
+                    .body("accounts[0].name", equalTo("Max Musterman"))
+                    .body("accounts", hasSize(1))
+                    .extract();
 
         this.responseContent = response.body().asString();
         return self();
@@ -157,25 +174,31 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     }
 
     @SneakyThrows
-    public AccountInformationResult open_banking_reads_anton_brueckner_transactions_on_redirect() {
-        RestAssured
-                .when()
-                 .get(URI.create(redirectOkUri).getPath())
-                .then()
-                    .statusCode(HttpStatus.OK.value())
-                    .body("transactions.booked.transactionId",
-                        containsInAnyOrder(
-                                "rnvGvu2TR2Yl99bAoM_skY",
-                                "1Lag4mgPRy4kLuz1rRifJ4",
-                                "xKVwpTr9TaAoW9j1Zem4Tw",
-                                "GrrnMdDgTGIjM-w_kkTVSA",
-                                "mfSdvTvYThwr8hocMJMsxA",
-                                "Tt7Os27bTc0vC6jDk0f5lY",
-                                "qlI0mwopQIknL0n-U4bD80",
-                                "pG7GZlccRPsoBNudHnX25Q"
-                        )
+    public AccountInformationResult open_banking_can_read_anton_brueckner_transactions_data_using_consent_bound_to_service_session(
+        String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+    ) {
+        withDefaultHeaders(ANTON_BRUECKNER)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .queryParam("dateFrom", dateFrom.format(ISO_DATE))
+                .queryParam("dateTo", dateTo.format(ISO_DATE))
+                .queryParam("bookingStatus", bookingStatus)
+            .when()
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+            .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("transactions.booked.transactionId",
+                    containsInAnyOrder(
+                        "rnvGvu2TR2Yl99bAoM_skY",
+                        "1Lag4mgPRy4kLuz1rRifJ4",
+                        "xKVwpTr9TaAoW9j1Zem4Tw",
+                        "GrrnMdDgTGIjM-w_kkTVSA",
+                        "mfSdvTvYThwr8hocMJMsxA",
+                        "Tt7Os27bTc0vC6jDk0f5lY",
+                        "qlI0mwopQIknL0n-U4bD80",
+                        "pG7GZlccRPsoBNudHnX25Q"
                     )
-                    .body("transactions.booked", hasSize(ANTON_BRUECKNER_BOOKED_TRANSACTIONS_COUNT));
+                )
+                .body("transactions.booked", hasSize(ANTON_BRUECKNER_BOOKED_TRANSACTIONS_COUNT));
         return self();
     }
 

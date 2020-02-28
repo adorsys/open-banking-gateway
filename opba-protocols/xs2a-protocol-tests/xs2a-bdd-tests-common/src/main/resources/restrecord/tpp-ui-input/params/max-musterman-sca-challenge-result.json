@@ -1,5 +1,5 @@
 {
   "scaAuthenticationData": {
-    "scaChallengeResult": "123456"
+    "SCA_CHALLENGE_DATA": "123456"
   }
 }

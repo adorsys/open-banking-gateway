@@ -85,7 +85,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .then()
                     .statusCode(HttpStatus.ACCEPTED.value())
                     .extract();
-        updateExecutionId(response);
+        updateServiceSessionId(response);
         updateRedirectCode(response);
         updateNextConsentAuthorizationUrl(response);
         return self();
@@ -100,7 +100,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                     .statusCode(HttpStatus.ACCEPTED.value())
                     .extract();
 
-        updateExecutionId(response);
+        updateServiceSessionId(response);
         updateRedirectCode(response);
         updateNextConsentAuthorizationUrl(response);
         return self();
@@ -115,7 +115,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                     .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
-        updateExecutionId(response);
+        updateServiceSessionId(response);
         updateRedirectCode(response);
         updateNextConsentAuthorizationUrl(response);
         return self();
@@ -134,7 +134,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                     .statusCode(HttpStatus.MOVED_PERMANENTLY.value())
                     .extract();
 
-        updateExecutionId(response);
+        updateServiceSessionId(response);
         updateRedirectCode(response);
         updateNextConsentAuthorizationUrl(response);
         return self();
@@ -215,7 +215,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     private void startInitialInternalConsentAuthorization(String uriPath, String resource) {
         ExtractableResponse<Response> response =
                 startInitialInternalConsentAuthorization(uriPath, resource, HttpStatus.SEE_OTHER);
-        updateExecutionId(response);
+        updateServiceSessionId(response);
         updateRedirectCode(response);
     }
 
@@ -247,7 +247,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         this.redirectUriToGetUserParams = response.header(LOCATION);
     }
 
-    private void updateExecutionId(ExtractableResponse<Response> response) {
+    private void updateServiceSessionId(ExtractableResponse<Response> response) {
         serviceSessionId = response.header(SERVICE_SESSION_ID);
     }
 
@@ -270,7 +270,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     private String selectedScaBody(String scaName) {
-        return String.format("{\"scaAuthenticationData\":{\"scaMethodId\":\"%s\"}}", this.availableScas.get(scaName));
+        return String.format("{\"scaAuthenticationData\":{\"SCA_CHALLENGE_ID\":\"%s\"}}", this.availableScas.get(scaName));
     }
 
     @Data
