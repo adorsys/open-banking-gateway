@@ -1,24 +1,25 @@
 {
   "accounts": [
     {
-      "aspspAccountId": null,
-      "resourceId": "MXp18v3aQCQsatLYCBsUjM",
+      "links": null,
+      "resourceId": "4aFCnu9yQSglauLoYho1lM",
       "iban": "DE38760700240320465700",
       "bban": null,
       "pan": null,
       "maskedPan": null,
       "msisdn": null,
       "currency": "EUR",
-      "name": "Max Musterman",
+      "name": "max.musterman",
       "product": "Cash24",
       "cashAccountType": "CASH",
       "status": "enabled",
       "bic": null,
-      "linkedAccounts": null,
-      "usageType": null,
+      "linkedAccounts": "WXMWxjaLQNgmofZQ_uPqho",
+      "usage": null,
       "details": null,
-      "balances": null,
-      "links": null
+      "_links": null,
+      "ownerName": null,
+      "ownerAddress": null
     }
   ]
 }
