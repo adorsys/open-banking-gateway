@@ -157,7 +157,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
 
         AccountInformationResult result = then()
                 .open_banking_has_consent_for_max_musterman_account_list()
-                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(false);
 
         return result.getResponseContent();
     }
@@ -185,7 +185,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
 
         AccountInformationResult result = then()
                 .open_banking_has_consent_for_anton_brueckner_account_list()
-                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
+                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(false);
 
         return result.getResponseContent();
     }

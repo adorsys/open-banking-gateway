@@ -36,6 +36,7 @@ import static org.assertj.core.util.BigDecimalComparator.BIG_DECIMAL_COMPARATOR;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.instanceOf;
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
@@ -43,6 +44,8 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
 
     private static final int ANTON_BRUECKNER_BOOKED_TRANSACTIONS_COUNT = 8;
     private static final int MAX_MUSTERMAN_BOOKED_TRANSACTIONS_COUNT = 5;
+    private static final String ANTON_BRUECKNER_IBAN = "DE80760700240271232400";
+    private static final String MAX_MUSTERMAN_IBAN = "DE38760700240320465700";
 
     @ExpectedScenarioState
     private String redirectOkUri;
@@ -97,16 +100,23 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
 
     @SneakyThrows
     public AccountInformationResult open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session() {
+        return open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(false);
+    }
+
+    @SneakyThrows
+    public AccountInformationResult open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(
+        boolean validateResourceId
+    ) {
         ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
                     .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
                     .statusCode(HttpStatus.OK.value())
-                    .body("accounts[0].iban", equalTo("DE80760700240271232400"))
-                    .body("accounts[0].resourceId", equalTo("cmD4EYZeTkkhxRuIV1diKA"))
+                    .body("accounts[0].iban", equalTo(ANTON_BRUECKNER_IBAN))
+                    .body("accounts[0].resourceId", validateResourceId ? equalTo("cmD4EYZeTkkhxRuIV1diKA") : instanceOf(String.class))
                     .body("accounts[0].currency", equalTo("EUR"))
-                    .body("accounts[0].name", equalTo("Anton Brueckner"))
+                    .body("accounts[0].name", equalTo("anton.brueckner"))
                     .body("accounts", hasSize(1))
                 .extract();
 
@@ -116,16 +126,23 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
 
     @SneakyThrows
     public AccountInformationResult open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session() {
+        return open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(false);
+    }
+
+    @SneakyThrows
+    public AccountInformationResult open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
+        boolean validateResourceId
+    ) {
         ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
                     .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
                     .statusCode(HttpStatus.OK.value())
-                    .body("accounts[0].iban", equalTo("DE38760700240320465700"))
-                    .body("accounts[0].resourceId", equalTo("oN7KTVuJSVotMvPPPavhVo"))
+                    .body("accounts[0].iban", equalTo(MAX_MUSTERMAN_IBAN))
+                    .body("accounts[0].resourceId", validateResourceId ? equalTo("oN7KTVuJSVotMvPPPavhVo") : instanceOf(String.class))
                     .body("accounts[0].currency", equalTo("EUR"))
-                    .body("accounts[0].name", equalTo("Max Musterman"))
+                    .body("accounts[0].name", equalTo("max.musterman"))
                     .body("accounts", hasSize(1))
                     .extract();
 
