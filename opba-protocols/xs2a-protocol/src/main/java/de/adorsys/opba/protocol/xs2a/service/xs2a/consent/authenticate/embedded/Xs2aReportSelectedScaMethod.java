@@ -1,9 +1,9 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate.embedded;
 
-import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
+import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedConsentParameters;
@@ -15,7 +15,6 @@ import de.adorsys.xs2a.adapter.service.Response;
 import de.adorsys.xs2a.adapter.service.model.SelectPsuAuthenticationMethod;
 import de.adorsys.xs2a.adapter.service.model.SelectPsuAuthenticationMethodResponse;
 import lombok.RequiredArgsConstructor;
-import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +24,6 @@ public class Xs2aReportSelectedScaMethod extends ValidatedExecution<Xs2aContext>
 
     private final Extractor extractor;
     private final Xs2aValidator validator;
-    private final RuntimeService runtimeService;
     private final AccountInformationService ais;
 
     @Override
@@ -48,11 +46,6 @@ public class Xs2aReportSelectedScaMethod extends ValidatedExecution<Xs2aContext>
                 execution,
                 (Xs2aContext ctx) -> ctx.setScaSelected(authResponse.getBody().getChosenScaMethod())
         );
-    }
-
-    @Override
-    protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
-        runtimeService.trigger(execution.getId());
     }
 
     @Service
