@@ -33,12 +33,12 @@ public class AisStagesCommonUtil {
     public static RequestSpecification withDefaultHeaders(String fintechUserId) {
         return RestAssured
                 .given()
-                .header(AUTHORIZATION, DEFAULT_AUTHORIZATION)
-                .header(BANK_ID, SANDBOX_BANK_ID)
-                .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
-                .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
-                .header(FINTECH_USER_ID, fintechUserId)
-                .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
-                .header(X_REQUEST_ID, UUID.randomUUID().toString());
+                    .header(AUTHORIZATION, DEFAULT_AUTHORIZATION)
+                    .header(BANK_ID, SANDBOX_BANK_ID)
+                    .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
+                    .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
+                    .header(FINTECH_USER_ID, fintechUserId)
+                    .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString());
     }
 }

@@ -147,7 +147,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     }
 
     @SneakyThrows
-    public AccountInformationResult open_banking_reads_anton_brueckner_transactions_validated_by_iban(
+    public AccountInformationResult open_banking_reads_anton_brueckner_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         ExtractableResponse<Response> response = getTransactionListFor(ANTON_BRUECKNER, resourceId, dateFrom, dateTo, bookingStatus);
@@ -256,7 +256,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     }
 
     @SneakyThrows
-    public AccountInformationResult open_banking_reads_max_musterman_transactions_validated_by_iban(
+    public AccountInformationResult open_banking_reads_max_musterman_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         ExtractableResponse<Response> response = getTransactionListFor(MAX_MUSTERMAN, resourceId, dateFrom, dateTo, bookingStatus);

@@ -43,10 +43,10 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @EnabledIfEnvironmentVariable(named = ENABLE_HEAVY_TESTS, matches = "true")
 @EnableAutoConfiguration(exclude = {
-        HypermediaAutoConfiguration.class,
-        Xs2aCmsAutoConfiguration.class,
-        ManagementWebSecurityAutoConfiguration.class,
-        SecurityAutoConfiguration.class,
+    HypermediaAutoConfiguration.class,
+    Xs2aCmsAutoConfiguration.class,
+    ManagementWebSecurityAutoConfiguration.class,
+    SecurityAutoConfiguration.class,
 })
 @EnableBankingPersistence
 @ExtendWith(SeleniumExtension.class)
@@ -99,33 +99,33 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
     @Test
     public void testTransactionListWithConsentUsingRedirect(FirefoxDriver firefoxDriver) {
         String accountResourceId = JsonPath
-                .parse(redirectListAntonBruecknerAccounts(firefoxDriver)).read("$.accounts[0].resourceId");
+            .parse(redirectListAntonBruecknerAccounts(firefoxDriver)).read("$.accounts[0].resourceId");
 
         given()
-                .enabled_redirect_sandbox_mode();
+            .enabled_redirect_sandbox_mode();
 
         when()
-                .open_banking_list_transactions_called_for_anton_brueckner(accountResourceId)
-                .and()
-                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions()
-                .and()
-                .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_inputs_username_and_password(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_confirms_consent_information(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_selects_sca_method(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(firefoxDriver);
+            .fintech_calls_list_transactions_for_anton_brueckner(accountResourceId)
+            .and()
+            .user_anton_brueckner_provided_initial_parameters_to_list_transactions_with_single_account_consent()
+            .and()
+            .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
+            .and()
+            .sandbox_anton_brueckner_inputs_username_and_password(firefoxDriver)
+            .and()
+            .sandbox_anton_brueckner_confirms_consent_information(firefoxDriver)
+            .and()
+            .sandbox_anton_brueckner_selects_sca_method(firefoxDriver)
+            .and()
+            .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
+            .and()
+            .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(firefoxDriver);
 
         then()
-                .open_banking_has_consent_for_anton_brueckner_transaction_list()
-                .open_banking_reads_anton_brueckner_transactions_validated_by_iban(
-                    accountResourceId, DATE_FROM, DATE_TO, BOTH_BOOKING
-                );
+            .open_banking_has_consent_for_anton_brueckner_transaction_list()
+            .open_banking_reads_anton_brueckner_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
+                accountResourceId, DATE_FROM, DATE_TO, BOTH_BOOKING
+            );
     }
 
     @Test
@@ -138,69 +138,69 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
         String accountResourceId = JsonPath.parse(embeddedListMaxMustermanAccounts()).read("$.accounts[0].resourceId");
 
         given()
-                .enabled_embedded_sandbox_mode();
+            .enabled_embedded_sandbox_mode();
         when()
-                .open_banking_list_transactions_called_for_max_musterman(accountResourceId)
-                .and()
-                .open_banking_user_max_musterman_provided_initial_parameters_to_list_transactions()
-                .and()
-                .open_banking_user_max_musterman_provided_password()
-                .and()
-                .open_banking_user_max_musterman_selected_sca_challenge_type_email1()
-                .and()
-                .open_banking_user_max_musterman_provided_sca_challenge_result_and_redirect_to_fintech_ok();
+            .fintech_calls_list_transactions_for_max_musterman(accountResourceId)
+            .and()
+            .user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent()
+            .and()
+            .user_max_musterman_provided_password_to_embedded_authorization()
+            .and()
+            .user_max_musterman_selected_sca_challenge_type_email1_to_embedded_authorization()
+            .and()
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_redirect_to_fintech_ok();
         then()
-                .open_banking_has_consent_for_max_musterman_transaction_list()
-                .open_banking_reads_max_musterman_transactions_validated_by_iban(
-                    accountResourceId, DATE_FROM, DATE_TO, BOTH_BOOKING
-                );
+            .open_banking_has_consent_for_max_musterman_transaction_list()
+            .open_banking_reads_max_musterman_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
+                accountResourceId, DATE_FROM, DATE_TO, BOTH_BOOKING
+            );
     }
 
     private String embeddedListMaxMustermanAccounts() {
         given()
             .enabled_embedded_sandbox_mode();
         when()
-            .open_banking_list_accounts_called_for_max_musterman()
+            .fintech_calls_list_accounts_for_max_musterman()
             .and()
-            .open_banking_user_max_musterman_provided_initial_parameters_to_list_accounts()
+            .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
             .and()
-            .open_banking_user_max_musterman_provided_password()
+            .user_max_musterman_provided_password_to_embedded_authorization()
             .and()
-            .open_banking_user_max_musterman_selected_sca_challenge_type_email2()
+            .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
             .and()
-            .open_banking_user_max_musterman_provided_sca_challenge_result_and_redirect_to_fintech_ok();
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_redirect_to_fintech_ok();
 
         AccountInformationResult result = then()
-                .open_banking_has_consent_for_max_musterman_account_list()
-                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(false);
+            .open_banking_has_consent_for_max_musterman_account_list()
+            .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(false);
 
         return result.getResponseContent();
     }
 
     private String redirectListAntonBruecknerAccounts(FirefoxDriver firefoxDriver) {
         given()
-                .enabled_redirect_sandbox_mode();
+            .enabled_redirect_sandbox_mode();
 
         when()
-                .open_banking_list_accounts_called_for_anton_brueckner()
-                .and()
-                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
-                .and()
-                .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_inputs_username_and_password(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_confirms_consent_information(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_selects_sca_method(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
-                .and()
-                .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(firefoxDriver);
+            .fintech_calls_list_accounts_for_anton_brueckner()
+            .and()
+            .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
+            .and()
+            .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
+            .and()
+            .sandbox_anton_brueckner_inputs_username_and_password(firefoxDriver)
+            .and()
+            .sandbox_anton_brueckner_confirms_consent_information(firefoxDriver)
+            .and()
+            .sandbox_anton_brueckner_selects_sca_method(firefoxDriver)
+            .and()
+            .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
+            .and()
+            .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(firefoxDriver);
 
         AccountInformationResult result = then()
-                .open_banking_has_consent_for_anton_brueckner_account_list()
-                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(false);
+            .open_banking_has_consent_for_anton_brueckner_account_list()
+            .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(false);
 
         return result.getResponseContent();
     }

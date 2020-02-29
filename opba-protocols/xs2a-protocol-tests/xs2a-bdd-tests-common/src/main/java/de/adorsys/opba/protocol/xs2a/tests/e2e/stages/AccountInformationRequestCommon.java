@@ -77,9 +77,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         config = config().redirect(redirectConfig().followRedirects(false));
     }
 
-    public SELF open_banking_list_accounts_called_for_anton_brueckner() {
+    public SELF fintech_calls_list_accounts_for_anton_brueckner() {
         ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
-                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
@@ -91,9 +91,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF open_banking_list_accounts_called_for_max_musterman() {
+    public SELF fintech_calls_list_accounts_for_max_musterman() {
         ExtractableResponse<Response> response = withDefaultHeaders(MAX_MUSTERMAN)
-                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
@@ -106,7 +106,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF open_banking_list_transactions_called_for_anton_brueckner(String resourceId) {
+    public SELF fintech_calls_list_transactions_for_anton_brueckner(String resourceId) {
         ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
@@ -121,11 +121,11 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF open_banking_list_transactions_called_for_max_musterman() {
-        return open_banking_list_transactions_called_for_max_musterman("oN7KTVuJSVotMvPPPavhVo");
+    public SELF fintech_calls_list_transactions_for_max_musterman() {
+        return fintech_calls_list_transactions_for_max_musterman("oN7KTVuJSVotMvPPPavhVo");
     }
 
-    public SELF open_banking_list_transactions_called_for_max_musterman(String resourceId) {
+    public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId) {
         ExtractableResponse<Response> response = withDefaultHeaders(MAX_MUSTERMAN)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
@@ -140,7 +140,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent() {
+    public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
             "restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"
@@ -149,16 +149,16 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions() {
+    public SELF user_anton_brueckner_provided_initial_parameters_to_list_transactions_with_single_account_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/anton-brueckner-transactions.json"
+            "restrecord/tpp-ui-input/params/anton-brueckner-transactions-single-account-consent.json"
         );
 
         return self();
     }
 
-    public SELF open_banking_user_max_musterman_provided_initial_parameters_to_list_accounts() {
+    public SELF user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 "restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent.json"
@@ -166,15 +166,15 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF open_banking_user_max_musterman_provided_initial_parameters_to_list_transactions() {
+    public SELF user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-            "restrecord/tpp-ui-input/params/max-musterman-transactions.json"
+            "restrecord/tpp-ui-input/params/max-musterman-transactions-single-account-consent.json"
         );
         return self();
     }
 
-    public SELF open_banking_user_max_musterman_provided_password() {
+    public SELF user_max_musterman_provided_password_to_embedded_authorization() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 "restrecord/tpp-ui-input/params/max-musterman-password.json"
@@ -183,7 +183,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF open_banking_user_max_musterman_selected_sca_challenge_type_email1() {
+    public SELF user_max_musterman_selected_sca_challenge_type_email1_to_embedded_authorization() {
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
             selectedScaBody("EMAIL:max.musterman@mail.de"),
@@ -192,7 +192,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF open_banking_user_max_musterman_selected_sca_challenge_type_email2() {
+    public SELF user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization() {
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
             selectedScaBody("EMAIL:max.musterman2@mail.de"),
@@ -201,7 +201,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF open_banking_user_max_musterman_provided_sca_challenge_result_and_redirect_to_fintech_ok() {
+    public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_redirect_to_fintech_ok() {
         ExtractableResponse<Response> response = provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/max-musterman-sca-challenge-result.json"),
