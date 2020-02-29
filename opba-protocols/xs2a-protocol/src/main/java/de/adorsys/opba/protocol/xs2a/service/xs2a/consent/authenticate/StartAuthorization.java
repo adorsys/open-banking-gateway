@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 import static de.adorsys.xs2a.adapter.service.ResponseHeaders.ASPSP_SCA_APPROACH;
 
@@ -56,6 +58,7 @@ public class StartAuthorization extends ValidatedExecution<Xs2aContext> {
 
         ContextUtil.getAndUpdateContext(execution, (Xs2aContext ctx) -> {
             ctx.setAspspScaApproach(config.getPreferredApproach().name());
+            ctx.setAuthorizationId(UUID.randomUUID().toString());
         });
     }
 

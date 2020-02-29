@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.db.domain.Approach.EMBEDDED;
 import static de.adorsys.opba.db.domain.Approach.REDIRECT;
+import static de.adorsys.opba.protocol.xs2a.service.xs2a.consent.ConsentConst.CONSENT_FINALIZED;
 
 @Service("xs2aConsentInfo")
 public class Xs2aConsentInfo {
@@ -26,7 +27,7 @@ public class Xs2aConsentInfo {
     }
 
     public boolean isConsentFinalized(Xs2aContext ctx) {
-        return "finalised".equalsIgnoreCase(ctx.getScaStatus());
+        return CONSENT_FINALIZED.equalsIgnoreCase(ctx.getScaStatus());
     }
 
     public boolean isOkRedirectConsent(Xs2aContext ctx) {
