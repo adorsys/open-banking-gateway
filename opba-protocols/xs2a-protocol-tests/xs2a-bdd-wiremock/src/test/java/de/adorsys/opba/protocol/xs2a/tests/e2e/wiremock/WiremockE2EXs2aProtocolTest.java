@@ -63,9 +63,9 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running();
         when()
-                .open_banking_list_accounts_called_for_anton_brueckner()
+                .fintech_calls_list_accounts_for_anton_brueckner()
                 .and()
-                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
+                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
                 .and()
                 .open_banking_redirect_from_aspsp_ok_webhook_called();
         then()
@@ -78,9 +78,9 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running();
         when()
-                .open_banking_list_transactions_called_for_anton_brueckner(ANTON_BRUECKNER_RESOURCE_ID)
+                .fintech_calls_list_transactions_for_anton_brueckner(ANTON_BRUECKNER_RESOURCE_ID)
                 .and()
-                .open_banking_user_anton_brueckner_provided_initial_parameters_to_list_transactions()
+                .user_anton_brueckner_provided_initial_parameters_to_list_transactions_with_single_account_consent()
                 .and()
                 .open_banking_redirect_from_aspsp_ok_webhook_called();
         then()
@@ -95,15 +95,15 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_accounts_running();
         when()
-                .open_banking_list_accounts_called_for_max_musterman()
+                .fintech_calls_list_accounts_for_max_musterman()
                 .and()
-                .open_banking_user_max_musterman_provided_initial_parameters_to_list_accounts()
+                .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
                 .and()
-                .open_banking_user_max_musterman_provided_password()
+                .user_max_musterman_provided_password_to_embedded_authorization()
                 .and()
-                .open_banking_user_max_musterman_selected_sca_challenge_type_email2()
+                .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
                 .and()
-                .open_banking_user_max_musterman_provided_sca_challenge_result_and_redirect_to_fintech_ok();
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_redirect_to_fintech_ok();
         then()
                 .open_banking_has_consent_for_max_musterman_account_list()
                 .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
@@ -114,15 +114,15 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_transactions_running();
         when()
-                .open_banking_list_transactions_called_for_max_musterman()
+                .fintech_calls_list_transactions_for_max_musterman()
                 .and()
-                .open_banking_user_max_musterman_provided_initial_parameters_to_list_transactions()
+                .user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent()
                 .and()
-                .open_banking_user_max_musterman_provided_password()
+                .user_max_musterman_provided_password_to_embedded_authorization()
                 .and()
-                .open_banking_user_max_musterman_selected_sca_challenge_type_email1()
+                .user_max_musterman_selected_sca_challenge_type_email1_to_embedded_authorization()
                 .and()
-                .open_banking_user_max_musterman_provided_sca_challenge_result_and_redirect_to_fintech_ok();
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_redirect_to_fintech_ok();
         then()
                 .open_banking_has_consent_for_max_musterman_transaction_list()
                 .open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
