@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate.embedded;
 
+import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.RedirectExecutor;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
@@ -22,6 +23,10 @@ public class Xs2aAskForPassword extends ValidatedExecution<Xs2aContext> {
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
+        ContextUtil.getAndUpdateContext(
+            execution,
+            (Xs2aContext ctx) -> ctx.setPsuPassword("mock-password")
+        );
         runtimeService.trigger(execution.getId());
     }
 }
