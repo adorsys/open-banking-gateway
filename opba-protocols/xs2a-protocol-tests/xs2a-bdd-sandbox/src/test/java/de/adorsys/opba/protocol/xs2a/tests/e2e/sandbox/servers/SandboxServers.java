@@ -2,11 +2,9 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers;
 
 import com.tngtech.jgiven.annotation.BeforeStage;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.CommonGivenStages;
 import io.restassured.RestAssured;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -17,9 +15,6 @@ import static io.restassured.config.RedirectConfig.redirectConfig;
 public class SandboxServers<SELF extends SandboxServers<SELF>> extends CommonGivenStages<SELF> {
 
     private static final String ASPSP_PROFILE_BASE_URI = "http://localhost:20010";
-
-    @Autowired
-    private BankProfileJpaRepository profiles;
 
     @BeforeStage
     void prepareRestAssured() {
