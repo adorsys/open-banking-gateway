@@ -4,15 +4,17 @@ import de.adorsys.opba.protocol.api.ais.ListAccounts;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.facade.services.FacadeService;
-import de.adorsys.opba.protocol.facade.services.ProtocolSelector;
 import de.adorsys.opba.protocol.facade.services.ProtocolResultHandler;
+import de.adorsys.opba.protocol.facade.services.ProtocolSelector;
 import de.adorsys.opba.protocol.facade.services.ServiceContextProvider;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
 import static de.adorsys.opba.db.domain.entity.ProtocolAction.LIST_ACCOUNTS;
 
+@Async
 @Service
 public class ListAccountsService extends FacadeService<ListAccountsRequest, AccountListBody, ListAccounts> {
 

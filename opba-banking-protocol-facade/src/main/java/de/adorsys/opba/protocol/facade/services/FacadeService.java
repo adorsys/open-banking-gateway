@@ -4,11 +4,10 @@ import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.protocol.api.Action;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
-import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.body.ResultBody;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
@@ -24,7 +23,6 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
     private final ServiceContextProvider provider;
     private final ProtocolResultHandler handler;
 
-    @Async
     @Transactional
     public CompletableFuture<FacadeResult<O>> execute(I request) {
         ServiceContext<I> ctx = contextFor(request);
