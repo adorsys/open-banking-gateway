@@ -31,6 +31,8 @@ import java.net.URI;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+import static de.adorsys.opba.protocol.api.dto.headers.ResponseHeaders.X_ERROR_CODE;
+import static de.adorsys.opba.protocol.api.dto.headers.ResponseHeaders.X_ERROR_MESSAGE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.awaitility.Durations.ONE_HUNDRED_MILLISECONDS;
@@ -93,8 +95,8 @@ class ServiceSessionAndAuthSessionTest {
 
         FacadeRedirectResult authUpdatedResult = (FacadeRedirectResult) updateAuthorizationService.execute(buildAuthRequest(listAccountsResponse)).get();
 
-        assertThat(UUID.fromString(authUpdatedResult.getAuthorizationSessionId())).isEqualTo(sessionId);
-        assertThat(UUID.fromString(authUpdatedResult.getServiceSessionId())).isEqualTo(sessionId);
+        assertThat(authUpdatedResult.getAuthorizationSessionId()).isEqualTo(sessionId.toString());
+        assertThat(authUpdatedResult.getServiceSessionId()).isEqualTo(sessionId.toString());
 
         assertThat(authUpdatedResult.getRedirectionTo()).isEqualTo(authorizationRequiredResult.getRedirectionTo());
 
@@ -112,7 +114,7 @@ class ServiceSessionAndAuthSessionTest {
 
         FacadeRedirectErrorResult errorResponse = (FacadeRedirectErrorResult) listAccountsService.execute(buildListAccountRequest(sessionId)).get();
 
-        assertErrorResponse(errorResponse, ERROR_RESULT, sessionId);
+        assertErrorResponse(errorResponse, sessionId.toString());
 
         await().atMost(ONE_SECOND)
                 .pollDelay(ONE_HUNDRED_MILLISECONDS)
@@ -142,7 +144,7 @@ class ServiceSessionAndAuthSessionTest {
 
         FacadeRedirectErrorResult errorResponse = (FacadeRedirectErrorResult) updateAuthorizationService.execute(buildAuthRequest(listAccountsResponse)).get();
 
-        assertErrorResponse(errorResponse, ERROR_RESULT, sessionId);
+        assertErrorResponse(errorResponse, sessionId.toString());
         assertAllSessions(sessionId);
     }
 
@@ -184,8 +186,8 @@ class ServiceSessionAndAuthSessionTest {
 
         FacadeStartAuthorizationResult listAccountsResponse = (FacadeStartAuthorizationResult) listAccountsService.execute(buildListAccountRequest(sessionId)).get();
 
-        assertThat(UUID.fromString(listAccountsResponse.getAuthorizationSessionId())).isEqualTo(sessionId);
-        assertThat(UUID.fromString(listAccountsResponse.getServiceSessionId())).isEqualTo(sessionId);
+        assertThat(listAccountsResponse.getAuthorizationSessionId()).isEqualTo(sessionId.toString());
+        assertThat(listAccountsResponse.getServiceSessionId()).isEqualTo(sessionId.toString());
         assertThat(listAccountsResponse.getRedirectionTo()).isEqualTo(redirectionResult.getRedirectionTo());
         return listAccountsResponse;
     }
@@ -227,13 +229,13 @@ class ServiceSessionAndAuthSessionTest {
         assertThat(serviceSessionFromDB.getAlgo()).isEqualTo(ALGO);
     }
 
-    private void assertErrorResponse(FacadeRedirectErrorResult errorResponse, ErrorResult<AuthorizationRequiredResult> errorResult, UUID sessionId) {
-        assertThat(UUID.fromString(errorResponse.getAuthorizationSessionId())).isEqualTo(sessionId);
-        assertThat(UUID.fromString(errorResponse.getServiceSessionId())).isEqualTo(sessionId);
+    private void assertErrorResponse(FacadeRedirectErrorResult errorResponse, String sessionId) {
+        assertThat(errorResponse.getAuthorizationSessionId()).isEqualTo(sessionId);
+        assertThat(errorResponse.getServiceSessionId()).isEqualTo(sessionId);
         assertThat(errorResponse.getXRequestId()).isEqualTo(REQUEST_ID);
         assertThat(errorResponse.getRedirectionTo().toString()).isEqualTo(REDIRECT_URL_NO_OK);
-        assertThat(errorResponse.getHeaders().get(ResponseHeaders.X_ERROR_CODE)).isEqualTo(errorResult.getCode());
-        assertThat(errorResponse.getHeaders().get(ResponseHeaders.X_ERROR_MESSAGE)).isEqualTo(errorResult.getMessage());
+        assertThat(errorResponse.getHeaders().get(X_ERROR_CODE)).isEqualTo(ERROR_RESULT.getCode());
+        assertThat(errorResponse.getHeaders().get(X_ERROR_MESSAGE)).isEqualTo(ERROR_RESULT.getMessage());
     }
 
     private AuthorizationRequiredResult buildAuthorizationRequiredResult() {
