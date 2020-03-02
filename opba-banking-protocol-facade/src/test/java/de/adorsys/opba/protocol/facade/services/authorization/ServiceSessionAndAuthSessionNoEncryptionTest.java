@@ -27,18 +27,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
+import static org.awaitility.Durations.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 
@@ -47,13 +44,14 @@ import static org.mockito.Mockito.doAnswer;
  */
 @ActiveProfiles("test, no-encryption")
 @SpringBootTest(classes = ApplicationTest.class)
-public class ServiceSessionAndAuthSessionNoEncryptionTest {
+class ServiceSessionAndAuthSessionNoEncryptionTest {
     private static final String PASSWORD = "password";
     private static final String TEST_BANK_ID = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
     private static final UUID REQUEST_ID = UUID.fromString("e3865c6b-70f2-4c1e-ad31-d7c2ff160858");
     private static final String REDIRECT_URL_OK = "http://google.com";
     private static final String REDIRECT_URL_NO_OK = "http://microsoft.com";
     private static final String NOOP_ALGO = "NOOP";
+    private static final ErrorResult<AuthorizationRequiredResult> ERROR_RESULT = buildErrorResult();
 
     @Autowired
     private ListAccountsService listAccountsService;
@@ -80,9 +78,11 @@ public class ServiceSessionAndAuthSessionNoEncryptionTest {
         ValidationErrorResult validationErrorResult = buildValidationErrorResultResult();
         FacadeStartAuthorizationResult listAccountsResponse = createAndAssertListAccountRequestForBruecker(sessionId, validationErrorResult);
 
-        await().atMost(Durations.ONE_SECOND)
-                .pollDelay(Durations.ONE_HUNDRED_MILLISECONDS)
-                .until(() -> authenticationSessions.findAll().iterator().hasNext());
+        assertThat(listAccountsResponse.getAuthorizationSessionId()).isEqualTo(sessionId.toString());
+
+        await().atMost(ONE_SECOND)
+                .pollDelay(ONE_HUNDRED_MILLISECONDS)
+                .until(() -> authenticationSessions.findById(sessionId).isPresent());
 
         assertAllSessions(sessionId);
 
@@ -107,21 +107,17 @@ public class ServiceSessionAndAuthSessionNoEncryptionTest {
     void serviceSession_protocolError() {
         UUID sessionId = UUID.randomUUID();
 
-        ErrorResult<AuthorizationRequiredResult> errorResult = new ErrorResult<>();
-        errorResult.setCode("400");
-        errorResult.setMessage("The addressed resource is unknown relative to the TPP");
-
-        doAnswer(invocation -> CompletableFuture.completedFuture(errorResult))
+        doAnswer(invocation -> CompletableFuture.completedFuture(ERROR_RESULT))
                 .when(xs2aListAccountsEntrypoint)
                 .execute(any(ServiceContext.class));
 
         FacadeRedirectErrorResult errorResponse = (FacadeRedirectErrorResult) listAccountsService.execute(buildListAccountRequest(sessionId)).get();
 
-        assertErrorResponse(errorResponse, errorResult, sessionId);
+        assertErrorResponse(errorResponse, ERROR_RESULT, sessionId);
 
-        await().atMost(Durations.ONE_SECOND)
-                .pollDelay(Durations.ONE_HUNDRED_MILLISECONDS)
-                .until(() -> authenticationSessions.findAll().iterator().hasNext());
+        await().atMost(ONE_SECOND)
+                .pollDelay(ONE_HUNDRED_MILLISECONDS)
+                .until(() -> authenticationSessions.findById(sessionId).isPresent());
 
         assertAllSessions(sessionId);
     }
@@ -133,24 +129,21 @@ public class ServiceSessionAndAuthSessionNoEncryptionTest {
         ValidationErrorResult validationErrorResult = buildValidationErrorResultResult();
         FacadeStartAuthorizationResult listAccountsResponse = createAndAssertListAccountRequestForBruecker(sessionId, validationErrorResult);
 
-        await().atMost(Durations.ONE_SECOND)
-                .pollDelay(Durations.ONE_HUNDRED_MILLISECONDS)
-                .until(() -> authenticationSessions.findAll().iterator().hasNext());
+        assertThat(listAccountsResponse.getAuthorizationSessionId()).isEqualTo(sessionId.toString());
+
+        await().atMost(ONE_SECOND)
+                .pollDelay(ONE_HUNDRED_MILLISECONDS)
+                .until(() -> authenticationSessions.findById(sessionId).isPresent());
 
         assertAllSessions(sessionId);
 
-
-        ErrorResult<AuthorizationRequiredResult> errorResult = new ErrorResult<>();
-        errorResult.setCode("400");
-        errorResult.setMessage("The addressed resource is unknown relative to the TPP");
-
-        doAnswer(invocation -> CompletableFuture.completedFuture(errorResult))
+        doAnswer(invocation -> CompletableFuture.completedFuture(ERROR_RESULT))
                 .when(xs2aUpdateAuthorization)
                 .execute(any(ServiceContext.class));
 
         FacadeRedirectErrorResult errorResponse = (FacadeRedirectErrorResult) updateAuthorizationService.execute(buildAuthRequest(listAccountsResponse)).get();
 
-        assertErrorResponse(errorResponse, errorResult, sessionId);
+        assertErrorResponse(errorResponse, ERROR_RESULT, sessionId);
         assertAllSessions(sessionId);
     }
 
@@ -162,9 +155,9 @@ public class ServiceSessionAndAuthSessionNoEncryptionTest {
 
         createAndAssertListAccountRequestForBruecker(sessionId, authorizationRequiredResult);
 
-        await().atMost(Durations.ONE_SECOND)
-                .pollDelay(Durations.ONE_HUNDRED_MILLISECONDS)
-                .until(() -> authenticationSessions.findAll().iterator().hasNext());
+        await().atMost(ONE_SECOND)
+                .pollDelay(ONE_HUNDRED_MILLISECONDS)
+                .until(() -> authenticationSessions.findById(sessionId).isPresent());
 
         assertAllSessions(sessionId);
     }
@@ -184,13 +177,6 @@ public class ServiceSessionAndAuthSessionNoEncryptionTest {
     }
 
     private AuthorizationRequest buildAuthRequest(FacadeStartAuthorizationResult listAccountsResponse) {
-        Map<String, String> authData = new HashMap<>();
-        authData.put("consent.frequencyPerDay", "5");
-        authData.put("psuIpAddress", "1.1.1.1"); // NOPMD Hard code the IP address in test is not a problem
-        authData.put("psuId", "anton.brueckner");
-        authData.put("consent.validUntil", "2020-02-26T22:00:00.000Z");
-        authData.put("consent.access.allAccountsAccess", "allAccountsWithBalances");
-
         return AuthorizationRequest.builder()
                        .facadeServiceable(FacadeServiceableRequest.builder()
                                                   .redirectCode(listAccountsResponse.getRedirectCode())
@@ -198,7 +184,6 @@ public class ServiceSessionAndAuthSessionNoEncryptionTest {
                                                   .requestId(listAccountsResponse.getXRequestId())
                                                   .build()
                        )
-                       .scaAuthenticationData(authData)
                        .build();
     }
 
@@ -217,15 +202,10 @@ public class ServiceSessionAndAuthSessionNoEncryptionTest {
     }
 
     private void assertAllSessions(UUID sessionId) {
-        Optional<AuthSession> authenticationSessionOptional = authenticationSessions.findById(sessionId);
-        Optional<ServiceSession> serviceSessionOptional = serviceSessionRepository.findById(sessionId);
+        AuthSession authenticationSession = authenticationSessions.findById(sessionId).get();
+        ServiceSession serviceSessionFromDB = serviceSessionRepository.findById(sessionId).get();
 
-        assertThat(authenticationSessionOptional.isPresent()).isTrue();
-        assertThat(serviceSessionOptional.isPresent()).isTrue();
-
-        AuthSession authenticationSession = authenticationSessionOptional.get();
         ServiceSession serviceSessionFromAuth = authenticationSession.getParent();
-        ServiceSession serviceSessionFromDB = serviceSessionOptional.get();
 
         assertThat(serviceSessionFromDB.getId()).isEqualTo(serviceSessionFromAuth.getId());
         assertThat(serviceSessionFromDB.getAuthSession().getId()).isEqualTo(authenticationSession.getId());
@@ -244,10 +224,18 @@ public class ServiceSessionAndAuthSessionNoEncryptionTest {
     }
 
     private AuthorizationRequiredResult buildAuthorizationRequiredResult() {
-        return new AuthorizationRequiredResult(URI.create("http://localhost:4400/account-information/login?encryptedConsentId=ZwaFosuf-GopQSJwEcWKIn708zVNbrHvmWZh6amuM59aBEMABLWcMZATy6v9CghY5hpqT3HlUQAcRciH8hB3asz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q&redirectId=7154aa62-b744-4072-b4b9-0fa87048e2c8"));
+        return new AuthorizationRequiredResult(URI.create("http://localhost:4400/account-information"));
     }
 
     private ValidationErrorResult buildValidationErrorResultResult() {
-        return new ValidationErrorResult(URI.create("http://localhost:5500/parameters/provide-more/8bce1a14-5a43-11ea-893e-acde48001122?q=%5B%7B%22uiCode%22:%22textbox.integer%22,%20%22ctxCode%22:%22frequencyPerDay%22,%20%22message%22:%22%7Bno.ctx.frequencyPerDay%7D%22,%20%22target%22:%22AIS_CONSENT%22%7D,%20%7B%22uiCode%22:%22textbox.string%22,%20%22ctxCode%22:%22PSU_ID%22,%20%22message%22:%22PSU%20id%20(username%20to%20login%20to%20bank%20account)%22,%20%22target%22:%22CONTEXT%22%7D,%20%7B%22uiCode%22:%22textbox.string%22,%20%22ctxCode%22:%22PSU_IP_ADDRESS%22,%20%22message%22:%22%7Bno.ctx.psuIpAddress%7D%22,%20%22target%22:%22CONTEXT%22%7D,%20%7B%22uiCode%22:%22accountaccess.class%22,%20%22ctxCode%22:%22access%22,%20%22message%22:%22%7Bno.ctx.accountaccess%7D%22,%20%22target%22:%22AIS_CONSENT%22%7D,%20%7B%22uiCode%22:%22boolean.boolean%22,%20%22ctxCode%22:%22recurringIndicator%22,%20%22message%22:%22%7Bno.ctx.recurringIndicator%7D%22,%20%22target%22:%22AIS_CONSENT%22%7D,%20%7B%22uiCode%22:%22date.string%22,%20%22ctxCode%22:%22validUntil%22,%20%22message%22:%22%7Bno.ctx.validUntil%7D%22,%20%22target%22:%22AIS_CONSENT%22%7D%5D"));
+        return new ValidationErrorResult(URI.create("http://localhost:5500/parameters/provide-more/8bce1a14-5a43-11ea-893e-acde48001122"));
+    }
+
+    private static ErrorResult<AuthorizationRequiredResult> buildErrorResult() {
+        ErrorResult<AuthorizationRequiredResult> errorResult = new ErrorResult<>();
+        errorResult.setCode("400");
+        errorResult.setMessage("The addressed resource is unknown relative to the TPP");
+
+        return errorResult;
     }
 }
