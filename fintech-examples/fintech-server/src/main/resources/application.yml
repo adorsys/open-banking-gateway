@@ -13,7 +13,7 @@ tpp:
 
 mock:
   tppais:
-    listtransactions: true
+    listtransactions: false
     listaccounts: false
 
 spring:

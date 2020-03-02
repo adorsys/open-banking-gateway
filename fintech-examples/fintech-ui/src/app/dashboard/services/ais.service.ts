@@ -10,13 +10,13 @@ export class AisService {
 
   getAccounts(bankId: string) {
     return this.finTechAccountInformationService
-      .aisAccountsGET(bankId, '', '')
-      .pipe(map(response => response.accountList));
+      .aisAccountsGET(bankId, '', '', 'ok-url', 'not-ok-url')
+      .pipe(map(response => response.accounts));
   }
 
   getTransactions() {
     return this.finTechAccountInformationService
-      .aisTransactionsGET('bankId', 'accountId', '', '')
-      .pipe(map(response => response.accountList));
+      .aisTransactionsGET('bankId', 'accountId', '', '', 'ok-url', 'not-ok-url')
+      .pipe(map(response => response.transactions));
   }
 }
