@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox;
 import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
 import de.adorsys.opba.db.config.EnableBankingPersistence;
+import de.adorsys.opba.db.domain.Approach;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.SandboxServers;
@@ -15,9 +16,10 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
@@ -91,18 +93,21 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
         consent.setNok(consent.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
     }
 
-    @Test
-    public void testAccountsListWithConsentUsingRedirect(FirefoxDriver firefoxDriver) {
-        redirectListAntonBruecknerAccounts(firefoxDriver);
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    public void testAccountsListWithConsentUsingRedirect(FirefoxDriver firefoxDriver, Approach approach) {
+        redirectListAntonBruecknerAccounts(firefoxDriver, approach);
     }
 
-    @Test
-    public void testTransactionListWithConsentUsingRedirect(FirefoxDriver firefoxDriver) {
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    public void testTransactionListWithConsentUsingRedirect(FirefoxDriver firefoxDriver, Approach approach) {
         String accountResourceId = JsonPath
-            .parse(redirectListAntonBruecknerAccounts(firefoxDriver)).read("$.accounts[0].resourceId");
+            .parse(redirectListAntonBruecknerAccounts(firefoxDriver, approach)).read("$.accounts[0].resourceId");
 
         given()
-            .enabled_redirect_sandbox_mode();
+            .enabled_redirect_sandbox_mode()
+            .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
 
         when()
             .fintech_calls_list_transactions_for_anton_brueckner(accountResourceId)
@@ -128,17 +133,23 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
             );
     }
 
-    @Test
-    void testAccountsListWithConsentUsingEmbedded() {
-        embeddedListMaxMustermanAccounts();
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testAccountsListWithConsentUsingEmbedded(Approach approach) {
+        embeddedListMaxMustermanAccounts(approach);
     }
 
-    @Test
-    void testTransactionsListWithConsentUsingEmbedded() {
-        String accountResourceId = JsonPath.parse(embeddedListMaxMustermanAccounts()).read("$.accounts[0].resourceId");
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testTransactionsListWithConsentUsingEmbedded(Approach approach) {
+        String accountResourceId = JsonPath
+            .parse(embeddedListMaxMustermanAccounts(approach))
+            .read("$.accounts[0].resourceId");
 
         given()
-            .enabled_embedded_sandbox_mode();
+            .enabled_embedded_sandbox_mode()
+            .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+
         when()
             .fintech_calls_list_transactions_for_max_musterman(accountResourceId)
             .and()
@@ -156,9 +167,11 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
             );
     }
 
-    private String embeddedListMaxMustermanAccounts() {
+    private String embeddedListMaxMustermanAccounts(Approach approach) {
         given()
-            .enabled_embedded_sandbox_mode();
+            .enabled_embedded_sandbox_mode()
+            .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+
         when()
             .fintech_calls_list_accounts_for_max_musterman()
             .and()
@@ -177,9 +190,10 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
         return result.getResponseContent();
     }
 
-    private String redirectListAntonBruecknerAccounts(FirefoxDriver firefoxDriver) {
+    private String redirectListAntonBruecknerAccounts(FirefoxDriver firefoxDriver, Approach approach) {
         given()
-            .enabled_redirect_sandbox_mode();
+            .enabled_redirect_sandbox_mode()
+            .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
 
         when()
             .fintech_calls_list_accounts_for_anton_brueckner()
