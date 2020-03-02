@@ -1,7 +1,5 @@
 package de.adorsys.opba.fintech.impl.tppclients;
 
-import org.springframework.http.HttpHeaders;
-
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor")
 public class HeaderFields {
     public static final String AUTHORIZATION_SESSION_ID = "Authorization-Session-ID";
