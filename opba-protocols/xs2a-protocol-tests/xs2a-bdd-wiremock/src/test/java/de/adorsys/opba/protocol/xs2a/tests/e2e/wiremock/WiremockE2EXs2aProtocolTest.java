@@ -1,14 +1,15 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock;
 
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
+import de.adorsys.opba.db.domain.Approach;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.MockServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockAccountInformationRequest;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -57,11 +58,13 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
         consent.setNok(consent.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
     }
 
-    @Test
-    @SneakyThrows
-    void testAccountsListWithConsentUsingRedirect() {
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testAccountsListWithConsentUsingRedirect(Approach approach) {
         given()
-                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running();
+                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+
         when()
                 .fintech_calls_list_accounts_for_anton_brueckner()
                 .and()
@@ -73,10 +76,13 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
     }
 
-    @Test
-    void testTransactionsListWithConsentUsingRedirect() {
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testTransactionsListWithConsentUsingRedirect(Approach approach) {
         given()
-                .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running();
+                .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+
         when()
                 .fintech_calls_list_transactions_for_anton_brueckner(ANTON_BRUECKNER_RESOURCE_ID)
                 .and()
@@ -90,10 +96,13 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 );
     }
 
-    @Test
-    void testAccountsListWithConsentUsingEmbedded() {
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testAccountsListWithConsentUsingEmbedded(Approach approach) {
         given()
-                .embedded_mock_of_sandbox_for_max_musterman_accounts_running();
+                .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+
         when()
                 .fintech_calls_list_accounts_for_max_musterman()
                 .and()
@@ -109,10 +118,13 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
     }
 
-    @Test
-    void testTransactionsListWithConsentUsingEmbedded() {
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testTransactionsListWithConsentUsingEmbedded(Approach approach) {
         given()
-                .embedded_mock_of_sandbox_for_max_musterman_transactions_running();
+                .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+
         when()
                 .fintech_calls_list_transactions_for_max_musterman()
                 .and()
