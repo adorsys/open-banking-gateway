@@ -8,6 +8,11 @@ server:
       path: /
       sameSite: none
       # sameSite: Strict|Lax|none
+
+fintech:
+  ui:
+    # origin: http://localhost:4444 if not set, * is used
+
 tpp:
   url: http://localhost:8085
 

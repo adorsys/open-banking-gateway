@@ -1,6 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
@@ -14,6 +15,9 @@ import static org.springframework.http.HttpStatus.FOUND;
 
 @Slf4j
 public class HandleAcceptedService {
+    @Value("${fintech.ui.origin:*}")
+    private String origin;
+
     ResponseEntity handleAccepted(HttpHeaders headers) {
         String authSessionID = headers.getFirst(AUTHORIZATION_SESSION_ID);
         String redirectCode = headers.getFirst(REDIRECT_CODE);
@@ -30,7 +34,7 @@ public class HandleAcceptedService {
                 .header(REDIRECT_CODE, redirectCode)
                 .header(PSU_CONSENT_SESSION, psuConsentSession)
                 // TODO no hardcoded values, no hardcoded names
-                .header(ALLOW, "http://localhost:4444")
+                .header(ALLOW, origin)
                 .header("Access-Control-Allow-Credentials", "true")
                 .header("Access-Control-Allowed-methods", "*")
                 .location(location)
