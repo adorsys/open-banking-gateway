@@ -49,8 +49,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.accountsSubscription = this.route.params
       .pipe(concatMap(param => this.aisService.getAccounts(param.id)))
-      .subscribe(accountList => {
-        accountList.accounts.forEach(account => {
+      .subscribe(accounts => {
+        accounts.forEach(account => {
           this.cardList2.push({
             headline: account.iban,
             subheadline: account.name ? account.name : ''

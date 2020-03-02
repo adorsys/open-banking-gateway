@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
 
+import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.ALLOW;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.AUTHORIZATION_SESSION_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.PSU_CONSENT_SESSION;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.REDIRECT_CODE;
@@ -23,10 +24,15 @@ public class HandleAcceptedService {
                 redirectCode,
                 psuConsentSession,
                 location);
+
         return ResponseEntity.status(FOUND)
                 .header(AUTHORIZATION_SESSION_ID, authSessionID)
                 .header(REDIRECT_CODE, redirectCode)
                 .header(PSU_CONSENT_SESSION, psuConsentSession)
+                // TODO no hardcoded values, no hardcoded names
+                .header(ALLOW, "http://localhost:4444")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allowed-methods", "*")
                 .location(location)
                 .build();
     }

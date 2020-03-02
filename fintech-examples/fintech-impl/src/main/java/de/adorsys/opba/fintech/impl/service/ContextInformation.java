@@ -9,6 +9,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ContextInformation {
     private final UUID xRequestID;
-    private final String fintechID = "my-fintech-id";
-    private final String serviceSessionPassword = "very-secret-password";
+    // TODO has to be synchronized with backend, see technical ui /initial
+    private final String fintechID = "MY-SUPER-FINTECH-ID";
+    private final String serviceSessionPassword = "qwerty";
 }
