@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 @JGivenStage
+@SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Stage<SELF> {
 
     @Autowired
