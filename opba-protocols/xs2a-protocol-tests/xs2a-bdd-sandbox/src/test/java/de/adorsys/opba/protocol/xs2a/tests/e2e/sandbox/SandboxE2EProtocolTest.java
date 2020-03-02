@@ -95,15 +95,15 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
 
     @ParameterizedTest
     @EnumSource(Approach.class)
-    public void testAccountsListWithConsentUsingRedirect(FirefoxDriver firefoxDriver, Approach approach) {
-        redirectListAntonBruecknerAccounts(firefoxDriver, approach);
+    public void testAccountsListWithConsentUsingRedirect(Approach approach, FirefoxDriver firefoxDriver) {
+        redirectListAntonBruecknerAccounts(approach, firefoxDriver);
     }
 
     @ParameterizedTest
     @EnumSource(Approach.class)
-    public void testTransactionListWithConsentUsingRedirect(FirefoxDriver firefoxDriver, Approach approach) {
+    public void testTransactionListWithConsentUsingRedirect(Approach approach, FirefoxDriver firefoxDriver) {
         String accountResourceId = JsonPath
-            .parse(redirectListAntonBruecknerAccounts(firefoxDriver, approach)).read("$.accounts[0].resourceId");
+            .parse(redirectListAntonBruecknerAccounts(approach, firefoxDriver)).read("$.accounts[0].resourceId");
 
         given()
             .enabled_redirect_sandbox_mode()
@@ -190,7 +190,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
         return result.getResponseContent();
     }
 
-    private String redirectListAntonBruecknerAccounts(FirefoxDriver firefoxDriver, Approach approach) {
+    private String redirectListAntonBruecknerAccounts(Approach approach, FirefoxDriver firefoxDriver) {
         given()
             .enabled_redirect_sandbox_mode()
             .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
