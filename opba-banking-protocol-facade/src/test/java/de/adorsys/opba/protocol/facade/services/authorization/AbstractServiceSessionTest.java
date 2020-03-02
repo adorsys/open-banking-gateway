@@ -5,7 +5,6 @@ import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
-import de.adorsys.opba.protocol.api.dto.headers.ResponseHeaders;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
@@ -13,7 +12,6 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.Authorization
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
-import de.adorsys.opba.protocol.facade.config.ApplicationTest;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
@@ -21,11 +19,10 @@ import de.adorsys.opba.protocol.facade.services.ais.ListAccountsService;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aListAccountsEntrypoint;
 import de.adorsys.opba.protocol.xs2a.entrypoint.authorization.Xs2aUpdateAuthorization;
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.net.URI;
 import java.util.UUID;
@@ -43,16 +40,17 @@ import static org.mockito.Mockito.doAnswer;
 /**
  * Note: This test keeps DB in dirty state - doesn't cleanup after itself.
  */
-@ActiveProfiles("test")
-@SpringBootTest(classes = ApplicationTest.class)
-class ServiceSessionAndAuthSessionTest {
+
+abstract class AbstractServiceSessionTest {
     private static final String PASSWORD = "password";
     private static final String TEST_BANK_ID = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
     private static final UUID REQUEST_ID = UUID.fromString("e3865c6b-70f2-4c1e-ad31-d7c2ff160858");
     private static final String REDIRECT_URL_OK = "http://google.com";
     private static final String REDIRECT_URL_NO_OK = "http://microsoft.com";
-    private static final String ALGO = "PBEWithSHA256And256BitAES-CBC-BC";
     private static final ErrorResult<AuthorizationRequiredResult> ERROR_RESULT = buildErrorResult();
+    private static final String ERROR_CODE_400 = "400";
+    private static final String ERROR_RESULT_MESSAGE = "The addressed resource is unknown relative to the TPP";
+    private static final UUID SESSION_ID = UUID.randomUUID();
 
     @Autowired
     private ListAccountsService listAccountsService;
@@ -72,20 +70,28 @@ class ServiceSessionAndAuthSessionTest {
     @MockBean
     private Xs2aUpdateAuthorization xs2aUpdateAuthorization;
 
+    @BeforeEach
+    void setup() {
+        authenticationSessions.deleteAll();
+        serviceSessionRepository.deleteAll();
+    }
+
+    abstract String getAlgorithm();
+
     @Test
     @SneakyThrows
     void serviceSessionAndAuthSessionWithConsent_success() {
-        UUID sessionId = UUID.randomUUID();
-        ValidationErrorResult validationErrorResult = buildValidationErrorResultResult();
-        FacadeStartAuthorizationResult listAccountsResponse = createAndAssertListAccountRequestForBruecker(sessionId, validationErrorResult);
 
-        assertThat(listAccountsResponse.getAuthorizationSessionId()).isEqualTo(sessionId.toString());
+        ValidationErrorResult validationErrorResult = buildValidationErrorResultResult();
+        FacadeStartAuthorizationResult listAccountsResponse = createAndAssertListAccountRequestForBruecker(validationErrorResult);
+
+        assertThat(listAccountsResponse.getAuthorizationSessionId()).isEqualTo(SESSION_ID.toString());
 
         await().atMost(ONE_SECOND)
                 .pollDelay(ONE_HUNDRED_MILLISECONDS)
-                .until(() -> authenticationSessions.findById(sessionId).isPresent());
+                .until(() -> authenticationSessions.findById(SESSION_ID).isPresent());
 
-        assertAllSessions(sessionId);
+        assertAllSessions();
 
         AuthorizationRequiredResult authorizationRequiredResult = buildAuthorizationRequiredResult();
 
@@ -95,48 +101,48 @@ class ServiceSessionAndAuthSessionTest {
 
         FacadeRedirectResult authUpdatedResult = (FacadeRedirectResult) updateAuthorizationService.execute(buildAuthRequest(listAccountsResponse)).get();
 
-        assertThat(authUpdatedResult.getAuthorizationSessionId()).isEqualTo(sessionId.toString());
-        assertThat(authUpdatedResult.getServiceSessionId()).isEqualTo(sessionId.toString());
+        assertThat(authUpdatedResult.getAuthorizationSessionId()).isEqualTo(SESSION_ID.toString());
+        assertThat(authUpdatedResult.getServiceSessionId()).isEqualTo(SESSION_ID.toString());
 
         assertThat(authUpdatedResult.getRedirectionTo()).isEqualTo(authorizationRequiredResult.getRedirectionTo());
 
-        assertAllSessions(sessionId);
+        assertAllSessions();
     }
 
     @Test
     @SneakyThrows
     void serviceSession_protocolError() {
-        UUID sessionId = UUID.randomUUID();
+
 
         doAnswer(invocation -> CompletableFuture.completedFuture(ERROR_RESULT))
                 .when(xs2aListAccountsEntrypoint)
                 .execute(any(ServiceContext.class));
 
-        FacadeRedirectErrorResult errorResponse = (FacadeRedirectErrorResult) listAccountsService.execute(buildListAccountRequest(sessionId)).get();
+        FacadeRedirectErrorResult errorResponse = (FacadeRedirectErrorResult) listAccountsService.execute(buildListAccountRequest()).get();
 
-        assertErrorResponse(errorResponse, sessionId.toString());
+        assertErrorResponse(errorResponse, SESSION_ID.toString());
 
         await().atMost(ONE_SECOND)
                 .pollDelay(ONE_HUNDRED_MILLISECONDS)
-                .until(() -> authenticationSessions.findById(sessionId).isPresent());
+                .until(() -> authenticationSessions.findById(SESSION_ID).isPresent());
 
-        assertAllSessions(sessionId);
+        assertAllSessions();
     }
 
     @Test
     @SneakyThrows
     void authSession_protocolError() {
-        UUID sessionId = UUID.randomUUID();
-        ValidationErrorResult validationErrorResult = buildValidationErrorResultResult();
-        FacadeStartAuthorizationResult listAccountsResponse = createAndAssertListAccountRequestForBruecker(sessionId, validationErrorResult);
 
-        assertThat(listAccountsResponse.getAuthorizationSessionId()).isEqualTo(sessionId.toString());
+        ValidationErrorResult validationErrorResult = buildValidationErrorResultResult();
+        FacadeStartAuthorizationResult listAccountsResponse = createAndAssertListAccountRequestForBruecker(validationErrorResult);
+
+        assertThat(listAccountsResponse.getAuthorizationSessionId()).isEqualTo(SESSION_ID.toString());
 
         await().atMost(ONE_SECOND)
                 .pollDelay(ONE_HUNDRED_MILLISECONDS)
-                .until(() -> authenticationSessions.findById(sessionId).isPresent());
+                .until(() -> authenticationSessions.findById(SESSION_ID).isPresent());
 
-        assertAllSessions(sessionId);
+        assertAllSessions();
 
         doAnswer(invocation -> CompletableFuture.completedFuture(ERROR_RESULT))
                 .when(xs2aUpdateAuthorization)
@@ -144,50 +150,35 @@ class ServiceSessionAndAuthSessionTest {
 
         FacadeRedirectErrorResult errorResponse = (FacadeRedirectErrorResult) updateAuthorizationService.execute(buildAuthRequest(listAccountsResponse)).get();
 
-        assertErrorResponse(errorResponse, sessionId.toString());
-        assertAllSessions(sessionId);
+        assertErrorResponse(errorResponse, SESSION_ID.toString());
+        assertAllSessions();
     }
 
     @Test
     @SneakyThrows
     void serviceSession_success() {
-        UUID sessionId = UUID.randomUUID();
+
         AuthorizationRequiredResult authorizationRequiredResult = buildAuthorizationRequiredResult();
 
-        createAndAssertListAccountRequestForBruecker(sessionId, authorizationRequiredResult);
+        createAndAssertListAccountRequestForBruecker(authorizationRequiredResult);
 
         await().atMost(ONE_SECOND)
                 .pollDelay(ONE_HUNDRED_MILLISECONDS)
-                .until(() -> authenticationSessions.findById(sessionId).isPresent());
+                .until(() -> authenticationSessions.findById(SESSION_ID).isPresent());
 
-        assertAllSessions(sessionId);
-    }
-
-    @Test
-    @SneakyThrows
-    void serviceSession_noEncryption_success() {
-        UUID sessionId = UUID.randomUUID();
-        AuthorizationRequiredResult authorizationRequiredResult = buildAuthorizationRequiredResult();
-
-        createAndAssertListAccountRequestForBruecker(sessionId, authorizationRequiredResult);
-
-        await().atMost(ONE_SECOND)
-                .pollDelay(ONE_HUNDRED_MILLISECONDS)
-                .until(() -> authenticationSessions.findById(sessionId).isPresent());
-
-        assertAllSessions(sessionId);
+        assertAllSessions();
     }
 
     @SneakyThrows
-    private FacadeStartAuthorizationResult createAndAssertListAccountRequestForBruecker(UUID sessionId, RedirectionResult redirectionResult) {
+    private FacadeStartAuthorizationResult createAndAssertListAccountRequestForBruecker(RedirectionResult redirectionResult) {
         doAnswer(invocation -> CompletableFuture.completedFuture(redirectionResult))
                 .when(xs2aListAccountsEntrypoint)
                 .execute(any(ServiceContext.class));
 
-        FacadeStartAuthorizationResult listAccountsResponse = (FacadeStartAuthorizationResult) listAccountsService.execute(buildListAccountRequest(sessionId)).get();
+        FacadeStartAuthorizationResult listAccountsResponse = (FacadeStartAuthorizationResult) listAccountsService.execute(buildListAccountRequest()).get();
 
-        assertThat(listAccountsResponse.getAuthorizationSessionId()).isEqualTo(sessionId.toString());
-        assertThat(listAccountsResponse.getServiceSessionId()).isEqualTo(sessionId.toString());
+        assertThat(listAccountsResponse.getAuthorizationSessionId()).isEqualTo(SESSION_ID.toString());
+        assertThat(listAccountsResponse.getServiceSessionId()).isEqualTo(SESSION_ID.toString());
         assertThat(listAccountsResponse.getRedirectionTo()).isEqualTo(redirectionResult.getRedirectionTo());
         return listAccountsResponse;
     }
@@ -203,13 +194,13 @@ class ServiceSessionAndAuthSessionTest {
                        .build();
     }
 
-    private ListAccountsRequest buildListAccountRequest(UUID sessionId) {
+    private ListAccountsRequest buildListAccountRequest() {
         return ListAccountsRequest.builder()
                        .facadeServiceable(
                                FacadeServiceableRequest.builder()
                                        .bankId(TEST_BANK_ID)
                                        .requestId(REQUEST_ID)
-                                       .serviceSessionId(sessionId)
+                                       .serviceSessionId(SESSION_ID)
                                        .sessionPassword(PASSWORD)
                                        .fintechRedirectUrlOk(REDIRECT_URL_OK)
                                        .fintechRedirectUrlNok(REDIRECT_URL_NO_OK)
@@ -217,16 +208,17 @@ class ServiceSessionAndAuthSessionTest {
                        ).build();
     }
 
-    private void assertAllSessions(UUID sessionId) {
-        AuthSession authenticationSession = authenticationSessions.findById(sessionId).get();
-        ServiceSession serviceSessionFromDB = serviceSessionRepository.findById(sessionId).get();
+    private void assertAllSessions() {
+        AuthSession authenticationSession = authenticationSessions.findById(SESSION_ID).get();
+        ServiceSession serviceSessionFromDB = serviceSessionRepository.findById(SESSION_ID).get();
 
         ServiceSession serviceSessionFromAuth = authenticationSession.getParent();
 
         assertThat(serviceSessionFromDB.getId()).isEqualTo(serviceSessionFromAuth.getId());
         assertThat(serviceSessionFromDB.getAuthSession().getId()).isEqualTo(authenticationSession.getId());
         assertThat(serviceSessionFromDB.getAuthSession().getRedirectCode()).isEqualTo(authenticationSession.getRedirectCode());
-        assertThat(serviceSessionFromDB.getAlgo()).isEqualTo(ALGO);
+        assertThat(serviceSessionFromDB.getAlgo()).isEqualTo(getAlgorithm());
+
     }
 
     private void assertErrorResponse(FacadeRedirectErrorResult errorResponse, String sessionId) {
@@ -234,8 +226,8 @@ class ServiceSessionAndAuthSessionTest {
         assertThat(errorResponse.getServiceSessionId()).isEqualTo(sessionId);
         assertThat(errorResponse.getXRequestId()).isEqualTo(REQUEST_ID);
         assertThat(errorResponse.getRedirectionTo().toString()).isEqualTo(REDIRECT_URL_NO_OK);
-        assertThat(errorResponse.getHeaders().get(X_ERROR_CODE)).isEqualTo(ERROR_RESULT.getCode());
-        assertThat(errorResponse.getHeaders().get(X_ERROR_MESSAGE)).isEqualTo(ERROR_RESULT.getMessage());
+        assertThat(errorResponse.getHeaders().get(X_ERROR_CODE)).isEqualTo(ERROR_CODE_400);
+        assertThat(errorResponse.getHeaders().get(X_ERROR_MESSAGE)).isEqualTo(ERROR_RESULT_MESSAGE);
     }
 
     private AuthorizationRequiredResult buildAuthorizationRequiredResult() {
@@ -248,8 +240,8 @@ class ServiceSessionAndAuthSessionTest {
 
     private static ErrorResult<AuthorizationRequiredResult> buildErrorResult() {
         ErrorResult<AuthorizationRequiredResult> errorResult = new ErrorResult<>();
-        errorResult.setCode("400");
-        errorResult.setMessage("The addressed resource is unknown relative to the TPP");
+        errorResult.setCode(ERROR_CODE_400);
+        errorResult.setMessage(ERROR_RESULT_MESSAGE);
 
         return errorResult;
     }
