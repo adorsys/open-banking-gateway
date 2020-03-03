@@ -11,7 +11,6 @@ import io.restassured.response.Response;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,9 +47,6 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
 
     @ExpectedScenarioState
     protected String serviceSessionId;
-
-    @LocalServerPort
-    private int serverPort;
 
     @Autowired
     private ConsentRepository consents;

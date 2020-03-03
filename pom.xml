@@ -123,6 +123,7 @@
         <jgiven.version>1.0.0-RC3</jgiven.version>
         <wiremock.version>2.25.1</wiremock.version>
         <testcontainers.version>1.12.4</testcontainers.version>
+        <zerocode.tdd.version>1.3.17</zerocode.tdd.version>
         <selenium-jupiter.version>3.3.4</selenium-jupiter.version>
         <slf4j-simple.version>1.7.29</slf4j-simple.version>
         <!-- other properties -->

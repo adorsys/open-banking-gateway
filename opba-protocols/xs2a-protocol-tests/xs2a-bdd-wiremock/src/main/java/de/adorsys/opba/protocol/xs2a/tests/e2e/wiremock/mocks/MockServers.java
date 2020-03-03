@@ -18,7 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Slf4j
 @JGivenStage
-public class MockServers <SELF extends MockServers<SELF>> extends CommonGivenStages<SELF> {
+@SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
+public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStages<SELF> {
 
     @Autowired
     private BankProfileJpaRepository bankProfileJpaRepository;
@@ -28,7 +29,7 @@ public class MockServers <SELF extends MockServers<SELF>> extends CommonGivenSta
 
     @AfterScenario
     @SneakyThrows
-    void stopWireMock() {
+    public void stopWireMock() {
         if (null != sandbox) {
             sandbox.stop();
             sandbox = null;

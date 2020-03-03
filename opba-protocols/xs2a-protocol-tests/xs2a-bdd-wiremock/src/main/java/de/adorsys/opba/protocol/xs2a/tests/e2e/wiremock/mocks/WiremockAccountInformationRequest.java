@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
 @JGivenStage
+@SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class WiremockAccountInformationRequest<SELF extends WiremockAccountInformationRequest<SELF>> extends AccountInformationRequestCommon<SELF> {
 
     @ExpectedScenarioState
