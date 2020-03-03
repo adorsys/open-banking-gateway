@@ -1,5 +1,6 @@
 ## Roadmap
 
+Wiki Link: https://wiki.adorsys.de/display/BG/OBG+Roadmap
 Our project started on November 1st 2019 and the Open Banking Gateway team offers development with two branches: 
 
 * **Develop branch** : This is the branch from which a release is built and used to collect all the other branches. 
