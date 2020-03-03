@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.FOUND;
+import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -87,7 +87,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
                 .thenReturn(accepted);
 
         MvcResult mvcResult = plainListAccounts(result.getXsrfToken(), result.getBankUUID());
-        assertEquals(FOUND.value(), mvcResult.getResponse().getStatus());
+        assertEquals(ACCEPTED.value(), mvcResult.getResponse().getStatus());
         assertEquals("redirectCode", mvcResult.getResponse().getHeader(REDIRECT_CODE));
     }
 
