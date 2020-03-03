@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.SERVICE_SESSION_ID;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -36,7 +37,9 @@ public class FinTechListTransactionsWithMockTest extends FinTechListAccountsWith
                         .header("X-Request-ID", UUID.randomUUID().toString())
                         .header("X-XSRF-TOKEN", xsrfToken)
                         .header("Fintech-Redirect-URL-OK", "ok")
-                        .header("Fintech-Redirect-URL-NOK", "notok"))
+                        .header("Fintech-Redirect-URL-NOK", "notok")
+                        .header(SERVICE_SESSION_ID, "any-session-not-specified-in api.yml yet")
+                )
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
