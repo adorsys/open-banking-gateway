@@ -54,7 +54,7 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
         when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(accepted);
         MvcResult mvcResult = plainListAmounts(result.getXsrfToken(), result.getBankUUID(), accountIDs.get(0));
-        assertEquals(HttpStatus.FOUND.value(), mvcResult.getResponse().getStatus());
+        assertEquals(HttpStatus.ACCEPTED.value(), mvcResult.getResponse().getStatus());
     }
 
     @SneakyThrows
