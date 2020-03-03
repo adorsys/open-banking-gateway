@@ -101,11 +101,16 @@
                     <resourceBundles>
                         <resourceBundle>de.adorsys.opba:xs2a-bdd-tests-common:${project.version}</resourceBundle>
                     </resourceBundles>
+                    <includes>
+                        <include>mockedsandbox/**/*.*</include>
+                        <include>**/*.yml</include>
+                    </includes>
                 </configuration>
                 <executions>
                     <execution>
                         <goals>
                             <goal>process</goal>
+                            <goal>bundle</goal>
                         </goals>
                     </execution>
                 </executions>

@@ -11,6 +11,7 @@ import org.jsmart.zerocode.core.domain.LoadWith;
 import org.jsmart.zerocode.core.domain.TestMapping;
 import org.jsmart.zerocode.core.domain.TestMappings;
 import org.jsmart.zerocode.jupiter.extension.ParallelLoadExtension;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,6 +49,12 @@ class WiremockE2EStressXs2aProtocolTest extends SpringScenarioTest<MockServers, 
         ProtocolConfiguration.Redirect.Consent consent = configuration.getRedirect().getConsentAccounts();
         consent.setOk(consent.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
         consent.setNok(consent.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
+    }
+
+    // JGivenConfig doesn't seem to be applied
+    @AfterEach
+    void afterEach() {
+        given().stopWireMock();
     }
 
 
