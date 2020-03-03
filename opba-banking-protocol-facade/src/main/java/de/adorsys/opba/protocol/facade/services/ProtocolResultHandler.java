@@ -21,6 +21,7 @@ import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeSuccess
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -38,7 +39,11 @@ public class ProtocolResultHandler {
     private final EntityManager entityManager;
     private final AuthenticationSessionRepository authenticationSessions;
 
-    @Transactional
+    /**
+     * This class must ensure that it is separate transaction - so it won't join any other as is used with
+     * CompletableFuture.
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public <O, R extends FacadeServiceableGetter> FacadeResult<O> handleResult(Result<O> result, UUID xRequestId, ServiceContext<R> session) {
         if (result instanceof SuccessResult) {
             return handleSuccess((SuccessResult<O>) result, xRequestId, session);

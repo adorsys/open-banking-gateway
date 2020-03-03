@@ -8,6 +8,7 @@ import de.adorsys.opba.tppbankingapi.config.EnableBankingApi;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableConsentApi
 @EnableBankingApi
@@ -15,6 +16,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @EnableXs2aSandboxProtocol
 @EnableBankingPersistence
 @SpringBootApplication
+@EnableTransactionManagement
 @EnableConfigurationProperties
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Springboot starter class is not an utility class
 public class OpenBankingEmbeddedApplication {

@@ -23,7 +23,7 @@ public class ProtocolSelector {
     private final ServiceSessionRepository sessions;
     private final BankProtocolRepository protocolRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public <A> A selectAndPersistProtocolFor(
         ServiceContext<?> ctx,
         ProtocolAction protocolAction,
