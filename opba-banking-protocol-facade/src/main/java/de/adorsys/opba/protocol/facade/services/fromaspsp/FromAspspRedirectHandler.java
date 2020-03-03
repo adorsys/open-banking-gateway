@@ -7,14 +7,12 @@ import de.adorsys.opba.protocol.facade.services.FacadeService;
 import de.adorsys.opba.protocol.facade.services.ProtocolResultHandler;
 import de.adorsys.opba.protocol.facade.services.ProtocolSelector;
 import de.adorsys.opba.protocol.facade.services.ServiceContextProvider;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
 import static de.adorsys.opba.db.domain.entity.ProtocolAction.FROM_ASPSP_REDIRECT;
 
-@Async
 @Service
 public class FromAspspRedirectHandler extends FacadeService<FromAspspRequest, UpdateAuthBody, FromAspspRedirect> {
 

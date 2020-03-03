@@ -14,7 +14,6 @@ import java.util.Map;
 
 import static de.adorsys.opba.db.domain.entity.ProtocolAction.LIST_ACCOUNTS;
 
-@Async
 @Service
 public class ListAccountsService extends FacadeService<ListAccountsRequest, AccountListBody, ListAccounts> {
 
