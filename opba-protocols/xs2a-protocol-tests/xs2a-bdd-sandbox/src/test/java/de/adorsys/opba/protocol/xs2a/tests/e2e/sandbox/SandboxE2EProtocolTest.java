@@ -107,7 +107,8 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
 
         given()
             .enabled_redirect_sandbox_mode()
-            .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+            .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+            .rest_assured_points_to_server();
 
         when()
             .fintech_calls_list_transactions_for_anton_brueckner(accountResourceId)
@@ -148,7 +149,8 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
 
         given()
             .enabled_embedded_sandbox_mode()
-            .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+            .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+            .rest_assured_points_to_server();
 
         when()
             .fintech_calls_list_transactions_for_max_musterman(accountResourceId)
@@ -170,7 +172,8 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
     private String embeddedListMaxMustermanAccounts(Approach approach) {
         given()
             .enabled_embedded_sandbox_mode()
-            .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+            .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+            .rest_assured_points_to_server();
 
         when()
             .fintech_calls_list_accounts_for_max_musterman()
@@ -193,7 +196,8 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
     private String redirectListAntonBruecknerAccounts(Approach approach, FirefoxDriver firefoxDriver) {
         given()
             .enabled_redirect_sandbox_mode()
-            .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+            .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+            .rest_assured_points_to_server();
 
         when()
             .fintech_calls_list_accounts_for_anton_brueckner()

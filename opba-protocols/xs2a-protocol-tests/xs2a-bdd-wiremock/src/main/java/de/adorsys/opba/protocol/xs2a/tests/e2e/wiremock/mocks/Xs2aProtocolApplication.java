@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock;
+package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks;
 
 import de.adorsys.opba.consentapi.config.EnableConsentApi;
 import de.adorsys.opba.db.config.EnableBankingPersistence;

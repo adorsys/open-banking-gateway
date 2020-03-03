@@ -3,11 +3,9 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.Stage;
-import com.tngtech.jgiven.annotation.BeforeStage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import lombok.Getter;
@@ -27,8 +25,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
-import static io.restassured.RestAssured.config;
-import static io.restassured.config.RedirectConfig.redirectConfig;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.BigDecimalComparator.BIG_DECIMAL_COMPARATOR;
@@ -58,13 +54,6 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
 
     @Autowired
     private ConsentRepository consents;
-
-    @BeforeStage
-    void setupRestAssured() {
-        RestAssured.baseURI = "http://localhost:" + serverPort;
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        config = config().redirect(redirectConfig().followRedirects(false));
-    }
 
     @SneakyThrows
     @Transactional
