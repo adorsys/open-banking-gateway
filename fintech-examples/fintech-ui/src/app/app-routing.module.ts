@@ -4,6 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guards/auth.guard';
 import { GuestGuard } from './guards/guest.guard';
 import { RedirectCardComponent } from './common/redirect-card/redirect-card.component';
+import { RedirectAfterConsentComponent } from './redirect-after-consent/redirect-after-consent.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,11 @@ const routes: Routes = [
     path: 'search',
     canActivate: [AuthGuard],
     loadChildren: () => import('./bank-search/bank-search.module').then(m => m.BankSearchModule)
+  },
+  {
+    path: 'redirectAfterConsent',
+    canActivate: [AuthGuard],
+    component: RedirectAfterConsentComponent
   },
   {
     path: '**',
