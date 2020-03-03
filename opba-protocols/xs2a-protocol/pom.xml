@@ -190,11 +190,6 @@
             <version>${assertj.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.skyscreamer</groupId>
-            <artifactId>jsonassert</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>spring-web-test-client</artifactId>
             <scope>test</scope>

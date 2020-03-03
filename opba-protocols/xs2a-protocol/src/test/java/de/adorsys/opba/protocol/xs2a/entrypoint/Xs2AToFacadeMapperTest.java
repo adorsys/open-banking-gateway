@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.io.Resources;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
@@ -15,16 +15,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import java.net.URL;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = Xs2AToFacadeMapperTest.TestConfig.class)
 public class Xs2AToFacadeMapperTest {
     public static final ObjectMapper JSON_MAPPER = new ObjectMapper()
             .registerModule(new JavaTimeModule())
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-            .enable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+            .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    public static final String PATH_PREFIX = "mapper-test-fixtures/xs2a_to_facade_response_mapper_";
 
     @Autowired
     private Xs2aResultBodyExtractor.Xs2aToFacadeMapper mapper;
@@ -32,27 +30,28 @@ public class Xs2AToFacadeMapperTest {
     @Test
     @SneakyThrows
     void accountsMapperTest() {
-        URL inputUrl = Resources.getResource("mapper-test-fixtures/xs2a_to_facade_response_mapper_accounts_input.json");
-        AccountListHolder inputObject = JSON_MAPPER.readValue(inputUrl, AccountListHolder.class);
-        AccountListBody outputObject = mapper.map(inputObject);
+        AccountListHolder accountListHolder = getFromFile(PATH_PREFIX + "accounts_input.json", AccountListHolder.class);
+        AccountListBody accountListBody = mapper.map(accountListHolder);
 
-        URL outputUrl = Resources.getResource("mapper-test-fixtures/xs2a_to_facade_response_mapper_accounts_output.json");
-        AccountListBody expectedObject = JSON_MAPPER.readValue(outputUrl, AccountListBody.class);
-
-        assertThat(expectedObject).isEqualToComparingFieldByField(outputObject);
+        AccountListBody expected = getFromFile(PATH_PREFIX + "accounts_output.json", AccountListBody.class);
+        assertThat(expected).isEqualToComparingFieldByField(accountListBody);
     }
 
     @Test
     @SneakyThrows
     void transactionsMapperTest() {
-        URL inputUrl = Resources.getResource("mapper-test-fixtures/xs2a_to_facade_response_mapper_transactions_input.json");
-        TransactionsReport inputObject = JSON_MAPPER.readValue(inputUrl, TransactionsReport.class);
-        TransactionsResponseBody outputObject = mapper.map(inputObject);
+        TransactionsReport transactionsReport = getFromFile(PATH_PREFIX + "transactions_input.json",
+                TransactionsReport.class);
+        TransactionsResponseBody transactionsResponseBody = mapper.map(transactionsReport);
 
-        URL outputUrl = Resources.getResource("mapper-test-fixtures/xs2a_to_facade_response_mapper_transactions_output.json");
-        TransactionsResponseBody expectedObject = JSON_MAPPER.readValue(outputUrl, TransactionsResponseBody.class);
+        TransactionsResponseBody expected = getFromFile(PATH_PREFIX + "transactions_output.json",
+                TransactionsResponseBody.class);
+        assertThat(expected).isEqualToComparingFieldByField(transactionsResponseBody);
+    }
 
-        assertThat(expectedObject).isEqualToComparingFieldByField(outputObject);
+    @SneakyThrows
+    private <T> T getFromFile(String path, Class<T> valueType) {
+        return JSON_MAPPER.readValue(Resources.getResource(path), valueType);
     }
 
     @Configuration
