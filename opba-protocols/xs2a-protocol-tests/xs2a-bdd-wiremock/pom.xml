@@ -30,14 +30,12 @@
             <groupId>de.adorsys.opba</groupId>
             <artifactId>xs2a-protocol</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>de.adorsys.opba</groupId>
             <artifactId>xs2a-bdd-tests-common</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>

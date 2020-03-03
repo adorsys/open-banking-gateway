@@ -10,9 +10,8 @@ import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.CommonGivenStages;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Runs Sandbox as json-backed mock.
@@ -76,7 +75,7 @@ public class MockServers <SELF extends MockServers<SELF>> extends CommonGivenSta
         bankProfile.setUrl("http://localhost:" + sandbox.port());
         bankProfileJpaRepository.save(bankProfile);
 
-        assertThat(sandbox).isNotNull();
-        assertThat(sandbox.isRunning()).isTrue();
+        Assertions.assertThat(sandbox).isNotNull();
+        Assertions.assertThat(sandbox.isRunning()).isTrue();
     }
 }
