@@ -14,6 +14,7 @@ import { LoginComponent } from './login/login.component';
 import { GlobalErrorHandler } from './errorsHandler/global-errors-handler';
 import { ErrorService } from './errorsHandler/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RedirectAfterConsentComponent } from './redirect-after-consent/redirect-after-consent.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -25,7 +26,7 @@ export function apiConfigFactory(): Configuration {
 }
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent],
+  declarations: [AppComponent, LoginComponent, RedirectAfterConsentComponent],
   imports: [
     AppRoutingModule,
     BrowserModule,

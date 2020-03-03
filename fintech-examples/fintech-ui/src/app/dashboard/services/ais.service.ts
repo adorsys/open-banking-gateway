@@ -1,23 +1,30 @@
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { FinTechAccountInformationService } from '../../api';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AisService {
-  constructor(private finTechAccountInformationService: FinTechAccountInformationService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private finTechAccountInformationService: FinTechAccountInformationService
+  ) {}
 
   getAccounts(bankId: string) {
     //    return this.finTechAccountInformationService
     //    .aisAccountsGET(bankId, '', '', 'ok-url', 'not-ok-url')
     //      .pipe(map(response => response.accounts));
 
+    const okurl = window.location.protocol + '//' + window.location.host + '/redirectAfterConsent';
+    console.log('redirect url:' + okurl);
+
     const response = this.finTechAccountInformationService.aisAccountsGET(
       bankId,
       '',
       '',
-      'ok-url',
+      okurl,
       'not-ok-url',
       'response'
     );
@@ -26,10 +33,6 @@ export class AisService {
       switch (r.status) {
         case 202:
           let locationForRedirect = r.headers.get('location');
-          console.log('redirect to ', locationForRedirect);
-          console.log('headerfield Service-Session-ID:', r.headers.get('Service-Session-ID'));
-          console.log('headerfield Authorization-Session-ID:', r.headers.get('Authorization-Session-ID'));
-          console.log('headerfield Redirect-Code:', r.headers.get('Redirect-Code'));
           console.log('before:', decodeURI(locationForRedirect));
 
           locationForRedirect +=
@@ -39,14 +42,16 @@ export class AisService {
             r.headers.get('Service-Session-ID') +
             '&redirectCode=' +
             r.headers.get('Redirect-Code');
+
           console.log('after:', decodeURI(locationForRedirect));
           window.location.href = locationForRedirect;
-          // TODO has to be tied up
+          // TODO has to be tidied up
           return [];
         case 200:
           return r.body.accounts;
       }
     });
+    return [];
   }
 
   getTransactions() {
