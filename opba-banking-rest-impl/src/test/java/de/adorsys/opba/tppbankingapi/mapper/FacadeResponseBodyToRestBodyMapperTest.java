@@ -34,22 +34,22 @@ public class FacadeResponseBodyToRestBodyMapperTest {
     @Test
     @SneakyThrows
     void accountsMapperTest() {
-        AccountListBody accountListBody = getFromFile(PATH_PREFIX + "accounts_input.json", AccountListBody.class);
-        AccountList accountList = accountsRestMapper.map(accountListBody);
+        AccountListBody mappingInput = getFromFile(PATH_PREFIX + "accounts_input.json", AccountListBody.class);
+        AccountList mappingResult = accountsRestMapper.map(mappingInput);
 
         AccountList expected = getFromFile(PATH_PREFIX + "accounts_output.json", AccountList.class);
-        assertThat(expected).isEqualToComparingFieldByField(accountList);
+        assertThat(expected).isEqualToComparingFieldByField(mappingResult);
     }
 
     @Test
     void transactionsMapperTest() {
-        TransactionsResponseBody transactionsResponseBody = getFromFile(PATH_PREFIX + "transactions_input.json",
+        TransactionsResponseBody mappingInput = getFromFile(PATH_PREFIX + "transactions_input.json",
                 TransactionsResponseBody.class);
-        TransactionsResponse transactionsResponse = transactionsRestMapper.map(transactionsResponseBody);
+        TransactionsResponse mappingResult = transactionsRestMapper.map(mappingInput);
 
         TransactionsResponse expected = getFromFile(PATH_PREFIX + "transactions_output.json",
                 TransactionsResponse.class);
-        assertThat(expected).isEqualToComparingFieldByField(transactionsResponse);
+        assertThat(expected).isEqualToComparingFieldByField(mappingResult);
     }
 
     @SneakyThrows

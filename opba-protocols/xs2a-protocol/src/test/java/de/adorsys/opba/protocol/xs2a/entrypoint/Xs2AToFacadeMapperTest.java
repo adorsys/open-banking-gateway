@@ -30,23 +30,23 @@ public class Xs2AToFacadeMapperTest {
     @Test
     @SneakyThrows
     void accountsMapperTest() {
-        AccountListHolder accountListHolder = getFromFile(PATH_PREFIX + "accounts_input.json", AccountListHolder.class);
-        AccountListBody accountListBody = mapper.map(accountListHolder);
+        AccountListHolder mappingInput = getFromFile(PATH_PREFIX + "accounts_input.json", AccountListHolder.class);
+        AccountListBody mappingResult = mapper.map(mappingInput);
 
         AccountListBody expected = getFromFile(PATH_PREFIX + "accounts_output.json", AccountListBody.class);
-        assertThat(expected).isEqualToComparingFieldByField(accountListBody);
+        assertThat(expected).isEqualToComparingFieldByField(mappingResult);
     }
 
     @Test
     @SneakyThrows
     void transactionsMapperTest() {
-        TransactionsReport transactionsReport = getFromFile(PATH_PREFIX + "transactions_input.json",
+        TransactionsReport mappingInput = getFromFile(PATH_PREFIX + "transactions_input.json",
                 TransactionsReport.class);
-        TransactionsResponseBody transactionsResponseBody = mapper.map(transactionsReport);
+        TransactionsResponseBody mappingResult = mapper.map(mappingInput);
 
         TransactionsResponseBody expected = getFromFile(PATH_PREFIX + "transactions_output.json",
                 TransactionsResponseBody.class);
-        assertThat(expected).isEqualToComparingFieldByField(transactionsResponseBody);
+        assertThat(expected).isEqualToComparingFieldByField(mappingResult);
     }
 
     @SneakyThrows
