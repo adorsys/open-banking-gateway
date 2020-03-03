@@ -3,7 +3,6 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tngtech.jgiven.Stage;
-import com.tngtech.jgiven.annotation.BeforeStage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.annotation.ScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
@@ -13,7 +12,6 @@ import io.restassured.response.Response;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -35,8 +33,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil
 import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
-import static io.restassured.RestAssured.config;
-import static io.restassured.config.RedirectConfig.redirectConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.LOCATION;
 
@@ -66,16 +62,6 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     @ScenarioState
     private Map<String, String> availableScas;
-
-    @LocalServerPort
-    private int serverPort;
-
-    @BeforeStage
-    void setupRestAssured() {
-        RestAssured.baseURI = "http://localhost:" + serverPort;
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        config = config().redirect(redirectConfig().followRedirects(false));
-    }
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner() {
         ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)

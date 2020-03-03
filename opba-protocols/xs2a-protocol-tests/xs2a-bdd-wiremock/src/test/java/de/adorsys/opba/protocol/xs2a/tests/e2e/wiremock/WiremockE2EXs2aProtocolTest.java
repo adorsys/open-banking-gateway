@@ -7,6 +7,8 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.MockServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockAccountInformationRequest;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.Xs2aProtocolApplication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -17,8 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
 
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
@@ -37,12 +37,6 @@ As we redefine list accounts for adorsys-sandbox bank to sandbox customary one
 @SpringBootTest(classes = {Xs2aProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
 class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, WiremockAccountInformationRequest<? extends WiremockAccountInformationRequest<?>>, AccountInformationResult> {
-
-    private static final String ANTON_BRUECKNER_RESOURCE_ID = "cmD4EYZeTkkhxRuIV1diKA";
-    private static final String MAX_MUSTERMAN_RESOURCE_ID = "oN7KTVuJSVotMvPPPavhVo";
-    private static final LocalDate DATE_FROM = LocalDate.parse("2018-01-01");
-    private static final LocalDate DATE_TO = LocalDate.parse("2020-09-30");
-    private static final String BOTH_BOOKING = "BOTH";
 
     @LocalServerPort
     private int port;
@@ -63,7 +57,8 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
     void testAccountsListWithConsentUsingRedirect(Approach approach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
-                .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+                .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+                .rest_assured_points_to_server();
 
         when()
                 .fintech_calls_list_accounts_for_anton_brueckner()
@@ -81,10 +76,11 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
     void testTransactionsListWithConsentUsingRedirect(Approach approach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running()
-                .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+                .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+                .rest_assured_points_to_server();
 
         when()
-                .fintech_calls_list_transactions_for_anton_brueckner(ANTON_BRUECKNER_RESOURCE_ID)
+                .fintech_calls_list_transactions_for_anton_brueckner(WiremockConst.ANTON_BRUECKNER_RESOURCE_ID)
                 .and()
                 .user_anton_brueckner_provided_initial_parameters_to_list_transactions_with_single_account_consent()
                 .and()
@@ -92,7 +88,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
         then()
                 .open_banking_has_consent_for_anton_brueckner_transaction_list()
                 .open_banking_can_read_anton_brueckner_transactions_data_using_consent_bound_to_service_session(
-                    ANTON_BRUECKNER_RESOURCE_ID, DATE_FROM, DATE_TO, BOTH_BOOKING
+                    WiremockConst.ANTON_BRUECKNER_RESOURCE_ID, WiremockConst.DATE_FROM, WiremockConst.DATE_TO, WiremockConst.BOTH_BOOKING
                 );
     }
 
@@ -101,7 +97,8 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
     void testAccountsListWithConsentUsingEmbedded(Approach approach) {
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
-                .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+                .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+                .rest_assured_points_to_server();
 
         when()
                 .fintech_calls_list_accounts_for_max_musterman()
@@ -123,7 +120,8 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
     void testTransactionsListWithConsentUsingEmbedded(Approach approach) {
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
-                .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+                .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+                .rest_assured_points_to_server();
 
         when()
                 .fintech_calls_list_transactions_for_max_musterman()
@@ -138,7 +136,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
         then()
                 .open_banking_has_consent_for_max_musterman_transaction_list()
                 .open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
-                    MAX_MUSTERMAN_RESOURCE_ID, DATE_FROM, DATE_TO, BOTH_BOOKING
+                    WiremockConst.MAX_MUSTERMAN_RESOURCE_ID, WiremockConst.DATE_FROM, WiremockConst.DATE_TO, WiremockConst.BOTH_BOOKING
                 );
     }
 }
