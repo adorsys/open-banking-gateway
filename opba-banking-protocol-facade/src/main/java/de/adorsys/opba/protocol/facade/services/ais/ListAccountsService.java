@@ -4,8 +4,8 @@ import de.adorsys.opba.protocol.api.ais.ListAccounts;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.facade.services.FacadeService;
-import de.adorsys.opba.protocol.facade.services.ProtocolSelector;
 import de.adorsys.opba.protocol.facade.services.ProtocolResultHandler;
+import de.adorsys.opba.protocol.facade.services.ProtocolSelector;
 import de.adorsys.opba.protocol.facade.services.ServiceContextProvider;
 import org.springframework.stereotype.Service;
 
