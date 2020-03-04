@@ -4,7 +4,7 @@ import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.impl.database.entities.CookieEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,12 +21,12 @@ import static de.adorsys.opba.fintech.impl.tppclients.CookieNames.XSRF_TOKEN_COO
  * All users are accepted. Password allways has to be 1234, otherwise login fails
  */
 @Configuration
+@RequiredArgsConstructor
 public class AuthorizeService {
     private static final boolean CHECK_SESSION_COOKIE_TODO = false;
     private static final String UNIVERSAL_PASSWORD = "1234";
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     /**
      * @param loginRequest
@@ -65,6 +65,10 @@ public class AuthorizeService {
 
     public SessionEntity getByXsrfToken(String xsrfToken) {
         return userRepository.findByXsrfToken(xsrfToken).get();
+    }
+
+    public SessionEntity updateUserSession(SessionEntity sessionEntity) {
+        return userRepository.save(sessionEntity);
     }
 
     private void generateUserIfUserDoesNotExistYet(LoginRequest loginRequest) {
