@@ -8,8 +8,9 @@ import de.adorsys.opba.fintech.impl.service.AccountService;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.ContextInformation;
 import de.adorsys.opba.fintech.impl.service.TransactionService;
+import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,24 +20,23 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class FinTechAccountInformationImpl implements FinTechAccountInformationApi {
 
-    @Autowired
-    AuthorizeService authorizeService;
-
-    @Autowired
-    AccountService accountService;
-
-    @Autowired
-    TransactionService transactionService;
+    private final AuthorizeService authorizeService;
+    private final AccountService accountService;
+    private final TransactionService transactionService;
+    private final RedirectHandlerService redirectHandlerService;
 
     @Override
     public ResponseEntity<AccountList> aisAccountsGET(String bankId, UUID xRequestID, String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
         if (!authorizeService.isAuthorized(xsrfToken, null)) {
+            log.warn("Request was failed: Xsrf Token is wrong or user are not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         ContextInformation contextInformation = new ContextInformation(xRequestID);
         SessionEntity sessionEntity = authorizeService.getByXsrfToken(xsrfToken);
+        redirectHandlerService.registerRedirectUrlForSession(xsrfToken, fintechRedirectURLOK, fintechRedirectURLNOK);
         return accountService.listAccounts(contextInformation, sessionEntity, bankId, fintechRedirectURLOK, fintechRedirectURLNOK);
     }
 
@@ -46,11 +46,14 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
                                                                             LocalDate dateFrom, LocalDate dateTo,
                                                                             String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
         if (!authorizeService.isAuthorized(xsrfToken, null)) {
+            log.warn("Request was failed: Xsrf Token is wrong or user are not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         ContextInformation contextInformation = new ContextInformation(xRequestID);
         SessionEntity sessionEntity = authorizeService.getByXsrfToken(xsrfToken);
+
+        redirectHandlerService.registerRedirectUrlForSession(xsrfToken, fintechRedirectURLOK, fintechRedirectURLNOK);
 
         return transactionService.listTransactions(contextInformation, sessionEntity, fintechRedirectURLOK,
                 fintechRedirectURLNOK, bankId, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList);

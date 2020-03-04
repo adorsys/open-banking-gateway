@@ -7,8 +7,9 @@ import de.adorsys.opba.fintech.api.resource.generated.FinTechAuthorizationApi;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
+import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -24,13 +25,11 @@ import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_ID;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
-
-    @Autowired
-    AuthorizeService authorizeService;
-
-    @Autowired
-    CookieConfigProperties cookieConfigProperties;
+    private final AuthorizeService authorizeService;
+    private final CookieConfigProperties cookieConfigProperties;
+    private final RedirectHandlerService redirectHandlerService;
 
     @Override
     public ResponseEntity<InlineResponse200> loginPOST(LoginRequest loginRequest, UUID xRequestID) {
@@ -68,4 +67,8 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
+    @Override
+    public ResponseEntity<Void> fromConsentOkGET(String redirectState, String redirectId, String redirectCode) {
+        return redirectHandlerService.doRedirect(redirectState, redirectId, redirectCode);
+    }
 }
