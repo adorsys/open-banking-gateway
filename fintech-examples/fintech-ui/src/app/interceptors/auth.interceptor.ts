@@ -18,9 +18,6 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private handleRequest(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    for (const key of request.headers.keys()) {
-      console.log('orig request has header key', key, ' with value: ', request.headers.get(key));
-    }
     const headers = request.headers
       .set('X-Request-ID', uuid.v4())
       .set('Content-Type', 'application/json')
@@ -32,9 +29,6 @@ export class AuthInterceptor implements HttpInterceptor {
         withCredentials: true,
         headers
       });
-    }
-    for (const key of request.headers.keys()) {
-      console.log('new request has header key', key, ' with value: ', request.headers.get(key));
     }
     return next.handle(request);
   }
