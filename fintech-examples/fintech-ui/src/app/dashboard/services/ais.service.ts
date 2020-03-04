@@ -17,6 +17,7 @@ export class AisService {
     //    .aisAccountsGET(bankId, '', '', 'ok-url', 'not-ok-url')
     //      .pipe(map(response => response.accounts));
 
+    // TODO maybe without protocol
     const okurl = window.location.protocol + '//' + window.location.host + '/redirectAfterConsent';
     console.log('redirect url:' + okurl);
 
@@ -33,21 +34,17 @@ export class AisService {
       switch (r.status) {
         case 202:
           let locationForRedirect = r.headers.get('location');
-          console.log('before:', decodeURI(locationForRedirect));
-
-          locationForRedirect +=
-            '&authorizationSessionId=' +
-            r.headers.get('Authorization-Session-ID') +
-            '&serviceSessionId=' +
-            r.headers.get('Service-Session-ID') +
-            '&redirectCode=' +
-            r.headers.get('Redirect-Code');
-
-          console.log('after:', decodeURI(locationForRedirect));
+          const additionalParameters = new URLSearchParams({
+            authorizationSessionId: r.headers.get('Authorization-Session-ID'),
+            serviceSessionId: r.headers.get('Service-Session-ID'),
+            redirectCode: r.headers.get('Redirect-Code')
+          });
+          locationForRedirect += '&' + additionalParameters;
           window.location.href = locationForRedirect;
-          // TODO has to be tidied up
-          return [];
+          return []; /* this code is never reached */
         case 200:
+          console.log('I got the accounts and I want to show them ;-)');
+          console.log('I got ', r.body.accounts.length, ' accounts');
           return r.body.accounts;
       }
     });
