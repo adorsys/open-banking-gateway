@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PageConfirmPageComponent } from './page-confirm-page.component';
+import { TanConfirmPageComponent } from './tan-confirm-page.component';
 
-describe('PageConfirmPageComponent', () => {
-  let component: PageConfirmPageComponent;
-  let fixture: ComponentFixture<PageConfirmPageComponent>;
+describe('TanConfirmPageComponent', () => {
+  let component: TanConfirmPageComponent;
+  let fixture: ComponentFixture<TanConfirmPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PageConfirmPageComponent ]
+      declarations: [ TanConfirmPageComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PageConfirmPageComponent);
+    fixture = TestBed.createComponent(TanConfirmPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

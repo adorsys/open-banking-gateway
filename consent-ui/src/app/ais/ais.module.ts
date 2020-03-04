@@ -7,11 +7,11 @@ import { PasswordInputPageComponent } from './password-input-page/password-input
 import { EntryPageComponent } from './entry-page/entry-page.component';
 import { ConfirmConsentPageComponent } from './confirm-consent-page/confirm-consent-page.component';
 import { ScaSelectPageComponent } from './sca-select-page/sca-select-page.component';
-import { PageConfirmPageComponent } from './page-confirm-page/page-confirm-page.component';
+import { TanConfirmPageComponent } from './tan-confirm-page/tan-confirm-page.component';
 
 
 @NgModule({
-  declarations: [ResultPageComponent, PasswordInputPageComponent, EntryPageComponent, ConfirmConsentPageComponent, ScaSelectPageComponent, PageConfirmPageComponent],
+  declarations: [ResultPageComponent, PasswordInputPageComponent, EntryPageComponent, ConfirmConsentPageComponent, ScaSelectPageComponent, TanConfirmPageComponent],
   imports: [
     CommonModule,
     AisRoutingModule
