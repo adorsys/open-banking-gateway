@@ -1,0 +1,12 @@
+$BROWSER_VIEWPOINT: 100vh;
+
+@media (min-width: 768px) {
+  .fix-width {
+    max-width: 24rem;
+    min-width: 24rem;
+  }
+
+  .h-md-100 {
+    min-height: $BROWSER_VIEWPOINT;
+  }
+}
