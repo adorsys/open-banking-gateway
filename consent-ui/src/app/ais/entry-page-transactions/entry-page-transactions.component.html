@@ -1,1 +1,38 @@
-<p>entry-page-transactions works!</p>
+<form [formGroup]="transactionsAccessForm" (ngSubmit)="transactionsAccessForm.valid && onSubmit()">
+  <div class="card">
+    <div class="card-body">
+      <h2 class="card-title font-weight-bold">Select ibans and account accesses</h2>
+      <div class="font-weight-light my-4 text-muted">Please select ibans and types of accesses you are granting
+        to the TPP,
+        then
+        confirm with “Next". Account access would be selected
+        by default for every iban of your choice.
+      </div>
+
+      <div class="col-12 font-weight-light" *ngFor="let account of accounts, let i = index">
+        <div class="form-check">
+          <div class="form-check">
+            <input class="form-check-input" id="accounts_{{i}}" name="accounts"
+                   [value]="account.accountIban"
+                   (change)="handleObjectSelectedEvent(account)"
+                   [checked]="account.checked"
+                   type="checkbox">
+            <label class="form-check-label font-weight-bold" for="accounts_{{i}}">{{account.accountIban}}</label>
+            <br>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer no-bg-color">
+        <div class="row my-3">
+          <div class="col-12 col-sm-6 pr-sm-2">
+            <button type="button" class="btn btn-outline-secondary btn-block">Cancel
+            </button>
+          </div>
+          <div class="col-12 col-sm-6 pl-sm-2">
+            <button type="submit" class="btn btn-primary btn-block">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'consent-app-entry-page-transactions',
@@ -7,9 +8,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EntryPageTransactionsComponent implements OnInit {
 
-  constructor() { }
+  public finTechName = 'Awesome FinTech';
+  public bankName = 'Adorsys Sandbox';
+
+  public accounts = [
+    new TransactionsOnAccountAccess('IBAN123456', true),
+    new TransactionsOnAccountAccess('IBAN789168', true)
+  ];
+
+  public transactionsAccessForm: FormGroup;
+
+  constructor(private formBuilder: FormBuilder) {
+    this.transactionsAccessForm = this.formBuilder.group({});
+  }
 
   ngOnInit() {
   }
 
+  onSubmit() {
+  }
+
+  handleObjectSelectedEvent(container: TransactionsOnAccountAccess): void {
+    container.checked = !container.checked;
+  }
 }
+
+export class TransactionsOnAccountAccess {
+
+  constructor(public accountIban: string, public checked: boolean) {
+  }
+}
+
