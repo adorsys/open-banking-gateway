@@ -12,8 +12,9 @@ export class EntryPageAccountsComponent implements OnInit {
   public bankName = 'Adorsys Sandbox';
 
   public accountAccesses = [
-    new AccountAccess('1', 'Allow to see list of all your accounts'),
-    new AccountAccess('2', 'Limit access to specific accounts')
+    new AccountAccess(AccountAccessLevel.ALL_ACCOUNTS, 'Allow seeing a list of all your accounts'),
+    new AccountAccess(AccountAccessLevel.ALL_ACCOUNTS_WITH_BALANCES, 'Allow seeing a list of all your accounts with balances'),
+    new AccountAccess(AccountAccessLevel.FINE_GRAINED, 'Limit access to specific accounts')
   ];
   public selectedAccess = this.accountAccesses[0];
 
@@ -28,12 +29,22 @@ export class EntryPageAccountsComponent implements OnInit {
   ngOnInit() {
   }
 
-  handleMethodSelectedEvent(scaMethod: AccountAccess) {
-    this.selectedAccess = scaMethod;
+  handleMethodSelectedEvent(access: AccountAccess) {
+    this.selectedAccess = access;
+  }
+
+  submitButtonMessage() {
+    return this.selectedAccess.id === AccountAccessLevel.FINE_GRAINED ? 'Specify access' : 'Grant access';
   }
 }
 
 export class AccountAccess {
-  constructor(public id: string, public message: string) {
+  constructor(public id: AccountAccessLevel, public message: string) {
   }
+}
+
+export enum AccountAccessLevel {
+  ALL_ACCOUNTS = 'ALL_ACCOUNTS',
+  ALL_ACCOUNTS_WITH_BALANCES = 'ALL_ACCOUNTS_WITH_BALANCES',
+  FINE_GRAINED = 'FINE_GRAINED'
 }
