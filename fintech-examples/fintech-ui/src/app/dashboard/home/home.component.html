@@ -1,17 +1,1 @@
-<div class="row mt-5" *ngIf="cardList2 && cardList2.length">
-  <div *ngFor="let card of cardList2" class="col mb-2">
-    <app-list-item [card]="card" [config]="config"></app-list-item>
-  </div>
-</div>
-<div class="mb-5"></div>
-<p class="date">TODAY</p>
-<div *ngFor="let card of cardList" class="">
-  <app-list-item [card]="card"></app-list-item>
-</div>
-
-<div class="mb-4"></div>
-
-<p class="date">YESTERDAY</p>
-<div *ngFor="let card of cardList" class="">
-  <app-list-item [card]="card"></app-list-item>
-</div>
+<app-show-accounts *ngIf="showAccounts" [accounts]="accounts" [bankId]="bankID"></app-show-accounts>

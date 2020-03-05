@@ -3,6 +3,7 @@ import { AisService } from '../services/ais.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { concatMap } from 'rxjs/operators';
+import { AccountDetails } from '../../api';
 
 @Component({
   selector: 'app-home',
@@ -11,52 +12,20 @@ import { concatMap } from 'rxjs/operators';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private accountsSubscription: Subscription;
-  private bankId = '';
-
-  cardList = [
-    {
-      headline: 'Telecom',
-      subheadline: 'Monatliche Abrechnung Mobilfunkvertrag',
-      accountBalance: '-2128'
-    },
-    {
-      headline: 'Telecom',
-      subheadline: 'Monatliche Abrechnung Mobilfunkvertrag',
-      accountBalance: '128'
-    },
-    {
-      headline: 'Telecom',
-      subheadline: 'Monatliche Abrechnung Mobilfunkvertrag',
-      accountBalance: '-128'
-    },
-    {
-      headline: 'Telecom',
-      subheadline: 'Monatliche Abrechnung Mobilfunkvertrag',
-      accountBalance: '128'
-    }
-  ];
-
-  cardList2 = [];
-
-  config = {
-    headline: 'small',
-    subheadline: 'large',
-    shadow: 'shadow'
-  };
+  private showAccounts = false;
+  private accounts: AccountDetails[];
+  private bankID = '';
 
   constructor(private route: ActivatedRoute, private aisService: AisService) {}
 
   ngOnInit() {
-    this.accountsSubscription = this.route.params
-      .pipe(concatMap(param => this.aisService.getAccounts(param.id)))
-      .subscribe(accounts => {
-        accounts.forEach(account => {
-          this.cardList2.push({
-            headline: account.iban,
-            subheadline: account.name ? account.name : ''
-          });
-        });
+    this.route.params.forEach(param => {
+      this.aisService.getAccounts(param.id).subscribe(accounts => {
+        this.bankID = param.id;
+        this.accounts = accounts;
+        this.showAccounts = true;
       });
+    });
   }
 
   ngOnDestroy(): void {
