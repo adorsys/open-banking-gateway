@@ -11,6 +11,7 @@ import { TanConfirmPageComponent } from './tan-confirm-page/tan-confirm-page.com
 import { AccountDetailsComponent } from './common/account-details/account-details.component';
 import { EntryPageAccountsComponent } from './entry-page-accounts/entry-page-accounts.component';
 import { EntryPageTransactionsComponent } from './entry-page-transactions/entry-page-transactions.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { EntryPageTransactionsComponent } from './entry-page-transactions/entry-
   ],
   imports: [
     CommonModule,
-    AisRoutingModule
+    AisRoutingModule,
+    ReactiveFormsModule
   ]
 })
 export class AisModule { }
