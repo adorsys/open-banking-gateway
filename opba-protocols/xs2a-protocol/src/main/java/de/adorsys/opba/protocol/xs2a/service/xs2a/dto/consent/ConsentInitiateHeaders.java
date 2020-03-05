@@ -13,7 +13,6 @@ import java.util.Map;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
-import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_IP_ADDRESS;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_NOK_REDIRECT_URI;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_URI;
 
@@ -32,7 +31,6 @@ public class ConsentInitiateHeaders extends WithBasicInfo {
 
     public RequestHeaders toHeaders() {
         Map<String, String> headers = super.asMap();
-        headers.put(PSU_IP_ADDRESS, psuIpAddress);
         headers.put(TPP_REDIRECT_URI, redirectUriOk);
         headers.put(TPP_NOK_REDIRECT_URI, redirectUriNok);
         return RequestHeaders.fromMap(headers);
