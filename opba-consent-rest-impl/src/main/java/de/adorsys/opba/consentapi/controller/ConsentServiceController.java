@@ -6,6 +6,7 @@ import de.adorsys.opba.consentapi.service.mapper.AisConsentMapper;
 import de.adorsys.opba.consentapi.service.mapper.AisExtrasMapper;
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
+import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.fromaspsp.FromAspspRequest;
@@ -20,6 +21,8 @@ import de.adorsys.opba.restapi.shared.service.RedirectionOnlyToOkMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -35,6 +38,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
     private final GetAuthorizationStateService authorizationStateService;
     private final UpdateAuthorizationService updateAuthorizationService;
     private final FromAspspRedirectHandler fromAspspRedirectHandler;
+    private final HttpServletRequest request;
 
     @Override
     public CompletableFuture authUsingGET(String authId, String redirectCode) {
@@ -58,6 +62,9 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
             String authId,
             PsuAuthRequest body,
             String redirectCode) {
+        Map<ExtraAuthRequestParam, Object> extrasMap = extrasMapper.map(body.getExtras());
+        extrasMap.putIfAbsent(ExtraAuthRequestParam.PSU_IP_ADDRESS, request.getRemoteAddr());
+
         return updateAuthorizationService.execute(
                 AuthorizationRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
@@ -70,7 +77,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                         )
                         .aisConsent(aisConsentMapper.map(body))
                         .scaAuthenticationData(body.getScaAuthenticationData())
-                        .extras(extrasMapper.map(body.getExtras()))
+                        .extras(extrasMap)
                         .build()
         ).thenApply((FacadeResult<UpdateAuthBody> result) ->
                 mapper.translate(result, new NoOpMapper<>()));
