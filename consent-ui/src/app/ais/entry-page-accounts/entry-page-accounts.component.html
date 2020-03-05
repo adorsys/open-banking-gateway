@@ -3,18 +3,18 @@
     <h3 class="mb-4 text-left">Access permission for accounts in <b>{{bankName}}</b></h3>
     <p class="text-secondary mb-5 text-left">Please choose an account access level for <b>{{finTechName}}</b></p>
     <div class="form-group my-4">
-      <div *ngFor="let scaMethod of accountAccesses; let i = index" class="form-check">
+      <div *ngFor="let access of accountAccesses; let i = index" class="form-check">
         <input class="form-check-input"
                type="radio"
-               name="scaMethod"
-               [id]="scaMethod.id"
-               [checked]="i == 0" (change)="handleMethodSelectedEvent(scaMethod)">
-        <label class="form-check-label ml-4" [for]="scaMethod.id">{{scaMethod.message}}</label>
+               name="accountAccess"
+               [id]="access.id"
+               [checked]="selectedAccess.id === access.id" (change)="handleMethodSelectedEvent(access)">
+        <label class="form-check-label ml-4" [for]="access.id">{{access.message}}</label>
       </div>
     </div>
     <div class="form-group d-flex flex-row justify-content-lg-between">
       <button class="btn md-6 w-100 mr-sm-2 mr-md-3 btn-outline-secondary">Cancel</button>
-      <button  type="submit" class="btn md-6 w-100 btn-primary" [disabled]="!selectedAccess">Grant access</button>
+      <button type="submit" class="btn md-6 w-100 btn-primary" [disabled]="!selectedAccess">{{submitButtonMessage()}}</button>
     </div>
   </div>
 </form>
