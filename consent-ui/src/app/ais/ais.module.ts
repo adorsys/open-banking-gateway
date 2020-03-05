@@ -12,9 +12,18 @@ import { AccountDetailsComponent } from './common/account-details/account-detail
 import { EntryPageAccountsComponent } from './entry-page-accounts/entry-page-accounts.component';
 import { EntryPageTransactionsComponent } from './entry-page-transactions/entry-page-transactions.component';
 
-
 @NgModule({
-  declarations: [ResultPageComponent, PasswordInputPageComponent, EntryPageComponent, ConfirmConsentPageComponent, ScaSelectPageComponent, TanConfirmPageComponent, AccountDetailsComponent, EntryPageAccountsComponent, EntryPageTransactionsComponent],
+  declarations: [
+    ResultPageComponent,
+    PasswordInputPageComponent,
+    EntryPageComponent,
+    ConfirmConsentPageComponent,
+    ScaSelectPageComponent,
+    TanConfirmPageComponent,
+    AccountDetailsComponent,
+    EntryPageAccountsComponent,
+    EntryPageTransactionsComponent
+  ],
   imports: [
     CommonModule,
     AisRoutingModule
