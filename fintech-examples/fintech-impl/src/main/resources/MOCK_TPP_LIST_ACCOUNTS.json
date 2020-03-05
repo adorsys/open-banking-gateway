@@ -8,7 +8,7 @@
       "maskedPan": "123456xxxxxx1234",
       "msisdn": "+49 170 1234567",
       "currency": "EUR",
-      "name": "string",
+      "name": "udo kaputnik",
       "product": "string",
       "cashAccountType": "string",
       "status": "enabled",
@@ -41,7 +41,7 @@
       "maskedPan": "123456xxxxxx1234",
       "msisdn": "+49 170 1234567",
       "currency": "EUR",
-      "name": "string",
+      "name": "max mustermann",
       "product": "string",
       "cashAccountType": "string",
       "status": "enabled",
@@ -65,7 +65,17 @@
         "postalCode": "75000",
         "country": "FR"
       }
-    }
+    },
+    {
+        "resourceId": "-8Xt-yKeRror7n3i2t7q_8",
+        "iban": "DE80760700240271232400",
+        "currency": "EUR",
+        "name": "anton.brueckner",
+        "product": "Cash24",
+        "cashAccountType": "CASH",
+        "status": "enabled",
+        "linkedAccounts": "ozvf-exORxQkZFgna1xMcU"
+      }
 
   ]
 }

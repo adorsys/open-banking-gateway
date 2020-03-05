@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { BankSearchComponent } from './components/bank-search/bank-search.component';
 import { RedirectPageComponent } from './components/redirect-page/redirect-page.component';
 
