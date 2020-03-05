@@ -1,0 +1,14 @@
+{
+  "accounts": [
+    {
+      "resourceId": "4aFCnu9yQSglauLoYho1lM",
+      "iban": "DE38760700240320465700",
+      "currency": "EUR",
+      "name": "max.musterman",
+      "product": "Cash24",
+      "cashAccountType": "CASH",
+      "status": "enabled",
+      "linkedAccounts": "WXMWxjaLQNgmofZQ_uPqho"
+    }
+  ]
+}

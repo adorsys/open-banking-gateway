@@ -18,6 +18,7 @@ import java.util.UUID;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.AUTHORIZATION_SESSION_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.PSU_CONSENT_SESSION;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.REDIRECT_CODE;
+import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.SERVICE_SESSION_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,6 +47,7 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
                 .header(AUTHORIZATION_SESSION_ID, "1")
                 .header(REDIRECT_CODE, "redirectCode")
                 .header(PSU_CONSENT_SESSION, "2")
+                .header(SERVICE_SESSION_ID, "any-session-not-specified-in api.yml yet")
                 .location(new URI("affe"))
                 .build();
 
@@ -54,7 +56,7 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
         when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(accepted);
         MvcResult mvcResult = plainListAmounts(result.getXsrfToken(), result.getBankUUID(), accountIDs.get(0));
-        assertEquals(HttpStatus.FOUND.value(), mvcResult.getResponse().getStatus());
+        assertEquals(HttpStatus.ACCEPTED.value(), mvcResult.getResponse().getStatus());
     }
 
     @SneakyThrows

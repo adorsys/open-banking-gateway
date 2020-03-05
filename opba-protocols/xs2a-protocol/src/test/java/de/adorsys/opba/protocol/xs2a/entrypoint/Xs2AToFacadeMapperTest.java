@@ -1,46 +1,61 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.common.io.Resources;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
-import de.adorsys.opba.protocol.xs2a.service.mappers.generated.Xs2aResultBodyExtractor$Xs2aToFacadeMapperImpl;
-import de.adorsys.xs2a.adapter.service.model.AccountDetails;
+import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
-import de.adorsys.xs2a.adapter.service.model.Amount;
-import de.adorsys.xs2a.adapter.service.model.Balance;
-import de.adorsys.xs2a.adapter.service.model.CashAccountType;
-import org.junit.Assert;
+import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootTest(classes = Xs2AToFacadeMapperTest.TestConfig.class)
 public class Xs2AToFacadeMapperTest {
-    static String IBAN = "DE23445343434";
-    static String AMOUNTVALUE = "123,32";
+    public static final ObjectMapper JSON_MAPPER = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    public static final String PATH_PREFIX = "mapper-test-fixtures/xs2a_to_facade_response_mapper_";
+
+    @Autowired
+    private Xs2aResultBodyExtractor.Xs2aToFacadeMapper mapper;
 
     @Test
-    public void testMapping() {
+    @SneakyThrows
+    void accountsMapperTest() {
+        AccountListHolder mappingInput = getFromFile(PATH_PREFIX + "accounts_input.json", AccountListHolder.class);
+        AccountListBody mappingResult = mapper.map(mappingInput);
 
-        AccountListHolder xs2aEntity = new AccountListHolder();
-        {
-            Amount amount = new Amount();
-            amount.setAmount(AMOUNTVALUE);
-            Balance balance = new Balance();
-            balance.setBalanceAmount(amount);
-            List<Balance> balances = new ArrayList<>();
-            balances.add(balance);
+        AccountListBody expected = getFromFile(PATH_PREFIX + "accounts_output.json", AccountListBody.class);
+        assertThat(expected).isEqualToComparingFieldByField(mappingResult);
+    }
 
-            AccountDetails account = new AccountDetails();
-            account.setIban(IBAN);
-            account.setBalances(balances);
-            account.setCashAccountType(CashAccountType.CASH);
+    @Test
+    @SneakyThrows
+    void transactionsMapperTest() {
+        TransactionsReport mappingInput = getFromFile(PATH_PREFIX + "transactions_input.json",
+                TransactionsReport.class);
+        TransactionsResponseBody mappingResult = mapper.map(mappingInput);
 
-            List<AccountDetails> accounts = new ArrayList<>();
-            accounts.add(account);
+        TransactionsResponseBody expected = getFromFile(PATH_PREFIX + "transactions_output.json",
+                TransactionsResponseBody.class);
+        assertThat(expected).isEqualToComparingFieldByField(mappingResult);
+    }
 
-            xs2aEntity.setAccounts(accounts);
-        }
-        AccountListBody facadeEntity = new Xs2aResultBodyExtractor$Xs2aToFacadeMapperImpl().map(xs2aEntity);
-        Assert.assertEquals(IBAN, facadeEntity.getAccounts().get(0).getIban());
-        Assert.assertEquals(CashAccountType.CASH.name(), facadeEntity.getAccounts().get(0).getCashAccountType());
+    @SneakyThrows
+    private <T> T getFromFile(String path, Class<T> valueType) {
+        return JSON_MAPPER.readValue(Resources.getResource(path), valueType);
+    }
+
+    @Configuration
+    @ComponentScan(basePackages = "de.adorsys.opba.protocol.xs2a.service.mappers.generated")
+    public static class TestConfig {
     }
 }

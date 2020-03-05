@@ -173,8 +173,8 @@ paths:
       responses:
         '200':
           $ref: "#/components/responses/200_AccountList"
-        '302':
-          $ref: '#/components/responses/302_Found'
+        '202':
+          $ref: '#/components/responses/202_Accepted'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
         '404':
@@ -208,8 +208,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/200_AccountsTransactions'
-        '302':
-          $ref: '#/components/responses/302_Found'
+        '202':
+          $ref: '#/components/responses/202_Accepted'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
         '404':
@@ -352,30 +352,21 @@ components:
   parameters:
 
     Fintech-Redirect-URL-OK:
+      # the description must not be added. currently fintech-ui codegenerate fails, if non-standard-header field has description
+      #    -attribute components.parameters.Fintech-Redirect-URL-OK.[Fintech-Redirect-URL-OK].desription is unexpected
       name: Fintech-Redirect-URL-OK
-      in: header
-      desription: |
-        This header provides the desired URL where PSU will be redirected back after authorisation session in case of
-        successful authorisation. This URL might contain unique Identifier of this User and/or Session,
-        recognisable by FinTech.
-        Since authorisation may be mandated by the bank at any time, this header to be included to all
-        service requests, even if PsuConsentSession already exists.
       required: true
+      in: header
       schema:
         type: string
       example: "https://example.com/myservice/sf3-3r33-3535?authResult=success"
 
     Fintech-Redirect-URL-NOK:
+      # the description must not be added. currently fintech-ui codegenerate fails, if non-standard-header field has description
+      #    -attribute components.parameters.Fintech-Redirect-URL-NOK.[Fintech-Redirect-URL-NOK].desription is unexpected
       name: Fintech-Redirect-URL-NOK
-      in: header
-      desription: |
-        This header provides the desired URL where PSU will be redirected back  after authorisation session in case of
-        unsuccessful authorisation (i.e. PSU's authorisation reject, technical failure, lack of credentials etc.).
-        This URL might contain unique Identifier of this User and/or Session,
-        recognisable by FinTech.
-        Since authorisation may be mandated by the bank at any time, this header to be included to all
-        service requests, even if PsuConsentSession already exists.
       required: true
+      in: header
       schema:
         type: string
       example: "https://example.com/myservice/sf3-3r33-3535/failure"
@@ -617,8 +608,8 @@ components:
           schema:
             $ref: '#/components/schemas/transactionsResponse'
 
-    302_Found:
-      description: Redirects UserAgent to the ConsentAuthorisationApi.
+    202_Accepted:
+      description: Redirects UserAgent to the ConsentAuthorisationApi. The original 302 caused problems in UI, so 202 is used.
       headers:
         Location:
           $ref: '#/components/headers/Location-Consent-Auth'

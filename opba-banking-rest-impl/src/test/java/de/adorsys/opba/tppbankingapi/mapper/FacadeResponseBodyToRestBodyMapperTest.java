@@ -1,33 +1,64 @@
 package de.adorsys.opba.tppbankingapi.mapper;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.common.io.Resources;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
-import de.adorsys.opba.protocol.api.dto.result.body.AccountListDetailBody;
+import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.tppbankingapi.ais.model.generated.AccountList;
-import de.adorsys.opba.tppbankingapi.mapper.generated.TppBankingApiAisController$AccountListFacadeResponseBodyToRestBodyMapperImpl;
+import de.adorsys.opba.tppbankingapi.ais.model.generated.TransactionsResponse;
+import de.adorsys.opba.tppbankingapi.controller.TppBankingApiAisController;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import static org.junit.Assert.assertEquals;
-
+@SpringBootTest(classes = FacadeResponseBodyToRestBodyMapperTest.TestConfig.class)
 public class FacadeResponseBodyToRestBodyMapperTest {
-    private static final String IBAN = "DE122342343243";
-    private static final String DELETED = "DELETED";
+    public static final ObjectMapper JSON_MAPPER = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    public static final String PATH_PREFIX = "mapper-test-fixtures/facade_to_rest_response_mapper_";
+
+    @Autowired
+    private TppBankingApiAisController.AccountListFacadeResponseBodyToRestBodyMapper accountsRestMapper;
+
+    @Autowired
+    private TppBankingApiAisController.TransactionsFacadeResponseBodyToRestBodyMapper transactionsRestMapper;
 
     @Test
-    public void testMapping() {
-        AccountListDetailBody account = AccountListDetailBody.builder()
-                .iban(IBAN)
-                .status(DELETED)
-                .build();
+    @SneakyThrows
+    void accountsMapperTest() {
+        AccountListBody mappingInput = getFromFile(PATH_PREFIX + "accounts_input.json", AccountListBody.class);
+        AccountList mappingResult = accountsRestMapper.map(mappingInput);
 
-        List<AccountListDetailBody> accountDetails = new ArrayList<>();
-        accountDetails.add(account);
-        AccountListBody facadeEntity = AccountListBody.builder().accounts(accountDetails).build();
+        AccountList expected = getFromFile(PATH_PREFIX + "accounts_output.json", AccountList.class);
+        assertThat(expected).isEqualToComparingFieldByField(mappingResult);
+    }
 
-        AccountList restEntity = new TppBankingApiAisController$AccountListFacadeResponseBodyToRestBodyMapperImpl().map(facadeEntity);
-        assertEquals(IBAN, restEntity.getAccounts().get(0).getIban());
-        assertEquals(DELETED, restEntity.getAccounts().get(0).getStatus().name());
+    @Test
+    void transactionsMapperTest() {
+        TransactionsResponseBody mappingInput = getFromFile(PATH_PREFIX + "transactions_input.json",
+                TransactionsResponseBody.class);
+        TransactionsResponse mappingResult = transactionsRestMapper.map(mappingInput);
+
+        TransactionsResponse expected = getFromFile(PATH_PREFIX + "transactions_output.json",
+                TransactionsResponse.class);
+        assertThat(expected).isEqualToComparingFieldByField(mappingResult);
+    }
+
+    @SneakyThrows
+    private <T> T getFromFile(String path, Class<T> valueType) {
+        return JSON_MAPPER.readValue(Resources.getResource(path), valueType);
+    }
+
+    @Configuration
+    @ComponentScan(basePackages = "de.adorsys.opba.tppbankingapi.mapper.generated")
+    public static class TestConfig {
     }
 }

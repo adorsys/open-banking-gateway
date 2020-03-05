@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
+import * as uuid from 'uuid';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -17,9 +18,8 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private handleRequest(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const headers = new HttpHeaders()
-      // TODO: to be defined
-      .set('X-Request-ID', '99391c7e-ad88-49ec-a2ad-99ddcb1f7721')
+    const headers = request.headers
+      .set('X-Request-ID', uuid.v4())
       .set('Content-Type', 'application/json')
       // TODO: is supposed to be sent automatically when X-XSRF cookie exists, check why not
       .set('X-XSRF-TOKEN', this.authService.getX_XSRF_TOKEN());

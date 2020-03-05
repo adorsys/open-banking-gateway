@@ -24,4 +24,20 @@ This project is planned until the end of 2020 and our current timetable plans MV
 |            |Login Page creation for the Demo Frontend<br/><br/>Change Test data with productive data for the TppBankSearchApi<br/><br/>Update the general project's documentation<br/><br/>Getting Started documentation<br/><br/>Definition of the FinTechApi, BankingApi and ConsentAuthorisationApi<br/><br/>Integration of Bank search API and FintechUI<br/><br/>       |
 | ***29.01.2020***      | ***0.0.5*** | 
 |            |Move the implemented TppBankSearchApi to a separate module<br/><br/>Make a Backend for the login to the FinTechUi<br/><br/>Implementation of the Login Page<br/><br/>Dummy Implementation of the BankingApi *list of account* <br/><br/>Dummy Implementation of the *list of account* of the FinTechApi<br/><br/> Create relation between BankId and Service offered<br/><br/>Create Banking Protocol Facade<br/><br/>Implementation of the Banking Protocol for the dynamic Sandbox<br/><br/>Create the database migration module| 
+| ***16.03.2020***      | ***0.0.6*** | 
+|            |  Bank Search (Login Fintech, BankSearch, BankSelect, BankServices) <br/><br/>Get List of Accounts redirect approach with XS2A Sandbox|
+| ***30.03.2020***      | ***0.0.7*** | 
+|            |  Get List of Transaction redirect approach with XS2A Sandbox <br/><br/>Get List of Accounts embedded approach with XS2A Sandbox|
+| ***14.04.2020***      | ***0.0.8*** | 
+|            |  Get List of Transactions embedded approach with XS2A Sandbox|
+| ***27.04.2020***      | ***0.0.9*** | 
+|            |  Get List of Account redirect approach with productive Bank (Deutsche Bank)<br/><br/>Get List of Accounts embedded approach with productive Bank (Sparkasse)|
 
+Following features are planned for MVP1 (01.11.2019 - 30.04.2020)
+* Bank Search (Login Fintech, BankSearch, BankSelect, BankServices)
+* List of Accounts Redirect with Sandbox
+* List of Transactions Redirect with Sandbox
+* List of Accounts Embedded with Sandbox
+* List of Transactions Embedded with Sandbox
+* List of Account Redirect with Bank
+* List of Account Embedded with Bank

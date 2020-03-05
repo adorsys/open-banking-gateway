@@ -8,12 +8,13 @@ server:
       path: /
       sameSite: none
       # sameSite: Strict|Lax|none
+
 tpp:
   url: http://localhost:8085
 
 mock:
   tppais:
-    listtransactions: true
+    listtransactions: false
     listaccounts: false
 
 spring:
