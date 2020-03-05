@@ -13,6 +13,7 @@ import org.jsmart.zerocode.core.domain.TestMappings;
 import org.jsmart.zerocode.jupiter.extension.ParallelLoadExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -24,10 +25,13 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_HEAVY_TESTS;
+import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
+@EnabledIfEnvironmentVariable(named = ENABLE_HEAVY_TESTS, matches = TRUE_BOOL)
 @ExtendWith({WiremockE2EStressXs2aProtocolTest.RestAssuredConfigurer.class, ParallelLoadExtension.class})
 /*
  * Set to use Xs2aProtocol, not Sandbox protocol for transaction listing:
