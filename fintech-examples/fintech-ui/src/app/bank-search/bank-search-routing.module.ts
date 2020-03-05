@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BankSearchComponent } from './components/bank-search/bank-search.component';
 import { RedirectPageComponent } from './components/redirect-page/redirect-page.component';
-import { ListServicesComponent } from './components/list-services/list-services.component';
 
 const routes: Routes = [
   {
@@ -10,11 +9,7 @@ const routes: Routes = [
     component: BankSearchComponent
   },
   {
-    path: 'services/:id',
-    component: ListServicesComponent
-  },
-  {
-    path: 'redirect/:id',
+    path: '/dashboard/:id',
     component: RedirectPageComponent
   }
 ];
