@@ -12,6 +12,7 @@ export class EntryPageAccountsComponent implements OnInit {
   public bankName = 'Adorsys Sandbox';
 
   public accountAccesses = [
+
     new AccountAccess(AccountAccessLevel.ALL_ACCOUNTS, 'Allow seeing a list of all your accounts'),
     new AccountAccess(AccountAccessLevel.ALL_ACCOUNTS_WITH_BALANCES, 'Allow seeing a list of all your accounts with balances'),
     new AccountAccess(AccountAccessLevel.FINE_GRAINED, 'Limit access to specific accounts')
@@ -36,14 +37,19 @@ export class EntryPageAccountsComponent implements OnInit {
   submitButtonMessage() {
     return this.selectedAccess.id === AccountAccessLevel.FINE_GRAINED ? 'Specify access' : 'Grant access';
   }
+
+  onSubmit() {
+  }
 }
 
 export class AccountAccess {
+
   constructor(public id: AccountAccessLevel, public message: string) {
   }
 }
 
 export enum AccountAccessLevel {
+
   ALL_ACCOUNTS = 'ALL_ACCOUNTS',
   ALL_ACCOUNTS_WITH_BALANCES = 'ALL_ACCOUNTS_WITH_BALANCES',
   FINE_GRAINED = 'FINE_GRAINED'
