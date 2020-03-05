@@ -1,5 +1,5 @@
 <div class="parent">
-  <div *ngFor="let account of accounts" (click)="selectAccount(account.resourceId)">
+  <div *ngFor="let account of accounts" (click)="transactions.selectAccount(account.resourceId)">
     <div class="list-container list-container--{{ config?.shadow }}">
       <div class="list-item">
         <h1 class="list-item__headline list-item__headline--{{ config?.headline }}">{{ account.name }}</h1>
@@ -9,4 +9,4 @@
   </div>
 </div>
 
-<app-show-transactions [accountId]="selectedAccount" [bankId]="bankId"></app-show-transactions>
+<app-show-transactions #transactions [bankId]="bankId"></app-show-transactions>

@@ -10,9 +10,6 @@ export class ShowAccountsComponent implements OnInit {
   @Input()
   bankId = '';
 
-  @Output()
-  selectedAccount = '';
-
   config = {
     headline: 'small',
     subheadline: 'large',
@@ -25,9 +22,4 @@ export class ShowAccountsComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
-
-  selectAccount(id) {
-    console.log('selected account:', id);
-    this.selectedAccount = id;
-  }
 }
