@@ -12,9 +12,9 @@ import { AccountDetails } from '../../api';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private accountsSubscription: Subscription;
-  private showAccounts = false;
-  private accounts: AccountDetails[];
-  private bankID = '';
+  showAccounts = false;
+  accounts: AccountDetails[];
+  bankID = '';
 
   constructor(private route: ActivatedRoute, private aisService: AisService) {}
 

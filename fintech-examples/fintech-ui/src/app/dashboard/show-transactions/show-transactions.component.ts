@@ -14,22 +14,21 @@ export class ShowTransactionsComponent implements OnInit {
   bankId = '';
 
   private transactions;
-  private showTransactions = false;
+  showTransactions = false;
 
   constructor(private route: ActivatedRoute, private aisService: AisService) {}
 
-  ngOnInit() {
-    console.log('accountId:' + this.accountId + ' and bankid ' + this.bankId);
-    if (this.accountId !== '') {
-      console.log('ask for transactions');
-      /*
-      this.aisService.getTransactions(this.bankId, this.accountId).subscribe(transactions => {
-          this.transactions = transactions;
-          this.showTransactions = true;
-        }
-      );
+  ngOnInit() {}
 
-       */
-    }
+  selectAccount(id) {
+    this.accountId = id;
+    console.log('ask for transactions for ', this.accountId);
+    /*
+    this.aisService.getTransactions(this.bankId, this.accountId).subscribe(transactions => {
+        this.transactions = transactions;
+        this.showTransactions = true;
+      }
+    );
+     */
   }
 }
