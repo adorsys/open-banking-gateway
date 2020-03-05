@@ -35,15 +35,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Security;
 import java.time.LocalDate;
 
+import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_HEAVY_TESTS;
+import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
-import static de.adorsys.opba.protocol.xs2a.testsandbox.Const.ENABLE_HEAVY_TESTS;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
  * Happy-path heavy test that uses Dynamic-Sandbox to drive banking-protocol.
  */
-@EnabledIfEnvironmentVariable(named = ENABLE_HEAVY_TESTS, matches = "true")
+@EnabledIfEnvironmentVariable(named = ENABLE_HEAVY_TESTS, matches = TRUE_BOOL)
 @EnableAutoConfiguration(exclude = {
     HypermediaAutoConfiguration.class,
     Xs2aCmsAutoConfiguration.class,
