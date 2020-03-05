@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EntryPageComponent } from './entry-page.component';
+import { EntryPageAccountsComponent } from './entry-page-accounts.component';
 
-describe('EntryPageComponent', () => {
-  let component: EntryPageComponent;
-  let fixture: ComponentFixture<EntryPageComponent>;
+describe('EntryPageAccountsComponent', () => {
+  let component: EntryPageAccountsComponent;
+  let fixture: ComponentFixture<EntryPageAccountsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EntryPageComponent ]
+      declarations: [ EntryPageAccountsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EntryPageComponent);
+    fixture = TestBed.createComponent(EntryPageAccountsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
