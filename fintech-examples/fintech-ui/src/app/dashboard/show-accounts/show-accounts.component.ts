@@ -13,12 +13,6 @@ export class ShowAccountsComponent implements OnInit, OnDestroy {
   private accountsSubscription: Subscription;
   accounts: AccountDetails[];
 
-  config = {
-    headline: 'small',
-    subheadline: 'large',
-    shadow: 'shadow'
-  };
-
   @Input()
   showAccounts = false;
 

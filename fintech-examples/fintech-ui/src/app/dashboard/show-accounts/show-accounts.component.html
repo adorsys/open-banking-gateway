@@ -1,10 +1,10 @@
 <div *ngIf="showAccounts">
   <div class="parent">
     <div *ngFor="let account of accounts" (click)="transactions.selectAccount(account.resourceId)">
-      <div class="list-container list-container--{{ config?.shadow }}">
+      <div class="list-container list-container--shadow">
         <div class="list-item">
-          <h1 class="list-item__headline list-item__headline--{{ config?.headline }}">{{ account.name }}</h1>
-          <p class="list-item__subheadline list-item__subheadline--{{ config?.subheadline }}">{{ account.iban }}</p>
+          <h1 class="list-item__headline list-item__headline--small">{{ account.name }}</h1>
+          <p class="list-item__subheadline list-item__subheadline--large">{{ account.iban }}</p>
         </div>
       </div>
     </div>

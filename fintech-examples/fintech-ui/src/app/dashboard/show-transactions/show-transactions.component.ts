@@ -20,12 +20,6 @@ export class ShowTransactionsComponent implements OnInit, OnDestroy {
   private transactions: AccountReport;
   showTransactions = false;
 
-  config = {
-    headline: 'small',
-    subheadline: 'small',
-    shadow: 'shadow'
-  };
-
   constructor(private route: ActivatedRoute, private aisService: AisService) {}
 
   ngOnInit() {}
