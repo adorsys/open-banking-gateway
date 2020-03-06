@@ -17,7 +17,7 @@ export class ShowTransactionsComponent implements OnInit, OnDestroy {
   @Input()
   bankId = '';
 
-  private transactions: AccountReport;
+  transactions: AccountReport;
   showTransactions = false;
 
   constructor(private route: ActivatedRoute, private aisService: AisService) {}
