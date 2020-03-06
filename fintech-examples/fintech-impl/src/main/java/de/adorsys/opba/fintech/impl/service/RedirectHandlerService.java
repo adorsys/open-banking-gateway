@@ -23,6 +23,8 @@ import static java.util.Collections.singletonList;
 @Service
 @RequiredArgsConstructor
 public class RedirectHandlerService {
+    private final String LOCATION_HEADER = "Location";
+    private final String NOT_OK_URL = readBaseNotOkUrl();
 
     private final RedirectUrlRepository redirectUrlRepository;
     private final AuthorizeService authorizeService;
@@ -46,24 +48,24 @@ public class RedirectHandlerService {
     public ResponseEntity doRedirect(String redirectState, String redirectId, String redirectCode) {
         if (StringUtils.isBlank(redirectCode)) {
             log.warn("Validation redirect request was failed: redirect code is empty!");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return prepareRedirectResponse(NOT_OK_URL, HttpStatus.BAD_REQUEST);
         }
 
         Optional<RedirectUrlsEntity> redirectUrlsEntityOptional = redirectUrlRepository.findByRedirectCode(redirectCode);
 
         if (!redirectUrlsEntityOptional.isPresent()) {
             log.warn("Validation redirect request was failed: redirect code is wrong!");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return prepareRedirectResponse(NOT_OK_URL, HttpStatus.BAD_REQUEST);
         }
 
         if (StringUtils.isBlank(redirectState)) {
             log.warn("Validation redirect request was failed: Xsrf Token is empty!");
-            new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return prepareRedirectResponse(NOT_OK_URL, HttpStatus.BAD_REQUEST);
         }
 
         if (!authorizeService.isAuthorized(redirectState, null)) {
             log.warn("Validation redirect request was failed: Xsrf Token is wrong or user are not authorized!");
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return prepareRedirectResponse(NOT_OK_URL, HttpStatus.UNAUTHORIZED);
         }
 
         SessionEntity optionalUser = authorizeService.getByXsrfToken(redirectState);
@@ -71,7 +73,7 @@ public class RedirectHandlerService {
 
         RedirectUrlsEntity redirectUrlsEntity = redirectUrlsEntityOptional.get();
 
-        return prepareRedirectResponse(redirectUrlsEntity.getOkURL());
+        return prepareRedirectResponse(redirectUrlsEntity.getOkURL(), HttpStatus.FOUND);
     }
 
     private void updateSessionByRedirectCode(SessionEntity sessionEntity, String redirectCode) {
@@ -80,10 +82,15 @@ public class RedirectHandlerService {
         authorizeService.updateUserSession(sessionEntity);
     }
 
-    private ResponseEntity prepareRedirectResponse(String redirectUrl) {
+    private ResponseEntity prepareRedirectResponse(String redirectUrl, HttpStatus status) {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.put("Location", singletonList(redirectUrl));
+        headers.put(LOCATION_HEADER, singletonList(redirectUrl));
 
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        return new ResponseEntity<>(headers, status);
+    }
+
+    private String readBaseNotOkUrl() {
+        // TODO we need to decide where will be stored N_OK_URL
+        return "http://localhost:5500/fintech-callback/nok";
     }
 }
