@@ -21,8 +21,6 @@ import de.adorsys.opba.restapi.shared.service.RedirectionOnlyToOkMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -38,7 +36,6 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
     private final GetAuthorizationStateService authorizationStateService;
     private final UpdateAuthorizationService updateAuthorizationService;
     private final FromAspspRedirectHandler fromAspspRedirectHandler;
-    private final HttpServletRequest request;
 
     @Override
     public CompletableFuture authUsingGET(String authId, String redirectCode) {
@@ -62,9 +59,6 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
             String authId,
             PsuAuthRequest body,
             String redirectCode) {
-        Map<ExtraAuthRequestParam, Object> extrasMap = extrasMapper.map(body.getExtras());
-        extrasMap.putIfAbsent(ExtraAuthRequestParam.PSU_IP_ADDRESS, request.getRemoteAddr());
-
         return updateAuthorizationService.execute(
                 AuthorizationRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
@@ -77,7 +71,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                         )
                         .aisConsent(aisConsentMapper.map(body))
                         .scaAuthenticationData(body.getScaAuthenticationData())
-                        .extras(extrasMap)
+                        .extras(extrasMapper.map(body.getExtras()))
                         .build()
         ).thenApply((FacadeResult<UpdateAuthBody> result) ->
                 mapper.translate(result, new NoOpMapper<>()));
