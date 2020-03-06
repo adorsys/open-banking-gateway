@@ -23,8 +23,8 @@ import static java.util.Collections.singletonList;
 @Service
 @RequiredArgsConstructor
 public class RedirectHandlerService {
-    private final String LOCATION_HEADER = "Location";
-    private final String NOT_OK_URL = readBaseNotOkUrl();
+    private static final String LOCATION_HEADER = "Location";
+    private static final String NOT_OK_URL = readBaseNotOkUrl();
 
     private final RedirectUrlRepository redirectUrlRepository;
     private final AuthorizeService authorizeService;
@@ -89,7 +89,7 @@ public class RedirectHandlerService {
         return new ResponseEntity<>(headers, status);
     }
 
-    private String readBaseNotOkUrl() {
+    private static String readBaseNotOkUrl() {
         // TODO we need to decide where will be stored N_OK_URL
         return "http://localhost:5500/fintech-callback/nok";
     }
