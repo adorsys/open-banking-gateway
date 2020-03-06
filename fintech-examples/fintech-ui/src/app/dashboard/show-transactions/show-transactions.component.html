@@ -2,7 +2,7 @@
   <div *ngIf="transactions.pending.length > 0">
     Pending
     <div *ngFor="let transaction of transactions.pending">
-      <div class="parent list-container list-container--{{ config?.shadow }}">
+      <div class="parent list-container list-container--shadow }}">
         <div class="date">
           {{ transaction.bookingDate }}
         </div>
@@ -22,7 +22,7 @@
   <div *ngIf="transactions.booked.length > 0">
     Booked
     <div *ngFor="let transaction of transactions.booked">
-      <div class="parent list-container list-container--{{ config?.shadow }}">
+      <div class="parent list-container list-container--shadow }}">
         <div class="date">
           {{ transaction.bookingDate }}
         </div>
