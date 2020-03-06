@@ -14,8 +14,8 @@ tpp:
 
 mock:
   tppais:
-    listtransactions: true
-    listaccounts: true
+    listtransactions: false
+    listaccounts: false
 
 spring:
   datasource:
