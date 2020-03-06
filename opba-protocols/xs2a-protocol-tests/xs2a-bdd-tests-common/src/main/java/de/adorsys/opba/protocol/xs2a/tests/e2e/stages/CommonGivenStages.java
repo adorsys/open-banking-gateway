@@ -4,12 +4,20 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.db.domain.Approach;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
+import io.restassured.RestAssured;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.transaction.annotation.Transactional;
+
+import static io.restassured.RestAssured.config;
+import static io.restassured.config.RedirectConfig.redirectConfig;
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Stage<SELF> {
+
+    @LocalServerPort
+    private int serverPort;
 
     @Autowired
     private BankProfileJpaRepository profiles;
@@ -22,6 +30,14 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
                 return it;
             })
             .forEach(profiles::save);
+
+        return self();
+    }
+
+    public SELF rest_assured_points_to_server() {
+        RestAssured.baseURI = "http://localhost:" + serverPort;
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+        config = config().redirect(redirectConfig().followRedirects(false));
 
         return self();
     }

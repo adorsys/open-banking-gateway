@@ -1,3 +1,4 @@
+package mockedsandbox.restrecord
 /**
  * This helper shortens WireMock generated filenames
  */
