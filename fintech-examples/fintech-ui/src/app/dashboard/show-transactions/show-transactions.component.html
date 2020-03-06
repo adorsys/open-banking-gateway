@@ -1,1 +1,38 @@
-<p *ngIf="showTransactions">show-transactions works!</p>
+<div *ngIf="showTransactions">
+  <div *ngIf="transactions.pending.length > 0">
+    Pending
+    <div *ngFor="let transaction of transactions.pending">
+      <div class="parent list-container list-container--{{ config?.shadow }}">
+        <div class="date">
+          {{ transaction.bookingDate }}
+        </div>
+        <div class="description">
+          {{ transaction.additionalInformation }}
+        </div>
+        <div class="amount-number">
+          {{ transaction.transactionAmount.amount }}
+        </div>
+        <div class="amount-currency">
+          {{ transaction.transactionAmount.currency }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="transactions.booked.length > 0">
+    Booked
+    <div *ngFor="let transaction of transactions.booked">
+      <div class="parent list-container list-container--{{ config?.shadow }}">
+        <div class="date">
+          {{ transaction.bookingDate }}
+        </div>
+        <div class="description">
+          {{ transaction.additionalInformation }}
+        </div>
+        <div class="amount">
+          {{ transaction.transactionAmount.amount }} {{ transaction.transactionAmount.currency }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
