@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "openapi-gen": "openapi-generator generate -g typescript-angular -o src/app/api -i ../opba-consent-rest-api/src/main/resources/static/tpp_consent_api.yml --skip-validate-spec",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
@@ -31,6 +32,7 @@
     "@angular/compiler-cli": "~8.2.14",
     "@angular/language-service": "~8.2.14",
     "@types/node": "~8.9.4",
+    "@openapitools/openapi-generator-cli": "^1.0.8-4.2.2",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
     "codelyzer": "^5.0.0",
