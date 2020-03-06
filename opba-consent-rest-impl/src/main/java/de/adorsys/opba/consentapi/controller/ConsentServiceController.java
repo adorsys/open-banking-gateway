@@ -9,6 +9,7 @@ import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationReque
 import de.adorsys.opba.protocol.api.dto.request.authorization.fromaspsp.FromAspspRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
+import de.adorsys.opba.protocol.facade.services.authorization.StartAuthorizationService;
 import de.adorsys.opba.protocol.facade.services.authorization.UpdateAuthorizationService;
 import de.adorsys.opba.protocol.facade.services.fromaspsp.FromAspspRedirectHandler;
 import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
@@ -26,8 +27,22 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
     private final AisExtrasMapper extrasMapper;
     private final AisConsentMapper aisConsentMapper;
     private final FacadeResponseMapper mapper;
+    private final StartAuthorizationService initAuthorizationService;
     private final UpdateAuthorizationService updateAuthorizationService;
     private final FromAspspRedirectHandler fromAspspRedirectHandler;
+
+    @Override
+    public CompletableFuture authUsingGET(String authId, String redirectCode) {
+        return initAuthorizationService.execute(
+                AuthorizationRequest.builder()
+                        .facadeServiceable(FacadeServiceableRequest.builder()
+                                .redirectCode(redirectCode)
+                                .authorizationSessionId(authId)
+                                .build()
+                        )
+                        .build()
+        ).thenApply((FacadeResult<UpdateAuthBody> result) -> mapper.translate(result, new NoOpMapper<>()));
+    }
 
     @Override
     public CompletableFuture embeddedUsingPOST(
