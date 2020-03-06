@@ -10,6 +10,7 @@ public class HttpHeaders {
     public static final String AUTHORIZATION_SESSION_ID = "Authorization-Session-ID";
     public static final String REDIRECT_CODE = "Redirect-Code";
     public static final String X_REQUEST_ID = "X-Request-ID";
+    public static final String COMPUTE_PSU_IP_ADDRESS = "Compute-PSU-IP-Address";
 
     @UtilityClass
     public class UserAgentContext {

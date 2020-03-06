@@ -29,6 +29,8 @@ export class InitialRequestComponent implements OnInit {
   bankId = new FormControl();
   serviceSessionId = new FormControl();
   resultstructure = "";
+  computeIp = new FormControl();
+  ipAddress = new FormControl();
 
   // transaction
   accountId = new FormControl();
@@ -45,6 +47,7 @@ export class InitialRequestComponent implements OnInit {
     this.requestId.setValue('43da4e2f-72cb-43bb-8afd-683104de57f9');
     this.bankId.setValue('53c47f54-b9a4-465a-8f77-bc6cd5f0cf46');
     this.serviceSessionId.setValue('');
+    // this.ipAddress.setValue('1.1.1.1');
   }
 
   ngOnInit() {
@@ -54,6 +57,15 @@ export class InitialRequestComponent implements OnInit {
           this.serviceSessionId.setValue(params.serviceSessionId);
         }
       });
+
+    this.getIPAddress();
+  }
+
+  getIPAddress() {
+    this.client.get('http://api.ipify.org/?format=json').subscribe(
+      (res: any) => {
+        this.ipAddress.setValue(res.ip);
+    });
   }
 
   submit() {
@@ -65,7 +77,9 @@ export class InitialRequestComponent implements OnInit {
       'X-Request-ID': this.requestId.value,
       'Service-Session-Password': this.serviceSessionPassword.value,
       'Bank-ID': this.bankId.value,
-      'Service-Session-ID': this.serviceSessionId.value
+      'Service-Session-ID': this.serviceSessionId.value,
+      'PSU-IP-Address': (this.computeIp.value ? this.ipAddress.value : ''),
+      'Compute-PSU-IP-Address': this.computeIp.value ? 'true' : 'false'
     };
     console.log("SEND REQUEST");
 
@@ -94,6 +108,10 @@ export class InitialRequestComponent implements OnInit {
           window.location.href = res.headers.get('Location');
       }
     });
+  }
+
+  onClickComputeIp() {
+    this.ipAddress.setValue(this.computeIp ? '' : this.getIPAddress());
   }
 }
 
