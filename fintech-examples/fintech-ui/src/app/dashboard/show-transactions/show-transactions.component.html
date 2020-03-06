@@ -29,8 +29,11 @@
         <div class="description">
           {{ transaction.additionalInformation }}
         </div>
-        <div class="amount">
-          {{ transaction.transactionAmount.amount }} {{ transaction.transactionAmount.currency }}
+        <div class="amount-number">
+          {{ transaction.transactionAmount.amount }}
+        </div>
+        <div class="amount-currency">
+          {{ transaction.transactionAmount.currency }}
         </div>
       </div>
     </div>
