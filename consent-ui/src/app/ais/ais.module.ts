@@ -12,6 +12,8 @@ import { AccountDetailsComponent } from './common/account-details/account-detail
 import { EntryPageAccountsComponent } from './entry-page-accounts/entry-page-accounts.component';
 import { EntryPageTransactionsComponent } from './entry-page-transactions/entry-page-transactions.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import { ErrorPageComponent } from './error-page/error-page.component';
+import {CardWithSidebarComponent} from './card-with-sidebar/card-with-sidebar.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,9 @@ import {ReactiveFormsModule} from '@angular/forms';
     TanConfirmPageComponent,
     AccountDetailsComponent,
     EntryPageAccountsComponent,
-    EntryPageTransactionsComponent
+    EntryPageTransactionsComponent,
+    ErrorPageComponent,
+    CardWithSidebarComponent
   ],
   imports: [
     CommonModule,

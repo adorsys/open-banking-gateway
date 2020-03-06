@@ -8,15 +8,17 @@ import {ResultPageComponent} from './result-page/result-page.component';
 import {ScaSelectPageComponent} from './sca-select-page/sca-select-page.component';
 import {EntryPageAccountsComponent} from './entry-page-accounts/entry-page-accounts.component';
 import {EntryPageTransactionsComponent} from './entry-page-transactions/entry-page-transactions.component';
+import {ErrorPageComponent} from './error-page/error-page.component';
 
 
 const routes: Routes = [
   {
-    path: '',
+    path: '/{authId}',
     component: EntryPageComponent,
     children: [
       {path: 'list-accounts', component: EntryPageAccountsComponent},
-      {path: 'list-transactions', component: EntryPageTransactionsComponent}
+      {path: 'list-transactions', component: EntryPageTransactionsComponent},
+      {path: 'error', component: ErrorPageComponent}
     ]
   },
   {
@@ -38,6 +40,10 @@ const routes: Routes = [
   {
     path: 'consent-result',
     component: ResultPageComponent,
+  },
+  {
+    path: 'error',
+    component: ErrorPageComponent
   }
 ];
 

@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
+import {ConsentAuthorizationService} from '../../api/consentAuthorization.service';
 
 @Component({
   selector: 'consent-app-entry-page-transactions',
@@ -18,7 +19,7 @@ export class EntryPageTransactionsComponent implements OnInit {
 
   public transactionsAccessForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private consentAuthorisation: ConsentAuthorizationService) {
     this.transactionsAccessForm = this.formBuilder.group({});
   }
 

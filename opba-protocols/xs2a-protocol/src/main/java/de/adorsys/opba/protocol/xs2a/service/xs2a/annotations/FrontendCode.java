@@ -1,5 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.annotations;
 
+import de.adorsys.opba.protocol.api.dto.codes.TypeCode;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -10,5 +12,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface FrontendCode {
 
-    String value();
+    TypeCode value();
 }

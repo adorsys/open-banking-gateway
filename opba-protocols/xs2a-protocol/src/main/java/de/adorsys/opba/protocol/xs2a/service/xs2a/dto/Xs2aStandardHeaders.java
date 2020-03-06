@@ -1,5 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.dto;
 
+import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
+import de.adorsys.opba.protocol.api.dto.codes.TypeCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ContextCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
@@ -22,11 +24,10 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 public class Xs2aStandardHeaders {
 
     @NotBlank(message = "{no.ctx.psuId}")
-    @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("PSU_ID"))
+    @ValidationInfo(ui = @FrontendCode(TypeCode.STRING), ctx = @ContextCode(FieldCode.PSU_ID))
     private String psuId;
 
     @NotBlank(message = "{no.aspsp.id}")
-    @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("aspspId"))
     private String aspspId;
 
     @NotBlank // can't be provided manually

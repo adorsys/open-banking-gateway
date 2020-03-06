@@ -1,8 +1,5 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.dto;
 
-import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ContextCode;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.FrontendCode;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
 import lombok.Data;
 import org.mapstruct.Mapper;
@@ -16,8 +13,7 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
 @Data
 public class Xs2aResourceParameters {
 
-    @NotBlank
-    @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("resourceId"))
+    @NotBlank(message = "{no.ctx.resourceId}")
     @NotNull(message = "{no.ctx.resourceId}")
     private String resourceId;
 

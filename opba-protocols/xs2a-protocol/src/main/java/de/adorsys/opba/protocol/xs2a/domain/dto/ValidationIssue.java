@@ -1,6 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.domain.dto;
 
-import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.TargetObject;
+import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
+import de.adorsys.opba.protocol.api.dto.codes.TypeCode;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ScopeObject;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -8,28 +10,27 @@ import lombok.NonNull;
 
 @Getter
 @Builder
-@EqualsAndHashCode(of = {"ctxCode", "target"})
+@EqualsAndHashCode(of = {"code", "scope"})
 public class ValidationIssue {
 
     @NonNull
-    private final String uiCode;
+    private final TypeCode type;
 
     @NonNull
-    private final String ctxCode;
+    private final ScopeObject scope;
 
     @NonNull
-    private final String message;
+    private final FieldCode code;
 
-    @NonNull
-    private final TargetObject target;
+    private final String captionMessage;
 
     @Override
     public String toString() {
         return "{"
-                + "\"uiCode\":\"" + uiCode + "\""
-                + ", \"ctxCode\":\"" + ctxCode + "\""
-                + ", \"message\":\"" + message + "\""
-                + ", \"target\":\"" + target + "\""
+                + "\"type\":\"" + type + "\""
+                + ", \"scope\":\"" + scope + "\""
+                + ", \"code\":\"" + code + "\""
+                + ", \"captionMessage\":\"" + captionMessage + "\""
                 + "}";
     }
 }

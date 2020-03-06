@@ -44,7 +44,7 @@ protocol:
       nok: ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
     parameters:
       max-array-size: 32
-      provide-more: ${protocol.embedded-ui-base-url}/ais/#{context.getAction().toString()}
+      provide-more: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
       provide-psu-password: ${protocol.embedded-ui-base-url}/parameters/provide-psu-password/#{execution.getId()}
       select-sca-method: ${protocol.embedded-ui-base-url}/parameters/select-sca-method/#{execution.getId()}?q=#{urlSafe(context.getAvailableSca().toString())}
       report-sca-result: ${protocol.embedded-ui-base-url}/parameters/report-sca-result/#{execution.getId()}?q=#{urlSafe(context.getScaSelected().getAuthenticationType() + ":" + context.getScaSelected().getName())}
