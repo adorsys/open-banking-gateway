@@ -8,6 +8,7 @@ public enum ProtocolAction {
     LIST_ACCOUNTS("list-accounts"),
     LIST_TRANSACTIONS("list-transactions"),
     // Consent
+    START_AUTHORIZATION("start-authorization"),
     UPDATE_AUTHORIZATION("update-authorization"),
     FROM_ASPSP_REDIRECT("from-aspsp"),
     // PIS

@@ -6,8 +6,8 @@ import {ConfirmConsentPageComponent} from './confirm-consent-page/confirm-consen
 import {TanConfirmPageComponent} from './tan-confirm-page/tan-confirm-page.component';
 import {ResultPageComponent} from './result-page/result-page.component';
 import {ScaSelectPageComponent} from './sca-select-page/sca-select-page.component';
-import {EntryPageAccountsComponent} from "./entry-page-accounts/entry-page-accounts.component";
-import {EntryPageTransactionsComponent} from "./entry-page-transactions/entry-page-transactions.component";
+import {EntryPageAccountsComponent} from './entry-page-accounts/entry-page-accounts.component';
+import {EntryPageTransactionsComponent} from './entry-page-transactions/entry-page-transactions.component';
 
 
 const routes: Routes = [
