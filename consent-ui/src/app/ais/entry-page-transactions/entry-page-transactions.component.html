@@ -1,13 +1,8 @@
 <form [formGroup]="transactionsAccessForm" (ngSubmit)="transactionsAccessForm.valid && onSubmit()">
   <div class="card">
     <div class="card-body">
-      <h2 class="card-title font-weight-bold">Select ibans and account accesses</h2>
-      <div class="font-weight-light my-4 text-muted">Please select ibans and types of accesses you are granting
-        to the TPP,
-        then
-        confirm with “Next". Account access would be selected
-        by default for every iban of your choice.
-      </div>
+      <h2 class="mb-4 text-left">Access permission to read transaction data in {{bankName}}</h2>
+      <p class="text-secondary mb-5 text-left">Please select for which accounts you want to share transaction data with <b>{{finTechName}}</b></div>
 
       <div class="col-12 font-weight-light" *ngFor="let account of accounts, let i = index">
         <div class="form-check">
@@ -34,5 +29,4 @@
         </div>
       </div>
     </div>
-  </div>
 </form>
