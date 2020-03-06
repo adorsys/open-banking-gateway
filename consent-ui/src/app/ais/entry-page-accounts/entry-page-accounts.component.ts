@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ConsentAuthorizationService} from '../../api/consentAuthorization.service';
 
 @Component({
   selector: 'consent-app-entry-page-accounts',
@@ -21,7 +22,7 @@ export class EntryPageAccountsComponent implements OnInit {
 
   public accountAccessForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private consentAuthorisation: ConsentAuthorizationService) {
     this.accountAccessForm = this.formBuilder.group({
       accountAccess: ['', Validators.required],
     });

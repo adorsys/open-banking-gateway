@@ -809,13 +809,41 @@ components:
         singlePayment:
           $ref: '#/components/schemas/SinglePayment'
 
+    ConsentAuthRequirement:
+      title: ConsentAuth
+      type: object
+      description: Transport object for consent API request response
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentAuthRequiredField'
+
+    ConsentAuthRequiredField:
+      title: ConsentAuthRequiredField
+      type: object
+      description: Fields that are required to be filled in order to authorize consent
+      properties:
+        type:
+          type: string
+          description: Field data type - boolean, string, etc.
+        scope:
+          type: string
+          description: Scope of the field.
+        code:
+          type: string
+          description: Field code - what does the field mean.
+        captionMessage:
+          type: string
+          description: Custom message that describes field meaning
+
     AuthorizeRequest:
       title: AuthorizeRequest
       type: object
       description: Contains information used to legitimate a request.
       properties:
         consentAuth:
-          $ref: '#/components/schemas/ConsentAuth'
+          $ref: '#/components/schemas/ConsentAuthRequirement'
 
     DenyRedirectRequest:
       title: DenyRedirectRequest
