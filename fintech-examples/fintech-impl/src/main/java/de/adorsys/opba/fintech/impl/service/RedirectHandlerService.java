@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -20,16 +19,17 @@ import java.util.UUID;
 import static java.util.Collections.singletonList;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
 public class RedirectHandlerService {
     private static final String LOCATION_HEADER = "Location";
-    private static final String NOT_OK_URL = readBaseNotOkUrl();
+    private final String notOkUrl;
+    private final String okUrl;
+    private final String exceptionUrl;
 
     private final RedirectUrlRepository redirectUrlRepository;
     private final AuthorizeService authorizeService;
 
-    public String registerRedirectUrlForSession(String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
+    public RedirectUrlsEntity registerRedirectUrlForSession(String xsrfToken) {
         String redirectCode = UUID.randomUUID().toString();
         log.debug("ONLY FOR DEBUG: redirectCode: {}", redirectCode);
 
@@ -37,43 +37,41 @@ public class RedirectHandlerService {
 
         redirectUrls.setRedirectCode(redirectCode);
         redirectUrls.setRedirectState(xsrfToken);
-        redirectUrls.setNotOkURL(fintechRedirectURLNOK);
-        redirectUrls.setOkURL(fintechRedirectURLOK);
+        redirectUrls.setNotOkURL(getModifiedUrlWithRedirectCode(notOkUrl, redirectCode));
+        redirectUrls.setOkURL(getModifiedUrlWithRedirectCode(okUrl, redirectCode));
 
-        redirectUrlRepository.save(redirectUrls);
-
-        return redirectCode;
+        return redirectUrlRepository.save(redirectUrls);
     }
 
     public ResponseEntity doRedirect(String redirectState, String redirectId, String redirectCode) {
         if (StringUtils.isBlank(redirectCode)) {
             log.warn("Validation redirect request was failed: redirect code is empty!");
-            return prepareRedirectResponse(NOT_OK_URL, HttpStatus.BAD_REQUEST);
+            return prepareRedirectResponse(exceptionUrl);
         }
 
         Optional<RedirectUrlsEntity> redirectUrlsEntityOptional = redirectUrlRepository.findByRedirectCode(redirectCode);
 
         if (!redirectUrlsEntityOptional.isPresent()) {
             log.warn("Validation redirect request was failed: redirect code is wrong!");
-            return prepareRedirectResponse(NOT_OK_URL, HttpStatus.BAD_REQUEST);
+            return prepareRedirectResponse(exceptionUrl);
         }
+
+        RedirectUrlsEntity redirectUrlsEntity = redirectUrlsEntityOptional.get();
 
         if (StringUtils.isBlank(redirectState)) {
             log.warn("Validation redirect request was failed: Xsrf Token is empty!");
-            return prepareRedirectResponse(NOT_OK_URL, HttpStatus.BAD_REQUEST);
+            return prepareRedirectResponse(redirectUrlsEntity.getNotOkURL());
         }
 
         if (!authorizeService.isAuthorized(redirectState, null)) {
             log.warn("Validation redirect request was failed: Xsrf Token is wrong or user are not authorized!");
-            return prepareRedirectResponse(NOT_OK_URL, HttpStatus.UNAUTHORIZED);
+            return prepareRedirectResponse(redirectUrlsEntity.getNotOkURL());
         }
 
         SessionEntity optionalUser = authorizeService.getByXsrfToken(redirectState);
         updateSessionByRedirectCode(optionalUser, redirectCode);
 
-        RedirectUrlsEntity redirectUrlsEntity = redirectUrlsEntityOptional.get();
-
-        return prepareRedirectResponse(redirectUrlsEntity.getOkURL(), HttpStatus.FOUND);
+        return prepareRedirectResponse(redirectUrlsEntity.getOkURL());
     }
 
     private void updateSessionByRedirectCode(SessionEntity sessionEntity, String redirectCode) {
@@ -82,15 +80,15 @@ public class RedirectHandlerService {
         authorizeService.updateUserSession(sessionEntity);
     }
 
-    private ResponseEntity prepareRedirectResponse(String redirectUrl, HttpStatus status) {
+    private ResponseEntity prepareRedirectResponse(String redirectUrl) {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.put(LOCATION_HEADER, singletonList(redirectUrl));
 
-        return new ResponseEntity<>(headers, status);
+        return new ResponseEntity<>(headers, HttpStatus.FOUND);
     }
 
-    private static String readBaseNotOkUrl() {
-        // TODO we need to decide where will be stored N_OK_URL
-        return "http://localhost:5500/fintech-callback/nok";
+    private String getModifiedUrlWithRedirectCode(String url, String redirectCode) {
+        // TODO it means url has format "http://some-address/more?parameter="
+        return url + redirectCode;
     }
 }

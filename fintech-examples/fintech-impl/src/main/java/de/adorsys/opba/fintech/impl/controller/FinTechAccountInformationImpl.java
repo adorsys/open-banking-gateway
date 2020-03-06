@@ -3,6 +3,7 @@ package de.adorsys.opba.fintech.impl.controller;
 import de.adorsys.opba.fintech.api.model.generated.AccountList;
 import de.adorsys.opba.fintech.api.model.generated.TransactionsResponse;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAccountInformationApi;
+import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.service.AccountService;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
@@ -36,8 +37,10 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
         }
         ContextInformation contextInformation = new ContextInformation(xRequestID);
         SessionEntity sessionEntity = authorizeService.getByXsrfToken(xsrfToken);
-        redirectHandlerService.registerRedirectUrlForSession(xsrfToken, fintechRedirectURLOK, fintechRedirectURLNOK);
-        return accountService.listAccounts(contextInformation, sessionEntity, bankId, fintechRedirectURLOK, fintechRedirectURLNOK);
+
+        RedirectUrlsEntity redirectUrlsEntity = redirectHandlerService.registerRedirectUrlForSession(xsrfToken);
+
+        return accountService.listAccounts(contextInformation, sessionEntity, bankId, redirectUrlsEntity.getOkURL(), redirectUrlsEntity.getNotOkURL());
     }
 
     @Override
@@ -53,9 +56,9 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
         ContextInformation contextInformation = new ContextInformation(xRequestID);
         SessionEntity sessionEntity = authorizeService.getByXsrfToken(xsrfToken);
 
-        redirectHandlerService.registerRedirectUrlForSession(xsrfToken, fintechRedirectURLOK, fintechRedirectURLNOK);
+        RedirectUrlsEntity redirectUrlsEntity = redirectHandlerService.registerRedirectUrlForSession(xsrfToken);
 
-        return transactionService.listTransactions(contextInformation, sessionEntity, fintechRedirectURLOK,
-                fintechRedirectURLNOK, bankId, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList);
+        return transactionService.listTransactions(contextInformation, sessionEntity, redirectUrlsEntity.getOkURL(), redirectUrlsEntity.getNotOkURL(),
+                                                   bankId, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList);
     }
 }
