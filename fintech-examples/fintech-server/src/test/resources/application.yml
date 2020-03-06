@@ -9,3 +9,9 @@ spring:
     username: SA
     password:
     driver-class-name: org.h2.Driver
+
+fintech-ui:
+  # It means URLs have format "http://some-address/more?parameter="
+  ok-url: http://localhost:5500/fintech-callback/redirect?fintechRedirectUriOk=
+  nok-url: http://localhost:5500/fintech-callback/redirect?fintechRedirectUriNOk=
+  exception-url: http://localhost:5500/fintech-callback/excaption-redirect?exception
