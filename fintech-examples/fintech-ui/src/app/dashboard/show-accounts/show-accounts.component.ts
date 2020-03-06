@@ -12,6 +12,7 @@ import { AisService } from '../services/ais.service';
 export class ShowAccountsComponent implements OnInit, OnDestroy {
   private accountsSubscription: Subscription;
   accounts: AccountDetails[];
+  selectedAccount = null;
 
   @Input()
   showAccounts = false;
@@ -33,5 +34,13 @@ export class ShowAccountsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.accountsSubscription.unsubscribe();
+  }
+
+  selectAccount(id) {
+    this.selectedAccount = id;
+  }
+
+  isSelected(id) {
+    return id === this.selectedAccount ? 'selected' : 'shadow';
   }
 }
