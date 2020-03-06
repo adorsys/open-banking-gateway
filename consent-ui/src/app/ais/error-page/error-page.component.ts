@@ -1,4 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'consent-app-error-page',
@@ -7,10 +8,17 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class ErrorPageComponent implements OnInit {
 
-  @Input() errorMessage = 'Unexpected error has occurred';
+  static ERROR_QUERY_MESSAGE = 'message';
 
-  constructor() { }
+  errorMessage = 'Unexpected error has occurred';
+
+  constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
+    this.activatedRoute.queryParams.subscribe(it => {
+      if (it[ErrorPageComponent.ERROR_QUERY_MESSAGE] && '' !== it[ErrorPageComponent.ERROR_QUERY_MESSAGE]) {
+        this.errorMessage = it[ErrorPageComponent.ERROR_QUERY_MESSAGE];
+      }
+    });
   }
 }

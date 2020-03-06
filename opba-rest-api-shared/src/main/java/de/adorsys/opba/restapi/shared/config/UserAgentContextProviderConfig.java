@@ -16,7 +16,6 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_AC
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_DEVICE_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_GEO_LOCATION;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_HTTP_METHOD;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP_ADDRESS;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP_PORT;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_USER_AGENT;
 
@@ -27,7 +26,8 @@ public class UserAgentContextProviderConfig {
     @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public UserAgentContext provideCurrentUserAgentContext(HttpServletRequest httpServletRequest) {
         return UserAgentContext.builder()
-                .psuIpAddress(httpServletRequest.getHeader(PSU_IP_ADDRESS))
+                // FIXME - YOU SHOULD NOT SEE IT!!!
+                .psuIpAddress("1.1.1.1")
                 .psuIpPort(httpServletRequest.getHeader(PSU_IP_PORT))
                 .psuAccept(httpServletRequest.getHeader(PSU_ACCEPT))
                 .psuAcceptCharset(httpServletRequest.getHeader(PSU_ACCEPT_CHARSET))

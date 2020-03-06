@@ -11,9 +11,10 @@ import { TanConfirmPageComponent } from './tan-confirm-page/tan-confirm-page.com
 import { AccountDetailsComponent } from './common/account-details/account-details.component';
 import { EntryPageAccountsComponent } from './entry-page-accounts/entry-page-accounts.component';
 import { EntryPageTransactionsComponent } from './entry-page-transactions/entry-page-transactions.component';
-import {ReactiveFormsModule} from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ErrorPageComponent } from './error-page/error-page.component';
-import {CardWithSidebarComponent} from './card-with-sidebar/card-with-sidebar.component';
+import { RouteBasedCardWithSidebarComponent } from './route-based-card-with-sidebar/route-based-card-with-sidebar.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import {CardWithSidebarComponent} from './card-with-sidebar/card-with-sidebar.co
     EntryPageAccountsComponent,
     EntryPageTransactionsComponent,
     ErrorPageComponent,
-    CardWithSidebarComponent
+    RouteBasedCardWithSidebarComponent,
+    SidebarComponent
   ],
   imports: [
     CommonModule,

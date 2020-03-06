@@ -3,7 +3,7 @@
   <process id="xs2a-authorize-consent" name="xs2a-authorize-consent" isExecutable="true">
     <documentation>XS2A consent authorization process</documentation>
     <startEvent id="start" name="start" flowable:formFieldValidation="true"></startEvent>
-    <serviceTask id="startAuthorization" name="Start SCA authorization" flowable:async="true" flowable:delegateExpression="${xs2aStartAuthorization}">
+    <serviceTask id="startAuthorization" name="Start SCA authorization" flowable:async="true" flowable:delegateExpression="${xs2aStartConsentAuthorization}">
       <documentation>scaStatus: recieved -&gt; psuIdentified</documentation>
     </serviceTask>
     <endEvent id="end" name="end"></endEvent>
