@@ -1,12 +1,22 @@
 package de.adorsys.opba.db.domain.entity;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public enum ProtocolAction {
     // AIS
-    LIST_ACCOUNTS,
-    LIST_TRANSACTIONS,
+    LIST_ACCOUNTS("list-accounts"),
+    LIST_TRANSACTIONS("list-transactions"),
     // Consent
-    UPDATE_AUTHORIZATION,
-    FROM_ASPSP_REDIRECT,
+    UPDATE_AUTHORIZATION("update-authorization"),
+    FROM_ASPSP_REDIRECT("from-aspsp"),
     // PIS
-    INITIATE_PAYMENT
+    INITIATE_PAYMENT("initiate-payment");
+
+    private final String name;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
