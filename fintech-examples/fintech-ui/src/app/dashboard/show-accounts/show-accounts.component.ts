@@ -30,7 +30,7 @@ export class ShowAccountsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     if (this.showAccounts) {
       this.route.params.forEach(param => {
-        this.aisService.getAccounts(param.id).subscribe(accounts => {
+        this.accountsSubscription = this.aisService.getAccounts(param.id).subscribe(accounts => {
           this.accounts = accounts;
         });
       });
