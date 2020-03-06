@@ -23,9 +23,9 @@ import java.util.UUID;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 import static de.adorsys.xs2a.adapter.service.ResponseHeaders.ASPSP_SCA_APPROACH;
 
-@Service("xs2aStartAuthorization")
+@Service("xs2aStartConsentAuthorization")
 @RequiredArgsConstructor
-public class StartAuthorization extends ValidatedExecution<Xs2aContext> {
+public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
 
     private final Extractor extractor;
     private final Xs2aValidator validator;

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CardWithSidebarComponent } from './card-with-sidebar.component';
+import { RouteBasedCardWithSidebarComponent } from './route-based-card-with-sidebar.component';
 
 describe('SidebarComponent', () => {
-  let component: CardWithSidebarComponent;
-  let fixture: ComponentFixture<CardWithSidebarComponent>;
+  let component: RouteBasedCardWithSidebarComponent;
+  let fixture: ComponentFixture<RouteBasedCardWithSidebarComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CardWithSidebarComponent ]
+      declarations: [ RouteBasedCardWithSidebarComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CardWithSidebarComponent);
+    fixture = TestBed.createComponent(RouteBasedCardWithSidebarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

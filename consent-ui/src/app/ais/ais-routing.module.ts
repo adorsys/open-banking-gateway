@@ -13,9 +13,9 @@ import {ErrorPageComponent} from './error-page/error-page.component';
 
 const routes: Routes = [
   {
-    path: '/{authId}',
-    component: EntryPageComponent,
+    path: ':authId',
     children: [
+      {path: '', component: EntryPageComponent},
       {path: 'list-accounts', component: EntryPageAccountsComponent},
       {path: 'list-transactions', component: EntryPageTransactionsComponent},
       {path: 'error', component: ErrorPageComponent}
