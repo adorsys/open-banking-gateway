@@ -11,24 +11,15 @@ import { AccountDetails } from '../../api';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  private accountsSubscription: Subscription;
-  showAccounts = false;
-  accounts: AccountDetails[];
   bankID = '';
 
-  constructor(private route: ActivatedRoute, private aisService: AisService) {}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.route.params.forEach(param => {
-      this.aisService.getAccounts(param.id).subscribe(accounts => {
-        this.bankID = param.id;
-        this.accounts = accounts;
-        this.showAccounts = true;
-      });
+      this.bankID = param.id;
     });
   }
 
-  ngOnDestroy(): void {
-    this.accountsSubscription.unsubscribe();
-  }
+  ngOnDestroy(): void {}
 }

@@ -1,12 +1,14 @@
-<div class="parent">
-  <div *ngFor="let account of accounts" (click)="transactions.selectAccount(account.resourceId)">
-    <div class="list-container list-container--{{ config?.shadow }}">
-      <div class="list-item">
-        <h1 class="list-item__headline list-item__headline--{{ config?.headline }}">{{ account.name }}</h1>
-        <p class="list-item__subheadline list-item__subheadline--{{ config?.subheadline }}">{{ account.iban }}</p>
+<div *ngIf="showAccounts">
+  <div class="parent">
+    <div *ngFor="let account of accounts" (click)="transactions.selectAccount(account.resourceId)">
+      <div class="list-container list-container--{{ config?.shadow }}">
+        <div class="list-item">
+          <h1 class="list-item__headline list-item__headline--{{ config?.headline }}">{{ account.name }}</h1>
+          <p class="list-item__subheadline list-item__subheadline--{{ config?.subheadline }}">{{ account.iban }}</p>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<app-show-transactions #transactions [bankId]="bankId"></app-show-transactions>
+  <app-show-transactions #transactions [bankId]="bankId"></app-show-transactions>
+</div>
