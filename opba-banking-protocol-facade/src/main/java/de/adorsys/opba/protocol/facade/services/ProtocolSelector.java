@@ -60,7 +60,7 @@ public class ProtocolSelector {
     }
 
     private boolean isForAuthorization(ProtocolAction action) {
-        return action == ProtocolAction.UPDATE_AUTHORIZATION;
+        return action == ProtocolAction.AUTHORIZATION || ProtocolAction.AUTHORIZATION == action.getParent();
     }
 
     private <A> A findActionBean(BankProtocol forProtocol, Map<String, A> actionBeans, ProtocolAction action) {

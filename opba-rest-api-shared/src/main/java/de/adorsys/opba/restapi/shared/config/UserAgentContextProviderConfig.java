@@ -27,7 +27,7 @@ public class UserAgentContextProviderConfig {
     public UserAgentContext provideCurrentUserAgentContext(HttpServletRequest httpServletRequest) {
         return UserAgentContext.builder()
                 // FIXME - YOU SHOULD NOT SEE IT!!!
-                .psuIpAddress("1.1.1.1")
+                .psuIpAddress(httpServletRequest.getRemoteAddr())
                 .psuIpPort(httpServletRequest.getHeader(PSU_IP_PORT))
                 .psuAccept(httpServletRequest.getHeader(PSU_ACCEPT))
                 .psuAcceptCharset(httpServletRequest.getHeader(PSU_ACCEPT_CHARSET))

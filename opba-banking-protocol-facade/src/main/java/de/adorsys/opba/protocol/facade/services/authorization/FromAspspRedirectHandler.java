@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.facade.services.fromaspsp;
+package de.adorsys.opba.protocol.facade.services.authorization;
 
 import de.adorsys.opba.protocol.api.authorization.FromAspspRedirect;
 import de.adorsys.opba.protocol.api.dto.request.authorization.fromaspsp.FromAspspRequest;
