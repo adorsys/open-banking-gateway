@@ -1,34 +1,43 @@
 <div class="sidebar">
   <ul class="nav flex-md-column">
-    <div *ngIf="contains('accounts')">
-      <li class="nav-item">
-        <a [routerLinkActive]="['active']" [routerLink]="['/']" class="nav-link ">
-          <div class="icon__container">
-            <img alt="bank_cards" class="text-primary" src="assets/icons/icons8-bank_cards.svg" />
-          </div>
-          <span class="nav__title">Accounts</span>
-        </a>
-      </li>
-    </div>
-    <div *ngIf="contains('transfert')">
-      <li class="nav-item">
-        <a [routerLinkActive]="['active']" [routerLink]="['/']" class="nav-link ">
-          <div class="icon__container">
-            <img alt="transfert" class="text-primary" src="assets/icons/icons8-sent.svg" />
-          </div>
-          <span class="nav__title">Transfert</span>
-        </a>
-      </li>
-    </div>
-    <div>
-      <li class="nav-item">
-        <a [routerLinkActive]="['active']" [routerLink]="['/']" class="nav-link">
-          <div class="icon__container">
-            <img alt="settings" class="text-primary" src="assets/icons/icons8-maintenance.svg" />
-          </div>
-          <span class="nav__title">Setting</span>
-        </a>
-      </li>
-    </div>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [routerLinkActive]="['active']"
+        [routerLink]="['/dashboard/'] + bankId"
+        (click)="contains('LIST_ACCOUNTS')"
+      >
+        <div class="icon__container">
+          <img alt="bank_cards" class="text-primary" src="assets/icons/icons8-bank_cards.svg" />
+        </div>
+        <span class="nav__title">Accounts</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [routerLinkActive]="['active']"
+        [routerLink]="['/dashboard/'] + bankId"
+        (click)="contains('LIST_TRANSACTIONS')"
+      >
+        <div class="icon__container">
+          <img alt="transfert" class="text-primary" src="assets/icons/icons8-sent.svg" />
+        </div>
+        <span class="nav__title">Transfert</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        [routerLinkActive]="['active']"
+        [routerLink]="['/dashboard/'] + bankId"
+        (click)="contains('UPDATE_AUTHORIZATION')"
+        class="nav-link"
+      >
+        <div class="icon__container">
+          <img alt="settings" class="text-primary" src="assets/icons/icons8-maintenance.svg" />
+        </div>
+        <span class="nav__title">Setting</span>
+      </a>
+    </li>
   </ul>
 </div>

@@ -8,25 +8,34 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-  services: Array<string>;
+  services: string[];
   bankId: string;
   bankName: string;
 
-  constructor(private bankProfileService: BankProfileService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private bankProfileService: BankProfileService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.bankId = this.route.snapshot.paramMap.get('id');
+    //        this.bankId = this.route.snapshot.paramMap.get('id');
+    this.bankId = localStorage.getItem('bankId');
+
+    console.log('bankid', this.bankId);
+    this.getBankInfos();
+  }
+
+  getBankInfos() {
     this.bankProfileService.getBankProfile(this.bankId).subscribe(response => {
       this.bankName = response.bankName;
       this.services = response.services;
+      localStorage.setItem('services', JSON.stringify(this.services));
+      console.log('list of services1', this.services);
     });
   }
 
-  contains(service: string): boolean {
-    return this.services.includes(service);
-  }
-
-  goTo(): void {
-    this.router.navigate(['/dashboard', this.bankId]);
+  contains(service: string) {
+    this.services = JSON.parse(localStorage.getItem('services'));
+    this.services.forEach(value => {
+      return value === service;
+    });
+    return false;
   }
 }
