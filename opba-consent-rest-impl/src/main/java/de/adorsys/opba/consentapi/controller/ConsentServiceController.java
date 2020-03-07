@@ -4,6 +4,7 @@ import de.adorsys.opba.consentapi.model.generated.PsuAuthRequest;
 import de.adorsys.opba.consentapi.resource.generated.ConsentAuthorizationApi;
 import de.adorsys.opba.consentapi.service.mapper.AisConsentMapper;
 import de.adorsys.opba.consentapi.service.mapper.AisExtrasMapper;
+import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.fromaspsp.FromAspspRequest;
@@ -11,7 +12,7 @@ import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.authorization.StartAuthorizationService;
 import de.adorsys.opba.protocol.facade.services.authorization.UpdateAuthorizationService;
-import de.adorsys.opba.protocol.facade.services.fromaspsp.FromAspspRedirectHandler;
+import de.adorsys.opba.protocol.facade.services.authorization.FromAspspRedirectHandler;
 import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,18 +25,21 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class ConsentServiceController implements ConsentAuthorizationApi {
 
+    private final UserAgentContext userAgentContext;
     private final AisExtrasMapper extrasMapper;
     private final AisConsentMapper aisConsentMapper;
     private final FacadeResponseMapper mapper;
-    private final StartAuthorizationService initAuthorizationService;
+    private final StartAuthorizationService startAuthorizationService;
     private final UpdateAuthorizationService updateAuthorizationService;
     private final FromAspspRedirectHandler fromAspspRedirectHandler;
 
     @Override
     public CompletableFuture authUsingGET(String authId, String redirectCode) {
-        return initAuthorizationService.execute(
+        return startAuthorizationService.execute(
                 AuthorizationRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
+                                // Get rid of CGILIB here by copying:
+                                .uaContext(userAgentContext.toBuilder().build())
                                 .redirectCode(redirectCode)
                                 .authorizationSessionId(authId)
                                 .build()
@@ -54,6 +58,8 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
         return updateAuthorizationService.execute(
                 AuthorizationRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
+                                // Get rid of CGILIB here by copying:
+                                .uaContext(userAgentContext.toBuilder().build())
                                 .redirectCode(redirectCode)
                                 .authorizationSessionId(authId)
                                 .requestId(xRequestID)

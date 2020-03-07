@@ -29,6 +29,7 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 
+import static de.adorsys.opba.db.domain.entity.ProtocolAction.AUTHORIZATION;
 import static de.adorsys.opba.db.domain.entity.ProtocolAction.UPDATE_AUTHORIZATION;
 
 @Service
@@ -144,7 +145,7 @@ public class ProtocolResultHandler {
     @NotNull
     private <O> AuthSession createNewAuthSession(Result<O> result, ServiceContext session) {
         BankProtocol authProtocol = protocolRepository
-                .findByBankProfileUuidAndAction(session.getBankId(), UPDATE_AUTHORIZATION)
+                .findByBankProfileUuidAndAction(session.getBankId(), AUTHORIZATION)
                 .orElseThrow(
                         () -> new IllegalStateException("Missing update authorization handler for " + session.getBankId())
                 );

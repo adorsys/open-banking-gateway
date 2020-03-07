@@ -15,6 +15,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { RouteBasedCardWithSidebarComponent } from './route-based-card-with-sidebar/route-based-card-with-sidebar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { ConsentInitiateComponent } from './consent-initiate/consent-initiate.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     EntryPageTransactionsComponent,
     ErrorPageComponent,
     RouteBasedCardWithSidebarComponent,
-    SidebarComponent
+    SidebarComponent,
+    ConsentInitiateComponent
   ],
   imports: [
     CommonModule,

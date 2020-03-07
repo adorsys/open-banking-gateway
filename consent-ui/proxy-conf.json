@@ -1,0 +1,11 @@
+{
+  "/embedded-server/*": {
+    "target": "http://localhost:8085",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/embedded-server": ""
+    },
+    "logLevel": "debug"
+  }
+}

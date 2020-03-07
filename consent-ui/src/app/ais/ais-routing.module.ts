@@ -9,13 +9,15 @@ import {ScaSelectPageComponent} from './sca-select-page/sca-select-page.componen
 import {EntryPageAccountsComponent} from './entry-page-accounts/entry-page-accounts.component';
 import {EntryPageTransactionsComponent} from './entry-page-transactions/entry-page-transactions.component';
 import {ErrorPageComponent} from './error-page/error-page.component';
+import {ConsentInitiateComponent} from "./consent-initiate/consent-initiate.component";
 
 
 const routes: Routes = [
   {
     path: ':authId',
+    component: EntryPageComponent,
     children: [
-      {path: '', component: EntryPageComponent},
+      {path: '', component: ConsentInitiateComponent},
       {path: 'list-accounts', component: EntryPageAccountsComponent},
       {path: 'list-transactions', component: EntryPageTransactionsComponent},
       {path: 'error', component: ErrorPageComponent}

@@ -11,7 +11,7 @@ import {Observable} from 'rxjs';
 })
 export class ConsentAuthorizationService {
 
-  private basePath = 'http://localhost:8085';
+  private basePath = 'http://localhost:4200/embedded-server';
 
   constructor(protected httpClient: HttpClient) {
   }
