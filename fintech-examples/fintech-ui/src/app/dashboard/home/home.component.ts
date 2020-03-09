@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.route.params.forEach(param => {
+      console.log('dashboard gets bankid ' + param.id);
       this.bankID = param.id;
     });
   }
