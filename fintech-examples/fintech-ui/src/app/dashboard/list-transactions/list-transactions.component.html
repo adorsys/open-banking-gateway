@@ -1,18 +1,18 @@
-<div *ngIf="showTransactions">
+<div *ngIf="makeVisible">
   <div *ngIf="transactions.pending.length > 0">
     Pending
     <div *ngFor="let transaction of transactions.pending">
-      <div class="parent list-container list-container--shadow }}">
-        <div class="date">
+      <div class="ltx-parent ltx-list-container ltx-list-container--shadow }}">
+        <div class="ltx-date">
           {{ transaction.bookingDate }}
         </div>
-        <div class="description">
+        <div class="ltx-description">
           {{ transaction.additionalInformation }}
         </div>
-        <div class="amount-number">
+        <div class="ltx-amount-number">
           {{ transaction.transactionAmount.amount }}
         </div>
-        <div class="amount-currency">
+        <div class="ltx-amount-currency">
           {{ transaction.transactionAmount.currency }}
         </div>
       </div>
@@ -22,17 +22,17 @@
   <div *ngIf="transactions.booked.length > 0">
     Booked
     <div *ngFor="let transaction of transactions.booked">
-      <div class="parent list-container list-container--shadow }}">
-        <div class="date">
+      <div class="ltx-parent ltx-list-container ltx-list-container--shadow }}">
+        <div class="ltx-date">
           {{ transaction.bookingDate }}
         </div>
-        <div class="description">
+        <div class="ltx-description">
           {{ transaction.additionalInformation }}
         </div>
-        <div class="amount-number">
+        <div class="ltx-amount-number">
           {{ transaction.transactionAmount.amount }}
         </div>
-        <div class="amount-currency">
+        <div class="ltx-amount-currency">
           {{ transaction.transactionAmount.currency }}
         </div>
       </div>

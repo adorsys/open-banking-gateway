@@ -5,17 +5,16 @@ import { ActivatedRoute } from '@angular/router';
 import { AisService } from '../services/ais.service';
 
 @Component({
-  selector: 'app-show-accounts',
-  templateUrl: './show-accounts.component.html',
-  styleUrls: ['./show-accounts.component.scss']
+  selector: 'app-list-accounts',
+  templateUrl: './list-accounts.component.html'
 })
-export class ShowAccountsComponent implements OnInit, OnDestroy {
+export class ListAccountsComponent implements OnInit, OnDestroy {
   private accountsSubscription: Subscription;
   accounts: AccountDetails[];
-  selectedAccount = null;
+  selectedAccount: string;
 
   @Input()
-  showAccounts = false;
+  makeVisible = false;
 
   @Input()
   bankId = '';
@@ -23,7 +22,7 @@ export class ShowAccountsComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute, private aisService: AisService) {}
 
   ngOnInit() {
-    if (this.showAccounts) {
+    if (this.makeVisible) {
       this.route.params.forEach(param => {
         this.accountsSubscription = this.aisService.getAccounts(param.id).subscribe(accounts => {
           this.accounts = accounts;
@@ -41,6 +40,6 @@ export class ShowAccountsComponent implements OnInit, OnDestroy {
   }
 
   isSelected(id) {
-    return id === this.selectedAccount ? 'selected' : 'shadow';
+    return id === this.selectedAccount ? 'selected' : 'unselected';
   }
 }
