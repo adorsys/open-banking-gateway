@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Authorize Consent Redirect Approach - Open Banking Gateway Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Authorize Consent Redirect Approach";
+    var mkdocs_page_input_path = "architecture/5b-psuAuthRedirectConsent.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Open Banking Gateway Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../getting_started/">Getting started</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../ContributionGuidelines/">Contibution Guidelines</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../roadmap/">Roadmap</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../releasenotes/">Release notes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../version_policy/">Version policy</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../drafts/initial_requirements/">Initial Requirements</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Architecture</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../dictionary/">Dictionary</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../building_blocks/01.Application_context/">Application context</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../building_blocks/02.Component_diagrams/">Component diagrams</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Concepts</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../concepts/psu-security-concept/">PSU Security Concept</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Use cases</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../use_cases/">Use cases</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../1-loginWithFinTech/">Login with FinTech Application</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../2-searchBank/">Search bank</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../3-selectBank/">Select bank</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../4a-aisListOfAccounts/">List of Accounts</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../4b-aisListOfTransactions/">List of Transactions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5-redirectPsuToConsentAPI/">Redirect to Consent Authorization API</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5a-psuAuthEmbeddedConsent/">Authorize Consent Embedded Approach</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Authorize Consent Redirect Approach</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#authorize-consent-redirect-approach">Authorize Consent Redirect Approach</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#description">Description</a></li>
+        
+            <li><a class="toctree-l4" href="#diagram">Diagram</a></li>
+        
+            <li><a class="toctree-l4" href="#use-cases">Use Cases</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../6-consume_api/">Consume Service</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../drafts/initial_requirements/">Draft</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../initial_requirements/">Initial requirements</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Open Banking Gateway Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Use cases &raquo;</li>
+        
+      
+    
+    <li>Authorize Consent Redirect Approach</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/adorsys/open-banking-gateway/edit/master/docs/architecture/5b-psuAuthRedirectConsent.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="authorize-consent-redirect-approach">Authorize Consent Redirect Approach</h1>
+<h2 id="description">Description</h2>
+<p>Describes the process of redirecting a PSU to the Online Banking interface of it's ASPSP.</p>
+<h2 id="diagram">Diagram</h2>
+<p><img alt="Session diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/5b-psuAuthRedirectConsent.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" />  </p>
+<h2 id="use-cases">Use Cases</h2>
+<h3 id="authredirect-010-020-display-redirectinfopage">AuthRedirect-010 &amp; -020 : Display RedirectInfoPage</h3>
+<p>ConsentAuthorisationUI.infoPanel page uses information provided by the AuthorizeResponse to display a redirect to ASPSP info page to the PSU. </p>
+<h3 id="authredirect-030-040-grant-redirect">AuthRedirect-030 &amp; -040 : Grant Redirect</h3>
+<p>The PSU interface might decide to either allow the PSU to explicitly confirm or deny the redirection to the ASPSP, or automatically proceed with this without the consent of the PSU. In both case, the ConsentAuthorisationUI has to invoke the FinTechApi.toAspspGrant that will in turn invoke the ConsentAuthorisationApi.toAspspGrant endpoint to generate the redirect response. </p>
+<h3 id="managing-redirection">Managing Redirection</h3>
+<h4 id="authredirect-050-redirecting-psu-to-the-aspsp">AuthRedirect-050 : Redirecting PSU to the ASPSP</h4>
+<p>Detailed specification of the redirect process might depend on the specification of the ASPSP interface. Nevertheless, the returned redirect link carries an ConsentAuthSessionCookie that is used to store consent details in the User Agent of the PSU. 
+As well, the consentAuthState shall be part of any BackRedirectURL (OKUrl, nokUrl) so ConsentAuthorisationApi can read the ConsentAuthSessionCookie when ASPSP sends back PSU to the ConsentAuthorisationApi.</p>
+<h4 id="authredirect-060-back-redirecting-psu-to-the-consentauthorisationapi">AuthRedirect-060 : Back-Redirecting PSU to the ConsentAuthorisationAPI</h4>
+<p>The endpoint ConsentAuthorisationAPI.fromAspspOk consumes a redirect call from the ASPSP Online Banking. The corresponding URL
+contains a consentAuthState. The consentAuthState will the be used to retrieve the attached ConsentAuthSessionCookie whose content will in turn be used to read the TppConsentSession.</p>
+<h4 id="authredirect-071-authredirect-073-forward-call-to-bankingprotocol">AuthRedirect-071 .. AuthRedirect-073 : Forward call to BankingProtocol</h4>
+<p>The fromAspspOk method of the BankingProtocol is called with TppConsentSession and aspspAuthCode.
+- The aspspAuthCode can be use to retrieve Token from ASPSP Token endpoint in case of an oAuth Approach.
+- The consent session contains any other information needed to manage the consent process.</p>
+<h4 id="authredirect-077-redirect-psu-to-fintechapi">AuthRedirect-077 Redirect PSU to FinTechAPI</h4>
+<p>The TppConsentSession is temporarily encrypted and stored in the form of a RedirectSession. Corresponding redirectCode is used to redirect PSU to the FinTechAPI redirect endpoint. ConsentAuthSessionCookie is deleted with start of this back redirect process.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../6-consume_api/" class="btn btn-neutral float-right" title="Consume Service">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../5a-psuAuthEmbeddedConsent/" class="btn btn-neutral" title="Authorize Consent Embedded Approach"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/adorsys/open-banking-gateway/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../5a-psuAuthEmbeddedConsent/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../6-consume_api/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+
+</body>
+</html>

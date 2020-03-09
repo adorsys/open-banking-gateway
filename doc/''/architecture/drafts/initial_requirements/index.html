@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../../img/favicon.ico">
+  <title>Draft - Open Banking Gateway Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Draft";
+    var mkdocs_page_input_path = "architecture/drafts/initial_requirements.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../../.." class="icon icon-home"> Open Banking Gateway Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../getting_started/">Getting started</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../ContributionGuidelines/">Contibution Guidelines</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../roadmap/">Roadmap</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../releasenotes/">Release notes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../version_policy/">Version policy</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="./">Initial Requirements</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Architecture</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../dictionary/">Dictionary</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../building_blocks/01.Application_context/">Application context</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../building_blocks/02.Component_diagrams/">Component diagrams</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Concepts</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../concepts/psu-security-concept/">PSU Security Concept</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Use cases</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../use_cases/">Use cases</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../1-loginWithFinTech/">Login with FinTech Application</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../2-searchBank/">Search bank</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../3-selectBank/">Select bank</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../4a-aisListOfAccounts/">List of Accounts</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../4b-aisListOfTransactions/">List of Transactions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../5-redirectPsuToConsentAPI/">Redirect to Consent Authorization API</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../5a-psuAuthEmbeddedConsent/">Authorize Consent Embedded Approach</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../5b-psuAuthRedirectConsent/">Authorize Consent Redirect Approach</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../6-consume_api/">Consume Service</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Draft</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#tech-setup">Tech setup</a></li>
+    
+
+    <li class="toctree-l2"><a href="#least-annoying-api">Least annoying API:</a></li>
+    
+
+    <li class="toctree-l2"><a href="#initial-implementation-diagram">Initial implementation diagram</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#e2e-flows">E2E flows</a></li>
+        
+            <li><a class="toctree-l3" href="#generic-request-handling-check-consent-is-valid-pre-filter">Generic request handling (Check consent is valid pre-filter)</a></li>
+        
+            <li><a class="toctree-l3" href="#obtaining-ais-consent-swimlane">Obtaining AIS Consent swimlane</a></li>
+        
+            <li><a class="toctree-l3" href="#getting-transaction-list-using-ais-consent-swimlane">Getting transaction list using AIS Consent swimlane</a></li>
+        
+            <li><a class="toctree-l3" href="#full-swimlane-e2e-for-getting-transaction-list">Full swimlane e2e for getting transaction list</a></li>
+        
+            <li><a class="toctree-l3" href="#full-swimlane-e2e-for-performing-payment">Full swimlane e2e for performing payment</a></li>
+        
+            <li><a class="toctree-l3" href="#api">API</a></li>
+        
+            <li><a class="toctree-l3" href="#in-short">In short</a></li>
+        
+            <li><a class="toctree-l3" href="#with-details">With details</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l2"><a href="#api-sketch">API sketch</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#psu-wants-to-pay-100eur-to-iban-12345">PSU wants to pay 100EUR to IBAN 12345</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../initial_requirements/">Initial requirements</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../..">Open Banking Gateway Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Draft</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/adorsys/open-banking-gateway/edit/master/docs/architecture/drafts/initial_requirements.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="tech-setup">Tech setup</h1>
+<pre><code>Spring Boot &gt;= 2.2
+Flowable BPMN 6.x
+Drools rule engine (embedded with Flowable)
+Postgres RDBMS 12.x
+XS2A-flow for tests
+</code></pre>
+<h1 id="least-annoying-api">Least annoying API:</h1>
+<pre><code>TPP creates user profile (name, surname,...) that provides information necessary to perform requests on his behalf
+TPP provides setting which mode will be used STATIC or DIALOG to perform user requests
+In STATIC mode TPP must fulfill all fields that are not provided by profile but are necessary to perform action (except SCA)
+TPP calls i.e. /pay/IBAN-from/IBAN-to/CURRENCY/amount with parameters from step nr. 3. The only extra stuff to complete the call is SCA
+</code></pre>
+<h1 id="initial-implementation-diagram">Initial implementation diagram</h1>
+<h2 id="e2e-flows">E2E flows</h2>
+<ol>
+<li><a href="#full-swimlane-e2e-for-getting-transaction-list">Transaction list</a> flow.</li>
+<li><a href="#full-swimlane-e2e-for-performing-payment">Performing payment</a> flow.</li>
+</ol>
+<h2 id="generic-request-handling-check-consent-is-valid-pre-filter">Generic request handling (Check consent is valid pre-filter)</h2>
+<p>Initially (for MVP0), questions <code>Needs consent?</code> and <code>Consent valid?</code> are answered using database-table that 
+contains bank profile, in future it can be switched to rule engine or entire BPMN job. </p>
+<h3 id="tpp-can-initiate-consent-with-psu-under-the-hood-if-required">TPP can initiate consent with PSU under the hood if required.</h3>
+<p>This basically means that if request is missing consent, but has flag to allow automatic consent creation TPP will 
+call <a href="#obtaining-ais-consent-swimlane">obtaining consent</a> flow.</p>
+<p><img alt="Implementation draft diagram - generic request" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-generic.puml&amp;fmt=svg&amp;vvv=2&amp;sanitize=true" /></p>
+<h2 id="obtaining-ais-consent-swimlane">Obtaining AIS Consent swimlane</h2>
+<p><img alt="Implementation draft diagram - consent" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-consent.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" /></p>
+<h2 id="getting-transaction-list-using-ais-consent-swimlane">Getting transaction list using AIS Consent swimlane</h2>
+<p><img alt="Implementation draft diagram - Tx list" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-tx-list.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" /></p>
+<h2 id="full-swimlane-e2e-for-getting-transaction-list">Full swimlane e2e for getting transaction list</h2>
+<details><summary>Get transaction list by FinTech</summary>
+
+**Notes:**
+1. Initially PSU enters FinTech screen 'Transaction list'
+1. Since consent is missing, when being asked for 'Transaction list' TPP will create implicit consent with PSU 
+(since PSU is in session with FinTech)
+1. After consent was established FinTech can store it and get 'Transaction list' without PSU intervention
+1. If consent has expired FinTech should inform user and perform step 1 again 
+
+![Implementation draft diagram - Tx list full](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-full-flow-tx-list.puml&fmt=svg&vvv=1&sanitize=true)
+
+</details>
+
+<h2 id="full-swimlane-e2e-for-performing-payment">Full swimlane e2e for performing payment</h2>
+<details><summary>Perform payment by FinTech</summary>
+
+![Implementation draft diagram - Perform payment](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-full-flow-payment.puml&fmt=svg&vvv=2&sanitize=true)
+
+</details>
+
+<h2 id="api">API</h2>
+<p>OpenBankingGateway Api is defined for boundary (of course TPP itself can use it):
+FinTech with OpenBankingGw API &lt;--&gt; TPP with OpenBankingGw Impl (See diagrams above)</p>
+<p>Consent API:
+1. <code>PUT /consents/{bankId} body: {accounts: [&lt;accountIds&gt;], allAccounts: true}</code> to create consent</p>
+<p>Account information API:
+1. <code>GET /transactions</code> to read transactions <strong>with option to ask for consent automatically</strong>
+1. <code>GET /accounts</code> to read account details <strong>with option to ask for consent automatically</strong></p>
+<p>Payment API:
+1. <code>PUT /payments</code> to initiate payment
+...</p>
+<h2 id="in-short">In short</h2>
+<p><img alt="Implementation draft diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-v0-bird-view.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" /></p>
+<h2 id="with-details">With details</h2>
+<p><img alt="Detailed Implementation draft diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/implementation-draft-v0.puml&amp;fmt=svg&amp;vvv=17&amp;sanitize=true" /></p>
+<h1 id="api-sketch">API sketch</h1>
+<h2 id="psu-wants-to-pay-100eur-to-iban-12345">PSU wants to pay 100EUR to IBAN 12345</h2>
+<h3 id="generic-case">Generic case</h3>
+<ol>
+<li>Find PSU client bank id <code>GET /api/v1/banks?name=Deutsche</code> or <code>GET /api/v1/banks?bic=12345</code> -&gt; <code>{bankId}</code></li>
+<li>View necessary parameters that are required from PSU for <code>{bankId}</code> to execute payment: 
+<code>GET /api/v1/payments/{bankId}/{psuId}/{ibanFrom}/{ibanTo}/parameters</code> - yields 
+<code>{"GEO_LOCATION": "This payment requires client geo-location"}</code> (Note: this also may yield i.e. SCA method if PSU did not select it in profile)</li>
+<li>Since request can't automatically proceed, TPP reads required GEO_LOCATION from PSU</li>
+<li>Now TPP can proceed with payment <code>PUT /api/v1/payments/{bankId}/{psuId}/{ibanFrom}/{ibanTo} body: {"amount": 100.0, "currency": "EUR", "GEO_LOCATION": {"lat": 12, "lng": 10.0}}</code> 
+(Note: This can have i.e. SCA method to use that overrides profile defaults)</li>
+<li>OpenBanking handles request sequence using computed process</li>
+</ol>
+<h3 id="sequence-diagram">Sequence diagram</h3>
+<h4 id="tpp-acquires-mandatory-parameters-before-request">TPP acquires mandatory parameters before request</h4>
+<p><img alt="Implementation draft diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/payment-static-param.puml&amp;fmt=svg&amp;vvv=2&amp;sanitize=true" /></p>
+<h4 id="tpp-acquires-mandatory-parameters-during-request">TPP acquires mandatory parameters during request</h4>
+<p><img alt="Implementation draft diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/drafts/payment-dynamic-param.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" /></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../../initial_requirements/" class="btn btn-neutral float-right" title="Initial requirements">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../../6-consume_api/" class="btn btn-neutral" title="Consume Service"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/adorsys/open-banking-gateway/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../../6-consume_api/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../../../initial_requirements/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+
+</body>
+</html>

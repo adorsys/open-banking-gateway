@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../../img/favicon.ico">
+  <title>PSU Security Concept - Open Banking Gateway Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "PSU Security Concept";
+    var mkdocs_page_input_path = "architecture/concepts/psu-security-concept.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../../.." class="icon icon-home"> Open Banking Gateway Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../getting_started/">Getting started</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../ContributionGuidelines/">Contibution Guidelines</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../roadmap/">Roadmap</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../releasenotes/">Release notes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../version_policy/">Version policy</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../drafts/initial_requirements/">Initial Requirements</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Architecture</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../dictionary/">Dictionary</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../building_blocks/01.Application_context/">Application context</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../building_blocks/02.Component_diagrams/">Component diagrams</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Concepts</span>
+    <ul class="subnav">
+                <li class=" current">
+                    
+    <a class="current" href="./">PSU Security Concept</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#psu-access-security-design">PSU Access Security Design</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#core-participants">Core Participants</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#security-considerations">Security Considerations</a></li>
+    
+
+    <li class="toctree-l3"><a href="#redirection-and-xsrf">Redirection and XSRF</a></li>
+    
+
+    <li class="toctree-l3"><a href="#redirection-and-data-sharing">Redirection and Data Sharing</a></li>
+    
+
+    <li class="toctree-l3"><a href="#step-1-identify-psu-at-the-fintechapi">Step-1: Identify PSU at the FinTechApi</a></li>
+    
+
+    <li class="toctree-l3"><a href="#step-2-store-psu-idfintech-with-the-consentauthorizationsession">Step-2: Store psu-id@fintech with the ConsentAuthorizationSession</a></li>
+    
+
+    <li class="toctree-l3"><a href="#step-2-identify-psu-at-the-tpp-consentauthorisationapi">Step-2: Identify PSU at the TPP ConsentAuthorisationApi</a></li>
+    
+
+    <li class="toctree-l3"><a href="#step-3a-consentauthorisation-at-the-tpps-consentauthorisationapi-embedded-sca">Step-3a: ConsentAuthorisation at the TPP's ConsentAuthorisationApi (Embedded-sca)</a></li>
+    
+
+    <li class="toctree-l3"><a href="#step-3b-identify-psu-at-the-aspsps-onlinebankingapi-redirect-sca">Step-3b: Identify PSU at the ASPSP's OnlineBankingApi (Redirect-sca)</a></li>
+    
+
+    <li class="toctree-l3"><a href="#step-4-verify-equivalence-between-psu-idaspsp-and-psu-idtpp-redirect-sca">Step-4: Verify Equivalence between psu-id@aspsp and psu-id@tpp (Redirect-sca)</a></li>
+    
+
+    <li class="toctree-l3"><a href="#alt-1-sharing-of-identity-provider">Alt-1: Sharing of Identity Provider</a></li>
+    
+
+    <li class="toctree-l3"><a href="#alt-2-no-sharing-of-identity-provider">Alt-2: No Sharing of Identity Provider</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#make-sure-the-physical-back-redirection-sends-the-psu-to-the-source-psuuseragent">Make sure the physical back redirection sends the PSU to the Source PsuUserAgent</a></li>
+        
+            <li><a class="toctree-l4" href="#verify-redirect-state-once-in-the-source-psuuseragent">Verify Redirect State once in the Source PsuUserAgent</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#alt-3-no-sharing-of-idp-and-decoupled-sca">Alt-3: No Sharing of IDP and Decoupled-sca</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#manual-code-transfer">Manual Code Transfer</a></li>
+        
+            <li><a class="toctree-l4" href="#qr-scan">QR-Scan</a></li>
+        
+            <li><a class="toctree-l4" href="#push-notifications">Push notifications</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#limitation-of-identity-equivalence-for-existing-openbanking-flows">Limitation of Identity Equivalence for Existing OpenBanking Flows</a></li>
+    
+
+    </ul>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Use cases</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../use_cases/">Use cases</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../1-loginWithFinTech/">Login with FinTech Application</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../2-searchBank/">Search bank</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../3-selectBank/">Select bank</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../4a-aisListOfAccounts/">List of Accounts</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../4b-aisListOfTransactions/">List of Transactions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../5-redirectPsuToConsentAPI/">Redirect to Consent Authorization API</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../5a-psuAuthEmbeddedConsent/">Authorize Consent Embedded Approach</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../5b-psuAuthRedirectConsent/">Authorize Consent Redirect Approach</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../6-consume_api/">Consume Service</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../drafts/initial_requirements/">Draft</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../initial_requirements/">Initial requirements</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../..">Open Banking Gateway Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Concepts &raquo;</li>
+        
+      
+    
+    <li>PSU Security Concept</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/adorsys/open-banking-gateway/edit/master/docs/architecture/concepts/psu-security-concept.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="psu-access-security-design">PSU Access Security Design</h1>
+<h2 id="abstract"><a name="OpenBankingPsuContract"></a>Abstract</h2>
+<p>We define the <strong>OpenBanking PSU Contract</strong> as a relationship between the <strong><a href="./#PSU">PSU</a></strong>, the <strong><a href="./#FinTech">FinTech</a></strong>, the <strong><a href="./#TPP">TPP</a></strong> and the <strong><a href="./#ASPSP">ASPSP</a></strong> so that:
+- the <strong>PSU</strong> can initiate banking/payment services through an application provided by the <strong>FinTech</strong>, and for this purpose,
+- the <strong>PSU</strong> can <strong>authorize</strong> the <strong>TPP</strong> to service this initiated payment/banking requests from a designated <strong>FinTech</strong> on behalf of the PSU, and for this purpose,
+- the <strong>PSU</strong> can <strong>authorize</strong> the <strong>ASPSP</strong> to service this initiated payment/banking requests from a designated <strong>TPP</strong> on behalf of the PSU.</p>
+<p>This is, the PSU might be interacting with up to three different legal entities to consume a single banking/payment service (FinTech, TPP and ASPSP). Therefore, the entire OpenBanking service flow involves the initiation, authorization and confirmation of the banking/payment service. The integrity of the entire service flow is only given if we can verify that:
+- the PSU <strong>that controls the credentials</strong> used to identify at the <strong>FinTech interface</strong> and initiate a banking/payment service at that <strong>FinTech interface</strong> is the <strong>same natural person</strong> as the PSU that controls the credential used to identify at the TPP interface for the purpose of authorizing <strong>that initiated banking service</strong>, and that 
+- the PSU that controls the credentials used to identify at the TPP interface <strong>for the purpose</strong> of authorizing an initiated banking service is the same natural person as the PSU that controls the credentials used to identify at the ASPSP interface with the purpose of authorizing that initiated banking service at the ASPSP interface, and that
+- the PSU that controls the credentials used to identify at the ASPSP interface and authorize an initiated banking service is the same natural person as the PSU that finally identifies at the FinTech interface to confirm <strong>that authorized</strong> banking/payment service.</p>
+<p>We call this relation the <strong>PSU identities equivalence</strong>. This is, ensuring integrity of the overall PSU OpenBanking service flow boils down to the <strong>verification of the equivalence</strong> of involved PSU identities (psu-id@fintech ==&gt; psu-id@tpp ==&gt; psu-id@aspsp).</p>
+<p>Therefore, the purpose of this work is to analyze interactions to be performed between a PSU and those three legal entities while initiating, authorizing and confirming a banking/payment service, and then provide recommendations on how to secure those interactions such as to maintain the integrity of the banking service consumed. </p>
+<p>The following picture depicts participants and interfaces used in this concept.</p>
+<p><img alt="High level architecture" src="../../../img/open-banking-gateway-psu-interface.png" /></p>
+<h2 id="core-participants">Core Participants</h2>
+<h3 id="psu"><a name="PSU"></a>PSU</h3>
+<p>A Payment Service User is any natural person that uses a banking or payment service on behalf of himself or on behalf of another natural person or legal entity.
+Form the perspective of this analysis, a PSU:
+- is a natural person,
+- is in possession of some personal non sharable online banking credentials,
+- uses applications running on some devices to interact with online services,
+- can act on behalf of himself, another natural or legal person,</p>
+<h3 id="aspsp"><a name="ASPSP"></a>ASPSP</h3>
+<p>An Account Servicing Payment Service Provider is a legal entity maintains payment account for natural and/or legal person.</p>
+<p>Form the perspective of this analysis, an ASPSP:
+- might provides an online interface for use by a PSU to authorize of a consent (OnlineBankingApi),
+- might provide an application for use by the PSU for use by the PSU to access the OnlineBankingApi (OnlineBankingUI), 
+- provides an online interface for use by a TPP for online access to banking services (OpenBankingApi),
+- might provide an online interface for use by a TPP to forward PSU consent authorization to the ASPSP (OpenBankingApi)</p>
+<p>The <strong>psu-id@aspsp</strong> is the identity of the PSU as known to the ASPSP. This identity generally matches an online banking identifier in the realm of the ASPSP.</p>
+<h3 id="tpp"><a name="TPP"></a>TPP</h3>
+<p>A Third Party Provider is a legal entity that implements access to ASPSP OpenBanking interfaces. A TPP is a regulated entity that implements legal provisions to protect PSU banking data obtained from OpenBankingApis. Market practices show that some TPPs are setup to service other entities (FinTech) with access to banking services.</p>
+<p>Form the perspective of this analysis, a TPP:
+- provides an online interface for the management of PSU consents (ConsentAuthorisationApi)
+- provides an application for use by the PSU to authorize consent in the embedded approach (EmbeddedConsentUI). This same application can also be used to present redirect info pages to the PSU (RedirectInfoPage).
+- provides an online interface for use by a FinTech to access banking services (TppBankApi, TppBankSearchApi),</p>
+<p>The <strong>psu-id@tpp</strong> is the PSU as known to the TPP. If TPP environment is designed to service a single FinTech, this identity can be set equal to the <strong>psu-id@tpp</strong>.</p>
+<p>If a TPPenvironment services multiple FinTech entities, the TPP will have to establish a separated PSU identity that references all corresponding FinTech identities. This requirement only exists because some OpenBanking specifications do not allow TPP to maintain multiple valid consents of the same type on the same bank account.</p>
+<p>In a situation where the TPP uses the same account information consent to service many FinTech, a TPP consent management layer must allow a PSU to revoke that consent for a designated FinTech without revoking the consent at the ASPSP level. </p>
+<h3 id="fintech"><a name="FinTech"></a>FinTech</h3>
+<p>A FinTech is a legal entity that provides some sort of aggregated online banking/payment services to other natural and legal people.</p>
+<p>Form the perspective of this analysis, a FinTech:
+- provides an online interface for use by a PSU to access banking services (FinTechApi),
+- provides an application for use by the PSU to consume banking services (FinTechUI, FinTechSearchUI).</p>
+<p>The <strong>psu-id@fintech</strong> is the identity of the PSU in the realm of the FinTech, as most FinTech applications require the PSU to establish an identity before using the application. This is the most important identity as it covers the consumption of the banking/payment services. Further identities (tpp, aspsp) are only needed for authorization. 
+This framework is designed such as to request the FinTech to provide a permanent unique identity of each PSU to the TPP.</p>
+<h2 id="psuuserdevice"><a name="PsuUserDevice"></a>PsuUserDevice</h2>
+<p>A PsuUserDevice runs applications used by the PSU to access banking services. Those applications are generally called PsuUserAgents. Sample PSU user devices are Personal Computers, Mobile Phones or even SecureId Token devices.</p>
+<h3 id="psuuseragent"><a name="PsuUserAgent"></a>PsuUserAgent</h3>
+<p>A PsuUserAgent is an application running on a PsuUserDevice and used by the PSU to access banking functionality. PsuUserAgents are either web applications running on a standard web browser or native applications.</p>
+<p>A web browser is considered compliant with this framework when :
+- it can protect access to cookies.
+- it can manage redirection as defined by the http specification.</p>
+<p>For uniformity, we require native applications considered compliant with this framework to provide the same behavior as a compliant web browser based PsuUgerAgent with respect to cookie management and redirection. Following specifications deal with security threads associated with the redirection between UI-Applications on a PsuUserDevice: <a href="https://tools.ietf.org/html/rfc8252">RFC8252:OAuth 2.0 for Native Apps</a>,<a href="https://tools.ietf.org/html/rfc7636">RFC7636:Proof Key for Code Exchange by OAuth Public Clients</a>.</p>
+<h3 id="useragentcontext"><a name="UserAgentContext"></a>UserAgentContext</h3>
+<p>Independent on the type of PsuUgerAgent, OpenBanking interfaces will require transmission of a class of information associated with the PsuUserAgent so they can perform verification of the authenticity of the original PSU request and customize the response produced for intermediary layers. We group these data under the name "UserAgentContext". Following header names account among the UserAgentContext: IP-Address, IP-Port, Accept, Accept-Charset, Accept-Encoding, Accept-Language, Device-ID, User-Agent, Geo-Location, Http-Method.</p>
+<h2 id="security-considerations">Security Considerations</h2>
+<p>This work deals with details associated with the verification that the natural person that controls credentials used to authorize the initiation of a banking service at the TPP or ASPSP interface also controls credentials used to initiated that service at the FinTech interface. This is, we want to prevent the owner of some online banking credentials to involuntarily use them to authorize a banking service initiated by another natural person.</p>
+<h3 id="cookies"><a name="Cookies"></a>Cookies</h3>
+<p>The first measure consists in protecting a session established between a PsuUgerAgent and a ServerApplication (FinTechApi, ConsentAuthorizeApi).</p>
+<p>The use of <a href="https://tools.ietf.org/html/rfc6265">Cookies RFC6265</a> provides the most elaborated way to protect a session established between a PsuUgerAgent and a ServerApplication. We assume a PsuUgerAgent storing a cookie fulfills following requirements:
+- Cookies carrying the attribute <strong>HttpOnly</strong> are not provided access to scripts run by a web browser based UserAgent. Native applications designed for banking services must undergo thorough security reviews to make sure they fulfill this requirement.
+- Cookies carrying the attribute <strong>Secure</strong> are only sent to the server over SSL connections.
+- Expired Cookies (attribute <strong>Expires, Max-Age</strong>) are not sent to the server.
+- Cookies set with no value (<strong>SessionCookie=;</strong>) are deleted from the UserAgent.
+- Cookies shall never be transmitted to a domain not matching it origin.
+- In the same domain, cookies shall only be transmitted to the configured path.</p>
+<h4 id="sessioncookie-and-xsrf"><a name="SessionCookie"></a> SessionCookie and XSRF</h4>
+<p>We assume all three applications FinTeApi, ConsentAuthorisationApi, OnlineBakingApi maintain their own session information with corresponding UIs. We assume those APIs use cookies to maintain session with the corresponding PsuUserAgents. In the context of this framework, those cookies are called SessionCookies. We also expect a following behavior from APIs and UserAgents:
+* A response that sets a SessionCookie also carries a corresponding X-XSRF-TOKEN in the response header.
+* A request that authenticates with a SessionCookie must also add the X-XSRF-TOKEN to the request header.
+* Server must match X-XSRF-TOKEN against SessionCookie before proceeding with the request.</p>
+<h3 id="redirection"><a name="Redirection"></a> Redirection</h3>
+<p>The server can request the PsuUgerAgent to redirect the user to another application by returning an "HTTP 302" response code to the PsuUserAgent. The way a PsuUserAgent proceeds with a location URL depend on the nature and the configuration of the host PsuUserDevice. The handling of redirection in native applications environments is well handled in <strong><a href="https://tools.ietf.org/html/rfc8252">OAuth 2.0 for Native Apps RFC8252</a></strong>.</p>
+<p>We will be using redirection to switch the user context from one application to another one. Following redirection will generally be found in this framework:
+- FinTechApi to-&gt; ConsentAuthorisationApi
+- ConsentAuthorisationApi to-&gt; OnlineBankingApi
+- OnlineBankingApi backTo-&gt; ConsentAuthorisationApi
+- ConsentAuthorisationApi backTo-&gt; FinTechApi</p>
+<p>We assume all three ServerApplications (FinTechApi, ConsentAuthorisationApi, OnlineBankingApi) are hosted on different domains. This is, we do not expect cookies set by one ServerApplication to be visible to another ServerApplication.</p>
+<p>We assume UiApps (OnlineBankingUI, EmbeddedConsentUI, FinTechUI/FinTechSearchUI) do not share context information. They can only interact with each other by the way of the hosting PsuUserDevice using the URL provided by the source UiApp to open the target UIApp.</p>
+<h4 id="redirection-and-xsrf">Redirection and XSRF</h4>
+<p>As we can not protect/control redirection on user device, known internet based identity protocols like oAuth2 make use of the <strong>state</strong> parameter to store information that will be sent back to the redirection source and used by the redirection source to verify that the user was sent back to the original source UIApp.
+This is, implementing XSRF for redirection consists in storing a RedirectCookie in the source UIApp and adding a corresponding XSRF-Token to the state parameter.</p>
+<h4 id="redirection-and-data-sharing">Redirection and Data Sharing</h4>
+<p>We also do not advice adding too many persistent information to the redirection URL, as these are all logged in files everywhere on infrastructure components in data centers. If we have any bulky information to share between the source UIApp and the target UIApp, we can add a <strong>OneTime</strong> and <strong>ShortLived</strong> authorization code we called <strong>redirectCode</strong> to <strong>RedirectUrl</strong>. This redirectCode can be used at target to retrieved shared payload (generally through an authenticated back channel connection). This is the practice borrowed from <a href="https://tools.ietf.org/html/rfc6749">oAuth2 RFC6749</a>.</p>
+<h2 id="identity-equivalence"><a name="SecurePsuConsent"></a>Identity Equivalence</h2>
+<p>When a PSU initiate a banking service at the FinTech interface (FinTechApi), the processing TPP will initiate a consent authorization process if needed (TppBankingApi). Once a consent authorization process is initiated by the TppBankingApi, we want to make sure that the PSU giving his consent (psu-id@tpp, psu-id@aspsp), is the same as the PSU requesting the service at the FinTech interface (psu-id@fintech).</p>
+<p>Ensuring the equivalence of those identities can be represented as (assuming alice and bob are PSUs):</p>
+<pre><code>alice@fintech ==&gt; alice@tpp ==&gt; alice@aspsp 
+
+// Where alice@fintech ==&gt; alice@tpp neans the person identified at the FinTechApi as alice@fintech controls the necessary credentials used to identify at the ConsentAuthorisationApi as alice@tpp
+</code></pre>
+
+<p>This is, the integrity of the OpenBanking PSU Contract is broken when security breaches can be used to compromise these equivalences like in the following pseudo code:</p>
+<pre><code>bob@fintech ==&gt; alice@tpp ==&gt; alice@aspsp 
+// although in reality  bob@fintech =/=&gt; alice@tpp 
+// In this case bob identifies with the FinTechApi (as bob@fintech) but manipulates alice to identify with the ConsentAuthorisationApi and provide her consent for the requested banking service. 
+
+bob@fintech ==&gt; bob@tpp ==&gt; alice@aspsp 
+// although in reality  bob@tpp =/=&gt; alice@aspsp
+// In this case bob identifies with the FinTechApi and the ConsentAuthorisationApi but manipulates alice to identify with the OnlieBankingApi and provide her consent for the requested banking service. 
+</code></pre>
+
+<h3 id="step-1-identify-psu-at-the-fintechapi">Step-1: Identify PSU at the FinTechApi</h3>
+<p>We always expect the PSU to be identified at the FinTechApi interface. So we assume that the psu-id@fintech is known. The integrity of the rest of the contract relies on the capability of the FinTech to protect the session associating the PSU to the FinTechApi.</p>
+<p>The service request itself is always initiated by the FinTechApi. Before initiation, we assume that the PSU (alice) has signed into the FinTechApi and her identity is known to the FinTechApi and thus associated with the service request forwarded to the TppBankingApi.</p>
+<h3 id="step-2-store-psu-idfintech-with-the-consentauthorizationsession">Step-2: Store psu-id@fintech with the ConsentAuthorizationSession</h3>
+<p>While processing a service request, if the TPP notices that the service request is not covered by a consent (either as a result of pre-checking for the consent or from an error returned by the ASPSP's OpenBankingApi), the TPP will trigger a new consent authorization process identifies by an <strong>auth-id</strong> and called <strong>ConsentAuthorizationSession</strong>. </p>
+<p>Starting a new ConsentAuthorizationSession, we require the TPP to store the FinTech identity of the service requesting PSU alice@fintech with the ConsentAuthorizationSession record before initiating a redirect to the ConsentAuthorisationApi. This is, the ConsentAuthorizationSession record stored in the TPP Database has the state: </p>
+<pre><code>// Syntax: [index+]=ConsentAuthorizationSession[data]
+[auth-id,redirectCode]=ConsentAuthorizationSession[auth-id,redirectCode, alice@fintech, ConsentData]
+// Where redirectCode is a one time key that can be used by the ConsentAuthorisationApi once to retrieve the ConsentAuthorizationSession.
+// Where auth-id is the identifier of this ConsentAuthorizationSession
+</code></pre>
+
+<h3 id="step-2-identify-psu-at-the-tpp-consentauthorisationapi">Step-2: Identify PSU at the TPP ConsentAuthorisationApi</h3>
+<p>At first, redirecting a PSU from the FinTechApi to the TPP ConsentAuthorisationApi does not establish any relationship between the PSU and the TPP, even if we can use the redirectCode associated with the redirected URL to retrieve ConsentAuthorisationSession. Of course the ConsentAuthorisationApi knows that the ConsentAuthorizationSession was initiated by alice@fintech, but this does not mean that the PSU controlling the current PsuUserAgent (known as ConsentAuthorisationUI) is the same natural person as the one controling the identity alice@fintech. </p>
+<p>In order to proceed with the ConsentAuthorisationSession, the TPP ConsentAuthorisationApi will have to establish an identification of the natural person controlling the UserAgent, resulting in a new PSU identity called (psu-id@tpp). This PSU identity (psu-id@tpp) is associated with the ConsentAuthorisationSession upon successful authentication of the PSU at the TPP ConsentAuthorisationApi interface. At this stage, the ConsentAuthorizationSession record stored in the TPP Database has the following state: </p>
+<pre><code>[auth-id,redirectCode]=ConsentAuthorizationSession[auth-id,redirectCode, alice@fintech, alice123@tpp, ConsentData]
+// But with the assumption that alice@fintech =/=&gt; alice123@tpp. 
+// Meaning that both identities are not yet verified equivalent (controlled by the same natural person)
+</code></pre>
+
+<p>Even though the ConsentAuthorizationSession in the TPP database is associated with two identities (alice@fintech and alice123@tpp), there is no proof that both identities alice@fintech and alice123@tpp are controlled by the same natural person.</p>
+<h3 id="step-3a-consentauthorisation-at-the-tpps-consentauthorisationapi-embedded-sca">Step-3a: ConsentAuthorisation at the TPP's ConsentAuthorisationApi (Embedded-sca)</h3>
+<p>In an Embedded-SCA case, the credentials associated with psu-id@aspsp are collected by the ConsentAuthorisationApi and forwarded to the OpenBankingApi of the ASPSP. In this case it is easy to assume uniqueness between both psu-id@tpp and psu-id@aspsp as both are done within the same user session at the same interface. This results in the following record after a successful embedded consent authorization at the ConsentAuthorisationApi:</p>
+<pre><code>[auth-id,redirectCode]=ConsentAuthorizationSession[auth-id,redirectCode, alice@fintech, alice123@tpp, alice-s@aspsp, ConsentData, alice123@tpp==&gt;alice-s@aspsp]
+// Where alice@fintech =/=&gt; alice123@tpp. // Meaning that both identities are not yet verified equivalent (owned by the same natural person)
+// Where alice123@tpp ==&gt; alice-s@aspsp. // Meaning alice123@tpp could provide the banking credentials of alice-s@aspsp.
+</code></pre>
+
+<p>Even in this embedded case, there is still a missing equivalence between <strong>alice@fintech</strong> and <strong>alice-s@tpp</strong>.</p>
+<h3 id="step-3b-identify-psu-at-the-aspsps-onlinebankingapi-redirect-sca">Step-3b: Identify PSU at the ASPSP's OnlineBankingApi (Redirect-sca)</h3>
+<p>In a Redirect-SCA case (oauth, redirect, decoupled), the PSU has to be redirected by the ConsentAuthorisationApi to the OnlienBanking interface of the ASPSP. After a successful consent authorization at the OnlienBanking interface, the record could be updated by the mean of poling the authorization status of this ConsentAuthorizationSession at the OpenBankingApi of the ASPSP. Upon successful authorization of the requested consent, the ConsentAuthorizationSession in the database of the TPP looks like:   </p>
+<pre><code>[auth-id,redirectCode]=ConsentAuthorizationSession[auth-id,redirectCode, alice@fintech, alice123@tpp, alice-s@aspsp, ConsentData]
+// Where alice@fintech =/=&gt; alice123@tpp. // Meaning that both identities are not yet verified equivalent (owned by the same natural person)
+// Where alice123@tpp =/=&gt; alice-s@aspsp. // Meaning that both identities are not yet verified equivalent (owned by the same natural person)
+</code></pre>
+
+<h3 id="step-4-verify-equivalence-between-psu-idaspsp-and-psu-idtpp-redirect-sca">Step-4: Verify Equivalence between psu-id@aspsp and psu-id@tpp (Redirect-sca)</h3>
+<p>After a successful consent authorization at the OnlineBankingApi of the ASPSP, the framework has to ensure equivalence between the PSU identified at the TPP and the PSU identified at the ASPSP.</p>
+<p>In this framework, we designed a two steps redirection FinTech -&gt; TPP -&gt; ASPSP knowing that this might make the process more cumbersome, but this design represents the superset of most of the cases found on the market. After thorough analysis of most scenarios, we noticed that the identity equivalence process can only securely happen in one of these ways:</p>
+<h3 id="alt-1-sharing-of-identity-provider">Alt-1: Sharing of Identity Provider</h3>
+<p>If two involved entities (FinTech, TPP, ASPSP) share the same identity provider (IDP), the identity association process will be simple as the IDP will provide a common identifier. For example the subject claim of an identity token could lead to the verification of subject(alice123@tpp)==subject(alice-s@aspsp).</p>
+<h3 id="alt-2-no-sharing-of-identity-provider">Alt-2: No Sharing of Identity Provider</h3>
+<p>If two parties are not sharing identity provider, a <strong>physical back redirection</strong> from the ASPSP to the TPP must be used to help complete the identity verification. Note that a <strong>physical back redirection</strong> will not be possible with the decoupled approach.</p>
+<p>Following sub-steps will be needed to ensure clean and secure physical back redirection in the example of a redirect from the TPP to the ASPSP:</p>
+<h4 id="make-sure-the-physical-back-redirection-sends-the-psu-to-the-source-psuuseragent">Make sure the physical back redirection sends the PSU to the Source PsuUserAgent</h4>
+<p>The URL for the <strong>physical back redirection</strong> must have been protected against manipulation: 
+- In case there is an initiation step present between TPP and ASPSP, use this step must have been used to transfer the <strong>back redirection url</strong> to the ASPSP (this is an example of the redirect approach of the NextGenPSD2 API).
+- In case there is no such initiation step (generally when OAuth is being used), make sure oAuth2 <strong>back redirection url templates</strong> and <strong>webOrigins</strong> are properly designed, as the concrete <strong>back redirection url</strong> is transported in the <strong>redirect_uri</strong> parameter of the consent request and exposed to attackers for manipulations.</p>
+<h4 id="verify-redirect-state-once-in-the-source-psuuseragent">Verify Redirect State once in the Source PsuUserAgent</h4>
+<ul>
+<li>A RedirectCookie must have been set on the PsuUserAgent while redirecting a user from the TPP (ConsentAuthorisationApi) to the ASPSP (OnlineBankingApi).</li>
+<li>The <strong>back redirection url</strong> to contains contains the state parameter that is used by the source PsuUserAgent to validate stored RedirectCookie. </li>
+</ul>
+<p>If a physical redirect can occur from the ASPSP (OnlineBankingApi) back to the TPP (ConsentAuthorisationApi), <strong>a validation of the original RedirectCookie can be taken as a guaranty to declare equivalence between the psu-id@tpp and the psu-id@aspsp</strong>.</p>
+<h3 id="alt-3-no-sharing-of-idp-and-decoupled-sca">Alt-3: No Sharing of IDP and Decoupled-sca</h3>
+<p>We define a decoupled approach as one where there no way of achieving <strong>physical (back) redirection</strong> between the source UIApp and the target UiApp. This generally happens when both are not on the same physical device. In this case a physical exchange muss happen. This physical information exchange is generally sufficient in one direction as the purpose is to make sure the PSU is physically in control of both devices (and UIApp credentials). Following are among other means for physical information exchange between two devices:</p>
+<h4 id="manual-code-transfer">Manual Code Transfer</h4>
+<p>Physical sharing of state information between the source an the target of the redirection can be covered by having one side of the redirect enter a redirectCode displayed by the other side. In this case the redirectCode displayed is the handle for a more complex hash code shared over the back channel between source and target of the redirect.</p>
+<h4 id="qr-scan">QR-Scan</h4>
+<p>Physical sharing of state information between the source an the target of the redirection can be covered by having one side of the redirect (camera capable side) the possibility to scan a QR-Code displayed by the other side UIApp. </p>
+<h4 id="push-notifications">Push notifications</h4>
+<p>A push notification could be used to deep link the user into the target decoupled UIApp. To prevent spam, push notification shall only be done if the overall process can provide a sufficient level of confidence that the source side of the redirection identified the PSU before the initiation of the redirection process. The use of push notification can replaces the  manual code or QR-scan described above.</p>
+<h3 id="limitation-of-identity-equivalence-for-existing-openbanking-flows">Limitation of Identity Equivalence for Existing OpenBanking Flows</h3>
+<p>In some OpenBanking approaches, validating the consent at the OnlineBanking interface of the ASPSP directly finalizes authorization of the service request. The current state of the NextGenPSD2 specification for example finalizes a payment initiation with the act of a PSU authorizing the payment consent (either on the ASPSP or TPP interface), but future release are planing an additional step for the <strong>confirmation of the service request</strong> at the OpenBanking interface (after authorization). This additional step is necessary for to complete verification of the identity equivalence as described above.</p>
+<p>Recall that this weakness is only provided if the consent authorizing interface (OnlineBankingApi for redirect-sca or ConsentAuthorizationApi for embedded-sca) can not establish identity equivalence. Remember that if source and target share the same identity provider, target will generally be able establish identity equivalence and therefore authorized payment initiation can be release for execution without breach of the <strong>OpenBanking PSU Contract</strong>.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../../use_cases/" class="btn btn-neutral float-right" title="Use cases">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../../building_blocks/02.Component_diagrams/" class="btn btn-neutral" title="Component diagrams"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/adorsys/open-banking-gateway/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+        <span><a href="../../building_blocks/02.Component_diagrams/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../../use_cases/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+
+</body>
+</html>
