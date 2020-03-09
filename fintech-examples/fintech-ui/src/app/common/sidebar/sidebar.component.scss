@@ -7,6 +7,10 @@
   .nav-item {
     background-color: $primary-10;
     border-radius: 3px;
+
+    &--disabled {
+      background-color: #f0f0f0;
+    }
   }
 
   .nav-link {
@@ -31,6 +35,14 @@
   }
 
   .nav-item {
+    padding: 0.5rem;
+
+    &:not(:last-of-type) {
+      margin-bottom: 10px;
+    }
+  }
+
+  .nav-item--disabled {
     padding: 0.5rem;
 
     &:not(:last-of-type) {

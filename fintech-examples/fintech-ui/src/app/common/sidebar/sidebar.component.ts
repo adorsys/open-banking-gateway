@@ -8,7 +8,9 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-  services: string[] = [];
+  showListAccounts = false;
+  showListTransactions = false;
+  showInitiatePayment = false;
   bankId: string;
   bankName: string;
 
@@ -17,26 +19,12 @@ export class SidebarComponent implements OnInit {
   ngOnInit() {
     this.bankId = this.route.snapshot.paramMap.get('id');
     console.log('bankid', this.bankId);
-    this.getBankInfos();
-  }
-
-  getBankInfos() {
     this.bankProfileService.getBankProfile(this.bankId).subscribe(response => {
+      console.log('bank profile returns:' + JSON.stringify(response));
       this.bankName = response.bankName;
-      this.services = response.services;
-      localStorage.setItem('services', JSON.stringify(this.services));
-      console.log('list-services', this.services);
+      this.showListAccounts = response.services.includes('LIST_ACCOUNTS');
+      this.showListTransactions = response.services.includes('LIST_TRANSACTIONS');
+      this.showInitiatePayment = response.services.includes('UPDATE_AUTHORIZATION');
     });
-  }
-
-  contains(service: string) {
-    this.services = JSON.parse(localStorage.getItem('services'));
-    if (this.services == null) {
-      return false;
-    } else {
-      this.services.forEach(value => {
-        return value === service;
-      });
-    }
   }
 }
