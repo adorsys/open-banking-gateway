@@ -1,7 +1,7 @@
 package de.adorsys.opba.fintech.impl.service.mocks;
 
-import de.adorsys.opba.tppbankingapi.token.model.generated.PsuConsentSession;
-import de.adorsys.opba.tppbankingapi.token.model.generated.PsuConsentSessionResponse;
+import de.adorsys.opba.tpp.token.api.model.generated.PsuConsentSession;
+import de.adorsys.opba.tpp.token.api.model.generated.PsuConsentSessionResponse;
 
 public class TppBankingApiTokenMock extends MockBaseClass {
     public PsuConsentSessionResponse getTransactionsResponse(String redirectCode) {
