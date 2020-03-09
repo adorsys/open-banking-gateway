@@ -26,8 +26,7 @@ export class BankSearchComponent {
 
   onBankSelect(bankId: string) {
     this.selectedBank = bankId;
-    localStorage.setItem('bankId', bankId);
-    this.router.navigate(['/dashboard', bankId], { relativeTo: this.route });
+    this.router.navigate(['/dashboard', bankId]);
   }
 
   private bankUnselect() {
