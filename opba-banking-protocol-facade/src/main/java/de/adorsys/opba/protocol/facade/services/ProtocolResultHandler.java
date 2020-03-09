@@ -30,7 +30,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static de.adorsys.opba.db.domain.entity.ProtocolAction.AUTHORIZATION;
-import static de.adorsys.opba.db.domain.entity.ProtocolAction.UPDATE_AUTHORIZATION;
 
 @Service
 @RequiredArgsConstructor
