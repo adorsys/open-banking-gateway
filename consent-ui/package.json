@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "openapi-gen": "openapi-generator generate -g typescript-angular -o src/app/api -i ../opba-consent-rest-api/src/main/resources/static/tpp_consent_api.yml --skip-validate-spec",
+    "openapi-gen": "openapi-generator generate -g typescript-angular -o src/app/api -i ../opba-consent-rest-api/src/main/resources/static/tpp_consent_api.yml",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",

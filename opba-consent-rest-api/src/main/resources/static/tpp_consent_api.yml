@@ -507,14 +507,12 @@ components:
       type: object
       properties:
         category:
-          required: true
           type: string
           enum:
             - ERROR
             - WARNING
             - INFO
         code:
-          required: true
           type: string
         path:
           type: string
