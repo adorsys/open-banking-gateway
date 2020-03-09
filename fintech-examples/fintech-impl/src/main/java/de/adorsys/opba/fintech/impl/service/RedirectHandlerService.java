@@ -4,7 +4,7 @@ import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
 import de.adorsys.opba.fintech.impl.service.mocks.TppBankingApiTokenMock;
-import de.adorsys.opba.tppbankingapi.token.model.generated.PsuConsentSessionResponse;
+import de.adorsys.opba.tpp.token.api.model.generated.PsuConsentSessionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
