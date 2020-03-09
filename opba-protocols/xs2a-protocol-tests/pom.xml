@@ -23,6 +23,7 @@
         <module>xs2a-bdd-tests-common</module>
         <module>xs2a-bdd-sandbox</module>
         <module>xs2a-bdd-wiremock</module>
+        <module>xs2a-stress-test</module>
     </modules>
 </project>
 

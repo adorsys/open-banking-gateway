@@ -10,16 +10,16 @@ import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.CommonGivenStages;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Runs Sandbox as json-backed mock.
  */
 @Slf4j
 @JGivenStage
-public class MockServers <SELF extends MockServers<SELF>> extends CommonGivenStages<SELF> {
+@SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
+public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStages<SELF> {
 
     @Autowired
     private BankProfileJpaRepository bankProfileJpaRepository;
@@ -29,7 +29,7 @@ public class MockServers <SELF extends MockServers<SELF>> extends CommonGivenSta
 
     @AfterScenario
     @SneakyThrows
-    void stopWireMock() {
+    public void stopWireMock() {
         if (null != sandbox) {
             sandbox.stop();
             sandbox = null;
@@ -76,7 +76,7 @@ public class MockServers <SELF extends MockServers<SELF>> extends CommonGivenSta
         bankProfile.setUrl("http://localhost:" + sandbox.port());
         bankProfileJpaRepository.save(bankProfile);
 
-        assertThat(sandbox).isNotNull();
-        assertThat(sandbox.isRunning()).isTrue();
+        Assertions.assertThat(sandbox).isNotNull();
+        Assertions.assertThat(sandbox.isRunning()).isTrue();
     }
 }

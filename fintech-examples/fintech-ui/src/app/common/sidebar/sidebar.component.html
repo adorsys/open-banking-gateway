@@ -1,7 +1,12 @@
 <div class="sidebar">
   <ul class="nav flex-md-column">
     <li class="nav-item">
-      <a [routerLinkActive]="['active']" [routerLink]="['/']" class="nav-link ">
+      <a
+        class="nav-link"
+        [routerLinkActive]="['active']"
+        [routerLink]="['/dashboard/'] + bankId"
+        (click)="contains('LIST_ACCOUNTS')"
+      >
         <div class="icon__container">
           <img alt="bank_cards" class="text-primary" src="assets/icons/icons8-bank_cards.svg" />
         </div>
@@ -9,7 +14,12 @@
       </a>
     </li>
     <li class="nav-item">
-      <a [routerLinkActive]="['active']" [routerLink]="['/']" class="nav-link ">
+      <a
+        class="nav-link"
+        [routerLinkActive]="['active']"
+        [routerLink]="['/dashboard/'] + bankId"
+        (click)="contains('LIST_TRANSACTIONS')"
+      >
         <div class="icon__container">
           <img alt="transfert" class="text-primary" src="assets/icons/icons8-sent.svg" />
         </div>
@@ -17,7 +27,12 @@
       </a>
     </li>
     <li class="nav-item">
-      <a [routerLinkActive]="['active']" [routerLink]="['/']" class="nav-link">
+      <a
+        [routerLinkActive]="['active']"
+        [routerLink]="['/dashboard/'] + bankId"
+        class="nav-link"
+        (click)="contains('UPDATE_AUTHORIZATION')"
+      >
         <div class="icon__container">
           <img alt="settings" class="text-primary" src="assets/icons/icons8-maintenance.svg" />
         </div>

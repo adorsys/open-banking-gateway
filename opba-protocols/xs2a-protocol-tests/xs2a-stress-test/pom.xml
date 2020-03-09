@@ -8,9 +8,9 @@
         <version>0.0.6-SNAPSHOT</version>
     </parent>
 
-    <!-- BDD Tests for protocol running on top of Wiremock-based response-request fixtures -->
-    <artifactId>xs2a-bdd-wiremock</artifactId>
-    <name>opba-protocols/xs2a-protocol-tests/xs2a-bdd-wiremock</name>
+    <!-- Stress test wit Wiremock backed ASPSP -->
+    <artifactId>xs2a-stress-test</artifactId>
+    <name>opba-protocols/xs2a-protocol-tests/xs2a-stress-test</name>
 
     <properties>
         <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
@@ -28,19 +28,8 @@
 
         <dependency>
             <groupId>de.adorsys.opba</groupId>
-            <artifactId>xs2a-protocol</artifactId>
+            <artifactId>xs2a-bdd-wiremock</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>de.adorsys.opba</groupId>
-            <artifactId>xs2a-bdd-tests-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -57,20 +46,22 @@
         </dependency>
 
         <dependency>
-            <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock</artifactId>
-            <version>${wiremock.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
             <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${testcontainers.version}</version>
+            <groupId>org.jsmart</groupId>
+            <artifactId>zerocode-tdd</artifactId>
+            <version>${zerocode.tdd.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jsmart</groupId>
+            <artifactId>zerocode-tdd-jupiter</artifactId>
+            <version>${zerocode.tdd.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -79,38 +70,19 @@
         <finalName>${project.artifactId}-${project.version}</finalName>
         <plugins>
             <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>${maven.dependency.plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>analyze</id>
-                        <goals>
-                            <goal>analyze-only</goal>
-                        </goals>
-                        <configuration>
-                            <failOnWarning>false</failOnWarning>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-remote-resources-plugin</artifactId>
                 <version>${maven-remote-resources-plugin.version}</version>
                 <configuration>
                     <resourceBundles>
                         <resourceBundle>de.adorsys.opba:xs2a-bdd-tests-common:${project.version}</resourceBundle>
+                        <resourceBundle>de.adorsys.opba:xs2a-bdd-wiremock:${project.version}</resourceBundle>
                     </resourceBundles>
-                    <includes>
-                        <include>mockedsandbox/**/*.*</include>
-                        <include>**/*.yml</include>
-                    </includes>
                 </configuration>
                 <executions>
                     <execution>
                         <goals>
                             <goal>process</goal>
-                            <goal>bundle</goal>
                         </goals>
                     </execution>
                 </executions>

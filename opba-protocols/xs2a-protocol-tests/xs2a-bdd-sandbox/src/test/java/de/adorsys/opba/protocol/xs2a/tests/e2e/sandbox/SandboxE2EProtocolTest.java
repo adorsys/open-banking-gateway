@@ -35,15 +35,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Security;
 import java.time.LocalDate;
 
+import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_HEAVY_TESTS;
+import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
-import static de.adorsys.opba.protocol.xs2a.testsandbox.Const.ENABLE_HEAVY_TESTS;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
  * Happy-path heavy test that uses Dynamic-Sandbox to drive banking-protocol.
  */
-@EnabledIfEnvironmentVariable(named = ENABLE_HEAVY_TESTS, matches = "true")
+@EnabledIfEnvironmentVariable(named = ENABLE_HEAVY_TESTS, matches = TRUE_BOOL)
 @EnableAutoConfiguration(exclude = {
     HypermediaAutoConfiguration.class,
     Xs2aCmsAutoConfiguration.class,
@@ -107,7 +108,8 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
 
         given()
             .enabled_redirect_sandbox_mode()
-            .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+            .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+            .rest_assured_points_to_server();
 
         when()
             .fintech_calls_list_transactions_for_anton_brueckner(accountResourceId)
@@ -148,7 +150,8 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
 
         given()
             .enabled_embedded_sandbox_mode()
-            .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+            .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+            .rest_assured_points_to_server();
 
         when()
             .fintech_calls_list_transactions_for_max_musterman(accountResourceId)
@@ -170,7 +173,8 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
     private String embeddedListMaxMustermanAccounts(Approach approach) {
         given()
             .enabled_embedded_sandbox_mode()
-            .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+            .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+            .rest_assured_points_to_server();
 
         when()
             .fintech_calls_list_accounts_for_max_musterman()
@@ -193,7 +197,8 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
     private String redirectListAntonBruecknerAccounts(Approach approach, FirefoxDriver firefoxDriver) {
         given()
             .enabled_redirect_sandbox_mode()
-            .preferred_sca_approach_selected_for_all_banks_in_opba(approach);
+            .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+            .rest_assured_points_to_server();
 
         when()
             .fintech_calls_list_accounts_for_anton_brueckner()
