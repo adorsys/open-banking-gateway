@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,8 +24,8 @@ class RedirectHandlerServiceTest {
     private final String REDIRECT_STATE = "682dbd06-75d4-4f73-a7e7-9084150a1f10";
     private final String REDIRECT_ID = "fd8a0548-6862-46cb-8d24-f4b5edc7f7cb";
     private final String REDIRECT_CODE = "7ca3f778-b0bb-4c1a-8003-d176089d1455";
-    private final String OK_URL = "http://localhost:5500/fintech-callback/redirect?fintechRedirectUriOk=" + REDIRECT_STATE;
-    private final String NOT_OK_URL = "http://localhost:5500/fintech-callback/redirect?fintechRedirectUriNOk=" + REDIRECT_STATE;
+    private final String OK_URL = "http://localhost:5500/fintech-callback/redirect?fintechRedirectUriOk={redirectCode}";
+    private final String NOT_OK_URL = "http://localhost:5500/fintech-callback/redirect?fintechRedirectUriNOk={redirectCode}";
     private final String EXCEPTION_URL = "http://localhost:5500/fintech-callback/excaption-redirect?exception";
     private final String LOCATION_HEADER = "Location";
     private final RedirectUrlsEntity REDIRECT_URLS_ENTITY = buildRedirectUrlsEntity();
@@ -106,16 +107,7 @@ class RedirectHandlerServiceTest {
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE)).thenReturn(Optional.empty());
 
         // when
-        ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_STATE, REDIRECT_ID, REDIRECT_CODE);
-
-        // then
-        verify(authorizeService, times(0)).getByXsrfToken(REDIRECT_STATE);
-        verify(authorizeService, times(0)).updateUserSession(sessionEntity);
-
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.SEE_OTHER);
-        assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
-        assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(EXCEPTION_URL));
-        assertThat(responseEntity.getBody()).isNull();
+        assertThrows(IllegalStateException.class, () -> redirectHandlerService.doRedirect(REDIRECT_STATE, REDIRECT_ID, REDIRECT_CODE));
     }
 
     @Test
