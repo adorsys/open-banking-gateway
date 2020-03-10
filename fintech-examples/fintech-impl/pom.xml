@@ -21,9 +21,9 @@
             ${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml
         </tpp-ais-location>
         <tpp-ais-prefix>de.adorsys.opba.tpp.ais</tpp-ais-prefix>
-        <tpp-token-location>
+        <open-banking-api-spec-location>
             ${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_token.yml
-        </tpp-token-location>
+        </open-banking-api-spec-location>
         <tpp-token-prefix>de.adorsys.opba.tpp.token</tpp-token-prefix>
     </properties>
 
@@ -201,7 +201,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${tpp-token-location}</inputSpec>
+                            <inputSpec>${open-banking-api-spec-location}</inputSpec>
                             <language>spring</language>
                             <output>${project.build.directory}/generated-sources/open-api/</output>
                             <generateApiTests>false</generateApiTests>
