@@ -17,7 +17,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static java.util.Collections.singletonList;
@@ -56,29 +55,23 @@ public class RedirectHandlerService {
             return prepareRedirectResponse(exceptionUrl);
         }
 
-        Optional<RedirectUrlsEntity> redirectUrlsEntityOptional = redirectUrlRepository.findByRedirectCode(redirectCode);
-
-        if (!redirectUrlsEntityOptional.isPresent()) {
-            log.warn("Validation redirect request was failed: redirect code is wrong!");
-            return prepareRedirectResponse(exceptionUrl);
-        }
-
-        RedirectUrlsEntity redirectUrlsEntity = redirectUrlsEntityOptional.get();
+        RedirectUrlsEntity redirectUrls = redirectUrlRepository.findByRedirectCode(redirectCode)
+                                                  .orElseThrow(() -> new IllegalStateException("Validation redirect request was failed: redirect code is wrong!"));
 
         if (StringUtils.isBlank(redirectState)) {
             log.warn("Validation redirect request was failed: Xsrf Token is empty!");
-            return prepareRedirectResponse(redirectUrlsEntity.getNotOkURL());
+            return prepareRedirectResponse(redirectUrls.getNotOkURL());
         }
 
         if (!authorizeService.isAuthorized(redirectState, null)) {
             log.warn("Validation redirect request was failed: Xsrf Token is wrong or user are not authorized!");
-            return prepareRedirectResponse(redirectUrlsEntity.getNotOkURL());
+            return prepareRedirectResponse(redirectUrls.getNotOkURL());
         }
 
         SessionEntity optionalUser = authorizeService.getByXsrfToken(redirectState);
         updateSessionByRedirectCode(optionalUser, redirectCode);
 
-        return prepareRedirectResponse(redirectUrlsEntity.getOkURL());
+        return prepareRedirectResponse(redirectUrls.getOkURL());
     }
 
     private void updateSessionByRedirectCode(SessionEntity sessionEntity, String redirectCode) {
