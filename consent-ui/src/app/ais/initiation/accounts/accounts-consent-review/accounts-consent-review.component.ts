@@ -3,7 +3,7 @@ import {ConsentUtil} from "../../../common/consent-util";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder} from "@angular/forms";
 import {SessionService} from "../../../../common/session.service";
-import {AisConsent} from "../../../common/dto/ais-consent";
+import {AccountAccessLevel, AisConsent} from "../../../common/dto/ais-consent";
 import {StubUtil} from "../../../common/stub-util";
 
 @Component({
@@ -12,6 +12,8 @@ import {StubUtil} from "../../../common/stub-util";
   styleUrls: ['./accounts-consent-review.component.scss']
 })
 export class AccountsConsentReviewComponent implements OnInit {
+
+  public AccountAccessLevel;
 
   public finTechName = StubUtil.FINTECH_NAME;
   public aspspName = StubUtil.ASPSP_NAME;

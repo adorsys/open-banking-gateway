@@ -31,6 +31,8 @@ export class SessionService {
   }
 
   public getConsentObject<T>(authorizationId: string, factory: () => T): T {
+    console.log(authorizationId + Session.CONSENT_OBJECT)
+    console.log(sessionStorage.getItem(authorizationId + Session.CONSENT_OBJECT))
     return Object.assign(
       factory(),
       JSON.parse(sessionStorage.getItem(authorizationId + Session.CONSENT_OBJECT))

@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {StubUtil} from "../../../common/stub-util";
 import {SessionService} from "../../../../common/session.service";
 import {ConsentUtil} from "../../../common/consent-util";
-import {AccountAccess} from "../../../common/dto/ais-consent";
+import {AccountAccess, AccountAccessLevel} from "../../../common/dto/ais-consent";
 import {AccountsConsentReviewComponent} from "../accounts-consent-review/accounts-consent-review.component";
 import {AuthConsentState} from "../../../common/dto/auth-state";
 
@@ -88,7 +88,7 @@ export class EntryPageAccountsComponent implements OnInit {
         .forEach(it => consentObj.extras[it.code] = this.accountAccessForm.get(it.code).value)
     }
 
-    this.sessionService.setConsentState(this.authorizationId, consentObj);
+    this.sessionService.setConsentObject(this.authorizationId, consentObj);
     this.moveToReviewConsent();
   }
 
@@ -101,11 +101,4 @@ export class Access {
 
   constructor(public id: AccountAccessLevel, public message: string) {
   }
-}
-
-export enum AccountAccessLevel {
-
-  ALL_ACCOUNTS = 'ALL_ACCOUNTS',
-  ALL_ACCOUNTS_WITH_BALANCES = 'ALL_ACCOUNTS_WITH_BALANCES',
-  FINE_GRAINED = 'FINE_GRAINED'
 }
