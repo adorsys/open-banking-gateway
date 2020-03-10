@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {ConsentAuthorizationService} from '../../api/consentAuthorization.service';
+import {StubUtil} from "../../../common/stub-util";
+import {ConsentAuthorizationService} from "../../../../api/consentAuthorization.service";
 
 @Component({
   selector: 'consent-app-entry-page-transactions',
@@ -9,8 +10,10 @@ import {ConsentAuthorizationService} from '../../api/consentAuthorization.servic
 })
 export class EntryPageTransactionsComponent implements OnInit {
 
-  public finTechName = 'Awesome FinTech';
-  public bankName = 'Adorsys Sandbox';
+  public static ROUTE = 'entry-consent-transactions';
+
+  public finTechName = StubUtil.FINTECH_NAME;
+  public aspspName = StubUtil.ASPSP_NAME;
 
   public accounts = [
     new TransactionsOnAccountAccess('IBAN123456', true),

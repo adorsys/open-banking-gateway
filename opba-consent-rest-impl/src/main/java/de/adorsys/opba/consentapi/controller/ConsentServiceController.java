@@ -10,11 +10,12 @@ import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationReque
 import de.adorsys.opba.protocol.api.dto.request.authorization.fromaspsp.FromAspspRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
-import de.adorsys.opba.protocol.facade.services.authorization.StartAuthorizationService;
-import de.adorsys.opba.protocol.facade.services.authorization.UpdateAuthorizationService;
 import de.adorsys.opba.protocol.facade.services.authorization.FromAspspRedirectHandler;
+import de.adorsys.opba.protocol.facade.services.authorization.GetAuthorizationStateService;
+import de.adorsys.opba.protocol.facade.services.authorization.UpdateAuthorizationService;
 import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
+import de.adorsys.opba.restapi.shared.service.RedirectionOnlyToOkMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,14 +29,15 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
     private final UserAgentContext userAgentContext;
     private final AisExtrasMapper extrasMapper;
     private final AisConsentMapper aisConsentMapper;
+    private final RedirectionOnlyToOkMapper redirectionOnlyToOkMapper;
     private final FacadeResponseMapper mapper;
-    private final StartAuthorizationService startAuthorizationService;
+    private final GetAuthorizationStateService authorizationStateService;
     private final UpdateAuthorizationService updateAuthorizationService;
     private final FromAspspRedirectHandler fromAspspRedirectHandler;
 
     @Override
     public CompletableFuture authUsingGET(String authId, String redirectCode) {
-        return startAuthorizationService.execute(
+        return authorizationStateService.execute(
                 AuthorizationRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
                                 // Get rid of CGILIB here by copying:
@@ -45,7 +47,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                                 .build()
                         )
                         .build()
-        ).thenApply((FacadeResult<UpdateAuthBody> result) -> mapper.translate(result, new NoOpMapper<>()));
+        ).thenApply(redirectionOnlyToOkMapper::translate);
     }
 
     @Override

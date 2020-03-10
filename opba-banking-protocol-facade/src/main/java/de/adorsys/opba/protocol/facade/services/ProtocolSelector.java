@@ -54,6 +54,10 @@ public class ProtocolSelector {
         ServiceSession session = sessions.findById(serviceSessionId)
                 .orElseThrow(() -> new IllegalStateException("Missing session " + serviceSessionId));
 
+        if (null == session.getService()) {
+            session.setService(protocol);
+        }
+
         session.setProtocol(protocol);
         sessions.save(session);
         return protocol;

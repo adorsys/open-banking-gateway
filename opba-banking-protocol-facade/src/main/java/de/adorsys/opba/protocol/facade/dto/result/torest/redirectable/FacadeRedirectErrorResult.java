@@ -15,7 +15,7 @@ import static de.adorsys.opba.protocol.api.dto.headers.ResponseHeaders.X_ERROR_M
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class FacadeRedirectErrorResult<T> extends FacadeResultRedirectable<T> {
+public class FacadeRedirectErrorResult<T, C extends RedirectionCause> extends FacadeResultRedirectable<T, C> {
 
     public static final ErrorFromProtocol ERROR_FROM_PROTOCOL = Mappers.getMapper(ErrorFromProtocol.class);
 

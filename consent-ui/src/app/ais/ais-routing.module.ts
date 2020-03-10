@@ -6,10 +6,12 @@ import {ConfirmConsentPageComponent} from './confirm-consent-page/confirm-consen
 import {TanConfirmPageComponent} from './tan-confirm-page/tan-confirm-page.component';
 import {ResultPageComponent} from './result-page/result-page.component';
 import {ScaSelectPageComponent} from './sca-select-page/sca-select-page.component';
-import {EntryPageAccountsComponent} from './entry-page-accounts/entry-page-accounts.component';
-import {EntryPageTransactionsComponent} from './entry-page-transactions/entry-page-transactions.component';
 import {ErrorPageComponent} from './error-page/error-page.component';
-import {ConsentInitiateComponent} from "./consent-initiate/consent-initiate.component";
+import {ConsentInitiateComponent} from "./initiation/consent-initiate/consent-initiate.component";
+import {EntryPageAccountsComponent} from "./initiation/accounts/entry-page-accounts/entry-page-accounts.component";
+import {EntryPageTransactionsComponent} from "./initiation/transactions/entry-page-transactions/entry-page-transactions.component";
+import {AccountsConsentReviewComponent} from "./initiation/accounts/accounts-consent-review/accounts-consent-review.component";
+import {TransactionsConsentReviewComponent} from "./initiation/transactions/transactions-consent-review/transactions-consent-review.component";
 
 
 const routes: Routes = [
@@ -18,8 +20,10 @@ const routes: Routes = [
     component: EntryPageComponent,
     children: [
       {path: '', component: ConsentInitiateComponent},
-      {path: 'list-accounts', component: EntryPageAccountsComponent},
-      {path: 'list-transactions', component: EntryPageTransactionsComponent},
+      {path: EntryPageAccountsComponent.ROUTE, component: EntryPageAccountsComponent},
+      {path: EntryPageTransactionsComponent.ROUTE, component: EntryPageTransactionsComponent},
+      {path: AccountsConsentReviewComponent.ROUTE, component: AccountsConsentReviewComponent},
+      {path: TransactionsConsentReviewComponent.ROUTE, component: TransactionsConsentReviewComponent},
       {path: 'error', component: ErrorPageComponent}
     ]
   },

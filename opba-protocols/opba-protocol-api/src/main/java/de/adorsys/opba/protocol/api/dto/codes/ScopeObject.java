@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.service.xs2a.annotations;
+package de.adorsys.opba.protocol.api.dto.codes;
 
 public enum ScopeObject {
     GENERAL,

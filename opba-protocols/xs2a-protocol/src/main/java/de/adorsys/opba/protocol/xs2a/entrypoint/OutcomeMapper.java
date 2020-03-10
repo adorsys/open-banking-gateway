@@ -1,29 +1,31 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint;
 
+import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationRequiredResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
-import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ConsentAcquired;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Redirect;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Response;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ValidationIssue;
+import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ValidationProblem;
 import lombok.RequiredArgsConstructor;
 
 import java.net.URI;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class OutcomeMapper<T> {
 
-    private final CompletableFuture<Result<T>> channel;
-    private final Function<Response, T> extractBody;
+    protected final CompletableFuture<Result<T>> channel;
+    protected final Function<Response, T> extractBodyOnSuccess;
 
     public void onSuccess(Response responseResult) {
-        channel.complete(new SuccessResult<>(extractBody.apply(responseResult)));
+        channel.complete(new SuccessResult<>(extractBodyOnSuccess.apply(responseResult)));
     }
 
     public void onRedirect(Redirect redirectResult) {
@@ -34,10 +36,12 @@ public class OutcomeMapper<T> {
         );
     }
 
-    public void onValidationProblem(ValidationIssue validationIssue) {
+    public void onValidationProblem(ValidationProblem problem) {
         channel.complete(
                 new ContextBasedValidationErrorResult<>(
-                        validationIssue.getProvideMoreParamsDialog(), validationIssue.getExecutionId()
+                    problem.getProvideMoreParamsDialog(),
+                    problem.getExecutionId(),
+                    problem.getIssues()
                 )
         );
     }
@@ -45,7 +49,7 @@ public class OutcomeMapper<T> {
     public void onConsentAcquired(ConsentAcquired acquired) {
         channel.complete(
             // Facade knows redirection target
-            new ConsentAcquiredResult<>(null)
+            new ConsentAcquiredResult<>(null, null)
         );
     }
 
@@ -53,12 +57,12 @@ public class OutcomeMapper<T> {
         channel.complete(new ErrorResult<>());
     }
 
-    private static class ContextBasedAuthorizationRequiredResult<T> extends AuthorizationRequiredResult<T> {
+    private static class ContextBasedAuthorizationRequiredResult<T> extends AuthorizationRequiredResult<T, Object> {
 
         private final String executionId;
 
         ContextBasedAuthorizationRequiredResult(URI redirectionTo, String executionId) {
-            super(redirectionTo);
+            super(redirectionTo, null);
             this.executionId = executionId;
         }
 
@@ -68,12 +72,12 @@ public class OutcomeMapper<T> {
         }
     }
 
-    private static class ContextBasedValidationErrorResult<T> extends ValidationErrorResult<T> {
+    private static class ContextBasedValidationErrorResult<T> extends ValidationErrorResult<T, Set<ValidationIssue>> {
 
         private final String executionId;
 
-        ContextBasedValidationErrorResult(URI redirectionTo, String executionId) {
-            super(redirectionTo);
+        ContextBasedValidationErrorResult(URI redirectionTo, String executionId, Set<ValidationIssue> issues) {
+            super(redirectionTo, issues);
             this.executionId = executionId;
         }
 

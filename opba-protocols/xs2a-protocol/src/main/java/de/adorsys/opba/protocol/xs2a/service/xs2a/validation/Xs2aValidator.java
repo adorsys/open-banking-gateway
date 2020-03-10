@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.validation;
 
 import com.google.common.collect.Iterables;
 import de.adorsys.opba.protocol.xs2a.domain.ValidationIssueException;
-import de.adorsys.opba.protocol.xs2a.domain.dto.ValidationIssue;
+import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;

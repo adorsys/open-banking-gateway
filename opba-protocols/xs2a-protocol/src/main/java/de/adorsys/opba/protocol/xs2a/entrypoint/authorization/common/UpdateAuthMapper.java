@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.entrypoint.authorization;
+package de.adorsys.opba.protocol.xs2a.entrypoint.authorization.common;
 
 import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;

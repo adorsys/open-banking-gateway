@@ -64,6 +64,15 @@ public class ServiceSession implements IdAssignable<UUID>  {
     @OneToOne(mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private AuthSession authSession;
 
+    /**
+     * Identifies which protocol is serviced - i.e. list accounts, one that was selected on the first request
+     */
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private BankProtocol service;
+
+    /**
+     * Identifies current protocol i.e. some authorization protocol.
+     */
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private BankProtocol protocol;
 

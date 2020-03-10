@@ -1,8 +1,8 @@
-package de.adorsys.opba.protocol.xs2a.domain.dto;
+package de.adorsys.opba.protocol.api.dto;
 
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
+import de.adorsys.opba.protocol.api.dto.codes.ScopeObject;
 import de.adorsys.opba.protocol.api.dto.codes.TypeCode;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ScopeObject;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

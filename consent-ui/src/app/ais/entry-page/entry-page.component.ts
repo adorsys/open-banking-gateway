@@ -1,9 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {SessionService} from '../../common/session.service';
-import {ConsentAuthorizationService} from '../../api/consentAuthorization.service';
-import {combineLatest} from 'rxjs';
-import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'consent-app-entry-page',

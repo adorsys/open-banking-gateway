@@ -48,7 +48,10 @@ public class BankProtocol {
     private Collection<BankSubProtocol> subProtocols;
 
     @OneToMany(mappedBy = "protocol", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<ServiceSession> serviceSessions;
+    private Collection<ServiceSession> currentForSessions;
+
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<ServiceSession> servicesSessions;
 
     @OneToMany(mappedBy = "protocol", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<AuthSession> authSessions;

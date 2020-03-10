@@ -17,6 +17,7 @@ import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
 import de.adorsys.opba.protocol.facade.config.ApplicationTest;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
+import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.RedirectionCause;
 import de.adorsys.opba.protocol.facade.services.ProtocolResultHandler;
 import de.adorsys.opba.protocol.facade.services.ServiceContextProvider;
 import lombok.SneakyThrows;
@@ -86,8 +87,8 @@ public class ServiceContextProviderTest {
         ServiceContext<FacadeServiceableGetter> providedContext = serviceContextProvider.provide(request);
         EncryptionService encryptionService = providedContext.getEncryptionService();
         URI redirectionTo = new URI("/");
-        Result<URI> result = new ConsentAcquiredResult<>(redirectionTo);
-        FacadeRedirectResult<URI> uriFacadeResult = (FacadeRedirectResult)
+        Result<URI> result = new ConsentAcquiredResult<>(redirectionTo, null);
+        FacadeRedirectResult<URI, RedirectionCause> uriFacadeResult = (FacadeRedirectResult)
             handler.handleResult(result, request.getFacadeServiceable().getRequestId(), providedContext);
 
         assertThat(providedContext.getRequest().getFacadeServiceable().getSessionPassword()).isEqualTo(PASSWORD);
