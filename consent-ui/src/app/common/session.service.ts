@@ -20,6 +20,10 @@ export class SessionService {
   }
 
   public getConsentState<T>(authorizationId: string, factory: () => T): T {
+    if (!sessionStorage.getItem(authorizationId + Session.CONSENT_STATE)) {
+      return null;
+    }
+
     return Object.assign(
       factory(),
       JSON.parse(sessionStorage.getItem(authorizationId + Session.CONSENT_STATE))
@@ -31,8 +35,10 @@ export class SessionService {
   }
 
   public getConsentObject<T>(authorizationId: string, factory: () => T): T {
-    console.log(authorizationId + Session.CONSENT_OBJECT)
-    console.log(sessionStorage.getItem(authorizationId + Session.CONSENT_OBJECT))
+    if (!sessionStorage.getItem(authorizationId + Session.CONSENT_OBJECT)) {
+      return null;
+    }
+
     return Object.assign(
       factory(),
       JSON.parse(sessionStorage.getItem(authorizationId + Session.CONSENT_OBJECT))

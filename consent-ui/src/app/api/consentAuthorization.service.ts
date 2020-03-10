@@ -55,6 +55,9 @@ export class ConsentAuthorizationService {
     }
 
     let headers = new HttpHeaders();
+    headers = headers.set("X-Request-ID", xRequestID);
+    headers = headers.set("X-XSRF-TOKEN", X_XSRF_TOKEN);
+
     return this.httpClient.post(
       `${this.basePath}/v1/consent/${encodeURIComponent(String(authId))}/embedded`,
       psuAuthRequest,

@@ -2,22 +2,26 @@
   <div class="card-body">
     <h2 class="mb-4 text-left">Access permission for accounts in {{aspspName}}</h2>
     <p class="text-secondary mb-5 text-left">Review an account access level for <strong>{{finTechName}}</strong></p>
+    <ng-container [ngSwitch]="aisConsent.consent.access.availableAccounts">
       <div class="form-group my-4">
-        <ng-container [ngSwitch]="aisConsent.access.availableAccounts">
-          <ng-container *ngSwitchCase="AccountAccessLevel.ALL_ACCOUNTS">
-            <p>Access to all your accounts is to be granted</p>
+        <ul>
+          <ng-container *ngSwitchCase="accountAccessLevel.ALL_ACCOUNTS">
+            <li><strong>All</strong> your accounts will be visible</li>
           </ng-container>
-          <ng-container *ngSwitchCase="AccountAccessLevel.ALL_ACCOUNTS_WITH_BALANCES">
-            <p>Access to all your accounts with balances is to be granted</p>
+          <ng-container *ngSwitchCase="accountAccessLevel.ALL_ACCOUNTS_WITH_BALANCES">
+            <li><strong>All</strong> your accounts <strong>with balances</strong> will be visible</li>
           </ng-container>
-          <ng-container *ngSwitchCase="AccountAccessLevel.FINE_GRAINED">
-
+          <ng-container *ngSwitchCase="accountAccessLevel.FINE_GRAINED">
+            <li></li>
           </ng-container>
-        </ng-container>
-      <div class="form-group d-flex flex-row justify-content-lg-between">
-        <button class="btn md-6 w-100 mr-sm-2 mr-md-3 btn-outline-secondary">Cancel</button>
-        <button type="button" class="btn md-6 w-100 btn-primary" (click)="onConfirm()">Confirm</button>
+          <li>The consent will be valid until <strong>{{aisConsent.consent.validUntil}}</strong></li>
+          <li>The consent can be used <strong>{{aisConsent.consent.frequencyPerDay}}</strong> times per day</li>
+        </ul>
       </div>
+    </ng-container>
+    <div class="form-group d-flex flex-row justify-content-lg-between">
+      <button class="btn md-6 w-100 mr-sm-2 mr-md-3 btn-outline-secondary">Cancel</button>
+      <button type="button" class="btn md-6 w-100 btn-primary" (click)="onConfirm()">Confirm</button>
     </div>
   </div>
 </div>
