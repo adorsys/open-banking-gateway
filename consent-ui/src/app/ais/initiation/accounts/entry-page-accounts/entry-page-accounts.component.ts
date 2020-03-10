@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {StubUtil} from "../../../common/stub-util";
 import {SessionService} from "../../../../common/session.service";
 import {ConsentUtil} from "../../../common/consent-util";
-import {AccountAccess, AccountAccessLevel} from "../../../common/dto/ais-consent";
+import {AccountAccess, AccountAccessLevel, AisConsent} from "../../../common/dto/ais-consent";
 import {AccountsConsentReviewComponent} from "../accounts-consent-review/accounts-consent-review.component";
 import {AuthConsentState} from "../../../common/dto/auth-state";
 
@@ -73,14 +73,18 @@ export class EntryPageAccountsComponent implements OnInit {
 
   onConfirm() {
     const consentObj = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
-    if (this.selectedAccess.value === AccountAccessLevel.FINE_GRAINED) {
+    if (this.selectedAccess.value.id === AccountAccessLevel.FINE_GRAINED) {
       return;
     }
 
-    if (!consentObj.access) {
-      consentObj.access = new AccountAccess();
+    if (!consentObj.consent) {
+      consentObj.consent = {} as AisConsent;
     }
-    consentObj.access.availableAccounts = this.selectedAccess.value;
+
+    if (!consentObj.consent.access) {
+      consentObj.consent.access = new AccountAccess();
+    }
+    consentObj.consent.access.availableAccounts = this.selectedAccess.value.id;
 
     if (this.state.hasGeneralViolation()) {
       consentObj.extras = consentObj.extras ? consentObj.extras : {};

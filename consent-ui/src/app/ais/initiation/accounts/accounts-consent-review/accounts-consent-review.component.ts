@@ -3,8 +3,9 @@ import {ConsentUtil} from "../../../common/consent-util";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder} from "@angular/forms";
 import {SessionService} from "../../../../common/session.service";
-import {AccountAccessLevel, AisConsent} from "../../../common/dto/ais-consent";
+import {AccountAccessLevel, AisConsent, AisConsentToGrant} from "../../../common/dto/ais-consent";
 import {StubUtil} from "../../../common/stub-util";
+import {ConsentAuthorizationService} from "../../../../api/consentAuthorization.service";
 
 @Component({
   selector: 'consent-app-accounts-consent-review',
@@ -13,7 +14,7 @@ import {StubUtil} from "../../../common/stub-util";
 })
 export class AccountsConsentReviewComponent implements OnInit {
 
-  public AccountAccessLevel;
+  accountAccessLevel = AccountAccessLevel;
 
   public finTechName = StubUtil.FINTECH_NAME;
   public aspspName = StubUtil.ASPSP_NAME;
@@ -21,14 +22,16 @@ export class AccountsConsentReviewComponent implements OnInit {
   public static ROUTE = 'review-consent-accounts';
 
   private authorizationId: string;
-  private aisConsent: AisConsent;
+  private aisConsent: AisConsentToGrant;
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private sessionService: SessionService
-  ) { }
+    private sessionService: SessionService,
+    private consentAuthorisation: ConsentAuthorizationService
+  ) {
+  }
 
   ngOnInit() {
     this.activatedRoute.parent.params.subscribe(res => {
@@ -38,5 +41,21 @@ export class AccountsConsentReviewComponent implements OnInit {
   }
 
   onConfirm() {
+    const body = {
+      extras: this.aisConsent.extras
+    };
+
+    if (this.aisConsent) {
+      body['consentAuth'] = {consent: this.aisConsent.consent};
+    }
+
+    this.consentAuthorisation.embeddedUsingPOST(
+      this.authorizationId,
+      StubUtil.X_XSRF_TOKEN,
+      StubUtil.X_REQUEST_ID,
+      this.sessionService.getRedirectCode(this.authorizationId),
+      body
+    ).subscribe(res => {
+    })
   }
 }

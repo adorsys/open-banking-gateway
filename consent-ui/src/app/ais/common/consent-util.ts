@@ -1,22 +1,23 @@
 import {SessionService} from "../../common/session.service";
-import {AisConsent} from "./dto/ais-consent";
+import {AccountAccess, AisConsent, AisConsentToGrant} from "./dto/ais-consent";
 
 export class ConsentUtil {
 
-  public static getOrDefault(authorizationId: string, storageService: SessionService) : AisConsent {
-    if (!storageService.getConsentObject(authorizationId, () => new AisConsent())) {
+  public static getOrDefault(authorizationId: string, storageService: SessionService) : AisConsentToGrant {
+    if (!storageService.getConsentObject(authorizationId, () => new AisConsentToGrant())) {
       storageService.setConsentObject(authorizationId, ConsentUtil.initializeConsentObject());
     }
 
-    return storageService.getConsentObject(authorizationId, () => new AisConsent());
+    return storageService.getConsentObject(authorizationId, () => new AisConsentToGrant());
   }
 
-  private static initializeConsentObject() : AisConsent {
-    const aisConsent = new AisConsent();
+  private static initializeConsentObject() : AisConsentToGrant {
+    const aisConsent = new AisConsentToGrant();
     // FIXME: These fields MUST be initialized by FinTech through API and user can only adjust it.
-    aisConsent.frequencyPerDay = 10;
-    aisConsent.recurringIndicator = true;
-    aisConsent.validUntil = ConsentUtil.futureDate().toISOString().split("T")[0];
+    aisConsent.consent = new AisConsentImpl();
+    aisConsent.consent.frequencyPerDay = 10;
+    aisConsent.consent.recurringIndicator = true;
+    aisConsent.consent.validUntil = ConsentUtil.futureDate().toISOString().split("T")[0];
     return aisConsent;
   }
 
@@ -26,4 +27,11 @@ export class ConsentUtil {
     result.setDate(result.getDate() + 365);
     return result;
   }
+}
+
+class AisConsentImpl implements AisConsent {
+  access: AccountAccess;
+  frequencyPerDay: number;
+  recurringIndicator;
+  validUntil: string;
 }

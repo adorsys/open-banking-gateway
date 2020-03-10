@@ -1,12 +1,16 @@
-export class AisConsent {
+export class AisConsentToGrant {
 
-  access: AccountAccess;
-  recurringIndicator = false;
-  validUntil: string;
-  frequencyPerDay: number;
-
+  consent: AisConsent;
   constructor(public extras?: {[key: string]: string}) {
   }
+}
+
+export interface AisConsent {
+
+  access: AccountAccess;
+  recurringIndicator;
+  validUntil: string;
+  frequencyPerDay: number;
 }
 
 export class AccountAccess {
