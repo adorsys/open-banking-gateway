@@ -67,7 +67,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                                 .requestId(xRequestID)
                                 .build()
                         )
-                        .aisConsent(aisConsentMapper.map(body))
+                        .aisConsent(null == body.getConsentAuth() ? null : aisConsentMapper.map(body))
                         .scaAuthenticationData(body.getScaAuthenticationData())
                         .extras(extrasMapper.map(body.getExtras()))
                         .build()

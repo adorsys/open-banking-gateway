@@ -42,11 +42,11 @@ public class UpdateAuthMapper {
         throw new IllegalArgumentException("Can't update authorization for: " + context.getClass().getCanonicalName());
     }
 
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = AisMapper.class)
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = AisMapper.class, nullValuePropertyMappingStrategy = IGNORE)
     public interface FromAisRequestAccountList extends DtoUpdatingMapper<AuthorizationRequest, AccountListXs2aContext> {
 
-        @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress", nullValuePropertyMappingStrategy = IGNORE)
-        @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType", nullValuePropertyMappingStrategy = IGNORE)
+        @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress")
+        @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType")
         void mapTo(AuthorizationRequest request, @MappingTarget AccountListXs2aContext context);
 
         @Override
@@ -56,11 +56,11 @@ public class UpdateAuthMapper {
         }
     }
 
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = AisMapper.class)
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = AisMapper.class, nullValuePropertyMappingStrategy = IGNORE)
     public interface FromAisRequestTransactionList extends DtoUpdatingMapper<AuthorizationRequest, TransactionListXs2aContext> {
 
-        @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress", nullValuePropertyMappingStrategy = IGNORE)
-        @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType", nullValuePropertyMappingStrategy = IGNORE)
+        @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress")
+        @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType")
         void mapTo(AuthorizationRequest request, @MappingTarget TransactionListXs2aContext context);
 
         @Override
