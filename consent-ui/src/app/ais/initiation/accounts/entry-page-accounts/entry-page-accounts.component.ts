@@ -7,6 +7,7 @@ import {ConsentUtil} from "../../../common/consent-util";
 import {AccountAccess, AccountAccessLevel, AisConsent} from "../../../common/dto/ais-consent";
 import {AccountsConsentReviewComponent} from "../accounts-consent-review/accounts-consent-review.component";
 import {AuthConsentState} from "../../../common/dto/auth-state";
+import {LimitedAccessComponent} from "../../common/limited-access/limited-access.component";
 
 @Component({
   selector: 'consent-app-entry-page-accounts',
@@ -68,12 +69,13 @@ export class EntryPageAccountsComponent implements OnInit {
   }
 
   submitButtonMessage() {
-    return this.selectedAccess.value === AccountAccessLevel.FINE_GRAINED ? 'Specify access' : 'Grant access';
+    return this.selectedAccess.value.id === AccountAccessLevel.FINE_GRAINED ? 'Specify access' : 'Grant access';
   }
 
   onConfirm() {
     const consentObj = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     if (this.selectedAccess.value.id === AccountAccessLevel.FINE_GRAINED) {
+      this.router.navigate([LimitedAccessComponent.ROUTE], {relativeTo: this.activatedRoute.parent});
       return;
     }
 

@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from "@angular/router";
+import {FormBuilder, FormGroup} from "@angular/forms";
+import {SessionService} from "../../../../common/session.service";
+import {Account} from "../account-selector/account-selector.component";
 
 @Component({
   selector: 'consent-app-limited-access',
@@ -7,9 +11,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LimitedAccessComponent implements OnInit {
 
-  constructor() { }
+  public static ROUTE = 'limited-access';
 
-  ngOnInit() {
+  accounts = [new Account()];
+  limitedAccountAccessForm: FormGroup;
+
+  private authorizationId: string;
+
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private formBuilder: FormBuilder,
+    private sessionService: SessionService
+  ) {
+    this.limitedAccountAccessForm = this.formBuilder.group({});
   }
 
+  ngOnInit() {
+    this.activatedRoute.parent.params.subscribe(res => {
+      this.authorizationId = res.authId;
+    })
+  }
+
+  onSelect() {
+  }
 }
