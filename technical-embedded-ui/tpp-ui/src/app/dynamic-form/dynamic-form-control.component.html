@@ -1,20 +1,13 @@
 <div [formGroup]="form">
-  <div [ngSwitch]="control.controlType">
+  <div [ngSwitch]="control.type">
 
-    <mat-form-field *ngSwitchCase="'textbox'">
+    <mat-form-field *ngSwitchCase="'STRING'">
       <input name="{{control.id}}" [formControlName]="control.id" [type]="control.type" matInput placeholder="{{control.message}}">
     </mat-form-field>
 
-    <div *ngSwitchCase="'dropdown'">
-      {{control.message}}
-      <select [id]="control.id" [formControlName]="control.id" name="{{control.id}}">
-        <option *ngFor="let opt of control.options" [value]="opt.key">{{opt.value}}</option>
-      </select>
-    </div>
+    <app-three-state-checkbox *ngSwitchCase="'BOOLEAN'" [form]="form" controlName="{{control.id}}" label="{{control.message}}"></app-three-state-checkbox>
 
-    <app-three-state-checkbox *ngSwitchCase="'boolean'" [form]="form" controlName="{{control.id}}" label="{{control.message}}"></app-three-state-checkbox>
-
-    <mat-form-field *ngSwitchCase="'date'">
+    <mat-form-field *ngSwitchCase="'DATE'">
       <input matInput [matDatepicker]="dp" name="{{control.id}}" placeholder="{{control.message}}" [formControlName]="control.id">
       <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
       <mat-datepicker #dp></mat-datepicker>
