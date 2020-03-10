@@ -84,7 +84,7 @@ public class RedirectHandlerService {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.put(LOCATION_HEADER, singletonList(redirectUrl));
 
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
     }
 
     private String getModifiedUrlWithRedirectCode(String url, String redirectCode) {

@@ -79,7 +79,7 @@ class RedirectHandlerServiceTest {
         verify(authorizeService, times(1)).getByXsrfToken(REDIRECT_STATE);
         verify(authorizeService, times(1)).updateUserSession(sessionEntity);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.SEE_OTHER);
         assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
         assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(OK_URL));
         assertThat(responseEntity.getBody()).isNull();
@@ -94,7 +94,7 @@ class RedirectHandlerServiceTest {
         verify(authorizeService, times(0)).getByXsrfToken(REDIRECT_STATE);
         verify(authorizeService, times(0)).updateUserSession(sessionEntity);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.SEE_OTHER);
         assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
         assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(EXCEPTION_URL));
         assertThat(responseEntity.getBody()).isNull();
@@ -112,7 +112,7 @@ class RedirectHandlerServiceTest {
         verify(authorizeService, times(0)).getByXsrfToken(REDIRECT_STATE);
         verify(authorizeService, times(0)).updateUserSession(sessionEntity);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.SEE_OTHER);
         assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
         assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(EXCEPTION_URL));
         assertThat(responseEntity.getBody()).isNull();
@@ -130,7 +130,7 @@ class RedirectHandlerServiceTest {
         verify(authorizeService, times(0)).getByXsrfToken(REDIRECT_STATE);
         verify(authorizeService, times(0)).updateUserSession(sessionEntity);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.SEE_OTHER);
         assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
         assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(NOT_OK_URL));
         assertThat(responseEntity.getBody()).isNull();
@@ -149,7 +149,7 @@ class RedirectHandlerServiceTest {
         verify(authorizeService, times(0)).getByXsrfToken(REDIRECT_STATE);
         verify(authorizeService, times(0)).updateUserSession(sessionEntity);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FOUND);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.SEE_OTHER);
         assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
         assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(NOT_OK_URL));
         assertThat(responseEntity.getBody()).isNull();
