@@ -1,2 +1,6 @@
 protocol:
+  redirect:
+    parameters:
+      provide-more: ${protocol.embedded-ui-base-url}/parameters/provide-more/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}
   gateway-base-url: ${protocol.embedded-ui-base-url}/from-aspsp
+  embedded-ui-base-url: http://localhost:5500
