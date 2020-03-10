@@ -43,7 +43,10 @@ class RedirectHandlerServiceTest {
 
     @BeforeEach
     void setup() {
-        redirectHandlerService = new RedirectHandlerService(NOT_OK_URL, OK_URL, EXCEPTION_URL, redirectUrlRepository, authorizeService);
+        redirectHandlerService = new RedirectHandlerService(redirectUrlRepository, authorizeService);
+        redirectHandlerService.setOkUrl(OK_URL);
+        redirectHandlerService.setNotOkUrl(NOT_OK_URL);
+        redirectHandlerService.setExceptionUrl(EXCEPTION_URL);
     }
 
     @Test

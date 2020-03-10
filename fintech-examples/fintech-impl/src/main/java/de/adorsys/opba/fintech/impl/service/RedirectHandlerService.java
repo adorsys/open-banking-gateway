@@ -6,12 +6,16 @@ import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
 import de.adorsys.opba.fintech.impl.service.mocks.TppBankingApiTokenMock;
 import de.adorsys.opba.tpp.token.api.model.generated.PsuConsentSessionResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -19,12 +23,15 @@ import java.util.UUID;
 import static java.util.Collections.singletonList;
 
 @Slf4j
+@Service
+@Setter
 @RequiredArgsConstructor
+@ConfigurationProperties("fintech-ui")
 public class RedirectHandlerService {
     private static final String LOCATION_HEADER = "Location";
-    private final String notOkUrl;
-    private final String okUrl;
-    private final String exceptionUrl;
+    private String notOkUrl;
+    private String okUrl;
+    private String exceptionUrl;
 
     private final RedirectUrlRepository redirectUrlRepository;
     private final AuthorizeService authorizeService;
@@ -88,7 +95,8 @@ public class RedirectHandlerService {
     }
 
     private String getModifiedUrlWithRedirectCode(String url, String redirectCode) {
-        // TODO it means url has format "http://some-address/more?parameter="
-        return url + redirectCode;
+        return UriComponentsBuilder.fromPath(url)
+                       .buildAndExpand(redirectCode)
+                       .toUriString();
     }
 }
