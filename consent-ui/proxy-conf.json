@@ -6,6 +6,7 @@
     "pathRewrite": {
       "^/embedded-server": ""
     },
-    "logLevel": "debug"
+    "logLevel": "debug",
+    "headers": {"Access-Control-Expose-Headers": "*"}
   }
 }

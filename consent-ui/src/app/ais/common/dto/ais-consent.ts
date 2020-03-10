@@ -15,6 +15,13 @@ export class AccountAccess {
   balances: string[];
   transactions: string[];
 
-  availableAccounts: string;
+  availableAccounts: AccountAccessLevel;
   allPsd2: string;
+}
+
+export enum AccountAccessLevel {
+
+  ALL_ACCOUNTS = 'ALL_ACCOUNTS',
+  ALL_ACCOUNTS_WITH_BALANCES = 'ALL_ACCOUNTS_WITH_BALANCES',
+  FINE_GRAINED = 'FINE_GRAINED'
 }
