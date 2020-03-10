@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {FormGroup} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {uuid} from "uuidv4";
 
 @Component({
@@ -15,6 +15,27 @@ export class AccountSelectorComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.accounts.forEach(it => {
+      if (!this.targetForm.contains(it.id)) {
+        this.addControlToForm(it);
+      }
+    })
+  }
+
+  addAccount() {
+    const account = new Account();
+    this.accounts.push(account);
+    this.addControlToForm(account);
+  }
+
+  removeAccount(account: Account) {
+    this.accounts.splice(this.accounts.indexOf(account), 1);
+    this.targetForm.removeControl(account.id);
+  }
+
+  private addControlToForm(account: Account) {
+    this.targetForm.addControl(account.id, new FormControl(account.iban, [Validators.required, Validators.minLength(5)]));
+    console.log(this.accounts)
   }
 
 }
@@ -27,6 +48,6 @@ export class Account {
 
   constructor(iban?: string) {
     this.id = "account:" + uuid();
-    this.iban = iban;
+    this.iban = iban ? iban : '';
   }
 }
