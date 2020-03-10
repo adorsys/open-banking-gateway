@@ -1,9 +1,0 @@
-<div class="list-container list-container--{{ config?.shadow }}">
-  <div class="list-item">
-    <h1 class="list-item__headline list-item__headline--{{ config?.headline }}">{{ card?.headline }}</h1>
-    <p class="list-item__subheadline list-item__subheadline--{{ config?.subheadline }}">{{ card?.subheadline }}</p>
-  </div>
-  <div *ngIf="card?.accountBalance" [class.text-danger]="card?.accountBalance < 0" class="list-item list-item__balance">
-    {{ card.accountBalance | currency: 'EUR':'symbol':'1.0' }}
-  </div>
-</div>
