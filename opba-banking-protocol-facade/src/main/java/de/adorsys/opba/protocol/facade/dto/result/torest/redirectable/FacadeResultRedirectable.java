@@ -9,13 +9,14 @@ import java.util.Map;
 import java.util.UUID;
 
 @Data
-public abstract class FacadeResultRedirectable<T> implements FacadeResult<T> {
+public abstract class FacadeResultRedirectable<T, C extends RedirectionCause> implements FacadeResult<T> {
 
     private String redirectCode;
     private UUID xRequestId;
     private String serviceSessionId;
     private String authorizationSessionId;
     private URI redirectionTo;
+    private C cause;
 
     public Map<String, String> getHeaders() {
         return Collections.emptyMap();

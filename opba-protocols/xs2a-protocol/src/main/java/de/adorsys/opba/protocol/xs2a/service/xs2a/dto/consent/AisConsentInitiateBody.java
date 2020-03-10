@@ -30,15 +30,15 @@ import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.OBJECT;
 import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
-import static de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ScopeObject.AIS_CONSENT;
-import static de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ScopeObject.AIS_CONSENT_SCOPE;
+import static de.adorsys.opba.protocol.api.dto.codes.ScopeObject.AIS_CONSENT;
+import static de.adorsys.opba.protocol.api.dto.codes.ScopeObject.AIS_CONSENT_SCOPE;
 
 @Getter
 @Setter
 public class AisConsentInitiateBody {
 
     @Valid
-    @ValidationInfo(ui = @FrontendCode(OBJECT), ctx = @ContextCode(target = AIS_CONSENT_SCOPE))
+    @ValidationInfo(ui = @FrontendCode(OBJECT), ctx = @ContextCode(target = AIS_CONSENT))
     @NotNull(message = "{no.ctx.accountaccess}")
     private AccountAccessBody access;
 

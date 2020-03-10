@@ -42,27 +42,29 @@ public class FacadeResponseMapper {
         throw new IllegalArgumentException("Unknown result type: " + result.getClass());
     }
 
-    private ResponseEntity<?> handleRedirect(FacadeResultRedirectable<?> result) {
+    protected ResponseEntity<?> handleRedirect(FacadeResultRedirectable<?, ?> result) {
         if (result instanceof FacadeStartAuthorizationResult) {
             return handleInitialAuthorizationRedirect((FacadeStartAuthorizationResult) result);
         }
 
-        return defaultHandleRedirect(result);
+        return doHandleRedirect(result);
     }
 
-    private ResponseEntity<?> handleInitialAuthorizationRedirect(FacadeStartAuthorizationResult<?> result) {
+    protected ResponseEntity<?> handleInitialAuthorizationRedirect(FacadeStartAuthorizationResult<?, ?> result) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(ACCEPTED));
         putExtraRedirectHeaders(result, response);
+        response.body(result.getCause());
         return responseForRedirection(result, response);
     }
 
-    private ResponseEntity<?> defaultHandleRedirect(FacadeResultRedirectable<?> result) {
+    protected ResponseEntity<?> doHandleRedirect(FacadeResultRedirectable<?, ?> result) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(SEE_OTHER));
         putExtraRedirectHeaders(result, response);
+        response.body(result.getCause());
         return responseForRedirection(result, response);
     }
 
-    private ResponseEntity<Map<String, String>> responseForRedirection(FacadeResultRedirectable<?> result, ResponseEntity.BodyBuilder response) {
+    protected ResponseEntity<Map<String, String>> responseForRedirection(FacadeResultRedirectable<?, ?> result, ResponseEntity.BodyBuilder response) {
         return response
             .header(AUTHORIZATION_SESSION_ID, result.getAuthorizationSessionId())
             .header(REDIRECT_CODE, result.getRedirectCode())
@@ -71,24 +73,24 @@ public class FacadeResponseMapper {
             .body(ImmutableMap.of("msg", "Please use redirect link in 'Location' header"));
     }
 
-    private <E> ResponseEntity<E> handleError(FacadeRedirectErrorResult<?> result) {
+    protected <E> ResponseEntity<E> handleError(FacadeRedirectErrorResult<?, ?> result) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(SEE_OTHER));
         return putExtraRedirectHeaders(result, response).build();
     }
 
-    private <T, F> ResponseEntity<T> handleSuccess(FacadeSuccessResult<F> result, FacadeResponseBodyToRestBodyMapper<T, F> mapper) {
+    protected <T, F> ResponseEntity<T> handleSuccess(FacadeSuccessResult<F> result, FacadeResponseBodyToRestBodyMapper<T, F> mapper) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(OK));
         return response.body(mapper.map(result.getBody()));
     }
 
-    private ResponseEntity.BodyBuilder putDefaultHeaders(FacadeResult<?> result, ResponseEntity.BodyBuilder builder) {
+    protected ResponseEntity.BodyBuilder putDefaultHeaders(FacadeResult<?> result, ResponseEntity.BodyBuilder builder) {
         builder
                 .header(X_REQUEST_ID, null == result.getXRequestId() ? null : result.getXRequestId().toString())
                 .header(SERVICE_SESSION_ID, result.getServiceSessionId());
         return builder;
     }
 
-    private ResponseEntity.BodyBuilder putExtraRedirectHeaders(FacadeResultRedirectable<?> result, ResponseEntity.BodyBuilder builder) {
+    protected ResponseEntity.BodyBuilder putExtraRedirectHeaders(FacadeResultRedirectable<?, ?> result, ResponseEntity.BodyBuilder builder) {
         result.getHeaders().forEach(builder::header);
         return builder;
     }

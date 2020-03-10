@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.annotations;
 
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
+import de.adorsys.opba.protocol.api.dto.codes.ScopeObject;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
