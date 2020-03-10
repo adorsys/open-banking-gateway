@@ -18,7 +18,9 @@ import {EntryPageTransactionsComponent} from "./initiation/transactions/entry-pa
 import {ConsentInitiateComponent} from "./initiation/consent-initiate/consent-initiate.component";
 import {AccountsConsentReviewComponent} from "./initiation/accounts/accounts-consent-review/accounts-consent-review.component";
 import {TransactionsConsentReviewComponent} from "./initiation/transactions/transactions-consent-review/transactions-consent-review.component";
-import { DynamicInputsComponent } from './initiation/dynamic-inputs/dynamic-inputs.component';
+import { DynamicInputsComponent } from './initiation/common/dynamic-inputs/dynamic-inputs.component';
+import { AccountSelectorComponent } from './initiation/common/account-selector/account-selector.component';
+import { LimitedAccessComponent } from './initiation/common/limited-access/limited-access.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { DynamicInputsComponent } from './initiation/dynamic-inputs/dynamic-inpu
     ConsentInitiateComponent,
     AccountsConsentReviewComponent,
     TransactionsConsentReviewComponent,
-    DynamicInputsComponent
+    DynamicInputsComponent,
+    AccountSelectorComponent,
+    LimitedAccessComponent
   ],
   imports: [
     CommonModule,
