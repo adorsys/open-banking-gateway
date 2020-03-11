@@ -1,22 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DashboardComponent } from './dashboard.component';
-import { HomeComponent } from './home/home.component';
+import { BankComponent } from './bank.component';
 import { ListAccountsComponent } from './list-accounts/list-accounts.component';
-import { ListTransactionsComponent } from './list-transactions/list-transactions.component';
 
 const routes: Routes = [
   {
-    path: ':id',
-    component: DashboardComponent,
+    path: ':bankid',
+    component: BankComponent,
     children: [
       {
         path: 'account',
         component: ListAccountsComponent
-      },
-      {
-        path: 'account/:id',
-        component: ListTransactionsComponent
       }
     ]
   }
@@ -26,4 +20,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class DashboardRoutingModule {}
+export class BankRoutingModule {}

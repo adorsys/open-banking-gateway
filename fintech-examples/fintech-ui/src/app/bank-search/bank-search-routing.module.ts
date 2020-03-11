@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BankSearchComponent } from './components/bank-search/bank-search.component';
-import { DashboardComponent } from '../dashboard/dashboard.component';
+import { BankComponent } from '../bank/bank.component';
 
 const routes: Routes = [
   {
@@ -10,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: '/bank/:id',
-    component: DashboardComponent
+    component: BankComponent
   }
 ];
 

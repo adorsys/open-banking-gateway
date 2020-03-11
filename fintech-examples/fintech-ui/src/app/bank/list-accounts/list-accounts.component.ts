@@ -15,7 +15,7 @@ export class ListAccountsComponent implements OnInit, OnDestroy {
   bankId = '';
 
   constructor(private route: ActivatedRoute, private aisService: AisService) {
-    this.bankId = route.parent.snapshot.paramMap.get('id');
+    this.bankId = route.parent.snapshot.paramMap.get('bankid');
     console.log('list-accounts', this.accounts);
   }
 

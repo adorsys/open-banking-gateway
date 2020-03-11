@@ -17,7 +17,7 @@ export class SidebarComponent implements OnInit {
   constructor(private bankProfileService: BankProfileService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.bankId = this.route.snapshot.paramMap.get('id');
+    this.bankId = this.route.snapshot.paramMap.get('bankid');
     console.log('bankid', this.bankId);
     this.bankProfileService.getBankProfile(this.bankId).subscribe(response => {
       console.log('bank profile returns:' + JSON.stringify(response));
