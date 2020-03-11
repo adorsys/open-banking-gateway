@@ -19,8 +19,8 @@ import {ConsentInitiateComponent} from "./initiation/consent-initiate/consent-in
 import {AccountsConsentReviewComponent} from "./initiation/accounts/accounts-consent-review/accounts-consent-review.component";
 import {TransactionsConsentReviewComponent} from "./initiation/transactions/transactions-consent-review/transactions-consent-review.component";
 import { DynamicInputsComponent } from './initiation/common/dynamic-inputs/dynamic-inputs.component';
-import { AccountSelectorComponent } from './initiation/common/account-selector/account-selector.component';
-import { LimitedAccessComponent } from './initiation/common/limited-access/limited-access.component';
+import { AccountsReferenceComponent } from './initiation/common/accounts-reference/accounts-reference.component';
+import { DedicatedAccessComponent } from './initiation/common/dedicated-access/dedicated-access.component';
 
 @NgModule({
   declarations: [
@@ -40,8 +40,8 @@ import { LimitedAccessComponent } from './initiation/common/limited-access/limit
     AccountsConsentReviewComponent,
     TransactionsConsentReviewComponent,
     DynamicInputsComponent,
-    AccountSelectorComponent,
-    LimitedAccessComponent
+    AccountsReferenceComponent,
+    DedicatedAccessComponent
   ],
   imports: [
     CommonModule,

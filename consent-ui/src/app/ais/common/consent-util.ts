@@ -15,6 +15,7 @@ export class ConsentUtil {
     const aisConsent = new AisConsentToGrant();
     // FIXME: These fields MUST be initialized by FinTech through API and user can only adjust it.
     aisConsent.consent = new AisConsentImpl();
+    aisConsent.consent.access = new AccountAccess();
     aisConsent.consent.frequencyPerDay = 10;
     aisConsent.consent.recurringIndicator = true;
     aisConsent.consent.validUntil = ConsentUtil.futureDate().toISOString().split("T")[0];

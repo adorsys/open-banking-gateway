@@ -1,6 +1,7 @@
 export class AisConsentToGrant {
-
+  level: AccountAccessLevel;
   consent: AisConsent;
+
   constructor(public extras?: {[key: string]: string}) {
   }
 }
