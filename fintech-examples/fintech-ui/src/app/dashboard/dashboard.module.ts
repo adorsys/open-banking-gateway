@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { SidebarComponent } from '../common/sidebar/sidebar.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { HomeComponent } from './home/home.component';

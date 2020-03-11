@@ -51,6 +51,11 @@
   }
 }
 
+.disabled {
+  pointer-events: none;
+  display: none;
+}
+
 @media (max-width: 767px) {
   .nav-item {
     margin-left: 1rem;

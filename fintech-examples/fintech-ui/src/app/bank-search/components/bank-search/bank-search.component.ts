@@ -26,7 +26,7 @@ export class BankSearchComponent {
 
   onBankSelect(bankId: string) {
     this.selectedBank = bankId;
-    this.router.navigate(['/dashboard', bankId]);
+    this.router.navigate(['/bank', bankId]);
   }
 
   private bankUnselect() {

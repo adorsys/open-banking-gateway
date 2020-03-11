@@ -1,0 +1,16 @@
+<nav class="navbar navbar-light py-3" *ngIf="isLoggedIn()">
+  <a class="navbar-brand text-primary mr-4" routerLink="/">
+    <img class="logo" />
+    <span class="ml-3">FintechUI</span>
+  </a>
+  <ul class="nav ml-auto">
+    <li class="nav-item">
+      <a (click)="onLogout()" [routerLinkActive]="['active']" class="btn nav-link px-0 mb-0">
+        <div class="mr-2">
+          <img src="./assets/icons/1200px-N26_(Direktbank)_2018_logo.svg" />
+        </div>
+        <span class="nav__title">Sign out</span>
+      </a>
+    </li>
+  </ul>
+</nav>

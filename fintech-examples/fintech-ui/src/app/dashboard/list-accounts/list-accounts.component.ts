@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AccountDetails } from '../../api';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -12,23 +12,18 @@ export class ListAccountsComponent implements OnInit, OnDestroy {
   private accountsSubscription: Subscription;
   accounts: AccountDetails[];
   selectedAccount: string;
-
-  @Input()
-  makeVisible = false;
-
-  @Input()
   bankId = '';
 
-  constructor(private route: ActivatedRoute, private aisService: AisService) {}
+  constructor(private route: ActivatedRoute, private aisService: AisService) {
+    this.bankId = route.parent.snapshot.paramMap.get('id');
+    console.log('list-accounts', this.accounts);
+  }
 
   ngOnInit() {
-    if (this.makeVisible) {
-      this.route.params.forEach(param => {
-        this.accountsSubscription = this.aisService.getAccounts(param.id).subscribe(accounts => {
-          this.accounts = accounts;
-        });
-      });
-    }
+    this.accountsSubscription = this.aisService.getAccounts(this.bankId).subscribe(accounts => {
+      this.accounts = accounts;
+      console.log('list-accounts2', this.accounts);
+    });
   }
 
   ngOnDestroy(): void {

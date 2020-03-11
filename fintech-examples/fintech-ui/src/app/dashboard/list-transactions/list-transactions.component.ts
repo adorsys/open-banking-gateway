@@ -36,6 +36,6 @@ export class ListTransactionsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.accountsSubscription.unsubscribe();
+    //  this.accountsSubscription.unsubscribe();
   }
 }

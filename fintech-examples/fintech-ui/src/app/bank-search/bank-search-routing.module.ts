@@ -9,7 +9,7 @@ const routes: Routes = [
     component: BankSearchComponent
   },
   {
-    path: '/dashboard/:id',
+    path: '/bank/:id',
     component: DashboardComponent
   }
 ];
