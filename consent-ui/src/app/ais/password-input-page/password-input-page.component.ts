@@ -7,12 +7,12 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
   styleUrls: ['./password-input-page.component.scss']
 })
 export class PasswordInputPageComponent implements OnInit {
-  loginForm: FormGroup;
+  passwordForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-    this.loginForm = this.formBuilder.group({
+    this.passwordForm = this.formBuilder.group({
       pin: ['', Validators.required]
     });
   }
