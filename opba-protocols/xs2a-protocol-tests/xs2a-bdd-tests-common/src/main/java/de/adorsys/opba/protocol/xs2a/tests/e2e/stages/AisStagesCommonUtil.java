@@ -12,10 +12,12 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_U
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_OK;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_USER_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.COMPUTE_PSU_IP_ADDRESS;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP_ADDRESS;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 
 @UtilityClass
-@SuppressWarnings("checkstyle:HideUtilityClassConstructor") //Checkstyle doesn't recognise Lombok
+@SuppressWarnings({"checkstyle:HideUtilityClassConstructor", "PMD.AvoidUsingHardCodedIP"}) //Checkstyle doesn't recognise Lombok
 public class AisStagesCommonUtil {
 
     public static final String AUTHORIZE_CONSENT_ENDPOINT = "/v1/consent/{serviceSessionId}/embedded";
@@ -29,6 +31,8 @@ public class AisStagesCommonUtil {
     public static final String SESSION_PASSWORD = "qwerty";
     public static final String ANTON_BRUECKNER = "anton.brueckner";
     public static final String MAX_MUSTERMAN = "max.musterman";
+    public static final String COMPUTE_IP_ADDRESS = "false";
+    public static final String IP_ADDRESS = "1.1.1.1";
 
     public static RequestSpecification withDefaultHeaders(String fintechUserId) {
         return RestAssured
@@ -39,6 +43,8 @@ public class AisStagesCommonUtil {
                     .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
                     .header(FINTECH_USER_ID, fintechUserId)
                     .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
-                    .header(X_REQUEST_ID, UUID.randomUUID().toString());
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
+                    .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 }
