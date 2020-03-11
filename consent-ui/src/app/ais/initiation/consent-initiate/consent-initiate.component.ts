@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {combineLatest} from "rxjs";
 import {map} from "rxjs/operators";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -6,8 +6,8 @@ import {SessionService} from "../../../common/session.service";
 import {ConsentAuthorizationService} from "../../../api/consentAuthorization.service";
 import {ApiHeaders} from "../../../api/api.headers";
 import {AuthConsentState, AuthViolation} from "../../common/dto/auth-state";
-import {EntryPageAccountsComponent} from "../accounts/entry-page-accounts/entry-page-accounts.component";
 import {EntryPageTransactionsComponent} from "../transactions/entry-page-transactions/entry-page-transactions.component";
+import {EntryPageAccountsComponent} from "../accounts/entry-page-accounts/entry-page-accounts.component";
 
 @Component({
   selector: 'consent-app-consent-initiate',

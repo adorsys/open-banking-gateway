@@ -1,35 +1,5 @@
-<form [formGroup]="transactionsAccessForm" (ngSubmit)="transactionsAccessForm.valid && onSubmit()">
-  <div class="card">
-    <div class="card-body">
-      <h2 class="mb-4 text-left">Access permission to read transaction data in {{aspspName}}</h2>
-      <p class="text-secondary mb-5 text-left">
-        Please select for which accounts you want to share transaction data with <strong>{{finTechName}}</strong>
-      </p>
-    </div>
-
-      <div class="col-12 font-weight-light" *ngFor="let account of accounts, let i = index">
-        <div class="form-check">
-          <div class="form-check">
-            <input class="form-check-input" id="accounts_{{i}}" name="accounts"
-                   [value]="account.accountIban"
-                   (change)="handleObjectSelectedEvent(account)"
-                   [checked]="account.checked"
-                   type="checkbox">
-            <label class="form-check-label font-weight-bold" for="accounts_{{i}}">{{account.accountIban}}</label>
-            <br>
-          </div>
-        </div>
-      </div>
-      <div class="card-footer no-bg-color">
-        <div class="row my-3">
-          <div class="col-12 col-sm-6 pr-sm-2">
-            <button type="button" class="btn btn-outline-secondary btn-block">Cancel
-            </button>
-          </div>
-          <div class="col-12 col-sm-6 pl-sm-2">
-            <button type="submit" class="btn btn-primary btn-block">Next</button>
-          </div>
-        </div>
-      </div>
-    </div>
-</form>
+<consent-app-access-selection
+  [accountAccesses]="transactionsAccountAccess"
+  [consentReviewPage]="transactionsConsentReviewPage"
+  [dedicatedConsentPage]="dedicatedConsentPage"
+></consent-app-access-selection>

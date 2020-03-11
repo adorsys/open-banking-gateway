@@ -27,6 +27,7 @@ export class AccountAccess {
 export enum AccountAccessLevel {
 
   ALL_ACCOUNTS = 'ALL_ACCOUNTS',
+  ALL_PSD2 = 'ALL_PSD2',
   ALL_ACCOUNTS_WITH_BALANCES = 'ALL_ACCOUNTS_WITH_BALANCES',
   FINE_GRAINED = 'FINE_GRAINED'
 }

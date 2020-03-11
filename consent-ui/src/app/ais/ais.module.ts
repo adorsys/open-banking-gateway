@@ -13,7 +13,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { RouteBasedCardWithSidebarComponent } from './route-based-card-with-sidebar/route-based-card-with-sidebar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import {EntryPageAccountsComponent} from "./initiation/accounts/entry-page-accounts/entry-page-accounts.component";
 import {EntryPageTransactionsComponent} from "./initiation/transactions/entry-page-transactions/entry-page-transactions.component";
 import {ConsentInitiateComponent} from "./initiation/consent-initiate/consent-initiate.component";
 import {AccountsConsentReviewComponent} from "./initiation/accounts/accounts-consent-review/accounts-consent-review.component";
@@ -21,6 +20,8 @@ import {TransactionsConsentReviewComponent} from "./initiation/transactions/tran
 import { DynamicInputsComponent } from './initiation/common/dynamic-inputs/dynamic-inputs.component';
 import { AccountsReferenceComponent } from './initiation/common/accounts-reference/accounts-reference.component';
 import { DedicatedAccessComponent } from './initiation/common/dedicated-access/dedicated-access.component';
+import {ConsentAccountAccessSelectionComponent} from "./initiation/common/initial-consent/consent-account-access-selection.component";
+import { EntryPageAccountsComponent } from './initiation/accounts/entry-page-accounts/entry-page-accounts.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,7 @@ import { DedicatedAccessComponent } from './initiation/common/dedicated-access/d
     ScaSelectPageComponent,
     TanConfirmPageComponent,
     AccountDetailsComponent,
-    EntryPageAccountsComponent,
+    ConsentAccountAccessSelectionComponent,
     EntryPageTransactionsComponent,
     ErrorPageComponent,
     RouteBasedCardWithSidebarComponent,
@@ -41,7 +42,8 @@ import { DedicatedAccessComponent } from './initiation/common/dedicated-access/d
     TransactionsConsentReviewComponent,
     DynamicInputsComponent,
     AccountsReferenceComponent,
-    DedicatedAccessComponent
+    DedicatedAccessComponent,
+    EntryPageAccountsComponent
   ],
   imports: [
     CommonModule,
