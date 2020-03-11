@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {StubUtil} from "../../../common/stub-util";
-import {ConsentAuthorizationService} from "../../../../api/consentAuthorization.service";
+import {AccountAccessLevel} from "../../../common/dto/ais-consent";
+import {Access} from "../../common/initial-consent/consent-account-access-selection.component";
+import {TransactionsConsentReviewComponent} from "../transactions-consent-review/transactions-consent-review.component";
+import {DedicatedAccessComponent} from "../../common/dedicated-access/dedicated-access.component";
 
 @Component({
   selector: 'consent-app-entry-page-transactions',
@@ -12,34 +13,17 @@ export class EntryPageTransactionsComponent implements OnInit {
 
   public static ROUTE = 'entry-consent-transactions';
 
-  public finTechName = StubUtil.FINTECH_NAME;
-  public aspspName = StubUtil.ASPSP_NAME;
-
-  public accounts = [
-    new TransactionsOnAccountAccess('IBAN123456', true),
-    new TransactionsOnAccountAccess('IBAN789168', true)
+  transactionsAccountAccess = [
+    new Access(AccountAccessLevel.ALL_PSD2, 'Allow seeing a list of all your accounts and transactions'),
+    new Access(AccountAccessLevel.FINE_GRAINED, 'Limit access to specific accounts (details and transactions)')
   ];
+  transactionsConsentReviewPage = TransactionsConsentReviewComponent.ROUTE;
+  dedicatedConsentPage = DedicatedAccessComponent.ROUTE;
 
-  public transactionsAccessForm: FormGroup;
-
-  constructor(private formBuilder: FormBuilder, private consentAuthorisation: ConsentAuthorizationService) {
-    this.transactionsAccessForm = this.formBuilder.group({});
+  constructor() {
   }
 
   ngOnInit() {
-  }
-
-  onSubmit() {
-  }
-
-  handleObjectSelectedEvent(container: TransactionsOnAccountAccess): void {
-    container.checked = !container.checked;
-  }
-}
-
-export class TransactionsOnAccountAccess {
-
-  constructor(public accountIban: string, public checked: boolean) {
   }
 }
 

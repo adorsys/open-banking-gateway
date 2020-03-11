@@ -6,6 +6,7 @@ import {SessionService} from "../../../../common/session.service";
 import {AccountAccessLevel, AisConsentToGrant} from "../../../common/dto/ais-consent";
 import {StubUtil} from "../../../common/stub-util";
 import {ConsentAuthorizationService} from "../../../../api/consentAuthorization.service";
+import {SharedRoutes} from "../../common/shared-routes";
 
 @Component({
   selector: 'consent-app-accounts-consent-review',
@@ -19,7 +20,7 @@ export class AccountsConsentReviewComponent implements OnInit {
   public finTechName = StubUtil.FINTECH_NAME;
   public aspspName = StubUtil.ASPSP_NAME;
 
-  public static ROUTE = 'review-consent-accounts';
+  public static ROUTE = SharedRoutes.REVIEW;
 
   private authorizationId: string;
   private aisConsent: AisConsentToGrant;
@@ -34,7 +35,7 @@ export class AccountsConsentReviewComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.activatedRoute.parent.params.subscribe(res => {
+    this.activatedRoute.parent.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
       this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     });

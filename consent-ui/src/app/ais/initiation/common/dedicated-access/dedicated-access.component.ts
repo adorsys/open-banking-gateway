@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {SessionService} from "../../../../common/session.service";
 import {AccountReference} from "../accounts-reference/accounts-reference.component";
 import {StubUtil} from "../../../common/stub-util";
 import {ConsentUtil} from "../../../common/consent-util";
-import {AccountsConsentReviewComponent} from "../../accounts/accounts-consent-review/accounts-consent-review.component";
+import {SharedRoutes} from "../shared-routes";
 
 @Component({
   selector: 'consent-app-limited-access',
@@ -34,7 +34,7 @@ export class DedicatedAccessComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.activatedRoute.parent.params.subscribe(res => {
+    this.activatedRoute.parent.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
     })
   }
@@ -50,6 +50,6 @@ export class DedicatedAccessComponent implements OnInit {
     consentObj.consent.access.transactions = this.accounts.map(it => it.iban);
 
     this.sessionService.setConsentObject(this.authorizationId, consentObj);
-    this.router.navigate([AccountsConsentReviewComponent.ROUTE], {relativeTo: this.activatedRoute.parent});
+    this.router.navigate([SharedRoutes.REVIEW], {relativeTo: this.activatedRoute.parent});
   }
 }
