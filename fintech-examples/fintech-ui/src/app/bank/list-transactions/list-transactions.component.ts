@@ -11,9 +11,7 @@ import { AccountReport, TransactionDetails } from '../../api';
 export class ListTransactionsComponent implements OnInit, OnDestroy {
   private accountsSubscription: Subscription;
 
-  @Input()
   accountId = '';
-  @Input()
   bankId = '';
 
   makeVisible = false;
@@ -22,12 +20,13 @@ export class ListTransactionsComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute, private aisService: AisService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.bankId = this.route.parent.parent.parent.snapshot.paramMap.get('bankid');
+    console.log('list-transactions for bankid', this.bankId);
+    this.accountId = this.route.snapshot.paramMap.get('accountid');
+    console.log('list-transactions for accountid', this.accountId);
 
-  selectAccount(id) {
-    this.makeVisible = false;
     this.transactionsLists = [];
-    this.accountId = id;
     console.log('ask for transactions for ', this.accountId);
     this.accountsSubscription = this.aisService.getTransactions(this.bankId, this.accountId).subscribe(transactions => {
       this.transactionsLists = [transactions.pending, transactions.booked];

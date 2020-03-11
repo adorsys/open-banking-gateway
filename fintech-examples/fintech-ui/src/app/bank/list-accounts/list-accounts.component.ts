@@ -14,15 +14,13 @@ export class ListAccountsComponent implements OnInit, OnDestroy {
   selectedAccount: string;
   bankId = '';
 
-  constructor(private route: ActivatedRoute, private aisService: AisService) {
-    this.bankId = route.parent.snapshot.paramMap.get('bankid');
-    console.log('list-accounts', this.accounts);
-  }
+  constructor(private route: ActivatedRoute, private aisService: AisService) {}
 
   ngOnInit() {
+    this.bankId = this.route.parent.parent.snapshot.paramMap.get('bankid');
+    console.log('list-accounts for bankid', this.bankId);
     this.accountsSubscription = this.aisService.getAccounts(this.bankId).subscribe(accounts => {
       this.accounts = accounts;
-      console.log('list-accounts2', this.accounts);
     });
   }
 

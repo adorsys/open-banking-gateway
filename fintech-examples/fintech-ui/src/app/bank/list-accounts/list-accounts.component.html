@@ -2,7 +2,8 @@
   <div class="lacc-parent">
     <div
       *ngFor="let account of accounts"
-      (click)="selectAccount(account.resourceId); transactions.selectAccount(account.resourceId)"
+      (click)="selectAccount(account.resourceId)"
+      [routerLink]="[account.resourceId]"
     >
       <div class="lacc-list-container lacc-list-container--{{ isSelected(account.resourceId) }}">
         <div class="lacc-list-item ">
@@ -12,6 +13,5 @@
       </div>
     </div>
   </div>
-
-  <app-list-transactions #transactions [bankId]="bankId"></app-list-transactions>
+  <router-outlet></router-outlet>
 </div>
