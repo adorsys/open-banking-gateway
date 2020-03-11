@@ -112,8 +112,17 @@ public class AisConsentInitiateBody {
             return null;
         }
 
+        default AccountAccess.AllPsd2Enum allPsd2(String allPsd2) {
+            if ("ALL_ACCOUNTS".equals(allPsd2)) {
+                return AccountAccess.AllPsd2Enum.ALLACCOUNTS;
+            }
+
+            return null;
+        }
+
         @Mapping(source = "cons.access.availableAccounts", target = "access.availableAccounts")
         @Mapping(source = "cons.access.availableAccounts", target = "access.availableAccountsWithBalance")
+        @Mapping(source = "cons.access.allPsd2", target = "access.allPsd2")
         Consents map(AisConsentInitiateBody cons);
     }
 

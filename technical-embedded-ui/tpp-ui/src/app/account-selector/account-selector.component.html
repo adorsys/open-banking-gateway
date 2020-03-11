@@ -1,6 +1,6 @@
 Choose account access
-<mat-radio-group class="account-radio-group" name="accessSelector">
-  <mat-radio-button #dedicated class="account-radio-button" [value]="dedicatedChecked.checked" [checked]="dedicatedChecked.checked" aria-label="Dedicated accounts access"></mat-radio-button>
+<mat-radio-group class="account-radio-group" [formControl]="accessSelector" (click)="clearConsent()">
+  <mat-radio-button #dedicated class="account-radio-button" [value]="consentLevel.DEDICATED" aria-label="Dedicated accounts access"></mat-radio-button>
   <div class="nested"
        (click)="!dedicated.checked ? $event.stopPropagation() : null;"
        [class.disabled]="!dedicated.checked">
@@ -45,10 +45,16 @@ Choose account access
     </div>
   </div>
   <div>
-    <mat-radio-button #all class="account-radio-button" [value]="allChecked.checked" [checked]="allChecked.checked">All accounts access</mat-radio-button>
-    <mat-radio-group class="account-radio-group nested" [disabled]="!all.checked" [(ngModel)]="aisConsent.access.availableAccounts">
+    <mat-radio-button #allAccounts class="account-radio-button" [value]="consentLevel.GLOBAL_ACCOUNTS" (click)="clearConsent()">All accounts access</mat-radio-button>
+    <mat-radio-group class="account-radio-group nested" [disabled]="!allAccounts.checked" [(ngModel)]="aisConsent.access.availableAccounts">
       <mat-radio-button value="ALL_ACCOUNTS">All accounts</mat-radio-button>
       <mat-radio-button value="ALL_ACCOUNTS_WITH_BALANCES">All accounts with balances</mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <div>
+    <mat-radio-button #allPsd2 class="account-radio-button" [value]="consentLevel.GLOBAL_PSD2" (click)="clearConsent()">All PSD2 accounts access (transactions, balances)</mat-radio-button>
+    <mat-radio-group class="account-radio-group nested" [disabled]="!allPsd2.checked" [(ngModel)]="aisConsent.access.allPsd2">
+      <mat-radio-button value="ALL_ACCOUNTS">All accounts</mat-radio-button>
     </mat-radio-group>
   </div>
 </mat-radio-group>

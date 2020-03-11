@@ -14,36 +14,43 @@ export class AccountSelectorComponent implements OnInit {
   @Input() form: FormGroup;
   @Input() aisConsent: AisConsentBody;
 
-  allChecked = {checked: false};
-  dedicatedChecked = {checked: false};
+  consentLevel = ConsentLevel;
+
+  accessSelector = new FormControl();
   allAccounts = new FormControl();
+  allPsd2 = new FormControl();
 
   constructor(private globals: Globals) {}
 
   ngOnInit() {
     this.aisConsent.access = new AccountAccessBody();
     this.form.addControl('aisConsent.access.allAccountsAccess', this.allAccounts);
+    this.form.addControl('aisConsent.access.allPsd2', this.allPsd2);
 
     this.globals.userInfo.subscribe(it => {
       if (it.id === 'ais.allAccounts') {
-        this.allChecked.checked = true;
+        this.clearConsent();
+        this.accessSelector.setValue(ConsentLevel.GLOBAL_ACCOUNTS);
         this.aisConsent.access.availableAccounts = it.value;
       }
 
       if (it.id === 'ais.accounts') {
-        this.dedicatedChecked.checked = true;
+        this.clearConsent();
+        this.accessSelector.setValue(ConsentLevel.DEDICATED);
         const acc = this.addAccount();
         this.aisConsent.access.accounts[acc] = it.value;
       }
 
       if (it.id === 'ais.balances') {
-        this.dedicatedChecked.checked = true;
+        this.clearConsent();
+        this.accessSelector.setValue(ConsentLevel.DEDICATED);
         const bal = this.addBalance();
         this.aisConsent.access.balances[bal] = it.value;
       }
 
       if (it.id === 'ais.transactions') {
-        this.dedicatedChecked.checked = true;
+        this.clearConsent();
+        this.accessSelector.setValue(ConsentLevel.DEDICATED);
         const txn = this.addTransaction();
         this.aisConsent.access.transactions[txn] = it.value;
       }
@@ -59,7 +66,16 @@ export class AccountSelectorComponent implements OnInit {
       if (it.id === 'ais.validUntil') {
         this.aisConsent.validUntil = it.value;
       }
+      console.log(this.aisConsent)
     });
+  }
+
+  clearConsent() {
+    this.aisConsent.access.allPsd2 = null;
+    this.aisConsent.access.availableAccounts = null;
+    this.aisConsent.access.accounts = [];
+    this.aisConsent.access.balances = [];
+    this.aisConsent.access.transactions = [];
   }
 
   addAccount() : number {
@@ -103,4 +119,10 @@ export class AccountSelectorComponent implements OnInit {
     this.aisConsent.access.transactions.splice(this.aisConsent.access.transactions.indexOf(txn.ibanValue), 1);
     txn.remove();
   }
+}
+
+export enum ConsentLevel {
+  DEDICATED = 'DEDICATED',
+  GLOBAL_ACCOUNTS = 'GLOBAL_ACCOUNTS',
+  GLOBAL_PSD2 = 'GLOBAL_PSD2'
 }

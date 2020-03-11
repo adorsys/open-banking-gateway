@@ -7,6 +7,7 @@ import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aFlowableProperties;
 import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aObjectMapper;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -65,6 +66,10 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
         // TODO - tidy up context merging
         if (ctx instanceof TransactionListXs2aContext && context instanceof TransactionListXs2aContext) {
             merger.merge((TransactionListXs2aContext) context, (TransactionListXs2aContext) ctx);
+        } else if (ctx instanceof AccountListXs2aContext && context instanceof TransactionListXs2aContext) { // allPsd2 handling
+            merger.merge((AccountListXs2aContext) ctx, (TransactionListXs2aContext) context);
+            // original request was for account listing but now is for transaction listing
+            ctx = context;
         } else if (ctx instanceof TransactionListXs2aContext) {
             merger.merge(context, (TransactionListXs2aContext) ctx);
         } else if (ctx instanceof Xs2aContext) {
@@ -84,5 +89,6 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
         void merge(Xs2aContext source, @MappingTarget Xs2aContext target);
         void merge(Xs2aContext source, @MappingTarget TransactionListXs2aContext target);
         void merge(TransactionListXs2aContext source, @MappingTarget TransactionListXs2aContext target);
+        void merge(AccountListXs2aContext source, @MappingTarget TransactionListXs2aContext target);
     }
 }
