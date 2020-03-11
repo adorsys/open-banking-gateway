@@ -39,11 +39,11 @@
 
     <br>
     <label for="ipAddress">IP Address</label>
-    <input id="ipAddress" name="ipAddress" type="text" [disabled]="!computeIp" [formControl]="ipAddress">
+    <input id="ipAddress" name="ipAddress" type="text" [formControl]="ipAddress">
 
     <br>
     <label for="computeIp">Compute IP Address</label>
-    <input id="computeIp" name="computeIp" type="checkbox" [formControl]="computeIp.value" (click)="onClickComputeIp()">
+    <input id="computeIp" name="computeIp" type="checkbox" [value]="computeIp.value" (click)="onClickComputeIp($event)">
 
     <hr>
     <br>
