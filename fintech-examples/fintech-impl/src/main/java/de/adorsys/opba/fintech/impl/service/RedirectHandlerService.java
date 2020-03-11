@@ -3,12 +3,11 @@ package de.adorsys.opba.fintech.impl.service;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
-import de.adorsys.opba.fintech.impl.service.mocks.TppBankingApiTokenMock;
-import de.adorsys.opba.tpp.token.api.model.generated.PsuConsentSessionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,12 +27,17 @@ import static java.util.Collections.singletonList;
 @ConfigurationProperties("fintech-ui")
 public class RedirectHandlerService {
     private static final String LOCATION_HEADER = "Location";
+    @Value("${mock.tppais.listaccounts:false}")
+    private String mockTppAisString;
+
     private String notOkUrl;
     private String okUrl;
     private String exceptionUrl;
 
     private final RedirectUrlRepository redirectUrlRepository;
     private final AuthorizeService authorizeService;
+    private final AccountService accountService;
+    private final TransactionService transactionService;
 
     public RedirectUrlsEntity registerRedirectUrlForSession(String xsrfToken) {
         String redirectCode = UUID.randomUUID().toString();
@@ -52,7 +56,7 @@ public class RedirectHandlerService {
     public ResponseEntity doRedirect(String redirectState, String redirectId, String redirectCode) {
         if (StringUtils.isBlank(redirectCode)) {
             log.warn("Validation redirect request was failed: redirect code is empty!");
-            return prepareRedirectResponse(exceptionUrl);
+            return prepareErrorRedirectResponse(exceptionUrl);
         }
 
         RedirectUrlsEntity redirectUrls = redirectUrlRepository.findByRedirectCode(redirectCode)
@@ -60,27 +64,31 @@ public class RedirectHandlerService {
 
         if (StringUtils.isBlank(redirectState)) {
             log.warn("Validation redirect request was failed: Xsrf Token is empty!");
-            return prepareRedirectResponse(redirectUrls.getNotOkURL());
+            return prepareErrorRedirectResponse(redirectUrls.getNotOkURL());
         }
 
         if (!authorizeService.isAuthorized(redirectState, null)) {
             log.warn("Validation redirect request was failed: Xsrf Token is wrong or user are not authorized!");
-            return prepareRedirectResponse(redirectUrls.getNotOkURL());
+            return prepareErrorRedirectResponse(redirectUrls.getNotOkURL());
         }
 
-        SessionEntity optionalUser = authorizeService.getByXsrfToken(redirectState);
-        updateSessionByRedirectCode(optionalUser, redirectCode);
+        SessionEntity sessionEntity = authorizeService.getByXsrfToken(redirectState);
 
-        return prepareRedirectResponse(redirectUrls.getOkURL());
+        return handleDirectionForRedirect(sessionEntity, redirectUrls);
     }
 
-    private void updateSessionByRedirectCode(SessionEntity sessionEntity, String redirectCode) {
-        PsuConsentSessionResponse psuConsentSessionResponse = new TppBankingApiTokenMock().getTransactionsResponse(redirectCode);
-        sessionEntity.setPsuConsentSession(psuConsentSessionResponse.getPsuConsentSession().toString());
-        authorizeService.updateUserSession(sessionEntity);
+    private ResponseEntity handleDirectionForRedirect(SessionEntity sessionEntity, RedirectUrlsEntity redirectUrls) {
+        switch (sessionEntity.getRequestAction()) {
+            case LIST_ACCOUNTS:
+                return accountService.listAccounts(sessionEntity, redirectUrls);
+            case LIST_TRANSACTIONS:
+                return transactionService.listTransactions(sessionEntity, redirectUrls, null, null, null, null, null, null);
+            default:
+                throw new RuntimeException("DID NOT EXPECT REQUEST ACTION:" + sessionEntity.getRequestAction());
+        }
     }
 
-    private ResponseEntity prepareRedirectResponse(String redirectUrl) {
+    private ResponseEntity prepareErrorRedirectResponse(String redirectUrl) {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.put(LOCATION_HEADER, singletonList(redirectUrl));
 
