@@ -4,10 +4,10 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {StubUtil} from "../../../common/stub-util";
 import {SessionService} from "../../../../common/session.service";
 import {ConsentUtil} from "../../../common/consent-util";
-import {AccountAccess, AccountAccessLevel, AisConsent} from "../../../common/dto/ais-consent";
+import {AccountAccess, AccountAccessLevel, AisConsent, AisConsentToGrant} from "../../../common/dto/ais-consent";
 import {AccountsConsentReviewComponent} from "../accounts-consent-review/accounts-consent-review.component";
 import {AuthConsentState} from "../../../common/dto/auth-state";
-import {LimitedAccessComponent} from "../../common/limited-access/limited-access.component";
+import {DedicatedAccessComponent} from "../../common/dedicated-access/dedicated-access.component";
 
 @Component({
   selector: 'consent-app-entry-page-accounts',
@@ -73,29 +73,40 @@ export class EntryPageAccountsComponent implements OnInit {
   }
 
   onConfirm() {
-    const consentObj = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
+    this.updateConsentObject();
+
     if (this.selectedAccess.value.id === AccountAccessLevel.FINE_GRAINED) {
-      this.router.navigate([LimitedAccessComponent.ROUTE], {relativeTo: this.activatedRoute.parent});
+      this.handleDedicatedAccess();
       return;
     }
 
-    if (!consentObj.consent) {
-      consentObj.consent = {} as AisConsent;
-    }
+    this.handleGenericAccess();
+  }
 
-    if (!consentObj.consent.access) {
-      consentObj.consent.access = new AccountAccess();
-    }
-    consentObj.consent.access.availableAccounts = this.selectedAccess.value.id;
+  private updateConsentObject() {
+    const consentObj = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
 
     if (this.state.hasGeneralViolation()) {
       consentObj.extras = consentObj.extras ? consentObj.extras : {};
       this.state.getGeneralViolations()
         .forEach(it => consentObj.extras[it.code] = this.accountAccessForm.get(it.code).value)
     }
+    consentObj.level = this.selectedAccess.value.id;
+
+    if (this.selectedAccess.value.id !== AccountAccessLevel.FINE_GRAINED) {
+      consentObj.consent.access.availableAccounts = this.selectedAccess.value.id;
+    }
 
     this.sessionService.setConsentObject(this.authorizationId, consentObj);
+  }
+
+  private handleGenericAccess() {
     this.moveToReviewConsent();
+  }
+
+  private handleDedicatedAccess() {
+    this.router.navigate([DedicatedAccessComponent.ROUTE], {relativeTo: this.activatedRoute.parent});
+    return;
   }
 
   private moveToReviewConsent() {

@@ -6,7 +6,6 @@
              [id]="account.id"
              [name]="account.id"
              [formControlName]="account.id"
-             [(ngModel)]="account.iban"
              placeholder="IBAN"
              [ngClass]="{ 'is-invalid': targetForm.controls[account.id].touched && targetForm.controls[account.id].errors }"
              class="form-control">

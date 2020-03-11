@@ -12,7 +12,7 @@ import {EntryPageAccountsComponent} from "./initiation/accounts/entry-page-accou
 import {EntryPageTransactionsComponent} from "./initiation/transactions/entry-page-transactions/entry-page-transactions.component";
 import {AccountsConsentReviewComponent} from "./initiation/accounts/accounts-consent-review/accounts-consent-review.component";
 import {TransactionsConsentReviewComponent} from "./initiation/transactions/transactions-consent-review/transactions-consent-review.component";
-import {LimitedAccessComponent} from "./initiation/common/limited-access/limited-access.component";
+import {DedicatedAccessComponent} from "./initiation/common/dedicated-access/dedicated-access.component";
 
 
 const routes: Routes = [
@@ -25,7 +25,7 @@ const routes: Routes = [
       {path: EntryPageTransactionsComponent.ROUTE, component: EntryPageTransactionsComponent},
       {path: AccountsConsentReviewComponent.ROUTE, component: AccountsConsentReviewComponent},
       {path: TransactionsConsentReviewComponent.ROUTE, component: TransactionsConsentReviewComponent},
-      {path: LimitedAccessComponent.ROUTE, component: LimitedAccessComponent},
+      {path: DedicatedAccessComponent.ROUTE, component: DedicatedAccessComponent},
       {path: 'error', component: ErrorPageComponent}
     ]
   },

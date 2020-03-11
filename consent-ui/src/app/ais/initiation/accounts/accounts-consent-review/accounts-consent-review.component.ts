@@ -3,7 +3,7 @@ import {ConsentUtil} from "../../../common/consent-util";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder} from "@angular/forms";
 import {SessionService} from "../../../../common/session.service";
-import {AccountAccessLevel, AisConsent, AisConsentToGrant} from "../../../common/dto/ais-consent";
+import {AccountAccessLevel, AisConsentToGrant} from "../../../common/dto/ais-consent";
 import {StubUtil} from "../../../common/stub-util";
 import {ConsentAuthorizationService} from "../../../../api/consentAuthorization.service";
 

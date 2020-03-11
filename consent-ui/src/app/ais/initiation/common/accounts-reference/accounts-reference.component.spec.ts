@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LimitedAccessComponent } from './limited-access.component';
+import { AccountsReferenceComponent } from './accounts-reference.component';
 
-describe('LimitedAccessComponent', () => {
-  let component: LimitedAccessComponent;
-  let fixture: ComponentFixture<LimitedAccessComponent>;
+describe('AccountSelectorComponent', () => {
+  let component: AccountsReferenceComponent;
+  let fixture: ComponentFixture<AccountsReferenceComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LimitedAccessComponent ]
+      declarations: [ AccountsReferenceComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LimitedAccessComponent);
+    fixture = TestBed.createComponent(AccountsReferenceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
