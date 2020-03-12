@@ -4,6 +4,7 @@ public enum FieldCode {
     NONE,
 
     PSU_ID,
+    PSU_IP_ADDRESS,
     PSU_PASSWORD,
     RECURRING_INDICATOR,
     VALID_UNTIL,

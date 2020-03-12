@@ -5,8 +5,6 @@ import de.adorsys.opba.consentapi.resource.generated.ConsentAuthorizationApi;
 import de.adorsys.opba.consentapi.service.mapper.AisConsentMapper;
 import de.adorsys.opba.consentapi.service.mapper.AisExtrasMapper;
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
-import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
-import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.fromaspsp.FromAspspRequest;
