@@ -3,13 +3,11 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
-import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import lombok.SneakyThrows;
 import org.awaitility.Durations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,8 +38,6 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     @ExpectedScenarioState
     private WireMockServer wireMock;
 
-    @ProvidedScenarioState
-    Exception exception;
 
     public SELF open_banking_redirect_from_aspsp_ok_webhook_called() {
         LoggedRequest consentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
@@ -64,12 +60,12 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner_ip_address_compute() {
         ExtractableResponse<Response> response = withHeadersWithoutIpAddress(ANTON_BRUECKNER)
-                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                .header(COMPUTE_PSU_IP_ADDRESS, true)
+                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                    .header(COMPUTE_PSU_IP_ADDRESS, true)
                 .when()
-                .get(AIS_ACCOUNTS_ENDPOINT)
+                    .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
+                    .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -79,11 +75,12 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner_no_ip_address() {
         ExtractableResponse<Response> response = withHeadersWithoutIpAddress(ANTON_BRUECKNER)
-                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                    .header(COMPUTE_PSU_IP_ADDRESS, false)
                 .when()
-                .get(AIS_ACCOUNTS_ENDPOINT)
+                    .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
-                .statusCode(HttpStatus.ACCEPTED.value())
+                    .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -96,15 +93,15 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
 
         ExtractableResponse<Response> response = RestAssured
                 .given()
-                .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(body)
+                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(body)
                 .when()
-                .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
+                    .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
                 .then()
-                .statusCode(HttpStatus.SEE_OTHER.value())
+                    .statusCode(HttpStatus.SEE_OTHER.value())
                 .extract();
 
         LoggedRequest loggedRequest = await().atMost(Durations.TEN_SECONDS)
@@ -122,16 +119,6 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         updateServiceSessionId(response);
         updateRedirectCode(response);
 
-        return self();
-    }
-
-    @SneakyThrows
-    public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_exception() {
-        try {
-            return user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_ip_address_check();
-        } catch (Exception e) {
-            exception = e;
-        }
         return self();
     }
 }
