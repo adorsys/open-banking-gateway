@@ -58,7 +58,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     @ProvidedScenarioState
     @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
-    private String responseContent;
+    protected String responseContent;
 
     @ScenarioState
     private Map<String, String> availableScas;
@@ -229,15 +229,15 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return response;
     }
 
-    private void updateNextConsentAuthorizationUrl(ExtractableResponse<Response> response) {
+    protected void updateNextConsentAuthorizationUrl(ExtractableResponse<Response> response) {
         this.redirectUriToGetUserParams = response.header(LOCATION);
     }
 
-    private void updateServiceSessionId(ExtractableResponse<Response> response) {
+    protected void updateServiceSessionId(ExtractableResponse<Response> response) {
         serviceSessionId = response.header(SERVICE_SESSION_ID);
     }
 
-    private void updateRedirectCode(ExtractableResponse<Response> response) {
+    protected void updateRedirectCode(ExtractableResponse<Response> response) {
         redirectCode = response.header(REDIRECT_CODE);
     }
 
