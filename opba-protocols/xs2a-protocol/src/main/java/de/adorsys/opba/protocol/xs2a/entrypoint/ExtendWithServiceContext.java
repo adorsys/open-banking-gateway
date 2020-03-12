@@ -10,6 +10,7 @@ public class ExtendWithServiceContext {
     public Xs2aContext extend(Xs2aContext context, ServiceContext serviceContext) {
         context.setServiceSessionId(serviceContext.getServiceSessionId());
         context.setRedirectCodeIfAuthContinued(serviceContext.getFutureRedirectCode().toString());
+        context.setAspspRedirectCode(serviceContext.getFutureAspspRedirectCode().toString());
         context.setAuthorizationSessionIdIfOpened(serviceContext.getFutureAuthSessionId().toString());
         return context;
     }

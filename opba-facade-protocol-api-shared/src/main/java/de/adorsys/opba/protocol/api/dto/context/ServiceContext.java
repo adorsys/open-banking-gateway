@@ -24,6 +24,11 @@ public class ServiceContext<T> {
     private final UUID authSessionId;
 
     /**
+     * Will be used as redirect code when coming back from ASPSP.
+     */
+    private final UUID futureAspspRedirectCode;
+
+    /**
      * Will be used as redirect code only when authorization session is opened or continued.
      */
     private final UUID futureRedirectCode;

@@ -19,7 +19,7 @@ import de.adorsys.opba.protocol.facade.config.ApplicationTest;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.RedirectionCause;
 import de.adorsys.opba.protocol.facade.services.ProtocolResultHandler;
-import de.adorsys.opba.protocol.facade.services.ServiceContextProvider;
+import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

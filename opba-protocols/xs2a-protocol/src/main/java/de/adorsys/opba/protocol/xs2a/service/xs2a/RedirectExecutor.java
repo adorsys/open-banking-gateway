@@ -4,6 +4,7 @@ import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Redirect;
 import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -24,16 +25,18 @@ public class RedirectExecutor {
             DelegateExecution execution,
             Xs2aContext context,
             Function<ProtocolConfiguration.Redirect, String> redirectSelector) {
-        redirect(execution, context, redirectSelector.apply(configuration.getRedirect()));
+        String uiScreenUri = redirectSelector.apply(configuration.getRedirect());
+        redirect(execution, context, uiScreenUri, uiScreenUri);
     }
 
     public void redirect(
             DelegateExecution execution,
             Xs2aContext context,
-            String destinationSpel) {
-        URI destination = URI.create(
+            String uiScreenUriSpel,
+            String destinationUri) {
+        URI screenUri = URI.create(
             ContextUtil.evaluateSpelForCtx(
-                destinationSpel,
+                uiScreenUriSpel,
                 execution,
                 context
             )
@@ -41,10 +44,15 @@ public class RedirectExecutor {
         Redirect.RedirectBuilder redirect = Redirect.builder();
         redirect.processId(execution.getRootProcessInstanceId());
         redirect.executionId(execution.getId());
-        redirect.redirectUri(destination);
+        redirect.redirectUri(screenUri);
         ContextUtil.getAndUpdateContext(
             execution,
-            (BaseContext ctx) -> context.setRedirectTo(destination.toASCIIString())
+            (BaseContext ctx) -> {
+                LastRedirectionTarget target = new LastRedirectionTarget();
+                target.setRedirectTo(destinationUri);
+                target.setRedirectToUiScreen(screenUri.toASCIIString());
+                ctx.setLastRedirection(target);
+            }
         );
 
         applicationEventPublisher.publishEvent(redirect.build());

@@ -45,6 +45,7 @@ public class AuthSession {
 
     @Column(nullable = false)
     private String redirectCode;
+    private String aspspRedirectCode;
 
     @Version
     private int version;

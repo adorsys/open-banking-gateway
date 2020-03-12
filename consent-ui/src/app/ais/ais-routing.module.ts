@@ -13,6 +13,7 @@ import {DedicatedAccessComponent} from "./entry-page/initiation/common/dedicated
 import {AccountsConsentReviewComponent} from "./entry-page/initiation/accounts/accounts-consent-review/accounts-consent-review.component";
 import {EntryPageTransactionsComponent} from "./entry-page/initiation/transactions/entry-page-transactions/entry-page-transactions.component";
 import {TransactionsConsentReviewComponent} from "./entry-page/initiation/transactions/transactions-consent-review/transactions-consent-review.component";
+import {ToAspspRedirectionComponent} from "./to-aspsp-redirection/to-aspsp-redirection.component";
 
 
 const routes: Routes = [
@@ -37,6 +38,7 @@ const routes: Routes = [
           {path: TransactionsConsentReviewComponent.ROUTE, component: TransactionsConsentReviewComponent}
         ]
       },
+      {path: ToAspspRedirectionComponent.ROUTE, component: ToAspspRedirectionComponent},
       {path: 'error', component: ErrorPageComponent}
     ]
   },

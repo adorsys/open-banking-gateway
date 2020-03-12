@@ -34,13 +34,24 @@ public class BaseContext {
     private String authorizationSessionIdIfOpened;
 
     /**
-     * Read-only. This is for redirects from ASPSP, Facade provides this value.
+     * Read-only. Facade provides this value.
      */
     private String redirectCodeIfAuthContinued;
 
-    private Set<ValidationIssue> violations = new HashSet<>();
-    private String redirectTo;
+    /**
+     * Read-only. This is for redirects from ASPSP, Facade provides this value.
+     */
+    private String aspspRedirectCode;
 
+    /**
+     * GetAuth state variables
+     */
+    private Set<ValidationIssue> violations = new HashSet<>();
+    private LastRedirectionTarget lastRedirection;
+
+    /**
+     * Other helpful functions
+     */
     public String getRequestId() {
         return this.sagaId;
     }

@@ -2,6 +2,7 @@ package de.adorsys.opba.consentapi.controller;
 
 import de.adorsys.opba.consentapi.model.generated.PsuAuthRequest;
 import de.adorsys.opba.consentapi.resource.generated.ConsentAuthorizationApi;
+import de.adorsys.opba.consentapi.service.FromAspspMapper;
 import de.adorsys.opba.consentapi.service.mapper.AisConsentMapper;
 import de.adorsys.opba.consentapi.service.mapper.AisExtrasMapper;
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
@@ -29,6 +30,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
     private final UserAgentContext userAgentContext;
     private final AisExtrasMapper extrasMapper;
     private final AisConsentMapper aisConsentMapper;
+    private final FromAspspMapper aspspMapper;
     private final RedirectionOnlyToOkMapper redirectionOnlyToOkMapper;
     private final FacadeResponseMapper mapper;
     private final GetAuthorizationStateService authorizationStateService;
@@ -90,8 +92,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                 )
                 .isOk(true)
                 .build()
-        ).thenApply((FacadeResult<UpdateAuthBody> result) ->
-                mapper.translate(result, new NoOpMapper<>()));
+        ).thenApply(aspspMapper::translate);
     }
 
     @Override
