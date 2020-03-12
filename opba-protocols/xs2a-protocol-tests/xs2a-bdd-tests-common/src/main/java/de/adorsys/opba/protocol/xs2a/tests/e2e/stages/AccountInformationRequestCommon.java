@@ -173,7 +173,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
             selectedScaBody("EMAIL:max.musterman@mail.de"),
-            HttpStatus.SEE_OTHER
+            HttpStatus.ACCEPTED
         );
         return self();
     }
@@ -182,7 +182,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
             selectedScaBody("EMAIL:max.musterman2@mail.de"),
-            HttpStatus.SEE_OTHER
+            HttpStatus.ACCEPTED
         );
         return self();
     }
@@ -191,7 +191,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         ExtractableResponse<Response> response = provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/max-musterman-sca-challenge-result.json"),
-                HttpStatus.SEE_OTHER
+                HttpStatus.ACCEPTED
         );
 
         assertThat(response.header(LOCATION)).contains("localhost").contains("/ok");
@@ -200,7 +200,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     private void startInitialInternalConsentAuthorization(String uriPath, String resource) {
         ExtractableResponse<Response> response =
-                startInitialInternalConsentAuthorization(uriPath, resource, HttpStatus.SEE_OTHER);
+                startInitialInternalConsentAuthorization(uriPath, resource, HttpStatus.ACCEPTED);
         updateServiceSessionId(response);
         updateRedirectCode(response);
     }
