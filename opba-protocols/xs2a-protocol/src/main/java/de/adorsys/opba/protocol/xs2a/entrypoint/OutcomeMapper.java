@@ -1,20 +1,18 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint;
 
-import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationRequiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
-import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ConsentAcquired;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Redirect;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Response;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ValidationProblem;
+import de.adorsys.opba.protocol.xs2a.entrypoint.dto.ContextBasedValidationErrorResult;
 import lombok.RequiredArgsConstructor;
 
 import java.net.URI;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -72,18 +70,4 @@ public class OutcomeMapper<T> {
         }
     }
 
-    private static class ContextBasedValidationErrorResult<T> extends ValidationErrorResult<T, Set<ValidationIssue>> {
-
-        private final String executionId;
-
-        ContextBasedValidationErrorResult(URI redirectionTo, String executionId, Set<ValidationIssue> issues) {
-            super(redirectionTo, issues);
-            this.executionId = executionId;
-        }
-
-        @Override
-        public String authContext() {
-            return executionId;
-        }
-    }
 }
