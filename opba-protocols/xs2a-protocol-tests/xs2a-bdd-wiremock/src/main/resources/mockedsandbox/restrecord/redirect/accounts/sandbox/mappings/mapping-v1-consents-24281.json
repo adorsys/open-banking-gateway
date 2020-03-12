@@ -10,6 +10,9 @@
       "PSU-ID" : {
         "equalTo" : "anton.brueckner"
       },
+      "PSU-IP-Address" : {
+        "matches" : ".+"
+      },
       "Content-Type" : {
         "equalTo" : "application/json; charset=UTF-8"
       },
