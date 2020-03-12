@@ -38,7 +38,8 @@ public class BaseContext {
      */
     private String redirectCodeIfAuthContinued;
 
-    private final Set<ValidationIssue> violations = new HashSet<>();
+    private Set<ValidationIssue> violations = new HashSet<>();
+    private String redirectTo;
 
     public String getRequestId() {
         return this.sagaId;
