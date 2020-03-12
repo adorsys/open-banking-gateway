@@ -1,6 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
+import de.adorsys.opba.fintech.impl.database.entities.RequestInfoEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListAccountsMock;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
@@ -24,13 +25,14 @@ public class AccountService extends HandleAcceptedService {
         this.tppAisClient = tppAisClient;
     }
 
-    public ResponseEntity listAccounts(SessionEntity sessionEntity, RedirectUrlsEntity redirectUrlsEntity) {
+    public ResponseEntity listAccounts(ContextInformation contextInformation,
+                                       SessionEntity sessionEntity,
+                                       RedirectUrlsEntity redirectUrlsEntity,
+                                       RequestInfoEntity requestInfoEntity) {
         if (mockTppAisString != null && mockTppAisString.equalsIgnoreCase("true") ? true : false) {
             log.warn("Mocking call to list accounts");
             return new ResponseEntity<>(new TppListAccountsMock().getAccountList(), HttpStatus.OK);
         }
-
-        ContextInformation contextInformation = new ContextInformation(sessionEntity.getXRequestID());
 
         ResponseEntity<AccountList> accounts = tppAisClient.getAccounts(
                 contextInformation.getFintechID(),
@@ -38,8 +40,8 @@ public class AccountService extends HandleAcceptedService {
                 sessionEntity.getLoginUserName(),
                 redirectUrlsEntity.getOkURL(),
                 redirectUrlsEntity.getNotOkURL(),
-                sessionEntity.getXRequestID(),
-                sessionEntity.getBankId(),
+                contextInformation.getXRequestID(),
+                requestInfoEntity.getBankId(),
                 sessionEntity.getPsuConsentSession(),
                 sessionEntity.getServiceSessionID());
 

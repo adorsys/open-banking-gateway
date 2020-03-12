@@ -2,6 +2,7 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.RequestAction;
+import de.adorsys.opba.fintech.impl.database.entities.RequestInfoEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpStatus.ACCEPTED;
+import static org.springframework.http.HttpStatus.SEE_OTHER;
 
 @ExtendWith(MockitoExtension.class)
 class RedirectHandlerServiceTest {
@@ -32,7 +33,7 @@ class RedirectHandlerServiceTest {
     private final String EXCEPTION_URL = "http://localhost:5500/fintech-callback/excaption-redirect?exception";
     private final String LOCATION_HEADER = "Location";
     private final RedirectUrlsEntity REDIRECT_URLS_ENTITY = buildRedirectUrlsEntity();
-    private final String OK_URI_VALUE = "http://localhost:5500/fintech-callback/redirect?fintechRedirectUriOk="+REDIRECT_CODE_VALUE;
+    private final String OK_URI_VALUE = "http://localhost:5500/fintech-callback/redirect?fintechRedirectUriOk=" + REDIRECT_CODE_VALUE;
 
     @Mock
     private RedirectUrlRepository redirectUrlRepository;
@@ -49,12 +50,18 @@ class RedirectHandlerServiceTest {
     @Mock
     private TransactionService transactionService;
 
+    @Mock
+    private RequestInfoService requestInfoService;
+
+    @Mock
+    private RequestInfoEntity requestInfoEntity;
+
     @InjectMocks
     private RedirectHandlerService redirectHandlerService;
 
     @BeforeEach
     void setup() {
-        redirectHandlerService = new RedirectHandlerService(redirectUrlRepository, authorizeService, accountService, transactionService);
+        redirectHandlerService = new RedirectHandlerService(redirectUrlRepository, authorizeService, accountService, transactionService, requestInfoService);
         redirectHandlerService.setOkUrl(OK_URL);
         redirectHandlerService.setNotOkUrl(NOT_OK_URL);
         redirectHandlerService.setExceptionUrl(EXCEPTION_URL);
@@ -82,8 +89,9 @@ class RedirectHandlerServiceTest {
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.of(REDIRECT_URLS_ENTITY));
         when(authorizeService.getByXsrfToken(REDIRECT_STATE_VALUE)).thenReturn(sessionEntity);
         when(authorizeService.isAuthorized(REDIRECT_STATE_VALUE, null)).thenReturn(true);
-        when(sessionEntity.getRequestAction()).thenReturn(RequestAction.LIST_ACCOUNTS);
-        when(accountService.listAccounts(sessionEntity, REDIRECT_URLS_ENTITY)).thenReturn(buildResponseEntity());
+        when(requestInfoEntity.getRequestAction()).thenReturn(RequestAction.LIST_ACCOUNTS);
+        when(requestInfoService.getRequestInfoByXsrfToken(REDIRECT_STATE_VALUE)).thenReturn(requestInfoEntity);
+        when(accountService.listAccounts(any(ContextInformation.class), eq(sessionEntity), eq(REDIRECT_URLS_ENTITY), eq(requestInfoEntity))).thenReturn(buildResponseEntity());
 
         // when
         ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_STATE_VALUE, REDIRECT_ID_VALUE, REDIRECT_CODE_VALUE);
@@ -91,7 +99,7 @@ class RedirectHandlerServiceTest {
         // then
         verify(authorizeService, times(1)).getByXsrfToken(REDIRECT_STATE_VALUE);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.ACCEPTED);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(ACCEPTED);
         assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
         assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(OK_URI_VALUE));
         assertThat(responseEntity.getBody()).isNull();
@@ -106,7 +114,7 @@ class RedirectHandlerServiceTest {
         verify(authorizeService, times(0)).getByXsrfToken(REDIRECT_STATE_VALUE);
         verify(authorizeService, times(0)).updateUserSession(sessionEntity);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.SEE_OTHER);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);
         assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
         assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(EXCEPTION_URL));
         assertThat(responseEntity.getBody()).isNull();
@@ -133,7 +141,7 @@ class RedirectHandlerServiceTest {
         verify(authorizeService, times(0)).getByXsrfToken(REDIRECT_STATE_VALUE);
         verify(authorizeService, times(0)).updateUserSession(sessionEntity);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.SEE_OTHER);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);
         assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
         assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(NOT_OK_URL));
         assertThat(responseEntity.getBody()).isNull();
@@ -152,7 +160,7 @@ class RedirectHandlerServiceTest {
         verify(authorizeService, times(0)).getByXsrfToken(REDIRECT_STATE_VALUE);
         verify(authorizeService, times(0)).updateUserSession(sessionEntity);
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.SEE_OTHER);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);
         assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
         assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(NOT_OK_URL));
         assertThat(responseEntity.getBody()).isNull();

@@ -1,6 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
+import de.adorsys.opba.fintech.impl.database.entities.RequestInfoEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ public class RedirectHandlerService {
     private final AuthorizeService authorizeService;
     private final AccountService accountService;
     private final TransactionService transactionService;
+    private final RequestInfoService requestInfoService;
 
     public RedirectUrlsEntity registerRedirectUrlForSession(String xsrfToken) {
         String redirectCode = UUID.randomUUID().toString();
@@ -72,19 +74,25 @@ public class RedirectHandlerService {
             return prepareErrorRedirectResponse(redirectUrls.getNotOkURL());
         }
 
+        ContextInformation contextInformation = new ContextInformation(UUID.randomUUID());
+
+        RequestInfoEntity info = requestInfoService.getRequestInfoByXsrfToken(redirectState);
         SessionEntity sessionEntity = authorizeService.getByXsrfToken(redirectState);
 
-        return handleDirectionForRedirect(sessionEntity, redirectUrls);
+        return handleDirectionForRedirect(contextInformation, sessionEntity, redirectUrls, info);
     }
 
-    private ResponseEntity handleDirectionForRedirect(SessionEntity sessionEntity, RedirectUrlsEntity redirectUrls) {
-        switch (sessionEntity.getRequestAction()) {
+    private ResponseEntity handleDirectionForRedirect(ContextInformation contextInformation,
+                                                      SessionEntity sessionEntity,
+                                                      RedirectUrlsEntity redirectUrls,
+                                                      RequestInfoEntity info) {
+        switch (info.getRequestAction()) {
             case LIST_ACCOUNTS:
-                return accountService.listAccounts(sessionEntity, redirectUrls);
+                return accountService.listAccounts(contextInformation, sessionEntity, redirectUrls, info);
             case LIST_TRANSACTIONS:
-                return transactionService.listTransactions(sessionEntity, redirectUrls, null, null, null, null, null, null);
+                return transactionService.listTransactions(contextInformation, sessionEntity, redirectUrls, info);
             default:
-                throw new RuntimeException("DID NOT EXPECT REQUEST ACTION:" + sessionEntity.getRequestAction());
+                throw new RuntimeException("DID NOT EXPECT REQUEST ACTION:" + info.getRequestAction());
         }
     }
 
