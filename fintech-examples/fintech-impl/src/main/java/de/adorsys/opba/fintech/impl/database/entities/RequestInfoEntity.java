@@ -18,7 +18,7 @@ public class RequestInfoEntity {
     private String xsrfToken;
     private String bankId;
     private RequestAction requestAction;
-    private  String accountId;
+    private String accountId;
     private LocalDate dateFrom;
     private LocalDate dateTo;
     private String entryReferenceFrom;
