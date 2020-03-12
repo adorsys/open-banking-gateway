@@ -1,3 +1,4 @@
 export enum ApiHeaders {
-  REDIRECT_CODE = 'Redirect-Code'
+  REDIRECT_CODE = 'Redirect-Code',
+  LOCATION = 'Location'
 }

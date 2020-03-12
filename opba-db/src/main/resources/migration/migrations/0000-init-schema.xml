@@ -101,6 +101,7 @@
             <column name="redirect_code" type="VARCHAR(256)">
                 <constraints nullable="false"/>
             </column>
+            <column name="aspsp_redirect_code" type="VARCHAR(256)"/>
 
             <!-- Is nullable as authentication context can be managed by protocol implementor -->
             <column name="context" type="TEXT"/>

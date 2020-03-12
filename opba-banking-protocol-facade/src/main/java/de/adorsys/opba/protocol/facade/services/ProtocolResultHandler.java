@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationRequiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult;
@@ -123,6 +124,7 @@ public class ProtocolResultHandler {
 
         AuthSession auth = addAuthorizationSessionData(result, xRequestId, session, mappedResult);
         mappedResult.setCause(mapCause(auth.getParent().getService().getAction(), result));
+        setAspspRedirectCodeIfRequired(result, auth, session);
         return mappedResult;
     }
 
@@ -134,7 +136,15 @@ public class ProtocolResultHandler {
 
         AuthSession auth = addAuthorizationSessionData(result, xRequestId, session, mappedResult);
         mappedResult.setCause(mapCause(auth.getParent().getService().getAction(), result));
+        setAspspRedirectCodeIfRequired(result, auth, session);
         return mappedResult;
+    }
+
+
+    protected <O> void setAspspRedirectCodeIfRequired(RedirectionResult<O, ?> result, AuthSession session, ServiceContext context) {
+        if (result instanceof AuthorizationRequiredResult) {
+            session.setAspspRedirectCode(context.getFutureAspspRedirectCode().toString());
+        }
     }
 
     protected <O> AuthSession addAuthorizationSessionData(Result<O> result, UUID xRequestId, ServiceContext session,

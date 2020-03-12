@@ -22,6 +22,7 @@ import {DynamicInputsComponent} from "./entry-page/initiation/common/dynamic-inp
 import {AccountsReferenceComponent} from "./entry-page/initiation/common/accounts-reference/accounts-reference.component";
 import {EntryPageAccountsComponent} from "./entry-page/initiation/accounts/entry-page-accounts/entry-page-accounts.component";
 import {DedicatedAccessComponent} from "./entry-page/initiation/common/dedicated-access/dedicated-access.component";
+import { ToAspspRedirectionComponent } from './to-aspsp-redirection/to-aspsp-redirection.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import {DedicatedAccessComponent} from "./entry-page/initiation/common/dedicated
     DynamicInputsComponent,
     AccountsReferenceComponent,
     DedicatedAccessComponent,
-    EntryPageAccountsComponent
+    EntryPageAccountsComponent,
+    ToAspspRedirectionComponent
   ],
   imports: [
     CommonModule,
