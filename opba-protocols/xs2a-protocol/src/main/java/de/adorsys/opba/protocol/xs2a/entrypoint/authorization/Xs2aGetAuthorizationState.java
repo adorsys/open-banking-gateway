@@ -31,12 +31,12 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
         String executionId = serviceContext.getAuthContext();
         BaseContext ctx = (BaseContext) runtimeService.getVariable(executionId, CONTEXT);
         // Whatever is non-null - that takes precedence
-        LastViolations issues = null == ctx.getViolations() || ctx.getViolations().isEmpty() ?
-            (LastViolations) runtimeService.getVariable(executionId, LAST_VALIDATION_ISSUES)
+        LastViolations issues = null == ctx.getViolations() || ctx.getViolations().isEmpty()
+            ? (LastViolations) runtimeService.getVariable(executionId, LAST_VALIDATION_ISSUES)
             : new LastViolations(ctx.getViolations());
 
-        LastRedirectionTarget redirectTo = null == ctx.getLastRedirection() ?
-            (LastRedirectionTarget) runtimeService.getVariable(executionId, LAST_REDIRECTION_TARGET)
+        LastRedirectionTarget redirectTo = null == ctx.getLastRedirection()
+            ? (LastRedirectionTarget) runtimeService.getVariable(executionId, LAST_REDIRECTION_TARGET)
             : ctx.getLastRedirection();
 
         URI redirectToAsUri = null == redirectTo ? null : URI.create(redirectTo.getRedirectTo());
