@@ -13,15 +13,16 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { RouteBasedCardWithSidebarComponent } from './route-based-card-with-sidebar/route-based-card-with-sidebar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import {EntryPageTransactionsComponent} from "./initiation/transactions/entry-page-transactions/entry-page-transactions.component";
-import {ConsentInitiateComponent} from "./initiation/consent-initiate/consent-initiate.component";
-import {AccountsConsentReviewComponent} from "./initiation/accounts/accounts-consent-review/accounts-consent-review.component";
-import {TransactionsConsentReviewComponent} from "./initiation/transactions/transactions-consent-review/transactions-consent-review.component";
-import { DynamicInputsComponent } from './initiation/common/dynamic-inputs/dynamic-inputs.component';
-import { AccountsReferenceComponent } from './initiation/common/accounts-reference/accounts-reference.component';
-import { DedicatedAccessComponent } from './initiation/common/dedicated-access/dedicated-access.component';
-import {ConsentAccountAccessSelectionComponent} from "./initiation/common/initial-consent/consent-account-access-selection.component";
-import { EntryPageAccountsComponent } from './initiation/accounts/entry-page-accounts/entry-page-accounts.component';
+import {ConsentAccountAccessSelectionComponent} from "./entry-page/initiation/common/initial-consent/consent-account-access-selection.component";
+import {ConsentInitiateComponent} from "./entry-page/initiation/consent-initiate/consent-initiate.component";
+import {EntryPageTransactionsComponent} from "./entry-page/initiation/transactions/entry-page-transactions/entry-page-transactions.component";
+import {AccountsConsentReviewComponent} from "./entry-page/initiation/accounts/accounts-consent-review/accounts-consent-review.component";
+import {TransactionsConsentReviewComponent} from "./entry-page/initiation/transactions/transactions-consent-review/transactions-consent-review.component";
+import {DynamicInputsComponent} from "./entry-page/initiation/common/dynamic-inputs/dynamic-inputs.component";
+import {AccountsReferenceComponent} from "./entry-page/initiation/common/accounts-reference/accounts-reference.component";
+import {EntryPageAccountsComponent} from "./entry-page/initiation/accounts/entry-page-accounts/entry-page-accounts.component";
+import {DedicatedAccessComponent} from "./entry-page/initiation/common/dedicated-access/dedicated-access.component";
+
 
 @NgModule({
   declarations: [

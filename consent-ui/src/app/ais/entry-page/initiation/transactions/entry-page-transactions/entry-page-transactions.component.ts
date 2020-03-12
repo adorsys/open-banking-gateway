@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {AccountAccessLevel} from "../../../common/dto/ais-consent";
 import {Access} from "../../common/initial-consent/consent-account-access-selection.component";
 import {TransactionsConsentReviewComponent} from "../transactions-consent-review/transactions-consent-review.component";
 import {DedicatedAccessComponent} from "../../common/dedicated-access/dedicated-access.component";
+import {AccountAccessLevel} from "../../../../common/dto/ais-consent";
 
 @Component({
   selector: 'consent-app-entry-page-transactions',

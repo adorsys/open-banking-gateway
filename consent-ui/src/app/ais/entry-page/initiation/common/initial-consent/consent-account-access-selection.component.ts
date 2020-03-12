@@ -1,11 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from "@angular/router";
-import {StubUtil} from "../../../common/stub-util";
-import {SessionService} from "../../../../common/session.service";
-import {ConsentUtil} from "../../../common/consent-util";
-import {AccountAccessLevel} from "../../../common/dto/ais-consent";
-import {AuthConsentState} from "../../../common/dto/auth-state";
+import {AuthConsentState} from "../../../../common/dto/auth-state";
+import {SessionService} from "../../../../../common/session.service";
+import {StubUtil} from "../../../../common/stub-util";
+import {AccountAccessLevel} from "../../../../common/dto/ais-consent";
+import {ConsentUtil} from "../../../../common/consent-util";
 
 @Component({
   selector: 'consent-app-access-selection',

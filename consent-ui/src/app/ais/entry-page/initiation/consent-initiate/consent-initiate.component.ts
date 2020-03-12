@@ -1,13 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {combineLatest} from "rxjs";
-import {map} from "rxjs/operators";
-import {ActivatedRoute, Router} from "@angular/router";
-import {SessionService} from "../../../common/session.service";
-import {ConsentAuthorizationService} from "../../../api/consentAuthorization.service";
-import {ApiHeaders} from "../../../api/api.headers";
-import {AuthConsentState, AuthViolation} from "../../common/dto/auth-state";
+import {ActivatedRoute, ActivatedRouteSnapshot, Router} from "@angular/router";
 import {EntryPageTransactionsComponent} from "../transactions/entry-page-transactions/entry-page-transactions.component";
 import {EntryPageAccountsComponent} from "../accounts/entry-page-accounts/entry-page-accounts.component";
+import {SessionService} from "../../../../common/session.service";
+import {ConsentAuthorizationService} from "../../../../api/consentAuthorization.service";
+import {ApiHeaders} from "../../../../api/api.headers";
+import {AuthConsentState, AuthViolation} from "../../../common/dto/auth-state";
 
 @Component({
   selector: 'consent-app-consent-initiate',
@@ -16,19 +14,26 @@ import {EntryPageAccountsComponent} from "../accounts/entry-page-accounts/entry-
 })
 export class ConsentInitiateComponent implements OnInit {
 
+  private route: ActivatedRouteSnapshot;
+
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private sessionService: SessionService,
               private consentAuthService: ConsentAuthorizationService) { }
 
   ngOnInit() {
-    combineLatest(this.activatedRoute.params, this.activatedRoute.queryParams)
-      .pipe(map(it => (new AuthorizationKey(it[0].authId, it[1].redirectCode))))
-      .subscribe(it => {
-        if (it.isInvalid()) {
-          this.abortUnauthorized();
-        } else {
-          this.initiateConsentSession(it.authorizationId, it.redirectCode);
-        }
-      });
+    this.route = this.activatedRoute.snapshot;
+
+    const authId = this.route.params.authId;
+    const redirectCode = this.route.queryParams.redirectCode;
+
+    if (ConsentInitiateComponent.isInvalid(authId, redirectCode)) {
+      this.abortUnauthorized();
+    } else {
+      this.initiateConsentSession(authId, redirectCode);
+    }
+  }
+
+  private static isInvalid(authorizationId: string, redirectCode: string): boolean {
+    return !redirectCode || !authorizationId || '' === redirectCode || '' === authorizationId;
   }
 
   private abortUnauthorized() {
@@ -57,16 +62,6 @@ export class ConsentInitiateComponent implements OnInit {
         console.log(res);
         throw new Error("Can't handle action: " + res.action);
     }
-  }
-}
-
-
-class AuthorizationKey {
-  constructor(public authorizationId: string, public redirectCode: string) {
-  }
-
-  isInvalid(): boolean {
-    return !this.redirectCode || !this.authorizationId || '' === this.redirectCode || '' === this.authorizationId;
   }
 }
 
