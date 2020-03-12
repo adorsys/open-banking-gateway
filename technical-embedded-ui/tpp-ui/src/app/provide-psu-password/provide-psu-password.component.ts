@@ -25,10 +25,9 @@ export class ProvidePsuPasswordComponent implements OnInit {
       {headers: {
           'X-Request-ID': Helpers.uuidv4(),
           'X-XSRF-TOKEN': Helpers.uuidv4(),
-        }}
+        }, observe: "response"}
     ).subscribe(res => {
-    }, error => {
-      window.location.href = error.url;
+      window.location.href = res.headers.get("Location");
     });
   }
 
