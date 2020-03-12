@@ -4,6 +4,7 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
+import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import io.restassured.response.ExtractableResponse;
@@ -50,6 +51,9 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
 
     @Autowired
     private ConsentRepository consents;
+
+    @ProvidedScenarioState
+    Exception exception;
 
     @SneakyThrows
     @Transactional
@@ -271,6 +275,13 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
                         new BigDecimal("3000.00"),
                         new BigDecimal("10000.00")
                 );
+        return self();
+    }
+
+    @SneakyThrows
+    @Transactional
+    public AccountInformationResult an_exception_is_thrown() {
+        assertThat(exception).isNotNull();
         return self();
     }
 }

@@ -3,11 +3,13 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
+import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import lombok.SneakyThrows;
 import org.awaitility.Durations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,6 +39,9 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
 
     @ExpectedScenarioState
     private WireMockServer wireMock;
+
+    @ProvidedScenarioState
+    Exception exception;
 
     public SELF open_banking_redirect_from_aspsp_ok_webhook_called() {
         LoggedRequest consentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
@@ -75,7 +80,6 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     public SELF fintech_calls_list_accounts_for_anton_brueckner_no_ip_address() {
         ExtractableResponse<Response> response = withHeadersWithoutIpAddress(ANTON_BRUECKNER)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                .header(COMPUTE_PSU_IP_ADDRESS, true)
                 .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
@@ -118,6 +122,16 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         updateServiceSessionId(response);
         updateRedirectCode(response);
 
+        return self();
+    }
+
+    @SneakyThrows
+    public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_exception() {
+        try {
+            return user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_ip_address_check();
+        } catch (Exception e) {
+            exception = e;
+        }
         return self();
     }
 }
