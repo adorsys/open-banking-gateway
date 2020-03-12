@@ -11,6 +11,5 @@ spring:
     driver-class-name: org.h2.Driver
 
 fintech-ui:
-  ok-url: http://localhost:5500/fintech-callback/redirect?fintechRedirectUriOk={redirectCode}
-  not-ok-url: http://localhost:5500/fintech-callback/redirect?fintechRedirectUriNOk={redirectCode}
-  exception-url: http://localhost:5500/fintech-callback/excaption-redirect?exception
+  redirect-url: http://localhost:4444/{redirectUri}/{redirectCode}
+  exception-url: http://localhost:4444/excaption-redirect

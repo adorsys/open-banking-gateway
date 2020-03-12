@@ -20,8 +20,6 @@ mock:
     listaccounts: true
 
 fintech-ui:
-  # It means URLs have format "http://some-address/more?parameter="
-  ok-url: http://localhost:5500/fintech-callback/redirect?fintechRedirectUriOk={redirectCode}
-  not-ok-url: http://localhost:5500/fintech-callback/redirect?fintechRedirectUriNOk={redirectCode}
-  exception-url: http://localhost:5500/fintech-callback/excaption-redirect?exception
+  redirect-url: http://localhost:4444/{redirectUri}/{redirectCode}
+  exception-url: http://localhost:4444/excaption-redirect
 
