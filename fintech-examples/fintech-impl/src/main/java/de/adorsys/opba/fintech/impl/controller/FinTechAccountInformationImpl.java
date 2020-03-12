@@ -43,7 +43,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
 
         SessionEntity sessionEntity = authorizeService.getByXsrfToken(xsrfToken);
 
-        RedirectUrlsEntity redirectUrlsEntity = redirectHandlerService.registerRedirectUrlForSession(xsrfToken);
+        RedirectUrlsEntity redirectUrlsEntity = redirectHandlerService.registerRedirectUrlForSession(xsrfToken, fintechRedirectURLOK, fintechRedirectURLNOK);
         RequestInfoEntity info = requestInfoService.addRequestInfo(xsrfToken, bankId, RequestAction.LIST_ACCOUNTS);
 
         return accountService.listAccounts(contextInformation, sessionEntity, redirectUrlsEntity, info);
@@ -62,7 +62,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
 
         SessionEntity sessionEntity = authorizeService.getByXsrfToken(xsrfToken);
 
-        RedirectUrlsEntity redirectUrlsEntity = redirectHandlerService.registerRedirectUrlForSession(xsrfToken);
+        RedirectUrlsEntity redirectUrlsEntity = redirectHandlerService.registerRedirectUrlForSession(xsrfToken, fintechRedirectURLOK, fintechRedirectURLNOK);
         RequestInfoEntity info = requestInfoService.addRequestInfo(xsrfToken, bankId, RequestAction.LIST_TRANSACTIONS, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList);
 
         return transactionService.listTransactions(contextInformation, sessionEntity, redirectUrlsEntity, info);

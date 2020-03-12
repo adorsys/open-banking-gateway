@@ -28,9 +28,16 @@ class RedirectHandlerServiceTest {
     private final String REDIRECT_STATE_VALUE = "682dbd06-75d4-4f73-a7e7-9084150a1f10";
     private final String REDIRECT_ID_VALUE = "fd8a0548-6862-46cb-8d24-f4b5edc7f7cb";
     private final String REDIRECT_CODE_VALUE = "7ca3f778-b0bb-4c1a-8003-d176089d1455";
-    private final String OK_URL = "http://localhost:5500/fintech-callback/redirect?fintechRedirectUriOk={redirectCode}";
-    private final String NOT_OK_URL = "http://localhost:5500/fintech-callback/redirect?fintechRedirectUriNOk={redirectCode}";
-    private final String EXCEPTION_URL = "http://localhost:5500/fintech-callback/excaption-redirect?exception";
+    private final String REDIRECT_URL = "http://localhost:4444/{redirectUri}/{redirectCode}";
+    private final String EXCEPTION_URL = "http://localhost:4444/excaption-redirect";
+
+    private final String FULL_OK_URL = "http://localhost:4444/redirect-ok/to/682dbd06-75d4-4f73-a7e7-9084150a1f10/7ca3f778-b0bb-4c1a-8003-d176089d1455";
+    private final String FULL_NOT_OK_URL = "http://localhost:4444/redirect-no-ok/to/682dbd06-75d4-4f73-a7e7-9084150a1f10/7ca3f778-b0bb-4c1a-8003-d176089d1455";
+
+    private final String FINTECH_REDIRECT_OK = "redirect-ok/to/682dbd06-75d4-4f73-a7e7-9084150a1f10";
+    private final String FINTECH_REDIRECT_NOT_OK = "redirect-no-ok/to/682dbd06-75d4-4f73-a7e7-9084150a1f10";
+
+
     private final String LOCATION_HEADER = "Location";
     private final RedirectUrlsEntity REDIRECT_URLS_ENTITY = buildRedirectUrlsEntity();
     private final String OK_URI_VALUE = "http://localhost:5500/fintech-callback/redirect?fintechRedirectUriOk=" + REDIRECT_CODE_VALUE;
@@ -62,8 +69,7 @@ class RedirectHandlerServiceTest {
     @BeforeEach
     void setup() {
         redirectHandlerService = new RedirectHandlerService(redirectUrlRepository, authorizeService, accountService, transactionService, requestInfoService);
-        redirectHandlerService.setOkUrl(OK_URL);
-        redirectHandlerService.setNotOkUrl(NOT_OK_URL);
+        redirectHandlerService.setRedirectUrl(REDIRECT_URL);
         redirectHandlerService.setExceptionUrl(EXCEPTION_URL);
     }
 
@@ -73,12 +79,12 @@ class RedirectHandlerServiceTest {
         when(redirectUrlRepository.save(any(RedirectUrlsEntity.class))).thenReturn(buildRedirectUrlsEntity());
 
         // when
-        RedirectUrlsEntity redirectCode = redirectHandlerService.registerRedirectUrlForSession(REDIRECT_STATE_VALUE);
+        RedirectUrlsEntity redirectCode = redirectHandlerService.registerRedirectUrlForSession(REDIRECT_STATE_VALUE, FINTECH_REDIRECT_OK, FINTECH_REDIRECT_NOT_OK);
 
         //then
         verify(redirectUrlRepository, times(1)).save(any(RedirectUrlsEntity.class));
-        assertThat(redirectCode.getNotOkURL()).isEqualTo(NOT_OK_URL);
-        assertThat(redirectCode.getOkURL()).isEqualTo(OK_URL);
+        assertThat(redirectCode.getNotOkURL()).isEqualTo(FULL_NOT_OK_URL);
+        assertThat(redirectCode.getOkURL()).isEqualTo(FULL_OK_URL);
         assertThat(redirectCode.getRedirectState()).isEqualTo(REDIRECT_STATE_VALUE);
         assertThat(redirectCode.getRedirectCode()).isEqualTo(REDIRECT_CODE_VALUE);
     }
@@ -143,7 +149,7 @@ class RedirectHandlerServiceTest {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);
         assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
-        assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(NOT_OK_URL));
+        assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(FULL_NOT_OK_URL));
         assertThat(responseEntity.getBody()).isNull();
     }
 
@@ -162,7 +168,7 @@ class RedirectHandlerServiceTest {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);
         assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
-        assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(NOT_OK_URL));
+        assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(FULL_NOT_OK_URL));
         assertThat(responseEntity.getBody()).isNull();
     }
 
@@ -170,8 +176,8 @@ class RedirectHandlerServiceTest {
         RedirectUrlsEntity redirectUrlsEntity = new RedirectUrlsEntity();
         redirectUrlsEntity.setRedirectCode(REDIRECT_CODE_VALUE);
         redirectUrlsEntity.setRedirectState(REDIRECT_STATE_VALUE);
-        redirectUrlsEntity.setOkURL(OK_URL);
-        redirectUrlsEntity.setNotOkURL(NOT_OK_URL);
+        redirectUrlsEntity.setOkURL(FULL_OK_URL);
+        redirectUrlsEntity.setNotOkURL(FULL_NOT_OK_URL);
 
         return redirectUrlsEntity;
     }
