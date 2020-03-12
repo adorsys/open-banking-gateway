@@ -11,6 +11,7 @@ export class SidebarComponent implements OnInit {
   showListAccounts = false;
   showListTransactions = false;
   showInitiatePayment = false;
+  showSettings = false;
   bankId: string;
   bankName: string;
 
@@ -26,5 +27,9 @@ export class SidebarComponent implements OnInit {
       this.showListTransactions = response.services.includes('LIST_TRANSACTIONS');
       this.showInitiatePayment = response.services.includes('INITIATE_PAYMENT');
     });
+  }
+
+  getRouterLinkListAccounts(): string {
+    return this.showListAccounts ? 'account' : '';
   }
 }
