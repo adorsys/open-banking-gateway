@@ -23,6 +23,7 @@ import {AccountsReferenceComponent} from "./entry-page/initiation/common/account
 import {EntryPageAccountsComponent} from "./entry-page/initiation/accounts/entry-page-accounts/entry-page-accounts.component";
 import {DedicatedAccessComponent} from "./entry-page/initiation/common/dedicated-access/dedicated-access.component";
 import { ToAspspRedirectionComponent } from './to-aspsp-page/to-aspsp-redirection.component';
+import {ConsentInfoComponent} from "./components/consent-info/consent-info.component";
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { ToAspspRedirectionComponent } from './to-aspsp-page/to-aspsp-redirectio
     AccountsReferenceComponent,
     DedicatedAccessComponent,
     EntryPageAccountsComponent,
-    ToAspspRedirectionComponent
+    ToAspspRedirectionComponent,
+    ConsentInfoComponent
   ],
   imports: [
     CommonModule,
