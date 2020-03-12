@@ -183,13 +183,11 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
                 .rest_assured_points_to_server();
-
         when()
-                .fintech_calls_list_accounts_for_anton_brueckner_no_ip_address()
-                .and()
-                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_exception();
+                .fintech_calls_list_accounts_for_anton_brueckner_no_ip_address();
+
         then()
-                .an_exception_is_thrown();
+                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_and_gets_303();
     }
 
 }
