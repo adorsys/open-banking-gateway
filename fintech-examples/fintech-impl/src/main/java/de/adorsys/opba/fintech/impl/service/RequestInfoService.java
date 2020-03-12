@@ -31,7 +31,7 @@ public class RequestInfoService {
         requestInfoEntity.setDateFrom(dateFrom);
         requestInfoEntity.setDateTo(dateTo);
         requestInfoEntity.setEntryReferenceFrom(entryReferenceFrom);
-        requestInfoEntity.setBankId(bookingStatus);
+        requestInfoEntity.setBookingStatus(bookingStatus);
         requestInfoEntity.setDeltaList(deltaList);
 
         return requestInfoRepository.save(requestInfoEntity);
