@@ -15,7 +15,7 @@ export class AisService {
     private route: ActivatedRoute,
     private finTechAccountInformationService: FinTechAccountInformationService
   ) {
-    this.okurl = window.location.protocol + '//' + window.location.host + '/redirectAfterConsent';
+    this.okurl = 'bank/53c47f54-b9a4-465a-8f77-bc6cd5f0cf46/account';
     console.log('redirect url:' + this.okurl);
   }
 
