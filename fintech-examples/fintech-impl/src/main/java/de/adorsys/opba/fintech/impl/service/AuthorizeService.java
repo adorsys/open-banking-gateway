@@ -2,7 +2,6 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.impl.database.entities.CookieEntity;
-import de.adorsys.opba.fintech.impl.database.entities.RequestAction;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -69,19 +68,6 @@ public class AuthorizeService {
     }
 
     public SessionEntity updateUserSession(SessionEntity sessionEntity) {
-        return userRepository.save(sessionEntity);
-    }
-
-    public SessionEntity updateUserSessionWithAdditionalData(String xsrfToken, String bankId, UUID xRequestID, RequestAction requestAction) {
-        Optional<SessionEntity> entityOptional = userRepository.findByXsrfToken(xsrfToken);
-        if (!entityOptional.isPresent()) {
-            return null;
-        }
-        SessionEntity sessionEntity = entityOptional.get();
-        sessionEntity.setBankId(bankId);
-        sessionEntity.setXRequestID(xRequestID);
-        sessionEntity.setRequestAction(requestAction);
-
         return userRepository.save(sessionEntity);
     }
 

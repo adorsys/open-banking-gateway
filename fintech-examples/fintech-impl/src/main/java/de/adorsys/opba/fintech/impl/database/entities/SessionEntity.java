@@ -40,9 +40,6 @@ public class SessionEntity {
 
     private String psuConsentSession;
     private UUID serviceSessionID;
-    private String bankId;
-    private UUID xRequestID;
-    private RequestAction requestAction;
 
     public SessionEntity addCookie(String key, String value) {
         if (cookies == null) {
