@@ -7,12 +7,12 @@ import {TanConfirmPageComponent} from './tan-confirm-page/tan-confirm-page.compo
 import {ResultPageComponent} from './result-page/result-page.component';
 import {ScaSelectPageComponent} from './sca-select-page/sca-select-page.component';
 import {ErrorPageComponent} from './error-page/error-page.component';
-import {ConsentInitiateComponent} from "./initiation/consent-initiate/consent-initiate.component";
-import {EntryPageTransactionsComponent} from "./initiation/transactions/entry-page-transactions/entry-page-transactions.component";
-import {AccountsConsentReviewComponent} from "./initiation/accounts/accounts-consent-review/accounts-consent-review.component";
-import {TransactionsConsentReviewComponent} from "./initiation/transactions/transactions-consent-review/transactions-consent-review.component";
-import {DedicatedAccessComponent} from "./initiation/common/dedicated-access/dedicated-access.component";
-import {EntryPageAccountsComponent} from "./initiation/accounts/entry-page-accounts/entry-page-accounts.component";
+import {ConsentInitiateComponent} from "./entry-page/initiation/consent-initiate/consent-initiate.component";
+import {EntryPageAccountsComponent} from "./entry-page/initiation/accounts/entry-page-accounts/entry-page-accounts.component";
+import {DedicatedAccessComponent} from "./entry-page/initiation/common/dedicated-access/dedicated-access.component";
+import {AccountsConsentReviewComponent} from "./entry-page/initiation/accounts/accounts-consent-review/accounts-consent-review.component";
+import {EntryPageTransactionsComponent} from "./entry-page/initiation/transactions/entry-page-transactions/entry-page-transactions.component";
+import {TransactionsConsentReviewComponent} from "./entry-page/initiation/transactions/transactions-consent-review/transactions-consent-review.component";
 
 
 const routes: Routes = [

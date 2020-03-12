@@ -1,11 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {SessionService} from "../../../../common/session.service";
-import {AccountReference} from "../accounts-reference/accounts-reference.component";
-import {StubUtil} from "../../../common/stub-util";
-import {ConsentUtil} from "../../../common/consent-util";
 import {SharedRoutes} from "../shared-routes";
+import {StubUtil} from "../../../../common/stub-util";
+import {AccountReference} from "../accounts-reference/accounts-reference.component";
+import {SessionService} from "../../../../../common/session.service";
+import {ConsentUtil} from "../../../../common/consent-util";
 
 @Component({
   selector: 'consent-app-limited-access',
