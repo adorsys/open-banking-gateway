@@ -34,6 +34,8 @@ public class RedirectExecutor {
             Xs2aContext context,
             String uiScreenUriSpel,
             String destinationUri) {
+        setDestinationUriInContext(execution, destinationUri);
+
         URI screenUri = URI.create(
             ContextUtil.evaluateSpelForCtx(
                 uiScreenUriSpel,
@@ -45,16 +47,35 @@ public class RedirectExecutor {
         redirect.processId(execution.getRootProcessInstanceId());
         redirect.executionId(execution.getId());
         redirect.redirectUri(screenUri);
+
+        setUiUriInContext(execution, screenUri);
+
+        applicationEventPublisher.publishEvent(redirect.build());
+    }
+
+    private void setUiUriInContext(DelegateExecution execution, URI screenUri) {
         ContextUtil.getAndUpdateContext(
             execution,
             (BaseContext ctx) -> {
-                LastRedirectionTarget target = new LastRedirectionTarget();
-                target.setRedirectTo(destinationUri);
+                LastRedirectionTarget target = getOrCreateLastRedirection(ctx);
                 target.setRedirectToUiScreen(screenUri.toASCIIString());
                 ctx.setLastRedirection(target);
             }
         );
+    }
 
-        applicationEventPublisher.publishEvent(redirect.build());
+    private void setDestinationUriInContext(DelegateExecution execution, String destinationUri) {
+        ContextUtil.getAndUpdateContext(
+            execution,
+            (BaseContext ctx) -> {
+                LastRedirectionTarget target = getOrCreateLastRedirection(ctx);
+                target.setRedirectTo(destinationUri);
+                ctx.setLastRedirection(target);
+            }
+        );
+    }
+
+    private LastRedirectionTarget getOrCreateLastRedirection(BaseContext ctx) {
+        return null == ctx.getLastRedirection() ? new LastRedirectionTarget() : ctx.getLastRedirection();
     }
 }

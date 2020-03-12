@@ -48,13 +48,13 @@ export class DynamicFormComponent implements OnInit {
       {headers: {
         'X-Request-ID': Helpers.uuidv4(),
         'X-XSRF-TOKEN': Helpers.uuidv4(),
-      }}
+      }, observe: "response"}
     ).subscribe(res => {
-    }, error => {
-      if (error.url.includes('redirToSandbox=')) {
-        window.location.href = error.url.substr(error.url.indexOf('redirToSandbox=') + 'redirToSandbox='.length);
+      const url = res.headers.get("Location");
+      if (url.includes('redirToSandbox=')) {
+        window.location.href = url.substr(url.indexOf('redirToSandbox=') + 'redirToSandbox='.length);
       } else {
-        window.location.href = error.url;
+        window.location.href = url;
       }
     });
   }
