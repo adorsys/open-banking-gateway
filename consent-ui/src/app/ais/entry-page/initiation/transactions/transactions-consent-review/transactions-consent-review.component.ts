@@ -7,7 +7,7 @@ import {ConsentAuthorizationService} from "../../../../../api/consentAuthorizati
 import {AccountAccessLevel, AisConsentToGrant} from "../../../../common/dto/ais-consent";
 import {StubUtil} from "../../../../common/stub-util";
 import {ConsentUtil} from "../../../../common/consent-util";
-import {ApiHeaders} from "../../../../api/api.headers";
+import {ApiHeaders} from "../../../../../api/api.headers";
 
 @Component({
   selector: 'consent-app-transactions-consent-review',
