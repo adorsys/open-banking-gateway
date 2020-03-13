@@ -1,0 +1,16 @@
+<form [formGroup]="limitedAccountAccessForm">
+  <div class="card">
+    <div class="card-body">
+
+      <h2 class="mb-4 text-left">Dedicated access for accounts in {{aspspName}}</h2>
+
+      <p class="text-secondary mb-5 text-left">Accounts with their details to be visible for <strong>{{finTechName}}</strong></p>
+      <consent-app-account-selector [targetForm]="limitedAccountAccessForm" [accounts]="accounts"></consent-app-account-selector>
+
+      <div class="form-group d-flex flex-row justify-content-lg-between">
+        <button class="btn md-6 w-100 mr-sm-2 mr-md-3 btn-outline-secondary">Cancel</button>
+        <button type="button" class="btn md-6 w-100 btn-primary" [disabled]="limitedAccountAccessForm.invalid" (click)="onSelect()">Select</button>
+      </div>
+    </div>
+  </div>
+</form>

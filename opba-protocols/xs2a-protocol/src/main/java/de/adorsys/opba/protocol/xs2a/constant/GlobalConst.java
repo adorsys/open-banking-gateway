@@ -7,6 +7,9 @@ import lombok.experimental.UtilityClass;
 public class GlobalConst {
 
     public static final String CONTEXT = "CONTEXT";
+    public static final String LAST_VALIDATION_ISSUES = "LAST_VALIDATION_ISSUES";
+    public static final String LAST_REDIRECTION_TARGET = "LAST_REDIRECTION_TARGET";
+
     public static final String BEFORE_VALIDATION_CONTEXT = "BEFORE_VALIDATION_CONTEXT";
     public static final String RESULT = "RESULT";
 

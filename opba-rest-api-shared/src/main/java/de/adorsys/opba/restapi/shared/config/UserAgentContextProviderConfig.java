@@ -9,6 +9,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static de.adorsys.opba.restapi.shared.HttpHeaders.COMPUTE_PSU_IP_ADDRESS;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_ACCEPT;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_ACCEPT_CHARSET;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_ACCEPT_ENCODING;
@@ -27,7 +28,9 @@ public class UserAgentContextProviderConfig {
     @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public UserAgentContext provideCurrentUserAgentContext(HttpServletRequest httpServletRequest) {
         return UserAgentContext.builder()
-                .psuIpAddress(httpServletRequest.getHeader(PSU_IP_ADDRESS))
+                .psuIpAddress("true".equals(httpServletRequest.getHeader(COMPUTE_PSU_IP_ADDRESS))
+                        ? httpServletRequest.getRemoteAddr()
+                        : httpServletRequest.getHeader(PSU_IP_ADDRESS))
                 .psuIpPort(httpServletRequest.getHeader(PSU_IP_PORT))
                 .psuAccept(httpServletRequest.getHeader(PSU_ACCEPT))
                 .psuAcceptCharset(httpServletRequest.getHeader(PSU_ACCEPT_CHARSET))

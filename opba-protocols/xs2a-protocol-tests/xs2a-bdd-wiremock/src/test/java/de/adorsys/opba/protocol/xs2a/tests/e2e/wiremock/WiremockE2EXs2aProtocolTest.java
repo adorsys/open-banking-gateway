@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockAccountInf
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.Xs2aProtocolApplication;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,4 +140,54 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                     WiremockConst.MAX_MUSTERMAN_RESOURCE_ID, WiremockConst.DATE_FROM, WiremockConst.DATE_TO, WiremockConst.BOTH_BOOKING
                 );
     }
+
+    @Test
+    void testAccountsListWithConsentUsingRedirectWithIpAddress() {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
+                .rest_assured_points_to_server();
+
+        when()
+                .fintech_calls_list_accounts_for_anton_brueckner()
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_ip_address_check()
+                .and()
+                .open_banking_redirect_from_aspsp_ok_webhook_called();
+        then()
+                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
+    }
+
+    @Test
+    void testAccountsListWithConsentUsingRedirectWithComputedIpAddress() {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
+                .rest_assured_points_to_server();
+
+        when()
+                .fintech_calls_list_accounts_for_anton_brueckner_ip_address_compute()
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_ip_address_check()
+                .and()
+                .open_banking_redirect_from_aspsp_ok_webhook_called();
+        then()
+                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
+    }
+
+    @Test
+    void testAccountsListWithConsentUsingRedirectWithoutIpAddress() {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
+                .rest_assured_points_to_server();
+        when()
+                .fintech_calls_list_accounts_for_anton_brueckner_no_ip_address();
+
+        then()
+                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_and_gets_303();
+    }
+
 }

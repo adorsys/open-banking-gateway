@@ -37,6 +37,14 @@
     <label for="bankId">Bank id</label>
     <input id="bankId" name="bankId" type="text" [formControl]="bankId">
 
+    <br>
+    <label for="ipAddress">IP Address</label>
+    <input id="ipAddress" name="ipAddress" type="text" [formControl]="ipAddress">
+
+    <br>
+    <label for="computeIp">Compute IP Address</label>
+    <input id="computeIp" name="computeIp" type="checkbox" [value]="computeIp.value" (click)="onClickComputeIp($event)">
+
     <hr>
     <br>
     Supply if consent available to get result or you want to use your own session UUID:

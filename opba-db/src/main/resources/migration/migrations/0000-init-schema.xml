@@ -72,6 +72,7 @@
             <column name="fintech_nok_uri" type="TEXT">
                 <constraints nullable="false"/>
             </column>
+            <column name="service_id" type="BIGINT"/>
             <column name="protocol_id" type="BIGINT"/>
             <column name="version" type="INT">
                 <constraints nullable="false"/>

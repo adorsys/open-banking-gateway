@@ -36,6 +36,10 @@ body {
   }
 }
 
+.navbar-light {
+  background: var(--light);
+}
+
 .navbar-brand {
   display: flex;
   flex-flow: row nowrap;

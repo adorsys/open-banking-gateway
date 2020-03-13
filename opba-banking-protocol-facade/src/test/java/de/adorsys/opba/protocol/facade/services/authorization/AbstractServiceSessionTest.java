@@ -231,11 +231,17 @@ abstract class AbstractServiceSessionTest {
     }
 
     private AuthorizationRequiredResult buildAuthorizationRequiredResult() {
-        return new AuthorizationRequiredResult(URI.create("http://localhost:4400/account-information"));
+        return new AuthorizationRequiredResult(
+            URI.create("http://localhost:4400/account-information"),
+            null
+        );
     }
 
     private ValidationErrorResult buildValidationErrorResultResult() {
-        return new ValidationErrorResult(URI.create("http://localhost:5500/parameters/provide-more/8bce1a14-5a43-11ea-893e-acde48001122"));
+        return new ValidationErrorResult(
+            URI.create("http://localhost:5500/parameters/provide-more/8bce1a14-5a43-11ea-893e-acde48001122"),
+            null
+        );
     }
 
     private static ErrorResult<AuthorizationRequiredResult> buildErrorResult() {

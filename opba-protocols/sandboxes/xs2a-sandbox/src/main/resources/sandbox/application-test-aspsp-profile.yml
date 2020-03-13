@@ -19,8 +19,8 @@ bank_profile:
 setting:
   ais:
     consentTypes:
-      bankOfferedConsentSupported: FALSE
-      globalConsentSupported: FALSE
+      bankOfferedConsentSupported: TRUE
+      globalConsentSupported: TRUE
       availableAccountsConsentSupported: TRUE
       accountAccessFrequencyPerDay: 4
       notConfirmedConsentExpirationTimeMs: 86400000

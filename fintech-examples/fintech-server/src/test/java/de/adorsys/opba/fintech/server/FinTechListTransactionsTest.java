@@ -47,7 +47,7 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
                 .header(AUTHORIZATION_SESSION_ID, "1")
                 .header(REDIRECT_CODE, "redirectCode")
                 .header(PSU_CONSENT_SESSION, "2")
-                .header(SERVICE_SESSION_ID, "any-session-not-specified-in api.yml yet")
+                .header(SERVICE_SESSION_ID, "682dbd06-75d4-4f73-a7e7-9084150a1f10")
                 .location(new URI("affe"))
                 .build();
 

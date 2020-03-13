@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -37,7 +38,8 @@ public class SessionEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
     private List<CookieEntity> cookies = new ArrayList<>();
 
-    String psuConsentSession;
+    private String psuConsentSession;
+    private UUID serviceSessionID;
 
     public SessionEntity addCookie(String key, String value) {
         if (cookies == null) {

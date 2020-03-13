@@ -1,0 +1,35 @@
+<form [formGroup]="targetForm">
+  <ng-container *ngFor="let account of accounts">
+    <div class="form-inline"
+         [ngClass]="{ 'is-invalid': targetForm.controls[account.id].touched && targetForm.controls[account.id].errors }">
+      <input type="text"
+             [id]="account.id"
+             [name]="account.id"
+             [formControlName]="account.id"
+             placeholder="IBAN"
+             [ngClass]="{ 'is-invalid': targetForm.controls[account.id].touched && targetForm.controls[account.id].errors }"
+             class="form-control">
+      <button class='btn' (click)="removeAccount(account)">
+        <div class="mr-2">
+          <img src="assets/icons/minus.png">
+        </div>
+      </button>
+    </div>
+    <div class="invalid-feedback"
+         *ngIf="targetForm.controls[account.id].touched && targetForm.controls[account.id].errors; else noErrors">
+      IBAN must be at least 5 characters
+    </div>
+    <ng-template #noErrors>
+      <br/>
+    </ng-template>
+  </ng-container>
+</form>
+
+<button class='btn' (click)="addAccount()">
+  <div class="mr-2">
+    <img src="assets/icons/plus.png"> Add account
+  </div>
+</button>
+
+<br/>
+<br/>

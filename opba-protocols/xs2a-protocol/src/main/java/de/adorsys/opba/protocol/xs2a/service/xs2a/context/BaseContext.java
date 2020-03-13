@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.context;
 
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.db.domain.entity.ProtocolAction;
-import de.adorsys.opba.protocol.xs2a.domain.dto.ValidationIssue;
+import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import lombok.Data;
 
 import java.util.HashSet;
@@ -38,7 +38,8 @@ public class BaseContext {
      */
     private String redirectCodeIfAuthContinued;
 
-    private final Set<ValidationIssue> violations = new HashSet<>();
+    private Set<ValidationIssue> violations = new HashSet<>();
+    private String redirectTo;
 
     public String getRequestId() {
         return this.sagaId;

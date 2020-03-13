@@ -1,14 +1,14 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
+import de.adorsys.opba.fintech.impl.database.entities.RequestInfoEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
-import de.adorsys.opba.fintech.impl.service.mocks.TppBankingApiTokenMock;
-import de.adorsys.opba.tpp.token.api.model.generated.PsuConsentSessionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,14 +28,19 @@ import static java.util.Collections.singletonList;
 @ConfigurationProperties("fintech-ui")
 public class RedirectHandlerService {
     private static final String LOCATION_HEADER = "Location";
-    private String notOkUrl;
-    private String okUrl;
+    @Value("${mock.tppais.listaccounts:false}")
+    private String mockTppAisString;
+
+    private String redirectUrl;
     private String exceptionUrl;
 
     private final RedirectUrlRepository redirectUrlRepository;
     private final AuthorizeService authorizeService;
+    private final AccountService accountService;
+    private final TransactionService transactionService;
+    private final RequestInfoService requestInfoService;
 
-    public RedirectUrlsEntity registerRedirectUrlForSession(String xsrfToken) {
+    public RedirectUrlsEntity registerRedirectUrlForSession(String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
         String redirectCode = UUID.randomUUID().toString();
         log.debug("ONLY FOR DEBUG: redirectCode: {}", redirectCode);
 
@@ -43,8 +48,8 @@ public class RedirectHandlerService {
 
         redirectUrls.setRedirectCode(redirectCode);
         redirectUrls.setRedirectState(xsrfToken);
-        redirectUrls.setNotOkURL(getModifiedUrlWithRedirectCode(notOkUrl, redirectCode));
-        redirectUrls.setOkURL(getModifiedUrlWithRedirectCode(okUrl, redirectCode));
+        redirectUrls.setNotOkURL(getModifiedUrlWithRedirectCode(fintechRedirectURLNOK, redirectCode));
+        redirectUrls.setOkURL(getModifiedUrlWithRedirectCode(fintechRedirectURLOK, redirectCode));
 
         return redirectUrlRepository.save(redirectUrls);
     }
@@ -52,7 +57,7 @@ public class RedirectHandlerService {
     public ResponseEntity doRedirect(String redirectState, String redirectId, String redirectCode) {
         if (StringUtils.isBlank(redirectCode)) {
             log.warn("Validation redirect request was failed: redirect code is empty!");
-            return prepareRedirectResponse(exceptionUrl);
+            return prepareErrorRedirectResponse(exceptionUrl);
         }
 
         RedirectUrlsEntity redirectUrls = redirectUrlRepository.findByRedirectCode(redirectCode)
@@ -60,36 +65,46 @@ public class RedirectHandlerService {
 
         if (StringUtils.isBlank(redirectState)) {
             log.warn("Validation redirect request was failed: Xsrf Token is empty!");
-            return prepareRedirectResponse(redirectUrls.getNotOkURL());
+            return prepareErrorRedirectResponse(redirectUrls.getNotOkURL());
         }
 
         if (!authorizeService.isAuthorized(redirectState, null)) {
             log.warn("Validation redirect request was failed: Xsrf Token is wrong or user are not authorized!");
-            return prepareRedirectResponse(redirectUrls.getNotOkURL());
+            return prepareErrorRedirectResponse(redirectUrls.getNotOkURL());
         }
 
-        SessionEntity optionalUser = authorizeService.getByXsrfToken(redirectState);
-        updateSessionByRedirectCode(optionalUser, redirectCode);
+        ContextInformation contextInformation = new ContextInformation(UUID.randomUUID());
 
-        return prepareRedirectResponse(redirectUrls.getOkURL());
+        RequestInfoEntity info = requestInfoService.getRequestInfoByXsrfToken(redirectState);
+        SessionEntity sessionEntity = authorizeService.getByXsrfToken(redirectState);
+
+        return handleDirectionForRedirect(contextInformation, sessionEntity, redirectUrls, info);
     }
 
-    private void updateSessionByRedirectCode(SessionEntity sessionEntity, String redirectCode) {
-        PsuConsentSessionResponse psuConsentSessionResponse = new TppBankingApiTokenMock().getTransactionsResponse(redirectCode);
-        sessionEntity.setPsuConsentSession(psuConsentSessionResponse.getPsuConsentSession().toString());
-        authorizeService.updateUserSession(sessionEntity);
+    private ResponseEntity handleDirectionForRedirect(ContextInformation contextInformation,
+                                                      SessionEntity sessionEntity,
+                                                      RedirectUrlsEntity redirectUrls,
+                                                      RequestInfoEntity info) {
+        switch (info.getRequestAction()) {
+            case LIST_ACCOUNTS:
+                return accountService.listAccounts(contextInformation, sessionEntity, redirectUrls, info);
+            case LIST_TRANSACTIONS:
+                return transactionService.listTransactions(contextInformation, sessionEntity, redirectUrls, info);
+            default:
+                throw new RuntimeException("DID NOT EXPECT REQUEST ACTION:" + info.getRequestAction());
+        }
     }
 
-    private ResponseEntity prepareRedirectResponse(String redirectUrl) {
+    private ResponseEntity prepareErrorRedirectResponse(String redirectUrl) {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.put(LOCATION_HEADER, singletonList(redirectUrl));
 
         return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
     }
 
-    private String getModifiedUrlWithRedirectCode(String url, String redirectCode) {
-        return UriComponentsBuilder.fromPath(url)
-                       .buildAndExpand(redirectCode)
+    private String getModifiedUrlWithRedirectCode(String... params) {
+        return UriComponentsBuilder.fromPath(redirectUrl)
+                       .buildAndExpand(params)
                        .toUriString();
     }
 }

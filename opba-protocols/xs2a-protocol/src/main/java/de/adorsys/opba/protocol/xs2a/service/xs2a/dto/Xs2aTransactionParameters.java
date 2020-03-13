@@ -13,6 +13,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
+import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.BOOKING_STATUS;
+import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 
@@ -20,15 +22,13 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
 @EqualsAndHashCode(callSuper = true)
 public class Xs2aTransactionParameters extends Xs2aWithBalanceParameters {
 
-    @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode("bookingStatus"))
+    @ValidationInfo(ui = @FrontendCode(STRING), ctx = @ContextCode(BOOKING_STATUS))
     @NotBlank(message = "{no.ctx.bookingStatus}")
     private String bookingStatus;
 
-    @ValidationInfo(ui = @FrontendCode("textbox.date"), ctx = @ContextCode("dateFrom"))
     @NotNull(message = "{no.ctx.dateFrom}")
     private LocalDate dateFrom;
 
-    @ValidationInfo(ui = @FrontendCode("textbox.date"), ctx = @ContextCode("dateTo"))
     @NotNull(message = "{no.ctx.dateTo}")
     private LocalDate dateTo;
 

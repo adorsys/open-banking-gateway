@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Redirect;
 import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -30,17 +31,20 @@ public class RedirectExecutor {
             DelegateExecution execution,
             Xs2aContext context,
             String destinationSpel) {
+        URI destination = URI.create(
+            ContextUtil.evaluateSpelForCtx(
+                destinationSpel,
+                execution,
+                context
+            )
+        );
         Redirect.RedirectBuilder redirect = Redirect.builder();
         redirect.processId(execution.getRootProcessInstanceId());
         redirect.executionId(execution.getId());
-        redirect.redirectUri(
-                URI.create(
-                        ContextUtil.evaluateSpelForCtx(
-                                destinationSpel,
-                                execution,
-                                context
-                        )
-                )
+        redirect.redirectUri(destination);
+        ContextUtil.getAndUpdateContext(
+            execution,
+            (BaseContext ctx) -> context.setRedirectTo(destination.toASCIIString())
         );
 
         applicationEventPublisher.publishEvent(redirect.build());

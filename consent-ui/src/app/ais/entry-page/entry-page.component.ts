@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'consent-app-entry-page',
@@ -11,5 +11,4 @@ export class EntryPageComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }

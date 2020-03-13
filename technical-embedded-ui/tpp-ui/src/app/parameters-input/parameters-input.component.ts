@@ -25,9 +25,9 @@ export class ParametersInputComponent implements OnInit {
       params => {
         this.submissionUri = this.submissionUri + params['authorizationSessionId'] + '/embedded?redirectCode=' + params['redirectCode'];
         const data: DynamicFormControlBase<any>[] = JSON.parse(params['q'])
-          .map(it => new DynamicFormControlBase(it.ctxCode, it.uiCode, it.message, it.target as Target));
+          .map(it => new DynamicFormControlBase(it.code, it.code, it.type, it.scope, it.captionMessage, it.scope as Target));
         this.inputsAisConsent = data.filter(it => it.target === Target.AIS_CONSENT);
-        this.inputsDynamic = data.filter(it => it.target === Target.CONTEXT);
+        this.inputsDynamic = data.filter(it => it.target === Target.GENERAL);
       }
     );
   }

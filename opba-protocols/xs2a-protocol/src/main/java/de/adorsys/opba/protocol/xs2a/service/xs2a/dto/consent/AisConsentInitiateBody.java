@@ -19,29 +19,39 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
+import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.FREQUENCY_PER_DAY;
+import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.IBAN;
+import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.RECURRING_INDICATOR;
+import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.VALID_UNTIL;
+import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.BOOLEAN;
+import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.DATE;
+import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.INTEGER;
+import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.OBJECT;
+import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
-import static de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.TargetObject.AIS_CONSENT;
+import static de.adorsys.opba.protocol.api.dto.codes.ScopeObject.AIS_CONSENT;
+import static de.adorsys.opba.protocol.api.dto.codes.ScopeObject.AIS_CONSENT_SCOPE;
 
 @Getter
 @Setter
 public class AisConsentInitiateBody {
 
     @Valid
-    @ValidationInfo(ui = @FrontendCode("accountaccess.class"), ctx = @ContextCode(value = "access", target = AIS_CONSENT))
+    @ValidationInfo(ui = @FrontendCode(OBJECT), ctx = @ContextCode(target = AIS_CONSENT))
     @NotNull(message = "{no.ctx.accountaccess}")
     private AccountAccessBody access;
 
-    @ValidationInfo(ui = @FrontendCode("boolean.boolean"), ctx = @ContextCode(value = "recurringIndicator", target = AIS_CONSENT))
+    @ValidationInfo(ui = @FrontendCode(BOOLEAN), ctx = @ContextCode(value = RECURRING_INDICATOR, target = AIS_CONSENT))
     @NotNull(message = "{no.ctx.recurringIndicator}")
     private Boolean recurringIndicator;
 
-    @ValidationInfo(ui = @FrontendCode("date.string"), ctx = @ContextCode(value = "validUntil", target = AIS_CONSENT))
+    @ValidationInfo(ui = @FrontendCode(DATE), ctx = @ContextCode(value = VALID_UNTIL, target = AIS_CONSENT))
     @NotNull(message = "{no.ctx.validUntil}")
     @FutureOrPresent(message = "{future.ctx.validUntil}")
     private LocalDate validUntil;
 
-    @ValidationInfo(ui = @FrontendCode("textbox.integer"), ctx = @ContextCode(value = "frequencyPerDay", target = AIS_CONSENT))
+    @ValidationInfo(ui = @FrontendCode(INTEGER), ctx = @ContextCode(value = FREQUENCY_PER_DAY, target = AIS_CONSENT))
     @NotNull(message = "{no.ctx.frequencyPerDay}")
     private Integer frequencyPerDay;
 
@@ -66,7 +76,7 @@ public class AisConsentInitiateBody {
     @Setter
     public static class AccountReferenceBody {
 
-        @ValidationInfo(ui = @FrontendCode("textbox.string"), ctx = @ContextCode(prefix = "ais", target = AIS_CONSENT))
+        @ValidationInfo(ui = @FrontendCode(STRING), ctx = @ContextCode(value = IBAN, target = AIS_CONSENT_SCOPE))
         @NotBlank(message = "{no.ctx.iban}")
         private String iban;
 
@@ -102,8 +112,17 @@ public class AisConsentInitiateBody {
             return null;
         }
 
+        default AccountAccess.AllPsd2Enum allPsd2(String allPsd2) {
+            if ("ALL_ACCOUNTS".equals(allPsd2)) {
+                return AccountAccess.AllPsd2Enum.ALLACCOUNTS;
+            }
+
+            return null;
+        }
+
         @Mapping(source = "cons.access.availableAccounts", target = "access.availableAccounts")
         @Mapping(source = "cons.access.availableAccounts", target = "access.availableAccountsWithBalance")
+        @Mapping(source = "cons.access.allPsd2", target = "access.allPsd2")
         Consents map(AisConsentInitiateBody cons);
     }
 

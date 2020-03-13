@@ -4,26 +4,36 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
+import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
+import io.restassured.RestAssured;
+import io.restassured.internal.RestAssuredResponseImpl;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon.REDIRECT_CODE_QUERY;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.BigDecimalComparator.BIG_DECIMAL_COMPARATOR;
@@ -50,6 +60,9 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
 
     @Autowired
     private ConsentRepository consents;
+
+    @ProvidedScenarioState
+    protected String redirectCode;
 
     @SneakyThrows
     @Transactional
@@ -271,6 +284,28 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
                         new BigDecimal("3000.00"),
                         new BigDecimal("10000.00")
                 );
+        return self();
+    }
+
+    public AccountInformationResult user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_and_gets_303() {
+        String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json");
+
+        ExtractableResponse<Response> response = RestAssured
+                .given()
+                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(body)
+                .when()
+                    .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
+                .then()
+                    .statusCode(HttpStatus.SEE_OTHER.value())
+                .extract();
+
+        String responseLog = ((RestAssuredResponseImpl) response).getLogRepository().getResponseLog();
+        assertThat(responseLog).matches(Pattern.compile("(?s).*provide-more.*PSU_IP_ADDRESS.*", Pattern.MULTILINE));
+
         return self();
     }
 }

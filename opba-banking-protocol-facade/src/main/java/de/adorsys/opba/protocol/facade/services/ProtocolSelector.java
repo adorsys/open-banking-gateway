@@ -54,13 +54,17 @@ public class ProtocolSelector {
         ServiceSession session = sessions.findById(serviceSessionId)
                 .orElseThrow(() -> new IllegalStateException("Missing session " + serviceSessionId));
 
+        if (null == session.getService()) {
+            session.setService(protocol);
+        }
+
         session.setProtocol(protocol);
         sessions.save(session);
         return protocol;
     }
 
     private boolean isForAuthorization(ProtocolAction action) {
-        return action == ProtocolAction.UPDATE_AUTHORIZATION;
+        return action == ProtocolAction.AUTHORIZATION || ProtocolAction.AUTHORIZATION == action.getParent();
     }
 
     private <A> A findActionBean(BankProtocol forProtocol, Map<String, A> actionBeans, ProtocolAction action) {
