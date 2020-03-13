@@ -11,7 +11,7 @@ import {FintechCallbackOkComponent} from "./fintech-callback-ok/fintech-callback
 
 const routes: Routes = [
   {path: 'initial', component: InitialRequestComponent},
-  {path: 'from-aspsp/v1/consent/:authId/fromAspsp/:state/ok', component: FromAspspComponent},
+  {path: 'from-aspsp', component: FromAspspComponent},
   {path: 'fintech-callback/ok', component: FintechCallbackOkComponent},
   {path: 'parameters/provide-more/:executionId', component: ParametersInputComponent},
   {path: 'parameters/provide-psu-password/:executionId', component: ProvidePsuPasswordComponent},

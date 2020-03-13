@@ -38,6 +38,7 @@ const routes: Routes = [
         ]
       },
       {path: ToAspspRedirectionComponent.ROUTE, component: ToAspspRedirectionComponent},
+      {path: ResultPageComponent.ROUTE, component: ResultPageComponent},
       {
         path: 'authenticate',
         component: PasswordInputPageComponent,

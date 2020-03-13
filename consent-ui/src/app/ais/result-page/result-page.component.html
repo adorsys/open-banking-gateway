@@ -1,1 +1,11 @@
-<p>result-page works!</p>
+<div class="card">
+  <div class="card-body">
+    <h2 class="mb-4 text-left">Consent has been granted</h2>
+    <p class="text-secondary mb-5 text-left">You are going to be redirected back to <strong>{{finTechName}}</strong></p>
+
+    <div class="form-group d-flex flex-row justify-content-lg-between">
+      <button class="btn md-6 w-100 mr-sm-2 mr-md-3 btn-outline-secondary">Cancel</button>
+      <button type="button" class="btn md-6 w-100 btn-primary" (click)="onConfirm()">Back to {{finTechName}}</button>
+    </div>
+  </div>
+</div>
