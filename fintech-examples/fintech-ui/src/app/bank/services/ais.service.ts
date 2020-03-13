@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { FinTechAccountInformationService } from '../../api';
 import { ActivatedRoute } from '@angular/router';
-
+//
 @Injectable({
   providedIn: 'root'
 })
@@ -37,7 +37,7 @@ export class AisService {
 
   getTransactions(bankId: string, accountId: string) {
     return this.finTechAccountInformationService
-      .aisTransactionsGET('bankId', 'accountId', '', '', this.okurl, 'not-ok-url')
+      .aisTransactionsGET('bankId', 'accountId', '', '', window.location.pathname, 'not-ok-url')
       .pipe(map(response => response.transactions));
   }
 }

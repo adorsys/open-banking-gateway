@@ -3,14 +3,24 @@
     <img class="logo" />
     <span class="ml-3">FintechUI</span>
   </a>
-  <ul class="nav ml-auto">
-    <li class="nav-item">
-      <a (click)="onLogout()" [routerLinkActive]="['active']" class="btn nav-link px-0 mb-0">
-        <div class="mr-2">
-          <img src="./assets/icons/1200px-N26_(Direktbank)_2018_logo.svg" />
-        </div>
-        <span class="nav__title">Sign out</span>
+  <ul class="nav">
+    <li class="dropdown ml-auto">
+      <a
+        class="nav-item dropdown-toggle mr-3 no-underline clickable"
+        id="dropdownMenuButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+        >admin
       </a>
+      <div class="dropdown-menu dropdown-menu-right">
+        <a (click)="onLogout()" [routerLinkActive]="['active']" class="dropdown-item clickable pb-2">
+          <div>
+            <img src="" />
+            <span class="nav__title"> Sign out</span>
+          </div>
+        </a>
+      </div>
     </li>
   </ul>
 </nav>
