@@ -50,7 +50,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                 .when()
                     .get(redirectOkUri)
                 .then()
-                    .statusCode(HttpStatus.SEE_OTHER.value())
+                    .statusCode(HttpStatus.ACCEPTED.value())
                     .extract();
 
         assertThat(response.header(LOCATION)).contains("localhost");
@@ -101,7 +101,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                 .when()
                     .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
                 .then()
-                    .statusCode(HttpStatus.SEE_OTHER.value())
+                    .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
         LoggedRequest loggedRequest = await().atMost(Durations.TEN_SECONDS)
