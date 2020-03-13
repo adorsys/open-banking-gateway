@@ -6,15 +6,15 @@
   <ul class="nav">
     <li class="dropdown ml-auto">
       <a
-        class="nav-item dropdown-toggle mr-3 no-underline clickable"
+        class="nav-item mr-3 no-underline clickable"
         id="dropdownMenuButton"
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
-        >admin
+        >{{ getUserName() }}
       </a>
-      <div class="dropdown-menu dropdown-menu-right">
-        <a (click)="onLogout()" [routerLinkActive]="['active']" class="dropdown-item clickable pb-2">
+      <div class="">
+        <a (click)="onLogout()" [routerLinkActive]="['active']" class="clickable pb-2">
           <div>
             <img src="" />
             <span class="nav__title"> Sign out</span>

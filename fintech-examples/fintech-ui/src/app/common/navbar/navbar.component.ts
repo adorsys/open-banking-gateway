@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { UserProfile } from '../../api';
-import { UserService } from '../../bank/services/user-service';
+import { Consts } from '../consts';
 
 @Component({
   selector: 'app-navbar',
@@ -9,18 +8,9 @@ import { UserService } from '../../bank/services/user-service';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  public user: UserProfile;
+  constructor(private authService: AuthService) {}
 
-  constructor(private authService: AuthService, private userService: UserService) {}
-
-  ngOnInit() {
-    if (this.authService.isLoggedIn()) {
-      this.userService.currentUser.subscribe((response: UserProfile) => {
-        this.user = response;
-      });
-      this.userService.loadUserInfo();
-    }
-  }
+  ngOnInit() {}
 
   onLogout(): void {
     this.authService.logout();
@@ -28,5 +18,9 @@ export class NavbarComponent implements OnInit {
 
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
+  }
+
+  getUserName(): string {
+    return localStorage.getItem(Consts.USERNAME);
   }
 }
