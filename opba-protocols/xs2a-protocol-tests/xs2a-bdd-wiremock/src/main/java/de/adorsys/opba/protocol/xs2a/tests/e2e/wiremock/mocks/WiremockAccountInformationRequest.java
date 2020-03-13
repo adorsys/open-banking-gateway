@@ -50,7 +50,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                 .when()
                     .get(redirectOkUri)
                 .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
+                    .statusCode(HttpStatus.SEE_OTHER.value())
                     .extract();
 
         assertThat(response.header(LOCATION)).contains("localhost");
