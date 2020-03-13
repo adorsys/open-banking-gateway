@@ -102,7 +102,7 @@ public class ProtocolResultHandler {
             (FacadeRedirectResult<O, RedirectionCause>) FacadeRedirectResult.FROM_PROTOCOL.map(result);
 
         addAuthorizationSessionData(result, xRequestId, session, mappedResult);
-        mappedResult.setRedirectionTo(URI.create(session.getFintechRedirectOkUri()));
+        mappedResult.setRedirectionTo(result.getRedirectionTo());
         return mappedResult;
     }
 

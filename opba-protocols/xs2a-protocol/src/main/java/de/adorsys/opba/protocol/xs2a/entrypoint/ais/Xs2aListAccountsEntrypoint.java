@@ -68,6 +68,8 @@ public class Xs2aListAccountsEntrypoint implements ListAccounts {
 
         @Mapping(source = "facadeServiceable.bankId", target = "aspspId")
         @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress")
+        @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
+        @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")
         @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType", nullValuePropertyMappingStrategy = IGNORE)
         AccountListXs2aContext map(ListAccountsRequest ctx);
     }
