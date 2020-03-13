@@ -6,7 +6,7 @@ server:
       maxAge: 300
       httpOnly: false
       path: /
-      sameSite: none
+      sameSite: Lax
       # sameSite: Strict|Lax|none
 
 tpp:
