@@ -1,3 +1,4 @@
 #!/bin/bash
 
-docker-compose up -e OPBA_PROFILES=dev,no-encryption
+OPBA_PROFILES=dev,no-encryption
+docker-compose up

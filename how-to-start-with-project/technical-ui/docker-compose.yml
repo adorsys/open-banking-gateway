@@ -44,7 +44,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=docker
       - PKCS12_KEYSTORE=/pkcs12/sample-qwac.keystore
       - SPRING_PROFILES_ACTIVE=${OPBA_PROFILES},technical-ui
-      - GATEWAY_BASE_URL=http://opba-banking-gateway:8085
+      - PROTOCOL_GATEWAY_BASE_URL=http://localhost:18085
       - EMBEDDED_UI_BASE_URL=http://localhost:5500
       - SPRING_LIQUIBASE_PARAMETERS_ADORSYS_SANDBOX_URL=http://x2sa-sandbox-ledgersgateway:8089
       - FACADE_ENCRYPTION_KEYSETPATH=/keysetpath/example-keyset.json
