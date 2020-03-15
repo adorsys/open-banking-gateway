@@ -20,6 +20,7 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 @SuppressWarnings({"checkstyle:HideUtilityClassConstructor", "PMD.AvoidUsingHardCodedIP"}) //Checkstyle doesn't recognise Lombok
 public class AisStagesCommonUtil {
 
+    public static final String GET_CONSENT_AUTH_STATE = "/v1/consent/{serviceSessionId}";
     public static final String AUTHORIZE_CONSENT_ENDPOINT = "/v1/consent/{serviceSessionId}/embedded";
     public static final String AIS_ACCOUNTS_ENDPOINT = "/v1/banking/ais/accounts";
     public static final String AIS_TRANSACTIONS_ENDPOINT = "/v1/banking/ais/accounts/{resourceId}/transactions";
