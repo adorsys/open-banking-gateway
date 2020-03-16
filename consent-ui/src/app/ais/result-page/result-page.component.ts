@@ -3,9 +3,9 @@ import {StubUtil} from "../common/stub-util";
 import {AisConsentToGrant} from "../common/dto/ais-consent";
 import {ActivatedRoute, ActivatedRouteSnapshot} from "@angular/router";
 import {SessionService} from "../../common/session.service";
-import {ConsentAuthorizationService} from "../../api/consentAuthorization.service";
 import {ConsentUtil} from "../common/consent-util";
 import {ApiHeaders} from "../../api/api.headers";
+import {ConsentAuthorizationService} from "../../api";
 
 @Component({
   selector: 'consent-app-result-page',

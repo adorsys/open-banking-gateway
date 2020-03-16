@@ -5,9 +5,9 @@ import {StubUtil} from "../../../../common/stub-util";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder} from "@angular/forms";
 import {SessionService} from "../../../../../common/session.service";
-import {ConsentAuthorizationService} from "../../../../../api/consentAuthorization.service";
 import {ConsentUtil} from "../../../../common/consent-util";
 import {ApiHeaders} from "../../../../../api/api.headers";
+import {ConsentAuth, ConsentAuthorizationService, PsuAuthRequest} from "../../../../../api";
 
 @Component({
   selector: 'consent-app-accounts-consent-review',
@@ -43,12 +43,10 @@ export class AccountsConsentReviewComponent implements OnInit {
   }
 
   onConfirm() {
-    const body = {
-      extras: this.aisConsent.extras
-    };
+    const body = {extras: this.aisConsent.extras} as PsuAuthRequest;
 
     if (this.aisConsent) {
-      body['consentAuth'] = {consent: this.aisConsent.consent};
+      body.consentAuth = {consent: this.aisConsent.consent} as ConsentAuth;
     }
 
     this.consentAuthorisation.embeddedUsingPOST(
