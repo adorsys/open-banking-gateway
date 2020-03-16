@@ -75,4 +75,10 @@ fintech-ui/node_modules:
 fintech-ui: fintech-ui/node_modules
 	cd fintech-examples/fintech-ui && npm run build:prod
 
+consent-ui/node_modules:
+	cd consent-ui && npm install
+
+.PHONY : consent-ui
+consent-ui: consent-ui/node_modules
+	cd consent-ui && npm run build:prod
 
