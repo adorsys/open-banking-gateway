@@ -9,13 +9,18 @@ import {ActivatedRoute} from "@angular/router";
 export class FintechCallbackOkComponent implements OnInit {
 
   serviceSessionId: string;
+  redirectCode: string;
 
   constructor(private activatedRoute: ActivatedRoute) {  }
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
       params => {
+        this.redirectCode = params['redirectCode'];
         this.serviceSessionId = params['serviceSessionId'];
+        if (!this.serviceSessionId) {
+          this.serviceSessionId = localStorage.getItem(this.redirectCode);
+        }
       });
   }
 

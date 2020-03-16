@@ -30,6 +30,7 @@ protocol:
     consent-accounts:
       ok:  ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
       nok: ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
+      result: ${protocol.embedded-ui-base-url}/from-aspsp?dest=#{urlSafe(context.getLastRedirection().getRedirectTo())}&serviceSessionId=#{context.getServiceSessionId()}
     parameters:
       max-array-size: 32
       provide-more: 'http://localhost:5500/parameters/provide-more/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}'

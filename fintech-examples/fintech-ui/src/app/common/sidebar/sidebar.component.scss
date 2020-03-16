@@ -1,0 +1,68 @@
+@import 'src/assets/themes/variables';
+
+.sidebar {
+  background-color: white;
+  padding: 0 1rem;
+
+  .nav-item {
+    background-color: $primary-10;
+    border-radius: 3px;
+
+    &--disabled {
+      background-color: white;
+    }
+  }
+
+  .nav-link {
+    @extend %layout-padding;
+    display: flex;
+    align-content: flex-start;
+    align-items: center;
+
+    .nav__title {
+      padding-left: 10px;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .sidebar {
+    height: 100vh;
+
+    .nav {
+      margin-top: 3rem;
+    }
+  }
+
+  .nav-item {
+    padding: 0.5rem;
+
+    &:not(:last-of-type) {
+      margin-bottom: 10px;
+    }
+  }
+
+  .nav-item--disabled {
+    padding: 0.5rem;
+
+    &:not(:last-of-type) {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .nav-item {
+    margin-left: 1rem;
+  }
+
+  .nav {
+    margin: 1rem 0;
+  }
+}
+
+@media (max-width: 434px) {
+  .nav-item {
+    margin-bottom: 0.8rem;
+  }
+}

@@ -38,6 +38,9 @@ public class ProtocolConfiguration {
 
             @NotBlank
             private String nok;
+
+            @NotBlank
+            private String result;
         }
 
         @Data

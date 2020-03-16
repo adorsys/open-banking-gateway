@@ -23,9 +23,9 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
 
   public selectedAccess;
   public accountAccessForm: FormGroup;
+  public state: AuthConsentState;
 
   private authorizationId: string;
-  private state: AuthConsentState;
 
   constructor(
     private router: Router,

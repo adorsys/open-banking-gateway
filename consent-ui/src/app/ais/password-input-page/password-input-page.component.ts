@@ -2,9 +2,9 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute} from "@angular/router";
 import {StubUtil} from "../common/stub-util";
-import {ConsentAuthorizationService} from "../../api/consentAuthorization.service";
 import {Subscription} from "rxjs";
 import {ApiHeaders} from "../../api/api.headers";
+import {ConsentAuthorizationService} from "../../api";
 
 @Component({
   selector: 'consent-app-password-input-page',
