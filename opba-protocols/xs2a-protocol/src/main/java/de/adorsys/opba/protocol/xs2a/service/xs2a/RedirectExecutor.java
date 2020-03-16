@@ -26,7 +26,7 @@ public class RedirectExecutor {
             Xs2aContext context,
             Function<ProtocolConfiguration.Redirect, String> redirectSelector) {
         String uiScreenUri = redirectSelector.apply(configuration.getRedirect());
-        redirect(execution, context, uiScreenUri, uiScreenUri);
+        redirect(execution, context, uiScreenUri, null);
     }
 
     public void redirect(
