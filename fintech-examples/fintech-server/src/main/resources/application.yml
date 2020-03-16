@@ -1,12 +1,12 @@
 server:
-  port: 18086
+  port: 8086
   controller:
     cookie:
       secure: false
       maxAge: 300
       httpOnly: false
       path: /
-      sameSite: none
+      sameSite: Lax
       # sameSite: Strict|Lax|none
 
 tpp:
