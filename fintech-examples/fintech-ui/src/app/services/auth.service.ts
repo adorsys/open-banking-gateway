@@ -32,9 +32,9 @@ export class AuthService {
   }
 
   logout(): void {
-    this.cookieService.deleteAll();
-    localStorage.clear();
+    this.cookieService.deleteAll('/');
     this.openLoginPage();
+    localStorage.clear();
   }
 
   openLoginPage() {
