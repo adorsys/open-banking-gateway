@@ -7,6 +7,7 @@ import {FormBuilder} from "@angular/forms";
 import {SessionService} from "../../../../../common/session.service";
 import {ConsentAuthorizationService} from "../../../../../api/consentAuthorization.service";
 import {ConsentUtil} from "../../../../common/consent-util";
+import {ApiHeaders} from "../../../../../api/api.headers";
 
 @Component({
   selector: 'consent-app-accounts-consent-review',
@@ -55,8 +56,11 @@ export class AccountsConsentReviewComponent implements OnInit {
       StubUtil.X_XSRF_TOKEN,
       StubUtil.X_REQUEST_ID,
       this.sessionService.getRedirectCode(this.authorizationId),
-      body
+      body,
+      'response'
     ).subscribe(res => {
+      this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+      window.location.href = res.headers.get(ApiHeaders.LOCATION);
     })
   }
 }

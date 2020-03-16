@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate.redirect;
 
+import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.RedirectExecutor;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class Xs2aDoScaRedirect extends ValidatedExecution<Xs2aContext> {
 
+    private final ProtocolConfiguration configuration;
     private final RuntimeService runtimeService;
     private final RedirectExecutor redirectExecutor;
 
@@ -20,6 +22,7 @@ public class Xs2aDoScaRedirect extends ValidatedExecution<Xs2aContext> {
         redirectExecutor.redirect(
                 execution,
                 context,
+                configuration.getRedirect().getToAspsp(),
                 context.getStartScaProcessResponse().getLinks().get("scaRedirect").getHref()
         );
     }

@@ -1,5 +1,6 @@
 protocol:
   redirect:
+    to-aspsp: "#{context.getLastRedirection().getRedirectTo()}"
     parameters:
       provide-more: ${protocol.embedded-ui-base-url}/parameters/provide-more/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}
   gateway-base-url: ${protocol.embedded-ui-base-url}/from-aspsp

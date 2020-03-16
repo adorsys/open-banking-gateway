@@ -7,6 +7,7 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.result.body.ResultBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
+import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;

@@ -27,6 +27,9 @@ public class ProtocolConfiguration {
         @NotNull
         private Parameters parameters;
 
+        @NotBlank
+        private String toAspsp;
+
         @Data
         public static class Consent {
 
@@ -35,7 +38,6 @@ public class ProtocolConfiguration {
 
             @NotBlank
             private String nok;
-
         }
 
         @Data

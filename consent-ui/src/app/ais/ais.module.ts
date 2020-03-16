@@ -5,7 +5,6 @@ import { AisRoutingModule } from './ais-routing.module';
 import { ResultPageComponent } from './result-page/result-page.component';
 import { PasswordInputPageComponent } from './password-input-page/password-input-page.component';
 import { EntryPageComponent } from './entry-page/entry-page.component';
-import { ConfirmConsentPageComponent } from './confirm-consent-page/confirm-consent-page.component';
 import { ScaSelectPageComponent } from './sca-select-page/sca-select-page.component';
 import { TanConfirmPageComponent } from './tan-confirm-page/tan-confirm-page.component';
 import { AccountDetailsComponent } from './common/account-details/account-details.component';
@@ -22,6 +21,8 @@ import {DynamicInputsComponent} from "./entry-page/initiation/common/dynamic-inp
 import {AccountsReferenceComponent} from "./entry-page/initiation/common/accounts-reference/accounts-reference.component";
 import {EntryPageAccountsComponent} from "./entry-page/initiation/accounts/entry-page-accounts/entry-page-accounts.component";
 import {DedicatedAccessComponent} from "./entry-page/initiation/common/dedicated-access/dedicated-access.component";
+import { ToAspspRedirectionComponent } from './to-aspsp-page/to-aspsp-redirection.component';
+import {ConsentInfoComponent} from "./components/consent-info/consent-info.component";
 
 
 @NgModule({
@@ -29,7 +30,6 @@ import {DedicatedAccessComponent} from "./entry-page/initiation/common/dedicated
     ResultPageComponent,
     PasswordInputPageComponent,
     EntryPageComponent,
-    ConfirmConsentPageComponent,
     ScaSelectPageComponent,
     TanConfirmPageComponent,
     AccountDetailsComponent,
@@ -44,7 +44,9 @@ import {DedicatedAccessComponent} from "./entry-page/initiation/common/dedicated
     DynamicInputsComponent,
     AccountsReferenceComponent,
     DedicatedAccessComponent,
-    EntryPageAccountsComponent
+    EntryPageAccountsComponent,
+    ToAspspRedirectionComponent,
+    ConsentInfoComponent
   ],
   imports: [
     CommonModule,

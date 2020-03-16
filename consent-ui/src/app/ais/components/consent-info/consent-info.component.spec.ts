@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConfirmConsentPageComponent } from './confirm-consent-page.component';
+import { ConsentInfoComponent } from './consent-info.component';
 
-describe('ConfirmConsentPageComponent', () => {
-  let component: ConfirmConsentPageComponent;
-  let fixture: ComponentFixture<ConfirmConsentPageComponent>;
+describe('ConsentInfoComponent', () => {
+  let component: ConsentInfoComponent;
+  let fixture: ComponentFixture<ConsentInfoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfirmConsentPageComponent ]
+      declarations: [ ConsentInfoComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConfirmConsentPageComponent);
+    fixture = TestBed.createComponent(ConsentInfoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

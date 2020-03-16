@@ -26,9 +26,10 @@ spring:
 
 protocol:
   redirect:
+    to-aspsp: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
     consent-accounts:
-      ok:  ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
-      nok: ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+      ok:  ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+      nok: ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
     parameters:
       max-array-size: 32
       provide-more: 'http://localhost:5500/parameters/provide-more/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}'

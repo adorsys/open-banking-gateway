@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.facade.services;
+package de.adorsys.opba.protocol.facade.services.context;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +15,8 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
+import de.adorsys.opba.protocol.facade.services.FacadeEncryptionServiceFactory;
+import de.adorsys.opba.protocol.facade.services.ServiceSessionWithEncryption;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -24,20 +26,23 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
 import java.util.UUID;
 
-@Service
+@Service(ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER)
 @RequiredArgsConstructor
-public class ServiceContextProvider {
+public class ServiceContextProviderForFintech implements ServiceContextProvider {
+
+    public static final String FINTECH_CONTEXT_PROVIDER = "FINTECH_CONTEXT_PROVIDER";
 
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .findAndRegisterModules()
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
-    private final AuthenticationSessionRepository authSessions;
+    protected final AuthenticationSessionRepository authSessions;
     private final ServiceSessionRepository serviceSessions;
     private final SecretKeyOperations secretKeyOperations;
     private final FacadeEncryptionServiceFactory encryptionFactory;
 
+    @Override
     @Transactional
     @SneakyThrows
     public <T extends FacadeServiceableGetter> ServiceContext<T> provide(T request) {
@@ -56,11 +61,32 @@ public class ServiceContextProvider {
                 // Currently 1-1 auth-session to service session
                 .futureAuthSessionId(session.getId())
                 .futureRedirectCode(UUID.randomUUID())
+                .futureAspspRedirectCode(UUID.randomUUID())
                 .request(request)
                 .authContext(null == authSession ? null : authSession.getContext())
                 .fintechRedirectOkUri(session.getFintechOkUri())
                 .fintechRedirectNokUri(session.getFintechNokUri())
                 .build();
+    }
+
+    protected <T extends FacadeServiceableGetter> void validateRedirectCode(T request, AuthSession session) {
+        if (!Objects.equals(session.getRedirectCode(), request.getFacadeServiceable().getRedirectCode())) {
+            throw new IllegalArgumentException("Wrong redirect code");
+        }
+    }
+
+    private <T extends FacadeServiceableGetter> AuthSession validateAuthSession(T request) {
+        if (Strings.isNullOrEmpty(request.getFacadeServiceable().getRedirectCode())) {
+            throw new IllegalArgumentException("Missing redirect code");
+        }
+
+        UUID sessionId = UUID.fromString(request.getFacadeServiceable().getAuthorizationSessionId());
+        AuthSession session = authSessions.findById(sessionId)
+            .orElseThrow(() -> new IllegalStateException("No auth session " + sessionId));
+
+        validateRedirectCode(request, session);
+
+        return session;
     }
 
     private <T extends FacadeServiceableGetter> ServiceSessionWithEncryption extractOrCreateServiceSession(
@@ -164,21 +190,5 @@ public class ServiceContextProvider {
         }
 
         return null;
-    }
-
-    private <T extends FacadeServiceableGetter> AuthSession validateAuthSession(T request) {
-        if (Strings.isNullOrEmpty(request.getFacadeServiceable().getRedirectCode())) {
-            throw new IllegalArgumentException("Missing redirect code");
-        }
-
-        UUID sessionId = UUID.fromString(request.getFacadeServiceable().getAuthorizationSessionId());
-        AuthSession session = authSessions.findById(sessionId)
-                .orElseThrow(() -> new IllegalStateException("No auth session " + sessionId));
-
-        if (!Objects.equals(session.getRedirectCode(), request.getFacadeServiceable().getRedirectCode())) {
-            throw new IllegalArgumentException("Wrong redirect code");
-        }
-
-        return session;
     }
 }

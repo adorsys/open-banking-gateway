@@ -287,7 +287,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
         return self();
     }
 
-    public AccountInformationResult user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_and_gets_303() {
+    public AccountInformationResult user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_and_gets_202() {
         String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json");
 
         ExtractableResponse<Response> response = RestAssured
@@ -300,7 +300,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
                 .when()
                     .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
                 .then()
-                    .statusCode(HttpStatus.SEE_OTHER.value())
+                    .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
         String responseLog = ((RestAssuredResponseImpl) response).getLogRepository().getResponseLog();

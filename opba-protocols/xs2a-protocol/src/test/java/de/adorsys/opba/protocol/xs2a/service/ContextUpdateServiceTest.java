@@ -32,7 +32,7 @@ class ContextUpdateServiceTest extends BaseMockitoTest {
     @Test
     void updateContextRetriesOnFlowableOptimisticLockingException() {
         String execId = "FOO-BAR";
-        String value = "CTX";
+        String value = "CTXF";
 
         when(runtimeService.getVariable(execId, GlobalConst.CONTEXT)).thenReturn(value);
         doThrow(new FlowableOptimisticLockingException("FAIL")).doAnswer(inv -> null)

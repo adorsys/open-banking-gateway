@@ -9,6 +9,7 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_I
 import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
+import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -34,10 +35,15 @@ public class RedirectionOnlyToOkMapper {
     }
 
     protected ResponseEntity<?> responseForRedirection(FacadeResultRedirectable<?, ?> result, ResponseEntity.BodyBuilder response) {
-        return response
+         response
             .header(AUTHORIZATION_SESSION_ID, result.getAuthorizationSessionId())
-            .header(REDIRECT_CODE, result.getRedirectCode())
-            .body(result.getCause());
+            .header(REDIRECT_CODE, result.getRedirectCode());
+
+         if (null != result.getRedirectionTo()) {
+             response.header(LOCATION, result.getRedirectionTo().toASCIIString());
+         }
+
+         return response.body(result.getCause());
     }
 
     protected ResponseEntity.BodyBuilder putDefaultHeaders(FacadeResult<?> result, ResponseEntity.BodyBuilder builder) {

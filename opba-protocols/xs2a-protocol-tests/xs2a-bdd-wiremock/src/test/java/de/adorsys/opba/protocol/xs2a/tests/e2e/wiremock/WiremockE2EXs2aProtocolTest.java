@@ -187,7 +187,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .fintech_calls_list_accounts_for_anton_brueckner_no_ip_address();
 
         then()
-                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_and_gets_303();
+                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_and_gets_202();
     }
 
 }

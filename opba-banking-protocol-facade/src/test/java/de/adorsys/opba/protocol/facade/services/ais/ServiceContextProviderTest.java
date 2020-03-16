@@ -19,10 +19,11 @@ import de.adorsys.opba.protocol.facade.config.ApplicationTest;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.RedirectionCause;
 import de.adorsys.opba.protocol.facade.services.ProtocolResultHandler;
-import de.adorsys.opba.protocol.facade.services.ServiceContextProvider;
+import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
@@ -32,6 +33,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.net.URI;
 import java.util.UUID;
 
+import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -53,6 +55,7 @@ public class ServiceContextProviderTest {
     private ProtocolResultHandler handler;
 
     @Autowired
+    @Qualifier(FINTECH_CONTEXT_PROVIDER)
     private ServiceContextProvider serviceContextProvider;
 
     @Autowired
