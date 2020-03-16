@@ -1,7 +1,7 @@
 <nav class="navbar navbar-light py-3" *ngIf="isLoggedIn()">
   <a class="navbar-brand text-primary mr-4" routerLink="/">
-    <img class="logo" />
-    <span class="ml-3">FintechUI</span>
+    <img class="logo" [src]="" />
+    <span class="ml-3">Fintechui</span>
   </a>
   <ul class="nav">
     <li class="dropdown ml-auto">
@@ -11,7 +11,8 @@
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
-        >{{ getUserName() }}
+      >
+        {{ getUserName() }}
       </a>
       <div class="dropdown-menu dropdown-menu-right">
         <a (click)="onLogout()" [routerLinkActive]="['active']" class="dropdown-item clickable pb-2">
