@@ -22,9 +22,9 @@ export class AccountsConsentReviewComponent implements OnInit {
   public aspspName = StubUtil.ASPSP_NAME;
 
   public static ROUTE = SharedRoutes.REVIEW;
+  public aisConsent: AisConsentToGrant;
 
   private authorizationId: string;
-  private aisConsent: AisConsentToGrant;
 
   constructor(
     private router: Router,

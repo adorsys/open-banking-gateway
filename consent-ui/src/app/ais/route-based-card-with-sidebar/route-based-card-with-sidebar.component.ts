@@ -8,7 +8,7 @@ import {CustomizeService} from '../common/services/customize.service';
 })
 export class RouteBasedCardWithSidebarComponent implements OnInit {
 
-  constructor(private customizeService: CustomizeService) { }
+  constructor(public customizeService: CustomizeService) { }
 
   ngOnInit() {
   }

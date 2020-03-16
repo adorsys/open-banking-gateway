@@ -16,8 +16,9 @@ export class ConsentInfoComponent implements OnInit {
   public finTechName = StubUtil.FINTECH_NAME;
   public aspspName = StubUtil.ASPSP_NAME;
 
+  public aisConsent: AisConsentToGrant;
+
   private authorizationId: string;
-  private aisConsent: AisConsentToGrant;
 
   constructor(
     private router: Router,
