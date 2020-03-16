@@ -30,10 +30,21 @@ public class RedirectExecutor {
     }
 
     public void redirect(
-            DelegateExecution execution,
-            Xs2aContext context,
-            String uiScreenUriSpel,
-            String destinationUri) {
+        DelegateExecution execution,
+        Xs2aContext context,
+        String uiScreenUriSpel,
+        String destinationUri
+    ) {
+        redirect(execution, context, uiScreenUriSpel, destinationUri, Redirect.RedirectBuilder::build);
+    }
+
+    public void redirect(
+        DelegateExecution execution,
+        Xs2aContext context,
+        String uiScreenUriSpel,
+        String destinationUri,
+        Function<Redirect.RedirectBuilder, Object> eventFactory
+    ) {
         setDestinationUriInContext(execution, destinationUri);
 
         URI screenUri = URI.create(
@@ -50,7 +61,7 @@ public class RedirectExecutor {
 
         setUiUriInContext(execution, screenUri);
 
-        applicationEventPublisher.publishEvent(redirect.build());
+        applicationEventPublisher.publishEvent(eventFactory.apply(redirect));
     }
 
     private void setUiUriInContext(DelegateExecution execution, URI screenUri) {

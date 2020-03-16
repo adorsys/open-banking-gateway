@@ -66,6 +66,8 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .and()
                 .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
                 .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .and()
                 .open_banking_redirect_from_aspsp_ok_webhook_called();
         then()
                 .open_banking_has_consent_for_anton_brueckner_account_list()
@@ -84,6 +86,8 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .fintech_calls_list_transactions_for_anton_brueckner(WiremockConst.ANTON_BRUECKNER_RESOURCE_ID)
                 .and()
                 .user_anton_brueckner_provided_initial_parameters_to_list_transactions_with_single_account_consent()
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
                 .and()
                 .open_banking_redirect_from_aspsp_ok_webhook_called();
         then()

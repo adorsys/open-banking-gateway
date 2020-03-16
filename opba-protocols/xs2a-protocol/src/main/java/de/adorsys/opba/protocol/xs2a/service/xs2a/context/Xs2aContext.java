@@ -40,5 +40,8 @@ public class Xs2aContext extends BaseContext {
     // TODO: protect from overriding reflection https://github.com/adorsys/open-banking-gateway/issues/251
     private String redirectUriNok;
 
+    private String fintechRedirectUriOk;
+    private String fintechRedirectUriNok;
+
     private boolean redirectConsentOk;
 }

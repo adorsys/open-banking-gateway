@@ -15,14 +15,13 @@ export class FromAspspComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute) {  }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(
-      params => {
-        this.submissionUri = this.submissionUri + params['authId'] + '/fromAspsp/' + params['state'] + '/ok';
-      }
-    );
     this.activatedRoute.queryParams.subscribe(
       params => {
-        this.submissionUri = this.submissionUri + '?redirectCode=' + params['redirectCode'];
+        this.submissionUri = params.dest;
+        console.log(params.dest)
+        if (params.dest.includes('/fintech-callback/ok')) {
+          this.submissionUri += '?serviceSessionId=' + params.serviceSessionId;
+        }
       }
     );
   }

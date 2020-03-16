@@ -3,9 +3,9 @@ import {ActivatedRoute, ActivatedRouteSnapshot, Router} from "@angular/router";
 import {EntryPageTransactionsComponent} from "../transactions/entry-page-transactions/entry-page-transactions.component";
 import {EntryPageAccountsComponent} from "../accounts/entry-page-accounts/entry-page-accounts.component";
 import {SessionService} from "../../../../common/session.service";
-import {ConsentAuthorizationService} from "../../../../api/consentAuthorization.service";
 import {ApiHeaders} from "../../../../api/api.headers";
 import {AuthConsentState, AuthViolation} from "../../../common/dto/auth-state";
+import {ConsentAuthorizationService} from "../../../../api";
 
 @Component({
   selector: 'consent-app-consent-initiate',

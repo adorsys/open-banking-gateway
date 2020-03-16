@@ -3,11 +3,11 @@ import {SharedRoutes} from "../../common/shared-routes";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormBuilder} from "@angular/forms";
 import {SessionService} from "../../../../../common/session.service";
-import {ConsentAuthorizationService} from "../../../../../api/consentAuthorization.service";
 import {AccountAccessLevel, AisConsentToGrant} from "../../../../common/dto/ais-consent";
 import {StubUtil} from "../../../../common/stub-util";
 import {ConsentUtil} from "../../../../common/consent-util";
 import {ApiHeaders} from "../../../../../api/api.headers";
+import {ConsentAuth, ConsentAuthorizationService, PsuAuthRequest} from "../../../../../api";
 
 @Component({
   selector: 'consent-app-transactions-consent-review',
@@ -22,8 +22,9 @@ export class TransactionsConsentReviewComponent implements OnInit {
 
   public static ROUTE = SharedRoutes.REVIEW;
 
+  public aisConsent: AisConsentToGrant;
+
   private authorizationId: string;
-  private aisConsent: AisConsentToGrant;
 
   constructor(
     private router: Router,
@@ -42,12 +43,10 @@ export class TransactionsConsentReviewComponent implements OnInit {
   }
 
   onConfirm() {
-    const body = {
-      extras: this.aisConsent.extras
-    };
+    const body = {extras: this.aisConsent.extras} as PsuAuthRequest;
 
     if (this.aisConsent) {
-      body['consentAuth'] = {consent: this.aisConsent.consent};
+      body.consentAuth = {consent: this.aisConsent.consent} as ConsentAuth;
     }
 
     this.consentAuthorisation.embeddedUsingPOST(
