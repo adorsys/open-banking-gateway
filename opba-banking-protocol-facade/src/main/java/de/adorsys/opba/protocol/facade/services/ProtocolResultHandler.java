@@ -1,14 +1,13 @@
 package de.adorsys.opba.protocol.facade.services;
 
 import de.adorsys.opba.db.domain.entity.BankProtocol;
-import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
-import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
+import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationRequiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
@@ -17,12 +16,10 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErr
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
-import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.Cause;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
-import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.RedirectionCause;
 import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeSuccessResult;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -33,9 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.net.URI;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static de.adorsys.opba.db.domain.entity.ProtocolAction.AUTHORIZATION;
 
@@ -43,7 +38,6 @@ import static de.adorsys.opba.db.domain.entity.ProtocolAction.AUTHORIZATION;
 @RequiredArgsConstructor
 public class ProtocolResultHandler {
 
-    private final CauseMapper<ValidationIssue, Cause> validationIssueMapper;
     private final BankProtocolRepository protocolRepository;
     private final EntityManager entityManager;
     private final AuthenticationSessionRepository authenticationSessions;
@@ -87,8 +81,8 @@ public class ProtocolResultHandler {
     protected <O, R extends FacadeServiceableGetter> FacadeResult<O> handleError(
         ErrorResult<O> result, UUID xRequestId, ServiceContext<R> session
     ) {
-        FacadeRedirectErrorResult<O, RedirectionCause> mappedResult =
-            (FacadeRedirectErrorResult<O, RedirectionCause>) FacadeRedirectErrorResult.ERROR_FROM_PROTOCOL.map(result);
+        FacadeRedirectErrorResult<O, AuthStateBody> mappedResult =
+            (FacadeRedirectErrorResult<O, AuthStateBody>) FacadeRedirectErrorResult.ERROR_FROM_PROTOCOL.map(result);
 
         addAuthorizationSessionData(result, xRequestId, session, mappedResult);
         mappedResult.setRedirectionTo(URI.create(session.getFintechRedirectNokUri()));
@@ -98,15 +92,15 @@ public class ProtocolResultHandler {
     protected <O, R extends FacadeServiceableGetter> FacadeResult<O> handleConsentAcquired(
         ConsentAcquiredResult<O, ?> result, UUID xRequestId, ServiceContext<R> session
     ) {
-        FacadeRedirectResult<O, RedirectionCause> mappedResult =
-            (FacadeRedirectResult<O, RedirectionCause>) FacadeRedirectResult.FROM_PROTOCOL.map(result);
+        FacadeRedirectResult<O, AuthStateBody> mappedResult =
+            (FacadeRedirectResult<O, AuthStateBody>) FacadeRedirectResult.FROM_PROTOCOL.map(result);
 
         addAuthorizationSessionData(result, xRequestId, session, mappedResult);
         mappedResult.setRedirectionTo(result.getRedirectionTo());
         return mappedResult;
     }
 
-    protected <O, R extends FacadeServiceableGetter> FacadeResultRedirectable<O, RedirectionCause> handleRedirect(
+    protected <O, R extends FacadeServiceableGetter> FacadeResultRedirectable<O, AuthStateBody> handleRedirect(
         RedirectionResult<O, ?> result, UUID xRequestId, ServiceContext<R> session
     ) {
         if (!authSessionFromDb(session.getServiceSessionId()).isPresent()) {
@@ -116,26 +110,26 @@ public class ProtocolResultHandler {
         return doHandleRedirect(result, xRequestId, session);
     }
 
-    protected <O> FacadeStartAuthorizationResult<O, RedirectionCause> handleAuthorizationStart(
+    protected <O> FacadeStartAuthorizationResult<O, AuthStateBody> handleAuthorizationStart(
         RedirectionResult<O, ?> result, UUID xRequestId, ServiceContext session
     ) {
-        FacadeStartAuthorizationResult<O, RedirectionCause> mappedResult =
-            (FacadeStartAuthorizationResult<O, RedirectionCause>) FacadeStartAuthorizationResult.FROM_PROTOCOL.map(result);
+        FacadeStartAuthorizationResult<O, AuthStateBody> mappedResult =
+            (FacadeStartAuthorizationResult<O, AuthStateBody>) FacadeStartAuthorizationResult.FROM_PROTOCOL.map(result);
 
         AuthSession auth = addAuthorizationSessionData(result, xRequestId, session, mappedResult);
-        mappedResult.setCause(mapCause(auth.getParent().getService().getAction(), result));
+        mappedResult.setCause(mapCause(result));
         setAspspRedirectCodeIfRequired(result, auth, session);
         return mappedResult;
     }
 
-    protected <O> FacadeRedirectResult<O, RedirectionCause> doHandleRedirect(
+    protected <O> FacadeRedirectResult<O, AuthStateBody> doHandleRedirect(
         RedirectionResult<O, ?> result, UUID xRequestId, ServiceContext session
     ) {
-        FacadeRedirectResult<O, RedirectionCause> mappedResult =
-            (FacadeRedirectResult<O, RedirectionCause>) FacadeRedirectResult.FROM_PROTOCOL.map(result);
+        FacadeRedirectResult<O, AuthStateBody> mappedResult =
+            (FacadeRedirectResult<O, AuthStateBody>) FacadeRedirectResult.FROM_PROTOCOL.map(result);
 
         AuthSession auth = addAuthorizationSessionData(result, xRequestId, session, mappedResult);
-        mappedResult.setCause(mapCause(auth.getParent().getService().getAction(), result));
+        mappedResult.setCause(mapCause(result));
         setAspspRedirectCodeIfRequired(result, auth, session);
         return mappedResult;
     }
@@ -193,13 +187,9 @@ public class ProtocolResultHandler {
         return authenticationSessions.save(it);
     }
 
-    protected RedirectionCause mapCause(ProtocolAction action, RedirectionResult result) {
+    protected AuthStateBody mapCause(RedirectionResult result) {
         if (result instanceof ValidationErrorResult && null != result.getCause()) {
-            Set<ValidationIssue> issues = (Set<ValidationIssue>) result.getCause();
-            return new RedirectionCause(
-                action,
-                issues.stream().map(validationIssueMapper::map).collect(Collectors.toSet())
-            );
+            return ((AuthStateBody) result.getCause());
         }
 
         return null;

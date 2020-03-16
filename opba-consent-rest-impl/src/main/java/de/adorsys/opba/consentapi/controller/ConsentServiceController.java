@@ -1,6 +1,9 @@
 package de.adorsys.opba.consentapi.controller;
 
+import de.adorsys.opba.consentapi.Const;
+import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
 import de.adorsys.opba.consentapi.model.generated.PsuAuthRequest;
+import de.adorsys.opba.consentapi.model.generated.ScaUserData;
 import de.adorsys.opba.consentapi.resource.generated.ConsentAuthorizationApi;
 import de.adorsys.opba.consentapi.service.FromAspspMapper;
 import de.adorsys.opba.consentapi.service.mapper.AisConsentMapper;
@@ -9,6 +12,8 @@ import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.fromaspsp.FromAspspRequest;
+import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
+import de.adorsys.opba.protocol.api.dto.result.body.ScaMethod;
 import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.authorization.FromAspspRedirectHandler;
@@ -18,10 +23,14 @@ import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
 import de.adorsys.opba.restapi.shared.service.RedirectionOnlyToOkMapper;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+
+import static de.adorsys.opba.consentapi.Const.SPRING_KEYWORD;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +40,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
     private final AisExtrasMapper extrasMapper;
     private final AisConsentMapper aisConsentMapper;
     private final FromAspspMapper aspspMapper;
+    private final AuthStateBodyToApiMapper authStateMapper;
     private final RedirectionOnlyToOkMapper redirectionOnlyToOkMapper;
     private final FacadeResponseMapper mapper;
     private final GetAuthorizationStateService authorizationStateService;
@@ -49,7 +59,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                                 .build()
                         )
                         .build()
-        ).thenApply(redirectionOnlyToOkMapper::translate);
+        ).thenApply((FacadeResult<AuthStateBody> result) -> redirectionOnlyToOkMapper.translate(result, authStateMapper));
     }
 
     @Override
@@ -118,5 +128,16 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
         public T map(T facadeEntity) {
             return facadeEntity;
         }
+    }
+
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
+    public interface AuthStateBodyToApiMapper extends FacadeResponseBodyToRestBodyMapper<InlineResponse200, AuthStateBody> {
+
+        @Mapping(source = "facade", target = "consentAuth")
+        InlineResponse200 map(AuthStateBody facade);
+
+        @Mapping(source = "key", target = "id")
+        @Mapping(source = "value", target = "methodValue")
+        ScaUserData fromScaMethod(ScaMethod method);
     }
 }

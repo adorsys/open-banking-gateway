@@ -1,9 +1,4 @@
-export interface AuthViolation {
-  type: string;
-  scope: string;
-  code: string;
-  captionMessage: string;
-}
+import {AuthViolation} from "../../../api";
 
 export class AuthConsentState {
   constructor(public violations?: AuthViolation[]) {

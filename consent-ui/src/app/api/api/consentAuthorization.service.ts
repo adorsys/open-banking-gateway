@@ -165,7 +165,7 @@ export class ConsentAuthorizationService {
 
     /**
      * Generic challenge response end point for updating consent session with PSU authentication data while requesting remaining challenges for the ongoing authorization process. 
-     * Update consent session with PSU auth data whereby requesting remaining challenges for the ongoing authorization process.  
+     * Update consent session with PSU auth data whereby requesting remaining challenges for the ongoing authorization process. Returns 202 if one should proceed to some other link. Link to follow is in \&#39;Location\&#39; header. 
      * @param authId Used to distinguish between different consent authorization processes started by the same PSU. Also included in the corresponding cookie path to limit visibility of the consent cookie to the corresponding consent process. 
      * @param xRequestID Unique ID that identifies this request through common workflow. Shall be contained in HTTP Response as well. 
      * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie. The token matches the auth-id included in the requestpath and prefixing the cookie. 

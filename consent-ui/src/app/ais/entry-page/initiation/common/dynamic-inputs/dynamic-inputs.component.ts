@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {AuthViolation} from "../../../../common/dto/auth-state";
+import {AuthViolation} from "../../../../../api";
 
 @Component({
   selector: 'consent-app-dynamic-inputs',

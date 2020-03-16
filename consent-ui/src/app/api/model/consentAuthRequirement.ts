@@ -9,13 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ConsentAuthRequirement } from './consentAuthRequirement';
+import { ConsentAuthRequiredField } from './consentAuthRequiredField';
 
 
 /**
- * Contains information used to legitimate a request.
+ * Transport object for consent API request response
  */
-export interface AuthorizeRequest { 
-    consentAuth?: ConsentAuthRequirement;
+export interface ConsentAuthRequirement { 
+    fields?: Array<ConsentAuthRequiredField>;
 }
 
