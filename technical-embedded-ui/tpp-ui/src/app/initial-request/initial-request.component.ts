@@ -3,9 +3,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {Consts} from '../consts';
 import {HttpClient} from '@angular/common/http';
 import {ActivatedRoute} from '@angular/router';
-import * as _moment from 'moment';
-
-const moment = _moment;
+import {Helpers} from "../app.component";
 
 @Component({
   selector: 'app-initial-request',
@@ -38,8 +36,10 @@ export class InitialRequestComponent implements OnInit {
   dateTo = new FormControl();
   bookingStatus = BookingStatus.BOTH;
 
+  private redirectCode = Helpers.uuidv4();
+
   constructor(private activatedRoute: ActivatedRoute, private client: HttpClient) {
-    this.fintechRedirectUriOk.setValue('http://localhost:5500/fintech-callback/ok');
+    this.fintechRedirectUriOk.setValue('http://localhost:5500/fintech-callback/ok?redirectCode=' + this.redirectCode);
     this.fintechRedirectUriNok.setValue('http://localhost:5500/fintech-callback/nok');
     this.fintechUserId.setValue('Anton_Brueckner');
     this.authorization.setValue('MY-SUPER-FINTECH-ID');
@@ -91,12 +91,14 @@ export class InitialRequestComponent implements OnInit {
       }).subscribe(res => {
       console.log("status:" + res.status);
         switch(res.status) {
-          case 200: console.log("no redirect:")
+          case 200:
+            console.log("no redirect:")
             this.resultstructure = JSON.stringify(res.body, null, 2);
           break;
           default:
-          console.log("redirect to ",res.headers.get('Location'));
-          window.location.href = res.headers.get('Location');
+            console.log("redirect to ",res.headers.get('Location'));
+            localStorage.setItem(this.redirectCode, res.headers.get("Service-Session-ID"));
+            window.location.href = res.headers.get('Location');
       }
     });
   }
