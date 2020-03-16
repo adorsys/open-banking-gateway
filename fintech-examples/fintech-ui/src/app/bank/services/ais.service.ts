@@ -24,7 +24,7 @@ export class AisService {
               serviceSessionId: response.headers.get('Service-Session-ID'),
               redirectCode: response.headers.get('Redirect-Code')
             });
-            window.location.href = response.headers.get('location') + '&' + additionalParameters;
+            window.location.href = response.headers.get('location');
             break;
           case 200:
             console.log('I got the accounts and I want to show them ;-)');
