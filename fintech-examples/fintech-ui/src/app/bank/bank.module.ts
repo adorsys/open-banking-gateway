@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { ListAccountsModule } from './list-accounts/list-accounts.module';
 
 @NgModule({
-  declarations: [SidebarComponent, BankComponent],
+  declarations: [SidebarComponent, BankComponent, SidebarComponent],
   imports: [CommonModule, ShareModule, BankRoutingModule, ListAccountsModule]
 })
 export class BankModule {}
