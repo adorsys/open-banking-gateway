@@ -1,7 +1,7 @@
 <div class="sidebar">
   <ul class="nav flex-md-column">
     <li class="nav-item{{ showListAccounts ? '' : '--disabled' }}">
-      <a class="nav-link" [routerLink]>
+      <a class="nav-link" [routerLink]="getRouterLinkListAccounts()">
         <div class="icon__container">
           <img alt="bank_cards" class="text-primary" src="assets/icons/icons8-bank_cards.svg" />
         </div>
@@ -16,7 +16,7 @@
         <span class="nav__title">Transfer</span>
       </a>
     </li>
-    <li class="nav-item sidebar-element">
+    <li class="nav-item{{ showSettings ? '' : '--disabled' }} sidebar-element">
       <a class="nav-link" [routerLink]>
         <div class="icon__container">
           <img alt="settings" class="text-primary" src="assets/icons/icons8-maintenance.svg" />

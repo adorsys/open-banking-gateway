@@ -9,7 +9,7 @@
     border-radius: 3px;
 
     &--disabled {
-      background-color: white;
+      background-color: #efefef;
     }
   }
 
@@ -49,6 +49,11 @@
       margin-bottom: 10px;
     }
   }
+}
+
+.disabled {
+  pointer-events: none;
+  display: none;
 }
 
 @media (max-width: 767px) {

@@ -11,20 +11,25 @@ export class SidebarComponent implements OnInit {
   showListAccounts = false;
   showListTransactions = false;
   showInitiatePayment = false;
+  showSettings = false;
   bankId: string;
   bankName: string;
 
   constructor(private bankProfileService: BankProfileService, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.bankId = this.route.snapshot.paramMap.get('id');
-    console.log('bankid', this.bankId);
+    this.bankId = this.route.snapshot.paramMap.get('bankid');
+    console.log('sidebar gets bankid', this.bankId);
     this.bankProfileService.getBankProfile(this.bankId).subscribe(response => {
       console.log('bank profile returns:' + JSON.stringify(response));
       this.bankName = response.bankName;
       this.showListAccounts = response.services.includes('LIST_ACCOUNTS');
       this.showListTransactions = response.services.includes('LIST_TRANSACTIONS');
-      this.showInitiatePayment = response.services.includes('UPDATE_AUTHORIZATION');
+      this.showInitiatePayment = response.services.includes('INITIATE_PAYMENT');
     });
+  }
+
+  getRouterLinkListAccounts(): string {
+    return this.showListAccounts ? 'account' : '';
   }
 }
