@@ -71,3 +71,14 @@ services:
     networks:
       - opba-net
 
+  consent-ui:
+    environment:
+      - BACKEND_URL=http://open-banking-gateway:8085
+    restart: on-failure
+    build:
+      context: consent-ui
+      dockerfile: Dockerfile
+    ports:
+      - "24200:4200"
+    networks:
+      - opba-net
