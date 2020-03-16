@@ -22,8 +22,9 @@ export class TransactionsConsentReviewComponent implements OnInit {
 
   public static ROUTE = SharedRoutes.REVIEW;
 
+  public aisConsent: AisConsentToGrant;
+
   private authorizationId: string;
-  private aisConsent: AisConsentToGrant;
 
   constructor(
     private router: Router,
