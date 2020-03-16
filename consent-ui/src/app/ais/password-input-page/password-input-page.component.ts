@@ -5,6 +5,7 @@ import {StubUtil} from "../common/stub-util";
 import {Subscription} from "rxjs";
 import {ApiHeaders} from "../../api/api.headers";
 import {ConsentAuthorizationService} from "../../api";
+import {SessionService} from "../../common/session.service";
 
 @Component({
   selector: 'consent-app-password-input-page',
@@ -19,7 +20,7 @@ export class PasswordInputPageComponent implements OnInit, OnDestroy {
 
   constructor(private consentAuthorizationService: ConsentAuthorizationService,
               private activatedRoute: ActivatedRoute,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder, private sessionService: SessionService) {
   }
 
   ngOnInit() {
@@ -53,6 +54,7 @@ export class PasswordInputPageComponent implements OnInit, OnDestroy {
       ).subscribe(
         res => {
           // redirect to the provided location
+          this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
           console.log("REDIRECTING TO: " + res.headers.get(ApiHeaders.LOCATION));
           window.location.href = res.headers.get(ApiHeaders.LOCATION);
         },

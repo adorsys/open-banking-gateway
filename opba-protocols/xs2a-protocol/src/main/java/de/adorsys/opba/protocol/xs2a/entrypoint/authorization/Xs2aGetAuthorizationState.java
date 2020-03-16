@@ -42,7 +42,10 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
             result = readFromHistory(executionId);
         }
 
-        URI redirectToAsUri = null == result.getRedirect() ? null : URI.create(result.getRedirect().getRedirectTo());
+        URI redirectToAsUri =
+            null == result.getRedirect() || null == result.getRedirect().getRedirectTo()
+            ? null
+            : URI.create(result.getRedirect().getRedirectTo());
 
         return CompletableFuture.completedFuture(
             new ContextBasedValidationErrorResult<>(redirectToAsUri, executionId, result.getIssues().getViolations())
