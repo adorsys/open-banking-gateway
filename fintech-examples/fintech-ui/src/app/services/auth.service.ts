@@ -5,12 +5,15 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FinTechAuthorizationService } from '../api';
 import { Credentials } from '../models/credentials.model';
+import { Consts } from '../common/consts';
+import * as uuid from 'uuid';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private XSRF_TOKEN = 'XSRF-TOKEN';
+  private credentials: Credentials;
 
   constructor(
     private router: Router,
@@ -19,19 +22,19 @@ export class AuthService {
   ) {}
 
   login(credentials: Credentials): Observable<boolean> {
-    return this.finTechAuthorizationService
-      .loginPOST('99391c7e-ad88-49ec-a2ad-99ddcb1f7721', credentials, 'response')
-      .pipe(
-        map(loginResponse => {
-          // if login response is ok and cookie exist then the login was successful
-          return loginResponse.ok && this.cookieService.check(this.XSRF_TOKEN);
-        })
-      );
+    return this.finTechAuthorizationService.loginPOST(uuid.v4(), credentials, 'response').pipe(
+      map(loginResponse => {
+        // if login response is ok and cookie exist then the login was successful
+        localStorage.setItem(Consts.USERNAME, credentials.username);
+        return loginResponse.ok && this.cookieService.check(this.XSRF_TOKEN);
+      })
+    );
   }
 
   logout(): void {
-    this.cookieService.deleteAll();
+    this.cookieService.deleteAll('/');
     this.openLoginPage();
+    localStorage.clear();
   }
 
   openLoginPage() {

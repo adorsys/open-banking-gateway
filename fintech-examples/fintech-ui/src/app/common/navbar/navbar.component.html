@@ -1,0 +1,27 @@
+<nav class="navbar navbar-light py-3" *ngIf="isLoggedIn()">
+  <a class="navbar-brand text-primary mr-4" routerLink="/">
+    <img class="logo" [src]="" />
+    <span class="ml-3">Fintechui</span>
+  </a>
+  <ul class="nav">
+    <li class="dropdown ml-auto">
+      <a
+        class="nav-item dropdown-toggle mr-3 no-underline clickable"
+        id="dropdownMenuButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        {{ getUserName() }}
+      </a>
+      <div class="dropdown-menu dropdown-menu-right">
+        <a (click)="onLogout()" [routerLinkActive]="['active']" class="dropdown-item clickable pb-2">
+          <div>
+            <img src="" />
+            <span class="nav__title"> Sign out</span>
+          </div>
+        </a>
+      </div>
+    </li>
+  </ul>
+</nav>
