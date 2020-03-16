@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.facade.dto.result.torest.redirectable;
 
+import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +16,7 @@ import static de.adorsys.opba.protocol.api.dto.headers.ResponseHeaders.X_ERROR_M
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class FacadeRedirectErrorResult<T, C extends RedirectionCause> extends FacadeResultRedirectable<T, C> {
+public class FacadeRedirectErrorResult<T, C extends AuthStateBody> extends FacadeResultRedirectable<T, C> {
 
     public static final ErrorFromProtocol ERROR_FROM_PROTOCOL = Mappers.getMapper(ErrorFromProtocol.class);
 

@@ -769,11 +769,32 @@ components:
         currency:
           type: string
 
+    AuthViolation:
+      title: AuthViolation
+      type: object
+      description: Missing parameters required for authorization
+      properties:
+        type:
+          type: string
+        scope:
+          type: string
+        code:
+          type: string
+        captionMessage:
+          type: string
+
     ConsentAuth:
       title: ConsentAuth
       type: object
       description: Transport object for consent API request response 
       properties:
+        action:
+          type: string
+          enum: [LIST_ACCOUNTS, LIST_TRANSACTIONS]
+        violations:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthViolation'
         accounts:
           type: array
           items:

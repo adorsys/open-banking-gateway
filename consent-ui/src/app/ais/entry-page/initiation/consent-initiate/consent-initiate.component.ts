@@ -4,8 +4,9 @@ import {EntryPageTransactionsComponent} from "../transactions/entry-page-transac
 import {EntryPageAccountsComponent} from "../accounts/entry-page-accounts/entry-page-accounts.component";
 import {SessionService} from "../../../../common/session.service";
 import {ApiHeaders} from "../../../../api/api.headers";
-import {AuthConsentState, AuthViolation} from "../../../common/dto/auth-state";
-import {ConsentAuthorizationService} from "../../../../api";
+import {AuthConsentState} from "../../../common/dto/auth-state";
+import {ConsentAuth, ConsentAuthorizationService, InlineResponse200} from "../../../../api";
+import ActionEnum = ConsentAuth.ActionEnum;
 
 @Component({
   selector: 'consent-app-consent-initiate',
@@ -44,18 +45,18 @@ export class ConsentInitiateComponent implements OnInit {
     this.consentAuthService.authUsingGET(authorizationId, redirectCode, 'response')
        .subscribe(res => {
          this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-         this.navigate(authorizationId, res.body as AuthStateResponse);
+         this.navigate(authorizationId, res.body.consentAuth);
        });
   }
 
-  private navigate(authorizationId: string, res: AuthStateResponse) {
+  private navigate(authorizationId: string, res: ConsentAuth) {
     switch (res.action) {
-      case ServicedAction.LIST_ACCOUNTS:
-        this.sessionService.setConsentState(authorizationId, new AuthConsentState(res.causes));
+      case ActionEnum.ACCOUNTS:
+        this.sessionService.setConsentState(authorizationId, new AuthConsentState(res.violations));
         this.router.navigate([EntryPageAccountsComponent.ROUTE], { relativeTo: this.activatedRoute.parent});
         break;
-      case ServicedAction.LIST_TRANSACTIONS:
-        this.sessionService.setConsentState(authorizationId, new AuthConsentState(res.causes));
+      case ActionEnum.TRANSACTIONS:
+        this.sessionService.setConsentState(authorizationId, new AuthConsentState(res.violations));
         this.router.navigate([EntryPageTransactionsComponent.ROUTE], { relativeTo: this.activatedRoute.parent});
         break;
       default:
@@ -63,14 +64,4 @@ export class ConsentInitiateComponent implements OnInit {
         throw new Error("Can't handle action: " + res.action);
     }
   }
-}
-
-export enum ServicedAction {
-  LIST_ACCOUNTS = 'LIST_ACCOUNTS',
-  LIST_TRANSACTIONS = 'LIST_TRANSACTIONS'
-}
-
-interface AuthStateResponse {
-  action: ServicedAction;
-  causes: AuthViolation[];
 }

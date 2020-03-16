@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.facade.dto.result.torest.redirectable;
 
+import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionResult;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class FacadeStartAuthorizationResult<T, C extends RedirectionCause> extends FacadeResultRedirectable<T, C> {
+public class FacadeStartAuthorizationResult<T, C extends AuthStateBody> extends FacadeResultRedirectable<T, C> {
 
     public static final RedirectFromProtocol FROM_PROTOCOL = Mappers.getMapper(RedirectFromProtocol.class);
 

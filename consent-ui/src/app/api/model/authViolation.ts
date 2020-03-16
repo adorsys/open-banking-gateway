@@ -9,13 +9,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ConsentAuthRequirement } from './consentAuthRequirement';
 
 
 /**
- * Contains information used to legitimate a request.
+ * Missing parameters required for authorization
  */
-export interface AuthorizeRequest { 
-    consentAuth?: ConsentAuthRequirement;
+export interface AuthViolation { 
+    type?: string;
+    scope?: string;
+    code?: string;
+    captionMessage?: string;
 }
 

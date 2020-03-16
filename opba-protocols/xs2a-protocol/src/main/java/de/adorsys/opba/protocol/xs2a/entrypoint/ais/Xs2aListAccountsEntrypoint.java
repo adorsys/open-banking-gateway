@@ -3,9 +3,11 @@ package de.adorsys.opba.protocol.xs2a.entrypoint.ais;
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.protocol.api.ais.ListAccounts;
+import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
+import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper;
@@ -20,6 +22,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -38,6 +41,7 @@ public class Xs2aListAccountsEntrypoint implements ListAccounts {
     private final ProcessEventHandlerRegistrar registrar;
     private final Xs2aListAccountsEntrypoint.FromRequest mapper;
     private final ExtendWithServiceContext extender;
+    private final DtoMapper<Set<ValidationIssue>, Set<ValidationError>> errorMapper;
 
     @Override
     public CompletableFuture<Result<AccountListBody>> execute(ServiceContext<ListAccountsRequest> serviceContext) {
@@ -50,7 +54,7 @@ public class Xs2aListAccountsEntrypoint implements ListAccounts {
 
         registrar.addHandler(
                 instance.getProcessInstanceId(),
-                new OutcomeMapper<>(result, extractor::extractAccountList)
+                new OutcomeMapper<>(result, extractor::extractAccountList, errorMapper)
         );
         return result;
     }

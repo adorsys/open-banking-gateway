@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.facade.dto.result.torest.redirectable;
 
+import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import lombok.Data;
 
@@ -9,7 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Data
-public abstract class FacadeResultRedirectable<T, C extends RedirectionCause> implements FacadeResult<T> {
+public abstract class FacadeResultRedirectable<T, C extends AuthStateBody> implements FacadeResult<T> {
 
     private String redirectCode;
     private UUID xRequestId;

@@ -9,13 +9,27 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ConsentAuthRequirement } from './consentAuthRequirement';
 
 
 /**
- * Contains information used to legitimate a request.
+ * Fields that are required to be filled in order to authorize consent
  */
-export interface AuthorizeRequest { 
-    consentAuth?: ConsentAuthRequirement;
+export interface ConsentAuthRequiredField { 
+    /**
+     * Field data type - boolean, string, etc.
+     */
+    type?: string;
+    /**
+     * Scope of the field.
+     */
+    scope?: string;
+    /**
+     * Field code - what does the field mean.
+     */
+    code?: string;
+    /**
+     * Custom message that describes field meaning
+     */
+    captionMessage?: string;
 }
 

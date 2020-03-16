@@ -2,6 +2,7 @@ package de.adorsys.opba.restapi.shared.service;
 
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
+import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -15,22 +16,18 @@ import static org.springframework.http.HttpStatus.OK;
 @Service
 public class RedirectionOnlyToOkMapper {
 
-    public <F> ResponseEntity<?> translate(FacadeResult<F> result) {
+    public <T, F> ResponseEntity<?> translate(FacadeResult<F> result, FacadeResponseBodyToRestBodyMapper<T, F> mapper) {
         if (result instanceof FacadeResultRedirectable) {
-            return handleRedirect((FacadeResultRedirectable) result);
+            return handleRedirect((FacadeResultRedirectable<F, ?>) result, mapper);
         }
 
         throw new IllegalArgumentException("Unknown result type: " + result.getClass());
     }
 
-    protected ResponseEntity<?> handleRedirect(FacadeResultRedirectable<?, ?> result) {
-        return doHandleRedirect(result);
-    }
-
-    protected ResponseEntity<?> doHandleRedirect(FacadeResultRedirectable<?, ?> result) {
+    protected <T, F> ResponseEntity<?> handleRedirect(FacadeResultRedirectable<F, ?> result, FacadeResponseBodyToRestBodyMapper<T, F> mapper) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(OK));
         putExtraRedirectHeaders(result, response);
-        response.body(result.getCause());
+        response.body(mapper.map((F) result.getCause()));
         return responseForRedirection(result, response);
     }
 

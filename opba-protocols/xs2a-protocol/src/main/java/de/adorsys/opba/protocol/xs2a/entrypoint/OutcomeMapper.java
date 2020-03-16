@@ -1,5 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint;
 
+import de.adorsys.opba.protocol.api.dto.ValidationIssue;
+import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
+import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationRequiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
@@ -10,9 +13,11 @@ import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Redirect;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Response;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ValidationProblem;
 import de.adorsys.opba.protocol.xs2a.entrypoint.dto.ContextBasedValidationErrorResult;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import lombok.RequiredArgsConstructor;
 
 import java.net.URI;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -21,6 +26,7 @@ public class OutcomeMapper<T> {
 
     protected final CompletableFuture<Result<T>> channel;
     protected final Function<Response, T> extractBodyOnSuccess;
+    protected final DtoMapper<Set<ValidationIssue>, Set<ValidationError>> errorMapper;
 
     public void onSuccess(Response responseResult) {
         channel.complete(new SuccessResult<>(extractBodyOnSuccess.apply(responseResult)));
@@ -36,10 +42,10 @@ public class OutcomeMapper<T> {
 
     public void onValidationProblem(ValidationProblem problem) {
         channel.complete(
-                new ContextBasedValidationErrorResult<>(
+                new ContextBasedValidationErrorResult(
                     problem.getProvideMoreParamsDialog(),
                     problem.getExecutionId(),
-                    problem.getIssues()
+                    new AuthStateBody(null, errorMapper.map(problem.getIssues()), null, null, null, null)
                 )
         );
     }

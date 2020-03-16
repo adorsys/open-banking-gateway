@@ -12,6 +12,7 @@
 import { PeriodicPayment } from './periodicPayment';
 import { ScaStatus } from './scaStatus';
 import { AisConsentRequest } from './aisConsentRequest';
+import { AuthViolation } from './authViolation';
 import { BulkPayment } from './bulkPayment';
 import { ScaUserData } from './scaUserData';
 import { SinglePayment } from './singlePayment';
@@ -22,6 +23,8 @@ import { AccountDetails } from './accountDetails';
  * Transport object for consent API request response
  */
 export interface ConsentAuth { 
+    action?: ConsentAuth.ActionEnum;
+    violations?: Array<AuthViolation>;
     accounts?: Array<AccountDetails>;
     authMessageTemplate?: string;
     /**
@@ -44,4 +47,12 @@ export interface ConsentAuth {
     scaStatus?: ScaStatus;
     singlePayment?: SinglePayment;
 }
+export namespace ConsentAuth {
+    export type ActionEnum = 'LIST_ACCOUNTS' | 'LIST_TRANSACTIONS';
+    export const ActionEnum = {
+        ACCOUNTS: 'LIST_ACCOUNTS' as ActionEnum,
+        TRANSACTIONS: 'LIST_TRANSACTIONS' as ActionEnum
+    };
+}
+
 
