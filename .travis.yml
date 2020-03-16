@@ -13,6 +13,7 @@ script:
   # tests are not done with mvn test - dont know why
   - ./scripts/build_mvn.sh
   - docker run -it --rm -v "$PWD":/opt/app-root/src -w /opt/app-root/src -u "$(id -u "${USER}"):$(id -g "${USER}")" trion/ng-cli make fintech-ui
+  - docker run -it --rm -v "$PWD":/opt/app-root/src -w /opt/app-root/src -u "$(id -u "${USER}"):$(id -g "${USER}")" trion/ng-cli make consent-ui
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
