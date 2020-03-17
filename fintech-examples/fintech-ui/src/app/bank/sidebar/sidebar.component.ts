@@ -29,10 +29,6 @@ export class SidebarComponent implements OnInit {
     });
   }
 
-  backToPreviousPage() {
-    this.router.navigate(['/search']);
-  }
-
   getRouterLinkListAccounts(): string {
     return this.showListAccounts ? 'account' : '';
   }
