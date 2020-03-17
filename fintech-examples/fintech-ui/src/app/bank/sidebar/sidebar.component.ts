@@ -15,7 +15,7 @@ export class SidebarComponent implements OnInit {
   bankId: string;
   bankName: string;
 
-  constructor(private bankProfileService: BankProfileService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private bankProfileService: BankProfileService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
