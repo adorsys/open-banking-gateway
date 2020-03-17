@@ -1,6 +1,7 @@
 package de.adorsys.opba.consentapi.controller;
 
 import de.adorsys.opba.consentapi.Const;
+import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
 import de.adorsys.opba.consentapi.model.generated.PsuAuthRequest;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
@@ -139,5 +140,9 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
         @Mapping(source = "key", target = "id")
         @Mapping(source = "value", target = "methodValue")
         ScaUserData fromScaMethod(ScaMethod method);
+
+        default ConsentAuth.ActionEnum fromString(String value) {
+            return ConsentAuth.ActionEnum.fromValue(value);
+        }
     }
 }

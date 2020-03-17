@@ -27,11 +27,11 @@ public class RedirectionOnlyToOkMapper {
     protected <T, F> ResponseEntity<?> handleRedirect(FacadeResultRedirectable<F, ?> result, FacadeResponseBodyToRestBodyMapper<T, F> mapper) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(OK));
         putExtraRedirectHeaders(result, response);
-        response.body(mapper.map((F) result.getCause()));
-        return responseForRedirection(result, response);
+        T body = mapper.map((F) result.getCause());
+        return responseForRedirection(result, response).body(body);
     }
 
-    protected ResponseEntity<?> responseForRedirection(FacadeResultRedirectable<?, ?> result, ResponseEntity.BodyBuilder response) {
+    protected ResponseEntity.BodyBuilder responseForRedirection(FacadeResultRedirectable<?, ?> result, ResponseEntity.BodyBuilder response) {
          response
             .header(AUTHORIZATION_SESSION_ID, result.getAuthorizationSessionId())
             .header(REDIRECT_CODE, result.getRedirectCode());
@@ -40,7 +40,7 @@ public class RedirectionOnlyToOkMapper {
              response.header(LOCATION, result.getRedirectionTo().toASCIIString());
          }
 
-         return response.body(result.getCause());
+         return response;
     }
 
     protected ResponseEntity.BodyBuilder putDefaultHeaders(FacadeResult<?> result, ResponseEntity.BodyBuilder builder) {

@@ -8,8 +8,8 @@ import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationReque
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
-import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
+import de.adorsys.opba.protocol.xs2a.entrypoint.dto.ContextBasedValidationErrorResult;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.LastViolations;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
@@ -21,6 +21,7 @@ import org.flowable.engine.history.HistoricActivityInstance;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -52,7 +53,11 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
         }
 
         return CompletableFuture.completedFuture(
-            new ValidationErrorResult<>(null, result)
+            new ContextBasedValidationErrorResult<>(
+                    null == result.getRedirectTo() ? null : URI.create(result.getRedirectTo()),
+                    executionId,
+                    result
+            )
         );
     }
 

@@ -189,7 +189,7 @@ public class ProtocolResultHandler {
 
     protected AuthStateBody mapCause(RedirectionResult result) {
         if (result instanceof ValidationErrorResult && null != result.getCause()) {
-            return ((AuthStateBody) result.getCause());
+            return (AuthStateBody) result.getCause();
         }
 
         return null;
