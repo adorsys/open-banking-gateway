@@ -10,8 +10,4 @@ export class BankComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit() {}
-
-  backToPreviousPage() {
-    this.router.navigate(['/search']);
-  }
 }
