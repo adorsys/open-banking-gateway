@@ -7,13 +7,14 @@ import { FinTechAuthorizationService } from '../api';
 import { Credentials } from '../models/credentials.model';
 import { Consts } from '../common/consts';
 import * as uuid from 'uuid';
+import { timer } from 'rxjs/internal/observable/timer';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private XSRF_TOKEN = 'XSRF-TOKEN';
-  private credentials: Credentials;
+  time = timer(0);
 
   constructor(
     private router: Router,
@@ -33,6 +34,9 @@ export class AuthService {
 
   logout(): void {
     this.cookieService.deleteAll('/');
+    this.cookieService.set('SESSION-COOKIE', null);
+    this.cookieService.delete('XSRF-TOKEN', null);
+    console.log('cookies values XSRF-TOKEN', this.cookieService.get('XSRF-TOKEN'));
     this.openLoginPage();
     localStorage.clear();
   }
