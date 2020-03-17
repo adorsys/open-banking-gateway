@@ -63,7 +63,7 @@ public class ContextUtil {
         private final T context;
 
         public String urlSafe(String original) {
-            return UrlEscapers.urlFragmentEscaper().escape(original);
+            return UrlEscapers.urlPathSegmentEscaper().escape(original);
         }
     }
 }
