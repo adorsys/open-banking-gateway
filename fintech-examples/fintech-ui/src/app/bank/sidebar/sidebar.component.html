@@ -1,5 +1,6 @@
 <div class="sidebar">
   <ul class="nav flex-md-column">
+    <button class="btn btn-primary btn-block mb-3" (click)="backToPreviousPage()">back-search</button>
     <li class="nav-item{{ showListAccounts ? '' : '--disabled' }}">
       <a class="nav-link" [routerLink]="getRouterLinkListAccounts()">
         <div class="icon__container">

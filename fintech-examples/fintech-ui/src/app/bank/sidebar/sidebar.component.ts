@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BankProfileService } from '../../bank-search/services/bank-profile.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,7 +15,7 @@ export class SidebarComponent implements OnInit {
   bankId: string;
   bankName: string;
 
-  constructor(private bankProfileService: BankProfileService, private route: ActivatedRoute) {}
+  constructor(private bankProfileService: BankProfileService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
@@ -27,6 +27,10 @@ export class SidebarComponent implements OnInit {
       this.showListTransactions = response.services.includes('LIST_TRANSACTIONS');
       this.showInitiatePayment = response.services.includes('INITIATE_PAYMENT');
     });
+  }
+
+  backToPreviousPage() {
+    this.router.navigate(['/search']);
   }
 
   getRouterLinkListAccounts(): string {
