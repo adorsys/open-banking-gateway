@@ -1,6 +1,13 @@
 <div class="sidebar">
   <ul class="nav flex-md-column">
-    <button class="btn btn-primary btn-block mb-3" (click)="backToPreviousPage()">back-search</button>
+    <li class="nav-item{{ showListAccounts ? '' : '--disabled' }}">
+      <a class="nav-link" [routerLink]="'/search'">
+        <div class="icon__container">
+          <img width="23px" height="23px" alt="bank search" class="text-primary" src="assets/icons/bank-search.png" />
+        </div>
+        <span class="nav__title">Bank search</span>
+      </a>
+    </li>
     <li class="nav-item{{ showListAccounts ? '' : '--disabled' }}">
       <a class="nav-link" [routerLink]="getRouterLinkListAccounts()">
         <div class="icon__container">
