@@ -39,6 +39,8 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+        BankProfile config = bankProfileJpaRepository.findByBankUuid(context.getAspspId()).get();
+
         ValidatedPathHeaders<Xs2aInitialConsentParameters, Xs2aStandardHeaders> params =
                 extractor.forExecution(context);
         Response<StartScaProcessResponse> scaStart = ais.startConsentAuthorisation(
@@ -46,7 +48,8 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
                 params.getHeaders().toHeaders()
         );
 
-        context.setAspspScaApproach(scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH));
+        String aspspSelectedApproach = scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH);
+        context.setAspspScaApproach(null == aspspSelectedApproach ? config.getPreferredApproach().name() : aspspSelectedApproach);
         context.setAuthorizationId(scaStart.getBody().getAuthorisationId());
         context.setStartScaProcessResponse(scaStart.getBody());
         execution.setVariable(CONTEXT, context);
