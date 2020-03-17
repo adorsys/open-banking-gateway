@@ -210,7 +210,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 HttpStatus.ACCEPTED
         );
 
-        assertThat(response.header(LOCATION)).contains("localhost").contains("/ok");
+        assertThat(response.header(LOCATION)).contains("localhost").contains("%2Fok");
         return self();
     }
 
