@@ -1,1 +1,13 @@
-<p>sca-select-page works!</p>
+<form (ngSubmit)="onSubmit()" [formGroup]="scaMethodForm" autocomplete="off" novalidate>
+
+    <div class="form-group">
+        <label for="scaMethod">Example select</label>
+        <select class="form-control" id="scaMethod" formControlName="selectedMethodValue">
+            <option *ngFor="let scaMethod of scaMethods">{{scaMethod.methodValue}}</option>
+        </select>
+    </div>
+
+    <button class="btn btn-primary w-100"
+            type="submit">Submit
+    </button>
+</form>
