@@ -1,6 +1,8 @@
 FROM nginx:1.17.7-alpine
 LABEL maintainer="https://github.com/adorsys/open-banking-gateway"
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf.template
+COPY entry.sh /opt/entry.sh
+RUN chmod 775 /opt/entry.sh
 COPY dist/consent-ui /app/dist
-CMD ["nginx", "-g", "daemon off;"]
 EXPOSE 4200
+ENTRYPOINT /opt/entry.sh
