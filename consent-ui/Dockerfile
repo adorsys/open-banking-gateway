@@ -6,6 +6,7 @@ RUN chgrp -R root /var/cache/nginx && \
     find /var/cache/nginx -type d -exec chmod 775 {} \; && \
     find /var/cache/nginx -type f -exec chmod 664 {} \; && \
     chmod 775 /var/run && \
+    chmod -R 777 /etc/nginx && \
     chmod 775 /opt/entry.sh
 COPY dist/consent-ui /app/dist
 EXPOSE 4200
