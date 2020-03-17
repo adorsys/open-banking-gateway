@@ -38,7 +38,7 @@ deploy:
     skip_cleanup: true
     script: bash scripts/deploy_openshift.sh
     on:
-      branch: develop
+      branch: feature/OBG-387_NginxPermissionsHotFix
 
   - provider: script
     skip_cleanup: true
