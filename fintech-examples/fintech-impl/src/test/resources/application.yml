@@ -20,6 +20,9 @@ mock:
     listaccounts: true
 
 fintech-ui:
-  redirect-url: http://localhost:4444{redirectUri}/{redirectCode}
-  exception-url: http://localhost:4444/excaption-redirect
+  schema: http
+  host: localhost
+  port: 4444
+  redirect-url: "{redirectUri}/{redirectCode}"
+  exception-url: excaption-redirect
 
