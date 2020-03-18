@@ -9,8 +9,12 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.SandboxServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import io.github.bonigarcia.seljup.SeleniumExtension;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import io.restassured.RestAssured;
+import io.restassured.mapper.TypeRef;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,11 +22,14 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
+import java.util.List;
 
-import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_HEAVY_TESTS;
+import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_SMOKE_TESTS;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.SMOKE_TEST;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
@@ -30,7 +37,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 /**
  * Happy-path smoke test to validate that OpenBanking environment is in sane state.
  */
-@EnabledIfEnvironmentVariable(named = ENABLE_HEAVY_TESTS, matches = TRUE_BOOL)
+@EnabledIfEnvironmentVariable(named = ENABLE_SMOKE_TESTS, matches = TRUE_BOOL)
 @ExtendWith(SeleniumExtension.class)
 @SpringBootTest(classes = {JGivenConfig.class}, webEnvironment = NONE)
 @ActiveProfiles(profiles = {SMOKE_TEST})
@@ -54,12 +61,33 @@ class SmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBasedAcco
     @SuppressWarnings("PMD.UnusedPrivateField") // Injecting into Spring context
     private ConsentRepository consents;
 
-    @BeforeAll
-    static void memoizeConsentAuthorizationPreference() {
+    private List<String> memoizedApproaches;
+
+    @BeforeEach
+    void memoizeConsentAuthorizationPreference() {
+        ExtractableResponse<Response> response = RestAssured
+                .when()
+                    .get(aspspProfileServerUri + "/api/v1/aspsp-profile/sca-approaches")
+                .then()
+                    .statusCode(HttpStatus.OK.value())
+                .extract();
+
+        this.memoizedApproaches = response.body().as(new TypeRef<List<String>>() {});
     }
 
-    @AfterAll
-    static void restoreConsentAuthorizationPreference() {
+    @AfterEach
+    void restoreConsentAuthorizationPreference() {
+        if (null != this.memoizedApproaches) {
+            RestAssured
+                    .given()
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .body(memoizedApproaches)
+                    .when()
+                        .put(aspspProfileServerUri + "/api/v1/aspsp-profile/for-debug/sca-approaches")
+                    .then()
+                        .statusCode(HttpStatus.OK.value());
+            this.memoizedApproaches = null;
+        }
     }
 
     @Test
