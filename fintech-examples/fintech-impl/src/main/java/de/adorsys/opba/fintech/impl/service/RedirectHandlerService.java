@@ -43,8 +43,8 @@ public class RedirectHandlerService {
         String redirectCode = UUID.randomUUID().toString();
         log.debug("ONLY FOR DEBUG: redirectCode: {}", redirectCode);
 
-        String okUrl = fintechRedirectURLNOK.replaceAll("^/", "");
-        String noOkUrl = fintechRedirectURLOK.replaceAll("^/", "");
+        String okUrl = fintechRedirectURLOK.replaceAll("^/", "");
+        String noOkUrl = fintechRedirectURLNOK.replaceAll("^/", "");
 
         RedirectUrlsEntity redirectUrls = new RedirectUrlsEntity();
 
