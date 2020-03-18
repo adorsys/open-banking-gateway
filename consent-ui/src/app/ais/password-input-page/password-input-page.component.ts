@@ -1,11 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute} from "@angular/router";
-import {StubUtil} from "../common/stub-util";
-import {Subscription} from "rxjs";
-import {ApiHeaders} from "../../api/api.headers";
-import {ConsentAuthorizationService} from "../../api";
-import {SessionService} from "../../common/session.service";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { StubUtil } from '../common/stub-util';
+import { Subscription } from 'rxjs';
+import { ApiHeaders } from '../../api/api.headers';
+import { ConsentAuthorizationService } from '../../api';
+import { SessionService } from '../../common/session.service';
 
 @Component({
   selector: 'consent-app-password-input-page',
@@ -18,24 +18,21 @@ export class PasswordInputPageComponent implements OnInit, OnDestroy {
   private redirectCode: string;
   private subscriptions: Subscription[] = [];
 
-  constructor(private consentAuthorizationService: ConsentAuthorizationService,
-              private activatedRoute: ActivatedRoute,
-              private formBuilder: FormBuilder, private sessionService: SessionService) {
-  }
+  constructor(
+    private consentAuthorizationService: ConsentAuthorizationService,
+    private activatedRoute: ActivatedRoute,
+    private formBuilder: FormBuilder,
+    private sessionService: SessionService
+  ) {}
 
   ngOnInit() {
     this.passwordForm = this.formBuilder.group({
       pin: ['', Validators.required]
     });
 
-    this.authorizationSessionId = this.activatedRoute.parent.snapshot.paramMap.get("authId");
-
-    this.subscriptions.push(
-      this.activatedRoute.queryParams.subscribe(
-        params => {
-          this.redirectCode = params['redirectCode'];
-        }
-      ));
+    this.authorizationSessionId = this.activatedRoute.parent.snapshot.paramMap.get('authId');
+    this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
+    console.log('REDIRECT CODE: ', this.redirectCode);
   }
 
   ngOnDestroy(): void {
@@ -44,24 +41,27 @@ export class PasswordInputPageComponent implements OnInit, OnDestroy {
 
   submit(): void {
     this.subscriptions.push(
-      this.consentAuthorizationService.embeddedUsingPOST(
-        this.authorizationSessionId,
-        StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
-        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
-        this.redirectCode,
-        {scaAuthenticationData: {PSU_PASSWORD: this.passwordForm.get('pin').value}},
-        "response"
-      ).subscribe(
-        res => {
-          // redirect to the provided location
-          this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-          console.log("REDIRECTING TO: " + res.headers.get(ApiHeaders.LOCATION));
-          window.location.href = res.headers.get(ApiHeaders.LOCATION);
-        },
-        error => {
-          console.log(error);
-          // window.location.href = error.url;
-        })
+      this.consentAuthorizationService
+        .embeddedUsingPOST(
+          this.authorizationSessionId,
+          StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
+          StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
+          this.redirectCode,
+          { scaAuthenticationData: { PSU_PASSWORD: this.passwordForm.get('pin').value } },
+          'response'
+        )
+        .subscribe(
+          res => {
+            // redirect to the provided location
+            this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+            console.log('REDIRECTING TO: ' + res.headers.get(ApiHeaders.LOCATION));
+            window.location.href = res.headers.get(ApiHeaders.LOCATION);
+          },
+          error => {
+            console.log(error);
+            // window.location.href = error.url;
+          }
+        )
     );
   }
 }

@@ -1,11 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from "@angular/router";
-import {AuthConsentState} from "../../../../common/dto/auth-state";
-import {SessionService} from "../../../../../common/session.service";
-import {StubUtil} from "../../../../common/stub-util";
-import {AccountAccessLevel} from "../../../../common/dto/ais-consent";
-import {ConsentUtil} from "../../../../common/consent-util";
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthConsentState } from '../../../../common/dto/auth-state';
+import { SessionService } from '../../../../../common/session.service';
+import { StubUtil } from '../../../../common/stub-util';
+import { AccountAccessLevel } from '../../../../common/dto/ais-consent';
+import { ConsentUtil } from '../../../../common/consent-util';
 
 @Component({
   selector: 'consent-app-access-selection',
@@ -13,7 +13,6 @@ import {ConsentUtil} from "../../../../common/consent-util";
   styleUrls: ['./consent-account-access-selection.component.scss']
 })
 export class ConsentAccountAccessSelectionComponent implements OnInit {
-
   public finTechName = StubUtil.FINTECH_NAME;
   public aspspName = StubUtil.ASPSP_NAME;
 
@@ -50,15 +49,15 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
   }
 
   hasInputs(): boolean {
-    return this.hasAisViolations() || this.hasGeneralViolations()
+    return this.hasAisViolations() || this.hasGeneralViolations();
   }
 
   hasAisViolations(): boolean {
-    return this.state.hasAisViolation()
+    return this.state.hasAisViolation();
   }
 
   hasGeneralViolations(): boolean {
-    return this.state.hasGeneralViolation()
+    return this.state.hasGeneralViolation();
   }
 
   handleMethodSelectedEvent(access: Access) {
@@ -85,8 +84,9 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
 
     if (this.state.hasGeneralViolation()) {
       consentObj.extras = consentObj.extras ? consentObj.extras : {};
-      this.state.getGeneralViolations()
-        .forEach(it => consentObj.extras[it.code] = this.accountAccessForm.get(it.code).value)
+      this.state
+        .getGeneralViolations()
+        .forEach(it => (consentObj.extras[it.code] = this.accountAccessForm.get(it.code).value));
     }
 
     consentObj.level = this.selectedAccess.value.id;
@@ -107,17 +107,15 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
   }
 
   private handleDedicatedAccess() {
-    this.router.navigate([this.dedicatedConsentPage], {relativeTo: this.activatedRoute});
+    this.router.navigate([this.dedicatedConsentPage], { relativeTo: this.activatedRoute });
     return;
   }
 
   private moveToReviewConsent() {
-    this.router.navigate([this.consentReviewPage], {relativeTo: this.activatedRoute});
+    this.router.navigate([this.consentReviewPage], { relativeTo: this.activatedRoute });
   }
 }
 
 export class Access {
-
-  constructor(public id: AccountAccessLevel, public message: string) {
-  }
+  constructor(public id: AccountAccessLevel, public message: string) {}
 }
