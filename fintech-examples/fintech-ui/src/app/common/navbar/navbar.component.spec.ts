@@ -30,5 +30,6 @@ describe('NavbarComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(authServiceSpy.isLoggedIn).toHaveBeenCalled();
   });
 });

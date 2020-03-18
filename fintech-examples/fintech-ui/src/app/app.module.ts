@@ -16,6 +16,7 @@ import { ErrorService } from './errorsHandler/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RedirectAfterConsentComponent } from './redirect-after-consent/redirect-after-consent.component';
 import { NavbarComponent } from './common/navbar/navbar.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -33,6 +34,7 @@ export function apiConfigFactory(): Configuration {
     BrowserModule,
     BrowserAnimationsModule,
     ShareModule,
+    ReactiveFormsModule,
     HttpClientXsrfModule.withOptions({
       cookieName: 'XSRF-TOKEN',
       headerName: 'X-XSRF-TOKEN'

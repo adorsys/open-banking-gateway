@@ -6,6 +6,7 @@ import { of } from 'rxjs';
 import { AisService } from '../services/ais.service';
 import { ListAccountsComponent } from './list-accounts.component';
 import { AccountDetails, AccountStatus } from '../../api';
+import { AppComponent } from '../../app.component';
 
 describe('ListAccountsComponent', () => {
   let component: ListAccountsComponent;
@@ -15,7 +16,7 @@ describe('ListAccountsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule, RouterTestingModule],
+      imports: [RouterTestingModule, HttpClientTestingModule],
       declarations: [ListAccountsComponent],
       providers: [AisService]
     }).compileComponents();
@@ -26,14 +27,15 @@ describe('ListAccountsComponent', () => {
     component = fixture.componentInstance;
     router = TestBed.get(Router);
     fixture.detectChanges();
-    //        this.aisService = TestBed.get(AisService);
+    this.aisService = TestBed.get(AisService);
   });
 
   it('should create', () => {
+    expect(component.bankId).toBeTruthy();
     expect(component).toBeTruthy();
   });
 
-  it('should load accounts on NgOnInit', () => {
+  fit('should load accounts', () => {
     const mockAccounts: AccountDetails[] = [
       {
         resourceId: 'XXXXXX',
@@ -50,12 +52,7 @@ describe('ListAccountsComponent', () => {
         ownerName: 'Anton Brueckner'
       } as AccountDetails
     ];
-    const getAccountsSpy = spyOn(aisService, 'getAccounts').and.returnValue(
-      of({
-        accounts: mockAccounts,
-        totalElements: mockAccounts.length
-      })
-    );
+    const getAccountsSpy = spyOn(aisService, 'getAccounts').and.returnValue(of(mockAccounts));
 
     component.ngOnInit();
 

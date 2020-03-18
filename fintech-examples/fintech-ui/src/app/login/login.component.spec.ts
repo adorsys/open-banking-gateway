@@ -4,12 +4,12 @@ import { LoginComponent } from './login.component';
 import { AuthService } from '../services/auth.service';
 import { DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { SearchComponent } from '../bank-search/common/search/search.component';
 import { BankSearchModule } from '../bank-search/bank-search.module';
-import { ShareModule } from '../common/share.module';
 import { CookieService } from 'ngx-cookie-service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -21,11 +21,7 @@ describe('LoginComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        ShareModule,
-        BankSearchModule,
-        RouterTestingModule.withRoutes([{ path: 'search', component: SearchComponent }])
-      ],
+      imports: [BankSearchModule, ReactiveFormsModule, RouterTestingModule, HttpClientModule],
       providers: [AuthService, CookieService],
       declarations: [LoginComponent]
     }).compileComponents();
@@ -58,6 +54,7 @@ describe('LoginComponent', () => {
     el.click();
 
     expect(authServiceSpy).toHaveBeenCalledWith({ username: 'test', password: '12345' });
+    expect(authServiceSpy).toHaveBeenCalled();
   });
 
   it('loginForm should be invalid when at least one field is empty', () => {
