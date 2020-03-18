@@ -1,7 +1,7 @@
 {
   "access": null,
-  "recurringIndicator": true,
-  "validUntil": "2021-03-01",
-  "frequencyPerDay": 10,
-  "combinedServiceIndicator": false
+  "recurringIndicator": null,
+  "validUntil": null,
+  "frequencyPerDay": null,
+  "combinedServiceIndicator": null
 }

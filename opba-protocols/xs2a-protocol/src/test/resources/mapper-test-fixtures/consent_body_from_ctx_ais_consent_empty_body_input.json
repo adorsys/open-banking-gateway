@@ -20,7 +20,10 @@
   "mode": "MOCK_REAL_CALLS",
   "aspspId": "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46",
   "action": "LIST_ACCOUNTS",
-  "flowByAction": null,
+  "flowByAction": {
+    "LIST_ACCOUNTS": "xs2a-list-accounts",
+    "LIST_TRANSACTIONS": "xs2a-list-transactions"
+  },
   "sagaId": "25e0c2a1-6751-11ea-9989-acde48001122",
   "serviceSessionId": "c86feb1e-9ba8-4407-918f-8183143df295",
   "authorizationSessionIdIfOpened": "c86feb1e-9ba8-4407-918f-8183143df295",

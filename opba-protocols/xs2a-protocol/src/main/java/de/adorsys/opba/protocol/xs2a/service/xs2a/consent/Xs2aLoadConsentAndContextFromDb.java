@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.stereotype.Service;
@@ -86,9 +87,16 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
     )
     public interface ContextMerger {
 
+        @Mapping(target = "flowByAction", ignore = true)
         void merge(Xs2aContext source, @MappingTarget Xs2aContext target);
+
+        @Mapping(target = "flowByAction", ignore = true)
         void merge(Xs2aContext source, @MappingTarget TransactionListXs2aContext target);
+
+        @Mapping(target = "flowByAction", ignore = true)
         void merge(TransactionListXs2aContext source, @MappingTarget TransactionListXs2aContext target);
+
+        @Mapping(target = "flowByAction", ignore = true)
         void merge(AccountListXs2aContext source, @MappingTarget TransactionListXs2aContext target);
     }
 }
