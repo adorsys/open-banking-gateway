@@ -18,9 +18,11 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private handleRequest(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    console.log('see, xsrf token is set:' + request.headers.get('X-XSRF-TOKEN'));
     const headers = request.headers
       .set('X-Request-ID', uuid.v4())
       .set('Content-Type', 'application/json')
+
       // TODO: is supposed to be sent automatically when X-XSRF cookie exists, check why not
       .set('X-XSRF-TOKEN', this.authService.getX_XSRF_TOKEN());
 
