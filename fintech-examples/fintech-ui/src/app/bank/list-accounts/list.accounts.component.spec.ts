@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { AisService } from '../services/ais.service';
@@ -11,14 +11,14 @@ import { AppComponent } from '../../app.component';
 describe('ListAccountsComponent', () => {
   let component: ListAccountsComponent;
   let fixture: ComponentFixture<ListAccountsComponent>;
-  const aisService = AisService;
+  let aisService: AisService;
   let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule, HttpClientTestingModule],
       declarations: [ListAccountsComponent],
-      providers: [AisService]
+      providers: [AisService, { provide: ActivatedRoute }]
     }).compileComponents();
   }));
 
@@ -26,16 +26,20 @@ describe('ListAccountsComponent', () => {
     fixture = TestBed.createComponent(ListAccountsComponent);
     component = fixture.componentInstance;
     router = TestBed.get(Router);
+    aisService = TestBed.get(AisService);
+    // component.route.parent.parent.params.subscribe((params) => {
+    // component.bankId = params['bankId'];
+    // component.getAccountDetails();
+    // });
+    component.bankId = localStorage.getItem('bankId');
     fixture.detectChanges();
-    this.aisService = TestBed.get(AisService);
   });
 
   it('should create', () => {
-    expect(component.bankId).toBeTruthy();
     expect(component).toBeTruthy();
   });
 
-  fit('should load accounts', () => {
+  it('should load accounts', () => {
     const mockAccounts: AccountDetails[] = [
       {
         resourceId: 'XXXXXX',
@@ -52,11 +56,9 @@ describe('ListAccountsComponent', () => {
         ownerName: 'Anton Brueckner'
       } as AccountDetails
     ];
-    const getAccountsSpy = spyOn(aisService, 'getAccounts').and.returnValue(of(mockAccounts));
 
-    component.ngOnInit();
-
-    expect(getAccountsSpy).toHaveBeenCalled();
+    spyOn(aisService, 'getAccounts').and.returnValue(of(mockAccounts));
     expect(component.accounts).toEqual(mockAccounts);
+    expect(component.accounts).not.toBeUndefined();
   });
 });

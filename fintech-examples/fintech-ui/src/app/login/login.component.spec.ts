@@ -5,7 +5,6 @@ import { AuthService } from '../services/auth.service';
 import { DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
-import { SearchComponent } from '../bank-search/common/search/search.component';
 import { BankSearchModule } from '../bank-search/bank-search.module';
 import { CookieService } from 'ngx-cookie-service';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -39,11 +38,11 @@ describe('LoginComponent', () => {
     component.ngOnInit();
   });
 
-  it('should create', () => {
+  fit('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call login on the service', () => {
+  fit('should call login on the service', () => {
     authServiceSpy = spyOn(authService, 'login').and.callThrough();
 
     const form = component.loginForm;
@@ -57,11 +56,11 @@ describe('LoginComponent', () => {
     expect(authServiceSpy).toHaveBeenCalled();
   });
 
-  it('loginForm should be invalid when at least one field is empty', () => {
+  fit('loginForm should be invalid when at least one field is empty', () => {
     expect(component.loginForm.valid).toBeFalsy();
   });
 
-  it('username field validity', () => {
+  fit('username field validity', () => {
     let errors = {};
     const username = component.loginForm.controls['username'];
     expect(username.valid).toBeFalsy();
@@ -76,7 +75,7 @@ describe('LoginComponent', () => {
     expect(errors['required']).toBeFalsy();
   });
 
-  it('password field validity', () => {
+  fit('password field validity', () => {
     let errors = {};
     const password = component.loginForm.controls['password'];
     expect(password.valid).toBeFalsy();

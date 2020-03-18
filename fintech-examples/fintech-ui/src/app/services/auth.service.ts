@@ -33,7 +33,7 @@ export class AuthService {
     localStorage.clear();
     console.log('before logout get all cookies is ', JSON.stringify(this.cookieService.getAll()));
 
-    this.cookieService.delete(Consts.XSRF_TOKEN);
+    this.cookieService.deleteAll('/');
     const xsrftoken = this.cookieService.get(Consts.XSRF_TOKEN);
     if (xsrftoken !== undefined) {
       console.error('logut did not work, xsrf-token-cookie still exists');

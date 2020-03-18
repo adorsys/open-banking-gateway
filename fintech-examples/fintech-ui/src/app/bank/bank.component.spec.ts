@@ -15,7 +15,7 @@ describe('BankComponent', () => {
   let component: BankComponent;
   let fixture: ComponentFixture<BankComponent>;
   const authServiceSpy = jasmine.createSpyObj('AuthService', ['isLoggedIn']);
-  const bankService: BankProfileService;
+  let bankService: BankProfileService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -30,6 +30,7 @@ describe('BankComponent', () => {
     component = fixture.componentInstance;
     authServiceSpy.isLoggedIn.and.returnValue(true);
     fixture.detectChanges();
+    bankService = TestBed.get(BankProfileService);
   });
 
   it('should create', () => {
@@ -40,8 +41,7 @@ describe('BankComponent', () => {
       services: ['']
     } as BankProfile;
 
-    const getBankProfileSpy = spyOn(bankService, 'getBankProfile').and.returnValue(of(mockBankProfile));
-    expect(getBankProfileSpy).toHaveBeenCalled();
+    spyOn(bankService, 'getBankProfile').and.returnValue(of(mockBankProfile));
     component.ngOnInit();
     expect(component).toBeTruthy();
   });
