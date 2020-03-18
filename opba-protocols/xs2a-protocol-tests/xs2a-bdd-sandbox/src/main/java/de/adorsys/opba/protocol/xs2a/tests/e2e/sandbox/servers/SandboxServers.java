@@ -23,25 +23,33 @@ public class SandboxServers<SELF extends SandboxServers<SELF>> extends CommonGiv
     }
 
     public SELF enabled_embedded_sandbox_mode() {
+        return enabled_embedded_sandbox_mode(ASPSP_PROFILE_BASE_URI);
+    }
+
+    public SELF enabled_redirect_sandbox_mode() {
+        return enabled_redirect_sandbox_mode(ASPSP_PROFILE_BASE_URI);
+    }
+
+    public SELF enabled_embedded_sandbox_mode(String aspspProfileUri) {
         RestAssured
                 .given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body("[\"EMBEDDED\",\"REDIRECT\",\"DECOUPLED\"]")
                 .when()
-                    .put(ASPSP_PROFILE_BASE_URI + "/api/v1/aspsp-profile/for-debug/sca-approaches")
+                    .put(aspspProfileUri + "/api/v1/aspsp-profile/for-debug/sca-approaches")
                 .then()
                     .statusCode(HttpStatus.OK.value());
 
         return self();
     }
 
-    public SELF enabled_redirect_sandbox_mode() {
+    public SELF enabled_redirect_sandbox_mode(String aspspProfileUri) {
         RestAssured
                 .given()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body("[\"REDIRECT\",\"EMBEDDED\",\"DECOUPLED\"]")
                 .when()
-                    .put(ASPSP_PROFILE_BASE_URI + "/api/v1/aspsp-profile/for-debug/sca-approaches")
+                    .put(aspspProfileUri + "/api/v1/aspsp-profile/for-debug/sca-approaches")
                 .then()
                     .statusCode(HttpStatus.OK.value());
 
