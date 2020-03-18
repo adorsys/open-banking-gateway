@@ -12,7 +12,7 @@ COMMIT="$TRAVIS_COMMIT"
 OPBA_URL=https://obg-dev-openbankinggateway.cloud.adorsys.de
 
 # Wait for deployment to happen
-timeout 10s bash -c 'while [[ $(curl -s "'"$OPBA_URL"'"/actuator/info | grep -c '"$COMMIT"') != 1 ]]; do sleep 10; done' || echo "Failed waiting for deploy $COMMIT"; exit 1
+timeout 600s bash -c 'while [[ $(curl -s "'"$OPBA_URL"'"/actuator/info | grep -c '"$COMMIT"') != 1 ]]; do sleep 10; done' || echo "Failed waiting for deploy $COMMIT"; exit 1
 
 # Run smoke tests:
 export ENABLE_SMOKE_TESTS=true
