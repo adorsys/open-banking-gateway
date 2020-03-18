@@ -4,6 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 5500",
+    "serve:local": "ng serve --port 5500 --proxy-config=proxy-conf-local.js",
+    "serve:dev-backend-local-consent-ui": "ng serve --port 5500 --proxy-config=proxy-conf-dev-backend-local-consent-ui.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
