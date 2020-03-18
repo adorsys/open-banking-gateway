@@ -1,11 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {ConsentAuthorizationService, ScaUserData} from "../../api";
 import {SessionService} from "../../common/session.service";
 import {ApiHeaders} from "../../api/api.headers";
 import {StubUtil} from "../common/stub-util";
-import {Subscription} from "rxjs";
 
 @Component({
     selector: 'consent-app-sca-select-page',
@@ -18,7 +17,6 @@ export class ScaSelectPageComponent implements OnInit {
     redirectCode: string = '';
     scaMethodForm: FormGroup;
     scaMethods: ScaUserData[];
-    private subscriptions: Subscription[] = [];
 
     constructor(private sessionService: SessionService,
                 private consentAuthorizationService: ConsentAuthorizationService,
@@ -34,26 +32,25 @@ export class ScaSelectPageComponent implements OnInit {
     }
 
     onSubmit(): void {
-        this.subscriptions.push(
-            this.consentAuthorizationService.embeddedUsingPOST(
-                this.authorizationSessionId,
-                StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
-                StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
-                this.redirectCode,
-                {scaAuthenticationData: {SCA_CHALLENGE_ID: this.scaMethodForm.get('selectedMethodValue').value}},
-                "response"
-            ).subscribe(
-                res => {
-                    // redirect to the provided location
-                    console.log("REDIRECTING TO: " + res.headers.get(ApiHeaders.LOCATION));
-                    this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-                    window.location.href = res.headers.get(ApiHeaders.LOCATION);
-                },
-                error => {
-                    console.log(error);
-                    // window.location.href = error.url;
-                })
-        );
+        this.consentAuthorizationService.embeddedUsingPOST(
+            this.authorizationSessionId,
+            StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
+            StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
+            this.redirectCode,
+            {scaAuthenticationData: {SCA_CHALLENGE_ID: this.scaMethodForm.get('selectedMethodValue').value}},
+            "response"
+        ).subscribe(
+            res => {
+                // redirect to the provided location
+                console.log("REDIRECTING TO: " + res.headers.get(ApiHeaders.LOCATION));
+                this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+                window.location.href = res.headers.get(ApiHeaders.LOCATION);
+            },
+            error => {
+                console.log(error);
+                // window.location.href = error.url;
+            });
+
     }
 
     private loadAvailableMethods(): void {
@@ -68,7 +65,7 @@ export class ScaSelectPageComponent implements OnInit {
 
     private initialScaMethodForm(): void {
         this.scaMethodForm = this.formBuilder.group({
-            selectedMethodValue: ['', Validators.required],
+            selectedMethodValue: [new FormControl(), Validators.required],
         });
     }
 }
