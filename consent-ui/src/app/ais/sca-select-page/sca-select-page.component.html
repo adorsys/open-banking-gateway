@@ -3,7 +3,7 @@
     <div class="form-group">
         <label for="scaMethod">Example select</label>
         <select class="form-control" id="scaMethod" formControlName="selectedMethodValue">
-            <option *ngFor="let scaMethod of scaMethods">{{scaMethod.methodValue}}</option>
+            <option *ngFor="let scaMethod of scaMethods" [value]="scaMethod.id">{{scaMethod.methodValue}}</option>
         </select>
     </div>
 

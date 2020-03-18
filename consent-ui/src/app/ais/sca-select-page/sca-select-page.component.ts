@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ConsentAuthorizationService} from "../../api";
+import {ConsentAuthorizationService, ScaUserData} from "../../api";
 import {SessionService} from "../../common/session.service";
 import {ApiHeaders} from "../../api/api.headers";
 import {StubUtil} from "../common/stub-util";
@@ -17,7 +17,7 @@ export class ScaSelectPageComponent implements OnInit {
     authorizationSessionId: string = '';
     redirectCode: string = '';
     scaMethodForm: FormGroup;
-    scaMethods: ScaMethod[];
+    scaMethods: ScaUserData[];
     private subscriptions: Subscription[] = [];
 
     constructor(private sessionService: SessionService,
@@ -27,41 +27,10 @@ export class ScaSelectPageComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.initialScaMethodForm();
         this.authorizationSessionId = this.route.parent.snapshot.paramMap.get("authId");
         this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
         this.loadAvailableMethods();
-    }
-
-
-    private loadAvailableMethods(): void {
-        this.consentAuthorizationService.authUsingGET(this.authorizationSessionId, this.redirectCode, 'response')
-            .subscribe(consentAuth => {
-            /*     this.sessionService.setRedirectCode(this.authorizationSessionId, consentAuth.headers.get(ApiHeaders.REDIRECT_CODE));
-                 this.scaMethods = consentAuth.body.consentAuth.scaMethods;
-                this.initialScaMethodForm();*/
-            });
-
-        this.scaMethods = this.getScaMethodMock();
-        this.initialScaMethodForm();
-    }
-
-    private initialScaMethodForm(): void {
-        this.scaMethodForm = this.formBuilder.group({
-            selectedMethodValue: [this.scaMethods[0].methodValue, Validators.required],
-        });
-    }
-
-    private getScaMethodMock() {
-        return [
-            {
-                id: "jbmvs-XUSXEnLI9KtatgIo",
-                methodValue: "EMAIL:max.musterman@mail.de"
-            },
-            {
-                id: "Hqn8MrHUREIjGNYpGq38Jg",
-                methodValue: "EMAIL:max.musterman2@mail.de"
-            }
-        ];
     }
 
     onSubmit(): void {
@@ -86,9 +55,20 @@ export class ScaSelectPageComponent implements OnInit {
                 })
         );
     }
-}
 
-class ScaMethod {
-    id: string;
-    methodValue: string;
+    private loadAvailableMethods(): void {
+        this.consentAuthorizationService.authUsingGET(this.authorizationSessionId, this.redirectCode, 'response')
+            .subscribe(consentAuth => {
+                this.sessionService.setRedirectCode(this.authorizationSessionId, consentAuth.headers.get(ApiHeaders.REDIRECT_CODE));
+                this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
+                this.scaMethods = consentAuth.body.consentAuth.scaMethods;
+                this.scaMethodForm.get('selectedMethodValue').setValue(this.scaMethods[0].id);
+            });
+    }
+
+    private initialScaMethodForm(): void {
+        this.scaMethodForm = this.formBuilder.group({
+            selectedMethodValue: ['', Validators.required],
+        });
+    }
 }
