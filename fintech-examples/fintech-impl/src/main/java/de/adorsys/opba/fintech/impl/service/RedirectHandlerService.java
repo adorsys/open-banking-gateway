@@ -44,14 +44,14 @@ public class RedirectHandlerService {
         log.debug("ONLY FOR DEBUG: redirectCode: {}", redirectCode);
 
         String okUrl = fintechRedirectURLOK.replaceAll("^/", "");
-        String noOkUrl = fintechRedirectURLNOK.replaceAll("^/", "");
+        String notOkUrl = fintechRedirectURLNOK.replaceAll("^/", "");
 
         RedirectUrlsEntity redirectUrls = new RedirectUrlsEntity();
 
         redirectUrls.setRedirectCode(redirectCode);
         redirectUrls.setRedirectState(xsrfToken);
         redirectUrls.setOkURL(getModifiedUrlWithRedirectCode(okUrl, redirectCode));
-        redirectUrls.setNotOkURL(getModifiedUrlWithRedirectCode(noOkUrl, redirectCode));
+        redirectUrls.setNotOkURL(getModifiedUrlWithRedirectCode(notOkUrl, redirectCode));
 
         return redirectUrlRepository.save(redirectUrls);
     }
