@@ -1,4 +1,3 @@
 export class SharedRoutes {
-
-  public static REVIEW = "review-consent";
+  public static REVIEW = 'review-consent';
 }
