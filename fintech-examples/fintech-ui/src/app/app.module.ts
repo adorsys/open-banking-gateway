@@ -1,7 +1,6 @@
 import { HTTP_INTERCEPTORS, HttpClientXsrfModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { CookieService } from 'ngx-cookie-service';
 
 import { environment } from '../environments/environment';
 import { ApiModule, Configuration, ConfigurationParameters } from './api';
@@ -42,7 +41,6 @@ export function apiConfigFactory(): Configuration {
   providers: [
     AuthGuard,
     ErrorService,
-    CookieService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
