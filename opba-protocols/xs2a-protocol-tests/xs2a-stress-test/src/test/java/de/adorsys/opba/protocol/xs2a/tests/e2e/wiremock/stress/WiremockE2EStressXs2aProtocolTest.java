@@ -96,13 +96,13 @@ class WiremockE2EStressXs2aProtocolTest extends SpringScenarioTest<MockServers, 
             if ("testEmbeddedAccountListConcurrent".equals(context.getTestMethod().get().getName())) {
                 instance.given()
                     .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
-                    .rest_assured_points_to_server();
+                    .rest_assured_points_to_opba_server();
             }
 
             if ("testEmbeddedTransactionListConcurrent".equals(context.getTestMethod().get().getName())) {
                 instance.given()
                     .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
-                    .rest_assured_points_to_server();
+                    .rest_assured_points_to_opba_server();
             }
         }
     }
