@@ -1,26 +1,22 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.annotation.ScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
+import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
+import de.adorsys.opba.consentapi.model.generated.ScaUserData;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
@@ -62,7 +58,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     protected String responseContent;
 
     @ScenarioState
-    private Map<String, String> availableScas;
+    private List<ScaUserData> availableScas;
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner() {
         ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
@@ -210,7 +206,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 HttpStatus.ACCEPTED
         );
 
-        assertThat(response.header(LOCATION)).contains("localhost").contains("%2Fok");
+        assertThat(response.header(LOCATION)).contains("localhost").contains("consent-result");
         return self();
     }
 
@@ -259,26 +255,28 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     @SneakyThrows
     private void updateAvailableScas() {
-        String value = URLDecoder.decode(
-            this.redirectUriToGetUserParams.split("\\?")[1].split("=")[1],
-            StandardCharsets.UTF_8.name()
-        );
-        List<AuthDto> parsedValue = new ObjectMapper()
-            .readValue(value, new TypeReference<List<AuthDto>>() { });
+        ExtractableResponse<Response> response = RestAssured
+                .given()
+                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .when()
+                    .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
+                .then()
+                    .statusCode(HttpStatus.OK.value())
+                .extract();
 
-        this.availableScas = parsedValue.stream().collect(
-            Collectors.toMap(AuthDto::getValue, AuthDto::getKey)
-        );
+        InlineResponse200 parsedValue = new ObjectMapper()
+            .readValue(response.body().asString(), InlineResponse200.class);
+
+        this.availableScas = parsedValue.getConsentAuth().getScaMethods();
+        updateRedirectCode(response);
     }
 
     private String selectedScaBody(String scaName) {
-        return String.format("{\"scaAuthenticationData\":{\"SCA_CHALLENGE_ID\":\"%s\"}}", this.availableScas.get(scaName));
-    }
-
-    @Data
-    private static class AuthDto {
-
-        private String key;
-        private String value;
+        return String.format(
+                "{\"scaAuthenticationData\":{\"SCA_CHALLENGE_ID\":\"%s\"}}",
+                this.availableScas.stream().filter(it -> it.getMethodValue().equals(scaName)).findFirst().get().getId()
+        );
     }
 }
