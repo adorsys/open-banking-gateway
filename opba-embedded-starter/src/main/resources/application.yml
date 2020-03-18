@@ -23,6 +23,7 @@ spring:
       table-prefix: opb_
       adorsys-sandbox-url: http://localhost:20014
       fill-with-mock-data: true
+
 bank-search:
   start: 0
   max: 10
@@ -68,3 +69,9 @@ facade:
 
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
+
+# Actuator:
+management:
+  info:
+    git:
+      mode: full
