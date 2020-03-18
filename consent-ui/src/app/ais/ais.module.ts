@@ -6,7 +6,7 @@ import { ResultPageComponent } from './result-page/result-page.component';
 import { PasswordInputPageComponent } from './password-input-page/password-input-page.component';
 import { EntryPageComponent } from './entry-page/entry-page.component';
 import { ScaSelectPageComponent } from './sca-select-page/sca-select-page.component';
-import { TanConfirmPageComponent } from './tan-confirm-page/tan-confirm-page.component';
+import { ReportScaResultComponent } from './sca-result-page/sca-result-page.component';
 import { AccountDetailsComponent } from './common/account-details/account-details.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ErrorPageComponent } from './error-page/error-page.component';
@@ -30,7 +30,7 @@ import { ConsentInfoComponent } from './components/consent-info/consent-info.com
     PasswordInputPageComponent,
     EntryPageComponent,
     ScaSelectPageComponent,
-    TanConfirmPageComponent,
+    ReportScaResultComponent,
     AccountDetailsComponent,
     ConsentAccountAccessSelectionComponent,
     EntryPageTransactionsComponent,

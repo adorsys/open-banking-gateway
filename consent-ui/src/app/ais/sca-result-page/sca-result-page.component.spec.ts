@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TanConfirmPageComponent } from './tan-confirm-page.component';
+import { ReportScaResultComponent } from './sca-result-page.component';
 
-describe('TanConfirmPageComponent', () => {
-  let component: TanConfirmPageComponent;
-  let fixture: ComponentFixture<TanConfirmPageComponent>;
+describe('ScaResultPageComponent', () => {
+  let component: ReportScaResultComponent;
+  let fixture: ComponentFixture<ReportScaResultComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TanConfirmPageComponent ]
+      declarations: [ ReportScaResultComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TanConfirmPageComponent);
+    fixture = TestBed.createComponent(ReportScaResultComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
