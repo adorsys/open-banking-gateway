@@ -7,6 +7,8 @@ test:
   smoke:
     opba:
       server-uri: http://localhost:8085
+    aspsp-profile:
+      server-uri: http://localhost:20010
   retry:
     max: 10
   webdriver:

@@ -28,7 +28,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.SMOKE_TEST;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 /**
- * Happy-path heavy test that uses Dynamic-Sandbox to drive banking-protocol.
+ * Happy-path smoke test to validate that OpenBanking environment is in sane state.
  */
 @EnabledIfEnvironmentVariable(named = ENABLE_HEAVY_TESTS, matches = TRUE_BOOL)
 @ExtendWith(SeleniumExtension.class)
@@ -42,6 +42,9 @@ class SmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBasedAcco
 
     @Value("${test.smoke.opba.server-uri}")
     private String opbaServerUri;
+
+    @Value("${test.smoke.aspsp-profile.server-uri}")
+    private String aspspProfileServerUri;
 
     @MockBean // Stubbing out as they are not available, but currently breaking hierarchy has no sense as we can replace this with REST in future
     @SuppressWarnings("PMD.UnusedPrivateField") // Injecting into Spring context
@@ -70,7 +73,7 @@ class SmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBasedAcco
             .parse(redirectListAntonBruecknerAccounts(firefoxDriver)).read("$.accounts[0].resourceId");
 
         given()
-            .enabled_redirect_sandbox_mode()
+            .enabled_redirect_sandbox_mode(aspspProfileServerUri)
             .rest_assured_points_to_opba_server(opbaServerUri);
 
         when()
@@ -110,7 +113,7 @@ class SmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBasedAcco
             .read("$.accounts[0].resourceId");
 
         given()
-            .enabled_embedded_sandbox_mode()
+            .enabled_embedded_sandbox_mode(aspspProfileServerUri)
             .rest_assured_points_to_opba_server(opbaServerUri);
 
         when()
@@ -131,7 +134,7 @@ class SmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBasedAcco
 
     private String embeddedListMaxMustermanAccounts() {
         given()
-            .enabled_embedded_sandbox_mode()
+            .enabled_embedded_sandbox_mode(aspspProfileServerUri)
             .rest_assured_points_to_opba_server(opbaServerUri);
 
         when()
@@ -153,7 +156,7 @@ class SmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBasedAcco
 
     private String redirectListAntonBruecknerAccounts(FirefoxDriver firefoxDriver) {
         given()
-            .enabled_redirect_sandbox_mode()
+            .enabled_redirect_sandbox_mode(aspspProfileServerUri)
             .rest_assured_points_to_opba_server(opbaServerUri);
 
         when()
