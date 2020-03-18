@@ -30,10 +30,6 @@ public class RedirectHandlerService {
     private static final String LOCATION_HEADER = "Location";
     @Value("${mock.tppais.listaccounts:false}")
     private String mockTppAisString;
-
-    private String schema;
-    private String host;
-    private String port;
     private String redirectUrl;
     private String exceptionUrl;
 
@@ -106,11 +102,7 @@ public class RedirectHandlerService {
     }
 
     private String getModifiedUrlWithRedirectCode(String... params) {
-        return UriComponentsBuilder.newInstance()
-                       .scheme(schema)
-                       .host(host)
-                       .port(port)
-                       .path(redirectUrl)
+        return UriComponentsBuilder.fromHttpUrl(redirectUrl)
                        .buildAndExpand(params)
                        .toUriString();
     }
