@@ -7,10 +7,7 @@
       "recurringIndicator": true,
       "combinedServiceIndicator": false,
       "access": {
-        "transactions": ["DE38760700240320465700"],
-        "bookingStatus": "BOTH",
-        "dateFrom": "2018-01-01",
-        "dateTo": "2020-09-30"
+        "transactions": ["DE38760700240320465700"]
       },
       "frequencyPerDay": 12,
       "validUntil": "2030-01-31"
