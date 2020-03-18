@@ -37,6 +37,7 @@ bank-search:
         ORDER BY sml DESC
         LIMIT :max
         OFFSET :start"
+
 protocol:
   redirect:
     to-aspsp: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
@@ -48,7 +49,7 @@ protocol:
       max-array-size: 32
       provide-more: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
       provide-psu-password: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/authenticate
-      select-sca-method: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method?q=#{urlSafe(context.getAvailableSca().toString())}
+      select-sca-method: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
       report-sca-result: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/sca-result
   gateway-base-url: http://localhost:8085
   embedded-ui-base-url: http://localhost:4200

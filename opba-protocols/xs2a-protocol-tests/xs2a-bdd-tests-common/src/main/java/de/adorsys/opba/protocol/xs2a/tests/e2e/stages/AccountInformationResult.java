@@ -8,7 +8,6 @@ import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import io.restassured.RestAssured;
-import io.restassured.internal.RestAssuredResponseImpl;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import lombok.Getter;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
@@ -41,6 +39,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.springframework.http.HttpHeaders.LOCATION;
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
@@ -303,9 +302,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
                     .statusCode(HttpStatus.ACCEPTED.value())
                 .extract();
 
-        String responseLog = ((RestAssuredResponseImpl) response).getLogRepository().getResponseLog();
-        assertThat(responseLog).matches(Pattern.compile("(?s).*provide-more.*PSU_IP_ADDRESS.*", Pattern.MULTILINE));
-
+        assertThat(response.header(LOCATION)).matches(".+/ais/.+");
         return self();
     }
 }

@@ -1,4 +1,4 @@
-package smoketests;
+package de.adorsys.opba.smoketests;
 
 import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
