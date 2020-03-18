@@ -50,8 +50,8 @@ public class RedirectHandlerService {
 
         redirectUrls.setRedirectCode(redirectCode);
         redirectUrls.setRedirectState(xsrfToken);
-        redirectUrls.setNotOkURL(getModifiedUrlWithRedirectCode(okUrl, redirectCode));
-        redirectUrls.setOkURL(getModifiedUrlWithRedirectCode(noOkUrl, redirectCode));
+        redirectUrls.setOkURL(getModifiedUrlWithRedirectCode(okUrl, redirectCode));
+        redirectUrls.setNotOkURL(getModifiedUrlWithRedirectCode(noOkUrl, redirectCode));
 
         return redirectUrlRepository.save(redirectUrls);
     }
