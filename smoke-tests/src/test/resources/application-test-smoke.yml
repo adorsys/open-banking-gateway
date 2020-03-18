@@ -1,0 +1,13 @@
+# Useless - just to make bean injection work
+local:
+  server:
+    port: -1
+
+test:
+  smoke:
+    opba:
+      server-uri: http://localhost:8085
+  retry:
+    max: 10
+  webdriver:
+    timeout: PT10S

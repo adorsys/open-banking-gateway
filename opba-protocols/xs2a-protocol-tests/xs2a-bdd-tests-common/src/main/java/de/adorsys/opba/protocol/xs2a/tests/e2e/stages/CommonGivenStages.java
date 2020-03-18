@@ -34,8 +34,12 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
         return self();
     }
 
-    public SELF rest_assured_points_to_server() {
-        RestAssured.baseURI = "http://localhost:" + serverPort;
+    public SELF rest_assured_points_to_opba_server() {
+        return rest_assured_points_to_opba_server("http://localhost:" + serverPort);
+    }
+
+    public SELF rest_assured_points_to_opba_server(String opbaServerUri) {
+        RestAssured.baseURI = opbaServerUri;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         config = config().redirect(redirectConfig().followRedirects(false));
 

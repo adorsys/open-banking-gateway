@@ -59,7 +59,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
-                .rest_assured_points_to_server();
+                .rest_assured_points_to_opba_server();
 
         when()
                 .fintech_calls_list_accounts_for_anton_brueckner()
@@ -80,7 +80,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
-                .rest_assured_points_to_server();
+                .rest_assured_points_to_opba_server();
 
         when()
                 .fintech_calls_list_transactions_for_anton_brueckner(WiremockConst.ANTON_BRUECKNER_RESOURCE_ID)
@@ -103,7 +103,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
-                .rest_assured_points_to_server();
+                .rest_assured_points_to_opba_server();
 
         when()
                 .fintech_calls_list_accounts_for_max_musterman()
@@ -126,7 +126,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
-                .rest_assured_points_to_server();
+                .rest_assured_points_to_opba_server();
 
         when()
                 .fintech_calls_list_transactions_for_max_musterman()
@@ -150,7 +150,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
-                .rest_assured_points_to_server();
+                .rest_assured_points_to_opba_server();
 
         when()
                 .fintech_calls_list_accounts_for_anton_brueckner()
@@ -168,7 +168,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
-                .rest_assured_points_to_server();
+                .rest_assured_points_to_opba_server();
 
         when()
                 .fintech_calls_list_accounts_for_anton_brueckner_ip_address_compute()
@@ -186,7 +186,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
-                .rest_assured_points_to_server();
+                .rest_assured_points_to_opba_server();
         when()
                 .fintech_calls_list_accounts_for_anton_brueckner_no_ip_address();
 

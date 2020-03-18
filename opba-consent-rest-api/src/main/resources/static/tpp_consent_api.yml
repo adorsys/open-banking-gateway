@@ -758,6 +758,11 @@ components:
             in ISODate Format
           format: date
           example: 2020-10-10
+        combinedServiceIndicator:
+          type: boolean
+          description: '''true'', if the consent is i.e. account list and then payment
+                     ''false'', if the consent is for one access to the account data'
+          default: false
       description: Ais consent request
 
     Amount:
