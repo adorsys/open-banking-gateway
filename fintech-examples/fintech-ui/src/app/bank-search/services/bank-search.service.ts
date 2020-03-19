@@ -10,6 +10,6 @@ export class BankSearchService {
   searchBanks(keyword: string) {
     // required headers are set in http interceptor
     // that's the reason for empty strings
-    return this.finTechBankSearchService.bankSearchGET('', 'bank-token', keyword);
+    return this.finTechBankSearchService.bankSearchGET('', '', keyword);
   }
 }

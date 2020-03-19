@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Consts } from '../common/consts';
 import { LogException } from '../common/LogException';
 
 @Injectable({
