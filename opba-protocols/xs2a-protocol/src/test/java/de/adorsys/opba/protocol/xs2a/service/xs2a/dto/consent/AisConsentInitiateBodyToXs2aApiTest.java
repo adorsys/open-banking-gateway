@@ -16,7 +16,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 
 @SpringBootTest(classes = AisConsentInitiateBodyToXs2aApiTest.TestConfig.class)
 public class AisConsentInitiateBodyToXs2aApiTest {
@@ -58,7 +57,7 @@ public class AisConsentInitiateBodyToXs2aApiTest {
         AccountAccess.AvailableAccountsEnum actual = mapper.accounts(mappingInput);
 
         // Then
-        assertEquals(expected, actual);
+        assertThat(expected).isEqualTo(actual);
     }
 
     @Test
@@ -72,7 +71,7 @@ public class AisConsentInitiateBodyToXs2aApiTest {
         AccountAccess.AvailableAccountsEnum actual = mapper.accounts(mappingInput);
 
         // Then
-        assertEquals(expected, actual);
+        assertThat(expected).isEqualTo(actual);
     }
 
     @Test
@@ -86,7 +85,7 @@ public class AisConsentInitiateBodyToXs2aApiTest {
         AccountAccess.AvailableAccountsWithBalance actual = mapper.accountsWithBalance(mappingInput);
 
         // Then
-        assertEquals(expected, actual);
+        assertThat(expected).isEqualTo(actual);
     }
 
     @Test
@@ -100,7 +99,7 @@ public class AisConsentInitiateBodyToXs2aApiTest {
         AccountAccess.AvailableAccountsWithBalance actual = mapper.accountsWithBalance(mappingInput);
 
         // Then
-        assertEquals(expected, actual);
+        assertThat(expected).isEqualTo(actual);
     }
 
     @Test
@@ -114,7 +113,7 @@ public class AisConsentInitiateBodyToXs2aApiTest {
         AccountAccess.AllPsd2Enum actual = mapper.allPsd2(mappingInput);
 
         // Then
-        assertEquals(expected, actual);
+        assertThat(expected).isEqualTo(actual);
     }
 
     @Test
@@ -128,7 +127,7 @@ public class AisConsentInitiateBodyToXs2aApiTest {
         AccountAccess.AllPsd2Enum actual = mapper.allPsd2(mappingInput);
 
         // Then
-        assertEquals(expected, actual);
+        assertThat(expected).isEqualTo(actual);
     }
 
     @Configuration

@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = FromAuthObjectTest.TestConfig.class)
 public class FromAuthObjectTest {
@@ -39,7 +39,7 @@ public class FromAuthObjectTest {
         ScaMethod actual = mapper.map(mappingInput);
 
         // Then
-        assertEquals(expected, actual);
+        assertThat(expected).isEqualTo(actual);
     }
 
     @Configuration
