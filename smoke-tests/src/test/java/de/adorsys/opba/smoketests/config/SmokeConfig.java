@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class SmokeConfig {
 
     public static final LocalDate DATE_FROM = LocalDate.parse("2018-01-01");
-    public static final LocalDate DATE_TO = LocalDate.now();
+    public static final LocalDate DATE_TO = LocalDate.parse("2020-09-30");
     public static final String BOTH_BOOKING = "BOTH";
 
     @Getter
