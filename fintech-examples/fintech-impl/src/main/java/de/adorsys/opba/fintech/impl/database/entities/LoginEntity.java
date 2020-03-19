@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.OffsetDateTime;
 
 @Getter
@@ -18,8 +15,10 @@ import java.time.OffsetDateTime;
 @Builder
 public class LoginEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "login_generator")
+    @SequenceGenerator(name = "login_generator", sequenceName = "login_id_seq", allocationSize = 1)
     private Long id;
 
+    @Column(nullable = false)
     private OffsetDateTime loginTime;
 }

@@ -7,11 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +23,10 @@ import java.util.UUID;
 public class SessionEntity {
     @Id
     private String loginUserName;
+
+    @Column(nullable = false)
     private String password;
+
     private String xsrfToken;
 
     // TODO orphanRemoval should be true, but thatn deleting  fails. Dont know hot to
