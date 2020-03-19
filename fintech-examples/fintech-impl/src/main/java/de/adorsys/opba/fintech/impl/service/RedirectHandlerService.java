@@ -30,10 +30,6 @@ public class RedirectHandlerService {
     private static final String LOCATION_HEADER = "Location";
     @Value("${mock.tppais.listaccounts:false}")
     private String mockTppAisString;
-
-    private String schema;
-    private String host;
-    private String port;
     private String redirectUrl;
     private String exceptionUrl;
 
@@ -47,12 +43,15 @@ public class RedirectHandlerService {
         String redirectCode = UUID.randomUUID().toString();
         log.debug("ONLY FOR DEBUG: redirectCode: {}", redirectCode);
 
+        String okUrl = fintechRedirectURLOK.replaceAll("^/", "");
+        String notOkUrl = fintechRedirectURLNOK.replaceAll("^/", "");
+
         RedirectUrlsEntity redirectUrls = new RedirectUrlsEntity();
 
         redirectUrls.setRedirectCode(redirectCode);
         redirectUrls.setRedirectState(xsrfToken);
-        redirectUrls.setNotOkURL(getModifiedUrlWithRedirectCode(fintechRedirectURLNOK, redirectCode));
-        redirectUrls.setOkURL(getModifiedUrlWithRedirectCode(fintechRedirectURLOK, redirectCode));
+        redirectUrls.setOkURL(getModifiedUrlWithRedirectCode(okUrl, redirectCode));
+        redirectUrls.setNotOkURL(getModifiedUrlWithRedirectCode(notOkUrl, redirectCode));
 
         return redirectUrlRepository.save(redirectUrls);
     }
@@ -106,11 +105,7 @@ public class RedirectHandlerService {
     }
 
     private String getModifiedUrlWithRedirectCode(String... params) {
-        return UriComponentsBuilder.newInstance()
-                       .scheme(schema)
-                       .host(host)
-                       .port(port)
-                       .path(redirectUrl)
+        return UriComponentsBuilder.fromHttpUrl(redirectUrl)
                        .buildAndExpand(params)
                        .toUriString();
     }

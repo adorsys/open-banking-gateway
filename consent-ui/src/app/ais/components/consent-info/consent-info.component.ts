@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {AccountAccessLevel, AisConsentToGrant} from "../../common/dto/ais-consent";
-import {StubUtil} from "../../common/stub-util";
-import {ActivatedRoute, Router} from "@angular/router";
-import {SessionService} from "../../../common/session.service";
-import {ConsentUtil} from "../../common/consent-util";
+import { Component, OnInit } from '@angular/core';
+import { AccountAccessLevel, AisConsentToGrant } from '../../common/dto/ais-consent';
+import { StubUtil } from '../../common/stub-util';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SessionService } from '../../../common/session.service';
+import { ConsentUtil } from '../../common/consent-util';
 
 @Component({
   selector: 'consent-app-consent-info',
@@ -20,12 +20,7 @@ export class ConsentInfoComponent implements OnInit {
 
   private authorizationId: string;
 
-  constructor(
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private sessionService: SessionService
-  ) {
-  }
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private sessionService: SessionService) {}
 
   ngOnInit() {
     this.activatedRoute.params.subscribe(res => {

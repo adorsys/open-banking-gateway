@@ -65,8 +65,7 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "tpp-ui:build",
-            "proxyConfig": "proxy-conf.js"
+            "browserTarget": "tpp-ui:build"
           },
           "configurations": {
             "production": {

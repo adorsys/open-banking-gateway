@@ -1,0 +1,12 @@
+{
+  "/embedded-server/*": {
+    "target": "https://obg-dev-openbankinggateway.cloud.adorsys.de",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/embedded-server": ""
+    },
+    "logLevel": "debug",
+    "headers": {"Access-Control-Expose-Headers": "*"}
+  }
+}
