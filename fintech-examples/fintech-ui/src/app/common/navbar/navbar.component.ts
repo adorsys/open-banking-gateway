@@ -16,7 +16,7 @@ export class NavbarComponent implements OnInit {
 
   onLogout() {
     if (this.isLoggedIn()) {
-      this.authService.logout();
+      this.authService.logout().subscribe(ok => console.log('logout ' + ok ? 'was successful' : 'failed'));
     } else {
       this.router.navigate(['/login']);
     }

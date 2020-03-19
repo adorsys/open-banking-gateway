@@ -52,6 +52,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     private static final String FIN_TECH_AUTH_URL = "/v1/login";
+    private static final String FIN_TECH_AUTH_LOGOUT_URL = "/v1/logout";
     private static final String FIN_TECH_BANK_SEARCH_URL = "/v1/search/bankSearch";
     private static final String FIN_TECH_BANK_PROFILE_URL = "/v1/search/bankProfile";
 
@@ -82,6 +83,20 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
         MvcResult result = plainauth("peter", "12345");
         assertEquals(HttpStatus.UNAUTHORIZED.value(), result.getResponse().getStatus());
         assertNull(result.getResponse().getCookie("XSRF-TOKEN"));
+    }
+
+    @Test
+    @SneakyThrows
+    public void logoutPostOk() {
+        String xsrfToken = authOk("peter", "1234");
+        plainLogout(xsrfToken);
+    }
+
+    @Test
+    @SneakyThrows
+    public void logoutPostNotOk() {
+        MvcResult mvcResult = plainLogout(UUID.randomUUID().toString());
+        assertEquals(HttpStatus.UNAUTHORIZED.value(), mvcResult.getResponse().getStatus());
     }
 
     @Test
@@ -206,6 +221,17 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
                 .perform(post(FIN_TECH_AUTH_URL)
                         .header("X-Request-ID", UUID.randomUUID().toString())
                         .content(GSON.toJson(loginBody))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andReturn();
+    }
+
+    @SneakyThrows
+    MvcResult plainLogout(String xsrfToken) {
+        return this.mvc
+                .perform(post(FIN_TECH_AUTH_LOGOUT_URL)
+                        .header("X-Request-ID", UUID.randomUUID().toString())
+                        .header("X-XSRF-TOKEN", xsrfToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andReturn();

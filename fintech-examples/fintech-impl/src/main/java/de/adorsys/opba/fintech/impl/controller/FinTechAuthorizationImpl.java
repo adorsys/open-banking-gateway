@@ -74,4 +74,21 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
     public ResponseEntity<Void> fromConsentOkGET(String redirectState, String redirectId, String redirectCode) {
         return redirectHandlerService.doRedirect(redirectState, redirectId, redirectCode);
     }
+
+    @Override
+    public ResponseEntity<Void> logoutPOST(UUID xRequestID, String xsrfToken) {
+        ContextInformation contextInformation = new ContextInformation(xRequestID);
+        log.info("logoutPost is called");
+
+        if (!authorizeService.isAuthorized(xsrfToken, null)) {
+            log.warn("Request failed: Xsrf Token is wrong or user is not authorized!");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        authorizeService.logout(xsrfToken, null);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set(X_REQUEST_ID, contextInformation.getXRequestID().toString());
+        return new ResponseEntity<>(null, responseHeaders, HttpStatus.OK);
+    }
+
 }

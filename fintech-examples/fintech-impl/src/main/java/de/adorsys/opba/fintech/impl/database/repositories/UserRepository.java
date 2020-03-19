@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<SessionEntity, String> {
     Optional<SessionEntity> findByXsrfToken(String xsrfToken);
+    void deleteByXsrfToken(String xsrfToken);
 }

@@ -4,12 +4,11 @@ import { LoginComponent } from './login.component';
 import { AuthService } from '../services/auth.service';
 import { DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { SearchComponent } from '../bank-search/common/search/search.component';
 import { BankSearchModule } from '../bank-search/bank-search.module';
 import { ShareModule } from '../common/share.module';
-import { CookieService } from 'ngx-cookie-service';
+import { DocumentCookieService } from '../services/document-cookie.service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -26,7 +25,7 @@ describe('LoginComponent', () => {
         BankSearchModule,
         RouterTestingModule.withRoutes([{ path: 'search', component: SearchComponent }])
       ],
-      providers: [AuthService, CookieService],
+      providers: [AuthService, DocumentCookieService],
       declarations: [LoginComponent]
     }).compileComponents();
   }));

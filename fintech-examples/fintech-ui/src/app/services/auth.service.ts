@@ -6,6 +6,7 @@ import { FinTechAuthorizationService } from '../api';
 import { Credentials } from '../models/credentials.model';
 import { Consts } from '../common/consts';
 import { DocumentCookieService } from './document-cookie.service';
+import { LogException } from '../common/LogException';
 
 @Injectable({
   providedIn: 'root'
@@ -27,12 +28,23 @@ export class AuthService {
     );
   }
 
-  logout(): void {
-    localStorage.clear();
-    this.cookieService.delete(Consts.COOKIE_NAME_XSRF_TOKEN);
-    this.cookieService.delete(Consts.COOKIE_NAME_SESSION_COOKIE);
-    this.cookieService.getAll().forEach(cookie => console.log('cookie after logout :' + cookie));
-    this.openLoginPage();
+  logout(): Observable<boolean> {
+    console.log('start logout');
+    return this.finTechAuthorizationService.logoutPOST('', '', 'response').pipe(
+      map(response => {
+        if (response.ok) {
+          console.log('logout confirmed by server');
+          localStorage.clear();
+          this.cookieService.delete(Consts.COOKIE_NAME_XSRF_TOKEN);
+          this.cookieService.delete(Consts.COOKIE_NAME_SESSION_COOKIE);
+          this.cookieService.getAll().forEach(cookie => console.log('cookie after logout :' + cookie));
+          this.openLoginPage();
+        } else {
+          console.error('log off not possible due to server response:' + response.status);
+        }
+        return response.ok;
+      })
+    );
   }
 
   openLoginPage() {

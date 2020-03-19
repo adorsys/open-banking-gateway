@@ -1,7 +1,6 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
 

@@ -81,6 +81,25 @@ paths:
         '401':
           $ref: '#/components/responses/401_Unauthorized'
 
+  /v1/logout:
+    post:
+      tags:
+        - FinTechAuthorization
+      operationId: logoutPOST
+      summary: logs out user
+      description: If user can be authenticated, user will be logged out.
+      parameters:
+        #headers
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+      security:
+        - sessionCookie: []
+      responses:
+        '200':
+          description: nothing returned
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+
   /v1/search/bankSearch:
     get:
       tags:

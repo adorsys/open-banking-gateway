@@ -20,23 +20,30 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private handleRequest(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const xRequestID = uuid.v4();
-    const headers = request.headers
-      .set(Consts.HEADER_FIELD_X_REQUEST_ID, xRequestID)
-      .set(Consts.HEADER_FIELD_CONTENT_TYPE, 'application/json');
 
+    let headers;
     if (this.cookieService.exists(Consts.COOKIE_NAME_XSRF_TOKEN)) {
+      headers = request.headers
+        .set(Consts.HEADER_FIELD_X_REQUEST_ID, xRequestID)
+        .set(Consts.HEADER_FIELD_CONTENT_TYPE, 'application/json')
+        .set(Consts.HEADER_FIELD_X_XSRF_TOKEN, this.cookieService.find(Consts.COOKIE_NAME_XSRF_TOKEN));
+
       // TODO: is supposed to be sent automatically when X-XSRF cookie exists, check why not
       // Propably because it is mentioned in the api and thus overwritten by
       // generated service with not passed in XSRF-TOKEN (peters remark)
-      headers.set(Consts.HEADER_FIELD_X_XSRF_TOKEN, this.cookieService.find(Consts.COOKIE_NAME_XSRF_TOKEN));
+    } else {
+      headers = request.headers
+        .set(Consts.HEADER_FIELD_X_REQUEST_ID, xRequestID)
+        .set(Consts.HEADER_FIELD_CONTENT_TYPE, 'application/json');
     }
-
-    console.log('REQUEST ' + request.url + ' has ' + Consts.HEADER_FIELD_X_REQUEST_ID + ' ' + xRequestID);
 
     request = request.clone({
       withCredentials: true,
       headers
     });
+
+    console.log('REQUEST ' + request.url + ' has ' + Consts.HEADER_FIELD_X_REQUEST_ID + ' ' + xRequestID);
+
     return next.handle(request);
   }
 }
