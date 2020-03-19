@@ -53,12 +53,12 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SandboxServers
     }
 
     @Test
-    public void testAccountsListWithConsentUsingRedirect(FirefoxDriver firefoxDriver) {
+    public void testAccountsListWithConsentUsingRedirectAllAccountsConsent(FirefoxDriver firefoxDriver) {
         redirectListAntonBruecknerAccounts(firefoxDriver);
     }
 
     @Test
-    public void testTransactionListWithConsentUsingRedirect(FirefoxDriver firefoxDriver) {
+    public void testTransactionListWithConsentUsingRedirectAllAccountsConsent(FirefoxDriver firefoxDriver) {
         String accountResourceId = JsonPath
                 .parse(redirectListAntonBruecknerAccounts(firefoxDriver)).read("$.accounts[0].resourceId");
 
@@ -87,7 +87,9 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SandboxServers
                 .and()
                 .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
                 .and()
-                .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(firefoxDriver);
+                .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(firefoxDriver)
+                .and()
+                .user_anton_brueckner_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
 
         then()
                 .open_banking_reads_anton_brueckner_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
@@ -96,14 +98,14 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SandboxServers
     }
 
     @Test
-    void testAccountsListWithConsentUsingEmbedded() {
-        embeddedListMaxMustermanAccounts();
+    void testAccountsListWithConsentUsingEmbeddedAllAccountConsent(FirefoxDriver firefoxDriver) {
+        embeddedListMaxMustermanAccountsAllAccountConsent(firefoxDriver);
     }
 
     @Test
-    void testTransactionsListWithConsentUsingEmbedded() {
+    void testTransactionsListWithConsentUsingEmbeddedAllAccountConsent(FirefoxDriver firefoxDriver) {
         String accountResourceId = JsonPath
-                .parse(embeddedListMaxMustermanAccounts())
+                .parse(embeddedListMaxMustermanAccountsAllAccountConsent(firefoxDriver))
                 .read("$.accounts[0].resourceId");
 
         given()
@@ -113,20 +115,26 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SandboxServers
         when()
                 .fintech_calls_list_transactions_for_max_musterman(accountResourceId)
                 .and()
-                .user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent()
+                .user_max_musterman_opens_opba_consent_auth_entry_page(firefoxDriver)
                 .and()
-                .user_max_musterman_provided_password_to_embedded_authorization()
+                .user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(firefoxDriver)
                 .and()
-                .user_max_musterman_selected_sca_challenge_type_email1_to_embedded_authorization()
+                .user_max_musterman_in_consent_ui_reviews_transactions_consent_and_accepts(firefoxDriver)
                 .and()
-                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_redirect_to_fintech_ok();
+                .user_max_musterman_in_consent_ui_provides_pin(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_sees_sca_select_and_selected_type_email2_to_embedded_authorization(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
         then()
                 .open_banking_reads_max_musterman_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
                         accountResourceId, DATE_FROM, DATE_TO, BOTH_BOOKING
                 );
     }
 
-    private String embeddedListMaxMustermanAccounts() {
+    private String embeddedListMaxMustermanAccountsAllAccountConsent(FirefoxDriver firefoxDriver) {
         given()
                 .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
                 .rest_assured_points_to_opba_server(config.getOpbaServerUri());
@@ -134,13 +142,19 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SandboxServers
         when()
                 .fintech_calls_list_accounts_for_max_musterman()
                 .and()
-                .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
+                .user_max_musterman_opens_opba_consent_auth_entry_page(firefoxDriver)
                 .and()
-                .user_max_musterman_provided_password_to_embedded_authorization()
+                .user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_consent(firefoxDriver)
                 .and()
-                .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
+                .user_max_musterman_in_consent_ui_reviews_account_consent_and_accepts(firefoxDriver)
                 .and()
-                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_redirect_to_fintech_ok();
+                .user_max_musterman_in_consent_ui_provides_pin(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_sees_sca_select_and_selected_type_email2_to_embedded_authorization(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
 
         AccountInformationResult result = then()
                 .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(false);
