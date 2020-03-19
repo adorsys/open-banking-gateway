@@ -2,6 +2,11 @@
 
 echo "Validating DEV deployment"
 
+if [[ "$DISABLE_SMOKE_TESTS"  == "true" ]]; then
+  echo "Smoke tests are swithced off by DISABLE_SMOKE_TESTS variable"
+  exit 0
+fi
+
 if [[ $TRAVIS_REPO_SLUG != "adorsys/open-banking-gateway"
     || $TRAVIS_PULL_REQUEST != "false"
     || -z "$TRAVIS_COMMIT" ]];
