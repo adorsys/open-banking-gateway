@@ -134,6 +134,45 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SandboxServers
                 );
     }
 
+    @Test
+    void testAccountsListWithConsentUsingEmbeddedDedicatedOneAccountConsent(FirefoxDriver firefoxDriver) {
+        embeddedListMaxMustermanAccountsDedicatedOneAccountConsent(firefoxDriver);
+    }
+
+    @Test
+    void testTransactionsListWithConsentUsingEmbeddedDedicatedOneAccountConsent(FirefoxDriver firefoxDriver) {
+        String accountResourceId = JsonPath
+                .parse(embeddedListMaxMustermanAccountsDedicatedOneAccountConsent(firefoxDriver))
+                .read("$.accounts[0].resourceId");
+
+        given()
+                .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
+                .rest_assured_points_to_opba_server(config.getOpbaServerUri());
+
+        when()
+                .fintech_calls_list_transactions_for_max_musterman(accountResourceId)
+                .and()
+                .user_max_musterman_opens_opba_consent_auth_entry_page(firefoxDriver)
+                .and()
+                .user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_accounts_with_dedicated_transactions_consent(firefoxDriver)
+                .and()
+                .user_max_musterman_provided_to_consent_ui_account_iban_for_dedicated_transactions_consent(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_reviews_transactions_consent_and_accepts(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_provides_pin(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_sees_sca_select_and_selected_type_email2_to_embedded_authorization(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
+        then()
+                .open_banking_reads_max_musterman_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
+                        accountResourceId, DATE_FROM, DATE_TO, BOTH_BOOKING
+                );
+    }
+
     private String embeddedListMaxMustermanAccountsAllAccountConsent(FirefoxDriver firefoxDriver) {
         given()
                 .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
@@ -145,6 +184,36 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SandboxServers
                 .user_max_musterman_opens_opba_consent_auth_entry_page(firefoxDriver)
                 .and()
                 .user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_consent(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_reviews_account_consent_and_accepts(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_provides_pin(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_sees_sca_select_and_selected_type_email2_to_embedded_authorization(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
+
+        AccountInformationResult result = then()
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(false);
+
+        return result.getResponseContent();
+    }
+
+    private String embeddedListMaxMustermanAccountsDedicatedOneAccountConsent(FirefoxDriver firefoxDriver) {
+        given()
+                .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
+                .rest_assured_points_to_opba_server(config.getOpbaServerUri());
+
+        when()
+                .fintech_calls_list_accounts_for_max_musterman()
+                .and()
+                .user_max_musterman_opens_opba_consent_auth_entry_page(firefoxDriver)
+                .and()
+                .user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_accounts_with_dedicated_accounts_consent(firefoxDriver)
+                .and()
+                .user_max_musterman_provided_to_consent_ui_account_iban_for_dedicated_accounts_consent(firefoxDriver)
                 .and()
                 .user_max_musterman_in_consent_ui_reviews_account_consent_and_accepts(firefoxDriver)
                 .and()
