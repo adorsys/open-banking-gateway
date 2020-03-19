@@ -17,17 +17,18 @@ export class DocumentCookieService {
       if (cookie.startsWith(name + '=')) {
         const value = cookie.trim().substr(name.length + 1);
         if (value.length > 0) {
-          console.log('found cookie ' + name);
+          // console.log('found cookie ' + name);
           return value;
         }
       }
     }
-    console.log('did not find cookie ' + name);
+    // console.log('did not find cookie ' + name);
   }
 
   public delete(name: string): void {
-    console.log('delete cookie ' + name);
+    // console.log('delete cookie ' + name);
     document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    this.find(name); // this call is important. due to date cookie will be deleted
   }
 
   public exists(name: string): boolean {
