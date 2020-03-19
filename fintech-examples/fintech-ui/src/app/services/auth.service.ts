@@ -5,7 +5,6 @@ import { map } from 'rxjs/operators';
 import { FinTechAuthorizationService } from '../api';
 import { Credentials } from '../models/credentials.model';
 import { Consts } from '../common/consts';
-import * as uuid from 'uuid';
 import { DocumentCookieService } from './document-cookie.service';
 
 @Injectable({
@@ -19,10 +18,10 @@ export class AuthService {
   ) {}
 
   login(credentials: Credentials): Observable<boolean> {
-    return this.finTechAuthorizationService.loginPOST(uuid.v4(), credentials, 'response').pipe(
+    return this.finTechAuthorizationService.loginPOST('', credentials, 'response').pipe(
       map(response => {
         this.cookieService.getAll().forEach(cookie => console.log('cookie after login :' + cookie));
-        localStorage.setItem(Consts.USERNAME, credentials.username);
+        localStorage.setItem(Consts.LOCAL_STORAGE_USERNAME, credentials.username);
         return response.ok;
       })
     );
@@ -30,20 +29,13 @@ export class AuthService {
 
   logout(): void {
     localStorage.clear();
-    this.cookieService.delete(Consts.XSRF_TOKEN);
-    this.cookieService.delete(Consts.SESSION_COOKIE);
+    this.cookieService.delete(Consts.COOKIE_NAME_XSRF_TOKEN);
+    this.cookieService.delete(Consts.COOKIE_NAME_SESSION_COOKIE);
+    this.cookieService.getAll().forEach(cookie => console.log('cookie after logout :' + cookie));
     this.openLoginPage();
   }
 
   openLoginPage() {
     this.router.navigate(['/login']);
-  }
-
-  isLoggedIn(): boolean {
-    return this.cookieService.exists(Consts.XSRF_TOKEN);
-  }
-
-  getX_XSRF_TOKEN(): string {
-    return this.cookieService.find(Consts.XSRF_TOKEN);
   }
 }

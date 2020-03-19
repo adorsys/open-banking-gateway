@@ -15,26 +15,24 @@ export class AisService {
   getAccounts(bankId: string) {
     const okurl = window.location.pathname;
     console.log('redirect url:' + okurl);
-    return this.finTechAccountInformationService
-      .aisAccountsGET(bankId, '', 'peter', okurl, 'not-ok-url', 'response')
-      .pipe(
-        map(response => {
-          switch (response.status) {
-            case 202:
-              const additionalParameters = new URLSearchParams({
-                authorizationSessionId: response.headers.get('Authorization-Session-ID'),
-                serviceSessionId: response.headers.get('Service-Session-ID'),
-                redirectCode: response.headers.get('Redirect-Code')
-              });
-              window.location.href = response.headers.get('location') + '&' + additionalParameters;
-              break;
-            case 200:
-              console.log('I got the accounts and I want to show them ;-)');
-              console.log('I got ', response.body.accounts.length, ' accounts');
-              return response.body.accounts;
-          }
-        })
-      );
+    return this.finTechAccountInformationService.aisAccountsGET(bankId, '', '', okurl, 'not-ok-url', 'response').pipe(
+      map(response => {
+        switch (response.status) {
+          case 202:
+            const additionalParameters = new URLSearchParams({
+              authorizationSessionId: response.headers.get('Authorization-Session-ID'),
+              serviceSessionId: response.headers.get('Service-Session-ID'),
+              redirectCode: response.headers.get('Redirect-Code')
+            });
+            window.location.href = response.headers.get('location') + '&' + additionalParameters;
+            break;
+          case 200:
+            console.log('I got the accounts and I want to show them ;-)');
+            console.log('I got ', response.body.accounts.length, ' accounts');
+            return response.body.accounts;
+        }
+      })
+    );
   }
 
   getTransactions(bankId: string, accountId: string) {
