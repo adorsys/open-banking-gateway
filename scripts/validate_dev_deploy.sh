@@ -20,7 +20,7 @@ OPBA_URL=https://obg-dev-openbankinggateway.cloud.adorsys.de
 
 echo "Waiting for deployment"
 # Wait for deployment to happen
-timeout 600s bash -c 'while [[ $(wget -qO- '$OPBA_URL'/actuator/info | grep -c '$COMMIT') != 1 ]]; do echo "Wait for actuator status to return desired commit"; sleep 10; done' || echo "Failed waiting for deploy $COMMIT"; exit 1
+timeout 600s bash -c 'while [[ $(wget -qO- '$OPBA_URL'/actuator/info | grep -c '$COMMIT') != 1 ]]; do echo "Wait for actuator status to return desired commit"; sleep 10; done' || (echo "Failed waiting for deploy $COMMIT";exit 1)
 
 echo "Run smoke tests"
 # Run smoke tests:
