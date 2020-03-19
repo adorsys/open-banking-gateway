@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "Validating DEV deployment"
+
 if [[ $TRAVIS_REPO_SLUG != "adorsys/open-banking-gateway"
     || $TRAVIS_PULL_REQUEST != "false"
     || -z "$TRAVIS_COMMIT" ]];
