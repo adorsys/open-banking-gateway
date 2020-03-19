@@ -6,9 +6,11 @@ import { DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
 import { BankSearchModule } from '../bank-search/bank-search.module';
-import { CookieService } from 'ngx-cookie-service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { BankSearchComponent } from '../bank-search/components/bank-search/bank-search.component';
+import { CookieService } from 'ngx-cookie-service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -17,10 +19,16 @@ describe('LoginComponent', () => {
   let authServiceSpy;
   let de: DebugElement;
   let el: HTMLElement;
+  let router: Router;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [BankSearchModule, ReactiveFormsModule, RouterTestingModule, HttpClientModule],
+      imports: [
+        BankSearchModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        RouterTestingModule.withRoutes([{ path: 'search', component: BankSearchComponent }])
+      ],
       providers: [AuthService, CookieService],
       declarations: [LoginComponent]
     }).compileComponents();
@@ -33,16 +41,17 @@ describe('LoginComponent', () => {
     authService = fixture.debugElement.injector.get(AuthService);
     de = fixture.debugElement.query(By.css('form'));
     el = de.nativeElement;
+    router = TestBed.get(Router);
 
     fixture.detectChanges();
     component.ngOnInit();
   });
 
-  fit('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  fit('should call login on the service', () => {
+  it('should call login on the service', () => {
     authServiceSpy = spyOn(authService, 'login').and.callThrough();
 
     const form = component.loginForm;
@@ -56,11 +65,11 @@ describe('LoginComponent', () => {
     expect(authServiceSpy).toHaveBeenCalled();
   });
 
-  fit('loginForm should be invalid when at least one field is empty', () => {
+  it('loginForm should be invalid when at least one field is empty', () => {
     expect(component.loginForm.valid).toBeFalsy();
   });
 
-  fit('username field validity', () => {
+  it('username field validity', () => {
     let errors = {};
     const username = component.loginForm.controls['username'];
     expect(username.valid).toBeFalsy();
@@ -75,7 +84,7 @@ describe('LoginComponent', () => {
     expect(errors['required']).toBeFalsy();
   });
 
-  fit('password field validity', () => {
+  it('password field validity', () => {
     let errors = {};
     const password = component.loginForm.controls['password'];
     expect(password.valid).toBeFalsy();

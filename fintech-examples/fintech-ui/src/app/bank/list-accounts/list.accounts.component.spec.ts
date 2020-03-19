@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { AisService } from '../services/ais.service';
 import { ListAccountsComponent } from './list-accounts.component';
 import { AccountDetails, AccountStatus } from '../../api';
-import { AppComponent } from '../../app.component';
+import { BankComponent } from '../bank.component';
 
 describe('ListAccountsComponent', () => {
   let component: ListAccountsComponent;
@@ -16,7 +16,13 @@ describe('ListAccountsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule.withRoutes([
+          { path: 'bank/:id', component: BankComponent },
+          { path: '', component: ListAccountsComponent }
+        ])
+      ],
       declarations: [ListAccountsComponent],
       providers: [AisService, { provide: ActivatedRoute }]
     }).compileComponents();
@@ -27,11 +33,7 @@ describe('ListAccountsComponent', () => {
     component = fixture.componentInstance;
     router = TestBed.get(Router);
     aisService = TestBed.get(AisService);
-    // component.route.parent.parent.params.subscribe((params) => {
-    // component.bankId = params['bankId'];
-    // component.getAccountDetails();
-    // });
-    component.bankId = localStorage.getItem('bankId');
+    component.bankId = 'xxxxxxxxxxx';
     fixture.detectChanges();
   });
 

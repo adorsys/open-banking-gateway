@@ -21,7 +21,7 @@ describe('BankComponent', () => {
     TestBed.configureTestingModule({
       declarations: [SidebarComponent, BankComponent, NavbarComponent],
       imports: [RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule],
-      providers: [bankService]
+      providers: [BankProfileService]
     }).compileComponents();
   }));
 
@@ -42,6 +42,7 @@ describe('BankComponent', () => {
     } as BankProfile;
 
     spyOn(bankService, 'getBankProfile').and.returnValue(of(mockBankProfile));
+    expect(bankService.getBankProfile(mockBankProfile.bankId)).toBeTruthy();
     component.ngOnInit();
     expect(component).toBeTruthy();
   });

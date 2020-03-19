@@ -9,7 +9,7 @@ const routes: Routes = [
     component: BankSearchComponent
   },
   {
-    path: '/bank/:id',
+    path: 'bank/:id',
     component: BankComponent
   }
 ];

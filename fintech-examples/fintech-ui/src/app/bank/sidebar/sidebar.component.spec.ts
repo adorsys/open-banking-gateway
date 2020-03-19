@@ -21,7 +21,7 @@ describe('SidebarComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SidebarComponent);
     component = fixture.componentInstance;
-    component.route.params.subscribe(params => {
+    component.route.paramMap.subscribe(params => {
       component.bankId = params['bankId'];
     });
     fixture.detectChanges();
