@@ -22,6 +22,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     public static final String SUBMIT_ID = "do_submit";
     public static final String ANTON_BRUECKNER = "anton.brueckner";
     public static final String MAX_MUSTERMAN = "max.musterman";
+    public static final String MAX_MUSTERMAN_IBAN = "DE38760700240320465700";
     public static final String PIN_VALUE = "12345";
     public static final String TAN_VALUE = "123456";
 
@@ -61,6 +62,37 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         waitForPageLoadAndUrlEnds(driver, "entry-consent-accounts");
         sendText(driver, By.id("PSU_ID"), MAX_MUSTERMAN);
         clickOnButton(driver, By.id("ALL_ACCOUNTS"));
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+
+    public SELF user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_accounts_with_dedicated_transactions_consent(WebDriver driver) {
+        waitForPageLoadAndUrlEnds(driver, "entry-consent-transactions");
+        sendText(driver, By.id("PSU_ID"), MAX_MUSTERMAN);
+        clickOnButton(driver, By.id("FINE_GRAINED"));
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_accounts_with_dedicated_accounts_consent(WebDriver driver) {
+        waitForPageLoadAndUrlEnds(driver, "entry-consent-accounts");
+        sendText(driver, By.id("PSU_ID"), MAX_MUSTERMAN);
+        clickOnButton(driver, By.id("FINE_GRAINED"));
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_max_musterman_provided_to_consent_ui_account_iban_for_dedicated_accounts_consent(WebDriver driver) {
+        waitForPageLoadAndUrlEnds(driver, "entry-consent-accounts/dedicated-account-access");
+        sendText(driver, By.cssSelector("[id^=account-reference]"), MAX_MUSTERMAN_IBAN);
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_max_musterman_provided_to_consent_ui_account_iban_for_dedicated_transactions_consent(WebDriver driver) {
+        waitForPageLoadAndUrlEnds(driver, "entry-consent-transactions/dedicated-account-access");
+        sendText(driver, By.cssSelector("[id^=account-reference]"), MAX_MUSTERMAN_IBAN);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
