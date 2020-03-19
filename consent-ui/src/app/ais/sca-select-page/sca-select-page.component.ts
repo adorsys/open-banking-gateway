@@ -16,6 +16,7 @@ export class ScaSelectPageComponent implements OnInit {
   redirectCode = '';
   scaMethodForm: FormGroup;
   scaMethods: ScaUserData[] = [];
+  selectedMethod = new FormControl();
 
   constructor(
     private sessionService: SessionService,
@@ -38,7 +39,7 @@ export class ScaSelectPageComponent implements OnInit {
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
         StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
         this.redirectCode,
-        { scaAuthenticationData: { SCA_CHALLENGE_ID: this.scaMethodForm.get('selectedMethodValue').value } },
+        { scaAuthenticationData: { SCA_CHALLENGE_ID: this.selectedMethod.value } },
         'response'
       )
       .subscribe(
@@ -65,13 +66,13 @@ export class ScaSelectPageComponent implements OnInit {
         );
         this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
         this.scaMethods = consentAuth.body.consentAuth.scaMethods;
-        this.scaMethodForm.get('selectedMethodValue').setValue(this.scaMethods[0].id);
+        this.selectedMethod.setValue(this.scaMethods[0].id);
       });
   }
 
   private initialScaMethodForm(): void {
     this.scaMethodForm = this.formBuilder.group({
-      selectedMethodValue: [new FormControl(), Validators.required]
+      selectedMethodValue: [this.selectedMethod, Validators.required]
     });
   }
 }
