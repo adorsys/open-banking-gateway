@@ -15,6 +15,7 @@ import { ErrorService } from './errorsHandler/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RedirectAfterConsentComponent } from './redirect-after-consent/redirect-after-consent.component';
 import { NavbarComponent } from './common/navbar/navbar.component';
+import { DocumentCookieService } from './services/document-cookie.service';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -41,6 +42,7 @@ export function apiConfigFactory(): Configuration {
   providers: [
     AuthGuard,
     ErrorService,
+    DocumentCookieService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
