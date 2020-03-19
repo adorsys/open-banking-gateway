@@ -16,4 +16,4 @@ timeout 600s bash -c 'while [[ $(curl -s "'"$OPBA_URL"'"/actuator/info | grep -c
 
 # Run smoke tests:
 export ENABLE_SMOKE_TESTS=true
-./mvnw test -DfailIfNoTests=false -Dtest=de.adorsys.opba.smoketests.SmokeE2ETest
+./mvnw test -DfailIfNoTests=false -Dtest=de.adorsys.opba.smoketests.OpbaApiSmokeE2ETest
