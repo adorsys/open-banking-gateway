@@ -6,22 +6,29 @@ getProp = (name, defaultValue) => {
   return defaultValue;
 };
 
+getOpbaUrl = () => {
+  return getProp('OPBA_SERVER_URL', 'https://obg-dev-openbankinggateway.cloud.adorsys.de');
+};
+
+getConsentUiUrl = () => {
+  return getProp('OPBA_CONSENT_UI_URL', 'https://obg-dev-consentui.cloud.adorsys.de');
+};
+
 const PROXY_CONFIG = {
   '/embedded-server/*': {
-    target: getProp("EMBEDDED_SERVER_URL", "https://obg-dev-openbankinggateway.cloud.adorsys.de"),
+    target: getOpbaUrl(),
     pathRewrite: {
-      "^/embedded-server": ""
+      '^/embedded-server': ''
     },
-    logLevel: "debug",
+    logLevel: 'debug',
     secure: false,
     changeOrigin: true,
-    headers: {"Access-Control-Expose-Headers": "*"},
+    headers: {'Access-Control-Expose-Headers': '*'},
     onProxyRes: (proxyRes, req, res) => {
       if (proxyRes.headers['location']) {
-
         // change remote UI to local UI
-        if (proxyRes.headers['location'].includes('https://obg-dev-consentui.cloud.adorsys.de')) {
-          proxyRes.headers['location'] = proxyRes.headers['location'].replace('https://obg-dev-consentui.cloud.adorsys.de', 'http://localhost:4200');
+        if (proxyRes.headers['location'].includes(getConsentUiUrl())) {
+          proxyRes.headers['location'] = proxyRes.headers['location'].replace(getConsentUiUrl(), 'http://localhost:4200');
         }
       }
     }
