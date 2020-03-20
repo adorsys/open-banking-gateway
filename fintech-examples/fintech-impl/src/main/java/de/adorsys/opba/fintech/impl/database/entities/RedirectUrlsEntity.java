@@ -14,7 +14,7 @@ import javax.persistence.Id;
 public class RedirectUrlsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "redirect_urls_generator")
-    @SequenceGenerator(name = "redirect_urls_generator", sequenceName = "redirect_urls_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "redirect_urls_generator", sequenceName = "redirect_urls_id_seq")
     private Long id;
 
     @Column(nullable = false)

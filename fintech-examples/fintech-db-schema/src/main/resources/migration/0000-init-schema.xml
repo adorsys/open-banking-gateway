@@ -133,10 +133,10 @@
     <changeSet author="ryeex@adorsys.com.ua" id="2020-03-19-04">
         <comment>Create sequences for table IDs.</comment>
 
-        <createSequence sequenceName="cookie_id_seq"/>
-        <createSequence sequenceName="login_id_seq"/>
-        <createSequence sequenceName="redirect_urls_id_seq"/>
-        <createSequence sequenceName="request_info_id_seq"/>
+        <createSequence sequenceName="cookie_id_seq" incrementBy="50"/>
+        <createSequence sequenceName="login_id_seq" incrementBy="50"/>
+        <createSequence sequenceName="redirect_urls_id_seq" incrementBy="50"/>
+        <createSequence sequenceName="request_info_id_seq" incrementBy="50"/>
 
     </changeSet>
 
