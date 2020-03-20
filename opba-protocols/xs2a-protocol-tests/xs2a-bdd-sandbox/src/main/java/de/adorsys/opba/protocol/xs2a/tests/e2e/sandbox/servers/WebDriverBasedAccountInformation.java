@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,9 +14,8 @@ import org.springframework.retry.RetryOperations;
 
 import java.time.Duration;
 
-import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-
 @JGivenStage
+@SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccountInformation<SELF>> extends AccountInformationRequestCommon<SELF> {
 
     @Autowired
@@ -89,13 +89,13 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     private void performClick(WebDriver driver, By identifier) {
-        wait(driver).until(elementToBeClickable(identifier));
+        wait(driver).until(ExpectedConditions.elementToBeClickable(identifier));
         driver.findElement(identifier).click();
     }
 
     private void sendText(WebDriver driver, By identifier, String text) {
         withRetry.execute(context -> {
-            wait(driver).until(elementToBeClickable(identifier));
+            wait(driver).until(ExpectedConditions.elementToBeClickable(identifier));
             driver.findElement(identifier).sendKeys(text);
             return null;
         });

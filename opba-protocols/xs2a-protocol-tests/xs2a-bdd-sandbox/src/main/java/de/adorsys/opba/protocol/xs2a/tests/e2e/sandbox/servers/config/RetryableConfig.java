@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers;
+package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ConsentUtil } from '../common/consent-util';
-import { ApiHeaders } from '../../api/api.headers';
-import { AisConsentToGrant } from '../common/dto/ais-consent';
 import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ConsentAuthorizationService, ScaUserData } from '../../api';
 import { SessionService } from '../../common/session.service';
-import { ConsentAuthorizationService } from '../../api';
+import { ApiHeaders } from '../../api/api.headers';
+import { StubUtil } from '../common/stub-util';
 
 @Component({
   selector: 'consent-app-sca-select-page',
@@ -12,34 +12,67 @@ import { ConsentAuthorizationService } from '../../api';
   styleUrls: ['./sca-select-page.component.scss']
 })
 export class ScaSelectPageComponent implements OnInit {
-  private redirectTo: string;
-  private authorizationId: string;
-  private aisConsent: AisConsentToGrant;
+  authorizationSessionId = '';
+  redirectCode = '';
+  scaMethodForm: FormGroup;
+  scaMethods: ScaUserData[] = [];
+  selectedMethod = new FormControl();
 
   constructor(
-    private activatedRoute: ActivatedRoute,
     private sessionService: SessionService,
-    private consentAuthorisation: ConsentAuthorizationService
+    private consentAuthorizationService: ConsentAuthorizationService,
+    private route: ActivatedRoute,
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit() {
-    this.activatedRoute.parent.params.subscribe(res => {
-      this.authorizationId = res.authId;
-      this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
-      this.loadRedirectUri();
-    });
+    this.initialScaMethodForm();
+    this.authorizationSessionId = this.route.parent.snapshot.paramMap.get('authId');
+    this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
+    this.loadAvailableMethods();
   }
 
-  onConfirm() {
-    window.location.href = this.redirectTo;
+  onSubmit(): void {
+    this.consentAuthorizationService
+      .embeddedUsingPOST(
+        this.authorizationSessionId,
+        StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
+        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
+        this.redirectCode,
+        { scaAuthenticationData: { SCA_CHALLENGE_ID: this.selectedMethod.value } },
+        'response'
+      )
+      .subscribe(
+        res => {
+          // redirect to the provided location
+          console.log('REDIRECTING TO: ' + res.headers.get(ApiHeaders.LOCATION));
+          this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+          window.location.href = res.headers.get(ApiHeaders.LOCATION);
+        },
+        error => {
+          console.log(error);
+          // window.location.href = error.url;
+        }
+      );
   }
 
-  private loadRedirectUri() {
-    this.consentAuthorisation
-      .authUsingGET(this.authorizationId, this.sessionService.getRedirectCode(this.authorizationId), 'response')
-      .subscribe(res => {
-        this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-        console.log(res);
+  private loadAvailableMethods(): void {
+    this.consentAuthorizationService
+      .authUsingGET(this.authorizationSessionId, this.redirectCode, 'response')
+      .subscribe(consentAuth => {
+        this.sessionService.setRedirectCode(
+          this.authorizationSessionId,
+          consentAuth.headers.get(ApiHeaders.REDIRECT_CODE)
+        );
+        this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
+        this.scaMethods = consentAuth.body.consentAuth.scaMethods;
+        this.selectedMethod.setValue(this.scaMethods[0].id);
       });
+  }
+
+  private initialScaMethodForm(): void {
+    this.scaMethodForm = this.formBuilder.group({
+      selectedMethodValue: [this.selectedMethod, Validators.required]
+    });
   }
 }
