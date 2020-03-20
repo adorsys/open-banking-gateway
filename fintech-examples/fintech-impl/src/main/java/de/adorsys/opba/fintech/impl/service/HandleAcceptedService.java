@@ -51,7 +51,7 @@ public class HandleAcceptedService {
                                         ? null
                                         : UUID.fromString(serviceSessionIdString);
 
-        sessionEntity.setServiceSessionID(serviceSessionId);
+        sessionEntity.setServiceSessionId(serviceSessionId);
         authorizeService.updateUserSession(sessionEntity);
     }
 }

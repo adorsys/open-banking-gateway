@@ -92,6 +92,12 @@
             <version>${guava.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>${jetbrains.annotations.version}</version>
+        </dependency>
+
         <!-- MOCKS not in test, but mock in main -->
         <dependency>
             <groupId>org.apache.commons</groupId>
