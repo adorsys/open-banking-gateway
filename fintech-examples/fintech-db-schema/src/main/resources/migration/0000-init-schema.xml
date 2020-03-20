@@ -5,7 +5,7 @@
     <changeSet author="ryeex@adorsys.com.ua" id="2020-03-19-01">
         <comment>Create initial table structure</comment>
 
-        <createTable tableName="cookie_entity">
+        <createTable tableName="${table-prefix}cookie_entity">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -17,7 +17,7 @@
             </column>
         </createTable>
 
-        <createTable tableName="login_entity">
+        <createTable tableName="${table-prefix}login_entity">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -26,14 +26,14 @@
             </column>
         </createTable>
 
-        <createTable tableName="redirect_urls_entity">
+        <createTable tableName="${table-prefix}redirect_urls_entity">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="okurl" type="VARCHAR(255)">
+            <column name="ok_url" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="not_okurl" type="VARCHAR(255)">
+            <column name="not_ok_url" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="redirect_code" type="VARCHAR(255)">
@@ -44,7 +44,7 @@
             </column>
         </createTable>
 
-        <createTable tableName="request_info_entity">
+        <createTable tableName="${table-prefix}request_info_entity">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -67,7 +67,7 @@
 
         </createTable>
 
-        <createTable tableName="session_entity">
+        <createTable tableName="${table-prefix}session_entity">
             <column name="login_user_name" type="VARCHAR(255)">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -77,24 +77,24 @@
 
             <column name="xsrf_token" type="VARCHAR(255)"/>
             <column name="psu_consent_session" type="VARCHAR(255)"/>
-            <column name="service_sessionid" type="UUID"/>
+            <column name="service_session_id" type="UUID"/>
         </createTable>
 
-        <createTable tableName="session_entity_cookies">
+        <createTable tableName="${table-prefix}session_entity_cookies">
 
             <column name="session_entity_login_user_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cookies_id" type="INTEGER">
+            <column name="cookies_id" type="BIGINT">
                 <constraints nullable="false" unique="true"/>
             </column>
         </createTable>
 
-        <createTable tableName="session_entity_logins">
+        <createTable tableName="${table-prefix}session_entity_logins">
             <column name="session_entity_login_user_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="logins_id" type="INTEGER">
+            <column name="logins_id" type="BIGINT">
                 <constraints nullable="false" unique="true"/>
             </column>
         </createTable>
@@ -104,30 +104,30 @@
      <changeSet author="ryeex@adorsys.com.ua" id="2020-03-19-02">
         <comment>Add foreign keys to session_entity_cookies</comment>
 
-         <addForeignKeyConstraint baseColumnNames="session_entity_login_user_name" baseTableName="session_entity_cookies"
+         <addForeignKeyConstraint baseColumnNames="session_entity_login_user_name" baseTableName="${table-prefix}session_entity_cookies"
                                   constraintName="fk_sess_ent_cook_to_sess_ent" deferrable="false"
                                   initiallyDeferred="false"
-                                  referencedColumnNames="login_user_name" referencedTableName="session_entity"/>
+                                  referencedColumnNames="login_user_name" referencedTableName="${table-prefix}session_entity"/>
 
-         <addForeignKeyConstraint baseColumnNames="cookies_id" baseTableName="session_entity_cookies"
+         <addForeignKeyConstraint baseColumnNames="cookies_id" baseTableName="${table-prefix}session_entity_cookies"
                                   constraintName="fk_sess_ent_cook_to_cook" deferrable="false"
                                   initiallyDeferred="false"
-                                  referencedColumnNames="id" referencedTableName="cookie_entity"/>
+                                  referencedColumnNames="id" referencedTableName="${table-prefix}cookie_entity"/>
 
      </changeSet>
 
     <changeSet author="ryeex@adorsys.com.ua" id="2020-03-19-03">
         <comment>Add foreign keys to session_entity_logins</comment>
 
-        <addForeignKeyConstraint baseColumnNames="session_entity_login_user_name" baseTableName="session_entity_logins"
+        <addForeignKeyConstraint baseColumnNames="session_entity_login_user_name" baseTableName="${table-prefix}session_entity_logins"
                                  constraintName="fk_sess_ent_login_to_sess_ent" deferrable="false"
                                  initiallyDeferred="false"
-                                 referencedColumnNames="login_user_name" referencedTableName="session_entity"/>
+                                 referencedColumnNames="login_user_name" referencedTableName="${table-prefix}session_entity"/>
 
-        <addForeignKeyConstraint baseColumnNames="logins_id" baseTableName="session_entity_logins"
+        <addForeignKeyConstraint baseColumnNames="logins_id" baseTableName="${table-prefix}session_entity_logins"
                                  constraintName="fk_sess_ent_login_to_login" deferrable="false"
                                  initiallyDeferred="false"
-                                 referencedColumnNames="id" referencedTableName="login_entity"/>
+                                 referencedColumnNames="id" referencedTableName="${table-prefix}login_entity"/>
     </changeSet>
 
     <changeSet author="ryeex@adorsys.com.ua" id="2020-03-19-04">

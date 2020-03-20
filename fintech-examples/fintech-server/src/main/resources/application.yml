@@ -28,7 +28,16 @@ spring:
     username: postgres
     password: docker
   liquibase:
+    enabled: true
     change-log: classpath:master.xml
+    parameters:
+      table-prefix: opb_
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: de.adorsys.opba.fintech.impl.database.hibernate.PrefixAndSnakeCasePhysicalNamingStrategy
+      # DDL is handled by Liquibase
+      ddl-auto: validate
 
 fintech-ui:
   redirect-url: http://localhost:4444/{redirectUri}/{redirectCode}

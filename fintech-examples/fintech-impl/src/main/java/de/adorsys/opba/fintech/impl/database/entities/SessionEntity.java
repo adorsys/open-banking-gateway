@@ -43,7 +43,7 @@ public class SessionEntity {
     private List<CookieEntity> cookies = new ArrayList<>();
 
     private String psuConsentSession;
-    private UUID serviceSessionID;
+    private UUID serviceSessionId;
 
     public SessionEntity addCookie(String key, String value) {
         if (cookies == null) {

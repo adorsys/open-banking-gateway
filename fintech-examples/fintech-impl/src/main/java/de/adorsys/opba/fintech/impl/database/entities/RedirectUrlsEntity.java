@@ -21,10 +21,10 @@ public class RedirectUrlsEntity {
     private String redirectState;
 
     @Column(nullable = false)
-    private String okURL;
+    private String okUrl;
 
     @Column(nullable = false)
-    private String notOkURL;
+    private String notOkUrl;
 
     @Column(nullable = false)
     private String redirectCode;
