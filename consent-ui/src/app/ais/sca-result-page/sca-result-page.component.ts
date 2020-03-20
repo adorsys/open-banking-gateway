@@ -48,6 +48,7 @@ export class ReportScaResultComponent implements OnInit {
         res => {
           // redirect to the provided location
           console.log('REDIRECTING TO: ' + res.headers.get(ApiHeaders.LOCATION));
+          this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
           window.location.href = res.headers.get(ApiHeaders.LOCATION);
         },
         error => {
