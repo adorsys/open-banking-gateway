@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class RequestInfoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "request_info_generator")
-    @SequenceGenerator(name = "request_info_generator", sequenceName = "request_info_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "request_info_generator", sequenceName = "request_info_id_seq")
     private Long id;
 
     @Column(nullable = false)

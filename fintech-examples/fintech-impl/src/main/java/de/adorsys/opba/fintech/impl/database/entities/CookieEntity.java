@@ -23,7 +23,7 @@ import javax.persistence.Id;
 public class CookieEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cookie_generator")
-    @SequenceGenerator(name = "cookie_generator", sequenceName = "cookie_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "cookie_generator", sequenceName = "cookie_id_seq")
     private Long id;
 
     @Column(nullable = false)

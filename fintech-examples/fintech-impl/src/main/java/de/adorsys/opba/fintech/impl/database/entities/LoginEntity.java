@@ -21,7 +21,7 @@ import java.time.OffsetDateTime;
 public class LoginEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "login_generator")
-    @SequenceGenerator(name = "login_generator", sequenceName = "login_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "login_generator", sequenceName = "login_id_seq")
     private Long id;
 
     @Column(nullable = false)
