@@ -9,6 +9,8 @@ spring:
     username: SA
     password:
     driver-class-name: org.h2.Driver
+  liquibase:
+    change-log: classpath:master.xml
 
 fintech-ui:
   redirect-url: http://localhost:4444/{redirectUri}/{redirectCode}
