@@ -17,7 +17,7 @@ export class ListAccountsComponent implements OnInit, OnDestroy {
   constructor(public route: ActivatedRoute, private aisService: AisService) {}
 
   ngOnInit() {
-    this.bankId = this.route.parent.snapshot.paramMap.get('bankid');
+    this.bankId = this.route.parent.parent.snapshot.paramMap.get('bankid');
     console.log('list-accounts for bankid', this.bankId);
     localStorage.setItem('bankId', this.bankId);
     this.accountsSubscription = this.aisService.getAccounts(this.bankId).subscribe(accounts => {

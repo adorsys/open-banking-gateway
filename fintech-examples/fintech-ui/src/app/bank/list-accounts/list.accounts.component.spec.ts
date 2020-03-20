@@ -2,11 +2,28 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { AisService } from '../services/ais.service';
 import { ListAccountsComponent } from './list-accounts.component';
 import { AccountDetails, AccountStatus } from '../../api';
 import { BankComponent } from '../bank.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+
+class MockActivatedRoute {
+  parent: any;
+  params: any;
+
+  constructor(options) {
+    this.parent = options.parent;
+    this.params = options.params;
+  }
+}
+
+const mockActivatedRoute = new MockActivatedRoute({
+  parent: new MockActivatedRoute({
+    params: of({ bankId: 'xxxxx' })
+  })
+});
 
 describe('ListAccountsComponent', () => {
   let component: ListAccountsComponent;
@@ -23,9 +40,14 @@ describe('ListAccountsComponent', () => {
           { path: '', component: ListAccountsComponent }
         ])
       ],
-      declarations: [ListAccountsComponent],
-      providers: [AisService, { provide: ActivatedRoute }]
-    }).compileComponents();
+      declarations: [ListAccountsComponent, BankComponent, SidebarComponent]
+    })
+      .overrideComponent(ListAccountsComponent, {
+        set: {
+          providers: [AisService, { provide: ActivatedRoute, useValue: mockActivatedRoute }]
+        }
+      })
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -33,7 +55,7 @@ describe('ListAccountsComponent', () => {
     component = fixture.componentInstance;
     router = TestBed.get(Router);
     aisService = TestBed.get(AisService);
-    component.bankId = 'xxxxxxxxxxx';
+
     fixture.detectChanges();
   });
 
