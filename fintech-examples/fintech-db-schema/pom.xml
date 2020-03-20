@@ -18,6 +18,9 @@
         mvn -DpropertyFile=liquibase.my-special.properties liquibase:update
         -->
         <propertyFile>liquibase.properties</propertyFile>
+        <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
+        Change this if depth changes. Current: /open-banking-gateway/fintech-examples/fintech-server -->
+        <main.basedir>${project.parent.parent.basedir}</main.basedir>
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
