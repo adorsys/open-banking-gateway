@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DedicatedAccessComponent } from './dedicated-access.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('LimitedAccessComponent', () => {
   let component: DedicatedAccessComponent;
@@ -8,9 +10,10 @@ describe('LimitedAccessComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DedicatedAccessComponent ]
-    })
-    .compileComponents();
+      declarations: [DedicatedAccessComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
+      providers: [ReactiveFormsModule]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
