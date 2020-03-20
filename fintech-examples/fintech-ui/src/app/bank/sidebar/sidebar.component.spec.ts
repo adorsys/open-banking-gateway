@@ -4,30 +4,33 @@ import { SidebarComponent } from './sidebar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BankProfileService } from '../../bank-search/services/bank-profile.service';
-import { ActivatedRoute } from '@angular/router';
+import { MockActivatedRoute } from '../../services/mock-active-router';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
   let fixture: ComponentFixture<SidebarComponent>;
+  let activatedRoute: MockActivatedRoute;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [SidebarComponent],
       imports: [RouterTestingModule, HttpClientTestingModule],
-      providers: [BankProfileService, { provide: ActivatedRoute }]
+      providers: [BankProfileService, MockActivatedRoute]
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SidebarComponent);
     component = fixture.componentInstance;
-    component.route.paramMap.subscribe(params => {
-      component.bankId = params['bankId'];
-    });
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should get bankId from activated route', () => {
+    activatedRoute = new MockActivatedRoute();
+    expect(component.bankId).toBeUndefined();
+    activatedRoute.snapshot.paramMap.subscribe(id => (component.bankId = id));
+
+    fixture.detectChanges();
+    expect(component.bankId).toEqual('xxxxx');
   });
 });

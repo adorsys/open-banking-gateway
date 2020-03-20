@@ -20,16 +20,20 @@ export class SidebarComponent implements OnInit {
   ngOnInit() {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
     console.log('sidebar gets bankid', this.bankId);
-    this.bankProfileService.getBankProfile(this.bankId).subscribe(response => {
+    this.getBankProfile(this.bankId);
+  }
+
+  getRouterLinkListAccounts(): string {
+    return this.showListAccounts ? 'account' : '';
+  }
+
+  getBankProfile(bankId: string) {
+    this.bankProfileService.getBankProfile(bankId).subscribe(response => {
       console.log('bank profile returns:' + JSON.stringify(response));
       this.bankName = response.bankName;
       this.showListAccounts = response.services.includes('LIST_ACCOUNTS');
       this.showListTransactions = response.services.includes('LIST_TRANSACTIONS');
       this.showInitiatePayment = response.services.includes('INITIATE_PAYMENT');
     });
-  }
-
-  getRouterLinkListAccounts(): string {
-    return this.showListAccounts ? 'account' : '';
   }
 }
