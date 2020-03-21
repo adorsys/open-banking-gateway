@@ -33,8 +33,11 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
     private final RedirectHandlerService redirectHandlerService;
     private final RequestInfoService requestInfoService;
 
+    // uaContext
     @Override
     public ResponseEntity<AccountList> aisAccountsGET(String bankId, UUID xRequestID, String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
+
+
         ContextInformation contextInformation = new ContextInformation(xRequestID);
         if (!authorizeService.isAuthorized(xsrfToken, null)) {
             log.warn("Request was failed: Xsrf Token is wrong or user are not authorized!");

@@ -1,12 +1,11 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { FinTechAuthorizationService } from '../api';
-import { Credentials } from '../models/credentials.model';
-import { Consts } from '../common/consts';
-import { DocumentCookieService } from './document-cookie.service';
-import { LogException } from '../common/LogException';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {FinTechAuthorizationService} from '../api';
+import {Credentials} from '../models/credentials.model';
+import {Consts} from '../common/consts';
+import {DocumentCookieService} from './document-cookie.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +15,8 @@ export class AuthService {
     private router: Router,
     private finTechAuthorizationService: FinTechAuthorizationService,
     private cookieService: DocumentCookieService
-  ) {}
+  ) {
+  }
 
   login(credentials: Credentials): Observable<boolean> {
     return this.finTechAuthorizationService.loginPOST('', credentials, 'response').pipe(
@@ -31,20 +31,20 @@ export class AuthService {
   logout(): Observable<boolean> {
     console.log('start logout');
     return this.finTechAuthorizationService.logoutPOST('', '', 'response').pipe(
-      map(response => {
-        if (response.ok) {
-          console.log('logout confirmed by server');
+      map(
+        response => {
+          console.log("got response from server");
           localStorage.clear();
           this.cookieService.delete(Consts.COOKIE_NAME_XSRF_TOKEN);
           this.cookieService.delete(Consts.COOKIE_NAME_SESSION_COOKIE);
           this.cookieService.getAll().forEach(cookie => console.log('cookie after logout :' + cookie));
           this.openLoginPage();
-        } else {
-          console.error('log off not possible due to server response:' + response.status);
+          return response.ok;
+        },
+        error => {
+          console.error('logout with error');
         }
-        return response.ok;
-      })
-    );
+      ));
   }
 
   openLoginPage() {
