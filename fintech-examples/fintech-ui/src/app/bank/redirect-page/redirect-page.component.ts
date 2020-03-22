@@ -9,7 +9,7 @@ import {Consts} from "../../common/consts";
 })
 export class RedirectPageComponent implements OnInit {
   private bankId;
-  private bankName;
+  public bankName;
   private location;
 
   constructor(private router: Router, private route: ActivatedRoute) {
