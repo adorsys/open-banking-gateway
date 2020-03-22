@@ -58,7 +58,7 @@ public class AuthorizeService {
 
         // delete old cookies, if available
         sessionEntity.setCookies(new ArrayList<>());
-        
+
         sessionEntity.addCookie(SESSION_COOKIE, UUID.randomUUID().toString());
         sessionEntity.addCookie(XSRF_TOKEN_COOKIE, sessionEntity.getXsrfToken());
 
