@@ -9,6 +9,8 @@ import { of } from 'rxjs';
 import { SessionService } from '../../../../../common/session.service';
 import { AccountAccessLevel } from '../../../../common/dto/ais-consent';
 import { AuthConsentState } from '../../../../common/dto/auth-state';
+import { AccountsConsentReviewComponent } from '../../accounts/accounts-consent-review/accounts-consent-review.component';
+import { DedicatedAccessComponent } from '../dedicated-access/dedicated-access.component';
 
 describe('ConsentAccountAccessSelectionComponent', () => {
   let component: ConsentAccountAccessSelectionComponent;
@@ -21,7 +23,10 @@ describe('ConsentAccountAccessSelectionComponent', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { parent: { parent: { params: of({ authId: 'AUTH-ID' }) } } }
+          useValue: {
+            parent: { parent: { params: of({ authId: 'AUTH-ID' }) } },
+            snapshot: {}
+          }
         },
         {
           provide: SessionService,
@@ -39,6 +44,8 @@ describe('ConsentAccountAccessSelectionComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ConsentAccountAccessSelectionComponent);
     component = fixture.componentInstance;
+    component.consentReviewPage = AccountsConsentReviewComponent.ROUTE;
+    component.dedicatedConsentPage = DedicatedAccessComponent.ROUTE;
     component.accountAccesses = [new Access(AccountAccessLevel.ALL_ACCOUNTS, 'access to all accounts')];
     fixture.detectChanges();
   });
