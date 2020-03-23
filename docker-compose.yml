@@ -12,7 +12,7 @@ services:
       - POSTGRES_DB=open_banking
     ports:
       #HOST:CONTAINER
-      - "15432:5432"
+      - "5432:5432"
     volumes:
       - ./opba-db/src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
@@ -27,7 +27,7 @@ services:
       - FACADE_ENCRYPTION_KEYSETPATH=/keysetpath/example-keyset.json
     build: opba-embedded-starter
     ports:
-      - "18085:8085"
+      - "8085:8085"
     volumes:
       - ./opba-protocols/xs2a-protocol/src/main/resources/:/pkcs12/
       - ./opba-banking-protocol-facade/src/main/resources/:/keysetpath/
