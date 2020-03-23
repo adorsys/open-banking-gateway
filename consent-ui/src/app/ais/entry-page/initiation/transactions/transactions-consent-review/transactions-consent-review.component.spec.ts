@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TransactionsConsentReviewComponent } from './transactions-consent-review.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 
 describe('TransactionsConsentReviewComponent', () => {
   let component: TransactionsConsentReviewComponent;
@@ -8,9 +12,14 @@ describe('TransactionsConsentReviewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TransactionsConsentReviewComponent ]
-    })
-    .compileComponents();
+      declarations: [TransactionsConsentReviewComponent],
+      imports: [RouterTestingModule, ReactiveFormsModule, HttpClientTestingModule],
+      providers: [
+        {
+          provide: ActivatedRoute
+        }
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccountsReferenceComponent } from './accounts-reference.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('AccountSelectorComponent', () => {
   let component: AccountsReferenceComponent;
@@ -8,9 +9,9 @@ describe('AccountSelectorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AccountsReferenceComponent ]
-    })
-    .compileComponents();
+      declarations: [AccountsReferenceComponent],
+      imports: [ReactiveFormsModule]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
