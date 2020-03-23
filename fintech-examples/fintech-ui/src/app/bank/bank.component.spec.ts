@@ -10,6 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BankProfileService } from '../bank-search/services/bank-profile.service';
 import { BankProfile } from '../api';
 import { of } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 describe('BankComponent', () => {
   let component: BankComponent;
@@ -21,29 +22,33 @@ describe('BankComponent', () => {
     TestBed.configureTestingModule({
       declarations: [SidebarComponent, BankComponent, NavbarComponent],
       imports: [RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule],
-      providers: [BankProfileService]
+      providers: [
+        BankProfileService,
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            params: of({ bankId: 1234 }),
+            snapshot: {
+              paramMap: {
+                get(bankId: string): string {
+                  return '1234';
+                }
+              }
+            }
+          }
+        }
+      ]
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BankComponent);
     component = fixture.componentInstance;
-    authServiceSpy.isLoggedIn.and.returnValue(true);
     fixture.detectChanges();
     bankService = TestBed.get(BankProfileService);
   });
 
   it('should create', () => {
-    const mockBankProfile: BankProfile = {
-      bankId: 'xxxxxxxx',
-      bankName: 'adorsys',
-      bic: 'string-bic',
-      services: ['']
-    } as BankProfile;
-
-    spyOn(bankService, 'getBankProfile').and.returnValue(of(mockBankProfile));
-    expect(bankService.getBankProfile(mockBankProfile.bankId)).toBeTruthy();
-    component.ngOnInit();
     expect(component).toBeTruthy();
   });
 });

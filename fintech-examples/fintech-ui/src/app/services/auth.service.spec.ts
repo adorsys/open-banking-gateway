@@ -26,15 +26,12 @@ describe('AuthService', () => {
     expect(authService).toBeTruthy();
   });
 
-  it('should be created', inject([AuthService], (service: AuthService) => {
-    expect(service).toBeTruthy();
-  }));
-
   it('should navigate to login page after called logout', () => {
-    const navigateSpy = spyOn(router, 'navigate').and.callFake(() => Promise.resolve(true));
-    authService.logout();
-
-    expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+    const navigateSpy = spyOn(router, 'navigate');
+    authService.logout().subscribe(res => {
+      expect(res).toEqual(true);
+      expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+    });
   });
 
   it('should test login method', () => {
