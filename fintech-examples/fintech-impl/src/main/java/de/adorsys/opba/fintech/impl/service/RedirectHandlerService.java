@@ -50,8 +50,8 @@ public class RedirectHandlerService {
 
         redirectUrls.setRedirectCode(redirectCode);
         redirectUrls.setRedirectState(xsrfToken);
-        redirectUrls.setOkURL(getModifiedUrlWithRedirectCode(okUrl, redirectCode));
-        redirectUrls.setNotOkURL(getModifiedUrlWithRedirectCode(notOkUrl, redirectCode));
+        redirectUrls.setOkUrl(getModifiedUrlWithRedirectCode(okUrl, redirectCode));
+        redirectUrls.setNotOkUrl(getModifiedUrlWithRedirectCode(notOkUrl, redirectCode));
 
         return redirectUrlRepository.save(redirectUrls);
     }
@@ -67,12 +67,12 @@ public class RedirectHandlerService {
 
         if (StringUtils.isBlank(redirectState)) {
             log.warn("Validation redirect request was failed: Xsrf Token is empty!");
-            return prepareErrorRedirectResponse(redirectUrls.getNotOkURL());
+            return prepareErrorRedirectResponse(redirectUrls.getNotOkUrl());
         }
 
         if (!authorizeService.isAuthorized(redirectState, null)) {
             log.warn("Validation redirect request was failed: Xsrf Token is wrong or user are not authorized!");
-            return prepareErrorRedirectResponse(redirectUrls.getNotOkURL());
+            return prepareErrorRedirectResponse(redirectUrls.getNotOkUrl());
         }
 
         ContextInformation contextInformation = new ContextInformation(UUID.randomUUID());

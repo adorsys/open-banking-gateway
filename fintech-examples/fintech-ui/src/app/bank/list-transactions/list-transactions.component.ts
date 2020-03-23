@@ -1,8 +1,9 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {AisService} from '../services/ais.service';
 import {Subscription} from 'rxjs';
 import {AccountReport, TransactionDetails} from '../../api';
+import {RedirectStruct} from "../redirect-page/redirect-struct";
 
 @Component({
   selector: 'app-list-transactions',
@@ -18,7 +19,10 @@ export class ListTransactionsComponent implements OnInit, OnDestroy {
   transactionsLists: Array<Array<TransactionDetails>>;
   transactionsListNames = ['Pending', 'Booked'];
 
-  constructor(private route: ActivatedRoute, private aisService: AisService) {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private aisService: AisService) {
   }
 
   ngOnInit() {
@@ -34,14 +38,27 @@ export class ListTransactionsComponent implements OnInit, OnDestroy {
     );
 
     this.transactionsLists = [];
-    console.log('ask for transactions for ', this.accountId);
-    this.accountsSubscription = this.aisService.getTransactions(this.bankId, this.accountId).subscribe(transactions => {
-      this.transactionsLists = [transactions.pending, transactions.booked];
-      this.makeVisible = true;
-    });
+    console.log('ON INIT LTX ask for transactions for ', this.accountId);
+    this.accountsSubscription = this.aisService.getTransactions(this.bankId, this.accountId).subscribe(
+      response => {
+        switch (response.status) {
+          case 202:
+            console.log("list tx got REDIRECT");
+            const location = encodeURIComponent(response.headers.get('location'));
+            const r = new RedirectStruct();
+            r.okUrl = location;
+            r.cancelUrl = "../..";
+            this.router.navigate(['../redirect', JSON.stringify(r)], {relativeTo: this.route});
+            break;
+          case 200:
+            console.log('I got transactions');
+            this.transactionsLists = [response.body.transactions.pending, response.body.transactions.booked];
+            this.makeVisible = true;
+        }
+      });
   }
 
   ngOnDestroy(): void {
-    //  this.accountsSubscription.unsubscribe();
+    this.accountsSubscription.unsubscribe();
   }
 }

@@ -25,7 +25,8 @@
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
     "bootstrap": "^4.4.1",
-    "rxjs": "~6.4.0",
+    "ng-http-loader": "^6.0.1",
+    "rxjs": "^6.5.2",
     "tslib": "^1.10.0",
     "uuidv4": "^6.0.6",
     "zone.js": "~0.9.1"

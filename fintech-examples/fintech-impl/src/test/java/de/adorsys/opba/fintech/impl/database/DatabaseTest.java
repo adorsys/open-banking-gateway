@@ -28,9 +28,9 @@ public class DatabaseTest {
 
     @Test
     public void testSimpleSearch() {
-        userRepository.save(create("peter", "1"));
-        userRepository.save(create("maksym", "2"));
-        userRepository.save(create("valentyn", "3"));
+        userRepository.save(createSessionEntity("peter", "1"));
+        userRepository.save(createSessionEntity("maksym", "2"));
+        userRepository.save(createSessionEntity("valentyn", "3"));
 
         userRepository.findAll().forEach(en -> log.info(en.toString()));
 
@@ -42,7 +42,7 @@ public class DatabaseTest {
 
     @Test
     public void testDeleteInOneTx() {
-        userRepository.save(create("peter", "1"));
+        userRepository.save(createSessionEntity("peter", "1"));
         SessionEntity sessionEntity = userRepository.findById("peter").get();
         sessionEntity.setCookies(new ArrayList<>());
         userRepository.save(sessionEntity);
@@ -56,7 +56,7 @@ public class DatabaseTest {
 
     @Transactional(propagation = Propagation.NEVER)
     void testDeleteInTwoTx1() {
-        userRepository.save(create("peter", "1"));
+        userRepository.save(createSessionEntity("peter", "1"));
     }
 
     @Transactional(propagation = Propagation.NEVER)
@@ -67,7 +67,7 @@ public class DatabaseTest {
     }
 
 
-    private SessionEntity create(String username, String xsrf) {
+    private SessionEntity createSessionEntity(String username, String xsrf) {
         SessionEntity sessionEntity = SessionEntity.builder()
                 .loginUserName(username)
                 .password("affe")
@@ -77,7 +77,6 @@ public class DatabaseTest {
         sessionEntity.addCookie("cookie1", "value1");
         sessionEntity.addCookie("cookie2", "value2");
         sessionEntity.addCookie("cookie3", "value3");
-
 
         return sessionEntity;
     }

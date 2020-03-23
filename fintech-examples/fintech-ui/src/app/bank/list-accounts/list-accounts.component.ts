@@ -1,14 +1,15 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {AccountDetails} from '../../api';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AisService} from '../services/ais.service';
+import {RedirectStruct} from "../redirect-page/redirect-struct";
 
 @Component({
   selector: 'app-list-accounts',
   templateUrl: './list-accounts.component.html'
 })
-export class ListAccountsComponent implements OnInit, OnDestroy {
+export class ListAccountsComponent implements OnInit, OnDestroy, AfterViewInit {
   private accountsSubscription: Subscription;
   accounts: AccountDetails[];
   selectedAccount: string;
@@ -23,7 +24,7 @@ export class ListAccountsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.route.parent.parent.paramMap.subscribe(p => {
         this.bankId = p.get('bankid');
-        console.log("BANKID IS ", this.bankId);
+        console.log(" ON INIT LIST ACCOUNTS BANKID IS ", this.bankId);
       }
     );
 
@@ -32,13 +33,11 @@ export class ListAccountsComponent implements OnInit, OnDestroy {
       response => {
         switch (response.status) {
           case 202:
-            const additionalParameters = new URLSearchParams({
-              authorizationSessionId: response.headers.get('Authorization-Session-ID'),
-              serviceSessionId: response.headers.get('Service-Session-ID'),
-              redirectCode: response.headers.get('Redirect-Code')
-            });
             const location = encodeURIComponent(response.headers.get('location'));
-            this.router.navigate(['redirect', location], {relativeTo: this.route});
+            const r = new RedirectStruct();
+            r.okUrl = location;
+            r.cancelUrl = "../../..";
+            this.router.navigate(['redirect', JSON.stringify(r)], {relativeTo: this.route});
             break;
           case 200:
             console.log('I got ', response.body.accounts.length, ' accounts');
@@ -61,5 +60,9 @@ export class ListAccountsComponent implements OnInit, OnDestroy {
 
   isSelected(id) {
     return id === this.selectedAccount ? 'selected' : 'unselected';
+  }
+
+  ngAfterViewInit(): void {
+    console.log("AFTER VIEW INIT");
   }
 }

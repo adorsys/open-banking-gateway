@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, subscribeOn} from 'rxjs/operators';
 import {FinTechAuthorizationService} from '../api';
 import {Credentials} from '../models/credentials.model';
 import {Consts} from '../common/consts';
@@ -44,7 +44,7 @@ export class AuthService {
         error => {
           console.error('logout with error');
         }
-      ));
+    ));
   }
 
   openLoginPage() {

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Consts} from "../../common/consts";
+import {RedirectStruct} from "./redirect-struct";
 
 @Component({
   selector: 'app-redirect-page',
@@ -11,6 +12,7 @@ export class RedirectPageComponent implements OnInit {
   private bankId;
   public bankName;
   private location;
+  private cancelPath;
 
   constructor(private router: Router, private route: ActivatedRoute) {
   }
@@ -18,7 +20,9 @@ export class RedirectPageComponent implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe(p => {
-      this.location = decodeURIComponent(p.get('location'));
+      const r : RedirectStruct = JSON.parse(p.get('location'));
+      this.location = decodeURIComponent(r.okUrl);
+      this.cancelPath = decodeURIComponent(r.cancelUrl);
       console.log("LOCATION IS ", this.location);
     });
     this.bankName = localStorage.getItem(Consts.LOCAL_STORAGE_BANKNAME);
@@ -27,12 +31,11 @@ export class RedirectPageComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['']);
+    this.router.navigate([this.cancelPath], {relativeTo: this.route});
   }
 
   proceed(): void {
     console.log("NOW GO TO:", this.location);
-    //            window.location.href = response.headers.get('location') + '&' + additionalParameters;
     window.location.href = this.location;
   }
 }

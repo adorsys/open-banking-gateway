@@ -19,15 +19,29 @@ tpp:
 
 mock:
   tppais:
-    listaccounts: true
+    listaccounts: false
     listtransactions: false
 
 spring:
   datasource:
-    url: jdbc:h2:mem:test
-    username: SA
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:postgresql://localhost/open_banking?currentSchema=fintech
+    username: postgres
+    password: docker
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      schema: fintech
+  liquibase:
+    enabled: true
+    change-log: classpath:migration/master.xml
+    parameters:
+      table-prefix: opb_
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: de.adorsys.opba.fintech.impl.database.hibernate.PrefixAndSnakeCasePhysicalNamingStrategy
+      # DDL is handled by Liquibase
+      ddl-auto: validate
 
 fintech-ui:
   redirect-url: http://localhost:4444/{redirectUri}/{redirectCode}

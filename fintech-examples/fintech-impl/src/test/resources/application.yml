@@ -9,6 +9,10 @@ spring:
     properties:
       hibernate:
         enable_lazy_load_no_trans: true
+  liquibase:
+    change-log: classpath:migration/master.xml
+    parameters:
+      table-prefix: opb_
 
 tpp:
   url: http://localhost:8086
