@@ -1,0 +1,143 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="ryeex@adorsys.com.ua" id="2020-03-19-01">
+        <comment>Create initial table structure</comment>
+
+        <createTable tableName="${table-prefix}cookie_entity">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="${table-prefix}login_entity">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="login_time" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="${table-prefix}redirect_urls_entity">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="ok_url" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="not_ok_url" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="redirect_code" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="redirect_state" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="${table-prefix}request_info_entity">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="xsrf_token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bank_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="request_action" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="account_id" type="VARCHAR(255)"/>
+            <column name="booking_status" type="VARCHAR(255)"/>
+            <column name="date_from" type="DATE"/>
+            <column name="date_to" type="DATE"/>
+            <column name="delta_list" type="BOOLEAN"/>
+            <column name="entry_reference_from" type="VARCHAR(255)"/>
+
+        </createTable>
+
+        <createTable tableName="${table-prefix}session_entity">
+            <column name="login_user_name" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="xsrf_token" type="VARCHAR(255)"/>
+            <column name="psu_consent_session" type="VARCHAR(255)"/>
+            <column name="service_session_id" type="UUID"/>
+        </createTable>
+
+        <createTable tableName="${table-prefix}session_entity_cookies">
+
+            <column name="session_entity_login_user_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cookies_id" type="BIGINT">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="${table-prefix}session_entity_logins">
+            <column name="session_entity_login_user_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="logins_id" type="BIGINT">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+     <changeSet author="ryeex@adorsys.com.ua" id="2020-03-19-02">
+        <comment>Add foreign keys to session_entity_cookies</comment>
+
+         <addForeignKeyConstraint baseColumnNames="session_entity_login_user_name" baseTableName="${table-prefix}session_entity_cookies"
+                                  constraintName="fk_sess_ent_cook_to_sess_ent" deferrable="false"
+                                  initiallyDeferred="false"
+                                  referencedColumnNames="login_user_name" referencedTableName="${table-prefix}session_entity"/>
+
+         <addForeignKeyConstraint baseColumnNames="cookies_id" baseTableName="${table-prefix}session_entity_cookies"
+                                  constraintName="fk_sess_ent_cook_to_cook" deferrable="false"
+                                  initiallyDeferred="false"
+                                  referencedColumnNames="id" referencedTableName="${table-prefix}cookie_entity"/>
+
+     </changeSet>
+
+    <changeSet author="ryeex@adorsys.com.ua" id="2020-03-19-03">
+        <comment>Add foreign keys to session_entity_logins</comment>
+
+        <addForeignKeyConstraint baseColumnNames="session_entity_login_user_name" baseTableName="${table-prefix}session_entity_logins"
+                                 constraintName="fk_sess_ent_login_to_sess_ent" deferrable="false"
+                                 initiallyDeferred="false"
+                                 referencedColumnNames="login_user_name" referencedTableName="${table-prefix}session_entity"/>
+
+        <addForeignKeyConstraint baseColumnNames="logins_id" baseTableName="${table-prefix}session_entity_logins"
+                                 constraintName="fk_sess_ent_login_to_login" deferrable="false"
+                                 initiallyDeferred="false"
+                                 referencedColumnNames="id" referencedTableName="${table-prefix}login_entity"/>
+    </changeSet>
+
+    <changeSet author="ryeex@adorsys.com.ua" id="2020-03-19-04">
+        <comment>Create sequences for table IDs.</comment>
+
+        <createSequence sequenceName="cookie_id_seq" incrementBy="50"/>
+        <createSequence sequenceName="login_id_seq" incrementBy="50"/>
+        <createSequence sequenceName="redirect_urls_id_seq" incrementBy="50"/>
+        <createSequence sequenceName="request_info_id_seq" incrementBy="50"/>
+
+    </changeSet>
+
+</databaseChangeLog>
