@@ -5,6 +5,7 @@ import de.adorsys.opba.fintech.impl.database.entities.CookieEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import static de.adorsys.opba.fintech.impl.tppclients.CookieNames.XSRF_TOKEN_COO
  * This is just a dummy authorization.
  * All users are accepted. Password allways has to be 1234, otherwise login fails
  */
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class AuthorizeService {
@@ -48,6 +50,8 @@ public class AuthorizeService {
         if (!sessionEntity.getPassword().equals(loginRequest.getPassword())) {
             return Optional.empty();
         }
+
+        log.info("login for user {}", optionalUserEntity.get().getLoginUserName());
 
         // password is ok, so log in
         sessionEntity.setXsrfToken(UUID.randomUUID().toString());
@@ -86,10 +90,12 @@ public class AuthorizeService {
     public boolean isAuthorized(String xsrfToken, String sessionCookieContent) {
         Optional<SessionEntity> optionalUserEntity = userRepository.findByXsrfToken(xsrfToken);
         if (!optionalUserEntity.isPresent()) {
+            log.debug("XSRF-TOKEN {} is unknown", xsrfToken);
             return false;
         }
 
         if (!CHECK_SESSION_COOKIE_TODO) {
+            log.debug("XSRF-TOKEN {} is known", xsrfToken);
             return true;
         }
         for (CookieEntity cookie : optionalUserEntity.get().getCookies()) {
@@ -98,5 +104,13 @@ public class AuthorizeService {
             }
         }
         return false;
+    }
+
+
+    @Transactional
+    public void logout(String xsrfToken, String sessionCookieContent) {
+        Optional<SessionEntity> optionalUserEntity = userRepository.findByXsrfToken(xsrfToken);
+        log.info("logout for user {}", optionalUserEntity.get().getLoginUserName());
+        userRepository.deleteByXsrfToken(xsrfToken);
     }
 }

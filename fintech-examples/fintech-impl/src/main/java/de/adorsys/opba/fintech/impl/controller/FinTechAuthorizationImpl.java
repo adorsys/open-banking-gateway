@@ -7,6 +7,7 @@ import de.adorsys.opba.fintech.api.resource.generated.FinTechAuthorizationApi;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
+import de.adorsys.opba.fintech.impl.service.ContextInformation;
 import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
     @Override
     public ResponseEntity<InlineResponse200> loginPOST(LoginRequest loginRequest, UUID xRequestID) {
+        ContextInformation contextInformation = new ContextInformation(xRequestID);
         log.info("loginPost is called");
         Optional<SessionEntity> optionalUserEntity = authorizeService.login(loginRequest);
         if (optionalUserEntity.isPresent()) {
@@ -47,7 +49,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
             response.setUserProfile(userProfile);
 
             HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set(X_REQUEST_ID, xRequestID.toString());
+            responseHeaders.set(X_REQUEST_ID, contextInformation.getXRequestID().toString());
             log.info("set response cookie attributes to {}", cookieConfigProperties.toString());
             ArrayList<String> cookies = sessionEntity
                     .getCookies()
@@ -72,4 +74,21 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
     public ResponseEntity<Void> fromConsentOkGET(String redirectState, String redirectId, String redirectCode) {
         return redirectHandlerService.doRedirect(redirectState, redirectId, redirectCode);
     }
+
+    @Override
+    public ResponseEntity<Void> logoutPOST(UUID xRequestID, String xsrfToken) {
+        ContextInformation contextInformation = new ContextInformation(xRequestID);
+        log.info("logoutPost is called");
+
+        if (!authorizeService.isAuthorized(xsrfToken, null)) {
+            log.warn("Request failed: Xsrf Token is wrong or user is not authorized!");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        authorizeService.logout(xsrfToken, null);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set(X_REQUEST_ID, contextInformation.getXRequestID().toString());
+        return new ResponseEntity<>(null, responseHeaders, HttpStatus.OK);
+    }
+
 }

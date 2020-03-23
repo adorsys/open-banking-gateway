@@ -83,8 +83,8 @@ class RedirectHandlerServiceTest {
 
         //then
         verify(redirectUrlRepository, times(1)).save(any(RedirectUrlsEntity.class));
-        assertThat(redirectCode.getNotOkURL()).isEqualTo(FULL_NOT_OK_URL);
-        assertThat(redirectCode.getOkURL()).isEqualTo(FULL_OK_URL);
+        assertThat(redirectCode.getNotOkUrl()).isEqualTo(FULL_NOT_OK_URL);
+        assertThat(redirectCode.getOkUrl()).isEqualTo(FULL_OK_URL);
         assertThat(redirectCode.getRedirectState()).isEqualTo(REDIRECT_STATE_VALUE);
         assertThat(redirectCode.getRedirectCode()).isEqualTo(REDIRECT_CODE_VALUE);
     }
@@ -176,8 +176,8 @@ class RedirectHandlerServiceTest {
         RedirectUrlsEntity redirectUrlsEntity = new RedirectUrlsEntity();
         redirectUrlsEntity.setRedirectCode(REDIRECT_CODE_VALUE);
         redirectUrlsEntity.setRedirectState(REDIRECT_STATE_VALUE);
-        redirectUrlsEntity.setOkURL(FULL_OK_URL);
-        redirectUrlsEntity.setNotOkURL(FULL_NOT_OK_URL);
+        redirectUrlsEntity.setOkUrl(FULL_OK_URL);
+        redirectUrlsEntity.setNotOkUrl(FULL_NOT_OK_URL);
 
         return redirectUrlsEntity;
     }

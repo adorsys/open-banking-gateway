@@ -23,6 +23,7 @@
         <module>fintech-api</module>
         <module>fintech-server</module>
         <module>fintech-impl</module>
+        <module>fintech-db-schema</module>
     </modules>
 </project>
 

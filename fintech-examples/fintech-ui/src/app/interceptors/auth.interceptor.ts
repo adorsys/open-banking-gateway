@@ -2,12 +2,13 @@ import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } fro
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AuthService } from '../services/auth.service';
 import * as uuid from 'uuid';
+import { DocumentCookieService } from '../services/document-cookie.service';
+import { Consts } from '../common/consts';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService) {}
+  constructor(private cookieService: DocumentCookieService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return this.handleRequest(request, next).pipe(
@@ -18,18 +19,31 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private handleRequest(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const headers = request.headers
-      .set('X-Request-ID', uuid.v4())
-      .set('Content-Type', 'application/json')
-      // TODO: is supposed to be sent automatically when X-XSRF cookie exists, check why not
-      .set('X-XSRF-TOKEN', this.authService.getX_XSRF_TOKEN());
+    const xRequestID = uuid.v4();
 
-    if (this.authService.isLoggedIn()) {
-      request = request.clone({
-        withCredentials: true,
-        headers
-      });
+    let headers;
+    if (this.cookieService.exists(Consts.COOKIE_NAME_XSRF_TOKEN)) {
+      headers = request.headers
+        .set(Consts.HEADER_FIELD_X_REQUEST_ID, xRequestID)
+        .set(Consts.HEADER_FIELD_CONTENT_TYPE, 'application/json')
+        .set(Consts.HEADER_FIELD_X_XSRF_TOKEN, this.cookieService.find(Consts.COOKIE_NAME_XSRF_TOKEN));
+
+      // TODO: is supposed to be sent automatically when X-XSRF cookie exists, check why not
+      // Propably because it is mentioned in the api and thus overwritten by
+      // generated service with not passed in XSRF-TOKEN (peters remark)
+    } else {
+      headers = request.headers
+        .set(Consts.HEADER_FIELD_X_REQUEST_ID, xRequestID)
+        .set(Consts.HEADER_FIELD_CONTENT_TYPE, 'application/json');
     }
+
+    request = request.clone({
+      withCredentials: true,
+      headers
+    });
+
+    console.log('REQUEST ' + request.url + ' has ' + Consts.HEADER_FIELD_X_REQUEST_ID + ' ' + xRequestID);
+
     return next.handle(request);
   }
 }
