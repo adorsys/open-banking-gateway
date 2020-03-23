@@ -45,3 +45,6 @@ pkcs12:
 
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
+
+hibernate-validation:
+  invalid-consent-mesage: Ais consent has invalid structure
