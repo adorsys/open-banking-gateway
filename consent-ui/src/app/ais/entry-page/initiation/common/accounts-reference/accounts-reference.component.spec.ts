@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccountsReferenceComponent } from './accounts-reference.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-describe('AccountSelectorComponent', () => {
+describe('AccountsReferenceComponent', () => {
   let component: AccountsReferenceComponent;
   let fixture: ComponentFixture<AccountsReferenceComponent>;
 
@@ -17,6 +17,8 @@ describe('AccountSelectorComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AccountsReferenceComponent);
     component = fixture.componentInstance;
+    component.targetForm = new FormGroup({});
+    component.accounts = [];
     fixture.detectChanges();
   });
 

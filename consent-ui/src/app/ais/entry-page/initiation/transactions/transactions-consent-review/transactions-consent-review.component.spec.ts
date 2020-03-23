@@ -4,7 +4,8 @@ import { TransactionsConsentReviewComponent } from './transactions-consent-revie
 import { RouterTestingModule } from '@angular/router/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 
 describe('TransactionsConsentReviewComponent', () => {
   let component: TransactionsConsentReviewComponent;
@@ -17,7 +18,7 @@ describe('TransactionsConsentReviewComponent', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { parent: { parent: { params: { authId: 'AUTH-ID' } } } }
+          useValue: { parent: { parent: { params: of({ authId: 'AUTH-ID' }) } } }
         }
       ]
     }).compileComponents();
