@@ -1,5 +1,4 @@
-import { TestBed } from '@angular/core/testing';
-
+import { inject, TestBed } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
@@ -9,7 +8,7 @@ import { Consts } from '../common/consts';
 
 describe('AuthService', () => {
   let authService: AuthService;
-  const cookieService: DocumentCookieService;
+  let cookieService: DocumentCookieService;
   let router: Router;
 
   beforeEach(() => {
@@ -18,6 +17,7 @@ describe('AuthService', () => {
       providers: [AuthService, DocumentCookieService]
     });
 
+    cookieService = TestBed.get(DocumentCookieService);
     authService = TestBed.get(AuthService);
     router = TestBed.get(Router);
   });
@@ -26,8 +26,12 @@ describe('AuthService', () => {
     expect(authService).toBeTruthy();
   });
 
+  it('should be created', inject([AuthService], (service: AuthService) => {
+    expect(service).toBeTruthy();
+  }));
+
   it('should navigate to login page after called logout', () => {
-    const navigateSpy = spyOn(router, 'navigate');
+    const navigateSpy = spyOn(router, 'navigate').and.callFake(() => Promise.resolve(true));
     authService.logout();
 
     expect(navigateSpy).toHaveBeenCalledWith(['/login']);
