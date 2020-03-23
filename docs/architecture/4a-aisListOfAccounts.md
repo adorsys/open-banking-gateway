@@ -22,13 +22,11 @@ The result of a bank selection is that the FinTechUI displays the [BankProfile](
 ### LoA-020 : FinTechUI.selectService(listOfAccounts)
 Once selected by the PSU, the FinTechUI forwards the service selected to the FinTechApi. In this case "listOfAccounts". The selection might be accompanied with some service specifications. For listOfAccounts, the option withBalance can be added to indicate that the balance has to be returned as well.
 
+### LoA-021 : FinTechUI.readRedirectUrls(Fintech-Redirect-URL-OK,Fintech-Redirect-URL-NOK)
+Read the redirect urls associated with this context. These are URL used to start the UI from the ConsentAuthorizeAPI.
+
 ### <a name="LoA-030"></a>LoA-030 : FinTechApi.listOfAccounts
-Call specification: listOfAccounts[SessionCookie,X-XSRF-TOKEN](withBalance)<p:bank-id>.
-The FinTechUI issues a listOfAccounts request to the FinTechAPI with:
-- __[SessionCookie and X-XSRF-TOKEN](dictionary.md#SessionCookie):__ The SessionCookie used to maintain association between FinTechUI and FinTechApi. It holds a session identifier. A corresponding XSRF-TOKEN is sent back and forth though the header and used to authenticate the SessionCookie.
-- __The bank-id:__ passed as a query parameter and referencing the given [BankProfile](dictionary.md#BankProfile) that contains meta information associated with the selected Bank.
-- __withBalance:__ optional, instruct the TPP to request balances associated with each account.
-- __X-Request-ID:__ unique identifier that identifies this request throughout the entire processing chain. Shall be contained in HTTP Response as well.
+See [FinTechApi.listOfAccounts](../../fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#/v1/ais/banks/{bank-id}/accounts:)
 
 ### LoA-031 : FinTechApi.checkAuthorization
 Call specification: : checkAuthorization(SessionCookie,\nX-XSRF-TOKEN):psu-id@fintech
@@ -48,25 +46,11 @@ The __[UserAgentContext](dictionary.md#UserAgentContext)__ describes details ass
   * PSU-Geo-Location,
   * Http-Method.
 
-### <a name="LoA-033"></a>LoA-033 : FinTechApi.buildUrlTemplates
-Builds URL templates used to redirect control to the FinTechUI application. Generate a state parameter that will be used to protect the redirect process and add it as a query parameter to the built Fintech-Redirect-URL templates that are added to the request. The templates have the form __Fintech-Redirect-URL-[OK|NOK]<p:$AUTH-ID,q:state>__. Both the OK-URL and the NOK-URL are used to redirect control to the FinTechUI application from the TPP consent authorization interface (ConsentAuthorizationApi), as we set a RedirectCookie in the FinTechUI before redirecting the PSU to the ConsentAuthorizationApi. This RedirectCookie must be transported back to the FinTechApi with the redirect call back to the FinTech. 
-  - In order to distinguish redirect cookie associated with different authorization flows, we scope the Fintech-Redirect-URL with a dynamic path parameter "$AUTH-ID". This must be set as part of the cookie path of the RedirectCookie returned to the FinTechUI.
-  - In order to protect the Fintech-Redirect-URL against XSRF, we use the state parameter. This state parameter is defined at initialization of the request, and added as a query parameter to the Fintech-Redirect-URL.
-
-### LoA-034 : FinTechApi.loadServiceSession
+### LoA-033 : FinTechApi.loadServiceSession
 Uses the given psu-id and service type to load a corresponding service session if the FinTech judges the request of the PSU is the repetition of an existing service request.
 
 ### LoA-040 : TppBankingApi.listOfAccounts
-Forwards the PSU request to TPP with following associated context informations:
-
-- __Authorization:[FinTechContext](dictionary.md#FinTechContext): __ contains static identification information associated with the FinTech.
-- __Fintech-User-ID: psu-id@fintech:__ the unique identifier of the PSU in the realm of the FinTech
-- __Service-Session-ID:__ a unique identifier of the service request. This is returned by the TPP as a response to the first HTTP-Request associated with this service request.
-- __Fintech-Redirect-URL-[OK|NOK]<p:auth-id,q:state>:__ these are URL used to redirect control to the FinTechUI application. See [LoA-033](4a-aisListOfAccounts.md#LoA-033).
-- __UserAgentContext:__  See [LoA-032](4a-aisListOfAccounts.md#LoA-032).
-- __Bank-ID: __ See [LoA-030](4a-aisListOfAccounts.md#LoA-030).
-- __withBalance: __ See [LoA-030](4a-aisListOfAccounts.md#LoA-030).
-- __X-Request-ID:__ See [LoA-030](4a-aisListOfAccounts.md#LoA-030).
+Forwards the PSU request to TPP. See [TppBankingApi.listOfAccounts](../../opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml#/v1/banking/ais/accounts:).
 
 ### LoA-041 TppBankingApi.checkAuthorization
 verifies the authenticity of the Authorization header "FinTechContext". Returns the extracted fintechId.
@@ -108,9 +92,9 @@ Finaly updates the persistent service session with all prepared information.
 ### <a name="LoA-070"></a>LoA-070 .. -073 : No Suitable Consent Present: Create an Authorization Session
 If there is no suitable consent available, the BankingProtocol updates the ServiceSession with a new authorization session identified by an auth-id (unique in the scope of the user/serviceSession).
 - __The auth-id:__ is an identifier of the authorization instance in the context of this PSU. It can be a short alphanumeric string like "asrfvs" used to isolate parallel active authorization sessions from each order. 
-- In __LoA-071 mapFinTechRedirectUrl__ this auth-id will be used by the FinTech to set the path of the corresponding RedirectSession and also used to fill the Fintech-Redirect-URL-[OK|NOK]<p:$AUTH-ID,q:state>.  
+- In __LoA-071 mapFinTechRedirectUrl__ this auth-id will be added as a query parameter Fintech-Redirect-URL-[OK|NOK]<q:auth-id>.  
 - __The redirectCode__ generated contains the serviceSessionID and the auth-id. The redirectCode is used by the ConsentAuthorizationApi of the TPP to access the service record.
-- __The tppConsentEntryPoint__ is the static entry point of the nConsentAuthorisationApi extended with the query parameter redirectCode.
+- __The tppConsentEntryPoint__ is the static entry point of the ConsentAuthorisationApi extended with the query parameter redirectCode.
 
 ### LoA-074, LoA-075: Initiate Redirect
 By returning the BankingProtocolResponse<RedirectToTpp>(authId,serviceSessionID,tppConsentEntryPoint,redirectExp), the BankingProtocol instructs the BankingProtocolFacade, and the TppBankingApi to initiate a redirect of the PSU to the ConsentAuthorizationApi.
@@ -128,15 +112,12 @@ Upon redirecting the PSU user agent to the ConsentAuthorizationApi, the regular 
 - __Purpose:__ The RedirectCookie is used make sure that the UserAgent that started a redirect flow is the same as the one the terminated that redirect flow. This is essential to assume that the PSU physically using this user agent is the same as the one that accessed the authorization interfaces of the (TPP resp. ASPSP).
 - __The RedirectCookie:__ is therefore set by the origin of the redirection (FinTech) and must be transported to the FinTechApi when control is sent back to the FinTechUI.
 - __Expiration:__ This RedirectCookie shall be set for the max time we think the PSU needs to complete authorization of the corresponding consent. Therefore the expiration of this RedirectCookie generally has a longer life span than the expiration of a regular SessionCookie. 
-- __CookiePath (auth-id):__ This RedirectCookie must be bound to the "$AUTH-ID" path of the Fintech-Redirect-URLs (defined as Fintech-Redirect-URL-[OK|NOK]<p:$AUTH-ID,q:state>). This way, it does no need to be transported to the FinTechApi with any other request. 
-- __XSRF Protection (state):__ This RedirectCookie is also protected by a "state" query parameter that is available to the Fintech-Redirect-URLs.
+- __CookiePath (auth-id):__ This RedirectCookie must be bound to the [fromConsentOk](../../fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#/v1/{auth-id}/fromConsentOk). This way, it does no need to be transported to the FinTechApi with any other request. Recall that the auth-id is part of the url. So each authorization session has his own RedirectCookie.
+- __XSRF Protection (X-XSRF-TOKEN):__ This RedirectCookie is also protected by an xsrfToken that is returned to the FinTechUI as header parameter.
 - __User Session__: Generally processing a successful redirect is equivalent to a successful re-establishment of the user session. Meaning that FinTechApi can set a new SessionCookie to maintain the session with the PSU without a new explicit login of the PSU.
 
 ### <a name="LoA-080"></a>LoA-080 : FinTechApi redirects userAgent to the ConsentAuthorisationApi
-The service response carries a response code 302 instructing the FinTechUI to redirect the PsuUserDevice to the ConsentAuthorisationApi, with following information:
-- redirectCode : attached as a query parameter
-- SessionCookie : for deletion
-- RedirectCookie : with the expected duration of the consent authorization.
+The service response carries a response code 202 instructing the FinTechUI to redirect the PsuUserDevice to the ConsentAuthorisationApi. See [202_ToConsentAuthApi](../../fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#202_ToConsentAuthApi).
 
 ### <a name="LoA-090"></a>LoA-090 Suitable Consent Present
 If there is a suitable consent reference in the database of the TPP, this will be loaded and used to forward request to the ASPSP.

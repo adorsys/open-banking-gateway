@@ -27,6 +27,6 @@ Using information contained in the AuthorizeResponse object, the ConsentAuthoris
 ### AuthEmbedded-070-087 : Send PsuAuthData to ConsentAuthorisationApi
 The generic endpoint at ConsentAuthorisationApi.embeddedAuth will finally be called again to send authentication data entered by the PSU to the BankingProtocol.
 
-### AuthEmbedded-090-094 : Redirect to FinTechApi
-As the TppConsentSession presents no more AuthChallenge, a RedirectSession is prepared and the PSU is redirected back to the FinTechApi.
+### AuthEmbedded-090-094 : Redirect to FinTechUI
+As the TppConsentSession presents no more AuthChallenge, a RedirectSession is prepared and the PSU is redirected back to the FinTechUI. This is done by returning a 302_Redirect to the ConsentAuthorisationUI.
     

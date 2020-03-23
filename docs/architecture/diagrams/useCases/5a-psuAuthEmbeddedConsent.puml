@@ -4,9 +4,9 @@ autonumber 10 10 "<b><color blue>[AuthEmbedded-000]</color></b>"
 actor psu
 
 box "PsuUserAgent" #LightGray
-    participant "FinTechUI" as FinTechUI
+    'participant "FinTechUI" as FinTechUI
     participant "ConsentAuthorisationUI" as ConsentAuthorisationUI
-    participant "OnlineBankingUI" as OnlineBankingUI
+    'participant "OnlineBankingUI" as OnlineBankingUI
 end box
 box "FinTechDC" #DarkSeaGreen
     participant "FinTechApi" as FinTechApi
@@ -54,6 +54,6 @@ BankingProtocol -> RedirectSessionStoreApi ++ : redirectSession(TppConsentSessio
 RedirectSessionStoreApi -> RedirectSessionStoreApi : createEncryptStoreRedirectSession\n(TppConsentSession):redirectCode
 return redirectCode
 BankingProtocol --> ConsentAuthorisationApi ++ : 303_SeeOther(FinTechApi.FinTech-Redirect-URI)<redirectCode>
-ConsentAuthorisationApi --> FinTechUI ++ : 302_Redirect[ConsentAuthSessionCookie=null,\nFinTechApi.FinTech-Redirect-URI<redirectCode>]()
+ConsentAuthorisationApi --> ConsentAuthorisationUI ++ : 302_RedirectToFintech[ConsentAuthSessionCookie=null,\nFinTech-Redirect-URL-OK<q:auth-id,q:redirectCode>,Location]()
 end
 @enduml
