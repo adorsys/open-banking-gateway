@@ -7,7 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { of } from 'rxjs';
 
-describe('LimitedAccessComponent', () => {
+describe('DedicatedAccessComponent', () => {
   let component: DedicatedAccessComponent;
   let fixture: ComponentFixture<DedicatedAccessComponent>;
 

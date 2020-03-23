@@ -6,7 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 
-describe('ScaResultPageComponent', () => {
+describe('ReportScaResultComponent', () => {
   let component: ReportScaResultComponent;
   let fixture: ComponentFixture<ReportScaResultComponent>;
 
