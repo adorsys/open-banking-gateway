@@ -12,6 +12,7 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.protocol.xs2a.testsandbox.SandboxAppsStarter;
 import de.adorsys.psd2.sandbox.cms.starter.Xs2aCmsAutoConfiguration;
 import io.github.bonigarcia.seljup.SeleniumExtension;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -72,6 +73,8 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
 
     @BeforeAll
     static void startSandbox() {
+        WebDriverManager.firefoxdriver().arch64();
+
         if (null != System.getenv("NO_SANDBOX_START")) {
             return;
         }
