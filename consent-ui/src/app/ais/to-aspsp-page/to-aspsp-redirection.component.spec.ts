@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ToAspspRedirectionComponent } from './to-aspsp-redirection.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
 
 describe('ToAspspRedirectionComponent', () => {
   let component: ToAspspRedirectionComponent;
@@ -8,9 +12,17 @@ describe('ToAspspRedirectionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ToAspspRedirectionComponent ]
-    })
-    .compileComponents();
+      declarations: [ToAspspRedirectionComponent],
+      imports: [RouterTestingModule, HttpClientTestingModule],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            parent: { params: of({ authId: 'AUTH-ID' }) }
+          }
+        }
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
