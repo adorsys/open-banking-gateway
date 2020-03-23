@@ -16,6 +16,7 @@ export class ReportScaResultComponent implements OnInit {
 
   reportScaResultForm: FormGroup;
   private authorizationSessionId: string;
+  private redirectCode: string;
 
   constructor(
     private sessionService: SessionService,
@@ -30,6 +31,7 @@ export class ReportScaResultComponent implements OnInit {
     });
 
     this.authorizationSessionId = this.activatedRoute.parent.snapshot.paramMap.get('authId');
+    this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
   }
 
   submit(): void {
@@ -38,7 +40,7 @@ export class ReportScaResultComponent implements OnInit {
         this.authorizationSessionId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
         StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
-        this.sessionService.getRedirectCode(this.authorizationSessionId),
+        this.redirectCode,
         { scaAuthenticationData: { SCA_CHALLENGE_DATA: this.reportScaResultForm.get('tan').value } },
         'response'
       )
@@ -46,6 +48,7 @@ export class ReportScaResultComponent implements OnInit {
         res => {
           // redirect to the provided location
           console.log('REDIRECTING TO: ' + res.headers.get(ApiHeaders.LOCATION));
+          this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
           window.location.href = res.headers.get(ApiHeaders.LOCATION);
         },
         error => {
