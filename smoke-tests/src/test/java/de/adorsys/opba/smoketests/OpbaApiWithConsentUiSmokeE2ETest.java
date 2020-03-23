@@ -9,7 +9,9 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.smoketests.config.SandboxConsentAuthApproachState;
 import de.adorsys.opba.smoketests.config.SmokeConfig;
 import io.github.bonigarcia.seljup.SeleniumExtension;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
@@ -41,6 +43,11 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SandboxServers
 
     @Autowired
     private SandboxConsentAuthApproachState state;
+
+    @BeforeAll
+    static void setupDriverArch() {
+        WebDriverManager.firefoxdriver().arch64();
+    }
 
     @BeforeEach
     void memoizeConsentAuthorizationPreference() {
