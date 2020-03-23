@@ -1,18 +1,16 @@
 package de.adorsys.opba.protocol.xs2a.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.io.Resources;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UtilService {
-    private final ObjectMapper mapper = new ObjectMapper()
-                                                .registerModule(new JavaTimeModule())
-                                                .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    @Autowired
+    private ObjectMapper mapper;
 
     @SneakyThrows
     public <T> T getFromFile(String path, Class<T> valueType) {
