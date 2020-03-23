@@ -75,5 +75,5 @@ BankingProtocol -> RedirectSessionStoreApi ++ : redirectSession(TppConsentSessio
 RedirectSessionStoreApi -> RedirectSessionStoreApi : createEncryptStoreRedirectSession\n(TppConsentSession):redirectCode
 return 200_OK[](redirectCode)<>
 return 303_SeeOther(TppConsentSession)
-return 302_Redirect[ConsentAuthSessionCookie=null,\nFinTechApi.FinTech-Redirect-URI<redirectCode>]()
+return 302_RedirectToFintech[ConsentAuthSessionCookie=null,\nFinTech-Redirect-URL-OK<q:auth-id,q:redirectCode>,,Location]()
 @enduml

@@ -22,10 +22,14 @@ After receiving the list of accounts, the FinTechUI can dsiplay a single bank ac
 ### LoT-020 : FinTechUI.selectService(listTransactions)
 On of the services available when the FinTechUI present bank account details to the PSU is the "listOfTransactions". If selected by the PSU, the FinTechUI forwards the service call to the FinTechApi. The selection must be accompanied with some mandatory and optional service specifications. For example in the case of listOfTransactions, this the account-id is part of the request path and indicates the target account. The ListTransactionsSpec is used to describe additional optional request parameters.
 
+### LoA-021 : FinTechUI.readRedirectUrls(Fintech-Redirect-URL-OK,Fintech-Redirect-URL-NOK)
+Read the redirect urls associated with this context. These are URL used to start the UI from the ConsentAuthorizeAPI.
+
 ### <a name="LoT-030"></a>LoT-030 : FinTechApi.listOfTransactions
-Call specification: listOfTransactions[SessionCookie,X-XSRF-TOKEN,X-Request-ID]()<p:bank-id, p:account-id, q:dateFrom, q:dateTo,q:entryReferenceFrom, q:bookingStatus, q:deltaList>
+Call specification: See [](See [FinTechApi.listOfAccounts](../../fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#/v1/ais/banks/{bank-id}/accounts/{account-id}/transactions:)
+
 The FinTechUI issues a listOfTransactions request to the FinTechAPI with:
-- __[SessionCookie and X-XSRF-TOKEN](dictionary.md#SessionCookie):__ The SessionCookie used to maintain association between FinTechUI and FinTechApi. It holds a session identifier. A corresponding XSRF-TOKEN is sent back and forth though the header and used to authenticate the SessionCookie.
+- __SessionCookie and X-XSRF-TOKEN:__ The SessionCookie used to maintain association between FinTechUI and FinTechApi. It holds a session identifier. A corresponding XSRF-TOKEN is sent back and forth though the header and used to authenticate the SessionCookie.
 - __The bank-id:__ passed as a query parameter and referencing the given [BankProfile](dictionary.md#BankProfile) that contains meta information associated with the selected Bank.
 - __The account-id:__ is sent as a path parameter and references the target bank account.
 - __dateFrom:__ Starting date (inclusive the date dateFrom) of the transaction list, mandated if no delta access is required. For booked transactions, the relevant date is the booking date. For pending transactions, the relevant date is the entry date, which may not be transparent neither in this API nor other channels of the ASPSP.
@@ -53,31 +57,12 @@ The __[UserAgentContext](dictionary.md#UserAgentContext)__ describes details ass
   * PSU-Geo-Location,
   * Http-Method.
 
-### <a name="LoT-033"></a>LoT-033 : FinTechApi.buildUrlTemplates
-Builds URL templates used to redirect control to the FinTechUI application. Generate a state parameter that will be used to protect the redirect process and add it as a query parameter to the built Fintech-Redirect-URL templates that are added to the request. The templates have the form __Fintech-Redirect-URL-[OK|NOK]<p:$AUTH-ID,q:state>__. Both the OK-URL and the NOK-URL are used to redirect control to the FinTechUI application from the TPP consent authorization interface (ConsentAuthorizationApi), as we set a RedirectCookie in the FinTechUI before redirecting the PSU to the ConsentAuthorizationApi. This RedirectCookie must be transported back to the FinTechApi with the redirect call back to the FinTech. 
-  - In order to distinguish redirect cookie associated with different authorization flows, we scope the Fintech-Redirect-URL with a dynamic path parameter "$AUTH-ID". This must be set as part of the cookie path of the RedirectCookie returned to the FinTechUI.
-  - In order to protect the Fintech-Redirect-URL against XSRF, we use the state parameter. This state parameter is defined at initialization of the request, and added as a query parameter to the Fintech-Redirect-URL.
-
-### LoT-034 : FinTechApi.loadServiceSession
+### LoT-033 : FinTechApi.loadServiceSession
 Uses the given psu-id and service type to load a corresponding service session if the FinTech judges the request of the PSU is the repetition of an existing service request.
 
 
 ### LoT-040 : TppBankingApi.listOfTransactions
-Forwards the PSU request to TPP with following associated context informations:
-
-- __Authorization:[FinTechContext](dictionary.md#FinTechContext): __ contains static identification information associated with the FinTech.
-- __Fintech-User-ID: psu-id@fintech:__ the unique identifier of the PSU in the realm of the FinTech
-- __Service-Session-ID:__ a unique identifier of the service request. This is returned by the TPP as a response to the first HTTP-Request associated with this service request.
-- __Fintech-Redirect-URL-[OK|NOK]<p:auth-id,q:state>:__ these are URL used to redirect control to the FinTechUI application. See [LoT-033](4b-aisListOfTransactions.md#LoT-033).
-- __UserAgentContext:__  See [LoT-032](4b-aisListOfTransactions.md#LoT-032).
-- __Bank-ID: __ See [LoT-030](4b-aisListOfTransactions.md#LoT-030).
-- __account-id: __ See [LoT-030](4b-aisListOfTransactions.md#LoT-030).
-- __dateFrom: __ See [LoT-030](4b-aisListOfTransactions.md#LoT-030).
-- __dateTo: __ See [LoT-030](4b-aisListOfTransactions.md#LoT-030).
-- __entryReferenceFrom: __ See [LoT-030](4b-aisListOfTransactions.md#LoT-030).
-- __bookingStatus: __ See [LoT-030](4b-aisListOfTransactions.md#LoT-030).
-- __deltaList: __ See [LoT-030](4b-aisListOfTransactions.md#LoT-030).
-- __X-Request-ID:__ See [LoT-030](4b-aisListOfTransactions.md#LoT-030).
+Forwards the PSU request to TPP. See [TppBankingApi.listOfAccounts](../../opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml#/v1/banking/ais/accounts/{account-id}/transactions:).
 
 ### LoT-041 TppBankingApi.checkAuthorization
 verifies the authenticity of the Authorization header "FinTechContext". Returns the extracted fintechId.
