@@ -13,7 +13,6 @@ module.exports = function(config) {
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
-      random: false,
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
