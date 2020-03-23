@@ -16,7 +16,8 @@ describe('TransactionsConsentReviewComponent', () => {
       imports: [RouterTestingModule, ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         {
-          provide: ActivatedRoute
+          provide: ActivatedRoute,
+          useValue: { parent: { parent: { params: { authId: 'AUTH-ID' } } } }
         }
       ]
     }).compileComponents();
