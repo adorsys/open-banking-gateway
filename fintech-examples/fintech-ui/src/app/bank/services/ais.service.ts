@@ -30,7 +30,7 @@ export class AisService {
 
   getTransactions(bankId: string, accountId: string) {
     return this.finTechAccountInformationService
-      .aisTransactionsGET('bankId', 'accountId', '', '', window.location.pathname, 'not-ok-url')
+      .aisTransactionsGET(bankId, accountId, '', '', window.location.pathname, 'not-ok-url')
       .pipe(map(response => response.transactions));
   }
 

@@ -1,8 +1,8 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { AisService } from '../services/ais.service';
-import { Subscription } from 'rxjs';
-import { AccountReport, TransactionDetails } from '../../api';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {AisService} from '../services/ais.service';
+import {Subscription} from 'rxjs';
+import {AccountReport, TransactionDetails} from '../../api';
 
 @Component({
   selector: 'app-list-transactions',
@@ -18,13 +18,20 @@ export class ListTransactionsComponent implements OnInit, OnDestroy {
   transactionsLists: Array<Array<TransactionDetails>>;
   transactionsListNames = ['Pending', 'Booked'];
 
-  constructor(private route: ActivatedRoute, private aisService: AisService) {}
+  constructor(private route: ActivatedRoute, private aisService: AisService) {
+  }
 
   ngOnInit() {
-    this.bankId = this.route.parent.parent.parent.snapshot.paramMap.get('bankid');
-    console.log('list-transactions for bankid', this.bankId);
-    this.accountId = this.route.snapshot.paramMap.get('accountid');
-    console.log('list-transactions for accountid', this.accountId);
+    this.route.parent.parent.parent.paramMap.subscribe(p => {
+        this.bankId = p.get('bankid');
+        console.log('list-transactions for bankid', this.bankId);
+      }
+    );
+    this.route.paramMap.subscribe(p => {
+        this.accountId = p.get('accountid');
+        console.log('list-transactions for accountid', this.accountId);
+      }
+    );
 
     this.transactionsLists = [];
     console.log('ask for transactions for ', this.accountId);
