@@ -70,16 +70,16 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     protected <T extends FacadeServiceableGetter> void validateRedirectCode(T request, AuthSession session) {
+        if (Strings.isNullOrEmpty(request.getFacadeServiceable().getRedirectCode())) {
+            throw new IllegalArgumentException("Missing redirect code");
+        }
+
         if (!Objects.equals(session.getRedirectCode(), request.getFacadeServiceable().getRedirectCode())) {
             throw new IllegalArgumentException("Wrong redirect code");
         }
     }
 
-    private <T extends FacadeServiceableGetter> AuthSession validateAuthSession(T request) {
-        if (Strings.isNullOrEmpty(request.getFacadeServiceable().getRedirectCode())) {
-            throw new IllegalArgumentException("Missing redirect code");
-        }
-
+    private <T extends FacadeServiceableGetter> AuthSession readAndValidateAuthSession(T request) {
         UUID sessionId = UUID.fromString(request.getFacadeServiceable().getAuthorizationSessionId());
         AuthSession session = authSessions.findById(sessionId)
             .orElseThrow(() -> new IllegalStateException("No auth session " + sessionId));
@@ -181,7 +181,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
             return handleNoAuthSession(request);
         }
 
-        return validateAuthSession(request);
+        return readAndValidateAuthSession(request);
     }
 
     private <T extends FacadeServiceableGetter> AuthSession handleNoAuthSession(T request) {
