@@ -1,5 +1,6 @@
 export class Consts {
   public static LOCAL_STORAGE_USERNAME = 'USERNAME';
+  public static LOCAL_STORAGE_BANKNAME = 'BANKNAME';
 
   public static COOKIE_NAME_XSRF_TOKEN = 'XSRF-TOKEN';
   public static COOKIE_NAME_SESSION_COOKIE = 'SESSION-COOKIE';
