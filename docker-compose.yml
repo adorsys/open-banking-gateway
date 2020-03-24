@@ -28,7 +28,7 @@ services:
       - FACADE_ENCRYPTION_KEYSETPATH=/keysetpath/example-keyset.json
     build: opba-embedded-starter
     ports:
-      - "8085:8085"
+      - "18085:8085"
     volumes:
       - ./opba-protocols/xs2a-protocol/src/main/resources/:/pkcs12/
       - ./opba-banking-protocol-facade/src/main/resources/:/keysetpath/
