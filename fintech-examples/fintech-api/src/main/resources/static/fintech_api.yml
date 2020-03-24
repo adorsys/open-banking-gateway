@@ -19,13 +19,13 @@ info:
     It is the responsibility of the FinTechUI to :
     * parse and store this xsrfToken so that a refresh of a browser window can work. This shall be done using user agent capabilities. 
     A web browser application might decide to store the xsrfToken in the browser localStorage, as the cookie we set are all considered persistent.
-    * to the FinTechApi with each subsequent request that is carrying the corresponding SessionCookie (see the request path).
+    * make sure that each subsequent request that is carrying the SessionCookie also carries the corresponding xsrfToken as header field (see the request path).
     * remove this xsrfToken from the localStorage when the corresponding SessionCookie is deleted by a server response (setting cookie value to null).
     
     The main difference between an xsrfToken and a SessionCookie is that the sessionCookie is automatically sent with each matching request. The xsrfToken must be explicitely read and sent by application.
     
     #### API- vs. UI-Redirection
-    For simplicity, this Framework is designed to redirect to FinTechUI not to FinTechApi. It is the responsability of the FinTechUI to forward the call to the corresponding FinTechAPI backend.
+    For simplicity, this Framework is designed to redirect to FinTechUI not to FinTechApi.
     
     #### Explicite vs. Implicite Redirection
     We define an "Implicite redirection" a case where a web browser react to 30X reponse and automatically redirects to the attached endpoint. We define an
@@ -39,13 +39,7 @@ info:
     * that the corresponding xsrfToken is deleted from the local storage,
     * that a RedirectCookie set is stored (in case UI is not a web browser), so the user can be authenticated against it when sent back to the FinTechUI. The expiration of the RedirectCookie shall be set to the expected duration of the redirect,
     * that the corresponding xsrfToken is stored in the local storage (under the same cookie path as the RedirectCookie)
-    
-    #### Explicite Redirection for New Page
-    A redirecting 20X response sets a RedirectCookie with the expected duration and provides a response header with the corresponding X-XSRF-TOKEN paramater used to protect that RedirectCookie.
-    This aproach allows the FinTechUI to proceed with the storage of credentials (xsrfToken, evtl. Cookie) prior to performing the redirection.
-    
-    The /v1/afterReload endpoint provides a generic interface for exchange of a RedirectCookie against a new SessionCookie. See the endpoint definition bellow.
-    
+
     #### Redirecting to the ConsentAuthorisationApi
     For a redirection to the ConsentAuthorisationApi, a generated AUTH-ID is added to the cookie path and used to distinguish authorization processes from each order. 
     This information (AUTH-ID) must be contained in the back redirect url sent to the ConsentAuthorisationApi in the back channel, so that the FinTechUI can invoke
@@ -268,32 +262,12 @@ paths:
       security:
         - redirectCookie: []
       responses:
-        '302':
+        '202':
           $ref: '#/components/responses/202_ReloadUI'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
         '404':
           $ref: '#/components/responses/404_NotFound'
-
-  /v1/afterReload:
-    get:
-      tags:
-        - FinTechAuthorization
-      operationId: afterReloadGET
-      summary: Sent by FinTechUI to FinTechApi to load the proper SessionCookie after a redirect based UI reload.
-      description: |
-        Sent by FinTechUI to FinTechApi to load the proper SessionCookie after a redirect based UI reload.
-      parameters:
-        #header
-        - $ref: '#/components/parameters/X-Request-ID'
-        - $ref: '#/components/parameters/X-XSRF-TOKEN'
-          description: |
-            The xsrfToken matching the given RedirectCookie.
-      security:
-        - redirectCookie: []
-      responses:
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
 
 components:
 
@@ -667,7 +641,7 @@ components:
     202_ReloadUI:
       description: |
         Request reload of a designated page of the FinTechUI. Reloaded UI will use 
-        stored xsrfToken/RedirectCookie to access an afterReload endpoint to obtain proper multi usage sessionCookie.
+        stored xsrfToken/SessionCookie.
 
       headers:
         Location:
@@ -677,7 +651,7 @@ components:
         X-XSRF-TOKEN:
           $ref: '#/components/headers/X-XSRF-TOKEN'
         Set-Cookie:
-          $ref: '#/components/headers/Set-RedirectCookie'
+          $ref: '#/components/headers/Set-SessionCookie'
 
     400_BadRequest:
       description: Bad request
