@@ -31,7 +31,7 @@ public class Xs2aDenyAuthorization implements DenyAuthorization {
     public CompletableFuture<Result<DenyAuthBody>> execute(ServiceContext<DenyAuthorizationRequest> serviceContext) {
         String executionId = serviceContext.getAuthContext();
 
-        Xs2aAisContext ctx = readContextAndDeleteProcess(executionId);
+        Xs2aAisContext ctx = readContext(executionId);
         abortConsent.abortConsent(ctx);
 
         return CompletableFuture.completedFuture(
@@ -42,32 +42,25 @@ public class Xs2aDenyAuthorization implements DenyAuthorization {
         );
     }
 
-    private Xs2aAisContext readContextAndDeleteProcess(String executionId) {
+    private Xs2aAisContext readContext(String executionId) {
         if (null != runtimeService.createExecutionQuery().executionId(executionId).singleResult()) {
-            Xs2aAisContext context = (Xs2aAisContext) runtimeService.getVariable(executionId, CONTEXT);
-            runtimeService.deleteProcessInstance(
-                    runtimeService.createExecutionQuery().executionId(executionId).singleResult().getRootProcessInstanceId(),
-                    "User has aborted authorization"
-            );
-            return context;
+            return (Xs2aAisContext) runtimeService.getVariable(executionId, CONTEXT);
         }
 
-        return readAndDeleteHistoricalContext(executionId);
+        return readHistoricalContext(executionId);
     }
 
-    private Xs2aAisContext readAndDeleteHistoricalContext(String executionId) {
+    private Xs2aAisContext readHistoricalContext(String executionId) {
         HistoricActivityInstance finished = historyService.createHistoricActivityInstanceQuery()
                 .executionId(executionId)
                 .finished()
                 .listPage(0, 1)
                 .get(0);
 
-        Xs2aAisContext context = (Xs2aAisContext) historyService.createHistoricVariableInstanceQuery()
+        return (Xs2aAisContext) historyService.createHistoricVariableInstanceQuery()
                 .processInstanceId(finished.getProcessInstanceId())
                 .variableName(CONTEXT)
                 .singleResult()
                 .getValue();
-        historyService.deleteHistoricProcessInstance(finished.getProcessInstanceId());
-        return context;
     }
 }
