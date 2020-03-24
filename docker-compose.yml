@@ -15,6 +15,7 @@ services:
       - "5432:5432"
     volumes:
       - ./opba-db/src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./fintech-examples/fintech-db-schema/src/main/resources/init.sql:/docker-entrypoint-initdb.d/fintech-init.sql
     networks:
       - opba-net
 
@@ -52,10 +53,10 @@ services:
     environment:
       - TPP_URL=http://open-banking-gateway:8085
 
-      - SPRING_DATASOURCE_URL=jdbc:h2:mem:test
-      - SPRING_DATASOURCE_USERNAME=SA
-      - SPRING_DATASOURCE_PASSWORD=
-      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.h2.Driver
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/open_banking?currentSchema=fintech
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=docker
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver
 
       - SERVER_CONTROLLER_COOKIE_SECURE=false
       - SERVER_CONTROLLER_COOKIE_MAXAGE=200
