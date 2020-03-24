@@ -38,7 +38,7 @@ public class Xs2aDenyAuthorization implements DenyAuthorization {
 
         return CompletableFuture.completedFuture(
                 new AuthorizationDeniedResult<>(
-                        URI.create(ctx.getRedirectUriNok()),
+                        URI.create(ctx.getFintechRedirectUriNok()),
                         new DenyAuthBody()
                 )
         );
