@@ -6,7 +6,7 @@
     "openapi-gen": "openapi-generator generate -g typescript-angular -o src/app/api -i ../opba-consent-rest-api/src/main/resources/static/tpp_consent_api.yml",
     "start": "ng serve",
     "serve:local": "ng serve --proxy-config=proxy-conf-local-backend.json",
-    "serve:dev": "ng serve --proxy-config=proxy-conf-dev-backend.json",
+    "serve:dev": "ng serve --proxy-config=proxy-conf-dev-backend.js",
     "build": "ng build",
     "build:prod": "ng build --prod",
     "test": "ng test",
