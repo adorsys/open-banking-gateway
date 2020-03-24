@@ -37,6 +37,7 @@ export class DedicatedAccessComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.parent.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
+      this.loadDataFromExistingConsent();
     });
   }
 
@@ -55,6 +56,22 @@ export class DedicatedAccessComponent implements OnInit {
   }
 
   onBack() {
+    const consentObj = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
+    consentObj.consent.access.availableAccounts = null;
+    consentObj.consent.access.allPsd2 = null;
+    consentObj.consent.access.accounts = null;
+    consentObj.consent.access.balances = null;
+    consentObj.consent.access.transactions = null;
+    this.sessionService.setConsentObject(this.authorizationId, consentObj);
+
     this.location.back();
+  }
+
+  private loadDataFromExistingConsent() {
+    const consentObj = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
+    if (consentObj.consent.access.accounts) {
+      this.accounts = [];
+      consentObj.consent.access.accounts.forEach(it => this.accounts.push(new AccountReference(it)));
+    }
   }
 }
