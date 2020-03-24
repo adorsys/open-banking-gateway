@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
+
 @Data
 public class ScaMethod {
 
@@ -14,18 +16,18 @@ public class ScaMethod {
     private String key;
     private String value;
 
-    @Mapper
+    @Mapper(componentModel = SPRING_KEYWORD)
     public interface FromAuthObject {
         @Mapping(source = "authenticationMethodId", target = "key")
-        @Mapping(target = "value",  expression = "java(auth.getAuthenticationType() + ':' + auth.getName())")
+        @Mapping(target = "value", expression = "java(auth.getAuthenticationType() + ':' + auth.getName())")
         ScaMethod map(AuthenticationObject auth);
     }
 
     @Override
     public String toString() {
         return "{"
-            + "\"key\":\"" + key + "\""
-            + ", \"value\":\"" + value + "\""
-            + "}";
+                       + "\"key\":\"" + key + "\""
+                       + ", \"value\":\"" + value + "\""
+                       + "}";
     }
 }

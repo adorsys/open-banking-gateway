@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
-import de.adorsys.opba.protocol.xs2a.util.UtilService;
+import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +20,17 @@ public class Xs2aGetAuthorizationStateViolationsMapperTest {
 
     @Autowired
     private Xs2aGetAuthorizationState.ViolationsMapper mapper;
+
     @Autowired
-    private UtilService utilService;
+    private FixtureProvider fixtureProvider;
 
     @Test
     @SneakyThrows
     public void xs2aGetAuthorizationStateViolationsMapperTest() {
         // Given
-        Set<ValidationIssue> mappingInput = utilService.getFromFile(PATH_PREFIX + "validation_issue_input.json", new TypeReference<Set<ValidationIssue>>() {
+        Set<ValidationIssue> mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "validation_issue_input.json", new TypeReference<Set<ValidationIssue>>() {
         });
-        Set<ValidationError> expected = utilService.getFromFile(PATH_PREFIX + "validation_issue_output.json", new TypeReference<Set<ValidationError>>() {
+        Set<ValidationError> expected = fixtureProvider.getFromFile(PATH_PREFIX + "validation_issue_output.json", new TypeReference<Set<ValidationError>>() {
         });
 
         // When

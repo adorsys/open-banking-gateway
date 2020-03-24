@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.xs2a.entrypoint.authorization.common;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
-import de.adorsys.opba.protocol.xs2a.util.UtilService;
+import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +17,16 @@ public class UpdateAuthMapperFromAisRequestTransactionListTest {
 
     @Autowired
     private UpdateAuthMapper.FromAisRequestTransactionList mapper;
+
     @Autowired
-    private UtilService utilService;
+    private FixtureProvider fixtureProvider;
 
     @Test
     @SneakyThrows
     public void fromAisRequestTransactionListMapperTest() {
         // Given
-        AuthorizationRequest mappingInput = utilService.getFromFile(PATH_PREFIX + "authorization_request_input.json", AuthorizationRequest.class);
-        TransactionListXs2aContext expected = utilService.getFromFile(PATH_PREFIX + "authorization_request_output.json", TransactionListXs2aContext.class);
+        AuthorizationRequest mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "authorization_request_input.json", AuthorizationRequest.class);
+        TransactionListXs2aContext expected = fixtureProvider.getFromFile(PATH_PREFIX + "authorization_request_output.json", TransactionListXs2aContext.class);
         TransactionListXs2aContext actual = new TransactionListXs2aContext();
 
         // When

@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.xs2a.entrypoint.authorization;
 import com.fasterxml.jackson.core.type.TypeReference;
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
-import de.adorsys.opba.protocol.xs2a.util.UtilService;
+import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,16 +20,17 @@ public class Xs2aGetAuthorizationStateScaMethodsMapperTest {
 
     @Autowired
     private Xs2aGetAuthorizationState.ScaMethodsMapper mapper;
+
     @Autowired
-    private UtilService utilService;
+    private FixtureProvider fixtureProvider;
 
     @Test
     @SneakyThrows
     public void xs2aGetAuthorizationStateScaMethodsMapperTest() {
         // Given
-        List<ScaMethod> mappingInput = utilService.getFromFile(PATH_PREFIX + "sca_method_list_input.json", new TypeReference<List<ScaMethod>>() {
+        List<ScaMethod> mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "sca_method_list_input.json", new TypeReference<List<ScaMethod>>() {
         });
-        Set<de.adorsys.opba.protocol.api.dto.result.body.ScaMethod> expected = utilService.getFromFile(PATH_PREFIX + "sca_method_list_output.json", new TypeReference<Set<de.adorsys.opba.protocol.api.dto.result.body.ScaMethod>>() {
+        Set<de.adorsys.opba.protocol.api.dto.result.body.ScaMethod> expected = fixtureProvider.getFromFile(PATH_PREFIX + "sca_method_list_output.json", new TypeReference<Set<de.adorsys.opba.protocol.api.dto.result.body.ScaMethod>>() {
         });
 
         // When
