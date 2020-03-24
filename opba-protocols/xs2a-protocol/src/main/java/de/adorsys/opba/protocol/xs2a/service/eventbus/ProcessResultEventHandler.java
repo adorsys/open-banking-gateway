@@ -12,6 +12,7 @@ import java.util.function.Consumer;
  * Allows consumer to be registered after event addressed to him is published.
  * There can be only one undelivered message for unregistered consumer, multiple messages are
  * not supported.
+ * FIXME: https://github.com/adorsys/open-banking-gateway/issues/456
  */
 @Service
 public class ProcessResultEventHandler {
