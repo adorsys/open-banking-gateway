@@ -26,7 +26,6 @@ export class AisService {
     const okurl = window.location.pathname;
     return this.finTechAccountInformationService
       .aisTransactionsGET(bankId, accountId, '', '', okurl, 'not-ok-url',
-        null, null, null, null, null, 'response')
-      .pipe(map(response => response));
+        null, null, null, null, null, 'response');
   }
 }

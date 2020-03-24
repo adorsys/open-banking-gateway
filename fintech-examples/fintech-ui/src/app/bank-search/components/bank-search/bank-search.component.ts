@@ -25,10 +25,10 @@ export class BankSearchComponent {
     }
   }
 
-  onBankSelect(bankId: string) {
-    this.selectedBank = bankId;
-    localStorage.setItem(Consts.LOCAL_STORAGE_BANKNAME, this.searchedBanks.find(el => el.uuid === bankId).bankName);
-    this.router.navigate(['/bank', bankId]);
+  onBankSelect(bank: BankDescriptor) {
+    this.selectedBank = bank.uuid;
+    localStorage.setItem(Consts.LOCAL_STORAGE_BANKNAME, bank.bankName);
+    this.router.navigate(['/bank', bank.uuid]);
   }
 
   private bankUnselect() {

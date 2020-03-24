@@ -9,7 +9,7 @@ import {RedirectStruct} from "../redirect-page/redirect-struct";
   selector: 'app-list-accounts',
   templateUrl: './list-accounts.component.html'
 })
-export class ListAccountsComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ListAccountsComponent implements OnInit, OnDestroy {
   private accountsSubscription: Subscription;
   accounts: AccountDetails[];
   selectedAccount: string;
@@ -49,9 +49,7 @@ export class ListAccountsComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   ngOnDestroy(): void {
-    if (this.accountsSubscription != null) {
       this.accountsSubscription.unsubscribe();
-    }
   }
 
   selectAccount(id) {
@@ -60,9 +58,5 @@ export class ListAccountsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   isSelected(id) {
     return id === this.selectedAccount ? 'selected' : 'unselected';
-  }
-
-  ngAfterViewInit(): void {
-    console.log("AFTER VIEW INIT");
   }
 }

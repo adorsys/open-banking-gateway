@@ -31,12 +31,18 @@ export class ListTransactionsComponent implements OnInit, OnDestroy {
         console.log('list-transactions for bankid', this.bankId);
       }
     );
+
     this.route.paramMap.subscribe(p => {
         this.accountId = p.get('accountid');
         console.log('list-transactions for accountid', this.accountId);
+        // when accounts param is found, banks param must have been found before
+        // because bank param is earlier in path
+        this.askForTransactions();
       }
     );
+  }
 
+  askForTransactions() {
     this.transactionsLists = [];
     console.log('ON INIT LTX ask for transactions for ', this.accountId);
     this.accountsSubscription = this.aisService.getTransactions(this.bankId, this.accountId).subscribe(
