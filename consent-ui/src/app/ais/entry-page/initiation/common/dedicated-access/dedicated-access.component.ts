@@ -6,6 +6,7 @@ import { StubUtil } from '../../../../common/stub-util';
 import { AccountReference } from '../accounts-reference/accounts-reference.component';
 import { SessionService } from '../../../../../common/session.service';
 import { ConsentUtil } from '../../../../common/consent-util';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'consent-app-limited-access',
@@ -14,6 +15,7 @@ import { ConsentUtil } from '../../../../common/consent-util';
 })
 export class DedicatedAccessComponent implements OnInit {
   constructor(
+    private location: Location,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
@@ -50,5 +52,9 @@ export class DedicatedAccessComponent implements OnInit {
 
     this.sessionService.setConsentObject(this.authorizationId, consentObj);
     this.router.navigate([SharedRoutes.REVIEW], { relativeTo: this.activatedRoute.parent });
+  }
+
+  onBack() {
+    this.location.back();
   }
 }

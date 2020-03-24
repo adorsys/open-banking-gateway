@@ -106,12 +106,12 @@ public class ProtocolResultHandler {
     protected <O, R extends FacadeServiceableGetter> FacadeResultRedirectable<O, AuthStateBody> handleRedirect(
         RedirectionResult<O, ?> result, UUID xRequestId, ServiceContext<R> session
     ) {
-        if (!authSessionFromDb(session.getServiceSessionId()).isPresent()) {
-            return handleAuthorizationStart(result, xRequestId, session);
-        }
-
         if (result instanceof AuthorizationDeniedResult) {
             return doHandleAbortAuthorization(result, xRequestId, session);
+        }
+
+        if (!authSessionFromDb(session.getServiceSessionId()).isPresent()) {
+            return handleAuthorizationStart(result, xRequestId, session);
         }
 
         return doHandleRedirect(result, xRequestId, session);
@@ -135,7 +135,10 @@ public class ProtocolResultHandler {
         FacadeRedirectResult<O, AuthStateBody> mappedResult =
                 (FacadeRedirectResult<O, AuthStateBody>) FacadeRedirectResult.FROM_PROTOCOL.map(result);
 
-        sessions.deleteById(session.getServiceSessionId());
+        if (sessions.findById(session.getServiceSessionId()).isPresent()) {
+            sessions.deleteById(session.getServiceSessionId());
+        }
+
         mappedResult.setCause(mapCause(result));
         mappedResult.setXRequestId(xRequestId);
         return mappedResult;
