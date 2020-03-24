@@ -14,6 +14,7 @@
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (1, 3, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (2, 3, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (3, 3, 'FROM_ASPSP_REDIRECT', 'xs2aFromAspspRedirect');
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (4, 3, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
        </sql>
     </changeSet>
 </databaseChangeLog>

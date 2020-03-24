@@ -153,12 +153,13 @@ paths:
       security:
       - sessionCookie: []
 
-  /v1/consent/{auth-id}/toAspsp/deny:
+  /v1/consent/{auth-id}/deny:
     post:
-      operationId: denyRedirectUsingPOST
+      operationId: denyUsingPOST
       tags:
       - Consent Authorization
       summary: |
+        Consent authorization is denied - consent is blocked.
         Closes this session and redirects the PSU back to the FinTechApi or close the application window.
       description: |
         Closes this session and redirects the PSU back to the FinTechApi
@@ -174,7 +175,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DenyRedirectRequest'
+              $ref: '#/components/schemas/DenyRequest'
         required: true
       responses:
         '302':
@@ -872,10 +873,10 @@ components:
         consentAuth:
           $ref: '#/components/schemas/ConsentAuthRequirement'
 
-    DenyRedirectRequest:
-      title: DenyRedirectRequest
+    DenyRequest:
+      title: DenyRequest
       type: object
-      description: Denies a redirect to ASPSP requested by the ConsentAuthorisationApi
+      description: Consent authorization denied descriptor
       properties:
         consentAuth:
           $ref: '#/components/schemas/ConsentAuth'

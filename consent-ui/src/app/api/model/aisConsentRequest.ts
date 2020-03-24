@@ -29,5 +29,9 @@ export interface AisConsentRequest {
      * Consent`s expiration date. The content is the local ASPSP date in ISODate Format
      */
     validUntil: string;
+    /**
+     * \'true\', if the consent is i.e. account list and then payment \'false\', if the consent is for one access to the account data
+     */
+    combinedServiceIndicator?: boolean;
 }
 
