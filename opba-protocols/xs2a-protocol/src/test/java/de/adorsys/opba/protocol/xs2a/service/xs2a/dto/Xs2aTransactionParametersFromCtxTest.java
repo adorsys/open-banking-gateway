@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.dto;
 
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
-import de.adorsys.opba.protocol.xs2a.util.UtilService;
+import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +16,16 @@ public class Xs2aTransactionParametersFromCtxTest {
 
     @Autowired
     private Xs2aTransactionParameters.FromCtx mapper;
+
     @Autowired
-    private UtilService utilService;
+    private FixtureProvider fixtureProvider;
 
     @Test
     @SneakyThrows
     public void transactionParametersMapperTest() {
         // Given
-        TransactionListXs2aContext mappingInput = utilService.getFromFile(PATH_PREFIX + "transaction_list_input.json", TransactionListXs2aContext.class);
-        Xs2aTransactionParameters expected = utilService.getFromFile(PATH_PREFIX + "transaction_list_output.json", Xs2aTransactionParameters.class);
+        TransactionListXs2aContext mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "transaction_list_input.json", TransactionListXs2aContext.class);
+        Xs2aTransactionParameters expected = fixtureProvider.getFromFile(PATH_PREFIX + "transaction_list_output.json", Xs2aTransactionParameters.class);
 
         // When
         Xs2aTransactionParameters actual = mapper.map(mappingInput);

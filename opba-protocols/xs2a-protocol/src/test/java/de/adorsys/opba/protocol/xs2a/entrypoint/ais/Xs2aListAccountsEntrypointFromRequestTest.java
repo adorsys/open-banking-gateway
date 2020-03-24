@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.xs2a.entrypoint.ais;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.AccountListXs2aContext;
-import de.adorsys.opba.protocol.xs2a.util.UtilService;
+import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +17,16 @@ public class Xs2aListAccountsEntrypointFromRequestTest {
 
     @Autowired
     private Xs2aListAccountsEntrypoint.FromRequest mapper;
+
     @Autowired
-    private UtilService utilService;
+    private FixtureProvider fixtureProvider;
 
     @Test
     @SneakyThrows
     public void listAccountMapperTest() {
         // Given
-        ListAccountsRequest mappingInput = utilService.getFromFile(PATH_PREFIX + "list_account_request_input.json", ListAccountsRequest.class);
-        AccountListXs2aContext expected = utilService.getFromFile(PATH_PREFIX + "list_account_request_output.json", AccountListXs2aContext.class);
+        ListAccountsRequest mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "list_account_request_input.json", ListAccountsRequest.class);
+        AccountListXs2aContext expected = fixtureProvider.getFromFile(PATH_PREFIX + "list_account_request_output.json", AccountListXs2aContext.class);
 
         // When
         AccountListXs2aContext actual = mapper.map(mappingInput);

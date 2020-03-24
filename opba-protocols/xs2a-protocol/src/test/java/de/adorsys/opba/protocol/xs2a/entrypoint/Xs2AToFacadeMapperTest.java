@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.xs2a.entrypoint;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
-import de.adorsys.opba.protocol.xs2a.util.UtilService;
+import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
 import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
 import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
 import lombok.SneakyThrows;
@@ -19,28 +19,29 @@ public class Xs2AToFacadeMapperTest {
 
     @Autowired
     private Xs2aResultBodyExtractor.Xs2aToFacadeMapper mapper;
+
     @Autowired
-    private UtilService utilService;
+    private FixtureProvider fixtureProvider;
 
     @Test
     @SneakyThrows
     void accountsMapperTest() {
-        AccountListHolder mappingInput = utilService.getFromFile(PATH_PREFIX + "accounts_input.json", AccountListHolder.class);
+        AccountListHolder mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "accounts_input.json", AccountListHolder.class);
         AccountListBody mappingResult = mapper.map(mappingInput);
 
-        AccountListBody expected = utilService.getFromFile(PATH_PREFIX + "accounts_output.json", AccountListBody.class);
+        AccountListBody expected = fixtureProvider.getFromFile(PATH_PREFIX + "accounts_output.json", AccountListBody.class);
         assertThat(expected).isEqualToComparingFieldByField(mappingResult);
     }
 
     @Test
     @SneakyThrows
     void transactionsMapperTest() {
-        TransactionsReport mappingInput = utilService.getFromFile(PATH_PREFIX + "transactions_input.json",
-                                                                  TransactionsReport.class);
+        TransactionsReport mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_input.json",
+                                                                      TransactionsReport.class);
         TransactionsResponseBody mappingResult = mapper.map(mappingInput);
 
-        TransactionsResponseBody expected = utilService.getFromFile(PATH_PREFIX + "transactions_output.json",
-                                                                    TransactionsResponseBody.class);
+        TransactionsResponseBody expected = fixtureProvider.getFromFile(PATH_PREFIX + "transactions_output.json",
+                                                                        TransactionsResponseBody.class);
         assertThat(expected).isEqualToComparingFieldByField(mappingResult);
     }
 }

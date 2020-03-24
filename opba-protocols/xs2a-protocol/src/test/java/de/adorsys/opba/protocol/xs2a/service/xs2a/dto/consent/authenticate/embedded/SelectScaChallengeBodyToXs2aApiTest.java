@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.authenticate.embedded;
 
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
-import de.adorsys.opba.protocol.xs2a.util.UtilService;
+import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
 import de.adorsys.xs2a.adapter.service.model.SelectPsuAuthenticationMethod;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -16,15 +16,16 @@ public class SelectScaChallengeBodyToXs2aApiTest {
 
     @Autowired
     private SelectScaChallengeBody.ToXs2aApi mapper;
+
     @Autowired
-    private UtilService utilService;
+    private FixtureProvider fixtureProvider;
 
     @Test
     @SneakyThrows
     public void selectScaChallengeBodyToXs2aApiMapperTest() {
         // Given
-        SelectScaChallengeBody mappingInput = utilService.getFromFile(PATH_PREFIX + "select_sca_challenge_body_input.json", SelectScaChallengeBody.class);
-        SelectPsuAuthenticationMethod expected = utilService.getFromFile(PATH_PREFIX + "select_sca_challenge_body_output.json", SelectPsuAuthenticationMethod.class);
+        SelectScaChallengeBody mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "select_sca_challenge_body_input.json", SelectScaChallengeBody.class);
+        SelectPsuAuthenticationMethod expected = fixtureProvider.getFromFile(PATH_PREFIX + "select_sca_challenge_body_output.json", SelectPsuAuthenticationMethod.class);
 
         // When
         SelectPsuAuthenticationMethod actual = mapper.map(mappingInput);

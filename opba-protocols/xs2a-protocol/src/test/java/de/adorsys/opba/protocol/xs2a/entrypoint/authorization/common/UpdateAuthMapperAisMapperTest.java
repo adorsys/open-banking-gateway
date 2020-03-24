@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.xs2a.entrypoint.authorization.common;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AisConsentInitiateBody;
-import de.adorsys.opba.protocol.xs2a.util.UtilService;
+import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +17,16 @@ public class UpdateAuthMapperAisMapperTest {
 
     @Autowired
     private UpdateAuthMapper.AisMapper mapper;
+
     @Autowired
-    private UtilService utilService;
+    private FixtureProvider fixtureProvider;
 
     @Test
     @SneakyThrows
     public void aisMapperTest() {
         // Given
-        AisConsent mappingInput = utilService.getFromFile(PATH_PREFIX + "ais_consent_input.json", AisConsent.class);
-        AisConsentInitiateBody expected = utilService.getFromFile(PATH_PREFIX + "ais_consent_output.json", AisConsentInitiateBody.class);
+        AisConsent mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "ais_consent_input.json", AisConsent.class);
+        AisConsentInitiateBody expected = fixtureProvider.getFromFile(PATH_PREFIX + "ais_consent_output.json", AisConsentInitiateBody.class);
 
         // When
         AisConsentInitiateBody actual = mapper.map(mappingInput);
