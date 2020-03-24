@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthViolation } from '../../../../../api';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {AuthViolation} from '../../../../../api';
+import {AisConsentToGrant} from '../../../../common/dto/ais-consent';
 
 @Component({
   selector: 'consent-app-dynamic-inputs',
@@ -10,10 +11,16 @@ import { AuthViolation } from '../../../../../api';
 export class DynamicInputsComponent implements OnInit {
   @Input() violations: AuthViolation[];
   @Input() targetForm: FormGroup;
+  @Input() currentConsent: AisConsentToGrant;
 
   constructor() {}
 
   ngOnInit() {
     this.violations.forEach(it => this.targetForm.addControl(it.code, new FormControl('', Validators.required)));
+
+    if (this.currentConsent) {
+      this.violations
+        .forEach(it => this.targetForm.get(it.code).setValue(this.currentConsent.extras[it.code]));
+    }
   }
 }
