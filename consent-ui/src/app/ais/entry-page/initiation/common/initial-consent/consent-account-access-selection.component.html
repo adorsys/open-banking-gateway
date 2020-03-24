@@ -5,7 +5,7 @@
       <ng-container *ngIf="hasGeneralViolations()">
         <h2 class="mb-4 text-left">Consent authorization for {{aspspName}}</h2>
         <div class="form-group my-4">
-          <consent-app-dynamic-inputs [targetForm]="accountAccessForm" [violations]="state.getGeneralViolations()"></consent-app-dynamic-inputs>
+          <consent-app-dynamic-inputs [targetForm]="accountAccessForm" [violations]="state.getGeneralViolations()" [currentConsent]="consent"></consent-app-dynamic-inputs>
         </div>
       </ng-container>
 
