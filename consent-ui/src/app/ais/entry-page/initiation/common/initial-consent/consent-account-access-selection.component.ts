@@ -49,7 +49,7 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
 
       this.selectedAccess = new FormControl(this.accountAccesses[0], Validators.required);
       this.accountAccessForm.addControl('accountAccess', this.selectedAccess);
-      this.consent = this.sessionService.getConsentObject(this.authorizationId, () => new AisConsentToGrant());
+      this.consent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     });
   }
 
