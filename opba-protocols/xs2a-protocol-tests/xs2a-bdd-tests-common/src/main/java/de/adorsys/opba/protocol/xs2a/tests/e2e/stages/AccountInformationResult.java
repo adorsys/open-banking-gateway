@@ -72,6 +72,12 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
 
     @SneakyThrows
     @Transactional
+    public AccountInformationResult open_banking_has_no_consent() {
+        assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isEmpty();
+        return self();
+    }
+
+    @Transactional
     public AccountInformationResult open_banking_has_consent_for_max_musterman_account_list() {
         assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isNotEmpty();
         return self();
