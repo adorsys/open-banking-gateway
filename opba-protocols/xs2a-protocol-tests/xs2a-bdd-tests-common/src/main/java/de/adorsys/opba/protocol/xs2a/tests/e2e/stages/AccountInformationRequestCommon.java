@@ -24,6 +24,8 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.DENY_CONSENT_AUTH_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.FINTECH_REDIR_NOK;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.GET_CONSENT_AUTH_STATE;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
@@ -132,6 +134,24 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_denied_consent() {
+        ExtractableResponse<Response> response = RestAssured
+                .given()
+                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body("{}")
+                .when()
+                    .post(DENY_CONSENT_AUTH_ENDPOINT, serviceSessionId)
+                .then()
+                    .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
+
+        assertThat(response.header(LOCATION)).isEqualTo(FINTECH_REDIR_NOK);
+        return self();
+    }
+
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp() {
         ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
@@ -199,7 +219,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_redirect_to_fintech_ok() {
+    public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         ExtractableResponse<Response> response = provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/max-musterman-sca-challenge-result.json"),
