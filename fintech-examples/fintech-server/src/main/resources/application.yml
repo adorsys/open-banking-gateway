@@ -12,8 +12,6 @@ server:
       # The strict value will prevent the cookie from being sent by the browser to the target site in all cross-site browsing context, even when following a regular link.
       # The lax value will only send cookies for TOP LEVEL navigation GET requests. This is sufficient for user tracking, but it will prevent many CSRF attacks.
 
-
-
 tpp:
   url: http://localhost:8085
 
