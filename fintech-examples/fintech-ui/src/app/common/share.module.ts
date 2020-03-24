@@ -3,11 +3,10 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { InfoModule } from '../errorsHandler/info/info.module';
-import { RedirectCardComponent } from './redirect-card/redirect-card.component';
 
 @NgModule({
-  declarations: [RedirectCardComponent],
+  declarations: [],
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule, InfoModule],
-  exports: [CommonModule, ReactiveFormsModule, HttpClientModule, InfoModule, RedirectCardComponent]
+  exports: [CommonModule, ReactiveFormsModule, HttpClientModule, InfoModule]
 })
 export class ShareModule {}
