@@ -4,7 +4,7 @@
     <p class="text-secondary mb-5 text-left">Requested by <strong>{{finTechName}}</strong></p>
 
     <div class="form-group d-flex flex-row justify-content-lg-between">
-      <button id="do_cancel" class="btn md-6 w-100 mr-sm-2 mr-md-3 btn-outline-secondary">Cancel</button>
+      <button id="do_deny" class="btn md-6 w-100 mr-sm-2 mr-md-3 btn-outline-secondary" (click)="onDeny()">Deny consent</button>
       <button id="do_submit" type="button" class="btn md-6 w-100 btn-primary" [disabled]="!redirectTo" (click)="onConfirm()">Confirm</button>
     </div>
   </div>
