@@ -6,7 +6,6 @@ import { FinTechAuthorizationService } from '../api';
 import { Credentials } from '../models/credentials.model';
 import { Consts } from '../common/consts';
 import { DocumentCookieService } from './document-cookie.service';
-import { LogException } from '../common/LogException';
 
 @Injectable({
   providedIn: 'root'
