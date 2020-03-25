@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
+import { StubUtilTests } from '../../../../common/stub-util-tests';
 
 describe('TransactionsConsentReviewComponent', () => {
   let component: TransactionsConsentReviewComponent;
@@ -18,7 +19,7 @@ describe('TransactionsConsentReviewComponent', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { parent: { parent: { params: of({ authId: 'AUTH-ID' }) } } }
+          useValue: { parent: { parent: { params: of({ authId: StubUtilTests.AUTH_ID }) } } }
         }
       ]
     }).compileComponents();

@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { StubUtilTests } from '../common/stub-util-tests';
 
 describe('ReportScaResultComponent', () => {
   let component: ReportScaResultComponent;
@@ -17,7 +18,7 @@ describe('ReportScaResultComponent', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { parent: { snapshot: { paramMap: convertToParamMap({ authId: 'AUTH-ID' }) } } }
+          useValue: { parent: { snapshot: { paramMap: convertToParamMap({ authId: StubUtilTests.AUTH_ID }) } } }
         }
       ]
     }).compileComponents();

@@ -4,6 +4,7 @@ import { ResultPageComponent } from './result-page.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
+import { StubUtilTests } from '../common/stub-util-tests';
 
 describe('ResultPageComponent', () => {
   let component: ResultPageComponent;
@@ -18,8 +19,8 @@ describe('ResultPageComponent', () => {
           provide: ActivatedRoute,
           useValue: {
             snapshot: {
-              parent: { params: { authId: 'AUTH-ID' } },
-              queryParams: { redirectCode: 'REDIRECT-CODE' }
+              parent: { params: { authId: StubUtilTests.AUTH_ID } },
+              queryParams: { redirectCode: StubUtilTests.REDIRECT_ID }
             }
           }
         }

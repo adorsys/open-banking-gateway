@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
+import { StubUtilTests } from '../common/stub-util-tests';
 
 describe('ToAspspRedirectionComponent', () => {
   let component: ToAspspRedirectionComponent;
@@ -18,7 +19,7 @@ describe('ToAspspRedirectionComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            parent: { params: of({ authId: 'AUTH-ID' }) }
+            parent: { params: of({ authId: StubUtilTests.AUTH_ID }) }
           }
         }
       ]
