@@ -4,7 +4,8 @@ import { ConsentInitiateComponent } from './consent-initiate.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { StubUtilTests } from '../../../common/stub-util-tests';
 
 describe('ConsentInitiateComponent', () => {
   let component: ConsentInitiateComponent;
@@ -17,7 +18,12 @@ describe('ConsentInitiateComponent', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { snapshot: { params: { authId: 'AUTH-ID' }, queryParams: { redirectCode: 'REDIRECT-CODE' } } }
+          useValue: {
+            snapshot: {
+              params: { authId: StubUtilTests.AUTH_ID },
+              queryParams: { redirectCode: StubUtilTests.REDIRECT_ID }
+            }
+          }
         }
       ]
     }).compileComponents();

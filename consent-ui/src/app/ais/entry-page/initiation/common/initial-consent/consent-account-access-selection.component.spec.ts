@@ -11,6 +11,7 @@ import { AccountAccessLevel } from '../../../../common/dto/ais-consent';
 import { AuthConsentState } from '../../../../common/dto/auth-state';
 import { AccountsConsentReviewComponent } from '../../accounts/accounts-consent-review/accounts-consent-review.component';
 import { DedicatedAccessComponent } from '../dedicated-access/dedicated-access.component';
+import { StubUtilTests } from '../../../../common/stub-util-tests';
 
 describe('ConsentAccountAccessSelectionComponent', () => {
   let component: ConsentAccountAccessSelectionComponent;
@@ -24,7 +25,7 @@ describe('ConsentAccountAccessSelectionComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            parent: { parent: { params: of({ authId: 'AUTH-ID' }) } },
+            parent: { parent: { params: of({ authId: StubUtilTests.AUTH_ID }) } },
             snapshot: {}
           }
         },

@@ -6,6 +6,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { of } from 'rxjs';
+import { StubUtilTests } from '../../../../common/stub-util-tests';
 
 describe('DedicatedAccessComponent', () => {
   let component: DedicatedAccessComponent;
@@ -19,7 +20,7 @@ describe('DedicatedAccessComponent', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { parent: { parent: { params: of(convertToParamMap({ authId: 'AUTH-ID' })) } } }
+          useValue: { parent: { parent: { params: of(convertToParamMap({ authId: StubUtilTests.AUTH_ID })) } } }
         }
       ]
     }).compileComponents();
