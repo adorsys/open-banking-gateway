@@ -16,12 +16,12 @@ export class ListAccountsComponent implements OnInit, OnDestroy {
   bankId = '';
 
   constructor(private router: Router, private route: ActivatedRoute, private aisService: AisService) {}
-  
+
   ngOnInit() {
     this.route.parent.parent.paramMap.subscribe(p => {
       this.bankId = p.get('bankid');
-      console.log('ON INIT LIST ACCOUNTS BANKID IS', this.bankId);
     });
+    console.log('ON INIT LIST ACCOUNTS BANKID IS', this.bankId);
 
     console.log('list-accounts for bankid', this.bankId);
     this.accountsSubscription = this.aisService.getAccounts(this.bankId).subscribe(response => {

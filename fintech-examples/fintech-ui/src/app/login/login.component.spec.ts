@@ -10,7 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BankSearchComponent } from '../bank-search/components/bank-search/bank-search.component';
-import { CookieService } from 'ngx-cookie-service';
+import { DocumentCookieService } from '../services/document-cookie.service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -29,7 +29,7 @@ describe('LoginComponent', () => {
         HttpClientModule,
         RouterTestingModule.withRoutes([{ path: 'search', component: BankSearchComponent }])
       ],
-      providers: [AuthService, CookieService],
+      providers: [AuthService, DocumentCookieService],
       declarations: [LoginComponent]
     }).compileComponents();
   }));
