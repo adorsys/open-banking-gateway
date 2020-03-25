@@ -6,6 +6,7 @@ import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.util.encoders.Hex;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,8 +15,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
-import static de.adorsys.opba.fintech.impl.tppclients.CookieNames.SESSION_COOKIE;
-import static de.adorsys.opba.fintech.impl.tppclients.CookieNames.XSRF_TOKEN_COOKIE;
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.COOKIE_SESSION_COOKIE_NAME;
 
 /**
  * This is just a dummy authorization.
@@ -57,10 +57,10 @@ public class AuthorizeService {
         sessionEntity.setXsrfToken(UUID.randomUUID().toString());
 
         // delete old cookies, if available
-        sessionEntity.setCookies(new ArrayList<>());
+        sessionEntity.setSessionCookie(null);
 
-        sessionEntity.addCookie(SESSION_COOKIE, UUID.randomUUID().toString());
-        sessionEntity.addCookie(XSRF_TOKEN_COOKIE, sessionEntity.getXsrfToken());
+        sessionEntity.setSessionCookieValue(UUID.randomUUID().toString());
+        sessionEntity.setXsrfToken(sessionEntity.getXsrfToken());
 
         sessionEntity.addLogin(OffsetDateTime.now());
 
@@ -83,8 +83,13 @@ public class AuthorizeService {
         userRepository.save(
                 SessionEntity.builder()
                         .loginUserName(loginRequest.getUsername())
+                        .fintechUserId(createID(loginRequest.getUsername()))
                         .password(UNIVERSAL_PASSWORD)
                         .build());
+    }
+
+    private String createID(String username) {
+        return new String(Hex.encode(username.getBytes()));
     }
 
     @Transactional
@@ -99,12 +104,7 @@ public class AuthorizeService {
             log.debug("XSRF-TOKEN {} is known", xsrfToken);
             return true;
         }
-        for (CookieEntity cookie : optionalUserEntity.get().getCookies()) {
-            if (cookie.getName().equals(SESSION_COOKIE)) {
-                return cookie.getValue().equals(sessionCookieContent);
-            }
-        }
-        return false;
+        return optionalUserEntity.get().getSessionCookie().getValue().equals(sessionCookieContent);
     }
 
 

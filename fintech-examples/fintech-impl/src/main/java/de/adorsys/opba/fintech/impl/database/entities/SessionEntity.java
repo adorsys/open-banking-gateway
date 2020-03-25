@@ -1,5 +1,6 @@
 package de.adorsys.opba.fintech.impl.database.entities;
 
+import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,8 +8,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -28,28 +33,34 @@ import java.util.UUID;
 public class SessionEntity {
     @Id
     private String loginUserName;
-
-    @Column(nullable = false)
+    private String fintechUserId;
     private String password;
-
     private String xsrfToken;
+    private String psuConsentSession;
+    private UUID serviceSessionId;
 
     // TODO orphanRemoval should be true, but thatn deleting  fails. Dont know hot to
     // test with different transactions yet
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
     private List<LoginEntity> logins = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
-    private List<CookieEntity> cookies = new ArrayList<>();
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "name", column = @Column(name = "session_cookie_name")),
+            @AttributeOverride(name = "value", column = @Column(name = "session_cookie_value"))
+    })
+    private CookieEntity sessionCookie;
 
-    private String psuConsentSession;
-    private UUID serviceSessionId;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "name", column = @Column(name = "redirect_cookie_name")),
+            @AttributeOverride(name = "value", column = @Column(name = "redirect_cookie_value"))
+    })
+    private CookieEntity redirectCookie;
 
-    public SessionEntity addCookie(String key, String value) {
-        if (cookies == null) {
-            cookies = new ArrayList<>();
-        }
-        cookies.add(CookieEntity.builder().name(key).value(value).build());
+
+    public SessionEntity setSessionCookieValue(String value) {
+        sessionCookie = CookieEntity.builder().name(Consts.COOKIE_SESSION_COOKIE_NAME).value(value).build();
         return this;
     }
 

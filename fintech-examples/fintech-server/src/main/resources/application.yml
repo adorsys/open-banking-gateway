@@ -1,12 +1,20 @@
 server:
   port: 8086
   controller:
-    cookie:
+    sessioncookie:
       secure: false
       maxAge: 300
-      httpOnly: false
+      httpOnly: true
       path: /
       sameSite: Strict
+
+    redirectcookie:
+      secure: false
+      maxAge: 1800
+      httpOnly: false
+      path: /v1/{auth-id}/fromConsentOk
+      sameSite: Strict
+
       # sameSite: Strict|Lax|none
       # samesite SameSite prevents the browser from sending this cookie along with cross-site requests. Possible values for the flag are lax or strict.
       # The strict value will prevent the cookie from being sent by the browser to the target site in all cross-site browsing context, even when following a regular link.

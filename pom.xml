@@ -150,6 +150,7 @@
         <postgresql.version>42.2.11</postgresql.version>
         <!-- JavaDoc -->
         <javax.interceptor.api.version>1.2.2</javax.interceptor.api.version>
+        <commons-codec.version>1.14</commons-codec.version>
     </properties>
 
     <repositories>

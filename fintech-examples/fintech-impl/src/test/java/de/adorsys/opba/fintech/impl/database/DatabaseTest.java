@@ -44,7 +44,7 @@ public class DatabaseTest {
     public void testDeleteInOneTx() {
         userRepository.save(createSessionEntity("peter", "1"));
         SessionEntity sessionEntity = userRepository.findById("peter").get();
-        sessionEntity.setCookies(new ArrayList<>());
+        sessionEntity.setSessionCookie(null);
         userRepository.save(sessionEntity);
     }
 
@@ -62,7 +62,7 @@ public class DatabaseTest {
     @Transactional(propagation = Propagation.NEVER)
     void testDeleteInTwoTx2() {
         SessionEntity sessionEntity = userRepository.findById("peter").get();
-        sessionEntity.setCookies(new ArrayList<>());
+        sessionEntity.setSessionCookie(null);
         userRepository.save(sessionEntity);
     }
 
@@ -74,9 +74,7 @@ public class DatabaseTest {
                 .xsrfToken(xsrf)
                 .build();
         sessionEntity.addLogin(OffsetDateTime.now());
-        sessionEntity.addCookie("cookie1", "value1");
-        sessionEntity.addCookie("cookie2", "value2");
-        sessionEntity.addCookie("cookie3", "value3");
+        sessionEntity.setSessionCookieValue("value1");
 
         return sessionEntity;
     }

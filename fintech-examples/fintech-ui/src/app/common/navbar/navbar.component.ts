@@ -3,6 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { Consts } from '../consts';
 import { Router } from '@angular/router';
 import { DocumentCookieService } from '../../services/document-cookie.service';
+import {LocalStorage} from "../local-storage";
 
 @Component({
   selector: 'app-navbar',
@@ -23,7 +24,7 @@ export class NavbarComponent implements OnInit {
   }
 
   isLoggedIn(): boolean {
-    return this.cookieService.exists(Consts.COOKIE_NAME_XSRF_TOKEN);
+    return LocalStorage.isLoggedIn();
   }
 
   getUserName(): string {
