@@ -18,7 +18,8 @@ export class ToAspspRedirectionComponent implements OnInit {
   public finTechName = StubUtil.FINTECH_NAME;
   public aspspName = StubUtil.ASPSP_NAME;
 
-  private redirectTo: string;
+  redirectTo: string;
+
   private authorizationId: string;
   private aisConsent: AisConsentToGrant;
 

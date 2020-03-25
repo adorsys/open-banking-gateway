@@ -17,8 +17,9 @@ export class ResultPageComponent implements OnInit {
 
   public finTechName = StubUtil.FINTECH_NAME;
 
+  redirectTo: string;
+
   private route: ActivatedRouteSnapshot;
-  private redirectTo: string;
   private aisConsent: AisConsentToGrant;
 
   constructor(

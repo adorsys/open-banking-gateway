@@ -6,5 +6,5 @@
     </select>
   </div>
 
-  <button id="do_submit" class="btn btn-primary w-100" type="submit">Submit</button>
+  <button id="do_submit" class="btn btn-primary w-100" type="submit" [disabled]="!selectedMethod.value">Submit</button>
 </form>
