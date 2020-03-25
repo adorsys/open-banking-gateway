@@ -1,10 +1,10 @@
 <aspectj>
     <aspects>
-        <aspect name="de.adorsys.opba.smoketests.config.WebDriverErrorReportAspect"/>
+        <aspect name="de.adorsys.opba.smoketests.config.WebDriverErrorReportAspectAndWatcher"/>
         <weaver>
             <include within="de.adorsys.opba.smoketests.*"/>
-            <include within="de.adorsys.opba.protocol.xs2a.tests.*"/>
-            <include within="de.adorsys.opba.smoketests.config.WebDriverErrorReportAspect"/>
+            <include within="de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.*"/>
+            <include within="de.adorsys.opba.smoketests.config.WebDriverErrorReportAspectAndWatcher"/>
         </weaver>
     </aspects>
 </aspectj>

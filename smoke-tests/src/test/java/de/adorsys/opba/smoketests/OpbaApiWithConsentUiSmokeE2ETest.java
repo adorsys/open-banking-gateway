@@ -8,6 +8,7 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAcc
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.smoketests.config.SandboxConsentAuthApproachState;
 import de.adorsys.opba.smoketests.config.SmokeConfig;
+import de.adorsys.opba.smoketests.config.WebDriverErrorReportAspectAndWatcher;
 import io.github.bonigarcia.seljup.SeleniumExtension;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterEach;
@@ -33,7 +34,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * Happy-path smoke test to validate that OpenBanking environment with Consent UI is in sane state.
  */
 @EnabledIfEnvironmentVariable(named = ENABLE_SMOKE_TESTS, matches = TRUE_BOOL)
-@ExtendWith(SeleniumExtension.class)
+@ExtendWith({SeleniumExtension.class, WebDriverErrorReportAspectAndWatcher.class})
 @SpringBootTest(classes = {JGivenConfig.class, SmokeConfig.class}, webEnvironment = NONE)
 @ActiveProfiles(profiles = {SMOKE_TEST})
 class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>, AccountInformationResult> {
@@ -94,7 +95,7 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SandboxServers
                 .and()
                 .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
                 .and()
-                .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(firefoxDriver)
+                .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
                 .and()
                 .user_anton_brueckner_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
 
