@@ -1,0 +1,7 @@
+{
+  "authenticationType": "sms",
+  "authenticationVersion": "1.0",
+  "authenticationMethodId": "SCA_SMS",
+  "name": "mobile",
+  "explanation": "Authentication via mobile phone"
+}

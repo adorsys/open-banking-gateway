@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FinTechAuthorizationService } from '../api';
 import { Credentials } from '../models/credentials.model';
 import { Consts } from '../common/consts';
-import * as uuid from 'uuid';
+import { DocumentCookieService } from './document-cookie.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,42 +13,40 @@ import * as uuid from 'uuid';
 export class AuthService {
   constructor(
     private router: Router,
-    private cookieService: CookieService,
-    private finTechAuthorizationService: FinTechAuthorizationService
+    private finTechAuthorizationService: FinTechAuthorizationService,
+    private cookieService: DocumentCookieService
   ) {}
 
   login(credentials: Credentials): Observable<boolean> {
-    return this.finTechAuthorizationService.loginPOST(uuid.v4(), credentials, 'response').pipe(
-      map(loginResponse => {
-        // if login response is ok and cookie exist then the login was successful
-        localStorage.setItem(Consts.USERNAME, credentials.username);
-        console.log('after login get all cookies is ', JSON.stringify(this.cookieService.getAll()));
-        return loginResponse.ok && this.cookieService.check(Consts.XSRF_TOKEN);
+    return this.finTechAuthorizationService.loginPOST('', credentials, 'response').pipe(
+      map(response => {
+        this.cookieService.getAll().forEach(cookie => console.log('cookie after login :' + cookie));
+        localStorage.setItem(Consts.LOCAL_STORAGE_USERNAME, credentials.username);
+        return response.ok;
       })
     );
   }
 
-  logout(): void {
-    localStorage.clear();
-    console.log('before logout get all cookies is ', JSON.stringify(this.cookieService.getAll()));
-
-    this.cookieService.deleteAll('/');
-    const xsrftoken = this.cookieService.get(Consts.XSRF_TOKEN);
-    if (xsrftoken !== undefined) {
-      console.error('logut did not work, xsrf-token-cookie still exists');
-    }
-    this.openLoginPage();
+  logout(): Observable<boolean> {
+    console.log('start logout');
+    return this.finTechAuthorizationService.logoutPOST('', '', 'response').pipe(
+      map(response => {
+        if (response.ok) {
+          console.log('logout confirmed by server');
+          localStorage.clear();
+          this.cookieService.delete(Consts.COOKIE_NAME_XSRF_TOKEN);
+          this.cookieService.delete(Consts.COOKIE_NAME_SESSION_COOKIE);
+          this.cookieService.getAll().forEach(cookie => console.log('cookie after logout :' + cookie));
+          this.openLoginPage();
+        } else {
+          console.error('log off not possible due to server response:' + response.status);
+        }
+        return response.ok;
+      })
+    );
   }
 
   openLoginPage() {
     this.router.navigate(['/login']);
-  }
-
-  isLoggedIn(): boolean {
-    return this.cookieService.check(Consts.XSRF_TOKEN);
-  }
-
-  getX_XSRF_TOKEN(): string {
-    return this.cookieService.get(Consts.XSRF_TOKEN);
   }
 }

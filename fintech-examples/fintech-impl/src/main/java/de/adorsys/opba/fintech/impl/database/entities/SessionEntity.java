@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -27,7 +28,10 @@ import java.util.UUID;
 public class SessionEntity {
     @Id
     private String loginUserName;
+
+    @Column(nullable = false)
     private String password;
+
     private String xsrfToken;
 
     // TODO orphanRemoval should be true, but thatn deleting  fails. Dont know hot to
@@ -39,7 +43,7 @@ public class SessionEntity {
     private List<CookieEntity> cookies = new ArrayList<>();
 
     private String psuConsentSession;
-    private UUID serviceSessionID;
+    private UUID serviceSessionId;
 
     public SessionEntity addCookie(String key, String value) {
         if (cookies == null) {

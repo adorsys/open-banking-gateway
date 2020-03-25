@@ -22,14 +22,13 @@ describe('NavbarComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(NavbarComponent);
+    router = TestBed.get(Router);
     component = fixture.componentInstance;
     authServiceSpy.isLoggedIn.and.returnValue(true);
     fixture.detectChanges();
-    router = TestBed.get(Router);
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-    expect(authServiceSpy.isLoggedIn).toHaveBeenCalled();
   });
 });

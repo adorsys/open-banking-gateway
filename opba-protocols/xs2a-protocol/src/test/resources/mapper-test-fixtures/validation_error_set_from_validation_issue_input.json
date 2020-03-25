@@ -1,0 +1,14 @@
+[
+  {
+    "type": "OBJECT",
+    "scope": "AIS_CONSENT",
+    "code": "FREQUENCY_PER_DAY",
+    "captionMessage": "test message 1"
+  },
+  {
+    "type": "STRING",
+    "scope": "GENERAL",
+    "code": "BOOKING_STATUS",
+    "captionMessage": "test message 2"
+  }
+]

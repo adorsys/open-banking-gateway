@@ -2,20 +2,30 @@ package de.adorsys.opba.fintech.impl.database.entities;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Id;
 
 @Data
 @Entity
 public class RedirectUrlsEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "redirect_urls_generator")
+    @SequenceGenerator(name = "redirect_urls_generator", sequenceName = "redirect_urls_id_seq")
     private Long id;
 
-    private String redirectCode;
+    @Column(nullable = false)
     private String redirectState;
-    private String okURL;
-    private String notOkURL;
+
+    @Column(nullable = false)
+    private String okUrl;
+
+    @Column(nullable = false)
+    private String notOkUrl;
+
+    @Column(nullable = false)
+    private String redirectCode;
 }

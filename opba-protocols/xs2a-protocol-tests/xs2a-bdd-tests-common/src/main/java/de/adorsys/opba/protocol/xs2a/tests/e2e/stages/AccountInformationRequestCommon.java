@@ -206,7 +206,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 HttpStatus.ACCEPTED
         );
 
-        assertThat(response.header(LOCATION)).contains("localhost").contains("consent-result");
+        assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
         return self();
     }
 

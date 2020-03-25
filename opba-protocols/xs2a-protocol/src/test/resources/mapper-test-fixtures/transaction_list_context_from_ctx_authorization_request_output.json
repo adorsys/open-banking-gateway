@@ -1,0 +1,10 @@
+{
+  "aisConsent": {
+    "access": null,
+    "recurringIndicator": true,
+    "validUntil": "2021-03-01",
+    "frequencyPerDay": 10,
+    "combinedServiceIndicator": false
+  },
+  "psuIpAddress": "1.1.1.1"
+}

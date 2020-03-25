@@ -53,7 +53,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                     .statusCode(HttpStatus.SEE_OTHER.value())
                     .extract();
 
-        assertThat(response.header(LOCATION)).contains("localhost");
+        assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
 
         return self();
     }

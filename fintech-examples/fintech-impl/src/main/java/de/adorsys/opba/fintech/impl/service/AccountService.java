@@ -38,12 +38,12 @@ public class AccountService extends HandleAcceptedService {
                 contextInformation.getFintechID(),
                 contextInformation.getServiceSessionPassword(),
                 sessionEntity.getLoginUserName(),
-                redirectUrlsEntity.getOkURL(),
-                redirectUrlsEntity.getNotOkURL(),
+                redirectUrlsEntity.getOkUrl(),
+                redirectUrlsEntity.getNotOkUrl(),
                 contextInformation.getXRequestID(),
                 requestInfoEntity.getBankId(),
                 sessionEntity.getPsuConsentSession(),
-                sessionEntity.getServiceSessionID());
+                sessionEntity.getServiceSessionId());
 
         switch (accounts.getStatusCode()) {
             case OK:

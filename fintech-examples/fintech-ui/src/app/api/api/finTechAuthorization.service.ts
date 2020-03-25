@@ -194,4 +194,53 @@ export class FinTechAuthorizationService {
         );
     }
 
+    /**
+     * logs out user
+     * If user can be authenticated, user will be logged out.
+     * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
+     * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie. 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public logoutPOST(xRequestID: string, X_XSRF_TOKEN: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public logoutPOST(xRequestID: string, X_XSRF_TOKEN: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public logoutPOST(xRequestID: string, X_XSRF_TOKEN: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public logoutPOST(xRequestID: string, X_XSRF_TOKEN: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (xRequestID === null || xRequestID === undefined) {
+            throw new Error('Required parameter xRequestID was null or undefined when calling logoutPOST.');
+        }
+        if (X_XSRF_TOKEN === null || X_XSRF_TOKEN === undefined) {
+            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling logoutPOST.');
+        }
+
+        let headers = this.defaultHeaders;
+        if (xRequestID !== undefined && xRequestID !== null) {
+            headers = headers.set('X-Request-ID', String(xRequestID));
+        }
+        if (X_XSRF_TOKEN !== undefined && X_XSRF_TOKEN !== null) {
+            headers = headers.set('X-XSRF-TOKEN', String(X_XSRF_TOKEN));
+        }
+
+        // authentication (sessionCookie) required
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/logout`,
+            null,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
 }

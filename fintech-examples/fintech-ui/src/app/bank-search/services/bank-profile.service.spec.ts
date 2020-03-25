@@ -1,4 +1,4 @@
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { BankProfileService } from './bank-profile.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -18,7 +18,7 @@ describe('BankProfileService', () => {
     finTechBankSearchService = TestBed.get(FinTechBankSearchService);
   });
 
-  it('should be created', inject([BankProfileService], (service: BankProfileService) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should be created', () => {
+    expect(bankProfileService).toBeTruthy();
+  });
 });

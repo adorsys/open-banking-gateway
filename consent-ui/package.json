@@ -6,7 +6,7 @@
     "openapi-gen": "openapi-generator generate -g typescript-angular -o src/app/api -i ../opba-consent-rest-api/src/main/resources/static/tpp_consent_api.yml",
     "start": "ng serve",
     "serve:local": "ng serve --proxy-config=proxy-conf-local-backend.json",
-    "serve:dev": "ng serve --proxy-config=proxy-conf-dev-backend.json",
+    "serve:dev": "ng serve --proxy-config=proxy-conf-dev-backend.js",
     "build": "ng build",
     "build:prod": "ng build --prod",
     "test": "ng test",
@@ -25,7 +25,8 @@
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
     "bootstrap": "^4.4.1",
-    "rxjs": "~6.4.0",
+    "ng-http-loader": "^6.0.1",
+    "rxjs": "^6.5.2",
     "tslib": "^1.10.0",
     "uuidv4": "^6.0.6",
     "zone.js": "~0.9.1"

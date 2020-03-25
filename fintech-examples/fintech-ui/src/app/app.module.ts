@@ -1,7 +1,6 @@
 import { HTTP_INTERCEPTORS, HttpClientXsrfModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { CookieService } from 'ngx-cookie-service';
 
 import { environment } from '../environments/environment';
 import { ApiModule, Configuration, ConfigurationParameters } from './api';
@@ -16,7 +15,7 @@ import { ErrorService } from './errorsHandler/error.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RedirectAfterConsentComponent } from './redirect-after-consent/redirect-after-consent.component';
 import { NavbarComponent } from './common/navbar/navbar.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { DocumentCookieService } from './services/document-cookie.service';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -34,7 +33,6 @@ export function apiConfigFactory(): Configuration {
     BrowserModule,
     BrowserAnimationsModule,
     ShareModule,
-    ReactiveFormsModule,
     HttpClientXsrfModule.withOptions({
       cookieName: 'XSRF-TOKEN',
       headerName: 'X-XSRF-TOKEN'
@@ -44,7 +42,7 @@ export function apiConfigFactory(): Configuration {
   providers: [
     AuthGuard,
     ErrorService,
-    CookieService,
+    DocumentCookieService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

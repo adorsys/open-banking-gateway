@@ -9,22 +9,6 @@ import { AccountDetails, AccountStatus } from '../../api';
 import { BankComponent } from '../bank.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 
-class MockActivatedRoute {
-  parent: any;
-  params: any;
-
-  constructor(options) {
-    this.parent = options.parent;
-    this.params = options.params;
-  }
-}
-
-const mockActivatedRoute = new MockActivatedRoute({
-  parent: new MockActivatedRoute({
-    params: of({ bankId: 'xxxxx' })
-  })
-});
-
 describe('ListAccountsComponent', () => {
   let component: ListAccountsComponent;
   let fixture: ComponentFixture<ListAccountsComponent>;
@@ -44,7 +28,26 @@ describe('ListAccountsComponent', () => {
     })
       .overrideComponent(ListAccountsComponent, {
         set: {
-          providers: [AisService, { provide: ActivatedRoute, useValue: mockActivatedRoute }]
+          providers: [
+            AisService,
+            {
+              provide: ActivatedRoute,
+              useValue: {
+                parent: {
+                  parent: {
+                    params: of({ bankId: 1234 }),
+                    snapshot: {
+                      paramMap: {
+                        get(bankId: string): string {
+                          return '1234';
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
         }
       })
       .compileComponents();
@@ -64,6 +67,7 @@ describe('ListAccountsComponent', () => {
   });
 
   it('should load accounts', () => {
+    const bankId = '1234';
     const mockAccounts: AccountDetails[] = [
       {
         resourceId: 'XXXXXX',
@@ -81,8 +85,12 @@ describe('ListAccountsComponent', () => {
       } as AccountDetails
     ];
 
-    spyOn(aisService, 'getAccounts').and.returnValue(of(mockAccounts));
-    expect(component.accounts).toEqual(mockAccounts);
-    expect(component.accounts).not.toBeUndefined();
+    spyOn(aisService, 'getAccounts')
+      .withArgs(bankId)
+      .and.returnValue(of(mockAccounts));
+    expect(component.bankId).toEqual(bankId);
+    aisService.getAccounts(bankId).subscribe(res => {
+      expect(res).toEqual(mockAccounts);
+    });
   });
 });
