@@ -54,9 +54,8 @@ public class AuthorizeService {
 
         // delete old cookies, if available
         sessionEntity.setSessionCookie(null);
-
-        sessionEntity.setSessionCookieValue(UUID.randomUUID().toString());
         sessionEntity.setXsrfToken(sessionEntity.getXsrfToken());
+        sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(sessionEntity.getFintechUserId(), sessionEntity.getXsrfToken()));
 
         sessionEntity.addLogin(OffsetDateTime.now());
 
@@ -100,6 +99,7 @@ public class AuthorizeService {
             log.debug("XSRF-TOKEN {} is known", xsrfToken);
             return true;
         }
+        SessionEntity.validateSessionCookieValue(sessionCookieContent, xsrfToken);
         return optionalUserEntity.get().getSessionCookie().getValue().equals(sessionCookieContent);
     }
 

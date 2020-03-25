@@ -1,12 +1,17 @@
 package de.adorsys.opba.fintech.impl.database.entities;
 
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -17,6 +22,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +36,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Slf4j
 public class SessionEntity {
     @Id
     private String loginUserName;
@@ -57,8 +65,26 @@ public class SessionEntity {
     })
     private CookieEntity redirectCookie;
 
+    @SneakyThrows
+    public static String createSessionCookieValue(String fintechUserId, String xsrfToken) {
+        ObjectMapper mapper = new ObjectMapper();
+        return URLEncoder.encode(mapper.writeValueAsString(new SessionCookieValue(fintechUserId, xsrfToken.hashCode())), JsonEncoding.UTF8.getJavaName());
+    }
+
+    @SneakyThrows
+    public static void validateSessionCookieValue(String sessionCookieValueString, String xsrfToken) {
+        String decode = URLDecoder.decode(sessionCookieValueString, JsonEncoding.UTF8.getJavaName());
+        ObjectMapper mapper = new ObjectMapper();
+        SessionCookieValue sessionCookieValue = mapper.readValue(decode, SessionCookieValue.class);
+        if (sessionCookieValue.getHashedXsrfToken() == xsrfToken.hashCode()) {
+            log.info("validation of token ok");
+            return;
+        }
+        throw new RuntimeException("session cookie not valid " +  decode);
+    }
 
     public SessionEntity setSessionCookieValue(String value) {
+        log.info("session cookie will be {}", value);
         sessionCookie = CookieEntity.builder().name(Consts.COOKIE_SESSION_COOKIE_NAME).value(value).build();
         return this;
     }
@@ -79,5 +105,11 @@ public class SessionEntity {
             return null;
         }
         return logins.get(size - 1).getLoginTime();
+    }
+
+    @Data
+    public static class SessionCookieValue {
+        private final String fintechUserId;
+        private final int hashedXsrfToken;
     }
 }
