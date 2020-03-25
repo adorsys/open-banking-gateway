@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { BankSearchService } from '../../services/bank-search.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BankDescriptor } from '../../../api';
-import {Consts} from "../../../common/consts";
+import { Consts } from '../../../common/consts';
 
 @Component({
   selector: 'app-bank-search',
