@@ -228,15 +228,18 @@
 <p><img alt="Session diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/1-loginWithFinTech.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" />  </p>
 <h2 id="description">Description</h2>
 <h3 id="login-001-002-003-fintechuiloadfintechapplication-enterlogindata">Login-001, -002, -003 FinTechUI.loadFinTechApplication &amp; enterLoginData</h3>
-<p>FinTechUI displays the LoginUI to the PSU. PSU enters username and password and initiates the login request.</p>
+<p>FinTechUI displays the LoginUI to the PSU. PSU enters username and password and initiates the login request.
+In a productive use case, the login request will be handled by an identity provider. </p>
 <h3 id="login-004-005-fintechapilogin">Login-004, -005 FinTechApi.login</h3>
-<p>The PSU initiate a session with the FinTech providing his username and password as known to the FinTechApi.
-Username and password are provided in a LoginRequest object. Upon successful login, the FinTechApi will return a response 200_UserProfile containing:
-* UserProfile: provided in the body.
-* sessionState: provided in the body. Used read the FinTechLoginSessionCookie. 
-* FinTechLoginSessionCookie: provided in the Set-Cookie header.</p>
-<h3 id="login-006-fintechuidisplaybanksearchscreen">Login-006 FinTechUI.displayBankSearchScreen</h3>
-<p>Upon successfull login, the FinTechUi displays the bank search screen to the PSU.</p>
+<p>The PSU initiates a session with the FinTech providing his username and password as known to the FinTechApi. Username and password are provided in a LoginRequest object.
+Upon successful login, the FinTechApi will return a response of type <a href="https://github.com/adorsys/open-banking-gateway/blob/develop/fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#200_UserProfile">200_UserProfile</a>.
+Note that the response object contains both a <a href="https://github.com/adorsys/open-banking-gateway/blob/develop/fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#Set-SessionCookie">SessionCookie</a> 
+and a corresponding <a href="https://github.com/adorsys/open-banking-gateway/blob/develop/fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#X-XSRF-TOKEN">XSRF-TOKEN</a></p>
+<h3 id="login-006-fintechuiparseandstorexsrftoken">Login-006 FinTechUI.parseAndStoreXsrfToken</h3>
+<p>The xsrfToken returned by the server must be parsed and stored by the FinTechUI for association with each subsequent request. The FinTechUI must 
+parse and store this xsrfToken, so that it is accessible whenever the application is reloaded.</p>
+<h3 id="login-007-fintechuidisplaybanksearchscreen">Login-007 FinTechUI.displayBankSearchScreen</h3>
+<p>Upon successful login, the FinTechUi displays the bank search screen to the PSU.</p>
               
             </div>
           </div>

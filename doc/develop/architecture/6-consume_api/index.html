@@ -227,29 +227,32 @@
               
                 <h1 id="consume-api-after-consent-authorization">Consume API after Consent Authorization</h1>
 <h2 id="description">Description</h2>
-<p>This workflow starts with the redirect link leaving from either <a href="../5b-psuAuthRedirectConsent/">Authorize Consent Redirect Approach</a> or <a href="../5a-psuAuthEmbeddedConsent/">Authorize Consent Embedded Approach</a>. This redirect link will be used by the FinTechApi to retrieve a corresponding Token that can be used to request services on behalf of the PSU.</p>
-<p>As long as this token is valid, token will be used to perform corresponding service request on behalf on the PSU. </p>
+<p>This workflow starts with the redirect link leaving from either <a href="../5b-psuAuthRedirectConsent/">Authorize Consent Redirect Approach</a> or <a href="../5a-psuAuthEmbeddedConsent/">Authorize Consent Embedded Approach</a>. This redirect link will be used by the ConsetAuthorizeUI to start the FinTechUI. </p>
 <h2 id="diagram">Diagram</h2>
 <p><img alt="Session diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/6-consume_api.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" />  </p>
 <h2 id="use-cases">Use Cases</h2>
+<h3 id="bankingservice-001-fintechuiloadfintechui">BankingService-001 : FinTechUI.loadFinTechUI</h3>
+<p>Receiving a 302_RedirectToFintech from the ConsentAuthorisationAPI, the ConsentAuthorisationUI starts the FinTechUI using the location param.</p>
+<h3 id="bankingservice-002-fintechuireadxsrftoken">BankingService-002 : FinTechUI.readXsrfToken</h3>
+<p>The FinTechUI uses the provided auth-id to load the xsrfToken stored for the corresponding auth-id.</p>
+<h3 id="bankingservice-002-fintechuibuildbackendurl">BankingService-002 : FinTechUI.buildBackendUrl</h3>
+<p>FinTechUI uses the provided auth-id to build the backendUrl used to forward the request to the FinTechAPI. The url has the form: /v1/{auth-id}/fromConsentOk.</p>
 <h3 id="bankingservice-010-fintechapifromconsentok">BankingService-010 : FinTechApi.fromConsentOk</h3>
-<p>The redirect request coming from the <a href="../dictionary/#ConsentAuthorisationApi">ConsentAuthorisationApi</a> contains a redirectCode. This request will be forwarded by the FinTechApi to the TppBankingApi. The request contains following information:</p>
-<h4 id="redirectcode">redirectCode</h4>
-<p>Available in the redirect url. This information will be used to retrieve the authorization token from the TppBankingApi. So the information needs not be processed by the FinTechApi</p>
-<h4 id="fintechconsentsessioncookie">FinTechConsentSessionCookie</h4>
-<p>Available in the request header. This cookie shall be set for the Max time given to the PSU for the authorization of the corresponding consent. The cookie can be bound to the end point FinTechApi.fromConsentOk so it does not need to be transported to the server on other requests.</p>
-<h4 id="fintechconsentsessionstate">finTechConsentSessionState</h4>
-<p>Available in the redirect url. Will be used to read and validate the corresponding FinTechConsentSessionCookie.</p>
-<h3 id="bankingservice-020-validate-the-redirectlink">BankingService-020 : Validate the redirectLink</h3>
+<p>The FinTechAPI uses the provided xsrfToken and RedirectCookie to legitimate the redirect request.</p>
+<h3 id="bankingservice-020-fintechapivalidateredirectcall">BankingService-020 : FinTechApi.validateRedirectCall</h3>
 <p>The finTechConsentSessionState will be used to read and validate the corresponding FinTechConsentSessionCookie. </p>
 <h3 id="bankingservice-030-tppbankingapicode2token">BankingService-030 : TppBankingApi.code2Token</h3>
 <p>This end point is invoked by the FinTechApi to retrieve token used to send subsequent service requests to the TppBankingApi. We call this token PsuConsentSession.</p>
 <h3 id="bankingservice-040-bankingprotocolcode2token">BankingService-040 : BankingProtocol.code2Token</h3>
 <p>Forward request to banking protocol.</p>
-<h3 id="bankingservice-050-storepsuconsent">BankingService-050 : storePsuConsent</h3>
-<p>The returned PsuConsentSession is stored by the FinTechApi for future use. </p>
+<h3 id="bankingservice-048-fintechapistorepsuconsent">BankingService-048 : FinTechApi.storePsuConsent</h3>
+<p>The returned PsuConsentSession is stored by the FinTechApi for future use.</p>
+<h3 id="bankingservice-049-fintechui-202_reloadui">BankingService-049 : FinTechUI: 202_ReloadUI</h3>
+<p>At the end of the consent process, the FinTechAPI issues a redirect to the FinTechUI to display the original page to the user. </p>
+<h3 id="bankingservice-050-fintechapilistoftransactions">BankingService-050 : FinTechApi.listOfTransactions</h3>
+<p>Upon displaying the original page, the FinTechUI can reissue the original request to the the FinTechAPI.</p>
 <h3 id="bankingservice-060-bankingservice-067-service-requests">BankingService-060 .. BankingService-067 Service Requests</h3>
-<p>The returned token is used to invoke the service request (ListTransactions). Service result is returned to the FinTechApi and displayed to the PSU.</p>
+<p>Regular execution of the banking service.</p>
               
             </div>
           </div>
