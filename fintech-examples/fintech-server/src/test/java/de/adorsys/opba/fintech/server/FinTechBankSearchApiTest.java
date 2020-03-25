@@ -210,8 +210,8 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     String authOk(String username, String password) {
         MvcResult result = plainauth(username, password);
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        assertNotNull(result.getResponse().getCookie("XSRF-TOKEN"));
-        return result.getResponse().getCookie("XSRF-TOKEN").getValue();
+        assertNotNull(result.getResponse().getHeader("X-XSRF-TOKEN"));
+        return result.getResponse().getHeader("X-XSRF-TOKEN");
     }
 
     @SneakyThrows

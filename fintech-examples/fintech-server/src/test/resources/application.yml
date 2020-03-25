@@ -1,5 +1,19 @@
 server:
   port: 8086
+  controller:
+    sessioncookie:
+      secure: false
+      maxAge: 300
+      httpOnly: true
+      path: /
+      sameSite: Strict
+
+    redirectcookie:
+      secure: false
+      maxAge: 1800
+      httpOnly: false
+      path: /v1/{auth-id}/fromConsentOk
+      sameSite: Strict
 tpp:
   url: http://localhost:8086
 
