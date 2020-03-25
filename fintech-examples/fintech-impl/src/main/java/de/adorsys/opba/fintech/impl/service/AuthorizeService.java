@@ -1,7 +1,6 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
-import de.adorsys.opba.fintech.impl.database.entities.CookieEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,11 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
-
-import static de.adorsys.opba.fintech.impl.tppclients.Consts.COOKIE_SESSION_COOKIE_NAME;
 
 /**
  * This is just a dummy authorization.
