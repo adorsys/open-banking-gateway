@@ -15,6 +15,9 @@ import java.util.Stack;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * This is a helper aspect that allows logging of WebDriver url's and screens for easier debugging.
+ */
 @Slf4j
 @Aspect
 public class WebDriverErrorReportAspect {
@@ -48,14 +51,16 @@ public class WebDriverErrorReportAspect {
 
     @Around(value = "execution(* de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation.*(.., (org.openqa.selenium.WebDriver+), ..))")
     public Object runTestStep(ProceedingJoinPoint joinPoint) throws Throwable {
+        String methodName = joinPoint.getSignature().getName();
         try {
+            readAndStoreWebDriverData(methodName, true);
             return joinPoint.proceed();
         } finally {
-            readAndStoreWebDriverData();
+            readAndStoreWebDriverData(methodName, false);
         }
     }
 
-    private void readAndStoreWebDriverData() {
+    private void readAndStoreWebDriverData(String methodName, boolean isBefore) {
         String id = Thread.currentThread().getName();
         if (!DRIVERS.containsKey(id)) {
             return;
@@ -64,6 +69,8 @@ public class WebDriverErrorReportAspect {
         DriverInfo info = DRIVERS.get(id);
         WebDriver driver = info.getDriver();
         WebDriverInfoEntry entry = new WebDriverInfoEntry(
+                methodName,
+                isBefore,
                 driver.getCurrentUrl(),
                 driver instanceof TakesScreenshot ? ((TakesScreenshot) driver).getScreenshotAs(OutputType.BASE64) : null
         );
@@ -84,12 +91,20 @@ public class WebDriverErrorReportAspect {
 
         @Override
         public String toString() {
-            return String.format("url: %s%nscreenshot:%n%s%n", entry.getUrl(), entry.getScreenshot());
+            return String.format("[%s:%s]%nurl: %s%nscreenshot:%n%s%n",
+                    entry.isBefore() ? "BEFORE" : "AFTER",
+                    entry.getMethodName(),
+                    entry.getUrl(),
+                    entry.getScreenshot()
+            );
         }
     }
 
     @Data
     private static class WebDriverInfoEntry {
+
+        private final String methodName;
+        private final boolean isBefore;
         private final String url;
         private final String screenshot;
     }
