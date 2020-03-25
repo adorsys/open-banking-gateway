@@ -78,6 +78,10 @@ fintech-ui: fintech-ui/node_modules
 consent-ui/node_modules:
 	cd consent-ui && npm install
 
+.PHONY : consent-ui-test
+consent-ui-test: consent-ui/node_modules
+	cd consent-ui && ng test --watch=false --browsers ChromeHeadless
+
 .PHONY : consent-ui
 consent-ui: consent-ui/node_modules
 	cd consent-ui && npm run build:prod
