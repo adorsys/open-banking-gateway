@@ -2,8 +2,11 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
+import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -15,6 +18,7 @@ import org.springframework.retry.RetryOperations;
 
 import java.time.Duration;
 
+@Slf4j
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccountInformation<SELF>> extends AccountInformationRequestCommon<SELF> {
@@ -214,28 +218,48 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     private WebDriverWait wait(WebDriver driver) {
-        return new WebDriverWait(driver, timeout.getSeconds());
+        try {
+            return new WebDriverWait(driver, timeout.getSeconds());
+        } catch (RuntimeException ex) {
+            logSeleniumState(driver);
+            throw ex;
+        }
     }
 
     private void waitForPageLoad(WebDriver driver) {
-        new WebDriverWait(driver, timeout.getSeconds())
-                .until(wd -> ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));
+        try {
+            new WebDriverWait(driver, timeout.getSeconds())
+                    .until(wd -> ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));
+        } catch (RuntimeException ex) {
+            logSeleniumState(driver);
+            throw ex;
+        }
     }
 
     private void waitForPageLoadAndUrlContains(WebDriver driver, String urlContains) {
-        new WebDriverWait(driver, timeout.getSeconds())
-                .until(wd ->
-                        driver.getCurrentUrl().contains(urlContains)
-                        && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
-                );
+        try {
+            new WebDriverWait(driver, timeout.getSeconds())
+                    .until(wd ->
+                            driver.getCurrentUrl().contains(urlContains)
+                                    && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
+                    );
+        } catch (RuntimeException ex) {
+            logSeleniumState(driver);
+            throw ex;
+        }
     }
 
     private void waitForPageLoadAndUrlEnds(WebDriver driver, String urlEndsWith) {
-        new WebDriverWait(driver, timeout.getSeconds())
-                .until(wd ->
-                        driver.getCurrentUrl().endsWith(urlEndsWith)
-                        && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
-                );
+        try {
+            new WebDriverWait(driver, timeout.getSeconds())
+                    .until(wd ->
+                            driver.getCurrentUrl().endsWith(urlEndsWith)
+                                    && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
+                    );
+        } catch (RuntimeException ex) {
+            logSeleniumState(driver);
+            throw ex;
+        }
     }
 
     private void clickOnButton(WebDriver driver, By identifier) {
@@ -251,6 +275,9 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
             }
 
             return null;
+        }, recover -> {
+            logSeleniumState(driver);
+            throw new RuntimeException(recover.getLastThrowable());
         });
     }
 
@@ -264,6 +291,9 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
             wait(driver).until(ExpectedConditions.elementToBeClickable(identifier));
             driver.findElement(identifier).sendKeys(text);
             return null;
+        }, recover -> {
+            logSeleniumState(driver);
+            throw new RuntimeException(recover.getLastThrowable());
         });
     }
 
@@ -273,6 +303,9 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
             Select elem = new Select(driver.findElement(id));
             elem.selectByVisibleText(visibleText);
             return null;
+        }, recover -> {
+            logSeleniumState(driver);
+            throw new RuntimeException(recover.getLastThrowable());
         });
     }
 
@@ -286,5 +319,12 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
 
             throw ex;
         }
+    }
+
+    private void logSeleniumState(WebDriver driver) {
+        log.error("Browser URL is: {}", driver.getCurrentUrl());
+        log.error("Browser console is:");
+        log.error("Browser screenshot is (base64 of png):");
+        log.error("{}", ((TakesScreenshot)driver).getScreenshotAs(OutputType.BASE64));
     }
 }
