@@ -26,7 +26,7 @@ On of the services available when the FinTechUI present bank account details to 
 Read the redirect urls associated with this context. These are URL used to start the UI from the ConsentAuthorizeAPI.
 
 ### <a name="LoT-030"></a>LoT-030 : FinTechApi.listOfTransactions
-Call specification: See [](See [FinTechApi.listOfAccounts](../../fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#/v1/ais/banks/{bank-id}/accounts/{account-id}/transactions:)
+Call specification: See [](See [FinTechApi.listOfAccounts](https://github.com/adorsys/open-banking-gateway/blob/develop/fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#/v1/ais/banks/{bank-id}/accounts/{account-id}/transactions:)
 
 The FinTechUI issues a listOfTransactions request to the FinTechAPI with:
 - __SessionCookie and X-XSRF-TOKEN:__ The SessionCookie used to maintain association between FinTechUI and FinTechApi. It holds a session identifier. A corresponding XSRF-TOKEN is sent back and forth though the header and used to authenticate the SessionCookie.
@@ -62,7 +62,7 @@ Uses the given psu-id and service type to load a corresponding service session i
 
 
 ### LoT-040 : TppBankingApi.listOfTransactions
-Forwards the PSU request to TPP. See [TppBankingApi.listOfAccounts](../../opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml#/v1/banking/ais/accounts/{account-id}/transactions:).
+Forwards the PSU request to TPP. See [TppBankingApi.listOfAccounts](https://github.com/adorsys/open-banking-gateway/blob/develop/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml#/v1/banking/ais/accounts/{account-id}/transactions:).
 
 ### LoT-041 TppBankingApi.checkAuthorization
 verifies the authenticity of the Authorization header "FinTechContext". Returns the extracted fintechId.
