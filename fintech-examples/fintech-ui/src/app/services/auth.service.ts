@@ -27,23 +27,16 @@ export class AuthService {
     );
   }
 
-  logout(): Observable<boolean> {
+  logout(): Observable<any> {
     console.log('start logout');
-    return this.finTechAuthorizationService.logoutPOST('', '', 'response').pipe(
-      map(response => {
-        if (response.ok) {
-          console.log('logout confirmed by server');
-          localStorage.clear();
-          this.cookieService.delete(Consts.COOKIE_NAME_XSRF_TOKEN);
-          this.cookieService.delete(Consts.COOKIE_NAME_SESSION_COOKIE);
-          this.cookieService.getAll().forEach(cookie => console.log('cookie after logout :' + cookie));
-          this.openLoginPage();
-        } else {
-          console.error('log off not possible due to server response:' + response.status);
-        }
-        return response.ok;
-      })
-    );
+    return this.finTechAuthorizationService.logoutPOST('', '', 'response');
+  }
+
+  deleteAllCookies() {
+    localStorage.clear();
+    this.cookieService.delete(Consts.COOKIE_NAME_XSRF_TOKEN);
+    this.cookieService.delete(Consts.COOKIE_NAME_SESSION_COOKIE);
+    this.cookieService.getAll().forEach(cookie => console.log('cookie after logout :' + cookie));
   }
 
   openLoginPage() {

@@ -28,20 +28,21 @@ box "AspspDC" #LightSkyBlue
 end box
 
 FinTechUI --> psu : displayBankServices(BankProfile)
+autonumber 20 1 "<b><color blue>[LoA-000]"
 psu -> FinTechUI ++ : selectService(listOfAccounts)
+FinTechUI -> FinTechUI : readRedirectUrls(\nFintech-Redirect-URL-OK,\nFintech-Redirect-URL-NOK)
 autonumber 30 1 "<b><color blue>[LoA-000]"
-FinTechUI -> FinTechApi ++ : GET:listOfAccounts\n[SessionCookie,\nX-XSRF-TOKEN,\nX-Request-ID]()<p:bank-id, q:withBalance>
+FinTechUI -> FinTechApi ++ : GET:listOfAccounts\n[SessionCookie,\nX-XSRF-TOKEN,\nX-Request-ID, \nFintech-Redirect-URL-OK,\nFintech-Redirect-URL-NOK]\n()<p:bank-id, q:withBalance>
 FinTechApi -> FinTechApi : checkAuthorization(SessionCookie,\nX-XSRF-TOKEN):psu-id@fintech
 FinTechApi -> FinTechApi : userAgentContext():UserAgentContext
-FinTechApi -> FinTechApi : buildUrlTemplates():[state,\nFintech-Redirect-URL-OK-TPL<p:$AUTH-ID,q:state>,\nFintech-Redirect-URL-NOK-TPL<p:$AUTH-ID,q:state>]
 alt repeatingServiceRequest
     FinTechApi -> FinTechApi : loadServiceSession(psu-id@fintech,\n"listOfAccounts",X-Request-ID)\n:service-session-id
 end
 autonumber 40 1 "<b><color blue>[LoA-000]"
-FinTechApi -> TppBankingApi ++ : listOfAccounts\n[UserAgentContext,\nFintech-User-ID:psu-id@fintech,\nService-Session-ID:service-session-id,\nBank-ID:bank-id, X-Request-ID,\nFintech-Redirect-URL-OK-TPL<p:$AUTH-ID,q:state>,\nFintech-Redirect-URL-NOK-TPL<p:$AUTH-ID,q:state>,\nAuthorization:FinTechContext]()<q:withBalance>
+FinTechApi -> TppBankingApi ++ : listOfAccounts\n[UserAgentContext,\nFintech-User-ID:psu-id@fintech,\nService-Session-ID:service-session-id,\nBank-ID:bank-id, X-Request-ID,\nFintech-Redirect-URL-OK,\nFintech-Redirect-URL-NOK,\nAuthorization:FinTechContext]()<q:withBalance>
 TppBankingApi -> TppBankingApi : checkAuthorization(FinTechContext):finTechId
 TppBankingApi -> TppBankingApi : serviceSpec(withBalance):ServiceSpec
-TppBankingApi -> TppBankingApi : serviceContext(\nService-Id="listOfAccounts",\nFintech-User-ID=psu-id@fintech,\nService-Session-ID=service-session-id,\nBank-ID=bank-id,\nFinTech-ID=finTechId,\nFintech-Redirect-URL-OK-TPL<p:$AUTH-ID,q:state>,\nFintech-Redirect-URL-NOK-TPL<p:$AUTH-ID,q:state>,\nService-Spec=ServiceSpec,\nUser-Agent-Context=UserAgentContext)\n:ServiceContext
+TppBankingApi -> TppBankingApi : serviceContext(\nService-Id="listOfAccounts",\nFintech-User-ID=psu-id@fintech,\nService-Session-ID=service-session-id,\nBank-ID=bank-id,\nFinTech-ID=finTechId,\nFintech-Redirect-URL-OK,\nFintech-Redirect-URL-NOK>,\nService-Spec=ServiceSpec,\nUser-Agent-Context=UserAgentContext)\n:ServiceContext
 autonumber 50 1 "<b><color blue>[LoA-000]"
 TppBankingApi -> BankingProtocolFacade ++ : service(ServiceContext)
 alt repeatingServiceRequest\n ServiceContext["Service-Session-ID"]!=null
@@ -64,16 +65,16 @@ BankingProtocol -> BankingProtocol : updateServiceSession\n(bpServiceSessionKey,
 alt ServiceSession.noConsentPresent()
     autonumber 70 1 "<b><color blue>[LoA-000]"
     BankingProtocol -> BankingProtocol : newAuthSession\n(bpServiceSessionKey, ServiceSession, exp)\n:auth-id
-    BankingProtocol -> BankingProtocol : mapFinTechRedirectUrl\n(Fintech-Redirect-URL-OK-TPL<p:$AUTH-ID,q:state>,\nFintech-Redirect-URL-NOK-TPL<p:$AUTH-ID,q:state>,\nauth-id)\n:ServiceSession
+    BankingProtocol -> BankingProtocol : deprecated
     BankingProtocol -> BankingProtocol : newRedirectCode\n(serviceSessionID,\nauth-id, redirectExp)\n:redirectCode //enc & signed
     BankingProtocol -> BankingProtocol : define tppConsentEntryPoint=\nConsentAuthorisationApi.auth<q:redirectCode>
     return BankingProtocolResponse<RedirectToTpp>\n(authId,serviceSessionID,tppConsentEntryPoint,redirectExp)
     return BankingProtocolResponse<RedirectToTpp>\n(authId,serviceSessionID,tppConsentEntryPoint,redirectExp)
-    return 303_SeeOther(authId,serviceSessionID,\ntppConsentEntryPoint,redirectExp)
+    return 202_Accepted(authId,serviceSessionID,\ntppConsentEntryPoint,redirectExp)
     FinTechApi -> FinTechApi : storeServiceSessionId(fintechUserId,serviceSessionID)
-    FinTechApi -> FinTechApi : expireSessionCookie(SessionCookie):SessionCookie
-    FinTechApi -> FinTechApi : createRedirectCookie\n(path:authId,exp:redirectExp,xsrf:state)\n:RedirectCookie
-    return 302_Redirect\n[tppConsentEntryPoint,\nRedirectCookie, SessionCookie]()
+    FinTechApi -> FinTechApi : expireSessionCookie(SessionCookie):DeletedSessionCookie
+    FinTechApi -> FinTechApi : createRedirectCookie\n(path:v1/authId,exp:redirectExp)\n:RedirectCookie,xsrfToken
+    return 202_ToConsentAuthApi\n[tppConsentEntryPoint,\nX-XSRF-TOKEN,\nRedirectCookie,\nDeletedSessionCookie]()
 else ServiceSession.consentPresent()
     autonumber 90 1 "<b><color blue>[LoA-000]"
     activate BankingProtocol

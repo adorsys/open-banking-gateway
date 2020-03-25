@@ -4,9 +4,10 @@ import com.google.common.base.CaseFormat;
 import org.hibernate.boot.model.naming.Identifier;
 import org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl;
 import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Converts Hibernate camelCase naming into Database-friendly snake_case, also adds prefix to the tables.

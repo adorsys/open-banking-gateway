@@ -1,8 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { AccountDetails } from '../../api';
 import { Subscription } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
+import { RedirectStruct } from '../redirect-page/redirect-struct';
 
 @Component({
   selector: 'app-list-accounts',
@@ -14,14 +15,28 @@ export class ListAccountsComponent implements OnInit, OnDestroy {
   selectedAccount: string;
   bankId = '';
 
-  constructor(public route: ActivatedRoute, private aisService: AisService) {}
-
+  constructor(private router: Router, private route: ActivatedRoute, private aisService: AisService) {}
+  
   ngOnInit() {
-    this.bankId = this.route.parent.parent.snapshot.paramMap.get('bankid');
+    this.route.parent.parent.paramMap.subscribe(p => {
+      this.bankId = p.get('bankid');
+      console.log('ON INIT LIST ACCOUNTS BANKID IS', this.bankId);
+    });
+
     console.log('list-accounts for bankid', this.bankId);
-    localStorage.setItem('bankId', this.bankId);
-    this.accountsSubscription = this.aisService.getAccounts(this.bankId).subscribe(accounts => {
-      this.accounts = accounts;
+    this.accountsSubscription = this.aisService.getAccounts(this.bankId).subscribe(response => {
+      switch (response.status) {
+        case 202:
+          const location = encodeURIComponent(response.headers.get('location'));
+          const r = new RedirectStruct();
+          r.okUrl = location;
+          r.cancelUrl = '../../..';
+          this.router.navigate(['redirect', JSON.stringify(r)], { relativeTo: this.route });
+          break;
+        case 200:
+          console.log('I got ', response.body.accounts.length, ' accounts');
+          this.accounts = response.body.accounts;
+      }
     });
   }
 

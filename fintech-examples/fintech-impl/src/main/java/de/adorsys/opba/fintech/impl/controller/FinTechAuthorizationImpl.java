@@ -70,9 +70,10 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
+    // TODO NOT WORKING YET
     @Override
-    public ResponseEntity<Void> fromConsentOkGET(String redirectState, String redirectId, String redirectCode) {
-        return redirectHandlerService.doRedirect(redirectState, redirectId, redirectCode);
+    public ResponseEntity<Void> fromConsentOkGET(String authId, String redirectCode, UUID xRequestID, String xsrftoken) {
+        return redirectHandlerService.doRedirect("redirectState", authId, redirectCode);
     }
 
     @Override

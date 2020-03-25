@@ -18,10 +18,16 @@ fi
 COMMIT="$TRAVIS_COMMIT"
 OPBA_URL=https://obg-dev-openbankinggateway.cloud.adorsys.de
 
+function fail() {
+    echo "Failed waiting for $COMMIT to be deployed";
+    exit 1;
+}
+
 echo "Waiting for deployment"
 # Wait for deployment to happen
-timeout 600s bash -c 'while [[ $(wget -qO- '$OPBA_URL'/actuator/info | grep -c '$COMMIT') != 1 ]]; do echo "Wait for actuator status to return desired commit"; sleep 10; done' || (echo "Failed waiting for deploy $COMMIT";exit 1)
+timeout 600s bash -c 'while [[ $(wget -qO- '$OPBA_URL'/actuator/info | grep -c '$COMMIT') != 1 ]]; do echo "Wait for actuator to return desired commit '$COMMIT' / current: "$(wget -qO- '$OPBA_URL'/actuator/info)""; sleep 10; done' || fail
 
+echo "$COMMIT is deployed"
 echo "Run smoke tests"
 # Run smoke tests:
 export ENABLE_SMOKE_TESTS=true

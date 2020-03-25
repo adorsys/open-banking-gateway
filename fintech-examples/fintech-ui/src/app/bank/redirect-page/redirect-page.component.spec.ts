@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RedirectPageComponent } from './redirect-page.component';
-import { RedirectCardComponent } from '../../../common/redirect-card/redirect-card.component';
+import { RedirectCardComponent } from '../redirect-card/redirect-card.component';
 import { RouterTestingModule } from '@angular/router/testing';
 
 describe('RedirectPageComponent', () => {
