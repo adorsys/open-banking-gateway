@@ -16,8 +16,18 @@ export class NavbarComponent implements OnInit {
 
   onLogout() {
     if (this.isLoggedIn()) {
-      this.authService.logout();
-      console.log('logout was successful');
+      this.authService.logout().subscribe(
+        ok => console.log('logout ok'),
+        notok => {
+          if (notok.status === 504) {
+            this.authService.deleteAllCookies();
+            this.authService.openLoginPage();
+            console.log('server respond with 504');
+          } else {
+            console.log('logout NOT-OK');
+          }
+        }
+      );
     } else {
       this.router.navigate(['/login']);
     }
