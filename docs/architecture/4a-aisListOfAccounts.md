@@ -2,17 +2,25 @@
 General terms defined in the [dictionary](dictionary.md)
 
 ## Definition
-Request the list of bank accounts associated with this PSU's online banking account at the target ASPSP. 
+Requests the list of bank accounts associated with this PSU's online banking account at the target ASPSP. 
 
 If there is any reference to an existing account information consent (AisConsent) stored in the database of the TPP, the TPP will use this consent reference to forward the service request to the OpenBanking interface of the ASPSP.
 
 If there is no such reference in the database of the TPP, the TPP will respond the FinTech to redirect the PSU to the ConsentAuthorizationApi of the TPP.
 
+### Identifying the PSU
 In order to uniquely identify the requesting PSU, the TPP uses a unique reference made out of:
-- the fintechId : the unique identifier of this FinTech in the realm of the TPP. This parameter is read from the [FinTechContext](dictionary.md#FinTechContext) transported as jwt-Token in the Authorization header of each FinTech request to the TPP.
-- the psu-id@fintech : the unique identifier of the PSU in the realm of the FinTech.  This parameter is transported in the HttpHeader named: Fintech-User-ID
+* the fintechId : the unique identifier of this FinTech in the realm of the TPP. This parameter is read from the [FinTechContext](dictionary.md#FinTechContext) transported as jwt-Token in the authorization header of each FinTech request to the TPP.
+* the psu-id@fintech : the unique identifier of the PSU in the realm of the FinTech.  This parameter is transported in the HttpHeader named: Fintech-User-ID
+* PsuAuthData : this is an object opaque to the FinTechAPI and contains additional context information provided by the tpp and to be stored by the FinTechApi and provided if available through the corresponding header field.
 
-## Diagram
+### Mapping PSU Requests to Consent
+The complexity of mapping a PSU service request to an existing consent is kept in the database of the TPP. The only responsibility of a FinTech is to:
+* provide a unique psu-id@fintech per PSU
+* add the the PsuAuthData to the request if available
+* to associate the psu-id@fintech with a newly returned PsuAuthData and store this in the database of the FinTechAPI.    
+
+## Diagramm
 ![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/4a-aisListOfAccounts.puml&fmt=svg&vvv=1&sanitize=true)  
 
 ## Use Cases
@@ -23,13 +31,14 @@ The result of a bank selection is that the FinTechUI displays the [BankProfile](
 Once selected by the PSU, the FinTechUI forwards the service selected to the FinTechApi. In this case "listOfAccounts". The selection might be accompanied with some service specifications. For listOfAccounts, the option withBalance can be added to indicate that the balance has to be returned as well.
 
 ### LoA-021 : FinTechUI.readRedirectUrls(Fintech-Redirect-URL-OK,Fintech-Redirect-URL-NOK)
-Read the redirect urls associated with this context. These are URL used to start the UI from the ConsentAuthorizeAPI.
+Prepare the redirect urls associated with this request. These are URL used to start the UI from the ConsentAuthorizeAPI. 
+__TODO CLARIFY__: Normally this could be passed to the ConsentAuthorizationAPI by the FinTechUI. In which case, there will be no need to carry this through the application and through every request. 
 
 ### <a name="LoA-030"></a>LoA-030 : FinTechApi.listOfAccounts
 See [FinTechApi.listOfAccounts](../../fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#/v1/ais/banks/{bank-id}/accounts:)
 
 ### LoA-031 : FinTechApi.checkAuthorization
-Call specification: : checkAuthorization(SessionCookie,\nX-XSRF-TOKEN):psu-id@fintech
+Call specification: : checkAuthorization(SessionCookie,X-XSRF-TOKEN):psu-id@fintech
 Before proceeding with the request, the FinTechApi must validate the request for it authenticity and extract a unique identifier of the PSU in the world of the FinTech (psu-id@fintech). This validation also include the matching of the used cookie against the provided XSRF-Token.
 
 ### <a name="LoA-032"></a>LoA-032 : FinTechApi.userAgentContext
@@ -48,6 +57,11 @@ The __[UserAgentContext](dictionary.md#UserAgentContext)__ describes details ass
 
 ### LoA-033 : FinTechApi.loadServiceSession
 Uses the given psu-id and service type to load a corresponding service session if the FinTech judges the request of the PSU is the repetition of an existing service request.
+__TODO CLARIFY USE__: We must clarify the use of the service session. Is there any service session? Or is it sufficient to just provide a service-session-id. What else could be stored in a service session?
+__TODO CLARIFY USE__: how do we check if there is an existing service session?
+
+### <a name="LoA-034"></a>LoA-034 : FinTechApi.loadPsuAuthData
+Load PsuUserData associated with psu-id@fintech.
 
 ### LoA-040 : TppBankingApi.listOfAccounts
 Forwards the PSU request to TPP. See [TppBankingApi.listOfAccounts](../../opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml#/v1/banking/ais/accounts:).
@@ -73,6 +87,14 @@ The [BankingProtocol](dictionary.md#BankingProtocol) associated with the given B
 
 ### LoA-061 : BankingProtocol.define
 This step maps service parameter to be used in further processing to variable names for beter readability in subsequent calls.
+__TODO Valentine__: Define and describe process: I understand is like:
+* We have to find the user identified with psu-id@fintech
+* if none, we have to create a new record, create a corresponding encryption key, put it in the PsuAuthData and store it.
+* If we find one, then we have to use the PsuAuthData to load the user context containing:
+  * The psu-id@tpp
+  * The encryption key to read the consents of this psu-id@tpp
+  * find the right consent if any and use it to perform the request.
+* If the PsuAuthData changes we return the new one to the FinTechAPI.
 
 ### LoA-062 .. -064  : BankingProtocol.handelServiceSession
 If there is an existing serviceSessionId, it will be introspected to extract the id (bpServiceSessionID) and the key (bpServiceSessionKey) used to read and decrypt the persistent service session. The existing service session will be loaded.
