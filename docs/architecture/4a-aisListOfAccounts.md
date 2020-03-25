@@ -26,7 +26,7 @@ Once selected by the PSU, the FinTechUI forwards the service selected to the Fin
 Read the redirect urls associated with this context. These are URL used to start the UI from the ConsentAuthorizeAPI.
 
 ### <a name="LoA-030"></a>LoA-030 : FinTechApi.listOfAccounts
-See [FinTechApi.listOfAccounts](../../fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#/v1/ais/banks/{bank-id}/accounts:)
+See [FinTechApi.listOfAccounts](https://github.com/adorsys/open-banking-gateway/blob/develop/fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#/v1/ais/banks/{bank-id}/accounts:)
 
 ### LoA-031 : FinTechApi.checkAuthorization
 Call specification: : checkAuthorization(SessionCookie,\nX-XSRF-TOKEN):psu-id@fintech
@@ -50,7 +50,7 @@ The __[UserAgentContext](dictionary.md#UserAgentContext)__ describes details ass
 Uses the given psu-id and service type to load a corresponding service session if the FinTech judges the request of the PSU is the repetition of an existing service request.
 
 ### LoA-040 : TppBankingApi.listOfAccounts
-Forwards the PSU request to TPP. See [TppBankingApi.listOfAccounts](../../opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml#/v1/banking/ais/accounts:).
+Forwards the PSU request to TPP. See [TppBankingApi.listOfAccounts](https://github.com/adorsys/open-banking-gateway/blob/develop/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml#/v1/banking/ais/accounts:).
 
 ### LoA-041 TppBankingApi.checkAuthorization
 verifies the authenticity of the Authorization header "FinTechContext". Returns the extracted fintechId.
@@ -112,12 +112,12 @@ Upon redirecting the PSU user agent to the ConsentAuthorizationApi, the regular 
 - __Purpose:__ The RedirectCookie is used make sure that the UserAgent that started a redirect flow is the same as the one the terminated that redirect flow. This is essential to assume that the PSU physically using this user agent is the same as the one that accessed the authorization interfaces of the (TPP resp. ASPSP).
 - __The RedirectCookie:__ is therefore set by the origin of the redirection (FinTech) and must be transported to the FinTechApi when control is sent back to the FinTechUI.
 - __Expiration:__ This RedirectCookie shall be set for the max time we think the PSU needs to complete authorization of the corresponding consent. Therefore the expiration of this RedirectCookie generally has a longer life span than the expiration of a regular SessionCookie. 
-- __CookiePath (auth-id):__ This RedirectCookie must be bound to the [fromConsentOk](../../fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#/v1/{auth-id}/fromConsentOk). This way, it does no need to be transported to the FinTechApi with any other request. Recall that the auth-id is part of the url. So each authorization session has his own RedirectCookie.
+- __CookiePath (auth-id):__ This RedirectCookie must be bound to the [fromConsentOk](https://github.com/adorsys/open-banking-gateway/blob/develop/fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#/v1/{auth-id}/fromConsentOk). This way, it does no need to be transported to the FinTechApi with any other request. Recall that the auth-id is part of the url. So each authorization session has his own RedirectCookie.
 - __XSRF Protection (X-XSRF-TOKEN):__ This RedirectCookie is also protected by an xsrfToken that is returned to the FinTechUI as header parameter.
 - __User Session__: Generally processing a successful redirect is equivalent to a successful re-establishment of the user session. Meaning that FinTechApi can set a new SessionCookie to maintain the session with the PSU without a new explicit login of the PSU.
 
 ### <a name="LoA-080"></a>LoA-080 : FinTechApi redirects userAgent to the ConsentAuthorisationApi
-The service response carries a response code 202 instructing the FinTechUI to redirect the PsuUserDevice to the ConsentAuthorisationApi. See [202_ToConsentAuthApi](../../fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#202_ToConsentAuthApi).
+The service response carries a response code 202 instructing the FinTechUI to redirect the PsuUserDevice to the ConsentAuthorisationApi. See [202_ToConsentAuthApi](https://github.com/adorsys/open-banking-gateway/blob/develop/fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#202_ToConsentAuthApi).
 
 ### <a name="LoA-090"></a>LoA-090 Suitable Consent Present
 If there is a suitable consent reference in the database of the TPP, this will be loaded and used to forward request to the ASPSP.
