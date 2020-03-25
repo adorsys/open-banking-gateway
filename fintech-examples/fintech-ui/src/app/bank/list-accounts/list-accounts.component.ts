@@ -16,7 +16,7 @@ export class ListAccountsComponent implements OnInit, OnDestroy {
   bankId = '';
 
   constructor(private router: Router, private route: ActivatedRoute, private aisService: AisService) {}
-
+  
   ngOnInit() {
     this.route.parent.parent.paramMap.subscribe(p => {
       this.bankId = p.get('bankid');
