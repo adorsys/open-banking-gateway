@@ -35,9 +35,7 @@ autonumber 30 1 "<b><color blue>[LoA-000]"
 FinTechUI -> FinTechApi ++ : GET:listOfAccounts\n[SessionCookie,\nX-XSRF-TOKEN,\nX-Request-ID, \nFintech-Redirect-URL-OK,\nFintech-Redirect-URL-NOK]\n()<p:bank-id, q:withBalance>
 FinTechApi -> FinTechApi : checkAuthorization(SessionCookie,\nX-XSRF-TOKEN):psu-id@fintech
 FinTechApi -> FinTechApi : userAgentContext():UserAgentContext
-alt repeatingServiceRequest
-    FinTechApi -> FinTechApi : loadServiceSession(psu-id@fintech,\n"listOfAccounts",X-Request-ID)\n:service-session-id
-end
+FinTechApi -> FinTechApi : Deprecated: loadServiceSession:
 FinTechApi -> FinTechApi : loadPsuAuthData():PsuAuthData
 
 autonumber 40 1 "<b><color blue>[LoA-000]"

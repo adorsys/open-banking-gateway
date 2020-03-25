@@ -20,7 +20,7 @@ The complexity of mapping a PSU service request to an existing consent is kept i
 * add the the PsuAuthData to the request if available
 * to associate the psu-id@fintech with a newly returned PsuAuthData and store this in the database of the FinTechAPI.    
 
-## Diagramm
+## Diagram
 ![Session diagram](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/4a-aisListOfAccounts.puml&fmt=svg&vvv=1&sanitize=true)  
 
 ## Use Cases
@@ -32,7 +32,6 @@ Once selected by the PSU, the FinTechUI forwards the service selected to the Fin
 
 ### LoA-021 : FinTechUI.readRedirectUrls(Fintech-Redirect-URL-OK,Fintech-Redirect-URL-NOK)
 Prepare the redirect urls associated with this request. These are URL used to start the UI from the ConsentAuthorizeAPI. 
-__TODO CLARIFY__: Normally this could be passed to the ConsentAuthorizationAPI by the FinTechUI. In which case, there will be no need to carry this through the application and through every request. 
 
 ### <a name="LoA-030"></a>LoA-030 : FinTechApi.listOfAccounts
 See [FinTechApi.listOfAccounts](../../fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#/v1/ais/banks/{bank-id}/accounts:)
@@ -55,10 +54,7 @@ The __[UserAgentContext](dictionary.md#UserAgentContext)__ describes details ass
   * PSU-Geo-Location,
   * Http-Method.
 
-### LoA-033 : FinTechApi.loadServiceSession
-Uses the given psu-id and service type to load a corresponding service session if the FinTech judges the request of the PSU is the repetition of an existing service request.
-__TODO CLARIFY USE__: We must clarify the use of the service session. Is there any service session? Or is it sufficient to just provide a service-session-id. What else could be stored in a service session?
-__TODO CLARIFY USE__: how do we check if there is an existing service session?
+### LoA-033 : FinTechApi.loadServiceSession (Deprecated)
 
 ### <a name="LoA-034"></a>LoA-034 : FinTechApi.loadPsuAuthData
 Load PsuUserData associated with psu-id@fintech.
@@ -87,14 +83,6 @@ The [BankingProtocol](dictionary.md#BankingProtocol) associated with the given B
 
 ### LoA-061 : BankingProtocol.define
 This step maps service parameter to be used in further processing to variable names for beter readability in subsequent calls.
-__TODO Valentine__: Define and describe process: I understand is like:
-* We have to find the user identified with psu-id@fintech
-* if none, we have to create a new record, create a corresponding encryption key, put it in the PsuAuthData and store it.
-* If we find one, then we have to use the PsuAuthData to load the user context containing:
-  * The psu-id@tpp
-  * The encryption key to read the consents of this psu-id@tpp
-  * find the right consent if any and use it to perform the request.
-* If the PsuAuthData changes we return the new one to the FinTechAPI.
 
 ### LoA-062 .. -064  : BankingProtocol.handelServiceSession
 If there is an existing serviceSessionId, it will be introspected to extract the id (bpServiceSessionID) and the key (bpServiceSessionKey) used to read and decrypt the persistent service session. The existing service session will be loaded.
