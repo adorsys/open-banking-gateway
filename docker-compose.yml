@@ -21,11 +21,14 @@ services:
 
   open-banking-gateway:
     environment:
+      - SPRING_LIQUIBASE_PARAMETERS_ADORSYS-SANDBOX-URL=https://obg-bank-dev-xs2a.cloud.adorsys.de
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/open_banking?currentSchema=banking_protocol
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=docker
       - PKCS12_KEYSTORE=/pkcs12/sample-qwac.keystore
       - FACADE_ENCRYPTION_KEYSETPATH=/keysetpath/example-keyset.json
+      - PROTOCOL_EMBEDDED-UI-BASE-URL=http://localhost:14200
+      - PROTOCOL_GATEWAY-BASE-URL=http://open-banking-gateway:8085
     build: opba-embedded-starter
     ports:
       - "18085:8085"
@@ -45,7 +48,7 @@ services:
       context: fintech-examples/fintech-ui
       dockerfile: Dockerfile
     ports:
-      - "14200:4200"
+      - "24200:4200"
     networks:
       - opba-net
 
@@ -54,17 +57,18 @@ services:
       - TPP_URL=http://open-banking-gateway:8085
 
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/open_banking?currentSchema=fintech
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=docker
-      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver
+      - SPRING_JPA_DDL-AUTO=validate
 
-      - SERVER_CONTROLLER_COOKIE_SECURE=false
-      - SERVER_CONTROLLER_COOKIE_MAXAGE=200
-      - SERVER_CONTROLLER_COOKIE_HTTPONLY=false
-      - SERVER_CONTROLLER_COOKIE_PATH=/
+      - SERVER_CONTROLLER_SESSIONCOOKIE_SECURE=false
+      - SERVER_CONTROLLER_SESSIONCOOKIE_MAXAGE=200
+      - SERVER_CONTROLLER_SESSIONCOOKIE_HTTPONLY=false
+      - SERVER_CONTROLLER_SESSIONCOOKIE_PATH=/
 
       - MOCK_TPPAIS_LISTTRANSACTIONS=false
       - MOCK_TPPAIS_LISTACCOUNTS=false
+
+      - REDIRECT_URL=http://localhost:24000/{redirectUri}/{redirectCode}
+      - EXCEPTION-URL=http://localhost:24000/excaption-redirect
 
     build: fintech-examples/fintech-server
     ports:
@@ -80,6 +84,6 @@ services:
       context: consent-ui
       dockerfile: Dockerfile
     ports:
-      - "24200:4200"
+      - "14200:4200"
     networks:
       - opba-net

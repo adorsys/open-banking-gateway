@@ -4,11 +4,13 @@ import de.adorsys.opba.fintech.api.model.generated.InlineResponse200;
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.api.model.generated.UserProfile;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAuthorizationApi;
+import de.adorsys.opba.fintech.impl.database.entities.CookieEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.ContextInformation;
 import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
+import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -17,10 +19,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_ID;
 
@@ -51,19 +51,17 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set(X_REQUEST_ID, contextInformation.getXRequestID().toString());
             log.info("set response cookie attributes to {}", cookieConfigProperties.toString());
-            ArrayList<String> cookies = sessionEntity
-                    .getCookies()
-                    .stream()
-                    .map(cookie ->
-                            ResponseCookie.from(cookie.getName(), cookie.getValue())
-                                    .httpOnly(cookieConfigProperties.isHttpOnly())
-                                    .sameSite(cookieConfigProperties.getSameSite())
-                                    .secure(cookieConfigProperties.isSecure())
-                                    .path(cookieConfigProperties.getPath())
-                                    .maxAge(cookieConfigProperties.getMaxAge())
-                                    .build().toString())
-                    .collect(Collectors.toCollection(ArrayList::new));
-            responseHeaders.addAll(HttpHeaders.SET_COOKIE, cookies);
+
+            CookieEntity sessionCookie = sessionEntity.getSessionCookie();
+            String sessionCookieString = ResponseCookie.from(sessionCookie.getName(), sessionCookie.getValue())
+                    .httpOnly(cookieConfigProperties.getSessioncookie().isHttpOnly())
+                    .sameSite(cookieConfigProperties.getSessioncookie().getSameSite())
+                    .secure(cookieConfigProperties.getSessioncookie().isSecure())
+                    .path(cookieConfigProperties.getSessioncookie().getPath())
+                    .maxAge(cookieConfigProperties.getSessioncookie().getMaxAge())
+                    .build().toString();
+            responseHeaders.add(HttpHeaders.SET_COOKIE, sessionCookieString);
+            responseHeaders.add(Consts.HEADER_XSRF_TOKEN, sessionEntity.getXsrfToken());
 
             return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
         }

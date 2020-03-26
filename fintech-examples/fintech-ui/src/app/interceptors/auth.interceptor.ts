@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import * as uuid from 'uuid';
 import { DocumentCookieService } from '../services/document-cookie.service';
 import { Consts } from '../common/consts';
+import {LocalStorage} from "../common/local-storage";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -22,11 +23,11 @@ export class AuthInterceptor implements HttpInterceptor {
     const xRequestID = uuid.v4();
 
     let headers;
-    if (this.cookieService.exists(Consts.COOKIE_NAME_XSRF_TOKEN)) {
+    if (LocalStorage.isLoggedIn()) {
       headers = request.headers
         .set(Consts.HEADER_FIELD_X_REQUEST_ID, xRequestID)
         .set(Consts.HEADER_FIELD_CONTENT_TYPE, 'application/json')
-        .set(Consts.HEADER_FIELD_X_XSRF_TOKEN, this.cookieService.find(Consts.COOKIE_NAME_XSRF_TOKEN));
+        .set(Consts.HEADER_FIELD_X_XSRF_TOKEN, localStorage.getItem(Consts.LOCAL_STORAGE_XSRF_TOKEN));
 
       // TODO: is supposed to be sent automatically when X-XSRF cookie exists, check why not
       // Propably because it is mentioned in the api and thus overwritten by

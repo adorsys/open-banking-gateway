@@ -1,39 +1,46 @@
-<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-
-    <changeSet author="ryeex@adorsys.com.ua" id="2020-03-19-01">
-        <comment>Create initial table structure</comment>
-
-        <createTable tableName="${table-prefix}cookie_entity">
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="peter (generated)" id="1585154339565-1">
+        <createTable tableName="opb_login_entity">
             <column name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="opb_login_entity_pkey"/>
             </column>
-            <column name="name" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="value" type="VARCHAR(255)">
+            <column name="login_time" type="TIMESTAMP without time zone">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <createTable tableName="${table-prefix}login_entity">
+    </changeSet>
+    <changeSet author="peter (generated)" id="1585154339565-2">
+        <createTable tableName="opb_request_info_entity">
             <column name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="opb_request_info_entity_pkey"/>
             </column>
-            <column name="login_time" type="DATETIME">
+            <column name="account_id" type="VARCHAR(255)"/>
+            <column name="bank_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="booking_status" type="VARCHAR(255)"/>
+            <column name="date_from" type="date"/>
+            <column name="date_to" type="date"/>
+            <column name="delta_list" type="BOOLEAN"/>
+            <column name="entry_reference_from" type="VARCHAR(255)"/>
+            <column name="request_action" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="xsrf_token" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <createTable tableName="${table-prefix}redirect_urls_entity">
+    </changeSet>
+    <changeSet author="peter (generated)" id="1585154339565-3">
+        <createTable tableName="opb_redirect_urls_entity">
             <column name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="ok_url" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="opb_redirect_urls_entity_pkey"/>
             </column>
             <column name="not_ok_url" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ok_url" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="redirect_code" type="VARCHAR(255)">
@@ -43,101 +50,49 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <createTable tableName="${table-prefix}request_info_entity">
-            <column name="id" type="BIGINT">
-                <constraints nullable="false" primaryKey="true"/>
-            </column>
-            <column name="xsrf_token" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="bank_id" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="request_action" type="INTEGER">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="account_id" type="VARCHAR(255)"/>
-            <column name="booking_status" type="VARCHAR(255)"/>
-            <column name="date_from" type="DATE"/>
-            <column name="date_to" type="DATE"/>
-            <column name="delta_list" type="BOOLEAN"/>
-            <column name="entry_reference_from" type="VARCHAR(255)"/>
-
-        </createTable>
-
-        <createTable tableName="${table-prefix}session_entity">
+    </changeSet>
+    <changeSet author="peter (generated)" id="1585154339565-4">
+        <createTable tableName="opb_session_entity">
             <column name="login_user_name" type="VARCHAR(255)">
-                <constraints nullable="false" primaryKey="true"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="opb_session_entity_pkey"/>
             </column>
-            <column name="password" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="xsrf_token" type="VARCHAR(255)"/>
+            <column name="fintech_user_id" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
             <column name="psu_consent_session" type="VARCHAR(255)"/>
+            <column name="redirect_cookie_name" type="VARCHAR(255)"/>
+            <column name="redirect_cookie_value" type="VARCHAR(255)"/>
             <column name="service_session_id" type="UUID"/>
+            <column name="session_cookie_name" type="VARCHAR(255)"/>
+            <column name="session_cookie_value" type="VARCHAR(255)"/>
+            <column name="xsrf_token" type="VARCHAR(255)"/>
         </createTable>
-
-        <createTable tableName="${table-prefix}session_entity_cookies">
-
-            <column name="session_entity_login_user_name" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="cookies_id" type="BIGINT">
-                <constraints nullable="false" unique="true"/>
-            </column>
-        </createTable>
-
-        <createTable tableName="${table-prefix}session_entity_logins">
+    </changeSet>
+    <changeSet author="peter (generated)" id="1585154339565-5">
+        <createTable tableName="opb_session_entity_logins">
             <column name="session_entity_login_user_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="logins_id" type="BIGINT">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
         </createTable>
-
     </changeSet>
-
-     <changeSet author="ryeex@adorsys.com.ua" id="2020-03-19-02">
-        <comment>Add foreign keys to session_entity_cookies</comment>
-
-         <addForeignKeyConstraint baseColumnNames="session_entity_login_user_name" baseTableName="${table-prefix}session_entity_cookies"
-                                  constraintName="fk_sess_ent_cook_to_sess_ent" deferrable="false"
-                                  initiallyDeferred="false"
-                                  referencedColumnNames="login_user_name" referencedTableName="${table-prefix}session_entity"/>
-
-         <addForeignKeyConstraint baseColumnNames="cookies_id" baseTableName="${table-prefix}session_entity_cookies"
-                                  constraintName="fk_sess_ent_cook_to_cook" deferrable="false"
-                                  initiallyDeferred="false"
-                                  referencedColumnNames="id" referencedTableName="${table-prefix}cookie_entity"/>
-
-     </changeSet>
-
-    <changeSet author="ryeex@adorsys.com.ua" id="2020-03-19-03">
-        <comment>Add foreign keys to session_entity_logins</comment>
-
-        <addForeignKeyConstraint baseColumnNames="session_entity_login_user_name" baseTableName="${table-prefix}session_entity_logins"
-                                 constraintName="fk_sess_ent_login_to_sess_ent" deferrable="false"
-                                 initiallyDeferred="false"
-                                 referencedColumnNames="login_user_name" referencedTableName="${table-prefix}session_entity"/>
-
-        <addForeignKeyConstraint baseColumnNames="logins_id" baseTableName="${table-prefix}session_entity_logins"
-                                 constraintName="fk_sess_ent_login_to_login" deferrable="false"
-                                 initiallyDeferred="false"
-                                 referencedColumnNames="id" referencedTableName="${table-prefix}login_entity"/>
+    <changeSet author="peter (generated)" id="1585154339565-6">
+        <addForeignKeyConstraint baseColumnNames="session_entity_login_user_name" baseTableName="opb_session_entity_logins" constraintName="fkn5qc0hyc95jdhkr9j4ea78rer" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="login_user_name" referencedTableName="opb_session_entity" validate="true"/>
     </changeSet>
-
-    <changeSet author="ryeex@adorsys.com.ua" id="2020-03-19-04">
-        <comment>Create sequences for table IDs.</comment>
-
-        <createSequence sequenceName="cookie_id_seq" incrementBy="50"/>
-        <createSequence sequenceName="login_id_seq" incrementBy="50"/>
-        <createSequence sequenceName="redirect_urls_id_seq" incrementBy="50"/>
-        <createSequence sequenceName="request_info_id_seq" incrementBy="50"/>
-
+    <changeSet author="peter (generated)" id="1585154339565-7">
+        <addForeignKeyConstraint baseColumnNames="logins_id" baseTableName="opb_session_entity_logins" constraintName="fkqavwlr6mial9pix500av9v9vb" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="opb_login_entity" validate="true"/>
     </changeSet>
-
+    <changeSet author="peter (generated)" id="1585154339565-8">
+        <addUniqueConstraint columnNames="logins_id" constraintName="uk_cmnl0x10eantf1oscdra741ua" tableName="opb_session_entity_logins"/>
+    </changeSet>
+    <changeSet author="peter (generated)" id="1585154339565-9">
+        <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807" minValue="1" sequenceName="login_id_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="peter (generated)" id="1585154339565-10">
+        <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807" minValue="1" sequenceName="redirect_urls_id_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="peter (generated)" id="1585154339565-11">
+        <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807" minValue="1" sequenceName="request_info_id_seq" startValue="1"/>
+    </changeSet>
 </databaseChangeLog>

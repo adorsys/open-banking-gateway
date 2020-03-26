@@ -1,21 +1,17 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
-import de.adorsys.opba.fintech.impl.database.entities.CookieEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.util.encoders.Hex;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
-
-import static de.adorsys.opba.fintech.impl.tppclients.CookieNames.SESSION_COOKIE;
-import static de.adorsys.opba.fintech.impl.tppclients.CookieNames.XSRF_TOKEN_COOKIE;
 
 /**
  * This is just a dummy authorization.
@@ -57,10 +53,9 @@ public class AuthorizeService {
         sessionEntity.setXsrfToken(UUID.randomUUID().toString());
 
         // delete old cookies, if available
-        sessionEntity.setCookies(new ArrayList<>());
-
-        sessionEntity.addCookie(SESSION_COOKIE, UUID.randomUUID().toString());
-        sessionEntity.addCookie(XSRF_TOKEN_COOKIE, sessionEntity.getXsrfToken());
+        sessionEntity.setSessionCookie(null);
+        sessionEntity.setXsrfToken(sessionEntity.getXsrfToken());
+        sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(sessionEntity.getFintechUserId(), sessionEntity.getXsrfToken()));
 
         sessionEntity.addLogin(OffsetDateTime.now());
 
@@ -83,8 +78,13 @@ public class AuthorizeService {
         userRepository.save(
                 SessionEntity.builder()
                         .loginUserName(loginRequest.getUsername())
+                        .fintechUserId(createID(loginRequest.getUsername()))
                         .password(UNIVERSAL_PASSWORD)
                         .build());
+    }
+
+    private String createID(String username) {
+        return new String(Hex.encode(username.getBytes()));
     }
 
     @Transactional
@@ -99,12 +99,8 @@ public class AuthorizeService {
             log.debug("XSRF-TOKEN {} is known", xsrfToken);
             return true;
         }
-        for (CookieEntity cookie : optionalUserEntity.get().getCookies()) {
-            if (cookie.getName().equals(SESSION_COOKIE)) {
-                return cookie.getValue().equals(sessionCookieContent);
-            }
-        }
-        return false;
+        SessionEntity.validateSessionCookieValue(sessionCookieContent, xsrfToken);
+        return optionalUserEntity.get().getSessionCookie().getValue().equals(sessionCookieContent);
     }
 
 
