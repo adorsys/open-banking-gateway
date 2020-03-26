@@ -16,7 +16,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Constraint(validatedBy = AccountAccessBodyValidator.class)
 @Documented
-public @interface ValidAisConsent {
+public @interface ValidConsentBody {
 
     String message() default "{hibernate-validation.invalid-consent-message";
 
