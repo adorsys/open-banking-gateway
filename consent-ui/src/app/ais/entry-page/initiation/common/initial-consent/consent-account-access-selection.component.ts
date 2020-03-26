@@ -4,8 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthConsentState } from '../../../../common/dto/auth-state';
 import { SessionService } from '../../../../../common/session.service';
 import { StubUtil } from '../../../../common/stub-util';
-import { AccountAccessLevel } from '../../../../common/dto/ais-consent';
+import {AccountAccessLevel, AisConsentToGrant} from '../../../../common/dto/ais-consent';
 import { ConsentUtil } from '../../../../common/consent-util';
+import {ConsentAuthorizationService, DenyRequest} from '../../../../../api';
+import {ApiHeaders} from '../../../../../api/api.headers';
 
 @Component({
   selector: 'consent-app-access-selection',
@@ -23,6 +25,7 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
   public selectedAccess;
   public accountAccessForm: FormGroup;
   public state: AuthConsentState;
+  public consent: AisConsentToGrant;
 
   private authorizationId: string;
 
@@ -30,7 +33,8 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private consentAuthorizationService: ConsentAuthorizationService
   ) {
     this.accountAccessForm = this.formBuilder.group({});
   }
@@ -42,10 +46,11 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
       if (!this.hasInputs()) {
         this.moveToReviewConsent();
       }
-    });
 
-    this.selectedAccess = new FormControl(this.accountAccesses[0], Validators.required);
-    this.accountAccessForm.addControl('accountAccess', this.selectedAccess);
+      this.selectedAccess = new FormControl(this.accountAccesses[0], Validators.required);
+      this.accountAccessForm.addControl('accountAccess', this.selectedAccess);
+      this.consent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
+    });
   }
 
   hasInputs(): boolean {
@@ -77,6 +82,18 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
     }
 
     this.handleGenericAccess();
+  }
+
+  onDeny() {
+    this.consentAuthorizationService.denyUsingPOST(
+        this.authorizationId,
+        StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
+        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
+        {} as DenyRequest,
+        'response'
+    ).subscribe(res => {
+      window.location.href = res.headers.get(ApiHeaders.LOCATION);
+    })
   }
 
   private updateConsentObject() {

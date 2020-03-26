@@ -6,6 +6,7 @@ import { StubUtil } from '../../../../common/stub-util';
 import { AccountReference } from '../accounts-reference/accounts-reference.component';
 import { SessionService } from '../../../../../common/session.service';
 import { ConsentUtil } from '../../../../common/consent-util';
+import {Location} from '@angular/common';
 
 @Component({
   selector: 'consent-app-limited-access',
@@ -14,6 +15,7 @@ import { ConsentUtil } from '../../../../common/consent-util';
 })
 export class DedicatedAccessComponent implements OnInit {
   constructor(
+    private location: Location,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
@@ -35,6 +37,7 @@ export class DedicatedAccessComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.parent.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
+      this.loadDataFromExistingConsent();
     });
   }
 
@@ -50,5 +53,25 @@ export class DedicatedAccessComponent implements OnInit {
 
     this.sessionService.setConsentObject(this.authorizationId, consentObj);
     this.router.navigate([SharedRoutes.REVIEW], { relativeTo: this.activatedRoute.parent });
+  }
+
+  onBack() {
+    const consentObj = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
+    consentObj.consent.access.availableAccounts = null;
+    consentObj.consent.access.allPsd2 = null;
+    consentObj.consent.access.accounts = null;
+    consentObj.consent.access.balances = null;
+    consentObj.consent.access.transactions = null;
+    this.sessionService.setConsentObject(this.authorizationId, consentObj);
+
+    this.location.back();
+  }
+
+  private loadDataFromExistingConsent() {
+    const consentObj = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
+    if (consentObj.consent.access.accounts) {
+      this.accounts = [];
+      consentObj.consent.access.accounts.forEach(it => this.accounts.push(new AccountReference(it)));
+    }
   }
 }

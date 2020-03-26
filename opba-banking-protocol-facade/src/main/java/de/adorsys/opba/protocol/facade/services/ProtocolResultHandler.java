@@ -5,10 +5,12 @@ import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
+import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationDeniedResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationRequiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionResult;
@@ -40,6 +42,7 @@ public class ProtocolResultHandler {
 
     private final BankProtocolRepository protocolRepository;
     private final EntityManager entityManager;
+    private final ServiceSessionRepository sessions;
     private final AuthenticationSessionRepository authenticationSessions;
 
     /**
@@ -103,6 +106,10 @@ public class ProtocolResultHandler {
     protected <O, R extends FacadeServiceableGetter> FacadeResultRedirectable<O, AuthStateBody> handleRedirect(
         RedirectionResult<O, ?> result, UUID xRequestId, ServiceContext<R> session
     ) {
+        if (result instanceof AuthorizationDeniedResult) {
+            return doHandleAbortAuthorization(result, xRequestId, session);
+        }
+
         if (!authSessionFromDb(session.getServiceSessionId()).isPresent()) {
             return handleAuthorizationStart(result, xRequestId, session);
         }
@@ -119,6 +126,21 @@ public class ProtocolResultHandler {
         AuthSession auth = addAuthorizationSessionData(result, xRequestId, session, mappedResult);
         mappedResult.setCause(mapCause(result));
         setAspspRedirectCodeIfRequired(result, auth, session);
+        return mappedResult;
+    }
+
+    protected <O> FacadeRedirectResult<O, AuthStateBody> doHandleAbortAuthorization(
+            RedirectionResult<O, ?> result, UUID xRequestId, ServiceContext session
+    ) {
+        FacadeRedirectResult<O, AuthStateBody> mappedResult =
+                (FacadeRedirectResult<O, AuthStateBody>) FacadeRedirectResult.FROM_PROTOCOL.map(result);
+
+        if (sessions.findById(session.getServiceSessionId()).isPresent()) {
+            sessions.deleteById(session.getServiceSessionId());
+        }
+
+        mappedResult.setCause(mapCause(result));
+        mappedResult.setXRequestId(xRequestId);
         return mappedResult;
     }
 

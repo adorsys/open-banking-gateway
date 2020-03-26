@@ -133,6 +133,18 @@ $danger-gradient: linear-gradient(129.54deg, lighten($danger, 7%) 0%, $danger 10
 
   --secondaryButtonBorderStyle: 1px solid #{$danger};
 
+  /* Back */
+  --backButtonTextColor: #{$info};
+  --backButtonBG: white;
+
+  --backButtonHoveredTextColor: white;
+  --backButtonHovered: #{$info};
+
+  --backButtonClickedTextColor: white;
+  --backButtonClicked: #{$info};
+
+  --backButtonBorderStyle: 1px solid #{$info};
+
   /* Inputs */
   --inputBG: white;
   --inputBorderStyleLeft: 1px solid #a0a0a0;

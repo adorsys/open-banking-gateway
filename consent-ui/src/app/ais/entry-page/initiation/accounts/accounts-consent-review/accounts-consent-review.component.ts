@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { SharedRoutes } from '../../common/shared-routes';
 import { AccountAccessLevel, AisConsentToGrant } from '../../../../common/dto/ais-consent';
 import { StubUtil } from '../../../../common/stub-util';
@@ -16,6 +17,7 @@ import { ConsentAuth, ConsentAuthorizationService, PsuAuthRequest } from '../../
 })
 export class AccountsConsentReviewComponent implements OnInit {
   constructor(
+    private location: Location,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
@@ -60,5 +62,9 @@ export class AccountsConsentReviewComponent implements OnInit {
         this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
         window.location.href = res.headers.get(ApiHeaders.LOCATION);
       });
+  }
+
+  onBack() {
+    this.location.back();
   }
 }

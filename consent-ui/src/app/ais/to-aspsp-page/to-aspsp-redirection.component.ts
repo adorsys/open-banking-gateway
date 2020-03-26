@@ -5,7 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { SessionService } from '../../common/session.service';
 import { ConsentUtil } from '../common/consent-util';
 import { ApiHeaders } from '../../api/api.headers';
-import { ConsentAuthorizationService } from '../../api';
+import {ConsentAuthorizationService, DenyRequest} from '../../api';
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'consent-app-to-aspsp-redirection',
@@ -24,6 +25,7 @@ export class ToAspspRedirectionComponent implements OnInit {
   private aisConsent: AisConsentToGrant;
 
   constructor(
+    private location: Location,
     private activatedRoute: ActivatedRoute,
     private sessionService: SessionService,
     private consentAuthorisation: ConsentAuthorizationService
@@ -48,5 +50,17 @@ export class ToAspspRedirectionComponent implements OnInit {
         this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
         this.redirectTo = res.headers.get(ApiHeaders.LOCATION);
       });
+  }
+
+  onDeny() {
+    this.consentAuthorisation.denyUsingPOST(
+      this.authorizationId,
+      StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
+      StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
+      {} as DenyRequest,
+      'response'
+    ).subscribe(res => {
+      window.location.href = res.headers.get(ApiHeaders.LOCATION);
+    })
   }
 }

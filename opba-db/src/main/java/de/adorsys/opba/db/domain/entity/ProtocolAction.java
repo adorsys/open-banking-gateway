@@ -10,6 +10,7 @@ public enum ProtocolAction {
     AUTHORIZATION("authorization"),
     GET_AUTHORIZATION_STATE("get-authorization-state", AUTHORIZATION),
     UPDATE_AUTHORIZATION("update-authorization", AUTHORIZATION),
+    DENY_AUTHORIZATION("deny-authorization", AUTHORIZATION),
     FROM_ASPSP_REDIRECT("from-aspsp", AUTHORIZATION),
     // PIS
     INITIATE_PAYMENT("initiate-payment");

@@ -5,7 +5,8 @@ import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { SessionService } from '../../common/session.service';
 import { ConsentUtil } from '../common/consent-util';
 import { ApiHeaders } from '../../api/api.headers';
-import { ConsentAuthorizationService } from '../../api';
+import {ConsentAuthorizationService, DenyRequest} from '../../api';
+import {Location} from "@angular/common";
 
 @Component({
   selector: 'consent-app-result-page',
@@ -22,7 +23,10 @@ export class ResultPageComponent implements OnInit {
   private route: ActivatedRouteSnapshot;
   private aisConsent: AisConsentToGrant;
 
+  private authorizationId: string;
+
   constructor(
+    private location: Location,
     private activatedRoute: ActivatedRoute,
     private sessionService: SessionService,
     private consentAuthorisation: ConsentAuthorizationService
@@ -30,14 +34,26 @@ export class ResultPageComponent implements OnInit {
 
   ngOnInit() {
     this.route = this.activatedRoute.snapshot;
-    const authId = this.route.parent.params.authId;
+    this.authorizationId = this.route.parent.params.authId;
     const redirectCode = this.route.queryParams.redirectCode;
-    this.aisConsent = ConsentUtil.getOrDefault(authId, this.sessionService);
-    this.loadRedirectUri(authId, redirectCode);
+    this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
+    this.loadRedirectUri(this.authorizationId, redirectCode);
   }
 
   onConfirm() {
     window.location.href = this.redirectTo;
+  }
+
+  onDeny() {
+    this.consentAuthorisation.denyUsingPOST(
+      this.authorizationId,
+      StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
+      StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
+      {} as DenyRequest,
+      'response'
+    ).subscribe(res => {
+      window.location.href = res.headers.get(ApiHeaders.LOCATION);
+    })
   }
 
   private loadRedirectUri(authId: string, redirectCode: string) {

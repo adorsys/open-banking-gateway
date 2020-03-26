@@ -18,7 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { AuthorizeRequest } from '../model/authorizeRequest';
-import { DenyRedirectRequest } from '../model/denyRedirectRequest';
+import { DenyRequest } from '../model/denyRequest';
 import { InlineResponse200 } from '../model/inlineResponse200';
 import { PsuAuthRequest } from '../model/psuAuthRequest';
 import { PsuMessage } from '../model/psuMessage';
@@ -98,30 +98,30 @@ export class ConsentAuthorizationService {
     }
 
     /**
-     * Closes this session and redirects the PSU back to the FinTechApi or close the application window. 
+     * Consent authorization is denied - consent is blocked. Closes this session and redirects the PSU back to the FinTechApi or close the application window. 
      * Closes this session and redirects the PSU back to the FinTechApi or close the application window. In any case, the session of the user will be closed and cookies will be deleted with the response to this request. 
      * @param authId Used to distinguish between different consent authorization processes started by the same PSU. Also included in the corresponding cookie path to limit visibility of the consent cookie to the corresponding consent process. 
      * @param xRequestID Unique ID that identifies this request through common workflow. Shall be contained in HTTP Response as well. 
      * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie. The token matches the auth-id included in the requestpath and prefixing the cookie. 
-     * @param denyRedirectRequest 
+     * @param denyRequest 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public denyRedirectUsingPOST(authId: string, xRequestID: string, X_XSRF_TOKEN: string, denyRedirectRequest: DenyRedirectRequest, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public denyRedirectUsingPOST(authId: string, xRequestID: string, X_XSRF_TOKEN: string, denyRedirectRequest: DenyRedirectRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public denyRedirectUsingPOST(authId: string, xRequestID: string, X_XSRF_TOKEN: string, denyRedirectRequest: DenyRedirectRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public denyRedirectUsingPOST(authId: string, xRequestID: string, X_XSRF_TOKEN: string, denyRedirectRequest: DenyRedirectRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public denyUsingPOST(authId: string, xRequestID: string, X_XSRF_TOKEN: string, denyRequest: DenyRequest, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public denyUsingPOST(authId: string, xRequestID: string, X_XSRF_TOKEN: string, denyRequest: DenyRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public denyUsingPOST(authId: string, xRequestID: string, X_XSRF_TOKEN: string, denyRequest: DenyRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public denyUsingPOST(authId: string, xRequestID: string, X_XSRF_TOKEN: string, denyRequest: DenyRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (authId === null || authId === undefined) {
-            throw new Error('Required parameter authId was null or undefined when calling denyRedirectUsingPOST.');
+            throw new Error('Required parameter authId was null or undefined when calling denyUsingPOST.');
         }
         if (xRequestID === null || xRequestID === undefined) {
-            throw new Error('Required parameter xRequestID was null or undefined when calling denyRedirectUsingPOST.');
+            throw new Error('Required parameter xRequestID was null or undefined when calling denyUsingPOST.');
         }
         if (X_XSRF_TOKEN === null || X_XSRF_TOKEN === undefined) {
-            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling denyRedirectUsingPOST.');
+            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling denyUsingPOST.');
         }
-        if (denyRedirectRequest === null || denyRedirectRequest === undefined) {
-            throw new Error('Required parameter denyRedirectRequest was null or undefined when calling denyRedirectUsingPOST.');
+        if (denyRequest === null || denyRequest === undefined) {
+            throw new Error('Required parameter denyRequest was null or undefined when calling denyUsingPOST.');
         }
 
         let headers = this.defaultHeaders;
@@ -152,8 +152,8 @@ export class ConsentAuthorizationService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/consent/${encodeURIComponent(String(authId))}/toAspsp/deny`,
-            denyRedirectRequest,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/consent/${encodeURIComponent(String(authId))}/deny`,
+            denyRequest,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

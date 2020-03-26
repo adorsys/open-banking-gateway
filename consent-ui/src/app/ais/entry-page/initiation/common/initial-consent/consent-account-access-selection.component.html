@@ -5,7 +5,7 @@
       <ng-container *ngIf="hasGeneralViolations()">
         <h2 class="mb-4 text-left">Consent authorization for {{aspspName}}</h2>
         <div class="form-group my-4">
-          <consent-app-dynamic-inputs [targetForm]="accountAccessForm" [violations]="state.getGeneralViolations()"></consent-app-dynamic-inputs>
+          <consent-app-dynamic-inputs [targetForm]="accountAccessForm" [violations]="state.getGeneralViolations()" [currentConsent]="consent"></consent-app-dynamic-inputs>
         </div>
       </ng-container>
 
@@ -25,7 +25,7 @@
       </ng-container>
 
       <div class="form-group d-flex flex-row justify-content-lg-between">
-        <button id="do_cancel" class="btn md-6 w-100 mr-sm-2 mr-md-3 btn-outline-secondary">Cancel</button>
+        <button id="do_deny" class="btn md-6 w-100 mr-sm-2 mr-md-3 btn-outline-secondary" (click)="onDeny()">Deny consent</button>
         <button id="do_submit" type="button" class="btn md-6 w-100 btn-primary" [disabled]="accountAccessForm.invalid" (click)="onConfirm()">{{submitButtonMessage()}}</button>
       </div>
     </div>

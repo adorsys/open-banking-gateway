@@ -9,29 +9,25 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AisAccountAccessInfo } from './aisAccountAccessInfo';
+import { ConsentAuth } from './consentAuth';
 
 
 /**
- * Ais consent request
+ * Consent authorization denied descriptor
  */
-export interface AisConsentRequest { 
-    access: AisAccountAccessInfo;
+export interface DenyRequest { 
+    consentAuth?: ConsentAuth;
     /**
-     * Maximum frequency for an access per day. For a once-off access, this attribute is set to 1
+     * Will indicate if PSU wants to be sent back to FinTechApi.
      */
-    frequencyPerDay: number;
+    backToFinTech?: boolean;
     /**
-     * \'true\', if the consent is for recurring access to the account data , \'false\', if the consent is for one access to the account data
+     * In case there is no redirect back to TPP desired, exit page can be specified by ConsentAuthorisationApi
      */
-    recurringIndicator: boolean;
+    exitPage?: string;
     /**
-     * Consent`s expiration date. The content is the local ASPSP date in ISODate Format
+     * Set to true if consent object shall be forgotten or frozen.
      */
-    validUntil: string;
-    /**
-     * \'true\', if the consent is i.e. account list and then payment \'false\', if the consent is for one access to the account data
-     */
-    combinedServiceIndicator?: boolean;
+    forgetConsent?: boolean;
 }
 

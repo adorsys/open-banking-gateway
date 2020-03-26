@@ -219,7 +219,28 @@ nav {
       background: var(--secondaryButtonClicked);
       color: var(--secondaryButtonClickedTextColor);
     }
+  }
 
+  &-outline-back {
+    color: var(--backButtonTextColor);
+    background: var(--backButtonBG);
+    border: var(--backButtonBorderStyle);
+
+    &:hover {
+      color: var(--backButtonHoveredTextColor);
+      background: var(--backButtonHovered);
+    }
+
+    &:disabled {
+      background: var(--backButtonBG);
+      opacity: .65;
+    }
+
+    &:focus {
+      outline: none;
+      background: var(--backButtonClicked);
+      color: var(--backButtonClickedTextColor);
+    }
   }
 }
 

@@ -2,6 +2,7 @@ package de.adorsys.opba.consentapi.controller;
 
 import de.adorsys.opba.consentapi.Const;
 import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
+import de.adorsys.opba.consentapi.model.generated.DenyRequest;
 import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
 import de.adorsys.opba.consentapi.model.generated.PsuAuthRequest;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
@@ -12,11 +13,14 @@ import de.adorsys.opba.consentapi.service.mapper.AisExtrasMapper;
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
+import de.adorsys.opba.protocol.api.dto.request.authorization.DenyAuthorizationRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.fromaspsp.FromAspspRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
+import de.adorsys.opba.protocol.api.dto.result.body.DenyAuthBody;
 import de.adorsys.opba.protocol.api.dto.result.body.ScaMethod;
 import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
+import de.adorsys.opba.protocol.facade.services.authorization.DenyAuthorizationService;
 import de.adorsys.opba.protocol.facade.services.authorization.FromAspspRedirectHandler;
 import de.adorsys.opba.protocol.facade.services.authorization.GetAuthorizationStateService;
 import de.adorsys.opba.protocol.facade.services.authorization.UpdateAuthorizationService;
@@ -33,6 +37,8 @@ import java.util.concurrent.CompletableFuture;
 
 import static de.adorsys.opba.consentapi.Const.SPRING_KEYWORD;
 
+// TODO https://github.com/adorsys/open-banking-gateway/issues/457
+//  Tear this controller to multiple smaller to reduce footprint
 @RestController
 @RequiredArgsConstructor
 public class ConsentServiceController implements ConsentAuthorizationApi {
@@ -44,6 +50,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
     private final AuthStateBodyToApiMapper authStateMapper;
     private final RedirectionOnlyToOkMapper redirectionOnlyToOkMapper;
     private final FacadeResponseMapper mapper;
+    private final DenyAuthorizationService denyAuthorizationService;
     private final GetAuthorizationStateService authorizationStateService;
     private final UpdateAuthorizationService updateAuthorizationService;
     private final FromAspspRedirectHandler fromAspspRedirectHandler;
@@ -86,6 +93,20 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                         .build()
         ).thenApply((FacadeResult<UpdateAuthBody> result) ->
                 mapper.translate(result, new NoOpMapper<>()));
+    }
+
+    @Override
+    public CompletableFuture denyUsingPOST(DenyRequest body, UUID xRequestID, String xXsrfToken, String authId) {
+        return denyAuthorizationService.execute(DenyAuthorizationRequest.builder()
+                .facadeServiceable(FacadeServiceableRequest.builder()
+                        // Get rid of CGILIB here by copying:
+                        .uaContext(userAgentContext.toBuilder().build())
+                        .authorizationSessionId(authId)
+                        .requestId(xRequestID)
+                        .build()
+                )
+                .build()
+        ).thenApply((FacadeResult<DenyAuthBody> result) -> mapper.translate(result, new NoOpMapper<>()));
     }
 
     @Override

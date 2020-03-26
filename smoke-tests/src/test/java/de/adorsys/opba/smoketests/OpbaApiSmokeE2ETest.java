@@ -122,7 +122,7 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBa
             .and()
             .user_max_musterman_selected_sca_challenge_type_email1_to_embedded_authorization()
             .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_redirect_to_fintech_ok();
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
         then()
             .open_banking_reads_max_musterman_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
                 accountResourceId, DATE_FROM, DATE_TO, BOTH_BOOKING
@@ -143,7 +143,7 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBa
             .and()
             .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
             .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_redirect_to_fintech_ok();
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
 
         AccountInformationResult result = then()
             .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(false);
