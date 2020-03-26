@@ -88,37 +88,104 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         return self();
     }
 
-    public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_ip_address_check() {
-        String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json");
+    public SELF unknown_user_provided_initial_parameters_to_list_accounts_with_all_accounts_consent() {
+        String body = readResource("restrecord/tpp-ui-input/params/unknown-user-all-accounts-consent.json");
 
         ExtractableResponse<Response> response = RestAssured
-                .given()
-                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(body)
-                .when()
-                    .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
-                .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                .extract();
+                                                         .given()
+                                                         .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                                                         .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                                                         .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                                                         .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                         .body(body)
+                                                         .when()
+                                                         .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
+                                                         .then()
+                                                         .statusCode(HttpStatus.ACCEPTED.value())
+                                                         .extract();
 
-        LoggedRequest loggedRequest = await().atMost(Durations.TEN_SECONDS)
-                .until(() ->
-                        wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
-                ).get(0);
-
-        assertThat(loggedRequest.getHeader(PSU_IP_ADDRESS)).isNotEmpty();
+        assertThat(response.header(LOCATION)).contains("ais").contains("redirectCode").doesNotContain("consent-result");
 
         this.responseContent = response.body().asString();
         this.redirectUriToGetUserParams = response.header(LOCATION);
         updateRedirectCode(response);
-
-
         updateServiceSessionId(response);
         updateRedirectCode(response);
 
+        return self();
+    }
+
+    public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_ip_address_check() {
+        String antonBruecknerParametersBody = readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json");
+
+        return user_provided_initial_parameters_in_body_to_list_accounts_with_all_accounts_consent_with_ip_address_check(antonBruecknerParametersBody);
+    }
+
+    public SELF user_anton_brueckner_provided_initial_psu_id_parameter_to_list_accounts_with_all_accounts_consent_with_ip_address_check() {
+        String antonBruecknerPsuIdBody = readResource("restrecord/tpp-ui-input/params/anton-brueckner-in-extras.json");
+
+        return user_provided_initial_parameters_in_body_to_list_accounts_with_all_accounts_consent_with_ip_address_check(antonBruecknerPsuIdBody);
+    }
+
+    public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_dedicated_consent() {
+        String antonBruecknerParametersBody = readResource("restrecord/tpp-ui-input/params/anton-brueckner-dedicated-account-consent.json");
+
+        return user_provided_initial_parameters_in_body_to_list_accounts_with_all_accounts_consent_with_ip_address_check(antonBruecknerParametersBody);
+    }
+
+    public SELF user_provided_initial_parameters_in_body_to_list_accounts_with_all_accounts_consent_with_ip_address_check(String body) {
+        ExtractableResponse<Response> response = RestAssured
+                                                         .given()
+                                                         .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                                                         .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                                                         .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                                                         .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                         .body(body)
+                                                         .when()
+                                                         .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
+                                                         .then()
+                                                         .statusCode(HttpStatus.ACCEPTED.value())
+                                                         .extract();
+
+        LoggedRequest loggedRequest = await().atMost(Durations.TEN_SECONDS)
+                  .until(() ->
+                                 wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
+                  ).get(0);
+
+        assertThat(loggedRequest.getHeader(PSU_IP_ADDRESS)).isNotEmpty();
+        assertThat(response.header(LOCATION)).contains("ais").contains("to-aspsp-redirection");
+
+        this.responseContent = response.body().asString();
+        this.redirectUriToGetUserParams = response.header(LOCATION);
+        updateRedirectCode(response);
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+
+        return self();
+    }
+
+    public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_wrong_ibans() {
+        String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-wrong-ibans.json");
+
+        ExtractableResponse<Response> response = RestAssured
+                                                         .given()
+                                                         .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                                                         .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                                                         .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                                                         .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                         .body(body)
+                                                         .when()
+                                                         .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
+                                                         .then().statusCode(HttpStatus.SERVICE_UNAVAILABLE.value())
+                                                         .extract();
+
+        this.responseContent = response.body().asString();
+
+        return self();
+    }
+
+    public SELF got_503_http_error() {
+        assertThat(this.responseContent).contains("error").contains("Service Unavailable");
         return self();
     }
 }

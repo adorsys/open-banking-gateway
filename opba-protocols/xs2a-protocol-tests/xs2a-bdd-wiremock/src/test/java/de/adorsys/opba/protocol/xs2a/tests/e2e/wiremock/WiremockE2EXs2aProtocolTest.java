@@ -182,6 +182,86 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
     }
 
     @Test
+    void testAccountsListWithDedicatedConsentUsingRedirectWithComputedIpAddress() {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
+                .rest_assured_points_to_opba_server();
+
+        when()
+                .fintech_calls_list_accounts_for_anton_brueckner_ip_address_compute()
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_dedicated_consent()
+                .and()
+                .open_banking_redirect_from_aspsp_ok_webhook_called();
+        then()
+                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
+    }
+
+    @Test
+    void testAccountsListWithConsentUsingRedirectWithComputedIpAddressForUnknownUser() {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
+                .rest_assured_points_to_opba_server();
+
+        when()
+                .fintech_calls_list_accounts_for_anton_brueckner()
+                .and()
+                .unknown_user_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
+                .and()
+                .user_anton_brueckner_provided_initial_psu_id_parameter_to_list_accounts_with_all_accounts_consent_with_ip_address_check()
+                .and()
+                .open_banking_redirect_from_aspsp_ok_webhook_called();
+        then()
+                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
+    }
+
+    @Test
+    void testAccountsListWithConsentUsingRedirectWithWrongIbans() {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
+                .rest_assured_points_to_opba_server();
+
+        when()
+                .fintech_calls_list_accounts_for_anton_brueckner()
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_wrong_ibans()
+                .and()
+                .got_503_http_error();
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testTransactionsListWithConsentUsingEmbeddedForUnknownUser(Approach approach) {
+        given()
+                .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+                .rest_assured_points_to_opba_server();
+
+        when()
+                .fintech_calls_list_transactions_for_max_musterman()
+                .and()
+                .unknown_user_provided_initial_parameters_to_list_transactions_with_single_accounts_consent()
+                .and()
+                .user_max_musterman_provided_initial_psu_id_parameter_to_list_transactions_with_single_account_consent()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_email1_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+                .open_banking_has_consent_for_max_musterman_transaction_list()
+                .open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
+                        WiremockConst.MAX_MUSTERMAN_RESOURCE_ID, WiremockConst.DATE_FROM, WiremockConst.DATE_TO, WiremockConst.BOTH_BOOKING
+                );
+    }
+
+    @Test
     void testAccountsListWithConsentUsingRedirectWithoutIpAddress() {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
