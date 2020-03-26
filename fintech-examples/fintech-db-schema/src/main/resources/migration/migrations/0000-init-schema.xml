@@ -1,5 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
     <changeSet author="peter (generated)" id="1585154339565-1">
         <createTable tableName="opb_login_entity">
             <column name="id" type="BIGINT">
@@ -37,10 +39,10 @@
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="opb_redirect_urls_entity_pkey"/>
             </column>
-            <column name="not_ok_url" type="VARCHAR(255)">
+            <column name="nok_state_path" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="ok_url" type="VARCHAR(255)">
+            <column name="ok_state_path" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="redirect_code" type="VARCHAR(255)">

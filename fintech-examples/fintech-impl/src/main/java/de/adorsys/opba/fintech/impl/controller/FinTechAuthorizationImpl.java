@@ -71,7 +71,8 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
     // TODO NOT WORKING YET
     @Override
     public ResponseEntity<Void> fromConsentOkGET(String authId, String redirectCode, UUID xRequestID, String xsrftoken) {
-        return redirectHandlerService.doRedirect("redirectState", authId, redirectCode);
+        throw new IllegalStateException("ERR");
+        //return redirectHandlerService.doRedirect("redirectState", authId, redirectCode);
     }
 
     @Override
