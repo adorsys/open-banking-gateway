@@ -23,8 +23,8 @@ export class RedirectPageComponent implements OnInit {
       this.cancelPath = decodeURIComponent(r.cancelUrl);
       console.log('LOCATION IS ', this.location);
     });
-    this.bankName = localStorage.getItem(Consts.LOCAL_STORAGE_BANKNAME);
-    this.bankId = this.route.parent.parent.parent.snapshot.paramMap.get('bankid');
+    // this.bankName = localStorage.getItem(Consts.LOCAL_STORAGE_BANKNAME);
+    // this.bankId = this.route.parent.parent.parent.snapshot.paramMap.get('bankid');
     console.log('redirect page for bankid', this.bankId);
   }
 
