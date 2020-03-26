@@ -13,6 +13,10 @@ export class AisService {
     private finTechAccountInformationService: FinTechAccountInformationService
   ) {}
 
+  private static isoDate(toConvert: Date) {
+    return toConvert.toISOString().split('T')[0]
+  }
+
   getAccounts(bankId: string) {
     const okurl = window.location.pathname;
     console.log('redirect url:' + okurl);
@@ -30,16 +34,12 @@ export class AisService {
       '',
       okurl,
       'not-ok-url',
+      '1970-01-01',
+      AisService.isoDate(new Date()),
       null,
-      null,
-      null,
-      null,
+      'both',
       null,
       'response'
     );
-  }
-
-  fromConsentOk(redirectCode: string) {
-
   }
 }
