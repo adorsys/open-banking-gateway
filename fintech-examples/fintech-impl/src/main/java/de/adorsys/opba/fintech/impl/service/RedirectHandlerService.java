@@ -2,13 +2,13 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
-import de.adorsys.opba.fintech.impl.database.entities.RequestInfoEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static java.util.Collections.singletonList;
@@ -30,9 +31,6 @@ public class RedirectHandlerService {
     private final FintechUiConfig uiConfig;
     private final RedirectUrlRepository redirectUrlRepository;
     private final AuthorizeService authorizeService;
-    private final AccountService accountService;
-    private final TransactionService transactionService;
-    private final RequestInfoService requestInfoService;
 
     @Transactional
     public RedirectUrlsEntity registerRedirectStateForSession(String xsrfToken, String okPath, String nokPath) {
@@ -53,14 +51,23 @@ public class RedirectHandlerService {
     }
 
     @Transactional
-    public ResponseEntity doRedirect(String redirectState, String redirectCode) {
+    public ResponseEntity doRedirect(String redirectState, String authId, String redirectCode) {
         if (StringUtils.isBlank(redirectCode)) {
             log.warn("Validation redirect request was failed: redirect code is empty!");
             return prepareErrorRedirectResponse(uiConfig.getExceptionUrl());
         }
 
-        RedirectUrlsEntity redirectUrls = redirectUrlRepository.findByRedirectCode(redirectCode)
-                                                  .orElseThrow(() -> new IllegalStateException("Validation redirect request was failed: redirect code is wrong!"));
+        Optional<RedirectUrlsEntity> redirectUrls = redirectUrlRepository.findByRedirectCode(redirectCode);
+
+        if (!redirectUrls.isPresent()) {
+            log.warn("Validation redirect request was failed: redirect code is wrong");
+            return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
+        }
+
+        if (StringUtils.isBlank(authId)) {
+            log.warn("Validation redirect request was failed: authId is empty!");
+            return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
+        }
 
         if (StringUtils.isBlank(redirectState)) {
             log.warn("Validation redirect request was failed: Xsrf Token is empty!");
@@ -73,25 +80,17 @@ public class RedirectHandlerService {
         }
 
         ContextInformation contextInformation = new ContextInformation(UUID.randomUUID());
-
-        RequestInfoEntity info = requestInfoService.getRequestInfoByXsrfToken(redirectState);
         SessionEntity sessionEntity = authorizeService.getByXsrfToken(redirectState);
 
-        return handleDirectionForRedirect(contextInformation, sessionEntity, redirectUrls, info);
+        return prepareRedirectToReadResultResponse(contextInformation, sessionEntity, redirectUrls.get());
     }
 
-    private ResponseEntity handleDirectionForRedirect(ContextInformation contextInformation,
-                                                      SessionEntity sessionEntity,
-                                                      RedirectUrlsEntity redirectUrls,
-                                                      RequestInfoEntity info) {
-        switch (info.getRequestAction()) {
-            case LIST_ACCOUNTS:
-                return accountService.listAccounts(contextInformation, sessionEntity, redirectUrls, info);
-            case LIST_TRANSACTIONS:
-                return transactionService.listTransactions(contextInformation, sessionEntity, redirectUrls, info);
-            default:
-                throw new RuntimeException("DID NOT EXPECT REQUEST ACTION:" + info.getRequestAction());
-        }
+    private ResponseEntity prepareRedirectToReadResultResponse(
+            ContextInformation contextInformation, SessionEntity sessionEntity, RedirectUrlsEntity redirectUrls
+    ) {
+        HttpHeaders authHeaders = authorizeService.fillWithAuthorizationHeaders(contextInformation, sessionEntity);
+        authHeaders.put(LOCATION_HEADER, singletonList(redirectUrls.getOkStatePath()));
+        return new ResponseEntity<>(authHeaders, HttpStatus.ACCEPTED);
     }
 
     private ResponseEntity prepareErrorRedirectResponse(String redirectUrl) {
