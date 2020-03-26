@@ -1,0 +1,20 @@
+{
+  "accounts": [
+    {
+      "currency": "EUR",
+      "iban": "DE89370400440532013000"
+    }
+  ],
+  "balances": [
+    {
+      "currency": "EUR",
+      "iban": "DE89370400440532013000"
+    }
+  ],
+  "transactions": [
+    {
+      "currency": "EUR",
+      "iban": "DE89370400440532013000"
+    }
+  ]
+}

@@ -47,4 +47,4 @@ flowable:
   process-definition-location-prefix: classpath*:/processes/**/
 
 hibernate-validation:
-  invalid-consent-mesage: Ais consent has invalid structure
+  invalid-consent-message: Account consent body structure is invalid
