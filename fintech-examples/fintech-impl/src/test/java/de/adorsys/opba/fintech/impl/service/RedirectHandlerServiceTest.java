@@ -79,7 +79,7 @@ class RedirectHandlerServiceTest {
         when(redirectUrlRepository.save(any(RedirectUrlsEntity.class))).thenReturn(buildRedirectUrlsEntity());
 
         // when
-        RedirectUrlsEntity redirectCode = redirectHandlerService.registerRedirectUrlForSession(REDIRECT_STATE_VALUE, FINTECH_REDIRECT_OK, FINTECH_REDIRECT_NOT_OK);
+        RedirectUrlsEntity redirectCode = redirectHandlerService.registerRedirectStateForSession(REDIRECT_STATE_VALUE, FINTECH_REDIRECT_OK, FINTECH_REDIRECT_NOT_OK);
 
         //then
         verify(redirectUrlRepository, times(1)).save(any(RedirectUrlsEntity.class));

@@ -1,5 +1,6 @@
 package de.adorsys.opba.fintech.impl.service;
 
+import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.RequestInfoEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
@@ -8,14 +9,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.UUID;
 
@@ -25,41 +24,39 @@ import static java.util.Collections.singletonList;
 @Service
 @Setter
 @RequiredArgsConstructor
-@ConfigurationProperties("fintech-ui")
 public class RedirectHandlerService {
     private static final String LOCATION_HEADER = "Location";
-    @Value("${mock.tppais.listaccounts:false}")
-    private String mockTppAisString;
-    private String redirectUrl;
-    private String exceptionUrl;
 
+    private final FintechUiConfig uiConfig;
     private final RedirectUrlRepository redirectUrlRepository;
     private final AuthorizeService authorizeService;
     private final AccountService accountService;
     private final TransactionService transactionService;
     private final RequestInfoService requestInfoService;
 
-    public RedirectUrlsEntity registerRedirectUrlForSession(String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
+    @Transactional
+    public RedirectUrlsEntity registerRedirectStateForSession(String xsrfToken, String okPath, String nokPath) {
         String redirectCode = UUID.randomUUID().toString();
         log.debug("ONLY FOR DEBUG: redirectCode: {}", redirectCode);
 
-        String okUrl = fintechRedirectURLOK.replaceAll("^/", "");
-        String notOkUrl = fintechRedirectURLNOK.replaceAll("^/", "");
+        String localOkPath = okPath.replaceAll("^/", "");
+        String localNokPath = nokPath.replaceAll("^/", "");
 
         RedirectUrlsEntity redirectUrls = new RedirectUrlsEntity();
 
         redirectUrls.setRedirectCode(redirectCode);
         redirectUrls.setRedirectState(xsrfToken);
-        redirectUrls.setOkUrl(getModifiedUrlWithRedirectCode(okUrl, redirectCode));
-        redirectUrls.setNotOkUrl(getModifiedUrlWithRedirectCode(notOkUrl, redirectCode));
+        redirectUrls.setOkStatePath(localOkPath);
+        redirectUrls.setNokStatePath(localNokPath);
 
         return redirectUrlRepository.save(redirectUrls);
     }
 
-    public ResponseEntity doRedirect(String redirectState, String redirectId, String redirectCode) {
+    @Transactional
+    public ResponseEntity doRedirect(String redirectState, String redirectCode) {
         if (StringUtils.isBlank(redirectCode)) {
             log.warn("Validation redirect request was failed: redirect code is empty!");
-            return prepareErrorRedirectResponse(exceptionUrl);
+            return prepareErrorRedirectResponse(uiConfig.getExceptionUrl());
         }
 
         RedirectUrlsEntity redirectUrls = redirectUrlRepository.findByRedirectCode(redirectCode)
@@ -67,12 +64,12 @@ public class RedirectHandlerService {
 
         if (StringUtils.isBlank(redirectState)) {
             log.warn("Validation redirect request was failed: Xsrf Token is empty!");
-            return prepareErrorRedirectResponse(redirectUrls.getNotOkUrl());
+            return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
         if (!authorizeService.isAuthorized(redirectState, null)) {
             log.warn("Validation redirect request was failed: Xsrf Token is wrong or user are not authorized!");
-            return prepareErrorRedirectResponse(redirectUrls.getNotOkUrl());
+            return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
         ContextInformation contextInformation = new ContextInformation(UUID.randomUUID());
@@ -102,11 +99,5 @@ public class RedirectHandlerService {
         headers.put(LOCATION_HEADER, singletonList(redirectUrl));
 
         return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
-    }
-
-    private String getModifiedUrlWithRedirectCode(String... params) {
-        return UriComponentsBuilder.fromHttpUrl(redirectUrl)
-                       .buildAndExpand(params)
-                       .toUriString();
     }
 }

@@ -27,7 +27,7 @@ const routes: Routes = [
     loadChildren: () => import('./bank-search/bank-search.module').then(m => m.BankSearchModule)
   },
   {
-    path: 'redirectAfterConsent',
+    path: 'redirect-after-consent',
     canActivate: [AuthGuard],
     component: RedirectAfterConsentComponent
   },

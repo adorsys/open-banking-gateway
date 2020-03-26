@@ -1,5 +1,6 @@
 package de.adorsys.opba.fintech.impl.service;
 
+import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.RequestInfoEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
@@ -20,11 +21,13 @@ public class TransactionService extends HandleAcceptedService {
     @Value("${mock.tppais.listtransactions:false}")
     String mockTppAisString;
 
+    private final FintechUiConfig uiConfig;
     private final TppAisClient tppAisClient;
 
-    public TransactionService(AuthorizeService authorizeService, TppAisClient tppAisClient) {
+    public TransactionService(AuthorizeService authorizeService, TppAisClient tppAisClient, FintechUiConfig uiConfig) {
         super(authorizeService);
         this.tppAisClient = tppAisClient;
+        this.uiConfig = uiConfig;
     }
 
     public ResponseEntity listTransactions(ContextInformation contextInformation,
@@ -42,8 +45,8 @@ public class TransactionService extends HandleAcceptedService {
                 contextInformation.getFintechID(),
                 contextInformation.getServiceSessionPassword(),
                 sessionEntity.getLoginUserName(),
-                redirectUrlsEntity.getOkUrl(),
-                redirectUrlsEntity.getNotOkUrl(),
+                redirectUrlsEntity.buildOkUrl(uiConfig),
+                redirectUrlsEntity.buildNokUrl(uiConfig),
                 contextInformation.getXRequestID(),
                 requestInfoEntity.getBankId(),
                 sessionEntity.getPsuConsentSession(),
