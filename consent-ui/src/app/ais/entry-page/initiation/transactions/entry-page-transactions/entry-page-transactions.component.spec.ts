@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EntryPageTransactionsComponent } from './entry-page-transactions.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('EntryPageTransactionsComponent', () => {
   let component: EntryPageTransactionsComponent;
@@ -8,9 +9,9 @@ describe('EntryPageTransactionsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EntryPageTransactionsComponent ]
-    })
-    .compileComponents();
+      declarations: [EntryPageTransactionsComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

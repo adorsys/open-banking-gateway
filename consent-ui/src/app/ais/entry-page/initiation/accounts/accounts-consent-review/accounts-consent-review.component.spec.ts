@@ -1,6 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AccountsConsentReviewComponent } from './accounts-consent-review.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { of } from 'rxjs';
+import { StubUtilTests } from '../../../../common/stub-util-tests';
 
 describe('AccountsConsentReviewComponent', () => {
   let component: AccountsConsentReviewComponent;
@@ -8,9 +14,17 @@ describe('AccountsConsentReviewComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AccountsConsentReviewComponent ]
-    })
-    .compileComponents();
+      declarations: [AccountsConsentReviewComponent],
+      imports: [RouterTestingModule, ReactiveFormsModule, HttpClientTestingModule],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            parent: { parent: { params: of(convertToParamMap({ authId: StubUtilTests.AUTH_ID })) } }
+          }
+        }
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConsentInfoComponent } from './consent-info.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ConsentInfoComponent', () => {
   let component: ConsentInfoComponent;
@@ -8,9 +9,9 @@ describe('ConsentInfoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConsentInfoComponent ]
-    })
-    .compileComponents();
+      declarations: [ConsentInfoComponent],
+      imports: [RouterTestingModule]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
