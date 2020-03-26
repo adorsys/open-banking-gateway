@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
-import java.net.URI;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
@@ -33,8 +32,6 @@ class RedirectHandlerServiceTest {
     private final String REDIRECT_CODE_VALUE = "7ca3f778-b0bb-4c1a-8003-d176089d1455";
     private final String REDIRECT_URL = "http://localhost:4444/{redirectUri}/{redirectCode}";
     private final String EXCEPTION_URL = "http://localhost:4444/excaption-redirect";
-
-    private final String FULL_OK_URL = "http://localhost:4444/redirect-ok/to/682dbd06-75d4-4f73-a7e7-9084150a1f10/7ca3f778-b0bb-4c1a-8003-d176089d1455";
     private final String FULL_NOT_OK_URL = "http://localhost:4444/excaption-redirect";
 
     private final String FINTECH_REDIRECT_OK = "redirect-ok/to/682dbd06-75d4-4f73-a7e7-9084150a1f10";
@@ -43,7 +40,6 @@ class RedirectHandlerServiceTest {
 
     private final String LOCATION_HEADER = "Location";
     private final RedirectUrlsEntity REDIRECT_URLS_ENTITY = buildRedirectUrlsEntity();
-    private final String OK_URI_VALUE = "http://localhost:5500/fintech-callback/redirect?fintechRedirectUriOk=" + REDIRECT_CODE_VALUE;
 
     private FintechUiConfig uiConfig = new FintechUiConfig(REDIRECT_URL, EXCEPTION_URL, EXCEPTION_URL);
 
@@ -176,11 +172,5 @@ class RedirectHandlerServiceTest {
         redirectUrlsEntity.setNokStatePath(FINTECH_REDIRECT_NOT_OK);
 
         return redirectUrlsEntity;
-    }
-
-    private ResponseEntity buildResponseEntity() {
-        return ResponseEntity.status(ACCEPTED)
-                       .location(URI.create(OK_URI_VALUE))
-                       .build();
     }
 }
