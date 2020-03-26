@@ -10,7 +10,7 @@ import { BankComponent } from '../bank.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HttpResponse } from '@angular/common/http';
 
-fdescribe('ListAccountsComponent', () => {
+describe('ListAccountsComponent', () => {
   let component: ListAccountsComponent;
   let fixture: ComponentFixture<ListAccountsComponent>;
   let aisService: AisService;
