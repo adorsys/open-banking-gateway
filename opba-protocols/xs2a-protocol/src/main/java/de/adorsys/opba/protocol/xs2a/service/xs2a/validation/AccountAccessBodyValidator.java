@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.validation;
 
-import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidAisConsent;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidConsentBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AisConsentInitiateBody;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -8,10 +8,10 @@ import org.springframework.util.StringUtils;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class AccountAccessBodyValidator implements ConstraintValidator<ValidAisConsent, AisConsentInitiateBody.AccountAccessBody> {
+public class AccountAccessBodyValidator implements ConstraintValidator<ValidConsentBody, AisConsentInitiateBody.AccountAccessBody> {
 
     @Override
-    public void initialize(ValidAisConsent constraintAnnotation) {
+    public void initialize(ValidConsentBody constraintAnnotation) {
     }
 
     @Override
