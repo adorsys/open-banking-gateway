@@ -11,9 +11,10 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -54,10 +55,18 @@ public class WebDriverErrorReportAspectAndWatcher implements TestWatcher {
     public Object runTestStep(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();
         try {
-            readAndStoreWebDriverData(methodName, true);
+            logIfNeeded(joinPoint, methodName, true);
             return joinPoint.proceed();
         } finally {
-            readAndStoreWebDriverData(methodName, false);
+            logIfNeeded(joinPoint, methodName, false);
+        }
+    }
+
+    private void logIfNeeded(ProceedingJoinPoint joinPoint, String methodName, boolean b) {
+        // JGiven wraps class into ByteBuddy, so Aspect is triggered twice, but joinPoint once
+        // we need only real calls - with known source file location.
+        if (!joinPoint.getSourceLocation().getFileName().toLowerCase().contains("unknown")) {
+            readAndStoreWebDriverData(methodName, b);
         }
     }
 
@@ -70,8 +79,8 @@ public class WebDriverErrorReportAspectAndWatcher implements TestWatcher {
         logWebDriverHistoryForFailure(context.getTestMethod().get().getName(), cause);
     }
 
-    private void logWebDriverHistoryForFailure(String methodName, Throwable ex) {
-        DriverInfo info = DRIVERS.get(methodName);
+    private void logWebDriverHistoryForFailure(String driverId, Throwable ex) {
+        DriverInfo info = DRIVERS.get(driverId);
         if (null == info) {
             return;
         }
@@ -96,14 +105,14 @@ public class WebDriverErrorReportAspectAndWatcher implements TestWatcher {
                 driver instanceof TakesScreenshot ? ((TakesScreenshot) driver).getScreenshotAs(OutputType.BASE64) : null
         );
 
-        info.getLogs().push(new WebDriverLog(entry));
+        info.getLogs().add(new WebDriverLog(entry));
     }
 
     @Data
     private static class DriverInfo {
 
         private final WebDriver driver;
-        private final Stack<WebDriverLog> logs = new Stack<>();
+        private final List<WebDriverLog> logs = new ArrayList<>();
     }
 
     @Data
