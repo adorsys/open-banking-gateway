@@ -2,9 +2,9 @@ import {Consts} from "./consts";
 
 export class LocalStorage {
   public static isLoggedIn(): boolean {
-    console.log("check logged id");
+    console.log("check logged in");
     const token = localStorage.getItem(Consts.LOCAL_STORAGE_XSRF_TOKEN);
-    console.log("value is ", token);
+    console.log("value of xsrf-token is ", token);
     return token !== undefined && token !== null ;
   }
 

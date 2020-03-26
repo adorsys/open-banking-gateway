@@ -16,11 +16,17 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {}
 
   onLogout() {
-    if (this.isLoggedIn()) {
-      this.authService.logout().subscribe(ok => console.log('logout ok'), notok => console.log('logout NOT-OK'));
-    } else {
-      this.router.navigate(['/login']);
-    }
+    this.authService.logout().subscribe(
+      ok => this.logOutHelper(),
+      notok => {
+        this.logOutHelper();
+      }
+    );
+  }
+
+  logOutHelper() {
+    LocalStorage.logout();
+    this.authService.openLoginPage();
   }
 
   isLoggedIn(): boolean {

@@ -54,17 +54,18 @@ services:
       - TPP_URL=http://open-banking-gateway:8085
 
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/open_banking?currentSchema=fintech
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=docker
-      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=org.postgresql.Driver
+      - SPRING_JPA_DDL-AUTO=validate
 
-      - SERVER_CONTROLLER_COOKIE_SECURE=false
-      - SERVER_CONTROLLER_COOKIE_MAXAGE=200
-      - SERVER_CONTROLLER_COOKIE_HTTPONLY=false
-      - SERVER_CONTROLLER_COOKIE_PATH=/
+      - SERVER_CONTROLLER_SESSIONCOOKIE_SECURE=false
+      - SERVER_CONTROLLER_SESSIONCOOKIE_MAXAGE=200
+      - SERVER_CONTROLLER_SESSIONCOOKIE_HTTPONLY=false
+      - SERVER_CONTROLLER_SESSIONCOOKIE_PATH=/
 
       - MOCK_TPPAIS_LISTTRANSACTIONS=false
       - MOCK_TPPAIS_LISTACCOUNTS=false
+
+      - REDIRECT_URL=http://open-banking-gateway:14200/{redirectUri}/{redirectCode}
+      - EXCEPTION-URL=http://open-banking-gateway:14200/excaption-redirect
 
     build: fintech-examples/fintech-server
     ports:

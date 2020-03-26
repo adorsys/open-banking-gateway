@@ -16,11 +16,10 @@ export class AuthService {
     private router: Router,
     private finTechAuthorizationService: FinTechAuthorizationService,
     private cookieService: DocumentCookieService
-  ) {
-  }
+  ) {}
 
   login(credentials: Credentials): Observable<boolean> {
-    this.logout();
+    LocalStorage.logout();
     return this.finTechAuthorizationService.loginPOST('', credentials, 'response').pipe(
       map(response => {
         this.cookieService.getAll().forEach(cookie => console.log('cookie after login :' + cookie));
@@ -35,7 +34,7 @@ export class AuthService {
     );
   }
 
-  logout(): Observable<boolean> {
+  logout(): Observable<any> {
     console.log('start logout');
     return this.finTechAuthorizationService.logoutPOST('', '', 'response').pipe(
       map(

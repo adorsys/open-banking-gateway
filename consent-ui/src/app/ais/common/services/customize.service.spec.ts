@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CustomizeService } from './customize.service';
 
-describe('CustomizeServiceService', () => {
+describe('CustomizeService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {

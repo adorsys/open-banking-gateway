@@ -11,7 +11,9 @@ In a productive use case, the login request will be handled by an identity provi
 
 ### Login-004, -005 FinTechApi.login
 The PSU initiates a session with the FinTech providing his username and password as known to the FinTechApi. Username and password are provided in a LoginRequest object.
-Upon successful login, the FinTechApi will return a response of type [200_UserProfile](../../fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#200_UserProfile). Note that the response object contains both a [SessionCookie](../../fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#Set-SessionCookie) and a corresponding [XSRF-TOKEN](../../fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#X-XSRF-TOKEN)
+Upon successful login, the FinTechApi will return a response of type [200_UserProfile](https://github.com/adorsys/open-banking-gateway/blob/develop/fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#200_UserProfile).
+Note that the response object contains both a [SessionCookie](https://github.com/adorsys/open-banking-gateway/blob/develop/fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#Set-SessionCookie) 
+and a corresponding [XSRF-TOKEN](https://github.com/adorsys/open-banking-gateway/blob/develop/fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#X-XSRF-TOKEN)
 
 ### Login-006 FinTechUI.parseAndStoreXsrfToken
 The xsrfToken returned by the server must be parsed and stored by the FinTechUI for association with each subsequent request. The FinTechUI must 

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { BankProfileService } from './bank-profile.service';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FinTechBankSearchService } from '../../api';
 
 describe('BankProfileService', () => {
@@ -19,7 +19,6 @@ describe('BankProfileService', () => {
   });
 
   it('should be created', () => {
-    const service: BankProfileService = TestBed.get(BankProfileService);
-    expect(service).toBeTruthy();
+    expect(bankProfileService).toBeTruthy();
   });
 });
