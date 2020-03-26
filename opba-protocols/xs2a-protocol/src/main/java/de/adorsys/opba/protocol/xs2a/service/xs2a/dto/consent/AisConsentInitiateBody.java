@@ -20,12 +20,19 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
-import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.*;
-import static de.adorsys.opba.protocol.api.dto.codes.ScopeObject.AIS_CONSENT;
-import static de.adorsys.opba.protocol.api.dto.codes.ScopeObject.AIS_CONSENT_SCOPE;
-import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.*;
+import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.FREQUENCY_PER_DAY;
+import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.IBAN;
+import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.RECURRING_INDICATOR;
+import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.VALID_UNTIL;
+import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.BOOLEAN;
+import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.DATE;
+import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.INTEGER;
+import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.OBJECT;
+import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
+import static de.adorsys.opba.protocol.api.dto.codes.ScopeObject.AIS_CONSENT;
+import static de.adorsys.opba.protocol.api.dto.codes.ScopeObject.AIS_CONSENT_SCOPE;
 
 @Getter
 @Setter

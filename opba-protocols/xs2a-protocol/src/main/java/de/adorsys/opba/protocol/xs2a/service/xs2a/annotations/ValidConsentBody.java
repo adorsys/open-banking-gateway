@@ -18,7 +18,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface ValidConsentBody {
 
-    String message() default "{hibernate-validation.invalid-consent-message";
+    String message() default "{hibernate-validation.invalid-consent-message}";
 
     Class<?>[] groups() default {};
 
