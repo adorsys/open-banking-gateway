@@ -95,7 +95,7 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SandboxServers
                 .and()
                 .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
                 .and()
-                .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
+                .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(firefoxDriver)
                 .and()
                 .user_anton_brueckner_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
 
