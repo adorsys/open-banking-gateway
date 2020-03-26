@@ -29,5 +29,5 @@ spring:
       table-prefix: opb_
 
 fintech-ui:
-  redirect-url: http://localhost:4444/{redirectUri}/{redirectCode}
+  redirect-url: http://localhost:4444?redirectCode={redirectCode}
   exception-url: http://localhost:4444/excaption-redirect
