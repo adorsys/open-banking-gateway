@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {ConsentAuthorizationService} from "../bank/services/consent-authorization.service";
 
 @Component({
   selector: 'app-redirect-after-consent',
@@ -6,7 +8,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./redirect-after-consent.component.scss']
 })
 export class RedirectAfterConsentComponent implements OnInit {
-  constructor() {}
 
-  ngOnInit() {}
+  constructor(
+    private authService: ConsentAuthorizationService,
+    private route: ActivatedRoute,
+  ) {}
+
+  ngOnInit() {
+    const redirectCode = this.route.snapshot.queryParams.redirectCode;
+    this.authService.fromConsentOk(redirectCode);
+  }
 }

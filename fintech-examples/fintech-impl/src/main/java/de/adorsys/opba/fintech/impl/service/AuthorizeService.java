@@ -1,17 +1,24 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
+import de.adorsys.opba.fintech.impl.database.entities.CookieEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
+import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
+import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Hex;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.UUID;
+
+import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_ID;
 
 /**
  * This is just a dummy authorization.
@@ -25,6 +32,7 @@ public class AuthorizeService {
     private static final String UNIVERSAL_PASSWORD = "1234";
 
     private final UserRepository userRepository;
+    private final CookieConfigProperties cookieConfigProperties;
 
     /**
      * @param loginRequest
@@ -61,6 +69,24 @@ public class AuthorizeService {
 
         userRepository.save(sessionEntity);
         return Optional.of(sessionEntity);
+    }
+
+    public HttpHeaders fillWithAuthorizationHeaders(ContextInformation contextInformation, SessionEntity sessionEntity) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set(X_REQUEST_ID, contextInformation.getXRequestID().toString());
+        log.info("set response cookie attributes to {}", cookieConfigProperties.toString());
+
+        CookieEntity sessionCookie = sessionEntity.getSessionCookie();
+        String sessionCookieString = ResponseCookie.from(sessionCookie.getName(), sessionCookie.getValue())
+                .httpOnly(cookieConfigProperties.getSessioncookie().isHttpOnly())
+                .sameSite(cookieConfigProperties.getSessioncookie().getSameSite())
+                .secure(cookieConfigProperties.getSessioncookie().isSecure())
+                .path(cookieConfigProperties.getSessioncookie().getPath())
+                .maxAge(cookieConfigProperties.getSessioncookie().getMaxAge())
+                .build().toString();
+        responseHeaders.add(HttpHeaders.SET_COOKIE, sessionCookieString);
+        responseHeaders.add(Consts.HEADER_XSRF_TOKEN, sessionEntity.getXsrfToken());
+        return responseHeaders;
     }
 
     public SessionEntity getByXsrfToken(String xsrfToken) {
