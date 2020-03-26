@@ -1,4 +1,4 @@
-To create the inital file
+To create the initial file
 
 drop database
 go to application.yml of server
@@ -17,5 +17,5 @@ username: postgres
 password: docker
 classpath: /Users/peter/.m2/repository/org/postgresql/postgresql/42.2.11/postgresql-42.2.11.jar
 
-run the follogin command
+run the following command
 ./liquibase --changeLogFile=/tmp/0000-init-schema.xml generateChangeLog
