@@ -18,8 +18,9 @@ export class DynamicInputsComponent implements OnInit {
   ngOnInit() {
     this.violations.forEach(it => this.targetForm.addControl(it.code, new FormControl('', Validators.required)));
 
-    if (this.currentConsent) {
+    if (this.currentConsent && this.currentConsent.extras) {
       this.violations
+        .filter(it => this.targetForm.get(it.code) && this.currentConsent.extras[it.code])
         .forEach(it => this.targetForm.get(it.code).setValue(this.currentConsent.extras[it.code]));
     }
   }
