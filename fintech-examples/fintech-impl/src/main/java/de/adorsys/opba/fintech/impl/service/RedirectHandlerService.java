@@ -81,6 +81,7 @@ public class RedirectHandlerService {
 
         ContextInformation contextInformation = new ContextInformation(UUID.randomUUID());
         SessionEntity sessionEntity = authorizeService.getByXsrfToken(redirectState);
+        redirectUrlRepository.delete(redirectUrls.get());
 
         return prepareRedirectToReadResultResponse(contextInformation, sessionEntity, redirectUrls.get());
     }
