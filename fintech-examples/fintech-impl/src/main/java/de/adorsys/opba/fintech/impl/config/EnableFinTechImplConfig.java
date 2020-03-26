@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-@Import(FinTechImplConfig.class)
+@Import({FinTechImplConfig.class, FeignConfig.class})
 public @interface EnableFinTechImplConfig {
 }
 
