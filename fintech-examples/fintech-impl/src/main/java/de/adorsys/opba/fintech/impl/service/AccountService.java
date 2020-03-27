@@ -38,6 +38,26 @@ public class AccountService extends HandleAcceptedService {
             return new ResponseEntity<>(new TppListAccountsMock().getAccountList(), HttpStatus.OK);
         }
 
+        ResponseEntity accounts = readOpbaResponse(contextInformation, sessionEntity, redirectUrlsEntity, requestInfoEntity);
+
+        switch (accounts.getStatusCode()) {
+            case OK:
+                return new ResponseEntity<>(accounts.getBody(), HttpStatus.OK);
+            case ACCEPTED:
+                return handleAccepted(sessionEntity, accounts.getHeaders());
+            case UNAUTHORIZED:
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            default:
+                throw new RuntimeException("DID NOT EXPECT RETURNCODE:" + accounts.getStatusCode());
+        }
+    }
+
+    private ResponseEntity readOpbaResponse(
+            ContextInformation contextInformation,
+            SessionEntity sessionEntity,
+            RedirectUrlsEntity redirectUrlsEntity,
+            RequestInfoEntity requestInfoEntity
+    ) {
         ResponseEntity accounts;
         if (null != sessionEntity.getServiceSessionId()) {
              accounts = tppAisClient.getAccounts(
@@ -71,16 +91,6 @@ public class AccountService extends HandleAcceptedService {
                     requestInfoEntity.getBookingStatus(),
                     requestInfoEntity.getDeltaList());
         }
-
-        switch (accounts.getStatusCode()) {
-            case OK:
-                return new ResponseEntity<>(accounts.getBody(), HttpStatus.OK);
-            case ACCEPTED:
-                return handleAccepted(sessionEntity, accounts.getHeaders());
-            case UNAUTHORIZED:
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            default:
-                throw new RuntimeException("DID NOT EXPECT RETURNCODE:" + accounts.getStatusCode());
-        }
+        return accounts;
     }
 }

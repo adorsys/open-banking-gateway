@@ -33,6 +33,7 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
     @SneakyThrows
     public void testListTransactionsForOk() {
         BankProfileTestResult result = getBankProfileTestResult();
+        setServiceSessionId(result, UUID.randomUUID());
         List<String> accountIDs = listAccountsForOk(result);
         when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile("TPP_LIST_TRANSACTIONS.json"), TransactionsResponse.class)));
@@ -52,6 +53,7 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
                 .build();
 
         BankProfileTestResult result = getBankProfileTestResult();
+        setServiceSessionId(result, UUID.randomUUID());
         List<String> accountIDs = listAccountsForOk(result);
         when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(accepted);
