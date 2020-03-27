@@ -28,7 +28,7 @@ services:
       - PKCS12_KEYSTORE=/pkcs12/sample-qwac.keystore
       - FACADE_ENCRYPTION_KEYSETPATH=/keysetpath/example-keyset.json
       - PROTOCOL_EMBEDDED-UI-BASE-URL=http://localhost:14200
-      - PROTOCOL_GATEWAY-BASE-URL=http://open-banking-gateway:8085
+      - PROTOCOL_GATEWAY-BASE-URL=http://localhost:18085
     build: opba-embedded-starter
     ports:
       - "18085:8085"
@@ -67,8 +67,9 @@ services:
       - MOCK_TPPAIS_LISTTRANSACTIONS=false
       - MOCK_TPPAIS_LISTACCOUNTS=false
 
-      - REDIRECT_URL=http://localhost:24000/{redirectUri}/{redirectCode}
-      - EXCEPTION-URL=http://localhost:24000/excaption-redirect
+      - FINTECH-UI_REDIRECT-URL=http://localhost:24200/redirect-after-consent?redirectCode={redirectCode}
+      - FINTECH-UI_UNAUTHORIZED-URL=http://localhost:24200/
+      - FINTECH-UI_EXCEPTION-URL=http://localhost:24200/excaption-redirect
 
     build: fintech-examples/fintech-server
     ports:
