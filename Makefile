@@ -80,5 +80,4 @@ consent-ui/node_modules:
 
 .PHONY : consent-ui
 consent-ui: consent-ui/node_modules
-	cd consent-ui && ng test --watch=false --browsers ChromeHeadless && npm run build:prod
-
+	cd consent-ui && ng test --watch=false --browsers ChromeHeadless --code-coverage=true && npm run build:prod
