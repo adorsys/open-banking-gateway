@@ -1,7 +1,26 @@
-<div *ngFor="let transactionList of transactionsLists; let i = index">
-  <div *ngIf="transactionList.length > 0">
-    <span class="ltx-category">{{ transactionsListNames[i] }}</span>
-    <div *ngFor="let transaction of transactionList">
+<div>
+  <div *ngIf="transactions && transactions.pending && transactions.pending.length > 0">
+    <span class="ltx-category">Pending</span>
+    <div *ngFor="let transaction of transactions.pending">
+      <div class="ltx-parent ltx-list-container ltx-list-container--shadow">
+        <div class="ltx-date">
+          {{ transaction.bookingDate }}
+        </div>
+        <div class="ltx-description">
+          {{ transaction.additionalInformation }}
+        </div>
+        <div class="ltx-amount-number">
+          {{ transaction.transactionAmount.amount }}
+        </div>
+        <div class="ltx-amount-currency">
+          {{ transaction.transactionAmount.currency }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="transactions && transactions.booked && transactions.booked.length > 0">
+    <span class="ltx-category">Booked</span>
+    <div *ngFor="let transaction of transactions.booked">
       <div class="ltx-parent ltx-list-container ltx-list-container--shadow">
         <div class="ltx-date">
           {{ transaction.bookingDate }}
