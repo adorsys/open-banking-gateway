@@ -22,7 +22,7 @@ setting:
       bankOfferedConsentSupported: TRUE
       globalConsentSupported: TRUE
       availableAccountsConsentSupported: TRUE
-      accountAccessFrequencyPerDay: 4
+      accountAccessFrequencyPerDay: 100
       notConfirmedConsentExpirationTimeMs: 86400000
       maxConsentValidityDays: 0
       accountOwnerInformationSupported: false
