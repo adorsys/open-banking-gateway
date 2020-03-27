@@ -1,55 +1,74 @@
-language: java
+matrix:
+  include:
+    - language: java
+      env:
+        global:
+          - MOZ_HEADLESS=1
+      addons:
+        firefox: latest
 
-env:
-  global:
-    - MOZ_HEADLESS=1
-addons:
-  firefox: latest
+      jdk:
+        - openjdk8
 
-jdk:
-  - openjdk8
+      script:
+        # tests are not done with mvn test - dont know why
+        - ./scripts/build_mvn.sh
+        - docker run -it --rm -v "$PWD":/opt/app-root/src -w /opt/app-root/src -u "$(id -u "${USER}"):$(id -g "${USER}")" trion/ng-cli make fintech-ui
+        - docker run -it --rm -v "$PWD":/opt/app-root/src -w /opt/app-root/src -u "$(id -u "${USER}"):$(id -g "${USER}")" trion/ng-cli-karma make consent-ui
 
-script:
-  # tests are not done with mvn test - dont know why
-  - ./scripts/build_mvn.sh
-  - docker run -it --rm -v "$PWD":/opt/app-root/src -w /opt/app-root/src -u "$(id -u "${USER}"):$(id -g "${USER}")" trion/ng-cli make fintech-ui
-  - docker run -it --rm -v "$PWD":/opt/app-root/src -w /opt/app-root/src -u "$(id -u "${USER}"):$(id -g "${USER}")" trion/ng-cli-karma make consent-ui
+      after_success:
+        - bash <(curl -s https://codecov.io/bash)
 
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+      deploy:
+        - provider: script
+          skip_cleanup: true
+          script: /bin/bash scripts/deploy_mvn.sh
+          on:
+            tags: true
+            # matches: vX.Y.Z, vX.Y.Z-A, vX.Y.Z-RCA, vX.Y.Z-A-B.C.D, vX.Y.Z-A-B.C.D-E, vX.Y.Z-RCA-B.C.D-E
+            condition: "$TRAVIS_TAG =~ ^v([[:digit:]]+\\.)+[[:digit:]]+(-(RC)?[[:digit:]]+)?(-([[:digit:]]+\\.)+[[:digit:]]+(-[[:digit:]]+)?)?$"
 
-deploy:
-  - provider: script
-    skip_cleanup: true
-    script: /bin/bash scripts/deploy_mvn.sh
-    on:
-      tags: true
-      # matches: vX.Y.Z, vX.Y.Z-A, vX.Y.Z-RCA, vX.Y.Z-A-B.C.D, vX.Y.Z-A-B.C.D-E, vX.Y.Z-RCA-B.C.D-E
-      condition: "$TRAVIS_TAG =~ ^v([[:digit:]]+\\.)+[[:digit:]]+(-(RC)?[[:digit:]]+)?(-([[:digit:]]+\\.)+[[:digit:]]+(-[[:digit:]]+)?)?$"
+        # Deploy to open banking gateway dev
+        - provider: script
+          skip_cleanup: true
+          script: bash scripts/deploy_openshift.sh
+          on:
+            branch: develop
 
-  # Deploy to open banking gateway dev
-  - provider: script
-    skip_cleanup: true
-    script: bash scripts/deploy_openshift.sh
-    on:
-      branch: develop
+        - provider: script
+          skip_cleanup: true
+          script: bash scripts/deploy_doc.sh
+          on:
+            all_branches: true
+            condition: $TRAVIS_BRANCH = "develop" || $TRAVIS_TAG
 
-  - provider: script
-    skip_cleanup: true
-    script: bash scripts/deploy_doc.sh
-    on:
-      all_branches: true
-      condition: $TRAVIS_BRANCH = "develop" || $TRAVIS_TAG
+        - provider: script
+          skip_cleanup: true
+          script: bash scripts/deploy_javadoc.sh
+          on:
+            tags: true
 
-  - provider: script
-    skip_cleanup: true
-    script: bash scripts/deploy_javadoc.sh
-    on:
-      tags: true
+        # Validate deployment status
+        - provider: script
+          skip_cleanup: true
+          script: bash scripts/validate_dev_deploy.sh
+          on:
+            branch: develop
 
-  # Validate deployment status
-  - provider: script
-    skip_cleanup: true
-    script: bash scripts/validate_dev_deploy.sh
-    on:
-      branch: develop
+    - language: node_js
+      node_js:
+        - "10"
+      addons:
+        chrome: stable
+      env:
+        global:
+          CODECOV_TOKEN=$CODECOV_TOKEN
+      before_script:
+        - npm install
+      jobs:
+        include:
+          - stage: Test coverage
+            script:
+              - ng test --browsers=ChromeHeadlessNoSandbox --codeCoverage=true --watch=false
+            after_script:
+              - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./node_modules/.bin/codecov; fi
