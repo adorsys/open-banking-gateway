@@ -1,9 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AisService } from '../services/ais.service';
-import { Subscription } from 'rxjs';
-import { AccountReport, TransactionDetails } from '../../api';
-import { RedirectStruct } from '../redirect-page/redirect-struct';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AisService} from '../services/ais.service';
+import {Subscription} from 'rxjs';
+import {AccountReport} from '../../api';
+import {RedirectStruct} from '../redirect-page/redirect-struct';
 
 @Component({
   selector: 'app-list-transactions',
@@ -14,11 +14,8 @@ export class ListTransactionsComponent implements OnInit, OnDestroy {
 
   accountId = '';
   bankId = '';
-
   makeVisible = false;
-  transactionsLists: Array<Array<TransactionDetails>>;
-  transactionsListNames = ['Pending', 'Booked'];
-
+  transactions: AccountReport;
   constructor(private router: Router, private route: ActivatedRoute, private aisService: AisService) {}
 
   ngOnInit() {
@@ -37,7 +34,6 @@ export class ListTransactionsComponent implements OnInit, OnDestroy {
   }
 
   askForTransactions() {
-    this.transactionsLists = [];
     console.log('ON INIT LTX ask for transactions for ', this.accountId);
     this.accountsSubscription = this.aisService.getTransactions(this.bankId, this.accountId).subscribe(response => {
       switch (response.status) {
@@ -51,7 +47,7 @@ export class ListTransactionsComponent implements OnInit, OnDestroy {
           break;
         case 200:
           console.log('I got transactions');
-          this.transactionsLists = [response.body.transactions.pending, response.body.transactions.booked];
+          this.transactions = response.body.transactions;
           this.makeVisible = true;
       }
     });

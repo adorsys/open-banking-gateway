@@ -1,9 +1,9 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { AccountDetails } from '../../api';
-import { Subscription } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AisService } from '../services/ais.service';
-import { RedirectStruct } from '../redirect-page/redirect-struct';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AccountDetails} from '../../api';
+import {Subscription} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
+import {AisService} from '../services/ais.service';
+import {RedirectStruct} from '../redirect-page/redirect-struct';
 
 @Component({
   selector: 'app-list-accounts',
@@ -16,7 +16,7 @@ export class ListAccountsComponent implements OnInit, OnDestroy {
   bankId = '';
 
   constructor(private router: Router, private route: ActivatedRoute, private aisService: AisService) {}
-  
+
   ngOnInit() {
     this.route.parent.parent.paramMap.subscribe(p => {
       this.bankId = p.get('bankid');
