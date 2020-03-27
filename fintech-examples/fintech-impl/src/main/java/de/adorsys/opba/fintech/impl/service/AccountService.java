@@ -6,12 +6,13 @@ import de.adorsys.opba.fintech.impl.database.entities.RequestInfoEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListAccountsMock;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
-import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -37,16 +38,39 @@ public class AccountService extends HandleAcceptedService {
             return new ResponseEntity<>(new TppListAccountsMock().getAccountList(), HttpStatus.OK);
         }
 
-        ResponseEntity<AccountList> accounts = tppAisClient.getAccounts(
-                contextInformation.getFintechID(),
-                contextInformation.getServiceSessionPassword(),
-                sessionEntity.getLoginUserName(),
-                redirectUrlsEntity.buildOkUrl(uiConfig),
-                redirectUrlsEntity.buildNokUrl(uiConfig),
-                contextInformation.getXRequestID(),
-                requestInfoEntity.getBankId(),
-                sessionEntity.getPsuConsentSession(),
-                sessionEntity.getServiceSessionId());
+        ResponseEntity accounts;
+        if (null != sessionEntity.getServiceSessionId()) {
+             accounts = tppAisClient.getAccounts(
+                    contextInformation.getFintechID(),
+                    contextInformation.getServiceSessionPassword(),
+                    sessionEntity.getLoginUserName(),
+                    redirectUrlsEntity.buildOkUrl(uiConfig),
+                    redirectUrlsEntity.buildNokUrl(uiConfig),
+                    contextInformation.getXRequestID(),
+                    requestInfoEntity.getBankId(),
+                    sessionEntity.getPsuConsentSession(),
+                    sessionEntity.getServiceSessionId());
+        } else {
+            // FIXME: HACKETTY-HACK - force consent retrieval for transactions on ALL accounts
+            // Should be superseded and fixed with
+            // https://github.com/adorsys/open-banking-gateway/issues/303
+            accounts = tppAisClient.getTransactions(
+                    UUID.randomUUID().toString(), // As consent is missing this will be ignored
+                    contextInformation.getFintechID(),
+                    contextInformation.getServiceSessionPassword(),
+                    sessionEntity.getLoginUserName(),
+                    redirectUrlsEntity.buildOkUrl(uiConfig),
+                    redirectUrlsEntity.buildNokUrl(uiConfig),
+                    contextInformation.getXRequestID(),
+                    requestInfoEntity.getBankId(),
+                    sessionEntity.getPsuConsentSession(),
+                    sessionEntity.getServiceSessionId(),
+                    requestInfoEntity.getDateFrom(),
+                    requestInfoEntity.getDateTo(),
+                    requestInfoEntity.getEntryReferenceFrom(),
+                    requestInfoEntity.getBookingStatus(),
+                    requestInfoEntity.getDeltaList());
+        }
 
         switch (accounts.getStatusCode()) {
             case OK:
