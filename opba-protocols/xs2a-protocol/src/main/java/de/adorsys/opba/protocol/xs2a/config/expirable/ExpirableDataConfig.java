@@ -16,11 +16,13 @@ import static com.google.common.cache.CacheBuilder.newBuilder;
 @Configuration
 public class ExpirableDataConfig {
 
+    public static final long MIN_EXPIRE_SECONDS = 60L;
+
     @Bean
     CacheBuilder cacheBuilder(@Value("${protocol.expirable.expire-after-write}") Duration expireAfterWrite) {
-        if (expireAfterWrite.getSeconds() < 60L) {
-            throw new IllegalArgumentException("It is not recommended to have short transient data expiration time, " +
-                    "it must be at least equal to request timeout");
+        if (expireAfterWrite.getSeconds() < MIN_EXPIRE_SECONDS) {
+            throw new IllegalArgumentException("It is not recommended to have short transient data expiration time, "
+                    + "it must be at least equal to request timeout");
         }
 
         return newBuilder()
