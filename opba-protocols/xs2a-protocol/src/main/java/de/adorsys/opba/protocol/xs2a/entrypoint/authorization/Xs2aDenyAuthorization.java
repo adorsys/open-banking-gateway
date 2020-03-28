@@ -9,6 +9,8 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.Authorization
 import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.AbortConsent;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.Xs2aAisContext;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.flowable.common.engine.api.FlowableObjectNotFoundException;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.history.HistoricActivityInstance;
@@ -19,6 +21,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 
+@Slf4j
 @Service("xs2aDenyAuthorization")
 @RequiredArgsConstructor
 public class Xs2aDenyAuthorization implements DenyAuthorization {
@@ -43,11 +46,12 @@ public class Xs2aDenyAuthorization implements DenyAuthorization {
     }
 
     private Xs2aAisContext readContext(String executionId) {
-        if (null != runtimeService.createExecutionQuery().executionId(executionId).singleResult()) {
-            return (Xs2aAisContext) runtimeService.getVariable(executionId, CONTEXT);
-        }
-
-        return readHistoricalContext(executionId);
+       try {
+           return (Xs2aAisContext) runtimeService.getVariable(executionId, CONTEXT);
+       } catch (FlowableObjectNotFoundException ex) {
+           log.info("Can't find runtime instance of execution {} - looking in history tables", executionId);
+           return readHistoricalContext(executionId);
+       }
     }
 
     private Xs2aAisContext readHistoricalContext(String executionId) {
