@@ -1,12 +1,15 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.authenticate.embedded;
 
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
+import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,12 +28,14 @@ public class ProvidePsuPasswordBodyFromCtxTest {
     public void providePsuPasswordBodyFromCtxTestMapperTest() {
         // Given
         Xs2aContext mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "xs2a_context_input.json", Xs2aContext.class);
+        mappingInput.setTransientStorage(new TransientDataStorage(new HashMap<>()));
+        mappingInput.setPsuPassword("1234");
         ProvidePsuPasswordBody expected = fixtureProvider.getFromFile(PATH_PREFIX + "xs2a_context_output.json", ProvidePsuPasswordBody.class);
 
         // When
         ProvidePsuPasswordBody actual = mapper.map(mappingInput);
 
         // Then
-        assertThat(expected).isEqualToComparingFieldByFieldRecursively(actual);
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
     }
 }
