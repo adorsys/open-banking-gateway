@@ -8,6 +8,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -72,11 +73,13 @@ public class Xs2aSensitiveDataTest {
     public static class TestConfig {
 
         @Bean
+        @ConditionalOnMissingBean(TransientDataStorage.class)
         TransientDataStorage dataStorage() {
             return new TransientDataStorage(new HashMap<>());
         }
 
         @Bean
+        @ConditionalOnMissingBean(Xs2aFlowableProperties.class)
         Xs2aFlowableProperties flowableProperties() {
             return new Xs2aFlowableProperties();
         }
