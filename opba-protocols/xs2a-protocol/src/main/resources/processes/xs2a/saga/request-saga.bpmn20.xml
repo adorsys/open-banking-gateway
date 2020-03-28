@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef">
   <process id="request-saga" name="request-saga" isExecutable="true">
     <documentation>Saga that manages full cycle of request - from getting user initial input to providing additional data that is required by ASPSP during runtime</documentation>
     <startEvent id="start" name="start" flowable:formFieldValidation="true"></startEvent>
@@ -7,13 +11,11 @@
     <callActivity id="execution" name="Perform real bank call sequence" flowable:async="true" calledElement="${flowNameSelector.getNameForExecution(CONTEXT)}" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false">
       <extensionElements>
         <flowable:out source="CONTEXT" target="CONTEXT"></flowable:out>
-        <flowable:out source="RESULT" target="RESULT"></flowable:out>
       </extensionElements>
     </callActivity>
     <callActivity id="validation" name="Perform validation process sequence" flowable:async="true" calledElement="${flowNameSelector.getNameForValidation(CONTEXT)}" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false">
       <extensionElements>
         <flowable:out source="CONTEXT" target="CONTEXT"></flowable:out>
-        <flowable:out source="RESULT" target="RESULT"></flowable:out>
       </extensionElements>
     </callActivity>
     <boundaryEvent id="sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A" attachedToRef="execution">
