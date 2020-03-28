@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import org.flowable.engine.delegate.DelegateExecution;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service("xs2aSandboxTransactionListing")
@@ -14,11 +15,12 @@ public class SandboxTransactionListingService extends TransactionListingService 
     private final AccountListingService accountListingService;
 
     public SandboxTransactionListingService(
+            ApplicationEventPublisher eventPublisher,
             TransactionListingService.Extractor extractor,
             Xs2aValidator validator,
             AccountInformationService ais,
             AccountListingService accountListingService) {
-        super(extractor, validator, ais);
+        super(eventPublisher, extractor, validator, ais);
         this.accountListingService = accountListingService;
     }
 
