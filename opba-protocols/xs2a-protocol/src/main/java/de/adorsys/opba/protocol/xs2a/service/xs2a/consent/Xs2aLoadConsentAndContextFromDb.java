@@ -48,7 +48,7 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
     private void loadContext(DelegateExecution execution, Xs2aContext context) {
         Optional<Consent> consent = consentRepository.findByServiceSessionId(context.getServiceSessionId());
 
-        if (!consent.isPresent()) {
+        if (!consent.isPresent() || null == consent.get().getContext()) {
             return;
         }
 
