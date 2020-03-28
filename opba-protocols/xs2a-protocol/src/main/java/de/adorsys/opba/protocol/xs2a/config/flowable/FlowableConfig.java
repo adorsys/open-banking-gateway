@@ -25,8 +25,7 @@ public class FlowableConfig {
     EngineConfigurationConfigurer<SpringProcessEngineConfiguration> customizeListenerAndJsonSerializer(
         TransientDataStorage dataStorage,
         Xs2aFlowableProperties flowableProperties,
-        Xs2aObjectMapper mapper,
-        FlowableJobEventListener eventListener
+        Xs2aObjectMapper mapper
     ) {
         int maxLength = flowableProperties.getMaxLength();
 
@@ -40,7 +39,6 @@ public class FlowableConfig {
                 )
             );
             processConfiguration.setEnableEventDispatcher(true);
-            processConfiguration.setEventListeners(ImmutableList.of(eventListener));
         };
     }
 
