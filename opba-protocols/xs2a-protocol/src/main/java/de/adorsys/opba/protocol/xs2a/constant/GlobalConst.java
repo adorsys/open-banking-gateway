@@ -11,7 +11,6 @@ public class GlobalConst {
     public static final String LAST_REDIRECTION_TARGET = "LAST_REDIRECTION_TARGET";
 
     public static final String BEFORE_VALIDATION_CONTEXT = "BEFORE_VALIDATION_CONTEXT";
-    public static final String RESULT = "RESULT";
 
     public static final String REQUEST_SAGA = "request-saga";
     public static final String VALIDATION_ERROR_CODE = "VALIDATION";

@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.ais;
 
-import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
+import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedQueryHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.QueryHeadersMapperTemplate;
@@ -14,12 +14,14 @@ import de.adorsys.xs2a.adapter.service.Response;
 import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service("xs2aAccountListing")
 @RequiredArgsConstructor
 public class AccountListingService extends ValidatedExecution<Xs2aContext> {
 
+    private final ApplicationEventPublisher eventPublisher;
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
@@ -37,12 +39,9 @@ public class AccountListingService extends ValidatedExecution<Xs2aContext> {
                 params.getQuery().toParameters()
         );
 
-        ContextUtil.setResult(execution, accounts.getBody());
-    }
-
-    @Override
-    protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
-        ContextUtil.setResult(execution, new AccountListHolder());
+        eventPublisher.publishEvent(
+                new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), accounts.getBody())
+        );
     }
 
     @Service
