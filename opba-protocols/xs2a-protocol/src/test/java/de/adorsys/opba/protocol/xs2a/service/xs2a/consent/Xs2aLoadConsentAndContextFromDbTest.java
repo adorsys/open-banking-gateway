@@ -23,6 +23,7 @@ class Xs2aLoadConsentAndContextFromDbTest extends BaseMockitoTest {
     private Xs2aLoadConsentAndContextFromDb.ContextMerger merger;
 
     @Mock
+    @SuppressWarnings("PMD.UnusedPrivateField") /// Injected into class
     private Xs2aFlowableProperties properties;
 
     @Mock
