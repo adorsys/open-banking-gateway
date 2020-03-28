@@ -9,8 +9,8 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquir
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ConsentAcquired;
+import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Redirect;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Response;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ValidationProblem;
 import de.adorsys.opba.protocol.xs2a.entrypoint.dto.ContextBasedValidationErrorResult;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
@@ -25,10 +25,10 @@ import java.util.function.Function;
 public class OutcomeMapper<T> {
 
     protected final CompletableFuture<Result<T>> channel;
-    protected final Function<Response, T> extractBodyOnSuccess;
+    protected final Function<ProcessResponse, T> extractBodyOnSuccess;
     protected final DtoMapper<Set<ValidationIssue>, Set<ValidationError>> errorMapper;
 
-    public void onSuccess(Response responseResult) {
+    public void onSuccess(ProcessResponse responseResult) {
         channel.complete(new SuccessResult<>(extractBodyOnSuccess.apply(responseResult)));
     }
 
