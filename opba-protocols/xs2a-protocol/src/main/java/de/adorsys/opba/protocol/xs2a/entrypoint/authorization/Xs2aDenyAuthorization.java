@@ -15,6 +15,7 @@ import org.flowable.engine.HistoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.history.HistoricActivityInstance;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionOperations;
 
 import java.net.URI;
 import java.util.concurrent.CompletableFuture;
@@ -26,6 +27,7 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 @RequiredArgsConstructor
 public class Xs2aDenyAuthorization implements DenyAuthorization {
 
+    private final TransactionOperations txOper;
     private final HistoryService historyService;
     private final RuntimeService runtimeService;
     private final AbortConsent abortConsent;
@@ -34,7 +36,12 @@ public class Xs2aDenyAuthorization implements DenyAuthorization {
     public CompletableFuture<Result<DenyAuthBody>> execute(ServiceContext<DenyAuthorizationRequest> serviceContext) {
         String executionId = serviceContext.getAuthContext();
 
-        Xs2aAisContext ctx = readContext(executionId);
+        Xs2aAisContext ctx = txOper.execute(callback -> readContext(executionId));
+
+        if (null == ctx) {
+            throw new IllegalStateException("Context not found");
+        }
+
         abortConsent.abortConsent(ctx);
 
         return CompletableFuture.completedFuture(
