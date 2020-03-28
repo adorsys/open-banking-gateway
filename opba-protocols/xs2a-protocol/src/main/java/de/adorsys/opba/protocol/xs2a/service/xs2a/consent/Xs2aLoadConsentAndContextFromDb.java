@@ -88,15 +88,23 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
     public interface ContextMerger {
 
         @Mapping(target = "flowByAction", ignore = true)
+        @Mapping(target = "psuPassword", ignore = true)
+        @Mapping(target = "lastScaChallenge", ignore = true)
         void merge(Xs2aContext source, @MappingTarget Xs2aContext target);
 
         @Mapping(target = "flowByAction", ignore = true)
+        @Mapping(target = "psuPassword", ignore = true)
+        @Mapping(target = "lastScaChallenge", ignore = true)
         void merge(Xs2aContext source, @MappingTarget TransactionListXs2aContext target);
 
         @Mapping(target = "flowByAction", ignore = true)
+        @Mapping(target = "psuPassword", ignore = true)
+        @Mapping(target = "lastScaChallenge", ignore = true)
         void merge(TransactionListXs2aContext source, @MappingTarget TransactionListXs2aContext target);
 
         @Mapping(target = "flowByAction", ignore = true)
+        @Mapping(target = "psuPassword", ignore = true)
+        @Mapping(target = "lastScaChallenge", ignore = true)
         void merge(AccountListXs2aContext source, @MappingTarget TransactionListXs2aContext target);
     }
 }
