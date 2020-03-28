@@ -47,21 +47,25 @@ public class Xs2aContext extends BaseContext implements NeedsTransientStorage {
 
     private boolean redirectConsentOk;
 
+    @JsonIgnore
     public String getPsuPassword() {
-        TransientDataStorage.DataEntry entry = transientStorage.get(this);
-        return null != entry ? transientStorage.get(this).getPsuPassword() : null;
+        TransientDataStorage.DataEntry entry = this.transientStorage.get(this);
+        return null != entry ? this.transientStorage.get(this).getPsuPassword() : null;
     }
 
+    @JsonIgnore
     public String getLastScaChallenge() {
-        TransientDataStorage.DataEntry entry = transientStorage.get(this);
-        return null != entry ? transientStorage.get(this).getScaChallengeResult() : null;
+        TransientDataStorage.DataEntry entry = this.transientStorage.get(this);
+        return null != entry ? this.transientStorage.get(this).getScaChallengeResult() : null;
     }
 
+    @JsonIgnore
     public void setPsuPassword(String psuPassword) {
-        transientStorage.set(this, new TransientDataStorage.DataEntry(psuPassword, null));
+        this.transientStorage.set(this, new TransientDataStorage.DataEntry(psuPassword, null));
     }
 
+    @JsonIgnore
     public void setLastScaChallenge(String scaChallengeResult) {
-        transientStorage.set(this, new TransientDataStorage.DataEntry(null, scaChallengeResult));
+        this.transientStorage.set(this, new TransientDataStorage.DataEntry(null, scaChallengeResult));
     }
 }
