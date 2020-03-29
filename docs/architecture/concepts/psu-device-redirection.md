@@ -162,7 +162,7 @@ The European PSD2 initiative includes a sharing alternative called "Embedded App
 
 Despite the oAuth2 password grant, the PSD2 embedded approach mandates a second factor which is a one time password inherently bound to the transaction being authorized (or the consent being given). With the sexcond factor as enhancement and the requirement of implementing that second factor for login into banks native online banking applications, disclosing the online banking password of the banking users to third party banking service providers (TPP) seems to be a lees risker alternative than having banks and TPPs implement technical redirect based solutions they can't control.
 
-### Recommendation
+## Recommendation
 This work intentionally ignored the user experience perspective as the purpose was to highlight the complexity associated with implementing redirect flows. 
 
 The outcome recommends market initiatives (regulated or market base) to mandate the Open Banking Embedded Flow:
