@@ -147,22 +147,22 @@ Bob could install a relying party (APP-RP-Bob) that can impersonate the original
 In order to prevent a malicious RP (APP-RP-Bob) from using an intercepted authorization code to obtain the token, IDP and RP can be required to implement server side [PKCE RFC7636](https://tools.ietf.org/html/rfc7636). The advantage of PKCE over classical RP authentication information is that the client-secret (and  other APP-RP credentials) are static while generated code_verifier are dynamic and vary with each authorization request. 
 
 
-## Conclusion
+## Alternatives
 
-### Ignoring the Implicite Flow
+### Ignoring the oAuth2 Implicite Flow
 The oAuth2 framework defines many models of interaction between IDP and RPs. This work deals only with the authorization code flow, as market initiatives like the [OpenID Financial-grade API](https://openid.net/wg/fapi/) explicitly discards the oAuth2 implicit flow for open banking processes.
 
-### The oAuth2 Password Grant Flow
+### Reviewing the oAuth2 Password Grant Flow
 The password grant flow is one that allows a relying party to collect user credentials and forward them to the identity provider. From a technical perspective, this flow seems to be the simplest as it involves no redirection.
 
 The oAuth2 Password Grant Flow exposes static user credentials to the RPs raising a issue hard to deal with as we know that the user password is not supposed to be shared with third parties.
 
-### Open Banking Embedded Approach
+### Highlighting the Open Banking Embedded Approach
 The European PSD2 initiative includes a sharing alternative called "Embedded Approach". This alternative allows the third party provider (RP) to collect user credentials (user banking password and transaction numbers) and forward them to the user's banking service provider.
 
 Despite the oAuth2 password grant, the PSD2 embedded approach mandates a second factor which is a one time password inherently bound to the transaction being authorized (or the consent being given). With the sexcond factor as enhancement and the requirement of implementing that second factor for login into banks native online banking applications, disclosing the online banking password of the banking users to third party banking service providers (TPP) seems to be a lees risker alternative than having banks and TPPs implement technical redirect based solutions they can't control.
 
-### Outlook
+### Recommendation
 This work intentionally ignored the user experience perspective as the purpose was to highlight the complexity associating with implementing redirect flows. 
 
 Our final recommendation is (in regulated initiatives) to mandate the Open Banking Embedded Flow:
