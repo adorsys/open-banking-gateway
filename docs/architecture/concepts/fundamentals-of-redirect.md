@@ -1,4 +1,3 @@
-# User Agent Redirection
 # Fundamental of User Agent Redirection
  
 ### Advanced use Cases
