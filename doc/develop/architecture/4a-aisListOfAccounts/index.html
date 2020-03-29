@@ -228,12 +228,19 @@
                 <h1 id="list-of-accounts">List Of Accounts</h1>
 <p>General terms defined in the <a href="../dictionary/">dictionary</a></p>
 <h2 id="definition">Definition</h2>
-<p>Request the list of bank accounts associated with this PSU's online banking account at the target ASPSP. </p>
+<p>Requests the list of bank accounts associated with this PSU's online banking account at the target ASPSP. </p>
 <p>If there is any reference to an existing account information consent (AisConsent) stored in the database of the TPP, the TPP will use this consent reference to forward the service request to the OpenBanking interface of the ASPSP.</p>
 <p>If there is no such reference in the database of the TPP, the TPP will respond the FinTech to redirect the PSU to the ConsentAuthorizationApi of the TPP.</p>
+<h3 id="identifying-the-psu">Identifying the PSU</h3>
 <p>In order to uniquely identify the requesting PSU, the TPP uses a unique reference made out of:
-- the fintechId : the unique identifier of this FinTech in the realm of the TPP. This parameter is read from the <a href="../dictionary/#FinTechContext">FinTechContext</a> transported as jwt-Token in the Authorization header of each FinTech request to the TPP.
-- the psu-id@fintech : the unique identifier of the PSU in the realm of the FinTech.  This parameter is transported in the HttpHeader named: Fintech-User-ID</p>
+* the fintechId : the unique identifier of this FinTech in the realm of the TPP. This parameter is read from the <a href="../dictionary/#FinTechContext">FinTechContext</a> transported as jwt-Token in the authorization header of each FinTech request to the TPP.
+* the psu-id@fintech : the unique identifier of the PSU in the realm of the FinTech.  This parameter is transported in the HttpHeader named: Fintech-User-ID
+* PsuAuthData : this is an object opaque to the FinTechAPI and contains additional context information provided by the tpp and to be stored by the FinTechApi and provided if available through the corresponding header field.</p>
+<h3 id="mapping-psu-requests-to-consent">Mapping PSU Requests to Consent</h3>
+<p>The complexity of mapping a PSU service request to an existing consent is kept in the database of the TPP. The only responsibility of a FinTech is to:
+* provide a unique psu-id@fintech per PSU
+* add the the PsuAuthData to the request if available
+* to associate the psu-id@fintech with a newly returned PsuAuthData and store this in the database of the FinTechAPI.    </p>
 <h2 id="diagram">Diagram</h2>
 <p><img alt="Session diagram" src="http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/adorsys/open-banking-gateway/develop/docs/architecture/diagrams/useCases/4a-aisListOfAccounts.puml&amp;fmt=svg&amp;vvv=1&amp;sanitize=true" />  </p>
 <h2 id="use-cases">Use Cases</h2>
@@ -242,11 +249,11 @@
 <h3 id="loa-020-fintechuiselectservicelistofaccounts">LoA-020 : FinTechUI.selectService(listOfAccounts)</h3>
 <p>Once selected by the PSU, the FinTechUI forwards the service selected to the FinTechApi. In this case "listOfAccounts". The selection might be accompanied with some service specifications. For listOfAccounts, the option withBalance can be added to indicate that the balance has to be returned as well.</p>
 <h3 id="loa-021-fintechuireadredirecturlsfintech-redirect-url-okfintech-redirect-url-nok">LoA-021 : FinTechUI.readRedirectUrls(Fintech-Redirect-URL-OK,Fintech-Redirect-URL-NOK)</h3>
-<p>Read the redirect urls associated with this context. These are URL used to start the UI from the ConsentAuthorizeAPI.</p>
+<p>Prepare the redirect urls associated with this request. These are URL used to start the UI from the ConsentAuthorizeAPI. </p>
 <h3 id="loa-030-fintechapilistofaccounts"><a name="LoA-030"></a>LoA-030 : FinTechApi.listOfAccounts</h3>
 <p>See <a href="https://github.com/adorsys/open-banking-gateway/blob/develop/fintech-examples/fintech-api/src/main/resources/static/fintech_api.yml#/v1/ais/banks/{bank-id}/accounts:">FinTechApi.listOfAccounts</a></p>
 <h3 id="loa-031-fintechapicheckauthorization">LoA-031 : FinTechApi.checkAuthorization</h3>
-<p>Call specification: : checkAuthorization(SessionCookie,\nX-XSRF-TOKEN):psu-id@fintech
+<p>Call specification: : checkAuthorization(SessionCookie,X-XSRF-TOKEN):psu-id@fintech
 Before proceeding with the request, the FinTechApi must validate the request for it authenticity and extract a unique identifier of the PSU in the world of the FinTech (psu-id@fintech). This validation also include the matching of the used cookie against the provided XSRF-Token.</p>
 <h3 id="loa-032-fintechapiuseragentcontext"><a name="LoA-032"></a>LoA-032 : FinTechApi.userAgentContext</h3>
 <p>Parses the HTTP request and extract information associated with the user agent (see <a href="../dictionary/#UserAgentContext">UserAgentContext</a>).
@@ -261,8 +268,9 @@ The <strong><a href="../dictionary/#UserAgentContext">UserAgentContext</a></stro
   * User-Agent,
   * PSU-Geo-Location,
   * Http-Method.</p>
-<h3 id="loa-033-fintechapiloadservicesession">LoA-033 : FinTechApi.loadServiceSession</h3>
-<p>Uses the given psu-id and service type to load a corresponding service session if the FinTech judges the request of the PSU is the repetition of an existing service request.</p>
+<h3 id="loa-033-fintechapiloadservicesession-deprecated">LoA-033 : FinTechApi.loadServiceSession (Deprecated)</h3>
+<h3 id="loa-034-fintechapiloadpsuauthdata"><a name="LoA-034"></a>LoA-034 : FinTechApi.loadPsuAuthData</h3>
+<p>Load PsuUserData associated with psu-id@fintech.</p>
 <h3 id="loa-040-tppbankingapilistofaccounts">LoA-040 : TppBankingApi.listOfAccounts</h3>
 <p>Forwards the PSU request to TPP. See <a href="https://github.com/adorsys/open-banking-gateway/blob/develop/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml#/v1/banking/ais/accounts:">TppBankingApi.listOfAccounts</a>.</p>
 <h3 id="loa-041-tppbankingapicheckauthorization">LoA-041 TppBankingApi.checkAuthorization</h3>
