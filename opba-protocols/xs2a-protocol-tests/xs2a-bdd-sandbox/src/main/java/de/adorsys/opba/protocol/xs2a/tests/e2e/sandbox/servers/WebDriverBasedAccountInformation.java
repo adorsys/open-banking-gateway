@@ -10,10 +10,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.RetryOperations;
 
 import java.time.Duration;
+
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableConfig.TEST_RETRY_OPS;
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
@@ -27,6 +30,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     public static final String TAN_VALUE = "123456";
 
     @Autowired
+    @Qualifier(TEST_RETRY_OPS)
     private RetryOperations withRetry;
 
     @Value("${test.webdriver.timeout}")

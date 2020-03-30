@@ -16,7 +16,9 @@ import org.springframework.retry.support.RetryTemplate;
 @Configuration
 public class RetryableConfig {
 
-    @Bean
+    public static final String TEST_RETRY_OPS = "TEST_RETRY_OPS";
+
+    @Bean(name = TEST_RETRY_OPS)
     RetryOperations retryOperations(@Value("${test.retry.max}") int maxRetries) {
         RetryTemplate withRetry = new RetryTemplate();
         withRetry.setBackOffPolicy(new ExponentialBackOffPolicy());

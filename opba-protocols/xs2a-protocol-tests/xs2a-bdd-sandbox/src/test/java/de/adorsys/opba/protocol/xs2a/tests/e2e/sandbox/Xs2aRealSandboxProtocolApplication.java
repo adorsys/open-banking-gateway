@@ -12,5 +12,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @EnableBankingPersistence
 @SpringBootApplication
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Spring entry point
-public class Xs2aSandboxProtocolApplication {
+public class Xs2aRealSandboxProtocolApplication {
 }
