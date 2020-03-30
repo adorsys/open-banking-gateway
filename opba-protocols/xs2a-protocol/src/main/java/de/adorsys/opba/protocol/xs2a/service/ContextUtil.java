@@ -13,13 +13,26 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import java.util.function.Consumer;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
+import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.RESULT;
 
 @UtilityClass
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Lombok generates private ctor.
 public class ContextUtil {
 
+    public static <T> T getResult(DelegateExecution execution, Class<T> resultType) {
+        return execution.getVariable(RESULT, resultType);
+    }
+
+    public static <T> void setResult(DelegateExecution execution, T result) {
+        execution.setVariable(RESULT, result);
+    }
+
     public static <T> T getContext(DelegateExecution execution, Class<T> ctxType) {
         return execution.getVariable(CONTEXT, ctxType);
+    }
+
+    public static <T> void updateContext(DelegateExecution execution, T ctx) {
+        execution.setVariable(CONTEXT, ctx);
     }
 
     public static <T> void getAndUpdateContext(DelegateExecution execution, Consumer<T> contextUpdater) {

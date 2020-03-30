@@ -1,11 +1,11 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.ais;
 
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ProcessResponse;
+import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathQueryHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathQueryHeadersMapperTemplate;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aResourceParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aTransactionParameters;
@@ -16,14 +16,12 @@ import de.adorsys.xs2a.adapter.service.Response;
 import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service("xs2aTransactionListing")
 @RequiredArgsConstructor
 public class TransactionListingService extends ValidatedExecution<TransactionListXs2aContext> {
 
-    private final ApplicationEventPublisher eventPublisher;
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
@@ -39,15 +37,18 @@ public class TransactionListingService extends ValidatedExecution<TransactionLis
         ValidatedPathQueryHeaders<Xs2aResourceParameters, Xs2aTransactionParameters, Xs2aWithConsentIdHeaders> params =
                 extractor.forExecution(context);
 
-        Response<TransactionsReport> transactionList = ais.getTransactionList(
+        Response<TransactionsReport> accounts = ais.getTransactionList(
                 params.getPath().getResourceId(),
                 params.getHeaders().toHeaders(),
                 params.getQuery().toParameters()
         );
 
-        eventPublisher.publishEvent(
-                new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), transactionList.getBody())
-        );
+        ContextUtil.setResult(execution, accounts.getBody());
+    }
+
+    @Override
+    protected void doMockedExecution(DelegateExecution execution, TransactionListXs2aContext context) {
+        ContextUtil.setResult(execution, new TransactionsReport());
     }
 
     @Service

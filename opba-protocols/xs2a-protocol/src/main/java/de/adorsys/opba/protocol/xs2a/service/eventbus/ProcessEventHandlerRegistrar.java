@@ -1,8 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.service.eventbus;
 
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ConsentAcquired;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Redirect;
+import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Response;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ValidationProblem;
 import de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +18,8 @@ public class ProcessEventHandlerRegistrar {
         handler.add(
                 processId,
                 procResult -> {
-                    if (procResult instanceof ProcessResponse) {
-                        mapper.onSuccess((ProcessResponse) procResult);
+                    if (procResult instanceof Response) {
+                        mapper.onSuccess((Response) procResult);
                     } else if (procResult instanceof Redirect) {
                         mapper.onRedirect((Redirect) procResult);
                     } else if (procResult instanceof ValidationProblem) {
