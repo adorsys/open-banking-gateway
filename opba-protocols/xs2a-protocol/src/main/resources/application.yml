@@ -46,5 +46,3 @@ pkcs12:
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
 
-hibernate-validation:
-  invalid-consent-message: Account consent body structure is invalid

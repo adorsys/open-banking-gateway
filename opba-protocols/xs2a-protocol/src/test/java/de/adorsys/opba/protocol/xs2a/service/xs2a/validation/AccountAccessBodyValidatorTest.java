@@ -34,9 +34,21 @@ class AccountAccessBodyValidatorTest {
     }
 
     @Test
-    void dedicate_consent_without_accounts_test() {
+    void dedicate_consent_without_accounts_with_balances_test() {
         // Given
-        AisConsentInitiateBody.AccountAccessBody mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "dedicated_without_accounts_consent.json", AisConsentInitiateBody.AccountAccessBody.class);
+        AisConsentInitiateBody.AccountAccessBody mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "dedicated_without_accounts_consent_with_balances.json", AisConsentInitiateBody.AccountAccessBody.class);
+
+        // When
+        boolean actual = validator.isValid(mappingInput, null);
+
+        // Then
+        assertThat(actual).isTrue();
+    }
+
+    @Test
+    void dedicate_consent_without_accounts_without_balances_test() {
+        // Given
+        AisConsentInitiateBody.AccountAccessBody mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "dedicated_without_accounts_consent_without_balances.json", AisConsentInitiateBody.AccountAccessBody.class);
 
         // When
         boolean actual = validator.isValid(mappingInput, null);

@@ -2,5 +2,5 @@
   "accounts": [],
   "balances": [],
   "transactions": [],
-  "allPsd2": "ALL_ACCOUNTS"
+  "availableAccounts": "ALL_ACCOUNTS"
 }

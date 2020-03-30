@@ -8,6 +8,9 @@ import org.springframework.util.StringUtils;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import static de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AccountAccessType.ALL_ACCOUNTS;
+import static de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AccountAccessType.ALL_ACCOUNTS_WITH_BALANCES;
+
 public class AccountAccessBodyValidator implements ConstraintValidator<ValidConsentBody, AisConsentInitiateBody.AccountAccessBody> {
 
     @Override
@@ -34,14 +37,15 @@ public class AccountAccessBodyValidator implements ConstraintValidator<ValidCons
 
         boolean validDedicatedWithoutAccounts = isEmptyAccountInfo(body)
                                                         && StringUtils.isEmpty(body.getAllPsd2())
-                                                        && "allAccounts".equals(body.getAvailableAccounts());
+                                                        && (ALL_ACCOUNTS.getDescription().equals(body.getAvailableAccounts())
+                                                                    || ALL_ACCOUNTS_WITH_BALANCES.getDescription().equals(body.getAvailableAccounts()));
 
         return validDedicatedWithAccounts || validDedicatedWithoutAccounts;
     }
 
     private boolean isValidGlobalConsent(AisConsentInitiateBody.AccountAccessBody body) {
         return isEmptyAccountInfo(body)
-                       && "allAccounts".equals(body.getAllPsd2())
+                       && ALL_ACCOUNTS.getDescription().equals(body.getAllPsd2())
                        && StringUtils.isEmpty(body.getAvailableAccounts());
     }
 

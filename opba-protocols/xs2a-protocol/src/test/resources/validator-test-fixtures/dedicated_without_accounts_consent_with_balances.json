@@ -2,5 +2,5 @@
   "accounts": [],
   "balances": [],
   "transactions": [],
-  "availableAccounts": "allAccounts"
+  "availableAccounts": "ALL_ACCOUNTS_WITH_BALANCES"
 }
