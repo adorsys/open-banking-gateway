@@ -43,6 +43,7 @@ public class AisConsentInitiateBody {
     @Valid
     @ValidationInfo(ui = @FrontendCode(OBJECT), ctx = @ContextCode(target = AIS_CONSENT))
     @NotNull(message = "{no.ctx.accountaccess}")
+    @ValidConsentBody
     private AccountAccessBody access;
 
     @ValidationInfo(ui = @FrontendCode(BOOLEAN), ctx = @ContextCode(value = RECURRING_INDICATOR, target = AIS_CONSENT))
@@ -63,7 +64,6 @@ public class AisConsentInitiateBody {
 
     @Getter
     @Setter
-    @ValidConsentBody
     // FIXME: should use conditional validator - access accounts/balances/transactions OR availableAccounts/allPsd2
     public static class AccountAccessBody {
 
@@ -101,7 +101,7 @@ public class AisConsentInitiateBody {
         }
 
         default AccountAccess.AvailableAccountsEnum accounts(String availableAccounts) {
-            if (ALL_ACCOUNTS.getDescription().equals(availableAccounts)) {
+            if (ALL_ACCOUNTS.getApiName().equals(availableAccounts)) {
                 return AccountAccess.AvailableAccountsEnum.ALLACCOUNTS;
             }
 
@@ -109,7 +109,7 @@ public class AisConsentInitiateBody {
         }
 
         default AccountAccess.AvailableAccountsWithBalance accountsWithBalance(String availableAccounts) {
-            if (ALL_ACCOUNTS_WITH_BALANCES.getDescription().equals(availableAccounts)) {
+            if (ALL_ACCOUNTS_WITH_BALANCES.getApiName().equals(availableAccounts)) {
                 return AccountAccess.AvailableAccountsWithBalance.ALLACCOUNTS;
             }
 
@@ -117,7 +117,7 @@ public class AisConsentInitiateBody {
         }
 
         default AccountAccess.AllPsd2Enum allPsd2(String allPsd2) {
-            if (ALL_ACCOUNTS.getDescription().equals(allPsd2)) {
+            if (ALL_ACCOUNTS.getApiName().equals(allPsd2)) {
                 return AccountAccess.AllPsd2Enum.ALLACCOUNTS;
             }
 

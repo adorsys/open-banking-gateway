@@ -43,7 +43,7 @@ public class AisConsentInitiateBodyToXs2aApiTest {
     @SneakyThrows
     public void accountsTest_success() {
         // Given
-        String mappingInput = ALL_ACCOUNTS.getDescription();
+        String mappingInput = ALL_ACCOUNTS.getApiName();
         AccountAccess.AvailableAccountsEnum expected = AccountAccess.AvailableAccountsEnum.ALLACCOUNTS;
 
         // When
@@ -71,7 +71,7 @@ public class AisConsentInitiateBodyToXs2aApiTest {
     @SneakyThrows
     public void accountsWithBalanceTest_success() {
         // Given
-        String mappingInput = ALL_ACCOUNTS_WITH_BALANCES.getDescription();
+        String mappingInput = ALL_ACCOUNTS_WITH_BALANCES.getApiName();
         AccountAccess.AvailableAccountsWithBalance expected = AccountAccess.AvailableAccountsWithBalance.ALLACCOUNTS;
 
         // When
@@ -99,7 +99,7 @@ public class AisConsentInitiateBodyToXs2aApiTest {
     @SneakyThrows
     public void allPsd2Test_success() {
         // Given
-        String mappingInput = ALL_ACCOUNTS.getDescription();
+        String mappingInput = ALL_ACCOUNTS.getApiName();
         AccountAccess.AllPsd2Enum expected = AccountAccess.AllPsd2Enum.ALLACCOUNTS;
 
         // When
