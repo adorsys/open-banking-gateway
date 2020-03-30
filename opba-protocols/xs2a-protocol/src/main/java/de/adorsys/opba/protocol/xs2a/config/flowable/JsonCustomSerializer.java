@@ -1,14 +1,15 @@
 package de.adorsys.opba.protocol.xs2a.config.flowable;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.variable.api.types.ValueFields;
 import org.flowable.variable.api.types.VariableType;
 
 import java.util.List;
+import java.util.Map;
 
 // TODO: Secure serialized values with some encryption, remove code duplication.
 @RequiredArgsConstructor
@@ -16,7 +17,6 @@ class JsonCustomSerializer implements VariableType {
 
     static final String JSON = "as_json";
 
-    private final TransientDataStorage transientDataStorage;
     private final ObjectMapper mapper;
     private final List<String> allowOnlyClassesWithPrefix;
     private final int maxLength;
@@ -38,7 +38,7 @@ class JsonCustomSerializer implements VariableType {
             return true;
         }
 
-        if (!SerializerUtil.canSerialize(o.getClass().getCanonicalName(), allowOnlyClassesWithPrefix)) {
+        if (!CanSerializeUtil.canSerialize(o.getClass().getCanonicalName(), allowOnlyClassesWithPrefix)) {
             return false;
         }
 
@@ -68,11 +68,16 @@ class JsonCustomSerializer implements VariableType {
             return null;
         }
 
-        return SerializerUtil.deserialize(
-                valueFields.getTextValue().getBytes(),
-                mapper,
-                allowOnlyClassesWithPrefix,
-                transientDataStorage
+        JsonNode value = mapper.readTree(valueFields.getTextValue());
+        Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
+
+        if (!CanSerializeUtil.canSerialize(classNameAndValue.getKey(), allowOnlyClassesWithPrefix)) {
+            throw new IllegalArgumentException("Class deserialization not allowed " + classNameAndValue.getKey());
+        }
+
+        return mapper.readValue(
+                classNameAndValue.getValue().traverse(),
+                Class.forName(classNameAndValue.getKey())
         );
     }
 }

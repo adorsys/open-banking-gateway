@@ -21,6 +21,6 @@ public class Xs2aFlowableProperties {
     private int maxLength = 2048;
 
     public boolean canSerialize(String canonicalName) {
-        return SerializerUtil.canSerialize(canonicalName, serializeOnlyPackages);
+        return CanSerializeUtil.canSerialize(canonicalName, serializeOnlyPackages);
     }
 }

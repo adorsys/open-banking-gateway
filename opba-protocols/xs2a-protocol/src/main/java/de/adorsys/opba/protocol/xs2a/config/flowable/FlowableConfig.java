@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
-import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
 import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.flowable.spring.boot.EngineConfigurationConfigurer;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +22,6 @@ public class FlowableConfig {
      */
     @Bean
     EngineConfigurationConfigurer<SpringProcessEngineConfiguration> customizeListenerAndJsonSerializer(
-        TransientDataStorage dataStorage,
         Xs2aFlowableProperties flowableProperties,
         Xs2aObjectMapper mapper,
         FlowableJobEventListener eventListener
@@ -34,8 +32,8 @@ public class FlowableConfig {
             processConfiguration.setCustomPreVariableTypes(
                 new ArrayList<>(
                     ImmutableList.of(
-                        new JsonCustomSerializer(dataStorage, mapper.getMapper(), flowableProperties.getSerializeOnlyPackages(), maxLength),
-                        new LargeJsonCustomSerializer(dataStorage, mapper.getMapper(), flowableProperties.getSerializeOnlyPackages(), maxLength)
+                        new JsonCustomSerializer(mapper.getMapper(), flowableProperties.getSerializeOnlyPackages(), maxLength),
+                        new LargeJsonCustomSerializer(mapper.getMapper(), flowableProperties.getSerializeOnlyPackages(), maxLength)
                     )
                 )
             );

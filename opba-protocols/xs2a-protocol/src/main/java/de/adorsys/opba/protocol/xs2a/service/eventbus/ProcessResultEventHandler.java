@@ -1,10 +1,10 @@
 package de.adorsys.opba.protocol.xs2a.service.eventbus;
 
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.InternalProcessResult;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -15,13 +15,12 @@ import java.util.function.Consumer;
  * FIXME: https://github.com/adorsys/open-banking-gateway/issues/456
  */
 @Service
-@RequiredArgsConstructor
 public class ProcessResultEventHandler {
 
     private final Object lock = new Object();
 
-    private final Map<String, Consumer<InternalProcessResult>> subscribers;
-    private final Map<String, InternalProcessResult> deadLetterQueue;
+    private final Map<String, Consumer<InternalProcessResult>> subscribers = new HashMap<>();
+    private final Map<String, InternalProcessResult> deadLetterQueue = new HashMap<>();
 
     public void add(String processId, Consumer<InternalProcessResult> subscriber) {
         InternalProcessResult delayedMessage;
