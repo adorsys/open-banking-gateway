@@ -2,12 +2,12 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox;
 
 import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
-import de.adorsys.opba.db.config.EnableBankingPersistence;
 import de.adorsys.opba.db.domain.Approach;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.SandboxServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.protocol.xs2a.testsandbox.SandboxAppsStarter;
 import de.adorsys.psd2.sandbox.cms.starter.Xs2aCmsAutoConfiguration;
@@ -52,10 +52,9 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
     ManagementWebSecurityAutoConfiguration.class,
     SecurityAutoConfiguration.class,
 })
-@EnableBankingPersistence
 @ExtendWith(SeleniumExtension.class)
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-@SpringBootTest(classes = {Xs2aSandboxProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
+@SpringBootTest(classes = {RetryableConfig.class, Xs2aRealSandboxProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
 class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>, AccountInformationResult> {
 
