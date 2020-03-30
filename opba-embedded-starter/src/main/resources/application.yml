@@ -54,8 +54,6 @@ protocol:
       report-sca-result: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/sca-result
   gateway-base-url: http://localhost:8085
   embedded-ui-base-url: http://localhost:4200
-  expirable:
-    expire-after-write: PT600S
 
 pkcs12:
   keyStore: sample-qwac.keystore
