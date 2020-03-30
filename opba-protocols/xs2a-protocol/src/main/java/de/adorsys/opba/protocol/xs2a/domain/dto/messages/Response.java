@@ -6,10 +6,10 @@ import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public class ProcessResponse extends InternalProcessResult {
+public class Response extends InternalProcessResult {
 
     @Builder
-    public ProcessResponse(String processId, String executionId, Object result) {
+    public Response(String processId, String executionId, Object result) {
         super(processId, executionId, result);
     }
 }
