@@ -192,7 +192,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF unknown_user_provided_initial_parameters_to_list_transactions_with_single_accounts_consent() {
+    public SELF user_max_musterman_provided_initial_parameters_to_list_transactions_but_without_psu_id_with_single_accounts_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 "restrecord/tpp-ui-input/params/unknown-user-transactions-single-account-consent.json"
@@ -200,7 +200,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF user_max_musterman_provided_initial_psu_id_parameter_to_list_transactions_with_single_account_consent() {
+    public SELF user_max_musterman_provided_psu_id_parameter_to_list_transactions_with_single_account_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 "restrecord/tpp-ui-input/params/max-musterman-in-extras.json"
