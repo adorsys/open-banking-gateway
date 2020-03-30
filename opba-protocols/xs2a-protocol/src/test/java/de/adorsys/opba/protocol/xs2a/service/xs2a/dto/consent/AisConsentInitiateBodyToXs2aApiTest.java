@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AccountAccessType.ALL_ACCOUNTS;
+import static de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AccountAccessType.ALL_ACCOUNTS_WITH_BALANCES;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = MapperTestConfig.class)
@@ -41,7 +43,7 @@ public class AisConsentInitiateBodyToXs2aApiTest {
     @SneakyThrows
     public void accountsTest_success() {
         // Given
-        String mappingInput = "ALL_ACCOUNTS";
+        String mappingInput = ALL_ACCOUNTS.getDescription();
         AccountAccess.AvailableAccountsEnum expected = AccountAccess.AvailableAccountsEnum.ALLACCOUNTS;
 
         // When
@@ -69,7 +71,7 @@ public class AisConsentInitiateBodyToXs2aApiTest {
     @SneakyThrows
     public void accountsWithBalanceTest_success() {
         // Given
-        String mappingInput = "ALL_ACCOUNTS_WITH_BALANCES";
+        String mappingInput = ALL_ACCOUNTS_WITH_BALANCES.getDescription();
         AccountAccess.AvailableAccountsWithBalance expected = AccountAccess.AvailableAccountsWithBalance.ALLACCOUNTS;
 
         // When
@@ -97,7 +99,7 @@ public class AisConsentInitiateBodyToXs2aApiTest {
     @SneakyThrows
     public void allPsd2Test_success() {
         // Given
-        String mappingInput = "ALL_ACCOUNTS";
+        String mappingInput = ALL_ACCOUNTS.getDescription();
         AccountAccess.AllPsd2Enum expected = AccountAccess.AllPsd2Enum.ALLACCOUNTS;
 
         // When

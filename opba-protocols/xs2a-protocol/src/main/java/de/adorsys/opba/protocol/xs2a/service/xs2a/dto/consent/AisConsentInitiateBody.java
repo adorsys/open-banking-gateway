@@ -33,6 +33,8 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 import static de.adorsys.opba.protocol.api.dto.codes.ScopeObject.AIS_CONSENT;
 import static de.adorsys.opba.protocol.api.dto.codes.ScopeObject.AIS_CONSENT_SCOPE;
+import static de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AccountAccessType.ALL_ACCOUNTS;
+import static de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AccountAccessType.ALL_ACCOUNTS_WITH_BALANCES;
 
 @Getter
 @Setter
@@ -99,7 +101,7 @@ public class AisConsentInitiateBody {
         }
 
         default AccountAccess.AvailableAccountsEnum accounts(String availableAccounts) {
-            if ("ALL_ACCOUNTS".equals(availableAccounts)) {
+            if (ALL_ACCOUNTS.getDescription().equals(availableAccounts)) {
                 return AccountAccess.AvailableAccountsEnum.ALLACCOUNTS;
             }
 
@@ -107,7 +109,7 @@ public class AisConsentInitiateBody {
         }
 
         default AccountAccess.AvailableAccountsWithBalance accountsWithBalance(String availableAccounts) {
-            if ("ALL_ACCOUNTS_WITH_BALANCES".equals(availableAccounts)) {
+            if (ALL_ACCOUNTS_WITH_BALANCES.getDescription().equals(availableAccounts)) {
                 return AccountAccess.AvailableAccountsWithBalance.ALLACCOUNTS;
             }
 
@@ -115,7 +117,7 @@ public class AisConsentInitiateBody {
         }
 
         default AccountAccess.AllPsd2Enum allPsd2(String allPsd2) {
-            if ("ALL_ACCOUNTS".equals(allPsd2)) {
+            if (ALL_ACCOUNTS.getDescription().equals(allPsd2)) {
                 return AccountAccess.AllPsd2Enum.ALLACCOUNTS;
             }
 
