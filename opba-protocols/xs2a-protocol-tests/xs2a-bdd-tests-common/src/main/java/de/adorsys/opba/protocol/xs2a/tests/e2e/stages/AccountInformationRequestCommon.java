@@ -176,6 +176,15 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_anton_brueckner_provided_initial_parameters_to_list_transactions_with_all_accounts_psd2_consent() {
+        startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                "restrecord/tpp-ui-input/params/anton-brueckner-transactions-all-accounts-psd2-consent.json"
+        );
+
+        return self();
+    }
+
     public SELF user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
@@ -188,6 +197,14 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
             "restrecord/tpp-ui-input/params/max-musterman-transactions-single-account-consent.json"
+        );
+        return self();
+    }
+
+    public SELF user_max_musterman_provided_initial_parameters_to_list_transactions_with_all_accounts_psd2_consent() {
+        startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                "restrecord/tpp-ui-input/params/max-musterman-transactions-all-accounts-psd2-consent.json"
         );
         return self();
     }

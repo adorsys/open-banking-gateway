@@ -99,7 +99,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
 
     @SneakyThrows
     public AccountInformationResult open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session() {
-        return open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(false);
+        return open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(true);
     }
 
     @SneakyThrows
@@ -125,7 +125,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
 
     @SneakyThrows
     public AccountInformationResult open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session() {
-        return open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(false);
+        return open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true);
     }
 
     @SneakyThrows

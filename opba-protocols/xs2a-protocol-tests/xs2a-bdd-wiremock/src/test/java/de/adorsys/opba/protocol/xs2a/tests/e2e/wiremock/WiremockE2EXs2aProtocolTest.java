@@ -99,6 +99,30 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
 
     @ParameterizedTest
     @EnumSource(Approach.class)
+    void testAccountAndTransactionsListWithConsentForAllServicesUsingRedirect(Approach approach) {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+                .rest_assured_points_to_opba_server();
+
+        when()
+                .fintech_calls_list_transactions_for_anton_brueckner(WiremockConst.ANTON_BRUECKNER_RESOURCE_ID)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_list_transactions_with_all_accounts_psd2_consent()
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .and()
+                .open_banking_redirect_from_aspsp_ok_webhook_called();
+        then()
+                .open_banking_has_consent_for_anton_brueckner_transaction_list()
+                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session()
+                .open_banking_can_read_anton_brueckner_transactions_data_using_consent_bound_to_service_session(
+                        WiremockConst.ANTON_BRUECKNER_RESOURCE_ID, WiremockConst.DATE_FROM, WiremockConst.DATE_TO, WiremockConst.BOTH_BOOKING
+                );
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
     void testAccountsListWithConsentUsingEmbedded(Approach approach) {
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
@@ -141,7 +165,33 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
         then()
                 .open_banking_has_consent_for_max_musterman_transaction_list()
                 .open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
-                    WiremockConst.MAX_MUSTERMAN_RESOURCE_ID, WiremockConst.DATE_FROM, WiremockConst.DATE_TO, WiremockConst.BOTH_BOOKING
+                        WiremockConst.MAX_MUSTERMAN_RESOURCE_ID, WiremockConst.DATE_FROM, WiremockConst.DATE_TO, WiremockConst.BOTH_BOOKING
+                );
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testAccountAndTransactionsListWithConsentForAllServicesUsingEmbedded(Approach approach) {
+        given()
+                .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+                .rest_assured_points_to_opba_server();
+
+        when()
+                .fintech_calls_list_transactions_for_max_musterman()
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_list_transactions_with_all_accounts_psd2_consent()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_email1_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+                .open_banking_has_consent_for_max_musterman_transaction_list()
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session()
+                .open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
+                        WiremockConst.MAX_MUSTERMAN_RESOURCE_ID, WiremockConst.DATE_FROM, WiremockConst.DATE_TO, WiremockConst.BOTH_BOOKING
                 );
     }
 
