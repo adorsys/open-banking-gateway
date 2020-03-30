@@ -34,7 +34,7 @@ describe('LoginComponent', () => {
     }).compileComponents();
   }));
 
-  beforeEach(() => {
+  beforeEach(async () => {
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
 
@@ -44,7 +44,7 @@ describe('LoginComponent', () => {
     router = TestBed.get(Router);
 
     fixture.detectChanges();
-    component.ngOnInit();
+    await component.ngOnInit();
   });
 
   it('should create', () => {
