@@ -45,4 +45,3 @@ pkcs12:
 
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
-
