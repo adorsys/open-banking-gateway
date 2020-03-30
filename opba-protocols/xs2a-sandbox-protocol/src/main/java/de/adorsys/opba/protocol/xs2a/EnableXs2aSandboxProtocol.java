@@ -8,6 +8,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Note that in order to use EnableXs2aSandboxProtocol you need to import and apply to application profile
+ * {@link EnableXs2aProtocol} as well.
+ */
 @Import(Xs2aProtocolConfiguration.class)
 @Inherited
 @Target(ElementType.TYPE)

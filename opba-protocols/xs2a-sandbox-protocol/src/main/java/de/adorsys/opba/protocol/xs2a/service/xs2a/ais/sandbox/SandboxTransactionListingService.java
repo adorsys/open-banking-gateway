@@ -12,29 +12,29 @@ import org.springframework.stereotype.Service;
 @Service("xs2aSandboxTransactionListing")
 public class SandboxTransactionListingService extends TransactionListingService {
 
-    private final AccountListingService accountListingService;
+    private final NoResponseAccountListingService accountListingService;
 
     public SandboxTransactionListingService(
             ApplicationEventPublisher eventPublisher,
             TransactionListingService.Extractor extractor,
+            AccountListingService.Extractor accountListExtractor,
             Xs2aValidator validator,
-            AccountInformationService ais,
-            AccountListingService accountListingService) {
+            AccountInformationService ais) {
         super(eventPublisher, extractor, validator, ais);
-        this.accountListingService = accountListingService;
+        this.accountListingService = new NoResponseAccountListingService(accountListExtractor, validator, ais);
     }
 
     @Override
     @SuppressWarnings("checkstyle:MagicNumber") // Hardcoded as it is POC, these should be read from context
     protected void doRealExecution(DelegateExecution execution, TransactionListXs2aContext context) {
-        // XS2A sandbox quirk...
+        // XS2A sandbox quirk... we need to list accounts before listing transactions
         accountListingService.execute(execution);
         super.doRealExecution(execution, context);
     }
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, TransactionListXs2aContext context) {
-        // XS2A sandbox quirk...
+        // XS2A sandbox quirk... we need to list accounts before listing transactions
         accountListingService.execute(execution);
         super.doMockedExecution(execution, context);
     }
