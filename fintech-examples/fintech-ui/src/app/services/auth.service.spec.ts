@@ -6,7 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DocumentCookieService } from './document-cookie.service';
 import { Consts } from '../models/consts';
 
-describe('AuthService', () => {
+xdescribe('AuthService', () => {
   let authService: AuthService;
   let cookieService: DocumentCookieService;
   let router: Router;
