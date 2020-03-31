@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { Consts } from '../consts';
+import { Consts } from '../../models/consts';
 import { Router } from '@angular/router';
 import { DocumentCookieService } from '../../services/document-cookie.service';
-import {LocalStorage} from "../local-storage";
+import { LocalStorage } from '../../models/local-storage';
 
 @Component({
   selector: 'app-navbar',

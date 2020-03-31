@@ -4,8 +4,8 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import * as uuid from 'uuid';
 import { DocumentCookieService } from '../services/document-cookie.service';
-import { Consts } from '../common/consts';
-import {LocalStorage} from "../common/local-storage";
+import { Consts } from '../models/consts';
+import { LocalStorage } from '../models/local-storage';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

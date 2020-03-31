@@ -2,22 +2,18 @@
 
 .search {
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  align-content: center;
 
   .form-control {
     font-style: italic;
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
     padding-left: 2.375rem;
   }
 
   .form-control-feedback {
     position: absolute;
-    z-index: 2;
-    display: block;
-    width: 2.375rem;
-    height: 2.375rem;
-    padding-top: 0.9rem;
-    text-align: center;
+    padding-left: 0.7rem;
     pointer-events: none;
     color: $primary;
   }

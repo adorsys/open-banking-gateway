@@ -1,9 +1,8 @@
 @import 'src/assets/themes/variables';
 
 .scrollable {
-  overflow: scroll;
   overflow-x: hidden;
-  height: 350px;
+  max-height: 350px;
 }
 
 .bank-list {

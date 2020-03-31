@@ -1,16 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { LoginComponent } from './login.component';
-import { AuthService } from '../services/auth.service';
-import { DebugElement } from '@angular/core';
-import { RouterTestingModule } from '@angular/router/testing';
-import { By } from '@angular/platform-browser';
-import { BankSearchModule } from '../bank-search/bank-search.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BankSearchComponent } from '../bank-search/components/bank-search/bank-search.component';
+import { DebugElement } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { By } from '@angular/platform-browser';
+
+import { LoginComponent } from './login.component';
+import { BankSearchComponent } from '../bank-search/bank-search.component';
+
+import { BankSearchModule } from '../bank-search/bank-search.module';
+
 import { DocumentCookieService } from '../services/document-cookie.service';
+import { AuthService } from '../services/auth.service';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -34,7 +36,7 @@ describe('LoginComponent', () => {
     }).compileComponents();
   }));
 
-  beforeEach( () => {
+  beforeEach(() => {
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
 
@@ -44,7 +46,6 @@ describe('LoginComponent', () => {
     router = TestBed.get(Router);
 
     fixture.detectChanges();
-    component.ngOnInit();
   });
 
   it('should create', () => {
@@ -66,7 +67,7 @@ describe('LoginComponent', () => {
   });
 
   // TODO: fix this test when component Validators are properly set
-  xit('loginForm should be invalid when at least one field is empty', () => {
+  it('loginForm should be invalid when at least one field is empty', () => {
     expect(component.loginForm.valid).toBeFalsy();
   });
 
