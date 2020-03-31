@@ -234,6 +234,17 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_max_musterman_provided_wrong_password_to_embedded_authorization_and_stays_on_password_page() {
+        ExtractableResponse<Response> response = provideParametersToBankingProtocolWithBody(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/max-musterman-wrong-password.json"),
+                HttpStatus.ACCEPTED
+        );
+
+        assertThat(response.header(LOCATION)).contains("ais").contains("authenticate");
+        return self();
+    }
+
     public SELF user_max_musterman_selected_sca_challenge_type_email1_to_embedded_authorization() {
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
@@ -260,6 +271,17 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         );
 
         assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
+        return self();
+    }
+
+    public SELF user_max_musterman_provided_wrong_sca_challenge_result_to_embedded_authorization_and_stays_on_sca_page() {
+        ExtractableResponse<Response> response = provideParametersToBankingProtocolWithBody(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/max-musterman-wrong-sca-challenge-result.json"),
+                HttpStatus.ACCEPTED
+        );
+
+        assertThat(response.header(LOCATION)).contains("ais").contains("sca-result");
         return self();
     }
 
