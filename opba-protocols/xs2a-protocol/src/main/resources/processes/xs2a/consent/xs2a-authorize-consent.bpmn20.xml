@@ -47,7 +47,6 @@
     <sequenceFlow id="sid-BC0026EE-A538-4399-8BA7-080F7C2383C9" sourceRef="sendChallengeResult" targetRef="isScaFinalized"></sequenceFlow>
     <sequenceFlow id="sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6" sourceRef="embeddedScaChallenge" targetRef="sendChallengeResult"></sequenceFlow>
     <serviceTask id="reportSelectedScaMethod" name="Notify ASPS with selected SCA method" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aReportSelectedScaMethod}"></serviceTask>
-    <sequenceFlow id="sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB" sourceRef="reportSelectedScaMethod" targetRef="embeddedScaChallenge"></sequenceFlow>
     <sequenceFlow id="sid-F1C336CA-1C21-44CA-9CB4-C1E83F5ED1CE" sourceRef="selectScaMethod" targetRef="reportSelectedScaMethod"></sequenceFlow>
     <exclusiveGateway id="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A" default="sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643"></exclusiveGateway>
     <sequenceFlow id="sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE" sourceRef="notifyUserWithRedirect" targetRef="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A"></sequenceFlow>
@@ -59,14 +58,15 @@
     </sequenceFlow>
     <sequenceFlow id="sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643" sourceRef="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A" targetRef="end"></sequenceFlow>
     <sequenceFlow id="noUserPasswordPresent" name="No password available" sourceRef="isPasswordPresent" targetRef="askUserForPassword"></sequenceFlow>
-    <sequenceFlow id="sid-C9002EF3-5531-4787-8754-96515CEFCE8C" sourceRef="askUserForPassword" targetRef="authenticateUser"></sequenceFlow>
-    <sequenceFlow id="wrongPassword" name="Wrong password" sourceRef="isMultipleScaAvailable" targetRef="askUserForPassword">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isWrongPassword(CONTEXT)}]]></conditionExpression>
-    </sequenceFlow>
     <sequenceFlow id="moreScaChallenges" name="More challenges" sourceRef="isScaFinalized" targetRef="embeddedScaChallenge"></sequenceFlow>
     <sequenceFlow id="wrongScaChallenge" name="Wrong SCA challenge" sourceRef="isScaFinalized" targetRef="embeddedScaChallenge">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isWrongScaChallenge(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
+    <sequenceFlow id="wrongPassword" name="Wrong password" sourceRef="isMultipleScaAvailable" targetRef="askUserForPassword">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isWrongPassword(CONTEXT)}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-C9002EF3-5531-4787-8754-96515CEFCE8C" sourceRef="askUserForPassword" targetRef="authenticateUser"></sequenceFlow>
+    <sequenceFlow id="sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB" sourceRef="reportSelectedScaMethod" targetRef="embeddedScaChallenge"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
@@ -150,9 +150,9 @@
         <omgdi:waypoint x="1115.0" y="195.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB" id="BPMNEdge_sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB">
-        <omgdi:waypoint x="1044.95" y="104.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1090.0" y="104.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1090.0" y="195.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1044.9499999999928" y="104.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1065.0" y="104.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1065.0" y="195.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE" id="BPMNEdge_sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE">
         <omgdi:waypoint x="879.9499999999999" y="475.0"></omgdi:waypoint>
@@ -206,8 +206,8 @@
         <omgdi:waypoint x="1599.0" y="353.94992478766744"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-C9002EF3-5531-4787-8754-96515CEFCE8C" id="BPMNEdge_sid-C9002EF3-5531-4787-8754-96515CEFCE8C">
-        <omgdi:waypoint x="599.95" y="324.0"></omgdi:waypoint>
-        <omgdi:waypoint x="645.0" y="324.0"></omgdi:waypoint>
+        <omgdi:waypoint x="599.9499999999341" y="344.0"></omgdi:waypoint>
+        <omgdi:waypoint x="645.0" y="344.0"></omgdi:waypoint>
         <omgdi:waypoint x="645.0" y="274.95000000000005"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6" id="BPMNEdge_sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6">
