@@ -18,7 +18,10 @@ describe('ReportScaResultComponent', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { snapshot: {queryParamMap: convertToParamMap({})}, parent: { snapshot: { paramMap: convertToParamMap({ authId: StubUtilTests.AUTH_ID }) } } }
+          useValue: {
+            snapshot: {queryParamMap: convertToParamMap({})},
+            parent: { snapshot: { paramMap: convertToParamMap({ authId: StubUtilTests.AUTH_ID }) } }
+          }
         }
       ]
     }).compileComponents();
