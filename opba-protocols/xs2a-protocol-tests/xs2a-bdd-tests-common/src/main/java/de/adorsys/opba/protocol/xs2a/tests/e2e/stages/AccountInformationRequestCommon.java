@@ -241,7 +241,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 HttpStatus.ACCEPTED
         );
 
-        assertThat(response.header(LOCATION)).contains("ais").contains("authenticate");
+        assertThat(response.header(LOCATION)).contains("ais").contains("authenticate").contains("wrong=true");
         return self();
     }
 
@@ -281,7 +281,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 HttpStatus.ACCEPTED
         );
 
-        assertThat(response.header(LOCATION)).contains("ais").contains("sca-result");
+        assertThat(response.header(LOCATION)).contains("ais").contains("sca-result").contains("wrong=true");
         return self();
     }
 

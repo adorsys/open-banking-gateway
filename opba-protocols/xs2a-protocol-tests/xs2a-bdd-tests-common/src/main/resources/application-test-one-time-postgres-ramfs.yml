@@ -39,9 +39,9 @@ protocol:
     parameters:
       max-array-size: 32
       provide-more: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
-      provide-psu-password: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/authenticate
+      provide-psu-password: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/authenticate?wrong=#{context.getWrongAuthCredentials()}
       select-sca-method: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
-      report-sca-result: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/sca-result
+      report-sca-result: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/sca-result?wrong=#{context.getWrongAuthCredentials()}
   gateway-base-url: http://localhost:8085
   embedded-ui-base-url: http://localhost:4200
 
