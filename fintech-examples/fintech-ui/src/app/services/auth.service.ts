@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
-import {Observable} from 'rxjs';
-import {map, subscribeOn} from 'rxjs/operators';
-import {FinTechAuthorizationService} from '../api';
-import {Credentials} from '../models/credentials.model';
-import {Consts} from '../common/consts';
-import {DocumentCookieService} from './document-cookie.service';
-import {LocalStorage} from "../common/local-storage";
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { FinTechAuthorizationService } from '../api';
+import { Credentials } from '../models/credentials.model';
+import { Consts } from '../models/consts';
+import { DocumentCookieService } from './document-cookie.service';
+import { LocalStorage } from '../models/local-storage';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +25,7 @@ export class AuthService {
         this.cookieService.getAll().forEach(cookie => console.log('cookie after login :' + cookie));
         LocalStorage.login(response.headers.get(Consts.HEADER_FIELD_X_XSRF_TOKEN));
         if (!LocalStorage.isLoggedIn()) {
-          console.log("login not sucessfull");
+          console.log('login not sucessfull');
           this.openLoginPage();
         }
         localStorage.setItem(Consts.LOCAL_STORAGE_USERNAME, credentials.username);
@@ -39,7 +39,7 @@ export class AuthService {
     return this.finTechAuthorizationService.logoutPOST('', '', 'response').pipe(
       map(
         response => {
-          console.log("got response from server");
+          console.log('got response from server');
           localStorage.clear();
           this.cookieService.delete(Consts.COOKIE_NAME_SESSION);
           LocalStorage.logout();
@@ -50,7 +50,8 @@ export class AuthService {
         error => {
           console.error('logout with error');
         }
-    ));
+      )
+    );
   }
 
   openLoginPage() {

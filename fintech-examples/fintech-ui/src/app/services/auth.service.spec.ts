@@ -1,10 +1,10 @@
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DocumentCookieService } from './document-cookie.service';
-import { Consts } from '../common/consts';
+import { Consts } from '../models/consts';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -36,7 +36,7 @@ describe('AuthService', () => {
 
   it('should test login method', () => {
     // isLoggedin() is false by default
-    expect(cookieService.exists(Consts.COOKIE_NAME_XSRF_TOKEN)).toBeFalsy();
+    expect(cookieService.exists(Consts.LOCAL_STORAGE_XSRF_TOKEN)).toBeFalsy();
 
     // login credential is not correct
     const credentialsMock = { username: 'test', password: '12345' };

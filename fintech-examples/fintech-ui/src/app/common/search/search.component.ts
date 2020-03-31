@@ -9,7 +9,7 @@ import { FormControl } from '@angular/forms';
 })
 export class SearchComponent {
   @Output() keyword = new EventEmitter();
-  searchTerm = new FormControl('');
+  searchTerm = new FormControl('adorsys');
 
   constructor() {
     this.searchTerm.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).subscribe(inputData => {

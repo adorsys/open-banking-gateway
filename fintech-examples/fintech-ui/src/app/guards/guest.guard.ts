@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { DocumentCookieService } from '../services/document-cookie.service';
-import {LocalStorage} from "../common/local-storage";
+import { LocalStorage } from '../models/local-storage';
 
 @Injectable({
   providedIn: 'root'

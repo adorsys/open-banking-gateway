@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Consts } from '../../common/consts';
+import { Consts } from '../../models/consts';
 import { RedirectStruct } from './redirect-struct';
 
 @Component({
