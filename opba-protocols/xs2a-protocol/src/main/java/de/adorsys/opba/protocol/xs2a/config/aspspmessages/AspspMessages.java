@@ -16,5 +16,5 @@ import java.util.Set;
 public class AspspMessages {
 
     @NotEmpty
-    public Set<@NotBlank String> invalidCredentials;
+    private Set<@NotBlank String> invalidCredentials;
 }

@@ -31,11 +31,11 @@ public class Xs2aConsentInfo {
     }
 
     public boolean isWrongPassword(Xs2aContext ctx) {
-        return ctx.isWrongAuthCredentials();
+        return null != ctx.getWrongAuthCredentials() && ctx.getWrongAuthCredentials();
     }
 
     public boolean isWrongScaChallenge(Xs2aContext ctx) {
-        return ctx.isWrongAuthCredentials();
+        return null != ctx.getWrongAuthCredentials() && ctx.getWrongAuthCredentials();
     }
 
     public boolean isOkRedirectConsent(Xs2aContext ctx) {
