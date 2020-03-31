@@ -15,9 +15,11 @@ import de.adorsys.xs2a.adapter.service.Response;
 import de.adorsys.xs2a.adapter.service.model.ScaStatusResponse;
 import de.adorsys.xs2a.adapter.service.model.TransactionAuthorisation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service("xs2aReportScaChallenge")
 @RequiredArgsConstructor
 public class Xs2aReportScaChallenge extends ValidatedExecution<Xs2aContext> {
@@ -25,6 +27,7 @@ public class Xs2aReportScaChallenge extends ValidatedExecution<Xs2aContext> {
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
+    private final AuthorizationErrorSink errorSink;
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
@@ -36,6 +39,15 @@ public class Xs2aReportScaChallenge extends ValidatedExecution<Xs2aContext> {
         ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, TransactionAuthorisation> params =
                 extractor.forExecution(context);
 
+        errorSink.swallowAuthorizationErrorForLooping(
+                () -> aisAuthorizeWithSca(execution, params),
+                ex -> aisOnWrongSca(execution)
+        );
+    }
+
+    private void aisAuthorizeWithSca(
+            DelegateExecution execution,
+            ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, TransactionAuthorisation> params) {
         Response<ScaStatusResponse> authResponse = ais.updateConsentsPsuData(
                 params.getPath().getConsentId(),
                 params.getPath().getAuthorizationId(),
@@ -45,7 +57,20 @@ public class Xs2aReportScaChallenge extends ValidatedExecution<Xs2aContext> {
 
         ContextUtil.getAndUpdateContext(
                 execution,
-                (Xs2aContext ctx) -> ctx.setScaStatus(authResponse.getBody().getScaStatus().getValue())
+                (Xs2aContext ctx) -> {
+                    ctx.setWrongAuthCredentials(false);
+                    ctx.setScaStatus(authResponse.getBody().getScaStatus().getValue());
+                }
+        );
+    }
+
+    private void aisOnWrongSca(DelegateExecution execution) {
+        ContextUtil.getAndUpdateContext(
+                execution,
+                (Xs2aContext ctx) -> {
+                    log.warn("Request {} has provided incorrect sca challenge", ctx.getRequestId());
+                    ctx.setWrongAuthCredentials(true);
+                }
         );
     }
 

@@ -16,11 +16,13 @@ import de.adorsys.xs2a.adapter.service.Response;
 import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthentication;
 import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service("xs2aAuthenticateUserConsent")
 @RequiredArgsConstructor
 public class Xs2aAuthenticateUserConsent extends ValidatedExecution<Xs2aContext> {
@@ -28,6 +30,7 @@ public class Xs2aAuthenticateUserConsent extends ValidatedExecution<Xs2aContext>
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
+    private final AuthorizationErrorSink errorSink;
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
@@ -39,6 +42,15 @@ public class Xs2aAuthenticateUserConsent extends ValidatedExecution<Xs2aContext>
         ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params =
                 extractor.forExecution(context);
 
+        errorSink.swallowAuthorizationErrorForLooping(
+                () -> aisAuthorizeWithPassword(execution, params),
+                ex -> aisOnWrongPassword(execution)
+        );
+    }
+
+    private void aisAuthorizeWithPassword(
+            DelegateExecution execution,
+            ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params) {
         Response<UpdatePsuAuthenticationResponse> authResponse = ais.updateConsentsPsuData(
                 params.getPath().getConsentId(),
                 params.getPath().getAuthorizationId(),
@@ -49,8 +61,19 @@ public class Xs2aAuthenticateUserConsent extends ValidatedExecution<Xs2aContext>
         ContextUtil.getAndUpdateContext(
                 execution,
                 (Xs2aContext ctx) -> {
+                    ctx.setWrongAuthCredentials(false);
                     setScaAvailableMethodsIfCanBeChosen(authResponse, ctx);
                     ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
+                }
+        );
+    }
+
+    private void aisOnWrongPassword(DelegateExecution execution) {
+        ContextUtil.getAndUpdateContext(
+                execution,
+                (Xs2aContext ctx) -> {
+                    log.warn("Request {} has provided incorrect password", ctx.getRequestId());
+                    ctx.setWrongAuthCredentials(true);
                 }
         );
     }

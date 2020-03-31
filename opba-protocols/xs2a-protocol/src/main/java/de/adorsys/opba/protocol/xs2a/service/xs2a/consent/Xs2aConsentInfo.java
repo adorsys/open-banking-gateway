@@ -30,6 +30,14 @@ public class Xs2aConsentInfo {
         return CONSENT_FINALIZED.equalsIgnoreCase(ctx.getScaStatus());
     }
 
+    public boolean isWrongPassword(Xs2aContext ctx) {
+        return ctx.isWrongAuthCredentials();
+    }
+
+    public boolean isWrongScaChallenge(Xs2aContext ctx) {
+        return ctx.isWrongAuthCredentials();
+    }
+
     public boolean isOkRedirectConsent(Xs2aContext ctx) {
         return ctx.isRedirectConsentOk();
     }

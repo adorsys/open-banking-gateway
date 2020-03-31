@@ -40,6 +40,8 @@ protocol:
   gateway-base-url: http://localhost:8085
   expirable:
     expire-after-write: PT600S
+  aspspmessages:
+    invalid-credentials: PSU_CREDENTIALS_INVALID
 
 pkcs12:
   keyStore: sample-qwac.keystore
