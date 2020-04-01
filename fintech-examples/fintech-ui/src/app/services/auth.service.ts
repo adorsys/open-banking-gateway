@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FinTechAuthorizationService } from '../api';
 import { Credentials } from '../models/credentials.model';
-import { Consts } from '../models/consts';
+import { HeaderConfig} from '../models/consts';
 import { DocumentCookieService } from './document-cookie.service';
-import { LocalStorage } from '../models/local-storage';
+import {StorageService} from "./storage.service";
 
 @Injectable({
   providedIn: 'root'
@@ -15,40 +15,30 @@ export class AuthService {
   constructor(
     private router: Router,
     private finTechAuthorizationService: FinTechAuthorizationService,
-    private cookieService: DocumentCookieService
+    private cookieService: DocumentCookieService,
+    private storageService: StorageService
   ) {}
 
   login(credentials: Credentials): Observable<boolean> {
-    LocalStorage.logout();
     return this.finTechAuthorizationService.loginPOST('', credentials, 'response').pipe(
       map(response => {
-        this.cookieService.getAll().forEach(cookie => console.log('cookie after login :' + cookie));
-        LocalStorage.login(response.headers.get(Consts.HEADER_FIELD_X_XSRF_TOKEN));
-        if (!LocalStorage.isLoggedIn()) {
-          console.log('login not sucessfull');
-          this.openLoginPage();
-        }
-        localStorage.setItem(Consts.LOCAL_STORAGE_USERNAME, credentials.username);
+        this.setSessionData(response, credentials);
         return response.ok;
       })
     );
   }
 
   logout(): Observable<any> {
-    console.log('start logout');
-    return this.finTechAuthorizationService.logoutPOST('', '', 'response').pipe(
+      if (!this.isLoggedIn()) {
+          this.openLoginPage();
+          return;
+      }
+        return this.finTechAuthorizationService.logoutPOST('', '', 'response').pipe(
       map(
         response => {
-          console.log('got response from server');
-          localStorage.clear();
-          this.cookieService.delete(Consts.COOKIE_NAME_SESSION);
-          LocalStorage.logout();
-          this.cookieService.getAll().forEach(cookie => console.log('cookie after logout :' + cookie));
-          this.openLoginPage();
+            this.deleteSessionData();
+            this.openLoginPage();
           return response.ok;
-        },
-        error => {
-          console.error('logout with error');
         }
       )
     );
@@ -57,4 +47,18 @@ export class AuthService {
   openLoginPage() {
     this.router.navigate(['/login']);
   }
+
+    public isLoggedIn(): boolean {
+        const token = this.storageService.getXsrfToken();
+        return token !== undefined && token !== null;
+    }
+
+    private setSessionData(response: any, credentials: Credentials): void {
+        this.storageService.setXsrfToken(response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN));
+        this.storageService.setUserName(credentials.username);
+    }
+
+    private deleteSessionData() {
+        this.storageService.clearStorage();
+    }
 }

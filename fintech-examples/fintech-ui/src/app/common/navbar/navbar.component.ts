@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { Consts } from '../../models/consts';
-import { Router } from '@angular/router';
-import { DocumentCookieService } from '../../services/document-cookie.service';
-import { LocalStorage } from '../../models/local-storage';
+import {StorageService} from "../../services/storage.service";
 
 @Component({
   selector: 'app-navbar',
@@ -11,29 +8,19 @@ import { LocalStorage } from '../../models/local-storage';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  constructor(private authService: AuthService, private cookieService: DocumentCookieService, private router: Router) {}
+  constructor(private authService: AuthService, private storageService: StorageService) {}
 
   ngOnInit() {}
 
   onLogout() {
-    this.authService.logout().subscribe(
-      ok => this.logOutHelper(),
-      notok => {
-        this.logOutHelper();
-      }
-    );
-  }
-
-  logOutHelper() {
-    LocalStorage.logout();
-    this.authService.openLoginPage();
+    this.authService.logout().subscribe();
   }
 
   isLoggedIn(): boolean {
-    return LocalStorage.isLoggedIn();
+    return this.authService.isLoggedIn();
   }
 
   getUserName(): string {
-    return localStorage.getItem(Consts.LOCAL_STORAGE_USERNAME);
+    return this.storageService.getUserName();
   }
 }
