@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Consts } from '../../models/consts';
 import { RedirectStruct } from './redirect-struct';
-import {StorageService} from "../../services/storage.service";
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-redirect-page',

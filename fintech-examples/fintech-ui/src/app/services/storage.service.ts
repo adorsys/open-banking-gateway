@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import {DocumentCookieService} from "./document-cookie.service";
+import { DocumentCookieService } from './document-cookie.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
-
-  constructor(private documentCookieService: DocumentCookieService) { }
+  constructor(private documentCookieService: DocumentCookieService) {}
 
   public getXsrfToken(): string {
     return localStorage.getItem(Session.XSRF_TOKEN);
@@ -42,5 +41,5 @@ enum Session {
   USERNAME = 'USERNAME',
   BANKNAME = 'BANKNAME',
   XSRF_TOKEN = 'XSRF_TOKEN',
-  COOKIE_NAME_SESSION = 'SESSION-COOKIE',
+  COOKIE_NAME_SESSION = 'SESSION-COOKIE'
 }
