@@ -50,6 +50,11 @@
             <artifactId>bcprov-jdk15on</artifactId>
             <version>${bouncycastle.version}</version>
         </dependency>
+        <dependency>
+            <groupId>de.adorsys</groupId>
+            <artifactId>datasafe-business</artifactId>
+            <version>${datasafe.version}</version>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>
