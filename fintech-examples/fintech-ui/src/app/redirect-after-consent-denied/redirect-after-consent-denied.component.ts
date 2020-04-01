@@ -10,19 +10,19 @@ import { map, take } from "rxjs/operators";
 })
 export class RedirectAfterConsentDeniedComponent implements OnInit {
 
-  count = 5;
-  private countDown: Observable<number>;
+  seconds = 5;
+  private countDown$: Observable<number>;
 
   constructor(private router: Router) {
-    this.countDown = timer(0,1000).pipe(
-      take(this.count),
-      map(() => this.count--)
+    this.countDown$ = timer(0,1000).pipe(
+      take(this.seconds),
+      map(() => this.seconds--)
     );
   }
 
   ngOnInit() {
-    this.countDown.subscribe(() => {
-      if(this.count == 0)
+    this.countDown$.subscribe(() => {
+      if(this.seconds == 0)
         this.router.navigate(["/"]);
     })
   }
