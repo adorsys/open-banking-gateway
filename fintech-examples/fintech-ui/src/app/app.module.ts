@@ -16,6 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RedirectAfterConsentComponent } from './redirect-after-consent/redirect-after-consent.component';
 import { NavbarComponent } from './common/navbar/navbar.component';
 import { DocumentCookieService } from './services/document-cookie.service';
+import { RedirectAfterConsentDeniedComponent } from './redirect-after-consent-denied/redirect-after-consent-denied.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -27,7 +28,7 @@ export function apiConfigFactory(): Configuration {
 }
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RedirectAfterConsentComponent, NavbarComponent],
+  declarations: [AppComponent, LoginComponent, RedirectAfterConsentComponent, NavbarComponent, RedirectAfterConsentDeniedComponent],
   imports: [
     AppRoutingModule,
     BrowserModule,

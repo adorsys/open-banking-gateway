@@ -7,7 +7,7 @@
     "start": "npm run serve",
     "serve": "ng serve --port=4444 --proxy-config=proxy.conf.json",
     "serve:dev": "ng serve --proxy-config=proxy-dev.conf.json",
-    "serve:docker": "ng serve --proxy-config=proxy-docker.conf.json",
+    "serve:docker": "ng serve --port=24200 --proxy-config=proxy-docker.conf.json",
     "build": "ng build",
     "build:prod": "ng build --prod",
     "test": "ng test",
