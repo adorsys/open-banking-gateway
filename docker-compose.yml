@@ -69,7 +69,7 @@ services:
 
       - FINTECH-UI_REDIRECT-URL=http://localhost:24200/redirect-after-consent?redirectCode={redirectCode}
       - FINTECH-UI_UNAUTHORIZED-URL=http://localhost:24200/
-      - FINTECH-UI_EXCEPTION-URL=http://localhost:24200/excaption-redirect
+      - FINTECH-UI_EXCEPTION-URL=http://localhost:24200/redirect-after-consent-denied
 
     build: fintech-examples/fintech-server
     ports:
