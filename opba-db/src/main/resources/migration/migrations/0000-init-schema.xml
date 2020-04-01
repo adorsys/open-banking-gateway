@@ -121,5 +121,73 @@
                                  baseColumnNames="service_session_id"
                                  referencedTableName="${table-prefix}service_session"
                                  referencedColumnNames="id"/>
+
+        <createTable tableName="${table-prefix}fintech">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="fintech_id_sequence" incrementBy="50"/>
+        <createTable tableName="${table-prefix}psu">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="psu_id_sequence" incrementBy="50"/>
+
+        <createTable tableName="${table-prefix}psu_private">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="psu_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="psu_private_id_sequence" incrementBy="50"/>
+        <addForeignKeyConstraint constraintName="fk_psu_private_psu"
+                                 baseTableName="${table-prefix}psu_private"
+                                 baseColumnNames="psu_id"
+                                 referencedTableName="${table-prefix}psu"
+                                 referencedColumnNames="id"/>
+
+        <createTable tableName="${table-prefix}fintech_inbox">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="fintech_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="fintech_inbox_id_sequence" incrementBy="50"/>
+        <addForeignKeyConstraint constraintName="fk_fintech_inbox_fintech"
+                                 baseTableName="${table-prefix}fintech_inbox"
+                                 baseColumnNames="fintech_id"
+                                 referencedTableName="${table-prefix}fintech"
+                                 referencedColumnNames="id"/>
+
+        <createTable tableName="${table-prefix}fintech_private">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="fintech_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="fintech_private_id_sequence" incrementBy="50"/>
+        <addForeignKeyConstraint constraintName="fk_fintech_private_fintech"
+                                 baseTableName="${table-prefix}fintech_private"
+                                 baseColumnNames="fintech_id"
+                                 referencedTableName="${table-prefix}fintech"
+                                 referencedColumnNames="id"/>
+
     </changeSet>
 </databaseChangeLog>
