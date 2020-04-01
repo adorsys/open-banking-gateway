@@ -225,11 +225,16 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_max_musterman_provided_correct_password_after_wrong_to_embedded_authorization() {
+        assertThat(this.redirectUriToGetUserParams).contains("ais").contains("authenticate").contains("wrong=true");
+        max_musterman_provides_password();
+        updateAvailableScas();
+        return self();
+    }
+
     public SELF user_max_musterman_provided_password_to_embedded_authorization() {
-        startInitialInternalConsentAuthorization(
-                AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/max-musterman-password.json"
-        );
+        assertThat(this.redirectUriToGetUserParams).contains("ais").contains("authenticate").doesNotContain("wrong=true");
+        max_musterman_provides_password();
         updateAvailableScas();
         return self();
     }
@@ -263,13 +268,16 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
-        ExtractableResponse<Response> response = provideParametersToBankingProtocolWithBody(
-                AUTHORIZE_CONSENT_ENDPOINT,
-                readResource("restrecord/tpp-ui-input/params/max-musterman-sca-challenge-result.json"),
-                HttpStatus.ACCEPTED
-        );
+    public SELF user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
+        assertThat(this.redirectUriToGetUserParams).contains("ais").contains("sca-result").contains("wrong=true");
+        ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
+        assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
+        return self();
+    }
 
+    public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
+        assertThat(this.redirectUriToGetUserParams).contains("ais").contains("sca-result").doesNotContain("wrong=true");
+        ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
         assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
         return self();
     }
@@ -291,6 +299,22 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         updateServiceSessionId(response);
         updateRedirectCode(response);
     }
+
+    private ExtractableResponse<Response> max_musterman_provides_sca_challenge_result() {
+        return provideParametersToBankingProtocolWithBody(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/max-musterman-sca-challenge-result.json"),
+                HttpStatus.ACCEPTED
+        );
+    }
+
+    private void max_musterman_provides_password() {
+        startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                "restrecord/tpp-ui-input/params/max-musterman-password.json"
+        );
+    }
+
 
     private ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resource, HttpStatus status) {
         return provideParametersToBankingProtocolWithBody(uriPath, readResource(resource), status);
