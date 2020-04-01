@@ -4,6 +4,7 @@ import {LoginComponent} from './login/login.component';
 import {AuthGuard} from './guards/auth.guard';
 import {GuestGuard} from './guards/guest.guard';
 import {RedirectAfterConsentComponent} from './redirect-after-consent/redirect-after-consent.component';
+import { RedirectAfterConsentDeniedComponent } from "./redirect-after-consent-denied/redirect-after-consent-denied.component";
 
 const routes: Routes = [
   {
@@ -30,6 +31,11 @@ const routes: Routes = [
     path: 'redirect-after-consent',
     canActivate: [AuthGuard],
     component: RedirectAfterConsentComponent
+  },
+  {
+    path: 'redirect-after-consent-denied',
+    canActivate: [AuthGuard],
+    component: RedirectAfterConsentDeniedComponent
   },
   {
     path: '**',
