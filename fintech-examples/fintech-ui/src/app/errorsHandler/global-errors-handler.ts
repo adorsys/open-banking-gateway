@@ -18,7 +18,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     if (error instanceof HttpErrorResponse) {
       // Server Error
       if (error.status === 401) {
-        authService.logout().subscribe();
+        authService.logout();
         message = 'Please enter a valid username or password';
       } else {
         message = errorService.getServerMessage(error);

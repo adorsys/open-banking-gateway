@@ -9,7 +9,7 @@ import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private sessionService: StorageService, private authService: AuthService) {}
+  constructor(private storageService: StorageService, private authService: AuthService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return this.handleRequest(request, next).pipe(
@@ -21,7 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private handleRequest(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const xRequestID = uuid.v4();
-    const xsrfToken = this.sessionService.getXsrfToken();
+    const xsrfToken = this.storageService.getXsrfToken();
 
     let headers;
     if (this.authService.isLoggedIn()) {
