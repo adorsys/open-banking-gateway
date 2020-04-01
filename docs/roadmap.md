@@ -27,9 +27,9 @@ This project is planned until the end of 2020 and our current timetable plans MV
 | ***16.03.2020***      | ***0.0.6*** | 
 |            |  Bank Search (Login Fintech, BankSearch, BankSelect, BankServices) <br/><br/>Get List of Accounts redirect approach with XS2A Sandbox|
 | ***30.03.2020***      | ***0.0.7*** | 
-|            |  Get List of Transaction redirect approach with XS2A Sandbox <br/><br/>Get List of Accounts embedded approach with XS2A Sandbox|
+|            |  Get List of Transaction redirect approach with XS2A Sandbox <br/><br/>Get List of Accounts embedded approach with XS2A Sandbox<br/><br/>Get List of Transactions embedded approach with XS2A Sandbox|
 | ***14.04.2020***      | ***0.0.8*** | 
-|            |  Get List of Transactions embedded approach with XS2A Sandbox|
+|            |  Implementation of the Security Concepts|
 | ***27.04.2020***      | ***0.0.9*** | 
 |            |  Get List of Account redirect approach with productive Bank (Deutsche Bank)<br/><br/>Get List of Accounts embedded approach with productive Bank (Sparkasse)|
 
@@ -39,5 +39,6 @@ Following features are planned for MVP1 (01.11.2019 - 30.04.2020)
 * List of Transactions Redirect with Sandbox
 * List of Accounts Embedded with Sandbox
 * List of Transactions Embedded with Sandbox
+* Security Concepts
 * List of Account Redirect with Bank
 * List of Account Embedded with Bank
