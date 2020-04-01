@@ -10,11 +10,10 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.SequenceGenerator;
+import java.sql.Blob;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -25,12 +24,10 @@ import javax.persistence.SequenceGenerator;
 public class PsuPrivate {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "psu_private_id_generator")
-    @SequenceGenerator(name = "psu_private_id_generator", sequenceName = "psu_private_id_sequence")
-    private Long id;
+    private UUID id;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(nullable = false)
-    private byte[] data;
+    private Blob data;
 }
