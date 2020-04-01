@@ -72,7 +72,7 @@ public class Xs2aAuthenticateUserConsent extends ValidatedExecution<Xs2aContext>
         ContextUtil.getAndUpdateContext(
                 execution,
                 (Xs2aContext ctx) -> {
-                    log.warn("Request {} has provided incorrect password", ctx.getRequestId());
+                    log.warn("Request {} of {} has provided incorrect password", ctx.getRequestId(), ctx.getSagaId());
                     ctx.setWrongAuthCredentials(true);
                 }
         );
