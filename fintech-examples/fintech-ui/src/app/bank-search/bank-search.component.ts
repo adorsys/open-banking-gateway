@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { BankSearchService } from './services/bank-search.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BankDescriptor } from '../api';
-import { Consts } from '../models/consts';
+import {StorageService} from "../services/storage.service";
 
 @Component({
   selector: 'app-bank-search',
@@ -13,7 +13,7 @@ export class BankSearchComponent {
   searchedBanks: BankDescriptor[] = [];
   selectedBank: string;
 
-  constructor(private bankSearchService: BankSearchService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private bankSearchService: BankSearchService, private storageService: StorageService, private route: ActivatedRoute, private router: Router) {}
 
   onSearch(keyword: string): void {
     if (keyword && keyword.trim()) {
@@ -27,7 +27,7 @@ export class BankSearchComponent {
 
   onBankSelect(bank: BankDescriptor): void {
     this.selectedBank = bank.uuid;
-    localStorage.setItem(Consts.LOCAL_STORAGE_BANKNAME, bank.bankName);
+    this.storageService.setBankName(bank.bankName);
     this.router.navigate(['/bank', bank.uuid]);
   }
 
