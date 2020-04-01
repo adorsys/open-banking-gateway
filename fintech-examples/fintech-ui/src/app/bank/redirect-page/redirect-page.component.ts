@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Consts } from '../../models/consts';
 import { RedirectStruct } from './redirect-struct';
+import {StorageService} from "../../services/storage.service";
 
 @Component({
   selector: 'app-redirect-page',
@@ -14,7 +15,7 @@ export class RedirectPageComponent implements OnInit {
   private location;
   private cancelPath;
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  constructor(private router: Router, private route: ActivatedRoute, private storageService: StorageService) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(p => {
@@ -23,7 +24,7 @@ export class RedirectPageComponent implements OnInit {
       this.cancelPath = decodeURIComponent(r.cancelUrl);
       console.log('LOCATION IS ', this.location);
     });
-    this.bankName = localStorage.getItem(Consts.LOCAL_STORAGE_BANKNAME);
+    this.bankName = this.storageService.getBankName();
     //  this.bankId = this.route.parent.parent.parent.snapshot.paramMap.get('bankid');
     //  console.log('redirect page for bankid', this.bankId);
   }

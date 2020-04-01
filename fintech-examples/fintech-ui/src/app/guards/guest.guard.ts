@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { DocumentCookieService } from '../services/document-cookie.service';
-import { LocalStorage } from '../models/local-storage';
+import {AuthService} from "../services/auth.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class GuestGuard implements CanActivate {
-  constructor(private cookieService: DocumentCookieService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): boolean {
-    const isLoggedIn = LocalStorage.isLoggedIn();
+    const isLoggedIn = this.authService.isLoggedIn();
 
     if (isLoggedIn) {
       this.router.navigate(['/search']);
