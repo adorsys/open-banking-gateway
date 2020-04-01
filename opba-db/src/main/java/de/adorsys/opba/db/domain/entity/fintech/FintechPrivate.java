@@ -7,14 +7,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.ManyToOne;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -25,9 +25,10 @@ import javax.persistence.SequenceGenerator;
 public class FintechPrivate {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fintech_private_id_generator")
-    @SequenceGenerator(name = "fintech_private_id_generator", sequenceName = "fintech_private_id_sequence")
-    private Long id;
+    private UUID id;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    private Fintech fintech;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
