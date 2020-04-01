@@ -126,6 +126,8 @@
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
+            <column name="keystore" type="BLOB"/>
+            <column name="pub_keys" type="BLOB"/>
         </createTable>
         <createSequence sequenceName="fintech_id_sequence" incrementBy="50"/>
         <createTable tableName="${table-prefix}psu">
@@ -136,7 +138,7 @@
         <createSequence sequenceName="psu_id_sequence" incrementBy="50"/>
 
         <createTable tableName="${table-prefix}psu_private">
-            <column name="id" type="BIGINT">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
             <column name="psu_id" type="BIGINT">
@@ -154,7 +156,7 @@
                                  referencedColumnNames="id"/>
 
         <createTable tableName="${table-prefix}fintech_inbox">
-            <column name="id" type="BIGINT">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
             <column name="fintech_id" type="BIGINT">
@@ -172,7 +174,7 @@
                                  referencedColumnNames="id"/>
 
         <createTable tableName="${table-prefix}fintech_private">
-            <column name="id" type="BIGINT">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
             <column name="fintech_id" type="BIGINT">
