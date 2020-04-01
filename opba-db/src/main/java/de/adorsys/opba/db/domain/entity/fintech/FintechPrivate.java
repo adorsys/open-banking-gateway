@@ -25,8 +25,8 @@ import javax.persistence.SequenceGenerator;
 public class FintechPrivate {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "private_id_generator")
-    @SequenceGenerator(name = "private_id_generator", sequenceName = "private_id_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fintech_private_id_generator")
+    @SequenceGenerator(name = "fintech_private_id_generator", sequenceName = "fintech_private_id_sequence")
     private Long id;
 
     @Lob
