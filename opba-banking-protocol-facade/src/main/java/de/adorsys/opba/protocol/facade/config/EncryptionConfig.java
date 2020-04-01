@@ -20,6 +20,7 @@ import java.security.Security;
 
 import static de.adorsys.opba.protocol.api.Profiles.NO_ENCRYPTION;
 
+// FIXME - Drop it
 @Configuration
 @Slf4j
 public class EncryptionConfig {
