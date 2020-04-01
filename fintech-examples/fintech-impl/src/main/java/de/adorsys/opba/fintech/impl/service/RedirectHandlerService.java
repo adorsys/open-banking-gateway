@@ -74,7 +74,7 @@ public class RedirectHandlerService {
             return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
-        if (!authorizeService.isAuthorized(redirectState, null)) {
+        if (!authorizeService.isAuthorized()) {
             log.warn("Validation redirect request was failed: Xsrf Token is wrong or user are not authorized!");
             return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }

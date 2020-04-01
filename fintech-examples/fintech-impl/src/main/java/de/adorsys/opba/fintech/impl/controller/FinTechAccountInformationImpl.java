@@ -39,7 +39,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
 
 
         ContextInformation contextInformation = new ContextInformation(xRequestID);
-        if (!authorizeService.isAuthorized(xsrfToken, null)) {
+        if (!authorizeService.isAuthorized()) {
             log.warn("Request was failed: Xsrf Token is wrong or user are not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -57,7 +57,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
                                                                             String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK,
                                                                             LocalDate dateFrom, LocalDate dateTo,
                                                                             String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
-        if (!authorizeService.isAuthorized(xsrfToken, null)) {
+        if (!authorizeService.isAuthorized()) {
             log.warn("Request was failed: Xsrf Token is wrong or user are not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
