@@ -26,7 +26,7 @@ public class FintechInbox {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fintech_inbox_id_generator")
-    @SequenceGenerator(name = "fintech_inbox_generator", sequenceName = "fintech_inbox_sequence")
+    @SequenceGenerator(name = "fintech_inbox_id_generator", sequenceName = "fintech_inbox_id_sequence")
     private Long id;
 
     @Lob
