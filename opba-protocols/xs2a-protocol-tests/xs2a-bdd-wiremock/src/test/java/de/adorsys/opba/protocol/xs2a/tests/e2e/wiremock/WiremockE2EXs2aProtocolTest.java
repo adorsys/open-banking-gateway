@@ -184,7 +184,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .and()
                 .user_max_musterman_provided_wrong_password_to_embedded_authorization_and_stays_on_password_page()
                 .and()
-                .user_max_musterman_provided_password_to_embedded_authorization()
+                .user_max_musterman_provided_correct_password_after_wrong_to_embedded_authorization()
                 .and()
                 .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
                 .and()
@@ -209,7 +209,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .and()
                 .user_max_musterman_provided_wrong_password_to_embedded_authorization_and_stays_on_password_page()
                 .and()
-                .user_max_musterman_provided_password_to_embedded_authorization()
+                .user_max_musterman_provided_correct_password_after_wrong_to_embedded_authorization()
                 .and()
                 .user_max_musterman_selected_sca_challenge_type_email1_to_embedded_authorization()
                 .and()
@@ -240,7 +240,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .and()
                 .user_max_musterman_provided_wrong_sca_challenge_result_to_embedded_authorization_and_stays_on_sca_page()
                 .and()
-                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+                .user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
         then()
                 .open_banking_has_consent_for_max_musterman_account_list()
                 .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
@@ -265,7 +265,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .and()
                 .user_max_musterman_provided_wrong_sca_challenge_result_to_embedded_authorization_and_stays_on_sca_page()
                 .and()
-                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+                .user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
         then()
                 .open_banking_has_consent_for_max_musterman_transaction_list()
                 .open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
