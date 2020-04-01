@@ -28,10 +28,9 @@ xdescribe('AuthService', () => {
 
   it('should navigate to login page after called logout', () => {
     const navigateSpy = spyOn(router, 'navigate');
-    authService.logout().subscribe(res => {
-      expect(res).toEqual(true);
-      expect(navigateSpy).toHaveBeenCalledWith(['/login']);
-    });
+    authService.logout();
+    expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+
   });
 
   it('should test login method', () => {

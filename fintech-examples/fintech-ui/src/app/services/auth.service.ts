@@ -28,18 +28,17 @@ export class AuthService {
     );
   }
 
-  logout(): Observable<any> {
+  logout(): void {
     if (!this.isLoggedIn()) {
       this.openLoginPage();
       return;
     }
-    return this.finTechAuthorizationService.logoutPOST('', '', 'response').pipe(
-      map(response => {
-        this.deleteSessionData();
-        this.openLoginPage();
-        return response.ok;
-      })
-    );
+      this.finTechAuthorizationService.logoutPOST('', '', 'response')
+        .toPromise()
+        .finally(() => {
+          this.deleteSessionData();
+          this.openLoginPage();
+        });
   }
 
   openLoginPage() {
