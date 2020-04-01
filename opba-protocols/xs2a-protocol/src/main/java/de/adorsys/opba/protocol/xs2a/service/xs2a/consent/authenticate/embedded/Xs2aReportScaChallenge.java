@@ -68,7 +68,7 @@ public class Xs2aReportScaChallenge extends ValidatedExecution<Xs2aContext> {
         ContextUtil.getAndUpdateContext(
                 execution,
                 (Xs2aContext ctx) -> {
-                    log.warn("Request {} has provided incorrect sca challenge", ctx.getRequestId());
+                    log.warn("Request {} of {} has provided incorrect sca challenge", ctx.getRequestId(), ctx.getSagaId());
                     ctx.setWrongAuthCredentials(true);
                 }
         );
