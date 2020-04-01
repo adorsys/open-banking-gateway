@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 
 import static de.adorsys.opba.protocol.api.Profiles.NO_ENCRYPTION;
 
+// FIXME - Drop it
 @Data
 @Validated
 @Configuration
