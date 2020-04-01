@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FinTechAuthorizationService } from '../api';
 import { Credentials } from '../models/credentials.model';
-import { HeaderConfig} from '../models/consts';
+import { HeaderConfig } from '../models/consts';
 import { DocumentCookieService } from './document-cookie.service';
-import {StorageService} from "./storage.service";
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -29,18 +29,16 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-      if (!this.isLoggedIn()) {
-          this.openLoginPage();
-          return;
-      }
-        return this.finTechAuthorizationService.logoutPOST('', '', 'response').pipe(
-      map(
-        response => {
-            this.deleteSessionData();
-            this.openLoginPage();
-          return response.ok;
-        }
-      )
+    if (!this.isLoggedIn()) {
+      this.openLoginPage();
+      return;
+    }
+    return this.finTechAuthorizationService.logoutPOST('', '', 'response').pipe(
+      map(response => {
+        this.deleteSessionData();
+        this.openLoginPage();
+        return response.ok;
+      })
     );
   }
 
@@ -48,17 +46,17 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-    public isLoggedIn(): boolean {
-        const token = this.storageService.getXsrfToken();
-        return token !== undefined && token !== null;
-    }
+  public isLoggedIn(): boolean {
+    const token = this.storageService.getXsrfToken();
+    return token !== undefined && token !== null;
+  }
 
-    private setSessionData(response: any, credentials: Credentials): void {
-        this.storageService.setXsrfToken(response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN));
-        this.storageService.setUserName(credentials.username);
-    }
+  private setSessionData(response: any, credentials: Credentials): void {
+    this.storageService.setXsrfToken(response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN));
+    this.storageService.setUserName(credentials.username);
+  }
 
-    private deleteSessionData() {
-        this.storageService.clearStorage();
-    }
+  private deleteSessionData() {
+    this.storageService.clearStorage();
+  }
 }
