@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RedirectAfterConsentDeniedComponent } from './redirect-after-consent-denied.component';
+import { RouterTestingModule } from "@angular/router/testing";
 
 describe('RedirectAfterConsentDeniedComponent', () => {
   let component: RedirectAfterConsentDeniedComponent;
@@ -8,7 +9,8 @@ describe('RedirectAfterConsentDeniedComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RedirectAfterConsentDeniedComponent ]
+      declarations: [ RedirectAfterConsentDeniedComponent ],
+      imports: [RouterTestingModule]
     })
     .compileComponents();
   }));
