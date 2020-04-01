@@ -61,7 +61,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
         ContextInformation contextInformation = new ContextInformation(xRequestID);
         log.info("logoutPost is called");
 
-        if (!authorizeService.isAuthorized(xsrfToken, null)) {
+        if (!authorizeService.isAuthorized()) {
             log.warn("Request failed: Xsrf Token is wrong or user is not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }

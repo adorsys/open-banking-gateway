@@ -83,7 +83,7 @@ class RedirectHandlerServiceTest {
                 .thenReturn(new HttpHeaders());
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.of(REDIRECT_URLS_ENTITY));
         when(authorizeService.getByXsrfToken(REDIRECT_STATE_VALUE)).thenReturn(sessionEntity);
-        when(authorizeService.isAuthorized(REDIRECT_STATE_VALUE, null)).thenReturn(true);
+        when(authorizeService.isAuthorized()).thenReturn(true);
 
         // when
         ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_STATE_VALUE, REDIRECT_ID_VALUE, REDIRECT_CODE_VALUE);
@@ -149,7 +149,7 @@ class RedirectHandlerServiceTest {
     void doRedirect_redirectStateIsWrong() {
         // given
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.of(REDIRECT_URLS_ENTITY));
-        when(authorizeService.isAuthorized(REDIRECT_STATE_VALUE, null)).thenReturn(false);
+        // when(authorizeService.isAuthorized(REDIRECT_STATE_VALUE, null)).thenReturn(false);
 
         // when
         ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_STATE_VALUE, REDIRECT_ID_VALUE, REDIRECT_CODE_VALUE);
