@@ -9,7 +9,6 @@ import de.adorsys.opba.fintech.impl.database.entities.RequestInfoEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.service.AccountService;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
-import de.adorsys.opba.fintech.impl.service.ContextInformation;
 import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
 import de.adorsys.opba.fintech.impl.service.RequestInfoService;
 import de.adorsys.opba.fintech.impl.service.TransactionService;
@@ -38,7 +37,6 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
     public ResponseEntity<AccountList> aisAccountsGET(String bankId, UUID xRequestID, String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
 
 
-        ContextInformation contextInformation = new ContextInformation();
         if (!authorizeService.isAuthorized()) {
             log.warn("Request was failed: Xsrf Token is wrong or user are not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -49,7 +47,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
         RedirectUrlsEntity redirectUrlsEntity = redirectHandlerService.registerRedirectStateForSession(xsrfToken, fintechRedirectURLOK, fintechRedirectURLNOK);
         RequestInfoEntity info = requestInfoService.addRequestInfo(xsrfToken, bankId, RequestAction.LIST_ACCOUNTS);
 
-        return accountService.listAccounts(contextInformation, sessionEntity, redirectUrlsEntity, info);
+        return accountService.listAccounts(sessionEntity, redirectUrlsEntity, info);
     }
 
     @Override
@@ -61,13 +59,11 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
             log.warn("Request was failed: Xsrf Token is wrong or user are not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        ContextInformation contextInformation = new ContextInformation();
-
         SessionEntity sessionEntity = authorizeService.getByXsrfToken(xsrfToken);
 
         RedirectUrlsEntity redirectUrlsEntity = redirectHandlerService.registerRedirectStateForSession(xsrfToken, fintechRedirectURLOK, fintechRedirectURLNOK);
         RequestInfoEntity info = requestInfoService.addRequestInfo(xsrfToken, bankId, RequestAction.LIST_TRANSACTIONS, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList);
 
-        return transactionService.listTransactions(contextInformation, sessionEntity, redirectUrlsEntity, info);
+        return transactionService.listTransactions(sessionEntity, redirectUrlsEntity, info);
     }
 }
