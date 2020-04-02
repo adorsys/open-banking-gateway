@@ -2,7 +2,6 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
-import de.adorsys.opba.fintech.impl.database.entities.CookieEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_ID;
 
@@ -40,7 +38,7 @@ public class AuthorizeService {
      * @return empty, if user not found or password not valid. otherwise optional of userprofile
      */
     @Transactional
-    public Optional<SessionEntity> login(LoginRequest loginRequest) {
+    public Optional<SessionEntity> login(LoginRequest loginRequest, String xsrfToken) {
         // this is for demo only. all users are allowed. But password has to be 1234
         // otherwise login is not possible
         generateUserIfUserDoesNotExistYet(loginRequest);
@@ -59,12 +57,9 @@ public class AuthorizeService {
         log.info("login for user {}", optionalUserEntity.get().getLoginUserName());
 
         // password is ok, so log in
-        sessionEntity.setXsrfToken(UUID.randomUUID().toString());
 
         // delete old cookies, if available
-        sessionEntity.setSessionCookie(null);
-        sessionEntity.setXsrfToken(sessionEntity.getXsrfToken());
-        sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(sessionEntity.getFintechUserId(), sessionEntity.getXsrfToken()));
+        sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(sessionEntity.getFintechUserId(), xsrfToken));
 
         sessionEntity.addLogin(OffsetDateTime.now());
 
@@ -72,13 +67,12 @@ public class AuthorizeService {
         return Optional.of(sessionEntity);
     }
 
-    public HttpHeaders fillWithAuthorizationHeaders(SessionEntity sessionEntity) {
+    public HttpHeaders fillWithAuthorizationHeaders(SessionEntity sessionEntity, String xsrfToken) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set(X_REQUEST_ID, restRequestContext.getRequestId());
         log.debug("set response cookie attributes to {}", cookieConfigProperties.toString());
 
-        CookieEntity sessionCookie = sessionEntity.getSessionCookie();
-        String sessionCookieString = ResponseCookie.from(sessionCookie.getName(), sessionCookie.getValue())
+        String sessionCookieString = ResponseCookie.from(Consts.COOKIE_SESSION_COOKIE_NAME, sessionEntity.getSessionCookieValue())
                 .httpOnly(cookieConfigProperties.getSessioncookie().isHttpOnly())
                 .sameSite(cookieConfigProperties.getSessioncookie().getSameSite())
                 .secure(cookieConfigProperties.getSessioncookie().isSecure())
@@ -86,12 +80,12 @@ public class AuthorizeService {
                 .maxAge(cookieConfigProperties.getSessioncookie().getMaxAge())
                 .build().toString();
         responseHeaders.add(HttpHeaders.SET_COOKIE, sessionCookieString);
-        responseHeaders.add(Consts.HEADER_XSRF_TOKEN, sessionEntity.getXsrfToken());
+        responseHeaders.add(Consts.HEADER_XSRF_TOKEN, xsrfToken);
         return responseHeaders;
     }
 
-    public SessionEntity getByXsrfToken(String xsrfToken) {
-        return userRepository.findByXsrfToken(xsrfToken).get();
+    public SessionEntity getSessionCookieValue() {
+        return userRepository.findBySessionCookieValue(restRequestContext.getSessionCookieValue()).get();
     }
 
     public SessionEntity updateUserSession(SessionEntity sessionEntity) {
@@ -123,23 +117,26 @@ public class AuthorizeService {
                             ? "session cookie" : restRequestContext.getXsrfTokenHeaderField() == null ? "XSRFToken" : "RequestID");
             return false;
         }
-        String xsrfToken = restRequestContext.getXsrfTokenHeaderField();
-        Optional<SessionEntity> optionalUserEntity = userRepository.findByXsrfToken(xsrfToken);
-        if (!optionalUserEntity.isPresent()) {
-            log.debug("XSRF-TOKEN {} is unknown", xsrfToken);
-            return false;
-        }
 
+        // first check token with session without any DB
         String sessionCookieValue = restRequestContext.getSessionCookieValue();
-        SessionEntity.validateSessionCookieValue(sessionCookieValue, xsrfToken);
-        return optionalUserEntity.get().getSessionCookie().getValue().equals(sessionCookieValue);
+        SessionEntity.validateSessionCookieValue(sessionCookieValue, restRequestContext.getXsrfTokenHeaderField());
+
+        // now make sure, session is known to server
+        Optional<SessionEntity> optionalUserEntity = userRepository.findBySessionCookieValue(restRequestContext.getSessionCookieValue());
+        return optionalUserEntity.get().getSessionCookieValue().equals(sessionCookieValue);
     }
 
 
     @Transactional
-    public void logout(String xsrfToken, String sessionCookieContent) {
-        Optional<SessionEntity> optionalUserEntity = userRepository.findByXsrfToken(xsrfToken);
-        log.info("logout for user {}", optionalUserEntity.get().getLoginUserName());
-        userRepository.deleteByXsrfToken(xsrfToken);
+    public void logout() {
+        SessionEntity sessionEntity = getSession();
+        log.info("logout for user {}", sessionEntity.getLoginUserName());
+        sessionEntity.setSessionCookieValue(null);
+    }
+
+    public SessionEntity getSession() {
+        String sessionCookieValue = restRequestContext.getSessionCookieValue();
+        return userRepository.findBySessionCookieValue(sessionCookieValue).get();
     }
 }
