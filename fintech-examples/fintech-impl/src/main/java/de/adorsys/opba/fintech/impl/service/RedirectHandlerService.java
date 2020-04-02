@@ -79,7 +79,7 @@ public class RedirectHandlerService {
             return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
-        ContextInformation contextInformation = new ContextInformation(UUID.randomUUID());
+        ContextInformation contextInformation = new ContextInformation();
         SessionEntity sessionEntity = authorizeService.getByXsrfToken(redirectState);
         redirectUrlRepository.delete(redirectUrls.get());
 

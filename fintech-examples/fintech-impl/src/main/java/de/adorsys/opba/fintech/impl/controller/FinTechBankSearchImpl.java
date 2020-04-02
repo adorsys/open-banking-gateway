@@ -29,7 +29,7 @@ public class FinTechBankSearchImpl implements FinTechBankSearchApi {
         if (!authorizeService.isAuthorized()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        ContextInformation contextInformation = new ContextInformation(xRequestID);
+        ContextInformation contextInformation = new ContextInformation();
         return new ResponseEntity<>(bankSearchService.searchBank(contextInformation, keyword, start, max), HttpStatus.OK);
     }
 
@@ -38,7 +38,7 @@ public class FinTechBankSearchImpl implements FinTechBankSearchApi {
         if (!authorizeService.isAuthorized()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        ContextInformation contextInformation = new ContextInformation(xRequestID);
+        ContextInformation contextInformation = new ContextInformation();
         return new ResponseEntity<>(bankSearchService.searchBankProfile(contextInformation, bankId), HttpStatus.OK);
     }
 }
