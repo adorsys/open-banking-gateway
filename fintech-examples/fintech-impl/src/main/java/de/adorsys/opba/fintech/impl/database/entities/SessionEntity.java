@@ -77,10 +77,10 @@ public class SessionEntity {
         ObjectMapper mapper = new ObjectMapper();
         SessionCookieValue sessionCookieValue = mapper.readValue(decode, SessionCookieValue.class);
         if (sessionCookieValue.getHashedXsrfToken() == xsrfToken.hashCode()) {
-            log.info("validation of token ok");
+            log.info("validation of token for session ok {}", sessionCookieValue);
             return;
         }
-        throw new RuntimeException("session cookie not valid " +  decode);
+        throw new RuntimeException("session cookie not valid " + sessionCookieValue);
     }
 
     public SessionEntity setSessionCookieValue(String value) {
