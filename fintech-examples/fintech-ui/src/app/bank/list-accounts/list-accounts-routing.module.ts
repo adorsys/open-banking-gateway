@@ -8,17 +8,16 @@ const routes: Routes = [
   {
     path: '',
     component: ListAccountsComponent,
-
     children: [
-      {
-        path: 'redirect/:location',
-        component: RedirectPageComponent
-      },
       {
         path: ':accountid',
         component: ListTransactionsComponent
       }
     ]
+  },
+  {
+    path: 'redirect/:location',
+    component: RedirectPageComponent
   }
 ];
 
