@@ -16,6 +16,7 @@ import de.adorsys.datasafe.types.api.resource.AbsoluteLocation;
 import de.adorsys.datasafe.types.api.resource.BasePrivateResource;
 import de.adorsys.datasafe.types.api.resource.BasePublicResource;
 import de.adorsys.datasafe.types.api.resource.ResolvedResource;
+import de.adorsys.datasafe.types.api.resource.StorageIdentifier;
 import de.adorsys.datasafe.types.api.resource.WithCallback;
 import de.adorsys.datasafe.types.api.types.ReadStorePassword;
 import lombok.RequiredArgsConstructor;
@@ -146,6 +147,60 @@ public abstract class BaseDatasafeDbStorageService implements StorageService {
                     .id(userID)
                     .inbox(BasePublicResource.forAbsolutePublic(INBOX_STORAGE + userId + "/"))
                     .publicKeys(BasePublicResource.forAbsolutePublic(PUB_KEYS + userId))
+                    .build();
+        }
+    }
+
+    @RequiredArgsConstructor
+    public static class DbTablePrivateOnlyDFSConfig implements DFSConfig {
+
+        private final String readKeystorePassword;
+
+        @Override
+        public KeyStoreAuth privateKeyStoreAuth(UserIDAuth userIDAuth) {
+            return new KeyStoreAuth(
+                    new ReadStorePassword(readKeystorePassword::toCharArray),
+                    userIDAuth.getReadKeyPassword()
+            );
+        }
+
+        @Override
+        public AbsoluteLocation publicProfile(UserID userID) {
+            throw new IllegalStateException("Not supported");
+        }
+
+        @Override
+        public AbsoluteLocation privateProfile(UserID userID) {
+            throw new IllegalStateException("Not supported");
+        }
+
+        @Override
+        public CreateUserPrivateProfile defaultPrivateTemplate(UserIDAuth userIDAuth) {
+            String userId = userIDAuth.getUserID().getValue();
+
+            return CreateUserPrivateProfile.builder()
+                    .id(userIDAuth)
+                    .privateStorage(BasePrivateResource.forAbsolutePrivate(PRIVATE_STORAGE + userId + "/"))
+                    .keystore(BasePrivateResource.forAbsolutePrivate(KEYSTORE + userId))
+                    .inboxWithWriteAccess(BasePrivateResource.forAbsolutePrivate(INBOX_STORAGE + userId + "/"))
+                    .publishPubKeysTo(BasePublicResource.forAbsolutePublic(PUB_KEYS + userId))
+                    .associatedResources(Collections.emptyList())
+                    .build();
+        }
+
+        @Override
+        public CreateUserPublicProfile defaultPublicTemplate(UserID userID) {
+            throw new IllegalStateException("Not supported");
+        }
+
+        public UserPrivateProfile privateProfile(UserIDAuth userIDAuth) {
+            String userId = userIDAuth.getUserID().getValue();
+
+            return UserPrivateProfile.builder()
+                    .privateStorage(Collections.singletonMap(StorageIdentifier.DEFAULT, BasePrivateResource.forAbsolutePrivate(PRIVATE_STORAGE + userId + "/")))
+                    .keystore(BasePrivateResource.forAbsolutePrivate(KEYSTORE + userId))
+                    .associatedResources(Collections.emptyList())
+                    .publishPublicKeysTo(BasePublicResource.forAbsolutePublic("db://nowhere"))
                     .build();
         }
     }
