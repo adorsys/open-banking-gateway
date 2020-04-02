@@ -85,15 +85,18 @@ label {
 .ltx-list-container {
   @extend %layout-padding;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
   background-color: #fff;
   border-radius: 3px;
   width: 100%;
   text-align: start;
   margin: 6px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.145);
+  @media (max-width: $breakpoint-sm) {
+    flex-wrap: wrap;
+  }
 
   &--shadow {
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
@@ -101,18 +104,22 @@ label {
 }
 
 .ltx-date {
-  width: 10%;
+  white-space: nowrap;
 }
 .ltx-description {
-  width: 80%;
+  padding: 0 10px;
+  line-height: 1.2;
+  @media (max-width: $breakpoint-sm) {
+    padding: 0;
+  }
 }
 .ltx-amount-number {
-  width: 5%;
+  margin-left: auto;
   font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
   text-align: right;
+  padding-right: 5px;
 }
 .ltx-amount-currency {
-  width: 5%;
   text-align: right;
 }
 
@@ -121,6 +128,9 @@ label {
 }
 
 // list-accounts
+.withoutOutline {
+  outline: none;
+}
 .lacc-parent {
   margin: 50px;
   display: flex;
