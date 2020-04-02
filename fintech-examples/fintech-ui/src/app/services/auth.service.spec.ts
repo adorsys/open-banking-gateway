@@ -6,7 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DocumentCookieService } from './document-cookie.service';
 import { Consts } from '../models/consts';
 
-xdescribe('AuthService', () => {
+describe('AuthService', () => {
   let authService: AuthService;
   let cookieService: DocumentCookieService;
   let router: Router;
@@ -30,7 +30,6 @@ xdescribe('AuthService', () => {
     const navigateSpy = spyOn(router, 'navigate');
     authService.logout();
     expect(navigateSpy).toHaveBeenCalledWith(['/login']);
-
   });
 
   it('should test login method', () => {
