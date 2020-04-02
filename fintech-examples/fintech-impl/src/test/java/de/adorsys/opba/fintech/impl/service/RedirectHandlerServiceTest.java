@@ -24,7 +24,6 @@ import java.util.UUID;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -73,8 +72,7 @@ class RedirectHandlerServiceTest {
 
         log.info("setup RestRequestContext");
         restRequestContext.setRequestId(UUID.randomUUID().toString());
-        log.info("rrc is {}", restRequestContext.toString());
-        redirectHandlerService = new RedirectHandlerService(uiConfig, redirectUrlRepository, authorizeService);
+        redirectHandlerService = new RedirectHandlerService(uiConfig, redirectUrlRepository, authorizeService, restRequestContext);
     }
 
     @Test
@@ -96,17 +94,17 @@ class RedirectHandlerServiceTest {
     @Test
     void doRedirect_success() {
         // given
-        when(authorizeService.fillWithAuthorizationHeaders(eq(sessionEntity)))
+        when(authorizeService.fillWithAuthorizationHeaders(sessionEntity, restRequestContext.getXsrfTokenHeaderField()))
                 .thenReturn(new HttpHeaders());
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.of(REDIRECT_URLS_ENTITY));
-        when(authorizeService.getByXsrfToken(REDIRECT_STATE_VALUE)).thenReturn(sessionEntity);
+        when(authorizeService.getSession()).thenReturn(sessionEntity);
         when(authorizeService.isAuthorized()).thenReturn(true);
 
         // when
         ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_STATE_VALUE, REDIRECT_ID_VALUE, REDIRECT_CODE_VALUE);
 
         // then
-        verify(authorizeService, times(1)).getByXsrfToken(REDIRECT_STATE_VALUE);
+        verify(authorizeService, times(1)).getSession();
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(ACCEPTED);
         assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
@@ -120,7 +118,7 @@ class RedirectHandlerServiceTest {
         ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_STATE_VALUE, REDIRECT_ID_VALUE, "");
 
         // then
-        verify(authorizeService, times(0)).getByXsrfToken(REDIRECT_STATE_VALUE);
+        verify(authorizeService, times(0)).getSession();
         verify(authorizeService, times(0)).updateUserSession(sessionEntity);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);
@@ -153,7 +151,7 @@ class RedirectHandlerServiceTest {
         ResponseEntity responseEntity = redirectHandlerService.doRedirect("", REDIRECT_ID_VALUE, REDIRECT_CODE_VALUE);
 
         // then
-        verify(authorizeService, times(0)).getByXsrfToken(REDIRECT_STATE_VALUE);
+        verify(authorizeService, times(0)).getSession();
         verify(authorizeService, times(0)).updateUserSession(sessionEntity);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);
@@ -172,7 +170,7 @@ class RedirectHandlerServiceTest {
         ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_STATE_VALUE, REDIRECT_ID_VALUE, REDIRECT_CODE_VALUE);
 
         // then
-        verify(authorizeService, times(0)).getByXsrfToken(REDIRECT_STATE_VALUE);
+        verify(authorizeService, times(0)).getSession();
         verify(authorizeService, times(0)).updateUserSession(sessionEntity);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);

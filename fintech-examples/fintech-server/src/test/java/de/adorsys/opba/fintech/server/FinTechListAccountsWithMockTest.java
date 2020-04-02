@@ -1,6 +1,7 @@
 package de.adorsys.opba.fintech.server;
 
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
+import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import de.adorsys.opba.fintech.server.config.TestConfig;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -33,17 +33,17 @@ public class FinTechListAccountsWithMockTest extends FinTechBankSearchApiTest {
     @Test
     public void testListAccounts() {
         BankProfileTestResult result = getBankProfileTestResult();
-        List<String> accountIDs = listAccountIDs(result.getXsrfToken(), result.getBankUUID());
+        List<String> accountIDs = listAccountIDs(result.getBankUUID());
         accountIDs.forEach(a -> log.info("found: {}", a));
         assertTrue(accountIDs.containsAll(Arrays.asList(new String[]{"firstAccount", "secondAccount"})));
     }
 
     @SneakyThrows
-    List<String> listAccountIDs(String xsrfToken, String bankUUID) {
+    List<String> listAccountIDs(String bankUUID) {
         MvcResult mvcResult = this.mvc
                 .perform(get(FIN_TECH_LIST_ACCOUNTS_URL, bankUUID)
-                        .header("X-Request-ID", UUID.randomUUID().toString())
-                        .header("X-XSRF-TOKEN", xsrfToken)
+                        .header(Consts.HEADER_X_REQUEST_ID, restRequestContext.getRequestId())
+                        .header(Consts.HEADER_XSRF_TOKEN, restRequestContext.getXsrfTokenHeaderField())
                         .header("Fintech-Redirect-URL-OK", "ok")
                         .header("Fintech-Redirect-URL-NOK", "notok"))
                 .andDo(print())
