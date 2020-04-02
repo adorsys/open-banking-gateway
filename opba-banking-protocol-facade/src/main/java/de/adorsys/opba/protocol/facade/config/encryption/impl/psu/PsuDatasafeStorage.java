@@ -1,11 +1,10 @@
 package de.adorsys.opba.protocol.facade.config.encryption.impl.psu;
 
 import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.domain.entity.psu.PsuPrivate;
-import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.db.repository.jpa.psu.PsuPrivateRepository;
+import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.BaseDatasafeDbStorageService;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.DatasafeDataStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.DatasafeMetadataStorage;
@@ -20,12 +19,12 @@ public class PsuDatasafeStorage extends BaseDatasafeDbStorageService {
     public PsuDatasafeStorage(
             DatasafeDataStorage<PsuPrivate> datasafePrivate,
             PsuKeystoreStorage datasafeKeystore,
-            PsuPubKeysStorage datasafePub
+            PsuPubKeysStorage datasafePubKeys
     ) {
         super(ImmutableMap.<String, StorageActions>builder()
                 .put(tableId(PRIVATE_STORAGE), datasafePrivate)
                 .put(tableId(KEYSTORE), datasafeKeystore)
-                .put(tableId(PUB_KEYS), datasafePub)
+                .put(tableId(PUB_KEYS), datasafePubKeys)
                 .build()
         );
     }
@@ -48,18 +47,18 @@ public class PsuDatasafeStorage extends BaseDatasafeDbStorageService {
     }
 
     @Component
-    public static class PsuKeystoreStorage extends DatasafeMetadataStorage {
+    public static class PsuKeystoreStorage extends DatasafeMetadataStorage<Psu> {
 
-        public PsuKeystoreStorage(FintechRepository fintechs) {
-            super(fintechs, Fintech::getKeystore, Fintech::setKeystore);
+        public PsuKeystoreStorage(PsuRepository psus) {
+            super(psus, Psu::getKeystore, Psu::setKeystore);
         }
     }
 
     @Component
-    public static class PsuPubKeysStorage extends DatasafeMetadataStorage {
+    public static class PsuPubKeysStorage extends DatasafeMetadataStorage<Psu> {
 
-        public PsuPubKeysStorage(FintechRepository fintechs) {
-            super(fintechs, Fintech::getPubKeys, Fintech::setPubKeys);
+        public PsuPubKeysStorage(PsuRepository psus) {
+            super(psus, Psu::getPubKeys, Psu::setPubKeys);
         }
     }
 }
