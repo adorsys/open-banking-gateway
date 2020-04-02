@@ -31,6 +31,10 @@ public class AccountService extends HandleAcceptedService {
     @Autowired
     private TppProperties tppProperties;
 
+    @Autowired
+    private RedirectHandlerService redirectHandlerService;
+
+
     public AccountService(AuthorizeService authorizeService, TppAisClient tppAisClient, FintechUiConfig uiConfig) {
         super(authorizeService);
         this.tppAisClient = tppAisClient;
@@ -38,19 +42,22 @@ public class AccountService extends HandleAcceptedService {
     }
 
     public ResponseEntity listAccounts(SessionEntity sessionEntity,
-                                       RedirectUrlsEntity redirectUrlsEntity,
+                                       String fintechOkUrl, String fintechNOKUrl,
                                        String bankID) {
         if (mockTppAisString != null && mockTppAisString.equalsIgnoreCase("true") ? true : false) {
             log.warn("Mocking call to list accounts");
             return new ResponseEntity<>(new TppListAccountsMock().getAccountList(), HttpStatus.OK);
         }
 
-        ResponseEntity accounts = readOpbaResponse(bankID, sessionEntity, redirectUrlsEntity);
+        final String redirectCode = UUID.randomUUID().toString();
+        ResponseEntity accounts = readOpbaResponse(bankID, sessionEntity, redirectCode);
 
         switch (accounts.getStatusCode()) {
             case OK:
                 return new ResponseEntity<>(accounts.getBody(), HttpStatus.OK);
             case ACCEPTED:
+                log.info("create redirect entity for redirect code {}", redirectCode);
+                redirectHandlerService.registerRedirectStateForSession(redirectCode, fintechOkUrl, fintechNOKUrl);
                 return handleAccepted(sessionEntity, accounts.getHeaders());
             case UNAUTHORIZED:
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -59,19 +66,19 @@ public class AccountService extends HandleAcceptedService {
         }
     }
 
-    private ResponseEntity readOpbaResponse(String bankID, SessionEntity sessionEntity, RedirectUrlsEntity redirectUrlsEntity) {
+    private ResponseEntity readOpbaResponse(String bankID, SessionEntity sessionEntity, String redirectCode) {
         ResponseEntity accounts;
-        if (null != sessionEntity.getServiceSessionId()) {
+        if (null != sessionEntity.getServiceSessionId() && sessionEntity.getConsentConfirmed()) {
             accounts = tppAisClient.getAccounts(
                     tppProperties.getFintechID(),
                     tppProperties.getServiceSessionPassword(),
                     sessionEntity.getLoginUserName(),
-                    redirectUrlsEntity.buildOkUrl(uiConfig),
-                    redirectUrlsEntity.buildNokUrl(uiConfig),
+                    RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
+                    RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
                     UUID.fromString(restRequestContext.getRequestId()),
                     bankID,
                     sessionEntity.getPsuConsentSession(),
-                    sessionEntity.getServiceSessionId());
+                    sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null);
         } else {
             // FIXME: HACKETTY-HACK - force consent retrieval for transactions on ALL accounts
             // Should be superseded and fixed with
@@ -81,12 +88,12 @@ public class AccountService extends HandleAcceptedService {
                     tppProperties.getFintechID(),
                     tppProperties.getServiceSessionPassword(),
                     sessionEntity.getLoginUserName(),
-                    redirectUrlsEntity.buildOkUrl(uiConfig),
-                    redirectUrlsEntity.buildNokUrl(uiConfig),
+                    RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
+                    RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
                     UUID.fromString(restRequestContext.getRequestId()),
                     bankID,
                     sessionEntity.getPsuConsentSession(),
-                    sessionEntity.getServiceSessionId(),
+                    sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null,
                     null,
                     null,
                     null,

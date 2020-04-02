@@ -3,11 +3,9 @@ package de.adorsys.opba.fintech.impl.controller;
 import de.adorsys.opba.fintech.api.model.generated.AccountList;
 import de.adorsys.opba.fintech.api.model.generated.TransactionsResponse;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAccountInformationApi;
-import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.service.AccountService;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
-import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
 import de.adorsys.opba.fintech.impl.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +24,6 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
     private final AuthorizeService authorizeService;
     private final AccountService accountService;
     private final TransactionService transactionService;
-    private final RedirectHandlerService redirectHandlerService;
 
     // uaContext
     @Override
@@ -39,8 +36,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
 
         SessionEntity sessionEntity = authorizeService.getSession();
 
-        RedirectUrlsEntity redirectUrlsEntity = redirectHandlerService.registerRedirectStateForSession(xsrfToken, fintechRedirectURLOK, fintechRedirectURLNOK);
-        return accountService.listAccounts(sessionEntity, redirectUrlsEntity, bankId);
+        return accountService.listAccounts(sessionEntity, fintechRedirectURLOK, fintechRedirectURLNOK, bankId);
     }
 
     @Override
@@ -53,9 +49,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
         }
         SessionEntity sessionEntity = authorizeService.getSession();
 
-        RedirectUrlsEntity redirectUrlsEntity = redirectHandlerService.registerRedirectStateForSession(xsrfToken, fintechRedirectURLOK, fintechRedirectURLNOK);
-
-
-        return transactionService.listTransactions(sessionEntity, redirectUrlsEntity, bankId, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList);
+        return transactionService.listTransactions(sessionEntity, fintechRedirectURLOK, fintechRedirectURLNOK,
+                bankId, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList);
     }
 }
