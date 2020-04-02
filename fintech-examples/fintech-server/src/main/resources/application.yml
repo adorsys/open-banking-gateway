@@ -22,6 +22,8 @@ server:
 
 tpp:
   url: http://localhost:8085
+  fintechID: MY-SUPER-FINTECH-ID
+  serviceSessionPassword: qwerty
 
 mock:
   tppais:

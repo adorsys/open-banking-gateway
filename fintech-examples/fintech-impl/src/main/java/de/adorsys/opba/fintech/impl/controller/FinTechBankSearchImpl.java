@@ -5,7 +5,6 @@ import de.adorsys.opba.fintech.api.model.generated.InlineResponse2002;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechBankSearchApi;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.BankSearchService;
-import de.adorsys.opba.fintech.impl.service.ContextInformation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,8 +28,7 @@ public class FinTechBankSearchImpl implements FinTechBankSearchApi {
         if (!authorizeService.isAuthorized()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        ContextInformation contextInformation = new ContextInformation();
-        return new ResponseEntity<>(bankSearchService.searchBank(contextInformation, keyword, start, max), HttpStatus.OK);
+        return new ResponseEntity<>(bankSearchService.searchBank(keyword, start, max), HttpStatus.OK);
     }
 
     @Override
@@ -38,7 +36,6 @@ public class FinTechBankSearchImpl implements FinTechBankSearchApi {
         if (!authorizeService.isAuthorized()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        ContextInformation contextInformation = new ContextInformation();
-        return new ResponseEntity<>(bankSearchService.searchBankProfile(contextInformation, bankId), HttpStatus.OK);
+        return new ResponseEntity<>(bankSearchService.searchBankProfile(bankId), HttpStatus.OK);
     }
 }

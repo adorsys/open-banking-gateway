@@ -79,17 +79,14 @@ public class RedirectHandlerService {
             return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
-        ContextInformation contextInformation = new ContextInformation();
         SessionEntity sessionEntity = authorizeService.getByXsrfToken(redirectState);
         redirectUrlRepository.delete(redirectUrls.get());
 
-        return prepareRedirectToReadResultResponse(contextInformation, sessionEntity, redirectUrls.get());
+        return prepareRedirectToReadResultResponse(sessionEntity, redirectUrls.get());
     }
 
-    private ResponseEntity prepareRedirectToReadResultResponse(
-            ContextInformation contextInformation, SessionEntity sessionEntity, RedirectUrlsEntity redirectUrls
-    ) {
-        HttpHeaders authHeaders = authorizeService.fillWithAuthorizationHeaders(contextInformation, sessionEntity);
+    private ResponseEntity prepareRedirectToReadResultResponse(SessionEntity sessionEntity, RedirectUrlsEntity redirectUrls) {
+        HttpHeaders authHeaders = authorizeService.fillWithAuthorizationHeaders(sessionEntity);
         authHeaders.put(LOCATION_HEADER, singletonList(redirectUrls.getOkStatePath()));
         return new ResponseEntity<>(authHeaders, HttpStatus.ACCEPTED);
     }
