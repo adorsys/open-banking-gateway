@@ -134,6 +134,8 @@
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
+            <column name="keystore" type="BLOB"/>
+            <column name="pub_keys" type="BLOB"/>
         </createTable>
         <createSequence sequenceName="psu_id_sequence" incrementBy="50"/>
 
