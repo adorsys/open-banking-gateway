@@ -74,6 +74,9 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
+        log.info("set request id in restRequestContext");
+        restRequestContext.setRequestId(UUID.randomUUID().toString());
+        log.info("request is {}", restRequestContext.getRequestId());
     }
 
     @Autowired
@@ -195,8 +198,8 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     List<String> bankProfile(String xsrfToken, String bankUUID) {
         MvcResult mvcResult = this.mvc
                 .perform(get(FIN_TECH_BANK_PROFILE_URL)
-                        .header("X-Request-ID", UUID.randomUUID().toString())
-                        .header("X-XSRF-TOKEN", xsrfToken)
+                        .header(Consts.HEADER_X_REQUEST_ID, UUID.randomUUID().toString())
+                        .header(Consts.HEADER_XSRF_TOKEN, xsrfToken)
                         .param("bankId", bankUUID))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -219,8 +222,8 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     String authOk(String username, String password) {
         MvcResult result = plainauth(username, password);
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        assertNotNull(result.getResponse().getHeader("X-XSRF-TOKEN"));
-        return result.getResponse().getHeader("X-XSRF-TOKEN");
+        assertNotNull(result.getResponse().getHeader(Consts.HEADER_XSRF_TOKEN));
+        return result.getResponse().getHeader(Consts.HEADER_XSRF_TOKEN);
     }
 
     @SneakyThrows
@@ -228,7 +231,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
         LoginBody loginBody = new LoginBody(username, password);
         MvcResult mvcResult = this.mvc
                 .perform(post(FIN_TECH_AUTH_URL)
-                        .header("X-Request-ID", UUID.randomUUID().toString())
+                        .header(Consts.HEADER_X_REQUEST_ID, UUID.randomUUID().toString())
                         .content(GSON.toJson(loginBody))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -249,8 +252,8 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     MvcResult plainLogout(String xsrfToken) {
         return this.mvc
                 .perform(post(FIN_TECH_AUTH_LOGOUT_URL)
-                        .header("X-Request-ID", UUID.randomUUID().toString())
-                        .header("X-XSRF-TOKEN", xsrfToken)
+                        .header(Consts.HEADER_X_REQUEST_ID, UUID.randomUUID().toString())
+                        .header(Consts.HEADER_XSRF_TOKEN, xsrfToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andReturn();
@@ -274,8 +277,8 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     MvcResult plainBankSearch(String keyword, Integer start, Integer max, String xsrfToken) {
         return this.mvc
                 .perform(get(FIN_TECH_BANK_SEARCH_URL)
-                        .header("X-Request-ID", UUID.randomUUID().toString())
-                        .header("X-XSRF-TOKEN", xsrfToken)
+                        .header(Consts.HEADER_X_REQUEST_ID, UUID.randomUUID().toString())
+                        .header(Consts.HEADER_XSRF_TOKEN, xsrfToken)
                         .param("keyword", keyword)
                         .param("start", start.toString())
                         .param("max", max.toString()))
