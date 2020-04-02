@@ -1,12 +1,15 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
+import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.RequestInfoEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
+import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListAccountsMock;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +26,19 @@ public class AccountService extends HandleAcceptedService {
     private final FintechUiConfig uiConfig;
     private final TppAisClient tppAisClient;
 
+    @Autowired
+    private RestRequestContext restRequestContext;
+
+    @Autowired
+    private TppProperties tppProperties;
+
     public AccountService(AuthorizeService authorizeService, TppAisClient tppAisClient, FintechUiConfig uiConfig) {
         super(authorizeService);
         this.tppAisClient = tppAisClient;
         this.uiConfig = uiConfig;
     }
 
-    public ResponseEntity listAccounts(ContextInformation contextInformation,
-                                       SessionEntity sessionEntity,
+    public ResponseEntity listAccounts(SessionEntity sessionEntity,
                                        RedirectUrlsEntity redirectUrlsEntity,
                                        RequestInfoEntity requestInfoEntity) {
         if (mockTppAisString != null && mockTppAisString.equalsIgnoreCase("true") ? true : false) {
@@ -38,7 +46,7 @@ public class AccountService extends HandleAcceptedService {
             return new ResponseEntity<>(new TppListAccountsMock().getAccountList(), HttpStatus.OK);
         }
 
-        ResponseEntity accounts = readOpbaResponse(contextInformation, sessionEntity, redirectUrlsEntity, requestInfoEntity);
+        ResponseEntity accounts = readOpbaResponse(sessionEntity, redirectUrlsEntity, requestInfoEntity);
 
         switch (accounts.getStatusCode()) {
             case OK:
@@ -52,21 +60,16 @@ public class AccountService extends HandleAcceptedService {
         }
     }
 
-    private ResponseEntity readOpbaResponse(
-            ContextInformation contextInformation,
-            SessionEntity sessionEntity,
-            RedirectUrlsEntity redirectUrlsEntity,
-            RequestInfoEntity requestInfoEntity
-    ) {
+    private ResponseEntity readOpbaResponse(SessionEntity sessionEntity, RedirectUrlsEntity redirectUrlsEntity, RequestInfoEntity requestInfoEntity) {
         ResponseEntity accounts;
         if (null != sessionEntity.getServiceSessionId()) {
-             accounts = tppAisClient.getAccounts(
-                    contextInformation.getFintechID(),
-                    contextInformation.getServiceSessionPassword(),
+            accounts = tppAisClient.getAccounts(
+                    tppProperties.getFintechID(),
+                    tppProperties.getServiceSessionPassword(),
                     sessionEntity.getLoginUserName(),
                     redirectUrlsEntity.buildOkUrl(uiConfig),
                     redirectUrlsEntity.buildNokUrl(uiConfig),
-                    contextInformation.getXRequestID(),
+                    UUID.fromString(restRequestContext.getRequestId()),
                     requestInfoEntity.getBankId(),
                     sessionEntity.getPsuConsentSession(),
                     sessionEntity.getServiceSessionId());
@@ -76,12 +79,12 @@ public class AccountService extends HandleAcceptedService {
             // https://github.com/adorsys/open-banking-gateway/issues/303
             accounts = tppAisClient.getTransactions(
                     UUID.randomUUID().toString(), // As consent is missing this will be ignored
-                    contextInformation.getFintechID(),
-                    contextInformation.getServiceSessionPassword(),
+                    tppProperties.getFintechID(),
+                    tppProperties.getServiceSessionPassword(),
                     sessionEntity.getLoginUserName(),
                     redirectUrlsEntity.buildOkUrl(uiConfig),
                     redirectUrlsEntity.buildNokUrl(uiConfig),
-                    contextInformation.getXRequestID(),
+                    UUID.fromString(restRequestContext.getRequestId()),
                     requestInfoEntity.getBankId(),
                     sessionEntity.getPsuConsentSession(),
                     sessionEntity.getServiceSessionId(),

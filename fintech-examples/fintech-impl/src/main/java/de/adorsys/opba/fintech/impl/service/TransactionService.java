@@ -1,19 +1,24 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
+import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.RequestInfoEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.mapper.ManualMapper;
+import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListTransactionsMock;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -24,14 +29,19 @@ public class TransactionService extends HandleAcceptedService {
     private final FintechUiConfig uiConfig;
     private final TppAisClient tppAisClient;
 
+    @Autowired
+    private RestRequestContext restRequestContext;
+
+    @Autowired
+    private TppProperties tppProperties;
+
     public TransactionService(AuthorizeService authorizeService, TppAisClient tppAisClient, FintechUiConfig uiConfig) {
         super(authorizeService);
         this.tppAisClient = tppAisClient;
         this.uiConfig = uiConfig;
     }
 
-    public ResponseEntity listTransactions(ContextInformation contextInformation,
-                                           SessionEntity sessionEntity,
+    public ResponseEntity listTransactions(SessionEntity sessionEntity,
                                            RedirectUrlsEntity redirectUrlsEntity,
                                            RequestInfoEntity requestInfoEntity) {
 
@@ -42,12 +52,12 @@ public class TransactionService extends HandleAcceptedService {
 
         ResponseEntity<TransactionsResponse> transactions = tppAisClient.getTransactions(
                 requestInfoEntity.getAccountId(),
-                contextInformation.getFintechID(),
-                contextInformation.getServiceSessionPassword(),
+                tppProperties.getFintechID(),
+                tppProperties.getServiceSessionPassword(),
                 sessionEntity.getLoginUserName(),
                 redirectUrlsEntity.buildOkUrl(uiConfig),
                 redirectUrlsEntity.buildNokUrl(uiConfig),
-                contextInformation.getXRequestID(),
+                UUID.fromString(restRequestContext.getRequestId()),
                 requestInfoEntity.getBankId(),
                 sessionEntity.getPsuConsentSession(),
                 sessionEntity.getServiceSessionId(),

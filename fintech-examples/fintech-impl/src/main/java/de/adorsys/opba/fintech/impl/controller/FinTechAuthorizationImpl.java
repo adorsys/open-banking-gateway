@@ -6,7 +6,6 @@ import de.adorsys.opba.fintech.api.model.generated.UserProfile;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAuthorizationApi;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
-import de.adorsys.opba.fintech.impl.service.ContextInformation;
 import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +25,8 @@ import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_ID;
 public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
     private final AuthorizeService authorizeService;
     private final RedirectHandlerService redirectHandlerService;
+    private final RestRequestContext restRequestContext;
+
 
     @Override
     public ResponseEntity<InlineResponse200> loginPOST(LoginRequest loginRequest, UUID xRequestID) {
@@ -42,10 +43,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
             }
             response.setUserProfile(userProfile);
 
-            HttpHeaders responseHeaders = authorizeService.fillWithAuthorizationHeaders(
-                    new ContextInformation(),
-                    optionalUserEntity.get()
-            );
+            HttpHeaders responseHeaders = authorizeService.fillWithAuthorizationHeaders(optionalUserEntity.get());
             return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -58,7 +56,6 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
     @Override
     public ResponseEntity<Void> logoutPOST(UUID xRequestID, String xsrfToken) {
-        ContextInformation contextInformation = new ContextInformation();
         log.info("logoutPost is called");
 
         if (!authorizeService.isAuthorized()) {
@@ -68,7 +65,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
         authorizeService.logout(xsrfToken, null);
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(X_REQUEST_ID, contextInformation.getXRequestID().toString());
+        responseHeaders.set(X_REQUEST_ID, restRequestContext.getRequestId());
         return new ResponseEntity<>(null, responseHeaders, HttpStatus.OK);
     }
 
