@@ -43,7 +43,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
             response.setUserProfile(userProfile);
 
             HttpHeaders responseHeaders = authorizeService.fillWithAuthorizationHeaders(
-                    new ContextInformation(xRequestID),
+                    new ContextInformation(),
                     optionalUserEntity.get()
             );
             return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
@@ -58,7 +58,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
     @Override
     public ResponseEntity<Void> logoutPOST(UUID xRequestID, String xsrfToken) {
-        ContextInformation contextInformation = new ContextInformation(xRequestID);
+        ContextInformation contextInformation = new ContextInformation();
         log.info("logoutPost is called");
 
         if (!authorizeService.isAuthorized()) {
