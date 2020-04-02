@@ -3,7 +3,6 @@ package de.adorsys.opba.fintech.impl.service;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
-import de.adorsys.opba.fintech.impl.database.entities.RequestInfoEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListAccountsMock;
@@ -40,13 +39,13 @@ public class AccountService extends HandleAcceptedService {
 
     public ResponseEntity listAccounts(SessionEntity sessionEntity,
                                        RedirectUrlsEntity redirectUrlsEntity,
-                                       RequestInfoEntity requestInfoEntity) {
+                                       String bankID) {
         if (mockTppAisString != null && mockTppAisString.equalsIgnoreCase("true") ? true : false) {
             log.warn("Mocking call to list accounts");
             return new ResponseEntity<>(new TppListAccountsMock().getAccountList(), HttpStatus.OK);
         }
 
-        ResponseEntity accounts = readOpbaResponse(sessionEntity, redirectUrlsEntity, requestInfoEntity);
+        ResponseEntity accounts = readOpbaResponse(bankID, sessionEntity, redirectUrlsEntity);
 
         switch (accounts.getStatusCode()) {
             case OK:
@@ -60,7 +59,7 @@ public class AccountService extends HandleAcceptedService {
         }
     }
 
-    private ResponseEntity readOpbaResponse(SessionEntity sessionEntity, RedirectUrlsEntity redirectUrlsEntity, RequestInfoEntity requestInfoEntity) {
+    private ResponseEntity readOpbaResponse(String bankID, SessionEntity sessionEntity, RedirectUrlsEntity redirectUrlsEntity) {
         ResponseEntity accounts;
         if (null != sessionEntity.getServiceSessionId()) {
             accounts = tppAisClient.getAccounts(
@@ -70,7 +69,7 @@ public class AccountService extends HandleAcceptedService {
                     redirectUrlsEntity.buildOkUrl(uiConfig),
                     redirectUrlsEntity.buildNokUrl(uiConfig),
                     UUID.fromString(restRequestContext.getRequestId()),
-                    requestInfoEntity.getBankId(),
+                    bankID,
                     sessionEntity.getPsuConsentSession(),
                     sessionEntity.getServiceSessionId());
         } else {
@@ -85,14 +84,14 @@ public class AccountService extends HandleAcceptedService {
                     redirectUrlsEntity.buildOkUrl(uiConfig),
                     redirectUrlsEntity.buildNokUrl(uiConfig),
                     UUID.fromString(restRequestContext.getRequestId()),
-                    requestInfoEntity.getBankId(),
+                    bankID,
                     sessionEntity.getPsuConsentSession(),
                     sessionEntity.getServiceSessionId(),
-                    requestInfoEntity.getDateFrom(),
-                    requestInfoEntity.getDateTo(),
-                    requestInfoEntity.getEntryReferenceFrom(),
-                    requestInfoEntity.getBookingStatus(),
-                    requestInfoEntity.getDeltaList());
+                    null,
+                    null,
+                    null,
+                    null,
+                    null);
         }
         return accounts;
     }

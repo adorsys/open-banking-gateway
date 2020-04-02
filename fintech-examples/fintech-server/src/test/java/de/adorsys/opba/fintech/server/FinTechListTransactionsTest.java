@@ -1,5 +1,6 @@
 package de.adorsys.opba.fintech.server;
 
+import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import lombok.SneakyThrows;
 import org.json.JSONArray;
@@ -33,11 +34,11 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
     @SneakyThrows
     public void testListTransactionsForOk() {
         BankProfileTestResult result = getBankProfileTestResult();
-        setServiceSessionId(result, UUID.randomUUID());
+        setServiceSessionId(UUID.randomUUID());
         List<String> accountIDs = listAccountsForOk(result);
         when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile("TPP_LIST_TRANSACTIONS.json"), TransactionsResponse.class)));
-        List<String> amounts = listAmounts(result.getXsrfToken(), result.getBankUUID(), accountIDs.get(0));
+        List<String> amounts = listAmounts(result.getBankUUID(), accountIDs.get(0));
         assertTrue(amounts.containsAll(Arrays.asList(new String[]{"1000"})));
     }
 
@@ -53,17 +54,17 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
                 .build();
 
         BankProfileTestResult result = getBankProfileTestResult();
-        setServiceSessionId(result, UUID.randomUUID());
+        setServiceSessionId(UUID.randomUUID());
         List<String> accountIDs = listAccountsForOk(result);
         when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(accepted);
-        MvcResult mvcResult = plainListAmounts(result.getXsrfToken(), result.getBankUUID(), accountIDs.get(0));
+        MvcResult mvcResult = plainListAmounts(result.getBankUUID(), accountIDs.get(0));
         assertEquals(HttpStatus.ACCEPTED.value(), mvcResult.getResponse().getStatus());
     }
 
     @SneakyThrows
-    List<String> listAmounts(String xsrfToken, String bankUUID, String accountID) {
-        MvcResult mvcResult = plainListAmounts(xsrfToken, bankUUID, accountID);
+    List<String> listAmounts(String bankUUID, String accountID) {
+        MvcResult mvcResult = plainListAmounts(bankUUID, accountID);
         assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
 
         List<String> amountList = new ArrayList<>();
@@ -76,11 +77,11 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
         return amountList;
     }
 
-    private MvcResult plainListAmounts(String xsrfToken, String bankUUID, String accountID) throws Exception {
+    private MvcResult plainListAmounts(String bankUUID, String accountID) throws Exception {
         return this.mvc
                 .perform(get(FIN_TECH_LIST_TRANSACTIONS_URL, bankUUID, accountID)
-                        .header("X-Request-ID", UUID.randomUUID().toString())
-                        .header("X-XSRF-TOKEN", xsrfToken)
+                        .header(Consts.HEADER_X_REQUEST_ID, restRequestContext.getRequestId())
+                        .header(Consts.HEADER_XSRF_TOKEN, restRequestContext.getXsrfTokenHeaderField())
                         .header("Fintech-Redirect-URL-OK", "ok")
                         .header("Fintech-Redirect-URL-NOK", "notok"))
                 .andDo(print())

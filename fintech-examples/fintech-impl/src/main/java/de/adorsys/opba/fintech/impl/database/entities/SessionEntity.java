@@ -2,7 +2,6 @@ package de.adorsys.opba.fintech.impl.database.entities;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,11 +12,7 @@ import lombok.SneakyThrows;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -42,28 +37,15 @@ public class SessionEntity {
     private String loginUserName;
     private String fintechUserId;
     private String password;
-    private String xsrfToken;
     private String psuConsentSession;
     private UUID serviceSessionId;
+    private String sessionCookieValue;
 
-    // TODO orphanRemoval should be true, but thatn deleting  fails. Dont know hot to
+    // TODO orphanRemoval should be true, but thatn deleting  fails. Dont know how to
     // test with different transactions yet
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
     private List<LoginEntity> logins = new ArrayList<>();
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "name", column = @Column(name = "session_cookie_name")),
-            @AttributeOverride(name = "value", column = @Column(name = "session_cookie_value"))
-    })
-    private CookieEntity sessionCookie;
-
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "name", column = @Column(name = "redirect_cookie_name")),
-            @AttributeOverride(name = "value", column = @Column(name = "redirect_cookie_value"))
-    })
-    private CookieEntity redirectCookie;
 
     @SneakyThrows
     public static String createSessionCookieValue(String fintechUserId, String xsrfToken) {
@@ -81,12 +63,6 @@ public class SessionEntity {
             return;
         }
         throw new RuntimeException("session cookie not valid " + sessionCookieValue);
-    }
-
-    public SessionEntity setSessionCookieValue(String value) {
-        log.info("session cookie will be {}", value);
-        sessionCookie = CookieEntity.builder().name(Consts.COOKIE_SESSION_COOKIE_NAME).value(value).build();
-        return this;
     }
 
     public void addLogin(OffsetDateTime time) {

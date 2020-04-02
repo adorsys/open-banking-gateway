@@ -3,6 +3,7 @@ package de.adorsys.opba.fintech.server;
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
+import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import de.adorsys.opba.fintech.server.config.TestConfig;
 import de.adorsys.opba.fintech.server.feignmocks.TppAisClientFeignMock;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
@@ -59,7 +60,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     @SneakyThrows
     public void testListAccountsFor200() {
         BankProfileTestResult result = getBankProfileTestResult();
-        setServiceSessionId(result, UUID.randomUUID());
+        setServiceSessionId(UUID.randomUUID());
         List<String> accountIDs = listAccountsForOk(result);
         assertTrue(accountIDs.containsAll(Arrays.asList(new String[]{"12345", "67890"})));
     }
@@ -69,7 +70,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
         when(tppAisClientFeignMock.getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile("TPP_LIST_ACCOUNTS.json"), AccountList.class)));
 
-        MvcResult mvcResult = plainListAccounts(result.getXsrfToken(), result.getBankUUID());
+        MvcResult mvcResult = plainListAccounts(result.getBankUUID());
         assertEquals(OK.value(), mvcResult.getResponse().getStatus());
         log.info("GOT RESULT STRING: {}", mvcResult.getResponse().getContentAsString());
         List<String> accountIDs = new ArrayList<>();
@@ -92,23 +93,23 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
                 .location(new URI("affe"))
                 .build();
         BankProfileTestResult result = getBankProfileTestResult();
-        setServiceSessionId(result, null);
+        setServiceSessionId(null);
         when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any())).thenReturn(accepted);
 
-        MvcResult mvcResult = plainListAccounts(result.getXsrfToken(), result.getBankUUID());
+        MvcResult mvcResult = plainListAccounts(result.getBankUUID());
         assertEquals(ACCEPTED.value(), mvcResult.getResponse().getStatus());
         assertEquals("redirectCode", mvcResult.getResponse().getHeader(REDIRECT_CODE));
     }
 
 
     @SneakyThrows
-    MvcResult plainListAccounts(String xsrfToken, String bankUUID) {
-        log.info("xsrfToken {} bankUUID {}", xsrfToken, bankUUID);
+    MvcResult plainListAccounts(String bankUUID) {
+        log.info("bankUUID {}", bankUUID);
         return this.mvc
                 .perform(get(FIN_TECH_LIST_ACCOUNTS_URL, bankUUID)
-                        .header("X-Request-ID", UUID.randomUUID().toString())
-                        .header("X-XSRF-TOKEN", xsrfToken)
+                        .header(Consts.HEADER_X_REQUEST_ID, restRequestContext.getRequestId())
+                        .header(Consts.HEADER_XSRF_TOKEN, restRequestContext.getXsrfTokenHeaderField())
                         .header("Fintech-Redirect-URL-OK", "ok")
                         .header("Fintech-Redirect-URL-NOK", "notok"))
                 .andDo(print())
@@ -135,8 +136,8 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     public void loginPostUnAuthorized() {
     }
 
-    protected void setServiceSessionId(BankProfileTestResult result, UUID serviceSessionId) {
-        SessionEntity session = userRepository.findByXsrfToken(result.getXsrfToken()).get();
+    protected void setServiceSessionId(UUID serviceSessionId) {
+        SessionEntity session = userRepository.findBySessionCookieValue(restRequestContext.getSessionCookieValue()).get();
         session.setServiceSessionId(serviceSessionId);
         userRepository.save(session);
     }
