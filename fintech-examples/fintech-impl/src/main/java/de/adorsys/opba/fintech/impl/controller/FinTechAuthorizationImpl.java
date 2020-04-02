@@ -30,7 +30,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
     @Override
     public ResponseEntity<InlineResponse200> loginPOST(LoginRequest loginRequest, UUID xRequestID) {
-        log.info("loginPost is called");
+        log.debug("loginPost is called for {}", loginRequest.getUsername());
         Optional<SessionEntity> optionalUserEntity = authorizeService.login(loginRequest);
         if (optionalUserEntity.isPresent()) {
             SessionEntity sessionEntity = optionalUserEntity.get();
