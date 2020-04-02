@@ -13,6 +13,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -40,11 +41,16 @@ public class SessionEntity {
     private String psuConsentSession;
     private UUID serviceSessionId;
     private String sessionCookieValue;
+    // FIXME call 4c is missing
+    @Column(nullable = false)
+    private Boolean consentConfirmed;
+
 
     // TODO orphanRemoval should be true, but thatn deleting  fails. Dont know how to
     // test with different transactions yet
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
     private List<LoginEntity> logins = new ArrayList<>();
+
 
 
     @SneakyThrows
