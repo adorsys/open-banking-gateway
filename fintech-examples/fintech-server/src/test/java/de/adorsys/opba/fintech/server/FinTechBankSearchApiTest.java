@@ -1,6 +1,8 @@
 package de.adorsys.opba.fintech.server;
 
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
+import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
+import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import de.adorsys.opba.fintech.server.config.TestConfig;
 import de.adorsys.opba.fintech.server.feignmocks.TppBankSearchClientFeignMock;
 import de.adorsys.opba.tpp.banksearch.api.model.generated.BankProfileResponse;
@@ -15,11 +17,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Answers;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +31,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import javax.servlet.http.Cookie;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,6 +60,9 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     private static final String FIN_TECH_AUTH_LOGOUT_URL = "/v1/logout";
     private static final String FIN_TECH_BANK_SEARCH_URL = "/v1/search/bankSearch";
     private static final String FIN_TECH_BANK_PROFILE_URL = "/v1/search/bankProfile";
+
+    @MockBean(reset = MockReset.NONE, answer = Answers.CALLS_REAL_METHODS)
+    protected RestRequestContext restRequestContext;
 
     @MockBean
     protected TppBankSearchClientFeignMock tppBankSearchClientFeignMock;
@@ -89,7 +97,8 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     @SneakyThrows
     public void logoutPostOk() {
         String xsrfToken = authOk("peter", "1234");
-        plainLogout(xsrfToken);
+        MvcResult result = plainLogout(xsrfToken);
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
     }
 
     @Test
@@ -217,13 +226,23 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     @SneakyThrows
     MvcResult plainauth(String username, String password) {
         LoginBody loginBody = new LoginBody(username, password);
-        return this.mvc
+        MvcResult mvcResult = this.mvc
                 .perform(post(FIN_TECH_AUTH_URL)
                         .header("X-Request-ID", UUID.randomUUID().toString())
                         .content(GSON.toJson(loginBody))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andReturn();
+        String sessionValue = null;
+        Cookie sessionCookie = mvcResult.getResponse().getCookie(Consts.COOKIE_SESSION_COOKIE_NAME);
+        if (sessionCookie != null) {
+            sessionValue = mvcResult.getResponse().getCookie(Consts.COOKIE_SESSION_COOKIE_NAME).getValue();
+        }
+        String xsrfToken = mvcResult.getResponse().getHeader(Consts.HEADER_XSRF_TOKEN);
+        restRequestContext.setSessionCookieValue(sessionValue);
+        restRequestContext.setXsrfTokenHeaderField(xsrfToken);
+        log.info("RestRequestContext is now:         {}", restRequestContext.toString());
+        return mvcResult;
     }
 
     @SneakyThrows

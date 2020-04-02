@@ -1,6 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
+import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.CookieEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
@@ -28,11 +29,11 @@ import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_ID;
 @Configuration
 @RequiredArgsConstructor
 public class AuthorizeService {
-    private static final boolean CHECK_SESSION_COOKIE_TODO = false;
     private static final String UNIVERSAL_PASSWORD = "1234";
 
     private final UserRepository userRepository;
     private final CookieConfigProperties cookieConfigProperties;
+    private final RestRequestContext restRequestContext;
 
     /**
      * @param loginRequest
@@ -114,19 +115,23 @@ public class AuthorizeService {
     }
 
     @Transactional
-    public boolean isAuthorized(String xsrfToken, String sessionCookieContent) {
+    public boolean isAuthorized() {
+        log.info("passed in context is {}", restRequestContext.toString());
+        log.info("xsrftoken    : {}", restRequestContext.getXsrfTokenHeaderField());
+        log.info("sessioncookie: {}", restRequestContext.getSessionCookieValue());
+        if (restRequestContext.getSessionCookieValue() == null || restRequestContext.getXsrfTokenHeaderField() == null) {
+                return false;
+        }
+        String xsrfToken = restRequestContext.getXsrfTokenHeaderField();
         Optional<SessionEntity> optionalUserEntity = userRepository.findByXsrfToken(xsrfToken);
         if (!optionalUserEntity.isPresent()) {
             log.debug("XSRF-TOKEN {} is unknown", xsrfToken);
             return false;
         }
 
-        if (!CHECK_SESSION_COOKIE_TODO) {
-            log.debug("XSRF-TOKEN {} is known", xsrfToken);
-            return true;
-        }
-        SessionEntity.validateSessionCookieValue(sessionCookieContent, xsrfToken);
-        return optionalUserEntity.get().getSessionCookie().getValue().equals(sessionCookieContent);
+        String sessionCookieValue = restRequestContext.getSessionCookieValue();
+        SessionEntity.validateSessionCookieValue(sessionCookieValue, xsrfToken);
+        return optionalUserEntity.get().getSessionCookie().getValue().equals(sessionCookieValue);
     }
 
 
