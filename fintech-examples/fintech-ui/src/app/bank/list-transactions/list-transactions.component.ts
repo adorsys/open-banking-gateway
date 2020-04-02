@@ -1,13 +1,14 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AisService} from '../services/ais.service';
-import {Subscription} from 'rxjs';
-import {AccountReport} from '../../api';
-import {RedirectStruct} from '../redirect-page/redirect-struct';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AisService } from '../services/ais.service';
+import { Subscription } from 'rxjs';
+import { AccountReport } from '../../api';
+import { RedirectStruct } from '../redirect-page/redirect-struct';
 
 @Component({
   selector: 'app-list-transactions',
-  templateUrl: './list-transactions.component.html'
+  templateUrl: './list-transactions.component.html',
+  styleUrls: ['./list-transactions.component.scss']
 })
 export class ListTransactionsComponent implements OnInit, OnDestroy {
   private accountsSubscription: Subscription;
