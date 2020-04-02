@@ -1,0 +1,42 @@
+spring:
+  datasource:
+    username: postgres
+    password: docker
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      schema: banking_protocol
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: de.adorsys.opba.db.hibernate.PrefixAndSnakeCasePhysicalNamingStrategy
+      # DDL is handled by Liquibase
+      ddl-auto: validate
+    open-in-view: false
+  liquibase:
+    enabled: true
+    change-log: classpath:migration/master.xml
+    parameters:
+      table-prefix: opb_
+      fill-with-mock-data: true
+bank-search:
+  start: 0
+  max: 10
+  query: "SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, name) as sml
+           FROM opb_bank WHERE word_similarity(:keyword, name) >= 0.6
+         UNION
+          SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bic) as sml
+           FROM opb_bank WHERE word_similarity(:keyword, bic) >= 0.8
+         UNION
+          SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bank_code) as sml
+           FROM opb_bank WHERE word_similarity(:keyword, bank_code) >= 0.8
+         ORDER BY sml DESC, id
+         LIMIT :max
+         OFFSET :start"
+facade:
+  encryption:
+    providerName: BC
+    algorithm: PBEWithSHA256And256BitAES-CBC-BC
+    saltLength: 8
+    iterationCount: 1024
+    keySetPath: example-keyset.json

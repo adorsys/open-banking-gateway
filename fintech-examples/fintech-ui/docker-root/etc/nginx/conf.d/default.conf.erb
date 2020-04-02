@@ -1,0 +1,27 @@
+server {
+  listen 4200;
+
+  index index.html;
+  root /usr/share/nginx/html/;
+
+  access_log /var/log/nginx/access.log <%= ENV['NGINX_ACCESS_LOG_DEBUG'] %>;
+  error_log /var/log/nginx/error.log <%= ENV['NGINX_ERROR_LOG_DEBUG'] %>;
+
+  <% if ENV['BACKEND_URL'] && !ENV['BACKEND_URL'].empty? %>
+  location /fintech-api-proxy/ {
+        proxy_pass <%= ENV['BACKEND_URL'] %>/;
+
+        proxy_set_header          Host            $host;
+        proxy_set_header          X-Real-IP       $remote_addr;
+        proxy_set_header          X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_redirect default;
+        proxy_http_version 1.1;
+  }
+  <% end %>
+
+  location / {
+        proxy_intercept_errors on;
+        error_page 404 = /index.html;
+  }
+
+}

@@ -1,0 +1,55 @@
+server:
+  port: 8086
+  controller:
+    sessioncookie:
+      secure: false
+      maxAge: 300
+      httpOnly: true
+      path: /
+      sameSite: Strict
+
+    redirectcookie:
+      secure: false
+      maxAge: 1800
+      httpOnly: false
+      path: /v1/{auth-id}/fromConsentOk
+      sameSite: Strict
+
+      # sameSite: Strict|Lax|none
+      # samesite SameSite prevents the browser from sending this cookie along with cross-site requests. Possible values for the flag are lax or strict.
+      # The strict value will prevent the cookie from being sent by the browser to the target site in all cross-site browsing context, even when following a regular link.
+      # The lax value will only send cookies for TOP LEVEL navigation GET requests. This is sufficient for user tracking, but it will prevent many CSRF attacks.
+
+tpp:
+  url: http://localhost:8085
+
+mock:
+  tppais:
+    listaccounts: false
+    listtransactions: false
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost/open_banking?currentSchema=fintech
+    username: postgres
+    password: docker
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      schema: fintech
+  liquibase:
+    enabled: true
+    change-log: classpath:migration/master.xml
+    parameters:
+      table-prefix: opb_
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: de.adorsys.opba.fintech.impl.database.hibernate.PrefixAndSnakeCasePhysicalNamingStrategy
+      # DDL is handled by Liquibase
+      ddl-auto: validate
+
+fintech-ui:
+  redirect-url: http://localhost:4444/redirect-after-consent?redirectCode={redirectCode}
+  unauthorized-url: http://localhost:4444/
+  exception-url: http://localhost:4444/excaption-redirect

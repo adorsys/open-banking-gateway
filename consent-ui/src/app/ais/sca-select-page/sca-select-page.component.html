@@ -1,0 +1,10 @@
+<form (ngSubmit)="onSubmit()" *ngIf="scaMethods.length > 0" [formGroup]="scaMethodForm" autocomplete="off" novalidate>
+  <div class="form-group">
+    <label for="scaMethod">Example select</label>
+    <select [formControl]="selectedMethod" class="form-control" id="scaMethod">
+      <option *ngFor="let scaMethod of scaMethods" [value]="scaMethod.id">{{ scaMethod.methodValue }}</option>
+    </select>
+  </div>
+
+  <button id="do_submit" class="btn btn-primary w-100" type="submit" [disabled]="!selectedMethod.value">Submit</button>
+</form>

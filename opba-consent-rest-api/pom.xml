@@ -5,14 +5,14 @@
   <parent>
     <groupId>de.adorsys.opba</groupId>
     <artifactId>open-banking-gateway</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.6</version>
   </parent>
 
   <artifactId>opba-consent-rest-api</artifactId>
   <name>opba-consent-rest-api</name>
 
   <properties>
-    <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+    <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
     Change this if depth changes. Current: /open-banking-gateway/open-banking-gateway -->
     <main.basedir>${project.parent.basedir}</main.basedir>
     <openapi-spec-file-location>${project.basedir}/src/main/resources/static/tpp_consent_api.yml</openapi-spec-file-location>
@@ -79,10 +79,10 @@
               <generateModelTests>false</generateModelTests>
               <configOptions>
                 <sourceFolder>src/main/java</sourceFolder>
-                <basePackage>de.adorsys.opba.consentapi</basePackage>
-                <configPackage>de.adorsys.opba.consentapi.config</configPackage>
-                <modelPackage>de.adorsys.opba.consentapi.model</modelPackage>
-                <apiPackage>de.adorsys.opba.consentapi.resource</apiPackage>
+                <basePackage>de.adorsys.opba.consentapi.generated</basePackage>
+                <configPackage>de.adorsys.opba.consentapi.config.generated</configPackage>
+                <modelPackage>de.adorsys.opba.consentapi.model.generated</modelPackage>
+                <apiPackage>de.adorsys.opba.consentapi.resource.generated</apiPackage>
                 <interfaceOnly>true</interfaceOnly>
                 <skipOverwrite>true</skipOverwrite>
                 <dateLibrary>java8</dateLibrary>
@@ -97,6 +97,8 @@
                 <generateSupportingFiles>false</generateSupportingFiles>
                 <generateApiTests>false</generateApiTests>
                 <generateModelTests>false</generateModelTests>
+                <async>true</async>
+                <responseWrapper>java.util.concurrent.CompletableFuture</responseWrapper>
               </configOptions>
             </configuration>
           </execution>

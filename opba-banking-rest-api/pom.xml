@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>de.adorsys.opba</groupId>
-    <artifactId>open-banking-gateway</artifactId>
-    <version>0.0.5</version>
-  </parent>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>de.adorsys.opba</groupId>
+        <artifactId>open-banking-gateway</artifactId>
+        <version>0.0.6</version>
+    </parent>
 
-  <artifactId>opba-banking-rest-api</artifactId>
-  <name>opba-banking-rest-api</name>
+    <artifactId>opba-banking-rest-api</artifactId>
+    <name>opba-banking-rest-api</name>
 
   <properties>
-    <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+    <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
     Change this if depth changes. Current: /open-banking-gateway/opba-banking-rest-api -->
     <main.basedir>${project.parent.basedir}</main.basedir>
     <openapi-spec-file-location-banking_api_ais>${project.basedir}/src/main/resources/static/tpp_banking_api_ais.yml</openapi-spec-file-location-banking_api_ais>
@@ -20,49 +20,60 @@
     <openapi-spec-file-location-tpp_token_api>${project.basedir}/src/main/resources/static/tpp_banking_api_token.yml</openapi-spec-file-location-tpp_token_api>
   </properties>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-    </dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
 
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-webmvc</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-annotations</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.annotation</groupId>
-      <artifactId>javax.annotation-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-    </dependency>
-  </dependencies>
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
+    <build>
+        <plugins>
+            <plugin>
                 <groupId>io.swagger.codegen.v3</groupId>
                 <artifactId>swagger-codegen-maven-plugin</artifactId>
                 <version>${swagger-codegen-maven-plugin.version}</version>
@@ -78,10 +89,10 @@
                             <output>${project.build.directory}/generated-sources/open-api/</output>
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
-                                <basePackage>de.adorsys.opba.tppbankingapi.ais</basePackage>
-                                <configPackage>de.adorsys.opba.tppbankingapi.config</configPackage>
-                                <modelPackage>de.adorsys.opba.tppbankingapi.ais.model</modelPackage>
-                                <apiPackage>de.adorsys.opba.tppbankingapi.ais.resource</apiPackage>
+                                <basePackage>de.adorsys.opba.tppbankingapi.ais.generated</basePackage>
+                                <configPackage>de.adorsys.opba.tppbankingapi.config.generated</configPackage>
+                                <modelPackage>de.adorsys.opba.tppbankingapi.ais.model.generated</modelPackage>
+                                <apiPackage>de.adorsys.opba.tppbankingapi.ais.resource.generated</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>
@@ -91,6 +102,8 @@
                                 <useTags>true</useTags>
                                 <library>spring-mvc</library>
                                 <swaggerDocketConfig>false</swaggerDocketConfig>
+                                <async>true</async>
+                                <responseWrapper>java.util.concurrent.CompletableFuture</responseWrapper>
                             </configOptions>
                             <generateApiDocumentation>false</generateApiDocumentation>
                             <generateModelDocumentation>false</generateModelDocumentation>
@@ -110,10 +123,10 @@
                             <output>${project.build.directory}/generated-sources/open-api/</output>
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
-                                <basePackage>de.adorsys.opba.tppbankingapi.search</basePackage>
-                                <configPackage>de.adorsys.opba.tppbankingapi.config</configPackage>
-                                <modelPackage>de.adorsys.opba.tppbankingapi.search.model</modelPackage>
-                                <apiPackage>de.adorsys.opba.tppbankingapi.search.resource</apiPackage>
+                                <basePackage>de.adorsys.opba.tppbankingapi.search.generated</basePackage>
+                                <configPackage>de.adorsys.opba.tppbankingapi.config.generated</configPackage>
+                                <modelPackage>de.adorsys.opba.tppbankingapi.search.model.generated</modelPackage>
+                                <apiPackage>de.adorsys.opba.tppbankingapi.search.resource.generated</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>
@@ -142,10 +155,10 @@
                             <output>${project.build.directory}/generated-sources/open-api/</output>
                             <configOptions>
                                 <sourceFolder>src/main/java</sourceFolder>
-                                <basePackage>de.adorsys.opba.tppbankingapi.token</basePackage>
-                                <configPackage>de.adorsys.opba.tppbankingapi.config</configPackage>
-                                <modelPackage>de.adorsys.opba.tppbankingapi.token.model</modelPackage>
-                                <apiPackage>de.adorsys.opba.tppbankingapi.token.resource</apiPackage>
+                                <basePackage>de.adorsys.opba.tppbankingapi.token.generated</basePackage>
+                                <configPackage>de.adorsys.opba.tppbankingapi.config.generated</configPackage>
+                                <modelPackage>de.adorsys.opba.tppbankingapi.token.model.generated</modelPackage>
+                                <apiPackage>de.adorsys.opba.tppbankingapi.token.resource.generated</apiPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>
@@ -172,26 +185,26 @@
                     </dependency>
                 </dependencies>
             </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <version>${build-helper-maven-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>add-generated-source</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>add-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>${project.build.directory}/generated-sources/open-api/src/main/java</source>
-              </sources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${build-helper-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>add-generated-source</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/open-api/src/main/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

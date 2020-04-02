@@ -1,22 +1,21 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { BankProfile } from '../models/bank-profile.model';
+import { map } from 'rxjs/operators';
+import { BankProfile, FinTechBankSearchService } from '../../api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BankProfileService {
-  // path resolved by proxy
-  readonly API_PATH = 'fintech-api-proxy';
-
-  constructor(private http: HttpClient) {}
+  constructor(private finTechBankSearchService: FinTechBankSearchService) {}
 
   getBankProfile(bankId): Observable<BankProfile> {
-    return this.http.get<BankProfile>(this.API_PATH + '/v1/banks/profile', {
-      params: {
-        id: bankId
-      }
-    });
+    // required headers are set in http interceptor
+    // that's the reason for empty strings
+    return this.finTechBankSearchService.bankProfileGET('', '', bankId).pipe(
+      map(response => {
+        return response.bankProfile;
+      })
+    );
   }
 }

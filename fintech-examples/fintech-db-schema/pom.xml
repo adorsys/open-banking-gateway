@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>de.adorsys.opba</groupId>
+        <artifactId>fintech-examples</artifactId>
+        <version>0.0.6</version>
+    </parent>
+
+    <packaging>jar</packaging>
+
+    <properties>
+        <ruleset.basedir>../..</ruleset.basedir>
+        <!--
+        This property allows to put path to different files using command line:
+        mvn -DpropertyFile=liquibase.my-special.properties liquibase:update
+        -->
+        <propertyFile>liquibase.properties</propertyFile>
+        <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
+        Change this if depth changes. Current: /open-banking-gateway/fintech-examples/fintech-server -->
+        <main.basedir>${project.parent.parent.basedir}</main.basedir>
+    </properties>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>fintech-db-schema</artifactId>
+
+</project>

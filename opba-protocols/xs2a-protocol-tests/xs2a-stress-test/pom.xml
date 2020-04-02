@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>de.adorsys.opba</groupId>
+        <artifactId>xs2a-protocol-tests</artifactId>
+        <version>0.0.6</version>
+    </parent>
+
+    <!-- Stress test wit Wiremock backed ASPSP -->
+    <artifactId>xs2a-stress-test</artifactId>
+    <name>opba-protocols/xs2a-protocol-tests/xs2a-stress-test</name>
+
+    <properties>
+        <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
+        Change this if depth changes. Current: /open-banking-gateway/opba-protocols/xs2a-protocol-tests/xs2a-bdd-wiremock -->
+        <main.basedir>${project.parent.parent.parent.basedir}</main.basedir>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>xs2a-bdd-wiremock</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jsmart</groupId>
+            <artifactId>zerocode-tdd</artifactId>
+            <version>${zerocode.tdd.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jsmart</groupId>
+            <artifactId>zerocode-tdd-jupiter</artifactId>
+            <version>${zerocode.tdd.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-remote-resources-plugin</artifactId>
+                <version>${maven-remote-resources-plugin.version}</version>
+                <configuration>
+                    <resourceBundles>
+                        <resourceBundle>de.adorsys.opba:xs2a-bdd-tests-common:${project.version}</resourceBundle>
+                        <resourceBundle>de.adorsys.opba:xs2a-bdd-wiremock:${project.version}</resourceBundle>
+                    </resourceBundles>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+

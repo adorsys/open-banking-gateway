@@ -1,9 +1,7 @@
 # Consume API after Consent Authorization
 
 ## Description
-This workflow starts with the redirect link leaving from either [Authorize Consent Redirect Approach](5b-psuAuthRedirectConsent.md) or [Authorize Consent Embedded Approach](5a-psuAuthEmbeddedConsent.md). This redirect link will be used by the FinTechApi to retrieve a corresponding Token that can be used to request services on behalf of the PSU.
-
-As long as this token is valid, token will be used to perform corresponding service request on behalf on the PSU. 
+This workflow starts with the redirect link leaving from either [Authorize Consent Redirect Approach](5b-psuAuthRedirectConsent.md) or [Authorize Consent Embedded Approach](5a-psuAuthEmbeddedConsent.md). This redirect link will be used by the ConsetAuthorizeUI to start the FinTechUI. 
 
 ## Diagram
 
@@ -11,19 +9,20 @@ As long as this token is valid, token will be used to perform corresponding serv
 
 ## Use Cases
 
+### BankingService-001 : FinTechUI.loadFinTechUI
+Receiving a 302_RedirectToFintech from the ConsentAuthorisationAPI, the ConsentAuthorisationUI starts the FinTechUI using the location param.
+
+### BankingService-002 : FinTechUI.readXsrfToken
+The FinTechUI uses the provided auth-id to load the xsrfToken stored for the corresponding auth-id.
+
+### BankingService-002 : FinTechUI.buildBackendUrl
+FinTechUI uses the provided auth-id to build the backendUrl used to forward the request to the FinTechAPI. The url has the form: /v1/{auth-id}/fromConsentOk.
+
+
 ### BankingService-010 : FinTechApi.fromConsentOk
-The redirect request coming from the [ConsentAuthorisationApi](dictionary.md#ConsentAuthorisationApi) contains a redirectCode. This request will be forwarded by the FinTechApi to the TppBankingApi. The request contains following information:
+The FinTechAPI uses the provided xsrfToken and RedirectCookie to legitimate the redirect request.
 
-#### redirectCode
-Available in the redirect url. This information will be used to retrieve the authorization token from the TppBankingApi. So the information needs not be processed by the FinTechApi
-
-#### FinTechConsentSessionCookie
-Available in the request header. This cookie shall be set for the Max time given to the PSU for the authorization of the corresponding consent. The cookie can be bound to the end point FinTechApi.fromConsentOk so it does not need to be transported to the server on other requests.
-
-#### finTechConsentSessionState
-Available in the redirect url. Will be used to read and validate the corresponding FinTechConsentSessionCookie.
-
-### BankingService-020 : Validate the redirectLink
+### BankingService-020 : FinTechApi.validateRedirectCall
 The finTechConsentSessionState will be used to read and validate the corresponding FinTechConsentSessionCookie. 
 
 ### BankingService-030 : TppBankingApi.code2Token
@@ -32,8 +31,14 @@ This end point is invoked by the FinTechApi to retrieve token used to send subse
 ### BankingService-040 : BankingProtocol.code2Token
 Forward request to banking protocol.
 
-### BankingService-050 : storePsuConsent
-The returned PsuConsentSession is stored by the FinTechApi for future use. 
+### BankingService-048 : FinTechApi.storePsuConsent
+The returned PsuConsentSession is stored by the FinTechApi for future use.
+
+### BankingService-049 : FinTechUI: 202_ReloadUI
+At the end of the consent process, the FinTechAPI issues a redirect to the FinTechUI to display the original page to the user. 
+
+### BankingService-050 : FinTechApi.listOfTransactions
+Upon displaying the original page, the FinTechUI can reissue the original request to the the FinTechAPI.
 
 ### BankingService-060 .. BankingService-067 Service Requests
-The returned token is used to invoke the service request (ListTransactions). Service result is returned to the FinTechApi and displayed to the PSU.
+Regular execution of the banking service.

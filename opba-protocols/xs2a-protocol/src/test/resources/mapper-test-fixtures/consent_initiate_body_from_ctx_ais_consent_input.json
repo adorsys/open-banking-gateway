@@ -1,0 +1,8 @@
+{
+  "access": null,
+  "recurringIndicator": true,
+  "validUntil": "2021-03-01",
+  "frequencyPerDay": 10,
+  "combinedServiceIndicator": false,
+  "psuId": "99999-99999"
+}

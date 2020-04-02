@@ -1,0 +1,51 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/open_banking?currentSchema=banking_protocol
+    username: postgres
+    password: docker
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      schema: banking_protocol
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: de.adorsys.opba.db.hibernate.PrefixAndSnakeCasePhysicalNamingStrategy
+      # DDL is handled by Liquibase
+      ddl-auto: validate
+    open-in-view: false
+  liquibase:
+    enabled: true
+    change-log: classpath:migration/master.xml
+    parameters:
+      table-prefix: opb_
+      fill-with-mock-data: true
+
+protocol:
+  redirect:
+    to-aspsp: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
+    consent-accounts:
+      ok:  ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+      nok: ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
+      result: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+    parameters:
+      max-array-size: 32
+      provide-more: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+      provide-psu-password: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/authenticate?wrong=#{context.getWrongAuthCredentials()}
+      select-sca-method: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
+      report-sca-result: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/sca-result?wrong=#{context.getWrongAuthCredentials()}
+  gateway-base-url: http://localhost:8085
+  expirable:
+    expire-after-write: PT600S
+  aspspmessages:
+    invalid-credentials: PSU_CREDENTIALS_INVALID
+
+pkcs12:
+  keyStore: sample-qwac.keystore
+  password: password
+
+flowable:
+  process-definition-location-prefix: classpath*:/processes/**/

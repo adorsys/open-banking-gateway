@@ -5,14 +5,14 @@
   <parent>
     <groupId>de.adorsys.opba</groupId>
     <artifactId>fintech-examples</artifactId>
-    <version>0.0.5</version>
+    <version>0.0.6</version>
   </parent>
 
   <artifactId>fintech-api</artifactId>
   <name>fintech-examples/fintech-api</name>
 
   <properties>
-    <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+    <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
     Change this if depth changes. Current: /open-banking-gateway/fintech-examples/fintech-api -->
     <main.basedir>${project.parent.parent.basedir}</main.basedir>
     <openapi-spec-file-location>${project.basedir}/src/main/resources/static/fintech_api.yml</openapi-spec-file-location>
@@ -79,11 +79,11 @@
               <generateModelTests>false</generateModelTests>
               <configOptions>
                 <sourceFolder>src/main/java</sourceFolder>
-                <basePackage>de.adorsys.opba.fintech.api</basePackage>
-                <configPackage>de.adorsys.opba.fintech.api.config</configPackage>
-                <modelPackage>de.adorsys.opba.fintech.api.model</modelPackage>
-                <apiPackage>de.adorsys.opba.fintech.api.resource</apiPackage>
-                <invokerPackage>de.adorsys.opba.fintech.client</invokerPackage>
+                <basePackage>de.adorsys.opba.fintech.api.generated</basePackage>
+                <configPackage>de.adorsys.opba.fintech.api.config.generated</configPackage>
+                <modelPackage>de.adorsys.opba.fintech.api.model.generated</modelPackage>
+                <apiPackage>de.adorsys.opba.fintech.api.resource.generated</apiPackage>
+                <invokerPackage>de.adorsys.opba.fintech.client.generated</invokerPackage>
                 <interfaceOnly>true</interfaceOnly>
                 <skipOverwrite>true</skipOverwrite>
                 <dateLibrary>java8</dateLibrary>

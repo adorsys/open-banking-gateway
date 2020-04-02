@@ -2,6 +2,7 @@
 
 - [AisConsentSpec](dictionary.md#AisConsentSpec)
 - [App](dictionary.md#App)
+- [ASPSP](dictionary.md#ASPSP)
 - [AspspBankingApi](dictionary.md#AspspBankingApi)
 - [BankDescriptor](dictionary.md#BankDescriptor)
 - [BankingProtocolSelector](dictionary.md#BankingProtocolSelector)
@@ -11,6 +12,7 @@
 - [ConsentAuthorisationUI](dictionary.md#ConsentAuthorisationUI)
 - [ConsentData](dictionary.md#ConsentData)
 - [Dictionary](dictionary.md#Dictionary)
+- [FinTech](dictionary.md#FinTech)
 - [FinTechApi](dictionary.md#FinTechApi)
 - [FinTechContext](dictionary.md#FinTechContext)
 - [FinTechDC](dictionary.md#FinTechDC)
@@ -21,6 +23,7 @@
 - [OnlineBankingConsentSessionCookie](dictionary.md#OnlineBankingConsentSessionCookie)
 - [OnlineBankingLoginSessionCookie](dictionary.md#OnlineBankingLoginSessionCookie)
 - [OnlineBankingUI](dictionary.md#OnlineBankingUI)
+- [PSU](dictionary.md#PSU)
 - [PsuConsentSession](dictionary.md#PsuConsentSession)
 - [PsuIdentifier](dictionary.md#PsuIdentifier)
 - [PsuUserAgent](dictionary.md#PsuUserAgent)
@@ -106,6 +109,10 @@ UI used by PSU to authoraise consent in embedded case.
 ### <a name="OnlineBankingUI"></a> OnlineBankingUI
 This UI manages the interaction between the PSU and the ASPSP in redirect cases.
 
+## <a name="FinTech"></a> FinTech
+Organisation that uses Online Banking Services provided by TPP to service PSU with additional services.
+FinTech may or may not have own TPP License.
+
 ## <a name="FinTechDC"></a> FinTechDC
 Data center environment of the FinTech. Host the FinTechApi.
 
@@ -148,6 +155,10 @@ Specification associated with an AisConsent. This is highly dependent on the Ban
 ### <a name="FinTechContext"></a> FinTechContext
 Information used to identify the FinTech application at the TppBankingApi. For example a FinTech SSL client certificate or an APIKey or an oAuth2 Password Grant Credential.
 
+### <a name="PSU"></a> PSU
+
+A Payment Services User is a natural or legal person making use of a payment service as a payee, payer or both.
+
 ### <a name="PsuConsentSession"></a> PsuConsentSession
 Information associated with the consent as exchanged between the FinTechApi and the TppBankingApi. Generally contains:
 - Data needed to customize psu access at the ConsentAuthorisationApi (showInfoPanel, fintechStateHash)
@@ -181,6 +192,9 @@ Help select a banking protocol.
 ## <a name="AspspDC"></a> Aspsp Data Center
 Data center environment of the ASPSP
 
+## <a name="ASPSP"></a> ASPSP
+Account Servicing Payment Service Providers provide and maintain a payment account for a payer as defined by the PSRs and, in the context of the Open Banking Ecosystem are entities that publish Read/Write APIs to permit, with customer consent, payments initiated by third party providers and/or make their customers’ account transaction data available to third party providers via their API end points.
+
 ### <a name="AspspBankingApi"></a> AspspBankingApi 
 Api banking provided by ASPSP. This interface is not directly accessed by the PSU but by the TppBankingApi. TppBankingApi will use a TppContext to authenticate with the TppBankingApi.
 
@@ -212,4 +226,5 @@ This Cookie will be used by the ASPSP to keep a login session of the PSU over th
 
 
 ## <a name="TPP"></a> TPP
-A TPP is a Third Party Provider.
+A TPP is a Third Party Provider - a legal entity that holds a TPP License provided by NCA (PISP, AISP etc). and operates with corresponding QWAC Certificate.
+TPP may serve FinTech companies with XS2A Services.

@@ -1,4 +1,4 @@
-## Development and contributing
+# Development and contributing
 
 ### Internal development process
 Development is performed by 2-weeks sprints (We use kind of Scrum framework).
@@ -51,6 +51,10 @@ Further explanation in [checkstyle](#checkstyle)
 * Please use Optionals and corresponding streams instead of null-checks where possible
 * We prefer using Mockito over EasyMock for unit-tests.
 * We prefer SpringBoot autoconfiguration over manual Configuration where possible
+
+# Adding new modules
+
+When adding new modules or changing other modules ensure you are adding them to `last-module-codecoverage` too.
 
 #### Open API 3.0
 

@@ -1,0 +1,36 @@
+<div class="sidebar">
+  <ul class="nav flex-md-column">
+    <li class="nav-item">
+      <a class="nav-link" [routerLink]="'/search'">
+        <div class="icon__container">
+          <img width="23px" height="23px" alt="bank search" class="text-primary" src="assets/icons/bank-search.png" />
+        </div>
+        <span class="nav__title">Bank search</span>
+      </a>
+    </li>
+    <li class="nav-item{{ showListAccounts ? '' : '--disabled' }}">
+      <a class="nav-link" [routerLink]="getRouterLinkListAccounts()">
+        <div class="icon__container">
+          <img alt="bank_cards" class="text-primary" src="assets/icons/icons8-bank_cards.svg" />
+        </div>
+        <span class="nav__title">Accounts</span>
+      </a>
+    </li>
+    <li class="nav-item{{ showInitiatePayment ? '' : '--disabled' }} sidebar-element">
+      <a class="nav-link" [routerLink]>
+        <div class="icon__container">
+          <img alt="transfer" class="text-primary" src="assets/icons/icons8-sent.svg" />
+        </div>
+        <span class="nav__title">Transfer</span>
+      </a>
+    </li>
+    <li class="nav-item{{ showSettings ? '' : '--disabled' }} sidebar-element">
+      <a class="nav-link" [routerLink]>
+        <div class="icon__container">
+          <img alt="settings" class="text-primary" src="assets/icons/icons8-maintenance.svg" />
+        </div>
+        <span class="nav__title">Setting</span>
+      </a>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,31 @@
+{
+  "id" : "3e68203e-6386-31ef-a146-abc1703f75c1",
+  "request" : {
+    "url" : "/v1/accounts/oN7KTVuJSVotMvPPPavhVo/transactions?dateTo=2020-09-30&bookingStatus=BOTH&dateFrom=2018-01-01",
+    "method" : "GET",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "application/json"
+      },
+      "X-Request-ID" : {
+        "matches" : "[0-9a-zA-z\\-]+"
+      },
+      "PSU-ID" : {
+        "equalTo" : "max.musterman"
+      },
+      "Consent-ID" : {
+        "matches" : "[=_0-9a-zA-z\\-]+"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-v1-accounts-24398.json",
+    "headers" : {
+      "X-Request-Id" : "b75eb6bd-3233-11ea-b535-e2b5b1f1970b",
+      "Content-Type" : "application/json",
+      "Date" : "Wed, 08 Jan 2020 16:27:40 GMT"
+    }
+  },
+  "uuid" : "3e68203e-6386-31ef-a146-abc1703f75c1"
+}

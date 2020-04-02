@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test
+    username: SA
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+  liquibase:
+    change-log: classpath:migration/master.xml
+    parameters:
+      table-prefix: opb_
+
+tpp:
+  url: http://localhost:8086
+
+
+mock:
+  tppais:
+    listtransactions: true
+    listaccounts: true
+
+fintech-ui:
+  redirect-url: http://localhost:4444?redirectCode={redirectCode}
+  exception-url: http://localhost:4444/excaption-redirect
+

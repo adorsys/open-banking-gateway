@@ -6,6 +6,14 @@ paths: {}
 
 components:
   headers:
+    Location:
+      required: true
+      description: |
+        URL where User have to be redirected to in order to perform next step.
+      example: "https://example.com/someservice/some-id/somepage?param=value"
+      schema:
+        type: string
+
     X-Request-ID:
       required: true
       description: |
@@ -27,6 +35,37 @@ components:
       schema:
         type: string
 
+    ServiceSessionPassword:
+      name: Service-Session-Password
+      in: header
+      required: true
+      description: |
+        Password to encrypt users' context
+      example: "qwerty"
+      schema:
+        type: string
+
+    Bank-ID:
+      name: Bank-ID
+      in: header
+      required: false
+      description: |
+        A bank identifier, provided by TPP Bank Search API. To be provided by FinTech only if PsuConsentSession is missing.
+      example: "1234-0XGJK"
+      schema:
+        type: string
+
+    Fintech-User-ID:
+      name: Fintech-User-ID
+      in: header
+      required: true
+      description: |
+        An End-User identifier, known by FinTech, that unique for each physical person.
+        To be provided by FinTech with every request in order to validate the mapping of service request to the particular user.
+      example: "1234-0XGJK"
+      schema:
+        type: string
+
     PSU-Consent-Session:
       name: PSU-Consent-Session
       in: header
@@ -37,6 +76,17 @@ components:
       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicHN1IjoiSm9obl9Eb2UiLCJjb25zZW50SWQiOiI3OGUyODUwMy0xMzZkLTRkODYtYjg0NC1lNWY1NTgyNTc2ZTUiLCJpYXQiOjE1MTYyMzkwMjJ9.4BHXUW9CH63ZTkxKktFFrVGCUuFltFyivHxk3LVg2bs"
       schema:
         type: string
+
+    Service-Session-ID:
+      name: Service-Session-ID
+      in: header
+      required: false
+      description: |
+        Unique ID that identifies service session. Can be used for batch processing to correlate input and output.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
 
     X-Request-ID:
       name: X-Request-ID

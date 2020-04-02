@@ -1,0 +1,289 @@
+/* You can add global styles to this file, and also import other style files */
+@import "./assets/themes/variables";
+@import "~bootstrap/scss/bootstrap";
+@import "./assets/themes/mobile";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-size: var(--textFontSize);
+  font-weight: var(--textFontWeight);
+  font-family: var(--fontFamily);
+  color: var(--bodyFontColor);
+  background: var(--bodyBG);
+
+  @media screen and (max-width: 768px) {
+    font-size: var(--textFontSize768px);
+  }
+  @media screen and (max-width: 1024px) {
+    font-size: var(--textFontSize1024px);
+  }
+}
+
+.logo {
+  width: 200px;
+  height: auto;
+}
+
+.header {
+  &__title {
+    font-size: 2rem;
+  }
+}
+
+.navbar-light {
+  background: var(--light);
+}
+
+.navbar-brand {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+}
+
+a {
+  color: var(--anchorFontColor);
+
+  &.active, &:hover {
+    color: var(--anchorFontColorHover);
+  }
+
+  &.text-primary:hover, &.text-primary:focus {
+    color: var(--anchorFontColorHover) !important;
+  }
+}
+
+.text-dark {
+  font-size: 1rem;
+}
+
+.text-light-dark {
+  color: $COLOR_LIGHT_DARK;
+}
+
+.card {
+  border: none;
+
+  &--large {
+    padding: 2rem 2rem;
+  }
+
+  .card-img-top {
+    width: 420px;
+    margin: auto;
+  }
+
+  .card-body {
+    padding: 0;
+
+    .form-control {
+      padding: 1.5rem 1rem;
+      transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+    .form-check-label {
+      margin-left: 30px;
+      margin-bottom: 20px;
+    }
+  }
+
+  .card-footer {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.no-bg-color {
+  background-color: $COLOR_WHITE;
+  border: none;
+}
+
+@media (max-width: 767px) {
+  .bg-sm-light {
+    background-color: $COLOR_LIGHT_GREY-10;
+  }
+}
+
+#fixed {
+  position: sticky;
+  top: 0;
+  background-color: #f8f9fa;
+}
+
+.confirm-payment-cancellation-block {
+  position: fixed;
+
+  @media (max-width: 767px) {
+    position: relative;
+  }
+}
+
+.confirm-payment-block {
+  position: fixed;
+
+  @media (max-width: 767px) {
+    position: relative;
+  }
+}
+
+h1 {
+  font-size: var(--h1FontSize);
+  font-weight: var(--h1FontWeight);
+  color: var(--colorPrimary);
+}
+
+h2 {
+  font-size: var(--h2FontSize);
+  font-weight: var(--h2FontWeight);
+}
+
+h3 {
+  font-size: var(--h3FontSize);
+  font-weight: var(--h3FontWeight);
+}
+
+nav {
+  background: var(--headerBG);
+  padding: 2rem !important;
+}
+
+.nav-item {
+  &:hover {
+    background: var(--menuItemHovered);
+  }
+}
+
+.page-item.active {
+  .page-link {
+    background: var(--colorSecondary);
+    border-color: var(--colorSecondary);
+  }
+}
+
+.page-item {
+  .page-link {
+    color: var(--colorSecondary);
+  }
+}
+
+.btn {
+  white-space: nowrap;
+  border-radius: var(--buttonBorderRadius);
+
+  &-primary {
+    color: var(--buttonTextColor);
+
+    background: var(--buttonBG);
+    border: none;
+
+    &:hover {
+      background: var(--buttonHovered);
+    }
+
+    &:disabled {
+      background: var(--buttonBG);
+      opacity: .65;
+    }
+
+    &:focus {
+      outline: none;
+      background: var(--buttonClicked);
+    }
+
+    &:active {
+      background-color: inherit;
+    }
+  }
+
+  &-outline-secondary {
+    color: var(--secondaryButtonTextColor);
+    background: var(--secondaryButtonBG);
+    border: var(--secondaryButtonBorderStyle);
+
+    &:hover {
+      color: var(--secondaryButtonHoveredTextColor);
+      background: var(--secondaryButtonHovered);
+    }
+
+    &:disabled {
+      background: var(--secondaryButtonBG);
+      opacity: .65;
+    }
+
+    &:focus {
+      outline: none;
+      background: var(--secondaryButtonClicked);
+      color: var(--secondaryButtonClickedTextColor);
+    }
+  }
+
+  &-outline-back {
+    color: var(--backButtonTextColor);
+    background: var(--backButtonBG);
+    border: var(--backButtonBorderStyle);
+
+    &:hover {
+      color: var(--backButtonHoveredTextColor);
+      background: var(--backButtonHovered);
+    }
+
+    &:disabled {
+      background: var(--backButtonBG);
+      opacity: .65;
+    }
+
+    &:focus {
+      outline: none;
+      background: var(--backButtonClicked);
+      color: var(--backButtonClickedTextColor);
+    }
+  }
+}
+
+.form-control {
+  background: var(--inputBG);
+  outline: none;
+  border-left: var(--inputBorderStyleLeft);
+  border-top: var(--inputBorderStyleTop);
+  border-bottom: var(--inputBorderStyleBottom);
+  border-right: var(--inputBorderStyleRight);
+  border-radius: var(--inputBorderRadius);
+}
+
+@media screen and (max-width: 768px) {
+  h1 {
+    font-size: var(--h1FontSize768px);
+    font-weight: var(--h1FontWeight768px);
+  }
+
+  h2 {
+    font-size: var(--h2FontSize768px);
+    font-weight: var(--h2FontWeight768px);
+  }
+
+  h3 {
+    font-size: var(--h3FontSize768px);
+    font-weight: var(--h3FontWeight768px);
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  h1 {
+    font-size: var(--h1FontSize1024px);
+    font-weight: var(--h1FontWeight1024px);
+  }
+
+  h2 {
+    font-size: var(--h2FontSize1024px);
+    font-weight: var(--h2FontWeight1024px);
+  }
+
+  h3 {
+    font-size: var(--h3FontSize1024px);
+    font-weight: var(--h3FontWeight1024px);
+  }
+}

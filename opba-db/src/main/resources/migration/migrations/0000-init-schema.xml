@@ -1,0 +1,125 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="vbeex@adorsys.com.ua" id="2019-12-02-17">
+        <comment>Create initial table structure</comment>
+
+        <createTable tableName="${table-prefix}consent">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="service_session_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="consent_code" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="context" type="TEXT"/>
+        </createTable>
+        <createSequence sequenceName="consent_id_sequence" incrementBy="50"/>
+
+        <createTable tableName="${table-prefix}bank_protocol">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="bank_uuid" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="protocol_bean_name" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="bank_protocol_id_sequence" incrementBy="50"/>
+        <addUniqueConstraint tableName="${table-prefix}bank_protocol" columnNames="bank_uuid,action"/>
+
+        <createTable tableName="${table-prefix}bank_sub_protocol">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="protocol_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sub_protocol_bean_name" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="bank_sub_protocol_id_sequence" incrementBy="50"/>
+        <addUniqueConstraint tableName="${table-prefix}bank_sub_protocol" columnNames="protocol_id,action"/>
+        <addForeignKeyConstraint constraintName="fk_bank_sub_protocol_bank_protocol"
+                                 baseTableName="${table-prefix}bank_sub_protocol"
+                                 baseColumnNames="protocol_id"
+                                 referencedTableName="${table-prefix}bank_protocol"
+                                 referencedColumnNames="id"/>
+
+        <createTable tableName="${table-prefix}service_session">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <!-- Can't be null as is initial service request -->
+            <column name="context" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fintech_ok_uri" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fintech_nok_uri" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="service_id" type="BIGINT"/>
+            <column name="protocol_id" type="BIGINT"/>
+            <column name="version" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="secret_key" type="BLOB"/>
+            <column name="algo" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="salt" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="iter_count" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="fk_service_session_bank_protocol"
+                                 baseTableName="${table-prefix}service_session"
+                                 baseColumnNames="protocol_id"
+                                 referencedTableName="${table-prefix}bank_protocol"
+                                 referencedColumnNames="id"/>
+
+        <createTable tableName="${table-prefix}auth_session">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="redirect_code" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="aspsp_redirect_code" type="VARCHAR(256)"/>
+
+            <!-- Is nullable as authentication context can be managed by protocol implementor -->
+            <column name="context" type="TEXT"/>
+            <column name="protocol_id" type="BIGINT"/>
+            <column name="version" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="fk_auth_session_service_session"
+                                 baseTableName="${table-prefix}auth_session"
+                                 baseColumnNames="id"
+                                 referencedTableName="${table-prefix}service_session"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint constraintName="fk_consent_service_session"
+                                 baseTableName="${table-prefix}consent"
+                                 baseColumnNames="service_session_id"
+                                 referencedTableName="${table-prefix}service_session"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

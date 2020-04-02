@@ -30,6 +30,7 @@ psu -> FinTechUI ++ : loadFinTechApplication()
 return displayLoginUI()
 psu -> FinTechUI ++ : enterLoginData(username,password)
 FinTechUI -> FinTechApi ++ : login[](loginRequest)<>
-return 200_UserProfile[FinTechLoginSessionCookie](sessionState,UserProfile)
+return 200_UserProfile[cookies=SessionCookie,X-XSRF-TOKEN=xsrfToken](UserProfile)
+FinTechUI -> FinTechUI : parseAndStoreXsrfToken()
 return displayBankSearchScreen()
 @enduml

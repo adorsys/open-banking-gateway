@@ -1,0 +1,20 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="vbeex@adorsys.com.ua" id="2019-12-04-18">
+        <preConditions onFail="WARN">
+            <changeLogPropertyDefined property="fill-with-mock-data" value="true"/>
+        </preConditions>
+        <comment>Fills tables with mock data</comment>
+       <sql>
+           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (1, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'LIST_ACCOUNTS', 'xs2aListAccounts');
+           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (2, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
+           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (3, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'AUTHORIZATION', '');
+
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (1, 3, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (2, 3, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (3, 3, 'FROM_ASPSP_REDIRECT', 'xs2aFromAspspRedirect');
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (4, 3, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
+       </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -1,18 +1,171 @@
+@import './assets/themes/variables';
+
 @import '~bootstrap/scss/bootstrap';
+@import './assets/themes/fonts';
 * {
   margin: 0;
   padding: 0;
-  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: var(--main-BG);
 }
 
 .card {
-  max-width: 400px;
-  min-height: 300px;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+  border-radius: 16px;
+  //box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
   color: #2c2e2f;
+
+  &-frame {
+    margin: 120px auto 0;
+    max-width: 450px;
+    height: auto;
+  }
+
+  &-body {
+    padding: 3rem;
+    color: $dark-80;
+  }
+
+  &-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    font-family: geometric-SemiBold, sans-serif;
+  }
+
+  &-img {
+    width: 136px;
+    height: 136px;
+  }
+}
+
+.form__margin {
+  margin-bottom: 2rem;
+}
+
+label {
+  margin-bottom: 0;
+  color: $primary;
 }
 
 .form-control,
 .btn {
-  height: 44px;
+  height: 48px;
+  border: none;
+}
+
+.form-control,
+.form-control:focus {
+  border-radius: 0;
+  background-color: $primary-30;
+}
+
+.btn {
+  align-content: center;
+
+  &-center {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+  }
+
+  &-link {
+    color: $primary;
+    opacity: 0.6;
+  }
+}
+
+// list-transactions
+.ltx-parent {
+  display: flex;
+  flex-direction: row;
+}
+
+.ltx-list-container {
+  @extend %layout-padding;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 3px;
+  width: 100%;
+  text-align: start;
+  margin: 6px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.145);
+
+  &--shadow {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.ltx-date {
+  width: 10%;
+}
+.ltx-description {
+  width: 80%;
+}
+.ltx-amount-number {
+  width: 5%;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  text-align: right;
+}
+.ltx-amount-currency {
+  width: 5%;
+  text-align: right;
+}
+
+.ltx-category {
+  font-size: larger;
+}
+
+// list-accounts
+.lacc-parent {
+  margin: 50px;
+  display: flex;
+  flex-direction: row;
+}
+
+.lacc-list-container {
+  @extend %layout-padding;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 3px;
+  width: 95%;
+  text-align: start;
+  border-top: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.145);
+
+  &--unselected {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  }
+  &--selected {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 1);
+  }
+}
+
+.lacc-list-item {
+  &__headline {
+    font-size: 1.1rem;
+    margin-right: 0;
+
+    &--small {
+      font-size: 0.85rem;
+      color: $primary;
+    }
+  }
+
+  &__subheadline {
+    font-size: 0.85rem;
+    margin-bottom: 0;
+    color: $primary;
+
+    &--large {
+      font-size: 1.1rem;
+    }
+  }
 }

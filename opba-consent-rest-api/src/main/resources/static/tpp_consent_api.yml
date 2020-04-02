@@ -62,7 +62,7 @@ tags:
     Entry point for processing a consent request redirected by the TppBankingApi
     over the FinTechApi to this ConsentAuthorisationApi.
 paths:
-  /consent/{auth-id}:
+  /v1/consent/{auth-id}:
     get:
       operationId: authUsingGET
       summary: |
@@ -87,7 +87,7 @@ paths:
         '401':
           $ref: '#/components/responses/401_Unauthorized'
 
-  /consent/{auth-id}/embedded:
+  /v1/consent/{auth-id}/embedded:
     post:
       operationId: embeddedUsingPOST
       tags:
@@ -98,10 +98,13 @@ paths:
         authorization process.
       description: |
         Update consent session with PSU auth data whereby requesting remaining
-        challenges for the ongoing authorization process. 
+        challenges for the ongoing authorization process.
+        Returns 202 if one should proceed to some other link. Link to follow is in 'Location' header.
       parameters:
         #path
         - $ref: '#/components/parameters/auth-id'
+        #query
+        - $ref: '#/components/parameters/redirectCode'
         #headers
         - $ref: '#/components/parameters/X-Request-ID'
         - $ref: '#/components/parameters/X-XSRF-TOKEN'
@@ -114,12 +117,14 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/200_AuthorizeResponse'
+        '202':
+          $ref: '#/components/responses/200_AuthorizeResponse'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
       security:
       - sessionCookie: []
 
-  /consent/{auth-id}/toAspsp/grant:
+  /v1/consent/{auth-id}/toAspsp/grant:
     post:
       operationId: toAspspGrantUsingPOST
       tags:
@@ -148,12 +153,13 @@ paths:
       security:
       - sessionCookie: []
 
-  /consent/{auth-id}/toAspsp/deny:
+  /v1/consent/{auth-id}/deny:
     post:
-      operationId: denyRedirectUsingPOST
+      operationId: denyUsingPOST
       tags:
       - Consent Authorization
       summary: |
+        Consent authorization is denied - consent is blocked.
         Closes this session and redirects the PSU back to the FinTechApi or close the application window.
       description: |
         Closes this session and redirects the PSU back to the FinTechApi
@@ -169,7 +175,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DenyRedirectRequest'
+              $ref: '#/components/schemas/DenyRequest'
         required: true
       responses:
         '302':
@@ -179,7 +185,7 @@ paths:
       security:
       - sessionCookie: []
 
-  /consent/{auth-id}/fromAspsp/{redirectState}/ok:
+  /v1/consent/{auth-id}/fromAspsp/{redirectState}/ok:
     get:
       operationId: fromAspspOkUsingGET
       tags:
@@ -208,6 +214,8 @@ paths:
         #path
         - $ref: '#/components/parameters/auth-id'
         - $ref: '#/components/parameters/redirectState'
+        #query
+        - $ref: '#/components/parameters/redirectCode'
       responses:
         '200':
           $ref: '#/components/responses/200_AuthorizeResponse'
@@ -216,7 +224,7 @@ paths:
       security:
       - redirectCookie: []
 
-  /consent/{auth-id}/fromAspsp/{redirectState}/nok:
+  /v1/consent/{auth-id}/fromAspsp/{redirectState}/nok:
     get:
       operationId: fromAspspNokUsingGET
       tags:
@@ -229,6 +237,8 @@ paths:
         #path
         - $ref: '#/components/parameters/auth-id'
         - $ref: '#/components/parameters/redirectState'
+        #query
+        - $ref: '#/components/parameters/redirectCode'
       responses:
         '200':
           $ref: '#/components/responses/200_AuthorizeResponse'
@@ -344,7 +354,8 @@ components:
     redirectCode:
       name: redirectCode
       in: query
-      description: Code used to retrieve a redirect session.
+      description: Code used to retrieve a redirect session. This is
+        generaly transported as a query parameter
       example: "faadsf93nlas32wx"
       schema:
         type: string
@@ -500,14 +511,12 @@ components:
       type: object
       properties:
         category:
-          required: true
           type: string
           enum:
             - ERROR
             - WARNING
             - INFO
         code:
-          required: true
           type: string
         path:
           type: string
@@ -727,10 +736,7 @@ components:
       required:
       - access
       - frequencyPerDay
-      - id
       - recurringIndicator
-      - tppId
-      - userId
       - validUntil
       type: object
       properties:
@@ -742,27 +748,22 @@ components:
             this attribute is set to 1
           format: int32
           example: 4
-        id:
-          type: string
-          description: The consent id
         recurringIndicator:
           type: boolean
           description: '''true'', if the consent is for recurring access to the account
             data , ''false'', if the consent is for one access to the account data'
           example: false
-        tppId:
-          type: string
-          description: ID of the corresponding TPP.
-          example: testTPP
-        userId:
-          type: string
-          description: Corresponding PSU
         validUntil:
           type: string
           description: Consent`s expiration date. The content is the local ASPSP date
             in ISODate Format
           format: date
           example: 2020-10-10
+        combinedServiceIndicator:
+          type: boolean
+          description: '''true'', if the consent is i.e. account list and then payment
+                     ''false'', if the consent is for one access to the account data'
+          default: false
       description: Ais consent request
 
     Amount:
@@ -774,11 +775,32 @@ components:
         currency:
           type: string
 
+    AuthViolation:
+      title: AuthViolation
+      type: object
+      description: Missing parameters required for authorization
+      properties:
+        type:
+          type: string
+        scope:
+          type: string
+        code:
+          type: string
+        captionMessage:
+          type: string
+
     ConsentAuth:
       title: ConsentAuth
       type: object
       description: Transport object for consent API request response 
       properties:
+        action:
+          type: string
+          enum: [LIST_ACCOUNTS, LIST_TRANSACTIONS]
+        violations:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthViolation'
         accounts:
           type: array
           items:
@@ -815,18 +837,46 @@ components:
         singlePayment:
           $ref: '#/components/schemas/SinglePayment'
 
+    ConsentAuthRequirement:
+      title: ConsentAuth
+      type: object
+      description: Transport object for consent API request response
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentAuthRequiredField'
+
+    ConsentAuthRequiredField:
+      title: ConsentAuthRequiredField
+      type: object
+      description: Fields that are required to be filled in order to authorize consent
+      properties:
+        type:
+          type: string
+          description: Field data type - boolean, string, etc.
+        scope:
+          type: string
+          description: Scope of the field.
+        code:
+          type: string
+          description: Field code - what does the field mean.
+        captionMessage:
+          type: string
+          description: Custom message that describes field meaning
+
     AuthorizeRequest:
       title: AuthorizeRequest
       type: object
       description: Contains information used to legitimate a request.
       properties:
         consentAuth:
-          $ref: '#/components/schemas/ConsentAuth'
+          $ref: '#/components/schemas/ConsentAuthRequirement'
 
-    DenyRedirectRequest:
-      title: DenyRedirectRequest
+    DenyRequest:
+      title: DenyRequest
       type: object
-      description: Denies a redirect to ASPSP requested by the ConsentAuthorisationApi
+      description: Consent authorization denied descriptor
       properties:
         consentAuth:
           $ref: '#/components/schemas/ConsentAuth'
@@ -856,6 +906,11 @@ components:
             type: string
           description: SCA authentication data, depending on the chosen authentication
             method. If the data is binary, then it is base64 encoded.
+        extras:
+          type: object
+          additionalProperties:
+            type: string
+          description: ASPSP customary authorization parameters required to i.e. initiate consent.
 
     BulkPayment:
       title: BulkPayment

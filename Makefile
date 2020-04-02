@@ -1,10 +1,16 @@
-PUML_URLS_PATTERN=http://www\.plantuml\.com.*develop/docs/\(.*\).puml&fmt=svg&vvv=1&sanitize=true
-PUML_URLS_REPLACE=https://adorsys.github.io/open-banking-gateway/doc/${TRAVIS_TAG}/\1.png
+PUML_URLS_PATTERN=/develop/
+PUML_URLS_REPLACE=/${TRAVIS_TAG}/
+#PUML_URLS_PATTERN=http://www\.plantuml\.com.*develop/docs/\(.*\).puml&fmt=svg&vvv=1&sanitize=true
+#PUML_URLS_REPLACE=../../\1.png
+
 
 .PHONY : all
-all: java fintech-ui
+all: clean java fintech-ui site
 
-site: 	clean_docs \
+.PHONY : clean
+clean: clean_docs clean_java
+
+site: clean_docs \
 	prepare_docs \
 	replace_puml_urls \
 	convert_puml \
@@ -13,7 +19,7 @@ site: 	clean_docs \
 
 .PHONY : clean_docs
 clean_docs:
-	# "makefile: clean"
+	# "makefile: clean_docs"
 	rm -rf site
 
 .PHONY : prepare_docs
@@ -28,9 +34,11 @@ replace_puml_urls:
 	# "makefile: replace_puml_urls"
 	cp mkdocs.yml docs_for_site
 	cp README.md docs_for_site/docs/README.md
-	sed -i 's/docs\///g' docs_for_site/docs/README.md
-	find docs_for_site -type f -name "*.md" -exec sed -i  's/\.\.\/README.md/README.md/g' {} \;
-	# find docs_for_site -type f -name "*.md" -exec sed -i 's%${PUML_URLS_PATTERN}%${PUML_URLS_REPLACE}%' {} \;
+# trick with bak-files works for sed of GNU and BSD, therefore the command is macos and linux compatible
+	sed -i.bak 's/docs\///g' docs_for_site/docs/README.md && rm -rf docs_for_site/docs/README.md.bak
+	find docs_for_site -type f -name "*.md" -exec sed -i.bak 's/\.\.\/README.md/README.md/g' {} \;
+	[ ! -z "${TRAVIS_TAG}" ] && find docs_for_site -type f -name "*.md" -exec sed -i.bak 's%${PUML_URLS_PATTERN}%${PUML_URLS_REPLACE}%' {} || true \;
+	find docs_for_site -type f -name "*.md.bak" -exec rm -rf {} \;
 
 .PHONY : convert_puml
 convert_puml:
@@ -50,17 +58,26 @@ copy_puml:
 
 .PHONY : clean_java
 clean_java:
-	mvn clean
+	mvn -T1C clean
 
 .PHONY : java
-java: clean_java
-	mvn -DskipTests install
+java: clean_java java_tests
+	mvn -T1C -DskipTests install
+
+.PHONY : java_tests
+java_tests:
+	mvn verify
 
 fintech-ui/node_modules:
 	cd fintech-examples/fintech-ui && npm install
 
 .PHONY : fintech-ui
 fintech-ui: fintech-ui/node_modules
-	cd fintech-examples/fintech-ui && npm run build:prod
+	cd fintech-examples/fintech-ui && ng test --watch=false --browsers ChromeHeadless --code-coverage=true && npm run build:prod
 
+consent-ui/node_modules:
+	cd consent-ui && npm install
 
+.PHONY : consent-ui
+consent-ui: consent-ui/node_modules
+	cd consent-ui && ng test --watch=false --browsers ChromeHeadless --code-coverage=true && npm run build:prod

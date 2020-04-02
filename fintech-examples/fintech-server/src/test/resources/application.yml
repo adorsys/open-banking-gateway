@@ -1,0 +1,33 @@
+server:
+  port: 8086
+  controller:
+    sessioncookie:
+      secure: false
+      maxAge: 300
+      httpOnly: true
+      path: /
+      sameSite: Strict
+
+    redirectcookie:
+      secure: false
+      maxAge: 1800
+      httpOnly: false
+      path: /v1/{auth-id}/fromConsentOk
+      sameSite: Strict
+tpp:
+  url: http://localhost:8086
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:test
+    username: SA
+    password:
+    driver-class-name: org.h2.Driver
+  liquibase:
+    change-log: classpath:migration/master.xml
+    parameters:
+      table-prefix: opb_
+
+fintech-ui:
+  redirect-url: http://localhost:4444?redirectCode={redirectCode}
+  exception-url: http://localhost:4444/excaption-redirect

@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.adorsys.opba</groupId>
         <artifactId>open-banking-gateway</artifactId>
-        <version>0.0.5</version>
+        <version>0.0.6</version>
     </parent>
 
     <!-- Core module that implements main business logic -->
@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
 
     <properties>
-      <!-- Hard reference to root directory. Used to reference pmd anc checkstyle files from root.
+      <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
       Change this if depth changes. Current: /open-banking-gateway/core -->
       <main.basedir>${project.parent.basedir}</main.basedir>
     </properties>
@@ -23,6 +23,7 @@
         <module>fintech-api</module>
         <module>fintech-server</module>
         <module>fintech-impl</module>
+        <module>fintech-db-schema</module>
     </modules>
 </project>
 

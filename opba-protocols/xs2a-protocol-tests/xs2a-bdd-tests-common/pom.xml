@@ -1,0 +1,130 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>de.adorsys.opba</groupId>
+        <artifactId>xs2a-protocol-tests</artifactId>
+        <version>0.0.6</version>
+    </parent>
+
+    <!-- BDD Tests common step definitions, etc. -->
+    <artifactId>xs2a-bdd-tests-common</artifactId>
+    <name>opba-protocols/xs2a-bdd-tests-common</name>
+
+    <properties>
+        <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
+        Change this if depth changes. Current: /open-banking-gateway/opba-protocols/xs2a-protocol-tests/xs2a-bdd-tests-common -->
+        <main.basedir>${project.parent.parent.parent.basedir}</main.basedir>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-banking-rest-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-consent-rest-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-banking-protocol-facade</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.jgiven</groupId>
+            <artifactId>jgiven-core</artifactId>
+            <version>${jgiven.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.jgiven</groupId>
+            <artifactId>jgiven-spring-junit5</artifactId>
+            <version>${jgiven.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tngtech.jgiven</groupId>
+            <artifactId>jgiven-junit5</artifactId>
+            <version>${jgiven.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path-assert</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>spring-web-test-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven.dependency.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>analyze</id>
+                        <goals>
+                            <goal>analyze-only</goal>
+                        </goals>
+                        <configuration>
+                            <failOnWarning>false</failOnWarning>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-remote-resources-plugin</artifactId>
+                <version>${maven-remote-resources-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includes>
+                        <include>restrecord/**/*.*</include>
+                        <include>**/*.yml</include>
+                        <include>**/*.properties</include>
+                        <include>**/*.sql</include>
+                        <include>**/*.json</include>
+                        <include>sample-qwac.keystore</include>
+                    </includes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+

@@ -13,12 +13,12 @@ then
   TRAVIS_TAG="develop"
 fi
 
-docker run -it --rm -v "$PWD":/src -w /src -u "$(id -u "${USER}"):$(id -g "${USER}")" --env TRAVIS_TAG g0lden/mkdocs make site
+docker run -it --rm -v "$PWD":/src -w /src -u "$(id -u "${USER}"):$(id -g "${USER}")" --env TRAVIS_TAG g0lden/mkdocs make site || exit 1
 
 echo -e "Publishing Documentation...\n"
 
 git clone --quiet --branch=gh-pages https://"$GITHUB_TOKEN"@github.com/"$TRAVIS_REPO_SLUG" gh-pages > /dev/null
-cd gh-pages || exit
+cd gh-pages || exit 1
 
 if [ "$TRAVIS_TAG" == "develop" ];
 then
@@ -27,7 +27,7 @@ then
 else
 (
   mkdir -p ./doc/"$TRAVIS_TAG" && cp -Rf ../site/* ./doc/"$TRAVIS_TAG"
-  cd doc || exit
+  cd doc || exit 1
   rm latest
   ln -s "$TRAVIS_TAG" latest
 )

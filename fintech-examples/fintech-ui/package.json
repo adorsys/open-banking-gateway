@@ -3,7 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --proxy-config=proxy.conf.json",
+    "openapi-gen": "openapi-generator generate -g typescript-angular -o src/app/api -i ../fintech-api/src/main/resources/static/fintech_api.yml",
+    "start": "npm run serve",
+    "serve": "ng serve --port=4444 --proxy-config=proxy.conf.json",
+    "serve:dev": "ng serve --proxy-config=proxy-dev.conf.json",
+    "serve:docker": "ng serve --proxy-config=proxy-docker.conf.json",
     "build": "ng build",
     "build:prod": "ng build --prod",
     "test": "ng test",
@@ -15,6 +19,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "~8.2.14",
+    "@angular/cdk": "^8.2.3",
     "@angular/common": "~8.2.14",
     "@angular/compiler": "~8.2.14",
     "@angular/core": "~8.2.14",
@@ -35,6 +40,7 @@
     "@angular/cli": "~8.3.23",
     "@angular/compiler-cli": "~8.2.14",
     "@angular/language-service": "~8.2.14",
+    "@openapitools/openapi-generator-cli": "^1.0.8-4.2.2",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
