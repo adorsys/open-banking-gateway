@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.facade.config.encryption.impl;
+package de.adorsys.opba.protocol.facade.config.encryption.impl.fintech;
 
 import de.adorsys.datasafe.business.impl.service.DefaultDatasafeServices;
 import de.adorsys.datasafe.directory.api.config.DFSConfig;
@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 
 @RequiredArgsConstructor
-public class FintechDatasafe {
+public class FintechSecureStorage {
 
     @Delegate
     private final DefaultDatasafeServices datasafeServices;
