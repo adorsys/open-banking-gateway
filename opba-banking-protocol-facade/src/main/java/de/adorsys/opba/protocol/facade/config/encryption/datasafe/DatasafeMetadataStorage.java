@@ -1,8 +1,7 @@
 package de.adorsys.opba.protocol.facade.config.encryption.datasafe;
 
-import de.adorsys.opba.db.domain.entity.fintech.Fintech;
-import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -10,24 +9,24 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
-public abstract class DatasafeMetadataStorage implements BaseDatasafeDbStorageService.StorageActions {
+public abstract class DatasafeMetadataStorage<T> implements BaseDatasafeDbStorageService.StorageActions {
 
-    private final FintechRepository fintechs;
-    private final Function<Fintech, byte[]> getData;
-    private final BiConsumer<Fintech, byte[]> setData;
+    private final CrudRepository<T, Long> repository;
+    private final Function<T, byte[]> getData;
+    private final BiConsumer<T, byte[]> setData;
 
     @Override
     @Transactional
     public void update(String id, byte[] data) {
-        Fintech fintech = fintechs.findById(getIdValue(id)).get();
-        setData.accept(fintech, data);
-        fintechs.save(fintech);
+        T toSave = repository.findById(getIdValue(id)).get();
+        setData.accept(toSave, data);
+        repository.save(toSave);
     }
 
     @Override
     @Transactional
     public Optional<byte[]> read(String id) {
-        return fintechs.findById(Long.valueOf(id)).map(getData);
+        return repository.findById(Long.valueOf(id)).map(getData);
     }
 
     @Override
