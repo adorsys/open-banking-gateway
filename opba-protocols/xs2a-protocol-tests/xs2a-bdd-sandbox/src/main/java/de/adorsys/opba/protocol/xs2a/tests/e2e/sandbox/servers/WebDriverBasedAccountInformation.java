@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.RetryOperations;
 
+import java.net.URI;
 import java.time.Duration;
 
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableConfig.TEST_RETRY_OPS;
@@ -47,7 +48,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     public SELF user_anton_brueckner_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_consent(WebDriver driver) {
-        waitForPageLoadAndUrlEnds(driver, "entry-consent-accounts");
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts");
         sendText(driver, By.id("PSU_ID"), ANTON_BRUECKNER);
         clickOnButton(driver, By.id("ALL_ACCOUNTS"));
         clickOnButton(driver, By.id(SUBMIT_ID));
@@ -55,7 +56,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     public SELF user_anton_brueckner_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent(WebDriver driver) {
-        waitForPageLoadAndUrlEnds(driver, "entry-consent-transactions");
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
         sendText(driver, By.id("PSU_ID"), ANTON_BRUECKNER);
         clickOnButton(driver, By.id("ALL_PSD2"));
         clickOnButton(driver, By.id(SUBMIT_ID));
@@ -63,7 +64,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     public SELF user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_consent(WebDriver driver) {
-        waitForPageLoadAndUrlEnds(driver, "entry-consent-accounts");
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts");
         sendText(driver, By.id("PSU_ID"), MAX_MUSTERMAN);
         clickOnButton(driver, By.id("ALL_ACCOUNTS"));
         clickOnButton(driver, By.id(SUBMIT_ID));
@@ -72,7 +73,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
 
 
     public SELF user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_accounts_with_dedicated_transactions_consent(WebDriver driver) {
-        waitForPageLoadAndUrlEnds(driver, "entry-consent-transactions");
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
         sendText(driver, By.id("PSU_ID"), MAX_MUSTERMAN);
         clickOnButton(driver, By.id("FINE_GRAINED"));
         clickOnButton(driver, By.id(SUBMIT_ID));
@@ -80,7 +81,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     public SELF user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_accounts_with_dedicated_accounts_consent(WebDriver driver) {
-        waitForPageLoadAndUrlEnds(driver, "entry-consent-accounts");
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts");
         sendText(driver, By.id("PSU_ID"), MAX_MUSTERMAN);
         clickOnButton(driver, By.id("FINE_GRAINED"));
         clickOnButton(driver, By.id(SUBMIT_ID));
@@ -88,21 +89,21 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     public SELF user_max_musterman_provided_to_consent_ui_account_iban_for_dedicated_accounts_consent(WebDriver driver) {
-        waitForPageLoadAndUrlEnds(driver, "entry-consent-accounts/dedicated-account-access");
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts/dedicated-account-access");
         sendText(driver, By.cssSelector("[id^=account-reference]"), MAX_MUSTERMAN_IBAN);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
     public SELF user_max_musterman_provided_to_consent_ui_account_iban_for_dedicated_transactions_consent(WebDriver driver) {
-        waitForPageLoadAndUrlEnds(driver, "entry-consent-transactions/dedicated-account-access");
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions/dedicated-account-access");
         sendText(driver, By.cssSelector("[id^=account-reference]"), MAX_MUSTERMAN_IBAN);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
     public SELF user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(WebDriver driver) {
-        waitForPageLoadAndUrlEnds(driver, "entry-consent-transactions");
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
         sendText(driver, By.id("PSU_ID"), MAX_MUSTERMAN);
         clickOnButton(driver, By.id("ALL_PSD2"));
         clickOnButton(driver, By.id(SUBMIT_ID));
@@ -110,13 +111,13 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     public SELF user_anton_brueckner_in_consent_ui_reviews_accounts_concent_and_accepts(WebDriver driver) {
-        waitForPageLoadAndUrlEnds(driver, "entry-consent-accounts/review-consent");
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts/review-consent");
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
     public SELF user_anton_brueckner_in_consent_ui_sees_redirection_info_to_aspsp_and_accepts(WebDriver driver) {
-        waitForPageLoadAndUrlEnds(driver, "/to-aspsp-redirection");
+        waitForPageLoadAndUrlEndsWithPath(driver, "/to-aspsp-redirection");
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
@@ -139,40 +140,40 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     public SELF user_anton_brueckner_in_consent_ui_reviews_transaction_consent_and_accepts(WebDriver driver) {
-        waitForPageLoadAndUrlEnds(driver, "entry-consent-transactions/review-consent");
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions/review-consent");
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
     public SELF user_max_musterman_in_consent_ui_reviews_account_consent_and_accepts(WebDriver driver) {
-        waitForPageLoadAndUrlEnds(driver, "entry-consent-accounts/review-consent");
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts/review-consent");
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
     public SELF user_max_musterman_in_consent_ui_reviews_transactions_consent_and_accepts(WebDriver driver) {
-        waitForPageLoadAndUrlEnds(driver, "entry-consent-transactions/review-consent");
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions/review-consent");
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
 
     public SELF user_max_musterman_in_consent_ui_provides_pin(WebDriver driver) {
-        waitForPageLoadAndUrlEnds(driver, "authenticate");
+        waitForPageLoadAndUrlEndsWithPath(driver, "authenticate");
         sendText(driver, By.id("pin"), PIN_VALUE);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
     public SELF user_max_musterman_in_consent_ui_provides_sca_result_to_embedded_authorization(WebDriver driver) {
-        waitForPageLoadAndUrlEnds(driver, "sca-result");
+        waitForPageLoadAndUrlEndsWithPath(driver, "sca-result");
         sendText(driver, By.id("tan"), TAN_VALUE);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
     public SELF user_max_musterman_in_consent_ui_sees_sca_select_and_selected_type_email2_to_embedded_authorization(WebDriver driver) {
-        waitForPageLoadAndUrlEnds(driver, "select-sca-method");
+        waitForPageLoadAndUrlEndsWithPath(driver, "select-sca-method");
         selectByVisibleInDropdown(driver, By.id("scaMethod"), "EMAIL:max.musterman2@mail.de");
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
@@ -234,10 +235,10 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
                 );
     }
 
-    private void waitForPageLoadAndUrlEnds(WebDriver driver, String urlEndsWith) {
+    private void waitForPageLoadAndUrlEndsWithPath(WebDriver driver, String urlEndsWithPath) {
         new WebDriverWait(driver, timeout.getSeconds())
                 .until(wd ->
-                        driver.getCurrentUrl().endsWith(urlEndsWith)
+                        URI.create(driver.getCurrentUrl()).getPath().endsWith(urlEndsWithPath)
                         && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
                 );
     }
