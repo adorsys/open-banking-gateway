@@ -84,10 +84,6 @@ public class AuthorizeService {
         return responseHeaders;
     }
 
-    public SessionEntity getSessionCookieValue() {
-        return userRepository.findBySessionCookieValue(restRequestContext.getSessionCookieValue()).get();
-    }
-
     public SessionEntity updateUserSession(SessionEntity sessionEntity) {
         return userRepository.save(sessionEntity);
     }
@@ -101,6 +97,7 @@ public class AuthorizeService {
                         .loginUserName(loginRequest.getUsername())
                         .fintechUserId(createID(loginRequest.getUsername()))
                         .password(UNIVERSAL_PASSWORD)
+                        .consentConfirmed(false)
                         .build());
     }
 

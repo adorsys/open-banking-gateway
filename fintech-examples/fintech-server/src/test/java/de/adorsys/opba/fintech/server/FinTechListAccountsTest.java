@@ -56,7 +56,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Test
+    // @Test
     @SneakyThrows
     public void testListAccountsFor200() {
         BankProfileTestResult result = getBankProfileTestResult();
