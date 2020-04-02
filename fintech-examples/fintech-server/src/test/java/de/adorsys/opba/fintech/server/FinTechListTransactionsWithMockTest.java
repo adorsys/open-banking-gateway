@@ -1,5 +1,6 @@
 package de.adorsys.opba.fintech.server;
 
+import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -10,7 +11,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.SERVICE_SESSION_ID;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,17 +25,17 @@ public class FinTechListTransactionsWithMockTest extends FinTechListAccountsWith
     @Test
     public void testListTransactions() {
         BankProfileTestResult result = getBankProfileTestResult();
-        List<String> accountIDs = listAccountIDs(result.getXsrfToken(), result.getBankUUID());
-        List<String> amounts = listAmounts(result.getXsrfToken(), result.getBankUUID(), accountIDs.get(0));
+        List<String> accountIDs = listAccountIDs(result.getBankUUID());
+        List<String> amounts = listAmounts(result.getBankUUID(), accountIDs.get(0));
         assertTrue(amounts.containsAll(Arrays.asList(new String[]{"123"})));
     }
 
     @SneakyThrows
-    List<String> listAmounts(String xsrfToken, String bankUUID, String accountID) {
+    List<String> listAmounts(String bankUUID, String accountID) {
         MvcResult mvcResult = this.mvc
                 .perform(get(FIN_TECH_LIST_TRANSACTIONS_URL, bankUUID, accountID)
-                        .header("X-Request-ID", UUID.randomUUID().toString())
-                        .header("X-XSRF-TOKEN", xsrfToken)
+                        .header(Consts.HEADER_X_REQUEST_ID, restRequestContext.getRequestId())
+                        .header(Consts.HEADER_XSRF_TOKEN, restRequestContext.getXsrfTokenHeaderField())
                         .header("Fintech-Redirect-URL-OK", "ok")
                         .header("Fintech-Redirect-URL-NOK", "notok")
                         .header(SERVICE_SESSION_ID, "any-session-not-specified-in api.yml yet")

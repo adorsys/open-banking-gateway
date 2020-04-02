@@ -35,15 +35,15 @@ public class DatabaseTest {
 
         assertTrue(userRepository.findById("maksym").isPresent());
         assertFalse(userRepository.findById("maksim").isPresent());
-        assertTrue(userRepository.findByXsrfToken("1").isPresent());
-        assertFalse(userRepository.findByXsrfToken("4").isPresent());
+        assertTrue(userRepository.findBySessionCookieValue("1").isPresent());
+        assertFalse(userRepository.findBySessionCookieValue("4").isPresent());
     }
 
     @Test
     public void testDeleteInOneTx() {
         userRepository.save(createSessionEntity("peter", "1"));
         SessionEntity sessionEntity = userRepository.findById("peter").get();
-        sessionEntity.setSessionCookie(null);
+        sessionEntity.setSessionCookieValue(null);
         userRepository.save(sessionEntity);
     }
 
@@ -61,19 +61,18 @@ public class DatabaseTest {
     @Transactional(propagation = Propagation.NEVER)
     void testDeleteInTwoTx2() {
         SessionEntity sessionEntity = userRepository.findById("peter").get();
-        sessionEntity.setSessionCookie(null);
+        sessionEntity.setSessionCookieValue(null);
         userRepository.save(sessionEntity);
     }
 
 
-    private SessionEntity createSessionEntity(String username, String xsrf) {
+    private SessionEntity createSessionEntity(String username, String sessionCookieValue) {
         SessionEntity sessionEntity = SessionEntity.builder()
                 .loginUserName(username)
                 .password("affe")
-                .xsrfToken(xsrf)
                 .build();
+        sessionEntity.setSessionCookieValue(sessionCookieValue);
         sessionEntity.addLogin(OffsetDateTime.now());
-        sessionEntity.setSessionCookieValue("value1");
 
         return sessionEntity;
     }
