@@ -1,0 +1,11 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+test:
+  retry:
+    max: 10
+  webdriver:
+    timeout: PT10S
+  fintech:
+    server-uri: https://obg-dev-fintechserver.cloud.adorsys.de
