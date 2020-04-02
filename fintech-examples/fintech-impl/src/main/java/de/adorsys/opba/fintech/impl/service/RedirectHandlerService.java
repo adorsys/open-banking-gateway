@@ -1,6 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
+import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
@@ -31,6 +32,7 @@ public class RedirectHandlerService {
     private final FintechUiConfig uiConfig;
     private final RedirectUrlRepository redirectUrlRepository;
     private final AuthorizeService authorizeService;
+    private final RestRequestContext restRequestContext;
 
     @Transactional
     public RedirectUrlsEntity registerRedirectStateForSession(String xsrfToken, String okPath, String nokPath) {
@@ -79,14 +81,14 @@ public class RedirectHandlerService {
             return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
-        SessionEntity sessionEntity = authorizeService.getByXsrfToken(redirectState);
         redirectUrlRepository.delete(redirectUrls.get());
 
+        SessionEntity sessionEntity = authorizeService.getSession();
         return prepareRedirectToReadResultResponse(sessionEntity, redirectUrls.get());
     }
 
     private ResponseEntity prepareRedirectToReadResultResponse(SessionEntity sessionEntity, RedirectUrlsEntity redirectUrls) {
-        HttpHeaders authHeaders = authorizeService.fillWithAuthorizationHeaders(sessionEntity);
+        HttpHeaders authHeaders = authorizeService.fillWithAuthorizationHeaders(sessionEntity, restRequestContext.getXsrfTokenHeaderField());
         authHeaders.put(LOCATION_HEADER, singletonList(redirectUrls.getOkStatePath()));
         return new ResponseEntity<>(authHeaders, HttpStatus.ACCEPTED);
     }
