@@ -72,9 +72,9 @@ public class AuthorizeService {
         return Optional.of(sessionEntity);
     }
 
-    public HttpHeaders fillWithAuthorizationHeaders(ContextInformation contextInformation, SessionEntity sessionEntity) {
+    public HttpHeaders fillWithAuthorizationHeaders(SessionEntity sessionEntity) {
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(X_REQUEST_ID, contextInformation.getXRequestID().toString());
+        responseHeaders.set(X_REQUEST_ID, restRequestContext.getRequestId());
         log.info("set response cookie attributes to {}", cookieConfigProperties.toString());
 
         CookieEntity sessionCookie = sessionEntity.getSessionCookie();

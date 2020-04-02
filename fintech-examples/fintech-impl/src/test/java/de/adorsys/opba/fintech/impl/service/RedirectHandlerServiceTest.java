@@ -96,7 +96,7 @@ class RedirectHandlerServiceTest {
     @Test
     void doRedirect_success() {
         // given
-        when(authorizeService.fillWithAuthorizationHeaders(any(ContextInformation.class), eq(sessionEntity)))
+        when(authorizeService.fillWithAuthorizationHeaders(eq(sessionEntity)))
                 .thenReturn(new HttpHeaders());
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.of(REDIRECT_URLS_ENTITY));
         when(authorizeService.getByXsrfToken(REDIRECT_STATE_VALUE)).thenReturn(sessionEntity);
