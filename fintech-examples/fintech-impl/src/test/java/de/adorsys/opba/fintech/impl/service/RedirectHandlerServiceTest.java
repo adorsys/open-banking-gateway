@@ -87,7 +87,6 @@ class RedirectHandlerServiceTest {
         verify(redirectUrlRepository, times(1)).save(any(RedirectUrlsEntity.class));
         assertThat(redirectCode.getNokStatePath()).isEqualTo(FINTECH_REDIRECT_NOT_OK);
         assertThat(redirectCode.getOkStatePath()).isEqualTo(FINTECH_REDIRECT_OK);
-        assertThat(redirectCode.getRedirectState()).isEqualTo(REDIRECT_STATE_VALUE);
         assertThat(redirectCode.getRedirectCode()).isEqualTo(REDIRECT_CODE_VALUE);
     }
 
@@ -101,7 +100,7 @@ class RedirectHandlerServiceTest {
         when(authorizeService.isAuthorized()).thenReturn(true);
 
         // when
-        ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_STATE_VALUE, REDIRECT_ID_VALUE, REDIRECT_CODE_VALUE);
+        ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_ID_VALUE, REDIRECT_CODE_VALUE);
 
         // then
         verify(authorizeService, times(1)).getSession();
@@ -115,7 +114,7 @@ class RedirectHandlerServiceTest {
     @Test
     void doRedirect_redirectCodeIsEmpty() {
         // when
-        ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_STATE_VALUE, REDIRECT_ID_VALUE, "");
+        ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_ID_VALUE, REDIRECT_CODE_VALUE);
 
         // then
         verify(authorizeService, times(0)).getSession();
@@ -133,46 +132,9 @@ class RedirectHandlerServiceTest {
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.empty());
 
         // when
-        ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_STATE_VALUE, REDIRECT_ID_VALUE, REDIRECT_CODE_VALUE);
+        ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_ID_VALUE, REDIRECT_CODE_VALUE);
 
         // then
-        assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);
-        assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
-        assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(FULL_NOT_OK_URL));
-        assertThat(responseEntity.getBody()).isNull();
-    }
-
-    @Test
-    void doRedirect_redirectStateIsEmpty() {
-        // given
-        when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.of(REDIRECT_URLS_ENTITY));
-
-        // when
-        ResponseEntity responseEntity = redirectHandlerService.doRedirect("", REDIRECT_ID_VALUE, REDIRECT_CODE_VALUE);
-
-        // then
-        verify(authorizeService, times(0)).getSession();
-        verify(authorizeService, times(0)).updateUserSession(sessionEntity);
-
-        assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);
-        assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
-        assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(FULL_NOT_OK_URL));
-        assertThat(responseEntity.getBody()).isNull();
-    }
-
-    @Test
-    void doRedirect_redirectStateIsWrong() {
-        // given
-        when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.of(REDIRECT_URLS_ENTITY));
-        // when(authorizeService.isAuthorized(REDIRECT_STATE_VALUE, null)).thenReturn(false);
-
-        // when
-        ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_STATE_VALUE, REDIRECT_ID_VALUE, REDIRECT_CODE_VALUE);
-
-        // then
-        verify(authorizeService, times(0)).getSession();
-        verify(authorizeService, times(0)).updateUserSession(sessionEntity);
-
         assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);
         assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
         assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(FULL_NOT_OK_URL));
@@ -182,7 +144,6 @@ class RedirectHandlerServiceTest {
     private RedirectUrlsEntity buildRedirectUrlsEntity() {
         RedirectUrlsEntity redirectUrlsEntity = new RedirectUrlsEntity();
         redirectUrlsEntity.setRedirectCode(REDIRECT_CODE_VALUE);
-        redirectUrlsEntity.setRedirectState(REDIRECT_STATE_VALUE);
         redirectUrlsEntity.setOkStatePath(FINTECH_REDIRECT_OK);
         redirectUrlsEntity.setNokStatePath(FINTECH_REDIRECT_NOT_OK);
 

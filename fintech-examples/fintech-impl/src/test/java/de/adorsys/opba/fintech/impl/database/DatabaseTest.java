@@ -70,9 +70,11 @@ public class DatabaseTest {
         SessionEntity sessionEntity = SessionEntity.builder()
                 .loginUserName(username)
                 .password("affe")
+                .consentConfirmed(false)
                 .build();
         sessionEntity.setSessionCookieValue(sessionCookieValue);
         sessionEntity.addLogin(OffsetDateTime.now());
+
 
         return sessionEntity;
     }

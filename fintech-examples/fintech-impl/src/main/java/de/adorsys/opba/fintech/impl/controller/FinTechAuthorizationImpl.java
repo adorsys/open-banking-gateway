@@ -52,7 +52,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
     @Override
     public ResponseEntity fromConsentOkGET(String authId, String redirectCode, UUID xRequestID, String xsrftoken) {
-        return redirectHandlerService.doRedirect(xsrftoken, authId, redirectCode);
+        return redirectHandlerService.doRedirect(authId, redirectCode);
     }
 
     @Override
