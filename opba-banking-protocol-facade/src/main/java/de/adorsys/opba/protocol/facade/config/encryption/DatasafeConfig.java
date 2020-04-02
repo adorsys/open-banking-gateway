@@ -9,8 +9,11 @@ import de.adorsys.datasafe.encrypiton.impl.pathencryption.PathEncryptionImplRunt
 import de.adorsys.datasafe.types.api.context.BaseOverridesRegistry;
 import de.adorsys.datasafe.types.api.context.overrides.OverridesRegistry;
 import de.adorsys.datasafe.types.api.resource.Uri;
-import de.adorsys.opba.protocol.facade.config.encryption.impl.FintechDatasafe;
-import de.adorsys.opba.protocol.facade.config.encryption.impl.FintechStorage;
+import de.adorsys.opba.protocol.facade.config.encryption.datasafe.BaseDatasafeDbStorageService;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechDatasafeStorage;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuDatasafeStorage;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,18 +24,35 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class DatasafeConfig {
 
-    private final FintechStorage fintechStorage;
+    private final FintechDatasafeStorage fintechStorage;
+    private final PsuDatasafeStorage datasafeStorage;
 
     @Bean
-    public FintechDatasafe fintechDatasafeServices() {
-        DFSConfig config = new FintechStorage.FintechDFSConfig("trum-pam-pam");
+    public FintechSecureStorage fintechDatasafeServices() {
+        DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig("trum-pam-pam");
         OverridesRegistry overridesRegistry = new BaseOverridesRegistry();
-        ProfileRetrievalServiceImplRuntimeDelegatable.overrideWith(overridesRegistry, FintechStorage.FintechUserRetrieval::new);
+        ProfileRetrievalServiceImplRuntimeDelegatable.overrideWith(overridesRegistry, BaseDatasafeDbStorageService.DbTableUserRetrieval::new);
         PathEncryptionImplRuntimeDelegatable.overrideWith(overridesRegistry, NoOpPathEncryptionImplOverridden::new);
-        return new FintechDatasafe(
+        return new FintechSecureStorage(
                 DaggerDefaultDatasafeServices.builder()
                         .config(config)
                         .storage(fintechStorage)
+                        .overridesRegistry(overridesRegistry)
+                        .build(),
+                config
+        );
+    }
+
+    @Bean
+    public PsuSecureStorage psuDatasafeServices() {
+        DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig("trum-pam-pam");
+        OverridesRegistry overridesRegistry = new BaseOverridesRegistry();
+        ProfileRetrievalServiceImplRuntimeDelegatable.overrideWith(overridesRegistry, BaseDatasafeDbStorageService.DbTableUserRetrieval::new);
+        PathEncryptionImplRuntimeDelegatable.overrideWith(overridesRegistry, NoOpPathEncryptionImplOverridden::new);
+        return new PsuSecureStorage(
+                DaggerDefaultDatasafeServices.builder()
+                        .config(config)
+                        .storage(datasafeStorage)
                         .overridesRegistry(overridesRegistry)
                         .build(),
                 config
