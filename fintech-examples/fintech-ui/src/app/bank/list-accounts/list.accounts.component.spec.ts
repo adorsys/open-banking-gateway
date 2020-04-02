@@ -1,11 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { AisService } from '../services/ais.service';
 import { ListAccountsComponent } from './list-accounts.component';
-import { AccountDetails, AccountList, AccountStatus } from '../../api';
+import { AccountList } from '../../api';
 import { BankComponent } from '../bank.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HttpResponse } from '@angular/common/http';
@@ -14,50 +14,27 @@ describe('ListAccountsComponent', () => {
   let component: ListAccountsComponent;
   let fixture: ComponentFixture<ListAccountsComponent>;
   let aisService: AisService;
-  let router: Router;
+  let route: ActivatedRoute;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        RouterTestingModule.withRoutes([
-          { path: 'bank/:id', component: BankComponent },
-          { path: '', component: ListAccountsComponent }
-        ])
-      ],
-      declarations: [ListAccountsComponent, BankComponent, SidebarComponent]
-    })
-      .overrideComponent(ListAccountsComponent, {
-        set: {
-          providers: [
-            AisService,
-            {
-              provide: ActivatedRoute,
-              useValue: {
-                parent: {
-                  parent: {
-                    params: of({ bankId: 1234 }),
-                    paramMap: {
-                      subscribe(bankId: string): string {
-                        return '1234';
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          ]
+      imports: [HttpClientTestingModule, RouterTestingModule],
+      declarations: [ListAccountsComponent, BankComponent, SidebarComponent],
+      providers: [
+        AisService,
+        {
+          provide: ActivatedRoute,
+          useValue: { snapshot: { paramMap: convertToParamMap({ bankid: '1234' }) } }
         }
-      })
-      .compileComponents();
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ListAccountsComponent);
     component = fixture.componentInstance;
-    router = TestBed.get(Router);
     aisService = TestBed.get(AisService);
-
+    route = TestBed.get(ActivatedRoute);
     fixture.detectChanges();
   });
 
@@ -66,13 +43,13 @@ describe('ListAccountsComponent', () => {
   });
 
   it('should load accounts', () => {
-    const bankId = '1234';
+    const bankId = route.snapshot.paramMap.get('bankid');
     const mockAccounts: HttpResponse<AccountList> = {} as HttpResponse<AccountList>;
 
     spyOn(aisService, 'getAccounts')
       .withArgs(bankId)
       .and.returnValue(of(mockAccounts));
-    // expect(component.bankId).toEqual(bankId);
+    expect(component.bankId).toEqual(bankId);
     aisService.getAccounts(bankId).subscribe(res => {
       expect(res).toEqual(mockAccounts);
     });
