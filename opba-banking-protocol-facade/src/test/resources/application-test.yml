@@ -5,6 +5,9 @@ spring:
     password: docker
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
 
+protocol:
+  embedded-ui-base-url: http://localhost:1010
+
 facade:
   encryption:
     providerName: BC

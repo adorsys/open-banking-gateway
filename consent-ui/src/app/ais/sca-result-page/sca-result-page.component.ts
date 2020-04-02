@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { StubUtil } from '../common/stub-util';
-import { ConsentAuthorizationService } from '../../api';
-import { ApiHeaders } from '../../api/api.headers';
-import { SessionService } from '../../common/session.service';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute} from '@angular/router';
+import {StubUtil} from '../common/stub-util';
+import {ConsentAuthorizationService} from '../../api';
+import {ApiHeaders} from '../../api/api.headers';
+import {SessionService} from '../../common/session.service';
 
 @Component({
   selector: 'consent-app-sca-result-page',
@@ -17,6 +17,8 @@ export class ReportScaResultComponent implements OnInit {
   reportScaResultForm: FormGroup;
   private authorizationSessionId: string;
   private redirectCode: string;
+
+  wrongSca: boolean;
 
   constructor(
     private sessionService: SessionService,
@@ -31,6 +33,7 @@ export class ReportScaResultComponent implements OnInit {
     });
 
     this.authorizationSessionId = this.activatedRoute.parent.snapshot.paramMap.get('authId');
+    this.wrongSca = this.activatedRoute.snapshot.queryParamMap.get('wrong') === 'true';
     this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
   }
 

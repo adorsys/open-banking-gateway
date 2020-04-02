@@ -1,11 +1,11 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PasswordInputPageComponent } from './password-input-page.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { StubUtilTests } from '../common/stub-util-tests';
+import {PasswordInputPageComponent} from './password-input-page.component';
+import {ReactiveFormsModule} from '@angular/forms';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {RouterTestingModule} from '@angular/router/testing';
+import {ActivatedRoute, convertToParamMap} from '@angular/router';
+import {StubUtilTests} from '../common/stub-util-tests';
 
 describe('PasswordInputPageComponent', () => {
   let component: PasswordInputPageComponent;
@@ -18,7 +18,10 @@ describe('PasswordInputPageComponent', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { parent: { snapshot: { paramMap: convertToParamMap({ authId: StubUtilTests.AUTH_ID }) } } }
+          useValue: {
+            snapshot: {queryParamMap: convertToParamMap({})},
+            parent: { snapshot: { paramMap: convertToParamMap({ authId: StubUtilTests.AUTH_ID }) } }
+          }
         }
       ]
     }).compileComponents();

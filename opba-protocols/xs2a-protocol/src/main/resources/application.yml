@@ -30,16 +30,18 @@ protocol:
     consent-accounts:
       ok:  ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
       nok: ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
-      result: ${protocol.embedded-ui-base-url}/from-aspsp?dest=#{urlSafe(context.getLastRedirection().getRedirectTo())}&serviceSessionId=#{context.getServiceSessionId()}
+      result: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
     parameters:
       max-array-size: 32
-      provide-more: 'http://localhost:5500/parameters/provide-more/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}'
-      provide-psu-password: 'http://localhost:5500/parameters/provide-psu-password/#{execution.getId()}'
-      select-sca-method: 'http://localhost:5500/parameters/select-sca-method/#{execution.getId()}?q=#{urlSafe(context.getAvailableSca().toString())}'
-      report-sca-result: 'http://localhost:5500/parameters/report-sca-result/#{execution.getId()}?q=#{urlSafe(context.getScaSelected().getAuthenticationType() + ":" + context.getScaSelected().getName())}'
+      provide-more: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+      provide-psu-password: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/authenticate?wrong=#{context.getWrongAuthCredentials()}
+      select-sca-method: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
+      report-sca-result: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/sca-result?wrong=#{context.getWrongAuthCredentials()}
   gateway-base-url: http://localhost:8085
   expirable:
     expire-after-write: PT600S
+  aspspmessages:
+    invalid-credentials: PSU_CREDENTIALS_INVALID
 
 pkcs12:
   keyStore: sample-qwac.keystore
