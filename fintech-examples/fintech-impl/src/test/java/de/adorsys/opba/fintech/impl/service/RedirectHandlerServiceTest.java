@@ -1,19 +1,26 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
+import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.MockReset;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,6 +32,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.SEE_OTHER;
 
+@Slf4j
 @ExtendWith(MockitoExtension.class)
 class RedirectHandlerServiceTest {
     private final String REDIRECT_STATE_VALUE = "682dbd06-75d4-4f73-a7e7-9084150a1f10";
@@ -43,6 +51,10 @@ class RedirectHandlerServiceTest {
 
     private FintechUiConfig uiConfig = new FintechUiConfig(REDIRECT_URL, EXCEPTION_URL, EXCEPTION_URL);
 
+    @InjectMocks
+    @MockBean(reset = MockReset.NONE, answer = Answers.CALLS_REAL_METHODS)
+    private RestRequestContext restRequestContext;
+
     @Mock
     private RedirectUrlRepository redirectUrlRepository;
 
@@ -57,6 +69,11 @@ class RedirectHandlerServiceTest {
 
     @BeforeEach
     void setup() {
+        MockitoAnnotations.initMocks(this);
+
+        log.info("setup RestRequestContext");
+        restRequestContext.setRequestId(UUID.randomUUID().toString());
+        log.info("rrc is {}", restRequestContext.toString());
         redirectHandlerService = new RedirectHandlerService(uiConfig, redirectUrlRepository, authorizeService);
     }
 

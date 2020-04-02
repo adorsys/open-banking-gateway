@@ -116,11 +116,12 @@ public class AuthorizeService {
 
     @Transactional
     public boolean isAuthorized() {
-        log.info("passed in context is {}", restRequestContext.toString());
-        log.info("xsrftoken    : {}", restRequestContext.getXsrfTokenHeaderField());
-        log.info("sessioncookie: {}", restRequestContext.getSessionCookieValue());
-        if (restRequestContext.getSessionCookieValue() == null || restRequestContext.getXsrfTokenHeaderField() == null) {
-                return false;
+        log.info(restRequestContext.toString());
+        if (restRequestContext.getSessionCookieValue() == null || restRequestContext.getXsrfTokenHeaderField() == null || restRequestContext.getRequestId() == null) {
+            log.error("unauthorized call due to missing {}",
+                    restRequestContext.getSessionCookieValue() == null
+                            ? "session cookie" : restRequestContext.getXsrfTokenHeaderField() == null ? "XSRFToken" : "RequestID");
+            return false;
         }
         String xsrfToken = restRequestContext.getXsrfTokenHeaderField();
         Optional<SessionEntity> optionalUserEntity = userRepository.findByXsrfToken(xsrfToken);
