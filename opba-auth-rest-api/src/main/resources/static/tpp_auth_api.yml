@@ -7,13 +7,11 @@ info:
 externalDocs:
   url: "https://adorsys.github.com/open-banking-gateway"
 
-
 paths:
-
   /v1/auth/login:
     post:
       tags:
-        - UserLogin
+        - Psu Auth
       operationId: login
       summary: login user to open-banking
       description: TBD
@@ -22,7 +20,7 @@ paths:
         - $ref: '#/components/parameters/Authorization'
         - $ref: '#/components/parameters/X-Request-ID'
         #query
-        - $ref: '#/components/parameters/UserName'
+        - $ref: '#/components/parameters/PsuId'
         - $ref: '#/components/parameters/Password'
       responses:
         '202':
@@ -33,7 +31,7 @@ paths:
   /v1/auth/register:
     post:
       tags:
-        - UserRegister
+        - Psu Auth
       operationId: registration
       summary: registration user in open-banking db
       description: TBD
@@ -42,7 +40,7 @@ paths:
         - $ref: '#/components/parameters/Authorization'
         - $ref: '#/components/parameters/X-Request-ID'
         #query
-        - $ref: '#/components/parameters/UserName'
+        - $ref: '#/components/parameters/PsuId'
         - $ref: '#/components/parameters/Password'
       responses:
         '201':
@@ -63,8 +61,8 @@ components:
         format: uuid
 
   parameters:
-    UserName:
-      name: username
+    PsuId:
+      name: psuId
       in: query
       required: true
       schema:
