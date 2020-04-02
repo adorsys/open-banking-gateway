@@ -16,7 +16,8 @@ spring:
 
 tpp:
   url: http://localhost:8086
-
+  fintechID: MY-SUPER-FINTECH-ID
+  serviceSessionPassword: qwerty
 
 mock:
   tppais:

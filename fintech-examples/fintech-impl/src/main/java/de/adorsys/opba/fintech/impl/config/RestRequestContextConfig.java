@@ -19,6 +19,7 @@ public class RestRequestContextConfig {
         return RestRequestContext.builder()
                 .sessionCookieValue(Arrays.stream(httpServletRequest.getCookies()).filter(cookie -> cookie.getName().equalsIgnoreCase(Consts.COOKIE_SESSION_COOKIE_NAME)).findFirst().get().getValue())
                 .xsrfTokenHeaderField(httpServletRequest.getHeader(Consts.HEADER_XSRF_TOKEN))
+                .requestId(httpServletRequest.getHeader(Consts.HEADER_X_REQUEST_ID))
                 .build();
     }
 
