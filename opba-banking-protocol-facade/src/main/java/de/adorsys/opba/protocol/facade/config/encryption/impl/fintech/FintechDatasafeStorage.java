@@ -64,7 +64,7 @@ public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
     }
 
     @Component
-    public static class FintechKeystoreStorage extends DatasafeMetadataStorage {
+    public static class FintechKeystoreStorage extends DatasafeMetadataStorage<Fintech> {
 
         public FintechKeystoreStorage(FintechRepository fintechs) {
             super(fintechs, Fintech::getKeystore, Fintech::setKeystore);
@@ -72,7 +72,7 @@ public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
     }
 
     @Component
-    public static class FintechPubKeysStorage extends DatasafeMetadataStorage {
+    public static class FintechPubKeysStorage extends DatasafeMetadataStorage<Fintech> {
 
         public FintechPubKeysStorage(FintechRepository fintechs) {
             super(fintechs, Fintech::getPubKeys, Fintech::setPubKeys);
