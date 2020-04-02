@@ -49,13 +49,14 @@ services:
       dockerfile: Dockerfile
     ports:
       - "24200:4200"
+    depends_on:
+      - fintech-server
     networks:
       - opba-net
 
   fintech-server:
     environment:
       - TPP_URL=http://open-banking-gateway:8085
-
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/open_banking?currentSchema=fintech
       - SPRING_JPA_DDL-AUTO=validate
 
@@ -74,6 +75,8 @@ services:
     build: fintech-examples/fintech-server
     ports:
       - "18086:8086"
+    depends_on:
+      - postgres
     networks:
       - opba-net
 
@@ -86,5 +89,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "14200:4200"
+    depends_on:
+      - open-banking-gateway
     networks:
       - opba-net
