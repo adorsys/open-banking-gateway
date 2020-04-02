@@ -1,0 +1,54 @@
+@import 'src/assets/themes/variables';
+// list-accounts
+.withoutOutline {
+  outline: none;
+}
+.lacc-parent {
+  margin: 50px;
+  display: flex;
+  flex-direction: row;
+}
+
+.lacc-list-container {
+  @extend %layout-padding;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 3px;
+  //width: 95%;
+  text-align: start;
+  border-top: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.145);
+  cursor: pointer;
+
+  &--unselected {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  }
+  &--selected {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 1);
+  }
+}
+
+.lacc-list-item {
+  &__headline {
+    font-size: 1.1rem;
+    margin-right: 0;
+
+    &--small {
+      font-size: 0.85rem;
+      color: $primary;
+    }
+  }
+
+  &__subheadline {
+    font-size: 0.85rem;
+    margin-bottom: 0;
+    color: $primary;
+
+    &--large {
+      font-size: 1.1rem;
+    }
+  }
+}
