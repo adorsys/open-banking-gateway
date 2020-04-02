@@ -1,0 +1,148 @@
+openapi: 3.0.1
+info:
+  version: "1.0.0"
+  title: Open Banking Gateway Tpp Authentication API
+  description: >-
+    This API provides PSU login and registration functionality on TPP side.
+externalDocs:
+  url: "https://adorsys.github.com/open-banking-gateway"
+
+
+paths:
+
+  /v1/auth/login:
+    post:
+      tags:
+        - UserLogin
+      operationId: login
+      summary: login user to open-banking
+      description: TBD
+      parameters:
+        #common header parameter
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/X-Request-ID'
+        #query
+        - $ref: '#/components/parameters/UserName'
+        - $ref: '#/components/parameters/Password'
+      responses:
+        '202':
+          $ref: '#/components/responses/202_UserAccepted'
+        '401':
+          $ref: '#/components/responses/401_UNAUTHORIZED'
+
+  /v1/auth/register:
+    post:
+      tags:
+        - UserRegister
+      operationId: registration
+      summary: registration user in open-banking db
+      description: TBD
+      parameters:
+        #common header parameter
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/X-Request-ID'
+        #query
+        - $ref: '#/components/parameters/UserName'
+        - $ref: '#/components/parameters/Password'
+      responses:
+        '201':
+          $ref: '#/components/responses/201_UserCreated'
+        '400':
+          $ref: '#/components/responses/400_BadRequest'
+
+components:
+  headers:
+    X-Request-ID:
+      required: true
+      description: |
+        Unique ID that identifies this request through common workflow.
+        Shall be contained in HTTP Response as well.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+
+  parameters:
+    UserName:
+      name: username
+      in: query
+      required: true
+      schema:
+        type: string
+
+    Password:
+      name: password
+      in: query
+      required: true
+      schema:
+        type: string
+
+    Authorization:
+      name: Authorization
+      in: header
+      required: true
+      description: |
+        Unique Token that identifies FinTech Session for this request.
+      example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik15IGNvb2wgRmludGVjaCBBcHAiLCJpYXQiOjE1MTYyMzkwMjJ9.NfpSq7hot-1x3rZOaqRaSJzNnMw6ltX-9eqxcCQnGbI"
+      schema:
+        type: string
+
+    X-Request-ID:
+      name: X-Request-ID
+      in: header
+      required: true
+      description: |
+        Unique ID that identifies this request through common workflow.
+        Shall be contained in HTTP Response as well.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+
+  responses:
+    201_UserCreated:
+      description: User created sucessfully
+      headers:
+        X-Request-ID:
+          $ref: '#/components/parameters/X-Request-ID'
+      #NO RESPONSE BODY
+
+    202_UserAccepted:
+      description: User logged in
+      headers:
+        X-Request-ID:
+          $ref: '#/components/parameters/X-Request-ID'
+      #NO RESPONSE BODY
+
+  400_BadRequest:
+    description: |
+      Wrong registration parameters or user exist
+    headers:
+      X-Request-ID:
+        $ref: '#/components/parameters/X-Request-ID'
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/generalError"
+
+    401_Unauthorised:
+      description: |
+        Bad username or password
+      headers:
+        X-Request-ID:
+          $ref: '#/components/parameters/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/generalError"
+
+  schemas:
+    generalError:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "ERROR_CODE"
+        message:
+          type: string
+          example: "Error description message"
