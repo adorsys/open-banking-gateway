@@ -45,6 +45,7 @@ public class BankSearchService {
     @SneakyThrows
     public InlineResponse2002 searchBankProfile(String bankId) {
         return new InlineResponse2002().bankProfile(
-                ManualMapper.fromTppToFintech(tppBankSearchClient.bankProfileGET(tppProperties.getFintechID(), UUID.fromString(restRequestContext.getRequestId()), bankId).getBody().getBankProfileDescriptor()));
+                ManualMapper.fromTppToFintech(tppBankSearchClient.bankProfileGET(tppProperties.getFintechID(),
+                        UUID.fromString(restRequestContext.getRequestId()), bankId).getBody().getBankProfileDescriptor()));
     }
 }
