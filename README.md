@@ -26,6 +26,11 @@ The following picture displays the overall architecture of this banking gateway:
 ![High level architecture](docs/img/open-banking-gateway-arch-14-01-2020.png)
 
 
+## Security concept
+
+The following picture displays the overall security concept of this banking gateway:
+![Security concept](docs/img/security-concept.png)
+
 ## Information for developers:
  
  - Starting with project: [How to start with project](https://github.com/adorsys/open-banking-gateway/tree/develop/how-to-start-with-project) 
