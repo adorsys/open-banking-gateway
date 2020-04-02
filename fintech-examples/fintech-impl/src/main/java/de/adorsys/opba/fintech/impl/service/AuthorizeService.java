@@ -75,7 +75,7 @@ public class AuthorizeService {
     public HttpHeaders fillWithAuthorizationHeaders(SessionEntity sessionEntity) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set(X_REQUEST_ID, restRequestContext.getRequestId());
-        log.info("set response cookie attributes to {}", cookieConfigProperties.toString());
+        log.debug("set response cookie attributes to {}", cookieConfigProperties.toString());
 
         CookieEntity sessionCookie = sessionEntity.getSessionCookie();
         String sessionCookieString = ResponseCookie.from(sessionCookie.getName(), sessionCookie.getValue())
