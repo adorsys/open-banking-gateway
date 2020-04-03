@@ -59,6 +59,12 @@ protocol:
   aspspmessages:
     invalid-credentials: PSU_CREDENTIALS_INVALID
 
+encryption:
+  datasafe:
+    read-keystore:
+      psu: I-M-A-SAMPLE-PSU-PASSWORD-REPLACE-ME
+      fintech: I-M-A-SAMPLE-FINTECH-PASSWORD-REPLACE-ME
+
 pkcs12:
   keyStore: sample-qwac.keystore
   password: password
