@@ -15,6 +15,7 @@ import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSec
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuDatasafeStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,12 +25,16 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class DatasafeConfig {
 
+    private static final String ENCRYPTION_DATASAFE_READ_KEYSTORE = "encryption.datasafe.read-keystore";
+
     private final FintechDatasafeStorage fintechStorage;
     private final PsuDatasafeStorage psuStorage;
 
     @Bean
-    public FintechSecureStorage fintechDatasafeServices() {
-        DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig("trum-pam-pam");
+    public FintechSecureStorage fintechDatasafeServices(
+            @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE + ".fintech") String fintechReadStorePass
+    ) {
+        DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig(fintechReadStorePass);
         OverridesRegistry overridesRegistry = new BaseOverridesRegistry();
         ProfileRetrievalServiceImplRuntimeDelegatable.overrideWith(overridesRegistry, BaseDatasafeDbStorageService.DbTableUserRetrieval::new);
         PathEncryptionImplRuntimeDelegatable.overrideWith(overridesRegistry, NoOpPathEncryptionImplOverridden::new);
@@ -44,8 +49,10 @@ public class DatasafeConfig {
     }
 
     @Bean
-    public PsuSecureStorage psuDatasafeServices() {
-        DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig("trum-pam-pam");
+    public PsuSecureStorage psuDatasafeServices(
+            @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE + ".psu") String psuReadStorePass
+    ) {
+        DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig(psuReadStorePass);
         OverridesRegistry overridesRegistry = new BaseOverridesRegistry();
         ProfileRetrievalServiceImplRuntimeDelegatable.overrideWith(overridesRegistry, BaseDatasafeDbStorageService.DbTableUserRetrieval::new);
         PathEncryptionImplRuntimeDelegatable.overrideWith(overridesRegistry, NoOpPathEncryptionImplOverridden::new);
