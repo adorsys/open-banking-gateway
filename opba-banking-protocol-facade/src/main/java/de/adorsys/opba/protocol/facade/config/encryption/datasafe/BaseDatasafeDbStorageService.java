@@ -16,7 +16,6 @@ import de.adorsys.datasafe.types.api.resource.AbsoluteLocation;
 import de.adorsys.datasafe.types.api.resource.BasePrivateResource;
 import de.adorsys.datasafe.types.api.resource.BasePublicResource;
 import de.adorsys.datasafe.types.api.resource.ResolvedResource;
-import de.adorsys.datasafe.types.api.resource.StorageIdentifier;
 import de.adorsys.datasafe.types.api.resource.WithCallback;
 import de.adorsys.datasafe.types.api.types.ReadStorePassword;
 import lombok.RequiredArgsConstructor;
@@ -186,17 +185,6 @@ public abstract class BaseDatasafeDbStorageService implements StorageService {
         @Override
         public CreateUserPublicProfile defaultPublicTemplate(UserID userID) {
             throw new IllegalStateException("Not supported");
-        }
-
-        public UserPrivateProfile privateProfile(UserIDAuth userIDAuth) {
-            String userId = userIDAuth.getUserID().getValue();
-
-            return UserPrivateProfile.builder()
-                    .privateStorage(Collections.singletonMap(StorageIdentifier.DEFAULT, BasePrivateResource.forAbsolutePrivate(PRIVATE_STORAGE + userId + "/")))
-                    .keystore(BasePrivateResource.forAbsolutePrivate(KEYSTORE + userId))
-                    .associatedResources(Collections.emptyList())
-                    .publishPublicKeysTo(BasePublicResource.forAbsolutePublic("db://nowhere"))
-                    .build();
         }
     }
 
