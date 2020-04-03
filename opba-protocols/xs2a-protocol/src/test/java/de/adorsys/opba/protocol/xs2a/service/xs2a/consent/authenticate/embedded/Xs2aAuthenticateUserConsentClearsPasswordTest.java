@@ -21,6 +21,7 @@ import java.util.HashMap;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -33,6 +34,9 @@ class Xs2aAuthenticateUserConsentClearsPasswordTest extends BaseMockitoTest {
 
     @Mock
     private AccountInformationService ais;
+
+    @Mock
+    private AuthorizationErrorSink errorSink;
 
     @Mock
     private DelegateExecution delegateExecution;
@@ -53,6 +57,7 @@ class Xs2aAuthenticateUserConsentClearsPasswordTest extends BaseMockitoTest {
     void pinCleaned() {
         Xs2aContext context = new Xs2aContext();
         context.setTransientStorage(new TransientDataStorage(new HashMap<>()));
+        doCallRealMethod().when(errorSink).swallowAuthorizationErrorForLooping(any(), any());
         when(mockParams.getHeaders()).thenReturn(new Xs2aStandardHeaders());
         when(mockParams.getBody()).thenReturn(new UpdatePsuAuthentication());
         when(mockParams.getPath()).thenReturn(new Xs2aAuthorizedConsentParameters());
@@ -69,8 +74,8 @@ class Xs2aAuthenticateUserConsentClearsPasswordTest extends BaseMockitoTest {
     }
 
     public static class Xs2aAuthenticateUserConsentTestable extends Xs2aAuthenticateUserConsent {
-        public Xs2aAuthenticateUserConsentTestable(Extractor extractor, Xs2aValidator validator, AccountInformationService ais) {
-            super(extractor, validator, ais);
+        public Xs2aAuthenticateUserConsentTestable(Extractor extractor, Xs2aValidator validator, AccountInformationService ais, AuthorizationErrorSink errorSink) {
+            super(extractor, validator, ais, errorSink);
         }
 
         @Override
