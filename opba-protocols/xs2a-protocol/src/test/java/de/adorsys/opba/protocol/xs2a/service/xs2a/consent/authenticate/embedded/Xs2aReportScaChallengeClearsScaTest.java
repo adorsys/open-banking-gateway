@@ -33,9 +33,6 @@ class Xs2aReportScaChallengeClearsScaTest extends BaseMockitoTest {
     private Xs2aReportScaChallenge.Extractor extractor;
 
     @Mock
-    private Xs2aValidator validator;
-
-    @Mock
     private AccountInformationService ais;
 
     @Mock
