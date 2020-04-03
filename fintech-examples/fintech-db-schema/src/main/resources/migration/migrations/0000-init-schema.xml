@@ -15,7 +15,7 @@
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="opb_login_entity_pkey"/>
             </column>
-            <column name="login_time" type="TIMESTAMP without time zone">
+            <column name="login_time" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
         </createTable>

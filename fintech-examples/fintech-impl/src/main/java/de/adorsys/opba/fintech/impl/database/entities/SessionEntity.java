@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.util.encoders.Hex;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -20,6 +21,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +58,9 @@ public class SessionEntity {
 
     @SneakyThrows
     public static String createSessionCookieValue(String fintechUserId, String xsrfToken) {
+        // TODO Hashing with SHA256
         ObjectMapper mapper = new ObjectMapper();
-        return URLEncoder.encode(mapper.writeValueAsString(new SessionCookieValue(fintechUserId, xsrfToken.hashCode())), JsonEncoding.UTF8.getJavaName());
+        return URLEncoder.encode(mapper.writeValueAsString(new SessionCookieValue(fintechUserId, hashAndHexconvert(xsrfToken))), JsonEncoding.UTF8.getJavaName());
     }
 
     @SneakyThrows
@@ -64,7 +68,7 @@ public class SessionEntity {
         String decode = URLDecoder.decode(sessionCookieValueString, JsonEncoding.UTF8.getJavaName());
         ObjectMapper mapper = new ObjectMapper();
         SessionCookieValue sessionCookieValue = mapper.readValue(decode, SessionCookieValue.class);
-        if (sessionCookieValue.getHashedXsrfToken() == xsrfToken.hashCode()) {
+        if (sessionCookieValue.getHashedXsrfToken().equals(hashAndHexconvert(xsrfToken))) {
             log.info("validation of token for session ok {}", sessionCookieValue);
             return;
         }
@@ -92,6 +96,15 @@ public class SessionEntity {
     @Data
     public static class SessionCookieValue {
         private final String fintechUserId;
-        private final int hashedXsrfToken;
+        private final String hashedXsrfToken;
     }
+
+    @SneakyThrows
+    static String hashAndHexconvert(String decoded) {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] encodedhash = digest.digest(
+                decoded.getBytes(StandardCharsets.UTF_8));
+        return Hex.toHexString(encodedhash);
+    }
+
 }
