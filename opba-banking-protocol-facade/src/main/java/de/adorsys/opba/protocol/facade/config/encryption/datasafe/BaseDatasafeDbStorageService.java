@@ -95,6 +95,19 @@ public abstract class BaseDatasafeDbStorageService implements StorageService {
                 .orElseThrow(() -> new IllegalArgumentException("Failed to find entity for " + location.location().toASCIIString()));
     }
 
+    private static CreateUserPrivateProfile createUserPrivateProfile(UserIDAuth userIDAuth) {
+        String userId = userIDAuth.getUserID().getValue();
+
+        return CreateUserPrivateProfile.builder()
+                .id(userIDAuth)
+                .privateStorage(BasePrivateResource.forAbsolutePrivate(PRIVATE_STORAGE + userId + "/"))
+                .keystore(BasePrivateResource.forAbsolutePrivate(KEYSTORE + userId))
+                .inboxWithWriteAccess(BasePrivateResource.forAbsolutePrivate(INBOX_STORAGE + userId + "/"))
+                .publishPubKeysTo(BasePublicResource.forAbsolutePublic(PUB_KEYS + userId))
+                .associatedResources(Collections.emptyList())
+                .build();
+    }
+
     public interface StorageActions {
 
         void update(String id, byte[] data);
@@ -127,16 +140,7 @@ public abstract class BaseDatasafeDbStorageService implements StorageService {
 
         @Override
         public CreateUserPrivateProfile defaultPrivateTemplate(UserIDAuth userIDAuth) {
-            String userId = userIDAuth.getUserID().getValue();
-
-            return CreateUserPrivateProfile.builder()
-                    .id(userIDAuth)
-                    .privateStorage(BasePrivateResource.forAbsolutePrivate(PRIVATE_STORAGE + userId + "/"))
-                    .keystore(BasePrivateResource.forAbsolutePrivate(KEYSTORE + userId))
-                    .inboxWithWriteAccess(BasePrivateResource.forAbsolutePrivate(INBOX_STORAGE + userId + "/"))
-                    .publishPubKeysTo(BasePublicResource.forAbsolutePublic(PUB_KEYS + userId))
-                    .associatedResources(Collections.emptyList())
-                    .build();
+            return createUserPrivateProfile(userIDAuth);
         }
 
         @Override
@@ -176,16 +180,7 @@ public abstract class BaseDatasafeDbStorageService implements StorageService {
 
         @Override
         public CreateUserPrivateProfile defaultPrivateTemplate(UserIDAuth userIDAuth) {
-            String userId = userIDAuth.getUserID().getValue();
-
-            return CreateUserPrivateProfile.builder()
-                    .id(userIDAuth)
-                    .privateStorage(BasePrivateResource.forAbsolutePrivate(PRIVATE_STORAGE + userId + "/"))
-                    .keystore(BasePrivateResource.forAbsolutePrivate(KEYSTORE + userId))
-                    .inboxWithWriteAccess(BasePrivateResource.forAbsolutePrivate(INBOX_STORAGE + userId + "/"))
-                    .publishPubKeysTo(BasePublicResource.forAbsolutePublic(PUB_KEYS + userId))
-                    .associatedResources(Collections.emptyList())
-                    .build();
+            return createUserPrivateProfile(userIDAuth);
         }
 
         @Override
