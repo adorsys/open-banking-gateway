@@ -48,6 +48,7 @@ public class BaseContext {
      */
     private Set<ValidationIssue> violations = new HashSet<>();
     private LastRedirectionTarget lastRedirection;
+    private Boolean wrongAuthCredentials;
 
     /**
      * Other helpful functions

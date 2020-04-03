@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { StubUtil } from '../common/stub-util';
-import { Subscription } from 'rxjs';
-import { ApiHeaders } from '../../api/api.headers';
-import { ConsentAuthorizationService } from '../../api';
-import { SessionService } from '../../common/session.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute} from '@angular/router';
+import {StubUtil} from '../common/stub-util';
+import {Subscription} from 'rxjs';
+import {ApiHeaders} from '../../api/api.headers';
+import {ConsentAuthorizationService} from '../../api';
+import {SessionService} from '../../common/session.service';
 
 @Component({
   selector: 'consent-app-password-input-page',
@@ -17,6 +17,8 @@ export class PasswordInputPageComponent implements OnInit, OnDestroy {
   private authorizationSessionId: string;
   private redirectCode: string;
   private subscriptions: Subscription[] = [];
+
+  wrongPassword: boolean;
 
   constructor(
     private consentAuthorizationService: ConsentAuthorizationService,
@@ -31,6 +33,7 @@ export class PasswordInputPageComponent implements OnInit, OnDestroy {
     });
 
     this.authorizationSessionId = this.activatedRoute.parent.snapshot.paramMap.get('authId');
+    this.wrongPassword = this.activatedRoute.snapshot.queryParamMap.get('wrong') === 'true';
     this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
     console.log('REDIRECT CODE: ', this.redirectCode);
   }

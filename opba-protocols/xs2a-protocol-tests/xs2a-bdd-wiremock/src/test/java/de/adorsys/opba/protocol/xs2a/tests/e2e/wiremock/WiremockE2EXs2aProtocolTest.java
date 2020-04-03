@@ -171,6 +171,110 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
 
     @ParameterizedTest
     @EnumSource(Approach.class)
+    void testAccountsListWithOnceWrongPasswordThenOkWithConsentUsingEmbedded(Approach approach) {
+        given()
+                .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+                .rest_assured_points_to_opba_server();
+
+        when()
+                .fintech_calls_list_accounts_for_max_musterman()
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
+                .and()
+                .user_max_musterman_provided_wrong_password_to_embedded_authorization_and_stays_on_password_page()
+                .and()
+                .user_max_musterman_provided_correct_password_after_wrong_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+                .open_banking_has_consent_for_max_musterman_account_list()
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testTransactionsListWithOnceWrongPasswordThenOkWithConsentUsingEmbedded(Approach approach) {
+        given()
+                .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+                .rest_assured_points_to_opba_server();
+
+        when()
+                .fintech_calls_list_transactions_for_max_musterman()
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent()
+                .and()
+                .user_max_musterman_provided_wrong_password_to_embedded_authorization_and_stays_on_password_page()
+                .and()
+                .user_max_musterman_provided_correct_password_after_wrong_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_email1_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+                .open_banking_has_consent_for_max_musterman_transaction_list()
+                .open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
+                        WiremockConst.MAX_MUSTERMAN_RESOURCE_ID, WiremockConst.DATE_FROM, WiremockConst.DATE_TO, WiremockConst.BOTH_BOOKING
+                );
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testAccountsListWithOnceWrongScaChallengeThenOkWithConsentUsingEmbedded(Approach approach) {
+        given()
+                .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+                .rest_assured_points_to_opba_server();
+
+        when()
+                .fintech_calls_list_accounts_for_max_musterman()
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_wrong_sca_challenge_result_to_embedded_authorization_and_stays_on_sca_page()
+                .and()
+                .user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+                .open_banking_has_consent_for_max_musterman_account_list()
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testTransactionsListWithOnceWrongScaChallengeThenOkWithConsentUsingEmbedded(Approach approach) {
+        given()
+                .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+                .rest_assured_points_to_opba_server();
+
+        when()
+                .fintech_calls_list_transactions_for_max_musterman()
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_email1_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_wrong_sca_challenge_result_to_embedded_authorization_and_stays_on_sca_page()
+                .and()
+                .user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+                .open_banking_has_consent_for_max_musterman_transaction_list()
+                .open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
+                        WiremockConst.MAX_MUSTERMAN_RESOURCE_ID, WiremockConst.DATE_FROM, WiremockConst.DATE_TO, WiremockConst.BOTH_BOOKING
+                );
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
     void testAccountAndTransactionsListWithConsentForAllServicesUsingEmbedded(Approach approach) {
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
