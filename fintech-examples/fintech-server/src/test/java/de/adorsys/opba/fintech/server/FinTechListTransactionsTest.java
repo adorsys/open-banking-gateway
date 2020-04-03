@@ -5,7 +5,7 @@ import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import lombok.SneakyThrows;
 import org.json.JSONArray;
 import org.json.JSONObject;
-// import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MvcResult;
@@ -30,8 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 public class FinTechListTransactionsTest extends FinTechListAccountsTest {
     private static final String FIN_TECH_LIST_TRANSACTIONS_URL = "/v1/ais/banks/{bank-id}/accounts/{account-id}/transactions";
 
-    // Fixme
-    // @Test
+    @Test
     @SneakyThrows
     public void testListTransactionsForOk() {
         BankProfileTestResult result = getBankProfileTestResult();
@@ -43,8 +42,7 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
         assertTrue(amounts.containsAll(Arrays.asList(new String[]{"1000"})));
     }
 
-    // Fixme
-    // @Test
+    @Test
     @SneakyThrows
     public void testListTransactionsForRedirect() {
         ResponseEntity<TransactionsResponse> accepted = ResponseEntity.accepted()
