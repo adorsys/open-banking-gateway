@@ -22,7 +22,7 @@ public class RestRequestContextConfig {
     public RestRequestContext provideCurrentRestRequest(HttpServletRequest httpServletRequest) {
         String sessionCookieValue = null;
         if (httpServletRequest.getCookies() != null) {
-            Optional<Cookie> sessionCookie = Arrays.stream(httpServletRequest.getCookies()).filter(cookie -> cookie.getName().equalsIgnoreCase(Consts.COOKIE_SESSION_COOKIE_NAME)).findFirst();
+            Optional<Cookie> sessionCookie = Arrays.stream(httpServletRequest.getCookies()).filter(cookie -> Consts.COOKIE_SESSION_COOKIE_NAME.equalsIgnoreCase(cookie.getName())).findFirst();
             if (sessionCookie.isPresent()) {
                 sessionCookieValue = sessionCookie.get().getValue();
             }
