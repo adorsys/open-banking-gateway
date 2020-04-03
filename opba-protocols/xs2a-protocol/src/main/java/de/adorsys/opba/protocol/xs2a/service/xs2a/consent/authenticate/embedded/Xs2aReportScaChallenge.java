@@ -58,6 +58,7 @@ public class Xs2aReportScaChallenge extends ValidatedExecution<Xs2aContext> {
         ContextUtil.getAndUpdateContext(
                 execution,
                 (Xs2aContext ctx) -> {
+                    ctx.setLastScaChallenge(null); // eagerly destroy SCA challenge, albeit it is not persisted
                     ctx.setWrongAuthCredentials(false);
                     ctx.setScaStatus(authResponse.getBody().getScaStatus().getValue());
                 }
@@ -79,7 +80,7 @@ public class Xs2aReportScaChallenge extends ValidatedExecution<Xs2aContext> {
                                 Xs2aContext,
                                 Xs2aAuthorizedConsentParameters,
                                 Xs2aStandardHeaders,
-            ProvideScaChallengeResultBody,
+                                ProvideScaChallengeResultBody,
                                 TransactionAuthorisation> {
 
         public Extractor(
