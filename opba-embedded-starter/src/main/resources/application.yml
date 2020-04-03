@@ -61,6 +61,12 @@ protocol:
     invalid-credentials: PSU_CREDENTIALS_INVALID
     invalid-consent: FORMAT_ERROR
 
+encryption:
+  datasafe:
+    read-keystore:
+      psu: I-M-A-SAMPLE-PSU-PASSWORD-REPLACE-ME
+      fintech: I-M-A-SAMPLE-FINTECH-PASSWORD-REPLACE-ME
+
 pkcs12:
   keyStore: sample-qwac.keystore
   password: password
