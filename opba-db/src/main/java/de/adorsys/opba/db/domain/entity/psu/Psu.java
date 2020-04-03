@@ -7,13 +7,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import java.util.Collection;
 
 @Getter
 @Setter
@@ -28,7 +31,6 @@ public class Psu {
     @SequenceGenerator(name = "psu_id_generator", sequenceName = "psu_id_sequence")
     private Long id;
 
-
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private byte[] keystore;
@@ -36,4 +38,7 @@ public class Psu {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private byte[] pubKeys;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "psu")
+    private Collection<PsuPrivate> privateStore;
 }
