@@ -56,7 +56,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     @Autowired
     private UserRepository userRepository;
 
-    // @Test
+    @Test
     @SneakyThrows
     public void testListAccountsFor200() {
         BankProfileTestResult result = getBankProfileTestResult();
@@ -139,6 +139,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     protected void setServiceSessionId(UUID serviceSessionId) {
         SessionEntity session = userRepository.findBySessionCookieValue(restRequestContext.getSessionCookieValue()).get();
         session.setServiceSessionId(serviceSessionId);
+        session.setConsentConfirmed(true);
         userRepository.save(session);
     }
 }
