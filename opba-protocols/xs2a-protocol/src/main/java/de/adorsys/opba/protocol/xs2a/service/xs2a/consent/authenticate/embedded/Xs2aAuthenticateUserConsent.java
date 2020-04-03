@@ -62,6 +62,7 @@ public class Xs2aAuthenticateUserConsent extends ValidatedExecution<Xs2aContext>
                 execution,
                 (Xs2aContext ctx) -> {
                     ctx.setWrongAuthCredentials(false);
+                    ctx.setPsuPassword(null); // eagerly destroy password, albeit it is not persisted
                     setScaAvailableMethodsIfCanBeChosen(authResponse, ctx);
                     ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
                 }
