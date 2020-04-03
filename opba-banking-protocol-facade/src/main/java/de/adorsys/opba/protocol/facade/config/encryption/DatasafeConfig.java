@@ -59,7 +59,8 @@ public class DatasafeConfig {
         );
     }
 
-    // Path encryption that does not encrypt paths
+    // Path encryption that does not encrypt paths - as for use cases of OpenBanking we need to protect data
+    // not path to it.
     class NoOpPathEncryptionImplOverridden extends PathEncryptionImpl {
 
         NoOpPathEncryptionImplOverridden(PathEncryptionImplRuntimeDelegatable.ArgumentsCaptor captor) {
