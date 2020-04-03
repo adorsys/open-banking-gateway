@@ -25,7 +25,7 @@ import java.util.function.Function;
 public class DatasafeConfig {
 
     private final FintechDatasafeStorage fintechStorage;
-    private final PsuDatasafeStorage datasafeStorage;
+    private final PsuDatasafeStorage psuStorage;
 
     @Bean
     public FintechSecureStorage fintechDatasafeServices() {
@@ -52,7 +52,7 @@ public class DatasafeConfig {
         return new PsuSecureStorage(
                 DaggerDefaultDatasafeServices.builder()
                         .config(config)
-                        .storage(datasafeStorage)
+                        .storage(psuStorage)
                         .overridesRegistry(overridesRegistry)
                         .build(),
                 config
