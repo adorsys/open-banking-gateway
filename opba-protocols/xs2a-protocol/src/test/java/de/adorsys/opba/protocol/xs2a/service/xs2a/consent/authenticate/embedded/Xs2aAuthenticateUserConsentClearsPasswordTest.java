@@ -32,9 +32,6 @@ class Xs2aAuthenticateUserConsentClearsPasswordTest extends BaseMockitoTest {
     private Xs2aAuthenticateUserConsent.Extractor extractor;
 
     @Mock
-    private Xs2aValidator validator;
-
-    @Mock
     private AccountInformationService ais;
 
     @Mock
