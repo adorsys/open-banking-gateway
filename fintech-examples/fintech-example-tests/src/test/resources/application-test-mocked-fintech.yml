@@ -8,4 +8,4 @@ test:
   webdriver:
     timeout: PT10S
   fintech:
-    server-uri: https://obg-dev-fintechserver.cloud.adorsys.de
+    server-uri: https://obg-dev-fintechui.cloud.adorsys.de

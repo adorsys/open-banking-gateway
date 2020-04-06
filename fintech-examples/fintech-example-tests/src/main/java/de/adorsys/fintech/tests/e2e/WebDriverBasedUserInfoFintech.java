@@ -29,7 +29,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     @Qualifier(TEST_RETRY_OPS)
     private RetryOperations withRetry;
 
-    @Value("${test.fintech.server-uri}")
+    @Value("${test.fintech.uri}")
     private  String fintechUri;
 
     @ProvidedScenarioState
@@ -40,6 +40,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
 
     public SELF user_opens_fintechui_login_page(WebDriver driver) {
         driver.get(fintechUri);
+        System.out.println(fintechUri);
         return self();
     }
 

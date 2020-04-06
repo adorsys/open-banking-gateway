@@ -10,15 +10,9 @@ import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 
 import javax.transaction.Transactional;
+import java.util.UUID;
 
-import static de.adorsys.fintech.tests.e2e.FintechStagesUtils.BANKSEARCH_ENDPOINT;
-import static de.adorsys.fintech.tests.e2e.FintechStagesUtils.BANK_ID;
-import static de.adorsys.fintech.tests.e2e.FintechStagesUtils.BANK_ID_VALUE;
-import static de.adorsys.fintech.tests.e2e.FintechStagesUtils.FINTECH_LOGIN_ENDPOINT;
-import static de.adorsys.fintech.tests.e2e.FintechStagesUtils.USERNAME;
-import static de.adorsys.fintech.tests.e2e.FintechStagesUtils.X_XSRF_TOKEN;
-import static de.adorsys.fintech.tests.e2e.FintechStagesUtils.X_XSRF_TOKEN_VALUE;
-import static de.adorsys.fintech.tests.e2e.FintechStagesUtils.withDefaultHeaders;
+import static de.adorsys.fintech.tests.e2e.FintechStagesUtils.*;
 import static org.hamcrest.Matchers.equalTo;
 
 
@@ -72,6 +66,8 @@ public class UserInformationResult extends Stage<UserInformationResult> {
     public UserInformationResult fintech_can_read_bank_profile_using_xsrfToken(String bankName) {
         ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .header(X_XSRF_TOKEN, X_XSRF_TOKEN_VALUE)
+                                                         .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                                                         .header(SESSION_COOKIE, SESSION_COOKIE_VALUE)
                                                          .queryParam("keyword", bankName)
                                                          .when().get(BANKSEARCH_ENDPOINT, BANK_ID)
                                                          .then().statusCode(HttpStatus.OK.value())
