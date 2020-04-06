@@ -38,14 +38,14 @@ public class UserInformationResult extends Stage<UserInformationResult> {
     @SneakyThrows
     @Transactional
     public UserInformationResult fintech_knows_user_who_entered_his_credentials() {
-        assertThat(users.findByXsrfToken(xsrfToken)).isNotEmpty();
+        assertThat(users.findBySessionCookieValue(sessionCookie)).isNotEmpty();
         return self();
     }
 
     @SneakyThrows
     public UserInformationResult fintech_log_out_user() {
-        users.deleteByXsrfToken(xsrfToken);
-        assertThat(users.findByXsrfToken(xsrfToken)).isEqualTo(null);
+        users.deleteBySessionCookieValue(sessionCookie);
+        assertThat(users.findBySessionCookieValue(sessionCookie)).isEqualTo(null);
         return self();
     }
 

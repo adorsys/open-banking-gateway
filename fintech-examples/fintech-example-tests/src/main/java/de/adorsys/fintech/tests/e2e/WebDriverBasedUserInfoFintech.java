@@ -52,6 +52,22 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
+    public SELF user_sees_that_does_not_need_to_login(WebDriver webDriver) {
+        webDriver.get(redirectURI);
+        return self();
+    }
+
+    public SELF user_back_to_bank_search(WebDriver webDriver) {
+        waitForPageLoad(webDriver);
+        clickOnButton(webDriver, By.className("icon__container"), true);
+        return self();
+    }
+
+    public SELF user_sees_that_he_has_to_login(WebDriver webDriver) {
+        webDriver.get(fintechUri);
+        return self();
+    }
+
     public SELF user_navigates_to_bank_search(WebDriver driver) {
         driver.get(redirectURI);
         return self();
