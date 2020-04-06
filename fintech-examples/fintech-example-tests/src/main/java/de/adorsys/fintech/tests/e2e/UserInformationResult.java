@@ -4,13 +4,11 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
-import io.restassured.http.Cookie;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpStatus;
 
 import javax.transaction.Transactional;
@@ -21,6 +19,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 
 @JGivenStage
+@SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class UserInformationResult extends Stage<UserInformationResult> {
 
     @Autowired
@@ -51,11 +50,9 @@ public class UserInformationResult extends Stage<UserInformationResult> {
     }
 
     @SneakyThrows
-    public UserInformationResult fintech_can_read_user_data_using_xsrfToken(
-            boolean valideRessourceID) {
+    public UserInformationResult fintech_can_read_user_data_using_xsrfToken() {
         ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .header(X_XSRF_TOKEN, X_XSRF_TOKEN_VALUE)
-                                                         .cookie(SESSION_COOKIE)
                                                          .when().get(FINTECH_LOGIN_ENDPOINT)
                                                          .then().statusCode(HttpStatus.OK.value())
                                                          .body("userProfile.name", equalTo(USERNAME))
@@ -65,16 +62,23 @@ public class UserInformationResult extends Stage<UserInformationResult> {
         return self();
     }
 
+    //{"bankProfile":{"bankId":null,"bankName":"adorsys xs2a","bic":"ADORSYS",
+    // "services":["AUTHORIZATION","LIST_TRANSACTIONS","LIST_ACCOUNTS"]}}
     @SneakyThrows
-    public UserInformationResult fintech_can_read_bank_profile_using_xsrfToken() {
+    public UserInformationResult fintech_can_read_bank_profile_using_xsrfToken(String bankName) {
+        ExtractableResponse<Response> response = withDefaultHeaders()
+                                                         .header(X_XSRF_TOKEN, X_XSRF_TOKEN_VALUE)
+                                                         .queryParam("keyword", bankName)
+                                                         .when().get(BANKSEARCH_ENDPOINT, BANK_ID)
+                                                         .then().statusCode(HttpStatus.OK.value())
+                                                         .body("bankProfile.bankId", equalTo(BANK_ID_VALUE))
+                                                         .body("bankProfile.bankName", equalTo(bankName))
+                                                         .body("bankProfile.bic", equalTo("ADORSYS"))
+                                                         .body("bankProfile.service[0]", equalTo("AUTHORIZATION"))
+                                                         .body("bankProfile.service[1]", equalTo("LIST_TRANSACTIONS"))
+                                                         .body("bankProfile.service[1]", equalTo("LIST_ACCOUNTS"))
+                                                         .extract();
+        this.responseContent = response.body().asString();
         return self();
-    }
-
-    private ExtractableResponse<Response> getBankSearchedFor(String bankName) {
-        return withDefaultHeaders().header(SESSION_COOKIE, SESSION_COOKIE_VALUE)
-                .queryParam("bankSearch", bankName)
-                .when().get(BANKSEARCH_ENDPOINT, BANK_ID)
-                .then().statusCode(HttpStatus.OK.value())
-                .extract();
     }
 }

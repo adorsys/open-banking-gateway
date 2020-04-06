@@ -69,6 +69,8 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
+    //TODO add stages for accountList and TransactionList
+
     private void waitForPageLoad(WebDriver driver) {
         new WebDriverWait(driver, timeout.getSeconds())
                 .until(wd -> ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));
