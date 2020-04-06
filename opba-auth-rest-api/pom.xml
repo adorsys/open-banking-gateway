@@ -87,8 +87,6 @@
                                 <generateSupportingFiles>false</generateSupportingFiles>
                                 <generateApiTests>false</generateApiTests>
                                 <generateModelTests>false</generateModelTests>
-                                <async>true</async>
-                                <responseWrapper>java.util.concurrent.CompletableFuture</responseWrapper>
                             </configOptions>
                         </configuration>
                     </execution>
