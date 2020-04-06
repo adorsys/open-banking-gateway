@@ -33,7 +33,7 @@ class FintechApiSmokeTest extends SpringScenarioTest<FintechServer, WebDriverBas
               .and()
               .user_sees_that_does_not_need_to_login(firefoxDriver)
               .and()
-              .user_navigates_to_bank_search();
+              .user_navigates_to_bank_search(firefoxDriver);
 
         UserInformationResult result = then().fintech_can_read_bank_profile_using_xsrfToken("adorsys xs2a");
         return result.getResponseContent();
