@@ -41,7 +41,6 @@
         <module>opba-facade-protocol-api-shared</module>
         <module>last-module-codecoverage</module>
         <module>smoke-tests</module>
-        <module>smoke-test-fintech</module>
     </modules>
 
     <url>https://github.com/adorsys/open-banking-gateway</url>
