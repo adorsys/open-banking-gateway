@@ -13,7 +13,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "format:fix:precommit": "pretty-quick --staged --pattern 'consent-ui/**/*'"
+    "format:fix": "pretty-quick --pattern 'consent-ui/**/*'"
   },
   "private": true,
   "dependencies": {
@@ -61,7 +61,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "run-s format:fix:precommit lint"
+      "pre-commit": "run-s format:fix lint"
     }
   }
 }
