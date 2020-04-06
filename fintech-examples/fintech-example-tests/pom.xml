@@ -11,7 +11,6 @@
 
     <!-- BDD Tests for fintech-example  -->
     <artifactId>fintech-example-tests</artifactId>
-    <name>fintech-examples/fintech-example-tests</name>
 
     <dependencies>
 
@@ -32,10 +31,10 @@
             <scope>test</scope>
         </dependency>
 
-
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -58,16 +57,25 @@
             <groupId>com.tngtech.jgiven</groupId>
             <artifactId>jgiven-core</artifactId>
             <version>1.0.0-RC3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>xs2a-bdd-tests-common</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.tngtech.jgiven</groupId>
             <artifactId>jgiven-spring-junit5</artifactId>
             <version>1.0.0-RC3</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.tngtech.jgiven</groupId>
             <artifactId>jgiven-junit5</artifactId>
             <version>1.0.0-RC3</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.awaitility</groupId>
