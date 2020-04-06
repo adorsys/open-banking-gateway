@@ -1,7 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
-@import "./assets/themes/variables";
-@import "~bootstrap/scss/bootstrap";
-@import "./assets/themes/mobile";
+@import './assets/themes/variables';
+@import '~bootstrap/scss/bootstrap';
+@import './assets/themes/mobile';
+@import './assets/themes/fonts';
 
 * {
   margin: 0;
@@ -35,10 +36,6 @@ body {
   }
 }
 
-.navbar-light {
-  background: var(--light);
-}
-
 .navbar-brand {
   display: flex;
   flex-flow: row nowrap;
@@ -48,11 +45,13 @@ body {
 a {
   color: var(--anchorFontColor);
 
-  &.active, &:hover {
+  &.active,
+  &:hover {
     color: var(--anchorFontColorHover);
   }
 
-  &.text-primary:hover, &.text-primary:focus {
+  &.text-primary:hover,
+  &.text-primary:focus {
     color: var(--anchorFontColorHover) !important;
   }
 }
@@ -82,7 +81,7 @@ a {
 
     .form-control {
       padding: 1.5rem 1rem;
-      transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     }
 
     .form-check-label {
@@ -128,6 +127,12 @@ a {
   @media (max-width: 767px) {
     position: relative;
   }
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fontFamilySemiBold), sans-serif;
 }
 
 h1 {
@@ -186,7 +191,7 @@ nav {
 
     &:disabled {
       background: var(--buttonBG);
-      opacity: .65;
+      opacity: 0.65;
     }
 
     &:focus {
@@ -211,7 +216,7 @@ nav {
 
     &:disabled {
       background: var(--secondaryButtonBG);
-      opacity: .65;
+      opacity: 0.65;
     }
 
     &:focus {
@@ -233,7 +238,7 @@ nav {
 
     &:disabled {
       background: var(--backButtonBG);
-      opacity: .65;
+      opacity: 0.65;
     }
 
     &:focus {
