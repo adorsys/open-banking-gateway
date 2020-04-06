@@ -1,13 +1,14 @@
-$font-family-base: 'Verdana', sans-serif;
+$font-family-base: 'geometric-regular', sans-serif;
+$font-family-semiBold: 'geometric-SemiBold', sans-serif;
 $label-margin-bottom: 0;
 $input-btn-font-size: 1rem;
-$input-border-color: #A0A0A0;
-$input-btn-padding-y: .8rem;
+$input-border-color: #a0a0a0;
+$input-btn-padding-y: 0.8rem;
 
 $btn-transition: all 0.5s ease-in-out;
-$input-transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+$input-transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 
-$primary: #0F62A4;
+$primary: #0f62a4;
 $nav-tabs-link-active-color: red;
 
 /* CARD */
