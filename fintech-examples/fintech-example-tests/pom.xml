@@ -15,7 +15,7 @@
     <properties>
         <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
         Change this if depth changes. Current: /open-banking-gateway/fintech-example-tests -->
-        <main.basedir>${project.parent.basedir}</main.basedir>
+        <main.basedir>${project.parent.parent.basedir}</main.basedir>
     </properties>
 
     <dependencies>
