@@ -8,40 +8,46 @@ externalDocs:
   url: "https://adorsys.github.com/open-banking-gateway"
 
 paths:
-  /v1/auth/login:
+  /v1/psu/login:
     post:
       tags:
         - Psu Auth
       operationId: login
       summary: login user to open-banking
       description: TBD
+      requestBody:
+        description: User credentials object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PsuAuthBody'
+        required: true
       parameters:
         #common header parameter
-        - $ref: '#/components/parameters/Authorization'
         - $ref: '#/components/parameters/X-Request-ID'
-        #query
-        - $ref: '#/components/parameters/PsuId'
-        - $ref: '#/components/parameters/Password'
       responses:
         '202':
           $ref: '#/components/responses/202_UserAccepted'
         '401':
           $ref: '#/components/responses/401_UNAUTHORIZED'
 
-  /v1/auth/register:
+  /v1/psu/register:
     post:
       tags:
         - Psu Auth
       operationId: registration
       summary: registration user in open-banking db
       description: TBD
+      requestBody:
+        description: User credentials object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PsuAuthBody'
+        required: true
       parameters:
         #common header parameter
-        - $ref: '#/components/parameters/Authorization'
         - $ref: '#/components/parameters/X-Request-ID'
-        #query
-        - $ref: '#/components/parameters/PsuId'
-        - $ref: '#/components/parameters/Password'
       responses:
         '201':
           $ref: '#/components/responses/201_UserCreated'
@@ -75,16 +81,6 @@ components:
       schema:
         type: string
 
-    Authorization:
-      name: Authorization
-      in: header
-      required: true
-      description: |
-        Unique Token that identifies FinTech Session for this request.
-      example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik15IGNvb2wgRmludGVjaCBBcHAiLCJpYXQiOjE1MTYyMzkwMjJ9.NfpSq7hot-1x3rZOaqRaSJzNnMw6ltX-9eqxcCQnGbI"
-      schema:
-        type: string
-
     X-Request-ID:
       name: X-Request-ID
       in: header
@@ -101,6 +97,9 @@ components:
     201_UserCreated:
       description: User created sucessfully
       headers:
+        Location:
+          schema:
+            type: string
         X-Request-ID:
           $ref: '#/components/parameters/X-Request-ID'
       #NO RESPONSE BODY
@@ -110,7 +109,15 @@ components:
       headers:
         X-Request-ID:
           $ref: '#/components/parameters/X-Request-ID'
-      #NO RESPONSE BODY
+        Set-Cookie:
+          schema:
+            type: string
+            example: Authorization=abcde12345; Path=/; HttpOnly
+      content:
+        application/json:
+          schema:
+            type: string
+            description: Authorization cookie hash
 
   400_BadRequest:
     description: |
@@ -135,6 +142,22 @@ components:
             $ref: "#/components/schemas/generalError"
 
   schemas:
+    PsuAuthBody:
+      type: object
+      required:
+        - id
+        - password
+      properties:
+        id:
+          type: string
+        password:
+          type: string
+      example:
+        {
+          "id": "user1",
+          "password": "123"
+        }
+
     generalError:
       type: object
       properties:
