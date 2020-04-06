@@ -1,6 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
+import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
@@ -17,7 +18,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static java.util.Collections.singletonList;
 
@@ -31,10 +31,10 @@ public class RedirectHandlerService {
     private final FintechUiConfig uiConfig;
     private final RedirectUrlRepository redirectUrlRepository;
     private final AuthorizeService authorizeService;
+    private final RestRequestContext restRequestContext;
 
     @Transactional
-    public RedirectUrlsEntity registerRedirectStateForSession(String xsrfToken, String okPath, String nokPath) {
-        String redirectCode = UUID.randomUUID().toString();
+    public RedirectUrlsEntity registerRedirectStateForSession(final String redirectCode, final String okPath, final String nokPath) {
         log.debug("ONLY FOR DEBUG: redirectCode: {}", redirectCode);
 
         String localOkPath = okPath.replaceAll("^/", "");
@@ -43,7 +43,6 @@ public class RedirectHandlerService {
         RedirectUrlsEntity redirectUrls = new RedirectUrlsEntity();
 
         redirectUrls.setRedirectCode(redirectCode);
-        redirectUrls.setRedirectState(xsrfToken);
         redirectUrls.setOkStatePath(localOkPath);
         redirectUrls.setNokStatePath(localNokPath);
 
@@ -51,7 +50,7 @@ public class RedirectHandlerService {
     }
 
     @Transactional
-    public ResponseEntity doRedirect(String redirectState, String authId, String redirectCode) {
+    public ResponseEntity doRedirect(final String authId, final String redirectCode) {
         if (StringUtils.isBlank(redirectCode)) {
             log.warn("Validation redirect request was failed: redirect code is empty!");
             return prepareErrorRedirectResponse(uiConfig.getExceptionUrl());
@@ -60,7 +59,7 @@ public class RedirectHandlerService {
         Optional<RedirectUrlsEntity> redirectUrls = redirectUrlRepository.findByRedirectCode(redirectCode);
 
         if (!redirectUrls.isPresent()) {
-            log.warn("Validation redirect request was failed: redirect code is wrong");
+            log.warn("Validation redirect request was failed: redirect code {} is wrong", redirectCode);
             return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
@@ -69,27 +68,20 @@ public class RedirectHandlerService {
             return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
-        if (StringUtils.isBlank(redirectState)) {
-            log.warn("Validation redirect request was failed: Xsrf Token is empty!");
-            return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
-        }
-
         if (!authorizeService.isAuthorized()) {
             log.warn("Validation redirect request was failed: Xsrf Token is wrong or user are not authorized!");
             return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
-        ContextInformation contextInformation = new ContextInformation(UUID.randomUUID());
-        SessionEntity sessionEntity = authorizeService.getByXsrfToken(redirectState);
         redirectUrlRepository.delete(redirectUrls.get());
 
-        return prepareRedirectToReadResultResponse(contextInformation, sessionEntity, redirectUrls.get());
+        SessionEntity sessionEntity = authorizeService.getSession();
+        sessionEntity.setConsentConfirmed(true);
+        return prepareRedirectToReadResultResponse(sessionEntity, redirectUrls.get());
     }
 
-    private ResponseEntity prepareRedirectToReadResultResponse(
-            ContextInformation contextInformation, SessionEntity sessionEntity, RedirectUrlsEntity redirectUrls
-    ) {
-        HttpHeaders authHeaders = authorizeService.fillWithAuthorizationHeaders(contextInformation, sessionEntity);
+    private ResponseEntity prepareRedirectToReadResultResponse(SessionEntity sessionEntity, RedirectUrlsEntity redirectUrls) {
+        HttpHeaders authHeaders = authorizeService.fillWithAuthorizationHeaders(sessionEntity, restRequestContext.getXsrfTokenHeaderField());
         authHeaders.put(LOCATION_HEADER, singletonList(redirectUrls.getOkStatePath()));
         return new ResponseEntity<>(authHeaders, HttpStatus.ACCEPTED);
     }

@@ -1,19 +1,24 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
+import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
-import de.adorsys.opba.fintech.impl.database.entities.RequestInfoEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.mapper.ManualMapper;
+import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListTransactionsMock;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -24,16 +29,33 @@ public class TransactionService extends HandleAcceptedService {
     private final FintechUiConfig uiConfig;
     private final TppAisClient tppAisClient;
 
+    @Autowired
+    private RestRequestContext restRequestContext;
+
+    @Autowired
+    private TppProperties tppProperties;
+
+    @Autowired
+    private RedirectHandlerService redirectHandlerService;
+
     public TransactionService(AuthorizeService authorizeService, TppAisClient tppAisClient, FintechUiConfig uiConfig) {
         super(authorizeService);
         this.tppAisClient = tppAisClient;
         this.uiConfig = uiConfig;
     }
 
-    public ResponseEntity listTransactions(ContextInformation contextInformation,
-                                           SessionEntity sessionEntity,
-                                           RedirectUrlsEntity redirectUrlsEntity,
-                                           RequestInfoEntity requestInfoEntity) {
+    public ResponseEntity listTransactions(SessionEntity sessionEntity,
+                                           String fintechOkUrl,
+                                           String fintechNOkUrl,
+                                           String bankId,
+                                           String accountId,
+                                           LocalDate dateFrom,
+                                           LocalDate dateTo,
+                                           String entryReferenceFrom,
+                                           String bookingStatus,
+                                           Boolean deltaList) {
+
+        String redirectCode = UUID.randomUUID().toString();
 
         if (BooleanUtils.toBoolean(mockTppAisString)) {
             log.warn("mocking call for list transactions");
@@ -41,25 +63,27 @@ public class TransactionService extends HandleAcceptedService {
         }
 
         ResponseEntity<TransactionsResponse> transactions = tppAisClient.getTransactions(
-                requestInfoEntity.getAccountId(),
-                contextInformation.getFintechID(),
-                contextInformation.getServiceSessionPassword(),
+                accountId,
+                tppProperties.getFintechID(),
+                tppProperties.getServiceSessionPassword(),
                 sessionEntity.getLoginUserName(),
-                redirectUrlsEntity.buildOkUrl(uiConfig),
-                redirectUrlsEntity.buildNokUrl(uiConfig),
-                contextInformation.getXRequestID(),
-                requestInfoEntity.getBankId(),
+                RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
+                RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
+                UUID.fromString(restRequestContext.getRequestId()),
+                bankId,
                 sessionEntity.getPsuConsentSession(),
-                sessionEntity.getServiceSessionId(),
-                requestInfoEntity.getDateFrom(),
-                requestInfoEntity.getDateTo(),
-                requestInfoEntity.getEntryReferenceFrom(),
-                requestInfoEntity.getBookingStatus(),
-                requestInfoEntity.getDeltaList());
+                sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null,
+                dateFrom,
+                dateTo,
+                entryReferenceFrom,
+                bookingStatus,
+                deltaList);
         switch (transactions.getStatusCode()) {
             case OK:
                 return new ResponseEntity<>(ManualMapper.fromTppToFintech(transactions.getBody()), HttpStatus.OK);
             case ACCEPTED:
+                log.info("create redirect entity for lot for redirectcode {}", redirectCode);
+                redirectHandlerService.registerRedirectStateForSession(redirectCode, fintechOkUrl, fintechNOkUrl);
                 return handleAccepted(sessionEntity, transactions.getHeaders());
             case UNAUTHORIZED:
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

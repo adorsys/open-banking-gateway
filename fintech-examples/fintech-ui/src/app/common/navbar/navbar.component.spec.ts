@@ -10,11 +10,10 @@ describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
   let router: Router;
-  const authServiceSpy = jasmine.createSpyObj('AuthService', ['isLoggedIn', 'logout']);
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [TestBed.overrideProvider(AuthService, { useValue: authServiceSpy })],
+      providers: [AuthService],
       declarations: [NavbarComponent],
       imports: [RouterTestingModule, HttpClientTestingModule]
     }).compileComponents();
@@ -24,7 +23,6 @@ describe('NavbarComponent', () => {
     fixture = TestBed.createComponent(NavbarComponent);
     router = TestBed.get(Router);
     component = fixture.componentInstance;
-    authServiceSpy.isLoggedIn.and.returnValue(true);
     fixture.detectChanges();
   });
 

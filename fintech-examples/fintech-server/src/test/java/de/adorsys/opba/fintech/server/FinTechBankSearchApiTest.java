@@ -96,15 +96,17 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     @Test
     @SneakyThrows
     public void logoutPostOk() {
-        String xsrfToken = authOk("peter", "1234");
-        MvcResult result = plainLogout(xsrfToken);
+        authOk("peter", "1234");
+        MvcResult result = plainLogout();
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
     }
 
     @Test
     @SneakyThrows
     public void logoutPostNotOk() {
-        MvcResult mvcResult = plainLogout(UUID.randomUUID().toString());
+        restRequestContext.setRequestId(UUID.randomUUID().toString());
+        restRequestContext.setXsrfTokenHeaderField(UUID.randomUUID().toString());
+        MvcResult mvcResult = plainLogout();
         assertEquals(HttpStatus.UNAUTHORIZED.value(), mvcResult.getResponse().getStatus());
     }
 
@@ -119,14 +121,16 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
                 .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class)));
 
         LoginBody loginBody = new LoginBody("peter", "1234");
-        String xsrfToken = authOk(loginBody.username, loginBody.password);
-        bankSearchOk(keyword, start, max, xsrfToken);
+        authOk(loginBody.username, loginBody.password);
+        bankSearchOk(keyword, start, max);
     }
 
     @Test
     @SneakyThrows
     public void bankSearchUnAuthorized() {
-        MvcResult result = plainBankSearch("affe", 0, 2, "invalidToken");
+        restRequestContext.setRequestId(UUID.randomUUID().toString());
+        restRequestContext.setXsrfTokenHeaderField(UUID.randomUUID().toString());
+        MvcResult result = plainBankSearch("affe", 0, 2);
         assertEquals(HttpStatus.UNAUTHORIZED.value(), result.getResponse().getStatus());
     }
 
@@ -146,7 +150,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     @Setter
     @NoArgsConstructor
     static class BankProfileTestResult {
-        String xsrfToken = null;
+        String sessionCookieValue = null;
         String bankUUID = null;
         List<String> services = null;
 
@@ -159,7 +163,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
             final String password = "1234";
             log.info("DO Authorization ({}, {}) ==============================", user, password);
             LoginBody loginBody = new LoginBody(user, password);
-            result.setXsrfToken(authOk(loginBody.username, loginBody.password));
+            result.setSessionCookieValue(authOk(loginBody.username, loginBody.password));
         }
 
         {
@@ -171,7 +175,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
             when(tppBankSearchClientFeignMock.bankSearchGET(any(), any(), eq(keyword), eq(start), eq(max)))
                     .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class)));
 
-            result.setBankUUID(bankSearchOk(keyword, start, max, result.getXsrfToken()));
+            result.setBankUUID(bankSearchOk(keyword, start, max));
         }
 
         {
@@ -179,7 +183,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
             when(tppBankSearchClientFeignMock.bankProfileGET(any(), any(), eq(result.getBankUUID())))
                     .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankProfile(result.getBankUUID())), BankProfileResponse.class)));
 
-            result.setServices(bankProfile(result.getXsrfToken(), result.getBankUUID()));
+            result.setServices(bankProfile(result.getBankUUID()));
             assertTrue(result.getServices().containsAll(Arrays.asList(new String[]{"List accounts", "List transactions", "Initiate payment"})));
         }
         log.info(" i have done it");
@@ -187,16 +191,15 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     }
 
     /**
-     * @param xsrfToken
      * @param bankUUID
      * @return List of Services of Bank
      */
     @SneakyThrows
-    List<String> bankProfile(String xsrfToken, String bankUUID) {
+    List<String> bankProfile(String bankUUID) {
         MvcResult mvcResult = this.mvc
                 .perform(get(FIN_TECH_BANK_PROFILE_URL)
-                        .header("X-Request-ID", UUID.randomUUID().toString())
-                        .header("X-XSRF-TOKEN", xsrfToken)
+                        .header(Consts.HEADER_X_REQUEST_ID, UUID.randomUUID().toString())
+                        .header(Consts.HEADER_XSRF_TOKEN, restRequestContext.getXsrfTokenHeaderField())
                         .param("bankId", bankUUID))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -219,16 +222,17 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     String authOk(String username, String password) {
         MvcResult result = plainauth(username, password);
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        assertNotNull(result.getResponse().getHeader("X-XSRF-TOKEN"));
-        return result.getResponse().getHeader("X-XSRF-TOKEN");
+        assertNotNull(result.getResponse().getHeader(Consts.HEADER_XSRF_TOKEN));
+        return restRequestContext.getSessionCookieValue();
     }
 
     @SneakyThrows
     MvcResult plainauth(String username, String password) {
         LoginBody loginBody = new LoginBody(username, password);
+        restRequestContext.setRequestId(UUID.randomUUID().toString());
         MvcResult mvcResult = this.mvc
                 .perform(post(FIN_TECH_AUTH_URL)
-                        .header("X-Request-ID", UUID.randomUUID().toString())
+                        .header(Consts.HEADER_X_REQUEST_ID, restRequestContext.getRequestId())
                         .content(GSON.toJson(loginBody))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -241,16 +245,16 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
         String xsrfToken = mvcResult.getResponse().getHeader(Consts.HEADER_XSRF_TOKEN);
         restRequestContext.setSessionCookieValue(sessionValue);
         restRequestContext.setXsrfTokenHeaderField(xsrfToken);
-        log.info("RestRequestContext is now:         {}", restRequestContext.toString());
+        log.info("AFTER TEST LOGIN RestRequestContext is {}", restRequestContext.toString());
         return mvcResult;
     }
 
     @SneakyThrows
-    MvcResult plainLogout(String xsrfToken) {
+    MvcResult plainLogout() {
         return this.mvc
                 .perform(post(FIN_TECH_AUTH_LOGOUT_URL)
-                        .header("X-Request-ID", UUID.randomUUID().toString())
-                        .header("X-XSRF-TOKEN", xsrfToken)
+                        .header(Consts.HEADER_X_REQUEST_ID, restRequestContext.getRequestId())
+                        .header(Consts.HEADER_XSRF_TOKEN, restRequestContext.getXsrfTokenHeaderField())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andReturn();
@@ -260,22 +264,21 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
      * @param keyword
      * @param start
      * @param max
-     * @param xsrfToken
      * @return first BankUUID of found list
      */
     @SneakyThrows
-    String bankSearchOk(String keyword, Integer start, Integer max, String xsrfToken) {
-        MvcResult result = plainBankSearch(keyword, start, max, xsrfToken);
+    String bankSearchOk(String keyword, Integer start, Integer max) {
+        MvcResult result = plainBankSearch(keyword, start, max);
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
         return new JSONObject(result.getResponse().getContentAsString()).getJSONArray("bankDescriptor").getJSONObject(0).get("uuid").toString();
     }
 
     @SneakyThrows
-    MvcResult plainBankSearch(String keyword, Integer start, Integer max, String xsrfToken) {
+    MvcResult plainBankSearch(String keyword, Integer start, Integer max) {
         return this.mvc
                 .perform(get(FIN_TECH_BANK_SEARCH_URL)
-                        .header("X-Request-ID", UUID.randomUUID().toString())
-                        .header("X-XSRF-TOKEN", xsrfToken)
+                        .header(Consts.HEADER_X_REQUEST_ID, restRequestContext.getRequestId())
+                        .header(Consts.HEADER_XSRF_TOKEN, restRequestContext.getXsrfTokenHeaderField())
                         .param("keyword", keyword)
                         .param("start", start.toString())
                         .param("max", max.toString()))

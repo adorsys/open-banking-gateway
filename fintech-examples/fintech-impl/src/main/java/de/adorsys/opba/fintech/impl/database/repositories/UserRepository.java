@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<SessionEntity, String> {
-    Optional<SessionEntity> findByXsrfToken(String xsrfToken);
-    void deleteByXsrfToken(String xsrfToken);
+    Optional<SessionEntity> findBySessionCookieValue(String sessionCookieValue);
+    void deleteBySessionCookieValue(String sessionCookieValue);
 }

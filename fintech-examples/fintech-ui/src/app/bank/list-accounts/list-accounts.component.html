@@ -1,6 +1,7 @@
 <div>
   <div class="lacc-parent">
     <div
+      class="withoutOutline"
       *ngFor="let account of accounts"
       (click)="selectAccount(account.resourceId)"
       [routerLink]="[account.resourceId]"

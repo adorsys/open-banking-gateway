@@ -2,7 +2,6 @@ package de.adorsys.opba.fintech.impl.database.entities;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,18 +11,18 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.util.encoders.Hex;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,33 +41,26 @@ public class SessionEntity {
     private String loginUserName;
     private String fintechUserId;
     private String password;
-    private String xsrfToken;
     private String psuConsentSession;
     private UUID serviceSessionId;
+    private String sessionCookieValue;
+    // FIXME call 4c is missing
+    @Column(nullable = false)
+    private Boolean consentConfirmed;
 
-    // TODO orphanRemoval should be true, but thatn deleting  fails. Dont know hot to
+
+    // TODO orphanRemoval should be true, but thatn deleting  fails. Dont know how to
     // test with different transactions yet
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
     private List<LoginEntity> logins = new ArrayList<>();
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "name", column = @Column(name = "session_cookie_name")),
-            @AttributeOverride(name = "value", column = @Column(name = "session_cookie_value"))
-    })
-    private CookieEntity sessionCookie;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "name", column = @Column(name = "redirect_cookie_name")),
-            @AttributeOverride(name = "value", column = @Column(name = "redirect_cookie_value"))
-    })
-    private CookieEntity redirectCookie;
 
     @SneakyThrows
     public static String createSessionCookieValue(String fintechUserId, String xsrfToken) {
+        // TODO Hashing with SHA256
         ObjectMapper mapper = new ObjectMapper();
-        return URLEncoder.encode(mapper.writeValueAsString(new SessionCookieValue(fintechUserId, xsrfToken.hashCode())), JsonEncoding.UTF8.getJavaName());
+        return URLEncoder.encode(mapper.writeValueAsString(new SessionCookieValue(fintechUserId, hashAndHexconvert(xsrfToken))), JsonEncoding.UTF8.getJavaName());
     }
 
     @SneakyThrows
@@ -76,17 +68,11 @@ public class SessionEntity {
         String decode = URLDecoder.decode(sessionCookieValueString, JsonEncoding.UTF8.getJavaName());
         ObjectMapper mapper = new ObjectMapper();
         SessionCookieValue sessionCookieValue = mapper.readValue(decode, SessionCookieValue.class);
-        if (sessionCookieValue.getHashedXsrfToken() == xsrfToken.hashCode()) {
-            log.info("validation of token ok");
+        if (sessionCookieValue.getHashedXsrfToken().equals(hashAndHexconvert(xsrfToken))) {
+            log.info("validation of token for session ok {}", sessionCookieValue);
             return;
         }
-        throw new RuntimeException("session cookie not valid " +  decode);
-    }
-
-    public SessionEntity setSessionCookieValue(String value) {
-        log.info("session cookie will be {}", value);
-        sessionCookie = CookieEntity.builder().name(Consts.COOKIE_SESSION_COOKIE_NAME).value(value).build();
-        return this;
+        throw new RuntimeException("session cookie not valid " + sessionCookieValue);
     }
 
     public void addLogin(OffsetDateTime time) {
@@ -110,6 +96,15 @@ public class SessionEntity {
     @Data
     public static class SessionCookieValue {
         private final String fintechUserId;
-        private final int hashedXsrfToken;
+        private final String hashedXsrfToken;
     }
+
+    @SneakyThrows
+    static String hashAndHexconvert(String decoded) {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] encodedhash = digest.digest(
+                decoded.getBytes(StandardCharsets.UTF_8));
+        return Hex.toHexString(encodedhash);
+    }
+
 }
