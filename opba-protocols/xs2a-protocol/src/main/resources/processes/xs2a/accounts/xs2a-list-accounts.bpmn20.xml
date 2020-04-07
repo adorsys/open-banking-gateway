@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef">
   <process id="xs2a-list-accounts" name="xs2a-list-accounts" isExecutable="true">
     <documentation>XS2A compatible account list</documentation>
     <startEvent id="start" name="start" flowable:formFieldValidation="true">
@@ -9,122 +13,78 @@
     <serviceTask id="listAccounts" name="Call account list" flowable:async="true" flowable:delegateExpression="${xs2aAccountListing}">
       <documentation>Calls XS2A service to get account list with consent</documentation>
     </serviceTask>
-    <callActivity id="authorizeConsent" name="Authorize consent to perform account list" flowable:async="true" calledElement="xs2a-authorize-consent" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false">
+    <serviceTask id="createConsent" name="Create consent to do account list" flowable:async="true" flowable:delegateExpression="${xs2aAccountListConsentInitiate}"></serviceTask>
+    <callActivity id="authorizeAndPersistConsent" name="Authorize and persist consent to perform account list" flowable:async="true" calledElement="xs2a-authorize-consent" flowable:calledElementType="key" flowable:inheritVariables="true" flowable:fallbackToDefaultTenant="false">
       <extensionElements>
         <flowable:out source="CONTEXT" target="CONTEXT"></flowable:out>
       </extensionElements>
     </callActivity>
     <endEvent id="end" name="end"></endEvent>
+    <sequenceFlow id="sid-42764015-F0E2-4E8D-A156-87420CF9FC28" sourceRef="createConsent" targetRef="authorizeAndPersistConsent"></sequenceFlow>
     <sequenceFlow id="sid-F617FA73-A930-45E8-80DA-2B6C6393D5AB" sourceRef="listAccounts" targetRef="end"></sequenceFlow>
+    <sequenceFlow id="consentMissing" name="Consent missing" sourceRef="consentPresent" targetRef="createConsent"></sequenceFlow>
     <sequenceFlow id="consentAvailable" name="Consent available" sourceRef="consentPresent" targetRef="listAccounts">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentFinder.consentExists(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="callFintechWebhook" name="Calls FinTech webhook to notify completed authorization" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aReportToFintechConsentAuthorized}">
-      <documentation>Calls FinTech webhook to notify that user has completed authorization</documentation>
-    </serviceTask>
     <serviceTask id="loadConsent" name="Load consent and its context from database" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aLoadConsentAndContextFromDb}"></serviceTask>
     <sequenceFlow id="sid-09AB645C-028E-44F4-B9A7-60C7B7497432" sourceRef="start" targetRef="loadConsent"></sequenceFlow>
     <sequenceFlow id="sid-C291C0D5-0E1C-44B8-B691-936019F06ECA" sourceRef="loadConsent" targetRef="consentPresent"></sequenceFlow>
-    <sequenceFlow id="sid-07B49F7F-408A-46BB-9C62-F332612A4597" sourceRef="callFintechWebhook" targetRef="end"></sequenceFlow>
-    <serviceTask id="persistContextForFuture" name="Persist context for future service session invocation" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aPersistContext}"></serviceTask>
-    <sequenceFlow id="sid-A15A0FE0-1A0B-40F8-9720-7FE170BCA22E" sourceRef="persistContextForFuture" targetRef="callFintechWebhook"></sequenceFlow>
-    <serviceTask id="createConsent" name="Create consent to do account list" flowable:async="true" flowable:delegateExpression="${xs2aAccountListConsentInitiate}"></serviceTask>
-    <exclusiveGateway id="isCreationSuccess" name="Is creation success?" default="consentCreated"></exclusiveGateway>
-    <serviceTask id="askUserForIBAN" name="Ask user input IBAN. Suspends to wait" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAskForIban}" flowable:triggerable="true"></serviceTask>
-    <sequenceFlow id="sid-6B97025F-71FD-4841-A386-7AA6BF4A5B69" sourceRef="authorizeConsent" targetRef="persistContextForFuture"></sequenceFlow>
-    <sequenceFlow id="sid-EACA27A1-BEB3-4261-99A2-F85C4EB33C8A" sourceRef="createConsent" targetRef="isCreationSuccess"></sequenceFlow>
-    <sequenceFlow id="sid-5ACBFEA8-CA1F-430F-AE81-224FC92117B0" sourceRef="askUserForIBAN" targetRef="createConsent"></sequenceFlow>
-    <sequenceFlow id="consentCreated" name="Consent created" sourceRef="isCreationSuccess" targetRef="authorizeConsent"></sequenceFlow>
-    <sequenceFlow id="consentMissing" name="Consent missing" sourceRef="consentPresent" targetRef="createConsent"></sequenceFlow>
-    <sequenceFlow id="wrongIban" name="wrong IBAN" sourceRef="isCreationSuccess" targetRef="askUserForIBAN">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.hasWrongCredentials(CONTEXT)}]]></conditionExpression>
-    </sequenceFlow>
+    <sequenceFlow id="sid-6B97025F-71FD-4841-A386-7AA6BF4A5B69" sourceRef="authorizeAndPersistConsent" targetRef="end"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-list-accounts">
     <bpmndi:BPMNPlane bpmnElement="xs2a-list-accounts" id="BPMNPlane_xs2a-list-accounts">
       <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
-        <omgdc:Bounds height="30.0" width="30.0" x="15.000000000000002" y="160.50000000000003"></omgdc:Bounds>
+        <omgdc:Bounds height="30.0" width="30.0" x="15.0" y="163.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="consentPresent" id="BPMNShape_consentPresent">
         <omgdc:Bounds height="40.0" width="40.0" x="235.5" y="155.5"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="listAccounts" id="BPMNShape_listAccounts">
-        <omgdc:Bounds height="80.0" width="100.0" x="505.5" y="71.5"></omgdc:Bounds>
+        <omgdc:Bounds height="80.0" width="100.0" x="420.0" y="71.5"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="authorizeConsent" id="BPMNShape_authorizeConsent">
-        <omgdc:Bounds height="79.99999999999997" width="100.0" x="615.0000000000001" y="207.00000000000003"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="createConsent" id="BPMNShape_createConsent">
+        <omgdc:Bounds height="80.0" width="100.0" x="330.25" y="206.5"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="authorizeAndPersistConsent" id="BPMNShape_authorizeAndPersistConsent">
+        <omgdc:Bounds height="80.0" width="100.0" x="525.0" y="206.5"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
-        <omgdc:Bounds height="28.0" width="28.0" x="936.0000000000001" y="98.00000000000001"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="callFintechWebhook" id="BPMNShape_callFintechWebhook">
-        <omgdc:Bounds height="80.0" width="99.99999999999989" x="900.0000000000001" y="207.0"></omgdc:Bounds>
+        <omgdc:Bounds height="28.0" width="28.0" x="690.0" y="164.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="loadConsent" id="BPMNShape_loadConsent">
         <omgdc:Bounds height="80.0" width="100.0" x="90.0" y="135.5"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="persistContextForFuture" id="BPMNShape_persistContextForFuture">
-        <omgdc:Bounds height="80.0" width="100.0" x="765.0000000000001" y="207.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="createConsent" id="BPMNShape_createConsent">
-        <omgdc:Bounds height="79.99999999999997" width="99.99999999999994" x="300.00000000000006" y="207.00000000000003"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="isCreationSuccess" id="BPMNShape_isCreationSuccess">
-        <omgdc:Bounds height="39.99999999999997" width="40.0" x="437.0000000000001" y="227.00000000000003"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="askUserForIBAN" id="BPMNShape_askUserForIBAN">
-        <omgdc:Bounds height="80.0" width="99.99999999999994" x="300.00000000000006" y="345.00000000000006"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="sid-07B49F7F-408A-46BB-9C62-F332612A4597" id="BPMNEdge_sid-07B49F7F-408A-46BB-9C62-F332612A4597">
-        <omgdi:waypoint x="950.0" y="207.0"></omgdi:waypoint>
-        <omgdi:waypoint x="950.0000000000001" y="125.94992943207399"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-5ACBFEA8-CA1F-430F-AE81-224FC92117B0" id="BPMNEdge_sid-5ACBFEA8-CA1F-430F-AE81-224FC92117B0">
-        <omgdi:waypoint x="350.0" y="345.00000000000006"></omgdi:waypoint>
-        <omgdi:waypoint x="350.0" y="286.95000000000005"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="consentAvailable" id="BPMNEdge_consentAvailable">
-        <omgdi:waypoint x="255.34615384615384" y="155.6386748844376"></omgdi:waypoint>
-        <omgdi:waypoint x="255.0" y="111.0"></omgdi:waypoint>
-        <omgdi:waypoint x="505.5" y="111.41680532445925"></omgdi:waypoint>
+        <omgdi:waypoint x="255.34496124031008" y="155.63975155279502"></omgdi:waypoint>
+        <omgdi:waypoint x="255.0" y="111.5"></omgdi:waypoint>
+        <omgdi:waypoint x="420.0" y="111.5"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-42764015-F0E2-4E8D-A156-87420CF9FC28" id="BPMNEdge_sid-42764015-F0E2-4E8D-A156-87420CF9FC28">
+        <omgdi:waypoint x="430.20000000000005" y="246.5"></omgdi:waypoint>
+        <omgdi:waypoint x="524.9999999999502" y="246.5"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-09AB645C-028E-44F4-B9A7-60C7B7497432" id="BPMNEdge_sid-09AB645C-028E-44F4-B9A7-60C7B7497432">
-        <omgdi:waypoint x="44.9499984899576" y="175.50000000000003"></omgdi:waypoint>
-        <omgdi:waypoint x="90.0" y="175.5"></omgdi:waypoint>
+        <omgdi:waypoint x="44.94621695833143" y="177.65917717486298"></omgdi:waypoint>
+        <omgdi:waypoint x="89.99999999999925" y="176.63522727272726"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-6B97025F-71FD-4841-A386-7AA6BF4A5B69" id="BPMNEdge_sid-6B97025F-71FD-4841-A386-7AA6BF4A5B69">
-        <omgdi:waypoint x="714.95" y="247.0"></omgdi:waypoint>
-        <omgdi:waypoint x="764.9999999999364" y="247.0"></omgdi:waypoint>
+        <omgdi:waypoint x="624.9499999999999" y="246.5"></omgdi:waypoint>
+        <omgdi:waypoint x="704.0" y="246.5"></omgdi:waypoint>
+        <omgdi:waypoint x="704.0" y="191.9499443000122"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-C291C0D5-0E1C-44B8-B691-936019F06ECA" id="BPMNEdge_sid-C291C0D5-0E1C-44B8-B691-936019F06ECA">
         <omgdi:waypoint x="189.94999999998774" y="175.5"></omgdi:waypoint>
         <omgdi:waypoint x="235.5" y="175.5"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="consentCreated" id="BPMNEdge_consentCreated">
-        <omgdi:waypoint x="476.5039373814043" y="247.43987341772151"></omgdi:waypoint>
-        <omgdi:waypoint x="614.9999999999947" y="247.0029968454259"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-F617FA73-A930-45E8-80DA-2B6C6393D5AB" id="BPMNEdge_sid-F617FA73-A930-45E8-80DA-2B6C6393D5AB">
-        <omgdi:waypoint x="605.4499999999931" y="111.56330798479087"></omgdi:waypoint>
-        <omgdi:waypoint x="936.0000000000001" y="111.98225603434483"></omgdi:waypoint>
+        <omgdi:waypoint x="519.95" y="111.5"></omgdi:waypoint>
+        <omgdi:waypoint x="704.0" y="111.5"></omgdi:waypoint>
+        <omgdi:waypoint x="704.0" y="164.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="consentMissing" id="BPMNEdge_consentMissing">
-        <omgdi:waypoint x="255.5" y="195.43606843575418"></omgdi:waypoint>
-        <omgdi:waypoint x="255.5" y="247.0"></omgdi:waypoint>
-        <omgdi:waypoint x="299.9999999999977" y="247.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-A15A0FE0-1A0B-40F8-9720-7FE170BCA22E" id="BPMNEdge_sid-A15A0FE0-1A0B-40F8-9720-7FE170BCA22E">
-        <omgdi:waypoint x="864.95" y="247.0"></omgdi:waypoint>
-        <omgdi:waypoint x="900.0000000000001" y="247.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-EACA27A1-BEB3-4261-99A2-F85C4EB33C8A" id="BPMNEdge_sid-EACA27A1-BEB3-4261-99A2-F85C4EB33C8A">
-        <omgdi:waypoint x="399.94999999992655" y="247.0"></omgdi:waypoint>
-        <omgdi:waypoint x="437.0000000000001" y="247.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="wrongIban" id="BPMNEdge_wrongIban">
-        <omgdi:waypoint x="457.0000000000001" y="266.9427769732078"></omgdi:waypoint>
-        <omgdi:waypoint x="457.0000000000001" y="385.00000000000006"></omgdi:waypoint>
-        <omgdi:waypoint x="399.95000000000005" y="385.00000000000006"></omgdi:waypoint>
+        <omgdi:waypoint x="255.35915492957747" y="195.30950704225356"></omgdi:waypoint>
+        <omgdi:waypoint x="255.0" y="246.0"></omgdi:waypoint>
+        <omgdi:waypoint x="330.2499999999993" y="246.3003992015968"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
