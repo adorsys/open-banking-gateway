@@ -17,6 +17,10 @@ body {
   color: var(--bodyFontColor);
   background: var(--bodyBG);
 
+  strong {
+    font-family: var(--fontFamilyBold), sans-serif;
+  }
+
   @media screen and (max-width: 768px) {
     font-size: var(--textFontSize768px);
   }
@@ -57,7 +61,7 @@ a {
 }
 
 .text-dark {
-  font-size: 1rem;
+  color: var(--bodyFontColor);
 }
 
 .text-light-dark {
@@ -82,11 +86,6 @@ a {
     .form-control {
       padding: 1.5rem 1rem;
       transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    }
-
-    .form-check-label {
-      margin-left: 30px;
-      margin-bottom: 20px;
     }
   }
 
@@ -131,7 +130,8 @@ a {
 
 h1,
 h2,
-h3 {
+h3
+{
   font-family: var(--fontFamilySemiBold), sans-serif;
 }
 
@@ -151,9 +151,12 @@ h3 {
   font-weight: var(--h3FontWeight);
 }
 
-nav {
-  background: var(--headerBG);
-  padding: 2rem !important;
+section {
+  margin-bottom: 3rem;
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 .nav-item {
@@ -249,14 +252,11 @@ nav {
   }
 }
 
-.form-control {
+.form-control,
+.form-control:focus {
   background: var(--inputBG);
   outline: none;
-  border-left: var(--inputBorderStyleLeft);
-  border-top: var(--inputBorderStyleTop);
-  border-bottom: var(--inputBorderStyleBottom);
-  border-right: var(--inputBorderStyleRight);
-  border-radius: var(--inputBorderRadius);
+  border: none;
 }
 
 @media screen and (max-width: 768px) {

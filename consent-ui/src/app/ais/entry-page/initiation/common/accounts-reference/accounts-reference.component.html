@@ -9,13 +9,11 @@
              placeholder="IBAN"
              [ngClass]="{ 'is-invalid': targetForm.controls[account.id].touched && targetForm.controls[account.id].errors }"
              class="form-control">
-      <button class='btn' (click)="removeAccount(account)">
-        <div class="mr-2">
+      <div class='pointer pl-2' (click)="removeAccount(account)">
           <img src="assets/icons/minus.png">
-        </div>
-      </button>
+      </div>
     </div>
-    <div class="invalid-feedback"
+    <div class="invalid-feedback mb-2"
          *ngIf="targetForm.controls[account.id].touched && targetForm.controls[account.id].errors; else noErrors">
       IBAN must be at least 5 characters
     </div>
@@ -25,11 +23,6 @@
   </ng-container>
 </form>
 
-<button class='btn' (click)="addAccount()">
-  <div class="mr-2">
+<div class='pointer' (click)="addAccount()">
     <img src="assets/icons/plus.png"> Add account
-  </div>
-</button>
-
-<br/>
-<br/>
+</div>
