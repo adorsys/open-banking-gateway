@@ -2,14 +2,15 @@
   <div class="card">
     <div class="card-body">
 
-      <h2 class="mb-4 text-left">Dedicated access for accounts in {{aspspName}}</h2>
+      <section>
+        <h2>Dedicated access for accounts in {{aspspName}}</h2>
+        <p class="text-secondary">Accounts with their details to be visible for <strong class="text-dark">{{finTechName}}</strong></p>
+          <consent-app-account-selector [targetForm]="limitedAccountAccessForm" [accounts]="accounts"></consent-app-account-selector>
+      </section>
 
-      <p class="text-secondary mb-5 text-left">Accounts with their details to be visible for <strong>{{finTechName}}</strong></p>
-      <consent-app-account-selector [targetForm]="limitedAccountAccessForm" [accounts]="accounts"></consent-app-account-selector>
-
-      <div class="form-group d-flex flex-row justify-content-lg-between">
-        <button id="do_back" class="btn md-6 w-100 mr-sm-2 mr-md-3 btn-outline-back" (click)="onBack()">Back</button>
-        <button id="do_submit" type="button" class="btn md-6 w-100 btn-primary" [disabled]="limitedAccountAccessForm.invalid" (click)="onSelect()">Select</button>
+      <div class="d-sm-flex">
+        <button id="do_deny" class="btn btn-outline-back w-100 mr-4" (click)="onBack()">Back</button>
+        <button id="do_submit" type="button" class="btn btn-primary w-100" [disabled]="limitedAccountAccessForm.invalid" (click)="onSelect()">Select</button>
       </div>
     </div>
   </div>

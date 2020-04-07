@@ -10,3 +10,9 @@ $BROWSER_VIEWPOINT: 100vh;
     min-height: $BROWSER_VIEWPOINT;
   }
 }
+
+@media (max-width: 576px) {
+  button {
+    margin-bottom: 10px;
+  }
+}

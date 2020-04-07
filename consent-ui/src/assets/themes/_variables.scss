@@ -27,6 +27,7 @@ $danger-gradient: linear-gradient(129.54deg, lighten($danger, 7%) 0%, $danger 10
 
   --fontFamily: #{$font-family-base};
   --fontFamilySemiBold: #{$font-family-semiBold};
+  --fontFamilyBold: #{$font-family-Bold};
 
   /* Text sizes and weights */
 
@@ -135,10 +136,10 @@ $danger-gradient: linear-gradient(129.54deg, lighten($danger, 7%) 0%, $danger 10
   --backButtonBorderStyle: 1px solid #{$info};
 
   /* Inputs */
-  --inputBG: white;
+  --inputBG: #e5ecfe;
   --inputBorderStyleLeft: 1px solid #a0a0a0;
   --inputBorderStyleRight: 1px solid #a0a0a0;
   --inputBorderStyleBottom: 1px solid #a0a0a0;
   --inputBorderStyleTop: 1px solid #a0a0a0;
-  --inputBorderRadius: 0.25rem;
+  --inputBorderRadius: 0;
 }

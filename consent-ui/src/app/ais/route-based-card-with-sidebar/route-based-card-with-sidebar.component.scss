@@ -1,0 +1,33 @@
+.card-body {
+    padding: 3rem;
+}
+
+@media (min-width: 768px) {
+  .card {
+    border-radius: 16px;
+    color: #2c2e2f;
+
+    &-frame {
+      margin: 4rem;
+      width: 761px;
+      height: 100%;
+    }
+
+    &-title {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+    }
+  }
+
+  .sidebar {
+    min-width: 280px;
+    max-width: 280px;
+    height: 100vh;
+    background-color: white;
+
+    .container {
+      padding: 4rem 20px;
+    }
+  }
+}
