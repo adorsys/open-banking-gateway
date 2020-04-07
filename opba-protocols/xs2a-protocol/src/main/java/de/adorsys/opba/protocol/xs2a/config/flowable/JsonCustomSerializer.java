@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.config.flowable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
+import de.adorsys.opba.protocol.xs2a.service.storage.EncryptionServiceProvider;
 import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -16,6 +16,7 @@ class JsonCustomSerializer implements VariableType {
 
     static final String JSON = "as_json";
 
+    private final EncryptionServiceProvider encryptionServiceProvider;
     private final TransientDataStorage transientDataStorage;
     private final ObjectMapper mapper;
     private final List<String> allowOnlyClassesWithPrefix;
@@ -54,11 +55,7 @@ class JsonCustomSerializer implements VariableType {
             return;
         }
 
-        valueFields.setTextValue(mapper.writeValueAsString(
-                ImmutableMap.of(
-                        o.getClass().getCanonicalName(),
-                        o
-        )));
+        valueFields.setBytes(SerializerUtil.serialize(o, mapper));
     }
 
     @Override
@@ -69,10 +66,11 @@ class JsonCustomSerializer implements VariableType {
         }
 
         return SerializerUtil.deserialize(
-                valueFields.getTextValue().getBytes(),
+                valueFields.getBytes(),
                 mapper,
                 allowOnlyClassesWithPrefix,
-                transientDataStorage
+                transientDataStorage,
+                encryptionServiceProvider
         );
     }
 }
