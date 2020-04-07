@@ -3,30 +3,32 @@
     <div class="card-body">
 
       <ng-container *ngIf="hasGeneralViolations()">
-        <h2 class="mb-4 text-left">Consent authorization for {{aspspName}}</h2>
-        <div class="form-group my-4">
+        <section>
+          <h2>Consent authorization for {{aspspName}}</h2>
           <consent-app-dynamic-inputs [targetForm]="accountAccessForm" [violations]="state.getGeneralViolations()" [currentConsent]="consent"></consent-app-dynamic-inputs>
-        </div>
-      </ng-container>
+        </section>
+     </ng-container>
 
       <ng-container *ngIf="hasAisViolations()">
-        <h2 class="mb-4 text-left">Access permission for accounts in {{aspspName}}</h2>
-        <p class="text-secondary mb-5 text-left">Please choose an account access level for <strong>{{finTechName}}</strong></p>
-        <div class="form-group my-4">
-          <div *ngFor="let access of accountAccesses; let i = index" class="form-check">
-            <input class="form-check-input"
-                   type="radio"
-                   [formControl]="selectedAccess"
-                   [id]="access.id"
-                   [checked]="selectedAccess.value.id === access.id" (change)="handleMethodSelectedEvent(access)">
-            <label class="form-check-label ml-4" [for]="access.id">{{access.message}}</label>
+        <section>
+          <h2 class="">Access permission for accounts in {{aspspName}}</h2>
+          <p class="text-secondary mb-4">Please choose an account access level for <strong class="text-dark">{{finTechName}}</strong></p>
+          <div class="mb-5">
+            <div *ngFor="let access of accountAccesses; let i = index" class="form-check">
+              <input class="form-check-input"
+                     type="radio"
+                     [formControl]="selectedAccess"
+                     [id]="access.id"
+                     [checked]="selectedAccess.value.id === access.id" (change)="handleMethodSelectedEvent(access)">
+              <label class="form-check-label ml-4" [for]="access.id">{{access.message}}</label>
+            </div>
           </div>
-        </div>
+        </section>
       </ng-container>
 
-      <div class="form-group d-flex flex-row justify-content-lg-between">
-        <button id="do_deny" class="btn md-6 w-100 mr-sm-2 mr-md-3 btn-outline-secondary" (click)="onDeny()">Deny consent</button>
-        <button id="do_submit" type="button" class="btn md-6 w-100 btn-primary" [disabled]="accountAccessForm.invalid" (click)="onConfirm()">{{submitButtonMessage()}}</button>
+      <div class="d-sm-flex">
+        <button id="do_deny" class="btn btn-outline-secondary w-100 mr-4" (click)="onDeny()">Deny consent</button>
+        <button id="do_submit" type="button" class="btn btn-primary w-100" [disabled]="accountAccessForm.invalid" (click)="onConfirm()">{{submitButtonMessage()}}</button>
       </div>
     </div>
   </div>

@@ -1,24 +1,18 @@
-<div class="d-md-flex align-items-center h-100 align-items-stretch">
-  <!-- First-->
-  <div class="col-md-4 p-0 bg-light">
-    <div class="container-fluid">
-      <nav class="navbar navbar-light text-primary py-3">
+<div class="d-md-flex">
+  <div class="sidebar mt-md-0 mt-3">
+    <div class="container">
+      <nav class="mb-5">
         <a class="navbar-brand" href="#">
           <img class="logo" [src]="customizeService.getLogo()" />
         </a>
       </nav>
-    </div>
-    <div class="d-md-flex align-items-center h-100 justify-content-center">
       <consent-app-consent-info></consent-app-consent-info>
     </div>
   </div>
 
-  <!--&lt;!&ndash; Second 1/4 &ndash;&gt;-->
-  <div class="col-md-8 bg-white h-md-100">
-    <div class="d-md-flex align-items-center h-100 p-4 justify-content-center">
-      <div class="d-md-flex align-items-center ">
-        <router-outlet></router-outlet>
-      </div>
+  <div class="card card-frame">
+    <div class="card-body">
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>
