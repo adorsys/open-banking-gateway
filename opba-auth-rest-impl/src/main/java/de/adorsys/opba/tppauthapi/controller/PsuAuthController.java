@@ -13,20 +13,23 @@ import de.adorsys.opba.tppauthapi.service.PsuAuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.util.encoders.Hex;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
-import javax.servlet.http.HttpServletResponse;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.time.Duration;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.time.temporal.TemporalAmount;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,7 +46,6 @@ public class PsuAuthController implements PsuAuthApi {
     public static final Duration WEEK = Duration.ofDays(7);
 
     private final PsuAuthService psuAuthService;
-    private final HttpServletResponse httpServletResponse;
     private final CookieProperties cookieProperties;
 
     @Override
@@ -54,9 +56,7 @@ public class PsuAuthController implements PsuAuthApi {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-        KeyPair keyPair = generator.generateKeyPair();
-        String jwtToken = generateToken(psu.get().getUserId(), keyPair.getPrivate(), WEEK);
+        String jwtToken = generateToken(psu.get().getUserId(), getPrivateKey());
 
         String sessionCookieString = ResponseCookie.from(AUTHORIZATION_SESSION_ID, jwtToken)
                 .httpOnly(cookieProperties.isHttpOnly())
@@ -70,7 +70,7 @@ public class PsuAuthController implements PsuAuthApi {
                 .status(HttpStatus.ACCEPTED)
                 .header(X_REQUEST_ID, xRequestID.toString())
                 .header(SET_COOKIE, sessionCookieString)
-                .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                .header(X_XSRF_TOKEN, getHash(jwtToken))
                 .body(jwtToken);
     }
 
@@ -86,10 +86,10 @@ public class PsuAuthController implements PsuAuthApi {
     }
 
     @SneakyThrows
-    private String generateToken(String id, PrivateKey privateKey, TemporalAmount validity) {
+    private String generateToken(String id, PrivateKey privateKey) {
         ZonedDateTime currentTime = ZonedDateTime.now(ZoneOffset.UTC);
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
-                .expirationTime(Date.from(currentTime.plus(validity).toInstant()))
+                .expirationTime(Date.from(currentTime.plus(WEEK).toInstant()))
                 .issueTime(Date.from(currentTime.toInstant()))
                 .subject(String.valueOf(id))
                 .build();
@@ -97,5 +97,18 @@ public class PsuAuthController implements PsuAuthApi {
         SignedJWT signedJWT = new SignedJWT(jwsHeader, claims);
         signedJWT.sign(new RSASSASigner(privateKey));
         return signedJWT.serialize();
+    }
+
+    private PrivateKey getPrivateKey() throws NoSuchAlgorithmException {
+        KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+        KeyPair keyPair = generator.generateKeyPair();
+        return keyPair.getPrivate();
+    }
+
+    @NotNull
+    private String getHash(String jwtToken) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] hash = digest.digest(jwtToken.getBytes(StandardCharsets.UTF_8));
+        return new String(Hex.encode(hash));
     }
 }
