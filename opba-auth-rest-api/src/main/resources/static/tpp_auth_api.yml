@@ -112,7 +112,7 @@ components:
         Set-Cookie:
           schema:
             type: string
-            example: Authorization=abcde12345; Path=/; HttpOnly
+            example: Authorization-Session-ID=abcde12345; Path=/; HttpOnly
       content:
         application/json:
           schema:

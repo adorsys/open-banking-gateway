@@ -6,15 +6,20 @@ import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
+import de.adorsys.opba.tppauthapi.config.CookieProperties;
 import de.adorsys.opba.tppauthapi.model.generated.PsuAuthBody;
 import de.adorsys.opba.tppauthapi.resource.generated.PsuAuthApi;
 import de.adorsys.opba.tppauthapi.service.PsuAuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
+import javax.servlet.http.HttpServletResponse;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
@@ -23,28 +28,61 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAmount;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
+
+import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_ID;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.X_XSRF_TOKEN;
+import static org.springframework.http.HttpHeaders.SET_COOKIE;
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
 public class PsuAuthController implements PsuAuthApi {
-    private final PsuAuthService psuAuthService;
+    public static final Duration WEEK = Duration.ofDays(7);
 
-    @Override
-    public ResponseEntity<String> login(PsuAuthBody psuAuthBody, UUID xRequestID) {
-        return null;
-    }
+    private final PsuAuthService psuAuthService;
+    private final HttpServletResponse httpServletResponse;
+    private final CookieProperties cookieProperties;
 
     @Override
     @SneakyThrows
-    public ResponseEntity<Void> registration(PsuAuthBody psuAuthDto, UUID xRequestID) {
-        Psu psu = psuAuthService.createPsuIfNotExist(psuAuthDto.getId(), psuAuthDto.getPassword());
-        KeyPairGenerator generator = KeyPairGenerator.getInstance("AES");
+    public ResponseEntity<String> login(PsuAuthBody psuAuthBody, UUID xRequestID) {
+        Optional<Psu> psu = psuAuthService.getPsu(psuAuthBody.getId());
+        if (!psu.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
         KeyPair keyPair = generator.generateKeyPair();
-        generateToken(psu.getUserId(), keyPair.getPrivate(), Duration.ofDays(7));
-        return null;
-        // return jwttoken as httpOnly cookie,  xsrftoken in response body
+        String jwtToken = generateToken(psu.get().getUserId(), keyPair.getPrivate(), WEEK);
+
+        String sessionCookieString = ResponseCookie.from(AUTHORIZATION_SESSION_ID, jwtToken)
+                .httpOnly(cookieProperties.isHttpOnly())
+                .sameSite(cookieProperties.getSameSite())
+                .secure(cookieProperties.isSecure())
+                .path(cookieProperties.getPath())
+                .maxAge(cookieProperties.getMaxAge())
+                .build().toString();
+
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .header(X_REQUEST_ID, xRequestID.toString())
+                .header(SET_COOKIE, sessionCookieString)
+                .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                .body(jwtToken);
+    }
+
+    @Override
+    public ResponseEntity<Void> registration(PsuAuthBody psuAuthDto, UUID xRequestID) {
+        Optional<Psu> psu = psuAuthService.createPsuIfNotExist(psuAuthDto.getId(), psuAuthDto.getPassword());
+        if (!psu.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add(HttpHeaders.LOCATION, "/login");
+        return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
     }
 
     @SneakyThrows
