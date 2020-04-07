@@ -120,7 +120,10 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     @SneakyThrows
     private ServiceSessionWithEncryption createServiceSession(FacadeServiceableRequest facadeServiceable) {
         KeyWithParamsDto keyWithParams = newSecretKey(facadeServiceable.getSessionPassword());
-        EncryptionService encryptionService = encryptionFactory.provideEncryptionService(keyWithParams.getKey());
+        EncryptionService encryptionService = encryptionFactory.provideEncryptionService(
+                facadeServiceable.getRequestId(),
+                keyWithParams.getKey()
+        );
         String encryptedContext = new String(encryptionService.encrypt(MAPPER.writeValueAsBytes(facadeServiceable)));
 
         ServiceSession session = new ServiceSession();
@@ -138,7 +141,10 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     @NotNull
     private ServiceSessionWithEncryption serviceSessionWithEncryption(ServiceSession session, FacadeServiceableRequest facadeServiceable) {
         KeyDto key = deriveFromSessionOrRequest(session, facadeServiceable.getSessionPassword());
-        EncryptionService encryptionService = encryptionFactory.provideEncryptionService(key.getKey());
+        EncryptionService encryptionService = encryptionFactory.provideEncryptionService(
+                facadeServiceable.getRequestId(),
+                key.getKey()
+        );
         return new ServiceSessionWithEncryption(session, encryptionService);
     }
 
