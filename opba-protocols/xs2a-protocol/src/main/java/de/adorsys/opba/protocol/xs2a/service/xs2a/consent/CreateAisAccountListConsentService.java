@@ -4,14 +4,14 @@ import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
 import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedHeadersBody;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate.embedded.CreateConsentErrorSink;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
-import de.adorsys.xs2a.adapter.service.Response;
-import de.adorsys.xs2a.adapter.service.model.ConsentCreationResponse;
 import de.adorsys.xs2a.adapter.service.model.Consents;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +19,17 @@ import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 
+@Slf4j
 @Service("xs2aAccountListConsentInitiate")
 @RequiredArgsConstructor
-public class Xs2aAccountListConsentInitiate extends ValidatedExecution<AccountListXs2aContext> {
+public class CreateAisAccountListConsentService extends ValidatedExecution<AccountListXs2aContext> {
 
     private final AisConsentInitiateExtractor extractor;
     private final AccountInformationService ais;
     private final Xs2aValidator validator;
     private final ProtocolConfiguration configuration;
+    private final CreateConsentErrorSink errorSink;
+    private final CreateAisConsentService createAisConsentService;
 
     @Override
     protected void doPrepareContext(DelegateExecution execution, AccountListXs2aContext context) {
@@ -46,13 +49,10 @@ public class Xs2aAccountListConsentInitiate extends ValidatedExecution<AccountLi
     @Override
     protected void doRealExecution(DelegateExecution execution, AccountListXs2aContext context) {
         ValidatedHeadersBody<ConsentInitiateHeaders, Consents> params = extractor.forExecution(context);
-        Response<ConsentCreationResponse> consentInit = ais.createConsent(
-                params.getHeaders().toHeaders(),
-                params.getBody()
+        errorSink.swallowConsentCreationErrorForLooping(
+                () -> createAisConsentService.createConsent(ais, execution, context, params),
+                ex -> createAisConsentService.aisOnWrongIban(execution, log)
         );
-
-        context.setConsentId(consentInit.getBody().getConsentId());
-        execution.setVariable(CONTEXT, context);
     }
 
     @Override
