@@ -2,22 +2,18 @@ package de.adorsys.opba.protocol.facade.services;
 
 import com.google.crypto.tink.subtle.AesGcmJce;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.util.Base64;
-import java.util.UUID;
 
+@Getter
 @RequiredArgsConstructor
 public class EncryptionServiceImpl implements EncryptionService {
 
     private final byte[] key;
-    private final UUID requestId;
-
-    @Override
-    public String id() {
-        return requestId.toString();
-    }
+    private final String id;
 
     @Override
     @SneakyThrows

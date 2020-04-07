@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.config.flowable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.opba.protocol.xs2a.service.storage.EncryptionServiceProvider;
+import de.adorsys.opba.protocol.api.services.EncryptionServiceProvider;
 import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -51,7 +51,7 @@ class JsonCustomSerializer implements VariableType {
     @SneakyThrows
     public void setValue(Object o, ValueFields valueFields) {
         if (o == null) {
-            valueFields.setTextValue(null);
+            valueFields.setBytes(null);
             return;
         }
 
@@ -61,7 +61,7 @@ class JsonCustomSerializer implements VariableType {
     @Override
     @SneakyThrows
     public Object getValue(ValueFields valueFields) {
-        if (null == valueFields.getTextValue()) {
+        if (null == valueFields.getBytes()) {
             return null;
         }
 

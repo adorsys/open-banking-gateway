@@ -28,7 +28,7 @@ public class NoEncryptionServiceTest {
 
     @Test
     void noEncryption() {
-        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(null, null);
+        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(null);
         assertThat(encryptionService.encrypt(TEST_DATA)).isEqualTo(TEST_DATA);
         assertThat(encryptionService.decrypt(TEST_DATA)).isEqualTo(TEST_DATA);
     }
