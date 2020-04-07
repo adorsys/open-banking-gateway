@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.facade.services;
 
+import com.google.common.hash.Hashing;
 import com.google.crypto.tink.Aead;
 import de.adorsys.opba.protocol.api.dto.KeyWithParamsDto;
 import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import static de.adorsys.opba.protocol.api.Profiles.NO_ENCRYPTION;
@@ -46,7 +48,14 @@ public class SecretKeyOperationsImpl implements SecretKeyOperations {
         PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), salt, iterCount);
         SecretKeyFactory keyFac = SecretKeyFactory.getInstance(algo, provider.getProvider());
         byte[] key = keyFac.generateSecret(pbeKeySpec).getEncoded();
-        return new KeyWithParamsDto(key, salt, algo, properties.getSaltLength(), iterCount);
+        return new KeyWithParamsDto(
+                Hashing.sha256().hashString(password, StandardCharsets.UTF_8).toString(),
+                key,
+                salt,
+                algo,
+                properties.getSaltLength(),
+                iterCount
+        );
     }
 
     @Override

@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.api.services;
 
 public interface EncryptionService {
 
-    String id();
+    String getId();
 
     byte[] encrypt(byte[] data);
 
