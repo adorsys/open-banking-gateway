@@ -11,9 +11,10 @@ import org.springframework.lang.Nullable;
 @ToString
 @ConfigurationProperties(prefix = "cookie")
 public class CookieProperties {
+    private static final Integer MAX_AGE_DEFAULT = 300;
 
     private boolean secure = false;
-    private int maxAge = 300;
+    private int maxAge = MAX_AGE_DEFAULT;
     private boolean httpOnly = true;
     private String path = "/";
 
