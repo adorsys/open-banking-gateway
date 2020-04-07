@@ -17,4 +17,7 @@ public class AspspMessages {
 
     @NotEmpty
     private Set<@NotBlank String> invalidCredentials;
+
+    @NotEmpty
+    private Set<@NotBlank String> invalidConsent;
 }
