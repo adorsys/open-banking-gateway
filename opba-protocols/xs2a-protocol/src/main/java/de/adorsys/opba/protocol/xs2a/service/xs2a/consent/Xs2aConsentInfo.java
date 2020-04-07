@@ -41,4 +41,8 @@ public class Xs2aConsentInfo {
     public boolean isOkRedirectConsent(Xs2aContext ctx) {
         return ctx.isRedirectConsentOk();
     }
+
+    public boolean hasWrongCredentials(Xs2aContext ctx) {
+        return null != ctx.getWrongAuthCredentials() && ctx.getWrongAuthCredentials();
+    }
 }

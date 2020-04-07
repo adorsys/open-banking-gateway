@@ -13,20 +13,20 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AuthorizationErrorSink {
+public class CreateConsentErrorSink {
 
     private final AspspMessages messageConfig;
 
-    public void swallowAuthorizationErrorForLooping(Runnable tryAuthorize, Consumer<ErrorResponseException> onFail) {
+    public void swallowConsentCreationErrorForLooping(Runnable tryAuthorize, Consumer<ErrorResponseException> onFail) {
         try {
             tryAuthorize.run();
         } catch (ErrorResponseException ex) {
-            rethrowIfNotAuthorizationErrorCode(ex);
+            rethrowIfNotCorrectErrorCode(ex);
             onFail.accept(ex);
         }
     }
 
-    private void rethrowIfNotAuthorizationErrorCode(ErrorResponseException ex) {
+    private void rethrowIfNotCorrectErrorCode(ErrorResponseException ex) {
         if (!ex.getErrorResponse().isPresent() || null == ex.getErrorResponse().get().getTppMessages()) {
             throw ex;
         }
@@ -35,7 +35,7 @@ public class AuthorizationErrorSink {
                 .map(TppMessage::getCode)
                 .collect(Collectors.toSet());
 
-        if (Sets.intersection(messageConfig.getInvalidCredentials(), tppMessageCodes).isEmpty())  {
+        if (Sets.intersection(messageConfig.getInvalidConsent(), tppMessageCodes).isEmpty())  {
             throw ex;
         }
     }
