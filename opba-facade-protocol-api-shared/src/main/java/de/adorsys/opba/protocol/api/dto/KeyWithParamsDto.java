@@ -9,12 +9,12 @@ public class KeyWithParamsDto extends KeyDto {
     private int saltLength;
     private int iterationCount;
 
-    public KeyWithParamsDto(byte[] key) {
-        super(key);
+    public KeyWithParamsDto(String id, byte[] key) {
+        super(id, key);
     }
 
-    public KeyWithParamsDto(byte[] key, byte[] salt, String algorithm, int saltLength, int iterationCount) {
-        super(key);
+    public KeyWithParamsDto(String id, byte[] key, byte[] salt, String algorithm, int saltLength, int iterationCount) {
+        super(id, key);
         this.salt = salt;
         this.algorithm = algorithm;
         this.saltLength = saltLength;
