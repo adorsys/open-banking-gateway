@@ -1,9 +1,8 @@
-package de.adorsys.fintech.tests.e2e;
+package de.adorsys.fintech.tests.e2e.steps;
 
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import io.restassured.RestAssured;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -19,15 +18,16 @@ import org.springframework.retry.RetryOperations;
 import java.net.URI;
 import java.time.Duration;
 
-import static de.adorsys.fintech.tests.e2e.FintechStagesUtils.PIN_VALUE;
-import static de.adorsys.fintech.tests.e2e.FintechStagesUtils.USERNAME;
 import static de.adorsys.fintech.tests.e2e.config.RetryableConfig.TEST_RETRY_OPS;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.PIN_VALUE;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.USERNAME;
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
-public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFintech<SELF>> extends Stage <SELF> {
+public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFintech<SELF>> extends Stage<SELF> {
 
     static final String FINTECH_URI = "https://obg-dev-fintechui.cloud.adorsys.de";
+
     @Autowired
     @Qualifier(TEST_RETRY_OPS)
     private RetryOperations withRetry;
@@ -47,10 +47,8 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_login_with_its_credentials(WebDriver driver) {
-        clickOnButton(driver, By.name("Username"));
-        sendText(driver, By.name("Username"), USERNAME);
-        clickOnButton(driver, By.name("Password"));
-        sendText(driver, By.name("Password"), PIN_VALUE);
+        sendText(driver, By.id("username"), USERNAME);
+        sendText(driver, By.id("password"), PIN_VALUE);
         clickOnButton(driver, By.xpath("//button[@type='submit']"));
         return self();
     }
@@ -95,19 +93,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
                 .until(wd -> ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));
     }
 
-    public SELF fintech_points_to_fintechui_login_page(String fintechUri) {
-        RestAssured.baseURI = fintechUri;
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        return self();
-    }
-
-    public SELF fintech_point_to_another_page(WebDriver driver, String uri) {
-        waitForPageLoadAndUrlEndsWithPath(driver, uri);
-        return self();
-    }
-
     private void clickOnButton(WebDriver driver, By identifier) {
-
         clickOnButton(driver, identifier, false);
     }
 
@@ -164,8 +150,8 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     private void waitForPageLoadAndUrlEndsWithPath(WebDriver driver, String urlEndsWithPath) {
         new WebDriverWait(driver, timeout.getSeconds())
                 .until(wd ->
-                               URI.create(driver.getPageSource()).getPath().endsWith(urlEndsWithPath)
-                                       && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
+                        URI.create(driver.getPageSource()).getPath().endsWith(urlEndsWithPath)
+                                && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
                 );
     }
 

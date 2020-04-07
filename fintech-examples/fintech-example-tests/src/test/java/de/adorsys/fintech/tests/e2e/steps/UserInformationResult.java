@@ -1,4 +1,4 @@
-package de.adorsys.fintech.tests.e2e;
+package de.adorsys.fintech.tests.e2e.steps;
 
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
@@ -12,9 +12,18 @@ import org.springframework.http.HttpStatus;
 import javax.transaction.Transactional;
 import java.util.UUID;
 
-import static de.adorsys.fintech.tests.e2e.FintechStagesUtils.*;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.BANKSEARCH_ENDPOINT;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.BANK_ID;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.BANK_ID_VALUE;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.FINTECH_LOGIN_ENDPOINT;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.SESSION_COOKIE;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.SESSION_COOKIE_VALUE;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.USERNAME;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.X_REQUEST_ID;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.X_XSRF_TOKEN;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.X_XSRF_TOKEN_VALUE;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.withDefaultHeaders;
 import static org.hamcrest.Matchers.equalTo;
-
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase

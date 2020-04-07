@@ -9,3 +9,5 @@ test:
     timeout: PT10S
   fintech:
     uri: https://obg-dev-fintechui.cloud.adorsys.de
+
+debug: true

@@ -1,4 +1,4 @@
-package de.adorsys.fintech.tests.e2e;
+package de.adorsys.fintech.tests.e2e.steps;
 
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
