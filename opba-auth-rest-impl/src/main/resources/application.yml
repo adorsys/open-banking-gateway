@@ -1,0 +1,11 @@
+tpp:
+  keyPair:
+    validity: 864000
+    private:
+    public:
+cookie:
+  secure: false
+  maxAge: 300
+  httpOnly: true
+  path: /
+  sameSite: Strict
