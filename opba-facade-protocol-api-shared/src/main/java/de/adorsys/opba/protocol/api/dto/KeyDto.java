@@ -7,5 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class KeyDto {
 
+    protected final String id;
     protected final byte[] key;
 }
