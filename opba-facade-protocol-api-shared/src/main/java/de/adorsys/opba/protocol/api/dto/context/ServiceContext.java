@@ -49,7 +49,7 @@ public class ServiceContext<T> {
     @NonNull
     private final String fintechRedirectNokUri;
 
-    private final EncryptionService encryptionService;
+    private final EncryptionService encryption;
 
     public String loggableBankId() {
         return String.format(

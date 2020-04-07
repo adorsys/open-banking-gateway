@@ -5,6 +5,6 @@ public class NoEncKeyWithParamsDto extends KeyWithParamsDto {
     public static final String NOOP = "NOOP";
 
     public NoEncKeyWithParamsDto() {
-        super(null, NOOP.getBytes(), NOOP, 0, 0);
+        super(NOOP, null, NOOP.getBytes(), NOOP, 0, 0);
     }
 }

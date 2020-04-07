@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.config.flowable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.opba.protocol.xs2a.service.storage.EncryptionServiceProvider;
+import de.adorsys.opba.protocol.api.services.EncryptionServiceProvider;
 import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
