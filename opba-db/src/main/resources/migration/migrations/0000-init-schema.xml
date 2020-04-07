@@ -12,10 +12,10 @@
             <column name="service_session_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="consent_code" type="VARCHAR(256)">
+            <column name="enc_consent_id" type="BLOB">
                 <constraints nullable="false"/>
             </column>
-            <column name="context" type="TEXT"/>
+            <column name="enc_context" type="BLOB"/>
         </createTable>
         <createSequence sequenceName="consent_id_sequence" incrementBy="50"/>
 
