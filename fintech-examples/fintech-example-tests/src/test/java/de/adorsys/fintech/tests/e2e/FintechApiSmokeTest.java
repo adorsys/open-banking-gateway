@@ -2,7 +2,9 @@ package de.adorsys.fintech.tests.e2e;
 
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
 import de.adorsys.fintech.tests.e2e.config.SmokeConfig;
-import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
+import de.adorsys.fintech.tests.e2e.steps.FintechServer;
+import de.adorsys.fintech.tests.e2e.steps.UserInformationResult;
+import de.adorsys.fintech.tests.e2e.steps.WebDriverBasedUserInfoFintech;
 import io.github.bonigarcia.seljup.SeleniumExtension;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.BeforeAll;
@@ -11,11 +13,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
-@ExtendWith({SeleniumExtension.class, WebDriverErrorReportAspectAndWatcher.class})
-@SpringBootTest(classes = {JGivenConfig.class, SmokeConfig.class}, webEnvironment = NONE)
+@ActiveProfiles("test-mocked-fintech")
+@ExtendWith(SeleniumExtension.class)
+@SpringBootTest(classes = JGivenConfig.class, webEnvironment = NONE)
 class FintechApiSmokeTest extends SpringScenarioTest<FintechServer, WebDriverBasedUserInfoFintech<? extends WebDriverBasedUserInfoFintech<?>>, UserInformationResult> {
 
     @Autowired
