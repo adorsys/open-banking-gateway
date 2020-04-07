@@ -52,7 +52,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         AuthSession authSession = extractAndValidateAuthSession(request);
         ServiceSessionWithEncryption session = extractOrCreateServiceSession(request, authSession);
         return ServiceContext.<T>builder()
-                .encryptionService(session.getEncryption())
+                .encryption(session.getEncryption())
                 .serviceSessionId(session.getId())
                 .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
                 .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
@@ -120,10 +120,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     @SneakyThrows
     private ServiceSessionWithEncryption createServiceSession(FacadeServiceableRequest facadeServiceable) {
         KeyWithParamsDto keyWithParams = newSecretKey(facadeServiceable.getSessionPassword());
-        EncryptionService encryptionService = encryptionFactory.provideEncryptionService(
-                facadeServiceable.getRequestId(),
-                keyWithParams.getKey()
-        );
+        EncryptionService encryptionService = encryptionFactory.provideEncryptionService(keyWithParams);
         String encryptedContext = new String(encryptionService.encrypt(MAPPER.writeValueAsBytes(facadeServiceable)));
 
         ServiceSession session = new ServiceSession();
@@ -141,10 +138,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     @NotNull
     private ServiceSessionWithEncryption serviceSessionWithEncryption(ServiceSession session, FacadeServiceableRequest facadeServiceable) {
         KeyDto key = deriveFromSessionOrRequest(session, facadeServiceable.getSessionPassword());
-        EncryptionService encryptionService = encryptionFactory.provideEncryptionService(
-                facadeServiceable.getRequestId(),
-                key.getKey()
-        );
+        EncryptionService encryptionService = encryptionFactory.provideEncryptionService(key);
         return new ServiceSessionWithEncryption(session, encryptionService);
     }
 

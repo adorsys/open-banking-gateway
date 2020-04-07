@@ -29,6 +29,7 @@ public class BaseContext implements NeedsEncryptionService, PersistenceShouldUse
     );
 
     private String sagaId;
+    private String requestId;
     // Used to find existing consent:
     private UUID serviceSessionId;
 
@@ -64,6 +65,6 @@ public class BaseContext implements NeedsEncryptionService, PersistenceShouldUse
      * Other helpful functions
      */
     public String getRequestId() {
-        return this.sagaId;
+        return this.requestId;
     }
 }

@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.xs2a.config.flowable;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.protocol.xs2a.service.storage.EncryptionServiceProvider;
+import de.adorsys.opba.protocol.api.services.EncryptionServiceProvider;
 import de.adorsys.opba.protocol.xs2a.service.storage.NeedsTransientStorage;
 import de.adorsys.opba.protocol.xs2a.service.storage.PersistenceShouldUseEncryption;
 import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
@@ -27,19 +27,14 @@ public class SerializerUtil {
 
     @SneakyThrows
     public byte[] serialize(@NotNull Object data, @NotNull ObjectMapper mapper) {
-        if (data instanceof PersistenceShouldUseEncryption) {
-            return mapper.writeValueAsBytes(
-                    ImmutableMap.of(
-                            data.getClass().getCanonicalName(),
-                            new EncryptedContainer((PersistenceShouldUseEncryption) data, mapper)
-                    )
-            );
+        if (!(data instanceof PersistenceShouldUseEncryption)) {
+            throw new IllegalStateException("Can't serialize non-encrypted persistence classes");
         }
 
         return mapper.writeValueAsBytes(
                 ImmutableMap.of(
                         data.getClass().getCanonicalName(),
-                        mapper.writeValueAsString(data)
+                        new EncryptedContainer((PersistenceShouldUseEncryption) data, mapper)
                 )
         );
     }
@@ -57,18 +52,15 @@ public class SerializerUtil {
         Class<?> dataClazz = Class.forName(classNameAndValue.getKey());
         Object result;
 
-        if (PersistenceShouldUseEncryption.class.isAssignableFrom(dataClazz)) {
-            EncryptedContainer container = mapper.readValue(classNameAndValue.getValue().traverse().getBinaryValue(), EncryptedContainer.class);
-            result = mapper.readValue(
-                    encryptionService.get(container.getEncId()).decrypt(container.getData()),
-                    dataClazz
-            );
-        } else {
-            result = mapper.readValue(
-                    classNameAndValue.getValue().traverse().getBinaryValue(),
-                    dataClazz
-            );
+        if (!PersistenceShouldUseEncryption.class.isAssignableFrom(dataClazz)) {
+            throw new IllegalStateException("Can't deserialize non-encrypted persistence classes");
         }
+
+        EncryptedContainer container = mapper.readValue(classNameAndValue.getValue().traverse(), EncryptedContainer.class);
+        result = mapper.readValue(
+                encryptionService.getEncryptionById(container.getEncKeyId()).decrypt(container.getData()),
+                dataClazz
+        );
 
         if (result instanceof NeedsTransientStorage) {
             ((NeedsTransientStorage) result).setTransientStorage(transientDataStorage);
@@ -82,12 +74,12 @@ public class SerializerUtil {
     @AllArgsConstructor
     private static class EncryptedContainer {
 
-        private String encId;
+        private String encKeyId;
         private byte[] data;
 
         @SneakyThrows
         EncryptedContainer(PersistenceShouldUseEncryption entity, ObjectMapper mapper) {
-            this.encId = entity.getEncryption().id();
+            this.encKeyId = entity.getEncryption().getId();
             this.data = entity.getEncryption().encrypt(mapper.writeValueAsBytes(entity));
         }
     }

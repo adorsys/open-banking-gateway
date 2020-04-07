@@ -1,12 +1,12 @@
 package de.adorsys.opba.protocol.facade.services;
 
+import de.adorsys.opba.protocol.api.dto.KeyDto;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.UUID;
 
 import static de.adorsys.opba.protocol.api.Profiles.NO_ENCRYPTION;
 
@@ -16,11 +16,11 @@ public class FacadeEncryptionServiceFactory {
 
     private final Environment env;
 
-    public EncryptionService provideEncryptionService(UUID requestId, byte[] key) {
+    public EncryptionService provideEncryptionService(KeyDto key) {
         if (Arrays.asList(env.getActiveProfiles()).contains(NO_ENCRYPTION)) {
             return new NoEncryptionServiceImpl();
         }
 
-        return new EncryptionServiceImpl(key, requestId);
+        return new EncryptionServiceImpl(key.getKey(), key.getId());
     }
 }

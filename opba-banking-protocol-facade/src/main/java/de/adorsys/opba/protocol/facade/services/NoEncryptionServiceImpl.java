@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 public class NoEncryptionServiceImpl implements EncryptionService {
 
     @Override
-    public String id() {
+    public String getId() {
         return "NOOP";
     }
 

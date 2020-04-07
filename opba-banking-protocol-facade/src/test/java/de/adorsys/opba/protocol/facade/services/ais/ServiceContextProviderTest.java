@@ -88,7 +88,7 @@ public class ServiceContextProviderTest {
                 ).build();
 
         ServiceContext<FacadeServiceableGetter> providedContext = serviceContextProvider.provide(request);
-        EncryptionService encryptionService = providedContext.getEncryptionService();
+        EncryptionService encryptionService = providedContext.getEncryption();
         URI redirectionTo = new URI("/");
         Result<URI> result = new ConsentAcquiredResult<>(redirectionTo, null);
         FacadeRedirectResult<URI, AuthStateBody> uriFacadeResult = (FacadeRedirectResult)
@@ -114,7 +114,7 @@ public class ServiceContextProviderTest {
                                 .build()
                 ).build();
         ServiceContext<FacadeServiceableGetter> providedContext2 = serviceContextProvider.provide(request2);
-        EncryptionService encryptionService2 = providedContext2.getEncryptionService();
+        EncryptionService encryptionService2 = providedContext2.getEncryption();
 
         txTemplate.execute(callback -> {
             secondRequestCheck(sessionId, encryptionService2);
