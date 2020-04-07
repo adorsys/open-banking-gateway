@@ -17,7 +17,6 @@ public class PsuAuthService {
     private final PsuRepository psuRepository;
     private final PsuSecureStorage psuSecureStorage;
 
-
     public Optional<Psu> getPsu(String psuId) {
         return psuRepository.findByUserId(psuId);
     }

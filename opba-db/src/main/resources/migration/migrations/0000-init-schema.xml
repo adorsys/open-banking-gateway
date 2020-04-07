@@ -130,9 +130,13 @@
             <column name="pub_keys" type="BLOB"/>
         </createTable>
         <createSequence sequenceName="fintech_id_sequence" incrementBy="50"/>
+
         <createTable tableName="${table-prefix}psu">
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
+            </column>
+            <column name="login">
+                <constraints unique="true" nullable="false"/>
             </column>
             <column name="keystore" type="BLOB"/>
             <column name="pub_keys" type="BLOB"/>

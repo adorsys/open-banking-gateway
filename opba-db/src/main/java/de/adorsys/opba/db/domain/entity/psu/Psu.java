@@ -31,7 +31,7 @@ public class Psu {
     @SequenceGenerator(name = "psu_id_generator", sequenceName = "psu_id_sequence")
     private Long id;
 
-    private String userId;
+    private String login;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
