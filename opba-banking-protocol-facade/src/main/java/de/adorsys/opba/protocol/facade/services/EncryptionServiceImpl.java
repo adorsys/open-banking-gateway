@@ -6,11 +6,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.util.Base64;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class EncryptionServiceImpl implements EncryptionService {
 
     private final byte[] key;
+    private final UUID requestId;
+
+    @Override
+    public String id() {
+        return requestId.toString();
+    }
 
     @Override
     @SneakyThrows

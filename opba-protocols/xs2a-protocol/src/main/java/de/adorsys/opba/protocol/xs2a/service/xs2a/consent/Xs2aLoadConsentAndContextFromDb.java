@@ -48,21 +48,22 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
     private void loadContext(DelegateExecution execution, Xs2aContext context) {
         Optional<Consent> consent = consentRepository.findByServiceSessionId(context.getServiceSessionId());
 
-        if (!consent.isPresent() || null == consent.get().getContext()) {
+        if (!consent.isPresent() || null == consent.get().getEncContext()) {
             return;
         }
 
-        JsonNode value = mapper.readTree(consent.get().getContext());
+        JsonNode value = mapper.readTree(consent.get().getContext(context.getEncryption()));
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
 
         if (!properties.canSerialize(classNameAndValue.getKey())) {
             throw new IllegalArgumentException("Class deserialization not allowed " + classNameAndValue.getKey());
         }
 
-        Object ctx = mapper.getMapper().readValue(
+        Xs2aContext ctx = (Xs2aContext) mapper.getMapper().readValue(
                 classNameAndValue.getValue().traverse(),
                 Class.forName(classNameAndValue.getKey())
         );
+        ctx.setConsentId(consent.get().getConsent(context.getEncryption()));
 
         // TODO - tidy up context merging
         if (ctx instanceof TransactionListXs2aContext && context instanceof TransactionListXs2aContext) {

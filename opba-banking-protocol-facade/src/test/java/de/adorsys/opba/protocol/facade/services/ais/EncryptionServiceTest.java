@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -49,7 +51,7 @@ public class EncryptionServiceTest {
         String data = "data to encrypt";
 
         KeyDto key = secretKeyOperations.generateKey(password);
-        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(key.getKey());
+        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(UUID.randomUUID(), key.getKey());
         byte[] encryptedData = encryptionService.encrypt(data.getBytes());
         assertThat(encryptedData).isNotEqualTo(data.getBytes());
 
