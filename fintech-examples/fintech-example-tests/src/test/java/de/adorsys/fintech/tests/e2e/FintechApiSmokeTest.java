@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
-@ExtendWith(SeleniumExtension.class)
+@ExtendWith({SeleniumExtension.class, WebDriverErrorReportAspectAndWatcher.class})
 @SpringBootTest(classes = {JGivenConfig.class, SmokeConfig.class}, webEnvironment = NONE)
 class FintechApiSmokeTest extends SpringScenarioTest<FintechServer, WebDriverBasedUserInfoFintech<? extends WebDriverBasedUserInfoFintech<?>>, UserInformationResult> {
 
@@ -28,27 +28,21 @@ class FintechApiSmokeTest extends SpringScenarioTest<FintechServer, WebDriverBas
 
     @Test
     void testUserLoginToFintech(FirefoxDriver firefoxDriver) {
-        given().user_is_not_logged_in();
+        given().fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
         when().user_opens_fintechui_login_page(firefoxDriver)
                 .and()
-                .user_sees_that_he_has_to_login(firefoxDriver)
-                .and()
                 .user_login_with_its_credentials(firefoxDriver);
-
         then().fintech_can_read_user_data_using_xsrfToken();
     }
 
     @Test
     void testUserSearchesABank(FirefoxDriver firefoxDriver) {
-        given().user_is_logged_in();
+        given().fintech_point_to_another_page(firefoxDriver, "search");
         when().user_opens_fintechui_login_page(firefoxDriver)
               .and()
-              .user_sees_that_does_not_need_to_login(firefoxDriver)
-              .and()
-              .user_navigates_to_bank_search(firefoxDriver);
+              .user_sees_that_does_not_need_to_login(firefoxDriver);
 
         UserInformationResult result = then().fintech_can_read_bank_profile_using_xsrfToken("adorsys xs2a");
-      //  result.getResponseContent();
     }
 
 }

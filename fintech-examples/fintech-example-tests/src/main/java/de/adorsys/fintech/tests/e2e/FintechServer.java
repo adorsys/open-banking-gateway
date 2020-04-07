@@ -23,19 +23,21 @@ public class FintechServer<SELF extends FintechServer<SELF>> extends  WebDriverB
 
     public SELF user_is_logged_in() {
         RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                .when().get("https://obg-dev-fintechserver.cloud.adorsys.de")
+                .body("bob")
+                .when().get("https://obg-dev-fintechui.cloud.adorsys.de/search")
                 .then().statusCode(HttpStatus.OK.value());
         return self();
     }
 
     public SELF user_is_not_logged_in() {
         RestAssured.given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                .header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .when().post("https://obg-dev-fintechserver.cloud.adorsys.de/v1/login")
+                .body("{}")
+                .when().get("https://obg-dev-fintechui.cloud.adorsys.de/login")
                 .then().statusCode(HttpStatus.OK.value());
         return self();
     }

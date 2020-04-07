@@ -1,5 +1,6 @@
 package de.adorsys.fintech.tests.e2e.config;
 
+import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,10 @@ import org.springframework.context.annotation.Configuration;
 public class SmokeConfig {
 
     @Getter
-    @Value("${test.smoke.fintech.server-uri}")
+    @Value("${test.fintech.uri}")
     private String fintechServerUri;
+
+    @Getter
+    @ProvidedScenarioState
+    private String actualUri;
 }
