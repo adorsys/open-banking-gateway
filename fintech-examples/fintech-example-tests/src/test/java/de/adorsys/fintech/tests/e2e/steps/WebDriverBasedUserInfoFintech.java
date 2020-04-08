@@ -3,12 +3,8 @@ package de.adorsys.fintech.tests.e2e.steps;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -48,7 +44,6 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     public SELF user_login_with_its_credentials(WebDriver driver) {
         sendText(driver, By.id("username"), USERNAME);
         sendText(driver, By.id("password"), PIN_VALUE);
-        clickOnButton(driver, By.xpath("//button[@type='submit']"));
         return self();
     }
 
@@ -74,14 +69,15 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_looks_for_a_bank_in_the_bank_search_input_place(WebDriver driver) {
-        waitForPageLoad(driver);
-        sendText(driver, By.id("search"), "adorsys xs2a");
-        clickOnButton(driver, By.xpath("//button[@type='submit']"));
+        wait(driver);
+        System.out.println("TESSSTTSTSTS");
+        driver.findElement(By.name("searchValue")).clear();
+        sendTestInSearchInput(driver, By.tagName("searchValue"), "adorsys xs2a");
         return self();
     }
 
     public SELF user_confirm_login(WebDriver webDriver) {
-        waitForPageLoad(webDriver);
+        wait(webDriver);
         clickOnButton(webDriver, By.xpath("//button[@type='submit']"));
         return self();
     }
@@ -131,11 +127,12 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return new WebDriverWait(driver, timeout.getSeconds());
     }
 
-    private void selectByVisibleInDropdown(WebDriver driver, By id, String visibleText) {
+    private void sendTestInSearchInput(WebDriver driver, By id, String visibleText) {
         withRetry.execute(context -> {
-            wait(driver).until(ExpectedConditions.elementSelectionStateToBe(id, true));
-            Select elem = new Select(driver.findElement(id));
-            elem.selectByVisibleText(visibleText);
+            wait(driver).until(ExpectedConditions.elementToBeClickable(id));
+            WebElement input = driver.findElement(By.name("searchValue"));
+            input.click();
+            input.sendKeys(visibleText);
             return null;
         });
     }
