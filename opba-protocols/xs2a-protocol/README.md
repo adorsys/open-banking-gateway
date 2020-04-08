@@ -59,5 +59,13 @@ Customization is done by replacing bean names in generated xml files.
 
 ## IntelliJ and language injection
 
+### Navigation between code and BPMN diagram
+
+To work with BPMN diagrams efficiently within IntelliJ, you need to configure language injections.
+`Settings > Editor > Language Injections` -> Click import and select [language-injections.xml](docs/language-injections.xml)
+This will add Ctrl-click navigation between your classes and BPMN diagrams as well as IntelliJ will allow smart refactoring.
+
+### Working with generated XML diagrams:
+
 1. Ensure that the directory with generated xml is not excluded. If is -> `Right click on directory` -> `Mark Directory As` -> `Not Excluded`.
 ![Unexclude folder](docs/unexclude_dir.gif)
