@@ -1,10 +1,5 @@
 package de.adorsys.opba.tppauthapi.controller;
 
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.crypto.RSASSASigner;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.tppauthapi.config.CookieProperties;
 import de.adorsys.opba.tppauthapi.config.TppProperties;
@@ -20,16 +15,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
-import java.security.KeyFactory;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
-import java.time.Duration;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.Base64;
-import java.util.Date;
 import java.util.UUID;
 
 import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_ID;
@@ -52,7 +38,7 @@ public class PsuAuthController implements PsuAuthApi {
     public ResponseEntity<String> login(PsuAuthBody psuAuthBody, UUID xRequestID) {
         Psu psu = psuAuthService.tryAuthenticateUser(psuAuthBody.getId(), psuAuthBody.getPassword());
 
-        String jwtToken = generateToken(psu.getLogin());
+        String jwtToken = psuAuthService.generateToken(psu.getLogin());
 
         String sessionCookieString = ResponseCookie.from(AUTHORIZATION_SESSION_ID, jwtToken)
                 .httpOnly(cookieProperties.isHttpOnly())
@@ -77,36 +63,5 @@ public class PsuAuthController implements PsuAuthApi {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add(HttpHeaders.LOCATION, tppProperties.getLoginUrl());
         return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
-    }
-
-    @SneakyThrows
-    public String generateToken(String id) {
-        ZonedDateTime currentTime = ZonedDateTime.now(ZoneOffset.UTC);
-        Duration duration = Duration.ofSeconds(tppProperties.getKeyValidityDays());
-        JWTClaimsSet claims = new JWTClaimsSet.Builder()
-                .expirationTime(Date.from(currentTime.plus(duration).toInstant()))
-                .issueTime(Date.from(currentTime.toInstant()))
-                .subject(String.valueOf(id))
-                .build();
-        JWSHeader jwsHeader = new JWSHeader.Builder(JWSAlgorithm.parse(tppProperties.getJwsAlgo())).build();
-        SignedJWT signedJWT = new SignedJWT(jwsHeader, claims);
-        signedJWT.sign(new RSASSASigner(loadPrivateKey()));
-        return signedJWT.serialize();
-    }
-
-    @SneakyThrows
-    public PrivateKey loadPrivateKey() {
-        byte[] privateKeyBytes = Base64.getDecoder().decode(tppProperties.getPrivateKey());
-        PKCS8EncodedKeySpec ks = new PKCS8EncodedKeySpec(privateKeyBytes);
-        KeyFactory kf = KeyFactory.getInstance(tppProperties.getSignAlgo());
-        return kf.generatePrivate(ks);
-    }
-
-    @SneakyThrows
-    public PublicKey loadPublicKey() {
-        byte[] publicKeyBytes = Base64.getDecoder().decode(tppProperties.getPublicKey());
-        X509EncodedKeySpec ks = new X509EncodedKeySpec(publicKeyBytes);
-        KeyFactory kf = KeyFactory.getInstance(tppProperties.getSignAlgo());
-        return kf.generatePublic(ks);
     }
 }
