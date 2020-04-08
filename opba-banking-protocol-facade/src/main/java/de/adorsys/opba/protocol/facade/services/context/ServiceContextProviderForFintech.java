@@ -154,7 +154,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     private KeyWithParamsDto savedKey(ServiceSession session) {
         byte[] secretKey = session.getSecretKey();
         byte[] decryptedKey = secretKeyOperations.decrypt(secretKey);
-        return new KeyWithParamsDto(decryptedKey);
+        return new KeyWithParamsDto("FIXME", decryptedKey); // FIXME drop this
     }
 
     @NotNull
