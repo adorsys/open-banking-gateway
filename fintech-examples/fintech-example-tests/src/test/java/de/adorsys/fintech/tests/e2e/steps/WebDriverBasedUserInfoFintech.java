@@ -76,7 +76,6 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
 
     public SELF user_looks_for_a_bank_in_the_bank_search_input_place(WebDriver driver) {
         wait(driver);
-        System.out.println("TESSSTTSTSTS");
         sendTestInSearchInput(driver, By.name("searchValue"), " xs2a");
         return self();
     }
