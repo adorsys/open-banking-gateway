@@ -35,3 +35,5 @@ echo "Run API smoke tests"
 ./mvnw test -DfailIfNoTests=false -Dtest=de.adorsys.opba.smoketests.OpbaApiSmokeE2ETest
 echo "Run Consent UI and API smoke tests"
 ./mvnw test -DfailIfNoTests=false -Dtest=de.adorsys.opba.smoketests.OpbaApiWithConsentUiSmokeE2ETest
+echo "Run fintech UI"
+./mvnw test -DfailIfNoTests=false -Dtest=de.adorsys.fintech.tests.e2e.FintechApiSmokeTest
