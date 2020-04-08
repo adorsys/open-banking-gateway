@@ -58,6 +58,12 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
+    public SELF user_wait_for_the_result_in_bank_search(WebDriver webDriver) {
+        wait(webDriver);
+        clickOnButton(webDriver, By.className("bank-list"), false);
+        return self();
+    }
+
     public SELF user_sees_that_he_has_to_login(WebDriver webDriver) {
         webDriver.get(FINTECH_URI);
         return self();
@@ -71,8 +77,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     public SELF user_looks_for_a_bank_in_the_bank_search_input_place(WebDriver driver) {
         wait(driver);
         System.out.println("TESSSTTSTSTS");
-        driver.findElement(By.name("searchValue")).clear();
-        sendTestInSearchInput(driver, By.tagName("searchValue"), "adorsys xs2a");
+        sendTestInSearchInput(driver, By.name("searchValue"), " xs2a");
         return self();
     }
 
@@ -130,7 +135,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     private void sendTestInSearchInput(WebDriver driver, By id, String visibleText) {
         withRetry.execute(context -> {
             wait(driver).until(ExpectedConditions.elementToBeClickable(id));
-            WebElement input = driver.findElement(By.name("searchValue"));
+            WebElement input = driver.findElement(id);
             input.click();
             input.sendKeys(visibleText);
             return null;
