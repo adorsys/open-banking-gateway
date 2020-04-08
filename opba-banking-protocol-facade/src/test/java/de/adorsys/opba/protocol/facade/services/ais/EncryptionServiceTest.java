@@ -49,7 +49,7 @@ public class EncryptionServiceTest {
         String data = "data to encrypt";
 
         KeyDto key = secretKeyOperations.generateKey(password);
-        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(key.getKey());
+        EncryptionService encryptionService = facadeEncryptionServiceFactory.provideEncryptionService(key);
         byte[] encryptedData = encryptionService.encrypt(data.getBytes());
         assertThat(encryptedData).isNotEqualTo(data.getBytes());
 
