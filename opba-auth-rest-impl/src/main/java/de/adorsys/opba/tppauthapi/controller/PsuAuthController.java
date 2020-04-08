@@ -30,7 +30,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
 
 import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_ID;
@@ -51,19 +50,16 @@ public class PsuAuthController implements PsuAuthApi {
     @Override
     @SneakyThrows
     public ResponseEntity<String> login(PsuAuthBody psuAuthBody, UUID xRequestID) {
-        Optional<Psu> psu = psuAuthService.getPsu(psuAuthBody.getId());
-        if (!psu.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        Psu psu = psuAuthService.tryAuthenticateUser(psuAuthBody.getId(), psuAuthBody.getPassword());
 
-        String jwtToken = generateToken(psu.get().getLogin());
+        String jwtToken = generateToken(psu.getLogin());
 
         String sessionCookieString = ResponseCookie.from(AUTHORIZATION_SESSION_ID, jwtToken)
                 .httpOnly(cookieProperties.isHttpOnly())
                 .sameSite(cookieProperties.getSameSite())
                 .secure(cookieProperties.isSecure())
                 .path(cookieProperties.getPath())
-                .maxAge(cookieProperties.getMaxAge())
+                .maxAge(cookieProperties.getMaxAgeSeconds())
                 .build().toString();
 
         return ResponseEntity
@@ -76,10 +72,8 @@ public class PsuAuthController implements PsuAuthApi {
 
     @Override
     public ResponseEntity<Void> registration(PsuAuthBody psuAuthDto, UUID xRequestID) {
-        Optional<Psu> psu = psuAuthService.createPsuIfNotExist(psuAuthDto.getId(), psuAuthDto.getPassword());
-        if (!psu.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        psuAuthService.createPsuIfNotExist(psuAuthDto.getId(), psuAuthDto.getPassword());
+
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add(HttpHeaders.LOCATION, tppProperties.getLoginUrl());
         return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
@@ -88,7 +82,7 @@ public class PsuAuthController implements PsuAuthApi {
     @SneakyThrows
     public String generateToken(String id) {
         ZonedDateTime currentTime = ZonedDateTime.now(ZoneOffset.UTC);
-        Duration duration = Duration.ofSeconds(tppProperties.getKeyValidity());
+        Duration duration = Duration.ofSeconds(tppProperties.getKeyValidityDays());
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
                 .expirationTime(Date.from(currentTime.plus(duration).toInstant()))
                 .issueTime(Date.from(currentTime.toInstant()))
