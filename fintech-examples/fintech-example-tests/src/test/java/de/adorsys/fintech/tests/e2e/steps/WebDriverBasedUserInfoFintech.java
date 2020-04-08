@@ -1,7 +1,6 @@
 package de.adorsys.fintech.tests.e2e.steps;
 
 import com.tngtech.jgiven.Stage;
-import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -26,12 +25,6 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     @Autowired
     @Qualifier(TEST_RETRY_OPS)
     private RetryOperations withRetry;
-
-    @Value("${test.fintech.uri}")
-    private  String fintechUri;
-
-    @ProvidedScenarioState
-    private String redirectURI;
 
     @Value("${test.webdriver.timeout}")
     private Duration timeout;
