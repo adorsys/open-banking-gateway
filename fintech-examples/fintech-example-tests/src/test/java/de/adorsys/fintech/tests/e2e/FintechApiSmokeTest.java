@@ -31,22 +31,17 @@ class FintechApiSmokeTest extends SpringScenarioTest<FintechServer, WebDriverBas
     }
 
     @Test
-    void testUserLoginToFintech(FirefoxDriver firefoxDriver) {
+    void testUserLoginToFintechAndReadBankProfile(FirefoxDriver firefoxDriver) {
         given().fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
         when().user_opens_fintechui_login_page(firefoxDriver)
                 .and()
-                .user_login_with_its_credentials(firefoxDriver);
-        then().fintech_can_read_user_data_using_xsrfToken();
+                .user_login_with_its_credentials(firefoxDriver)
+                .and()
+                .user_confirm_login(firefoxDriver)
+                .and()
+                .user_navigates_to_bank_search(firefoxDriver)
+                .and()
+                .user_looks_for_a_bank_in_the_bank_search_input_place(firefoxDriver);
+        then().fintech_can_read_bank_profile_using_xsrfToken("adorsys xs2a");
     }
-
-    @Test
-    void testUserSearchesABank(FirefoxDriver firefoxDriver) {
-        given().fintech_point_to_another_page(firefoxDriver, "search");
-        when().user_opens_fintechui_login_page(firefoxDriver)
-              .and()
-              .user_sees_that_does_not_need_to_login(firefoxDriver);
-
-        UserInformationResult result = then().fintech_can_read_bank_profile_using_xsrfToken("adorsys xs2a");
-    }
-
 }

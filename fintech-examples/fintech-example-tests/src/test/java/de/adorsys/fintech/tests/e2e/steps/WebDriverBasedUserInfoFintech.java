@@ -19,8 +19,7 @@ import java.net.URI;
 import java.time.Duration;
 
 import static de.adorsys.fintech.tests.e2e.config.RetryableConfig.TEST_RETRY_OPS;
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.PIN_VALUE;
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.USERNAME;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
@@ -70,19 +69,25 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_navigates_to_bank_search(WebDriver driver) {
-        waitForPageLoadAndUrlEndsWithPath(driver, "search");
+        wait(driver);
         return self();
     }
 
-    public SELF user_look_for_a_bank_in_the_bank_search_input_place(WebDriver driver) {
+    public SELF user_looks_for_a_bank_in_the_bank_search_input_place(WebDriver driver) {
         waitForPageLoad(driver);
-        sendText(driver, By.name("Search"), "adorsys xs2a");
+        sendText(driver, By.id("search"), "adorsys xs2a");
         clickOnButton(driver, By.xpath("//button[@type='submit']"));
         return self();
     }
 
+    public SELF user_confirm_login(WebDriver webDriver) {
+        waitForPageLoad(webDriver);
+        clickOnButton(webDriver, By.xpath("//button[@type='submit']"));
+        return self();
+    }
+
     public SELF user_naviagtes_to_bank_profile(WebDriver webDriver) {
-        webDriver.get(redirectURI);
+        waitForPageLoadAndUrlEndsWithPath(webDriver, "bank" + BANK_ID_VALUE);
         return self();
     }
 
@@ -128,7 +133,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
 
     private void selectByVisibleInDropdown(WebDriver driver, By id, String visibleText) {
         withRetry.execute(context -> {
-            wait(driver).until(ExpectedConditions.elementToBeClickable(id));
+            wait(driver).until(ExpectedConditions.elementSelectionStateToBe(id, true));
             Select elem = new Select(driver.findElement(id));
             elem.selectByVisibleText(visibleText);
             return null;
