@@ -3,48 +3,58 @@ package de.adorsys.opba.tppauthapi;
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
-import de.adorsys.opba.tppauthapi.config.CookieProperties;
+import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
 import de.adorsys.opba.tppauthapi.config.TppProperties;
-import de.adorsys.opba.tppauthapi.controller.PsuAuthController;
+import de.adorsys.opba.tppauthapi.service.PsuAuthService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
+import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {TppProperties.class, CookieProperties.class})
-@AutoConfigureMockMvc
+@SpringBootTest(classes = TokenSignVerifyTest.TestConfig.class)
 public class TokenSignVerifyTest {
 
     @Autowired
     private TppProperties tppProperties;
-
+    @MockBean
+    private PsuRepository psuRepository;
+    @MockBean
+    private PsuSecureStorage psuSecureStorage;
+//    @Autowired
+//    private JWSHeader jwsHeader;
+//    @Autowired
+//    private RSASSASigner rsassaSigner;
     @Autowired
-    private CookieProperties cookieProperties;
+    PsuAuthService psuAuthService;
+
 
     @Test
     @SneakyThrows
     void signVerifyTest() {
         String message = "some data";
 
-        PsuAuthController psuAuthController = new PsuAuthController(null, cookieProperties, tppProperties);
-        String token = psuAuthController.generateToken(message);
+        String token = psuAuthService.generateToken(message);
 
-        JWSVerifier verifier = new RSASSAVerifier((RSAPublicKey) psuAuthController.loadPublicKey());
+        JWSVerifier verifier = new RSASSAVerifier((RSAPublicKey) loadPublicKey());
         JWSObject jwsObject = JWSObject.parse(token);
         assertTrue(jwsObject.verify(verifier));
         assertThat(jwsObject.getPayload().toJSONObject().get("sub")).isEqualTo(message);
@@ -64,5 +74,19 @@ public class TokenSignVerifyTest {
         log.info("Private key:" + privateKeyString);
         log.info("Public key:" + publicKeyString);
 
+    }
+
+    @SneakyThrows
+    private PublicKey loadPublicKey() {
+        byte[] publicKeyBytes = Base64.getDecoder().decode(tppProperties.getPublicKey());
+        X509EncodedKeySpec ks = new X509EncodedKeySpec(publicKeyBytes);
+        KeyFactory kf = KeyFactory.getInstance(tppProperties.getSignAlgo());
+        return kf.generatePublic(ks);
+    }
+
+    @Configuration
+    @ComponentScan(basePackages = "de.adorsys.opba.tppauthapi")
+    @EnableConfigurationProperties
+    public static class TestConfig {
     }
 }
