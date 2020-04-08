@@ -13,7 +13,6 @@ import javax.transaction.Transactional;
 import java.util.UUID;
 
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
-import static org.hamcrest.Matchers.equalTo;
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
@@ -61,20 +60,14 @@ public class UserInformationResult extends Stage<UserInformationResult> {
     //{"bankProfile":{"bankId":null,"bankName":"adorsys xs2a","bic":"ADORSYS",
     // "services":["AUTHORIZATION","LIST_TRANSACTIONS","LIST_ACCOUNTS"]}}
     @SneakyThrows
-    public UserInformationResult fintech_can_read_bank_profile_using_xsrfToken(String bankName) {
+    public UserInformationResult fintech_can_read_bank_profile_using_xsrfToken() {
         ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .header(X_XSRF_TOKEN, X_XSRF_TOKEN_VALUE)
                                                          .header(X_REQUEST_ID, UUID.randomUUID().toString())
                                                          .header(SESSION_COOKIE, SESSION_COOKIE_VALUE)
-                                                         .queryParam("keyword", bankName)
-                                                         .when().get(BANKSEARCH_ENDPOINT, BANK_ID_VALUE)
+                                                         .queryParam("keyword", BANKSEARCH)
+                                                         .when().get(BANKPROFILE_ENDPOINT +  BANK_ID_VALUE)
                                                          .then().statusCode(HttpStatus.OK.value())
-                                                         .body("bankProfile.bankId", equalTo(BANK_ID_VALUE))
-                                                         .body("bankProfile.bankName", equalTo(bankName))
-                                                         .body("bankProfile.bic", equalTo("ADORSYS"))
-                                                         .body("bankProfile.service[0]", equalTo("AUTHORIZATION"))
-                                                         .body("bankProfile.service[1]", equalTo("LIST_TRANSACTIONS"))
-                                                         .body("bankProfile.service[1]", equalTo("LIST_ACCOUNTS"))
                                                          .extract();
         this.responseContent = response.body().asString();
         return self();

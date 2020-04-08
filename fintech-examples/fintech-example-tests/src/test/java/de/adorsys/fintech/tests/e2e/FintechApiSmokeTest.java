@@ -44,6 +44,6 @@ class FintechApiSmokeTest extends SpringScenarioTest<FintechServer, WebDriverBas
                 .user_looks_for_a_bank_in_the_bank_search_input_place(firefoxDriver)
                 .and()
                 .user_wait_for_the_result_in_bank_search(firefoxDriver);
-        then().fintech_can_read_bank_profile_using_xsrfToken("adorsys xs2a");
+        then().fintech_can_read_bank_profile_using_xsrfToken();
     }
 }

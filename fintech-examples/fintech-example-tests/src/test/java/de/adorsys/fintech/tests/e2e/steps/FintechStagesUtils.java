@@ -18,7 +18,8 @@ public class FintechStagesUtils {
     public static final String BANK_ID_VALUE = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
     public static final String FINTECH_LOGIN_ENDPOINT = "login";
     public static final String BANKSEARCH = "adorsys xs2a";
-    public static final String BANKSEARCH_ENDPOINT = "search";
+    public static final String BANKPROFILE_ENDPOINT = "https://obg-dev-fintechui.cloud.adorsys.de/bank/";
+    public static final String BANKSEARCH_ENDPOINT = "https://obg-dev-fintechui.cloud.adorsys.de/search";
 
 
     public static RequestSpecification withDefaultHeaders() {
