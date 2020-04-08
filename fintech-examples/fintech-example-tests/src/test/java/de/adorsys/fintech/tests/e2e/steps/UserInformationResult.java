@@ -12,17 +12,7 @@ import org.springframework.http.HttpStatus;
 import javax.transaction.Transactional;
 import java.util.UUID;
 
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.BANKSEARCH_ENDPOINT;
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.BANK_ID;
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.BANK_ID_VALUE;
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.FINTECH_LOGIN_ENDPOINT;
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.SESSION_COOKIE;
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.SESSION_COOKIE_VALUE;
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.USERNAME;
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.X_REQUEST_ID;
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.X_XSRF_TOKEN;
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.X_XSRF_TOKEN_VALUE;
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.withDefaultHeaders;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
 import static org.hamcrest.Matchers.equalTo;
 
 @JGivenStage
@@ -57,13 +47,12 @@ public class UserInformationResult extends Stage<UserInformationResult> {
     }
 
     @SneakyThrows
-    public UserInformationResult fintech_can_read_user_data_using_xsrfToken() {
+    public UserInformationResult fintech_can_naviagte_to_bank_search_using_xsrfToken() {
         ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .header(X_XSRF_TOKEN, X_XSRF_TOKEN_VALUE)
-                                                         .when().get(FINTECH_LOGIN_ENDPOINT)
+                                                         .cookie(SESSION_COOKIE, SESSION_COOKIE_VALUE)
+                                                         .when().get(BANKSEARCH_ENDPOINT)
                                                          .then().statusCode(HttpStatus.OK.value())
-                                                         .body("userProfile.name", equalTo(USERNAME))
-                                                         .body("userProfile.lastLogin", equalTo(null))
                                                          .extract();
         this.responseContent = response.body().asString();
         return self();
@@ -78,7 +67,7 @@ public class UserInformationResult extends Stage<UserInformationResult> {
                                                          .header(X_REQUEST_ID, UUID.randomUUID().toString())
                                                          .header(SESSION_COOKIE, SESSION_COOKIE_VALUE)
                                                          .queryParam("keyword", bankName)
-                                                         .when().get(BANKSEARCH_ENDPOINT, BANK_ID)
+                                                         .when().get(BANKSEARCH_ENDPOINT, BANK_ID_VALUE)
                                                          .then().statusCode(HttpStatus.OK.value())
                                                          .body("bankProfile.bankId", equalTo(BANK_ID_VALUE))
                                                          .body("bankProfile.bankName", equalTo(bankName))
