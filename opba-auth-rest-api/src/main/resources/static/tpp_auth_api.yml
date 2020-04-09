@@ -29,7 +29,7 @@ paths:
         '202':
           $ref: '#/components/responses/202_UserAccepted'
         '401':
-          $ref: '#/components/responses/401_UNAUTHORIZED'
+          $ref: '#/components/responses/401_Unauthorised'
 
   /v1/psu/register:
     post:
@@ -119,16 +119,16 @@ components:
             type: string
             description: Authorization cookie hash
 
-  400_BadRequest:
-    description: |
-      Wrong registration parameters or user exist
-    headers:
-      X-Request-ID:
-        $ref: '#/components/parameters/X-Request-ID'
-    content:
-      application/json:
-        schema:
-          $ref: "#/components/schemas/generalError"
+    400_BadRequest:
+      description: |
+        Wrong registration parameters or user exist
+      headers:
+        X-Request-ID:
+          $ref: '#/components/parameters/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/generalError"
 
     401_Unauthorised:
       description: |
