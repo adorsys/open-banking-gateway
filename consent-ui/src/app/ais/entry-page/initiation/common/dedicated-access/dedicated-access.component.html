@@ -1,16 +1,28 @@
 <form [formGroup]="limitedAccountAccessForm">
   <div class="card">
     <div class="card-body">
-
       <section>
-        <h2>Dedicated access for accounts in {{aspspName}}</h2>
-        <p class="text-secondary">Accounts with their details to be visible for <strong class="text-dark">{{finTechName}}</strong></p>
-          <consent-app-account-selector [targetForm]="limitedAccountAccessForm" [accounts]="accounts"></consent-app-account-selector>
+        <h2>Dedicated access for accounts in {{ aspspName }}</h2>
+        <p class="text-secondary">
+          Accounts with their details to be visible for <strong class="text-dark">{{ finTechName }}</strong>
+        </p>
+        <consent-app-account-selector
+          [targetForm]="limitedAccountAccessForm"
+          [accounts]="accounts"
+        ></consent-app-account-selector>
       </section>
 
       <div class="d-sm-flex">
         <button id="do_deny" class="btn btn-outline-back w-100 mr-4" (click)="onBack()">Back</button>
-        <button id="do_submit" type="button" class="btn btn-primary w-100" [disabled]="limitedAccountAccessForm.invalid" (click)="onSelect()">Select</button>
+        <button
+          id="do_submit"
+          type="button"
+          class="btn btn-primary w-100"
+          [disabled]="limitedAccountAccessForm.invalid"
+          (click)="onSelect()"
+        >
+          Select
+        </button>
       </div>
     </div>
   </div>

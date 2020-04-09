@@ -1,20 +1,20 @@
-  <ng-container [ngSwitch]="aisConsent.level">
-      <ng-container *ngSwitchCase="accountAccessLevel.ALL_ACCOUNTS">
-        <p>All accounts visible</p>
-      </ng-container>
-      <ng-container *ngSwitchCase="accountAccessLevel.ALL_ACCOUNTS_WITH_BALANCES">
-        <p>All accounts, balances visible</p>
-      </ng-container>
-      <ng-container *ngSwitchCase="accountAccessLevel.ALL_PSD2">
-        <p>All accounts, transactions, balances visible</p>
-      </ng-container>
-      <ng-container *ngSwitchCase="accountAccessLevel.FINE_GRAINED">
-          <p>Transactions, balances:</p>
-          <ul class="pl-4 mb-4">
-            <li *ngFor="let account of aisConsent.consent.access.accounts">
-              {{account}}
-            </li>
-          </ul>
-      </ng-container>
-      <p>Until {{aisConsent.consent.validUntil}}</p>
+<ng-container [ngSwitch]="aisConsent.level">
+  <ng-container *ngSwitchCase="accountAccessLevel.ALL_ACCOUNTS">
+    <p>All accounts visible</p>
   </ng-container>
+  <ng-container *ngSwitchCase="accountAccessLevel.ALL_ACCOUNTS_WITH_BALANCES">
+    <p>All accounts, balances visible</p>
+  </ng-container>
+  <ng-container *ngSwitchCase="accountAccessLevel.ALL_PSD2">
+    <p>All accounts, transactions, balances visible</p>
+  </ng-container>
+  <ng-container *ngSwitchCase="accountAccessLevel.FINE_GRAINED">
+    <p>Transactions, balances:</p>
+    <ul class="pl-4 mb-4">
+      <li *ngFor="let account of aisConsent.consent.access.accounts">
+        {{ account }}
+      </li>
+    </ul>
+  </ng-container>
+  <p>Until {{ aisConsent.consent.validUntil }}</p>
+</ng-container>

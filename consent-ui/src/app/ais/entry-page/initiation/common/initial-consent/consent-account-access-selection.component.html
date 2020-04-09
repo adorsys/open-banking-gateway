@@ -1,26 +1,34 @@
 <form [formGroup]="accountAccessForm">
   <div class="card">
     <div class="card-body">
-
       <ng-container *ngIf="hasGeneralViolations()">
         <section>
-          <h2>Consent authorization for {{aspspName}}</h2>
-          <consent-app-dynamic-inputs [targetForm]="accountAccessForm" [violations]="state.getGeneralViolations()" [currentConsent]="consent"></consent-app-dynamic-inputs>
+          <h2>Consent authorization for {{ aspspName }}</h2>
+          <consent-app-dynamic-inputs
+            [targetForm]="accountAccessForm"
+            [violations]="state.getGeneralViolations()"
+            [currentConsent]="consent"
+          ></consent-app-dynamic-inputs>
         </section>
-     </ng-container>
+      </ng-container>
 
       <ng-container *ngIf="hasAisViolations()">
         <section>
-          <h2 class="">Access permission for accounts in {{aspspName}}</h2>
-          <p class="text-secondary mb-4">Please choose an account access level for <strong class="text-dark">{{finTechName}}</strong></p>
+          <h2 class="">Access permission for accounts in {{ aspspName }}</h2>
+          <p class="text-secondary mb-4">
+            Please choose an account access level for <strong class="text-dark">{{ finTechName }}</strong>
+          </p>
           <div class="mb-5">
             <div *ngFor="let access of accountAccesses; let i = index" class="form-check">
-              <input class="form-check-input"
-                     type="radio"
-                     [formControl]="selectedAccess"
-                     [id]="access.id"
-                     [checked]="selectedAccess.value.id === access.id" (change)="handleMethodSelectedEvent(access)">
-              <label class="form-check-label ml-4" [for]="access.id">{{access.message}}</label>
+              <input
+                class="form-check-input"
+                type="radio"
+                [formControl]="selectedAccess"
+                [id]="access.id"
+                [checked]="selectedAccess.value.id === access.id"
+                (change)="handleMethodSelectedEvent(access)"
+              />
+              <label class="form-check-label ml-4" [for]="access.id">{{ access.message }}</label>
             </div>
           </div>
         </section>
@@ -28,7 +36,15 @@
 
       <div class="d-sm-flex">
         <button id="do_deny" class="btn btn-outline-secondary w-100 mr-4" (click)="onDeny()">Deny consent</button>
-        <button id="do_submit" type="button" class="btn btn-primary w-100" [disabled]="accountAccessForm.invalid" (click)="onConfirm()">{{submitButtonMessage()}}</button>
+        <button
+          id="do_submit"
+          type="button"
+          class="btn btn-primary w-100"
+          [disabled]="accountAccessForm.invalid"
+          (click)="onConfirm()"
+        >
+          {{ submitButtonMessage() }}
+        </button>
       </div>
     </div>
   </div>
