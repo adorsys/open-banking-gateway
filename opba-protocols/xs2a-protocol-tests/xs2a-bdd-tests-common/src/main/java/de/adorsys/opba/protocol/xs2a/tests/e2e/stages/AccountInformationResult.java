@@ -23,6 +23,7 @@ import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon.REDIRECT_CODE_QUERY;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
@@ -33,9 +34,9 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.SESSION_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withSignatureHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.BigDecimalComparator.BIG_DECIMAL_COMPARATOR;
@@ -305,8 +306,8 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
 
         ExtractableResponse<Response> response = RestAssured
                 .given()
-                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                     .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -322,11 +323,10 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     }
 
     public AccountInformationResult fintech_calls_consent_activation_for_current_authorization_id() {
-        RestAssured
+        withSignatureHeaders(RestAssured
                 .given()
                     .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
-                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .when()
                     .post(CONFIRM_CONSENT_ENDPOINT, serviceSessionId)
                 .then()

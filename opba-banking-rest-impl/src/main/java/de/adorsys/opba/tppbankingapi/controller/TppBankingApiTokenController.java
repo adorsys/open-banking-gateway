@@ -19,7 +19,12 @@ public class TppBankingApiTokenController implements ConsentConfirmationApi {
     private final ConsentConfirmationService consentConfirmationService;
 
     @Override
-    public ResponseEntity<PsuConsentSessionResponse> confirmConsent(String authId, UUID xRequestID, String serviceSessionPassword) {
+    public ResponseEntity<PsuConsentSessionResponse> confirmConsent(String authId,
+                                                                    UUID xRequestID,
+                                                                    String serviceSessionPassword,
+                                                                    String xTimestampUTC,
+                                                                    String xRequestSignature,
+                                                                    String fintechID) {
         UUID authorizationSessionId = UUID.fromString(authId);
 
         if (!consentConfirmationService.confirmConsent(authorizationSessionId, serviceSessionPassword)) {
