@@ -20,7 +20,6 @@ import java.util.UUID;
 
 import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.X_XSRF_TOKEN;
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
 
 @Slf4j
@@ -49,8 +48,7 @@ public class PsuAuthController implements PsuAuthApi {
                 .status(HttpStatus.ACCEPTED)
                 .header(X_REQUEST_ID, xRequestID.toString())
                 .header(SET_COOKIE, cookieString)
-                .header(X_XSRF_TOKEN, ENCODER.encodeToString(jwtToken.getBytes()))
-                .body(jwtToken);
+                .body(ENCODER.encodeToString(jwtToken.getBytes()));
     }
 
     @Override

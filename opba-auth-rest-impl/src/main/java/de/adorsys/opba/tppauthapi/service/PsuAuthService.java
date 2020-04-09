@@ -1,7 +1,7 @@
 package de.adorsys.opba.tppauthapi.service;
 
 import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.crypto.RSASSASigner;
+import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
@@ -19,6 +19,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.time.Duration;
 import java.time.ZoneOffset;
@@ -30,10 +31,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PsuAuthService {
 
+    public static final String AUTHENTICATION_CHECKER = "63f510c1-8315-4b7e-8f24-0a2e6a135ea4";
     private final PsuRepository psuRepository;
     private final PsuSecureStorage psuSecureStorage;
     private final JWSHeader jwsHeader;
-    private final RSASSASigner rsassaSigner;
+    private final JWSSigner jwsSigner;
     private final TppProperties tppProperties;
 
     @Transactional(readOnly = true)
@@ -43,11 +45,7 @@ public class PsuAuthService {
             throw new PsuAuthenticationException("User not found: " + login);
         }
         UserIDAuth idAuth = new UserIDAuth(psu.get().getId().toString(), password::toCharArray);
-        try {
-            psuSecureStorage.privateService().read(ReadRequest.forDefaultPrivate(idAuth, "dummy"));
-        } catch (Exception e) {
-            throw new PsuAuthorizationException(e.getMessage(), e);
-        }
+        enableDatasafeAuthentication(idAuth);
         return psu.get();
     }
 
@@ -56,15 +54,12 @@ public class PsuAuthService {
     public Psu createPsuIfNotExist(String login, String password) {
         Optional<Psu> psu = psuRepository.findByLogin(login);
         if (psu.isPresent()) {
-            throw new PsuRegisterException("Psu already exist:" + login);
+            throw new PsuRegisterException("Psu already exists:" + login);
         }
         Psu newPsu = psuRepository.save(Psu.builder().login(login).build());
         UserIDAuth idAuth = new UserIDAuth(newPsu.getId().toString(), password::toCharArray);
         psuSecureStorage.registerPsu(idAuth);
-
-        try (OutputStream os = psuSecureStorage.privateService().write(WriteRequest.forDefaultPrivate(idAuth, "dummy"))) {
-            os.write(new byte[0]);
-        }
+        authenticateInDatasafe(idAuth);
         return newPsu;
     }
 
@@ -78,7 +73,22 @@ public class PsuAuthService {
                 .subject(String.valueOf(id))
                 .build();
         SignedJWT signedJWT = new SignedJWT(jwsHeader, claims);
-        signedJWT.sign(rsassaSigner);
+        signedJWT.sign(jwsSigner);
         return signedJWT.serialize();
+    }
+
+    private void authenticateInDatasafe(UserIDAuth idAuth) throws IOException {
+        try (OutputStream os = psuSecureStorage.privateService()
+                .write(WriteRequest.forDefaultPrivate(idAuth, AUTHENTICATION_CHECKER))) {
+            os.write(new byte[0]);
+        }
+    }
+
+    private void enableDatasafeAuthentication(UserIDAuth idAuth) throws PsuAuthorizationException {
+        try {
+            psuSecureStorage.privateService().read(ReadRequest.forDefaultPrivate(idAuth, AUTHENTICATION_CHECKER));
+        } catch (Exception e) {
+            throw new PsuAuthorizationException(e.getMessage(), e);
+        }
     }
 }
