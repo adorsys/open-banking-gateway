@@ -1,28 +1,32 @@
 <form [formGroup]="targetForm">
   <ng-container *ngFor="let account of accounts">
-    <div class="form-inline"
-         [ngClass]="{ 'is-invalid': targetForm.controls[account.id].touched && targetForm.controls[account.id].errors }">
-      <input type="text"
-             [id]="account.id"
-             [name]="account.id"
-             [formControlName]="account.id"
-             placeholder="IBAN"
-             [ngClass]="{ 'is-invalid': targetForm.controls[account.id].touched && targetForm.controls[account.id].errors }"
-             class="form-control">
-      <div class='pointer pl-2' (click)="removeAccount(account)">
-          <img src="assets/icons/minus.png">
+    <div
+      class="form-inline"
+      [ngClass]="{ 'is-invalid': targetForm.controls[account.id].touched && targetForm.controls[account.id].errors }"
+    >
+      <input
+        type="text"
+        [id]="account.id"
+        [name]="account.id"
+        [formControlName]="account.id"
+        placeholder="IBAN"
+        [ngClass]="{ 'is-invalid': targetForm.controls[account.id].touched && targetForm.controls[account.id].errors }"
+        class="form-control"
+      />
+      <div class="pointer pl-2" (click)="removeAccount(account)">
+        <img src="assets/icons/minus.png" />
       </div>
     </div>
-    <div class="invalid-feedback mb-2"
-         *ngIf="targetForm.controls[account.id].touched && targetForm.controls[account.id].errors; else noErrors">
+    <div
+      class="invalid-feedback mb-2"
+      *ngIf="targetForm.controls[account.id].touched && targetForm.controls[account.id].errors; else noErrors"
+    >
       IBAN must be at least 5 characters
     </div>
     <ng-template #noErrors>
-      <br/>
+      <br />
     </ng-template>
   </ng-container>
 </form>
 
-<div class='pointer' (click)="addAccount()">
-    <img src="assets/icons/plus.png"> Add account
-</div>
+<div class="pointer" (click)="addAccount()"><img src="assets/icons/plus.png" /> Add account</div>
