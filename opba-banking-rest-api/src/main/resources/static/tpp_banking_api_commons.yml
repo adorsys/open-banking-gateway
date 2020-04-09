@@ -100,6 +100,35 @@ components:
         type: string
         format: uuid
 
+    X-Timestamp-UTC:
+      name: X-Timestamp-UTC
+      in: header
+      required: false
+      description: |
+        The timestamp of the operation.
+      example: "2020-04-14T08:46:33.629Z"
+      schema:
+        type: string
+
+    X-Request-Signature:
+      name: X-Request-Signature
+      in: header
+      required: false
+      description: |
+        A signature of the request by the TPP fintech.
+      schema:
+        type: string
+
+    Fintech-ID:
+      name: Fintech-ID
+      in: header
+      required: false
+      description: |
+        Unique ID that identifies fintech.
+      example: "fintech_123"
+      schema:
+        type: string
+
   responses:
     401_UNAUTHORIZED:
       description: |

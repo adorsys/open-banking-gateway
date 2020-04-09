@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_REQUEST_SIGNATURE;
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP_UTC;
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -21,7 +25,10 @@ public class ConsentService {
         HttpStatus statusCode = tppConsenClient.confirmConsent(
                 authId,
                 xRequestId,
-                tppProperties.getServiceSessionPassword()
+                tppProperties.getServiceSessionPassword(),
+                COMPUTE_X_TIMESTAMP_UTC,
+                COMPUTE_X_REQUEST_SIGNATURE,
+                COMPUTE_FINTECH_ID
         ).getStatusCode();
         log.debug("consent confirmation response code: {}", statusCode);
         return statusCode.is2xxSuccessful();

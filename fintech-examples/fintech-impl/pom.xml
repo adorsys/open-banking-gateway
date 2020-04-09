@@ -61,6 +61,19 @@
             <version>${spring-web.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-api-security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-banking-rest-api</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- DB dependencies -->
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -91,7 +104,6 @@
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
         </dependency>
-
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>

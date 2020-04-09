@@ -20,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 import java.util.UUID;
 
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
@@ -37,7 +38,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil
 import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.LOCATION;
 
@@ -140,10 +140,10 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .getQueryParams()
                 .getFirst(REDIRECT_CODE_QUERY);
 
-        ExtractableResponse<Response> response = RestAssured
+        ExtractableResponse<Response> response =  RestAssured
                 .given()
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
                     .body(ImmutableMap.of(LOGIN, username, PASSWORD, password))
                 .when()
@@ -168,8 +168,8 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_denied_consent() {
         ExtractableResponse<Response> response = RestAssured
                 .given()
-                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -384,8 +384,8 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     private ExtractableResponse<Response> provideParametersToBankingProtocolWithBody(String uriPath, String body, HttpStatus status) {
         ExtractableResponse<Response> response = RestAssured
                 .given()
-                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -418,8 +418,8 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     private void updateAvailableScas() {
         ExtractableResponse<Response> response = RestAssured
                 .given()
-                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                 .when()
