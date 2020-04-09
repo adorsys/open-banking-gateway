@@ -2,6 +2,7 @@ package de.adorsys.opba.tppauthapi.config;
 
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.RSASSASigner;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +22,7 @@ public class AuthConfig {
     }
 
     @Bean
-    RSASSASigner rsassaSigner(TppProperties tppProperties) {
+    JWSSigner rsassaSigner(TppProperties tppProperties) {
         return new RSASSASigner(loadPrivateKey(tppProperties));
     }
 

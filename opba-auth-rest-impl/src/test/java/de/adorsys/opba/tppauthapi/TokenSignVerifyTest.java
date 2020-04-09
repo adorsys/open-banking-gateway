@@ -44,7 +44,6 @@ public class TokenSignVerifyTest {
     @Autowired
     PsuAuthService psuAuthService;
 
-
     @Test
     @SneakyThrows
     void signVerifyTest() {
