@@ -20,7 +20,7 @@ public class GenericControllerAdvice {
 
     @ExceptionHandler({PsuRegisterException.class})
     public ResponseEntity<List<String>> handleUserExistsException(PsuRegisterException ex) {
-        log.debug("User exists exception: {}", ex.getMessage(), ex);
+        log.error("User exists exception: {}", ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(Collections.singletonList(ex.getMessage()));
@@ -28,7 +28,7 @@ public class GenericControllerAdvice {
 
     @ExceptionHandler({PsuAuthenticationException.class})
     public ResponseEntity<List<String>> handleUserDoesNotExistException(PsuAuthenticationException ex) {
-        log.debug("User does not exist exception: {}", ex.getMessage(), ex);
+        log.error("User does not exist exception: {}", ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(Collections.singletonList(ex.getMessage()));
@@ -36,7 +36,7 @@ public class GenericControllerAdvice {
 
     @ExceptionHandler({PsuAuthorizationException.class})
     public ResponseEntity<List<String>> handleUnauthorizedException(Exception ex) {
-        log.debug("Unauthorized exception: {}", ex.getMessage(), ex);
+        log.error("Unauthorized exception: {}", ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(Collections.singletonList(ex.getMessage()));
@@ -44,7 +44,7 @@ public class GenericControllerAdvice {
 
     @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<List<String>> handleException(Exception ex) {
-        log.debug("Unhandled exception: {}", ex.getMessage(), ex);
+        log.error("Unhandled exception: {}", ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(Collections.singletonList(ex.getMessage()));
