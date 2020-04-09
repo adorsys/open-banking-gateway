@@ -12,7 +12,7 @@ import java.time.Duration;
 @Data
 @Validated
 @Configuration
-@ConfigurationProperties(prefix = "tpp")
+@ConfigurationProperties(prefix = "security.tpp")
 public class TppTokenProperties {
 
     @NotBlank

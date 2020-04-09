@@ -17,6 +17,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_REQUEST_SIGNATURE;
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP_UTC;
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
+
 @Service
 @Slf4j
 public class AccountService extends HandleAcceptedService {
@@ -68,15 +72,18 @@ public class AccountService extends HandleAcceptedService {
     }
 
     private ResponseEntity readOpbaResponse(String bankID, SessionEntity sessionEntity, String redirectCode) {
+        UUID xRequestId = UUID.fromString(restRequestContext.getRequestId());
         ResponseEntity accounts;
         if (null != sessionEntity.getServiceSessionId() && sessionEntity.getConsentConfirmed()) {
             accounts = tppAisClient.getAccounts(
-                    tppProperties.getFintechID(),
                     tppProperties.getServiceSessionPassword(),
                     sessionEntity.getLoginUserName(),
                     RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
                     RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
-                    UUID.fromString(restRequestContext.getRequestId()),
+                    xRequestId,
+                    COMPUTE_X_TIMESTAMP_UTC,
+                    COMPUTE_X_REQUEST_SIGNATURE,
+                    COMPUTE_FINTECH_ID,
                     bankID,
                     null,
                     sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null);
@@ -86,20 +93,18 @@ public class AccountService extends HandleAcceptedService {
             // https://github.com/adorsys/open-banking-gateway/issues/303
             accounts = tppAisClient.getTransactions(
                     UUID.randomUUID().toString(), // As consent is missing this will be ignored
-                    tppProperties.getFintechID(),
                     tppProperties.getServiceSessionPassword(),
                     sessionEntity.getLoginUserName(),
                     RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
                     RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
-                    UUID.fromString(restRequestContext.getRequestId()),
+                    xRequestId,
+                    COMPUTE_X_TIMESTAMP_UTC,
+                    COMPUTE_X_REQUEST_SIGNATURE,
+                    COMPUTE_FINTECH_ID,
                     bankID,
                     null,
                     sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null);
+                    null, null, null, null, null);
         }
         return accounts;
     }
