@@ -13,7 +13,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Base64;
 import java.util.UUID;
@@ -23,8 +24,9 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
 
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*") //FIXME move CORS at gateway/load balancer level
 public class PsuAuthController implements PsuAuthApi {
 
     public static final Base64.Encoder ENCODER = Base64.getEncoder();
