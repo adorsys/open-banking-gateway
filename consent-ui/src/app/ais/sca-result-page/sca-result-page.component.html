@@ -1,40 +1,29 @@
 <form (ngSubmit)="submit()" [formGroup]="reportScaResultForm">
-  <div class="card">
-    <div class="card-body">
-      <section>
-        <h2 class="text-center">Input confirmation number</h2>
-        <p class="text-secondary">
-          We have sent you the confirmation number. Please check your email and fill in the field below.
-        </p>
-        <div class="form-group">
-          <label class="text-secondary" for="tan">SCA confirmation number:</label><br />
-          <input
-            [ngClass]="{
-              'is-invalid': reportScaResultForm.controls['tan'].touched && reportScaResultForm.controls['tan'].errors
-            }"
-            class="form-control"
-            formControlName="tan"
-            id="tan"
-            name="tan"
-            placeholder="Enter your number"
-            type="password"
-          />
-          <div
-            *ngIf="
-              reportScaResultForm.controls['tan'].touched && reportScaResultForm.controls['tan'].hasError('required')
-            "
-            class="invalid-feedback"
-          >
-            TAN is required
-          </div>
-          <div *ngIf="wrongSca" class="invalid-feedback d-block">
-            SCA challenge is incorrect
-          </div>
+    <div class="card">
+        <div class="card-body">
+            <section>
+                <h2 class="text-center">Input confirmation number</h2>
+                <p class="text-secondary">We have sent you the confirmation number. Please check your email and fill in
+                    the field below.</p>
+                <div class="form-group">
+                    <label class="text-secondary" for="tan">SCA confirmation number:</label><br>
+                    <input [ngClass]="{ 'is-invalid': reportScaResultForm.controls['tan'].touched && reportScaResultForm.controls['tan'].errors }"
+                           class="form-control"
+                           formControlName="tan"
+                           id="tan"
+                           name="tan"
+                           placeholder="Enter your number"
+                           type="password">
+                    <div *ngIf="reportScaResultForm.controls['tan'].touched && reportScaResultForm.controls['tan'].hasError('required')"
+                         class="invalid-feedback">
+                        TAN is required
+                    </div>
+                    <div *ngIf="wrongSca" class="invalid-feedback d-block">
+                        SCA challenge is incorrect
+                    </div>
+                </div>
+            </section>
+            <button id="do_submit" type="submit" class="btn btn-primary w-100" [disabled]="reportScaResultForm.invalid">Confirm</button>
         </div>
-      </section>
-      <button id="do_submit" type="submit" class="btn btn-primary w-100" [disabled]="reportScaResultForm.invalid">
-        Confirm
-      </button>
     </div>
-  </div>
 </form>
