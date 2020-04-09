@@ -2,10 +2,9 @@ package de.adorsys.opba.tppauthapi.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.convert.DurationUnit;
 import org.springframework.context.annotation.Configuration;
 
-import java.time.temporal.ChronoUnit;
+import java.time.Duration;
 
 @Data
 @Configuration
@@ -16,7 +15,6 @@ public class TppProperties {
     private String privateKey;
     private String publicKey;
     private String signAlgo;
-    @DurationUnit(ChronoUnit.DAYS)
-    private Long keyValidityDays;
+    private Duration keyValidityDays;
     private String jwsAlgo;
 }

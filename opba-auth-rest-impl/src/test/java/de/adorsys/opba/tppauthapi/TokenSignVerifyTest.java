@@ -36,13 +36,11 @@ public class TokenSignVerifyTest {
     @Autowired
     private TppProperties tppProperties;
     @MockBean
+    @SuppressWarnings("PMD.UnusedPrivateField")
     private PsuRepository psuRepository;
     @MockBean
+    @SuppressWarnings("PMD.UnusedPrivateField")
     private PsuSecureStorage psuSecureStorage;
-//    @Autowired
-//    private JWSHeader jwsHeader;
-//    @Autowired
-//    private RSASSASigner rsassaSigner;
     @Autowired
     PsuAuthService psuAuthService;
 
