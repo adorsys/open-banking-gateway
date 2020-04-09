@@ -81,7 +81,7 @@ class DatasafeStorageIntegrationCheckTest {
     @Test
     @SneakyThrows
     void testPsuDatasafeIntegration() {
-        Psu psu = psus.save(Psu.builder().build());
+        Psu psu = psus.save(Psu.builder().login("login").build());
         UserIDAuth idAuth = new UserIDAuth(psu.getId().toString(), PASSWORD);
         psuSecureStorage.registerPsu(idAuth);
 
