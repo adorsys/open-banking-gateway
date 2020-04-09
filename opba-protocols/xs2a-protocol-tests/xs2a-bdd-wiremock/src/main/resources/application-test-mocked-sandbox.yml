@@ -5,3 +5,11 @@ protocol:
     consent-accounts:
       ok:  ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
       nok: ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
+
+fintech:
+  verification:
+    request-time-limit: P1000D
+    claim-name-key: sign-data
+    fintech-keys:
+      MY-SUPER-FINTECH-ID: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0QhZVg5KKh9YzXFT8kuTdsxYHgJ2us+idNym+L4P09O5BjJaIZPbx7jBCKf8CNLNMV+HuNa6aPwETIyGsYG9reJAupA+F0ETxzDZ/70zprnte0eEfitwA2fy3lq0VOwtb2NuaRQBAcJZC+Dni3UAjR4bfWblw+OzWSrhj8wNicyRgE/ov8bFiyhqYZrBx1NW8oQcSC5EXmevu3nna3izlBbZ/63OteHHZUmbyufW7hU6Ck9lq/cP4QMKmiMDj020ptwox9g4hCcwy0iL+qIcpGe6gfuBMMtt9XQnRuxIQeOQ8rYq2uaU6iOgj3vbSekqwrOCtKf/MooEcEGSvIa+EwIDAQAB
+      ANOTHER-FINTECH-ID: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJ6ETZBHHSFNUAvpKuRhzzOi2HuupfTnttJdZhYsPHTE1XPlo4D2RDhjDLECMXMmJNwKS1p1xZ/p836RhhVJ/lWTNXqAxRF3nfvvQXirROP91LPjyOQIF7IoS+Wm7VquJlKRR7/+tmJMSOwyf5727M0Wttfrsj/w/UVOhYlsUtKwIDAQAB

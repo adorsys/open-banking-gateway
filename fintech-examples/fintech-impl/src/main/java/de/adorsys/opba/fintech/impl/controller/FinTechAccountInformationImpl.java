@@ -25,7 +25,6 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
     private final AccountService accountService;
     private final TransactionService transactionService;
 
-    // uaContext
     @Override
     public ResponseEntity<AccountList> aisAccountsGET(String bankId, UUID xRequestID, String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
 

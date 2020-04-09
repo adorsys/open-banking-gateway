@@ -21,6 +21,9 @@ paths:
       #path
         - $ref: "#/components/parameters/auth-id"
       #common header parameter
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
       responses:
