@@ -30,8 +30,8 @@ public class PsuAuthController implements PsuAuthApi {
 
     public static final Base64.Encoder ENCODER = Base64.getEncoder();
     private final PsuAuthService psuAuthService;
-    private final CookieProperties cookieProperties;
     private final TppProperties tppProperties;
+    private final CookieProperties cookieProperties;
 
     @Override
     @SneakyThrows
@@ -40,18 +40,15 @@ public class PsuAuthController implements PsuAuthApi {
 
         String jwtToken = psuAuthService.generateToken(psu.getLogin());
 
-        String sessionCookieString = ResponseCookie.from(AUTHORIZATION_SESSION_ID, jwtToken)
-                .httpOnly(cookieProperties.isHttpOnly())
-                .sameSite(cookieProperties.getSameSite())
-                .secure(cookieProperties.isSecure())
-                .path(cookieProperties.getPath())
-                .maxAge(cookieProperties.getMaxAgeSeconds())
-                .build().toString();
+        String cookieString = new TppAuthResponseCookie(
+                cookieProperties,
+                ResponseCookie.from(AUTHORIZATION_SESSION_ID, jwtToken)
+        ).getCookieString();
 
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
                 .header(X_REQUEST_ID, xRequestID.toString())
-                .header(SET_COOKIE, sessionCookieString)
+                .header(SET_COOKIE, cookieString)
                 .header(X_XSRF_TOKEN, ENCODER.encodeToString(jwtToken.getBytes()))
                 .body(jwtToken);
     }
