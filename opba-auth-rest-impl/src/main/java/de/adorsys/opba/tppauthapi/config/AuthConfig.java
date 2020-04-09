@@ -32,5 +32,4 @@ public class AuthConfig {
         KeyFactory kf = KeyFactory.getInstance(tppProperties.getSignAlgo());
         return kf.generatePrivate(ks);
     }
-
 }
