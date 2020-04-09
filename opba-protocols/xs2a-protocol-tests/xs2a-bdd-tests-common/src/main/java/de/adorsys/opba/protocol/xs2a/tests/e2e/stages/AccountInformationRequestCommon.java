@@ -201,6 +201,34 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_max_musterman_provided_initial_parameters_with_wrong_iban_to_list_transactions_with_single_account_consent() {
+
+        String resource = "restrecord/tpp-ui-input/params/max-musterman-dedicated-account-consent-wrong-iban.json";
+
+        ExtractableResponse<Response> response =
+                startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT, resource, HttpStatus.ACCEPTED);
+
+        assertThat(this.redirectUriToGetUserParams).contains("ais").contains("entry-consent-transactions/dedicated-account-access").contains("wrong=true");
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        return self();
+    }
+
+    public SELF user_max_musterman_provided_initial_parameters_with_correct_iban_to_list_transactions_with_single_account_consent() {
+
+        String resource = "restrecord/tpp-ui-input/params/max-musterman-transactions-single-account-consent.json";
+
+        ExtractableResponse<Response> response =
+                startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT, resource, HttpStatus.ACCEPTED);
+
+        assertThat(this.redirectUriToGetUserParams).contains("ais").contains("authenticate").contains("wrong=false");
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        return self();
+    }
+
     public SELF user_max_musterman_provided_initial_parameters_to_list_transactions_with_all_accounts_psd2_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,

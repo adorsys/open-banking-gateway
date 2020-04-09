@@ -60,6 +60,9 @@ public class ProtocolConfiguration {
 
             @NotBlank
             private String reportScaResult;
+
+            @NotBlank
+            private String providePsuIban;
         }
     }
 }
