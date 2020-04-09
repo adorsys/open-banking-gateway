@@ -21,8 +21,8 @@ describe('DedicatedAccessComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            parent: {parent: {params: of(convertToParamMap({authId: StubUtilTests.AUTH_ID}))}},
-            snapshot: {queryParamMap: convertToParamMap({})},
+            parent: { parent: { params: of(convertToParamMap({ authId: StubUtilTests.AUTH_ID })) } },
+            snapshot: { queryParamMap: convertToParamMap({}) }
           }
         }
       ]

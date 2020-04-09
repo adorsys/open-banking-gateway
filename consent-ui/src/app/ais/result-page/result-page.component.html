@@ -2,12 +2,16 @@
   <div class="card-body">
     <section>
       <h2>Consent has been granted</h2>
-      <p class="text-secondary">You are going to be redirected back to <strong>{{finTechName}}</strong></p>
+      <p class="text-secondary">
+        You are going to be redirected back to <strong>{{ finTechName }}</strong>
+      </p>
     </section>
 
     <div class="d-sm-flex">
       <button id="do_deny" class="btn btn-outline-secondary w-100 mr-4" (click)="onDeny()">Deny consent</button>
-      <button id="do_submit" type="button" class="btn btn-primary w-100" [disabled]="!redirectTo" (click)="onConfirm()">Back to {{finTechName}}</button>
+      <button id="do_submit" type="button" class="btn btn-primary w-100" [disabled]="!redirectTo" (click)="onConfirm()">
+        Back to {{ finTechName }}
+      </button>
     </div>
   </div>
 </div>
