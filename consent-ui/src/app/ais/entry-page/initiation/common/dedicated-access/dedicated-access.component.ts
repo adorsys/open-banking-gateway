@@ -54,7 +54,7 @@ export class DedicatedAccessComponent implements OnInit {
     consentObj.consent.access.transactions = this.accounts.map(it => it.iban);
 
     this.sessionService.setConsentObject(this.authorizationId, consentObj);
-    this.router.navigate([SharedRoutes.REVIEW], {relativeTo: this.activatedRoute.parent});
+    this.router.navigate([SharedRoutes.REVIEW], { relativeTo: this.activatedRoute.parent });
   }
 
   onBack() {

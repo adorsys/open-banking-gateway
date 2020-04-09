@@ -1,32 +1,38 @@
 <div class="card">
   <div class="card-body">
     <section>
-      <h2>Access permission for accounts in {{aspspName}}</h2>
-      <p class="text-secondary">Review an account access level for <strong>{{finTechName}}</strong></p>
+      <h2>Access permission for accounts in {{ aspspName }}</h2>
+      <p class="text-secondary">
+        Review an account access level for <strong>{{ finTechName }}</strong>
+      </p>
     </section>
     <ng-container [ngSwitch]="aisConsent.level">
       <section>
-          <ng-container *ngSwitchCase="accountAccessLevel.ALL_ACCOUNTS">
-            <p>All your accounts will be visible</p>
-          </ng-container>
-          <ng-container *ngSwitchCase="accountAccessLevel.ALL_ACCOUNTS_WITH_BALANCES">
-            <p>All your accounts with balances will be visible</p>
-          </ng-container>
-          <ng-container *ngSwitchCase="accountAccessLevel.FINE_GRAINED">
-            <p>Dedicated access to <strong>account details and transactions</strong> for following accounts IBAN's: </p>
-              <ul class="list-group ml-5 mb-4">
-                <li *ngFor="let account of aisConsent.consent.access.accounts">
-                  <strong>{{account}}</strong>
-                </li>
-              </ul>
-          </ng-container>
-          <p>The consent will be valid until <strong>{{aisConsent.consent.validUntil}}</strong></p>
-          <p>The consent can be used <strong>{{aisConsent.consent.frequencyPerDay}} times per day </strong></p>
+        <ng-container *ngSwitchCase="accountAccessLevel.ALL_ACCOUNTS">
+          <p>All your accounts will be visible</p>
+        </ng-container>
+        <ng-container *ngSwitchCase="accountAccessLevel.ALL_ACCOUNTS_WITH_BALANCES">
+          <p>All your accounts with balances will be visible</p>
+        </ng-container>
+        <ng-container *ngSwitchCase="accountAccessLevel.FINE_GRAINED">
+          <p>Dedicated access to <strong>account details and transactions</strong> for following accounts IBAN's:</p>
+          <ul class="list-group ml-5 mb-4">
+            <li *ngFor="let account of aisConsent.consent.access.accounts">
+              <strong>{{ account }}</strong>
+            </li>
+          </ul>
+        </ng-container>
+        <p>
+          The consent will be valid until <strong>{{ aisConsent.consent.validUntil }}</strong>
+        </p>
+        <p>
+          The consent can be used <strong>{{ aisConsent.consent.frequencyPerDay }} times per day </strong>
+        </p>
       </section>
     </ng-container>
     <div class="form-group d-flex flex-row justify-content-lg-between">
-      <button  id="do_back" class="btn md-6 w-100 mr-sm-2 mr-md-3 btn-outline-back" (click)="onBack()">Back</button>
-      <button  id="do_submit" type="button" class="btn md-6 w-100 btn-primary" (click)="onConfirm()">Confirm</button>
+      <button id="do_back" class="btn md-6 w-100 mr-sm-2 mr-md-3 btn-outline-back" (click)="onBack()">Back</button>
+      <button id="do_submit" type="button" class="btn md-6 w-100 btn-primary" (click)="onConfirm()">Confirm</button>
     </div>
   </div>
 </div>
