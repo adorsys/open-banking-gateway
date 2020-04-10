@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.facade.config.encryption;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.datasafe.business.impl.service.DaggerDefaultDatasafeServices;
 import de.adorsys.datasafe.directory.api.config.DFSConfig;
 import de.adorsys.datasafe.directory.impl.profile.operations.actions.ProfileRetrievalServiceImplRuntimeDelegatable;
@@ -29,6 +30,7 @@ public class DatasafeConfig {
 
     private static final String ENCRYPTION_DATASAFE_READ_KEYSTORE = "encryption.datasafe.read-keystore";
 
+    private final ObjectMapper mapper;
     private final FintechDatasafeStorage fintechStorage;
     private final PsuDatasafeStorage psuStorage;
     private final FintechUserDatasafeStorage fintechUserStorage;
@@ -83,7 +85,8 @@ public class DatasafeConfig {
                         .storage(fintechUserStorage)
                         .overridesRegistry(overridesRegistry)
                         .build(),
-                config
+                config,
+                mapper
         );
     }
 
