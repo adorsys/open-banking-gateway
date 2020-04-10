@@ -1,7 +1,8 @@
 package de.adorsys.opba.protocol.facade.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
-import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
+import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
@@ -36,9 +37,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProtocolResultHandler {
 
+    private final ObjectMapper mapper;
     private final NewAuthSessionHandler newAuthSessionHandler;
     private final ServiceSessionRepository sessions;
-    private final AuthenticationSessionRepository authenticationSessions;
+    private final AuthorizationSessionRepository authenticationSessions;
 
     /**
      * This class must ensure that it is separate transaction - so it won't join any other as is used with
@@ -88,7 +90,7 @@ public class ProtocolResultHandler {
     }
 
     protected <O, R extends FacadeServiceableGetter> FacadeResult<O> handleConsentAcquired(
-        ConsentAcquiredResult<O, ?> result, FacadeServiceableRequest request, ServiceContext<R> session
+            ConsentAcquiredResult<O, ?> result, FacadeServiceableRequest request, ServiceContext<R> session
     ) {
         FacadeRedirectResult<O, AuthStateBody> mappedResult =
             (FacadeRedirectResult<O, AuthStateBody>) FacadeRedirectResult.FROM_PROTOCOL.map(result);

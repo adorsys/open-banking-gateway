@@ -98,17 +98,50 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+        <createSequence sequenceName="psu_private_id_sequence" incrementBy="50"/>
         <addForeignKeyConstraint constraintName="fk_psu_private_psu"
                                  baseTableName="${table-prefix}psu_private"
                                  baseColumnNames="psu_id"
                                  referencedTableName="${table-prefix}psu"
                                  referencedColumnNames="id"/>
 
+        <createTable tableName="${table-prefix}auth_session">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="redirect_code" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="aspsp_redirect_code" type="VARCHAR(256)"/>
+
+            <column name="protocol_id" type="BIGINT"/>
+            <column name="psu_id" type="BIGINT"/>
+            <column name="version" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="fk_auth_session_service_session"
+                                 baseTableName="${table-prefix}auth_session"
+                                 baseColumnNames="id"
+                                 referencedTableName="${table-prefix}service_session"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="fk_auth_session_psu"
+                                 baseTableName="${table-prefix}auth_session"
+                                 baseColumnNames="psu_id"
+                                 referencedTableName="${table-prefix}psu"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint constraintName="fk_consent_service_session"
+                                 baseTableName="${table-prefix}consent"
+                                 baseColumnNames="service_session_id"
+                                 referencedTableName="${table-prefix}service_session"
+                                 referencedColumnNames="id"/>
+
         <createTable tableName="${table-prefix}fintech">
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="global_id" type="VARCHAR(64)">
+            <column name="global_id" type="UUID">
                 <constraints unique="true" nullable="false"/>
             </column>
             <column name="keystore" type="BLOB"/>

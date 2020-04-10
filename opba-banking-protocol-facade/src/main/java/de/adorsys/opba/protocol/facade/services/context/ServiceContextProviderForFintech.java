@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Strings;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
-import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
+import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
@@ -35,7 +35,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
-    protected final AuthenticationSessionRepository authSessions;
+    protected final AuthorizationSessionRepository authSessions;
     private final ServiceSessionRepository serviceSessions;
     private final SecretKeyOperations secretKeyOperations;
 
@@ -115,7 +115,6 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     private ServiceSessionWithEncryption createServiceSession(FacadeServiceableRequest facadeServiceable) {
         EncryptionService encryptionService = new NoEncryptionServiceImpl(); // FIXME - this should be removed
         ServiceSession session = new ServiceSession();
-        session.setId(facadeServiceable.getServiceSessionId());
         return new ServiceSessionWithEncryption(serviceSessions.save(session), encryptionService);
     }
 
