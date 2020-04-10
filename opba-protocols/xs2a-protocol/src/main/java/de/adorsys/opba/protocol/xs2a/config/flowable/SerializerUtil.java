@@ -3,7 +3,9 @@ package de.adorsys.opba.protocol.xs2a.config.flowable;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
+import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.EncryptionServiceProvider;
+import de.adorsys.opba.protocol.xs2a.service.storage.NeedsEncryptionService;
 import de.adorsys.opba.protocol.xs2a.service.storage.NeedsTransientStorage;
 import de.adorsys.opba.protocol.xs2a.service.storage.PersistenceShouldUseEncryption;
 import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
@@ -57,10 +59,15 @@ public class SerializerUtil {
         }
 
         EncryptedContainer container = mapper.readValue(classNameAndValue.getValue().traverse(), EncryptedContainer.class);
+        EncryptionService encryptor = encryptionService.getEncryptionById(container.getEncKeyId());
         result = mapper.readValue(
-                encryptionService.getEncryptionById(container.getEncKeyId()).decrypt(container.getData()),
+                encryptor.decrypt(container.getData()),
                 dataClazz
         );
+
+        if (result instanceof NeedsEncryptionService) {
+            ((NeedsEncryptionService) result).setEncryption(encryptor);
+        }
 
         if (result instanceof NeedsTransientStorage) {
             ((NeedsTransientStorage) result).setTransientStorage(transientDataStorage);
