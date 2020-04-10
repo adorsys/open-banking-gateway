@@ -39,6 +39,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Note: This test keeps DB in dirty state - doesn't cleanup after itself.
  */
+@SuppressWarnings({"PMD.UnusedLocalVariable", "PMD.UnusedFormalParameter"}) // FIXME https://github.com/adorsys/open-banking-gateway/issues/557
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @ActiveProfiles("test")
 @SpringBootTest(classes = ApplicationTest.class)

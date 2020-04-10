@@ -33,6 +33,7 @@ public class FacadeAuthConfig {
         public static class PasswordConfig {
 
             @Min(8)
+            @SuppressWarnings("checkstyle:MagicNumber") // Magic minimal value - at least 8 bytes of entropy
             private int byteSize;
         }
     }

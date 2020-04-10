@@ -2,7 +2,6 @@ package de.adorsys.opba.tppauthapi.controller;
 
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
-import de.adorsys.opba.tppauthapi.config.CookieProperties;
 import de.adorsys.opba.tppauthapi.model.generated.PsuAuthBody;
 import de.adorsys.opba.tppauthapi.resource.generated.PsuAuthApi;
 import de.adorsys.opba.tppauthapi.service.PsuAuthService;

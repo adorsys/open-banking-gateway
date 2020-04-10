@@ -30,7 +30,6 @@ import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.AUTHORI
 import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.FINTECH_USER_TEMP_PASSWORD;
 
 // FIXME - this class needs refactoring - some other class should handle FinTech user registration
-// FIXME - https://github.com/adorsys/open-banking-gateway/issues/555
 @Service
 @RequiredArgsConstructor
 public class NewAuthSessionHandler {
@@ -47,6 +46,10 @@ public class NewAuthSessionHandler {
     @NotNull
     @SneakyThrows
     @Transactional
+    @SuppressWarnings("checkstyle:MethodLength") //  FIXME - https://github.com/adorsys/open-banking-gateway/issues/555
+    // We register DUMMY user whose data will be copied after real user authorizes
+    // The password of this DUMMY user is retained in url as it is safe - only if user logs in or registers
+    // he will be able to see the data stored in here and only real users' password is capable to open consent
     protected <O> AuthSession createNewAuthSession(FacadeServiceableRequest request, ServiceContext session, FacadeResultRedirectable<O, ?> result) {
         BankProtocol authProtocol = protocolRepository
                 .findByBankProfileUuidAndAction(session.getBankId(), AUTHORIZATION)
@@ -57,9 +60,6 @@ public class NewAuthSessionHandler {
         Fintech fintech = fintechs.findByGlobalId(request.getAuthorization())
                 .orElseThrow(() -> new IllegalStateException("No registered FinTech: " + request.getAuthorizationSessionId()));
 
-        // We register DUMMY user whose data will be copied after real user authorizes
-        // The password of this DUMMY user is retained in url as it is safe - only if user logs in or registers
-        // he will be able to see the data stored in here and only real users' password is capable to open consent
         String newPassword = passwordGenerator.generate();
         FintechUser user = fintechUsers.findByPsuFintechIdAndFintech(request.getFintechUserId(), fintech)
                 .orElseGet(() -> {
