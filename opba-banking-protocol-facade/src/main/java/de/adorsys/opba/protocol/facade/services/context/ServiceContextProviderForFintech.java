@@ -14,6 +14,7 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
+import de.adorsys.opba.protocol.facade.services.FacadeEncryptionServiceFactory;
 import de.adorsys.opba.protocol.facade.services.NoEncryptionServiceImpl;
 import de.adorsys.opba.protocol.facade.services.ServiceSessionWithEncryption;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     protected final AuthenticationSessionRepository authSessions;
     private final ServiceSessionRepository serviceSessions;
     private final SecretKeyOperations secretKeyOperations;
+    private final FacadeEncryptionServiceFactory encryptionFactory;
 
     @Override
     @Transactional
@@ -61,9 +63,6 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
                 .futureRedirectCode(UUID.randomUUID())
                 .futureAspspRedirectCode(UUID.randomUUID())
                 .request(request)
-                .authContext(null == authSession ? null : authSession.getContext())
-                .fintechRedirectOkUri(session.getFintechOkUri())
-                .fintechRedirectNokUri(session.getFintechNokUri())
                 .build();
     }
 
@@ -123,13 +122,6 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
 
         ServiceSession session = new ServiceSession();
         session.setId(facadeServiceable.getServiceSessionId());
-        session.setContext(encryptedContext);
-        session.setFintechOkUri(facadeServiceable.getFintechRedirectUrlOk());
-        session.setFintechNokUri(facadeServiceable.getFintechRedirectUrlNok());
-        session.setSecretKey(secretKeyOperations.encrypt(keyWithParams.getKey()));
-        session.setAlgo(keyWithParams.getAlgorithm());
-        session.setSalt(keyWithParams.getSalt());
-        session.setIterCount(keyWithParams.getIterationCount());
         return new ServiceSessionWithEncryption(serviceSessions.save(session), encryptionService);
     }
 
