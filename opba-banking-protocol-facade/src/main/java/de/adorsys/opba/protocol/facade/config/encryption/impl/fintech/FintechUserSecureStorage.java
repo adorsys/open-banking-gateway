@@ -1,20 +1,23 @@
 package de.adorsys.opba.protocol.facade.config.encryption.impl.fintech;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.io.ByteStreams;
 import de.adorsys.datasafe.business.impl.service.DefaultDatasafeServices;
 import de.adorsys.datasafe.directory.api.config.DFSConfig;
 import de.adorsys.datasafe.types.api.actions.ReadRequest;
 import de.adorsys.datasafe.types.api.actions.WriteRequest;
 import de.adorsys.opba.db.domain.entity.fintech.FintechUser;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.Delegate;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
+import java.net.URI;
 import java.util.function.Supplier;
 
 @RequiredArgsConstructor
@@ -24,6 +27,7 @@ public class FintechUserSecureStorage {
     private final DefaultDatasafeServices datasafeServices;
 
     private final DFSConfig config;
+    private final ObjectMapper mapper;
 
     public void registerFintechUser(FintechUser user, Supplier<char[]> password) {
         this.userProfile()
@@ -34,20 +38,29 @@ public class FintechUserSecureStorage {
     }
 
     @SneakyThrows
-    public void toInboxForAuth(AuthSession authSession, String data) {
+    public void toInboxForAuth(AuthSession authSession, FinTechUserInboxData data) {
         try (OutputStream os = datasafeServices.inboxService().write(
                 WriteRequest.forDefaultPublic(ImmutableSet.of(authSession.getFintechUser().getUserId()), authSession.getId().toString()))
         ) {
-            os.write(data.getBytes(StandardCharsets.UTF_8));
+            os.write(mapper.writeValueAsBytes(data));
         }
     }
 
     @SneakyThrows
-    public String fromInboxForAuth(AuthSession authSession, Supplier<char[]> password) {
+    public FinTechUserInboxData fromInboxForAuth(AuthSession authSession, Supplier<char[]> password) {
         try (InputStream is = datasafeServices.inboxService().read(
                 ReadRequest.forDefaultPrivate(authSession.getFintechUser().getUserIdAuth(password), authSession.getId().toString()))
         ) {
-            return new String(ByteStreams.toByteArray(is), StandardCharsets.UTF_8);
+            return mapper.readValue(is, FinTechUserInboxData.class);
         }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FinTechUserInboxData {
+
+        private URI afterPsuIdentifiedRedirectTo;
+        private Object requirements;
     }
 }
