@@ -62,29 +62,9 @@
             <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
-            <!-- Can't be null as is initial service request -->
-            <column name="context" type="TEXT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="fintech_ok_uri" type="TEXT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="fintech_nok_uri" type="TEXT">
-                <constraints nullable="false"/>
-            </column>
             <column name="service_id" type="BIGINT"/>
             <column name="protocol_id" type="BIGINT"/>
             <column name="version" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="secret_key" type="BLOB"/>
-            <column name="algo" type="VARCHAR(256)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="salt" type="BLOB">
-                <constraints nullable="false"/>
-            </column>
-            <column name="iter_count" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -92,6 +72,36 @@
                                  baseTableName="${table-prefix}service_session"
                                  baseColumnNames="protocol_id"
                                  referencedTableName="${table-prefix}bank_protocol"
+                                 referencedColumnNames="id"/>
+
+        <createTable tableName="${table-prefix}psu">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="login" type="VARCHAR(256)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="keystore" type="BLOB"/>
+            <column name="pub_keys" type="BLOB"/>
+        </createTable>
+        <createSequence sequenceName="psu_id_sequence" incrementBy="50"/>
+
+        <createTable tableName="${table-prefix}psu_private">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="psu_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="psu_private_id_sequence" incrementBy="50"/>
+        <addForeignKeyConstraint constraintName="fk_psu_private_psu"
+                                 baseTableName="${table-prefix}psu_private"
+                                 baseColumnNames="psu_id"
+                                 referencedTableName="${table-prefix}psu"
                                  referencedColumnNames="id"/>
 
         <createTable tableName="${table-prefix}auth_session">
@@ -103,10 +113,8 @@
             </column>
             <column name="aspsp_redirect_code" type="VARCHAR(256)"/>
 
-            <!-- Is nullable as authentication context can be managed by protocol implementor -->
-            <column name="context" type="TEXT"/>
             <column name="protocol_id" type="BIGINT"/>
-            <column name="auth_id" type="BIGINT"/>
+            <column name="psu_id" type="BIGINT"/>
             <column name="version" type="INT">
                 <constraints nullable="false"/>
             </column>
@@ -139,36 +147,6 @@
             <column name="pub_keys" type="BLOB"/>
         </createTable>
         <createSequence sequenceName="fintech_id_sequence" incrementBy="50"/>
-
-        <createTable tableName="${table-prefix}psu">
-            <column name="id" type="BIGINT">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="login" type="VARCHAR(256)">
-                <constraints unique="true" nullable="false"/>
-            </column>
-            <column name="keystore" type="BLOB"/>
-            <column name="pub_keys" type="BLOB"/>
-        </createTable>
-        <createSequence sequenceName="psu_id_sequence" incrementBy="50"/>
-
-        <createTable tableName="${table-prefix}psu_private">
-            <column name="id" type="UUID">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="psu_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="data" type="BLOB">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-        <createSequence sequenceName="psu_private_id_sequence" incrementBy="50"/>
-        <addForeignKeyConstraint constraintName="fk_psu_private_psu"
-                                 baseTableName="${table-prefix}psu_private"
-                                 baseColumnNames="psu_id"
-                                 referencedTableName="${table-prefix}psu"
-                                 referencedColumnNames="id"/>
 
         <createTable tableName="${table-prefix}fintech_inbox">
             <column name="id" type="UUID">

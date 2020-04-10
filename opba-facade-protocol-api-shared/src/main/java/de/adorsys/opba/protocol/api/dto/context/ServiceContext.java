@@ -43,12 +43,6 @@ public class ServiceContext<T> {
 
     private final String authContext;
 
-    @NonNull
-    private final String fintechRedirectOkUri;
-
-    @NonNull
-    private final String fintechRedirectNokUri;
-
     private final EncryptionService encryption;
 
     public String loggableBankId() {
