@@ -1,6 +1,7 @@
 package de.adorsys.opba.db.domain.entity.sessions;
 
 import de.adorsys.opba.db.domain.entity.BankProtocol;
+import de.adorsys.opba.db.domain.entity.psu.Psu;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,6 +43,9 @@ public class AuthSession {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private BankProtocol protocol;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Psu psu;
 
     @Column(nullable = false)
     private String redirectCode;

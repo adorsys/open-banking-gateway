@@ -106,6 +106,7 @@
             <!-- Is nullable as authentication context can be managed by protocol implementor -->
             <column name="context" type="TEXT"/>
             <column name="protocol_id" type="BIGINT"/>
+            <column name="auth_id" type="BIGINT"/>
             <column name="version" type="INT">
                 <constraints nullable="false"/>
             </column>
@@ -114,6 +115,11 @@
                                  baseTableName="${table-prefix}auth_session"
                                  baseColumnNames="id"
                                  referencedTableName="${table-prefix}service_session"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="fk_auth_session_psu"
+                                 baseTableName="${table-prefix}auth_session"
+                                 baseColumnNames="psu_id"
+                                 referencedTableName="${table-prefix}psu"
                                  referencedColumnNames="id"/>
 
         <addForeignKeyConstraint constraintName="fk_consent_service_session"
@@ -125,6 +131,9 @@
         <createTable tableName="${table-prefix}fintech">
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
+            </column>
+            <column name="global_id" type="UUID">
+                <constraints unique="true" nullable="false"/>
             </column>
             <column name="keystore" type="BLOB"/>
             <column name="pub_keys" type="BLOB"/>
