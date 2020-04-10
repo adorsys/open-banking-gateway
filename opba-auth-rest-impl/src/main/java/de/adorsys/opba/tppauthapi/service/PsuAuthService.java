@@ -57,9 +57,8 @@ public class PsuAuthService {
             throw new PsuRegisterException("Psu already exists:" + login);
         }
         Psu newPsu = psuRepository.save(Psu.builder().login(login).build());
-        UserIDAuth idAuth = new UserIDAuth(newPsu.getId().toString(), password::toCharArray);
-        psuSecureStorage.registerPsu(idAuth);
-        authenticateInDatasafe(idAuth);
+        psuSecureStorage.registerPsu(newPsu, password::toCharArray);
+        authenticateInDatasafe(newPsu.getUserIdAuth(password::toCharArray));
         return newPsu;
     }
 

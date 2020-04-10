@@ -56,7 +56,7 @@ class DatasafeStorageIntegrationCheckTest {
     void testFintechDatasafeIntegration() {
         Fintech fintech = fintechs.save(Fintech.builder().build());
         UserIDAuth idAuth = new UserIDAuth(fintech.getId().toString(), PASSWORD);
-        fintechSecureStorage.registerFintech(idAuth);
+        fintechSecureStorage.registerFintech(fintech, PASSWORD);
 
         String inboxFile = UUID.randomUUID().toString();
         try (OutputStream os = fintechSecureStorage.inboxService().write(forDefaultPublic(Collections.singleton(idAuth.getUserID()), inboxFile))) {
@@ -83,7 +83,7 @@ class DatasafeStorageIntegrationCheckTest {
     void testPsuDatasafeIntegration() {
         Psu psu = psus.save(Psu.builder().login("login").build());
         UserIDAuth idAuth = new UserIDAuth(psu.getId().toString(), PASSWORD);
-        psuSecureStorage.registerPsu(idAuth);
+        psuSecureStorage.registerPsu(psu, PASSWORD);
 
         String privateFile = UUID.randomUUID().toString();
         try (OutputStream os = psuSecureStorage.privateService().write(forDefaultPrivate(idAuth, privateFile))) {
