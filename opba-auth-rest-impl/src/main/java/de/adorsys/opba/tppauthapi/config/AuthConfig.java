@@ -4,9 +4,11 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.RSASSASigner;
+import de.adorsys.opba.tppauthapi.controller.TppAuthResponseCookie;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -15,6 +17,12 @@ import java.util.Base64;
 
 @Configuration
 public class AuthConfig {
+
+    @Bean
+    @Scope("prototype")
+    TppAuthResponseCookie.TppAuthResponseCookieBuilder tppAuthResponseCookieBuilder(CookieProperties cookieProperties) {
+        return TppAuthResponseCookie.builder().cookieProperties(cookieProperties);
+    }
 
     @Bean
     JWSHeader jwsHeaderBuilder(TppProperties tppProperties) {
