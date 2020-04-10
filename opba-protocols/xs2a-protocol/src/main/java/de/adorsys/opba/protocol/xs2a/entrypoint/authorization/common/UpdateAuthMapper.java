@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.xs2a.entrypoint.authorization.common;
 
 import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
+import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.UuidMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
@@ -42,9 +43,10 @@ public class UpdateAuthMapper {
         throw new IllegalArgumentException("Can't update authorization for: " + context.getClass().getCanonicalName());
     }
 
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = AisMapper.class, nullValuePropertyMappingStrategy = IGNORE)
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = {UuidMapper.class, AisMapper.class}, nullValuePropertyMappingStrategy = IGNORE)
     public interface FromAisRequestAccountList extends DtoUpdatingMapper<AuthorizationRequest, AccountListXs2aContext> {
 
+        @Mapping(source = "facadeServiceable.requestId", target = "requestId")
         @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress")
         @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType")
         void mapTo(AuthorizationRequest request, @MappingTarget AccountListXs2aContext context);
@@ -56,9 +58,10 @@ public class UpdateAuthMapper {
         }
     }
 
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = AisMapper.class, nullValuePropertyMappingStrategy = IGNORE)
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = {UuidMapper.class, AisMapper.class}, nullValuePropertyMappingStrategy = IGNORE)
     public interface FromAisRequestTransactionList extends DtoUpdatingMapper<AuthorizationRequest, TransactionListXs2aContext> {
 
+        @Mapping(source = "facadeServiceable.requestId", target = "requestId")
         @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress")
         @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType")
         void mapTo(AuthorizationRequest request, @MappingTarget TransactionListXs2aContext context);
