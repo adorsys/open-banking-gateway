@@ -11,7 +11,6 @@ import java.time.Duration;
 @ConfigurationProperties(prefix = "tpp")
 public class TppProperties {
 
-    private String loginUrl;
     private String privateKey;
     private String publicKey;
     private String signAlgo;
