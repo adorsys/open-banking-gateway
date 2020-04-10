@@ -2,9 +2,11 @@ package de.adorsys.opba.protocol.facade.config.encryption.impl.fintech;
 
 import de.adorsys.datasafe.business.impl.service.DefaultDatasafeServices;
 import de.adorsys.datasafe.directory.api.config.DFSConfig;
-import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
+import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
+
+import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 public class FintechSecureStorage {
@@ -14,11 +16,11 @@ public class FintechSecureStorage {
 
     private final DFSConfig config;
 
-    public void registerFintech(UserIDAuth auth) {
+    public void registerFintech(Fintech fintech, Supplier<char[]> password) {
         this.userProfile()
                 .createDocumentKeystore(
-                        auth,
-                        config.defaultPrivateTemplate(auth).buildPrivateProfile()
+                        fintech.getUserIdAuth(password),
+                        config.defaultPrivateTemplate(fintech.getUserIdAuth(password)).buildPrivateProfile()
                 );
     }
 }
