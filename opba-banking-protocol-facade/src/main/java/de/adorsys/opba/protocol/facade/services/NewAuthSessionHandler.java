@@ -26,7 +26,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.persistence.EntityManager;
 
 import static de.adorsys.opba.db.domain.entity.ProtocolAction.AUTHORIZATION;
+import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.AUTHORIZATION_SESSION_ID;
+import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.FINTECH_USER_TEMP_PASSWORD;
 
+// FIXME - this class needs refactoring - some other class should handle FinTech user registration
+// FIXME - https://github.com/adorsys/open-banking-gateway/issues/555
 @Service
 @RequiredArgsConstructor
 public class NewAuthSessionHandler {
@@ -80,8 +84,10 @@ public class NewAuthSessionHandler {
         result.setRedirectionTo(
                 UriComponentsBuilder
                         .fromHttpUrl(facadeAuthConfig.getRedirect().getLoginPage())
-                        .buildAndExpand(ImmutableMap.of("code", newPassword))
-                        .toUri()
+                        .buildAndExpand(ImmutableMap.of(
+                                FINTECH_USER_TEMP_PASSWORD, newPassword,
+                                AUTHORIZATION_SESSION_ID, newAuth.getId()
+                        )).toUri()
         );
 
         return newAuth;
