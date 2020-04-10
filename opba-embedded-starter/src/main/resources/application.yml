@@ -66,6 +66,7 @@ encryption:
     read-keystore:
       psu: I-M-A-SAMPLE-PSU-PASSWORD-REPLACE-ME
       fintech: I-M-A-SAMPLE-FINTECH-PASSWORD-REPLACE-ME
+      fintech-user: I-M-A-SAMPLE-FINTECH-USER-PASSWORD-REPLACE-ME
 
 pkcs12:
   keyStore: sample-qwac.keystore
