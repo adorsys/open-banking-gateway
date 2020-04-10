@@ -12,6 +12,8 @@ import de.adorsys.datasafe.types.api.resource.Uri;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.BaseDatasafeDbStorageService;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechDatasafeStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechUserDatasafeStorage;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechUserSecureStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuDatasafeStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,7 @@ public class DatasafeConfig {
 
     private final FintechDatasafeStorage fintechStorage;
     private final PsuDatasafeStorage psuStorage;
+    private final FintechUserDatasafeStorage fintechUserStorage;
 
     @Bean
     public FintechSecureStorage fintechDatasafeServices(
@@ -60,6 +63,24 @@ public class DatasafeConfig {
                 DaggerDefaultDatasafeServices.builder()
                         .config(config)
                         .storage(psuStorage)
+                        .overridesRegistry(overridesRegistry)
+                        .build(),
+                config
+        );
+    }
+
+    @Bean
+    public FintechUserSecureStorage fintechUserDatasafeServices(
+            @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE + ".fintech-user") String psuReadStorePass
+    ) {
+        DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig(psuReadStorePass);
+        OverridesRegistry overridesRegistry = new BaseOverridesRegistry();
+        ProfileRetrievalServiceImplRuntimeDelegatable.overrideWith(overridesRegistry, BaseDatasafeDbStorageService.DbTableUserRetrieval::new);
+        PathEncryptionImplRuntimeDelegatable.overrideWith(overridesRegistry, NoOpPathEncryptionImplOverridden::new);
+        return new FintechUserSecureStorage(
+                DaggerDefaultDatasafeServices.builder()
+                        .config(config)
+                        .storage(fintechUserStorage)
                         .overridesRegistry(overridesRegistry)
                         .build(),
                 config
