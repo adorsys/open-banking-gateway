@@ -1,7 +1,6 @@
 package de.adorsys.opba.tppauthapi.controller;
 
 import de.adorsys.opba.db.domain.entity.psu.Psu;
-import de.adorsys.opba.tppauthapi.config.CookieProperties;
 import de.adorsys.opba.tppauthapi.config.TppProperties;
 import de.adorsys.opba.tppauthapi.model.generated.PsuAuthBody;
 import de.adorsys.opba.tppauthapi.resource.generated.PsuAuthApi;
@@ -32,7 +31,7 @@ public class PsuAuthController implements PsuAuthApi {
     public static final Base64.Encoder ENCODER = Base64.getEncoder();
     private final PsuAuthService psuAuthService;
     private final TppProperties tppProperties;
-    private final CookieProperties cookieProperties;
+    private final TppAuthResponseCookie.TppAuthResponseCookieBuilder tppAuthResponseCookieBuilder;
 
     @Override
     @SneakyThrows
@@ -41,10 +40,9 @@ public class PsuAuthController implements PsuAuthApi {
 
         String jwtToken = psuAuthService.generateToken(psu.getLogin());
 
-        String cookieString = new TppAuthResponseCookie(
-                cookieProperties,
-                ResponseCookie.from(AUTHORIZATION_SESSION_ID, jwtToken)
-        ).getCookieString();
+        String cookieString = tppAuthResponseCookieBuilder
+                .responseCookieBuilder(ResponseCookie.from(AUTHORIZATION_SESSION_ID, jwtToken))
+                .build().getCookieString();
 
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
