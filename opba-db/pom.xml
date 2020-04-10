@@ -32,6 +32,11 @@
             <version>${xs2a-adapter.version}</version>
             <type>pom</type>
         </dependency>
+        <dependency>
+            <groupId>de.adorsys</groupId>
+            <artifactId>datasafe-encryption-api</artifactId>
+            <version>${datasafe.version}</version>
+        </dependency>
 
         <!-- Spring -->
         <dependency>

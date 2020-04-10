@@ -17,6 +17,7 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionRe
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
@@ -40,6 +41,7 @@ import static de.adorsys.opba.db.domain.entity.ProtocolAction.AUTHORIZATION;
 @RequiredArgsConstructor
 public class ProtocolResultHandler {
 
+    private final PsuSecureStorage psuVault;
     private final BankProtocolRepository protocolRepository;
     private final EntityManager entityManager;
     private final ServiceSessionRepository sessions;
@@ -124,6 +126,7 @@ public class ProtocolResultHandler {
             (FacadeStartAuthorizationResult<O, AuthStateBody>) FacadeStartAuthorizationResult.FROM_PROTOCOL.map(result);
 
         AuthSession auth = addAuthorizationSessionData(result, xRequestId, session, mappedResult);
+        psuVault.toPsuInboxForAuth(auth, "TODO");
         mappedResult.setCause(mapCause(result));
         setAspspRedirectCodeIfRequired(result, auth, session);
         return mappedResult;
