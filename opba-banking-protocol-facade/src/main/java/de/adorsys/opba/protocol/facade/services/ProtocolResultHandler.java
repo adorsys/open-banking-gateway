@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.facade.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.db.domain.entity.BankProtocol;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
@@ -8,6 +9,7 @@ import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
+import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationDeniedResult;
@@ -25,6 +27,7 @@ import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResu
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeSuccessResult;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -41,6 +44,7 @@ import static de.adorsys.opba.db.domain.entity.ProtocolAction.AUTHORIZATION;
 @RequiredArgsConstructor
 public class ProtocolResultHandler {
 
+    private final ObjectMapper mapper;
     private final PsuSecureStorage psuVault;
     private final BankProtocolRepository protocolRepository;
     private final EntityManager entityManager;
@@ -52,21 +56,21 @@ public class ProtocolResultHandler {
      * CompletableFuture.
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public <O, R extends FacadeServiceableGetter> FacadeResult<O> handleResult(Result<O> result, UUID xRequestId, ServiceContext<R> session) {
+    public <O, R extends FacadeServiceableGetter> FacadeResult<O> handleResult(Result<O> result, FacadeServiceableRequest request, ServiceContext<R> session) {
         if (result instanceof SuccessResult) {
-            return handleSuccess((SuccessResult<O>) result, xRequestId, session);
+            return handleSuccess((SuccessResult<O>) result, request.getRequestId(), session);
         }
 
         if (result instanceof ConsentAcquiredResult) {
-            return handleConsentAcquired((ConsentAcquiredResult<O, ?>) result, xRequestId, session);
+            return handleConsentAcquired((ConsentAcquiredResult<O, ?>) result, request.getRequestId(), session);
         }
 
         if (result instanceof ErrorResult) {
-            return handleError((ErrorResult<O>) result, xRequestId, session);
+            return handleError((ErrorResult<O>) result, request, session);
         }
 
         if (result instanceof RedirectionResult) {
-            return handleRedirect((RedirectionResult<O, ?>) result, xRequestId, session);
+            return handleRedirect((RedirectionResult<O, ?>) result, request.getRequestId(), session);
         }
 
         throw new IllegalStateException("Can't handle protocol result: " + result.getClass());
@@ -84,13 +88,13 @@ public class ProtocolResultHandler {
     }
 
     protected <O, R extends FacadeServiceableGetter> FacadeResult<O> handleError(
-        ErrorResult<O> result, UUID xRequestId, ServiceContext<R> session
+        ErrorResult<O> result, FacadeServiceableRequest request, ServiceContext<R> session
     ) {
         FacadeRedirectErrorResult<O, AuthStateBody> mappedResult =
             (FacadeRedirectErrorResult<O, AuthStateBody>) FacadeRedirectErrorResult.ERROR_FROM_PROTOCOL.map(result);
 
-        addAuthorizationSessionData(result, xRequestId, session, mappedResult);
-        mappedResult.setRedirectionTo(URI.create(session.getFintechRedirectNokUri()));
+        addAuthorizationSessionData(request.getRequestId(), session, mappedResult);
+        mappedResult.setRedirectionTo(URI.create(request.getFintechRedirectUrlNok()));
         return mappedResult;
     }
 
@@ -100,7 +104,7 @@ public class ProtocolResultHandler {
         FacadeRedirectResult<O, AuthStateBody> mappedResult =
             (FacadeRedirectResult<O, AuthStateBody>) FacadeRedirectResult.FROM_PROTOCOL.map(result);
 
-        addAuthorizationSessionData(result, xRequestId, session, mappedResult);
+        addAuthorizationSessionData(xRequestId, session, mappedResult);
         mappedResult.setRedirectionTo(result.getRedirectionTo());
         return mappedResult;
     }
@@ -119,14 +123,14 @@ public class ProtocolResultHandler {
         return doHandleRedirect(result, xRequestId, session);
     }
 
+    @SneakyThrows
     protected <O> FacadeStartAuthorizationResult<O, AuthStateBody> handleAuthorizationStart(
         RedirectionResult<O, ?> result, UUID xRequestId, ServiceContext session
     ) {
         FacadeStartAuthorizationResult<O, AuthStateBody> mappedResult =
             (FacadeStartAuthorizationResult<O, AuthStateBody>) FacadeStartAuthorizationResult.FROM_PROTOCOL.map(result);
 
-        AuthSession auth = addAuthorizationSessionData(result, xRequestId, session, mappedResult);
-        psuVault.toPsuInboxForAuth(auth, "TODO");
+        AuthSession auth = addAuthorizationSessionData(xRequestId, session, mappedResult);
         mappedResult.setCause(mapCause(result));
         setAspspRedirectCodeIfRequired(result, auth, session);
         return mappedResult;
@@ -153,7 +157,7 @@ public class ProtocolResultHandler {
         FacadeRedirectResult<O, AuthStateBody> mappedResult =
             (FacadeRedirectResult<O, AuthStateBody>) FacadeRedirectResult.FROM_PROTOCOL.map(result);
 
-        AuthSession auth = addAuthorizationSessionData(result, xRequestId, session, mappedResult);
+        AuthSession auth = addAuthorizationSessionData(xRequestId, session, mappedResult);
         mappedResult.setCause(mapCause(result));
         setAspspRedirectCodeIfRequired(result, auth, session);
         return mappedResult;
@@ -166,9 +170,9 @@ public class ProtocolResultHandler {
         }
     }
 
-    protected <O> AuthSession addAuthorizationSessionData(Result<O> result, UUID xRequestId, ServiceContext session,
+    protected <O> AuthSession addAuthorizationSessionData(UUID xRequestId, ServiceContext session,
                                                  FacadeResultRedirectable<O, ?> mappedResult) {
-        AuthSession authSession = updateAuthContext(result, session);
+        AuthSession authSession = updateAuthContext(session);
         mappedResult.setAuthorizationSessionId(authSession.getId().toString());
         mappedResult.setServiceSessionId(authSession.getParent().getId().toString());
         mappedResult.setXRequestId(xRequestId);
@@ -176,11 +180,11 @@ public class ProtocolResultHandler {
         return authSession;
     }
 
-    protected <O> AuthSession updateAuthContext(Result<O> result, ServiceContext session) {
+    protected <O> AuthSession updateAuthContext(ServiceContext session) {
         // Auth session is 1-1 to service session, using id as foreign key
         return authSessionFromDb(session.getServiceSessionId())
-                .map(it -> updateExistingAuthSession(result, session, it))
-                .orElseGet(() -> createNewAuthSession(result, session));
+                .map(it -> updateExistingAuthSession(session, it))
+                .orElseGet(() -> createNewAuthSession(session));
     }
 
     protected Optional<AuthSession> authSessionFromDb(UUID serviceSessionId) {
@@ -188,27 +192,32 @@ public class ProtocolResultHandler {
     }
 
     @NotNull
-    protected <O> AuthSession createNewAuthSession(Result<O> result, ServiceContext session) {
+    @SneakyThrows
+    protected <O> AuthSession createNewAuthSession(ServiceContext session) {
         BankProtocol authProtocol = protocolRepository
                 .findByBankProfileUuidAndAction(session.getBankId(), AUTHORIZATION)
                 .orElseThrow(
                         () -> new IllegalStateException("Missing update authorization handler for " + session.getBankId())
                 );
 
-        return authenticationSessions.save(
+        // We register DUMMY user whose data will be copied after real user authorizes
+        // The password of this DUMMY user is retained in url as it is safe - only if user logs in or registers
+        // he will be able to see the data stored in here and only real users' password is capable to open consent
+        AuthSession newAuth = authenticationSessions.save(
                 AuthSession.builder()
                         .parent(entityManager.find(ServiceSession.class, session.getServiceSessionId()))
                         .protocol(authProtocol)
-                        .context(result.authContext())
                         .redirectCode(session.getFutureRedirectCode().toString())
                         .build()
         );
+
+        psuVault.toPsuInboxForAuth(newAuth, mapper.writeValueAsString(session));
+        return newAuth;
     }
 
     @NotNull
-    protected <O> AuthSession updateExistingAuthSession(Result<O> result, ServiceContext session, AuthSession it) {
+    protected <O> AuthSession updateExistingAuthSession(ServiceContext session, AuthSession it) {
         it.setRedirectCode(session.getFutureRedirectCode().toString());
-        it.setContext(result.authContext());
         return authenticationSessions.save(it);
     }
 

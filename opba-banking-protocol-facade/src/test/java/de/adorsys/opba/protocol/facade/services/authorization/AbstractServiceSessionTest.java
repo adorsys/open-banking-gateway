@@ -217,8 +217,6 @@ abstract class AbstractServiceSessionTest {
         assertThat(serviceSessionFromDB.getId()).isEqualTo(serviceSessionFromAuth.getId());
         assertThat(serviceSessionFromDB.getAuthSession().getId()).isEqualTo(authenticationSession.getId());
         assertThat(serviceSessionFromDB.getAuthSession().getRedirectCode()).isEqualTo(authenticationSession.getRedirectCode());
-        assertThat(serviceSessionFromDB.getAlgo()).isEqualTo(getAlgorithm());
-
     }
 
     private void assertErrorResponse(FacadeRedirectErrorResult errorResponse, String sessionId) {

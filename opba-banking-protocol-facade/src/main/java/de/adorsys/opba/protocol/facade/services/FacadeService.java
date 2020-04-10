@@ -4,6 +4,7 @@ import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.protocol.api.Action;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
+import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.ResultBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
@@ -11,7 +12,6 @@ import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
@@ -31,7 +31,7 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
         return result.thenApply(
                 res -> handleResult(
                         res,
-                        request.getFacadeServiceable().getRequestId(),
+                        request.getFacadeServiceable(),
                         ctx
                 )
         );
@@ -49,8 +49,8 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
         );
     }
 
-    protected FacadeResult<O> handleResult(Result<O> result, UUID xRequestId, ServiceContext<I> ctx) {
-        return handler.handleResult(result, xRequestId, ctx);
+    protected FacadeResult<O> handleResult(Result<O> result, FacadeServiceableRequest request, ServiceContext<I> ctx) {
+        return handler.handleResult(result, request, ctx);
     }
 
     protected CompletableFuture<Result<O>> execute(A protocol, ServiceContext<I> ctx) {
