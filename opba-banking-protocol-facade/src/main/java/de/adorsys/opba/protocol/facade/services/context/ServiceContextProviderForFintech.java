@@ -16,6 +16,7 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
 import de.adorsys.opba.protocol.facade.services.FacadeEncryptionServiceFactory;
+import de.adorsys.opba.protocol.facade.services.NoEncryptionServiceImpl;
 import de.adorsys.opba.protocol.facade.services.ServiceSessionWithEncryption;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -120,7 +121,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     @SneakyThrows
     private ServiceSessionWithEncryption createServiceSession(FacadeServiceableRequest facadeServiceable) {
         KeyWithParamsDto keyWithParams = newSecretKey(facadeServiceable.getSessionPassword());
-        EncryptionService encryptionService = encryptionFactory.provideEncryptionService(keyWithParams);
+        EncryptionService encryptionService = new NoEncryptionServiceImpl(); // FIXME - this should be removed
         String encryptedContext = new String(encryptionService.encrypt(MAPPER.writeValueAsBytes(facadeServiceable)));
 
         ServiceSession session = new ServiceSession();
@@ -138,7 +139,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     @NotNull
     private ServiceSessionWithEncryption serviceSessionWithEncryption(ServiceSession session, FacadeServiceableRequest facadeServiceable) {
         KeyDto key = deriveFromSessionOrRequest(session, facadeServiceable.getSessionPassword());
-        EncryptionService encryptionService = encryptionFactory.provideEncryptionService(key);
+        EncryptionService encryptionService = new NoEncryptionServiceImpl(); // FIXME - this should be removed
         return new ServiceSessionWithEncryption(session, encryptionService);
     }
 
