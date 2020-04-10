@@ -37,11 +37,11 @@ public class Xs2aDenyAuthorization implements DenyAuthorization {
         String executionId = serviceContext.getAuthContext();
 
         Xs2aAisContext ctx = txOper.execute(callback -> readContext(executionId));
-
         if (null == ctx) {
             throw new IllegalStateException("Context not found");
         }
 
+        ctx.setRequestId(serviceContext.getRequest().getFacadeServiceable().getRequestId().toString()); // traceability
         abortConsent.abortConsent(ctx);
 
         return CompletableFuture.completedFuture(
