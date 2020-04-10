@@ -73,6 +73,10 @@ pkcs12:
   password: password
 
 facade:
+  redirect:
+    login-page: ${protocol.embedded-ui-base-url}/ais/login?redirectCode={code}
+    password:
+      byte-size: 8
   encryption:
     providerName: BC
     algorithm: PBEWithSHA256And256BitAES-CBC-BC
@@ -90,7 +94,6 @@ management:
       mode: full
 
 tpp:
-  login-url: http://localhost:8085/v1/psu/login
   key-validity-days: P7D
   jws-algo: RS256
   #  example private-public keypair. Generated using TokenSignVerifyTest.generateNewTppKeyPair()
