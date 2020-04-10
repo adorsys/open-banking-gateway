@@ -74,7 +74,7 @@ pkcs12:
 
 facade:
   redirect:
-    login-page: ${protocol.embedded-ui-base-url}/ais/login?redirectCode={code}
+    login-page: ${protocol.embedded-ui-base-url}/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
     password:
       byte-size: 8
   encryption:
