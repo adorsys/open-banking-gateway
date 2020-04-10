@@ -27,6 +27,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = ApplicationTest.class)
@@ -71,6 +73,8 @@ public class PsuAuthControllerTest {
                 .content(new Gson().toJson(getPsuAuthBody()))
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isCreated())
+                .andExpect(header().string("Location", "http://localhost:8085/v1/psu/login"))
+                .andDo(print())
                 .andReturn();
     }
 
@@ -86,6 +90,8 @@ public class PsuAuthControllerTest {
                 .content(new Gson().toJson(getPsuAuthBody()))
                 .contentType(APPLICATION_JSON))
                 .andExpect(status().isAccepted())
+                .andExpect(header().exists("Set-Cookie"))
+                .andDo(print())
                 .andReturn();
     }
 
