@@ -12,6 +12,7 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
+import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.UuidMapper;
 import de.adorsys.opba.protocol.xs2a.service.eventbus.ProcessEventHandlerRegistrar;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
@@ -67,10 +68,11 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
         return context;
     }
 
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
+    @Mapper(componentModel = SPRING_KEYWORD, uses = UuidMapper.class, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface FromRequest extends DtoMapper<ListTransactionsRequest, TransactionListXs2aContext> {
 
         @Mapping(source = "accountId", target = "resourceId")
+        @Mapping(source = "facadeServiceable.requestId", target = "requestId")
         @Mapping(source = "facadeServiceable.bankId", target = "aspspId")
         @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
