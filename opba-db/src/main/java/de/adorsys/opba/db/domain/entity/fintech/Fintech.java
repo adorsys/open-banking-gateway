@@ -19,7 +19,6 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import java.util.Collection;
-import java.util.UUID;
 import java.util.function.Supplier;
 
 @Getter
@@ -35,7 +34,7 @@ public class Fintech {
     @SequenceGenerator(name = "fintech_id_generator", sequenceName = "fintech_id_sequence")
     private Long id;
 
-    private UUID globalId;
+    private String globalId;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
@@ -51,11 +50,14 @@ public class Fintech {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fintech")
     private Collection<FintechPrivate> privateStore;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fintech")
+    private Collection<FintechUser> fintechUsersToAuthorize;
+
     public UserID getUserId() {
-        return new UserID(globalId.toString());
+        return new UserID(String.valueOf(id));
     }
 
     public UserIDAuth getUserIdAuth(Supplier<char[]> password) {
-        return new UserIDAuth(globalId.toString(), password);
+        return new UserIDAuth(String.valueOf(id), password);
     }
 }
