@@ -1,7 +1,8 @@
 package de.adorsys.opba.tppauthapi.controller;
 
 import de.adorsys.opba.db.domain.entity.psu.Psu;
-import de.adorsys.opba.tppauthapi.config.TppProperties;
+import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
+import de.adorsys.opba.tppauthapi.config.CookieProperties;
 import de.adorsys.opba.tppauthapi.model.generated.PsuAuthBody;
 import de.adorsys.opba.tppauthapi.resource.generated.PsuAuthApi;
 import de.adorsys.opba.tppauthapi.service.PsuAuthService;
@@ -29,8 +30,9 @@ import static org.springframework.http.HttpHeaders.SET_COOKIE;
 public class PsuAuthController implements PsuAuthApi {
 
     public static final Base64.Encoder ENCODER = Base64.getEncoder();
+
     private final PsuAuthService psuAuthService;
-    private final TppProperties tppProperties;
+    private final FacadeAuthConfig authConfig;
     private final TppAuthResponseCookie.TppAuthResponseCookieBuilder tppAuthResponseCookieBuilder;
 
     @Override
@@ -56,7 +58,8 @@ public class PsuAuthController implements PsuAuthApi {
         psuAuthService.createPsuIfNotExist(psuAuthDto.getId(), psuAuthDto.getPassword());
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(HttpHeaders.LOCATION, tppProperties.getLoginUrl());
+        // FIXME - this is incorrect as there should be user binding after registration, but currently keeping as is
+        responseHeaders.add(HttpHeaders.LOCATION, authConfig.getRedirect().getLoginPage());
         return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
     }
 }
