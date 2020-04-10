@@ -8,14 +8,12 @@ import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
-import de.adorsys.opba.protocol.api.dto.KeyDto;
 import de.adorsys.opba.protocol.api.dto.KeyWithParamsDto;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
-import de.adorsys.opba.protocol.facade.services.FacadeEncryptionServiceFactory;
 import de.adorsys.opba.protocol.facade.services.NoEncryptionServiceImpl;
 import de.adorsys.opba.protocol.facade.services.ServiceSessionWithEncryption;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +39,6 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     protected final AuthenticationSessionRepository authSessions;
     private final ServiceSessionRepository serviceSessions;
     private final SecretKeyOperations secretKeyOperations;
-    private final FacadeEncryptionServiceFactory encryptionFactory;
 
     @Override
     @Transactional
@@ -95,14 +92,14 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
             AuthSession authSession
     ) {
         if (null != authSession) {
-            return readServiceSessionFromAuthSession(authSession, request.getFacadeServiceable());
+            return readServiceSessionFromAuthSession(authSession);
         } else {
             return readOrCreateServiceSessionFromRequest(request.getFacadeServiceable());
         }
     }
 
-    private ServiceSessionWithEncryption readServiceSessionFromAuthSession(AuthSession authSession, FacadeServiceableRequest facadeServiceable) {
-        return serviceSessionWithEncryption(authSession.getParent(), facadeServiceable);
+    private ServiceSessionWithEncryption readServiceSessionFromAuthSession(AuthSession authSession) {
+        return serviceSessionWithEncryption(authSession.getParent());
     }
 
     private ServiceSessionWithEncryption readOrCreateServiceSessionFromRequest(FacadeServiceableRequest facadeServiceable) {
@@ -113,7 +110,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         }
 
         return serviceSessions.findById(serviceSessionId)
-            .map(it -> serviceSessionWithEncryption(it, facadeServiceable))
+            .map(this::serviceSessionWithEncryption)
             .orElseGet(() -> createServiceSession(facadeServiceable));
     }
 
@@ -137,34 +134,9 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     @NotNull
-    private ServiceSessionWithEncryption serviceSessionWithEncryption(ServiceSession session, FacadeServiceableRequest facadeServiceable) {
-        KeyDto key = deriveFromSessionOrRequest(session, facadeServiceable.getSessionPassword());
+    private ServiceSessionWithEncryption serviceSessionWithEncryption(ServiceSession session) {
         EncryptionService encryptionService = new NoEncryptionServiceImpl(); // FIXME - this should be removed
         return new ServiceSessionWithEncryption(session, encryptionService);
-    }
-
-    private KeyWithParamsDto deriveFromSessionOrRequest(ServiceSession session, String passwordFromRequest) {
-        if (null != passwordFromRequest) {
-            return recreateSecretKey(passwordFromRequest, session);
-        }
-
-        return savedKey(session);
-    }
-
-    @NotNull
-    private KeyWithParamsDto savedKey(ServiceSession session) {
-        byte[] secretKey = session.getSecretKey();
-        byte[] decryptedKey = secretKeyOperations.decrypt(secretKey);
-        return new KeyWithParamsDto("FIXME", decryptedKey); // FIXME drop this
-    }
-
-    @NotNull
-    private KeyWithParamsDto recreateSecretKey(String sessionPassword, ServiceSession session) {
-        return secretKeyOperations.generateKey(
-                sessionPassword,
-                session.getAlgo(),
-                session.getSalt(),
-                session.getIterCount());
     }
 
     @NotNull
