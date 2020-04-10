@@ -8,10 +8,9 @@ import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSec
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionOperations;
 
 import javax.annotation.PostConstruct;
-import java.util.UUID;
 
 // FIXME - this should be removed
 @Service
@@ -24,13 +23,25 @@ public class DummyPsuAndFinTechCreationService {
     private final FintechRepository fintechRepository;
     private final FintechSecureStorage fintechSecureStorage;
 
-    @PostConstruct
-    @Transactional
-    public void createPsuAndFinTech() {
-        Psu psu = psuRepository.save(Psu.builder().login("PSU").build());
-        psuSecureStorage.registerPsu(psu, "1234"::toCharArray);
+    private final TransactionOperations txOper;
 
-        Fintech fintech = fintechRepository.save(Fintech.builder().globalId(UUID.fromString("bff9db32-4c40-4c7f-a99b-e3cdffd377ba")).build());
-        fintechSecureStorage.registerFintech(fintech, "1234"::toCharArray);
+    @PostConstruct
+    public void createPsuAndFinTech() {
+        txOper.execute(callback -> {
+            String psuId = "Anton_Brueckner";
+            psuRepository.findByLogin(psuId).orElseGet(() -> {
+                Psu psu = psuRepository.save(Psu.builder().login(psuId).build());
+                psuSecureStorage.registerPsu(psu, "1234"::toCharArray);
+                return psu;
+            });
+
+            String fintechId = "MY-SUPER-FINTECH-ID";
+            fintechRepository.findByGlobalId(fintechId).orElseGet(() -> {
+                Fintech fintech = fintechRepository.save(Fintech.builder().globalId(fintechId).build());
+                fintechSecureStorage.registerFintech(fintech, "1234"::toCharArray);
+                return fintech;
+            });
+            return null;
+        });
     }
 }
