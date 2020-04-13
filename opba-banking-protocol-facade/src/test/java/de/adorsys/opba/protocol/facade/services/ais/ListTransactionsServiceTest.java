@@ -14,6 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -24,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 As we redefine list accounts for adorsys-sandbox bank to sandbox customary one
 (and it doesn't make sense to import sandbox module here) moving it back to plain xs2a bean:
  */
+@SuppressWarnings("CPD-START") // Same steps are used, but that's fine for readability
 @Sql(statements = "UPDATE opb_bank_protocol SET protocol_bean_name = 'xs2aListTransactions' WHERE protocol_bean_name = 'xs2aSandboxListTransactions'")
 @SpringBootTest(classes = ListTransactionsServiceTest.TestConfig.class)
 class ListTransactionsServiceTest {
@@ -40,6 +43,7 @@ class ListTransactionsServiceTest {
                         .facadeServiceable(
                                 FacadeServiceableRequest.builder()
                                         .uaContext(UserAgentContext.builder().psuIpAddress("1.1.1.1").build())
+                                        .requestId(UUID.randomUUID())
                                         .bankId("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46")
                                         .sessionPassword("123")
                                         .fintechRedirectUrlOk("http://google.com")

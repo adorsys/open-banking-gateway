@@ -13,11 +13,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Note: This test keeps DB in dirty state - doesn't cleanup after itself.
  */
+@SuppressWarnings("CPD-START") // Same steps are used, but that's fine for readability
 @ActiveProfiles("test")
 @SpringBootTest(classes = ListAccountsServiceTest.TestConfig.class)
 class ListAccountsServiceTest {
@@ -34,6 +37,7 @@ class ListAccountsServiceTest {
                         .facadeServiceable(
                                 FacadeServiceableRequest.builder()
                                         .uaContext(UserAgentContext.builder().psuIpAddress("1.1.1.1").build())
+                                        .requestId(UUID.randomUUID())
                                         .bankId("53c47f54-b9a4-465a-8f77-bc6cd5f0cf46")
                                         .sessionPassword("123")
                                         .fintechRedirectUrlOk("http://google.com")

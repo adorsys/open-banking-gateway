@@ -32,6 +32,6 @@ public class Xs2aListAccountsEntrypointFromRequestTest {
         AccountListXs2aContext actual = mapper.map(mappingInput);
 
         // Then
-        assertThat(expected).isEqualToComparingFieldByFieldRecursively(actual);
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
     }
 }
