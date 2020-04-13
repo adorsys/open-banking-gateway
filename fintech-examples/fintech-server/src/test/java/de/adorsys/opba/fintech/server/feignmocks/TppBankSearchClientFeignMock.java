@@ -1,12 +1,15 @@
 package de.adorsys.opba.fintech.server.feignmocks;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.fintech.impl.tppclients.TppBankSearchClient;
 import de.adorsys.opba.tpp.banksearch.api.model.generated.BankProfileResponse;
 import de.adorsys.opba.tpp.banksearch.api.model.generated.BankSearchResponse;
 import org.springframework.http.ResponseEntity;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Optional;
 import java.util.UUID;
 
 public class TppBankSearchClientFeignMock implements TppBankSearchClient {
@@ -19,5 +22,17 @@ public class TppBankSearchClientFeignMock implements TppBankSearchClient {
     @Override
     public ResponseEntity<BankSearchResponse> bankSearchGET(String authorization, UUID xRequestID, @NotNull @Valid String keyword, @Valid Integer start, @Valid Integer max) {
         return null;
+    }
+
+    // TODO: https://github.com/adorsys/open-banking-gateway/issues/559
+    @Override
+    public Optional<ObjectMapper> getObjectMapper() {
+        return Optional.empty();
+    }
+
+    // TODO: https://github.com/adorsys/open-banking-gateway/issues/559
+    @Override
+    public Optional<HttpServletRequest> getRequest() {
+        return Optional.empty();
     }
 }

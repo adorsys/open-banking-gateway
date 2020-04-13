@@ -1,8 +1,5 @@
 package de.adorsys.opba.protocol.facade.services.context;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Strings;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
@@ -12,7 +9,6 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
-import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
 import de.adorsys.opba.protocol.facade.services.NoEncryptionServiceImpl;
 import de.adorsys.opba.protocol.facade.services.ServiceSessionWithEncryption;
 import lombok.RequiredArgsConstructor;
@@ -29,15 +25,8 @@ import java.util.UUID;
 public class ServiceContextProviderForFintech implements ServiceContextProvider {
 
     public static final String FINTECH_CONTEXT_PROVIDER = "FINTECH_CONTEXT_PROVIDER";
-
-    private static final ObjectMapper MAPPER = new ObjectMapper()
-            .findAndRegisterModules()
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-            .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-
     protected final AuthorizationSessionRepository authSessions;
     private final ServiceSessionRepository serviceSessions;
-    private final SecretKeyOperations secretKeyOperations;
 
     @Override
     @Transactional
@@ -102,17 +91,17 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         UUID serviceSessionId = facadeServiceable.getServiceSessionId();
 
         if (null == serviceSessionId) {
-            return createServiceSession(facadeServiceable);
+            return createServiceSession();
         }
 
         return serviceSessions.findById(serviceSessionId)
             .map(this::serviceSessionWithEncryption)
-            .orElseGet(() -> createServiceSession(facadeServiceable));
+            .orElseGet(this::createServiceSession);
     }
 
     @NotNull
     @SneakyThrows
-    private ServiceSessionWithEncryption createServiceSession(FacadeServiceableRequest facadeServiceable) {
+    private ServiceSessionWithEncryption createServiceSession() {
         EncryptionService encryptionService = new NoEncryptionServiceImpl(); // FIXME - this should be removed
         ServiceSession session = new ServiceSession();
         return new ServiceSessionWithEncryption(serviceSessions.save(session), encryptionService);
