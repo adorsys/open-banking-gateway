@@ -12,12 +12,19 @@ import javax.validation.constraints.NotBlank;
 @Validated
 @Configuration
 @ConfigurationProperties("psu.secret-key")
-public class PsuSecretKeyConfig {
+public class PsuSecretKeyConfig implements EncSpec {
 
     @NotBlank
-    private String algo;
+    private String keyAlgo;
 
     @Min(128)
     @SuppressWarnings("checkstyle:MagicNumber") // Magic minimal value - at least 128 bit key
     private int len;
+
+    @Min(0)
+    @SuppressWarnings("checkstyle:MagicNumber") // Magic minimal value
+    private int ivSize;
+
+    @NotBlank
+    private String cipherAlgo;
 }

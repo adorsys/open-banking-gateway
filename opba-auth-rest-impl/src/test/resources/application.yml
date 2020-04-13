@@ -36,10 +36,3 @@ cookie:
   same-site: Strict
 bank-search:
   query:
-facade:
-  encryption:
-    providerName: BC
-    algorithm: PBEWithSHA256And256BitAES-CBC-BC
-    saltLength: 8
-    iterationCount: 1024
-    keySetPath: example-keyset.json

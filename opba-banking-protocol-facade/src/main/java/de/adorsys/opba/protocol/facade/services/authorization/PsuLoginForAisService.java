@@ -4,15 +4,14 @@ import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
 import de.adorsys.opba.protocol.api.dto.consent.ConsentResult;
+import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
 import de.adorsys.opba.protocol.facade.services.authorization.internal.psuauth.PsuFintechAssociationService;
 import de.adorsys.opba.protocol.facade.services.consent.ConsentSearchService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Delegate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.crypto.SecretKey;
 import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,6 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PsuLoginForAisService {
 
+    private final SecretKeySerde serde;
     private final PsuRepository psus;
     private final PsuFintechAssociationService associationService;
     private final AuthorizationSessionRepository authRepository;
@@ -38,20 +38,18 @@ public class PsuLoginForAisService {
         authRepository.save(session);
 
         return new Outcome(
-                association,
+                serde.asString(association.getSecretKey()),
                 consent.isPresent()
                         ? association.getConsentSpec().getAfterPsuIdentifiedAndConsentExistsRedirectTo()
                         : association.getConsentSpec().getAfterPsuIdentifiedAndNoConsentRedirectTo()
         );
     }
 
+    @Getter
     @RequiredArgsConstructor
-    public static class Outcome implements SecretKey {
+    public static class Outcome {
 
-        @Delegate
-        private final SecretKey key;
-
-        @Getter
+        private final String key;
         private final URI redirectLocation;
     }
 }

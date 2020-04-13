@@ -70,7 +70,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
                 .responseCookieBuilder(
                         ResponseCookie.from(
                                 AUTHORIZATION_SESSION_ID,
-                                psuAuthService.generateToken(Base64.getUrlEncoder().encodeToString(outcome.getEncoded()))
+                                psuAuthService.generateToken(outcome.getKey())
                         )
                 ).build()
                 .getCookieString();
