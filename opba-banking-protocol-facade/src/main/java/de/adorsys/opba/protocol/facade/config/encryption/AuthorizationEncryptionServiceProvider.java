@@ -12,6 +12,10 @@ public abstract class AuthorizationEncryptionServiceProvider {
     private final EncryptionWithInitVectorOper oper;
 
     public void remove(EncryptionService service) {
+        if (null == service) {
+            return;
+        }
+
         cachedServices.remove(service.getId());
     }
 
