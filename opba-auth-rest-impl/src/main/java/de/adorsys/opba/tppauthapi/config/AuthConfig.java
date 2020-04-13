@@ -35,6 +35,10 @@ public class AuthConfig {
         return new RSASSASigner(loadPrivateKey(tppProperties));
     }
 
+    /**
+     * See {@code de.adorsys.opba.tppauthapi.TokenSignVerifyTest#generateNewTppKeyPair()} for details of how to
+     * generate the encoded key.
+     */
     @SneakyThrows
     private PrivateKey loadPrivateKey(TppProperties tppProperties) {
         byte[] privateKeyBytes = Base64.getDecoder().decode(tppProperties.getPrivateKey());
