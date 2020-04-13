@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.facade.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
@@ -16,6 +15,7 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionRe
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
+import de.adorsys.opba.protocol.api.services.ProtocolFacingEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
@@ -37,7 +37,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProtocolResultHandler {
 
-    private final ObjectMapper mapper;
+    private final ProtocolFacingEncryptionServiceProvider encryptionServiceProvider;
     private final NewAuthSessionHandler newAuthSessionHandler;
     private final ServiceSessionRepository sessions;
     private final AuthorizationSessionRepository authenticationSessions;
@@ -48,6 +48,7 @@ public class ProtocolResultHandler {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public <O, R extends FacadeServiceableGetter> FacadeResult<O> handleResult(Result<O> result, FacadeServiceableRequest request, ServiceContext<R> session) {
+        encryptionServiceProvider.remove(session.getEncryption());
         if (result instanceof SuccessResult) {
             return handleSuccess((SuccessResult<O>) result, request.getRequestId(), session);
         }
