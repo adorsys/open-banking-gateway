@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface AuthenticationSessionRepository extends CrudRepository<AuthSession, UUID> {
+public interface AuthorizationSessionRepository extends CrudRepository<AuthSession, UUID> {
 
     Optional<AuthSession> findByParentId(UUID serviceSessionId);
 }
