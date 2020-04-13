@@ -4,7 +4,6 @@ import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
-import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -15,9 +14,8 @@ public class ServiceContextProviderForAspsp extends ServiceContextProviderForFin
     public static final String ASPSP_CONTEXT_PROVIDER = "ASPSP_CONTEXT_PROVIDER";
 
     public ServiceContextProviderForAspsp(AuthorizationSessionRepository authSessions,
-                                          ServiceSessionRepository serviceSessions,
-                                          SecretKeyOperations secretKeyOperations) {
-        super(authSessions, serviceSessions, secretKeyOperations);
+                                          ServiceSessionRepository serviceSessions) {
+        super(authSessions, serviceSessions);
     }
 
     protected <T extends FacadeServiceableGetter> void validateRedirectCode(T request, AuthSession session) {
