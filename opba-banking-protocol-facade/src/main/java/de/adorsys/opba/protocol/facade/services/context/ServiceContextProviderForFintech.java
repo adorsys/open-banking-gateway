@@ -9,11 +9,12 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
-import de.adorsys.opba.protocol.facade.services.NoEncryptionServiceImpl;
-import de.adorsys.opba.protocol.facade.services.ServiceSessionWithEncryption;
+import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
+import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +26,12 @@ import java.util.UUID;
 public class ServiceContextProviderForFintech implements ServiceContextProvider {
 
     public static final String FINTECH_CONTEXT_PROVIDER = "FINTECH_CONTEXT_PROVIDER";
+
     protected final AuthorizationSessionRepository authSessions;
+
+    private final SecretKeySerde secretKeySerde;
     private final ServiceSessionRepository serviceSessions;
+    private final ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider;
 
     @Override
     @Transactional
@@ -36,9 +41,9 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
             throw new IllegalArgumentException("No serviceable body");
         }
         AuthSession authSession = extractAndValidateAuthSession(request);
-        ServiceSessionWithEncryption session = extractOrCreateServiceSession(request, authSession);
+        ServiceSession session = extractOrCreateServiceSession(request, authSession);
         return ServiceContext.<T>builder()
-                .encryption(session.getEncryption())
+                .encryption(getEncryption(request))
                 .serviceSessionId(session.getId())
                 .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
                 .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
@@ -72,22 +77,18 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         return session;
     }
 
-    private <T extends FacadeServiceableGetter> ServiceSessionWithEncryption extractOrCreateServiceSession(
+    private <T extends FacadeServiceableGetter> ServiceSession extractOrCreateServiceSession(
             T request,
             AuthSession authSession
     ) {
         if (null != authSession) {
-            return readServiceSessionFromAuthSession(authSession);
+            return authSession.getParent();
         } else {
             return readOrCreateServiceSessionFromRequest(request.getFacadeServiceable());
         }
     }
 
-    private ServiceSessionWithEncryption readServiceSessionFromAuthSession(AuthSession authSession) {
-        return serviceSessionWithEncryption(authSession.getParent());
-    }
-
-    private ServiceSessionWithEncryption readOrCreateServiceSessionFromRequest(FacadeServiceableRequest facadeServiceable) {
+    private ServiceSession readOrCreateServiceSessionFromRequest(FacadeServiceableRequest facadeServiceable) {
         UUID serviceSessionId = facadeServiceable.getServiceSessionId();
 
         if (null == serviceSessionId) {
@@ -95,22 +96,13 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         }
 
         return serviceSessions.findById(serviceSessionId)
-            .map(this::serviceSessionWithEncryption)
             .orElseGet(this::createServiceSession);
     }
 
     @NotNull
     @SneakyThrows
-    private ServiceSessionWithEncryption createServiceSession() {
-        EncryptionService encryptionService = new NoEncryptionServiceImpl(); // FIXME - this should be removed
-        ServiceSession session = new ServiceSession();
-        return new ServiceSessionWithEncryption(serviceSessions.save(session), encryptionService);
-    }
-
-    @NotNull
-    private ServiceSessionWithEncryption serviceSessionWithEncryption(ServiceSession session) {
-        EncryptionService encryptionService = new NoEncryptionServiceImpl(); // FIXME - this should be removed
-        return new ServiceSessionWithEncryption(session, encryptionService);
+    private ServiceSession createServiceSession() {
+        return serviceSessions.save(new ServiceSession());
     }
 
     @SneakyThrows
@@ -129,5 +121,12 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         }
 
         return null;
+    }
+
+    @Nullable
+    private <T extends FacadeServiceableGetter> EncryptionService getEncryption(T request) {
+        return null == request.getFacadeServiceable().getKeyFromCookie()
+                ? null
+                : encryptionServiceProvider.forSecretKey(secretKeySerde.fromString(request.getFacadeServiceable().getKeyFromCookie()));
     }
 }
