@@ -201,7 +201,7 @@
             <column name="fintech_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="x_request_id" type="VARCHAR(50)">
+            <column name="x_request_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
         </createTable>

@@ -4,7 +4,7 @@ import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.fintech.FintechRequest;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechRequestRepository;
-import de.adorsys.opba.protocol.facade.services.DataDecryptionService;
+import de.adorsys.opba.protocol.facade.services.RequestVerifyingService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,12 +19,12 @@ import java.util.Optional;
 @Component
 public class RequestSignatureValidationFilter extends OncePerRequestFilter {
 
-    private final DataDecryptionService dataDecryptionService;
+    private final RequestVerifyingService requestVerifyingService;
     private final FintechRepository fintechRepository;
     private final FintechRequestRepository fintechRequestRepository;
 
-    public RequestSignatureValidationFilter(DataDecryptionService dataDecryptionService, FintechRepository fintechRepository, FintechRequestRepository fintechRequestRepository) {
-        this.dataDecryptionService = dataDecryptionService;
+    public RequestSignatureValidationFilter(RequestVerifyingService requestVerifyingService, FintechRepository fintechRepository, FintechRequestRepository fintechRequestRepository) {
+        this.requestVerifyingService = requestVerifyingService;
         this.fintechRepository = fintechRepository;
         this.fintechRequestRepository = fintechRequestRepository;
     }
@@ -38,7 +38,7 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
         byte[] publicKey = fintech.map(Fintech::getApiKeys)
                                    .orElse(null);
         String xRequestIdEncr = request.getHeader("X-Request-ID");
-        String xRequestIdDecr = dataDecryptionService.decrypt(xRequestIdEncr, publicKey);
+        String xRequestIdDecr = requestVerifyingService.verify(xRequestIdEncr, publicKey);
 
         Optional<FintechRequest> requestById = fintechRequestRepository.findByXRequestId(xRequestIdDecr);
 
