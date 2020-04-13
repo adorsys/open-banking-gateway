@@ -18,5 +18,6 @@ public class PsuSecretKeyConfig {
     private String algo;
 
     @Min(128)
+    @SuppressWarnings("checkstyle:MagicNumber") // Magic minimal value - at least 128 bit key
     private int len;
 }

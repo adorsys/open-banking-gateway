@@ -106,3 +106,11 @@ cookie:
   http-only: true
   path: /
   same-site: Strict
+psu:
+  secret-key:
+    algo: AES
+    len: 128
+consent-spec:
+  secret-key:
+    algo: AES
+    len: 128
