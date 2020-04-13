@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
-import de.adorsys.opba.protocol.api.services.EncryptionServiceProvider;
+import de.adorsys.opba.protocol.api.services.ProtocolFacingEncryptionServiceProvider;
 import de.adorsys.opba.protocol.xs2a.service.storage.NeedsEncryptionService;
 import de.adorsys.opba.protocol.xs2a.service.storage.NeedsTransientStorage;
 import de.adorsys.opba.protocol.xs2a.service.storage.PersistenceShouldUseEncryption;
@@ -43,7 +43,7 @@ public class SerializerUtil {
 
     @SneakyThrows
     public Object deserialize(@NotNull byte[] bytes, @NotNull ObjectMapper mapper, @NotNull List<String> allowOnlyClassesWithPrefix,
-                              @NotNull TransientDataStorage transientDataStorage, @NotNull EncryptionServiceProvider encryptionService) {
+                              @NotNull TransientDataStorage transientDataStorage, @NotNull ProtocolFacingEncryptionServiceProvider encryptionService) {
         JsonNode value = mapper.readTree(bytes);
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
 
