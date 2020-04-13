@@ -119,6 +119,7 @@
             <column name="fintech_user_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
+            <column name="enc_consent_spec" type="BLOB"/>
             <column name="version" type="INT">
                 <constraints nullable="false"/>
             </column>
