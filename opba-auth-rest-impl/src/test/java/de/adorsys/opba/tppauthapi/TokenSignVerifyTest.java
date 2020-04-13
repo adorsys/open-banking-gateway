@@ -4,9 +4,9 @@ import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
+import de.adorsys.opba.protocol.facade.config.auth.TppTokenProperties;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
-import de.adorsys.opba.tppauthapi.config.TppProperties;
-import de.adorsys.opba.tppauthapi.service.PsuAuthService;
+import de.adorsys.opba.protocol.facade.services.psu.PsuAuthService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TokenSignVerifyTest {
 
     @Autowired
-    private TppProperties tppProperties;
+    private TppTokenProperties tppTokenProperties;
     @MockBean
     @SuppressWarnings("PMD.UnusedPrivateField")
     private PsuRepository psuRepository;
@@ -75,9 +75,9 @@ public class TokenSignVerifyTest {
 
     @SneakyThrows
     private PublicKey loadPublicKey() {
-        byte[] publicKeyBytes = Base64.getDecoder().decode(tppProperties.getPublicKey());
+        byte[] publicKeyBytes = Base64.getDecoder().decode(tppTokenProperties.getPublicKey());
         X509EncodedKeySpec ks = new X509EncodedKeySpec(publicKeyBytes);
-        KeyFactory kf = KeyFactory.getInstance(tppProperties.getSignAlgo());
+        KeyFactory kf = KeyFactory.getInstance(tppTokenProperties.getSignAlgo());
         return kf.generatePublic(ks);
     }
 

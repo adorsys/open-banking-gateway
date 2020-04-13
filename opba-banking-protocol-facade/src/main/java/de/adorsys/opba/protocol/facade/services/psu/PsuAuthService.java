@@ -1,4 +1,4 @@
-package de.adorsys.opba.tppauthapi.service;
+package de.adorsys.opba.protocol.facade.services.psu;
 
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
@@ -9,11 +9,11 @@ import de.adorsys.datasafe.types.api.actions.ReadRequest;
 import de.adorsys.datasafe.types.api.actions.WriteRequest;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
+import de.adorsys.opba.protocol.facade.config.auth.TppTokenProperties;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
-import de.adorsys.opba.tppauthapi.config.TppProperties;
-import de.adorsys.opba.tppauthapi.exceptions.PsuAuthenticationException;
-import de.adorsys.opba.tppauthapi.exceptions.PsuAuthorizationException;
-import de.adorsys.opba.tppauthapi.exceptions.PsuRegisterException;
+import de.adorsys.opba.protocol.facade.exceptions.PsuAuthenticationException;
+import de.adorsys.opba.protocol.facade.exceptions.PsuAuthorizationException;
+import de.adorsys.opba.protocol.facade.exceptions.PsuRegisterException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,7 @@ public class PsuAuthService {
     private final PsuSecureStorage psuSecureStorage;
     private final JWSHeader jwsHeader;
     private final JWSSigner jwsSigner;
-    private final TppProperties tppProperties;
+    private final TppTokenProperties tppTokenProperties;
 
     @Transactional(readOnly = true)
     public Psu tryAuthenticateUser(String login, String password) throws PsuAuthorizationException {
@@ -65,7 +65,7 @@ public class PsuAuthService {
     @SneakyThrows
     public String generateToken(String id) {
         ZonedDateTime currentTime = ZonedDateTime.now(ZoneOffset.UTC);
-        Duration duration = tppProperties.getKeyValidityDays();
+        Duration duration = tppTokenProperties.getKeyValidityDuration();
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
                 .expirationTime(Date.from(currentTime.plus(duration).toInstant()))
                 .issueTime(Date.from(currentTime.toInstant()))

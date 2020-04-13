@@ -4,6 +4,7 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.RSASSASigner;
+import de.adorsys.opba.protocol.facade.config.auth.TppTokenProperties;
 import de.adorsys.opba.tppauthapi.controller.TppAuthResponseCookie;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -26,13 +27,13 @@ public class AuthConfig {
     }
 
     @Bean
-    JWSHeader jwsHeaderBuilder(TppProperties tppProperties) {
-        return new JWSHeader.Builder(JWSAlgorithm.parse(tppProperties.getJwsAlgo())).build();
+    JWSHeader jwsHeaderBuilder(TppTokenProperties tppTokenProperties) {
+        return new JWSHeader.Builder(JWSAlgorithm.parse(tppTokenProperties.getJwsAlgo())).build();
     }
 
     @Bean
-    JWSSigner rsassaSigner(TppProperties tppProperties) {
-        return new RSASSASigner(loadPrivateKey(tppProperties));
+    JWSSigner rsassaSigner(TppTokenProperties tppTokenProperties) {
+        return new RSASSASigner(loadPrivateKey(tppTokenProperties));
     }
 
     /**
@@ -40,10 +41,10 @@ public class AuthConfig {
      * generate the encoded key.
      */
     @SneakyThrows
-    private PrivateKey loadPrivateKey(TppProperties tppProperties) {
-        byte[] privateKeyBytes = Base64.getDecoder().decode(tppProperties.getPrivateKey());
+    private PrivateKey loadPrivateKey(TppTokenProperties tppTokenProperties) {
+        byte[] privateKeyBytes = Base64.getDecoder().decode(tppTokenProperties.getPrivateKey());
         PKCS8EncodedKeySpec ks = new PKCS8EncodedKeySpec(privateKeyBytes);
-        KeyFactory kf = KeyFactory.getInstance(tppProperties.getSignAlgo());
+        KeyFactory kf = KeyFactory.getInstance(tppTokenProperties.getSignAlgo());
         return kf.generatePrivate(ks);
     }
 }
