@@ -28,4 +28,5 @@ public class FacadeServiceableRequest {
 
     private final String sessionPassword;
     private final String keyFromCookie;
+    private final String psuAspspKeyId;
 }
