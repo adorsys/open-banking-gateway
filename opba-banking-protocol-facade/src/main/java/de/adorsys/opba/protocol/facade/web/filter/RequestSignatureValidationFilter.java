@@ -1,10 +1,10 @@
 package de.adorsys.opba.protocol.facade.web.filter;
 
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
-import de.adorsys.opba.db.domain.entity.fintech.FintechRequest;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
-import de.adorsys.opba.db.repository.jpa.fintech.FintechRequestRepository;
 import de.adorsys.opba.protocol.facade.services.RequestVerifyingService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -15,19 +15,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-//TODO add filter to save each request in FintechRequest table and order after this?
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class RequestSignatureValidationFilter extends OncePerRequestFilter {
+    private static final String X_REQUEST_SIGNATURE = "X-Request-Signature";
 
     private final RequestVerifyingService requestVerifyingService;
     private final FintechRepository fintechRepository;
-    private final FintechRequestRepository fintechRequestRepository;
-
-    public RequestSignatureValidationFilter(RequestVerifyingService requestVerifyingService, FintechRepository fintechRepository, FintechRequestRepository fintechRequestRepository) {
-        this.requestVerifyingService = requestVerifyingService;
-        this.fintechRepository = fintechRepository;
-        this.fintechRequestRepository = fintechRequestRepository;
-    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -35,17 +30,26 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
         Long fintechId = 1L;
 
         Optional<Fintech> fintech = fintechRepository.findById(fintechId);
+
         byte[] publicKey = fintech.map(Fintech::getApiKeys)
                                    .orElse(null);
-        String xRequestIdEncr = request.getHeader("X-Request-ID");
-        String xRequestIdDecr = requestVerifyingService.verify(xRequestIdEncr, publicKey);
 
-        Optional<FintechRequest> requestById = fintechRequestRepository.findByXRequestId(xRequestIdDecr);
-
-        if (requestById.isPresent()) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Wrong X-Request-Id");
+        if (publicKey == null) {
+            log.warn("Public key for fintech ID {} has not find ", fintechId);
             return;
         }
+
+        String xRequestSignature = request.getHeader(X_REQUEST_SIGNATURE);
+        String signData = requestVerifyingService.verify(xRequestSignature, new String(publicKey));
+
+        System.out.println(signData);
+
+        //Optional<FintechRequest> requestById = fintechRequestRepository.findByXRequestId(xRequestIdDecr);
+
+        /*if (requestById.isPresent()) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Wrong X-Request-Id");
+            return;
+        }*/
 
         filterChain.doFilter(request, response);
     }

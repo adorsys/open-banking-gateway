@@ -55,6 +55,11 @@
             <artifactId>datasafe-business</artifactId>
             <version>${datasafe.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.fusionauth</groupId>
+            <artifactId>fusionauth-jwt</artifactId>
+            <version>3.1.7</version>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>
