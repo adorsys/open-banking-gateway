@@ -1,4 +1,4 @@
-package de.adorsys.opba.tppauthapi.exceptions;
+package de.adorsys.opba.protocol.facade.exceptions;
 
 public class PsuAuthenticationException extends RuntimeException {
 

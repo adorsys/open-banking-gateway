@@ -6,7 +6,7 @@ import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.fintech.FintechUser;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
-import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
+import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechUserRepository;
@@ -40,7 +40,7 @@ public class NewAuthSessionHandler {
     private final FintechRepository fintechs;
     private final FintechUserRepository fintechUsers;
     private final FintechUserSecureStorage fintechUserVault;
-    private final AuthenticationSessionRepository authenticationSessions;
+    private final AuthorizationSessionRepository authenticationSessions;
     private final EntityManager entityManager;
 
     @NotNull

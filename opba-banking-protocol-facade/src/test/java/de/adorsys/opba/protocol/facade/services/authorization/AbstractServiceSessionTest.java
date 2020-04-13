@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.facade.services.authorization;
 
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
-import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
+import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
@@ -62,7 +62,7 @@ abstract class AbstractServiceSessionTest {
     private ServiceSessionRepository serviceSessionRepository;
 
     @Autowired
-    private AuthenticationSessionRepository authenticationSessions;
+    private AuthorizationSessionRepository authenticationSessions;
 
     @MockBean
     private Xs2aListAccountsEntrypoint xs2aListAccountsEntrypoint;
