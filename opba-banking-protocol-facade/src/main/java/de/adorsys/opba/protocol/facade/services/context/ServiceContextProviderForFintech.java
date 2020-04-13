@@ -8,13 +8,11 @@ import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
-import de.adorsys.opba.protocol.api.dto.KeyWithParamsDto;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
-import de.adorsys.opba.protocol.facade.services.FacadeEncryptionServiceFactory;
 import de.adorsys.opba.protocol.facade.services.NoEncryptionServiceImpl;
 import de.adorsys.opba.protocol.facade.services.ServiceSessionWithEncryption;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +38,6 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     protected final AuthenticationSessionRepository authSessions;
     private final ServiceSessionRepository serviceSessions;
     private final SecretKeyOperations secretKeyOperations;
-    private final FacadeEncryptionServiceFactory encryptionFactory;
 
     @Override
     @Transactional
@@ -116,10 +113,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     @NotNull
     @SneakyThrows
     private ServiceSessionWithEncryption createServiceSession(FacadeServiceableRequest facadeServiceable) {
-        KeyWithParamsDto keyWithParams = newSecretKey(facadeServiceable.getSessionPassword());
         EncryptionService encryptionService = new NoEncryptionServiceImpl(); // FIXME - this should be removed
-        String encryptedContext = new String(encryptionService.encrypt(MAPPER.writeValueAsBytes(facadeServiceable)));
-
         ServiceSession session = new ServiceSession();
         session.setId(facadeServiceable.getServiceSessionId());
         return new ServiceSessionWithEncryption(serviceSessions.save(session), encryptionService);
@@ -129,14 +123,6 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     private ServiceSessionWithEncryption serviceSessionWithEncryption(ServiceSession session) {
         EncryptionService encryptionService = new NoEncryptionServiceImpl(); // FIXME - this should be removed
         return new ServiceSessionWithEncryption(session, encryptionService);
-    }
-
-    @NotNull
-    private KeyWithParamsDto newSecretKey(String sessionPassword) {
-        if (Strings.isNullOrEmpty(sessionPassword)) {
-            throw new IllegalStateException("No password. Can't generate secret key");
-        }
-        return secretKeyOperations.generateKey(sessionPassword);
     }
 
     @SneakyThrows
