@@ -91,7 +91,7 @@ public abstract class BaseDatasafeDbStorageService implements StorageService {
     private byte[] requireBytes(AbsoluteLocation<?> location) {
         return handlers.get(deduceTable(location))
                 .read(deduceId(location))
-                .orElseThrow(() -> new IllegalArgumentException("Failed to find entity for " + location.location().toASCIIString()));
+                .orElseThrow(() -> new DbStorageEntityNotFoundException("Failed to find entity for " + location.location().toASCIIString()));
     }
 
     private static CreateUserPrivateProfile createUserPrivateProfile(UserIDAuth userIDAuth) {
@@ -105,6 +105,12 @@ public abstract class BaseDatasafeDbStorageService implements StorageService {
                 .publishPubKeysTo(BasePublicResource.forAbsolutePublic(PUB_KEYS + userId))
                 .associatedResources(Collections.emptyList())
                 .build();
+    }
+
+    public static class DbStorageEntityNotFoundException extends IllegalStateException {
+        public DbStorageEntityNotFoundException(String s) {
+            super(s);
+        }
     }
 
     public interface StorageActions {

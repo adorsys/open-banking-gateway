@@ -60,7 +60,8 @@ public class FintechUserSecureStorage {
     @AllArgsConstructor
     public static class FinTechUserInboxData {
 
-        private URI afterPsuIdentifiedRedirectTo;
+        private URI afterPsuIdentifiedAndConsentExistsRedirectTo;
+        private URI afterPsuIdentifiedAndNoConsentRedirectTo;
         private Object requirements;
     }
 }

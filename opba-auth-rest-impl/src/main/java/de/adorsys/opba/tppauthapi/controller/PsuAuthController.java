@@ -19,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Optional;
@@ -27,6 +26,7 @@ import java.util.UUID;
 
 import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
+import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
 
 @Slf4j
@@ -64,19 +64,20 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
 
     @Override
     public ResponseEntity<String> loginForApproval(PsuAuthBody body, UUID xRequestId, String redirectCode, UUID authorizationId) {
-        SecretKey secretKey = aisService.loginAndAssociateAuthSession(body.getLogin(), body.getPassword(), authorizationId, redirectCode);
+        PsuLoginForAisService.Outcome outcome = aisService.loginAndAssociateAuthSession(body.getLogin(), body.getPassword(), authorizationId, redirectCode);
 
         String cookieString = tppAuthResponseCookieBuilder
                 .responseCookieBuilder(
                         ResponseCookie.from(
                                 AUTHORIZATION_SESSION_ID,
-                                psuAuthService.generateToken(Base64.getUrlEncoder().encodeToString(secretKey.getEncoded()))
+                                psuAuthService.generateToken(Base64.getUrlEncoder().encodeToString(outcome.getEncoded()))
                         )
                 ).build()
                 .getCookieString();
 
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
+                .header(LOCATION, outcome.getRedirectLocation())
                 .header(X_REQUEST_ID, xRequestId.toString())
                 .header(SET_COOKIE, cookieString)
                 .build();
