@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
-import de.adorsys.opba.protocol.api.dto.KeyWithParamsDto;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
@@ -15,7 +14,6 @@ import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
-import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
 import de.adorsys.opba.protocol.facade.config.ApplicationTest;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
 import de.adorsys.opba.protocol.facade.services.ProtocolResultHandler;
@@ -65,8 +63,6 @@ public class ServiceContextProviderTest {
     @Autowired
     private BankProtocolRepository protocolRepository;
 
-    @Autowired
-    private SecretKeyOperations secretKeyOperations;
 
     @Autowired
     private TransactionTemplate txTemplate;
@@ -127,11 +123,6 @@ public class ServiceContextProviderTest {
     @SneakyThrows
     private void checkSavedSession(UUID sessionId, EncryptionService encryptionService, FacadeServiceableRequest facadeServiceable) {
         ServiceSession session = serviceSessionRepository.findById(sessionId).get();
-
-        // check that key is recoverable with password
-        KeyWithParamsDto keyWithParams = secretKeyOperations.generateKey(
-            PASSWORD
-        );
 
         // check that in context stored first request parameters facadServicable
         // storing some data to context using provided encryption service

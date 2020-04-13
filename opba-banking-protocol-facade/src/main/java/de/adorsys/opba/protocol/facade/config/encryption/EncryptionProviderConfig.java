@@ -1,29 +1,47 @@
 package de.adorsys.opba.protocol.facade.config.encryption;
 
-import de.adorsys.opba.protocol.api.services.EncryptionService;
-import de.adorsys.opba.protocol.api.services.EncryptionServiceProvider;
-import de.adorsys.opba.protocol.facade.services.NoEncryptionServiceImpl;
+import com.google.common.cache.CacheBuilder;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.crypto.SecretKey;
+import java.time.Duration;
 
-// FIXME - replace with normal encryption
+import static com.google.common.cache.CacheBuilder.newBuilder;
+
 @Configuration
 public class EncryptionProviderConfig {
 
-    @Bean
-    EncryptionServiceProvider dummyEncryption() {
-        return new EncryptionServiceProvider() {
-            @Override
-            public EncryptionService getEncryptionById(String id) {
-                return new NoEncryptionServiceImpl();
-            }
+    public static final long MIN_EXPIRE_SECONDS = 60L;
+    private static final String FACADE_CACHE_BUILDER = "facade-cache-builder";
 
-            @Override
-            public EncryptionService forSecretKey(SecretKey key) {
-                return new NoEncryptionServiceImpl();
-            }
-        };
+    @Bean(FACADE_CACHE_BUILDER)
+    CacheBuilder facadeCacheBuilder(@Value("${facade.expirable.expire-after-write}") Duration expireAfterWrite) {
+        if (expireAfterWrite.getSeconds() < MIN_EXPIRE_SECONDS) {
+            throw new IllegalArgumentException("It is not recommended to have short transient data expiration time, "
+                    + "it must be at least equal to request timeout");
+        }
+
+        return newBuilder()
+                .expireAfterWrite(expireAfterWrite)
+                .maximumSize(Integer.MAX_VALUE);
     }
+
+    @Bean
+    ConsentAuthorizationEncryptionServiceProvider consentAuthEncryptionProvider(ConsentSpecSecretKeyConfig specSecretKeyConfig, @Qualifier(FACADE_CACHE_BUILDER) CacheBuilder builder) {
+        return new ConsentAuthorizationEncryptionServiceProvider(
+                builder.build().asMap(),
+                new EncryptionWithInitVectorOper(specSecretKeyConfig)
+        );
+    }
+
+    @Bean
+    PsuConsentEncryptionServiceProvider psuConsentEncryptionProvider(PsuSecretKeyConfig psuSecretKeyConfig, @Qualifier(FACADE_CACHE_BUILDER) CacheBuilder builder) {
+        return new PsuConsentEncryptionServiceProvider(
+                builder.build().asMap(),
+                new EncryptionWithInitVectorOper(psuSecretKeyConfig)
+        );
+    }
+
 }

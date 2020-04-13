@@ -17,6 +17,7 @@ import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechUse
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechUserSecureStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuDatasafeStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
+import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -37,7 +38,8 @@ public class DatasafeConfig {
 
     @Bean
     public FintechSecureStorage fintechDatasafeServices(
-            @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE + ".fintech") String fintechReadStorePass
+            @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE + ".fintech") String fintechReadStorePass,
+            SecretKeySerde serde
     ) {
         DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig(fintechReadStorePass);
         OverridesRegistry overridesRegistry = new BaseOverridesRegistry();
@@ -50,14 +52,15 @@ public class DatasafeConfig {
                         .overridesRegistry(overridesRegistry)
                         .build(),
                 config,
-                mapper
+                serde
         );
     }
 
     @Bean
     public PsuSecureStorage psuDatasafeServices(
             @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE + ".psu") String psuReadStorePass,
-            KeyGeneratorConfig.PsuSecretKeyGenerator psuSecretKeyGenerator
+            PsuConsentEncryptionServiceProvider encryptionServiceProvider,
+            SecretKeySerde serde
     ) {
         DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig(psuReadStorePass);
         OverridesRegistry overridesRegistry = new BaseOverridesRegistry();
@@ -70,8 +73,8 @@ public class DatasafeConfig {
                         .overridesRegistry(overridesRegistry)
                         .build(),
                 config,
-                psuSecretKeyGenerator,
-                mapper
+                encryptionServiceProvider,
+                serde
         );
     }
 
