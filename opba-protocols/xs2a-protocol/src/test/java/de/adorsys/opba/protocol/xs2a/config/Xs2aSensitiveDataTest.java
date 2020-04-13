@@ -1,5 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.config;
 
+import de.adorsys.opba.protocol.api.services.EncryptionService;
+import de.adorsys.opba.protocol.api.services.EncryptionServiceProvider;
 import de.adorsys.opba.protocol.xs2a.config.flowable.FlowableConfig;
 import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aFlowableProperties;
 import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aObjectMapper;
@@ -71,6 +73,26 @@ public class Xs2aSensitiveDataTest {
 
     @Configuration
     public static class TestConfig {
+
+        @Bean
+        EncryptionServiceProvider encryptionServiceProvider() {
+            return id -> new EncryptionService() {
+                @Override
+                public String getId() {
+                    return "NOOP";
+                }
+
+                @Override
+                public byte[] encrypt(byte[] data) {
+                    return data;
+                }
+
+                @Override
+                public byte[] decrypt(byte[] data) {
+                    return data;
+                }
+            };
+        }
 
         @Bean
         @ConditionalOnMissingBean(TransientDataStorage.class)
