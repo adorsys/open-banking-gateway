@@ -18,5 +18,6 @@ public class ConsentSearchService {
 
     @Transactional
     public Optional<ConsentResult> findConsent(FintechUserSecureStorage.FinTechUserInboxData forData) {
+        return Optional.empty();
     }
 }

@@ -49,13 +49,15 @@ public class DatasafeConfig {
                         .storage(fintechStorage)
                         .overridesRegistry(overridesRegistry)
                         .build(),
-                config
+                config,
+                mapper
         );
     }
 
     @Bean
     public PsuSecureStorage psuDatasafeServices(
-            @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE + ".psu") String psuReadStorePass
+            @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE + ".psu") String psuReadStorePass,
+            KeyGeneratorConfig.PsuSecretKeyGenerator psuSecretKeyGenerator
     ) {
         DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig(psuReadStorePass);
         OverridesRegistry overridesRegistry = new BaseOverridesRegistry();
@@ -67,7 +69,9 @@ public class DatasafeConfig {
                         .storage(psuStorage)
                         .overridesRegistry(overridesRegistry)
                         .build(),
-                config
+                config,
+                psuSecretKeyGenerator,
+                mapper
         );
     }
 
