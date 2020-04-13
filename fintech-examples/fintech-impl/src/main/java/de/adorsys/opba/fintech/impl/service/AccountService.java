@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 @Service
@@ -34,6 +36,8 @@ public class AccountService extends HandleAcceptedService {
     @Autowired
     private RedirectHandlerService redirectHandlerService;
 
+    @Autowired
+    private RequestSigningService requestSigningService;
 
     public AccountService(AuthorizeService authorizeService, TppAisClient tppAisClient, FintechUiConfig uiConfig) {
         super(authorizeService);
@@ -67,6 +71,11 @@ public class AccountService extends HandleAcceptedService {
     }
 
     private ResponseEntity readOpbaResponse(String bankID, SessionEntity sessionEntity, String redirectCode) {
+        UUID xRequestId = UUID.fromString(restRequestContext.getRequestId());
+        String timeNow = Instant.now().atOffset(ZoneOffset.UTC).toString();
+        String dataForSign = xRequestId.toString() + timeNow; // TODO We need to add headers for PUBLIC KEY, X_REQUEST_SIGNATURE and X_TIMESTAMP_UTC
+        String signature = requestSigningService.sign(dataForSign);
+
         ResponseEntity accounts;
         if (null != sessionEntity.getServiceSessionId() && sessionEntity.getConsentConfirmed()) {
             accounts = tppAisClient.getAccounts(

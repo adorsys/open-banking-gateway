@@ -93,6 +93,12 @@
         </dependency>
 
         <dependency>
+            <groupId>io.fusionauth</groupId>
+            <artifactId>fusionauth-jwt</artifactId>
+            <version>3.1.7</version>
+        </dependency>
+
+        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>${commons-codec.version}</version>
@@ -148,6 +154,18 @@
             <artifactId>h2</artifactId>
             <version>${h2.database.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo</artifactId>
+            <version>5.0.0-RC1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-banking-rest-api</artifactId>
+            <version>0.0.7-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

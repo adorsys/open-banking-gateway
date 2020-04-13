@@ -55,3 +55,8 @@ fintech-ui:
   redirect-url: http://localhost:4444/redirect-after-consent?redirectCode={redirectCode}
   unauthorized-url: http://localhost:4444/
   exception-url: http://localhost:4444/excaption-redirect
+
+security:
+  private-key-path: private_key.pem
+  signIssuer: fintech.com
+  signSubject: fintech@awesome-fintech.com

@@ -12,6 +12,10 @@ public class HttpHeaders {
     public static final String X_REQUEST_ID = "X-Request-ID";
     public static final String COMPUTE_PSU_IP_ADDRESS = "Compute-PSU-IP-Address";
 
+    public static final String X_TIMESTAMP_UTC = "X-Timestamp-UTC";
+    public static final String X_REQUEST_SIGNATURE = "X-Request-Signature";
+    public static final String FINTECH_ID = "fintech_id";
+
     @UtilityClass
     public class UserAgentContext {
         public static final String PSU_IP_ADDRESS = "PSU-IP-Address";
