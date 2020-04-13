@@ -1,6 +1,6 @@
 package de.adorsys.opba.fintech.impl.web.filter;
 
-import de.adorsys.opba.fintech.impl.service.DataEncryptionService;
+import de.adorsys.opba.fintech.impl.service.RequestSigningService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -12,10 +12,10 @@ import java.io.IOException;
 
 @Component
 public class XRequestIdSigningFilter extends OncePerRequestFilter {
-    private final DataEncryptionService dataEncryptionService;
+    private final RequestSigningService requestSigningService;
 
-    public XRequestIdSigningFilter(DataEncryptionService dataEncryptionService) {
-        this.dataEncryptionService = dataEncryptionService;
+    public XRequestIdSigningFilter(RequestSigningService requestSigningService) {
+        this.requestSigningService = requestSigningService;
     }
 
     @Override
@@ -24,7 +24,7 @@ public class XRequestIdSigningFilter extends OncePerRequestFilter {
         HeaderModifyingRequestWrapper servletRequestWrapper = new HeaderModifyingRequestWrapper(request);
 
         if (xRequestIdHeader != null) {
-            String encryptedHeader = dataEncryptionService.encrypt(xRequestIdHeader);
+            String encryptedHeader = requestSigningService.sign(xRequestIdHeader);
             servletRequestWrapper.addHeader("X-Request-ID", encryptedHeader);
         }
 

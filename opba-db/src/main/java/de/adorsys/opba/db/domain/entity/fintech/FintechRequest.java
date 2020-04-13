@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.SequenceGenerator;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -33,5 +34,5 @@ public class FintechRequest {
     private Fintech fintech;
 
     @Column(nullable = false)
-    private String xRequestId;
+    private UUID xRequestId;
 }

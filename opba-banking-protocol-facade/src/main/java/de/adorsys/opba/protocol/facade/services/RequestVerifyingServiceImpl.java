@@ -6,9 +6,9 @@ import java.util.UUID;
 
 // TODO Stub implementation until Libaraty finally decided
 @Service
-public class DataDecryptionServiceImpl implements DataDecryptionService {
+public class RequestVerifyingServiceImpl implements RequestVerifyingService {
     @Override
-    public String decrypt(String value, byte[] publicKey) {
+    public String verify(String value, byte[] publicKey) {
         return UUID.randomUUID().toString();
     }
 }
