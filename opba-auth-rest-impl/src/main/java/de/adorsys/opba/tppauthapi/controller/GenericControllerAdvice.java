@@ -1,8 +1,8 @@
 package de.adorsys.opba.tppauthapi.controller;
 
-import de.adorsys.opba.tppauthapi.exceptions.PsuAuthenticationException;
-import de.adorsys.opba.tppauthapi.exceptions.PsuAuthorizationException;
-import de.adorsys.opba.tppauthapi.exceptions.PsuRegisterException;
+import de.adorsys.opba.protocol.facade.exceptions.PsuAuthenticationException;
+import de.adorsys.opba.protocol.facade.exceptions.PsuAuthorizationException;
+import de.adorsys.opba.protocol.facade.exceptions.PsuRegisterException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
