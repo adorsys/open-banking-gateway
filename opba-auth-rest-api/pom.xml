@@ -85,7 +85,7 @@
                                 <dateLibrary>java8</dateLibrary>
                                 <java8>true</java8>
                                 <implicitHeaders>false</implicitHeaders>
-                                <delegatePattern>true</delegatePattern>
+                                <defaultInterfaces>false</defaultInterfaces>
                                 <useTags>true</useTags>
                                 <library>spring-mvc</library>
                                 <swaggerDocketConfig>false</swaggerDocketConfig>

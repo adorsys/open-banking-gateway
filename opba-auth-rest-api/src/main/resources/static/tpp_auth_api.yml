@@ -11,9 +11,9 @@ paths:
   /v1/psu/login:
     post:
       tags:
-        - Psu Auth
+        - Psu Authentication
       operationId: login
-      summary: login user to open-banking
+      summary: Login user to open-banking
       description: TBD
       requestBody:
         description: User credentials object
@@ -30,11 +30,37 @@ paths:
           $ref: '#/components/responses/202_UserAccepted'
         '401':
           $ref: '#/components/responses/401_Unauthorised'
+  /v1/psu/ais/{authorization-id}/for-approval/login:
+    post:
+      tags:
+        - Psu Authentication and consent approval
+      operationId: loginForApproval
+      summary: Login user to open-banking
+      description: TBD
+      requestBody:
+        description: User credentials object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PsuAuthBody'
+        required: true
+      parameters:
+        #common header parameter
+        - $ref: '#/components/parameters/X-Request-ID'
+        #path
+        - $ref: "#/components/parameters/authorization-id"
+        #query
+        - $ref: "#/components/parameters/redirect-code"
+      responses:
+        '202':
+          $ref: '#/components/responses/202_UserAccepted'
+        '401':
+          $ref: '#/components/responses/401_Unauthorised'
 
   /v1/psu/register:
     post:
       tags:
-        - Psu Auth
+        - Psu Authentication
       operationId: registration
       summary: registration user in open-banking db
       description: TBD
@@ -55,34 +81,9 @@ paths:
           $ref: '#/components/responses/400_BadRequest'
 
 components:
-  headers:
-    X-Request-ID:
-      required: true
-      description: |
-        Unique ID that identifies this request through common workflow.
-        Shall be contained in HTTP Response as well.
-      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
-      schema:
-        type: string
-        format: uuid
-
   parameters:
-    PsuId:
-      name: psuId
-      in: query
-      required: true
-      schema:
-        type: string
-
-    Password:
-      name: password
-      in: query
-      required: true
-      schema:
-        type: string
-
     X-Request-ID:
-      name: X-Request-ID
+      name: xRequestId
       in: header
       required: true
       description: |
@@ -92,7 +93,22 @@ components:
       schema:
         type: string
         format: uuid
-
+    authorization-id:
+      name: authorizationId
+      in: path
+      description: Authorization session ID to approve
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+    redirect-code:
+      name: redirectCode
+      in: query
+      required: true
+      description: Redirect code that acts as a password protecting FinTech requested consent specification
+      example: "12345"
+      schema:
+        type: string
   responses:
     201_UserCreated:
       description: User created sucessfully
@@ -144,16 +160,16 @@ components:
     PsuAuthBody:
       type: object
       required:
-        - id
+        - login
         - password
       properties:
-        id:
+        login:
           type: string
         password:
           type: string
       example:
         {
-          "id": "user1",
+          "login": "user1",
           "password": "123"
         }
 
