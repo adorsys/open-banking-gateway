@@ -27,4 +27,5 @@ public class FacadeServiceableRequest {
     private final String fintechRedirectUrlNok;
 
     private final String sessionPassword;
+    private final String keyFromCookie;
 }

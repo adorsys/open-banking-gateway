@@ -77,12 +77,8 @@ facade:
     login-page: ${protocol.embedded-ui-base-url}/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
     password:
       byte-size: 8
-  encryption:
-    providerName: BC
-    algorithm: PBEWithSHA256And256BitAES-CBC-BC
-    saltLength: 8
-    iterationCount: 1024
-    keySetPath: example-keyset.json
+  expirable:
+    expire-after-write: PT10M
 
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
@@ -108,9 +104,13 @@ cookie:
   same-site: Strict
 psu:
   secret-key:
-    algo: AES
+    key-algo: AES
+    cipher-algo: AES/GCM/NoPadding
+    iv-size: 12
     len: 128
 consent-spec:
   secret-key:
-    algo: AES
+    key-algo: AES
+    cipher-algo: AES/GCM/NoPadding
+    iv-size: 12
     len: 128

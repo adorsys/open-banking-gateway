@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
-import de.adorsys.opba.protocol.api.services.EncryptionServiceProvider;
+import de.adorsys.opba.protocol.api.services.ProtocolFacingEncryptionServiceProvider;
 import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
 import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.flowable.spring.boot.EngineConfigurationConfigurer;
@@ -25,7 +25,7 @@ public class FlowableConfig {
     @Bean
     EngineConfigurationConfigurer<SpringProcessEngineConfiguration> customizeListenerAndJsonSerializer(
         TransientDataStorage dataStorage,
-        EncryptionServiceProvider encryptionServiceProvider,
+        ProtocolFacingEncryptionServiceProvider encryptionServiceProvider,
         Xs2aFlowableProperties flowableProperties,
         Xs2aObjectMapper mapper
     ) {

@@ -1,24 +1,20 @@
 package de.adorsys.opba.protocol.facade.config.encryption.impl.psu;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.datasafe.business.impl.service.DefaultDatasafeServices;
 import de.adorsys.datasafe.directory.api.config.DFSConfig;
 import de.adorsys.datasafe.types.api.actions.ReadRequest;
 import de.adorsys.datasafe.types.api.actions.WriteRequest;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
-import de.adorsys.opba.protocol.facade.config.encryption.KeyGeneratorConfig;
+import de.adorsys.opba.protocol.facade.config.encryption.PsuConsentEncryptionServiceProvider;
+import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.BaseDatasafeDbStorageService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.Delegate;
 import org.jetbrains.annotations.NotNull;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -31,8 +27,8 @@ public class PsuSecureStorage {
     private final DefaultDatasafeServices datasafeServices;
 
     private final DFSConfig config;
-    private final KeyGeneratorConfig.PsuSecretKeyGenerator keyGenerator;
-    private final ObjectMapper mapper;
+    private final PsuConsentEncryptionServiceProvider encryptionServiceProvider;
+    private final SecretKeySerde serde;
 
     public void registerPsu(Psu psu, Supplier<char[]> password) {
         this.userProfile()
@@ -43,27 +39,26 @@ public class PsuSecureStorage {
     }
 
     @SneakyThrows
-    public SecretKey getOrCreateKeyFromPrivateForAspsp(Supplier<char[]> password, AuthSession session) {
+    public SecretKeyWithIv getOrCreateKeyFromPrivateForAspsp(Supplier<char[]> password, AuthSession session) {
         try (InputStream is = datasafeServices.privateService().read(
                 ReadRequest.forDefaultPrivate(
                         session.getPsu().getUserIdAuth(password),
                         authId(session)
                 )
         )) {
-            SecretKeyContainer container = mapper.readValue(is, SecretKeyContainer.class);
-            return new SecretKeySpec(container.getEncoded(), container.getAlgo());
+            return serde.readAsBytes(is);
         } catch (BaseDatasafeDbStorageService.DbStorageEntityNotFoundException ex) {
             return generateAndSaveAspspSecretKey(password, session);
         }
     }
 
     @NotNull
-    private SecretKey generateAndSaveAspspSecretKey(Supplier<char[]> password, AuthSession session) throws IOException {
-        SecretKey key = keyGenerator.generate();
+    private SecretKeyWithIv generateAndSaveAspspSecretKey(Supplier<char[]> password, AuthSession session) throws IOException {
+        SecretKeyWithIv key = encryptionServiceProvider.generateKey();
         try (OutputStream os = datasafeServices.privateService().write(
                 WriteRequest.forDefaultPrivate(session.getPsu().getUserIdAuth(password), authId(session)))
         ) {
-            os.write(mapper.writeValueAsBytes(new SecretKeyContainer(key.getAlgorithm(), key.getEncoded())));
+            serde.writeAsBytes(key, os);
         }
         return key;
     }
@@ -71,14 +66,5 @@ public class PsuSecureStorage {
     @NotNull
     private String authId(AuthSession authSession) {
         return authSession.getId().toString();
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    private static class SecretKeyContainer {
-
-        private String algo;
-        private byte[] encoded;
     }
 }

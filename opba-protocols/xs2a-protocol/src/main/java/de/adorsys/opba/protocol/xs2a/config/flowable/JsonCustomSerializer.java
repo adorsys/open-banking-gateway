@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.config.flowable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.opba.protocol.api.services.EncryptionServiceProvider;
+import de.adorsys.opba.protocol.api.services.ProtocolFacingEncryptionServiceProvider;
 import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -16,7 +16,7 @@ class JsonCustomSerializer implements VariableType {
 
     static final String JSON = "as_json";
 
-    private final EncryptionServiceProvider encryptionServiceProvider;
+    private final ProtocolFacingEncryptionServiceProvider encryptionServiceProvider;
     private final TransientDataStorage transientDataStorage;
     private final ObjectMapper mapper;
     private final List<String> allowOnlyClassesWithPrefix;
