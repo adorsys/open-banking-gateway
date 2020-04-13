@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityManager;
+import java.net.URI;
 
 import static de.adorsys.opba.db.domain.entity.ProtocolAction.AUTHORIZATION;
 import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.AUTHORIZATION_SESSION_ID;
@@ -79,7 +80,11 @@ public class NewAuthSessionHandler {
 
         fintechUserVault.toInboxForAuth(
                 newAuth,
-                new FintechUserSecureStorage.FinTechUserInboxData(result.getRedirectionTo(), session)
+                new FintechUserSecureStorage.FinTechUserInboxData(
+                        URI.create(request.getFintechRedirectUrlOk()),
+                        result.getRedirectionTo(),
+                        session
+                )
         );
         result.setRedirectionTo(
                 UriComponentsBuilder
