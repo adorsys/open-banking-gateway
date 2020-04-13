@@ -11,6 +11,10 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
 public interface UuidMapper {
 
     default String map(UUID from) {
+        if (null == from) {
+            return null;
+        }
+
         return from.toString();
     }
 }

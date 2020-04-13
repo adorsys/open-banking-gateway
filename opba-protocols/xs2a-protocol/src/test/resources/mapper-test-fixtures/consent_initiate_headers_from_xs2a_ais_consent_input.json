@@ -29,6 +29,7 @@
     "LIST_ACCOUNTS": "xs2a-list-accounts",
     "LIST_TRANSACTIONS": "xs2a-list-transactions"
   },
+  "requestId": "cef0cbf3-6458-4f13-a418-ee4d7e750511",
   "sagaId": "25e0c2a1-6751-11ea-9989-acde48001122",
   "serviceSessionId": "c86feb1e-9ba8-4407-918f-8183143df295",
   "authorizationSessionIdIfOpened": "c86feb1e-9ba8-4407-918f-8183143df295",

@@ -31,6 +31,6 @@ public class ConsentInitiateHeadersFromAisCtxTest {
         ConsentInitiateHeaders actual = mapper.map(mappingInput);
 
         // Then
-        assertThat(expected).isEqualToComparingFieldByField(actual);
+        assertThat(actual).isEqualToComparingFieldByField(expected);
     }
 }
