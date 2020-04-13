@@ -2,17 +2,15 @@ package de.adorsys.opba.protocol.facade.services.authorization.internal.psuauth;
 
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechUserRepository;
+import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechUserSecureStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
 import de.adorsys.opba.protocol.facade.services.authorization.internal.SecretKeyForAuthorizationExchangeService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Delegate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.crypto.SecretKey;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +24,7 @@ public class PsuFintechAssociationService {
 
     @Transactional
     public void shareAspspSecretKeyWithFintech(String psuPassword, AuthSession session) {
-        SecretKey psuAspspKey = psuVault.getOrCreateKeyFromPrivateForAspsp(
+        SecretKeyWithIv psuAspspKey = psuVault.getOrCreateKeyFromPrivateForAspsp(
                 psuPassword::toCharArray,
                 session
         );
@@ -41,18 +39,16 @@ public class PsuFintechAssociationService {
                 fintechUserPassword::toCharArray
         );
 
-        SecretKey specEncryptionKey = keyExchange.encryptAndStoreForFuture(session, data);
+        SecretKeyWithIv specEncryptionKey = keyExchange.encryptAndStoreForFuture(session, data);
         fintechUserRepository.delete(session.getFintechUser());
         return new Association(specEncryptionKey, data);
     }
 
+    @Getter
     @RequiredArgsConstructor
-    public static class Association implements SecretKey {
+    public static class Association {
 
-        @Delegate
-        private final SecretKey secretKey;
-
-        @Getter
+        private final SecretKeyWithIv secretKey;
         private final FintechUserSecureStorage.FinTechUserInboxData consentSpec;
     }
 }
