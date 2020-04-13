@@ -77,7 +77,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
 
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
-                .header(LOCATION, outcome.getRedirectLocation())
+                .header(LOCATION, outcome.getRedirectLocation().toASCIIString())
                 .header(X_REQUEST_ID, xRequestId.toString())
                 .header(SET_COOKIE, cookieString)
                 .build();
@@ -89,7 +89,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
 
         HttpHeaders responseHeaders = new HttpHeaders();
         // FIXME - this is incorrect as there should be user binding after registration, but currently keeping as is
-        responseHeaders.add(HttpHeaders.LOCATION, authConfig.getRedirect().getLoginPage());
+        responseHeaders.add(LOCATION, authConfig.getRedirect().getLoginPage());
         return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
     }
 

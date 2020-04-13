@@ -97,7 +97,7 @@ public class PsuAuthControllerTest {
 
     private PsuAuthBody getPsuAuthBody() {
         PsuAuthBody psuAuthBody = new PsuAuthBody();
-        psuAuthBody.setId("login");
+        psuAuthBody.setLogin("login");
         psuAuthBody.setPassword("password");
         return psuAuthBody;
     }
