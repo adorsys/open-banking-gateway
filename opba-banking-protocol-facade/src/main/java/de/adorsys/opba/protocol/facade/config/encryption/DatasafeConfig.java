@@ -19,10 +19,13 @@ import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuDatasafeSto
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
 import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
 import lombok.RequiredArgsConstructor;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.PostConstruct;
+import java.security.Security;
 import java.util.function.Function;
 
 @Configuration
@@ -95,6 +98,15 @@ public class DatasafeConfig {
                 config,
                 mapper
         );
+    }
+
+    @PostConstruct
+    void provideBouncyCastle() {
+        if (null != Security.getProvider(BouncyCastleProvider.PROVIDER_NAME)) {
+            return;
+        }
+
+        Security.addProvider(new BouncyCastleProvider());
     }
 
     // Path encryption that does not encrypt paths - as for use cases of OpenBanking we need to protect data
