@@ -32,7 +32,7 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class DatasafeConfig {
 
-    private static final String ENCRYPTION_DATASAFE_READ_KEYSTORE = "encryption.datasafe.read-keystore";
+    private static final String ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX = "${encryption.datasafe.read-keystore";
 
     private final ObjectMapper mapper;
     private final FintechDatasafeStorage fintechStorage;
@@ -41,7 +41,7 @@ public class DatasafeConfig {
 
     @Bean
     public FintechSecureStorage fintechDatasafeServices(
-            @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE + ".fintech") String fintechReadStorePass,
+            @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX + ".fintech}") String fintechReadStorePass,
             SecretKeySerde serde
     ) {
         DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig(fintechReadStorePass);
@@ -61,7 +61,7 @@ public class DatasafeConfig {
 
     @Bean
     public PsuSecureStorage psuDatasafeServices(
-            @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE + ".psu") String psuReadStorePass,
+            @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX + ".psu}") String psuReadStorePass,
             PsuConsentEncryptionServiceProvider encryptionServiceProvider,
             SecretKeySerde serde
     ) {
@@ -83,7 +83,7 @@ public class DatasafeConfig {
 
     @Bean
     public FintechUserSecureStorage fintechUserDatasafeServices(
-            @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE + ".fintech-user") String psuReadStorePass
+            @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX + ".fintech-user}") String psuReadStorePass
     ) {
         DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig(psuReadStorePass);
         OverridesRegistry overridesRegistry = new BaseOverridesRegistry();

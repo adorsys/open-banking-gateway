@@ -54,12 +54,13 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
     private final GetAuthorizationStateService authorizationStateService;
     private final UpdateAuthorizationService updateAuthorizationService;
     private final FromAspspRedirectHandler fromAspspRedirectHandler;
+    private final FacadeServiceableRequest serviceableTemplate;
 
     @Override
     public CompletableFuture authUsingGET(String authId, String redirectCode) {
         return authorizationStateService.execute(
                 AuthorizationRequest.builder()
-                        .facadeServiceable(FacadeServiceableRequest.builder()
+                        .facadeServiceable(serviceableTemplate.toBuilder()
                                 // Get rid of CGILIB here by copying:
                                 .uaContext(userAgentContext.toBuilder().build())
                                 .redirectCode(redirectCode)
@@ -79,7 +80,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
             String redirectCode) {
         return updateAuthorizationService.execute(
                 AuthorizationRequest.builder()
-                        .facadeServiceable(FacadeServiceableRequest.builder()
+                        .facadeServiceable(serviceableTemplate.toBuilder()
                                 // Get rid of CGILIB here by copying:
                                 .uaContext(userAgentContext.toBuilder().build())
                                 .redirectCode(redirectCode)
@@ -98,7 +99,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
     @Override
     public CompletableFuture denyUsingPOST(DenyRequest body, UUID xRequestID, String xXsrfToken, String authId) {
         return denyAuthorizationService.execute(DenyAuthorizationRequest.builder()
-                .facadeServiceable(FacadeServiceableRequest.builder()
+                .facadeServiceable(serviceableTemplate.toBuilder()
                         // Get rid of CGILIB here by copying:
                         .uaContext(userAgentContext.toBuilder().build())
                         .authorizationSessionId(authId)
@@ -117,7 +118,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
 
         return fromAspspRedirectHandler.execute(
             FromAspspRequest.builder()
-                .facadeServiceable(FacadeServiceableRequest.builder()
+                .facadeServiceable(serviceableTemplate.toBuilder()
                     .redirectCode(redirectCode)
                     .authorizationSessionId(authId)
                     .build()
@@ -135,7 +136,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
 
         return fromAspspRedirectHandler.execute(
             FromAspspRequest.builder()
-                .facadeServiceable(FacadeServiceableRequest.builder()
+                .facadeServiceable(serviceableTemplate.toBuilder()
                     .redirectCode(redirectCode)
                     .authorizationSessionId(authId)
                     .build()

@@ -77,6 +77,8 @@ facade:
     login-page: ${protocol.embedded-ui-base-url}/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
     password:
       byte-size: 8
+  cookie:
+    path-template: / # TODO local-only due to proxies and double slashes - correct value is `/ais/{authorizationSessionId}`
   expirable:
     expire-after-write: PT10M
 
@@ -97,7 +99,7 @@ tpp:
   public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu8LW1QQQ1pWUleybA4BBwUxwU9BR9GGYfelsBT8oPPCKrIn9V79/GaBqnB4WC7MMsxYjchLmVm5c2tb9OS1/qVuKFND4vyE1+G4lEK+aRarklVdKjgWDn9CQs8SA7CitU4hcYc9wkRWftQ13NMeWSQEqisTsFX/qwkiiN8gdGe+vgCVH0W9Moi7zFt/IlpAu/ViXMl1x5A/DhhL8iWnW7IqUMcQzho8zNH2v7wc3fBHkXKQvH7MXx/3fFieKAe39unltnU2NsCmoZYGiso5pnOwyE6zxfJ0Vt/YR+eAw27Wk8lgl+r944PYsHIGJAfQFi2GMc8keJ9lbmxgV6Ys4awIDAQAB
   sign-algo: RSA
 cookie:
-  secure: true
+  secure: false # localhost-only - TODO application-dev.yml for dev env?
   max-age: PT300S
   http-only: true
   path: /
