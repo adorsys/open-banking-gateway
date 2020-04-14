@@ -72,7 +72,7 @@ public class EncryptionWithInitVectorOper {
         @Override
         @Synchronized("encryption")
         @SneakyThrows
-        public synchronized byte[] encrypt(byte[] data) {
+        public byte[] encrypt(byte[] data) {
             return encryption.get().doFinal(data);
         }
 
