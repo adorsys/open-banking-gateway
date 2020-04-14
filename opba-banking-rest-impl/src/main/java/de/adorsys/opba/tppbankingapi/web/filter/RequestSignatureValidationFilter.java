@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Duration;
+import java.time.OffsetDateTime;
 
 import static de.adorsys.opba.restapi.shared.HttpHeaders.FINTECH_ID;
 
@@ -49,13 +50,21 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
             return;
         }
 
+        String requestTimeStamp = signData.substring(36);
+        OffsetDateTime dateTime = OffsetDateTime.parse(requestTimeStamp);
 
-
-
-
-
+        if (operationDateTimeNowWithinLimit(dateTime)) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Timestamp validation failed");
+            return;
+        }
 
 
         filterChain.doFilter(request, response);
     }
+
+    private boolean operationDateTimeNowWithinLimit(OffsetDateTime dateTime) {
+        return OffsetDateTime.now().plus(timeLimit).isBefore(dateTime)
+                       || OffsetDateTime.now().minus(timeLimit).isAfter(dateTime);
+    }
+
 }
