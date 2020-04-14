@@ -26,6 +26,11 @@
         <!-- impl -->
         <dependency>
             <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-api-security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
             <artifactId>opba-db</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -54,10 +59,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

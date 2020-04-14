@@ -1,22 +1,18 @@
-package de.adorsys.opba.tppauthapi;
+package de.adorsys.opba.api.security.service;
 
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
-import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
-import de.adorsys.opba.protocol.facade.config.auth.TppTokenProperties;
-import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
-import de.adorsys.opba.protocol.facade.services.psu.PsuAuthService;
+import de.adorsys.opba.api.security.EnableTokenBasedApiSecurity;
+import de.adorsys.opba.api.security.config.TppTokenProperties;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -27,22 +23,17 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
+@ActiveProfiles("test")
 @SpringBootTest(classes = TokenSignVerifyTest.TestConfig.class)
 public class TokenSignVerifyTest {
 
     @Autowired
     private TppTokenProperties tppTokenProperties;
-    @MockBean
-    @SuppressWarnings("PMD.UnusedPrivateField")
-    private PsuRepository psuRepository;
-    @MockBean
-    @SuppressWarnings("PMD.UnusedPrivateField")
-    private PsuSecureStorage psuSecureStorage;
+
     @Autowired
-    PsuAuthService psuAuthService;
+    private TokenBasedAuthService psuAuthService;
 
     @Test
     @SneakyThrows
@@ -53,7 +44,7 @@ public class TokenSignVerifyTest {
 
         JWSVerifier verifier = new RSASSAVerifier((RSAPublicKey) loadPublicKey());
         JWSObject jwsObject = JWSObject.parse(token);
-        assertTrue(jwsObject.verify(verifier));
+        assertThat(jwsObject.verify(verifier)).isTrue();
         assertThat(jwsObject.getPayload().toJSONObject().get("sub")).isEqualTo(message);
     }
 
@@ -82,8 +73,7 @@ public class TokenSignVerifyTest {
     }
 
     @Configuration
-    @ComponentScan(basePackages = "de.adorsys.opba.tppauthapi")
-    @EnableConfigurationProperties
+    @EnableTokenBasedApiSecurity
     public static class TestConfig {
     }
 }
