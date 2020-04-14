@@ -60,12 +60,14 @@ public class NewAuthSessionHandler {
                 .orElseThrow(() -> new IllegalStateException("No registered FinTech: " + request.getAuthorizationSessionId()));
 
         String newPassword = passwordGenerator.generate();
-        FintechUser user = fintechUsers.findByPsuFintechIdAndFintech(request.getFintechUserId(), fintech)
-                .orElseGet(() -> {
-                    FintechUser newUser = fintechUsers.save(FintechUser.builder().psuFintechId(request.getFintechUserId()).fintech(fintech).build());
-                    fintechUserVault.registerFintechUser(newUser, newPassword::toCharArray);
-                    return newUser;
-                });
+        // Always create new user entity, as this is more like authorization dummy user.
+        FintechUser user = fintechUsers.save(
+                FintechUser.builder()
+                        .psuFintechId(request.getFintechUserId())
+                        .fintech(fintech)
+                        .build()
+        );
+        fintechUserVault.registerFintechUser(user, newPassword::toCharArray);
 
         AuthSession newAuth = authenticationSessions.save(
                 AuthSession.builder()

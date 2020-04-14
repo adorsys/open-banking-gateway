@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Scope;
 
 @Configuration
 @EnableTokenBasedApiSecurity
-public class AuthConfig {
+public class TppPsuAuthConfig {
 
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
