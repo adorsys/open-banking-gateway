@@ -100,6 +100,36 @@ components:
         type: string
         format: uuid
 
+    X-Timestamp-UTC:
+      name: X-Timestamp-UTC
+      in: header
+      required: false
+      description: |
+        Request sending timestamp, defined by RFC2616.
+      example: "Tue, 14 Apr 2020 08:49:37 GMT"
+      schema:
+        type: string
+
+    X-Request-Signature:
+      name: X-Request-Signature
+      in: header
+      required: false
+      description: |
+        Signed with RSA algorithm data, to be validated by the server.
+      schema:
+        type: string
+        format: byte
+
+    fintech_id:
+      name: fintech_id
+      in: header
+      required: false
+      description: |
+        Unique ID that identifies fintech. It is used for security purposes.
+      example: "fintech_123"
+      schema:
+        type: string
+
   responses:
     401_UNAUTHORIZED:
       description: |
