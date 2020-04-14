@@ -1,7 +1,7 @@
 package de.adorsys.fintech.tests.e2e.steps;
 
-import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -18,7 +18,7 @@ import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
-public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFintech<SELF>> extends Stage<SELF> {
+public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFintech<SELF>> extends AccountInformationRequestCommon<SELF> {
 
     static final String FINTECH_URI = "https://obg-dev-fintechui.cloud.adorsys.de";
 
@@ -48,6 +48,12 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     public SELF user_back_to_bank_search(WebDriver webDriver) {
         waitForPageLoad(webDriver);
         clickOnButton(webDriver, By.className("icon__container"), true);
+        return self();
+    }
+
+    public SELF user_click_on_accounts_list(WebDriver driver) {
+        wait(driver);
+        clickOnButton(driver, By.className("lacc-list-item"), false);
         return self();
     }
 
