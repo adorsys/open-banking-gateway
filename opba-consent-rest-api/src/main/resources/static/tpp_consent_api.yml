@@ -420,17 +420,18 @@ components:
       in: header
       required: false
       description: |
-        Request sending timestamp, defined by RFC2616.
-      example: "Tue, 14 Apr 2020 08:49:37 GMT"
+        The timestamp of the operation.
+      example: "2020-04-14T08:46:33.629Z"
       schema:
         type: string
+        format: date-time
 
     X-Request-Signature:
       name: X-Request-Signature
       in: header
       required: false
       description: |
-        Signed with RSA algorithm data, to be validated by the server.
+        A signature of the request by the TPP fintech.
       schema:
         type: string
         format: byte
@@ -440,7 +441,7 @@ components:
       in: header
       required: false
       description: |
-        Unique ID that identifies fintech. It is used for security purposes.
+        Unique ID that identifies fintech.
       example: "fintech_123"
       schema:
         type: string
