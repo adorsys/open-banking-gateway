@@ -37,10 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -117,7 +114,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
         final Integer start = 1;
         final Integer max = 2;
 
-        when(tppBankSearchClientFeignMock.bankSearchGET(any(), any(), eq(keyword), eq(start), eq(max)))
+        when(tppBankSearchClientFeignMock.bankSearchGET(any(), eq(keyword), any(), any(), any(), eq(start), eq(max)))
                 .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class)));
 
         LoginBody loginBody = new LoginBody("peter", "1234");
@@ -172,7 +169,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
             final Integer max = 2;
             log.info("DO Bank Search ({}, {}, {}) ==============================", keyword, start, max);
 
-            when(tppBankSearchClientFeignMock.bankSearchGET(any(), any(), eq(keyword), eq(start), eq(max)))
+            when(tppBankSearchClientFeignMock.bankSearchGET(any(), eq(keyword), any(), any(), any(), eq(start), eq(max)))
                     .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankSearch(keyword, start, max)), BankSearchResponse.class)));
 
             result.setBankUUID(bankSearchOk(keyword, start, max));
@@ -180,7 +177,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
 
         {
             log.info("DO Bank Profile ({}) ============================== ", result.getBankUUID());
-            when(tppBankSearchClientFeignMock.bankProfileGET(any(), any(), eq(result.getBankUUID())))
+            when(tppBankSearchClientFeignMock.bankProfileGET(any(), eq(result.getBankUUID()), any(), any(), any()))
                     .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankProfile(result.getBankUUID())), BankProfileResponse.class)));
 
             result.setServices(bankProfile(result.getBankUUID()));
