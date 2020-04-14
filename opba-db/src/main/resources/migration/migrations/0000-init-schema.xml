@@ -193,7 +193,7 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="psu_fintech_id" type="VARCHAR(64)">
-                <constraints unique="true" nullable="false"/>
+                <constraints nullable="false"/>
             </column>
             <column name="fintech_id" type="BIGINT">
                 <constraints nullable="false"/>
