@@ -8,6 +8,8 @@ test:
   webdriver:
     timeout: PT10S
   fintech:
+    search:
+      uri: https://obg-dev-fintechui.cloud.adorsys.de/search
     uri: https://obg-dev-fintechui.cloud.adorsys.de
 
 debug: true
