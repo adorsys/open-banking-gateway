@@ -120,6 +120,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="enc_consent_spec" type="BLOB"/>
+            <column name="context" type="TEXT"/>
             <column name="version" type="INT">
                 <constraints nullable="false"/>
             </column>

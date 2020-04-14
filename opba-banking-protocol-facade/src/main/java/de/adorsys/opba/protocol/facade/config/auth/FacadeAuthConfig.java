@@ -18,6 +18,9 @@ public class FacadeAuthConfig {
     @NotNull
     private Redirect redirect;
 
+    @NotNull
+    private AuthorizationCookie cookie;
+
     @Data
     @Validated
     public static class Redirect {
@@ -36,5 +39,15 @@ public class FacadeAuthConfig {
             @SuppressWarnings("checkstyle:MagicNumber") // Magic minimal value - at least 8 bytes of entropy
             private int byteSize;
         }
+    }
+
+    @Data
+    @Validated
+    public static class AuthorizationCookie {
+
+        @NotBlank
+        private String pathTemplate;
+
+        private String domain; // null allowed
     }
 }

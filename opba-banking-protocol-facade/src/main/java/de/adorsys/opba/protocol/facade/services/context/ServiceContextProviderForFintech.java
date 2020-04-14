@@ -8,8 +8,8 @@ import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
-import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
+import de.adorsys.opba.protocol.facade.config.encryption.EncryptionServiceWithKey;
 import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -49,6 +49,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
                 .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
                 .bankId(request.getFacadeServiceable().getBankId())
                 .authSessionId(null == authSession ? null : authSession.getId())
+                .authContext(null == authSession ? null : authSession.getContext())
                 // Currently 1-1 auth-session to service session
                 .futureAuthSessionId(session.getId())
                 .futureRedirectCode(UUID.randomUUID())
@@ -124,9 +125,17 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     @Nullable
-    private <T extends FacadeServiceableGetter> EncryptionService getEncryption(T request) {
-        return null == request.getFacadeServiceable().getKeyFromCookie()
-                ? null
-                : encryptionServiceProvider.forSecretKey(secretKeySerde.fromString(request.getFacadeServiceable().getKeyFromCookie()));
+    private <T extends FacadeServiceableGetter> EncryptionServiceWithKey getEncryption(T request) {
+        return null == request.getFacadeServiceable().getAuthorizationKey()
+                ? fintechUserFacingSecretKeyBasedEncryption()
+                : cookieBasedKeyEncryption(request);
+    }
+
+    private <T extends FacadeServiceableGetter> EncryptionServiceWithKey cookieBasedKeyEncryption(T request) {
+        return encryptionServiceProvider.forSecretKey(secretKeySerde.fromString(request.getFacadeServiceable().getAuthorizationKey()));
+    }
+
+    private <T extends FacadeServiceableGetter> EncryptionServiceWithKey fintechUserFacingSecretKeyBasedEncryption() {
+        return encryptionServiceProvider.forSecretKey(encryptionServiceProvider.generateKey());
     }
 }

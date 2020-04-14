@@ -22,7 +22,7 @@ public class SecretKeyForAuthorizationExchangeService {
 
     @SneakyThrows
     @Transactional
-    public SecretKeyWithIv encryptAndStoreForFuture(AuthSession session, FintechUserSecureStorage.FinTechUserInboxData data) {
+    public SecretKeyWithIv encryptAndStoreConsentSpecByGeneratedKey(AuthSession session, FintechUserSecureStorage.FinTechUserInboxData data) {
         SecretKeyWithIv key = encryptionServiceProvider.generateKey();
         EncryptionService service = encryptionServiceProvider.forSecretKey(key);
         session.setConsentSpec(service, mapper.writeValueAsString(data));

@@ -383,6 +383,17 @@ components:
         type: string
         format: uuid
 
+    X-Author:
+      name: X-XSRF-TOKEN
+      in: header
+      required: true
+      description: |
+        XSRF parameter used to validate a SessionCookie. The token matches the auth-id
+        included in the requestpath and prefixing the cookie.
+      example: abc123.faadsf93nlas32wx
+      schema:
+        type: string
+
     X-XSRF-TOKEN:
       name: X-XSRF-TOKEN
       in: header

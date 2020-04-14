@@ -59,7 +59,7 @@ public abstract class BaseDatasafeDbStorageService implements StorageService {
 
     @Override
     @SneakyThrows
-    @Transactional
+    @Transactional(noRollbackFor = BaseDatasafeDbStorageService.DbStorageEntityNotFoundException.class)
     public InputStream read(AbsoluteLocation absoluteLocation) {
         return new ByteArrayInputStream(requireBytes(absoluteLocation));
     }
