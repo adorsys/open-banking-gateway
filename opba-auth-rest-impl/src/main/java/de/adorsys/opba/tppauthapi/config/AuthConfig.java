@@ -5,7 +5,7 @@ import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.RSASSASigner;
 import de.adorsys.opba.protocol.facade.config.auth.TppTokenProperties;
-import de.adorsys.opba.tppauthapi.controller.TppAuthResponseCookie;
+import de.adorsys.opba.tppauthapi.controller.TppAuthResponseCookieTemplate;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
@@ -22,8 +22,8 @@ public class AuthConfig {
 
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-    TppAuthResponseCookie.TppAuthResponseCookieBuilder tppAuthResponseCookieBuilder(CookieProperties cookieProperties) {
-        return TppAuthResponseCookie.builder().cookieProperties(cookieProperties);
+    TppAuthResponseCookieTemplate tppAuthResponseCookieBuilder(CookieProperties cookieProperties) {
+        return new TppAuthResponseCookieTemplate(cookieProperties);
     }
 
     @Bean

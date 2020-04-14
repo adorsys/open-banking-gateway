@@ -21,12 +21,7 @@ public class SecretKeySerde {
 
     @SneakyThrows
     public String asString(SecretKeyWithIv secretKeyWithIv) {
-        return mapper.writeValueAsString(
-                new SecretKeyWithIvContainer(
-                        secretKeyWithIv.getSecretKey().getAlgorithm(),
-                        secretKeyWithIv.getSecretKey().getEncoded(),
-                        secretKeyWithIv.getIv())
-        );
+        return mapper.writeValueAsString(new SecretKeyWithIvContainer(secretKeyWithIv));
     }
 
     @SneakyThrows
@@ -39,12 +34,14 @@ public class SecretKeySerde {
     }
 
     @SneakyThrows
-    public void writeAsBytes(SecretKeyWithIv value, OutputStream os) {
-        mapper.writerFor(SecretKeyWithIv.class).writeValue(os, value);
+    public void write(SecretKeyWithIv value, OutputStream os) {
+        // Mapper may choose to close the stream if using stream interface, we don't want this
+        // as objects are small - this is ok.
+        os.write(mapper.writeValueAsBytes(new SecretKeyWithIvContainer(value)));
     }
 
     @SneakyThrows
-    public SecretKeyWithIv readAsBytes(InputStream is) {
+    public SecretKeyWithIv read(InputStream is) {
         SecretKeyWithIvContainer container = mapper.readValue(is, SecretKeyWithIvContainer.class);
         return new SecretKeyWithIv(
                 container.getIv(),
@@ -55,10 +52,23 @@ public class SecretKeySerde {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    private static class SecretKeyWithIvContainer {
+    public static class SecretKeyWithIvContainer {
 
         private String algo;
         private byte[] encoded;
         private byte[] iv;
+
+        public SecretKeyWithIvContainer(SecretKeyWithIv key) {
+            this.algo = key.getSecretKey().getAlgorithm();
+            this.encoded = key.getSecretKey().getEncoded();
+            this.iv = key.getIv();
+        }
+
+        public SecretKeyWithIv asKey() {
+            return new SecretKeyWithIv(
+                    this.iv,
+                    new SecretKeySpec(this.encoded, this.algo)
+            );
+        }
     }
 }
