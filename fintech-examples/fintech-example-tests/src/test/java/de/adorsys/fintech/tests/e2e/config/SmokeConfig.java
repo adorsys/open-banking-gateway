@@ -13,6 +13,10 @@ public class SmokeConfig {
     private String fintechServerUri;
 
     @Getter
+    @Value("${test.fintech.search.uri}")
+    private String fintechSearchUri;
+
+    @Getter
     @ProvidedScenarioState
     private String actualUri;
 }
