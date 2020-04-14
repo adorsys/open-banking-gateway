@@ -8,7 +8,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public abstract class AuthorizationEncryptionServiceProvider {
 
-    private final Map<String, EncryptionService> cachedServices;
+    private final Map<String, EncryptionServiceWithKey> cachedServices;
     private final EncryptionWithInitVectorOper oper;
 
     public void remove(EncryptionService service) {
@@ -19,12 +19,12 @@ public abstract class AuthorizationEncryptionServiceProvider {
         cachedServices.remove(service.getId());
     }
 
-    public EncryptionService getEncryptionById(String id) {
+    public EncryptionServiceWithKey getEncryptionById(String id) {
         return cachedServices.get(id);
     }
 
-    public EncryptionService forSecretKey(SecretKeyWithIv key) {
-        EncryptionService service = oper.encryptionService(key);
+    public EncryptionServiceWithKey forSecretKey(SecretKeyWithIv key) {
+        EncryptionServiceWithKey service = oper.encryptionService(key);
         cachedServices.put(service.getId(), service);
         return service;
     }

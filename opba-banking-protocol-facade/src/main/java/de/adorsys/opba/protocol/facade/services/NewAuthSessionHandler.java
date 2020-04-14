@@ -13,6 +13,7 @@ import de.adorsys.opba.db.repository.jpa.fintech.FintechUserRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
+import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechUserSecureStorage;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
 import de.adorsys.opba.protocol.facade.services.password.FintechUserPasswordGenerator;
@@ -24,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityManager;
-import java.net.URI;
 
 import static de.adorsys.opba.db.domain.entity.ProtocolAction.AUTHORIZATION;
 import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.AUTHORIZATION_SESSION_ID;
@@ -35,6 +35,7 @@ import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.FINTECH
 @RequiredArgsConstructor
 public class NewAuthSessionHandler {
 
+    private final ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider;
     private final FacadeAuthConfig facadeAuthConfig;
     private final BankProtocolRepository protocolRepository;
     private final FintechUserPasswordGenerator passwordGenerator;
@@ -48,9 +49,6 @@ public class NewAuthSessionHandler {
     @SneakyThrows
     @Transactional
     @SuppressWarnings("checkstyle:MethodLength") //  FIXME - https://github.com/adorsys/open-banking-gateway/issues/555
-    // We register DUMMY user whose data will be copied after real user authorizes
-    // The password of this DUMMY user is retained in url as it is safe - only if user logs in or registers
-    // he will be able to see the data stored in here and only real users' password is capable to open consent
     protected <O> AuthSession createNewAuthSession(FacadeServiceableRequest request, ServiceContext session, FacadeResultRedirectable<O, ?> result) {
         BankProtocol authProtocol = protocolRepository
                 .findByBankProfileUuidAndAction(session.getBankId(), AUTHORIZATION)
@@ -81,9 +79,9 @@ public class NewAuthSessionHandler {
         fintechUserVault.toInboxForAuth(
                 newAuth,
                 new FintechUserSecureStorage.FinTechUserInboxData(
-                        URI.create(request.getFintechRedirectUrlOk()),
                         result.getRedirectionTo(),
-                        session
+                        createSecretKeyOfCurrentSessionContainer(session),
+                        null
                 )
         );
         result.setRedirectionTo(
@@ -96,5 +94,10 @@ public class NewAuthSessionHandler {
         );
 
         return newAuth;
+    }
+
+    @NotNull
+    private SecretKeySerde.SecretKeyWithIvContainer createSecretKeyOfCurrentSessionContainer(ServiceContext session) {
+        return new SecretKeySerde.SecretKeyWithIvContainer(encryptionServiceProvider.getEncryptionById(session.getEncryption().getId()).getKey());
     }
 }

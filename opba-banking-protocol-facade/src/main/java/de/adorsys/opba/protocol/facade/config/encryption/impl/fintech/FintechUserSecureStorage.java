@@ -8,9 +8,11 @@ import de.adorsys.datasafe.types.api.actions.ReadRequest;
 import de.adorsys.datasafe.types.api.actions.WriteRequest;
 import de.adorsys.opba.db.domain.entity.fintech.FintechUser;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
+import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.Delegate;
@@ -60,8 +62,12 @@ public class FintechUserSecureStorage {
     @AllArgsConstructor
     public static class FinTechUserInboxData {
 
-        private URI afterPsuIdentifiedAndConsentExistsRedirectTo;
-        private URI afterPsuIdentifiedAndNoConsentRedirectTo;
+        @NonNull
+        private URI afterPsuIdentifiedRedirectTo;
+
+        @NonNull
+        private SecretKeySerde.SecretKeyWithIvContainer protocolKey;
+
         private Object requirements;
     }
 }

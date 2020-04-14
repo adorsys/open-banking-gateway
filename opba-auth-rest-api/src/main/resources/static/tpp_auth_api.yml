@@ -81,9 +81,18 @@ paths:
           $ref: '#/components/responses/400_BadRequest'
 
 components:
+  headers:
+    X-Request-ID:
+      required: true
+      description: >
+        Unique ID that identifies this request through common workflow.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
   parameters:
     X-Request-ID:
-      name: xRequestId
+      name: X-Request-ID
       in: header
       required: true
       description: |
@@ -94,7 +103,7 @@ components:
         type: string
         format: uuid
     authorization-id:
-      name: authorizationId
+      name: authorization-id
       in: path
       description: Authorization session ID to approve
       example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
@@ -102,7 +111,7 @@ components:
         type: string
         format: uuid
     redirect-code:
-      name: redirectCode
+      name: redirect-code
       in: query
       required: true
       description: Redirect code that acts as a password protecting FinTech requested consent specification

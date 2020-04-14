@@ -46,7 +46,7 @@ public class PsuSecureStorage {
                         authId(session)
                 )
         )) {
-            return serde.readAsBytes(is);
+            return serde.read(is);
         } catch (BaseDatasafeDbStorageService.DbStorageEntityNotFoundException ex) {
             return generateAndSaveAspspSecretKey(password, session);
         }
@@ -58,7 +58,7 @@ public class PsuSecureStorage {
         try (OutputStream os = datasafeServices.privateService().write(
                 WriteRequest.forDefaultPrivate(session.getPsu().getUserIdAuth(password), authId(session)))
         ) {
-            serde.writeAsBytes(key, os);
+            serde.write(key, os);
         }
         return key;
     }

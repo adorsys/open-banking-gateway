@@ -60,6 +60,11 @@ public class SerializerUtil {
 
         EncryptedContainer container = mapper.readValue(classNameAndValue.getValue().traverse(), EncryptedContainer.class);
         EncryptionService encryptor = encryptionService.getEncryptionById(container.getEncKeyId());
+
+        if (null == encryptor) {
+            throw new IllegalStateException("Missing encryption service for key: " + container.getEncKeyId());
+        }
+
         result = mapper.readValue(
                 encryptor.decrypt(container.getData()),
                 dataClazz
@@ -86,6 +91,10 @@ public class SerializerUtil {
 
         @SneakyThrows
         EncryptedContainer(PersistenceShouldUseEncryption entity, ObjectMapper mapper) {
+            if (null == entity.getEncryption()) {
+                throw new IllegalStateException("Missing encryption service");
+            }
+
             this.encKeyId = entity.getEncryption().getId();
             this.data = entity.getEncryption().encrypt(mapper.writeValueAsBytes(entity));
         }
