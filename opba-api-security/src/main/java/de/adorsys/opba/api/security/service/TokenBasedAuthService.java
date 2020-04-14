@@ -2,6 +2,7 @@ package de.adorsys.opba.api.security.service;
 
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import de.adorsys.opba.api.security.config.TppTokenProperties;
@@ -20,6 +21,7 @@ public class TokenBasedAuthService {
 
     private final JWSHeader jwsHeader;
     private final JWSSigner jwsSigner;
+    private final JWSVerifier verifier;
     private final TppTokenProperties tppTokenProperties;
 
     @SneakyThrows
@@ -34,5 +36,15 @@ public class TokenBasedAuthService {
         SignedJWT signedJWT = new SignedJWT(jwsHeader, claims);
         signedJWT.sign(jwsSigner);
         return signedJWT.serialize();
+    }
+
+    @SneakyThrows
+    public String validateTokenAndGetSubject(String token) {
+        SignedJWT jwt = SignedJWT.parse(token);
+        if (!jwt.verify(verifier)) {
+            throw new IllegalArgumentException("Wrong token");
+        }
+
+        return jwt.getJWTClaimsSet().getSubject();
     }
 }
