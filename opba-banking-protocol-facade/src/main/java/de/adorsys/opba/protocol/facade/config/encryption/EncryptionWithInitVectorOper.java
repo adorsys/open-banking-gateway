@@ -1,7 +1,6 @@
 package de.adorsys.opba.protocol.facade.config.encryption;
 
 import com.google.common.hash.Hashing;
-import de.adorsys.opba.protocol.api.services.EncryptionService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -9,20 +8,21 @@ import lombok.Synchronized;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
-import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import java.security.SecureRandom;
+import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 public class EncryptionWithInitVectorOper {
 
     private final EncSpec encSpec;
 
-    public EncryptionService encryptionService(SecretKeyWithIv keyWithIv) {
+    public EncryptionServiceWithKey encryptionService(SecretKeyWithIv keyWithIv) {
         return new Encryption(
-                encryption(keyWithIv),
-                decryption(keyWithIv),
-                Hashing.sha256().hashBytes(keyWithIv.getSecretKey().getEncoded()).toString()
+                Hashing.sha256().hashBytes(keyWithIv.getSecretKey().getEncoded()).toString(),
+                keyWithIv,
+                () -> encryption(keyWithIv),
+                () -> decryption(keyWithIv)
         );
     }
 
@@ -31,7 +31,7 @@ public class EncryptionWithInitVectorOper {
         Cipher cipher = Cipher.getInstance(encSpec.getCipherAlgo());
         cipher.init(
                 Cipher.ENCRYPT_MODE, keyWithIv.getSecretKey(),
-                new GCMParameterSpec(keyWithIv.getIv().length, keyWithIv.getIv())
+                new IvParameterSpec(keyWithIv.getIv())
         );
         return cipher;
     }
@@ -58,26 +58,29 @@ public class EncryptionWithInitVectorOper {
     }
 
     @RequiredArgsConstructor
-    public static class Encryption implements EncryptionService {
-
-        private final Cipher encryption;
-        private final Cipher decryption;
+    public static class Encryption implements EncryptionServiceWithKey {
 
         @Getter
         private final String id;
+
+        @Getter
+        private final SecretKeyWithIv key;
+
+        private final Supplier<Cipher> encryption;
+        private final Supplier<Cipher> decryption;
 
         @Override
         @Synchronized("encryption")
         @SneakyThrows
         public synchronized byte[] encrypt(byte[] data) {
-            return encryption.doFinal(data);
+            return encryption.get().doFinal(data);
         }
 
         @Override
         @Synchronized("decryption")
         @SneakyThrows
         public byte[] decrypt(byte[] data) {
-            return decryption.doFinal(data);
+            return decryption.get().doFinal(data);
         }
     }
 }
