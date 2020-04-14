@@ -15,7 +15,6 @@
         <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
         Change this if depth changes. Current: /open-banking-gateway/opba-banking-protocol-facade -->
         <main.basedir>${project.parent.basedir}</main.basedir>
-        <tink.version>1.3.0-rc3</tink.version>
     </properties>
 
     <dependencies>
@@ -40,11 +39,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.crypto.tink</groupId>
-            <artifactId>tink</artifactId>
-            <version>${tink.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>

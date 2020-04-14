@@ -3,6 +3,7 @@ package de.adorsys.opba.tppauthapi.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
+import de.adorsys.opba.api.security.service.TokenBasedAuthService;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
 import de.adorsys.opba.tppauthapi.model.generated.LoginResponse;
@@ -43,6 +44,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     public static final Base64.Encoder ENCODER = Base64.getEncoder();
     private final PsuLoginForAisService aisService;
     private final PsuAuthService psuAuthService;
+    private final TokenBasedAuthService authService;
     private final FacadeAuthConfig authConfig;
     private final TppAuthResponseCookieTemplate tppAuthResponseCookieBuilder;
 
@@ -52,7 +54,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     public ResponseEntity<LoginResponse> login(PsuAuthBody psuAuthBody, UUID xRequestID) {
         Psu psu = psuAuthService.tryAuthenticateUser(psuAuthBody.getLogin(), psuAuthBody.getPassword());
 
-        String jwtToken = psuAuthService.generateToken(psu.getLogin());
+        String jwtToken = authService.generateToken(psu.getLogin());
 
         String cookieString = tppAuthResponseCookieBuilder
                 .builder(AUTHORIZATION_SESSION_ID, jwtToken)
@@ -73,7 +75,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
         PsuLoginForAisService.Outcome outcome = aisService.loginAndAssociateAuthSession(body.getLogin(), body.getPassword(), authorizationId, redirectCode);
 
         ResponseCookie.ResponseCookieBuilder builder = tppAuthResponseCookieBuilder
-                .builder(AUTHORIZATION_SESSION_KEY,  psuAuthService.generateToken(outcome.getKey()));
+                .builder(AUTHORIZATION_SESSION_KEY,  authService.generateToken(outcome.getKey()));
 
         if (!Strings.isNullOrEmpty(authConfig.getCookie().getDomain())) {
             builder = builder.domain(authConfig.getCookie().getDomain());
