@@ -1,17 +1,23 @@
 <div class="card">
   <div class="card-body">
-    <section>
-      <h2>Consent has been granted</h2>
-      <p class="text-secondary">
-        You are going to be redirected back to <strong>{{ finTechName }}</strong>
-      </p>
-    </section>
+    <div class="d-flex flex-wrap">
+      <img alt="" src="assets/icons/icons8-checked.png" class="icons icons--big mr-5 mb-5">
+   <div class="">
+     <section>
+       <h2>Consent has been granted</h2>
+       <p class="text-secondary">
+         You are going to be redirected back to <strong>{{ finTechName }}</strong>
+       </p>
+     </section>
 
-    <div class="d-sm-flex">
-      <button id="do_deny" class="btn btn-outline-secondary w-100 mr-4" (click)="onDeny()">Deny consent</button>
-      <button id="do_submit" type="button" class="btn btn-primary w-100" [disabled]="!redirectTo" (click)="onConfirm()">
-        Back to {{ finTechName }}
-      </button>
-    </div>
+     <div class="d-sm-flex">
+       <button (click)="onDeny()" class="btn btn-outline-secondary w-100 mr-4" id="do_deny">Deny consent</button>
+       <button (click)="onConfirm()" [disabled]="!redirectTo" class="btn btn-primary w-100" id="do_submit" type="button">
+         Back to {{ finTechName }}
+       </button>
+     </div>
+   </div>
   </div>
+  </div>
+
 </div>
