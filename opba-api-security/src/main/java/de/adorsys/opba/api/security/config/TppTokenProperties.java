@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.facade.config.auth;
+package de.adorsys.opba.api.security.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
