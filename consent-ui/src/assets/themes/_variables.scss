@@ -101,39 +101,39 @@ $danger-gradient: linear-gradient(129.54deg, lighten($danger, 7%) 0%, $danger 10
 
   --buttonBgGradient1: #0db0e2;
   --buttonBgGradient2: #10317d;
-  --buttonBG: linear-gradient(129.54deg, var(--buttonBgGradient1) 0%, var(--buttonBgGradient2) 100%);
+  --buttonBG: #{$primary};
 
   --buttonHoveredGradient1: #0f62a4;
   --buttonHoveredGradient2: #10317d;
-  --buttonHovered: linear-gradient(129.54deg, var(--buttonHoveredGradient1) 0%, var(--buttonHoveredGradient2) 100%);
+  --buttonHovered: #{$primary};
 
   --buttonClickedGradient1: #0db0e2;
   --buttonClickedGradient2: #062e72;
-  --buttonClicked: linear-gradient(129.54deg, var(--buttonClickedGradient1) 0%, var(--buttonClickedGradient2) 100%);
+  --buttonClicked: #{$primary};
 
   /* Secondary */
-  --secondaryButtonTextColor: #{$danger};
+  --secondaryButtonTextColor: #{$deny};
   --secondaryButtonBG: white;
 
   --secondaryButtonHoveredTextColor: white;
-  --secondaryButtonHovered: #{$danger};
+  --secondaryButtonHovered: #{$deny};
 
   --secondaryButtonClickedTextColor: white;
-  --secondaryButtonClicked: #{$danger};
+  --secondaryButtonClicked: #{$deny};
 
-  --secondaryButtonBorderStyle: 1px solid #{$danger};
+  --secondaryButtonBorderStyle: 1px solid #{$deny};
 
   /* Back */
-  --backButtonTextColor: #{$info};
+  --backButtonTextColor: #{$primary};
   --backButtonBG: white;
 
-  --backButtonHoveredTextColor: white;
-  --backButtonHovered: #{$info};
+  --backButtonHoveredTextColor: #{$primary};
+  --backButtonHovered: #{$back};
 
-  --backButtonClickedTextColor: white;
-  --backButtonClicked: #{$info};
+  --backButtonClickedTextColor: #{$primary};
+  --backButtonClicked: #{$back};
 
-  --backButtonBorderStyle: 1px solid #{$info};
+  --backButtonBorderStyle: 1px solid #{$primary};
 
   /* Inputs */
   --inputBG: #e5ecfe;
