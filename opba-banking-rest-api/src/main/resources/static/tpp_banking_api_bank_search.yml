@@ -19,7 +19,9 @@ paths:
       description: Issues an incremental bank search request to the TppBankSearchApi.
       parameters:
       #header
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Authorization"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/fintech_id"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
       #query
         - name: keyword
@@ -57,7 +59,9 @@ paths:
       operationId: bankProfileGET
       parameters:
       #header
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Authorization"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/fintech_id"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
         - name: bankId
           in: query
