@@ -1,10 +1,10 @@
 package de.adorsys.opba.tppbankingapi.web.filter;
 
-import de.adorsys.opba.db.domain.entity.fintech.Fintech;
-import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.protocol.facade.services.RequestVerifyingService;
+import de.adorsys.opba.tppbankingapi.config.FinTechServicesConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -13,7 +13,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
+import java.time.Duration;
+
+import static de.adorsys.opba.restapi.shared.HttpHeaders.FINTECH_ID;
 
 @Slf4j
 @Component
@@ -22,33 +24,37 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
     private static final String X_REQUEST_SIGNATURE = "X-Request-Signature";
 
     private final RequestVerifyingService requestVerifyingService;
-    private final FintechRepository fintechRepository;
+    private final FinTechServicesConfig finTechServicesConfig;
+
+    @Value("${fintech.verification.request-time-limit}")
+    private Duration timeLimit;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Long fintechId = 1L;
+        String fintechId = request.getHeader(FINTECH_ID);
+        String xRequestSignature = request.getHeader(X_REQUEST_SIGNATURE);
 
-        Optional<Fintech> fintech = fintechRepository.findById(fintechId);
+        String fintechApiKey = finTechServicesConfig.getEnv().getProperty(fintechId);
 
-        byte[] publicKey = fintech.map(Fintech::getApiKeys)
-                                   .orElse(null);
-
-        if (publicKey == null) {
-            log.warn("Public key for fintech ID {} has not find ", fintechId);
+        if (fintechApiKey == null) {
+            log.warn("Api key for fintech ID {} has not find ", fintechId);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Wrong Fintech ID");
             return;
         }
 
-        String xRequestSignature = request.getHeader(X_REQUEST_SIGNATURE);
-        String signData = requestVerifyingService.verify(xRequestSignature, new String(publicKey));
+        String signData = requestVerifyingService.verify(xRequestSignature, fintechApiKey);
 
-        System.out.println(signData);
-
-        //Optional<FintechRequest> requestById = fintechRequestRepository.findByXRequestId(xRequestIdDecr);
-
-        /*if (requestById.isPresent()) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Wrong X-Request-Id");
+        if (signData == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Signature verification error");
             return;
-        }*/
+        }
+
+
+
+
+
+
+
 
         filterChain.doFilter(request, response);
     }

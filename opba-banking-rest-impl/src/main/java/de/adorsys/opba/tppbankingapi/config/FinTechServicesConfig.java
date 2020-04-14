@@ -1,17 +1,17 @@
 package de.adorsys.opba.tppbankingapi.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import lombok.Data;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 
-import java.util.HashMap;
-import java.util.Map;
-
+@Data
 @Configuration
 @EnableConfigurationProperties
-@ConfigurationProperties("fintech-db.yml")
+@PropertySource("classpath:fintech-db.yml")
 public class FinTechServicesConfig {
 
-    private final Map<String, String> fintechServices = new HashMap<>();
+    private final Environment env;
 
 }
