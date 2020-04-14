@@ -10,36 +10,40 @@
       <section>
         <ng-container *ngSwitchCase="accountAccessLevel.ALL_ACCOUNTS">
           <div class="flex-container">
-            <img src="assets/icons/icons8-mark_view_as_non_hidden.png" alt="accounts" class="icons">
-          <p>All your accounts will be visible</p>
+            <img src="assets/icons/icons8-mark_view_as_non_hidden.png" alt="accounts" class="icons" />
+            <p>All your accounts will be visible</p>
           </div>
         </ng-container>
         <ng-container *ngSwitchCase="accountAccessLevel.ALL_ACCOUNTS_WITH_BALANCES">
           <div class="flex-container">
-            <img src="assets/icons/icons8-mark_view_as_non_hidden.png" alt="accounts" class="icons">
-          <p>All your accounts with balances will be visible</p>
+            <img src="assets/icons/icons8-mark_view_as_non_hidden.png" alt="accounts" class="icons" />
+            <p>All your accounts with balances will be visible</p>
           </div>
         </ng-container>
         <ng-container *ngSwitchCase="accountAccessLevel.FINE_GRAINED">
           <div class="flex-container">
-            <img src="assets/icons/icons8-mark_view_as_non_hidden.png" alt="accounts" class="icons">
-          <p>Dedicated access to <strong>account details and transactions</strong> for following accounts IBAN's:</p>
+            <img src="assets/icons/icons8-mark_view_as_non_hidden.png" alt="accounts" class="icons" />
+            <p>Dedicated access to <strong>account details and transactions</strong> for following accounts IBAN's:</p>
           </div>
           <div class="ml-4">
-          <ul class="list-group ml-5 mb-4">
-            <li *ngFor="let account of aisConsent.consent.access.accounts">
-              <strong>{{ account }}</strong>
-            </li>
-          </ul>
+            <ul class="list-group ml-5 mb-4">
+              <li *ngFor="let account of aisConsent.consent.access.accounts">
+                <strong>{{ account }}</strong>
+              </li>
+            </ul>
           </div>
         </ng-container>
         <div class="flex-container">
-          <img src="assets/icons/icons8-approval.png" alt="approval" class="icons">
-          <p>The consent will be valid until <strong>{{ aisConsent.consent.validUntil }}</strong></p>
+          <img src="assets/icons/icons8-approval.png" alt="approval" class="icons" />
+          <p>
+            The consent will be valid until <strong>{{ aisConsent.consent.validUntil }}</strong>
+          </p>
         </div>
         <div class="flex-container">
-          <img src="assets/icons/icons8-last_24_hours.png" alt="24_hours" class="icons">
-        <p>The consent can be used <strong>{{ aisConsent.consent.frequencyPerDay }} times per day </strong></p>
+          <img src="assets/icons/icons8-last_24_hours.png" alt="24_hours" class="icons" />
+          <p>
+            The consent can be used <strong>{{ aisConsent.consent.frequencyPerDay }} times per day </strong>
+          </p>
         </div>
       </section>
     </ng-container>
