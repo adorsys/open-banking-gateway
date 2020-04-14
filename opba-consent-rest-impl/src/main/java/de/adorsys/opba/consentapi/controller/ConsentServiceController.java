@@ -56,7 +56,13 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
     private final FromAspspRedirectHandler fromAspspRedirectHandler;
 
     @Override
-    public CompletableFuture authUsingGET(String authId, String redirectCode) {
+    public CompletableFuture authUsingGET(
+            String authId,
+            String redirectCode,
+            String xTimestampUTC,
+            byte[] xRequestSignature,
+            String fintechId) {
+
         return authorizationStateService.execute(
                 AuthorizationRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
@@ -76,7 +82,11 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
             String xXsrfToken,
             String authId,
             PsuAuthRequest body,
+            String xTimestampUTC,
+            byte[] xRequestSignature,
+            String fintechId,
             String redirectCode) {
+
         return updateAuthorizationService.execute(
                 AuthorizationRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
@@ -96,7 +106,15 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
     }
 
     @Override
-    public CompletableFuture denyUsingPOST(DenyRequest body, UUID xRequestID, String xXsrfToken, String authId) {
+    public CompletableFuture denyUsingPOST(
+            DenyRequest body,
+            UUID xRequestID,
+            String xXsrfToken,
+            String authId,
+            String xTimestampUTC,
+            byte[] xRequestSignature,
+            String fintechId) {
+
         return denyAuthorizationService.execute(DenyAuthorizationRequest.builder()
                 .facadeServiceable(FacadeServiceableRequest.builder()
                         // Get rid of CGILIB here by copying:
@@ -113,7 +131,10 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
     public CompletableFuture fromAspspOkUsingGET(
         String authId,
         String redirectState,
-        String redirectCode) {
+        String redirectCode,
+        String xTimestampUTC,
+        byte[] xRequestSignature,
+        String fintechId) {
 
         return fromAspspRedirectHandler.execute(
             FromAspspRequest.builder()
@@ -131,7 +152,10 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
     public CompletableFuture fromAspspNokUsingGET(
         String authId,
         String redirectState,
-        String redirectCode) {
+        String redirectCode,
+        String xTimestampUTC,
+        byte[] xRequestSignature,
+        String fintechId) {
 
         return fromAspspRedirectHandler.execute(
             FromAspspRequest.builder()
