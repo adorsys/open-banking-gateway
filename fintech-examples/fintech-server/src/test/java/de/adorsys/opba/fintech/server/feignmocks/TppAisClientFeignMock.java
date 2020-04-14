@@ -12,12 +12,37 @@ import java.util.UUID;
 public class TppAisClientFeignMock implements TppAisClient {
 
     @Override
-    public ResponseEntity<AccountList> getAccounts(String authorization, String serviceSessionPassword, String fintechUserID, String fintechRedirectURLOK, String fintechRedirectURLNOK, UUID xRequestID, String bankID, String psUConsentSession, UUID serviceSessionID) {
+    public ResponseEntity<AccountList> getAccounts(String serviceSessionPassword,
+                                                   String fintechUserID,
+                                                   String fintechRedirectURLOK,
+                                                   String fintechRedirectURLNOK,
+                                                   UUID xRequestID,
+                                                   String xTimestampUTC,
+                                                   String xRequestSignature,
+                                                   String fintechId,
+                                                   String bankID,
+                                                   String psUConsentSession,
+                                                   UUID serviceSessionID) {
         return null;
     }
 
     @Override
-    public ResponseEntity<TransactionsResponse> getTransactions(String accountId, String authorization, String serviceSessionPassword, String fintechUserID, String fintechRedirectURLOK, String fintechRedirectURLNOK, UUID xRequestID, String bankID, String psUConsentSession, UUID serviceSessionID, @Valid LocalDate dateFrom, @Valid LocalDate dateTo, @Valid String entryReferenceFrom, @Valid String bookingStatus, @Valid Boolean deltaList) {
+    public ResponseEntity<TransactionsResponse> getTransactions(
+            String accountId,
+            String serviceSessionPassword,
+            String fintechUserID,
+            String fintechRedirectURLOK,
+            String fintechRedirectURLNOK,
+            UUID xRequestID,
+            String xTimestampUTC,
+            String xRequestSignature,
+            String fintechId,
+            String bankID,
+            String psUConsentSession,
+            UUID serviceSessionID,
+            @Valid LocalDate dateFrom, @Valid LocalDate dateTo,
+            @Valid String entryReferenceFrom, @Valid String bookingStatus, @Valid Boolean deltaList
+    ) {
         return null;
     }
 }

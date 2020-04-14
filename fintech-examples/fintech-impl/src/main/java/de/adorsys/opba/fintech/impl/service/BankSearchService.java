@@ -31,7 +31,15 @@ public class BankSearchService {
 
     @SneakyThrows
     public InlineResponse2001 searchBank(String keyword, Integer start, Integer max) {
-        BankSearchResponse bankSearchResponse = tppBankSearchClient.bankSearchGET(tppProperties.getFintechID(), UUID.fromString(restRequestContext.getRequestId()), keyword, start, max).getBody();
+        BankSearchResponse bankSearchResponse = tppBankSearchClient.bankSearchGET(
+                UUID.fromString(restRequestContext.getRequestId()),
+                keyword,
+                null,
+                null,
+                tppProperties.getFintechID(),
+                start,
+                max).getBody();
+
         InlineResponse2001 inlineResponse2001 =
                 new InlineResponse2001().bankDescriptor(bankSearchResponse.getBankDescriptor().stream().map(
                         bankDescriptor -> ManualMapper.fromTppToFintech(bankDescriptor)).collect(Collectors.toList()));
@@ -45,7 +53,12 @@ public class BankSearchService {
     @SneakyThrows
     public InlineResponse2002 searchBankProfile(String bankId) {
         return new InlineResponse2002().bankProfile(
-                ManualMapper.fromTppToFintech(tppBankSearchClient.bankProfileGET(tppProperties.getFintechID(),
-                        UUID.fromString(restRequestContext.getRequestId()), bankId).getBody().getBankProfileDescriptor()));
+                ManualMapper.fromTppToFintech(tppBankSearchClient.bankProfileGET(
+                        UUID.fromString(restRequestContext.getRequestId()),
+                        bankId,
+                        null,
+                        null,
+                        tppProperties.getFintechID()
+                ).getBody().getBankProfileDescriptor()));
     }
 }

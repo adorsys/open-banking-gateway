@@ -73,18 +73,17 @@ public class AccountService extends HandleAcceptedService {
     private ResponseEntity readOpbaResponse(String bankID, SessionEntity sessionEntity, String redirectCode) {
         UUID xRequestId = UUID.fromString(restRequestContext.getRequestId());
         String timeNow = Instant.now().atOffset(ZoneOffset.UTC).toString();
-        String dataForSign = xRequestId.toString() + timeNow; // TODO We need to add headers for PUBLIC KEY, X_REQUEST_SIGNATURE and X_TIMESTAMP_UTC
-        String signature = requestSigningService.sign(dataForSign);
-
         ResponseEntity accounts;
         if (null != sessionEntity.getServiceSessionId() && sessionEntity.getConsentConfirmed()) {
             accounts = tppAisClient.getAccounts(
-                    tppProperties.getFintechID(),
                     tppProperties.getServiceSessionPassword(),
                     sessionEntity.getLoginUserName(),
                     RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
                     RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
-                    UUID.fromString(restRequestContext.getRequestId()),
+                    xRequestId,
+                    timeNow,
+                    calculateSignature(xRequestId, timeNow),
+                    tppProperties.getFintechID(),
                     bankID,
                     sessionEntity.getPsuConsentSession(),
                     sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null);
@@ -94,21 +93,23 @@ public class AccountService extends HandleAcceptedService {
             // https://github.com/adorsys/open-banking-gateway/issues/303
             accounts = tppAisClient.getTransactions(
                     UUID.randomUUID().toString(), // As consent is missing this will be ignored
-                    tppProperties.getFintechID(),
                     tppProperties.getServiceSessionPassword(),
                     sessionEntity.getLoginUserName(),
                     RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
                     RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
-                    UUID.fromString(restRequestContext.getRequestId()),
+                    xRequestId,
+                    timeNow,
+                    calculateSignature(xRequestId, timeNow),
+                    tppProperties.getFintechID(),
                     bankID,
                     sessionEntity.getPsuConsentSession(),
-                    sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null);
+                    sessionEntity.getServiceSessionId(),
+                    null, null, null, null, null);
         }
         return accounts;
+    }
+
+    private String calculateSignature(UUID xRequestId, String timeNow) {
+        return requestSigningService.sign(xRequestId.toString() + timeNow);
     }
 }

@@ -17,7 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 @Service
@@ -37,6 +39,9 @@ public class TransactionService extends HandleAcceptedService {
 
     @Autowired
     private RedirectHandlerService redirectHandlerService;
+
+    @Autowired
+    private RequestSigningService requestSigningService;
 
     public TransactionService(AuthorizeService authorizeService, TppAisClient tppAisClient, FintechUiConfig uiConfig) {
         super(authorizeService);
@@ -61,15 +66,48 @@ public class TransactionService extends HandleAcceptedService {
             log.warn("mocking call for list transactions");
             return new ResponseEntity<>(ManualMapper.fromTppToFintech(new TppListTransactionsMock().getTransactionsResponse()), HttpStatus.OK);
         }
+        UUID xRequestId = UUID.fromString(restRequestContext.getRequestId());
+        String timeNow = Instant.now().atOffset(ZoneOffset.UTC).toString();
 
-        ResponseEntity<TransactionsResponse> transactions = tppAisClient.getTransactions(
+        ResponseEntity<TransactionsResponse> transactions = requestGetTransactions(sessionEntity, bankId, accountId,
+                                                                                   dateFrom, dateTo, entryReferenceFrom,
+                                                                                   bookingStatus, deltaList, redirectCode,
+                                                                                   xRequestId, timeNow);
+        switch (transactions.getStatusCode()) {
+            case OK:
+                return new ResponseEntity<>(ManualMapper.fromTppToFintech(transactions.getBody()), HttpStatus.OK);
+            case ACCEPTED:
+                log.info("create redirect entity for lot for redirect code {}", redirectCode);
+                redirectHandlerService.registerRedirectStateForSession(redirectCode, fintechOkUrl, fintechNOkUrl);
+                return handleAccepted(sessionEntity, transactions.getHeaders());
+            case UNAUTHORIZED:
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            default:
+                throw new RuntimeException("DID NOT EXPECT RETURN CODE:" + transactions.getStatusCode());
+        }
+    }
+
+    private ResponseEntity<TransactionsResponse> requestGetTransactions(SessionEntity sessionEntity,
+                                                                        String bankId,
+                                                                        String accountId,
+                                                                        LocalDate dateFrom,
+                                                                        LocalDate dateTo,
+                                                                        String entryReferenceFrom,
+                                                                        String bookingStatus,
+                                                                        Boolean deltaList,
+                                                                        String redirectCode,
+                                                                        UUID xRequestId,
+                                                                        String timeNow) {
+        return tppAisClient.getTransactions(
                 accountId,
-                tppProperties.getFintechID(),
                 tppProperties.getServiceSessionPassword(),
                 sessionEntity.getLoginUserName(),
                 RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
                 RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
-                UUID.fromString(restRequestContext.getRequestId()),
+                xRequestId,
+                timeNow,
+                calculateSignature(xRequestId, timeNow),
+                tppProperties.getFintechID(),
                 bankId,
                 sessionEntity.getPsuConsentSession(),
                 sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null,
@@ -78,17 +116,9 @@ public class TransactionService extends HandleAcceptedService {
                 entryReferenceFrom,
                 bookingStatus,
                 deltaList);
-        switch (transactions.getStatusCode()) {
-            case OK:
-                return new ResponseEntity<>(ManualMapper.fromTppToFintech(transactions.getBody()), HttpStatus.OK);
-            case ACCEPTED:
-                log.info("create redirect entity for lot for redirectcode {}", redirectCode);
-                redirectHandlerService.registerRedirectStateForSession(redirectCode, fintechOkUrl, fintechNOkUrl);
-                return handleAccepted(sessionEntity, transactions.getHeaders());
-            case UNAUTHORIZED:
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            default:
-                throw new RuntimeException("DID NOT EXPECT RETURNCODE:" + transactions.getStatusCode());
-        }
+    }
+
+    private String calculateSignature(UUID xRequestId, String timeNow) {
+        return requestSigningService.sign(xRequestId.toString() + timeNow);
     }
 }
