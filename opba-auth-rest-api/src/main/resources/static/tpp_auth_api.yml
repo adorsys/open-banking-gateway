@@ -50,7 +50,7 @@ paths:
         #path
         - $ref: "#/components/parameters/authorization-id"
         #query
-        - $ref: "#/components/parameters/redirect-code"
+        - $ref: "#/components/parameters/redirectCode"
       responses:
         '202':
           $ref: '#/components/responses/202_UserAccepted'
@@ -110,8 +110,8 @@ components:
       schema:
         type: string
         format: uuid
-    redirect-code:
-      name: redirect-code
+    redirectCode:
+      name: redirectCode
       in: query
       required: true
       description: Redirect code that acts as a password protecting FinTech requested consent specification
