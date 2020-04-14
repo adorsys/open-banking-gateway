@@ -85,3 +85,7 @@ management:
   info:
     git:
       mode: full
+
+fintech:
+  verification:
+    request-time-limit: 5m
