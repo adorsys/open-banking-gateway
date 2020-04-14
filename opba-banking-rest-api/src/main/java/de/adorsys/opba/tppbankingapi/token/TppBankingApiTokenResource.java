@@ -12,7 +12,13 @@ import java.util.UUID;
 @RestController
 public class TppBankingApiTokenResource implements TppTokenApi {
     @Override
-    public ResponseEntity<PsuConsentSessionResponse> code2TokenGET(String authorization, UUID xRequestID, String redirectCode) {
+    public ResponseEntity<PsuConsentSessionResponse> code2TokenGET(
+            UUID xRequestID,
+            String redirectCode,
+            String xTimestampUTC,
+            String xRequestSignature,
+            String fintechId) {
+
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 }
