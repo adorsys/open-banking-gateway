@@ -1,7 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import './assets/themes/variables';
 @import '~bootstrap/scss/bootstrap';
-@import './assets/themes/mobile';
 @import './assets/themes/fonts';
 
 * {
@@ -185,7 +184,6 @@ section {
     color: var(--buttonTextColor);
 
     background: var(--buttonBG);
-    border: none;
 
     &:hover {
       background: var(--buttonHovered);
@@ -214,6 +212,7 @@ section {
     &:hover {
       color: var(--secondaryButtonHoveredTextColor);
       background: var(--secondaryButtonHovered);
+      border: 1px solid transparent;
     }
 
     &:disabled {
@@ -236,6 +235,7 @@ section {
     &:hover {
       color: var(--backButtonHoveredTextColor);
       background: var(--backButtonHovered);
+      border: 1px solid transparent;
     }
 
     &:disabled {
@@ -256,6 +256,27 @@ section {
   background: var(--inputBG);
   outline: none;
   border: none;
+}
+
+.flex-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  p{
+    padding: 5px 0 0 15px;
+    margin-bottom: 0;
+  }
+}
+
+.icons {
+  width: 38px;
+  height: auto;
+
+  &--big {
+    width: 5.75rem;
+    height: 5.75rem;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -291,3 +312,5 @@ section {
     font-weight: var(--h3FontWeight1024px);
   }
 }
+
+@import './assets/themes/mobile';
