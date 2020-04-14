@@ -30,6 +30,11 @@
         <!-- impl -->
         <dependency>
             <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-api-security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
             <artifactId>opba-db</artifactId>
             <version>${project.version}</version>
         </dependency>
