@@ -40,7 +40,7 @@ public class ProtocolResultHandler {
     private final ProtocolFacingEncryptionServiceProvider encryptionServiceProvider;
     private final NewAuthSessionHandler newAuthSessionHandler;
     private final ServiceSessionRepository sessions;
-    private final AuthorizationSessionRepository authenticationSessions;
+    private final AuthorizationSessionRepository authorizationSessions;
 
     /**
      * This class must ensure that it is separate transaction - so it won't join any other as is used with
@@ -48,7 +48,14 @@ public class ProtocolResultHandler {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public <O, R extends FacadeServiceableGetter> FacadeResult<O> handleResult(Result<O> result, FacadeServiceableRequest request, ServiceContext<R> session) {
-        encryptionServiceProvider.remove(session.getEncryption());
+        try {
+            return doHandleResult(result, request, session);
+        } finally {
+            encryptionServiceProvider.remove(session.getEncryption());
+        }
+    }
+
+    private <O, R extends FacadeServiceableGetter> FacadeResult<O> doHandleResult(Result<O> result, FacadeServiceableRequest request, ServiceContext<R> session) {
         if (result instanceof SuccessResult) {
             return handleSuccess((SuccessResult<O>) result, request.getRequestId(), session);
         }
@@ -85,7 +92,7 @@ public class ProtocolResultHandler {
         FacadeRedirectErrorResult<O, AuthStateBody> mappedResult =
             (FacadeRedirectErrorResult<O, AuthStateBody>) FacadeRedirectErrorResult.ERROR_FROM_PROTOCOL.map(result);
 
-        addAuthorizationSessionData(request, session, mappedResult);
+        addAuthorizationSessionData(result, request, session, mappedResult);
         mappedResult.setRedirectionTo(URI.create(request.getFintechRedirectUrlNok()));
         return mappedResult;
     }
@@ -96,7 +103,7 @@ public class ProtocolResultHandler {
         FacadeRedirectResult<O, AuthStateBody> mappedResult =
             (FacadeRedirectResult<O, AuthStateBody>) FacadeRedirectResult.FROM_PROTOCOL.map(result);
 
-        addAuthorizationSessionData(request, session, mappedResult);
+        addAuthorizationSessionData(result, request, session, mappedResult);
         mappedResult.setRedirectionTo(result.getRedirectionTo());
         return mappedResult;
     }
@@ -122,7 +129,7 @@ public class ProtocolResultHandler {
         FacadeStartAuthorizationResult<O, AuthStateBody> mappedResult =
             (FacadeStartAuthorizationResult<O, AuthStateBody>) FacadeStartAuthorizationResult.FROM_PROTOCOL.map(result);
 
-        AuthSession auth = addAuthorizationSessionData(request, session, mappedResult);
+        AuthSession auth = addAuthorizationSessionData(result, request, session, mappedResult);
         mappedResult.setCause(mapCause(result));
         setAspspRedirectCodeIfRequired(result, auth, session);
         return mappedResult;
@@ -149,7 +156,7 @@ public class ProtocolResultHandler {
         FacadeRedirectResult<O, AuthStateBody> mappedResult =
             (FacadeRedirectResult<O, AuthStateBody>) FacadeRedirectResult.FROM_PROTOCOL.map(result);
 
-        AuthSession auth = addAuthorizationSessionData(request, session, mappedResult);
+        AuthSession auth = addAuthorizationSessionData(result, request, session, mappedResult);
         mappedResult.setCause(mapCause(result));
         setAspspRedirectCodeIfRequired(result, auth, session);
         return mappedResult;
@@ -162,9 +169,12 @@ public class ProtocolResultHandler {
         }
     }
 
-    protected <O> AuthSession addAuthorizationSessionData(FacadeServiceableRequest request, ServiceContext session,
-                                                 FacadeResultRedirectable<O, ?> mappedResult) {
+    protected <O> AuthSession addAuthorizationSessionData(Result<O> result,
+                                                          FacadeServiceableRequest request, ServiceContext session,
+                                                          FacadeResultRedirectable<O, ?> mappedResult) {
         AuthSession authSession = updateAuthContextAndResult(request, session, mappedResult);
+        authSession.setContext(result.authContext());
+        authorizationSessions.save(authSession);
         mappedResult.setAuthorizationSessionId(authSession.getId().toString());
         mappedResult.setServiceSessionId(authSession.getParent().getId().toString());
         mappedResult.setXRequestId(request.getRequestId());
@@ -180,13 +190,13 @@ public class ProtocolResultHandler {
     }
 
     protected Optional<AuthSession> authSessionFromDb(UUID serviceSessionId) {
-        return authenticationSessions.findByParentId(serviceSessionId);
+        return authorizationSessions.findByParentId(serviceSessionId);
     }
 
     @NotNull
-    protected <O> AuthSession updateExistingAuthSession(ServiceContext session, AuthSession it) {
+    protected AuthSession updateExistingAuthSession(ServiceContext session, AuthSession it) {
         it.setRedirectCode(session.getFutureRedirectCode().toString());
-        return authenticationSessions.save(it);
+        return authorizationSessions.save(it);
     }
 
     protected AuthStateBody mapCause(RedirectionResult result) {

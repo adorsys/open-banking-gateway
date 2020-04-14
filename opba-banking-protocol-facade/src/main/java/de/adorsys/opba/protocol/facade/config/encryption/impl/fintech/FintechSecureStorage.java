@@ -41,7 +41,7 @@ public class FintechSecureStorage {
                         authSession.getFintechUser().getFintech().getUserId()),
                         bankId(authSession)))
         ) {
-            serde.writeAsBytes(psuAspspKey, os);
+            serde.write(psuAspspKey, os);
         }
     }
 
@@ -52,7 +52,7 @@ public class FintechSecureStorage {
                         authSession.getFintechUser().getFintech().getUserIdAuth(password),
                         bankId(authSession)))
         ) {
-            return serde.readAsBytes(is);
+            return serde.read(is);
         }
     }
 
