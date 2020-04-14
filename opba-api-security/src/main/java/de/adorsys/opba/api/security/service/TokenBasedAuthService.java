@@ -11,6 +11,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -40,9 +41,18 @@ public class TokenBasedAuthService {
 
     @SneakyThrows
     public String validateTokenAndGetSubject(String token) {
+        if (token == null) {
+            throw new IllegalArgumentException("Missing token");
+        }
+
         SignedJWT jwt = SignedJWT.parse(token);
+
         if (!jwt.verify(verifier)) {
             throw new IllegalArgumentException("Wrong token");
+        }
+
+        if (Instant.now().isAfter(jwt.getJWTClaimsSet().getExpirationTime().toInstant())) {
+            throw new IllegalArgumentException("Expired token");
         }
 
         return jwt.getJWTClaimsSet().getSubject();
