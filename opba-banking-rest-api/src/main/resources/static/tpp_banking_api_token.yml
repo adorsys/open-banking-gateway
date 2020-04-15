@@ -3,18 +3,18 @@ info:
   version: "1.0.0"
   title: Open Banking Gateway Tpp Token API
   description: >-
-    This API provides FinTech with an Endpoint to retrieve a token after redirection from the consent authorization API
+    This API provides FinTech with an Endpoint to confirm consent after redirection from the consent authorization API
 externalDocs:
   url: "https://adorsys.github.com/open-banking-gateway"
 
 
 paths:
 
-  /v1/banking/token:
+  /v1/banking/consent/confirm:
     post:
       tags:
-        - TppToken
-      operationId: code2TokenGET
+        - ConsentConfirmation
+      operationId: confirmConsent
       summary: Issues new PSU Consent Session Token.
       description: TBD
       parameters:
@@ -63,9 +63,10 @@ components:
       description: |
         Unique Token that identifies PSU Consent Session for this request, if it is already available for given PSU by Fintech through previous requests.
         This Token is not designed to be parsed at Fintech side.
-      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicHN1IjoiSm9obl9Eb2UiLCJjb25zZW50SWQiOiI3OGUyODUwMy0xMzZkLTRkODYtYjg0NC1lNWY1NTgyNTc2ZTUiLCJpYXQiOjE1MTYyMzkwMjJ9.4BHXUW9CH63ZTkxKktFFrVGCUuFltFyivHxk3LVg2bs"
-      schema:
-        type: string
+      properties:
+        value:
+          type: string
+      example: "Confirmed"
 
     PsuConsentSessionResponse:
       type: object

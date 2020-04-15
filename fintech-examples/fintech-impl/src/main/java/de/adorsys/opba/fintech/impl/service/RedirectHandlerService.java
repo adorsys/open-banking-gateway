@@ -76,7 +76,6 @@ public class RedirectHandlerService {
         redirectUrlRepository.delete(redirectUrls.get());
 
         SessionEntity sessionEntity = authorizeService.getSession();
-        sessionEntity.setConsentConfirmed(true);
         return prepareRedirectToReadResultResponse(sessionEntity, redirectUrls.get());
     }
 
