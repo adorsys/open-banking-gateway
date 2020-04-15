@@ -2,6 +2,7 @@ package de.adorsys.opba.tppauthapi.controller;
 
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
+import de.adorsys.opba.tppauthapi.model.generated.LoginResponse;
 import de.adorsys.opba.tppauthapi.model.generated.PsuAuthBody;
 import de.adorsys.opba.tppauthapi.resource.generated.PsuAuthApi;
 import de.adorsys.opba.tppauthapi.service.PsuAuthService;
@@ -36,7 +37,7 @@ public class PsuAuthController implements PsuAuthApi {
 
     @Override
     @SneakyThrows
-    public ResponseEntity<String> login(PsuAuthBody psuAuthBody, UUID xRequestID) {
+    public ResponseEntity<LoginResponse> login(PsuAuthBody psuAuthBody, UUID xRequestID) {
         Psu psu = psuAuthService.tryAuthenticateUser(psuAuthBody.getId(), psuAuthBody.getPassword());
 
         String jwtToken = psuAuthService.generateToken(psu.getLogin());
@@ -45,11 +46,13 @@ public class PsuAuthController implements PsuAuthApi {
                 .responseCookieBuilder(ResponseCookie.from(AUTHORIZATION_SESSION_ID, jwtToken))
                 .build().getCookieString();
 
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setXsrfToken(ENCODER.encodeToString(jwtToken.getBytes()));
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
                 .header(X_REQUEST_ID, xRequestID.toString())
                 .header(SET_COOKIE, cookieString)
-                .body(ENCODER.encodeToString(jwtToken.getBytes()));
+                .body(loginResponse);
     }
 
     @Override
