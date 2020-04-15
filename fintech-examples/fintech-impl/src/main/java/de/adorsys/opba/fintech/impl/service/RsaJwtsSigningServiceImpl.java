@@ -30,21 +30,16 @@ public class RsaJwtsSigningServiceImpl implements RequestSigningService {
 
     @Override
     public String sign(String data) {
-
-        String signature = null;
         try {
-            KeyFactory keyFact = KeyFactory.getInstance(ALGORITHM_RSA);
             PKCS8EncodedKeySpec encodedPrivateKeySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKey));
-
+            KeyFactory keyFact = KeyFactory.getInstance(ALGORITHM_RSA);
             PrivateKey generatedPrivateKey = keyFact.generatePrivate(encodedPrivateKeySpec);
 
-            signature = generateSignature(generatedPrivateKey, data);
-
+            return generateSignature(generatedPrivateKey, data);
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-            log.warn("Error loading private key form property!");
+            log.warn("Encoded private key has wrong format :  {}", privateKey);
+            return null;
         }
-
-        return signature;
     }
 
     private String generateSignature(Key privateKey, String signData) {

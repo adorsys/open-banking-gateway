@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
-import java.security.interfaces.RSAPublicKey;
+import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 @Slf4j
@@ -21,20 +21,31 @@ public class RsaJwtsVerifyingServiceImpl implements RequestVerifyingService {
 
     @Override
     public String verify(String signature, String encodedPublicKey) {
+        PublicKey publicKey = getRsaPublicKey(encodedPublicKey);
+
+        if (publicKey == null) {
+            return null;
+        }
 
         try {
-            PKCS8EncodedKeySpec encodedPublicKeySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(encodedPublicKey));
-            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_RSA);
-            RSAPublicKey publicKey = (RSAPublicKey) keyFactory.generatePublic(encodedPublicKeySpec);
+            JwtParser parser = Jwts.parserBuilder().setSigningKey(publicKey).build();
+            Claims claims = parser.parseClaimsJws(signature).getBody();
 
-            JwtParser parser = Jwts.parserBuilder()
-                                       .setSigningKey(publicKey).build();
-
-            Claims claims = (Claims) parser.parse(signature).getBody();
             return (String) claims.get(CLAIM_NAME);
-
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+        } catch (Exception e) {
             log.warn("Signature verification error:  {}", signature);
+            return null;
+        }
+    }
+
+    private PublicKey getRsaPublicKey(String encodedPublicKey) {
+        try {
+            X509EncodedKeySpec encodedPublicKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(encodedPublicKey));
+            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_RSA);
+
+            return keyFactory.generatePublic(encodedPublicKeySpec);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            log.warn("Encoded public key has wrong format :  {}", encodedPublicKey);
             return null;
         }
     }
