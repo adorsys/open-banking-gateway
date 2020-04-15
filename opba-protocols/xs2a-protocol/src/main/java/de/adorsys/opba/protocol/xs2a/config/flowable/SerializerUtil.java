@@ -3,11 +3,10 @@ package de.adorsys.opba.protocol.xs2a.config.flowable;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.protocol.api.services.EncryptionService;
-import de.adorsys.opba.protocol.api.services.ProtocolFacingEncryptionServiceProvider;
-import de.adorsys.opba.protocol.xs2a.service.storage.NeedsTransientStorage;
-import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
-import de.adorsys.opba.protocol.xs2a.service.storage.UsesEncryptionService;
+import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
+import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
+import de.adorsys.opba.protocol.api.services.scoped.UsesRequestScoped;
+import de.adorsys.opba.protocol.api.services.scoped.encryption.UsesEncryptionService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,7 +41,7 @@ public class SerializerUtil {
 
     @SneakyThrows
     public Object deserialize(@NotNull byte[] bytes, @NotNull ObjectMapper mapper, @NotNull List<String> allowOnlyClassesWithPrefix,
-                              @NotNull TransientDataStorage transientDataStorage, @NotNull ProtocolFacingEncryptionServiceProvider encryptionService) {
+                              @NotNull RequestScopedServicesProvider requestScoped) {
         JsonNode value = mapper.readTree(bytes);
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
 
@@ -58,23 +57,19 @@ public class SerializerUtil {
         }
 
         EncryptedContainer container = mapper.readValue(classNameAndValue.getValue().traverse(), EncryptedContainer.class);
-        EncryptionService encryptor = encryptionService.getEncryptionById(container.getEncKeyId());
+        RequestScoped services = requestScoped.byEncryptionKeyId(container.getEncKeyId());
 
-        if (null == encryptor) {
-            throw new IllegalStateException("Missing encryption service for key: " + container.getEncKeyId());
+        if (null == services) {
+            throw new IllegalStateException("Missing request scoped service for key: " + container.getEncKeyId());
         }
 
         result = mapper.readValue(
-                encryptor.decrypt(container.getData()),
+                services.encryption().decrypt(container.getData()),
                 dataClazz
         );
 
-        if (result instanceof UsesEncryptionService) {
-            ((UsesEncryptionService) result).setEncryption(encryptor);
-        }
-
-        if (result instanceof NeedsTransientStorage) {
-            ((NeedsTransientStorage) result).setTransientStorage(transientDataStorage);
+        if (result instanceof UsesRequestScoped) {
+            ((UsesRequestScoped) result).setRequestScoped(services);
         }
 
         return result;
@@ -89,13 +84,13 @@ public class SerializerUtil {
         private byte[] data;
 
         @SneakyThrows
-        EncryptedContainer(UsesEncryptionService entity, ObjectMapper mapper) {
-            if (null == entity.getEncryption()) {
+        EncryptedContainer(UsesEncryptionService encryptionAccessor, ObjectMapper mapper) {
+            if (null == encryptionAccessor.encryption()) {
                 throw new IllegalStateException("Missing encryption service");
             }
 
-            this.encKeyId = entity.getEncryption().getId();
-            this.data = entity.getEncryption().encrypt(mapper.writeValueAsBytes(entity));
+            this.encKeyId = encryptionAccessor.encryption().getId();
+            this.data = encryptionAccessor.encryption().encrypt(mapper.writeValueAsBytes(encryptionAccessor));
         }
     }
 }

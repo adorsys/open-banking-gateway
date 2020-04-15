@@ -1,7 +1,8 @@
 package de.adorsys.opba.db.domain.entity;
 
-import de.adorsys.opba.db.domain.Approach;
 import de.adorsys.opba.db.domain.converter.ScaApproachConverter;
+import de.adorsys.opba.protocol.api.common.Approach;
+import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileDescriptor;
 import de.adorsys.xs2a.adapter.service.model.Aspsp;
@@ -42,7 +43,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "bank_profile", uniqueConstraints = {@UniqueConstraint(columnNames = "bank_uuid", name = "opb_bank_profile_bank_uuid_key")})
-public class BankProfile implements Serializable {
+public class BankProfile implements Serializable, CurrentBankProfile {
     private static final long serialVersionUID = 1L;
 
     public static final BankProfile.ToAspsp TO_ASPSP = Mappers.getMapper(BankProfile.ToAspsp.class);

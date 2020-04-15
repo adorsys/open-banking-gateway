@@ -1,8 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.config.flowable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.opba.protocol.api.services.ProtocolFacingEncryptionServiceProvider;
-import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
+import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.variable.api.types.ValueFields;
@@ -16,8 +15,7 @@ class LargeJsonCustomSerializer extends SerializableType {
 
     static final String JSON = "as_large_json";
 
-    private final ProtocolFacingEncryptionServiceProvider encryptionServiceProvider;
-    private final TransientDataStorage transientDataStorage;
+    private final RequestScopedServicesProvider scopedServicesProvider;
     private final ObjectMapper mapper;
     private final List<String> allowOnlyClassesWithPrefix;
     private final int minLength;
@@ -66,8 +64,7 @@ class LargeJsonCustomSerializer extends SerializableType {
                 bytes,
                 mapper,
                 allowOnlyClassesWithPrefix,
-                transientDataStorage,
-                encryptionServiceProvider
+                scopedServicesProvider
         );
     }
 }

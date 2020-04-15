@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock;
 
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
-import de.adorsys.opba.db.domain.Approach;
+import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
