@@ -1,5 +1,6 @@
 package de.adorsys.opba.db.domain.entity;
 
+import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import lombok.AllArgsConstructor;
@@ -36,6 +37,12 @@ public class Consent {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private ServiceSession serviceSession;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Bank aspsp;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Psu psu;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)

@@ -2,7 +2,8 @@ package de.adorsys.opba.protocol.api.services.scoped.consent;
 
 import java.util.UUID;
 
-public interface Consent {
+public interface ProtocolFacingConsent {
+
     UUID getInternalId();
 
     String getConsentId();

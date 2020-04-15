@@ -56,7 +56,7 @@ public class SerializerUtil {
         }
 
         EncryptedContainer container = mapper.readValue(classNameAndValue.getValue().traverse(), EncryptedContainer.class);
-        RequestScoped services = requestScoped.byEncryptionKeyId(container.getEncKeyId());
+        RequestScoped services = requestScoped.findRegisteredByKeyId(container.getEncKeyId());
 
         if (null == services) {
             throw new IllegalStateException("Missing request scoped service for key: " + container.getEncKeyId());
