@@ -23,6 +23,7 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.FINTECH_ID;
 @RequiredArgsConstructor
 public class RequestSignatureValidationFilter extends OncePerRequestFilter {
     private static final String X_REQUEST_SIGNATURE = "X-Request-Signature";
+    private static final int X_REQUEST_SIZE = 36;
 
     private final RequestVerifyingService requestVerifyingService;
     private final FinTechServicesConfig finTechServicesConfig;
@@ -50,14 +51,13 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String requestTimeStamp = signData.substring(36);
+        String requestTimeStamp = signData.substring(X_REQUEST_SIZE);
         OffsetDateTime dateTime = OffsetDateTime.parse(requestTimeStamp);
 
         if (operationDateTimeNowWithinLimit(dateTime)) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Timestamp validation failed");
             return;
         }
-
 
         filterChain.doFilter(request, response);
     }

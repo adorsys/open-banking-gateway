@@ -4,12 +4,9 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -17,7 +14,6 @@ import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
-import java.util.Objects;
 
 @Slf4j
 @Data
@@ -37,8 +33,7 @@ public class RsaJwtsSigningServiceImpl implements RequestSigningService {
 
         String signature = null;
         try {
-            KeyFactory keyFact = KeyFactory.getInstance("RSA");
-
+            KeyFactory keyFact = KeyFactory.getInstance(ALGORITHM_RSA);
             PKCS8EncodedKeySpec encodedPrivateKeySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKey));
 
             PrivateKey generatedPrivateKey = keyFact.generatePrivate(encodedPrivateKeySpec);
@@ -46,7 +41,7 @@ public class RsaJwtsSigningServiceImpl implements RequestSigningService {
             signature = generateSignature(generatedPrivateKey, data);
 
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-            log.warn("Error loading privet key form property!");
+            log.warn("Error loading private key form property!");
         }
 
         return signature;
