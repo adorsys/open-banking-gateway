@@ -6,7 +6,6 @@ import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
 import de.adorsys.opba.protocol.api.services.scoped.UsesRequestScoped;
-import de.adorsys.opba.protocol.api.services.scoped.encryption.UsesEncryptionService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,14 +26,14 @@ public class SerializerUtil {
 
     @SneakyThrows
     public byte[] serialize(@NotNull Object data, @NotNull ObjectMapper mapper) {
-        if (!(data instanceof UsesEncryptionService)) {
-            throw new IllegalStateException("Can't serialize non-encrypted persistence classes");
+        if (!(data instanceof RequestScoped)) {
+            throw new IllegalStateException("Can't serialize non-request scoped classes");
         }
 
         return mapper.writeValueAsBytes(
                 ImmutableMap.of(
                         data.getClass().getCanonicalName(),
-                        new EncryptedContainer((UsesEncryptionService) data, mapper)
+                        new EncryptedContainer((RequestScoped) data, mapper)
                 )
         );
     }
@@ -52,8 +51,8 @@ public class SerializerUtil {
         Class<?> dataClazz = Class.forName(classNameAndValue.getKey());
         Object result;
 
-        if (!UsesEncryptionService.class.isAssignableFrom(dataClazz)) {
-            throw new IllegalStateException("Can't deserialize non-encrypted persistence classes");
+        if (!RequestScoped.class.isAssignableFrom(dataClazz)) {
+            throw new IllegalStateException("Can't deserialize non-request scoped classes");
         }
 
         EncryptedContainer container = mapper.readValue(classNameAndValue.getValue().traverse(), EncryptedContainer.class);
@@ -78,19 +77,19 @@ public class SerializerUtil {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    private static class EncryptedContainer {
+    private class EncryptedContainer {
 
         private String encKeyId;
         private byte[] data;
 
         @SneakyThrows
-        EncryptedContainer(UsesEncryptionService encryptionAccessor, ObjectMapper mapper) {
-            if (null == encryptionAccessor.encryption()) {
+        EncryptedContainer(RequestScoped requestScoped, ObjectMapper mapper) {
+            if (null == requestScoped.encryption()) {
                 throw new IllegalStateException("Missing encryption service");
             }
 
-            this.encKeyId = encryptionAccessor.encryption().getId();
-            this.data = encryptionAccessor.encryption().encrypt(mapper.writeValueAsBytes(encryptionAccessor));
+            this.encKeyId = requestScoped.getEncryptionKeyId();
+            this.data = requestScoped.encryption().encrypt(mapper.writeValueAsBytes(requestScoped));
         }
     }
 }

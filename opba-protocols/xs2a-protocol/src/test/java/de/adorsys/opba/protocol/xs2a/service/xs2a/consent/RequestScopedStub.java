@@ -11,6 +11,11 @@ import java.util.concurrent.atomic.AtomicReference;
 public class RequestScopedStub implements RequestScoped {
 
     @Override
+    public String getEncryptionKeyId() {
+        return "NOOP";
+    }
+
+    @Override
     public CurrentBankProfile aspspProfile() {
         return null;
     }
