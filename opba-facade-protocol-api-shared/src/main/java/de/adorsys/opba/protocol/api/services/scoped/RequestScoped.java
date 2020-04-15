@@ -7,4 +7,6 @@ import de.adorsys.opba.protocol.api.services.scoped.transientdata.UsesTransientS
 
 // TODO - consider migration to custom spring scope
 public interface RequestScoped extends UsesEncryptionService, UsesTransientStorage, UsesConsentAccess, UsesCurrentAspspProfile {
+
+    String getEncryptionKeyId();
 }

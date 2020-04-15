@@ -8,8 +8,9 @@ import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
+import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
-import de.adorsys.opba.protocol.facade.config.encryption.EncryptionServiceWithKey;
+import de.adorsys.opba.protocol.facade.services.RequestScopedProvider;
 import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -29,9 +30,10 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
 
     protected final AuthorizationSessionRepository authSessions;
 
+    private final ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider;
+    private final RequestScopedProvider provider;
     private final SecretKeySerde secretKeySerde;
     private final ServiceSessionRepository serviceSessions;
-    private final ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider;
 
     @Override
     @Transactional
@@ -43,7 +45,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         AuthSession authSession = extractAndValidateAuthSession(request);
         ServiceSession session = extractOrCreateServiceSession(request, authSession);
         return ServiceContext.<T>builder()
-                .encryption(getEncryption(request))
+                .requestScoped(getEncryption(request))
                 .serviceSessionId(session.getId())
                 .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
                 .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
@@ -125,17 +127,17 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     @Nullable
-    private <T extends FacadeServiceableGetter> EncryptionServiceWithKey getEncryption(T request) {
+    private <T extends FacadeServiceableGetter> RequestScoped getEncryption(T request) {
         return null == request.getFacadeServiceable().getAuthorizationKey()
                 ? fintechUserFacingSecretKeyBasedEncryption()
                 : cookieBasedKeyEncryption(request);
     }
 
-    private <T extends FacadeServiceableGetter> EncryptionServiceWithKey cookieBasedKeyEncryption(T request) {
-        return encryptionServiceProvider.forSecretKey(secretKeySerde.fromString(request.getFacadeServiceable().getAuthorizationKey()));
+    private <T extends FacadeServiceableGetter> RequestScoped cookieBasedKeyEncryption(T request) {
+        return provider.register(secretKeySerde.fromString(request.getFacadeServiceable().getAuthorizationKey()));
     }
 
-    private <T extends FacadeServiceableGetter> EncryptionServiceWithKey fintechUserFacingSecretKeyBasedEncryption() {
-        return encryptionServiceProvider.forSecretKey(encryptionServiceProvider.generateKey());
+    private <T extends FacadeServiceableGetter> RequestScoped fintechUserFacingSecretKeyBasedEncryption() {
+        return provider.register(consentAuthorizationEncryptionServiceProvider.generateKey());
     }
 }
