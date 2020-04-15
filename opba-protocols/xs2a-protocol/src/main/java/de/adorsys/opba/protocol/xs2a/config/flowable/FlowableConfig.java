@@ -5,8 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
-import de.adorsys.opba.protocol.api.services.ProtocolFacingEncryptionServiceProvider;
-import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
+import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
 import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.flowable.spring.boot.EngineConfigurationConfigurer;
 import org.springframework.context.annotation.Bean;
@@ -24,8 +23,7 @@ public class FlowableConfig {
      */
     @Bean
     EngineConfigurationConfigurer<SpringProcessEngineConfiguration> customizeListenerAndJsonSerializer(
-        TransientDataStorage dataStorage,
-        ProtocolFacingEncryptionServiceProvider encryptionServiceProvider,
+        RequestScopedServicesProvider scopedServicesProvider,
         Xs2aFlowableProperties flowableProperties,
         Xs2aObjectMapper mapper
     ) {
@@ -35,8 +33,8 @@ public class FlowableConfig {
             processConfiguration.setCustomPreVariableTypes(
                 new ArrayList<>(
                     ImmutableList.of(
-                        new JsonCustomSerializer(encryptionServiceProvider, dataStorage, mapper.getMapper(), flowableProperties.getSerializeOnlyPackages(), maxLength),
-                        new LargeJsonCustomSerializer(encryptionServiceProvider, dataStorage, mapper.getMapper(), flowableProperties.getSerializeOnlyPackages(), maxLength)
+                        new JsonCustomSerializer(scopedServicesProvider, mapper.getMapper(), flowableProperties.getSerializeOnlyPackages(), maxLength),
+                        new LargeJsonCustomSerializer(scopedServicesProvider, mapper.getMapper(), flowableProperties.getSerializeOnlyPackages(), maxLength)
                     )
                 )
             );

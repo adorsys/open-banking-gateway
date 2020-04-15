@@ -1,7 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate;
 
-import de.adorsys.opba.db.domain.entity.BankProfile;
-import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
+import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
 import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeaders;
@@ -29,7 +28,6 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
 
     private final Extractor extractor;
     private final Xs2aValidator validator;
-    private final BankProfileJpaRepository bankProfileJpaRepository;
     private final AccountInformationService ais;
 
     @Override
@@ -39,7 +37,7 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        BankProfile config = bankProfileJpaRepository.findByBankUuid(context.getAspspId()).get();
+        CurrentBankProfile config = context.aspspProfile();
 
         ValidatedPathHeaders<Xs2aInitialConsentParameters, Xs2aStandardHeaders> params =
                 extractor.forExecution(context);
@@ -57,7 +55,7 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
-        BankProfile config = bankProfileJpaRepository.findByBankUuid(context.getAspspId()).get();
+        CurrentBankProfile config = context.aspspProfile();
 
         ContextUtil.getAndUpdateContext(execution, (Xs2aContext ctx) -> {
             ctx.setAspspScaApproach(config.getPreferredApproach().name());
