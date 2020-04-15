@@ -1,5 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
+import de.adorsys.opba.api.security.domain.SignData;
+import de.adorsys.opba.api.security.service.RequestSigningService;
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse2001;
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse2002;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
@@ -13,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,12 +33,12 @@ public class BankSearchService {
     @SneakyThrows
     public InlineResponse2001 searchBank(String keyword, Integer start, Integer max) {
         UUID xRequestId = UUID.fromString(restRequestContext.getRequestId());
-        String timeNow = Instant.now().atOffset(ZoneOffset.UTC).toString();
+        OffsetDateTime timeNow = Instant.now().atOffset(ZoneOffset.UTC);
 
         BankSearchResponse bankSearchResponse = tppBankSearchClient.bankSearchGET(
                 xRequestId,
                 keyword,
-                timeNow,
+                timeNow.toString(),
                 calculateSignature(xRequestId, timeNow),
                 tppProperties.getFintechID(),
                 start,
@@ -54,19 +57,20 @@ public class BankSearchService {
     @SneakyThrows
     public InlineResponse2002 searchBankProfile(String bankId) {
         UUID xRequestId = UUID.fromString(restRequestContext.getRequestId());
-        String timeNow = Instant.now().atOffset(ZoneOffset.UTC).toString();
+        OffsetDateTime timeNow = Instant.now().atOffset(ZoneOffset.UTC);
 
         return new InlineResponse2002().bankProfile(
                 ManualMapper.fromTppToFintech(tppBankSearchClient.bankProfileGET(
                         UUID.fromString(restRequestContext.getRequestId()),
                         bankId,
-                        timeNow,
+                        timeNow.toString(),
                         calculateSignature(xRequestId, timeNow),
                         tppProperties.getFintechID()
                 ).getBody().getBankProfileDescriptor()));
     }
 
-    private String calculateSignature(UUID xRequestId, String timeNow) {
-        return requestSigningService.sign(xRequestId.toString() + timeNow);
+    private String calculateSignature(UUID xRequestId, OffsetDateTime offsetDateTime) {
+        SignData signData = new SignData(xRequestId, offsetDateTime);
+        return requestSigningService.sign(signData);
     }
 }

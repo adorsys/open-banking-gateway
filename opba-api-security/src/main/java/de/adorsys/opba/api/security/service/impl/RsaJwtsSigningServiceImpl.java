@@ -1,5 +1,8 @@
-package de.adorsys.opba.fintech.impl.service;
+package de.adorsys.opba.api.security.service.impl;
 
+
+import de.adorsys.opba.api.security.domain.SignatureClaim;
+import de.adorsys.opba.api.security.service.RequestSigningService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
@@ -15,27 +18,28 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
 
+import static de.adorsys.opba.api.security.service.SignatureParams.ALGORITHM_RSA;
+import static de.adorsys.opba.api.security.service.SignatureParams.CLAIM_NAME;
+
 @Slf4j
 @Data
 @Service
 @ConfigurationProperties("security")
 public class RsaJwtsSigningServiceImpl implements RequestSigningService {
     private static final SignatureAlgorithm ALGORITHM = SignatureAlgorithm.RS256;
-    private static final String ALGORITHM_RSA = "RSA";
-    private static final String CLAIM_NAME = "sign-data";
 
     private String privateKey;
     private String signIssuer;
     private String signSubject;
 
     @Override
-    public String sign(String data) {
+    public String sign(SignatureClaim signatureClaim) {
         try {
             PKCS8EncodedKeySpec encodedPrivateKeySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKey));
-            KeyFactory keyFact = KeyFactory.getInstance(ALGORITHM_RSA);
+            KeyFactory keyFact = KeyFactory.getInstance(ALGORITHM_RSA.getValue());
             PrivateKey generatedPrivateKey = keyFact.generatePrivate(encodedPrivateKeySpec);
 
-            return generateSignature(generatedPrivateKey, data);
+            return generateSignature(generatedPrivateKey, signatureClaim.getClaimsAsString());
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
             log.warn("Encoded private key has wrong format :  {}", privateKey);
             return null;
@@ -46,7 +50,7 @@ public class RsaJwtsSigningServiceImpl implements RequestSigningService {
         return Jwts.builder()
                        .setSubject(signSubject)
                        .setIssuer(signIssuer)
-                       .claim(CLAIM_NAME, signData)
+                       .claim(CLAIM_NAME.getValue(), signData)
                        .signWith(privateKey, ALGORITHM)
                        .compact();
     }
