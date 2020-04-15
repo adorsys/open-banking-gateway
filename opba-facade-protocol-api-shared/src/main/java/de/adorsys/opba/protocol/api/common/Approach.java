@@ -1,4 +1,4 @@
-package de.adorsys.opba.db.domain;
+package de.adorsys.opba.protocol.api.common;
 
 public enum Approach {
 

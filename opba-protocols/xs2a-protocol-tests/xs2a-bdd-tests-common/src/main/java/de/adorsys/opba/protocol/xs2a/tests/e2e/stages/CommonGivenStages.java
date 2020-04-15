@@ -2,8 +2,8 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.db.domain.Approach;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
+import de.adorsys.opba.protocol.api.common.Approach;
 import io.restassured.RestAssured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.server.LocalServerPort;

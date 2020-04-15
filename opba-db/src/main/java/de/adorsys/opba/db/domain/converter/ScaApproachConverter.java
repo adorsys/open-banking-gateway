@@ -1,6 +1,6 @@
 package de.adorsys.opba.db.domain.converter;
 
-import de.adorsys.opba.db.domain.Approach;
+import de.adorsys.opba.protocol.api.common.Approach;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.AttributeConverter;

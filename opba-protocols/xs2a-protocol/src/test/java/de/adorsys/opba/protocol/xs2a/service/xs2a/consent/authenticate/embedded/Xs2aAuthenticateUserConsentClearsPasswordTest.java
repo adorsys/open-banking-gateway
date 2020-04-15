@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate.embedded
 
 import de.adorsys.opba.protocol.xs2a.BaseMockitoTest;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
-import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.RequestScopedStub;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedConsentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
@@ -15,8 +15,6 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import java.util.HashMap;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,7 +54,7 @@ class Xs2aAuthenticateUserConsentClearsPasswordTest extends BaseMockitoTest {
     @Test
     void pinCleaned() {
         Xs2aContext context = new Xs2aContext();
-        context.setTransientStorage(new TransientDataStorage(new HashMap<>()));
+        context.setRequestScoped(new RequestScopedStub());
         doCallRealMethod().when(errorSink).swallowAuthorizationErrorForLooping(any(), any());
         when(mockParams.getHeaders()).thenReturn(new Xs2aStandardHeaders());
         when(mockParams.getBody()).thenReturn(new UpdatePsuAuthentication());
