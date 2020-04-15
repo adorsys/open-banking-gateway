@@ -88,7 +88,7 @@ public class RedirectExecutor {
 
     private LastRedirectionTarget getOrCreateLastRedirection(BaseContext ctx) {
         LastRedirectionTarget target = null == ctx.getLastRedirection() ? new LastRedirectionTarget() : ctx.getLastRedirection();
-        target.setEncryption(ctx.getEncryption());
+        target.setRequestScoped(ctx.getRequestScoped());
         return target;
     }
 }
