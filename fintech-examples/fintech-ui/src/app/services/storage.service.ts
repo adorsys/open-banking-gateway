@@ -31,6 +31,15 @@ export class StorageService {
     localStorage.setItem(Session.BANKNAME, bankName);
   }
 
+  public getAuthId(): string {
+    return localStorage.getItem(Session.AUTH_ID);
+  }
+
+  public setAuthId(authId: string): void {
+    console.log("set authid to "+ authId);
+    localStorage.setItem(Session.AUTH_ID, authId);
+  }
+
   public clearStorage() {
     localStorage.clear();
     this.documentCookieService.delete(Session.COOKIE_NAME_SESSION);
@@ -41,5 +50,6 @@ enum Session {
   USERNAME = 'USERNAME',
   BANKNAME = 'BANKNAME',
   XSRF_TOKEN = 'XSRF_TOKEN',
-  COOKIE_NAME_SESSION = 'SESSION-COOKIE'
+  COOKIE_NAME_SESSION = 'SESSION-COOKIE',
+  AUTH_ID = 'AUTH_ID'
 }
