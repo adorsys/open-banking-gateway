@@ -55,23 +55,23 @@ public class TransactionService extends HandleAcceptedService {
                                            String bookingStatus,
                                            Boolean deltaList) {
 
-        String redirectCode = UUID.randomUUID().toString();
-
         if (BooleanUtils.toBoolean(mockTppAisString)) {
             log.warn("mocking call for list transactions");
             return new ResponseEntity<>(ManualMapper.fromTppToFintech(new TppListTransactionsMock().getTransactionsResponse()), HttpStatus.OK);
         }
+
+        String fintechRedirectCode = UUID.randomUUID().toString();
 
         ResponseEntity<TransactionsResponse> transactions = tppAisClient.getTransactions(
                 accountId,
                 tppProperties.getFintechID(),
                 tppProperties.getServiceSessionPassword(),
                 sessionEntity.getLoginUserName(),
-                RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
-                RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
+                RedirectUrlsEntity.buildOkUrl(uiConfig, fintechRedirectCode),
+                RedirectUrlsEntity.buildNokUrl(uiConfig, fintechRedirectCode),
                 UUID.fromString(restRequestContext.getRequestId()),
                 bankId,
-                sessionEntity.getPsuConsentSession(),
+                null,
                 sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null,
                 dateFrom,
                 dateTo,
@@ -82,8 +82,8 @@ public class TransactionService extends HandleAcceptedService {
             case OK:
                 return new ResponseEntity<>(ManualMapper.fromTppToFintech(transactions.getBody()), HttpStatus.OK);
             case ACCEPTED:
-                log.info("create redirect entity for lot for redirectcode {}", redirectCode);
-                redirectHandlerService.registerRedirectStateForSession(redirectCode, fintechOkUrl, fintechNOkUrl);
+                log.info("create redirect entity for lot for redirectcode {}", fintechRedirectCode);
+                redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
                 return handleAccepted(sessionEntity, transactions.getHeaders());
             case UNAUTHORIZED:
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

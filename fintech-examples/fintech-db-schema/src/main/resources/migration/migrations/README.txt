@@ -19,6 +19,4 @@ classpath: /Users/peter/.m2/repository/org/postgresql/postgresql/42.2.11/postgre
 
 run the following command
 ./liquibase --changeLogFile=/tmp/0000-init-schema.xml generateChangeLog
-
-Please replace
 sed "s#type=\"TIMESTAMP without time zone\"#type=\"TIMESTAMP\"#g" /tmp/0000-init-schema.xml
