@@ -34,15 +34,15 @@ public class RedirectHandlerService {
     private final RestRequestContext restRequestContext;
 
     @Transactional
-    public RedirectUrlsEntity registerRedirectStateForSession(final String redirectCode, final String okPath, final String nokPath) {
-        log.debug("ONLY FOR DEBUG: redirectCode: {}", redirectCode);
+    public RedirectUrlsEntity registerRedirectStateForSession(final String finTechRedirectCode, final String okPath, final String nokPath) {
+        log.debug("ONLY FOR DEBUG: finTechRedirectCode: {}", finTechRedirectCode);
 
         String localOkPath = okPath.replaceAll("^/", "");
         String localNokPath = nokPath.replaceAll("^/", "");
 
         RedirectUrlsEntity redirectUrls = new RedirectUrlsEntity();
 
-        redirectUrls.setRedirectCode(redirectCode);
+        redirectUrls.setRedirectCode(finTechRedirectCode);
         redirectUrls.setOkStatePath(localOkPath);
         redirectUrls.setNokStatePath(localNokPath);
 
@@ -50,21 +50,21 @@ public class RedirectHandlerService {
     }
 
     @Transactional
-    public ResponseEntity doRedirect(final String authId, final String redirectCode) {
+    public ResponseEntity doRedirect(final String uiGivenAuthId, final String redirectCode) {
         if (StringUtils.isBlank(redirectCode)) {
             log.warn("Validation redirect request was failed: redirect code is empty!");
             return prepareErrorRedirectResponse(uiConfig.getExceptionUrl());
+        }
+
+        if (StringUtils.isBlank(uiGivenAuthId)) {
+            log.warn("Validation redirect request was failed: authId is empty!");
+            return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
         Optional<RedirectUrlsEntity> redirectUrls = redirectUrlRepository.findByRedirectCode(redirectCode);
 
         if (!redirectUrls.isPresent()) {
             log.warn("Validation redirect request was failed: redirect code {} is wrong", redirectCode);
-            return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
-        }
-
-        if (StringUtils.isBlank(authId)) {
-            log.warn("Validation redirect request was failed: authId is empty!");
             return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
@@ -77,6 +77,9 @@ public class RedirectHandlerService {
 
         SessionEntity sessionEntity = authorizeService.getSession();
         sessionEntity.setConsentConfirmed(true);
+        String storedAuthId = sessionEntity.getAuthId();
+
+        log.info("ui passed authId {} and server remembered authId {}", uiGivenAuthId, storedAuthId);
         return prepareRedirectToReadResultResponse(sessionEntity, redirectUrls.get());
     }
 

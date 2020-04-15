@@ -49,15 +49,15 @@ public class AccountService extends HandleAcceptedService {
             return new ResponseEntity<>(new TppListAccountsMock().getAccountList(), HttpStatus.OK);
         }
 
-        final String redirectCode = UUID.randomUUID().toString();
-        ResponseEntity accounts = readOpbaResponse(bankID, sessionEntity, redirectCode);
+        final String fintechRedirectCode = UUID.randomUUID().toString();
+        ResponseEntity accounts = readOpbaResponse(bankID, sessionEntity, fintechRedirectCode);
 
         switch (accounts.getStatusCode()) {
             case OK:
                 return new ResponseEntity<>(accounts.getBody(), HttpStatus.OK);
             case ACCEPTED:
-                log.info("create redirect entity for redirect code {}", redirectCode);
-                redirectHandlerService.registerRedirectStateForSession(redirectCode, fintechOkUrl, fintechNOKUrl);
+                log.info("create redirect entity for redirect code {}", fintechRedirectCode);
+                redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOKUrl);
                 return handleAccepted(sessionEntity, accounts.getHeaders());
             case UNAUTHORIZED:
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -77,7 +77,7 @@ public class AccountService extends HandleAcceptedService {
                     RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
                     UUID.fromString(restRequestContext.getRequestId()),
                     bankID,
-                    sessionEntity.getPsuConsentSession(),
+                    null,
                     sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null);
         } else {
             // FIXME: HACKETTY-HACK - force consent retrieval for transactions on ALL accounts
@@ -92,7 +92,7 @@ public class AccountService extends HandleAcceptedService {
                     RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
                     UUID.fromString(restRequestContext.getRequestId()),
                     bankID,
-                    sessionEntity.getPsuConsentSession(),
+                    null,
                     sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null,
                     null,
                     null,
