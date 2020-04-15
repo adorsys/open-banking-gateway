@@ -8,8 +8,6 @@ import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.ConsentService;
 import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
-import de.adorsys.opba.tpp.token.api.model.generated.PsuConsentSession;
-import de.adorsys.opba.tpp.token.api.model.generated.PsuConsentSessionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -55,13 +53,9 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
     @Override
     public ResponseEntity fromConsentOkGET(String authId, String redirectCode, UUID xRequestID, String xsrfToken) {
-        PsuConsentSessionResponse response = consentService.confirmConsent(authId, xRequestID, redirectCode);
-        PsuConsentSession psuConsentSession = response.getPsuConsentSession();
-        if ("Confirmed".equals(psuConsentSession.getValue())) {
+        if (consentService.confirmConsent(authId, xRequestID)) {
             authorizeService.getSession().setConsentConfirmed(true);
         }
-        log.info(psuConsentSession.toString());
-
         return redirectHandlerService.doRedirect(authId, redirectCode);
     }
 
