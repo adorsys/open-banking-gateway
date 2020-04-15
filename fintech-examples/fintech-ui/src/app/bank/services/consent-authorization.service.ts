@@ -11,9 +11,10 @@ export class ConsentAuthorizationService {
     private authService: FinTechAuthorizationService
   ) {}
 
-  fromConsentOk(redirectCode: string) {
+  fromConsentOk(authId: string, redirectCode: string) {
+    console.log("pass auth id:" + authId );
     this.authService.fromConsentOkGET(
-      'redirectState',
+      authId,
       redirectCode,
     '',
     '',

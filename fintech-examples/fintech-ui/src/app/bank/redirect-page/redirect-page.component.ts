@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RedirectStruct } from './redirect-struct';
 import { StorageService } from '../../services/storage.service';
+import {HeaderConfig} from "../../models/consts";
 
 @Component({
   selector: 'app-redirect-page',
@@ -18,11 +19,12 @@ export class RedirectPageComponent implements OnInit {
 
   ngOnInit() {
     this.route.paramMap.subscribe(p => {
-      const r: RedirectStruct = JSON.parse(p.get('location'));
+      const r: RedirectStruct = JSON.parse(p.get(HeaderConfig.HEADER_FIELD_LOCATION));
       this.location = decodeURIComponent(r.okUrl);
       this.cancelPath = decodeURIComponent(r.cancelUrl);
       console.log('LOCATION IS ', this.location);
     });
+    // TODO this is no more the routing path approach
     this.bankName = this.storageService.getBankName();
     //  this.bankId = this.route.parent.parent.parent.snapshot.paramMap.get('bankid');
     //  console.log('redirect page for bankid', this.bankId);

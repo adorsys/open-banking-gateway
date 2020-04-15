@@ -76,10 +76,15 @@ public class RedirectHandlerService {
         redirectUrlRepository.delete(redirectUrls.get());
 
         SessionEntity sessionEntity = authorizeService.getSession();
-        sessionEntity.setConsentConfirmed(true);
         String storedAuthId = sessionEntity.getAuthId();
 
+        if (!uiGivenAuthId.equals(storedAuthId)) {
+            log.warn("Validation redirect request was failed: authid expected was {}, but authid from ui was {}", storedAuthId, uiGivenAuthId);
+            return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
+        }
+
         log.info("ui passed authId {} and server remembered authId {}", uiGivenAuthId, storedAuthId);
+        sessionEntity.setConsentConfirmed(true);
         return prepareRedirectToReadResultResponse(sessionEntity, redirectUrls.get());
     }
 
