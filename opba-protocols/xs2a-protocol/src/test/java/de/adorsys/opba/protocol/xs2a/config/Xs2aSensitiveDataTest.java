@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.xs2a.config;
 
-import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
 import de.adorsys.opba.protocol.xs2a.config.flowable.FlowableConfig;
 import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aFlowableProperties;
@@ -71,17 +70,7 @@ public class Xs2aSensitiveDataTest {
 
         @Bean
         RequestScopedServicesProvider requestScopedServicesProvider() {
-            return new RequestScopedServicesProvider() {
-                @Override
-                public RequestScoped current() {
-                    return new RequestScopedStub();
-                }
-
-                @Override
-                public RequestScoped byEncryptionKeyId(String keyId) {
-                    return new RequestScopedStub();
-                }
-            };
+            return keyId -> new RequestScopedStub();
         }
 
         @Bean

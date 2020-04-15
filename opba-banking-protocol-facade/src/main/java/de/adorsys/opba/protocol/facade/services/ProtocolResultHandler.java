@@ -36,7 +36,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProtocolResultHandler {
 
-    private final ProtocolFacingEncryptionServiceProvider encryptionServiceProvider;
+    private final RequestScopedProvider provider;
     private final NewAuthSessionHandler newAuthSessionHandler;
     private final ServiceSessionRepository sessions;
     private final AuthorizationSessionRepository authorizationSessions;
@@ -50,7 +50,7 @@ public class ProtocolResultHandler {
         try {
             return doHandleResult(result, request, session);
         } finally {
-            encryptionServiceProvider.remove(session.getEncryption());
+            provider.deRegister(session.getRequestScoped());
         }
     }
 
