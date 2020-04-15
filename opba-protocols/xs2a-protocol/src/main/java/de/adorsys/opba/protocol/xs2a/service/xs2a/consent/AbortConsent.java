@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
-import de.adorsys.opba.protocol.api.services.scoped.consent.Consent;
+import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.Xs2aAisContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class AbortConsent {
 
     @Transactional
     public void abortConsent(Xs2aAisContext ctx) {
-        Optional<Consent> consent = ctx.consentAccess()
+        Optional<ProtocolFacingConsent> consent = ctx.consentAccess()
                 .findByInternalId(ctx.getServiceSessionId());
 
         if (!consent.isPresent()) {

@@ -47,7 +47,7 @@ public class FintechUser {
     @Basic(fetch = FetchType.LAZY)
     private byte[] pubKeys;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "psu")
+    @OneToMany(mappedBy = "psu", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<PsuConsent> privateStore;
 
     @OneToMany(mappedBy = "psu", cascade = CascadeType.ALL, orphanRemoval = true)

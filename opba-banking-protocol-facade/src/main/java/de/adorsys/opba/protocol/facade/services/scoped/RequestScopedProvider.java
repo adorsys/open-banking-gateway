@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.facade.services;
+package de.adorsys.opba.protocol.facade.services.scoped;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.hash.Hashing;
@@ -27,15 +27,18 @@ import static de.adorsys.opba.protocol.facade.config.FacadeTransientDataConfig.F
 @Service
 public class RequestScopedProvider implements RequestScopedServicesProvider {
 
+    private final Map<String, InternalRequestScoped> memoizedProviders;
     private final BankProfileJpaRepository profileJpaRepository;
-    private final Map<String, InternalRequestScoped> cachedProviders;
+    private final ConsentAccessProvider accessProvider;
 
     public RequestScopedProvider(
             @Qualifier(FACADE_CACHE_BUILDER) CacheBuilder cacheBuilder,
-            BankProfileJpaRepository profileJpaRepository
+            BankProfileJpaRepository profileJpaRepository,
+            ConsentAccessProvider accessProvider
     ) {
-        this.cachedProviders = cacheBuilder.build().asMap();
+        this.memoizedProviders = cacheBuilder.build().asMap();
         this.profileJpaRepository = profileJpaRepository;
+        this.accessProvider = accessProvider;
     }
 
     public RequestScoped register(
@@ -48,24 +51,25 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
                 keyId,
                 key,
                 getBankProfile(request),
+                accessProvider,
                 encryptionService.forSecretKey(keyId, key)
         );
 
-        cachedProviders.put(requestScoped.getEncryptionKeyId(), requestScoped);
+        memoizedProviders.put(requestScoped.getEncryptionKeyId(), requestScoped);
         return requestScoped;
     }
 
-    public SecretKeyWithIv keyFor(RequestScoped requestScoped) {
-        return cachedProviders.get(requestScoped.getEncryptionKeyId()).getKey();
+    public SecretKeyWithIv keyFromRegistered(RequestScoped requestScoped) {
+        return memoizedProviders.get(requestScoped.getEncryptionKeyId()).getKey();
     }
 
-    public void deRegister(RequestScoped requestScoped) {
-        cachedProviders.remove(requestScoped.getEncryptionKeyId());
+    public void deregister(RequestScoped requestScoped) {
+        memoizedProviders.remove(requestScoped.getEncryptionKeyId());
     }
 
     @Override
-    public RequestScoped byEncryptionKeyId(String keyId) {
-        return cachedProviders.get(keyId);
+    public RequestScoped findRegisteredByKeyId(String keyId) {
+        return memoizedProviders.get(keyId);
     }
 
     private BankProfile getBankProfile(FacadeServiceableRequest request) {
@@ -80,6 +84,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         private final String encryptionKeyId;
         private final SecretKeyWithIv key;
         private final CurrentBankProfile bankProfile;
+        private final ConsentAccessProvider accessProvider;
         private final EncryptionService encryptionService;
 
         @Override
@@ -89,7 +94,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
 
         @Override
         public ConsentAccess consentAccess() {
-            return null;
+            return accessProvider;
         }
 
         @Override
