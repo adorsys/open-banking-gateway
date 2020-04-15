@@ -41,7 +41,7 @@ public class SessionEntity {
     private String loginUserName;
     private String fintechUserId;
     private String password;
-    private String psuConsentSession;
+    private String authId;
     private UUID serviceSessionId;
     private String sessionCookieValue;
     // FIXME call 4c is missing
