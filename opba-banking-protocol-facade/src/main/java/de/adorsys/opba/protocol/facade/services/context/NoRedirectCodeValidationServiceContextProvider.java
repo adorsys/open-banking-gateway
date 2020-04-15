@@ -5,8 +5,8 @@ import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
-import de.adorsys.opba.protocol.facade.services.RequestScopedProvider;
 import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
+import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
 import org.springframework.stereotype.Service;
 
 @Service(NoRedirectCodeValidationServiceContextProvider.NO_REDIRECT_CODE_VALIDATION)
