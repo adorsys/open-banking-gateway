@@ -2,6 +2,7 @@ package de.adorsys.opba.db.domain.entity;
 
 import de.adorsys.opba.db.domain.Approach;
 import de.adorsys.opba.db.domain.converter.ScaApproachConverter;
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileDescriptor;
 import de.adorsys.xs2a.adapter.service.model.Aspsp;
 import lombok.AllArgsConstructor;

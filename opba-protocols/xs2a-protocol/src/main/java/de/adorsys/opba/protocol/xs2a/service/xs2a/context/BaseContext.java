@@ -2,11 +2,11 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.context;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.db.domain.entity.ProtocolAction;
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
+import de.adorsys.opba.protocol.api.consent.UsesConsentAccess;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
-import de.adorsys.opba.protocol.xs2a.service.storage.NeedsEncryptionService;
-import de.adorsys.opba.protocol.xs2a.service.storage.PersistenceShouldUseEncryption;
+import de.adorsys.opba.protocol.xs2a.service.storage.UsesEncryptionService;
 import lombok.Data;
 
 import java.util.HashSet;
@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @Data
 // FIXME Entire class must be protected https://github.com/adorsys/open-banking-gateway/issues/251
-public class BaseContext implements NeedsEncryptionService, PersistenceShouldUseEncryption {
+public class BaseContext implements UsesEncryptionService, UsesConsentAccess {
 
     private ContextMode mode;
     // Application required

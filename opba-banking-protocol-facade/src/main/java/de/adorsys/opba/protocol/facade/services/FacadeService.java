@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.facade.services;
 
-import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.protocol.api.Action;
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
