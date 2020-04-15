@@ -15,12 +15,13 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      username: ['', [Validators.required, Validators.pattern('^[a-z0-9]+$')]],
+      password: ['', [Validators.required, Validators.pattern('.{4}')]]
     });
   }
 
   onSubmit() {
+    console.log(this.loginForm.valid);
     this.authService.login(this.loginForm.value).subscribe(success => {
       if (success) {
         this.router.navigate(['/search']);
