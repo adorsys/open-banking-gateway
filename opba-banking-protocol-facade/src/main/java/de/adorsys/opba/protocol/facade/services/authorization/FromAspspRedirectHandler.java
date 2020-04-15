@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-import static de.adorsys.opba.db.domain.entity.ProtocolAction.FROM_ASPSP_REDIRECT;
+import static de.adorsys.opba.protocol.api.common.ProtocolAction.FROM_ASPSP_REDIRECT;
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForAspsp.ASPSP_CONTEXT_PROVIDER;
 
 @Service
