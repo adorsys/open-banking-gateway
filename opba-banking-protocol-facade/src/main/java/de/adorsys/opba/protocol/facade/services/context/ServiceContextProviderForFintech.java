@@ -45,7 +45,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         AuthSession authSession = extractAndValidateAuthSession(request);
         ServiceSession session = extractOrCreateServiceSession(request, authSession);
         return ServiceContext.<T>builder()
-                .requestScoped(getEncryption(request))
+                .requestScoped(getRequestScoped(request))
                 .serviceSessionId(session.getId())
                 .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
                 .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
@@ -127,17 +127,28 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     @Nullable
-    private <T extends FacadeServiceableGetter> RequestScoped getEncryption(T request) {
+    private <T extends FacadeServiceableGetter> RequestScoped getRequestScoped(T request) {
         return null == request.getFacadeServiceable().getAuthorizationKey()
-                ? fintechUserFacingSecretKeyBasedEncryption()
+                ? fintechUserFacingSecretKeyBasedEncryption(request)
                 : cookieBasedKeyEncryption(request);
     }
 
     private <T extends FacadeServiceableGetter> RequestScoped cookieBasedKeyEncryption(T request) {
-        return provider.register(secretKeySerde.fromString(request.getFacadeServiceable().getAuthorizationKey()));
+        return provider.register(
+                request.getFacadeServiceable(),
+                consentAuthorizationEncryptionServiceProvider,
+                secretKeySerde.fromString(request.getFacadeServiceable().getAuthorizationKey())
+        );
     }
 
-    private <T extends FacadeServiceableGetter> RequestScoped fintechUserFacingSecretKeyBasedEncryption() {
-        return provider.register(consentAuthorizationEncryptionServiceProvider.generateKey());
+    /**
+     * To be consumed by {@link de.adorsys.opba.protocol.facade.services.NewAuthSessionHandler} if new auth session started.
+     */
+    private <T extends FacadeServiceableGetter> RequestScoped fintechUserFacingSecretKeyBasedEncryption(T request) {
+        return provider.register(
+                request.getFacadeServiceable(),
+                consentAuthorizationEncryptionServiceProvider,
+                consentAuthorizationEncryptionServiceProvider.generateKey()
+        );
     }
 }

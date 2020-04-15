@@ -13,7 +13,6 @@ import de.adorsys.opba.db.repository.jpa.fintech.FintechUserRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
-import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechUserSecureStorage;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
 import de.adorsys.opba.protocol.facade.services.password.FintechUserPasswordGenerator;
@@ -43,7 +42,6 @@ public class NewAuthSessionHandler {
     private final FintechUserSecureStorage fintechUserVault;
     private final AuthorizationSessionRepository authenticationSessions;
     private final EntityManager entityManager;
-    private final ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider;
     private final RequestScopedProvider requestScopedProvider;
 
     @NotNull
@@ -83,7 +81,7 @@ public class NewAuthSessionHandler {
                 newAuth,
                 new FintechUserSecureStorage.FinTechUserInboxData(
                         result.getRedirectionTo(),
-                        createSecretKeyOfCurrentSessionContainer(),
+                        createSecretKeyOfCurrentSessionContainer(session),
                         null
                 )
         );
@@ -100,7 +98,7 @@ public class NewAuthSessionHandler {
     }
 
     @NotNull
-    private SecretKeySerde.SecretKeyWithIvContainer createSecretKeyOfCurrentSessionContainer() {
-        return new SecretKeySerde.SecretKeyWithIvContainer(encryptionServiceProvider.generateKey());
+    private SecretKeySerde.SecretKeyWithIvContainer createSecretKeyOfCurrentSessionContainer(ServiceContext context) {
+        return new SecretKeySerde.SecretKeyWithIvContainer(requestScopedProvider.keyFor(context.getRequestScoped()));
     }
 }
