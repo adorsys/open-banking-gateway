@@ -3,7 +3,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <include relativeToChangelogFile="true" file="migrations/0000-init-schema.xml"/>
-    <include relativeToChangelogFile="true" file="migrations/0001-create-table-banks.xml"/>
+    <include relativeToChangelogFile="true" file="migrations/0000-create-table-banks.xml"/>
+    <include relativeToChangelogFile="true" file="migrations/0001-init-protocol-facade.xml"/>
     <include relativeToChangelogFile="true" file="migrations/0002-mock-data.xml"/>
 </databaseChangeLog>
