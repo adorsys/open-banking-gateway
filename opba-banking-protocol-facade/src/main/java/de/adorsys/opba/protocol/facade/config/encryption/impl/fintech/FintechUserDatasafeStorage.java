@@ -1,8 +1,8 @@
 package de.adorsys.opba.protocol.facade.config.encryption.impl.fintech;
 
 import com.google.common.collect.ImmutableMap;
+import de.adorsys.opba.db.domain.entity.fintech.FintechConsentSpec;
 import de.adorsys.opba.db.domain.entity.fintech.FintechUser;
-import de.adorsys.opba.db.domain.entity.fintech.FintechUserInbox;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechUserInboxRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechUserRepository;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.BaseDatasafeDbStorageService;
@@ -17,7 +17,7 @@ import java.net.URI;
 public class FintechUserDatasafeStorage extends BaseDatasafeDbStorageService {
 
     public FintechUserDatasafeStorage(
-            DatasafeDataStorage<FintechUserInbox> datasafeInbox,
+            DatasafeDataStorage<FintechConsentSpec> datasafeInbox,
             FintechUserPubKeysStorage datasafeKeystore,
             FintechUserKeystoreStorage datasafePub
     ) {
@@ -34,14 +34,14 @@ public class FintechUserDatasafeStorage extends BaseDatasafeDbStorageService {
     }
 
     @Component
-    public static class FintechUserInboxStorage extends DatasafeDataStorage<FintechUserInbox> {
+    public static class FintechConsentSpecStorage extends DatasafeDataStorage<FintechConsentSpec> {
 
-        public FintechUserInboxStorage(FintechUserInboxRepository inboxes, EntityManager em) {
+        public FintechConsentSpecStorage(FintechUserInboxRepository inboxes, EntityManager em) {
             super(
                     inboxes,
-                    (parent, id) -> FintechUserInbox.builder().id(id).user(em.find(FintechUser.class, parent)).build(),
-                    FintechUserInbox::getData,
-                    FintechUserInbox::setData
+                    (parent, id) -> FintechConsentSpec.builder().id(id).user(em.find(FintechUser.class, parent)).build(),
+                    FintechConsentSpec::getData,
+                    FintechConsentSpec::setData
             );
         }
     }
