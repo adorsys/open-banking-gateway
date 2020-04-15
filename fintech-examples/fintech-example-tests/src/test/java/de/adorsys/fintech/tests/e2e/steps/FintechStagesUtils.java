@@ -9,7 +9,7 @@ public class FintechStagesUtils {
 
     public static final String X_REQUEST_ID = "X_REQUEST_ID";
     public static final String PIN = "1234";
-    public static final String USERNAME = "tomy";
+    public static  String USERNAME = getRandomUser() + "ffd";
     public static final String X_XSRF_TOKEN = "xsrfToken";
     public static final String X_XSRF_TOKEN_VALUE = "441c1f6f-1bda-43c0-91d2-4b41a5d53a9c";
     public static final String SESSION_COOKIE = "sessionCookie";
@@ -23,6 +23,12 @@ public class FintechStagesUtils {
     public static final String BANKPROFILE_ENDPOINT = "https://obg-dev-fintechui.cloud.adorsys.de/bank/";
     public static final String BANKSEARCH_ENDPOINT = "https://obg-dev-fintechui.cloud.adorsys.de/search";
 
+
+    private static String getRandomUser() {
+        String names[] = {"anton", "thierry", "tomy", "ttit"};
+        int id = (int) ((Math.random() * (names.length - 1)) + 1);;
+        return names[id];
+    }
 
     public static RequestSpecification withDefaultHeaders() {
         return RestAssured.given().header(X_REQUEST_ID, UUID.randomUUID().toString());
