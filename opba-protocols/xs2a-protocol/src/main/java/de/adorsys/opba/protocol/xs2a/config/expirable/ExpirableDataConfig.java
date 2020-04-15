@@ -2,7 +2,6 @@ package de.adorsys.opba.protocol.xs2a.config.expirable;
 
 import com.google.common.cache.CacheBuilder;
 import de.adorsys.opba.protocol.xs2a.domain.dto.messages.InternalProcessResult;
-import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataEntry;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -31,11 +30,6 @@ public class ExpirableDataConfig {
         return newBuilder()
                 .expireAfterWrite(expireAfterWrite)
                 .maximumSize(Integer.MAX_VALUE);
-    }
-
-    @Bean
-    Map<String, TransientDataEntry> transientData(@Qualifier(PROTOCOL_CACHE_BUILDER) CacheBuilder builder) {
-        return builder.build().asMap();
     }
 
     @Bean
