@@ -1,7 +1,6 @@
 package de.adorsys.opba.starter;
 
 import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aObjectMapper;
-import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -25,14 +24,11 @@ public class Xs2aSensitiveDataTest {
     @Autowired
     private Xs2aObjectMapper mapper;
 
-    @Autowired
-    private TransientDataStorage dataStorage;
-
     @Test
     @SneakyThrows
     void testPsuPasswordNotSerialized() {
         Xs2aContext context = new Xs2aContext();
-        context.setTransientStorage(dataStorage);
+        context.setRequestScoped(new RequestScopedStub());
         context.setSagaId("1234");
         context.setPsuPassword("PASSWORD");
 
@@ -50,7 +46,7 @@ public class Xs2aSensitiveDataTest {
     @SneakyThrows
     void testLastScaChallengeNotSerialized() {
         Xs2aContext context = new Xs2aContext();
-        context.setTransientStorage(dataStorage);
+        context.setRequestScoped(new RequestScopedStub());
         context.setSagaId("1234");
         context.setLastScaChallenge("Challenge!");
 

@@ -84,7 +84,7 @@ public class SerializerUtil {
 
         @SneakyThrows
         EncryptedContainer(RequestScoped requestScoped, ObjectMapper mapper) {
-            if (null == requestScoped.encryption()) {
+            if (null == requestScoped || null == requestScoped.encryption()) {
                 throw new IllegalStateException("Missing encryption service");
             }
 
