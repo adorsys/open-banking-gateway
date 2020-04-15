@@ -5,10 +5,11 @@ import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.api.model.generated.UserProfile;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAuthorizationApi;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
-import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
+import de.adorsys.opba.fintech.impl.service.ConsentService;
 import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
-import de.adorsys.opba.fintech.impl.tppclients.SessionCookieType;
+import de.adorsys.opba.tpp.token.api.model.generated.PsuConsentSession;
+import de.adorsys.opba.tpp.token.api.model.generated.PsuConsentSessionResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -28,8 +29,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
     private final AuthorizeService authorizeService;
     private final RedirectHandlerService redirectHandlerService;
     private final RestRequestContext restRequestContext;
-    private final CookieConfigProperties cookieConfigProperties;
-
+    private final ConsentService consentService;
 
     @Override
     public ResponseEntity<InlineResponse200> loginPOST(LoginRequest loginRequest, UUID xRequestID) {
@@ -56,6 +56,13 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
     @Override
     public ResponseEntity fromConsentOkGET(String authId, String finTechRedirectCode, UUID xRequestID, String xsrftoken) {
+        PsuConsentSessionResponse response = consentService.confirmConsent(authId, xRequestID, finTechRedirectCode);
+        PsuConsentSession psuConsentSession = response.getPsuConsentSession();
+        if ("Confirmed".equals(psuConsentSession.getValue())) {
+            authorizeService.getSession().setConsentConfirmed(true);
+        }
+        log.info(psuConsentSession.toString());
+
         return redirectHandlerService.doRedirect(authId, finTechRedirectCode);
     }
 
