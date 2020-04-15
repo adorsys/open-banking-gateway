@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.facade.config.encryption.impl.psu;
 
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
-import de.adorsys.opba.db.domain.entity.psu.PsuPrivate;
+import de.adorsys.opba.db.domain.entity.psu.PsuConsent;
 import de.adorsys.opba.db.repository.jpa.psu.PsuPrivateRepository;
 import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.BaseDatasafeDbStorageService;
@@ -17,7 +17,7 @@ import java.net.URI;
 public class PsuDatasafeStorage extends BaseDatasafeDbStorageService {
 
     public PsuDatasafeStorage(
-            DatasafeDataStorage<PsuPrivate> datasafePrivate,
+            DatasafeDataStorage<PsuConsent> datasafePrivate,
             PsuKeystoreStorage datasafeKeystore,
             PsuPubKeysStorage datasafePubKeys
     ) {
@@ -34,14 +34,14 @@ public class PsuDatasafeStorage extends BaseDatasafeDbStorageService {
     }
 
     @Component
-    public static class PsuPrivateStorage extends DatasafeDataStorage<PsuPrivate> {
+    public static class PsuConsentsStorage extends DatasafeDataStorage<PsuConsent> {
 
-        public PsuPrivateStorage(PsuPrivateRepository privates, EntityManager em) {
+        public PsuConsentsStorage(PsuPrivateRepository privates, EntityManager em) {
             super(
                     privates,
-                    (parent, id) -> PsuPrivate.builder().id(id).psu(em.find(Psu.class, parent)).build(),
-                    PsuPrivate::getData,
-                    PsuPrivate::setData
+                    (parent, id) -> PsuConsent.builder().id(id).psu(em.find(Psu.class, parent)).build(),
+                    PsuConsent::getData,
+                    PsuConsent::setData
             );
         }
     }

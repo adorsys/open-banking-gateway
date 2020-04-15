@@ -2,8 +2,8 @@ package de.adorsys.opba.protocol.facade.config.encryption.impl.fintech;
 
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
-import de.adorsys.opba.db.domain.entity.fintech.FintechInbox;
-import de.adorsys.opba.db.domain.entity.fintech.FintechPrivate;
+import de.adorsys.opba.db.domain.entity.fintech.FintechConsent;
+import de.adorsys.opba.db.domain.entity.fintech.FintechConsentInbox;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechInboxRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechPrivateRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
@@ -19,8 +19,8 @@ import java.net.URI;
 public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
 
     public FintechDatasafeStorage(
-            DatasafeDataStorage<FintechPrivate> datasafePrivate,
-            DatasafeDataStorage<FintechInbox> datasafeInbox,
+            DatasafeDataStorage<FintechConsent> datasafePrivate,
+            DatasafeDataStorage<FintechConsentInbox> datasafeInbox,
             FintechKeystoreStorage datasafeKeystore,
             FintechPubKeysStorage datasafePub
     ) {
@@ -38,27 +38,27 @@ public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
     }
 
     @Component
-    public static class FintechPrivateStorage extends DatasafeDataStorage<FintechPrivate> {
+    public static class FintechConsentStorage extends DatasafeDataStorage<FintechConsent> {
 
-        public FintechPrivateStorage(FintechPrivateRepository privates, EntityManager em) {
+        public FintechConsentStorage(FintechPrivateRepository privates, EntityManager em) {
             super(
                     privates,
-                    (parent, id) -> FintechPrivate.builder().id(id).fintech(em.find(Fintech.class, parent)).build(),
-                    FintechPrivate::getData,
-                    FintechPrivate::setData
+                    (parent, id) -> FintechConsent.builder().id(id).fintech(em.find(Fintech.class, parent)).build(),
+                    FintechConsent::getData,
+                    FintechConsent::setData
             );
         }
     }
 
     @Component
-    public static class FintechInboxStorage extends DatasafeDataStorage<FintechInbox> {
+    public static class FintechConsentInboxStorage extends DatasafeDataStorage<FintechConsentInbox> {
 
-        public FintechInboxStorage(FintechInboxRepository inboxes, EntityManager em) {
+        public FintechConsentInboxStorage(FintechInboxRepository inboxes, EntityManager em) {
             super(
                     inboxes,
-                    (parent, id) -> FintechInbox.builder().id(id).fintech(em.find(Fintech.class, parent)).build(),
-                    FintechInbox::getData,
-                    FintechInbox::setData
+                    (parent, id) -> FintechConsentInbox.builder().id(id).fintech(em.find(Fintech.class, parent)).build(),
+                    FintechConsentInbox::getData,
+                    FintechConsentInbox::setData
             );
         }
     }

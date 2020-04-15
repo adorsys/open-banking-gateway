@@ -12,6 +12,12 @@
             <column name="service_session_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
+            <column name="psu_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bank_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
             <column name="enc_consent_id" type="BLOB">
                 <constraints nullable="false"/>
             </column>
@@ -53,7 +59,7 @@
         </createTable>
         <createSequence sequenceName="bank_sub_protocol_id_sequence" incrementBy="50"/>
         <addUniqueConstraint tableName="${table-prefix}bank_sub_protocol" columnNames="protocol_id,action"/>
-        <addForeignKeyConstraint constraintName="fk_bank_sub_protocol_bank_protocol"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_bank_sub_protocol_bank_protocol"
                                  baseTableName="${table-prefix}bank_sub_protocol"
                                  baseColumnNames="protocol_id"
                                  referencedTableName="${table-prefix}bank_protocol"
@@ -69,10 +75,15 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint constraintName="fk_service_session_bank_protocol"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_service_session_bank_protocol"
                                  baseTableName="${table-prefix}service_session"
                                  baseColumnNames="protocol_id"
                                  referencedTableName="${table-prefix}bank_protocol"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_consent_service_session"
+                                 baseTableName="${table-prefix}consent"
+                                 baseColumnNames="service_session_id"
+                                 referencedTableName="${table-prefix}service_session"
                                  referencedColumnNames="id"/>
 
         <createTable tableName="${table-prefix}psu">
@@ -87,22 +98,36 @@
         </createTable>
         <createSequence sequenceName="psu_id_sequence" incrementBy="50"/>
 
-        <createTable tableName="${table-prefix}psu_private">
-            <column name="id" type="UUID">
+        <createTable tableName="${table-prefix}fintech">
+            <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="psu_id" type="BIGINT">
-                <constraints nullable="false"/>
+            <column name="global_id" type="VARCHAR(64)">
+                <constraints unique="true" nullable="false"/>
             </column>
-            <column name="data" type="BLOB">
-                <constraints nullable="false"/>
-            </column>
+            <column name="keystore" type="BLOB"/>
+            <column name="pub_keys" type="BLOB"/>
         </createTable>
-        <createSequence sequenceName="psu_private_id_sequence" incrementBy="50"/>
-        <addForeignKeyConstraint constraintName="fk_psu_private_psu"
-                                 baseTableName="${table-prefix}psu_private"
-                                 baseColumnNames="psu_id"
-                                 referencedTableName="${table-prefix}psu"
+        <createSequence sequenceName="fintech_id_sequence" incrementBy="50"/>
+
+        <createTable tableName="${table-prefix}fintech_user">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="psu_fintech_id" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fintech_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="keystore" type="BLOB"/>
+            <column name="pub_keys" type="BLOB"/>
+        </createTable>
+        <createSequence sequenceName="fintech_user_id_sequence" incrementBy="50"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_user_fintech"
+                                 baseTableName="${table-prefix}fintech_user"
+                                 baseColumnNames="fintech_id"
+                                 referencedTableName="${table-prefix}fintech"
                                  referencedColumnNames="id"/>
 
         <createTable tableName="${table-prefix}auth_session">
@@ -125,36 +150,46 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint constraintName="fk_auth_session_service_session"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_auth_session_service_session"
                                  baseTableName="${table-prefix}auth_session"
                                  baseColumnNames="id"
                                  referencedTableName="${table-prefix}service_session"
                                  referencedColumnNames="id"/>
-        <addForeignKeyConstraint constraintName="fk_auth_session_psu"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_auth_session_psu"
                                  baseTableName="${table-prefix}auth_session"
                                  baseColumnNames="psu_id"
                                  referencedTableName="${table-prefix}psu"
                                  referencedColumnNames="id"/>
-
-        <addForeignKeyConstraint constraintName="fk_consent_service_session"
-                                 baseTableName="${table-prefix}consent"
-                                 baseColumnNames="service_session_id"
-                                 referencedTableName="${table-prefix}service_session"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_auth_session_fintech_user"
+                                 baseTableName="${table-prefix}auth_session"
+                                 baseColumnNames="fintech_user_id"
+                                 referencedTableName="${table-prefix}fintech_user"
                                  referencedColumnNames="id"/>
 
-        <createTable tableName="${table-prefix}fintech">
-            <column name="id" type="BIGINT">
+        <createTable tableName="${table-prefix}psu_consent">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="global_id" type="VARCHAR(64)">
-                <constraints unique="true" nullable="false"/>
+            <column name="psu_id" type="BIGINT">
+                <constraints nullable="false"/>
             </column>
-            <column name="keystore" type="BLOB"/>
-            <column name="pub_keys" type="BLOB"/>
+            <column name="data" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
-        <createSequence sequenceName="fintech_id_sequence" incrementBy="50"/>
+        <createSequence sequenceName="psu_consent_id_sequence" incrementBy="50"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_psu_consent_psu"
+                                 baseTableName="${table-prefix}psu_consent"
+                                 baseColumnNames="psu_id"
+                                 referencedTableName="${table-prefix}psu"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_psu_consent_auth_session"
+                                 baseTableName="${table-prefix}psu_consent"
+                                 baseColumnNames="id"
+                                 referencedTableName="${table-prefix}auth_session"
+                                 referencedColumnNames="id"/>
 
-        <createTable tableName="${table-prefix}fintech_inbox">
+        <createTable tableName="${table-prefix}fintech_consent_inbox">
             <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
@@ -165,50 +200,43 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint constraintName="fk_fintech_inbox_fintech"
-                                 baseTableName="${table-prefix}fintech_inbox"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_consent_inbox_fintech"
+                                 baseTableName="${table-prefix}fintech_consent_inbox"
                                  baseColumnNames="fintech_id"
                                  referencedTableName="${table-prefix}fintech"
                                  referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_consent_inbox_auth_session"
+                                 baseTableName="${table-prefix}fintech_consent_inbox"
+                                 baseColumnNames="id"
+                                 referencedTableName="${table-prefix}auth_session"
+                                 referencedColumnNames="id"/>
 
-        <createTable tableName="${table-prefix}fintech_private">
+        <createTable tableName="${table-prefix}fintech_consent">
             <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
             <column name="fintech_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
+            <column name="consent_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
             <column name="data" type="BLOB">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint constraintName="fk_fintech_private_fintech"
-                                 baseTableName="${table-prefix}fintech_private"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_consent_fintech"
+                                 baseTableName="${table-prefix}fintech_consent"
                                  baseColumnNames="fintech_id"
                                  referencedTableName="${table-prefix}fintech"
                                  referencedColumnNames="id"/>
-
-        <createTable tableName="${table-prefix}fintech_user">
-            <column name="id" type="BIGINT">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="psu_fintech_id" type="VARCHAR(64)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="fintech_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="keystore" type="BLOB"/>
-            <column name="pub_keys" type="BLOB"/>
-        </createTable>
-        <createSequence sequenceName="fintech_user_id_sequence" incrementBy="50"/>
-        <addForeignKeyConstraint constraintName="fk_fintech_user_fintech"
-                                 baseTableName="${table-prefix}fintech_user"
-                                 baseColumnNames="fintech_id"
-                                 referencedTableName="${table-prefix}fintech"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_consent_consent"
+                                 baseTableName="${table-prefix}fintech_consent"
+                                 baseColumnNames="consent_id"
+                                 referencedTableName="${table-prefix}consent"
                                  referencedColumnNames="id"/>
 
-        <createTable tableName="${table-prefix}fintech_user_inbox">
+        <createTable tableName="${table-prefix}fintech_consent_spec">
             <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
@@ -219,15 +247,36 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint constraintName="fk_fintech_user_inbox_fintech_user"
-                                 baseTableName="${table-prefix}fintech_user_inbox"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_consent_spec_fintech_user"
+                                 baseTableName="${table-prefix}fintech_consent_spec"
                                  baseColumnNames="user_id"
                                  referencedTableName="${table-prefix}fintech_user"
                                  referencedColumnNames="id"/>
-        <addForeignKeyConstraint constraintName="fk_fintech_user_inbox_auth_session"
-                                 baseTableName="${table-prefix}fintech_user_inbox"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_consent_spec_auth_session"
+                                 baseTableName="${table-prefix}fintech_consent_spec"
                                  baseColumnNames="id"
                                  referencedTableName="${table-prefix}auth_session"
                                  referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_consent_psu"
+                                 baseTableName="${table-prefix}consent"
+                                 baseColumnNames="psu_id"
+                                 referencedTableName="${table-prefix}psu"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_consent_bank"
+                                 baseTableName="${table-prefix}consent"
+                                 baseColumnNames="bank_id"
+                                 referencedTableName="${table-prefix}bank"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="add-relation-bank-profile-protocol" author="mhr">
+        <addForeignKeyConstraint baseColumnNames="bank_uuid"
+                                 baseTableName="${table-prefix}bank_protocol"
+                                 constraintName="fk_bank_protocol_bank_profile"
+                                 deferrable="true"
+                                 initiallyDeferred="true"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="bank_uuid"
+                                 referencedTableName="${table-prefix}bank_profile"/>
     </changeSet>
 </databaseChangeLog>
