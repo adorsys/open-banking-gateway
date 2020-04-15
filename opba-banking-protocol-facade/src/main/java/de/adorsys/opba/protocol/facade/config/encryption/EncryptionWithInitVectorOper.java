@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.facade.config.encryption;
 
-import com.google.common.hash.Hashing;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -17,9 +16,9 @@ public class EncryptionWithInitVectorOper {
 
     private final EncSpec encSpec;
 
-    public EncryptionServiceWithKey encryptionService(SecretKeyWithIv keyWithIv) {
+    public EncryptionServiceWithKey encryptionService(String keyId, SecretKeyWithIv keyWithIv) {
         return new Encryption(
-                Hashing.sha256().hashBytes(keyWithIv.getSecretKey().getEncoded()).toString(),
+                keyId,
                 keyWithIv,
                 () -> encryption(keyWithIv),
                 () -> decryption(keyWithIv)
@@ -61,7 +60,7 @@ public class EncryptionWithInitVectorOper {
     public static class Encryption implements EncryptionServiceWithKey {
 
         @Getter
-        private final String id;
+        private final String encryptionKeyId;
 
         @Getter
         private final SecretKeyWithIv key;
