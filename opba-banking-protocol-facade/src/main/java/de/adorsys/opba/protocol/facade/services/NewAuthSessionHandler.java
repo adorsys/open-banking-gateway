@@ -35,7 +35,6 @@ import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.FINTECH
 @RequiredArgsConstructor
 public class NewAuthSessionHandler {
 
-    private final ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider;
     private final FacadeAuthConfig facadeAuthConfig;
     private final BankProtocolRepository protocolRepository;
     private final FintechUserPasswordGenerator passwordGenerator;
@@ -44,6 +43,8 @@ public class NewAuthSessionHandler {
     private final FintechUserSecureStorage fintechUserVault;
     private final AuthorizationSessionRepository authenticationSessions;
     private final EntityManager entityManager;
+    private final ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider;
+    private final RequestScopedProvider requestScopedProvider;
 
     @NotNull
     @SneakyThrows
@@ -82,7 +83,7 @@ public class NewAuthSessionHandler {
                 newAuth,
                 new FintechUserSecureStorage.FinTechUserInboxData(
                         result.getRedirectionTo(),
-                        createSecretKeyOfCurrentSessionContainer(session),
+                        createSecretKeyOfCurrentSessionContainer(),
                         null
                 )
         );
@@ -99,7 +100,7 @@ public class NewAuthSessionHandler {
     }
 
     @NotNull
-    private SecretKeySerde.SecretKeyWithIvContainer createSecretKeyOfCurrentSessionContainer(ServiceContext session) {
-        return new SecretKeySerde.SecretKeyWithIvContainer(encryptionServiceProvider.getEncryptionById(session.getEncryption().getId()).getKey());
+    private SecretKeySerde.SecretKeyWithIvContainer createSecretKeyOfCurrentSessionContainer() {
+        return new SecretKeySerde.SecretKeyWithIvContainer(encryptionServiceProvider.generateKey());
     }
 }
