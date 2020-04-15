@@ -49,7 +49,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
     }
 
     @Test
-    void testUserWantsToSeeItsAccountsAndTransanctionsInFintech(FirefoxDriver firefoxDriver) {
+    void testAntonBruecknerWantsToSeeItsAccountsAndTransanctionsFromFintech(FirefoxDriver firefoxDriver) {
         given().fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
         when().user_already_login_in_bank_profile(firefoxDriver)
                 .and()
