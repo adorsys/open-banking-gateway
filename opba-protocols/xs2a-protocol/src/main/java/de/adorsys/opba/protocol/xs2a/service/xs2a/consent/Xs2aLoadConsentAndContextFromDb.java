@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import de.adorsys.opba.protocol.api.services.scoped.consent.Consent;
+import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
 import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aFlowableProperties;
 import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aObjectMapper;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
@@ -44,13 +44,13 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
 
     @SneakyThrows
     private void loadContext(DelegateExecution execution, Xs2aContext context) {
-        Optional<Consent> consent = context.consentAccess().findByInternalId(context.getServiceSessionId());
+        Optional<ProtocolFacingConsent> consent = context.consentAccess().findByInternalId(context.getServiceSessionId());
 
         if (!consent.isPresent() || null == consent.get().getConsentContext()) {
             return;
         }
 
-        Consent target = consent.get();
+        ProtocolFacingConsent target = consent.get();
 
         JsonNode value = mapper.readTree(target.getConsentContext());
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();

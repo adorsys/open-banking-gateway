@@ -21,6 +21,7 @@ import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedi
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeSuccessResult;
+import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +51,7 @@ public class ProtocolResultHandler {
         try {
             return doHandleResult(result, request, session);
         } finally {
-            provider.deRegister(session.getRequestScoped());
+            provider.deregister(session.getRequestScoped());
         }
     }
 

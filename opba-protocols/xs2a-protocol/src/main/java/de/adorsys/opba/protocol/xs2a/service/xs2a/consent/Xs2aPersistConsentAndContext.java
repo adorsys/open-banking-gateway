@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.protocol.api.services.scoped.consent.Consent;
+import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
 import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aObjectMapper;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
@@ -19,8 +19,8 @@ public class Xs2aPersistConsentAndContext extends ValidatedExecution<Xs2aContext
     @Override
     @SneakyThrows
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        Consent consent = context.consentAccess().findByInternalId(context.getServiceSessionId())
-                .orElseGet(() -> context.consentAccess().createButDontSave(context.getServiceSessionId()));
+        ProtocolFacingConsent consent = context.consentAccess().findByInternalId(context.getServiceSessionId())
+                .orElseGet(() -> context.consentAccess().createDoNotPersist(context.getServiceSessionId()));
 
         consent.setConsentId(context.getConsentId());
         consent.setConsentContext(

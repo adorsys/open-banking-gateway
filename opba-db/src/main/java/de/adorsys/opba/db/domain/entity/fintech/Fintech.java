@@ -44,14 +44,14 @@ public class Fintech {
     @Basic(fetch = FetchType.LAZY)
     private byte[] pubKeys;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fintech")
+    @OneToMany(mappedBy = "fintech", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<FintechConsentInbox> inbox;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fintech")
-    private Collection<FintechConsent> privateStore;
+    @OneToMany(mappedBy = "fintech", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<FintechConsent> consentKeys;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fintech")
-    private Collection<FintechUser> fintechUsersToAuthorize;
+    @OneToMany(mappedBy = "fintech", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<FintechUser> requestedConsentSpecs;
 
     public UserID getUserId() {
         return new UserID(String.valueOf(id));
