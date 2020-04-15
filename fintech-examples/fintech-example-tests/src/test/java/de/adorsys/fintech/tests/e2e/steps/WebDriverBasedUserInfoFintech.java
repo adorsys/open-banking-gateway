@@ -1,8 +1,12 @@
 package de.adorsys.fintech.tests.e2e.steps;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
-import org.openqa.selenium.*;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +14,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.RetryOperations;
 
-import java.net.URI;
 import java.time.Duration;
 
 import static de.adorsys.fintech.tests.e2e.config.RetryableConfig.TEST_RETRY_OPS;
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.PIN;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.USERNAME;
+
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
-public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFintech<SELF>> extends AccountInformationRequestCommon<SELF> {
+public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFintech<SELF>> extends WebDriverBasedAccountInformation<SELF> {
 
     static final String FINTECH_URI = "https://obg-dev-fintechui.cloud.adorsys.de";
 
@@ -34,26 +39,16 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
+    public SELF user_sees_account_and_list_transactions(WebDriver webDriver) {
+        wait(webDriver);
+        performClick(webDriver, By.className("lacc-list-item__headline"));
+        wait(webDriver);
+        return self();
+    }
+
     public SELF user_login_with_its_credentials(WebDriver driver) {
         sendText(driver, By.id("username"), USERNAME);
-        sendText(driver, By.id("password"), PIN_VALUE);
-        return self();
-    }
-
-    public SELF user_sees_that_does_not_need_to_login(WebDriver webDriver) {
-        waitForPageLoadAndUrlEndsWithPath(webDriver, "search");
-        return self();
-    }
-
-    public SELF user_back_to_bank_search(WebDriver webDriver) {
-        waitForPageLoad(webDriver);
-        clickOnButton(webDriver, By.className("icon__container"), true);
-        return self();
-    }
-
-    public SELF user_click_on_accounts_list(WebDriver driver) {
-        wait(driver);
-        clickOnButton(driver, By.className("lacc-list-item"), false);
+        sendText(driver, By.id("password"), PIN);
         return self();
     }
 
@@ -63,12 +58,27 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF user_sees_that_he_has_to_login(WebDriver webDriver) {
-        webDriver.get(FINTECH_URI);
+    public SELF user_already_login_in_bank_profile(FirefoxDriver firefoxDriver) {
+        user_opens_fintechui_login_page(firefoxDriver)
+                .and()
+                .user_login_with_its_credentials(firefoxDriver)
+                .and()
+                .user_confirm_login(firefoxDriver)
+                .and()
+                .user_navigates_to_page(firefoxDriver)
+                .and()
+                .user_looks_for_a_bank_in_the_bank_search_input_place(firefoxDriver)
+                .and()
+                .user_wait_for_the_result_in_bank_search(firefoxDriver)
+                .and()
+                .user_navigates_to_page(firefoxDriver)
+                .and()
+                .user_select_account_button(firefoxDriver);
         return self();
     }
 
-    public SELF user_navigates_to_bank_search(WebDriver driver) {
+
+    public SELF user_navigates_to_page(WebDriver driver) {
         wait(driver);
         return self();
     }
@@ -85,17 +95,18 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF user_naviagtes_to_bank_profile(WebDriver webDriver) {
-        waitForPageLoadAndUrlEndsWithPath(webDriver, "bank" + BANK_ID_VALUE);
+    public SELF user_accepts_to_get_redirected_to_consentui(WebDriver webDriver) {
+        wait(webDriver);
+        performClick(webDriver, By.xpath("//button[@class='btn btn-primary btn-center']"));
+        return self();
+    }
+
+    public SELF user_select_account_button(WebDriver webDriver) {
+        performClick(webDriver, By.linkText("Accounts"));
         return self();
     }
 
     //TODO add stages for accountList and TransactionList
-
-    private void waitForPageLoad(WebDriver driver) {
-        new WebDriverWait(driver, timeout.getSeconds())
-                .until(wd -> ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));
-    }
 
     private void clickOnButton(WebDriver driver, By identifier) {
         clickOnButton(driver, identifier, false);
@@ -151,13 +162,4 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
             throw ex;
         }
     }
-
-    private void waitForPageLoadAndUrlEndsWithPath(WebDriver driver, String urlEndsWithPath) {
-        new WebDriverWait(driver, timeout.getSeconds())
-                .until(wd ->
-                        URI.create(driver.getPageSource()).getPath().endsWith(urlEndsWithPath)
-                                && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
-                );
-    }
-
 }

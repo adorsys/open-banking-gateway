@@ -11,5 +11,9 @@ test:
     search:
       uri: https://obg-dev-fintechui.cloud.adorsys.de/search
     uri: https://obg-dev-fintechui.cloud.adorsys.de
+  aspsp-profile:
+    server-uri: https://obg-bank-dev-aspspprofile.cloud.adorsys.de
+  opba:
+    server-uri: https://obg-dev-openbankinggateway.cloud.adorsys.de
 
 debug: true
