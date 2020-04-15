@@ -1,6 +1,9 @@
 package de.adorsys.opba.tppbankingapi.web.filter;
 
-import de.adorsys.opba.protocol.facade.services.RequestVerifyingService;
+
+import de.adorsys.opba.api.security.domain.SignData;
+import de.adorsys.opba.api.security.service.RequestVerifyingService;
+import de.adorsys.opba.restapi.shared.HttpHeaders;
 import de.adorsys.opba.tppbankingapi.config.FinTechServicesConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,16 +18,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.OffsetDateTime;
-
-import static de.adorsys.opba.restapi.shared.HttpHeaders.FINTECH_ID;
+import java.util.UUID;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class RequestSignatureValidationFilter extends OncePerRequestFilter {
-    private static final String X_REQUEST_SIGNATURE = "X-Request-Signature";
-    private static final int X_REQUEST_SIZE = 36;
-
     private final RequestVerifyingService requestVerifyingService;
     private final FinTechServicesConfig finTechServicesConfig;
 
@@ -33,8 +32,12 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String fintechId = request.getHeader(FINTECH_ID);
-        String xRequestSignature = request.getHeader(X_REQUEST_SIGNATURE);
+        String fintechId = request.getHeader(HttpHeaders.FINTECH_ID);
+        String xRequestId = request.getHeader(HttpHeaders.X_REQUEST_ID);
+        String requestTimeStamp = request.getHeader(HttpHeaders.X_TIMESTAMP_UTC);
+        String xRequestSignature = request.getHeader(HttpHeaders.X_REQUEST_SIGNATURE);
+
+        OffsetDateTime dateTime = OffsetDateTime.parse(requestTimeStamp);
 
         String fintechApiKey = finTechServicesConfig.getEnv().getProperty(fintechId);
 
@@ -44,15 +47,14 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String signData = requestVerifyingService.verify(xRequestSignature, fintechApiKey);
+        SignData signData = new SignData(UUID.fromString(xRequestId), dateTime);
 
-        if (signData == null) {
+        boolean verificationResult = requestVerifyingService.verify(xRequestSignature, fintechApiKey, signData);
+
+        if (!verificationResult) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Signature verification error");
             return;
         }
-
-        String requestTimeStamp = signData.substring(X_REQUEST_SIZE);
-        OffsetDateTime dateTime = OffsetDateTime.parse(requestTimeStamp);
 
         if (operationDateTimeNowWithinLimit(dateTime)) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Timestamp validation failed");

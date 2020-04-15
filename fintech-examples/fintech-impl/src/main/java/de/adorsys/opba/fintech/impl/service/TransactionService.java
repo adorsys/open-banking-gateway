@@ -1,5 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
+import de.adorsys.opba.api.security.domain.SignData;
+import de.adorsys.opba.api.security.service.RequestSigningService;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
 
@@ -67,7 +70,7 @@ public class TransactionService extends HandleAcceptedService {
             return new ResponseEntity<>(ManualMapper.fromTppToFintech(new TppListTransactionsMock().getTransactionsResponse()), HttpStatus.OK);
         }
         UUID xRequestId = UUID.fromString(restRequestContext.getRequestId());
-        String timeNow = Instant.now().atOffset(ZoneOffset.UTC).toString();
+        OffsetDateTime timeNow = Instant.now().atOffset(ZoneOffset.UTC);
 
         ResponseEntity<TransactionsResponse> transactions = requestGetTransactions(sessionEntity, bankId, accountId,
                                                                                    dateFrom, dateTo, entryReferenceFrom,
@@ -97,7 +100,7 @@ public class TransactionService extends HandleAcceptedService {
                                                                         Boolean deltaList,
                                                                         String redirectCode,
                                                                         UUID xRequestId,
-                                                                        String timeNow) {
+                                                                        OffsetDateTime timeNow) {
         return tppAisClient.getTransactions(
                 accountId,
                 tppProperties.getServiceSessionPassword(),
@@ -105,7 +108,7 @@ public class TransactionService extends HandleAcceptedService {
                 RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
                 RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
                 xRequestId,
-                timeNow,
+                timeNow.toString(),
                 calculateSignature(xRequestId, timeNow),
                 tppProperties.getFintechID(),
                 bankId,
@@ -118,7 +121,8 @@ public class TransactionService extends HandleAcceptedService {
                 deltaList);
     }
 
-    private String calculateSignature(UUID xRequestId, String timeNow) {
-        return requestSigningService.sign(xRequestId.toString() + timeNow);
+    private String calculateSignature(UUID xRequestId, OffsetDateTime offsetDateTime) {
+        SignData signData = new SignData(xRequestId, offsetDateTime);
+        return requestSigningService.sign(signData);
     }
 }

@@ -1,5 +1,7 @@
-package de.adorsys.opba.protocol.facade.services;
+package de.adorsys.opba.api.security.service.impl;
 
+import de.adorsys.opba.api.security.domain.SignatureClaim;
+import de.adorsys.opba.api.security.service.RequestVerifyingService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -13,35 +15,38 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
+import static de.adorsys.opba.api.security.service.SignatureParams.ALGORITHM_RSA;
+import static de.adorsys.opba.api.security.service.SignatureParams.CLAIM_NAME;
+
 @Slf4j
 @Service
 public class RsaJwtsVerifyingServiceImpl implements RequestVerifyingService {
-    private static final String ALGORITHM_RSA = "RSA";
-    private static final String CLAIM_NAME = "sign-data";
 
     @Override
-    public String verify(String signature, String encodedPublicKey) {
+    public boolean verify(String signature, String encodedPublicKey, SignatureClaim signatureClaim) {
         PublicKey publicKey = getRsaPublicKey(encodedPublicKey);
 
         if (publicKey == null) {
-            return null;
+            return false;
         }
 
         try {
             JwtParser parser = Jwts.parserBuilder().setSigningKey(publicKey).build();
             Claims claims = parser.parseClaimsJws(signature).getBody();
 
-            return (String) claims.get(CLAIM_NAME);
+            return signatureClaim.getClaimsAsString()
+                           .equals(claims.get(CLAIM_NAME.getValue()));
+
         } catch (Exception e) {
             log.warn("Signature verification error:  {}", signature);
-            return null;
+            return false;
         }
     }
 
     private PublicKey getRsaPublicKey(String encodedPublicKey) {
         try {
             X509EncodedKeySpec encodedPublicKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(encodedPublicKey));
-            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_RSA);
+            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_RSA.getValue());
 
             return keyFactory.generatePublic(encodedPublicKeySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {

@@ -61,6 +61,12 @@
             <version>${spring-web.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-api-security</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- DB dependencies -->
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -90,23 +96,6 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-api</artifactId>
-            <version>${jjwt.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-            <version>${jjwt.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
-            <version>${jjwt.version}</version>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
