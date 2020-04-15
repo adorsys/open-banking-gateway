@@ -1,4 +1,4 @@
-package de.adorsys.opba.db.domain.entity;
+package de.adorsys.opba.protocol.api.common;
 
 import lombok.Getter;
 

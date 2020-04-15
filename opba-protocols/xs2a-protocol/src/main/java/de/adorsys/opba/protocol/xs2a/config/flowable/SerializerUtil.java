@@ -5,10 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.ProtocolFacingEncryptionServiceProvider;
-import de.adorsys.opba.protocol.xs2a.service.storage.NeedsEncryptionService;
 import de.adorsys.opba.protocol.xs2a.service.storage.NeedsTransientStorage;
-import de.adorsys.opba.protocol.xs2a.service.storage.PersistenceShouldUseEncryption;
 import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
+import de.adorsys.opba.protocol.xs2a.service.storage.UsesEncryptionService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,14 +28,14 @@ public class SerializerUtil {
 
     @SneakyThrows
     public byte[] serialize(@NotNull Object data, @NotNull ObjectMapper mapper) {
-        if (!(data instanceof PersistenceShouldUseEncryption)) {
+        if (!(data instanceof UsesEncryptionService)) {
             throw new IllegalStateException("Can't serialize non-encrypted persistence classes");
         }
 
         return mapper.writeValueAsBytes(
                 ImmutableMap.of(
                         data.getClass().getCanonicalName(),
-                        new EncryptedContainer((PersistenceShouldUseEncryption) data, mapper)
+                        new EncryptedContainer((UsesEncryptionService) data, mapper)
                 )
         );
     }
@@ -54,7 +53,7 @@ public class SerializerUtil {
         Class<?> dataClazz = Class.forName(classNameAndValue.getKey());
         Object result;
 
-        if (!PersistenceShouldUseEncryption.class.isAssignableFrom(dataClazz)) {
+        if (!UsesEncryptionService.class.isAssignableFrom(dataClazz)) {
             throw new IllegalStateException("Can't deserialize non-encrypted persistence classes");
         }
 
@@ -70,8 +69,8 @@ public class SerializerUtil {
                 dataClazz
         );
 
-        if (result instanceof NeedsEncryptionService) {
-            ((NeedsEncryptionService) result).setEncryption(encryptor);
+        if (result instanceof UsesEncryptionService) {
+            ((UsesEncryptionService) result).setEncryption(encryptor);
         }
 
         if (result instanceof NeedsTransientStorage) {
@@ -90,7 +89,7 @@ public class SerializerUtil {
         private byte[] data;
 
         @SneakyThrows
-        EncryptedContainer(PersistenceShouldUseEncryption entity, ObjectMapper mapper) {
+        EncryptedContainer(UsesEncryptionService entity, ObjectMapper mapper) {
             if (null == entity.getEncryption()) {
                 throw new IllegalStateException("Missing encryption service");
             }
