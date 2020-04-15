@@ -1,8 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import de.adorsys.opba.db.domain.entity.Consent;
-import de.adorsys.opba.db.repository.jpa.ConsentRepository;
+import de.adorsys.opba.protocol.api.services.scoped.consent.Consent;
 import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aFlowableProperties;
 import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aObjectMapper;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
@@ -32,7 +31,6 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
     private final ContextMerger merger;
     private final Xs2aFlowableProperties properties;
     private final Xs2aObjectMapper mapper;
-    private final ConsentRepository consentRepository;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
@@ -46,13 +44,15 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
 
     @SneakyThrows
     private void loadContext(DelegateExecution execution, Xs2aContext context) {
-        Optional<Consent> consent = consentRepository.findByServiceSessionId(context.getServiceSessionId());
+        Optional<Consent> consent = context.consentAccess().findByInternalId(context.getServiceSessionId());
 
-        if (!consent.isPresent() || null == consent.get().getEncContext()) {
+        if (!consent.isPresent() || null == consent.get().getConsentContext()) {
             return;
         }
 
-        JsonNode value = mapper.readTree(consent.get().getContext(context.getEncryption()));
+        Consent target = consent.get();
+
+        JsonNode value = mapper.readTree(target.getConsentContext());
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
 
         if (!properties.canSerialize(classNameAndValue.getKey())) {
@@ -63,7 +63,7 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
                 classNameAndValue.getValue().traverse(),
                 Class.forName(classNameAndValue.getKey())
         );
-        ctx.setConsentId(consent.get().getConsent(context.getEncryption()));
+        ctx.setConsentId(target.getConsentId());
 
         // TODO - tidy up context merging
         if (ctx instanceof TransactionListXs2aContext && context instanceof TransactionListXs2aContext) {
