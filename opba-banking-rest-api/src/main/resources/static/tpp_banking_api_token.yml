@@ -21,8 +21,6 @@ paths:
       #common header parameter
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Authorization"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
-      #query
-        - $ref: '#/components/parameters/redirectCode'
       responses:
         '200':
           $ref: "#/components/responses/200_PsuConsentSession"
@@ -32,16 +30,6 @@ paths:
           $ref: './tpp_banking_api_commons.yml#/components/responses/404_NOT_FOUND'
 
 components:
-  parameters:
-
-    redirectCode:
-      name: redirectCode
-      in: query
-      required: true
-      schema:
-        type: string
-
-
   responses:
 
     200_PsuConsentSession:
@@ -49,31 +37,7 @@ components:
       headers:
         X-Request-ID:
           $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PsuConsentSessionResponse'
-
-  schemas:
-
-    PsuConsentSession:
-      title: |
-        The representation of a PSU consent session. We call this a session
-        because it hase a life cycle including an expiration.
-      description: |
-        Unique Token that identifies PSU Consent Session for this request, if it is already available for given PSU by Fintech through previous requests.
-        This Token is not designed to be parsed at Fintech side.
-      properties:
-        value:
-          type: string
-      example: "Confirmed"
-
-    PsuConsentSessionResponse:
-      type: object
-      properties:
-        psuConsentSession:
-          $ref: '#/components/schemas/PsuConsentSession'
-
+      #NO RESPONSE BODY
 
   securitySchemes:
     BearerAuthOAuth:
