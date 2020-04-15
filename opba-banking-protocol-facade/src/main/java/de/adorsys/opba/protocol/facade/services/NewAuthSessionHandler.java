@@ -26,7 +26,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityManager;
 
-import static de.adorsys.opba.db.domain.entity.ProtocolAction.AUTHORIZATION;
+import static de.adorsys.opba.protocol.api.common.ProtocolAction.AUTHORIZATION;
 import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.AUTHORIZATION_SESSION_ID;
 import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.FINTECH_USER_TEMP_PASSWORD;
 

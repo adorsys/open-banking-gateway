@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint.authorization;
 
-import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.protocol.api.authorization.GetAuthorizationState;
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
