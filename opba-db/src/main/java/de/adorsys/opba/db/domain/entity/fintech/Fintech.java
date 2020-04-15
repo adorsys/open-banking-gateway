@@ -45,10 +45,10 @@ public class Fintech {
     private byte[] pubKeys;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fintech")
-    private Collection<FintechInbox> inbox;
+    private Collection<FintechConsentInbox> inbox;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fintech")
-    private Collection<FintechPrivate> privateStore;
+    private Collection<FintechConsent> privateStore;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fintech")
     private Collection<FintechUser> fintechUsersToAuthorize;

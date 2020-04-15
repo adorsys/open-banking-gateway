@@ -22,7 +22,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FintechPrivate {
+public class FintechConsentInbox {
 
     @Id
     private UUID id;
