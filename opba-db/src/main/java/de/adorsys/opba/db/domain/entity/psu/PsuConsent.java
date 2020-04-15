@@ -22,7 +22,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PsuPrivate {
+public class PsuConsent {
 
     @Id
     private UUID id;

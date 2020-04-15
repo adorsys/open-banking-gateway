@@ -41,17 +41,6 @@
         <addNotNullConstraint tableName="${table-prefix}bank_profile" columnName="bank_uuid" columnDataType="VARCHAR(255)"/>
     </changeSet>
 
-    <changeSet id="add-relation-bank-profile-protocol" author="mhr">
-        <addForeignKeyConstraint baseColumnNames="bank_uuid"
-                                 baseTableName="${table-prefix}bank_protocol"
-                                 constraintName="fk_bank_protocol_bank_profile"
-                                 deferrable="true"
-                                 initiallyDeferred="true"
-                                 onUpdate="RESTRICT"
-                                 referencedColumnNames="bank_uuid"
-                                 referencedTableName="${table-prefix}bank_profile"/>
-    </changeSet>
-
     <changeSet id="add-relation-bank-to-bank-profile" author="mhr">
         <addForeignKeyConstraint constraintName="fk_bank"
                                  baseTableName="${table-prefix}bank_profile"

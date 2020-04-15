@@ -46,7 +46,7 @@ public class Psu {
     private byte[] pubKeys;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "psu")
-    private Collection<PsuPrivate> privateStore;
+    private Collection<PsuConsent> privateStore;
 
     @OneToMany(mappedBy = "psu", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<AuthSession> authSessions;
