@@ -3,7 +3,7 @@ package de.adorsys.opba.db.domain;
 import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.BankProfile;
 import de.adorsys.opba.db.domain.entity.BankProtocol;
-import de.adorsys.opba.db.domain.entity.ProtocolAction;
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankDescriptor;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileDescriptor;
 import org.junit.jupiter.api.Test;

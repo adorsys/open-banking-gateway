@@ -3,8 +3,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.context;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
-import de.adorsys.opba.protocol.xs2a.service.storage.NeedsEncryptionService;
-import de.adorsys.opba.protocol.xs2a.service.storage.PersistenceShouldUseEncryption;
+import de.adorsys.opba.protocol.xs2a.service.storage.UsesEncryptionService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 // TODO - decide do we need to encrypt these
-public class LastViolations implements NeedsEncryptionService, PersistenceShouldUseEncryption {
+public class LastViolations implements UsesEncryptionService {
 
     private Set<ValidationIssue> violations = new HashSet<>();
 

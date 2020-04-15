@@ -2,10 +2,10 @@ package de.adorsys.opba.protocol.facade.services;
 
 import de.adorsys.opba.db.domain.entity.BankProtocol;
 import de.adorsys.opba.db.domain.entity.BankSubProtocol;
-import de.adorsys.opba.db.domain.entity.ProtocolAction;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
