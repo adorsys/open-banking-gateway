@@ -1,11 +1,11 @@
 package de.adorsys.opba.protocol.xs2a.config;
 
-import de.adorsys.opba.protocol.api.services.EncryptionService;
-import de.adorsys.opba.protocol.api.services.ProtocolFacingEncryptionServiceProvider;
+import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
+import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
 import de.adorsys.opba.protocol.xs2a.config.flowable.FlowableConfig;
 import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aFlowableProperties;
 import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aObjectMapper;
-import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.RequestScopedStub;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -16,8 +16,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
@@ -32,14 +30,11 @@ public class Xs2aSensitiveDataTest {
     @Autowired
     private Xs2aObjectMapper mapper;
 
-    @Autowired
-    private TransientDataStorage dataStorage;
-
     @Test
     @SneakyThrows
     void testPsuPasswordNotSerialized() {
         Xs2aContext context = new Xs2aContext();
-        context.setTransientStorage(dataStorage);
+        context.setRequestScoped(new RequestScopedStub());
         context.setSagaId("12345");
         context.setPsuPassword("PASSWORD");
 
@@ -57,7 +52,7 @@ public class Xs2aSensitiveDataTest {
     @SneakyThrows
     void testLastScaChallengeNotSerialized() {
         Xs2aContext context = new Xs2aContext();
-        context.setTransientStorage(dataStorage);
+        context.setRequestScoped(new RequestScopedStub());
         context.setSagaId("123456");
         context.setLastScaChallenge("Challenge!");
 
@@ -75,38 +70,18 @@ public class Xs2aSensitiveDataTest {
     public static class TestConfig {
 
         @Bean
-        ProtocolFacingEncryptionServiceProvider encryptionServiceProvider() {
-            return new ProtocolFacingEncryptionServiceProvider() {
+        RequestScopedServicesProvider requestScopedServicesProvider() {
+            return new RequestScopedServicesProvider() {
                 @Override
-                public EncryptionService getEncryptionById(String id) {
-                    return new EncryptionService() {
-                        @Override
-                        public String getId() {
-                            return "NOOP";
-                        }
-
-                        @Override
-                        public byte[] encrypt(byte[] data) {
-                            return data;
-                        }
-
-                        @Override
-                        public byte[] decrypt(byte[] data) {
-                            return data;
-                        }
-                    };
+                public RequestScoped current() {
+                    return new RequestScopedStub();
                 }
 
                 @Override
-                public void remove(EncryptionService service) {
+                public RequestScoped byEncryptionKeyId(String keyId) {
+                    return new RequestScopedStub();
                 }
             };
-        }
-
-        @Bean
-        @ConditionalOnMissingBean(TransientDataStorage.class)
-        TransientDataStorage dataStorage() {
-            return new TransientDataStorage(new HashMap<>());
         }
 
         @Bean
