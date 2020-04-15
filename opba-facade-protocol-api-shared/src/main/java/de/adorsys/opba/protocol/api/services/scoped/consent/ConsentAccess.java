@@ -6,9 +6,9 @@ import java.util.UUID;
 
 public interface ConsentAccess {
 
-    Consent createButDontSave(UUID internalId);
-    void save(Consent consent);
-    void delete(Consent consent);
-    Optional<Consent> findByInternalId(UUID internalId);
-    List<Consent> getAvailableConsentsForCurrentPsu();
+    ProtocolFacingConsent createDoNotPersist(UUID internalId);
+    void save(ProtocolFacingConsent consent);
+    void delete(ProtocolFacingConsent consent);
+    Optional<ProtocolFacingConsent> findByInternalId(UUID internalId);
+    List<ProtocolFacingConsent> getAvailableConsentsForCurrentPsu();
 }

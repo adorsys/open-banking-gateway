@@ -16,6 +16,7 @@ import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechUserSecureStorage;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
 import de.adorsys.opba.protocol.facade.services.password.FintechUserPasswordGenerator;
+import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -99,6 +100,6 @@ public class NewAuthSessionHandler {
 
     @NotNull
     private SecretKeySerde.SecretKeyWithIvContainer createSecretKeyOfCurrentSessionContainer(ServiceContext context) {
-        return new SecretKeySerde.SecretKeyWithIvContainer(requestScopedProvider.keyFor(context.getRequestScoped()));
+        return new SecretKeySerde.SecretKeyWithIvContainer(requestScopedProvider.keyFromRegistered(context.getRequestScoped()));
     }
 }
