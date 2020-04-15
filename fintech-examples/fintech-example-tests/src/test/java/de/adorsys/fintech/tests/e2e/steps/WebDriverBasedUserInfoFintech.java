@@ -40,9 +40,8 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_sees_account_and_list_transactions(WebDriver webDriver) {
-        wait(webDriver);
-        performClick(webDriver, By.className("lacc-list-item__headline"));
-        wait(webDriver);
+        performClick(webDriver, By.className("lacc-list-container"));
+        waitPlusTimer(webDriver, 10);
         return self();
     }
 
@@ -139,6 +138,10 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
 
     private WebDriverWait wait(WebDriver driver) {
         return new WebDriverWait(driver, timeout.getSeconds());
+    }
+
+    private WebDriverWait waitPlusTimer(WebDriver webDriver, long duration) {
+        return new WebDriverWait(webDriver, timeout.getSeconds() + duration);
     }
 
     private void sendTestInSearchInput(WebDriver driver, By id, String visibleText) {
