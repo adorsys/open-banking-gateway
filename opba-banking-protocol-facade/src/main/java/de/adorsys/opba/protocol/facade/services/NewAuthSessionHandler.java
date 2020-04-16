@@ -13,10 +13,10 @@ import de.adorsys.opba.db.repository.jpa.fintech.FintechUserRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
+import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechUserSecureStorage;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
 import de.adorsys.opba.protocol.facade.services.password.FintechUserPasswordGenerator;
-import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
@@ -43,13 +43,17 @@ public class NewAuthSessionHandler {
     private final FintechUserSecureStorage fintechUserVault;
     private final AuthorizationSessionRepository authenticationSessions;
     private final EntityManager entityManager;
-    private final RequestScopedProvider requestScopedProvider;
 
     @NotNull
     @SneakyThrows
     @Transactional
     @SuppressWarnings("checkstyle:MethodLength") //  FIXME - https://github.com/adorsys/open-banking-gateway/issues/555
-    protected <O> AuthSession createNewAuthSession(FacadeServiceableRequest request, ServiceContext session, FacadeResultRedirectable<O, ?> result) {
+    protected <O> AuthSession createNewAuthSession(
+            FacadeServiceableRequest request,
+            SecretKeyWithIv sessionKey,
+            ServiceContext session,
+            FacadeResultRedirectable<O, ?> result
+    ) {
         BankProtocol authProtocol = protocolRepository
                 .findByBankProfileUuidAndAction(session.getBankId(), AUTHORIZATION)
                 .orElseThrow(
@@ -82,7 +86,7 @@ public class NewAuthSessionHandler {
                 newAuth,
                 new FintechUserSecureStorage.FinTechUserInboxData(
                         result.getRedirectionTo(),
-                        createSecretKeyOfCurrentSessionContainer(session),
+                        new SecretKeySerde.SecretKeyWithIvContainer(sessionKey),
                         null
                 )
         );
@@ -96,10 +100,5 @@ public class NewAuthSessionHandler {
         );
 
         return newAuth;
-    }
-
-    @NotNull
-    private SecretKeySerde.SecretKeyWithIvContainer createSecretKeyOfCurrentSessionContainer(ServiceContext context) {
-        return new SecretKeySerde.SecretKeyWithIvContainer(requestScopedProvider.keyFromRegistered(context.getRequestScoped()));
     }
 }
