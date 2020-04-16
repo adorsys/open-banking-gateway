@@ -1,30 +1,21 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, ActivatedRouteSnapshot, Router} from '@angular/router';
-import {SessionService} from "../../common/session.service";
-import {Subscription} from 'rxjs';
+import {SessionService} from '../../common/session.service';
 import {AuthService} from '../../common/auth.service';
-import {EntryPageTransactionsComponent} from '../entry-page/initiation/transactions/entry-page-transactions/entry-page-transactions.component';
-import {ConsentAuth} from "../../api";
-import {AuthConsentState} from "../common/dto/auth-state";
-import {EntryPageAccountsComponent} from "../entry-page/initiation/accounts/entry-page-accounts/entry-page-accounts.component";
-import ActionEnum = ConsentAuth.ActionEnum;
 
 @Component({
   selector: 'consent-app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
   public static ROUTE = 'login';
 
   loginForm: FormGroup;
-  private subLogin: Subscription;
-  private username: FormControl | AbstractControl;
-  private pwd: FormControl | AbstractControl;
-
   private route: ActivatedRouteSnapshot;
   private redirectCode: string;
+  private authId: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -39,36 +30,32 @@ export class LoginComponent implements OnInit, OnDestroy {
       id: ['', Validators.required],
       password: ['', Validators.required]
     });
-    this.username = this.loginForm.get(['id']);
-    this.pwd = this.loginForm.get(['password']);
 
     this.route = this.activatedRoute.snapshot;
-
-    const authId = this.route.parent.params.authId;
-     this.redirectCode = this.route.queryParams.redirectCode;
-    console.log(this.redirectCode);
+    this.authId = this.route.parent.params.authId;
+    this.redirectCode = this.route.queryParams.redirectCode;
+    if (this.redirectCode) { this.sessionService.setRedirectCode(this.authId, this.redirectCode); }
   }
 
   onSubmit(){
-    this.subLogin = this.authService.userLogin(this.loginForm.value)
+    this.authService.userLogin(this.loginForm.value)
       .subscribe(
         res => {
-          console.log(res);
           // store xsrf-token in session-storage
           const xsrfToken = res.body.xsrfToken;
-          this.sessionService.setXsrfToken(xsrfToken);
+          this.sessionService.setXsrfToken(this.authId, xsrfToken);
           // navigate to transactions
           this.router.navigate(['../'],
-            { relativeTo: this.activatedRoute, queryParams: { redirectCode: this.redirectCode } });
+            { relativeTo: this.activatedRoute });
         },
           error => { console.log(error) } );
   }
 
-  ngOnDestroy(): void {
-    if (this.subLogin) {
-      this.subLogin.unsubscribe();
-    }
+  get id() {
+    return this.loginForm.get('id');
   }
-
+  get password() {
+    return this.loginForm.get('password');
+  }
 
 }

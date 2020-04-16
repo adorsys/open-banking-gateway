@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import { PsuAuthService } from '../api-auth/api/psuAuth.service'
 import * as uuid from 'uuid';
+import {PsuAuthBody} from "../api-auth";
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +14,12 @@ export class AuthService {
     private psuAuthService: PsuAuthService
   ) {  }
 
-  public userLogin(formData) {
+  public userLogin(credentials: PsuAuthBody) {
     const xRequestID = uuid.v4();
-    console.log('xRequestID: ', xRequestID);
-    return this.psuAuthService.login(xRequestID ,formData, 'response');
+    return this.psuAuthService.login(xRequestID, credentials, 'response');
   }
-  public userRegister(formData) {
+  public userRegister(credentials: PsuAuthBody) {
     const xRequestID = uuid.v4();
-    console.log('xRequestID: ', xRequestID);
-    return this.psuAuthService.registration(xRequestID ,formData, 'response');
+    return this.psuAuthService.registration(xRequestID, credentials, 'response');
   }
 }
