@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @Configuration
 @EnableFeignClients(basePackages = "de.adorsys.opba.fintech.impl.tppclients")
 @EnableJpaRepositories(basePackages = {"de.adorsys.opba.fintech.impl.database.repositories"})
-@ComponentScan({"de.adorsys.opba.fintech.impl", "de.adorsys.opba.api.security.service"})
+@ComponentScan("de.adorsys.opba.fintech.impl")
 @EntityScan("de.adorsys.opba.fintech.impl.database.entities")
 public class FinTechImplConfig {
 }

@@ -5,8 +5,8 @@ import de.adorsys.opba.api.security.service.RequestVerifyingService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -19,7 +19,7 @@ import static de.adorsys.opba.api.security.service.SignatureParams.ALGORITHM_RSA
 import static de.adorsys.opba.api.security.service.SignatureParams.CLAIM_NAME;
 
 @Slf4j
-@Service
+@RequiredArgsConstructor
 public class RsaJwtsVerifyingServiceImpl implements RequestVerifyingService {
 
     @Override
