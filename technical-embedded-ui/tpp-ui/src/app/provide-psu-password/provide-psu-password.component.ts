@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {Consts} from "../consts";
-import {FormControl, FormGroup} from "@angular/forms";
-import {ActivatedRoute} from "@angular/router";
-import {HttpClient} from "@angular/common/http";
-import {Helpers} from "../app.component";
+import { Consts } from "../consts";
+import { FormControl, FormGroup } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
+import { HttpClient } from "@angular/common/http";
+import { Helpers } from "../app.component";
 
 @Component({
   selector: 'app-provide-psu-password',
@@ -34,7 +34,7 @@ export class ProvidePsuPasswordComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
       params => {
-        this.submissionUri = this.submissionUri + params['authorizationSessionId'] + '/embedded?redirectCode=' + params['redirectCode'];
+        this.submissionUri = this.submissionUri + params.authorizationSessionId[0] + '/embedded?redirectCode=' + params.redirectCode[0];
       }
     );
   }

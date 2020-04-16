@@ -1,8 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {DynamicFormControlBase, Target} from "../dynamic-form/dynamic-form-control-base";
-import {ActivatedRoute} from "@angular/router";
-import {Consts} from "../consts";
-import {Globals, UserInfo} from "../globals";
+import { Component, Input, OnInit } from '@angular/core';
+import { DynamicFormControlBase, Target } from "../dynamic-form/dynamic-form-control-base";
+import { ActivatedRoute } from "@angular/router";
+import { Consts } from "../consts";
+import { Globals, UserInfo } from "../globals";
 
 @Component({
   selector: 'app-parameters-input',
@@ -23,7 +23,7 @@ export class ParametersInputComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
       params => {
-        this.submissionUri = this.submissionUri + params['authorizationSessionId'] + '/embedded?redirectCode=' + params['redirectCode'];
+        this.submissionUri = this.submissionUri + params.authorizationSessionId[0] + '/embedded?redirectCode=' + params.redirectCode[0];
         const data: DynamicFormControlBase<any>[] = JSON.parse(params['q'])
           .map(it => new DynamicFormControlBase(it.code, it.code, it.type, it.scope, it.captionMessage, it.scope as Target));
         this.inputsAisConsent = data.filter(it => it.target === Target.AIS_CONSENT);
