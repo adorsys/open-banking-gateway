@@ -109,6 +109,8 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
     @RequiredArgsConstructor
     public static class InternalRequestScoped implements RequestScoped {
 
+        private final TransientStorage transientStorage = new TransientStorageImpl();
+
         private final String encryptionKeyId;
         private final SecretKeyWithIv key;
         private final CurrentBankProfile bankProfile;
@@ -132,7 +134,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
 
         @Override
         public TransientStorage transientStorage() {
-            return new TransientStorageImpl();
+            return transientStorage;
         }
     }
 
