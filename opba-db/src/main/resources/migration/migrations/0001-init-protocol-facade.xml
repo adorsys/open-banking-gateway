@@ -158,10 +158,10 @@
             <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="redirect_code" type="VARCHAR(256)">
+            <column name="redirect_code" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="aspsp_redirect_code" type="VARCHAR(256)"/>
+            <column name="aspsp_redirect_code" type="VARCHAR(64)"/>
 
             <column name="protocol_id" type="BIGINT"/>
             <column name="psu_id" type="BIGINT"/>
@@ -169,7 +169,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="enc_consent_spec" type="BLOB"/>
-            <column name="context" type="TEXT"/>
+            <column name="context" type="VARCHAR(64)"/>
             <column name="version" type="INT">
                 <constraints nullable="false"/>
             </column>

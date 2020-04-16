@@ -16,6 +16,7 @@ import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
 import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
 import java.util.UUID;
 
+@Slf4j
 @Service(ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER)
 @RequiredArgsConstructor
 public class ServiceContextProviderForFintech implements ServiceContextProvider {
@@ -42,6 +44,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     @Transactional
     @SneakyThrows
     public <T extends FacadeServiceableGetter> ServiceContext<T> provide(T request) {
+        log.info("Update {}", request);
         if (null == request.getFacadeServiceable()) {
             throw new IllegalArgumentException("No serviceable body");
         }
