@@ -1,9 +1,10 @@
 package de.adorsys.opba.protocol.facade.services.scoped;
 
 import com.google.common.cache.CacheBuilder;
-import com.google.common.hash.Hashing;
 import de.adorsys.opba.db.domain.entity.BankProfile;
+import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
+import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 import static de.adorsys.opba.protocol.facade.config.FacadeTransientDataConfig.FACADE_CACHE_BUILDER;
 
@@ -40,13 +42,16 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
     }
 
     public RequestScoped registerForFintechSession(
+            Fintech fintech,
             BankProfile profile,
+            ServiceSession session,
             AuthorizationEncryptionServiceProvider encryptionServiceProvider,
-            SecretKeyWithIv key
+            SecretKeyWithIv futureAuthorizationSessionKey,
+            Supplier<char[]> fintechPassword
     ) {
-        EncryptionServiceWithKey encryptionService = encryptionService(encryptionServiceProvider, key);
-        ConsentAccess access = accessProvider.noAccess();
-        return doRegister(profile, access, encryptionService, key);
+        ConsentAccess access = accessProvider.forFintech(fintech, session, fintechPassword);
+        EncryptionServiceWithKey encryptionService = encryptionService(encryptionServiceProvider, futureAuthorizationSessionKey);
+        return doRegister(profile, access, encryptionService, futureAuthorizationSessionKey);
     }
 
     public RequestScoped registerForPsuSession(
@@ -75,8 +80,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
     }
 
     private EncryptionServiceWithKey encryptionService(AuthorizationEncryptionServiceProvider encryptionServiceProvider, SecretKeyWithIv key) {
-        String keyId = Hashing.sha256().hashBytes(key.getSecretKey().getEncoded()).toString();
-        return encryptionServiceProvider.forSecretKey(keyId, key);
+        return encryptionServiceProvider.forSecretKey(key);
     }
 
     @NotNull

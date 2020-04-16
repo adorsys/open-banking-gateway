@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.facade.config.encryption;
 
+import com.google.common.hash.Hashing;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -7,7 +8,8 @@ public abstract class AuthorizationEncryptionServiceProvider {
 
     private final EncryptionWithInitVectorOper oper;
 
-    public EncryptionServiceWithKey forSecretKey(String keyId, SecretKeyWithIv key) {
+    public EncryptionServiceWithKey forSecretKey(SecretKeyWithIv key) {
+        String keyId = Hashing.sha256().hashBytes(key.getSecretKey().getEncoded()).toString();
         return oper.encryptionService(keyId, key);
     }
 
