@@ -19,8 +19,8 @@ public class Xs2aPersistConsentAndContext extends ValidatedExecution<Xs2aContext
     @Override
     @SneakyThrows
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        ProtocolFacingConsent consent = context.consentAccess().findByInternalId(context.getServiceSessionId())
-                .orElseGet(() -> context.consentAccess().createDoNotPersist(context.getServiceSessionId()));
+        ProtocolFacingConsent consent = context.consentAccess().findByCurrentServiceSession()
+                .orElseGet(() -> context.consentAccess().createDoNotPersist());
 
         consent.setConsentId(context.getConsentId());
         consent.setConsentContext(

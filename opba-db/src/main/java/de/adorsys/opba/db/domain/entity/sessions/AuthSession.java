@@ -40,7 +40,7 @@ public class AuthSession {
     @JoinColumn(name = "id")
     private ServiceSession parent;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private BankProtocol protocol;
 
     @ManyToOne(fetch = FetchType.LAZY)
