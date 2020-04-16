@@ -187,7 +187,7 @@ components:
       type: object
       properties:
         xsrfToken:
-          type: String
+          type: string
           description: Authorization cookie hash
 
     generalError:
