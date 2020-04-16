@@ -4,8 +4,18 @@ protocol:
     consent-accounts:
       result: ${protocol.embedded-ui-base-url}/from-aspsp?dest=#{urlSafe(context.getLastRedirection().getRedirectTo())}&serviceSessionId=#{context.getServiceSessionId()}
     parameters:
-      provide-psu-password: ${protocol.embedded-ui-base-url}/parameters/provide-psu-password/#{execution.getId()}
-      select-sca-method: ${protocol.embedded-ui-base-url}/parameters/select-sca-method/#{execution.getId()}?q=#{urlSafe(context.getAvailableSca().toString())}
-      report-sca-result: ${protocol.embedded-ui-base-url}/parameters/report-sca-result/#{execution.getId()}?q=#{urlSafe(context.getScaSelected().getAuthenticationType() + ":" + context.getScaSelected().getName())}
-      provide-more: ${protocol.embedded-ui-base-url}/parameters/provide-more/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}
+      provide-psu-password: ${protocol.embedded-ui-base-url}/parameters/provide-psu-password/#{execution.getId()}?authorizationSessionId=#{context.getAuthorizationSessionIdIfOpened()}&redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+      select-sca-method: ${protocol.embedded-ui-base-url}/parameters/select-sca-method/#{execution.getId()}?q=#{urlSafe(context.getAvailableSca().toString())}&authorizationSessionId=#{context.getAuthorizationSessionIdIfOpened()}&redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+      report-sca-result: ${protocol.embedded-ui-base-url}/parameters/report-sca-result/#{execution.getId()}?q=#{urlSafe(context.getScaSelected().getAuthenticationType() + ":" + context.getScaSelected().getName())}&authorizationSessionId=#{context.getAuthorizationSessionIdIfOpened()}&redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+      provide-more: ${protocol.embedded-ui-base-url}/parameters/provide-more/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}&authorizationSessionId=#{context.getAuthorizationSessionIdIfOpened()}&redirectCode=#{context.getRedirectCodeIfAuthContinued()}
   embedded-ui-base-url: http://localhost:5500
+
+facade:
+  redirect:
+    login-page: ${protocol.embedded-ui-base-url}/login/{authorizationSessionId}?redirectCode={fintechUserTempPassword}
+    password:
+      byte-size: 8
+  cookie:
+    path-templates: /embedded-server/v1/consent/{authorizationSessionId},/v1/consent/{authorizationSessionId}
+  expirable:
+    expire-after-write: PT10M

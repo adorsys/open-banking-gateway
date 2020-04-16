@@ -11,7 +11,7 @@ const PROXY_CONFIG = {
   '/embedded-server/*': {
     target: getProp("EMBEDDED_SERVER_URL", "http://localhost:8085"),
     pathRewrite: {
-      "^/embedded-server": ""
+      "^/embedded-server/": ""
     },
     logLevel: "debug",
     secure: false,
