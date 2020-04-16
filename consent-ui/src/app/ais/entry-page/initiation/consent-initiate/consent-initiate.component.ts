@@ -31,7 +31,7 @@ export class ConsentInitiateComponent implements OnInit {
     this.route = this.activatedRoute.snapshot;
 
     const authId = this.route.params.authId;
-    const redirectCode = this.route.queryParams.redirectCode;
+    const redirectCode = this.sessionService.getRedirectCode(authId);
 
     if (ConsentInitiateComponent.isInvalid(authId, redirectCode)) {
       this.abortUnauthorized();
@@ -45,8 +45,6 @@ export class ConsentInitiateComponent implements OnInit {
   }
 
   private initiateConsentSession(authorizationId: string, redirectCode: string) {
-    console.log('authorizationId: ', authorizationId);
-    console.log('redirectCode: ', redirectCode);
     this.consentAuthService.authUsingGET(authorizationId, redirectCode, 'response').subscribe(res => {
       this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
 
