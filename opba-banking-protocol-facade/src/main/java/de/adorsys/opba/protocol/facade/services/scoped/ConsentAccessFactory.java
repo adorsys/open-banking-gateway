@@ -2,12 +2,18 @@ package de.adorsys.opba.protocol.facade.services.scoped;
 
 import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.Consent;
+import de.adorsys.opba.db.domain.entity.fintech.Fintech;
+import de.adorsys.opba.db.domain.entity.fintech.FintechConsent;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
+import de.adorsys.opba.db.repository.jpa.fintech.FintechConsentRepository;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
+import de.adorsys.opba.protocol.facade.config.encryption.PsuConsentEncryptionServiceProvider;
+import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,20 +21,26 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ConsentAccessFactory {
 
+    private final FintechSecureStorage fintechVault;
+    private final PsuConsentEncryptionServiceProvider encryptionServiceProvider;
+    private final FintechConsentRepository fintechConsentRepository;
     private final ConsentRepository consentRepository;
 
     public ConsentAccess forPsuAndAspsp(Psu psu, Bank aspsp, ServiceSession session, EncryptionService encryptionService) {
         return new PsuConsentAccess(psu, aspsp, encryptionService, session, consentRepository);
     }
 
-    public ConsentAccess noAccess() {
-        return new NoConsentAccess();
+    public ConsentAccess forFintech(Fintech fintech, ServiceSession session, Supplier<char[]> fintechPassword) {
+        return new FintechConsentAccess(
+                fintech, encryptionServiceProvider, fintechConsentRepository, fintechVault, consentRepository, session, fintechPassword
+        );
     }
 
     @RequiredArgsConstructor
@@ -76,7 +88,16 @@ public class ConsentAccessFactory {
     }
 
     @RequiredArgsConstructor
-    private static class NoConsentAccess implements ConsentAccess {
+    private static class FintechConsentAccess implements ConsentAccess {
+
+        private final Fintech fintech;
+        private final PsuConsentEncryptionServiceProvider encryptionService;
+        private final FintechConsentRepository consents;
+        private final FintechSecureStorage fintechVault;
+        private final ConsentRepository consentRepository;
+        private final ServiceSession serviceSession;
+        private final Supplier<char[]> fintechPassword;
+
 
         @Override
         public ProtocolFacingConsent createDoNotPersist() {
@@ -95,7 +116,21 @@ public class ConsentAccessFactory {
 
         @Override
         public Optional<ProtocolFacingConsent> findByCurrentServiceSession() {
-            return Optional.empty();
+            Optional<Consent> consent = consentRepository.findByServiceSessionId(serviceSession.getId());
+            if (!consent.isPresent()) {
+                return Optional.empty();
+            }
+
+            Optional<FintechConsent> fintechConsent = consents.findByFintechAndConsent(fintech, consent.get());
+
+            if (!fintechConsent.isPresent()) {
+                return Optional.empty();
+            }
+
+            SecretKeyWithIv psuAspspKey = fintechVault
+                    .psuAspspKeyFromPrivate(fintechConsent.get().getFintech(), consent.get(), fintechPassword);
+
+            return Optional.of(new ProtocolFacingConsentImpl(consent.get(), encryptionService.forSecretKey(psuAspspKey)));
         }
 
         @Override

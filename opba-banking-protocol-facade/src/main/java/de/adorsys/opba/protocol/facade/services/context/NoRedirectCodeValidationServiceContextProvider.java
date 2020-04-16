@@ -4,6 +4,7 @@ import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
+import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
@@ -16,12 +17,13 @@ public class NoRedirectCodeValidationServiceContextProvider extends ServiceConte
     public static final String NO_REDIRECT_CODE_VALIDATION = "NO_REDIRECT_CODE_VALIDATION_CONTEXT_PROVIDER";
 
     public NoRedirectCodeValidationServiceContextProvider(AuthorizationSessionRepository authSessions,
+                                                          FintechRepository fintechRepository,
                                                           SecretKeySerde serde,
                                                           ServiceSessionRepository serviceSessions,
                                                           BankProfileJpaRepository bankProfileJpaRepository,
                                                           ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider,
                                                           RequestScopedProvider requestScopedProvider) {
-        super(authSessions, bankProfileJpaRepository, consentAuthorizationEncryptionServiceProvider, requestScopedProvider, serde, serviceSessions);
+        super(authSessions, fintechRepository, bankProfileJpaRepository, consentAuthorizationEncryptionServiceProvider, requestScopedProvider, serde, serviceSessions);
     }
 
     protected <T extends FacadeServiceableGetter> void validateRedirectCode(T request, AuthSession session) {

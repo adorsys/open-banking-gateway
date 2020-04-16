@@ -67,4 +67,15 @@ public class FintechSecureStorage {
             serde.write(psuAspspKey, os);
         }
     }
+
+    @SneakyThrows
+    public SecretKeyWithIv psuAspspKeyFromPrivate(Fintech fintech, Consent consent, Supplier<char[]> password) {
+        try (InputStream is = datasafeServices.privateService().read(
+                ReadRequest.forDefaultPrivate(
+                        fintech.getUserIdAuth(password),
+                        consent.getId().toString()))
+        ) {
+            return serde.read(is);
+        }
+    }
 }
