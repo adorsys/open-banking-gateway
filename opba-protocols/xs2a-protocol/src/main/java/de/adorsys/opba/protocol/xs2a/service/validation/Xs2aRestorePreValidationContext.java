@@ -4,6 +4,7 @@ import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.LastViolations;
+import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.LAST_REDIRECTION_TARGET;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.LAST_VALIDATION_ISSUES;
 
+@RequiredArgsConstructor
 @Service("xs2aRestorePreValidationContext")
 public class Xs2aRestorePreValidationContext implements JavaDelegate {
 
