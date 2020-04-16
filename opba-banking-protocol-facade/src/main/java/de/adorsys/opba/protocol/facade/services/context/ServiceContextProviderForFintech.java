@@ -48,7 +48,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         AuthSession authSession = extractAndValidateAuthSession(request);
         ServiceSession session = extractOrCreateServiceSession(request, authSession);
         return ServiceContext.<T>builder()
-                .requestScoped(getRequestScoped(request, session, authSession))
+                .requestScoped(getRequestScoped(request, authSession))
                 .serviceSessionId(session.getId())
                 .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
                 .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
@@ -130,9 +130,9 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     @Nullable
-    private <T extends FacadeServiceableGetter> RequestScoped getRequestScoped(T request, ServiceSession svcSession, AuthSession session) {
+    private <T extends FacadeServiceableGetter> RequestScoped getRequestScoped(T request, AuthSession session) {
         return null == request.getFacadeServiceable().getAuthorizationKey()
-                ? fintechFacingSecretKeyBasedEncryption(request, svcSession)
+                ? fintechFacingSecretKeyBasedEncryption(request)
                 : psuCookieBasedKeyEncryption(request, session);
     }
 
@@ -151,7 +151,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     /**
      * To be consumed by {@link de.adorsys.opba.protocol.facade.services.NewAuthSessionHandler} if new auth session started.
      */
-    private <T extends FacadeServiceableGetter> RequestScoped fintechFacingSecretKeyBasedEncryption(T request, ServiceSession svcSession) {
+    private <T extends FacadeServiceableGetter> RequestScoped fintechFacingSecretKeyBasedEncryption(T request) {
         BankProfile profile = profileJpaRepository.findByBankUuid(request.getFacadeServiceable().getBankId())
                 .orElseThrow(() -> new IllegalArgumentException("No bank profile for bank: " + request.getFacadeServiceable().getBankId()));
 
