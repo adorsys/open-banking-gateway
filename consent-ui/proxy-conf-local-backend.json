@@ -1,6 +1,6 @@
 {
   "/embedded-server/*": {
-    "target": "http://localhost:8085",
+    "target": "http://localhost:18085",
     "secure": false,
     "changeOrigin": true,
     "pathRewrite": {

@@ -1,0 +1,48 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+  <div class="card card-frame">
+    <div class="card-body">
+      <h4 class="card-title">Login</h4>
+      <div class="form__margin">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            [ngClass]="{ 'is-invalid': id?.errors && id?.dirty }"
+            autocomplete="off"
+            class="form-control"
+            formControlName="id"
+            id="username"
+            type="text"
+          />
+          <div *ngIf="id?.errors?.required && id?.dirty" class="invalid-feedback">
+            Username is Required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            [ngClass]="{ 'is-invalid': password?.errors && password?.dirty }"
+            autocomplete="off"
+            class="form-control"
+            formControlName="password"
+            id="password"
+            type="password"
+          />
+          <div *ngIf="password?.errors?.required && password?.dirty" class="invalid-feedback">
+            Password is Required
+          </div>
+        </div>
+      </div>
+      <button
+        class="btn btn-primary btn-center btn-block mb-3"
+        type="submit"
+        [disabled]="!loginForm.valid"
+      >Login</button>
+      <div>
+        <a routerLink="../register">Register</a>
+      </div>
+    </div>
+  </div>
+</form>
+
+
