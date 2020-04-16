@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface PsuPrivateRepository extends CrudRepository<PsuConsent, UUID> {
+public interface PsuConsentRepository extends CrudRepository<PsuConsent, UUID> {
 }

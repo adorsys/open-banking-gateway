@@ -2,11 +2,13 @@ package de.adorsys.opba.protocol.facade.services.context;
 
 import com.google.common.base.Strings;
 import de.adorsys.opba.db.domain.entity.BankProfile;
+import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
+import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
@@ -16,7 +18,6 @@ import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
 import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Objects;
 import java.util.UUID;
 
-@Slf4j
 @Service(ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER)
 @RequiredArgsConstructor
 public class ServiceContextProviderForFintech implements ServiceContextProvider {
@@ -34,6 +34,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
 
     protected final AuthorizationSessionRepository authSessions;
 
+    private final FintechRepository fintechRepository;
     private final BankProfileJpaRepository profileJpaRepository;
     private final ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider;
     private final RequestScopedProvider provider;
@@ -44,14 +45,13 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     @Transactional
     @SneakyThrows
     public <T extends FacadeServiceableGetter> ServiceContext<T> provide(T request) {
-        log.info("Update {}", request);
         if (null == request.getFacadeServiceable()) {
             throw new IllegalArgumentException("No serviceable body");
         }
         AuthSession authSession = extractAndValidateAuthSession(request);
         ServiceSession session = extractOrCreateServiceSession(request, authSession);
         return ServiceContext.<T>builder()
-                .requestScoped(getRequestScoped(request, authSession))
+                .requestScoped(getRequestScoped(request, session, authSession))
                 .serviceSessionId(session.getId())
                 .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
                 .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
@@ -133,10 +133,10 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     @Nullable
-    private <T extends FacadeServiceableGetter> RequestScoped getRequestScoped(T request, AuthSession session) {
+    private <T extends FacadeServiceableGetter> RequestScoped getRequestScoped(T request, ServiceSession session, AuthSession authSession) {
         return null == request.getFacadeServiceable().getAuthorizationKey()
-                ? fintechFacingSecretKeyBasedEncryption(request)
-                : psuCookieBasedKeyEncryption(request, session);
+                ? fintechFacingSecretKeyBasedEncryption(request, session)
+                : psuCookieBasedKeyEncryption(request, authSession);
     }
 
     private <T extends FacadeServiceableGetter> RequestScoped psuCookieBasedKeyEncryption(T request, AuthSession session) {
@@ -154,14 +154,20 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     /**
      * To be consumed by {@link de.adorsys.opba.protocol.facade.services.NewAuthSessionHandler} if new auth session started.
      */
-    private <T extends FacadeServiceableGetter> RequestScoped fintechFacingSecretKeyBasedEncryption(T request) {
+    private <T extends FacadeServiceableGetter> RequestScoped fintechFacingSecretKeyBasedEncryption(T request, ServiceSession session) {
         BankProfile profile = profileJpaRepository.findByBankUuid(request.getFacadeServiceable().getBankId())
                 .orElseThrow(() -> new IllegalArgumentException("No bank profile for bank: " + request.getFacadeServiceable().getBankId()));
 
+        Fintech fintech = fintechRepository.findByGlobalId(request.getFacadeServiceable().getAuthorization())
+                .orElseThrow(() -> new IllegalStateException("No registered FinTech: " + request.getFacadeServiceable().getAuthorization()));
+
         return provider.registerForFintechSession(
+                fintech,
                 profile,
+                session,
                 consentAuthorizationEncryptionServiceProvider,
-                consentAuthorizationEncryptionServiceProvider.generateKey()
+                consentAuthorizationEncryptionServiceProvider.generateKey(),
+                () -> request.getFacadeServiceable().getSessionPassword().toCharArray()
         );
     }
 }

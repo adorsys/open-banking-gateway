@@ -6,7 +6,7 @@
         <comment>Create initial table structure</comment>
 
         <createTable tableName="${table-prefix}consent">
-            <column name="id" type="BIGINT">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
             <column name="service_session_id" type="UUID">
@@ -30,7 +30,6 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createSequence sequenceName="consent_id_sequence" incrementBy="50"/>
 
         <createTable tableName="${table-prefix}bank_protocol">
             <column name="id" type="BIGINT">
@@ -260,7 +259,7 @@
             <column name="fintech_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="consent_id" type="BIGINT">
+            <column name="consent_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
             <column name="data" type="BLOB">

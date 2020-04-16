@@ -38,7 +38,7 @@ public class DummyPsuAndFinTechCreationService {
             String fintechId = "MY-SUPER-FINTECH-ID";
             fintechRepository.findByGlobalId(fintechId).orElseGet(() -> {
                 Fintech fintech = fintechRepository.save(Fintech.builder().globalId(fintechId).build());
-                fintechSecureStorage.registerFintech(fintech, "1234"::toCharArray);
+                fintechSecureStorage.registerFintech(fintech, "qwerty"::toCharArray);
                 return fintech;
             });
             return null;

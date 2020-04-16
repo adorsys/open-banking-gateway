@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.facade.config.encryption.impl.fintech;
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.db.domain.entity.fintech.FintechConsentSpec;
 import de.adorsys.opba.db.domain.entity.fintech.FintechUser;
-import de.adorsys.opba.db.repository.jpa.fintech.FintechUserInboxRepository;
+import de.adorsys.opba.db.repository.jpa.fintech.FintechConsentSpecRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechUserRepository;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.BaseDatasafeDbStorageService;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.DatasafeDataStorage;
@@ -36,7 +36,7 @@ public class FintechUserDatasafeStorage extends BaseDatasafeDbStorageService {
     @Component
     public static class FintechConsentSpecStorage extends DatasafeDataStorage<FintechConsentSpec> {
 
-        public FintechConsentSpecStorage(FintechUserInboxRepository inboxes, EntityManager em) {
+        public FintechConsentSpecStorage(FintechConsentSpecRepository inboxes, EntityManager em) {
             super(
                     inboxes,
                     (parent, id) -> FintechConsentSpec.builder().id(id).user(em.find(FintechUser.class, parent)).build(),

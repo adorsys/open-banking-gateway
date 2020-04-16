@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface FintechInboxRepository extends CrudRepository<FintechConsentInbox, UUID> {
+public interface FintechConsentInboxRepository extends CrudRepository<FintechConsentInbox, UUID> {
 }

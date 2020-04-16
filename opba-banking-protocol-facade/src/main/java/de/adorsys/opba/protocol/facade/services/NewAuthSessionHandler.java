@@ -61,7 +61,7 @@ public class NewAuthSessionHandler {
                 );
 
         Fintech fintech = fintechs.findByGlobalId(request.getAuthorization())
-                .orElseThrow(() -> new IllegalStateException("No registered FinTech: " + request.getAuthorizationSessionId()));
+                .orElseThrow(() -> new IllegalStateException("No registered FinTech: " + request.getAuthorization()));
 
         String newPassword = passwordGenerator.generate();
         // Always create new user entity, as this is more like authorization dummy user.

@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 @RequiredArgsConstructor
 public abstract class DatasafeDataStorage<T> implements BaseDatasafeDbStorageService.StorageActions {
-    private final CrudRepository<T, UUID> repository;
+    protected final CrudRepository<T, UUID> repository;
     private final BiFunction<Long, UUID, T> factory;
     private final Function<T, byte[]> getData;
     private final BiConsumer<T, byte[]> setData;
@@ -20,7 +20,7 @@ public abstract class DatasafeDataStorage<T> implements BaseDatasafeDbStorageSer
     @Override
     @Transactional
     public void update(String id, byte[] data) {
-        Optional<T> entry = repository.findById(uuid(id));
+        Optional<T> entry = find(id);
         if (entry.isPresent()) {
             T toSave = entry.get();
             setData.accept(toSave, data);
@@ -35,7 +35,7 @@ public abstract class DatasafeDataStorage<T> implements BaseDatasafeDbStorageSer
     @Override
     @Transactional
     public Optional<byte[]> read(String id) {
-        return repository.findById(uuid(id)).map(getData);
+        return find(id).map(getData);
     }
 
     @Override
@@ -50,5 +50,9 @@ public abstract class DatasafeDataStorage<T> implements BaseDatasafeDbStorageSer
 
     protected Long parentId(String compositeId) {
         return Long.parseLong(compositeId.split("/")[0]);
+    }
+
+    protected Optional<T> find(String id) {
+        return repository.findById(uuid(id));
     }
 }
