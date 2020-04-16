@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
-import {Consts} from '../consts';
-import {HttpClient} from '@angular/common/http';
-import {ActivatedRoute} from '@angular/router';
-import {Helpers} from "../app.component";
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Consts } from '../consts';
+import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
+import { Helpers } from "../app.component";
 
 @Component({
   selector: 'app-initial-request',
@@ -98,6 +98,7 @@ export class InitialRequestComponent implements OnInit {
           default:
             console.log("redirect to ",res.headers.get('Location'));
             localStorage.setItem(this.redirectCode, res.headers.get("Service-Session-ID"));
+            localStorage.setItem('PASSWORD_' + res.headers.get("Service-Session-ID"), this.serviceSessionPassword.value);
             window.location.href = res.headers.get('Location');
       }
     });
