@@ -1,4 +1,4 @@
-import { Helperfunctions } from './helperfunctions';
+import { Helperfunctions } from './customValidators';
 
 describe('Helperfunctions', () => {
   it('should create an instance', () => {

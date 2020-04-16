@@ -1,6 +1,6 @@
 import {FormGroup} from "@angular/forms";
 
-export class Helperfunctions {
+export class CustomValidators {
 
   static readonly compareFields: any = (controlName: string, matchingControlName: string) => {
     return  (formGroup: FormGroup) => {

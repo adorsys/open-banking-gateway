@@ -34,19 +34,19 @@
         </div>
 
         <div class="form-group">
-          <label for="password">Confirm Password</label>
+          <label for="confirmPassword">Confirm Password</label>
           <input
-            [ngClass]="{ 'is-invalid': password2?.errors && password2?.dirty }"
+            [ngClass]="{ 'is-invalid': confirmPassword?.errors && confirmPassword?.dirty }"
             autocomplete="off"
             class="form-control"
-            formControlName="password2"
-            id="password2"
+            formControlName="confirmPassword"
+            id="confirmPassword"
             type="password"
           />
-          <div *ngIf="password2?.errors?.required && password2?.dirty" class="invalid-feedback">
+          <div *ngIf="confirmPassword?.errors?.required && confirmPassword?.dirty" class="invalid-feedback">
             Password is Required
           </div>
-          <div *ngIf="password2?.errors?.compareFields && password2?.dirty" class="invalid-feedback">
+          <div *ngIf="confirmPassword?.errors?.compareFields && confirmPassword?.dirty" class="invalid-feedback">
             The passwords ara not identical.
           </div>
         </div>
