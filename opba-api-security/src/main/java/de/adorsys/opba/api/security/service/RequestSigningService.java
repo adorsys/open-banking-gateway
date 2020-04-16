@@ -1,7 +1,7 @@
 package de.adorsys.opba.api.security.service;
 
-import de.adorsys.opba.api.security.domain.SignatureClaim;
+import de.adorsys.opba.api.security.domain.SignData;
 
 public interface RequestSigningService {
-    String sign(SignatureClaim signatureClaim);
+    String sign(SignData signData);
 }
