@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import { Helperfunctions } from '../../utilities/helperfunctions';
-import {Subscription} from "rxjs";
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, ActivatedRouteSnapshot, Router} from '@angular/router';
+import { CustomValidators } from '../../utilities/customValidators';
 import {AuthService} from '../../common/auth.service';
+import {LoginComponent} from "../login/login.component";
 
 @Component({
   selector: 'consent-app-register',
@@ -13,44 +13,48 @@ import {AuthService} from '../../common/auth.service';
 export class RegisterComponent implements OnInit {
   public static ROUTE = 'register';
   loginForm: FormGroup;
-  private username: FormControl | AbstractControl;
-  private pwd: FormControl | AbstractControl;
-  private pwd2: FormControl | AbstractControl;
-  private subRegister: Subscription;
+  private route: ActivatedRouteSnapshot;
+  private redirectCode: string;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private route: ActivatedRoute ) { }
+    private activatedRoute: ActivatedRoute ) { }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
       id: ['', Validators.required],
       password: ['', Validators.required],
-      password2: ['', Validators.required]
-    }, { validators: Helperfunctions.compareFields( 'password', 'password2' ) });
-    this.username = this.loginForm.get(['id']);
-    this.pwd = this.loginForm.get(['password']);
-    this.pwd2 = this.loginForm.get(['password2']);
+      confirmPassword: ['', Validators.required]
+    }, { validators: CustomValidators.compareFields( 'password', 'confirmPassword' ) });
+
+    this.route = this.activatedRoute.snapshot;
+    this.redirectCode = this.route.queryParams.redirectCode;
   }
   onSubmit(){
-    console.log( this.loginForm.valid );
-    console.log( this.loginForm.value );
-
     const userObj = {
       id: this.loginForm.value.id,
       password: this.loginForm.value.password
     }
-    this.subRegister = this.authService.userRegister(userObj).subscribe(
+    this.authService.userRegister(userObj).subscribe(
       res => {
-      console.log(res);
       if (res.status === 201 ) {
-        this.router.navigate( ['login'], { relativeTo: this.route.parent } );
+        this.router.navigate( [LoginComponent.ROUTE] );
       }
     },
       error => { console.log(error);
     });
+  }
+
+  get id() {
+    return this.loginForm.get('id');
+  }
+  get password() {
+    return this.loginForm.get('password');
+  }
+  get confirmPassword() {
+    return this.loginForm.get('confirmPassword');
   }
 
 }
