@@ -73,27 +73,11 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     @Override
     public ResponseEntity<String> loginForApproval(PsuAuthBody body, UUID xRequestId, String redirectCode, UUID authorizationId) {
         PsuLoginForAisService.Outcome outcome = aisService.loginAndAssociateAuthSession(body.getLogin(), body.getPassword(), authorizationId, redirectCode);
-
-        ResponseCookie.ResponseCookieBuilder builder = tppAuthResponseCookieBuilder
-                .builder(AUTHORIZATION_SESSION_KEY,  authService.generateToken(outcome.getKey()));
-
-        if (!Strings.isNullOrEmpty(authConfig.getCookie().getDomain())) {
-            builder = builder.domain(authConfig.getCookie().getDomain());
-        }
-        builder = builder.path(
-                UriComponentsBuilder.fromPath(
-                        authConfig.getCookie().getPathTemplate())
-                        .buildAndExpand(ImmutableMap.of(UriExpandConst.AUTHORIZATION_SESSION_ID, authorizationId.toString()))
-                        .toUriString()
-        );
-
-        String cookieString = builder.build().toString();
-
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
                 .header(LOCATION, outcome.getRedirectLocation().toASCIIString())
                 .header(X_REQUEST_ID, xRequestId.toString())
-                .header(SET_COOKIE, cookieString)
+                .header(SET_COOKIE, buildAuthorizationCookiesOnAllPaths(authorizationId, outcome.getKey()))
                 .build();
     }
 
@@ -117,5 +101,29 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     @Override
     public Optional<HttpServletRequest> getRequest() {
         return Optional.empty();
+    }
+
+    private String[] buildAuthorizationCookiesOnAllPaths(UUID authorizationId, String key) {
+        String token = authService.generateToken(key);
+        return authConfig.getCookie().getPathTemplates().stream()
+                .map(it -> cookieString(authorizationId, it, token))
+                .toArray(String[]::new);
+    }
+
+    private String cookieString(UUID authorizationId, String path, String token) {
+        ResponseCookie.ResponseCookieBuilder builder = tppAuthResponseCookieBuilder
+                .builder(AUTHORIZATION_SESSION_KEY,  token);
+
+        if (!Strings.isNullOrEmpty(authConfig.getCookie().getDomain())) {
+            builder = builder.domain(authConfig.getCookie().getDomain());
+        }
+
+        builder = builder.path(
+                UriComponentsBuilder.fromPath(path)
+                        .buildAndExpand(ImmutableMap.of(UriExpandConst.AUTHORIZATION_SESSION_ID, authorizationId.toString()))
+                        .toUriString()
+        );
+
+        return builder.build().toString();
     }
 }
