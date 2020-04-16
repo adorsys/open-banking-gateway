@@ -44,6 +44,59 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
+    public SELF sandbox_max_musterman_inputs_username_and_password(WebDriver driver) {
+        waitPlusTimer(driver, timeout.getSeconds());
+        clickOnButton(driver, By.name("login"));
+        sendText(driver, By.name("login"), MAX_MUSTERMAN);
+        sendText(driver, By.name("pin"), "12345");
+        clickOnButton(driver, By.xpath("//button[@type='submit']"));
+        return self();
+    }
+
+    public SELF sandbox_max_musterman_provides_sca_challenge_result(WebDriver driver) {
+        waitPlusTimer(driver, timeout.getSeconds());
+        sendText(driver, By.name("authCode"), "123456");
+        clickOnButton(driver, By.xpath("//button[@type='submit']"));
+        return self();
+    }
+
+    public SELF sandbox_max_musterman_from_consent_ui_navigates_to_bank_auth_page(WebDriver driver) {
+        waitForPageLoadAndUrlContains(driver, "account-information/login");
+        return self();
+    }
+
+    public SELF user_in_consent_ui_sees_redirection_info_to_aspsp_and_accepts(WebDriver driver) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "/to-aspsp-redirection");
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_max_musterman_in_consent_ui_sees_sca_select_and_confirm_type_email2_to_redirect_authorization(WebDriver driver) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "select-sca");
+        clickOnButton(driver, By.xpath("//button[@type='submit']"));
+        return self();
+    }
+
+    public SELF user_max_musterman_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(WebDriver driver) {
+        wait(driver);
+        clickOnButton(driver, By.className("btn-primary"), true);
+        return self();
+    }
+
+    public SELF user_max_musterman_in_consent_ui_reviews_transaction_consent_and_accepts(WebDriver driver) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions/review-consent");
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent(WebDriver driver) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
+        sendText(driver, By.id("PSU_ID"), MAX_MUSTERMAN);
+        clickOnButton(driver, By.id("ALL_PSD2"));
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
     public SELF user_login_with_its_credentials(WebDriver driver) {
         sendText(driver, By.id("username"), USERNAME + RandomString.make().toLowerCase());
         sendText(driver, By.id("password"), PIN);
@@ -57,9 +110,9 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_anton_brueckner_in_consent_ui_provides_pin(WebDriver driver) {
-        waitForPageLoadAndUrlEndsWithPath(driver, "authenticate");
-        sendText(driver, By.id("pin"), PIN_VALUE);
-        clickOnButton(driver, By.id(SUBMIT_ID));
+        wait(driver);
+        sendText(driver, By.xpath("//button[@type='password']"), PIN_VALUE);
+        clickOnButton(driver, By.xpath("//button[@type='submit']"));
         return self();
     }
 
@@ -201,6 +254,14 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         new WebDriverWait(driver, timeout.getSeconds())
                 .until(wd ->
                                URI.create(driver.getCurrentUrl()).getPath().endsWith(urlEndsWithPath)
+                                       && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
+                );
+    }
+
+    private void waitForPageLoadAndUrlContains(WebDriver driver, String urlContains) {
+        new WebDriverWait(driver, timeout.getSeconds())
+                .until(wd ->
+                               driver.getCurrentUrl().contains(urlContains)
                                        && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
                 );
     }
