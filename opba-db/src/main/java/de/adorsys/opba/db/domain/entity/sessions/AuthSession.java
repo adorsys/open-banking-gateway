@@ -9,10 +9,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -22,6 +26,7 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -30,6 +35,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class AuthSession {
 
     @Id
@@ -65,6 +71,12 @@ public class AuthSession {
 
     @Version
     private int version;
+
+    @CreatedDate
+    private Instant createdAt;
+
+    @LastModifiedDate
+    private Instant modifiedAt;
 
     public String getConsentSpec(EncryptionService encryption) {
         return new String(encryption.decrypt(encConsentSpec), StandardCharsets.UTF_8);

@@ -8,10 +8,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,6 +24,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -27,6 +32,7 @@ import java.nio.charset.StandardCharsets;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Consent {
 
     @Id
@@ -54,6 +60,12 @@ public class Consent {
     private byte[] encContext;
 
     private boolean confirmed;
+
+    @CreatedDate
+    private Instant createdAt;
+
+    @LastModifiedDate
+    private Instant modifiedAt;
 
     public String getContext(EncryptionService encryption) {
         return new String(encryption.decrypt(encContext), StandardCharsets.UTF_8);
