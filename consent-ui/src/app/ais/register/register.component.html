@@ -1,0 +1,64 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+  <div class="card card-frame">
+    <div class="card-body">
+      <h4 class="card-title">Register</h4>
+      <div class="form__margin">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input
+            [ngClass]="{ 'is-invalid': id?.errors && id?.dirty }"
+            autocomplete="off"
+            class="form-control"
+            formControlName="id"
+            id="username"
+            type="text"
+          />
+          <div *ngIf="id?.errors?.required && id?.dirty" class="invalid-feedback">
+            Username is Required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            [ngClass]="{ 'is-invalid': password?.errors && password?.dirty }"
+            autocomplete="off"
+            class="form-control"
+            formControlName="password"
+            id="password"
+            type="password"
+          />
+          <div *ngIf="password?.errors?.required && password?.dirty" class="invalid-feedback">
+            Password is Required
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Confirm Password</label>
+          <input
+            [ngClass]="{ 'is-invalid': password2?.errors && password2?.dirty }"
+            autocomplete="off"
+            class="form-control"
+            formControlName="password2"
+            id="password2"
+            type="password"
+          />
+          <div *ngIf="password2?.errors?.required && password2?.dirty" class="invalid-feedback">
+            Password is Required
+          </div>
+          <div *ngIf="password2?.errors?.compareFields && password2?.dirty" class="invalid-feedback">
+            The passwords ara not identical.
+          </div>
+        </div>
+      </div>
+      <button
+        class="btn btn-primary btn-center btn-block mb-3"
+        type="submit"
+        [disabled]="!loginForm.valid"
+      >Register</button>
+      <div>
+        <a routerLink="../login">Login</a>
+      </div>
+    </div>
+  </div>
+</form>
