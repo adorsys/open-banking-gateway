@@ -1,5 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from "@angular/router";
+import { Helpers } from "../app.component";
+import { HttpClient } from "@angular/common/http";
+import { Consts } from "../consts";
 
 @Component({
   selector: 'app-fintech-callback-ok',
@@ -8,10 +11,12 @@ import {ActivatedRoute} from "@angular/router";
 })
 export class FintechCallbackOkComponent implements OnInit {
 
+  submissionUri: string = Consts.API_V1_URL_BASE + '/banking/consents/';
+
   serviceSessionId: string;
   redirectCode: string;
 
-  constructor(private activatedRoute: ActivatedRoute) {  }
+  constructor(private client: HttpClient, private activatedRoute: ActivatedRoute) {  }
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
@@ -25,6 +30,16 @@ export class FintechCallbackOkComponent implements OnInit {
   }
 
   submit() {
-    window.location.href = '/initial?serviceSessionId=' + this.serviceSessionId;
+    const password = localStorage.getItem('PASSWORD_' + this.serviceSessionId);
+    this.client.post(
+      this.submissionUri + this.serviceSessionId + '/confirm',
+      {},
+      {headers: {
+          'X-Request-ID': Helpers.uuidv4(),
+          'Service-Session-Password': password,
+        }, observe: 'response'}
+    ).subscribe(res => {
+      window.location.href = '/initial?serviceSessionId=' + this.serviceSessionId;
+    });
   }
 }
