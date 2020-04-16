@@ -4,7 +4,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.hash.Hashing;
 import de.adorsys.opba.db.domain.entity.BankProfile;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
-import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
@@ -30,16 +29,13 @@ import static de.adorsys.opba.protocol.facade.config.FacadeTransientDataConfig.F
 public class RequestScopedProvider implements RequestScopedServicesProvider {
 
     private final Map<String, InternalRequestScoped> memoizedProviders;
-    private final BankProfileJpaRepository profileJpaRepository;
     private final ConsentAccessFactory accessProvider;
 
     public RequestScopedProvider(
             @Qualifier(FACADE_CACHE_BUILDER) CacheBuilder cacheBuilder,
-            BankProfileJpaRepository profileJpaRepository,
             ConsentAccessFactory accessProvider
     ) {
         this.memoizedProviders = cacheBuilder.build().asMap();
-        this.profileJpaRepository = profileJpaRepository;
         this.accessProvider = accessProvider;
     }
 
@@ -141,6 +137,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
     private static class TransientStorageImpl implements TransientStorage {
 
         @Delegate
+        @SuppressWarnings("PMD.UnusedPrivateField") // it is used through Delegate - via TransientStorage interface
         private final AtomicReference<Object> value = new AtomicReference<>();
     }
 }
