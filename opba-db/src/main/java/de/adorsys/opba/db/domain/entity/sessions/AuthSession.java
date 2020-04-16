@@ -64,9 +64,6 @@ public class AuthSession {
     @Column(nullable = false)
     private byte[] encConsentSpec;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(nullable = false)
     private String context;
 
     @Version
