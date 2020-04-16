@@ -1,9 +1,11 @@
 package de.adorsys.opba.protocol.facade.services.context;
 
 import com.google.common.base.Strings;
+import de.adorsys.opba.db.domain.entity.BankProfile;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
+import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
@@ -30,6 +32,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
 
     protected final AuthorizationSessionRepository authSessions;
 
+    private final BankProfileJpaRepository profileJpaRepository;
     private final ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider;
     private final RequestScopedProvider provider;
     private final SecretKeySerde secretKeySerde;
@@ -45,7 +48,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         AuthSession authSession = extractAndValidateAuthSession(request);
         ServiceSession session = extractOrCreateServiceSession(request, authSession);
         return ServiceContext.<T>builder()
-                .requestScoped(getRequestScoped(request))
+                .requestScoped(getRequestScoped(request, session, authSession))
                 .serviceSessionId(session.getId())
                 .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
                 .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
@@ -127,15 +130,19 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     @Nullable
-    private <T extends FacadeServiceableGetter> RequestScoped getRequestScoped(T request) {
+    private <T extends FacadeServiceableGetter> RequestScoped getRequestScoped(T request, ServiceSession svcSession, AuthSession session) {
         return null == request.getFacadeServiceable().getAuthorizationKey()
-                ? fintechUserFacingSecretKeyBasedEncryption(request)
-                : cookieBasedKeyEncryption(request);
+                ? fintechFacingSecretKeyBasedEncryption(request, svcSession)
+                : psuCookieBasedKeyEncryption(request, session);
     }
 
-    private <T extends FacadeServiceableGetter> RequestScoped cookieBasedKeyEncryption(T request) {
-        return provider.register(
-                request.getFacadeServiceable(),
+    private <T extends FacadeServiceableGetter> RequestScoped psuCookieBasedKeyEncryption(T request, AuthSession session) {
+        if (null == session) {
+            throw new IllegalArgumentException("Missing authorization session");
+        }
+
+        return provider.registerForPsuSession(
+                session,
                 consentAuthorizationEncryptionServiceProvider,
                 secretKeySerde.fromString(request.getFacadeServiceable().getAuthorizationKey())
         );
@@ -144,9 +151,12 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     /**
      * To be consumed by {@link de.adorsys.opba.protocol.facade.services.NewAuthSessionHandler} if new auth session started.
      */
-    private <T extends FacadeServiceableGetter> RequestScoped fintechUserFacingSecretKeyBasedEncryption(T request) {
-        return provider.register(
-                request.getFacadeServiceable(),
+    private <T extends FacadeServiceableGetter> RequestScoped fintechFacingSecretKeyBasedEncryption(T request, ServiceSession svcSession) {
+        BankProfile profile = profileJpaRepository.findByBankUuid(request.getFacadeServiceable().getBankId())
+                .orElseThrow(() -> new IllegalArgumentException("No bank profile for bank: " + request.getFacadeServiceable().getBankId()));
+
+        return provider.registerForFintechSession(
+                profile,
                 consentAuthorizationEncryptionServiceProvider,
                 consentAuthorizationEncryptionServiceProvider.generateKey()
         );

@@ -15,7 +15,7 @@
             <column name="psu_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="bank_id" type="BIGINT">
+            <column name="aspsp_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="enc_consent_id" type="BLOB">
@@ -265,7 +265,7 @@
                                  referencedColumnNames="id"/>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_consent_bank"
                                  baseTableName="${table-prefix}consent"
-                                 baseColumnNames="bank_id"
+                                 baseColumnNames="aspsp_id"
                                  referencedTableName="${table-prefix}bank"
                                  referencedColumnNames="id"/>
     </changeSet>

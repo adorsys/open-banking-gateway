@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.facade.services.context;
 
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
+import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
@@ -17,9 +18,10 @@ public class NoRedirectCodeValidationServiceContextProvider extends ServiceConte
     public NoRedirectCodeValidationServiceContextProvider(AuthorizationSessionRepository authSessions,
                                                           SecretKeySerde serde,
                                                           ServiceSessionRepository serviceSessions,
+                                                          BankProfileJpaRepository bankProfileJpaRepository,
                                                           ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider,
                                                           RequestScopedProvider requestScopedProvider) {
-        super(authSessions, consentAuthorizationEncryptionServiceProvider, requestScopedProvider, serde, serviceSessions);
+        super(authSessions, bankProfileJpaRepository, consentAuthorizationEncryptionServiceProvider, requestScopedProvider, serde, serviceSessions);
     }
 
     protected <T extends FacadeServiceableGetter> void validateRedirectCode(T request, AuthSession session) {

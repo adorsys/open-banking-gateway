@@ -39,7 +39,7 @@ public class FintechSecureStorage {
         try (OutputStream os = datasafeServices.inboxService().write(
                 WriteRequest.forDefaultPublic(ImmutableSet.of(
                         authSession.getFintechUser().getFintech().getUserId()),
-                        bankId(authSession)))
+                        authSession.getId().toString()))
         ) {
             serde.write(psuAspspKey, os);
         }
@@ -50,13 +50,9 @@ public class FintechSecureStorage {
         try (InputStream is = datasafeServices.inboxService().read(
                 ReadRequest.forDefaultPrivate(
                         authSession.getFintechUser().getFintech().getUserIdAuth(password),
-                        bankId(authSession)))
+                        authSession.getId().toString()))
         ) {
             return serde.read(is);
         }
-    }
-
-    private String bankId(AuthSession authSession) {
-        return authSession.getProtocol().getBankProfile().getBank().getUuid();
     }
 }

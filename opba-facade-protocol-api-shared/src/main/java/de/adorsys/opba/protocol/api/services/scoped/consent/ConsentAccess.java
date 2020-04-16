@@ -1,14 +1,13 @@
 package de.adorsys.opba.protocol.api.services.scoped.consent;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface ConsentAccess {
 
-    ProtocolFacingConsent createDoNotPersist(UUID internalId);
+    ProtocolFacingConsent createDoNotPersist();
     void save(ProtocolFacingConsent consent);
     void delete(ProtocolFacingConsent consent);
-    Optional<ProtocolFacingConsent> findByInternalId(UUID internalId);
-    List<ProtocolFacingConsent> getAvailableConsentsForCurrentPsu();
+    Optional<ProtocolFacingConsent> findByCurrentServiceSession();
+    Collection<ProtocolFacingConsent> getAvailableConsentsForCurrentPsu();
 }
