@@ -20,11 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.time.Duration;
-import java.util.UUID;
 
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.SESSION_COOKIE;
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.SESSION_COOKIE_VALUE;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 import static io.restassured.RestAssured.config;
 import static io.restassured.config.RedirectConfig.redirectConfig;
 
@@ -50,27 +46,6 @@ public class FintechServer<SELF extends FintechServer<SELF>> extends SandboxServ
     public SELF fintech_points_to_fintechui_login_page(String fintechUri) {
         RestAssured.baseURI = fintechUri;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        return self();
-    }
-
-    public SELF rest_assured_point_to_bankProfile(String bankUri) {
-        RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(FintechStagesUtils.X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(SESSION_COOKIE, SESSION_COOKIE_VALUE)
-                .when().get("https://obg-dev-fintechui.cloud.adorsys.de/search")
-                .then().statusCode(HttpStatus.OK.value());
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();;
-        return self();
-    }
-
-    public SELF user_is_not_logged_in() {
-        RestAssured.given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                .header("", "")
-                .when().get("https://obg-dev-fintechui.cloud.adorsys.de/login")
-                .then().statusCode(HttpStatus.OK.value());
         return self();
     }
 

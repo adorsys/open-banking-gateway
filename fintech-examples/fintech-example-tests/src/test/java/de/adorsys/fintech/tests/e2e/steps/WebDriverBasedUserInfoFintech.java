@@ -2,11 +2,8 @@ package de.adorsys.fintech.tests.e2e.steps;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import net.bytebuddy.utility.RandomString;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.RetryOperations;
 
+import java.net.URI;
 import java.time.Duration;
 
 import static de.adorsys.fintech.tests.e2e.config.RetryableConfig.TEST_RETRY_OPS;
@@ -40,13 +38,14 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_sees_account_and_list_transactions(WebDriver webDriver) {
+        wait(webDriver);
         performClick(webDriver, By.className("lacc-list-container"));
-        waitPlusTimer(webDriver, 10);
+        waitPlusTimer(webDriver, 20);
         return self();
     }
 
     public SELF user_login_with_its_credentials(WebDriver driver) {
-        sendText(driver, By.id("username"), USERNAME);
+        sendText(driver, By.id("username"), USERNAME + RandomString.make().toLowerCase());
         sendText(driver, By.id("password"), PIN);
         return self();
     }
@@ -57,7 +56,21 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF user_already_login_in_bank_profile(FirefoxDriver firefoxDriver) {
+    public SELF user_anton_brueckner_in_consent_ui_provides_pin(WebDriver driver) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "authenticate");
+        sendText(driver, By.id("pin"), PIN_VALUE);
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_anton_brueckner_in_consent_ui_provides_sca_result_to_embedded_authorization(WebDriver driver) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "sca-result");
+        sendText(driver, By.id("tan"), TAN_VALUE);
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_already_login_in_bank_profile(WebDriver firefoxDriver) {
         user_opens_fintechui_login_page(firefoxDriver)
                 .and()
                 .user_login_with_its_credentials(firefoxDriver)
@@ -76,6 +89,12 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
+    public SELF user_back_to_bank_search(WebDriver webDriver) {
+        wait(webDriver);
+        performClick(webDriver, By.linkText("Bank search"));
+        return self();
+    }
+
 
     public SELF user_navigates_to_page(WebDriver driver) {
         wait(driver);
@@ -85,6 +104,18 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     public SELF user_looks_for_a_bank_in_the_bank_search_input_place(WebDriver driver) {
         wait(driver);
         sendTestInSearchInput(driver, By.name("searchValue"), " xs2a");
+        return self();
+    }
+
+    public SELF user_after_login_wants_to_logout(WebDriver webDriver) {
+        wait(webDriver);
+        clickOnButton(webDriver, By.id("dropdownMenuButton"));
+        return  self();
+    }
+
+    public SELF user_click_on_logout_button(WebDriver webDriver) {
+        wait(webDriver);
+        clickOnButton(webDriver, By.className("nav__title"), false);
         return self();
     }
 
@@ -164,5 +195,13 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
 
             throw ex;
         }
+    }
+
+    private void waitForPageLoadAndUrlEndsWithPath(WebDriver driver, String urlEndsWithPath) {
+        new WebDriverWait(driver, timeout.getSeconds())
+                .until(wd ->
+                               URI.create(driver.getCurrentUrl()).getPath().endsWith(urlEndsWithPath)
+                                       && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
+                );
     }
 }
