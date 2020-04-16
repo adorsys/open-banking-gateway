@@ -6,10 +6,10 @@ import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.api.security.service.TokenBasedAuthService;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
-import de.adorsys.opba.tppauthapi.model.generated.LoginResponse;
 import de.adorsys.opba.protocol.facade.config.auth.UriExpandConst;
 import de.adorsys.opba.protocol.facade.services.authorization.PsuLoginForAisService;
 import de.adorsys.opba.protocol.facade.services.psu.PsuAuthService;
+import de.adorsys.opba.tppauthapi.model.generated.LoginResponse;
 import de.adorsys.opba.tppauthapi.model.generated.PsuAuthBody;
 import de.adorsys.opba.tppauthapi.resource.generated.PsuAuthenticationAndConsentApprovalApi;
 import de.adorsys.opba.tppauthapi.resource.generated.PsuAuthenticationApi;
@@ -71,7 +71,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     }
 
     @Override
-    public ResponseEntity<String> loginForApproval(PsuAuthBody body, UUID xRequestId, String redirectCode, UUID authorizationId) {
+    public ResponseEntity<LoginResponse> loginForApproval(PsuAuthBody body, UUID xRequestId, String redirectCode, UUID authorizationId) {
         PsuLoginForAisService.Outcome outcome = aisService.loginAndAssociateAuthSession(body.getLogin(), body.getPassword(), authorizationId, redirectCode);
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
