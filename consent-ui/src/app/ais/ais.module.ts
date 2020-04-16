@@ -23,6 +23,10 @@ import { EntryPageAccountsComponent } from './entry-page/initiation/accounts/ent
 import { DedicatedAccessComponent } from './entry-page/initiation/common/dedicated-access/dedicated-access.component';
 import { ToAspspRedirectionComponent } from './to-aspsp-page/to-aspsp-redirection.component';
 import { ConsentInfoComponent } from './components/consent-info/consent-info.component';
+import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
+import {ApiModule} from "../api";
+import {ApiModule as AuthApiModule} from "../api-auth";
 
 @NgModule({
   declarations: [
@@ -45,8 +49,10 @@ import { ConsentInfoComponent } from './components/consent-info/consent-info.com
     DedicatedAccessComponent,
     EntryPageAccountsComponent,
     ToAspspRedirectionComponent,
-    ConsentInfoComponent
+    ConsentInfoComponent,
+    LoginComponent,
+    RegisterComponent
   ],
-  imports: [CommonModule, AisRoutingModule, ReactiveFormsModule]
+  imports: [CommonModule, AisRoutingModule, ReactiveFormsModule, ApiModule, AuthApiModule]
 })
 export class AisModule {}

@@ -44,6 +44,17 @@ export class SessionService {
       JSON.parse(sessionStorage.getItem(authorizationId + Session.CONSENT_OBJECT))
     );
   }
+
+  public setXsrfToken(token: string) {
+    console.log('setToken: ', token);
+    sessionStorage.setItem( 'xsrf-token', token);
+  }
+  public getXsrfToken() {
+    sessionStorage.getItem( 'xsrf-token');
+  }
+  public isLoggedIn() {
+    return this.getXsrfToken() !== null;
+  }
 }
 
 enum Session {
