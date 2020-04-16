@@ -338,7 +338,6 @@ components:
         type: string
 
   parameters:
-
     auth-id:
       name: auth-id
       in: path

@@ -5,6 +5,7 @@ import de.adorsys.datasafe.business.impl.service.DefaultDatasafeServices;
 import de.adorsys.datasafe.directory.api.config.DFSConfig;
 import de.adorsys.datasafe.types.api.actions.ReadRequest;
 import de.adorsys.datasafe.types.api.actions.WriteRequest;
+import de.adorsys.opba.db.domain.entity.Consent;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
@@ -53,6 +54,17 @@ public class FintechSecureStorage {
                         authSession.getId().toString()))
         ) {
             return serde.read(is);
+        }
+    }
+
+    @SneakyThrows
+    public void psuAspspKeyToPrivate(AuthSession authSession, SecretKeyWithIv psuAspspKey, Consent consent, Supplier<char[]> password) {
+        try (OutputStream os = datasafeServices.privateService().write(
+                WriteRequest.forDefaultPrivate(
+                        authSession.getFintechUser().getFintech().getUserIdAuth(password),
+                        consent.getId().toString()))
+        ) {
+            serde.write(psuAspspKey, os);
         }
     }
 }
