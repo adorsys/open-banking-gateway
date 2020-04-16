@@ -23,12 +23,12 @@ import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class Xs2aAuthenticateUserConsentClearsPasswordTest extends BaseMockitoTest {
+class Xs2AAuthenticateWithPinUserConsentClearsPasswordTest extends BaseMockitoTest {
 
     private static final String PASSWORD_VALUE = "12345";
 
     @Mock
-    private Xs2aAuthenticateUserConsent.Extractor extractor;
+    private Xs2aAuthenticateUserConsentWithPin.Extractor extractor;
 
     @Mock
     private AccountInformationService ais;
@@ -49,7 +49,7 @@ class Xs2aAuthenticateUserConsentClearsPasswordTest extends BaseMockitoTest {
     private UpdatePsuAuthenticationResponse responseBody;
 
     @InjectMocks
-    private Xs2aAuthenticateUserConsentTestable tested;
+    private Xs2AAuthenticateWithPinUserConsentTestable tested;
 
     @Test
     void pinCleaned() {
@@ -71,8 +71,8 @@ class Xs2aAuthenticateUserConsentClearsPasswordTest extends BaseMockitoTest {
         assertThat(context.getPsuPassword()).isNull();
     }
 
-    public static class Xs2aAuthenticateUserConsentTestable extends Xs2aAuthenticateUserConsent {
-        public Xs2aAuthenticateUserConsentTestable(Extractor extractor, Xs2aValidator validator, AccountInformationService ais, AuthorizationErrorSink errorSink) {
+    public static class Xs2AAuthenticateWithPinUserConsentTestable extends Xs2aAuthenticateUserConsentWithPin {
+        public Xs2AAuthenticateWithPinUserConsentTestable(Extractor extractor, Xs2aValidator validator, AccountInformationService ais, AuthorizationErrorSink errorSink) {
             super(extractor, validator, ais, errorSink);
         }
 

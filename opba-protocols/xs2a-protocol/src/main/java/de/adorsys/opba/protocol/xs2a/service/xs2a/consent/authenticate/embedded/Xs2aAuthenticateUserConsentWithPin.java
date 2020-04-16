@@ -23,9 +23,9 @@ import org.springframework.stereotype.Service;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Service("xs2aAuthenticateUserConsent")
+@Service("xs2aAuthenticateUserConsentWithPin")
 @RequiredArgsConstructor
-public class Xs2aAuthenticateUserConsent extends ValidatedExecution<Xs2aContext> {
+public class Xs2aAuthenticateUserConsentWithPin extends ValidatedExecution<Xs2aContext> {
 
     private final Extractor extractor;
     private final Xs2aValidator validator;
