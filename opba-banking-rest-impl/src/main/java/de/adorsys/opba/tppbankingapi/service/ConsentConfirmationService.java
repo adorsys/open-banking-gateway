@@ -28,10 +28,7 @@ public class ConsentConfirmationService {
             return false;
         }
 
-        Optional<Consent> consent = consentRepository.findByPsuAndAspsp(
-                session.get().getPsu(),
-                session.get().getProtocol().getBankProfile().getBank()
-        );
+        Optional<Consent> consent = consentRepository.findByServiceSessionId(session.get().getParent().getId());
 
         if (!consent.isPresent()) {
             return false;
