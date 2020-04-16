@@ -5,10 +5,8 @@ import de.adorsys.opba.api.security.domain.SignData;
 import de.adorsys.opba.api.security.service.RequestSigningService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.security.KeyFactory;
@@ -22,15 +20,13 @@ import static de.adorsys.opba.api.security.service.SignatureParams.ALGORITHM_RSA
 import static de.adorsys.opba.api.security.service.SignatureParams.CLAIM_NAME;
 
 @Slf4j
-@Data
-@Service
-@ConfigurationProperties("security")
+@RequiredArgsConstructor
 public class RsaJwtsSigningServiceImpl implements RequestSigningService {
     private static final SignatureAlgorithm ALGORITHM = SignatureAlgorithm.RS256;
 
-    private String privateKey;
-    private String signIssuer;
-    private String signSubject;
+    private final String privateKey;
+    private final String signIssuer;
+    private final String signSubject;
 
     @Override
     public String sign(SignData signData) {

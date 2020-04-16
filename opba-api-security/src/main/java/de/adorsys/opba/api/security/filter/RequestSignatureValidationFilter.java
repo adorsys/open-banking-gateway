@@ -1,14 +1,12 @@
-package de.adorsys.opba.tppbankingapi.web.filter;
+package de.adorsys.opba.api.security.filter;
 
 
+import de.adorsys.opba.api.security.domain.HttpHeaders;
 import de.adorsys.opba.api.security.domain.SignData;
 import de.adorsys.opba.api.security.service.RequestVerifyingService;
-import de.adorsys.opba.restapi.shared.HttpHeaders;
-import de.adorsys.opba.tppbankingapi.config.FinTechServicesConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.core.env.Environment;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -21,14 +19,11 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 public class RequestSignatureValidationFilter extends OncePerRequestFilter {
     private final RequestVerifyingService requestVerifyingService;
-    private final FinTechServicesConfig finTechServicesConfig;
-
-    @Value("${fintech.verification.request-time-limit}")
-    private Duration timeLimit;
+    private final Duration requestTimeLimit;
+    private final Environment environment;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -39,7 +34,7 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
 
         OffsetDateTime dateTime = OffsetDateTime.parse(requestTimeStamp);
 
-        String fintechApiKey = finTechServicesConfig.getEnv().getProperty(fintechId);
+        String fintechApiKey = environment.getProperty(fintechId);
 
         if (fintechApiKey == null) {
             log.warn("Api key for fintech ID {} has not find ", fintechId);
@@ -65,8 +60,8 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
     }
 
     private boolean operationDateTimeNowWithinLimit(OffsetDateTime dateTime) {
-        return OffsetDateTime.now().plus(timeLimit).isBefore(dateTime)
-                       || OffsetDateTime.now().minus(timeLimit).isAfter(dateTime);
+        return OffsetDateTime.now().plus(requestTimeLimit).isBefore(dateTime)
+                       || OffsetDateTime.now().minus(requestTimeLimit).isAfter(dateTime);
     }
 
 }
