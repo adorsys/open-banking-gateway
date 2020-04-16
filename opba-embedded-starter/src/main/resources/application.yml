@@ -78,7 +78,7 @@ facade:
     password:
       byte-size: 8
   cookie:
-    path-template: / # TODO local-only due to proxies and double slashes - correct value is `/ais/{authorizationSessionId}`
+    path-templates: /embedded-server/v1/consent/{authorizationSessionId},/v1/consent/{authorizationSessionId}
   expirable:
     expire-after-write: PT10M
 
