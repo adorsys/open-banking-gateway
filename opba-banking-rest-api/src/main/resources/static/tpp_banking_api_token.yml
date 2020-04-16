@@ -10,7 +10,7 @@ externalDocs:
 
 paths:
 
-  /v1/banking/consent/confirm:
+  /v1/banking/consents/{auth-id}/confirm:
     post:
       tags:
         - ConsentConfirmation
@@ -18,9 +18,11 @@ paths:
       summary: Issues new PSU Consent Session Token.
       description: TBD
       parameters:
+      #path
+        - $ref: "#/components/parameters/auth-id"
       #common header parameter
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Authorization"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
       responses:
         '200':
           $ref: "#/components/responses/200_PsuConsentSession"
@@ -30,14 +32,29 @@ paths:
           $ref: './tpp_banking_api_commons.yml#/components/responses/404_NOT_FOUND'
 
 components:
-  responses:
+  parameters:
+    auth-id:
+      name: auth-id
+      in: path
+      required: true
+      description: |
+        Used to distinguish between different consent authorization processes started by the same PSU.
+        Also included in the corresponding cookie path to limit visibility of the consent cookie to the
+        corresponding consent process.
+      example: abc123
+      schema:
+        type: string
 
+  responses:
     200_PsuConsentSession:
       description: Response containing the service profile of a bank.
       headers:
         X-Request-ID:
           $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
-      #NO RESPONSE BODY
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PsuConsentSessionResponse'
 
   securitySchemes:
     BearerAuthOAuth:
@@ -54,3 +71,12 @@ components:
           scopes:
             write: allows modifying resources
             read: allows reading resources
+
+  schemas:
+    PsuConsentSessionResponse:
+      type: object
+      properties:
+        # To be renamed to PSU-ASPSP-Key ID
+        authorizationSessionId:
+          type: string
+          format: uuid
