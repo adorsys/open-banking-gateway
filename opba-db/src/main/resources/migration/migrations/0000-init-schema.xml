@@ -16,6 +16,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="enc_context" type="BLOB"/>
+            <column name="confirmed" type="boolean" defaultValue="false"/>
         </createTable>
         <createSequence sequenceName="consent_id_sequence" incrementBy="50"/>
 
