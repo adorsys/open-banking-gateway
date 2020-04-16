@@ -13,6 +13,8 @@ import { AccountsConsentReviewComponent } from './entry-page/initiation/accounts
 import { EntryPageTransactionsComponent } from './entry-page/initiation/transactions/entry-page-transactions/entry-page-transactions.component';
 import { TransactionsConsentReviewComponent } from './entry-page/initiation/transactions/transactions-consent-review/transactions-consent-review.component';
 import { ToAspspRedirectionComponent } from './to-aspsp-page/to-aspsp-redirection.component';
+import {LoginComponent} from "./login/login.component";
+import {RegisterComponent} from "./register/register.component";
 
 const routes: Routes = [
   {
@@ -42,6 +44,8 @@ const routes: Routes = [
         path: 'authenticate',
         component: PasswordInputPageComponent
       },
+      { path: LoginComponent.ROUTE, component: LoginComponent },
+      { path: RegisterComponent.ROUTE, component: RegisterComponent },
       {
         path: 'select-sca-method',
         component: ScaSelectPageComponent
