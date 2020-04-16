@@ -49,8 +49,9 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
     }
 
     @Test
-    void testAntonBruecknerWantsToSeeItsAccountsAndTransanctionsFromFintech(FirefoxDriver firefoxDriver) {
-        given().fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
+    void testRedirectAntonBruecknerWantsToSeeItsAccountsAndTransanctionsFromFintech(FirefoxDriver firefoxDriver) {
+        given().enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri())
+                .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
         when().user_already_login_in_bank_profile(firefoxDriver)
                 .and()
                 .user_accepts_to_get_redirected_to_consentui(firefoxDriver)
@@ -89,5 +90,75 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
 
         then()
                 .fintech_can_read_anton_brueckner_accounts_and_transactions();
+    }
+
+        @Test
+    public void testEmbeddedMaxMustermanWantsItsAccountsAndTransactionsFromFintech(FirefoxDriver firefoxDriver) {
+        given().enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri())
+                .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
+        when().user_already_login_in_bank_profile(firefoxDriver)
+                .and()
+                .user_accepts_to_get_redirected_to_consentui(firefoxDriver)
+                .and()
+                .user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_reviews_transactions_consent_and_accepts(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_provides_pin(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_sees_sca_select_and_selected_type_email2_to_embedded_authorization(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver)
+                .and()
+                .user_navigates_to_page(firefoxDriver)
+                .and()
+                .user_sees_account_and_list_transactions(firefoxDriver);
+
+        then().fintech_can_read_max_musterman_accounts_and_transactions();
+    }
+
+    @Test
+    void testEmbeddedAntonBruecknerWantsToSeeItsAccountsAndTransanctionsFromFintech(FirefoxDriver firefoxDriver) {
+        given().enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri())
+                .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
+        when().user_already_login_in_bank_profile(firefoxDriver)
+                .and()
+                .user_accepts_to_get_redirected_to_consentui(firefoxDriver)
+                .and()
+                .user_anton_brueckner_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent(firefoxDriver)
+                .and()
+                .user_anton_brueckner_in_consent_ui_reviews_transaction_consent_and_accepts(firefoxDriver)
+                .and()
+                .user_anton_brueckner_in_consent_ui_sees_redirection_info_to_aspsp_and_accepts(firefoxDriver)
+                .and()
+                .user_anton_brueckner_in_consent_ui_provides_pin(firefoxDriver)
+                .and()
+                .user_anton_brueckner_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver)
+                .and()
+                .user_anton_brueckner_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver)
+                .and()
+                .user_navigates_to_page(firefoxDriver)
+                .and()
+                .user_sees_account_and_list_transactions(firefoxDriver);
+
+        then()
+                .fintech_can_read_anton_brueckner_accounts_and_transactions();
+
+    }
+
+    @Test
+    public void testUserAfterLoginWantsToLogout(FirefoxDriver firefoxDriver) {
+        given().fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
+        when().user_already_login_in_bank_profile(firefoxDriver)
+                .and()
+                .user_back_to_bank_search(firefoxDriver)
+                .and()
+                .user_after_login_wants_to_logout(firefoxDriver)
+                .and()
+                .user_click_on_logout_button(firefoxDriver);
+
+        then().fintech_navigates_back_to_login_after_user_logs_out();
     }
 }
