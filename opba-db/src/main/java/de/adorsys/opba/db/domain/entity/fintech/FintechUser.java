@@ -53,7 +53,7 @@ public class FintechUser {
     @OneToMany(mappedBy = "psu", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<AuthSession> authSessions;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Fintech fintech;
 
     public UserID getUserId() {
