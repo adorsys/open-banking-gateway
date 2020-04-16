@@ -65,12 +65,8 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         return doRegister(session.getProtocol().getBankProfile(), access, encryptionService, key);
     }
 
-    public SecretKeyWithIv keyFromRegistered(RequestScoped requestScoped) {
-        return memoizedProviders.get(requestScoped.getEncryptionKeyId()).getKey();
-    }
-
-    public void deregister(RequestScoped requestScoped) {
-        memoizedProviders.remove(requestScoped.getEncryptionKeyId());
+    public InternalRequestScoped deregister(RequestScoped requestScoped) {
+        return memoizedProviders.remove(requestScoped.getEncryptionKeyId());
     }
 
     @Override

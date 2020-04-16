@@ -21,7 +21,6 @@
     <boundaryEvent id="sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A" attachedToRef="execution">
       <errorEventDefinition errorRef="VALIDATION"></errorEventDefinition>
     </boundaryEvent>
-    <serviceTask id="validationErrorsHandler" name="Notify about validation errors" flowable:async="true" flowable:delegateExpression="${handleValidationErrors}"></serviceTask>
     <sequenceFlow id="sid-AA3814A7-D245-4099-ABA7-449E203665F1" sourceRef="execution" targetRef="end"></sequenceFlow>
     <sequenceFlow id="sid-C66278C4-EC81-438B-8264-C15C99FDDD18" sourceRef="sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A" targetRef="handleExecutionErrors"></sequenceFlow>
     <serviceTask id="fillInitialContext" name="Fill context with bpmn-related information" flowable:async="true" flowable:delegateExpression="${fillBpmnContext}"></serviceTask>
@@ -33,16 +32,17 @@
     <serviceTask id="persistCurrentContext" name="Persist context before validation" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aStorePreValidationContext}"></serviceTask>
     <sequenceFlow id="sid-BE22A9B7-11C3-41BC-A8F7-9CD8809C8C55" sourceRef="fillInitialContext" targetRef="persistCurrentContext"></sequenceFlow>
     <sequenceFlow id="sid-C865530D-39E8-4602-8D61-61B3CECFA9EE" sourceRef="persistCurrentContext" targetRef="validation"></sequenceFlow>
-    <serviceTask id="restoreCurrentContextOnError" name="Restore context that was before validation and wait for user input to update" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aRestorePreValidationContext}" flowable:triggerable="true"></serviceTask>
+    <serviceTask id="reportErrorAndRestoreContextBefore" name="Restore context that was before validation" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aRestorePreValidationContext}"></serviceTask>
     <sequenceFlow id="sid-275DF142-FA3D-4C53-A4A0-8DF179406C8C" sourceRef="validation" targetRef="hasValidationErrors"></sequenceFlow>
     <serviceTask id="restoreCurrentContextOnOk" name="Restore context that was before validation" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aRestorePreValidationContext}"></serviceTask>
-    <sequenceFlow id="noValidationErrors" name="No errors" sourceRef="hasValidationErrors" targetRef="restoreCurrentContextOnOk"></sequenceFlow>
     <sequenceFlow id="sid-254FCF56-028D-4204-9F41-7E9AAB8D1AB3" sourceRef="restoreCurrentContextOnOk" targetRef="updateContextToRealMode"></sequenceFlow>
-    <sequenceFlow id="sid-8D9A83E7-C86F-4397-BC7F-CCA2A6F2EBD4" sourceRef="restoreCurrentContextOnError" targetRef="persistCurrentContext"></sequenceFlow>
-    <sequenceFlow id="sid-B4A38440-9E24-479E-A358-56B7529066F4" name="Validation errors" sourceRef="hasValidationErrors" targetRef="validationErrorsHandler">
+    <sequenceFlow id="noValidationErrors" name="No errors" sourceRef="hasValidationErrors" targetRef="restoreCurrentContextOnOk"></sequenceFlow>
+    <sequenceFlow id="sid-B4A38440-9E24-479E-A358-56B7529066F4" name="Validation errors" sourceRef="hasValidationErrors" targetRef="reportErrorAndRestoreContextBefore">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{validationErrors.isPresent(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-BF30D9FE-C7B9-4D41-8C81-C5453529C1E1" sourceRef="validationErrorsHandler" targetRef="restoreCurrentContextOnError"></sequenceFlow>
+    <sequenceFlow id="sid-8D9A83E7-C86F-4397-BC7F-CCA2A6F2EBD4" sourceRef="reportViolations" targetRef="persistCurrentContext"></sequenceFlow>
+    <serviceTask id="reportViolations" name="Report context violations to user" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aReportValidationError}" flowable:triggerable="true"></serviceTask>
+    <sequenceFlow id="sid-E8282976-16E7-4A3F-AB10-2E9630924B35" sourceRef="reportErrorAndRestoreContextBefore" targetRef="reportViolations"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_request-saga">
     <bpmndi:BPMNPlane bpmnElement="request-saga" id="BPMNPlane_request-saga">
@@ -61,9 +61,6 @@
       <bpmndi:BPMNShape bpmnElement="sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A" id="BPMNShape_sid-0B988308-D4BC-4E58-ACE3-0DB7A8D87B0A">
         <omgdc:Bounds height="30.0" width="30.0" x="1187.0" y="201.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="validationErrorsHandler" id="BPMNShape_validationErrorsHandler">
-        <omgdc:Bounds height="80.0" width="100.0" x="627.0" y="330.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="fillInitialContext" id="BPMNShape_fillInitialContext">
         <omgdc:Bounds height="80.0" width="100.0" x="164.75" y="135.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
@@ -79,19 +76,22 @@
       <bpmndi:BPMNShape bpmnElement="persistCurrentContext" id="BPMNShape_persistCurrentContext">
         <omgdc:Bounds height="80.0" width="100.0" x="330.0" y="135.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="restoreCurrentContextOnError" id="BPMNShape_restoreCurrentContextOnError">
-        <omgdc:Bounds height="80.0" width="100.0" x="330.0" y="330.0"></omgdc:Bounds>
+      <bpmndi:BPMNShape bpmnElement="reportErrorAndRestoreContextBefore" id="BPMNShape_reportErrorAndRestoreContextBefore">
+        <omgdc:Bounds height="80.0" width="100.0" x="540.0" y="330.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="restoreCurrentContextOnOk" id="BPMNShape_restoreCurrentContextOnOk">
         <omgdc:Bounds height="80.0" width="100.0" x="810.0" y="135.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="reportViolations" id="BPMNShape_reportViolations">
+        <omgdc:Bounds height="80.0" width="100.0" x="405.0" y="330.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-E8282976-16E7-4A3F-AB10-2E9630924B35" id="BPMNEdge_sid-E8282976-16E7-4A3F-AB10-2E9630924B35">
+        <omgdi:waypoint x="540.0" y="370.0"></omgdi:waypoint>
+        <omgdi:waypoint x="504.95000000000005" y="370.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-BE22A9B7-11C3-41BC-A8F7-9CD8809C8C55" id="BPMNEdge_sid-BE22A9B7-11C3-41BC-A8F7-9CD8809C8C55">
         <omgdi:waypoint x="264.70000000000005" y="175.0"></omgdi:waypoint>
         <omgdi:waypoint x="330.0" y="175.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-BF30D9FE-C7B9-4D41-8C81-C5453529C1E1" id="BPMNEdge_sid-BF30D9FE-C7B9-4D41-8C81-C5453529C1E1">
-        <omgdi:waypoint x="627.0" y="370.0"></omgdi:waypoint>
-        <omgdi:waypoint x="429.95000000000005" y="370.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-AA3814A7-D245-4099-ABA7-449E203665F1" id="BPMNEdge_sid-AA3814A7-D245-4099-ABA7-449E203665F1">
         <omgdi:waypoint x="1246.95" y="175.0"></omgdi:waypoint>
@@ -114,7 +114,7 @@
         <omgdi:waypoint x="967.0" y="175.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="noValidationErrors" id="BPMNEdge_noValidationErrors">
-        <omgdi:waypoint x="696.9425615212117" y="175.0"></omgdi:waypoint>
+        <omgdi:waypoint x="696.9445521572401" y="175.0"></omgdi:waypoint>
         <omgdi:waypoint x="810.0" y="175.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-846BCBC1-F77B-4252-92F3-2C0340C8245B" id="BPMNEdge_sid-846BCBC1-F77B-4252-92F3-2C0340C8245B">
@@ -126,11 +126,13 @@
         <omgdi:waypoint x="657.0" y="175.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-B4A38440-9E24-479E-A358-56B7529066F4" id="BPMNEdge_sid-B4A38440-9E24-479E-A358-56B7529066F4">
-        <omgdi:waypoint x="677.0" y="194.94360986547088"></omgdi:waypoint>
-        <omgdi:waypoint x="677.0" y="330.0"></omgdi:waypoint>
+        <omgdi:waypoint x="677.0" y="194.94488723731428"></omgdi:waypoint>
+        <omgdi:waypoint x="677.0" y="370.0"></omgdi:waypoint>
+        <omgdi:waypoint x="639.9499999999999" y="370.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-8D9A83E7-C86F-4397-BC7F-CCA2A6F2EBD4" id="BPMNEdge_sid-8D9A83E7-C86F-4397-BC7F-CCA2A6F2EBD4">
-        <omgdi:waypoint x="380.0" y="330.0"></omgdi:waypoint>
+        <omgdi:waypoint x="404.9999999999798" y="370.0"></omgdi:waypoint>
+        <omgdi:waypoint x="380.0" y="370.0"></omgdi:waypoint>
         <omgdi:waypoint x="380.0" y="214.95000000000002"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
