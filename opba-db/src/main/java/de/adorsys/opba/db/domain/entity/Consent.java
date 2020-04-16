@@ -47,6 +47,8 @@ public class Consent {
     @Column(nullable = false)
     private byte[] encContext;
 
+    private boolean confirmed;
+
     public String getContext(EncryptionService encryption) {
         return new String(encryption.decrypt(encContext), StandardCharsets.UTF_8);
     }

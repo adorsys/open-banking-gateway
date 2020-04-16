@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface ConsentRepository extends JpaRepository<Consent, Long> {
 
     Optional<Consent> findByServiceSessionId(UUID serviceSessionId);
+
+    Optional<Consent> findByServiceSessionAuthSessionId(UUID authSessionId);
 }
