@@ -1,7 +1,7 @@
 package de.adorsys.opba.api.security.service.impl;
 
 
-import de.adorsys.opba.api.security.domain.SignatureClaim;
+import de.adorsys.opba.api.security.domain.SignData;
 import de.adorsys.opba.api.security.service.RequestSigningService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -33,13 +33,13 @@ public class RsaJwtsSigningServiceImpl implements RequestSigningService {
     private String signSubject;
 
     @Override
-    public String sign(SignatureClaim signatureClaim) {
+    public String sign(SignData signData) {
         try {
             PKCS8EncodedKeySpec encodedPrivateKeySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKey));
             KeyFactory keyFact = KeyFactory.getInstance(ALGORITHM_RSA.getValue());
             PrivateKey generatedPrivateKey = keyFact.generatePrivate(encodedPrivateKeySpec);
 
-            return generateSignature(generatedPrivateKey, signatureClaim.getClaimsAsString());
+            return generateSignature(generatedPrivateKey, signData.convertDataToString());
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
             log.warn("Encoded private key has wrong format :  {}", privateKey);
             return null;
