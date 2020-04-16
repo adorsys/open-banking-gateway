@@ -23,6 +23,12 @@
             </column>
             <column name="enc_context" type="BLOB"/>
             <column name="confirmed" type="boolean" defaultValue="false"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <createSequence sequenceName="consent_id_sequence" incrementBy="50"/>
 
@@ -74,6 +80,12 @@
             <column name="version" type="INT">
                 <constraints nullable="false"/>
             </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_service_session_bank_protocol"
                                  baseTableName="${table-prefix}service_session"
@@ -95,6 +107,12 @@
             </column>
             <column name="keystore" type="BLOB"/>
             <column name="pub_keys" type="BLOB"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <createSequence sequenceName="psu_id_sequence" incrementBy="50"/>
 
@@ -122,6 +140,12 @@
             </column>
             <column name="keystore" type="BLOB"/>
             <column name="pub_keys" type="BLOB"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <createSequence sequenceName="fintech_user_id_sequence" incrementBy="50"/>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_user_fintech"
@@ -147,6 +171,12 @@
             <column name="enc_consent_spec" type="BLOB"/>
             <column name="context" type="TEXT"/>
             <column name="version" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -176,6 +206,12 @@
             <column name="data" type="BLOB">
                 <constraints nullable="false"/>
             </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <createSequence sequenceName="psu_consent_id_sequence" incrementBy="50"/>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_psu_consent_psu"
@@ -197,6 +233,12 @@
                 <constraints nullable="false"/>
             </column>
             <column name="data" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -224,6 +266,12 @@
             <column name="data" type="BLOB">
                 <constraints nullable="false"/>
             </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_consent_fintech"
                                  baseTableName="${table-prefix}fintech_consent"
@@ -244,6 +292,12 @@
                 <constraints nullable="false"/>
             </column>
             <column name="data" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
         </createTable>
