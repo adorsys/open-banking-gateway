@@ -1,13 +1,14 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.validation;
 
 import com.google.common.collect.Iterables;
-import de.adorsys.opba.protocol.xs2a.domain.ValidationIssueException;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
+import de.adorsys.opba.protocol.xs2a.domain.ValidationIssueException;
 import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 import static de.adorsys.opba.protocol.xs2a.service.xs2a.context.ContextMode.REAL_CALLS;
 
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class Xs2aValidator {
@@ -47,6 +49,7 @@ public class Xs2aValidator {
                     // Only when doing real calls validations cause termination of flow
                     // TODO: Those validation in real call should be propagated and handled
                     if (REAL_CALLS == ctx.getMode()) {
+                        log.error("Fatal validation error for requestId={},sagaId={} - violations {}", ctx.getRequestId(), ctx.getSagaId(), allErrors);
                         throw new ValidationIssueException();
                     }
                 }

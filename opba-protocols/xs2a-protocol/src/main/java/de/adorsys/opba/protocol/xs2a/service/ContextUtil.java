@@ -18,11 +18,11 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Lombok generates private ctor.
 public class ContextUtil {
 
-    public static <T> T getContext(DelegateExecution execution, Class<T> ctxType) {
+    public <T> T getContext(DelegateExecution execution, Class<T> ctxType) {
         return execution.getVariable(CONTEXT, ctxType);
     }
 
-    public static <T> void getAndUpdateContext(DelegateExecution execution, Consumer<T> contextUpdater) {
+    public <T> void getAndUpdateContext(DelegateExecution execution, Consumer<T> contextUpdater) {
         @SuppressWarnings("unchecked")
         T ctx = (T) execution.getVariable(CONTEXT);
         contextUpdater.accept(ctx);
@@ -31,11 +31,11 @@ public class ContextUtil {
 
     // TODO: Extract to service/component
     @SuppressWarnings("unchecked")
-    public static <R, T> R evaluateSpelForCtx(String expression, DelegateExecution execution, T context) {
+    public <R, T> R evaluateSpelForCtx(String expression, DelegateExecution execution, T context) {
         return (R) evaluateSpelForCtx(expression, execution, context, Object.class);
     }
 
-    public static <R, T> R evaluateSpelForCtx(
+    public <R, T> R evaluateSpelForCtx(
             String expression, DelegateExecution execution, T context, Class<R> resultClass) {
         ExpressionParser parser = new SpelExpressionParser();
         StandardEvaluationContext parseContext = new StandardEvaluationContext(new SpelCtx<>(execution, context));
@@ -44,7 +44,7 @@ public class ContextUtil {
 
     @Getter
     @RequiredArgsConstructor
-    private static class SpelCtx<T> {
+    private class SpelCtx<T> {
 
         private final DelegateExecution execution;
         private final T context;
