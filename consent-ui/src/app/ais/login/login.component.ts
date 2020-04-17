@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
         res => {
           // store xsrf-token in session-storage
           const xsrfToken = res.body.xsrfToken;
-          this.sessionService.setXsrfToken(this.authId, xsrfToken);
+          this.sessionService.setXsrfToken(xsrfToken);
           // navigate to transactions
           this.router.navigate(['../'],
             { relativeTo: this.activatedRoute });
