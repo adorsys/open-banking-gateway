@@ -28,3 +28,18 @@ fintech-ui:
   redirect-url: http://localhost:4444?redirectCode={redirectCode}
   exception-url: http://localhost:4444/excaption-redirect
 
+server:
+  controller:
+    sessioncookie:
+      secure: false
+      maxAge: 30
+      httpOnly: true
+      path: /
+      sameSite: Strict
+
+    redirectcookie:
+      secure: false
+      maxAge: 300
+      httpOnly: true
+      path: /v1/{auth-id}
+      sameSite: Strict
