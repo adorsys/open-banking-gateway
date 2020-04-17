@@ -54,7 +54,7 @@ const routes: Routes = [
       },
       {
         path: ReportScaResultComponent.ROUTE,
-        component: ReportScaResultComponent,
+        component: ReportScaResultComponent
       },
       {
         path: 'report-sca-result',

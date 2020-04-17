@@ -9,7 +9,7 @@
     "start": "ng serve",
     "serve:local": "ng serve --proxy-config=proxy-conf-local-backend.json",
     "serve:dev": "ng serve --proxy-config=proxy-conf-dev-backend.js",
-    "serve:docker": "ng serve --port=14200 --proxy-config=proxy-conf-docker-backend.js",
+    "serve:docker": "ng serve --port=14200 --proxy-config=proxy-conf-docker-backend.json",
     "build": "ng build",
     "build:prod": "ng build --prod",
     "test": "ng test",

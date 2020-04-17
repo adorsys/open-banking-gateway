@@ -17,15 +17,12 @@ export class ConsentSharingComponent implements OnInit {
   public static ROUTE = 'consent-sharing';
 
   accountAccessLevel = AccountAccessLevel;
-
-  public finTechName = StubUtil.FINTECH_NAME;
-  public aspspName = StubUtil.ASPSP_NAME;
-
   redirectTo: string;
   isAccount = true;
 
+  public finTechName = StubUtil.FINTECH_NAME;
+  public aspspName = StubUtil.ASPSP_NAME;
   private aisConsent: AisConsentToGrant;
-
   private authorizationId: string;
 
   constructor(
@@ -41,20 +38,15 @@ export class ConsentSharingComponent implements OnInit {
     const redirectCode = this.sessionService.getRedirectCode(this.authorizationId);
     this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
 
-    console.log(this.authorizationId, redirectCode);
-
     this.consentAuthorisation.authUsingGET(this.authorizationId, redirectCode, 'response').subscribe(
       res => {
         this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-        console.log(res.headers.get(ApiHeaders.REDIRECT_CODE));
       },
       error => {
         console.log(error);
       }
     );
-
-    // TODO: uncomment when the endpoint is ready
-    // this.loadRedirectUri(this.authorizationId, redirectCode);
+    this.loadRedirectUri(this.authorizationId, redirectCode);
   }
 
   onConfirm() {
@@ -77,10 +69,10 @@ export class ConsentSharingComponent implements OnInit {
   }
 
   private loadRedirectUri(authId: string, redirectCode: string): void {
-    this.consentAuthorisation.authUsingGET(authId, redirectCode, 'response').subscribe(res => {
-      console.log(res);
+    // TODO: use the right endpoint after it's defined
+    /*   this.consentAuthorisation.authUsingGET(authId, redirectCode, 'response').subscribe(res => {
       this.sessionService.setRedirectCode(authId, res.headers.get(ApiHeaders.REDIRECT_CODE));
       this.redirectTo = res.headers.get(ApiHeaders.LOCATION);
-    });
+    });*/
   }
 }
