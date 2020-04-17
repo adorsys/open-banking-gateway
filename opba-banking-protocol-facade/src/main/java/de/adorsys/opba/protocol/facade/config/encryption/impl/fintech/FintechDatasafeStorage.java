@@ -39,9 +39,9 @@ public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
     }
 
     @Component
-    public static class FintechConsentStorage extends DatasafeDataStorage<FintechPsuAspspPrvKey> {
+    public static class FintechPsuAspspPrvKeyStorage extends DatasafeDataStorage<FintechPsuAspspPrvKey> {
 
-        public FintechConsentStorage(FintechConsentRepository privates, EntityManager em) {
+        public FintechPsuAspspPrvKeyStorage(FintechConsentRepository privates, EntityManager em) {
             super(
                     privates,
                     (parent, id) -> null, //FintechPsuAspspPrvKey.builder().consent(em.find(Consent.class, id)).fintech(em.find(Fintech.class, parent)).build(),
@@ -57,9 +57,9 @@ public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
     }
 
     @Component
-    public static class FintechConsentInboxStorage extends DatasafeDataStorage<FintechPsuAspspPrvKeyInbox> {
+    public static class FintechPsuAspspPrvKeyInboxStorage extends DatasafeDataStorage<FintechPsuAspspPrvKeyInbox> {
 
-        public FintechConsentInboxStorage(FintechConsentInboxRepository inboxes, EntityManager em) {
+        public FintechPsuAspspPrvKeyInboxStorage(FintechConsentInboxRepository inboxes, EntityManager em) {
             super(
                     inboxes,
                     (parent, id) -> FintechPsuAspspPrvKeyInbox.builder().id(id).fintech(em.find(Fintech.class, parent)).build(),
