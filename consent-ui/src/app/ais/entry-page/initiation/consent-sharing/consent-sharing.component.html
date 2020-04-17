@@ -1,0 +1,47 @@
+<div class="card">
+  <div class="card-body">
+    <h2 class="mb-4 text-left">Do you want to share your consent with {{ finTechName }}?</h2>
+    <p class="text-secondary mb-5 text-left">
+      already existing consent is going to be share with <strong>{{ finTechName }}</strong>
+    </p>
+    <ng-container [ngSwitch]="aisConsent.level">
+      <div class="form-group my-4">
+        <ul>
+          <ng-container *ngSwitchCase="accountAccessLevel.ALL_ACCOUNTS">
+            <li><strong>All</strong> your accounts will be visible</li>
+          </ng-container>
+          <ng-container *ngSwitchCase="accountAccessLevel.ALL_ACCOUNTS_WITH_BALANCES">
+            <li><strong>All</strong> your accounts <strong>with balances</strong> will be visible</li>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="accountAccessLevel.ALL_PSD2">
+            <li><strong>All</strong> your accounts and corresponding transactions will be visible</li>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="accountAccessLevel.FINE_GRAINED">
+            <li>
+              Dedicated access to <strong>account details and transactions</strong> for following accounts IBAN's:
+              <ul class="list-group px-5">
+                <li *ngFor="let account of aisConsent.consent.access.accounts">
+                  <strong>{{ account }}</strong>
+                </li>
+              </ul>
+            </li>
+          </ng-container>
+          <li>
+            The consent will be valid until <strong>{{ aisConsent.consent.validUntil }}</strong>
+          </li>
+          <li>
+            The consent can be used <strong>{{ aisConsent.consent.frequencyPerDay }}</strong> times per day
+          </li>
+        </ul>
+      </div>
+    </ng-container>
+    <div class="d-sm-flex">
+      <button (click)="onDeny()" class="btn btn-outline-secondary w-100 mr-4" id="do_deny">Decline consent</button>
+      <button (click)="onConfirm()" [disabled]="!redirectTo" class="btn btn-primary w-100" id="do_submit" type="button">
+        Grant consent
+      </button>
+    </div>
+  </div>
+</div>
