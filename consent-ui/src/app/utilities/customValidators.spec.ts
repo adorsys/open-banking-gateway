@@ -1,7 +1,7 @@
-import { Helperfunctions } from './customValidators';
+import { CustomValidators } from './customValidators';
 
-describe('Helperfunctions', () => {
+describe('customValidators', () => {
   it('should create an instance', () => {
-    expect(new Helperfunctions()).toBeTruthy();
+    expect(new CustomValidators()).toBeTruthy();
   });
 });

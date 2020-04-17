@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
-import {SessionService} from '../common/session.service';
+import { AuthService } from "../common/auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -8,17 +8,12 @@ import {SessionService} from '../common/session.service';
 export class AuthGuard implements CanActivate {
 
   constructor(
-    private sessionService: SessionService
+    private authService: AuthService
   ) {
   }
 
   canActivate():boolean {
-    if (this.sessionService.isLoggedIn()){
-      return true;
-    } else {
-      // implement navigate to login here
-      return false
-    }
+    return this.authService.isLoggedIn();
   }
 
 }
