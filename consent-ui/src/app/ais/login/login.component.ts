@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { SessionService } from '../../common/session.service';
 import { AuthService } from '../../common/auth.service';
-import { ApiHeaders } from "../../api/api.headers";
+import { ApiHeaders } from '../../api/api.headers';
 
 @Component({
   selector: 'consent-app-login',
