@@ -20,7 +20,7 @@ public class FintechPsuAspspTuple {
 
     public FintechPsuAspspTuple(String path) {
         String[] segments = path.split("/");
-        this.fintechId = Long.parseLong(segments[1]);
+        this.fintechId = Long.parseLong(segments[0]);
         this.psuId = Long.parseLong(segments[1]);
         this.aspspId = Long.parseLong(segments[2]);
     }
