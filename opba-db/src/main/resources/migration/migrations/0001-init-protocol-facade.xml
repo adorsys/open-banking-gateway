@@ -199,6 +199,12 @@
             <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
+            <column name="algo" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="format" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
             <column name="data" type="BLOB">
                 <constraints nullable="false"/>
             </column>
@@ -231,11 +237,6 @@
             </column>
         </createTable>
         <createSequence sequenceName="psu_aspsp_prv_key_id_sequence" incrementBy="50"/>
-        <addForeignKeyConstraint constraintName="${table-prefix}fk_psu_aspsp_prv_key_psu_aspsp_pub_key"
-                                 baseTableName="${table-prefix}psu_aspsp_prv_key"
-                                 baseColumnNames="id"
-                                 referencedTableName="${table-prefix}psu_aspsp_pub_key"
-                                 referencedColumnNames="id"/>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_psu_aspsp_prv_key_psu"
                                  baseTableName="${table-prefix}psu_aspsp_prv_key"
                                  baseColumnNames="psu_id"
@@ -246,6 +247,12 @@
                                  baseColumnNames="aspsp_id"
                                  referencedTableName="${table-prefix}bank"
                                  referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_psu_aspsp_pub_key_psu_aspsp_prv_key"
+                                 baseTableName="${table-prefix}psu_aspsp_pub_key"
+                                 baseColumnNames="id"
+                                 referencedTableName="${table-prefix}psu_aspsp_prv_key"
+                                 referencedColumnNames="id"
+                                 deferrable="true"/>
 
         <createTable tableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox">
             <column name="id" type="UUID">
@@ -274,11 +281,6 @@
                                  baseTableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox"
                                  baseColumnNames="fintech_id"
                                  referencedTableName="${table-prefix}fintech"
-                                 referencedColumnNames="id"/>
-        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_inbox_auth_session"
-                                 baseTableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox"
-                                 baseColumnNames="id"
-                                 referencedTableName="${table-prefix}auth_session"
                                  referencedColumnNames="id"/>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_inbox_psu"
                                  baseTableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox"
