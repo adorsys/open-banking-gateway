@@ -6,7 +6,6 @@ import de.adorsys.opba.api.security.domain.SignData;
 import de.adorsys.opba.api.security.service.RequestVerifyingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.env.Environment;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.OffsetDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -23,7 +23,7 @@ import java.util.UUID;
 public class RequestSignatureValidationFilter extends OncePerRequestFilter {
     private final RequestVerifyingService requestVerifyingService;
     private final Duration requestTimeLimit;
-    private final Environment environment;
+    private final Map<String, String> fintechKeysMap;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -34,7 +34,7 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
 
         OffsetDateTime dateTime = OffsetDateTime.parse(requestTimeStamp);
 
-        String fintechApiKey = environment.getProperty(fintechId);
+        String fintechApiKey = fintechKeysMap.get(fintechId);
 
         if (fintechApiKey == null) {
             log.warn("Api key for fintech ID {} has not find ", fintechId);

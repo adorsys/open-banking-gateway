@@ -2,10 +2,10 @@ package de.adorsys.opba.api.security.service.impl;
 
 import de.adorsys.opba.api.security.domain.SignData;
 import de.adorsys.opba.api.security.service.RequestVerifyingService;
+import de.adorsys.opba.api.security.service.SignatureParams;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.security.KeyFactory;
@@ -15,12 +15,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
-import static de.adorsys.opba.api.security.service.SignatureParams.ALGORITHM_RSA;
-import static de.adorsys.opba.api.security.service.SignatureParams.CLAIM_NAME;
-
 @Slf4j
-@RequiredArgsConstructor
 public class RsaJwtsVerifyingServiceImpl implements RequestVerifyingService {
+    private static final String ALGORITHM = SignatureParams.ALGORITHM_RSA.getValue();
 
     @Override
     public boolean verify(String signature, String encodedPublicKey, SignData signData) {
@@ -35,7 +32,7 @@ public class RsaJwtsVerifyingServiceImpl implements RequestVerifyingService {
             Claims claims = parser.parseClaimsJws(signature).getBody();
 
             return signData.convertDataToString()
-                           .equals(claims.get(CLAIM_NAME.getValue()));
+                           .equals(claims.get(SignatureParams.CLAIM_NAME.getValue()));
 
         } catch (Exception e) {
             log.warn("Signature verification error:  {}", signature);
@@ -46,7 +43,7 @@ public class RsaJwtsVerifyingServiceImpl implements RequestVerifyingService {
     private PublicKey getRsaPublicKey(String encodedPublicKey) {
         try {
             X509EncodedKeySpec encodedPublicKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(encodedPublicKey));
-            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_RSA.getValue());
+            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
 
             return keyFactory.generatePublic(encodedPublicKeySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
