@@ -35,7 +35,7 @@ public class RetryableConfig {
 
         @Override
         public <T, E extends Throwable> void onError(RetryContext context, RetryCallback<T, E> callback, Throwable throwable) {
-         //   log.info("Caught for retry {}", throwable.getMessage());
+            log.info("Caught for retry {}", throwable.getMessage());
         }
     }
 }
