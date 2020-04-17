@@ -4,6 +4,7 @@ import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
+import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListAccountsMock;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
@@ -24,8 +25,6 @@ public class AccountService extends HandleAcceptedService {
 
     private final FintechUiConfig uiConfig;
     private final TppAisClient tppAisClient;
-
-    @Autowired
     private RestRequestContext restRequestContext;
 
     @Autowired
@@ -35,10 +34,12 @@ public class AccountService extends HandleAcceptedService {
     private RedirectHandlerService redirectHandlerService;
 
 
-    public AccountService(AuthorizeService authorizeService, TppAisClient tppAisClient, FintechUiConfig uiConfig) {
-        super(authorizeService);
+    public AccountService(AuthorizeService authorizeService, TppAisClient tppAisClient, FintechUiConfig uiConfig,
+                          CookieConfigProperties cookieConfigProperties, RestRequestContext restRequestContext) {
+        super(authorizeService, cookieConfigProperties, restRequestContext);
         this.tppAisClient = tppAisClient;
         this.uiConfig = uiConfig;
+        this.restRequestContext = restRequestContext;
     }
 
     public ResponseEntity listAccounts(SessionEntity sessionEntity,

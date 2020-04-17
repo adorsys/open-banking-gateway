@@ -5,6 +5,7 @@ import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
+import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,13 +67,16 @@ class RedirectHandlerServiceTest {
     @InjectMocks
     private RedirectHandlerService redirectHandlerService;
 
+    @InjectMocks
+    private CookieConfigProperties cookieConfigProperties;
+
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
 
         log.info("setup RestRequestContext");
         restRequestContext.setRequestId(UUID.randomUUID().toString());
-        redirectHandlerService = new RedirectHandlerService(uiConfig, redirectUrlRepository, authorizeService, restRequestContext);
+        redirectHandlerService = new RedirectHandlerService(uiConfig, redirectUrlRepository, authorizeService, restRequestContext, cookieConfigProperties);
     }
 
     @Test
@@ -93,7 +97,7 @@ class RedirectHandlerServiceTest {
     @Test
     void doRedirect_success() {
         // given
-        when(authorizeService.fillWithAuthorizationHeaders(sessionEntity, restRequestContext.getXsrfTokenHeaderField()))
+        when(authorizeService.modifySessionEntityAndCreateNewAuthHeader("xrequestid", sessionEntity, restRequestContext.getXsrfTokenHeaderField(), cookieConfigProperties.getSessioncookie()))
                 .thenReturn(new HttpHeaders());
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.of(REDIRECT_URLS_ENTITY));
         when(authorizeService.getSession()).thenReturn(sessionEntity);

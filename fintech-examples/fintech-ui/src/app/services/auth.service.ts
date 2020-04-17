@@ -20,6 +20,7 @@ export class AuthService {
   ) {}
 
   login(credentials: Credentials): Observable<boolean> {
+    this.storageService.clearStorage();
     return this.finTechAuthorizationService.loginPOST('', credentials, 'response').pipe(
       map(response => {
         this.setSessionData(response, credentials);
@@ -47,7 +48,7 @@ export class AuthService {
 
   public isLoggedIn(): boolean {
     const token = this.storageService.getXsrfToken();
-    return token !== undefined && token !== null;
+    return token !== undefined && token !== null && this.storageService.isMaxAgeValid();
   }
 
   private setSessionData(response: any, credentials: Credentials): void {
