@@ -53,7 +53,7 @@ public class Psu {
     private byte[] pubKeys;
 
     @OneToMany(mappedBy = "psu", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<PsuConsent> consentKeys;
+    private Collection<PsuAspspPrvKey> consentKeys;
 
     @OneToMany(mappedBy = "psu", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<AuthSession> authSessions;

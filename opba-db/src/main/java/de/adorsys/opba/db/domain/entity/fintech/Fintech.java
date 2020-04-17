@@ -45,10 +45,10 @@ public class Fintech {
     private byte[] pubKeys;
 
     @OneToMany(mappedBy = "fintech", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<FintechConsentInbox> inbox;
+    private Collection<FintechPsuAspspPrvKeyInbox> inbox;
 
     @OneToMany(mappedBy = "fintech", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<FintechConsent> consentKeys;
+    private Collection<FintechPsuAspspPrvKey> consentKeys;
 
     @OneToMany(mappedBy = "fintech", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<FintechUser> requestedConsentSpecs;

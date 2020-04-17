@@ -195,14 +195,32 @@
                                  referencedTableName="${table-prefix}fintech_user"
                                  referencedColumnNames="id"/>
 
-        <createTable tableName="${table-prefix}psu_consent">
+        <createTable tableName="${table-prefix}psu_aspsp_pub_key">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="data" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="${table-prefix}psu_aspsp_prv_key">
             <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
             <column name="psu_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="data" type="BLOB">
+            <column name="aspsp_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enc_data" type="BLOB">
                 <constraints nullable="false"/>
             </column>
             <column name="created_at" type="TIMESTAMP">
@@ -212,26 +230,37 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createSequence sequenceName="psu_consent_id_sequence" incrementBy="50"/>
-        <addForeignKeyConstraint constraintName="${table-prefix}fk_psu_consent_psu"
-                                 baseTableName="${table-prefix}psu_consent"
+        <createSequence sequenceName="psu_aspsp_prv_key_id_sequence" incrementBy="50"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_psu_aspsp_prv_key_psu_aspsp_pub_key"
+                                 baseTableName="${table-prefix}psu_aspsp_prv_key"
+                                 baseColumnNames="id"
+                                 referencedTableName="${table-prefix}psu_aspsp_pub_key"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_psu_aspsp_prv_key_psu"
+                                 baseTableName="${table-prefix}psu_aspsp_prv_key"
                                  baseColumnNames="psu_id"
                                  referencedTableName="${table-prefix}psu"
                                  referencedColumnNames="id"/>
-        <addForeignKeyConstraint constraintName="${table-prefix}fk_psu_consent_auth_session"
-                                 baseTableName="${table-prefix}psu_consent"
-                                 baseColumnNames="id"
-                                 referencedTableName="${table-prefix}auth_session"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_psu_aspsp_prv_key_bank"
+                                 baseTableName="${table-prefix}psu_aspsp_prv_key"
+                                 baseColumnNames="aspsp_id"
+                                 referencedTableName="${table-prefix}bank"
                                  referencedColumnNames="id"/>
 
-        <createTable tableName="${table-prefix}fintech_consent_inbox">
+        <createTable tableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox">
             <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
             <column name="fintech_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="data" type="BLOB">
+            <column name="psu_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="aspsp_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enc_data" type="BLOB">
                 <constraints nullable="false"/>
             </column>
             <column name="created_at" type="TIMESTAMP">
@@ -241,28 +270,41 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_consent_inbox_fintech"
-                                 baseTableName="${table-prefix}fintech_consent_inbox"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_inbox_fintech"
+                                 baseTableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox"
                                  baseColumnNames="fintech_id"
                                  referencedTableName="${table-prefix}fintech"
                                  referencedColumnNames="id"/>
-        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_consent_inbox_auth_session"
-                                 baseTableName="${table-prefix}fintech_consent_inbox"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_inbox_auth_session"
+                                 baseTableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox"
                                  baseColumnNames="id"
                                  referencedTableName="${table-prefix}auth_session"
                                  referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_inbox_psu"
+                                 baseTableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox"
+                                 baseColumnNames="psu_id"
+                                 referencedTableName="${table-prefix}psu"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_inbox_bank"
+                                 baseTableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox"
+                                 baseColumnNames="aspsp_id"
+                                 referencedTableName="${table-prefix}bank"
+                                 referencedColumnNames="id"/>
 
-        <createTable tableName="${table-prefix}fintech_consent">
+        <createTable tableName="${table-prefix}fintech_psu_aspsp_prv_key">
             <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
             <column name="fintech_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="consent_id" type="UUID">
+            <column name="psu_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="data" type="BLOB">
+            <column name="aspsp_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enc_data" type="BLOB">
                 <constraints nullable="false"/>
             </column>
             <column name="created_at" type="TIMESTAMP">
@@ -272,15 +314,20 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_consent_fintech"
-                                 baseTableName="${table-prefix}fintech_consent"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_fintech"
+                                 baseTableName="${table-prefix}fintech_psu_aspsp_prv_key"
                                  baseColumnNames="fintech_id"
                                  referencedTableName="${table-prefix}fintech"
                                  referencedColumnNames="id"/>
-        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_consent_consent"
-                                 baseTableName="${table-prefix}fintech_consent"
-                                 baseColumnNames="consent_id"
-                                 referencedTableName="${table-prefix}consent"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_psu"
+                                 baseTableName="${table-prefix}fintech_psu_aspsp_prv_key"
+                                 baseColumnNames="psu_id"
+                                 referencedTableName="${table-prefix}psu"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_bank"
+                                 baseTableName="${table-prefix}fintech_psu_aspsp_prv_key"
+                                 baseColumnNames="aspsp_id"
+                                 referencedTableName="${table-prefix}bank"
                                  referencedColumnNames="id"/>
 
         <createTable tableName="${table-prefix}fintech_consent_spec">
@@ -290,7 +337,7 @@
             <column name="user_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="data" type="BLOB">
+            <column name="enc_data" type="BLOB">
                 <constraints nullable="false"/>
             </column>
             <column name="created_at" type="TIMESTAMP">
