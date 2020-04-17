@@ -23,14 +23,18 @@ export class ConsentInitiateComponent implements OnInit {
     private consentAuthService: ConsentAuthorizationService
   ) {}
 
-
+  private static isInvalid(authorizationId: string, redirectCode: string): boolean {
+    return !redirectCode || !authorizationId || '' === redirectCode || '' === authorizationId;
+  }
 
   ngOnInit() {
     this.route = this.activatedRoute.snapshot;
 
     const authId = this.route.params.authId;
     this.redirectCode = this.route.queryParams.redirectCode;
-    if (this.redirectCode) { this.sessionService.setRedirectCode(authId, this.redirectCode); }
+    if (this.redirectCode) {
+      this.sessionService.setRedirectCode(authId, this.redirectCode);
+    }
 
     if (ConsentInitiateComponent.isInvalid(authId, this.redirectCode)) {
       this.abortUnauthorized();
@@ -44,15 +48,16 @@ export class ConsentInitiateComponent implements OnInit {
   }
 
   private initiateConsentSession(authorizationId: string, redirectCode: string) {
-    this.consentAuthService.authUsingGET(authorizationId, redirectCode, 'response').subscribe(res => {
-      this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+    this.consentAuthService.authUsingGET(authorizationId, redirectCode, 'response').subscribe(
+      res => {
+        this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
 
-      this.navigate(authorizationId, res.body.consentAuth);
-    }, error => { console.log(error) });
-  }
-
-  private static isInvalid(authorizationId: string, redirectCode: string): boolean {
-    return !redirectCode || !authorizationId || '' === redirectCode || '' === authorizationId;
+        this.navigate(authorizationId, res.body.consentAuth);
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
 
   private navigate(authorizationId: string, res: ConsentAuth) {

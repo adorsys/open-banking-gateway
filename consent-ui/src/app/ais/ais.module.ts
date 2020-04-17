@@ -25,8 +25,7 @@ import { ToAspspRedirectionComponent } from './to-aspsp-page/to-aspsp-redirectio
 import { ConsentInfoComponent } from './components/consent-info/consent-info.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import {ApiModule} from "../api";
-import {ApiModule as AuthApiModule} from "../api-auth";
+import { ConsentSharingComponent } from './entry-page/initiation/consent-sharing/consent-sharing.component';
 
 @NgModule({
   declarations: [
