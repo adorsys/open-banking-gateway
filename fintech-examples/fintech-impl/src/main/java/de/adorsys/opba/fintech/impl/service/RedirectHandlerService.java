@@ -5,6 +5,7 @@ import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
+import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.util.Collections.singletonList;
 
@@ -27,11 +29,11 @@ import static java.util.Collections.singletonList;
 @RequiredArgsConstructor
 public class RedirectHandlerService {
     private static final String LOCATION_HEADER = "Location";
-
     private final FintechUiConfig uiConfig;
     private final RedirectUrlRepository redirectUrlRepository;
     private final AuthorizeService authorizeService;
     private final RestRequestContext restRequestContext;
+    private final CookieConfigProperties cookieConfigProperties;
 
     @Transactional
     public RedirectUrlsEntity registerRedirectStateForSession(final String finTechRedirectCode, final String okPath, final String nokPath) {
@@ -83,13 +85,14 @@ public class RedirectHandlerService {
             return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
-        log.info("ui passed authId {} and server remembered authId {}", uiGivenAuthId, storedAuthId);
+        log.info("authId {}", uiGivenAuthId);
         sessionEntity.setConsentConfirmed(true);
         return prepareRedirectToReadResultResponse(sessionEntity, redirectUrls.get());
     }
 
     private ResponseEntity prepareRedirectToReadResultResponse(SessionEntity sessionEntity, RedirectUrlsEntity redirectUrls) {
-        HttpHeaders authHeaders = authorizeService.fillWithAuthorizationHeaders(sessionEntity, restRequestContext.getXsrfTokenHeaderField());
+        String xsrfToken = UUID.randomUUID().toString();
+        HttpHeaders authHeaders = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), sessionEntity, xsrfToken, cookieConfigProperties.getSessioncookie());
         authHeaders.put(LOCATION_HEADER, singletonList(redirectUrls.getOkStatePath()));
         return new ResponseEntity<>(authHeaders, HttpStatus.ACCEPTED);
     }

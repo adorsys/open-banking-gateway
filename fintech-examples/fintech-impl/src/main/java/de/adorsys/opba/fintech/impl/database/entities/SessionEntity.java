@@ -58,7 +58,6 @@ public class SessionEntity {
 
     @SneakyThrows
     public static String createSessionCookieValue(String fintechUserId, String xsrfToken) {
-        // TODO Hashing with SHA256
         ObjectMapper mapper = new ObjectMapper();
         return URLEncoder.encode(mapper.writeValueAsString(new SessionCookieValue(fintechUserId, hashAndHexconvert(xsrfToken))), JsonEncoding.UTF8.getJavaName());
     }
