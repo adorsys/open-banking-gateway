@@ -14,6 +14,7 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
 
     protected final AuthorizationSessionRepository authSessions;
 
+    private final FintechSecureStorage fintechSecureStorage;
     private final FintechRepository fintechRepository;
     private final BankProfileJpaRepository profileJpaRepository;
     private final ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider;
@@ -158,8 +160,10 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         BankProfile profile = profileJpaRepository.findByBankUuid(request.getFacadeServiceable().getBankId())
                 .orElseThrow(() -> new IllegalArgumentException("No bank profile for bank: " + request.getFacadeServiceable().getBankId()));
 
+        // FinTech requests should be signed, so creating Fintech entity if it does not exist.
         Fintech fintech = fintechRepository.findByGlobalId(request.getFacadeServiceable().getAuthorization())
-                .orElseThrow(() -> new IllegalStateException("No registered FinTech: " + request.getFacadeServiceable().getAuthorization()));
+                .orElseGet(() -> registerFintech(request, request.getFacadeServiceable().getAuthorization()));
+        fintechSecureStorage.validatePassword(fintech, () -> request.getFacadeServiceable().getSessionPassword().toCharArray());
 
         return provider.registerForFintechSession(
                 fintech,
@@ -169,5 +173,11 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
                 consentAuthorizationEncryptionServiceProvider.generateKey(),
                 () -> request.getFacadeServiceable().getSessionPassword().toCharArray()
         );
+    }
+
+    private <T extends FacadeServiceableGetter> Fintech registerFintech(T request, String fintechId) {
+        Fintech fintech = fintechRepository.save(Fintech.builder().globalId(fintechId).build());
+        fintechSecureStorage.registerFintech(fintech, () -> request.getFacadeServiceable().getSessionPassword().toCharArray());
+        return fintech;
     }
 }
