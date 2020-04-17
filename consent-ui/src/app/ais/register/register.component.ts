@@ -15,11 +15,14 @@ export class RegisterComponent implements OnInit {
   public static ROUTE = 'register';
   loginForm: FormGroup;
 
+  private authId: string;
+  private redirectCode: string;
+
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private route: ActivatedRoute
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -31,6 +34,9 @@ export class RegisterComponent implements OnInit {
       },
       { validators: CustomValidators.compareFields('password', 'confirmPassword') }
     );
+
+    this.authId = this.activatedRoute.snapshot.parent.params.authId;
+    this.redirectCode = this.activatedRoute.snapshot.queryParams.redirectCode;
   }
   onSubmit() {
     const credentials: PsuAuthBody = {
@@ -40,7 +46,7 @@ export class RegisterComponent implements OnInit {
     this.authService.userRegister(credentials).subscribe(
       res => {
         if (res.status === 201) {
-          this.router.navigate([LoginComponent.ROUTE], { relativeTo: this.route.parent });
+          this.router.navigate([LoginComponent.ROUTE], { relativeTo: this.activatedRoute.parent, queryParams: {redirectCode: this.redirectCode} });
         }
       },
       error => {
