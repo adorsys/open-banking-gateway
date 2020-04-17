@@ -2,7 +2,7 @@ package de.adorsys.opba.db.domain.entity.fintech;
 
 import de.adorsys.datasafe.encrypiton.api.types.UserID;
 import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
-import de.adorsys.opba.db.domain.entity.psu.PsuConsent;
+import de.adorsys.opba.db.domain.entity.psu.PsuAspspPrvKey;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,7 +54,7 @@ public class FintechUser {
     private byte[] pubKeys;
 
     @OneToMany(mappedBy = "psu", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<PsuConsent> privateStore;
+    private Collection<PsuAspspPrvKey> privateStore;
 
     @OneToMany(mappedBy = "psu", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<AuthSession> authSessions;
