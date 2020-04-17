@@ -12,10 +12,13 @@ import org.springframework.stereotype.Service;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
 
 @Service
 @RequiredArgsConstructor
-public class SecretKeySerde {
+public class EncryptionKeySerde {
 
     private final ObjectMapper mapper;
 
@@ -49,6 +52,20 @@ public class SecretKeySerde {
         );
     }
 
+    @SneakyThrows
+    public void writePrivateKey(PrivateKey value, OutputStream os) {
+        // Mapper may choose to close the stream if using stream interface, we don't want this
+        // as objects are small - this is ok.
+        os.write(mapper.writeValueAsBytes(new PrivateKeyContainer(value)));
+    }
+
+    @SneakyThrows
+    public PrivateKey readPrivateKey(InputStream is) {
+        PrivateKeyContainer container = mapper.readValue(is, PrivateKeyContainer.class);
+        KeyFactory factory = KeyFactory.getInstance(container.getAlgo());
+        return factory.generatePrivate(new PKCS8EncodedKeySpec(container.getEncoded()));
+    }
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -69,6 +86,20 @@ public class SecretKeySerde {
                     this.iv,
                     new SecretKeySpec(this.encoded, this.algo)
             );
+        }
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class PrivateKeyContainer {
+
+        private String algo;
+        private byte[] encoded;
+
+        public PrivateKeyContainer(PrivateKey key) {
+            this.algo = key.getAlgorithm();
+            this.encoded = new PKCS8EncodedKeySpec(key.getEncoded()).getEncoded();
         }
     }
 }
