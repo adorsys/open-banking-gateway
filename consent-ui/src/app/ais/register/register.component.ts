@@ -38,6 +38,7 @@ export class RegisterComponent implements OnInit {
     this.authId = this.activatedRoute.snapshot.parent.params.authId;
     this.redirectCode = this.activatedRoute.snapshot.queryParams.redirectCode;
   }
+
   onSubmit() {
     const credentials: PsuAuthBody = {
       login: this.loginForm.value.login,
