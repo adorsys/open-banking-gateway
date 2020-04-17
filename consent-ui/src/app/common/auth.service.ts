@@ -1,20 +1,19 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import { PsuAuthService } from '../api-auth'
+import { HttpClient } from '@angular/common/http';
+import { PsuAuthenticationService } from '../api-auth';
 import * as uuid from 'uuid';
-import {PsuAuthBody} from "../api-auth";
-import { SessionService } from "./session.service";
+import { PsuAuthBody } from '../api-auth';
+import { SessionService } from './session.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
   constructor(
     private http: HttpClient,
-    private psuAuthService: PsuAuthService,
+    private psuAuthService: PsuAuthenticationService,
     private sessionService: SessionService
-  ) {  }
+  ) {}
 
   public userLogin(credentials: PsuAuthBody) {
     const xRequestID = uuid.v4();
@@ -25,6 +24,6 @@ export class AuthService {
     return this.psuAuthService.registration(xRequestID, credentials, 'response');
   }
   public isLoggedIn() {
-      return this.sessionService.getXsrfToken() !== null;
+    return this.sessionService.getXsrfToken() !== null;
   }
 }
