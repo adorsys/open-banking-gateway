@@ -36,6 +36,13 @@ public class FintechSecureStorage {
                 );
     }
 
+    public void validatePassword(Fintech fintech, Supplier<char[]> password) {
+        this.userProfile().updateReadKeyPassword(
+                fintech.getUserIdAuth(password),
+                fintech.getUserIdAuth(password).getReadKeyPassword()
+        );
+    }
+
     @SneakyThrows
     public void psuAspspKeyToInbox(AuthSession authSession, PrivateKey psuAspspKey) {
         try (OutputStream os = datasafeServices.inboxService().write(
