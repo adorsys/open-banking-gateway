@@ -50,8 +50,8 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
             Supplier<char[]> fintechPassword
     ) {
         ConsentAccess access = accessProvider.forFintech(fintech, session, fintechPassword);
-        EncryptionServiceWithKey encryptionService = encryptionService(encryptionServiceProvider, futureAuthorizationSessionKey);
-        return doRegister(profile, access, encryptionService, futureAuthorizationSessionKey);
+        EncryptionServiceWithKey authorizationSessionEncService = encryptionService(encryptionServiceProvider, futureAuthorizationSessionKey);
+        return doRegister(profile, access, authorizationSessionEncService, futureAuthorizationSessionKey);
     }
 
     public RequestScoped registerForPsuSession(
@@ -64,7 +64,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
                 session.getPsu(),
                 session.getProtocol().getBankProfile().getBank(),
                 session.getParent(),
-                encryptionService // TODO this should be PSU public key based
+                encryptionService
         );
 
         return doRegister(session.getProtocol().getBankProfile(), access, encryptionService, key);

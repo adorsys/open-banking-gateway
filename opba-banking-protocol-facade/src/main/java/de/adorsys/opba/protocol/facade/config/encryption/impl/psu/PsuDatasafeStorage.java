@@ -34,9 +34,9 @@ public class PsuDatasafeStorage extends BaseDatasafeDbStorageService {
     }
 
     @Component
-    public static class PsuConsentsStorage extends DatasafeDataStorage<PsuAspspPrvKey> {
+    public static class PsuAspspPrvKeyStorage extends DatasafeDataStorage<PsuAspspPrvKey> {
 
-        public PsuConsentsStorage(PsuConsentRepository privates, EntityManager em) {
+        public PsuAspspPrvKeyStorage(PsuConsentRepository privates, EntityManager em) {
             super(
                     privates,
                     (parent, id) -> PsuAspspPrvKey.builder().id(id).psu(em.find(Psu.class, parent)).build(),
