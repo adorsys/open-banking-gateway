@@ -1,17 +1,14 @@
 package de.adorsys.opba.fintech.impl.config;
 
+import de.adorsys.opba.api.security.EnableSignRequestBasedApiSecurity;
 import de.adorsys.opba.api.security.service.RequestSigningService;
 import de.adorsys.opba.api.security.service.impl.RsaJwtsSigningServiceImpl;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 
 @Data
-@Configuration
-//@EnableSignRequestBasedApiSecurity
-@ComponentScan("de.adorsys.opba.api.security.service")
+@EnableSignRequestBasedApiSecurity
 @ConfigurationProperties("security")
 public class RequestSigningConfig {
     private String privateKey;
@@ -21,6 +18,5 @@ public class RequestSigningConfig {
     @Bean
     public RequestSigningService requestSigningService() {
         return new RsaJwtsSigningServiceImpl(privateKey, signIssuer, signSubject);
-
     }
 }
