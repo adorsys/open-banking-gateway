@@ -1,6 +1,5 @@
 package de.adorsys.opba.db.domain.entity;
 
-import de.adorsys.opba.db.domain.entity.fintech.FintechConsent;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.domain.generators.AssignedUuidGenerator;
@@ -16,7 +15,6 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -26,10 +24,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.Collection;
 import java.util.UUID;
 
 @Entity
@@ -60,9 +56,6 @@ public class Consent {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Psu psu;
-
-    @OneToMany(mappedBy = "consent", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<FintechConsent> consents;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
