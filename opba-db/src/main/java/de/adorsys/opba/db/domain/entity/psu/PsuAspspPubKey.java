@@ -1,4 +1,4 @@
-package de.adorsys.opba.db.domain.entity.fintech;
+package de.adorsys.opba.db.domain.entity.psu;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,13 +10,14 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -27,18 +28,18 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class FintechConsentSpec {
+public class PsuAspspPubKey {
 
     @Id
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private FintechUser user;
+    @OneToOne(mappedBy = "pubKey", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private PsuAspspPrvKey prvKey;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(nullable = false)
-    private byte[] encData;
+    private byte[] data;
 
     @CreatedDate
     private Instant createdAt;
