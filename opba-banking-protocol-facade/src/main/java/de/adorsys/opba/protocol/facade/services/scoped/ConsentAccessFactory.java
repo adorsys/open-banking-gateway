@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.facade.services.scoped;
 import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.Consent;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
-import de.adorsys.opba.db.domain.entity.fintech.FintechConsent;
+import de.adorsys.opba.db.domain.entity.fintech.FintechPsuAspspPrvKey;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
@@ -121,7 +121,7 @@ public class ConsentAccessFactory {
                 return Optional.empty();
             }
 
-            Optional<FintechConsent> fintechConsent = consents.findByFintechAndConsent(fintech, consent.get());
+            Optional<FintechPsuAspspPrvKey> fintechConsent = Optional.empty();//consents.findByFintechAndConsent(fintech, consent.get());
 
             if (!fintechConsent.isPresent()) {
                 return Optional.empty();

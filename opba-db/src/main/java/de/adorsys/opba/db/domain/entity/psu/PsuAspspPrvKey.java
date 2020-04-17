@@ -1,5 +1,6 @@
-package de.adorsys.opba.db.domain.entity.fintech;
+package de.adorsys.opba.db.domain.entity.psu;
 
+import de.adorsys.opba.db.domain.entity.Bank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,8 +16,11 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -27,18 +31,26 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class FintechConsentInbox {
+public class PsuAspspPrvKey {
 
     @Id
     private UUID id;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "id")
+    private PsuAspspPubKey pubKey;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private Fintech fintech;
+    private Psu psu;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private Bank aspsp;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(nullable = false)
-    private byte[] data;
+    private byte[] encData;
 
     @CreatedDate
     private Instant createdAt;
