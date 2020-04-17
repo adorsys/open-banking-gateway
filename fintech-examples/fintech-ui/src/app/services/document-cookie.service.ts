@@ -25,7 +25,6 @@ export class DocumentCookieService {
   }
 
   public delete(name: string): void {
-    // console.log('delete cookie ' + name);
     document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     this.find(name); // this call is important. due to date cookie will be deleted
   }

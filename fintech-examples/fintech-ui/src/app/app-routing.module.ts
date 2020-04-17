@@ -1,9 +1,10 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {LoginComponent} from './login/login.component';
-import {AuthGuard} from './guards/auth.guard';
-import {GuestGuard} from './guards/guest.guard';
-import {RedirectAfterConsentComponent} from './redirect-after-consent/redirect-after-consent.component';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { LoginComponent } from './login/login.component';
+import { AuthGuard } from './guards/auth.guard';
+import { GuestGuard } from './guards/guest.guard';
+import { RedirectAfterConsentComponent } from './redirect-after-consent/redirect-after-consent.component';
+import { RedirectAfterConsentDeniedComponent } from './redirect-after-consent-denied/redirect-after-consent-denied.component';
 
 const routes: Routes = [
   {
@@ -32,14 +33,18 @@ const routes: Routes = [
     component: RedirectAfterConsentComponent
   },
   {
+    path: 'redirect-after-consent-denied',
+    canActivate: [AuthGuard],
+    component: RedirectAfterConsentDeniedComponent
+  },
+  {
     path: '**',
     redirectTo: ''
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {enableTracing: false})],
+  imports: [RouterModule.forRoot(routes, { enableTracing: false, paramsInheritanceStrategy: 'always' })],
   exports: [RouterModule]
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}
