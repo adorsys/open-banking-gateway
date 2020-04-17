@@ -1,27 +1,24 @@
 package de.adorsys.opba.protocol.facade.config.encryption;
 
+import de.adorsys.opba.protocol.api.services.EncryptionService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.Synchronized;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.IvParameterSpec;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
 import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 public class EncryptionWithInitVectorOper {
 
-    private final EncSpec encSpec;
+    private final SymmetricEncSpec encSpec;
 
-    public EncryptionServiceWithKey encryptionService(String keyId, SecretKeyWithIv keyWithIv) {
-        return new Encryption(
+    public EncryptionService encryptionService(String keyId, SecretKeyWithIv keyWithIv) {
+        return new SymmeticEncryption(
                 keyId,
-                keyWithIv,
                 () -> encryption(keyWithIv),
                 () -> decryption(keyWithIv)
         );
@@ -58,38 +55,23 @@ public class EncryptionWithInitVectorOper {
         return new SecretKeyWithIv(iv, keyGen.generateKey());
     }
 
-    @SneakyThrows
-    public KeyPair generatePublicPrivateKey() {
-        byte[] iv = new byte[encSpec.getIvSize()];
-        SecureRandom random = new SecureRandom();
-        random.nextBytes(iv);
-
-        KeyPairGenerator keyGen = KeyPairGenerator.getInstance(encSpec.getKeyAlgo());
-        keyGen.initialize(encSpec.getLen());
-        return keyGen.genKeyPair();
-    }
-
     @RequiredArgsConstructor
-    public static class Encryption implements EncryptionServiceWithKey {
+    public static class SymmeticEncryption implements EncryptionService {
+
 
         @Getter
         private final String encryptionKeyId;
-
-        @Getter
-        private final SecretKeyWithIv key;
 
         private final Supplier<Cipher> encryption;
         private final Supplier<Cipher> decryption;
 
         @Override
-        @Synchronized("encryption")
         @SneakyThrows
         public byte[] encrypt(byte[] data) {
             return encryption.get().doFinal(data);
         }
 
         @Override
-        @Synchronized("decryption")
         @SneakyThrows
         public byte[] decrypt(byte[] data) {
             return decryption.get().doFinal(data);

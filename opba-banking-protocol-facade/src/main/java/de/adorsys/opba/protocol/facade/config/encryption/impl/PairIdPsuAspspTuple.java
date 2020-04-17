@@ -18,9 +18,16 @@ public class PairIdPsuAspspTuple {
 
     public PairIdPsuAspspTuple(String path) {
         String[] segments = path.split("/");
+        if (segments.length == 3) {
+            this.psuId = Long.parseLong(segments[0]);
+            this.pairId = UUID.fromString(segments[1]);
+            this.aspspId = Long.parseLong(segments[2]);
+            return;
+        }
+
+        this.pairId = null;
         this.psuId = Long.parseLong(segments[0]);
-        this.pairId = UUID.fromString(segments[1]);
-        this.aspspId = Long.parseLong(segments[2]);
+        this.aspspId = Long.parseLong(segments[1]);
     }
 
     public PairIdPsuAspspTuple(UUID pairId, AuthSession session) {
@@ -29,17 +36,31 @@ public class PairIdPsuAspspTuple {
         this.aspspId = session.getProtocol().getBankProfile().getBank().getId();
     }
 
-    /**
-     * Key ID is
-     * @return
-     */
+    public PairIdPsuAspspTuple(AuthSession session) {
+        this.pairId = null;
+        this.psuId = session.getPsu().getId();
+        this.aspspId = session.getProtocol().getBankProfile().getBank().getId();
+    }
+
     public String toDatasafePathWithoutPsuAndId() {
+        if (null != pairId) {
+            throw new IllegalArgumentException("Unexpected pair id");
+        }
         return String.valueOf(this.aspspId);
+    }
+
+    public String toDatasafePathWithoutPsu() {
+        return pairId.toString() + "/" + this.aspspId;
     }
 
     public static PsuAspspPrvKey buildPrvKey(String path, EntityManager em) {
         PairIdPsuAspspTuple tuple = new PairIdPsuAspspTuple(path);
+        if (null == tuple.getPairId()) {
+            throw new IllegalArgumentException("Pair id missing");
+        }
+
         return PsuAspspPrvKey.builder()
+                .id(tuple.getPairId())
                 .psu(em.find(Psu.class, tuple.getPsuId()))
                 .aspsp(em.find(Bank.class, tuple.getAspspId()))
                 .build();

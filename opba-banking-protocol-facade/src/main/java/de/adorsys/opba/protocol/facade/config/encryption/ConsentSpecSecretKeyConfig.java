@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Validated
 @Configuration
 @ConfigurationProperties("consent-spec.secret-key")
-public class ConsentSpecSecretKeyConfig implements EncSpec {
+public class ConsentSpecSecretKeyConfig implements SymmetricEncSpec {
 
     @NotBlank
     private String keyAlgo;

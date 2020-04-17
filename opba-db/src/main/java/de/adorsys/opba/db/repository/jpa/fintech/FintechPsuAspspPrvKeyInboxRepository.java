@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface FintechConsentInboxRepository extends CrudRepository<FintechPsuAspspPrvKeyInbox, UUID> {
+public interface FintechPsuAspspPrvKeyInboxRepository extends CrudRepository<FintechPsuAspspPrvKeyInbox, UUID> {
 
     Optional<FintechPsuAspspPrvKeyInbox> findByFintechIdAndPsuIdAndAspspId(long fintechId, long psuId, long aspspId);
 }
