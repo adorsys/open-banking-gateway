@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CustomValidators } from '../../utilities/customValidators';
-import {AuthService} from '../../common/auth.service';
-import {LoginComponent} from '../login/login.component';
-import {PsuAuthBody} from '../../api-auth';
+import { AuthService } from '../../common/auth.service';
+import { LoginComponent } from '../login/login.component';
+import { PsuAuthBody } from '../../api-auth';
 
 @Component({
   selector: 'consent-app-register',
@@ -19,32 +19,38 @@ export class RegisterComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
-    this.loginForm = this.formBuilder.group({
-      id: ['', Validators.required],
-      password: ['', Validators.required],
-      confirmPassword: ['', Validators.required]
-    }, { validators: CustomValidators.compareFields( 'password', 'confirmPassword' ) });
+    this.loginForm = this.formBuilder.group(
+      {
+        login: ['', Validators.required],
+        password: ['', Validators.required],
+        confirmPassword: ['', Validators.required]
+      },
+      { validators: CustomValidators.compareFields('password', 'confirmPassword') }
+    );
   }
-  onSubmit(){
+  onSubmit() {
     const credentials: PsuAuthBody = {
-      id: this.loginForm.value.id,
+      login: this.loginForm.value.login,
       password: this.loginForm.value.password
     };
     this.authService.userRegister(credentials).subscribe(
       res => {
-      if (res.status === 201 ) {
-        this.router.navigate( [LoginComponent.ROUTE], { relativeTo: this.route.parent  } );
+        if (res.status === 201) {
+          this.router.navigate([LoginComponent.ROUTE], { relativeTo: this.route.parent });
+        }
+      },
+      error => {
+        console.log(error);
       }
-    },
-      error => { console.log(error);
-    });
+    );
   }
 
-  get id() {
-    return this.loginForm.get('id');
+  get login() {
+    return this.loginForm.get('login');
   }
   get password() {
     return this.loginForm.get('password');
@@ -52,5 +58,4 @@ export class RegisterComponent implements OnInit {
   get confirmPassword() {
     return this.loginForm.get('confirmPassword');
   }
-
 }

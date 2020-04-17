@@ -6,14 +6,14 @@
         <div class="form-group">
           <label for="username">Username</label>
           <input
-            [ngClass]="{ 'is-invalid': id?.errors && id?.dirty }"
+            [ngClass]="{ 'is-invalid': login?.errors && login?.dirty }"
             autocomplete="off"
             class="form-control"
-            formControlName="id"
+            formControlName="login"
             id="username"
             type="text"
           />
-          <div *ngIf="id?.errors?.required && id?.dirty" class="invalid-feedback">
+          <div *ngIf="login?.errors?.required && login?.dirty" class="invalid-feedback">
             Username is Required
           </div>
         </div>
@@ -51,11 +51,9 @@
           </div>
         </div>
       </div>
-      <button
-        class="btn btn-primary btn-center btn-block mb-3"
-        type="submit"
-        [disabled]="!loginForm.valid"
-      >Register</button>
+      <button class="btn btn-primary btn-center btn-block mb-3" type="submit" [disabled]="!loginForm.valid">
+        Register
+      </button>
       <div>
         <a routerLink="../login">Login</a>
       </div>
