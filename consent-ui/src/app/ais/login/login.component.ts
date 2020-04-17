@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { SessionService } from '../../common/session.service';
 import { AuthService } from '../../common/auth.service';
+import { ApiHeaders } from "../../api/api.headers";
 
 @Component({
   selector: 'consent-app-login',
@@ -40,13 +41,9 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.authService.userLogin(this.loginForm.value).subscribe(
+    this.authService.userLoginForConsent(this.authId, this.redirectCode, this.loginForm.value).subscribe(
       res => {
-        // store xsrf-token in session-storage
-        const xsrfToken = res.body.xsrfToken;
-        this.sessionService.setXsrfToken(xsrfToken);
-        // navigate to transactions
-        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+        window.location.href = res.headers.get(ApiHeaders.LOCATION);
       },
       error => {
         console.log(error);

@@ -15,6 +15,10 @@ spring:
         physical-strategy: de.adorsys.opba.db.hibernate.PrefixAndSnakeCasePhysicalNamingStrategy
       # DDL is handled by Liquibase
       ddl-auto: validate
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
     open-in-view: false
   liquibase:
     enabled: true
@@ -113,3 +117,9 @@ consent-spec:
     cipher-algo: AES/GCM/NoPadding
     iv-size: 12
     len: 128
+
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
