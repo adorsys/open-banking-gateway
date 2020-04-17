@@ -3,16 +3,16 @@ server:
   controller:
     sessioncookie:
       secure: false
-      maxAge: 300
+      maxAge: 30
       httpOnly: true
       path: /
       sameSite: Strict
 
     redirectcookie:
       secure: false
-      maxAge: 1800
-      httpOnly: false
-      path: /v1/{auth-id}/fromConsentOk
+      maxAge: 300
+      httpOnly: true
+      path: /v1/{auth-id}
       sameSite: Strict
 
       # sameSite: Strict|Lax|none

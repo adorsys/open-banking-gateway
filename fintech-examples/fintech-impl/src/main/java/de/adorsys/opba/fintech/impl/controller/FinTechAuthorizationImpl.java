@@ -5,6 +5,7 @@ import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.api.model.generated.UserProfile;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAuthorizationApi;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
+import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
     private final AuthorizeService authorizeService;
     private final RedirectHandlerService redirectHandlerService;
     private final RestRequestContext restRequestContext;
+    private final CookieConfigProperties cookieConfigProperties;
 
 
     @Override
@@ -44,7 +46,8 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
             }
             response.setUserProfile(userProfile);
 
-            HttpHeaders responseHeaders = authorizeService.fillWithAuthorizationHeaders(optionalUserEntity.get(), xsrfToken);
+            HttpHeaders responseHeaders = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), optionalUserEntity.get(),
+                    xsrfToken, cookieConfigProperties.getSessioncookie());
             return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
