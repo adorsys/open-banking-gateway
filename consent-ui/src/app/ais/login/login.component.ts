@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, ActivatedRouteSnapshot, Router} from '@angular/router';
-import {SessionService} from '../../common/session.service';
-import {AuthService} from '../../common/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { SessionService } from '../../common/session.service';
+import { AuthService } from '../../common/auth.service';
 
 @Component({
   selector: 'consent-app-login',
@@ -22,40 +22,42 @@ export class LoginComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private sessionService: SessionService,
-    private authService: AuthService,
-  ) { }
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      id: ['', Validators.required],
+      login: ['', Validators.required],
       password: ['', Validators.required]
     });
 
     this.route = this.activatedRoute.snapshot;
     this.authId = this.route.parent.params.authId;
     this.redirectCode = this.route.queryParams.redirectCode;
-    if (this.redirectCode) { this.sessionService.setRedirectCode(this.authId, this.redirectCode); }
+    if (this.redirectCode) {
+      this.sessionService.setRedirectCode(this.authId, this.redirectCode);
+    }
   }
 
-  onSubmit(){
-    this.authService.userLogin(this.loginForm.value)
-      .subscribe(
-        res => {
-          // store xsrf-token in session-storage
-          const xsrfToken = res.body.xsrfToken;
-          this.sessionService.setXsrfToken(xsrfToken);
-          // navigate to transactions
-          this.router.navigate(['../'],
-            { relativeTo: this.activatedRoute });
-        },
-          error => { console.log(error) } );
+  onSubmit() {
+    this.authService.userLogin(this.loginForm.value).subscribe(
+      res => {
+        // store xsrf-token in session-storage
+        const xsrfToken = res.body.xsrfToken;
+        this.sessionService.setXsrfToken(xsrfToken);
+        // navigate to transactions
+        this.router.navigate(['../'], { relativeTo: this.activatedRoute });
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
 
-  get id() {
-    return this.loginForm.get('id');
+  get login() {
+    return this.loginForm.get('login');
   }
   get password() {
     return this.loginForm.get('password');
   }
-
 }
