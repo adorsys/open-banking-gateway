@@ -59,9 +59,9 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private boolean operationDateTimeNotWithinLimit(OffsetDateTime dateTime) {
-        return OffsetDateTime.now().plus(requestTimeLimit).isBefore(dateTime)
-                       || OffsetDateTime.now().minus(requestTimeLimit).isAfter(dateTime);
+    private boolean operationDateTimeNotWithinLimit(OffsetDateTime operationTime) {
+        OffsetDateTime now = OffsetDateTime.now();
+        return now.plus(requestTimeLimit).isBefore(operationTime)
+                       || now.minus(requestTimeLimit).isAfter(operationTime);
     }
-
 }
