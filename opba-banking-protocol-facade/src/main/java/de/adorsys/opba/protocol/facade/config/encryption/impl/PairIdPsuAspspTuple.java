@@ -16,6 +16,7 @@ public class PairIdPsuAspspTuple {
     private final long psuId;
     private final long aspspId;
 
+    @SuppressWarnings("checkstyle:MagicNumber") // Magic segment count
     public PairIdPsuAspspTuple(String path) {
         String[] segments = path.split("/");
         if (segments.length == 3) {
