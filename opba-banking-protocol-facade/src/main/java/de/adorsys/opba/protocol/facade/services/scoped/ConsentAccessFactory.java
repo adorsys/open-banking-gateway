@@ -5,22 +5,26 @@ import de.adorsys.opba.db.domain.entity.Consent;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.fintech.FintechPsuAspspPrvKey;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
+import de.adorsys.opba.db.domain.entity.psu.PsuAspspPrvKey;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
-import de.adorsys.opba.db.repository.jpa.fintech.FintechConsentRepository;
+import de.adorsys.opba.db.repository.jpa.fintech.FintechPsuAspspPrvKeyRepository;
+import de.adorsys.opba.db.repository.jpa.psu.PsuAspspPrvKeyRepository;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
 import de.adorsys.opba.protocol.facade.config.encryption.PsuConsentEncryptionServiceProvider;
-import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import java.security.PrivateKey;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -28,18 +32,22 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ConsentAccessFactory {
 
+    private final EntityManager entityManager;
+    private final PsuAspspPrvKeyRepository prvKeyRepository;
     private final FintechSecureStorage fintechVault;
-    private final PsuConsentEncryptionServiceProvider encryptionServiceProvider;
-    private final FintechConsentRepository fintechConsentRepository;
+    private final PsuConsentEncryptionServiceProvider psuEncryption;
+    private final FintechPsuAspspPrvKeyRepository fintechPsuAspspPrvKeyRepository;
     private final ConsentRepository consentRepository;
 
-    public ConsentAccess forPsuAndAspsp(Psu psu, Bank aspsp, ServiceSession session, EncryptionService encryptionService) {
-        return new PsuConsentAccess(psu, aspsp, encryptionService, session, consentRepository);
+    public ConsentAccess forPsuAndAspsp(Psu psu, Bank aspsp, ServiceSession session) {
+        PsuAspspPrvKey prvKey = prvKeyRepository.findByPsuIdAndAspspId(psu.getId(), aspsp.getId())
+                .orElseThrow(() -> new IllegalStateException("No public key for: " + psu.getId()));
+        return new PsuConsentAccess(psu, aspsp, psuEncryption.forPublicKey(prvKey.getId(), prvKey.getPubKey().getKey()), session, consentRepository);
     }
 
     public ConsentAccess forFintech(Fintech fintech, ServiceSession session, Supplier<char[]> fintechPassword) {
         return new FintechConsentAccess(
-                fintech, encryptionServiceProvider, fintechConsentRepository, fintechVault, consentRepository, session, fintechPassword
+                fintech, psuEncryption, fintechPsuAspspPrvKeyRepository, fintechVault, consentRepository, entityManager, session.getId(), fintechPassword
         );
     }
 
@@ -92,10 +100,11 @@ public class ConsentAccessFactory {
 
         private final Fintech fintech;
         private final PsuConsentEncryptionServiceProvider encryptionService;
-        private final FintechConsentRepository consents;
+        private final FintechPsuAspspPrvKeyRepository keys;
         private final FintechSecureStorage fintechVault;
-        private final ConsentRepository consentRepository;
-        private final ServiceSession serviceSession;
+        private final ConsentRepository consents;
+        private final EntityManager entityManager;
+        private final UUID serviceSessionId;
         private final Supplier<char[]> fintechPassword;
 
 
@@ -116,20 +125,26 @@ public class ConsentAccessFactory {
 
         @Override
         public Optional<ProtocolFacingConsent> findByCurrentServiceSession() {
-            Optional<Consent> consent = consentRepository.findByServiceSessionId(serviceSession.getId());
-            if (!consent.isPresent()) {
+            ServiceSession serviceSession = entityManager.find(ServiceSession.class, serviceSessionId);
+            if (null == serviceSession || null == serviceSession.getAuthSession()) {
                 return Optional.empty();
             }
 
-            Optional<FintechPsuAspspPrvKey> fintechConsent = Optional.empty(); //consents.findByFintechAndConsent(fintech, consent.get());
-
-            if (!fintechConsent.isPresent()) {
+            Optional<FintechPsuAspspPrvKey> psuAspspPrivateKey = keys.findByFintechIdAndPsuIdAndAspspId(
+                    fintech.getId(),
+                    serviceSession.getAuthSession().getPsu().getId(),
+                    serviceSession.getAuthSession().getProtocol().getBankProfile().getBank().getId()
+            );
+            Optional<Consent> consent = consents.findByServiceSessionId(serviceSession.getId());
+            if (!psuAspspPrivateKey.isPresent() || !consent.isPresent()) {
                 return Optional.empty();
             }
 
-            SecretKeyWithIv psuAspspKey = null; //fintechVault.psuAspspKeyFromPrivate(fintechConsent.get().getFintech(), consent.get(), fintechPassword);
-
-            return Optional.of(new ProtocolFacingConsentImpl(consent.get(), encryptionService.forSecretKey(psuAspspKey)));
+            PrivateKey psuAspspKey = fintechVault.psuAspspKeyFromPrivate(serviceSession, fintech, fintechPassword);
+            return Optional.of(new ProtocolFacingConsentImpl(
+                    consent.get(),
+                    encryptionService.forPrivateKey(psuAspspPrivateKey.get().getId(), psuAspspKey))
+            );
         }
 
         @Override

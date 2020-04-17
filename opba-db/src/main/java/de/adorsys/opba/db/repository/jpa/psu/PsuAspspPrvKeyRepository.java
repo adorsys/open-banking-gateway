@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface PsuConsentRepository extends CrudRepository<PsuAspspPrvKey, UUID> {
+public interface PsuAspspPrvKeyRepository extends CrudRepository<PsuAspspPrvKey, UUID> {
 
     Optional<PsuAspspPrvKey> findByPsuIdAndAspspId(long psuId, long aspspId);
 }

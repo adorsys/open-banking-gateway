@@ -42,7 +42,7 @@ public class PsuSecureStorage {
     }
 
     @SneakyThrows
-    public PrivateKey getOrCreateKeyFromPrivateForAspsp(Supplier<char[]> password, AuthSession session, BiConsumer<UUID, PublicKey> newPublicKeyIfCreated) {
+    public PrivateKey getOrCreateKeyFromPrivateForAspsp(Supplier<char[]> password, AuthSession session, BiConsumer<UUID, PublicKey> storePublicKeyIfNeeded) {
         try (InputStream is = datasafeServices.privateService().read(
                 ReadRequest.forDefaultPrivate(
                         session.getPsu().getUserIdAuth(password),
@@ -51,22 +51,22 @@ public class PsuSecureStorage {
         )) {
             return serde.readPrivateKey(is);
         } catch (BaseDatasafeDbStorageService.DbStorageEntityNotFoundException ex) {
-            return generateAndSaveAspspSecretKey(password, session, newPublicKeyIfCreated);
+            return generateAndSaveAspspSecretKey(password, session, storePublicKeyIfNeeded);
         }
     }
 
     @SneakyThrows
-    private PrivateKey generateAndSaveAspspSecretKey(Supplier<char[]> password, AuthSession session, BiConsumer<UUID, PublicKey> newPublicKeyIfCreated) {
+    private PrivateKey generateAndSaveAspspSecretKey(Supplier<char[]> password, AuthSession session, BiConsumer<UUID, PublicKey> storePublicKeyIfNeeded) {
         UUID keyId = UUID.randomUUID();
         KeyPair key = encryptionServiceProvider.generateKeyPair();
         try (OutputStream os = datasafeServices.privateService().write(
                 WriteRequest.forDefaultPrivate(
                         session.getPsu().getUserIdAuth(password),
-                        new PairIdPsuAspspTuple(keyId, session).toDatasafePathWithoutPsuAndId()))
+                        new PairIdPsuAspspTuple(keyId, session).toDatasafePathWithoutPsu()))
         ) {
             serde.writePrivateKey(key.getPrivate(), os);
         }
-        newPublicKeyIfCreated.accept(keyId, key.getPublic());
+        storePublicKeyIfNeeded.accept(keyId, key.getPublic());
         return key.getPrivate();
     }
 }
