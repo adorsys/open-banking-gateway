@@ -86,7 +86,6 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
         psuAuthService.createPsuIfNotExist(psuAuthDto.getLogin(), psuAuthDto.getPassword());
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        // FIXME - this is incorrect as there should be user binding after registration, but currently keeping as is
         responseHeaders.add(LOCATION, authConfig.getRedirect().getLoginPage());
         return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
     }
