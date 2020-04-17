@@ -4,7 +4,7 @@ import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
-import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
+import de.adorsys.opba.fintech.impl.properties.CookieConfigPropertiesSpecific;
 import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +28,9 @@ import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_ID;
 @RequiredArgsConstructor
 public class AuthorizeService {
     private static final String UNIVERSAL_PASSWORD = "1234";
+    private static final String AUTH_ID_VARIABLE = "\\{auth-id}";
 
     private final UserRepository userRepository;
-    private final CookieConfigProperties cookieConfigProperties;
     private final RestRequestContext restRequestContext;
 
     /**
@@ -67,23 +67,38 @@ public class AuthorizeService {
         return Optional.of(sessionEntity);
     }
 
-    public HttpHeaders fillWithAuthorizationHeaders(SessionEntity sessionEntity, String xsrfToken) {
+    @Transactional
+    public HttpHeaders modifySessionEntityAndCreateNewAuthHeader(String xRequestID, SessionEntity sessionEntity, String xsrfToken, CookieConfigPropertiesSpecific cookieProps) {
+        sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(sessionEntity.getFintechUserId(), xsrfToken));
+
+        log.info("xsrf token is replaced with new token:    {}", xsrfToken);
+        log.info("sessioncookie is replaced with new cookie:{}", sessionEntity.getSessionCookieValue());
+        log.info("persist session entity with new session cookie");
+        userRepository.save(sessionEntity);
+
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(X_REQUEST_ID, restRequestContext.getRequestId());
-        log.debug("set response cookie attributes to {}", cookieConfigProperties.toString());
+        responseHeaders.set(X_REQUEST_ID, xRequestID);
+        log.debug("set response cookie attributes to {}", cookieProps.toString());
+
+        String path = cookieProps.getPath();
+        if (path.matches("(.*)" + AUTH_ID_VARIABLE + "(.*)")) {
+            path = path.replaceAll(AUTH_ID_VARIABLE, sessionEntity.getAuthId());
+            log.info("path contains auth id, so path will be {}", path);
+        }
 
         String sessionCookieString = ResponseCookie.from(Consts.COOKIE_SESSION_COOKIE_NAME, sessionEntity.getSessionCookieValue())
-                .httpOnly(cookieConfigProperties.getSessioncookie().isHttpOnly())
-                .sameSite(cookieConfigProperties.getSessioncookie().getSameSite())
-                .secure(cookieConfigProperties.getSessioncookie().isSecure())
-                .path(cookieConfigProperties.getSessioncookie().getPath())
-                .maxAge(cookieConfigProperties.getSessioncookie().getMaxAge())
+                .httpOnly(cookieProps.isHttpOnly())
+                .sameSite(cookieProps.getSameSite())
+                .secure(cookieProps.isSecure())
+                .path(path)
+                .maxAge(cookieProps.getMaxAge())
                 .build().toString();
         responseHeaders.add(HttpHeaders.SET_COOKIE, sessionCookieString);
-        responseHeaders.add(Consts.HEADER_XSRF_TOKEN, xsrfToken);
+        responseHeaders.add(Consts.HEADER_XSRF_TOKEN, xsrfToken + "; maxAge=" + cookieProps.getMaxAge());
         return responseHeaders;
     }
 
+    @Transactional
     public SessionEntity updateUserSession(SessionEntity sessionEntity) {
         return userRepository.save(sessionEntity);
     }
@@ -119,8 +134,14 @@ public class AuthorizeService {
         String sessionCookieValue = restRequestContext.getSessionCookieValue();
         SessionEntity.validateSessionCookieValue(sessionCookieValue, restRequestContext.getXsrfTokenHeaderField());
 
-        // now make sure, session is known to server
+        // now check that this sessionCookie is really known in DB
         Optional<SessionEntity> optionalUserEntity = userRepository.findBySessionCookieValue(restRequestContext.getSessionCookieValue());
+        if (!optionalUserEntity.isPresent()) {
+            log.error("session cookie might be old. However it is not found in DB and thus not valid {} ", restRequestContext.getSessionCookieValue());
+            return false;
+        }
+
+        // now make sure, session is known to server
         return optionalUserEntity.get().getSessionCookieValue().equals(sessionCookieValue);
     }
 
