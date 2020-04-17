@@ -39,16 +39,9 @@ public class Fintech {
     @Basic(fetch = FetchType.LAZY)
     private byte[] pubKeys;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    private byte[] apiKeys;
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fintech")
     private Collection<FintechInbox> inbox;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fintech")
     private Collection<FintechPrivate> privateStore;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "fintech")
-    private Collection<FintechRequest> fintechRequests;
 }
