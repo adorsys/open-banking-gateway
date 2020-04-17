@@ -10,13 +10,14 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import java.time.Instant;
 import java.util.UUID;
@@ -33,7 +34,9 @@ public class PsuAspspPubKey {
     @Id
     private UUID id;
 
-    @OneToOne(mappedBy = "pubKey", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "id")
     private PsuAspspPrvKey prvKey;
 
     @Lob

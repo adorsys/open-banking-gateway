@@ -3,8 +3,8 @@ package de.adorsys.opba.protocol.facade.services.authorization;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
-import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechUserSecureStorage;
-import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechConsentSpecSecureStorage;
+import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import de.adorsys.opba.protocol.facade.services.authorization.internal.psuauth.PsuFintechAssociationService;
 import lombok.Getter;
 import lombok.NonNull;
@@ -19,7 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PsuLoginForAisService {
 
-    private final SecretKeySerde serde;
+    private final EncryptionKeySerde serde;
     private final PsuRepository psus;
     private final PsuFintechAssociationService associationService;
     private final AuthorizationSessionRepository authRepository;
@@ -30,7 +30,7 @@ public class PsuLoginForAisService {
                 .orElseThrow(() -> new IllegalStateException("Missing authorization session: " + authorizationId));
         session.setPsu(psus.findByLogin(login).orElseThrow(() -> new IllegalStateException("No PSU found: " + login)));
         associationService.sharePsuAspspSecretKeyWithFintech(password, session);
-        FintechUserSecureStorage.FinTechUserInboxData association = associationService.associatePsuAspspWithFintechUser(session, authorizationPassword);
+        FintechConsentSpecSecureStorage.FinTechUserInboxData association = associationService.associatePsuAspspWithFintechUser(session, authorizationPassword);
         authRepository.save(session);
 
         return new Outcome(

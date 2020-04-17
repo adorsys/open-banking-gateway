@@ -7,7 +7,7 @@ import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
-import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
+import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ public class ServiceContextProviderForAspsp extends ServiceContextProviderForFin
 
     public ServiceContextProviderForAspsp(AuthorizationSessionRepository authSessions,
                                           FintechRepository fintechRepository,
-                                          SecretKeySerde serde,
+                                          EncryptionKeySerde serde,
                                           ServiceSessionRepository serviceSessions,
                                           BankProfileJpaRepository bankProfileJpaRepository,
                                           ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider,

@@ -14,7 +14,7 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
-import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
+import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -38,7 +38,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     private final BankProfileJpaRepository profileJpaRepository;
     private final ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider;
     private final RequestScopedProvider provider;
-    private final SecretKeySerde secretKeySerde;
+    private final EncryptionKeySerde encryptionKeySerde;
     private final ServiceSessionRepository serviceSessions;
 
     @Override
@@ -147,7 +147,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         return provider.registerForPsuSession(
                 session,
                 consentAuthorizationEncryptionServiceProvider,
-                secretKeySerde.fromString(request.getFacadeServiceable().getAuthorizationKey())
+                encryptionKeySerde.fromString(request.getFacadeServiceable().getAuthorizationKey())
         );
     }
 

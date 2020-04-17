@@ -1,25 +1,28 @@
 package de.adorsys.opba.db.domain.entity.psu;
 
 import de.adorsys.opba.db.domain.entity.Bank;
+import de.adorsys.opba.db.domain.generators.AssignedUuidGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import java.time.Instant;
 import java.util.UUID;
@@ -34,11 +37,17 @@ import java.util.UUID;
 public class PsuAspspPrvKey {
 
     @Id
+    @GenericGenerator(
+            name = AssignedUuidGenerator.ASSIGNED_ID_GENERATOR,
+            strategy = AssignedUuidGenerator.ASSIGNED_ID_STRATEGY
+    )
+    @GeneratedValue(
+            generator = AssignedUuidGenerator.ASSIGNED_ID_GENERATOR,
+            strategy = GenerationType.AUTO
+    )
     private UUID id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    @JoinColumn(name = "id")
+    @OneToOne(mappedBy = "prvKey", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private PsuAspspPubKey pubKey;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

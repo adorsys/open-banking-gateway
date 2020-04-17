@@ -8,15 +8,16 @@ import de.adorsys.opba.db.repository.jpa.fintech.FintechUserRepository;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.BaseDatasafeDbStorageService;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.DatasafeDataStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.DatasafeMetadataStorage;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.FintechUserAuthSessionTuple;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import java.net.URI;
 
 @Component
-public class FintechUserDatasafeStorage extends BaseDatasafeDbStorageService {
+public class FintechConsentSpecDatasafeStorage extends BaseDatasafeDbStorageService {
 
-    public FintechUserDatasafeStorage(
+    public FintechConsentSpecDatasafeStorage(
             DatasafeDataStorage<FintechConsentSpec> datasafeInbox,
             FintechUserPubKeysStorage datasafeKeystore,
             FintechUserKeystoreStorage datasafePub
@@ -36,10 +37,11 @@ public class FintechUserDatasafeStorage extends BaseDatasafeDbStorageService {
     @Component
     public static class FintechConsentSpecStorage extends DatasafeDataStorage<FintechConsentSpec> {
 
-        public FintechConsentSpecStorage(FintechConsentSpecRepository inboxes, EntityManager em) {
+        public FintechConsentSpecStorage(FintechConsentSpecRepository specs, EntityManager em) {
             super(
-                    inboxes,
-                    (parent, id) -> FintechConsentSpec.builder().id(id).user(em.find(FintechUser.class, parent)).build(),
+                    specs,
+                    path -> FintechUserAuthSessionTuple.buildFintechConsentSpec(path, em),
+                    path -> specs.findById(new FintechUserAuthSessionTuple(path).getAuthSessionId()),
                     FintechConsentSpec::getEncData,
                     FintechConsentSpec::setEncData
             );

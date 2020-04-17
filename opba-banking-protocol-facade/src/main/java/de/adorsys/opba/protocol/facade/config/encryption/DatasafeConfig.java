@@ -11,13 +11,13 @@ import de.adorsys.datasafe.types.api.context.BaseOverridesRegistry;
 import de.adorsys.datasafe.types.api.context.overrides.OverridesRegistry;
 import de.adorsys.datasafe.types.api.resource.Uri;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.BaseDatasafeDbStorageService;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechConsentSpecDatasafeStorage;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechConsentSpecSecureStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechDatasafeStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
-import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechUserDatasafeStorage;
-import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechUserSecureStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuDatasafeStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
-import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
+import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import lombok.RequiredArgsConstructor;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,12 +37,12 @@ public class DatasafeConfig {
     private final ObjectMapper mapper;
     private final FintechDatasafeStorage fintechStorage;
     private final PsuDatasafeStorage psuStorage;
-    private final FintechUserDatasafeStorage fintechUserStorage;
+    private final FintechConsentSpecDatasafeStorage fintechUserStorage;
 
     @Bean
     public FintechSecureStorage fintechDatasafeServices(
             @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX + ".fintech}") String fintechReadStorePass,
-            SecretKeySerde serde
+            EncryptionKeySerde serde
     ) {
         DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig(fintechReadStorePass);
         OverridesRegistry overridesRegistry = new BaseOverridesRegistry();
@@ -63,7 +63,7 @@ public class DatasafeConfig {
     public PsuSecureStorage psuDatasafeServices(
             @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX + ".psu}") String psuReadStorePass,
             PsuConsentEncryptionServiceProvider encryptionServiceProvider,
-            SecretKeySerde serde
+            EncryptionKeySerde serde
     ) {
         DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig(psuReadStorePass);
         OverridesRegistry overridesRegistry = new BaseOverridesRegistry();
@@ -82,14 +82,14 @@ public class DatasafeConfig {
     }
 
     @Bean
-    public FintechUserSecureStorage fintechUserDatasafeServices(
+    public FintechConsentSpecSecureStorage fintechUserDatasafeServices(
             @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX + ".fintech-user}") String psuReadStorePass
     ) {
         DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig(psuReadStorePass);
         OverridesRegistry overridesRegistry = new BaseOverridesRegistry();
         ProfileRetrievalServiceImplRuntimeDelegatable.overrideWith(overridesRegistry, BaseDatasafeDbStorageService.DbTableUserRetrieval::new);
         PathEncryptionImplRuntimeDelegatable.overrideWith(overridesRegistry, NoOpPathEncryptionImplOverridden::new);
-        return new FintechUserSecureStorage(
+        return new FintechConsentSpecSecureStorage(
                 DaggerDefaultDatasafeServices.builder()
                         .config(config)
                         .storage(fintechUserStorage)

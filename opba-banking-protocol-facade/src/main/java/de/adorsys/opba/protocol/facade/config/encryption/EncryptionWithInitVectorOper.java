@@ -8,6 +8,8 @@ import lombok.Synchronized;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.IvParameterSpec;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
 import java.util.function.Supplier;
 
@@ -54,6 +56,17 @@ public class EncryptionWithInitVectorOper {
         KeyGenerator keyGen = KeyGenerator.getInstance(encSpec.getKeyAlgo());
         keyGen.init(encSpec.getLen());
         return new SecretKeyWithIv(iv, keyGen.generateKey());
+    }
+
+    @SneakyThrows
+    public KeyPair generatePublicPrivateKey() {
+        byte[] iv = new byte[encSpec.getIvSize()];
+        SecureRandom random = new SecureRandom();
+        random.nextBytes(iv);
+
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance(encSpec.getKeyAlgo());
+        keyGen.initialize(encSpec.getLen());
+        return keyGen.genKeyPair();
     }
 
     @RequiredArgsConstructor
