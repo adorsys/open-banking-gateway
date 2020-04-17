@@ -105,11 +105,10 @@ cookie:
   path: /
   same-site: Strict
 psu:
-  secret-key:
-    key-algo: AES
-    cipher-algo: AES/GCM/NoPadding
-    iv-size: 12
-    len: 128
+  key-pair:
+    cipher-algo: AES256_CBC
+    key-algo: RSA
+    len: 2048
 consent-spec:
   secret-key:
     key-algo: AES

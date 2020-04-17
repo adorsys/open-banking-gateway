@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.facade.config.encryption;
 
-public interface EncSpec {
+public interface SymmetricEncSpec {
 
     String getKeyAlgo();
     String getCipherAlgo();
