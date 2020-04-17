@@ -1,8 +1,6 @@
 package de.adorsys.opba.protocol.facade.services.psu;
 
 import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
-import de.adorsys.datasafe.types.api.actions.ReadRequest;
-import de.adorsys.datasafe.types.api.actions.WriteRequest;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.psu.PsuSecureStorage;
@@ -10,23 +8,19 @@ import de.adorsys.opba.protocol.facade.exceptions.PsuAuthenticationException;
 import de.adorsys.opba.protocol.facade.exceptions.PsuAuthorizationException;
 import de.adorsys.opba.protocol.facade.exceptions.PsuRegisterException;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PsuAuthService {
 
-    public static final String AUTHENTICATION_CHECKER = "63f510c1-8315-4b7e-8f24-0a2e6a135ea4";
     private final PsuRepository psuRepository;
     private final PsuSecureStorage psuSecureStorage;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Psu tryAuthenticateUser(String login, String password) throws PsuAuthorizationException {
         Optional<Psu> psu = psuRepository.findByLogin(login);
         if (!psu.isPresent()) {
@@ -37,7 +31,6 @@ public class PsuAuthService {
         return psu.get();
     }
 
-    @SneakyThrows
     @Transactional
     public Psu createPsuIfNotExist(String login, String password) {
         Optional<Psu> psu = psuRepository.findByLogin(login);
@@ -46,20 +39,12 @@ public class PsuAuthService {
         }
         Psu newPsu = psuRepository.save(Psu.builder().login(login).build());
         psuSecureStorage.registerPsu(newPsu, password::toCharArray);
-        authenticateInDatasafe(newPsu.getUserIdAuth(password::toCharArray));
         return newPsu;
-    }
-
-    private void authenticateInDatasafe(UserIDAuth idAuth) throws IOException {
-        try (OutputStream os = psuSecureStorage.privateService()
-                .write(WriteRequest.forDefaultPrivate(idAuth, AUTHENTICATION_CHECKER))) {
-            os.write(new byte[0]);
-        }
     }
 
     private void enableDatasafeAuthentication(UserIDAuth idAuth) throws PsuAuthorizationException {
         try {
-            psuSecureStorage.privateService().read(ReadRequest.forDefaultPrivate(idAuth, AUTHENTICATION_CHECKER));
+            psuSecureStorage.userProfile().updateReadKeyPassword(idAuth, idAuth.getReadKeyPassword());
         } catch (Exception e) {
             throw new PsuAuthorizationException(e.getMessage(), e);
         }

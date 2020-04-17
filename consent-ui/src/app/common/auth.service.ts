@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { PsuAuthenticationService } from '../api-auth';
+import { PsuAuthBody, PsuAuthenticationAndConsentApprovalService, PsuAuthenticationService } from '../api-auth';
 import * as uuid from 'uuid';
-import { PsuAuthBody } from '../api-auth';
 import { SessionService } from './session.service';
 
 @Injectable({
@@ -12,8 +11,14 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private psuAuthService: PsuAuthenticationService,
+    private psuAuthForConsentApproval: PsuAuthenticationAndConsentApprovalService,
     private sessionService: SessionService
   ) {}
+
+  public userLoginForConsent(authorizationId: string, redirectCode: string, credentials: PsuAuthBody) {
+    const xRequestID = uuid.v4();
+    return this.psuAuthForConsentApproval.loginForApproval(xRequestID, authorizationId, redirectCode, credentials, 'response');
+  }
 
   public userLogin(credentials: PsuAuthBody) {
     const xRequestID = uuid.v4();
