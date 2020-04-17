@@ -3,6 +3,8 @@ package de.adorsys.opba.protocol.facade.config.encryption;
 import com.google.common.hash.Hashing;
 import lombok.RequiredArgsConstructor;
 
+import java.security.KeyPair;
+
 @RequiredArgsConstructor
 public abstract class AuthorizationEncryptionServiceProvider {
 
@@ -15,5 +17,9 @@ public abstract class AuthorizationEncryptionServiceProvider {
 
     public SecretKeyWithIv generateKey() {
         return oper.generateKey();
+    }
+
+    public KeyPair generateKeyPair() {
+        return oper.generatePublicPrivateKey();
     }
 }
