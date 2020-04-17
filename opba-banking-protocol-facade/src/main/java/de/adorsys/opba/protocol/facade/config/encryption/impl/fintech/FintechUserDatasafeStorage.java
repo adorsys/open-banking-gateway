@@ -40,8 +40,8 @@ public class FintechUserDatasafeStorage extends BaseDatasafeDbStorageService {
             super(
                     inboxes,
                     (parent, id) -> FintechConsentSpec.builder().id(id).user(em.find(FintechUser.class, parent)).build(),
-                    FintechConsentSpec::getData,
-                    FintechConsentSpec::setData
+                    FintechConsentSpec::getEncData,
+                    FintechConsentSpec::setEncData
             );
         }
     }
