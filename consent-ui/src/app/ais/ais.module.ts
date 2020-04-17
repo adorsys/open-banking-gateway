@@ -25,8 +25,8 @@ import { ToAspspRedirectionComponent } from './to-aspsp-page/to-aspsp-redirectio
 import { ConsentInfoComponent } from './components/consent-info/consent-info.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import {ApiModule} from "../api";
-import {ApiModule as AuthApiModule} from "../api-auth";
+//import {ApiModule} from "../api";
+//import {ApiModule as AuthApiModule} from "../api-auth";
 
 @NgModule({
   declarations: [
@@ -53,6 +53,6 @@ import {ApiModule as AuthApiModule} from "../api-auth";
     LoginComponent,
     RegisterComponent
   ],
-  imports: [CommonModule, AisRoutingModule, ReactiveFormsModule, ApiModule, AuthApiModule]
+  imports: [CommonModule, AisRoutingModule, ReactiveFormsModule]
 })
 export class AisModule {}

@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class SessionService {
-  private authId: string;
 
   constructor() { }
 
@@ -46,27 +45,18 @@ export class SessionService {
     );
   }
 
-  public setXsrfToken(authorizationId: string, token: string) {
-    console.log('setToken: ', token);
-    this.authId = authorizationId;
-    sessionStorage.setItem( authorizationId + Session.XSRF_TOKEN, token);
+  public setXsrfToken(token: string) {
+    sessionStorage.setItem( Session.XSRF_TOKEN, token);
   }
-  public getXsrfToken(authorizationId: string) {
-    sessionStorage.getItem( authorizationId + Session.XSRF_TOKEN);
+  public getXsrfToken() {
+    sessionStorage.getItem(Session.XSRF_TOKEN);
   }
-  public isLoggedIn() {
-    if (this.authId) {
-      return this.getXsrfToken(this.authId) !== null;
-    } else {
-      return false;
-    }
 
-  }
 }
 
 enum Session {
   REDIRECT_CODE = ':REDIRECT_CODE',
   CONSENT_STATE = ':CONSENT_STATE',
   CONSENT_OBJECT = ':CONSENT_OBJECT',
-  XSRF_TOKEN = ':XSRF_TOKEN'
+  XSRF_TOKEN = 'XSRF_TOKEN'
 }
