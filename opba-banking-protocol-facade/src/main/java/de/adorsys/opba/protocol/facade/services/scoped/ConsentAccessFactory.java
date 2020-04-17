@@ -121,14 +121,13 @@ public class ConsentAccessFactory {
                 return Optional.empty();
             }
 
-            Optional<FintechPsuAspspPrvKey> fintechConsent = Optional.empty();//consents.findByFintechAndConsent(fintech, consent.get());
+            Optional<FintechPsuAspspPrvKey> fintechConsent = Optional.empty(); //consents.findByFintechAndConsent(fintech, consent.get());
 
             if (!fintechConsent.isPresent()) {
                 return Optional.empty();
             }
 
-            SecretKeyWithIv psuAspspKey = fintechVault
-                    .psuAspspKeyFromPrivate(fintechConsent.get().getFintech(), consent.get(), fintechPassword);
+            SecretKeyWithIv psuAspspKey = null; //fintechVault.psuAspspKeyFromPrivate(fintechConsent.get().getFintech(), consent.get(), fintechPassword);
 
             return Optional.of(new ProtocolFacingConsentImpl(consent.get(), encryptionService.forSecretKey(psuAspspKey)));
         }

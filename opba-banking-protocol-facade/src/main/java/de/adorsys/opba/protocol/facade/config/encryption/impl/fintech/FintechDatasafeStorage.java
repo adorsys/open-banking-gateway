@@ -10,6 +10,7 @@ import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.BaseDatasafeDbStorageService;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.DatasafeDataStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.DatasafeMetadataStorage;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.FintechPsuAspspTuple;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -41,30 +42,45 @@ public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
     @Component
     public static class FintechPsuAspspPrvKeyStorage extends DatasafeDataStorage<FintechPsuAspspPrvKey> {
 
-        public FintechPsuAspspPrvKeyStorage(FintechConsentRepository privates, EntityManager em) {
+        public FintechPsuAspspPrvKeyStorage(FintechConsentRepository consents, EntityManager em) {
             super(
-                    privates,
-                    (parent, id) -> null, //FintechPsuAspspPrvKey.builder().consent(em.find(Consent.class, id)).fintech(em.find(Fintech.class, parent)).build(),
+                    consents,
+                    path -> FintechPsuAspspTuple.buildFintechPrvKey(path, em),
+                    path -> find(consents, path),
                     FintechPsuAspspPrvKey::getEncData,
                     FintechPsuAspspPrvKey::setEncData
             );
         }
 
-        @Override
-        protected Optional<FintechPsuAspspPrvKey> find(String id) {
-            return Optional.empty(); //((FintechConsentRepository) repository).findByFintechIdAndConsentId(parentId(id), uuid(id));
+        private static Optional<FintechPsuAspspPrvKey> find(FintechConsentRepository consents, String path) {
+            FintechPsuAspspTuple psuAspspTuple = new FintechPsuAspspTuple(path);
+            return consents.findByFintechIdAndPsuIdAndAspspId(
+                    psuAspspTuple.getFintechId(),
+                    psuAspspTuple.getPsuId(),
+                    psuAspspTuple.getAspspId()
+            );
         }
     }
 
     @Component
     public static class FintechPsuAspspPrvKeyInboxStorage extends DatasafeDataStorage<FintechPsuAspspPrvKeyInbox> {
 
-        public FintechPsuAspspPrvKeyInboxStorage(FintechConsentInboxRepository inboxes, EntityManager em) {
+        public FintechPsuAspspPrvKeyInboxStorage(FintechConsentInboxRepository inboxConsents, EntityManager em) {
             super(
-                    inboxes,
-                    (parent, id) -> FintechPsuAspspPrvKeyInbox.builder().id(id).fintech(em.find(Fintech.class, parent)).build(),
+                    inboxConsents,
+                    path -> FintechPsuAspspTuple.buildFintechInboxPrvKey(path, em),
+                    path -> find(inboxConsents, path),
                     FintechPsuAspspPrvKeyInbox::getEncData,
                     FintechPsuAspspPrvKeyInbox::setEncData
+            );
+        }
+
+        private static Optional<FintechPsuAspspPrvKeyInbox> find(FintechConsentInboxRepository consents, String path) {
+            FintechPsuAspspTuple psuAspspTuple = new FintechPsuAspspTuple(path);
+            return consents.findByFintechIdAndPsuIdAndAspspId(
+                    psuAspspTuple.getFintechId(),
+                    psuAspspTuple.getPsuId(),
+                    psuAspspTuple.getAspspId()
             );
         }
     }

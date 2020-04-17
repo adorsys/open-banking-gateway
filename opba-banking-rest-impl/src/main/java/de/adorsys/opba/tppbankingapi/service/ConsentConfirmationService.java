@@ -40,7 +40,8 @@ public class ConsentConfirmationService {
                 finTechPassword::toCharArray
         );
 
-        vault.psuAspspKeyToPrivate(session.get(), psuAspspKey, consent.get(), finTechPassword::toCharArray);
-        return true;
+        throw new IllegalArgumentException("NOT IMPL");
+        // vault.psuAspspKeyToPrivate(session.get(), psuAspspKey, consent.get(), finTechPassword::toCharArray);
+        //return true;
     }
 }

@@ -8,7 +8,8 @@ import de.adorsys.datasafe.types.api.actions.ReadRequest;
 import de.adorsys.datasafe.types.api.actions.WriteRequest;
 import de.adorsys.opba.db.domain.entity.fintech.FintechUser;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
-import de.adorsys.opba.protocol.facade.services.SecretKeySerde;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.FintechUserAuthSessionTuple;
+import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ import java.net.URI;
 import java.util.function.Supplier;
 
 @RequiredArgsConstructor
-public class FintechUserSecureStorage {
+public class FintechConsentSpecSecureStorage {
 
     @Delegate
     private final DefaultDatasafeServices datasafeServices;
@@ -42,7 +43,9 @@ public class FintechUserSecureStorage {
     @SneakyThrows
     public void toInboxForAuth(AuthSession authSession, FinTechUserInboxData data) {
         try (OutputStream os = datasafeServices.inboxService().write(
-                WriteRequest.forDefaultPublic(ImmutableSet.of(authSession.getFintechUser().getUserId()), authSession.getId().toString()))
+                WriteRequest.forDefaultPublic(
+                        ImmutableSet.of(authSession.getFintechUser().getUserId()),
+                        new FintechUserAuthSessionTuple(authSession).toDatasafePathWithoutParent()))
         ) {
             os.write(mapper.writeValueAsBytes(data));
         }
@@ -51,7 +54,9 @@ public class FintechUserSecureStorage {
     @SneakyThrows
     public FinTechUserInboxData fromInboxForAuth(AuthSession authSession, Supplier<char[]> password) {
         try (InputStream is = datasafeServices.inboxService().read(
-                ReadRequest.forDefaultPrivate(authSession.getFintechUser().getUserIdAuth(password), authSession.getId().toString()))
+                ReadRequest.forDefaultPrivate(
+                        authSession.getFintechUser().getUserIdAuth(password),
+                        new FintechUserAuthSessionTuple(authSession).toDatasafePathWithoutParent()))
         ) {
             return mapper.readValue(is, FinTechUserInboxData.class);
         }
@@ -66,7 +71,7 @@ public class FintechUserSecureStorage {
         private URI afterPsuIdentifiedRedirectTo;
 
         @NonNull
-        private SecretKeySerde.SecretKeyWithIvContainer protocolKey;
+        private EncryptionKeySerde.SecretKeyWithIvContainer protocolKey;
 
         private Object requirements;
     }
