@@ -128,7 +128,6 @@
             </column>
             <column name="keystore" type="BLOB"/>
             <column name="pub_keys" type="BLOB"/>
-            <column name="api_keys" type="BLOB"/>
         </createTable>
         <createSequence sequenceName="fintech_id_sequence" incrementBy="50"/>
         <createTable tableName="${table-prefix}psu">
@@ -190,24 +189,6 @@
         <createSequence sequenceName="fintech_private_id_sequence" incrementBy="50"/>
         <addForeignKeyConstraint constraintName="fk_fintech_private_fintech"
                                  baseTableName="${table-prefix}fintech_private"
-                                 baseColumnNames="fintech_id"
-                                 referencedTableName="${table-prefix}fintech"
-                                 referencedColumnNames="id"/>
-
-        <createTable tableName="${table-prefix}fintech_request">
-            <column name="id" type="BIGINT">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="fintech_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="x_request_id" type="UUID">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-        <createSequence sequenceName="fintech-request_id_sequence" incrementBy="50"/>
-        <addForeignKeyConstraint constraintName="fk_fintech_request_fintech"
-                                 baseTableName="${table-prefix}fintech_request"
                                  baseColumnNames="fintech_id"
                                  referencedTableName="${table-prefix}fintech"
                                  referencedColumnNames="id"/>
