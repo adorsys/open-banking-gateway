@@ -8,29 +8,16 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.SandboxServers;
 import io.restassured.RestAssured;
 import io.restassured.config.RedirectConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URI;
-import java.time.Duration;
-
-import static io.restassured.RestAssured.config;
-import static io.restassured.config.RedirectConfig.redirectConfig;
-
 @JGivenStage
 @Slf4j
 public class FintechServer<SELF extends FintechServer<SELF>> extends SandboxServers<SELF> {
     private static final String ASPSP_PROFILE_BASE_URI = "http://localhost:20010";
-
-    @Value("${test.webdriver.timeout}")
-    private Duration timeout;
 
     @LocalServerPort
     private int serverPort;
@@ -47,14 +34,6 @@ public class FintechServer<SELF extends FintechServer<SELF>> extends SandboxServ
         RestAssured.baseURI = fintechUri;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         return self();
-    }
-
-    private void waitForPageLoadAndUrlEndsWithPath(WebDriver driver, String urlEndsWithPath) {
-        new WebDriverWait(driver, timeout.getSeconds())
-                .until(wd ->
-                        URI.create(driver.getPageSource()).getPath().endsWith(urlEndsWithPath)
-                                && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
-                );
     }
 
     public SELF enabled_embedded_sandbox_mode() {
@@ -110,7 +89,6 @@ public class FintechServer<SELF extends FintechServer<SELF>> extends SandboxServ
     public SELF rest_assured_points_to_opba_server(String opbaServerUri) {
         RestAssured.baseURI = opbaServerUri;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
-        config = config().redirect(redirectConfig().followRedirects(false));
 
         return self();
     }
