@@ -15,6 +15,7 @@ import { TransactionsConsentReviewComponent } from './entry-page/initiation/tran
 import { ToAspspRedirectionComponent } from './to-aspsp-page/to-aspsp-redirection.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { ConsentSharingComponent } from './entry-page/initiation/consent-sharing/consent-sharing.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,7 @@ const routes: Routes = [
     component: EntryPageComponent,
     children: [
       { path: '', component: ConsentInitiateComponent },
+      { path: ConsentSharingComponent.ROUTE, component: ConsentSharingComponent },
       {
         path: EntryPageAccountsComponent.ROUTE,
         children: [
@@ -52,7 +54,7 @@ const routes: Routes = [
       },
       {
         path: ReportScaResultComponent.ROUTE,
-        component: ReportScaResultComponent
+        component: ReportScaResultComponent,
       },
       {
         path: 'report-sca-result',
