@@ -1,9 +1,8 @@
-import {FormGroup} from "@angular/forms";
+import { FormGroup } from '@angular/forms';
 
 export class CustomValidators {
-
   static readonly compareFields: any = (controlName: string, matchingControlName: string) => {
-    return  (formGroup: FormGroup) => {
+    return (formGroup: FormGroup) => {
       const control = formGroup.controls[controlName];
       const matchingControl = formGroup.controls[matchingControlName];
 
@@ -12,11 +11,10 @@ export class CustomValidators {
         return;
       }
       if (control.value !== matchingControl.value) {
-        matchingControl.setErrors( { compareFields: { valid: false, msg: 'Passwords are not identical.' } } );
+        matchingControl.setErrors({ compareFields: { valid: false, msg: 'Passwords are not identical.' } });
       } else {
         matchingControl.setErrors(null);
       }
     };
-  }
-
+  };
 }
