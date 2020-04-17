@@ -15,4 +15,11 @@ $BROWSER_VIEWPOINT: 100vh;
   button {
     margin-bottom: 10px;
   }
+
+  .icons {
+    &--big {
+      width: 4rem;
+      height: 4rem;
+    }
+  }
 }
