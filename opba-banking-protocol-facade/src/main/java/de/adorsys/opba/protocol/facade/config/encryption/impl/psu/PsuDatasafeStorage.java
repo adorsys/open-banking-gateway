@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.facade.config.encryption.impl.psu;
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.domain.entity.psu.PsuAspspPrvKey;
-import de.adorsys.opba.db.repository.jpa.psu.PsuConsentRepository;
+import de.adorsys.opba.db.repository.jpa.psu.PsuAspspPrvKeyRepository;
 import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.BaseDatasafeDbStorageService;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.DatasafeDataStorage;
@@ -38,7 +38,7 @@ public class PsuDatasafeStorage extends BaseDatasafeDbStorageService {
     @Component
     public static class PsuAspspPrvKeyStorage extends DatasafeDataStorage<PsuAspspPrvKey> {
 
-        public PsuAspspPrvKeyStorage(PsuConsentRepository consents, EntityManager em) {
+        public PsuAspspPrvKeyStorage(PsuAspspPrvKeyRepository consents, EntityManager em) {
             super(
                     consents,
                     path -> PairIdPsuAspspTuple.buildPrvKey(path, em),
@@ -48,7 +48,7 @@ public class PsuDatasafeStorage extends BaseDatasafeDbStorageService {
             );
         }
 
-        private static Optional<PsuAspspPrvKey> find(PsuConsentRepository consents, String path) {
+        private static Optional<PsuAspspPrvKey> find(PsuAspspPrvKeyRepository consents, String path) {
             PairIdPsuAspspTuple psuAspspTuple = new PairIdPsuAspspTuple(path);
             return consents.findByPsuIdAndAspspId(
                     psuAspspTuple.getPsuId(),

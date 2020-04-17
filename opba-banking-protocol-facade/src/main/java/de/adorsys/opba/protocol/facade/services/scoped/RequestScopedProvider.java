@@ -11,8 +11,7 @@ import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.transientdata.TransientStorage;
-import de.adorsys.opba.protocol.facade.config.encryption.AuthorizationEncryptionServiceProvider;
-import de.adorsys.opba.protocol.facade.config.encryption.EncryptionServiceWithKey;
+import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -45,26 +44,25 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
             Fintech fintech,
             BankProfile profile,
             ServiceSession session,
-            AuthorizationEncryptionServiceProvider encryptionServiceProvider,
+            ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider,
             SecretKeyWithIv futureAuthorizationSessionKey,
             Supplier<char[]> fintechPassword
     ) {
         ConsentAccess access = accessProvider.forFintech(fintech, session, fintechPassword);
-        EncryptionServiceWithKey authorizationSessionEncService = encryptionService(encryptionServiceProvider, futureAuthorizationSessionKey);
+        EncryptionService authorizationSessionEncService = encryptionService(encryptionServiceProvider, futureAuthorizationSessionKey);
         return doRegister(profile, access, authorizationSessionEncService, futureAuthorizationSessionKey);
     }
 
     public RequestScoped registerForPsuSession(
             AuthSession session,
-            AuthorizationEncryptionServiceProvider encryptionServiceProvider,
+            ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider,
             SecretKeyWithIv key
     ) {
-        EncryptionServiceWithKey encryptionService = encryptionService(encryptionServiceProvider, key);
+        EncryptionService encryptionService = encryptionService(encryptionServiceProvider, key);
         ConsentAccess access = accessProvider.forPsuAndAspsp(
                 session.getPsu(),
                 session.getProtocol().getBankProfile().getBank(),
-                session.getParent(),
-                encryptionService
+                session.getParent()
         );
 
         return doRegister(session.getProtocol().getBankProfile(), access, encryptionService, key);
@@ -79,7 +77,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         return memoizedProviders.get(keyId);
     }
 
-    private EncryptionServiceWithKey encryptionService(AuthorizationEncryptionServiceProvider encryptionServiceProvider, SecretKeyWithIv key) {
+    private EncryptionService encryptionService(ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider, SecretKeyWithIv key) {
         return encryptionServiceProvider.forSecretKey(key);
     }
 
@@ -87,7 +85,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
     private RequestScoped doRegister(
             BankProfile bank,
             ConsentAccess access,
-            EncryptionServiceWithKey encryptionService,
+            EncryptionService encryptionService,
             SecretKeyWithIv key) {
         InternalRequestScoped requestScoped = new InternalRequestScoped(
                 encryptionService.getEncryptionKeyId(),

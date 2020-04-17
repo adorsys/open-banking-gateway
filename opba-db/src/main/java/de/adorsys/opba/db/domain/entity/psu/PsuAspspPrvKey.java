@@ -1,6 +1,7 @@
 package de.adorsys.opba.db.domain.entity.psu;
 
 import de.adorsys.opba.db.domain.entity.Bank;
+import de.adorsys.opba.db.domain.entity.IdAssignable;
 import de.adorsys.opba.db.domain.generators.AssignedUuidGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,7 +35,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class PsuAspspPrvKey {
+public class PsuAspspPrvKey implements IdAssignable<UUID> {
 
     @Id
     @GenericGenerator(

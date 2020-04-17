@@ -20,6 +20,8 @@ import java.security.spec.PKCS8EncodedKeySpec;
 @RequiredArgsConstructor
 public class EncryptionKeySerde {
 
+    private static final String PKCS_8 = "PKCS#8";
+
     private final ObjectMapper mapper;
 
     @SneakyThrows
@@ -62,6 +64,9 @@ public class EncryptionKeySerde {
     @SneakyThrows
     public PrivateKey readPrivateKey(InputStream is) {
         PrivateKeyContainer container = mapper.readValue(is, PrivateKeyContainer.class);
+        if (!PKCS_8.equals(container.getFormat())) {
+            throw new IllegalArgumentException("Bad key format");
+        }
         KeyFactory factory = KeyFactory.getInstance(container.getAlgo());
         return factory.generatePrivate(new PKCS8EncodedKeySpec(container.getEncoded()));
     }
@@ -95,11 +100,17 @@ public class EncryptionKeySerde {
     public static class PrivateKeyContainer {
 
         private String algo;
+        private String format;
         private byte[] encoded;
 
         public PrivateKeyContainer(PrivateKey key) {
+            if (!PKCS_8.equals(key.getFormat())) {
+                throw new IllegalArgumentException("Bad key format");
+            }
+
             this.algo = key.getAlgorithm();
-            this.encoded = new PKCS8EncodedKeySpec(key.getEncoded()).getEncoded();
+            this.format = key.getFormat();
+            this.encoded = key.getEncoded();
         }
     }
 }
