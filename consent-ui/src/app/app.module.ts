@@ -16,7 +16,7 @@ import { BASE_PATH as BASE_PATH_AUTH } from './api-auth';
   providers: [
     { provide: BASE_PATH, useValue: environment.API_BASE_PATH },
     { provide: BASE_PATH_AUTH, useValue: environment.API_BASE_PATH }
-    ],
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
