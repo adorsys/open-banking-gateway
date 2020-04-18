@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 @Slf4j
-public class BankRepositoryImpl {
+public class BankSearchRepositoryImpl {
 
     @Value("${bank-search.query}")
     private String query;

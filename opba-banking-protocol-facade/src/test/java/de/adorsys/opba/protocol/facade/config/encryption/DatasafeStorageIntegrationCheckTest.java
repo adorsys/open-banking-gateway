@@ -3,8 +3,10 @@ package de.adorsys.opba.protocol.facade.config.encryption;
 import com.google.common.io.ByteStreams;
 import de.adorsys.datasafe.encrypiton.api.types.UserIDAuth;
 import de.adorsys.datasafe.types.api.actions.ReadRequest;
+import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
+import de.adorsys.opba.db.repository.jpa.BankRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
 import de.adorsys.opba.protocol.facade.config.ApplicationTest;
@@ -46,6 +48,9 @@ class DatasafeStorageIntegrationCheckTest {
     private FintechRepository fintechs;
 
     @Autowired
+    private BankRepository banks;
+
+    @Autowired
     private PsuSecureStorage psuSecureStorage;
 
     @Autowired
@@ -54,11 +59,13 @@ class DatasafeStorageIntegrationCheckTest {
     @Test
     @SneakyThrows
     void testFintechDatasafeIntegration() {
-        Fintech fintech = fintechs.save(Fintech.builder().build());
+        Fintech fintech = fintechs.save(Fintech.builder().globalId("fintech").build());
+        Bank bank = banks.findAll().get(0);
+        Psu psu = psus.save(Psu.builder().login("login-1").build());
         UserIDAuth idAuth = new UserIDAuth(fintech.getId().toString(), PASSWORD);
         fintechSecureStorage.registerFintech(fintech, PASSWORD);
 
-        String inboxFile = UUID.randomUUID().toString();
+        String inboxFile = fintech.getId() + "/" + psu.getId() + "/" + bank.getId().toString();
         try (OutputStream os = fintechSecureStorage.inboxService().write(forDefaultPublic(Collections.singleton(idAuth.getUserID()), inboxFile))) {
             os.write(DATA_TO_STORE.getBytes(StandardCharsets.UTF_8));
         }
@@ -68,7 +75,7 @@ class DatasafeStorageIntegrationCheckTest {
             message = ByteStreams.toByteArray(is);
         }
 
-        String privateFile = UUID.randomUUID().toString();
+        String privateFile = fintech.getId() + "/" + psu.getId() + "/" + bank.getId().toString();
         try (OutputStream os = fintechSecureStorage.privateService().write(forDefaultPrivate(idAuth, privateFile))) {
             os.write(message);
         }
@@ -81,12 +88,15 @@ class DatasafeStorageIntegrationCheckTest {
     @Test
     @SneakyThrows
     void testPsuDatasafeIntegration() {
-        Psu psu = psus.save(Psu.builder().login("login").build());
+        Psu psu = psus.save(Psu.builder().login("login-2").build());
+        Bank bank = banks.findAll().get(0);
         UserIDAuth idAuth = new UserIDAuth(psu.getId().toString(), PASSWORD);
         psuSecureStorage.registerPsu(psu, PASSWORD);
 
-        String privateFile = UUID.randomUUID().toString();
-        try (OutputStream os = psuSecureStorage.privateService().write(forDefaultPrivate(idAuth, privateFile))) {
+        String privateFile = UUID.randomUUID().toString() + "/" + bank.getId().toString();
+        try (OutputStream os = psuSecureStorage.privateService().write(
+                forDefaultPrivate(idAuth, privateFile))
+        ) {
             os.write(DATA_TO_STORE.getBytes(StandardCharsets.UTF_8));
         }
 

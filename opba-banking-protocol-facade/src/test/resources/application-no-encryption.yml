@@ -1,8 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:tc:postgresql:12:////open_banking?TC_DAEMON=true&TC_INITSCRIPT=init.sql
-    username: postgres
-    password: docker
-    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-bank-search:
-  query:
