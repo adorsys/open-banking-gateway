@@ -39,13 +39,33 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     @Value("${test.webdriver.timeout}")
     private Duration timeout;
 
-    public SELF user_anton_brueckner_opens_opba_consent_auth_entry_page(WebDriver driver) {
+    public SELF user_anton_brueckner_opens_opba_consent_login_page(WebDriver driver) {
         driver.get(redirectUriToGetUserParams);
+        waitForPageLoadAndUrlContains(driver, "/login");
         return self();
     }
 
-    public SELF user_max_musterman_opens_opba_consent_auth_entry_page(WebDriver driver) {
+    public SELF user_max_musterman_opens_opba_consent_login_page(WebDriver driver) {
         driver.get(redirectUriToGetUserParams);
+        waitForPageLoadAndUrlContains(driver, "/login");
+        return self();
+    }
+
+    public SELF user_sees_register_button_clicks_it_navigate_to_register_fills_form_and_registers(WebDriver driver, String username, String password) {
+        clickOnButton(driver, By.id("register"));
+        waitForPageLoadAndUrlEndsWithPath(driver, "/register");
+        sendText(driver, By.id("username"), username);
+        sendText(driver, By.id("password"), password);
+        sendText(driver, By.id("confirmPassword"), password);
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_logs_in_to_opba(WebDriver driver, String username, String password) {
+        waitForPageLoadAndUrlContains(driver, "/login");
+        sendText(driver, By.id("username"), username);
+        sendText(driver, By.id("password"), password);
+        clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
