@@ -13,7 +13,7 @@ import { PsuAuthBody } from '../../api-auth';
 })
 export class RegisterComponent implements OnInit {
   public static ROUTE = 'register';
-  loginForm: FormGroup;
+  registerForm: FormGroup;
 
   private authId: string;
   private redirectCode: string;
@@ -26,7 +26,7 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loginForm = this.formBuilder.group(
+    this.registerForm = this.formBuilder.group(
       {
         login: ['', Validators.required],
         password: ['', Validators.required],
@@ -41,8 +41,8 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     const credentials: PsuAuthBody = {
-      login: this.loginForm.value.login,
-      password: this.loginForm.value.password
+      login: this.registerForm.value.login,
+      password: this.registerForm.value.password
     };
     this.authService.userRegister(credentials).subscribe(
       res => {
@@ -60,12 +60,12 @@ export class RegisterComponent implements OnInit {
   }
 
   get login() {
-    return this.loginForm.get('login');
+    return this.registerForm.get('login');
   }
   get password() {
-    return this.loginForm.get('password');
+    return this.registerForm.get('password');
   }
   get confirmPassword() {
-    return this.loginForm.get('confirmPassword');
+    return this.registerForm.get('confirmPassword');
   }
 }
