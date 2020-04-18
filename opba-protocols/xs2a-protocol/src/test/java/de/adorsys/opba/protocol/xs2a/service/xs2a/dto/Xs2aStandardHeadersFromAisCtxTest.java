@@ -31,6 +31,6 @@ public class Xs2aStandardHeadersFromAisCtxTest {
         Xs2aStandardHeaders actual = mapper.map(mappingInput);
 
         // Then
-        assertThat(expected).isEqualToComparingFieldByFieldRecursively(actual);
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
     }
 }

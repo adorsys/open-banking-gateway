@@ -1,8 +1,15 @@
 spring:
   datasource:
-    url: jdbc:tc:postgresql:12:////open_banking?TC_DAEMON=true&?TC_TMPFS=/testtmpfs:rw&TC_INITSCRIPT=init.sql
+    url: jdbc:tc:postgresql:12:////open_banking?TC_DAEMON=true&?TC_TMPFS=/testtmpfs:rw
     username: postgres
     password: docker
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    hikari:
+      schema: public
+  # OPBA-DB must be unavailable here, so overriding naming strategy
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
 bank-search:
   query:
