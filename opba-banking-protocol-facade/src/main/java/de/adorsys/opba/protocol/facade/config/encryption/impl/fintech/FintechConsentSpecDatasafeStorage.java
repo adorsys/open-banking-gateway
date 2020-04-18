@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.facade.config.encryption.datasafe.DatasafeDataSt
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.DatasafeMetadataStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.FintechUserAuthSessionTuple;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.support.TransactionOperations;
 
 import javax.persistence.EntityManager;
 import java.net.URI;
@@ -37,13 +38,14 @@ public class FintechConsentSpecDatasafeStorage extends BaseDatasafeDbStorageServ
     @Component
     public static class FintechConsentSpecStorage extends DatasafeDataStorage<FintechConsentSpec> {
 
-        public FintechConsentSpecStorage(FintechConsentSpecRepository specs, EntityManager em) {
+        public FintechConsentSpecStorage(FintechConsentSpecRepository specs, EntityManager em, TransactionOperations txOper) {
             super(
                     specs,
                     path -> FintechUserAuthSessionTuple.buildFintechConsentSpec(path, em),
                     path -> specs.findById(new FintechUserAuthSessionTuple(path).getAuthSessionId()),
                     FintechConsentSpec::getEncData,
-                    FintechConsentSpec::setEncData
+                    FintechConsentSpec::setEncData,
+                    txOper
             );
         }
     }

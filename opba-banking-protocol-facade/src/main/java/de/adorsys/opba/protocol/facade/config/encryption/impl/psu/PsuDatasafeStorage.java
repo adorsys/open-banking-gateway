@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.facade.config.encryption.datasafe.DatasafeDataSt
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.DatasafeMetadataStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.PairIdPsuAspspTuple;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.support.TransactionOperations;
 
 import javax.persistence.EntityManager;
 import java.net.URI;
@@ -38,13 +39,14 @@ public class PsuDatasafeStorage extends BaseDatasafeDbStorageService {
     @Component
     public static class PsuAspspPrvKeyStorage extends DatasafeDataStorage<PsuAspspPrvKey> {
 
-        public PsuAspspPrvKeyStorage(PsuAspspPrvKeyRepository consents, EntityManager em) {
+        public PsuAspspPrvKeyStorage(PsuAspspPrvKeyRepository privateKeys, EntityManager em, TransactionOperations txOper) {
             super(
-                    consents,
+                    privateKeys,
                     path -> PairIdPsuAspspTuple.buildPrvKey(path, em),
-                    path -> find(consents, path),
+                    path -> find(privateKeys, path),
                     PsuAspspPrvKey::getEncData,
-                    PsuAspspPrvKey::setEncData
+                    PsuAspspPrvKey::setEncData,
+                    txOper
             );
         }
 
