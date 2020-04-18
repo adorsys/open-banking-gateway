@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.facade.config.encryption.datasafe;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionOperations;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -16,30 +16,31 @@ public abstract class DatasafeDataStorage<T> implements BaseDatasafeDbStorageSer
     private final Function<String, Optional<T>> find;
     private final Function<T, byte[]> getData;
     private final BiConsumer<T, byte[]> setData;
+    private final TransactionOperations txOper;
 
     @Override
-    @Transactional
     public void update(String path, byte[] data) {
-        Optional<T> entry = find.apply(path);
-        if (entry.isPresent()) {
-            T toSave = entry.get();
-            setData.accept(toSave, data);
-            return;
-        }
+        txOper.execute(callback -> {
+            Optional<T> entry = find.apply(path);
+            if (entry.isPresent()) {
+                T toSave = entry.get();
+                setData.accept(toSave, data);
+                return null;
+            }
 
-        T newEntry = factory.apply(path);
-        setData.accept(newEntry, data);
-        repository.save(newEntry);
+            T newEntry = factory.apply(path);
+            setData.accept(newEntry, data);
+            repository.save(newEntry);
+            return null;
+        });
     }
 
     @Override
-    @Transactional
     public Optional<byte[]> read(String path) {
-        return find.apply(path).map(getData);
+        return txOper.execute(callback -> find.apply(path).map(getData));
     }
 
     @Override
-    @Transactional
     public void delete(String path) {
         throw new IllegalStateException("Not allowed");
     }

@@ -92,17 +92,24 @@ class WiremockE2EStressXs2aProtocolTest extends SpringScenarioTest<MockServers, 
                 (WiremockE2EStressXs2aProtocolTest) context.getTestInstance().get();
 
             instance.beforeEach();
-
             if ("testEmbeddedAccountListConcurrent".equals(context.getTestMethod().get().getName())) {
                 instance.given()
                     .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
                     .rest_assured_points_to_opba_server();
+
+                // register FinTech to avoid normal concurrent failures - if FinTech doesn't exist some requests
+                // trying to register it can fail because only one can succeed
+                instance.when().fintech_calls_list_accounts_for_anton_brueckner();
             }
 
             if ("testEmbeddedTransactionListConcurrent".equals(context.getTestMethod().get().getName())) {
                 instance.given()
                     .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
                     .rest_assured_points_to_opba_server();
+
+                // register FinTech to avoid normal concurrent failures - if FinTech doesn't exist some requests
+                // trying to register it can fail because only one can succeed
+                instance.when().fintech_calls_list_accounts_for_anton_brueckner();
             }
         }
     }
