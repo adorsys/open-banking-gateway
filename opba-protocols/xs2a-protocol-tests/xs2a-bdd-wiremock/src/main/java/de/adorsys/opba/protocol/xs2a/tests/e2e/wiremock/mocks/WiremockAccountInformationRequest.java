@@ -22,6 +22,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withHeadersWithoutIpAddress;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.COMPUTE_PSU_IP_ADDRESS;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP_ADDRESS;
@@ -47,6 +48,8 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
 
         this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
         ExtractableResponse<Response> response = RestAssured
+                .given()
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .when()
                     .get(redirectOkUri)
                 .then()
@@ -92,17 +95,18 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         String body = readResource("restrecord/tpp-ui-input/params/unknown-user-all-accounts-consent.json");
 
         ExtractableResponse<Response> response = RestAssured
-                                                         .given()
-                                                             .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                                                             .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                                                             .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                                                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                             .body(body)
-                                                         .when()
-                                                            .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
-                                                         .then()
-                                                             .statusCode(HttpStatus.ACCEPTED.value())
-                                                             .extract();
+                 .given()
+                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                     .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                     .contentType(MediaType.APPLICATION_JSON_VALUE)
+                     .body(body)
+                 .when()
+                    .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
+                 .then()
+                     .statusCode(HttpStatus.ACCEPTED.value())
+                     .extract();
 
         assertThat(response.header(LOCATION)).contains("ais").contains("redirectCode").doesNotContain("consent-result");
 
@@ -135,17 +139,18 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
 
     public SELF user_provided_initial_parameters_in_body_to_list_accounts_with_all_accounts_consent_with_ip_address_check(String body) {
         ExtractableResponse<Response> response = RestAssured
-                                                         .given()
-                                                            .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                                                            .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                                                             .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                                                            .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                            .body(body)
-                                                         .when()
-                                                            .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
-                                                         .then()
-                                                            .statusCode(HttpStatus.ACCEPTED.value())
-                                                            .extract();
+                 .given()
+                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(body)
+                 .when()
+                    .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
+                 .then()
+                    .statusCode(HttpStatus.ACCEPTED.value())
+                    .extract();
 
         LoggedRequest loggedRequest = await().atMost(Durations.TEN_SECONDS)
                   .until(() ->
@@ -168,16 +173,17 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-wrong-ibans.json");
 
         ExtractableResponse<Response> response = RestAssured
-                                                         .given()
-                                                             .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                                                             .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                                                             .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                                                             .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                             .body(body)
-                                                         .when()
-                                                            .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
-                                                         .then().statusCode(HttpStatus.SERVICE_UNAVAILABLE.value())
-                                                         .extract();
+                 .given()
+                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                     .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                     .contentType(MediaType.APPLICATION_JSON_VALUE)
+                     .body(body)
+                 .when()
+                    .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
+                 .then().statusCode(HttpStatus.SERVICE_UNAVAILABLE.value())
+                 .extract();
 
         this.responseContent = response.body().asString();
 

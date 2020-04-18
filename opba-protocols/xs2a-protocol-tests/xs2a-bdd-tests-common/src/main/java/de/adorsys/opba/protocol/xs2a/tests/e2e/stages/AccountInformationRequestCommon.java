@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.annotation.ScenarioState;
@@ -14,6 +15,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,14 +23,18 @@ import java.util.UUID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_LOGIN_USER_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.DENY_CONSENT_AUTH_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.FINTECH_REDIR_NOK;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.GET_CONSENT_AUTH_STATE;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.LOGIN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
@@ -41,6 +47,9 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 public class AccountInformationRequestCommon<SELF extends AccountInformationRequestCommon<SELF>> extends Stage<SELF> {
 
     public static final String REDIRECT_CODE_QUERY = "redirectCode";
+
+    @ProvidedScenarioState
+    protected String authSessionCookie;
 
     @ProvidedScenarioState
     protected String redirectUriToGetUserParams;
@@ -125,6 +134,28 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(String username, String password) {
+        String fintechUserTempPassword = UriComponentsBuilder
+                .fromHttpUrl(redirectUriToGetUserParams).build()
+                .getQueryParams()
+                .getFirst(REDIRECT_CODE_QUERY);
+
+        ExtractableResponse<Response> response = RestAssured
+                .given()
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
+                    .body(ImmutableMap.of(LOGIN, username, PASSWORD, password))
+                .when()
+                    .post(AIS_LOGIN_USER_ENDPOINT, serviceSessionId)
+                .then()
+                    .statusCode(HttpStatus.ACCEPTED.value())
+                    .extract();
+
+        this.authSessionCookie = response.cookie(AUTHORIZATION_SESSION_KEY);
+        return self();
+    }
+
     public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
@@ -139,6 +170,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .given()
                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body("{}")
@@ -154,6 +186,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp() {
         ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
             .when()
                 .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
@@ -325,6 +358,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .given()
                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(body)
@@ -345,11 +379,11 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     protected void updateServiceSessionId(ExtractableResponse<Response> response) {
-        serviceSessionId = response.header(SERVICE_SESSION_ID);
+        this.serviceSessionId = response.header(SERVICE_SESSION_ID);
     }
 
     protected void updateRedirectCode(ExtractableResponse<Response> response) {
-        redirectCode = response.header(REDIRECT_CODE);
+        this.redirectCode = response.header(REDIRECT_CODE);
     }
 
     @SneakyThrows
@@ -358,6 +392,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .given()
                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                 .when()
                     .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
