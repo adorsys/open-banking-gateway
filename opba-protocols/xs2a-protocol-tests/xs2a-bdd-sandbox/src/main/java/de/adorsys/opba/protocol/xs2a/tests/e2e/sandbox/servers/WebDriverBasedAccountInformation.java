@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -18,6 +19,7 @@ import java.net.URI;
 import java.time.Duration;
 
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableConfig.TEST_RETRY_OPS;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
@@ -209,6 +211,18 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         waitForPageLoad(driver);
         sendText(driver, By.name("authCode"), "123456");
         clickOnButton(driver, By.xpath("//button[@type='submit']"));
+        return self();
+    }
+
+    // Sending cookie with last request as it doesn't exist in browser for API tests
+    public SELF sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_only(WebDriver driver) {
+        waitForPageLoad(driver);
+        driver.manage().addCookie(new Cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie));
+        try {
+            clickOnButton(driver, By.className("btn-primary"), true);
+        } finally {
+            driver.manage().deleteCookieNamed(AUTHORIZATION_SESSION_KEY);
+        }
         return self();
     }
 
