@@ -34,7 +34,7 @@ public class Xs2aLoadConsentAndContextFromDbContextMergerTest {
         mapper.merge(mappingInput, actual);
 
         // Then
-        assertThat(expected).isEqualToComparingFieldByFieldRecursively(actual);
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
     }
 
     @Test
@@ -49,7 +49,7 @@ public class Xs2aLoadConsentAndContextFromDbContextMergerTest {
         mapper.merge(mappingInput, actual);
 
         // Then
-        assertThat(expected).isEqualToComparingFieldByFieldRecursively(actual);
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class Xs2aLoadConsentAndContextFromDbContextMergerTest {
         mapper.merge(mappingInput, actual);
 
         // Then
-        assertThat(expected).isEqualToComparingFieldByFieldRecursively(actual);
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
     }
 
     @Test
@@ -79,6 +79,6 @@ public class Xs2aLoadConsentAndContextFromDbContextMergerTest {
         mapper.merge(mappingInput, actual);
 
         // Then
-        assertThat(expected).isEqualToComparingFieldByFieldRecursively(actual);
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
     }
 }
