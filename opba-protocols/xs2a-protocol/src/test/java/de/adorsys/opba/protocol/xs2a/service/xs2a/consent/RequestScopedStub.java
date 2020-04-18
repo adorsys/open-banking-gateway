@@ -10,6 +10,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class RequestScopedStub implements RequestScoped {
 
+    private final TransientStorage transientStorage = new TransientStorageStub();
+
     @Override
     public String getEncryptionKeyId() {
         return "NOOP";
@@ -32,19 +34,21 @@ public class RequestScopedStub implements RequestScoped {
 
     @Override
     public TransientStorage transientStorage() {
-        return new TransientStorage() {
+        return transientStorage;
+    }
 
-            private final AtomicReference<Object> data = new AtomicReference<>();
+    private static class TransientStorageStub implements TransientStorage {
 
-            @Override
-            public <T> T get() {
-                return (T) this.data.get();
-            }
+        private final AtomicReference<Object> data = new AtomicReference<>();
 
-            @Override
-            public void set(Object entry) {
-                this.data.set(entry);
-            }
-        };
+        @Override
+        public <T> T get() {
+            return (T) this.data.get();
+        }
+
+        @Override
+        public void set(Object entry) {
+            this.data.set(entry);
+        }
     }
 }

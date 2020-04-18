@@ -31,6 +31,6 @@ public class ProvidePsuPasswordBodyToXs2aApiTest {
         UpdatePsuAuthentication actual = mapper.map(mappingInput);
 
         // Then
-        assertThat(expected).isEqualToComparingFieldByFieldRecursively(actual);
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
     }
 }
