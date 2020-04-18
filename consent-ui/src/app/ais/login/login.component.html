@@ -33,11 +33,11 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-primary btn-center btn-block mb-3" type="submit" [disabled]="!loginForm.valid">
+      <button id="do_submit" class="btn btn-primary btn-center btn-block mb-3" type="submit" [disabled]="!loginForm.valid">
         Login
       </button>
       <div>
-        <a routerLink="../register" [queryParams]="{ redirectCode: redirectCode }">Register</a>
+        <a id="register" routerLink="../register" [queryParams]="{ redirectCode: redirectCode }">Register</a>
       </div>
     </div>
   </div>
