@@ -2,7 +2,7 @@ package de.adorsys.opba.tppbankingapi.service;
 
 import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.BankProfile;
-import de.adorsys.opba.db.repository.BankRepositoryImpl;
+import de.adorsys.opba.db.repository.BankSearchRepositoryImpl;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankDescriptor;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileDescriptor;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class BankService {
 
     private final BankProfileJpaRepository bankProfileJpaRepository;
-    private final BankRepositoryImpl bankRepository;
+    private final BankSearchRepositoryImpl bankRepository;
 
     @Transactional(readOnly = true)
     public Optional<BankProfileDescriptor> getBankProfile(String bankId) {

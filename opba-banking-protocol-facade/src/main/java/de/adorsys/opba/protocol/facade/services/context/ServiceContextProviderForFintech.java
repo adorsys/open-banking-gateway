@@ -103,17 +103,19 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         UUID serviceSessionId = facadeServiceable.getServiceSessionId();
 
         if (null == serviceSessionId) {
-            return createServiceSession();
+            return createServiceSession(UUID.randomUUID());
         }
 
         return serviceSessions.findById(serviceSessionId)
-            .orElseGet(this::createServiceSession);
+            .orElseGet(() -> createServiceSession(serviceSessionId));
     }
 
     @NotNull
     @SneakyThrows
-    private ServiceSession createServiceSession() {
-        return serviceSessions.save(new ServiceSession());
+    private ServiceSession createServiceSession(UUID serviceSessionId) {
+        ServiceSession serviceSession = new ServiceSession();
+        serviceSession.setId(serviceSessionId);
+        return serviceSessions.save(serviceSession);
     }
 
     @SneakyThrows
