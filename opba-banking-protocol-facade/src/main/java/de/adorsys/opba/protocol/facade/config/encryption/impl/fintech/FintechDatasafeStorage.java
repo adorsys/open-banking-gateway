@@ -12,6 +12,7 @@ import de.adorsys.opba.protocol.facade.config.encryption.datasafe.DatasafeDataSt
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.DatasafeMetadataStorage;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.FintechPsuAspspTuple;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.support.TransactionOperations;
 
 import javax.persistence.EntityManager;
 import java.net.URI;
@@ -42,13 +43,14 @@ public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
     @Component
     public static class FintechPsuAspspPrvKeyStorage extends DatasafeDataStorage<FintechPsuAspspPrvKey> {
 
-        public FintechPsuAspspPrvKeyStorage(FintechPsuAspspPrvKeyRepository consents, EntityManager em) {
+        public FintechPsuAspspPrvKeyStorage(FintechPsuAspspPrvKeyRepository consents, TransactionOperations txOper, EntityManager em) {
             super(
                     consents,
                     path -> FintechPsuAspspTuple.buildFintechPrvKey(path, em),
                     path -> find(consents, path),
                     FintechPsuAspspPrvKey::getEncData,
-                    FintechPsuAspspPrvKey::setEncData
+                    FintechPsuAspspPrvKey::setEncData,
+                    txOper
             );
         }
 
@@ -65,13 +67,14 @@ public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
     @Component
     public static class FintechPsuAspspPrvKeyInboxStorage extends DatasafeDataStorage<FintechPsuAspspPrvKeyInbox> {
 
-        public FintechPsuAspspPrvKeyInboxStorage(FintechPsuAspspPrvKeyInboxRepository inboxConsents, EntityManager em) {
+        public FintechPsuAspspPrvKeyInboxStorage(FintechPsuAspspPrvKeyInboxRepository inboxConsents, TransactionOperations txOper, EntityManager em) {
             super(
                     inboxConsents,
                     path -> FintechPsuAspspTuple.buildFintechInboxPrvKey(path, em),
                     path -> find(inboxConsents, path),
                     FintechPsuAspspPrvKeyInbox::getEncData,
-                    FintechPsuAspspPrvKeyInbox::setEncData
+                    FintechPsuAspspPrvKeyInbox::setEncData,
+                    txOper
             );
         }
 
