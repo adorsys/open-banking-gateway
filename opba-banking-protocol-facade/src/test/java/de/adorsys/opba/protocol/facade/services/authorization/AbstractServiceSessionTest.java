@@ -18,8 +18,9 @@ import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStar
 import de.adorsys.opba.protocol.facade.services.ais.ListAccountsService;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aListAccountsEntrypoint;
 import de.adorsys.opba.protocol.xs2a.entrypoint.authorization.Xs2aUpdateAuthorization;
+import liquibase.integration.spring.SpringLiquibase;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -37,11 +38,9 @@ import static org.awaitility.Durations.ONE_SECOND;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 
-/**
- * Note: This test keeps DB in dirty state - doesn't cleanup after itself.
- */
-
 abstract class AbstractServiceSessionTest {
+    private static final String FINTECH_ID = "MY-SUPER-FINTECH";
+    private static final String FINTECH_USER_ID = "user@fintech.com";
     private static final String PASSWORD = "password";
     private static final String TEST_BANK_ID = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
     private static final UUID REQUEST_ID = UUID.fromString("e3865c6b-70f2-4c1e-ad31-d7c2ff160858");
@@ -64,24 +63,25 @@ abstract class AbstractServiceSessionTest {
     @Autowired
     private AuthorizationSessionRepository authenticationSessions;
 
+    @Autowired
+    private SpringLiquibase liquibase;
+
     @MockBean
     private Xs2aListAccountsEntrypoint xs2aListAccountsEntrypoint;
 
     @MockBean
     private Xs2aUpdateAuthorization xs2aUpdateAuthorization;
 
-    @BeforeEach
+    @AfterEach
+    @SneakyThrows
     void setup() {
-        authenticationSessions.deleteAll();
-        serviceSessionRepository.deleteAll();
+        // drop (drop-first: true) and re-create DB
+        liquibase.afterPropertiesSet();
     }
-
-    abstract String getAlgorithm();
 
     @Test
     @SneakyThrows
     void serviceSessionAndAuthSessionWithConsent_success() {
-
         ValidationErrorResult validationErrorResult = buildValidationErrorResultResult();
         FacadeStartAuthorizationResult listAccountsResponse = createAndAssertListAccountRequestForBruecker(validationErrorResult);
 
@@ -112,27 +112,18 @@ abstract class AbstractServiceSessionTest {
     @Test
     @SneakyThrows
     void serviceSession_protocolError() {
-
-
         doAnswer(invocation -> CompletableFuture.completedFuture(ERROR_RESULT))
                 .when(xs2aListAccountsEntrypoint)
                 .execute(any(ServiceContext.class));
 
         FacadeRedirectErrorResult errorResponse = (FacadeRedirectErrorResult) listAccountsService.execute(buildListAccountRequest()).get();
 
-        assertErrorResponse(errorResponse, SESSION_ID.toString());
-
-        await().atMost(ONE_SECOND)
-                .pollDelay(ONE_HUNDRED_MILLISECONDS)
-                .until(() -> authenticationSessions.findById(SESSION_ID).isPresent());
-
-        assertServiceAndAuthorizationSessions();
+        assertErrorResponse(errorResponse, SESSION_ID.toString(), false);
     }
 
     @Test
     @SneakyThrows
     void authSession_protocolError() {
-
         ValidationErrorResult validationErrorResult = buildValidationErrorResultResult();
         FacadeStartAuthorizationResult listAccountsResponse = createAndAssertListAccountRequestForBruecker(validationErrorResult);
 
@@ -150,14 +141,13 @@ abstract class AbstractServiceSessionTest {
 
         FacadeRedirectErrorResult errorResponse = (FacadeRedirectErrorResult) updateAuthorizationService.execute(buildAuthRequest(listAccountsResponse)).get();
 
-        assertErrorResponse(errorResponse, SESSION_ID.toString());
+        assertErrorResponse(errorResponse, SESSION_ID.toString(), true);
         assertServiceAndAuthorizationSessions();
     }
 
     @Test
     @SneakyThrows
     void serviceSession_success() {
-
         AuthorizationRequiredResult authorizationRequiredResult = buildAuthorizationRequiredResult();
 
         createAndAssertListAccountRequestForBruecker(authorizationRequiredResult);
@@ -179,17 +169,21 @@ abstract class AbstractServiceSessionTest {
 
         assertThat(listAccountsResponse.getAuthorizationSessionId()).isEqualTo(SESSION_ID.toString());
         assertThat(listAccountsResponse.getServiceSessionId()).isEqualTo(SESSION_ID.toString());
-        assertThat(listAccountsResponse.getRedirectionTo()).isEqualTo(redirectionResult.getRedirectionTo());
+        assertThat(listAccountsResponse.getRedirectionTo()).asString().contains("localhost:1010").contains("ais").contains("login?redirectCode=");
         return listAccountsResponse;
     }
 
     private AuthorizationRequest buildAuthRequest(FacadeStartAuthorizationResult listAccountsResponse) {
         return AuthorizationRequest.builder()
                        .facadeServiceable(FacadeServiceableRequest.builder()
-                                                  .redirectCode(listAccountsResponse.getRedirectCode())
-                                                  .authorizationSessionId(listAccountsResponse.getAuthorizationSessionId())
-                                                  .requestId(listAccountsResponse.getXRequestId())
-                                                  .build()
+                               .authorization(FINTECH_ID)
+                               .sessionPassword(PASSWORD)
+                               .bankId(TEST_BANK_ID)
+                               .redirectCode(listAccountsResponse.getRedirectCode())
+                               .authorizationSessionId(listAccountsResponse.getAuthorizationSessionId())
+                               .fintechRedirectUrlNok(REDIRECT_URL_NO_OK)
+                               .requestId(listAccountsResponse.getXRequestId())
+                               .build()
                        )
                        .build();
     }
@@ -202,6 +196,8 @@ abstract class AbstractServiceSessionTest {
                                        .requestId(REQUEST_ID)
                                        .serviceSessionId(SESSION_ID)
                                        .sessionPassword(PASSWORD)
+                                       .fintechUserId(FINTECH_USER_ID)
+                                       .authorization(FINTECH_ID)
                                        .fintechRedirectUrlOk(REDIRECT_URL_OK)
                                        .fintechRedirectUrlNok(REDIRECT_URL_NO_OK)
                                        .build()
@@ -219,8 +215,13 @@ abstract class AbstractServiceSessionTest {
         assertThat(serviceSessionFromDB.getAuthSession().getRedirectCode()).isEqualTo(authenticationSession.getRedirectCode());
     }
 
-    private void assertErrorResponse(FacadeRedirectErrorResult errorResponse, String sessionId) {
-        assertThat(errorResponse.getAuthorizationSessionId()).isEqualTo(sessionId);
+    private void assertErrorResponse(FacadeRedirectErrorResult errorResponse, String sessionId, boolean authSessionIsOpen) {
+        if (!authSessionIsOpen) {
+            assertThat(errorResponse.getAuthorizationSessionId()).isNull();
+        } else {
+            assertThat(errorResponse.getAuthorizationSessionId()).isEqualTo(sessionId);
+        }
+
         assertThat(errorResponse.getServiceSessionId()).isEqualTo(sessionId);
         assertThat(errorResponse.getXRequestId()).isEqualTo(REQUEST_ID);
         assertThat(errorResponse.getRedirectionTo().toString()).isEqualTo(REDIRECT_URL_NO_OK);

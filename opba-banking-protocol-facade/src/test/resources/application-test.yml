@@ -4,20 +4,57 @@ spring:
     username: postgres
     password: docker
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+  liquibase:
+    drop-first: true
 
 protocol:
   embedded-ui-base-url: http://localhost:1010
 
+encryption:
+  datasafe:
+    read-keystore:
+      psu: I-M-A-SAMPLE-PSU-PASSWORD-REPLACE-ME
+      fintech: I-M-A-SAMPLE-FINTECH-PASSWORD-REPLACE-ME
+      fintech-user: I-M-A-SAMPLE-FINTECH-USER-PASSWORD-REPLACE-ME
+
 facade:
-  encryption:
-    providerName: BC
-    algorithm: PBEWithSHA256And256BitAES-CBC-BC
-    saltLength: 8
-    iterationCount: 1024
-    keySetPath: example-keyset.json
+  redirect:
+    login-page: ${protocol.embedded-ui-base-url}/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
+    password:
+      byte-size: 8
+  cookie:
+    path-templates: /embedded-server/v1/consent/{authorizationSessionId},/v1/consent/{authorizationSessionId}
+  expirable:
+    expire-after-write: PT10M
 
 pkcs12:
   keyStore: sample-qwac.keystore
   password: password
 bank-search:
   query:
+
+tpp:
+  key-validity-duration: PT5M
+  jws-algo: RS256
+  # Example private-public keypair for DEMO-purposes. Generated using TokenSignVerifyTest.generateNewTppKeyPair(). Production use should load private key from secure place.
+  private-key: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC7wtbVBBDWlZSV7JsDgEHBTHBT0FH0YZh96WwFPyg88Iqsif1Xv38ZoGqcHhYLswyzFiNyEuZWblza1v05LX+pW4oU0Pi/ITX4biUQr5pFquSVV0qOBYOf0JCzxIDsKK1TiFxhz3CRFZ+1DXc0x5ZJASqKxOwVf+rCSKI3yB0Z76+AJUfRb0yiLvMW38iWkC79WJcyXXHkD8OGEvyJadbsipQxxDOGjzM0fa/vBzd8EeRcpC8fsxfH/d8WJ4oB7f26eW2dTY2wKahlgaKyjmmc7DITrPF8nRW39hH54DDbtaTyWCX6v3jg9iwcgYkB9AWLYYxzyR4n2VubGBXpizhrAgMBAAECggEAeR6Cvv7Ubdgn9V6f0G5X/H12qFplw6OBXxfIWsoXBtiUXCDXkFczgjB9FSBDUGC7/Hp3ewq+E1s2AuVUjCHRjEpElJEJJSIjUpKazly4w+AtfDjHGz5rXhiIf65vC+hhhtUb4uyRzMWKNJzvHNjzFTzvWH0XXfcaVSHNovYv754VjGzwtdhgj0w8QYRsCq4evBsRCl+POuJdKYv9BDYj3ADffVgDU0Txs8Q2lYvm16V0Ihgbcd6Dq4WblZY3Bkh0s9WpZVZdIy/R6bLWx1BSJwHiT267Oiq0U+REW4J584FryIrsqMTNJPjEbybEskniCujHxkGnRixO1BJZPvdIwQKBgQD1Zd4oNhO7SVX8H2+bYTEjKxZYSA2B6E+7pWGn1d4cOX2jjNhj1SQkLfWXQg4JFljTh9pL3K0moL8MkrLoYq+TTqEngMh7OJtEYySbec5ZSA6MM36VDYbHyNvjKHPrzwtzzbbYOqFXF8OZT5Eq9X+jQTmqcmGnYipmcWPRdK1J4wKBgQDD34Au37qsEM6f7VVm7zY/hXb+bZ1px6nkS+QuW2hp270brENq3LNtcA3oUX8yr/X8H9OEyO7+oevFcEkHRyDMce80VrO1UytXVQDo7nF6vepbPYy8u/rF/FLicrkLPoqQCDnL+NYVtnZo/oaXfw506VMBbU20+Yt3eUoxN2m92QKBgHyO3UmJ0VAh9DwJ9MtodNmF+EyNHhYPRdFYK45WNuwanlQSnI9n03VtwpepFpi0OBf+f+Y7t8PAmdiW6aqc1MOviIsVii1JWT5IGH+2PvAAbCnrxVeAyyXDJSFTGivaJtT72NA+SkB7tnOt+GBWxhemds+2SSz93cmryl+5mm/DAoGBAKafS+WUALI6oeq99DZaK6WhnXYWPSAs70L7pCIjNBFJEfemdLtE/4WLGumT2kZ+FRzi3gZI/7WwfGY6fIUqZqZEDZ5SWxFWrLnf36RGolYtlF0FYOF0b4FYghGMUglUrH6V4MS46zURQG1Uh538QYoGqcu+9amL1q5NiWWQo+0RAoGBAO+gk6lD3U1gUqAzSo3ri8gszk2Jopky+lIUy9y3ebsFsc3EetT7A/OgiSj4KZAgHKJiCesbq1OL7VeTGpsl0dqXPNW2Mh+xVVMJHGJ7ydZ8lvlNGQTNSvBwZwjJBsZMHCSgjdOGDF88NJKo2/Bjlhdg7tWp2qTkTVm7hTdYUY4+
+  public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu8LW1QQQ1pWUleybA4BBwUxwU9BR9GGYfelsBT8oPPCKrIn9V79/GaBqnB4WC7MMsxYjchLmVm5c2tb9OS1/qVuKFND4vyE1+G4lEK+aRarklVdKjgWDn9CQs8SA7CitU4hcYc9wkRWftQ13NMeWSQEqisTsFX/qwkiiN8gdGe+vgCVH0W9Moi7zFt/IlpAu/ViXMl1x5A/DhhL8iWnW7IqUMcQzho8zNH2v7wc3fBHkXKQvH7MXx/3fFieKAe39unltnU2NsCmoZYGiso5pnOwyE6zxfJ0Vt/YR+eAw27Wk8lgl+r944PYsHIGJAfQFi2GMc8keJ9lbmxgV6Ys4awIDAQAB
+  sign-algo: RSA
+cookie:
+  secure: false # localhost-only - TODO application-dev.yml for dev env?
+  max-age: PT300S
+  http-only: true
+  path: /
+  same-site: Strict
+psu:
+  key-pair:
+    cipher-algo: AES256_CBC
+    key-algo: RSA
+    len: 2048
+consent-spec:
+  secret-key:
+    key-algo: AES
+    cipher-algo: AES/GCM/NoPadding
+    iv-size: 12
+    len: 128
+

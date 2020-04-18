@@ -67,7 +67,7 @@ public class ProtocolResultHandler {
         }
 
         if (result instanceof ErrorResult) {
-            return handleError((ErrorResult<O>) result, request);
+            return handleError((ErrorResult<O>) result, request.getRequestId(), session, request);
         }
 
         if (result instanceof RedirectionResult) {
@@ -89,11 +89,14 @@ public class ProtocolResultHandler {
     }
 
     protected <O, R extends FacadeServiceableGetter> FacadeResult<O> handleError(
-            ErrorResult<O> result, FacadeServiceableRequest request
+            ErrorResult<O> result, UUID xRequestId, ServiceContext<R> session, FacadeServiceableRequest request
     ) {
         FacadeRedirectErrorResult<O, AuthStateBody> mappedResult =
             (FacadeRedirectErrorResult<O, AuthStateBody>) FacadeRedirectErrorResult.ERROR_FROM_PROTOCOL.map(result);
+        mappedResult.setServiceSessionId(session.getServiceSessionId().toString());
         mappedResult.setRedirectionTo(URI.create(request.getFintechRedirectUrlNok()));
+        mappedResult.setXRequestId(xRequestId);
+        addAuthorizationSessionDataIfAvailable(result, request, session, mappedResult);
         return mappedResult;
     }
 
@@ -138,6 +141,16 @@ public class ProtocolResultHandler {
         if (result instanceof AuthorizationRequiredResult) {
             session.setAspspRedirectCode(context.getFutureAspspRedirectCode().toString());
         }
+    }
+
+    protected <O, R extends FacadeServiceableGetter> void addAuthorizationSessionDataIfAvailable(
+            Result<O> result, FacadeServiceableRequest request, ServiceContext<R> session, FacadeResultRedirectable mappedResult) {
+        Optional<AuthSession> authSession = authorizationSessions.findByParentId(session.getServiceSessionId());
+        if (!authSession.isPresent()) {
+            return;
+        }
+
+        addAuthorizationSessionData(result, authSession.get(), request, session, mappedResult);
     }
 
     protected <O> AuthSession addAuthorizationSessionData(
