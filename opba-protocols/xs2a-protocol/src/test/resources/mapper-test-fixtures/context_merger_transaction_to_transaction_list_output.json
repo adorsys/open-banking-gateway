@@ -27,7 +27,7 @@
   "redirectUriOk": "http://localhost:5500/from-aspsp/v1/consent/c86feb1e-9ba8-4407-918f-8183143df295/fromAspsp/STUB_STATE/ok?redirectCode=a5001521-edd8-4d99-b72d-30670b839d06",
   "redirectUriNok": "http://localhost:5500/from-aspsp/v1/consent/c86feb1e-9ba8-4407-918f-8183143df295/fromAspsp/STUB_STATE/nok?redirectCode=a5001521-edd8-4d99-b72d-30670b839d06",
   "redirectConsentOk": false,
-  "mode": "MOCK_REAL_CALLS",
+  "mode": null,
   "aspspId": "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46",
   "action": "LIST_ACCOUNTS",
   "flowByAction": {
