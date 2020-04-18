@@ -1,4 +1,4 @@
-<form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+<form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
   <div class="card card-frame">
     <div class="card-body">
       <h4 class="card-title">Register</h4>
@@ -51,7 +51,7 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-primary btn-center btn-block mb-3" type="submit" [disabled]="!loginForm.valid">
+      <button id="do_submit" class="btn btn-primary btn-center btn-block mb-3" type="submit" [disabled]="!registerForm.valid">
         Register
       </button>
       <div>
