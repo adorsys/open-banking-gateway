@@ -31,6 +31,6 @@ public class Xs2aWithBalanceParametersFromCtxTest {
         Xs2aWithBalanceParameters actual = mapper.map(mappingInput);
 
         // Then
-        assertThat(expected).isEqualToComparingFieldByFieldRecursively(actual);
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
     }
 }
