@@ -7,10 +7,4 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @SpringBootTest(classes = ApplicationTest.class)
 class ServiceAndAuthorizationSessionTest extends AbstractServiceSessionTest {
-    private static final String ALGO = "PBEWithSHA256And256BitAES-CBC-BC";
-
-    @Override
-    String getAlgorithm() {
-        return ALGO;
-    }
 }
