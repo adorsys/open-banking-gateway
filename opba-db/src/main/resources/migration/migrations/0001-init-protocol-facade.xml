@@ -237,6 +237,7 @@
             </column>
         </createTable>
         <createSequence sequenceName="psu_aspsp_prv_key_id_sequence" incrementBy="50"/>
+        <addUniqueConstraint tableName="${table-prefix}psu_aspsp_prv_key" columnNames="psu_id,aspsp_id"/>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_psu_aspsp_prv_key_psu"
                                  baseTableName="${table-prefix}psu_aspsp_prv_key"
                                  baseColumnNames="psu_id"
@@ -282,6 +283,7 @@
                                  baseColumnNames="fintech_id"
                                  referencedTableName="${table-prefix}fintech"
                                  referencedColumnNames="id"/>
+        <addUniqueConstraint tableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox" columnNames="psu_id,aspsp_id"/>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_inbox_psu"
                                  baseTableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox"
                                  baseColumnNames="psu_id"
@@ -321,6 +323,7 @@
                                  baseColumnNames="fintech_id"
                                  referencedTableName="${table-prefix}fintech"
                                  referencedColumnNames="id"/>
+        <addUniqueConstraint tableName="${table-prefix}fintech_psu_aspsp_prv_key" columnNames="psu_id,aspsp_id"/>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_psu"
                                  baseTableName="${table-prefix}fintech_psu_aspsp_prv_key"
                                  baseColumnNames="psu_id"
