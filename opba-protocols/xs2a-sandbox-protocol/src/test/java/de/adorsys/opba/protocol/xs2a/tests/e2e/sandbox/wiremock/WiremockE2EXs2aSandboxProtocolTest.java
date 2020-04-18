@@ -46,10 +46,10 @@ class WiremockE2EXs2aSandboxProtocolTest extends SpringScenarioTest<MockServers,
 
     @ParameterizedTest
     @EnumSource(Approach.class)
-    void testAccountAndTransactionsListWithConsentForAllServicesUsingRedirect(Approach approach) {
+    void testAccountAndTransactionsListWithConsentForAllServicesUsingRedirect(Approach expectedApproach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running()
-                .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server();
 
         when()
@@ -70,10 +70,10 @@ class WiremockE2EXs2aSandboxProtocolTest extends SpringScenarioTest<MockServers,
 
     @ParameterizedTest
     @EnumSource(Approach.class)
-    void testAccountAndTransactionsListWithConsentForAllServicesUsingEmbedded(Approach approach) {
+    void testAccountAndTransactionsListWithConsentForAllServicesUsingEmbedded(Approach expectedApproach) {
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
-                .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server();
 
         when()

@@ -1,5 +1,6 @@
 package de.adorsys.opba.db.domain.entity.fintech;
 
+import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import java.time.Instant;
@@ -33,7 +35,12 @@ public class FintechConsentSpec {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
     private FintechUser user;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id", updatable = false, insertable = false)
+    private AuthSession authSession;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)

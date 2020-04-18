@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon.REDIRECT_CODE_QUERY;
@@ -28,8 +29,11 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.CONFIRM_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.SESSION_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
@@ -56,6 +60,9 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
 
     @ExpectedScenarioState
     protected String serviceSessionId;
+
+    @ExpectedScenarioState
+    protected String authSessionCookie;
 
     @Autowired
     private ConsentRepository consents;
@@ -301,6 +308,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(body)
                 .when()
@@ -310,6 +318,19 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
                 .extract();
 
         assertThat(response.header(LOCATION)).matches(".+/ais/.+");
+        return self();
+    }
+
+    public AccountInformationResult fintech_calls_consent_activation_for_current_authorization_id() {
+        RestAssured
+                .given()
+                    .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                    .post(CONFIRM_CONSENT_ENDPOINT, serviceSessionId)
+                .then()
+                    .statusCode(HttpStatus.OK.value());
         return self();
     }
 }
