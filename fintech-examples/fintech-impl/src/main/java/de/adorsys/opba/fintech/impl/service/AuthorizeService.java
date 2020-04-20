@@ -70,20 +70,14 @@ public class AuthorizeService {
     @Transactional
     public HttpHeaders modifySessionEntityAndCreateNewAuthHeader(String xRequestID, SessionEntity sessionEntity, String xsrfToken, CookieConfigPropertiesSpecific cookieProps) {
         sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(sessionEntity.getFintechUserId(), xsrfToken));
-
-        log.info("xsrf token is replaced with new token:    {}", xsrfToken);
-        log.info("sessioncookie is replaced with new cookie:{}", sessionEntity.getSessionCookieValue());
-        log.info("persist session entity with new session cookie");
         userRepository.save(sessionEntity);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set(X_REQUEST_ID, xRequestID);
-        log.debug("set response cookie attributes to {}", cookieProps.toString());
 
         String path = cookieProps.getPath();
         if (path.matches("(.*)" + AUTH_ID_VARIABLE + "(.*)")) {
             path = path.replaceAll(AUTH_ID_VARIABLE, sessionEntity.getAuthId());
-            log.info("path contains auth id, so path will be {}", path);
         }
 
         String sessionCookieString = ResponseCookie.from(Consts.COOKIE_SESSION_COOKIE_NAME, sessionEntity.getSessionCookieValue())
@@ -94,7 +88,11 @@ public class AuthorizeService {
                 .maxAge(cookieProps.getMaxAge())
                 .build().toString();
         responseHeaders.add(HttpHeaders.SET_COOKIE, sessionCookieString);
-        responseHeaders.add(Consts.HEADER_XSRF_TOKEN, xsrfToken + "; maxAge=" + cookieProps.getMaxAge());
+        String xsrfTokenString = xsrfToken + "; Max-Age=" + cookieProps.getMaxAge();
+        responseHeaders.add(Consts.HEADER_XSRF_TOKEN, xsrfTokenString);
+        log.info("HEADER xsrf token is replaced with new token : {}", xsrfTokenString);
+        log.info("COOKIE session is replaced with new cookie   : {}", sessionCookieString);
+
         return responseHeaders;
     }
 

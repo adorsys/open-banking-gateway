@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
-import { StorageService } from '../../services/storage.service';
+import {Component, OnInit} from '@angular/core';
+import {AuthService} from '../../services/auth.service';
+import {StorageService} from '../../services/storage.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,9 +8,11 @@ import { StorageService } from '../../services/storage.service';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  constructor(private authService: AuthService, private storageService: StorageService) {}
+  constructor(private authService: AuthService, private storageService: StorageService) {
+  }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   onLogout() {
     this.authService.logout();
@@ -22,5 +24,20 @@ export class NavbarComponent implements OnInit {
 
   getUserName(): string {
     return this.storageService.getUserName();
+  }
+
+  getSessionValidUntil(): string {
+    const validUntilDate: Date = this.storageService.getValidUntilDate();
+    if (validUntilDate != null) {
+      const validUntilDateString = validUntilDate.toLocaleString();
+      let regEx = /.*([0-9]{2}:[0-9]{2}:[0-9]{2})/;
+      let matches = validUntilDateString.match(regEx);
+      if (matches.length != 2) {
+        throw "valid until is not parsable " + validUntilDateString;
+      }
+      return matches[1];
+    }
+    return "";
+
   }
 }

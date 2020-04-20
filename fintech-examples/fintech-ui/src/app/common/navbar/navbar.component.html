@@ -1,7 +1,9 @@
 <nav class="navbar navbar-light py-3" *ngIf="isLoggedIn()">
   <a class="navbar-brand text-primary mr-4" routerLink="/">
-    <img class="logo" [src]="" />
+    <img class="logo" [src]=""/>
     <span class="ml-3">Fintechui</span>
+    <span class="tiny"> session valid until {{ getSessionValidUntil()}}</span>
+
   </a>
   <ul class="nav">
     <li class="dropdown ml-auto">
@@ -17,7 +19,7 @@
       <div class="dropdown-menu dropdown-menu-right">
         <a (click)="onLogout()" [routerLinkActive]="['active']" class="dropdown-item clickable pb-2">
           <div>
-            <img src="" />
+            <img src=""/>
             <span class="nav__title"> Sign out</span>
           </div>
         </a>
