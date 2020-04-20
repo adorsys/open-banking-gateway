@@ -1,10 +1,11 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { AuthGuard } from './guards/auth.guard';
-import { GuestGuard } from './guards/guest.guard';
-import { RedirectAfterConsentComponent } from './redirect-after-consent/redirect-after-consent.component';
-import { RedirectAfterConsentDeniedComponent } from './redirect-after-consent-denied/redirect-after-consent-denied.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {LoginComponent} from './login/login.component';
+import {AuthGuard} from './guards/auth.guard';
+import {GuestGuard} from './guards/guest.guard';
+import {RedirectAfterConsentComponent} from './redirect-after-consent/redirect-after-consent.component';
+import {RedirectAfterConsentDeniedComponent} from './redirect-after-consent-denied/redirect-after-consent-denied.component';
+import {SessionExpiredComponent} from "./session-expired/session-expired.component";
 
 const routes: Routes = [
   {
@@ -38,13 +39,18 @@ const routes: Routes = [
     component: RedirectAfterConsentDeniedComponent
   },
   {
+    path: 'session-expired',
+    component: SessionExpiredComponent
+  },
+  {
     path: '**',
     redirectTo: ''
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { enableTracing: false, paramsInheritanceStrategy: 'always' })],
+  imports: [RouterModule.forRoot(routes, {enableTracing: false, paramsInheritanceStrategy: 'always'})],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}
