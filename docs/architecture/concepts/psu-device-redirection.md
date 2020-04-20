@@ -1,6 +1,3 @@
-
-
-
 # Open Banking and the Complexity of User Agent Redirection
 
 ## Abstract
@@ -10,6 +7,8 @@ Most Open Banking interaction patterns rely on user agent redirection (as seen i
 In some regions, sharing of online user banking access is driven by regulators mandating custodians (a.k.a. ASPSP or banks) to share access to user banking data at user's will with third party providers (See European PSD2). In some other regions, data sharing initiatives extend their scope to many other business domains such as telecommunication, health, and utilities (See Australian CDR).
 
 Although sharing data has always been practiced in banking business (see EBICS), the novelty of Open Banking lies within the capacity of ad-hoc online connectivity of business, that strives to enable data sharing without preceding time expensive offline authorization steps at the agency location of the custodian. In the case of EBICS, the bank account owner will use an offline channel to have his bank (custodian) explicitly give authorization to provide access to a designated third party. In a world dominated by real time online access to applications, authorization steps need to be taken right away and on the go. This is why the online platform business community leverages __User Agent Redirection__ to allow for real time online connectivity and interaction between the user and many participating service providers.
+
+It is explained why another approach, __Embedded SCA__, is more suitable and more secure for sharing identities at least between regulated and supervised financial service providers, e.g. within Open Banking in Europe.
 
 ### The Challenge
 
@@ -22,15 +21,15 @@ The use of __User Agent Redirection__ for sharing access to banking services wil
 
 ### Complexity of User Agent Redirection
 
-The purpose of this work is to provide insight into the complexity associated with a secure implementation of __User Agent Redirection__. Instead of narrating the use case of Open Banking, we want to show that even the better known and intensively utilized case of identity provisioning (oAuth2) is too complex enough and not yet well thought.
+The purpose of this work is to provide insight into the complexity associated with a secure implementation of __User Agent Redirection__. Instead of narrating some proprietary use cases in Open Banking, we want to show that even the more mature, better known and intensively utilized case of identity provisioning (oAuth2) is too complex and not yet well enough thought out.
 
 The current state of implementation for Open Banking shows that neither financial institutions (known as ASPSP), nor third party providers (AISP, PISP, PIISP), are experienced enough to implement and operate solid, tamper proof __User Agent Redirection__ based Open Banking sharing processes.
 
 ## Highlighting User Agent Redirection
 
 ### Common Terms
-Let's call:
-- __APP-RP : the __server application of a relying party that redirects user to an identity provider,
+Let's call :
+- __APP-RP :__ the server application of a relying party that redirects user to an identity provider,
 - __UI-RP :__ the UI application utilized to access the server application of the relying party,
 - __APP-IDP :__ the server application providing the identity service,
 - __UI-IDP :__ the UI application utilized to access the identity provider,
@@ -145,16 +144,16 @@ In order to prevent the malicious RP (APP-RP-Bob) from using an intercepted auth
 ### Reviewing the oAuth2 Resource Owner Password Credentials Flow (ROPC)
 ROPC is one that allows a relying party to collect user credentials and take them directly to the token endpoint of the identity provider. 
 
-From a technical perspective, this flow seems to be the simplest as it involves no redirection. From a data protection perspective, this flow discloses the password of the user to the RP, raising issues hard to deal with as we know that the user’s password is not supposed to be shared with third parties. We also assume RPs are not trustworthy enough to guarantee the secrecy of the end user's password. 
+From a technical perspective, this flow seems to be the simplest as it involves no redirection. From a data protection perspective, this flow discloses the password of the user to the RP, raising issues hard to deal with as we know that the user’s password is not supposed to be shared with non-regulated third parties. We also assume that non-supervised RPs are not trustworthy enough to guarantee the secrecy of the end user's password. 
 
 ### Highlighting the Open Banking Embedded Approach
-The European PSD2 initiative includes an SCA alternative called "Embedded Approach". This approach allows the third party provider (RP) to collect user credentials (user banking password and transaction numbers) and forward them to the user's banking service provider.
+The European PSD2 initiative ensures that all Payment Service Providers participating in the Open Banking arena must be licensed, i.e. security audited and supervised, and it mandates Strong Customer Authentication (SCA) involving a minimum of two factors, i.e. credentials. This includes an SCA method called "Embedded Approach", which allows a licensed third party provider (RP) to collect user credentials (user banking password and transaction numbers) and forward them to the user's banking service provider.
 
-Just like the oAuth2 ROPC, the PSD2 embedded SCA approach allows the TPP to see the password of the end user. But despite the oAuth2 ROPC, the PSD2 embedded approach mandates a second factor which is inherently bound to the transaction being authorized (or the consent being given). With the second factor as enhancement and the requirement of implementing that second factor for authentication with the bank’s native online banking interface, disclosing the online banking password of the banking users to third party banking service providers (TPP) seems to be a less risky alternative than having banks and TPPs implement technical redirection based solutions they can't control.
+Just like the oAuth2 ROPC, the PSD2 embedded SCA approach allows a licensed TPP to see the password of the end user. But despite the oAuth2 ROPC, the PSD2 embedded approach mandates a second factor which is inherently bound to the transaction being authorized (or the consent being given). With the second factor as enhancement and the requirement of implementing that second factor for authentication with the bank’s native online banking interface, disclosing the online banking password of the banking users only to supervised third party banking service providers (TPP) seems to be a less risky alternative than having banks and TPPs implement technical redirection based solutions they can't control.
 
 ## Recommendation : Mandate the Embedded SCA Approach
 
-Considering the fact that all open banking transactions implement a second factor (even for the PSU identification), having the online banking password of the PSU disclosed to TPPs exposes less risk than having to mandate TPP-implementation of complex user  agent redirection.
+Considering the fact that all open banking transactions implement a second factor (even for the PSU identification), having the online banking password of the PSU disclosed to licensed TPPs exposes less risk than having to mandate TPP-implementation of complex user  agent redirection.
 
 Therefore, this paper recommends the __mandate__ of ASPSP support of the __Embedded SCA Approach__:
 - as second factor is simple, well understood and applied to ASPSP's native online banking interfaces as well,
