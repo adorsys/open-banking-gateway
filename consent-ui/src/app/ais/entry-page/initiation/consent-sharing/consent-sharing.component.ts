@@ -5,7 +5,6 @@ import { ConsentAuthorizationService, DenyRequest } from '../../../../api';
 import { ApiHeaders } from '../../../../api/api.headers';
 import { StubUtil } from '../../../common/stub-util';
 import { AccountAccessLevel, AisConsentToGrant } from '../../../common/dto/ais-consent';
-import { Location } from '@angular/common';
 import { ConsentUtil } from '../../../common/consent-util';
 
 @Component({
@@ -22,11 +21,11 @@ export class ConsentSharingComponent implements OnInit {
 
   public finTechName = StubUtil.FINTECH_NAME;
   public aspspName = StubUtil.ASPSP_NAME;
-  private aisConsent: AisConsentToGrant;
+  public aisConsent: AisConsentToGrant;
+
   private authorizationId: string;
 
   constructor(
-    private location: Location,
     private activatedRoute: ActivatedRoute,
     private sessionService: SessionService,
     private consentAuthorisation: ConsentAuthorizationService
