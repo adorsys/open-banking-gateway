@@ -6,9 +6,9 @@ local:
 test:
   smoke:
     opba:
-      server-uri: http://localhost:8085
+      server-uri: https://obg-dev-openbankinggateway.cloud.adorsys.de
     aspsp-profile:
-      server-uri: http://localhost:20010
+      server-uri: https://obg-bank-dev-aspspprofile.cloud.adorsys.de
   retry:
     max: 10
   webdriver:
