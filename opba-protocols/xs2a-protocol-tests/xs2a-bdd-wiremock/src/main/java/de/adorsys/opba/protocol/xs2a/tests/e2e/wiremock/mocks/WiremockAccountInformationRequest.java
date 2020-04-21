@@ -40,13 +40,14 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     private WireMockServer wireMock;
 
 
-    public SELF open_banking_redirect_from_aspsp_ok_webhook_called() {
+    public SELF open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test() {
         LoggedRequest consentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
                 .until(() ->
                         wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
                 ).get(0);
 
-        this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
+        // no consent UI for embedded test
+        this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI).replace("/embedded-server/", "/");
         ExtractableResponse<Response> response = RestAssured
                 .given()
                     .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
