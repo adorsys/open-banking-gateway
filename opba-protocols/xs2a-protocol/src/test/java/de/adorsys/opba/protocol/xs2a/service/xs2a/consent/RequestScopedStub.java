@@ -5,7 +5,9 @@ import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.transientdata.TransientStorage;
+import de.adorsys.opba.protocol.api.services.scoped.validation.BankValidationRuleDto;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class RequestScopedStub implements RequestScoped {
@@ -35,6 +37,11 @@ public class RequestScopedStub implements RequestScoped {
     @Override
     public TransientStorage transientStorage() {
         return transientStorage;
+    }
+
+    @Override
+    public List<BankValidationRuleDto> getValidationRules() {
+        return null;
     }
 
     private static class TransientStorageStub implements TransientStorage {

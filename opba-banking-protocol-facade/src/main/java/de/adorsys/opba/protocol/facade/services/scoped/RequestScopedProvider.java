@@ -2,42 +2,52 @@ package de.adorsys.opba.protocol.facade.services.scoped;
 
 import com.google.common.cache.CacheBuilder;
 import de.adorsys.opba.db.domain.entity.BankProfile;
+import de.adorsys.opba.db.domain.entity.BankValidationRule;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
+import de.adorsys.opba.db.repository.jpa.BankValidationRuleRepository;
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.transientdata.TransientStorage;
+import de.adorsys.opba.protocol.api.services.scoped.validation.BankValidationRuleDto;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import org.jetbrains.annotations.NotNull;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static de.adorsys.opba.protocol.facade.config.FacadeTransientDataConfig.FACADE_CACHE_BUILDER;
 
 @Service
 public class RequestScopedProvider implements RequestScopedServicesProvider {
+    public static final ToRulesDto TO_RULES_DTO = Mappers.getMapper(ToRulesDto.class);
 
     private final Map<String, InternalRequestScoped> memoizedProviders;
     private final ConsentAccessFactory accessProvider;
+    private final BankValidationRuleRepository bankValidationRuleRepository;
 
     public RequestScopedProvider(
             @Qualifier(FACADE_CACHE_BUILDER) CacheBuilder cacheBuilder,
-            ConsentAccessFactory accessProvider
-    ) {
+            ConsentAccessFactory accessProvider,
+            BankValidationRuleRepository bankValidationRuleRepository) {
         this.memoizedProviders = cacheBuilder.build().asMap();
         this.accessProvider = accessProvider;
+        this.bankValidationRuleRepository = bankValidationRuleRepository;
     }
 
     public RequestScoped registerForFintechSession(
@@ -50,7 +60,11 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
     ) {
         ConsentAccess access = accessProvider.forFintech(fintech, session, fintechPassword);
         EncryptionService authorizationSessionEncService = encryptionService(encryptionServiceProvider, futureAuthorizationSessionKey);
-        return doRegister(profile, access, authorizationSessionEncService, futureAuthorizationSessionKey);
+
+        List<BankValidationRule> bankValidationRules = bankValidationRuleRepository.findByProtocolId(
+                session.getProtocol().getId()
+        );
+        return doRegister(profile, access, authorizationSessionEncService, futureAuthorizationSessionKey, bankValidationRules);
     }
 
     public RequestScoped registerForPsuSession(
@@ -64,8 +78,10 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
                 session.getProtocol().getBankProfile().getBank(),
                 session.getParent()
         );
-
-        return doRegister(session.getProtocol().getBankProfile(), access, encryptionService, key);
+        List<BankValidationRule> bankValidationRules = bankValidationRuleRepository.findByProtocolId(
+                session.getParent().getProtocol().getId()
+        );
+        return doRegister(session.getProtocol().getBankProfile(), access, encryptionService, key, bankValidationRules);
     }
 
     public InternalRequestScoped deregister(RequestScoped requestScoped) {
@@ -86,13 +102,15 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
             BankProfile bank,
             ConsentAccess access,
             EncryptionService encryptionService,
-            SecretKeyWithIv key) {
+            SecretKeyWithIv key,
+            List<BankValidationRule> validationRules) {
         InternalRequestScoped requestScoped = new InternalRequestScoped(
                 encryptionService.getEncryptionKeyId(),
                 key,
                 bank,
                 access,
-                encryptionService
+                encryptionService,
+                validationRules
         );
 
         memoizedProviders.put(requestScoped.getEncryptionKeyId(), requestScoped);
@@ -110,6 +128,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         private final CurrentBankProfile bankProfile;
         private final ConsentAccess access;
         private final EncryptionService encryptionService;
+        private final List<BankValidationRule> validationRules;
 
         @Override
         public CurrentBankProfile aspspProfile() {
@@ -130,6 +149,11 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         public TransientStorage transientStorage() {
             return transientStorage;
         }
+
+        @Override
+        public List<BankValidationRuleDto> getValidationRules() {
+            return validationRules.stream().map(TO_RULES_DTO::map).collect(Collectors.toList());
+        }
     }
 
     private static class TransientStorageImpl implements TransientStorage {
@@ -137,5 +161,10 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         @Delegate
         @SuppressWarnings("PMD.UnusedPrivateField") // it is used through Delegate - via TransientStorage interface
         private final AtomicReference<Object> value = new AtomicReference<>();
+    }
+
+    @Mapper
+    public interface ToRulesDto {
+        BankValidationRuleDto map(BankValidationRule rules);
     }
 }
