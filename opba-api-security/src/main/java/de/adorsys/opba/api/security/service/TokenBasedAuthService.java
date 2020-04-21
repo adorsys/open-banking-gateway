@@ -41,7 +41,7 @@ public class TokenBasedAuthService {
 
     @SneakyThrows
     public String validateTokenAndGetSubject(String token) {
-        if (token == null) {
+        if (token == null || "".equals(token)) {
             throw new IllegalArgumentException("Missing token");
         }
 
