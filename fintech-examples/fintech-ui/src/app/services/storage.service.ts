@@ -6,7 +6,6 @@ import {DocumentCookieService} from './document-cookie.service';
 })
 export class StorageService {
   constructor(private documentCookieService: DocumentCookieService) {
-    this.clearStorage();
   }
 
   public getXsrfToken(): string {
@@ -23,13 +22,6 @@ export class StorageService {
 
     localStorage.setItem(Session.XSRF_TOKEN, matches[1]);
     this.setMaxAge(parseInt(matches[2]));
-
-
-    const cookies = this.documentCookieService.getAll();
-    for (let i = 0; i<cookies.length; i++) {
-      console.log("have cookie :\"" + cookies[i] + "\"");
-
-    }
   }
 
   public getUserName(): string {

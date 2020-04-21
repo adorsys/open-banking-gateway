@@ -8,6 +8,7 @@ import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
+import de.adorsys.opba.fintech.impl.tppclients.SessionCookieType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -47,7 +48,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
             response.setUserProfile(userProfile);
 
             HttpHeaders responseHeaders = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), optionalUserEntity.get(),
-                    xsrfToken, cookieConfigProperties.getSessioncookie());
+                    xsrfToken, cookieConfigProperties, SessionCookieType.REGULAR);
             return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
