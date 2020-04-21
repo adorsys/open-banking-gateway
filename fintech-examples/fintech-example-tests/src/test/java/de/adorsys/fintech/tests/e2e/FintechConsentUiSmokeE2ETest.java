@@ -9,6 +9,7 @@ import de.adorsys.fintech.tests.e2e.steps.UserInformationResult;
 import de.adorsys.fintech.tests.e2e.steps.WebDriverBasedUserInfoFintech;
 import io.github.bonigarcia.seljup.SeleniumExtension;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,8 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.net.URI;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
@@ -88,11 +91,13 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and().user_navigates_to_page(firefoxDriver)
                 .and().user_sees_account_and_list_transactions(firefoxDriver);
 
+        String id = getInfoId(firefoxDriver);
+
         then()
-                .fintech_can_read_anton_brueckner_accounts_and_transactions();
+                .fintech_can_read_anton_brueckner_accounts_and_transactions(id);
     }
 
-        @Test
+    @Test
     public void testEmbeddedMaxMustermanWantsItsAccountsAndTransactionsFromFintech(FirefoxDriver firefoxDriver) {
         given().enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri())
                 .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
@@ -118,7 +123,8 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and()
                 .user_sees_account_and_list_transactions(firefoxDriver);
 
-        then().fintech_can_read_max_musterman_accounts_and_transactions();
+        String id = getInfoId(firefoxDriver);
+        then().fintech_can_read_max_musterman_accounts_and_transactions(id);
     }
 
     @Test
@@ -145,8 +151,10 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and()
                 .user_sees_account_and_list_transactions(firefoxDriver);
 
+        String id = getInfoId(firefoxDriver);
+
         then()
-                .fintech_can_read_anton_brueckner_accounts_and_transactions();
+                .fintech_can_read_anton_brueckner_accounts_and_transactions(id);
 
     }
 
@@ -164,6 +172,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
         then().fintech_navigates_back_to_login_after_user_logs_out();
     }
 
+    @SneakyThrows
     @Test
     public void testRedirectMaxMustermanToSeeItsAccountsAndTransanctionsFromFintech(FirefoxDriver firefoxDriver) {
         given().enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri())
@@ -202,6 +211,18 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and()
                 .user_sees_account_and_list_transactions(firefoxDriver);
 
-        then().fintech_can_read_max_musterman_accounts_and_transactions();
+        String id = getInfoId(firefoxDriver);
+
+        then().fintech_can_read_max_musterman_accounts_and_transactions(id);
+    }
+
+    @SneakyThrows
+    private String getInfoId(FirefoxDriver firefoxDriver) {
+
+        String url = firefoxDriver.getCurrentUrl();
+        URI uri = new URI(url);
+        String path = uri.getPath();
+        String bankId = path.substring(path.lastIndexOf('/') + 1);
+        return bankId;
     }
 }

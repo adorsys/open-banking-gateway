@@ -265,4 +265,5 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
                                        && ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete")
                 );
     }
+
 }

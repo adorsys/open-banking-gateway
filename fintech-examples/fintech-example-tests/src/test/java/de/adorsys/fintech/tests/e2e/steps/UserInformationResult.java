@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 
+import java.util.UUID;
+
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.withDefaultHeaders;
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
@@ -24,12 +26,12 @@ public class UserInformationResult extends AccountInformationResult {
     private String respContent;
 
     @SneakyThrows
-    public UserInformationResult fintech_can_read_anton_brueckner_accounts_and_transactions() {
+    public UserInformationResult fintech_can_read_anton_brueckner_accounts_and_transactions(String antonBruecknerId) {
         ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
-                                                         .header(X_XSRF_TOKEN, X_XSRF_TOKEN_VALUE)
-                                                         .header(SESSION_COOKIE, SESSION_COOKIE_VALUE)
+                                                         .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                                                         .header(SESSION_COOKIE, UUID.randomUUID().toString())
                                                          .when()
-                                                         .get(BANKPROFILE_ENDPOINT + BANK_ID_VALUE + ACCOUNT + ANTON_BRUECKNER_ID)
+                                                         .get(BANKPROFILE_ENDPOINT + BANK_ID_VALUE + ACCOUNT + antonBruecknerId)
                                                          .then()
                                                          .statusCode(HttpStatus.OK.value())
                                                          .extract();
@@ -37,12 +39,12 @@ public class UserInformationResult extends AccountInformationResult {
         return (UserInformationResult) self();
     }
 
-    public UserInformationResult fintech_can_read_max_musterman_accounts_and_transactions() {
+    public UserInformationResult fintech_can_read_max_musterman_accounts_and_transactions(String maxMustermanId) {
         ExtractableResponse<Response> response = withDefaultHeaders(MAX_MUSTERMAN)
-                                                         .header(X_XSRF_TOKEN, X_XSRF_TOKEN_VALUE)
-                                                         .header(SESSION_COOKIE, SESSION_COOKIE_VALUE)
+                                                         .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                                                         .header(SESSION_COOKIE, UUID.randomUUID().toString())
                                                          .when()
-                                                         .get(BANKPROFILE_ENDPOINT + BANK_ID_VALUE + ACCOUNT + MAX_MUSTERMAN_ID)
+                                                         .get(BANKPROFILE_ENDPOINT + BANK_ID_VALUE + ACCOUNT + maxMustermanId)
                                                          .then()
                                                          .statusCode(HttpStatus.OK.value())
                                                          .extract();
@@ -60,4 +62,18 @@ public class UserInformationResult extends AccountInformationResult {
         this.respContent = response.body().asString();
         return (UserInformationResult) self();
     }
+
+    public UserInformationResult fintech_get_bank_infos(String bankId) {
+        ExtractableResponse<Response> response = withDefaultHeaders()
+                                                         .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                                                         .header(SESSION_COOKIE, UUID.randomUUID().toString())
+                                                         .when()
+                                                         .get(BANKPROFILE_ENDPOINT + bankId)
+                                                         .then()
+                                                         .statusCode(HttpStatus.OK.value())
+                                                         .extract();
+        this.respContent = response.body().asString();
+        return (UserInformationResult) self();
+    }
+
 }
