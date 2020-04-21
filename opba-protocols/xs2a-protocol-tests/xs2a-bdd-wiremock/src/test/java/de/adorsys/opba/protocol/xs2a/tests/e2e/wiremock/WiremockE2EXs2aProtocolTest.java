@@ -76,7 +76,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .and()
                 .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
                 .and()
-                .open_banking_redirect_from_aspsp_ok_webhook_called();
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
         then()
                 .open_banking_has_consent_for_anton_brueckner_account_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
@@ -101,7 +101,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .and()
                 .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
                 .and()
-                .open_banking_redirect_from_aspsp_ok_webhook_called();
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
         then()
                 .open_banking_has_consent_for_anton_brueckner_transaction_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
@@ -128,7 +128,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .and()
                 .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
                 .and()
-                .open_banking_redirect_from_aspsp_ok_webhook_called();
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
         then()
                 .open_banking_has_consent_for_anton_brueckner_transaction_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
@@ -390,7 +390,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .and()
                 .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_ip_address_check()
                 .and()
-                .open_banking_redirect_from_aspsp_ok_webhook_called();
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
         then()
                 .open_banking_has_consent_for_anton_brueckner_account_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
@@ -412,7 +412,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .and()
                 .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_ip_address_check()
                 .and()
-                .open_banking_redirect_from_aspsp_ok_webhook_called();
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
         then()
                 .open_banking_has_consent_for_anton_brueckner_account_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
@@ -434,7 +434,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .and()
                 .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_dedicated_consent()
                 .and()
-                .open_banking_redirect_from_aspsp_ok_webhook_called();
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
         then()
                 .open_banking_has_consent_for_anton_brueckner_account_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
@@ -458,7 +458,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
                 .and()
                 .user_anton_brueckner_provided_psu_id_parameter_to_list_accounts_with_all_accounts_consent_with_ip_address_check()
                 .and()
-                .open_banking_redirect_from_aspsp_ok_webhook_called();
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
         then()
                 .open_banking_has_consent_for_anton_brueckner_account_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
