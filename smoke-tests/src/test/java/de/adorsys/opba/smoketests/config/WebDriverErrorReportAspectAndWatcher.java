@@ -27,6 +27,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Aspect
 public class WebDriverErrorReportAspectAndWatcher implements TestWatcher {
 
+    private static final int SCREENS_TO_LOG = 3;
+
     private static final Map<String, DriverInfo> DRIVERS = new ConcurrentHashMap<>();
 
     @Around(value = "execution(* *(.., (org.openqa.selenium.WebDriver+), ..)) && (@annotation(org.junit.jupiter.api.Test) || @within(org.junit.jupiter.api.Test))")
@@ -85,9 +87,10 @@ public class WebDriverErrorReportAspectAndWatcher implements TestWatcher {
             return;
         }
 
-        log.error("Failed due to {}", ex.getMessage());
-        log.error("Last WebDriver sequence:");
-        info.getLogs().forEach(it -> log.error("{}", it));
+        log.error("Failed due to {}", ex.getMessage(), ex);
+        log.error("Last {} screens of WebDriver sequence:", SCREENS_TO_LOG);
+        int skipScreenCount = Math.max(0, info.getLogs().size() - SCREENS_TO_LOG);
+        info.getLogs().stream().skip(skipScreenCount).forEach(it -> log.error("{}", it));
     }
 
     private void readAndStoreWebDriverData(String methodName, boolean isBefore) {
