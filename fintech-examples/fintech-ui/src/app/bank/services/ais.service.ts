@@ -1,7 +1,7 @@
-import {map} from 'rxjs/operators';
-import {FinTechAccountInformationService} from '../../api';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Injectable} from '@angular/core';
+import { map } from 'rxjs/operators';
+import { FinTechAccountInformationService } from '../../api';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class AisService {
   ) {}
 
   private static isoDate(toConvert: Date) {
-    return toConvert.toISOString().split('T')[0]
+    return toConvert.toISOString().split('T')[0];
   }
 
   getAccounts(bankId: string) {

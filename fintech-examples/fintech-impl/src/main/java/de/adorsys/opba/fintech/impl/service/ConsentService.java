@@ -1,7 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
-import de.adorsys.opba.fintech.impl.tppclients.TppConsenClient;
+import de.adorsys.opba.fintech.impl.tppclients.TppConsentClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,11 +18,11 @@ import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
 @RequiredArgsConstructor
 public class ConsentService {
 
-    private final TppConsenClient tppConsenClient;
+    private final TppConsentClient tppConsentClient;
     private final TppProperties tppProperties;
 
     public boolean confirmConsent(String authId, UUID xRequestId) {
-        HttpStatus statusCode = tppConsenClient.confirmConsent(
+        HttpStatus statusCode = tppConsentClient.confirmConsent(
                 authId,
                 xRequestId,
                 tppProperties.getServiceSessionPassword(),
