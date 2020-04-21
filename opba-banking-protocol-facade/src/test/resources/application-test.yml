@@ -7,13 +7,6 @@ spring:
   liquibase:
     drop-first: true
 
-# Facade tests simply ignore Flowable
-flowable:
-  app:
-    enabled: false
-  jpa-enabled: false
-  async-executor-activate: false
-
 protocol:
   embedded-ui-base-url: http://localhost:1010
 
