@@ -17,7 +17,13 @@ export class AuthService {
 
   public userLoginForConsent(authorizationId: string, redirectCode: string, credentials: PsuAuthBody) {
     const xRequestID = uuid.v4();
-    return this.psuAuthForConsentApproval.loginForApproval(xRequestID, authorizationId, redirectCode, credentials, 'response');
+    return this.psuAuthForConsentApproval.loginForApproval(
+      xRequestID,
+      authorizationId,
+      redirectCode,
+      credentials,
+      'response'
+    );
   }
 
   public userLogin(credentials: PsuAuthBody) {
