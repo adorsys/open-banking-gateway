@@ -97,7 +97,7 @@ class RedirectHandlerServiceTest {
     @Test
     void doRedirect_success() {
         // given
-        when(authorizeService.modifySessionEntityAndCreateNewAuthHeader(any(), any(), any(), any()))
+        when(authorizeService.modifySessionEntityAndCreateNewAuthHeader(any(), any(), any(), any(), any()))
                 .thenReturn(new HttpHeaders());
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.of(REDIRECT_URLS_ENTITY));
         when(authorizeService.getSession()).thenReturn(sessionEntity);

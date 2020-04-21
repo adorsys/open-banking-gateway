@@ -6,6 +6,7 @@ import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
+import de.adorsys.opba.fintech.impl.tppclients.SessionCookieType;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -92,7 +93,7 @@ public class RedirectHandlerService {
 
     private ResponseEntity prepareRedirectToReadResultResponse(SessionEntity sessionEntity, RedirectUrlsEntity redirectUrls) {
         String xsrfToken = UUID.randomUUID().toString();
-        HttpHeaders authHeaders = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), sessionEntity, xsrfToken, cookieConfigProperties.getSessioncookie());
+        HttpHeaders authHeaders = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), sessionEntity, xsrfToken, cookieConfigProperties, SessionCookieType.REGULAR);
         authHeaders.put(LOCATION_HEADER, singletonList(redirectUrls.getOkStatePath()));
         return new ResponseEntity<>(authHeaders, HttpStatus.ACCEPTED);
     }
