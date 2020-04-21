@@ -105,7 +105,7 @@ class WiremockE2EXs2aProtocolAuthorizationDenyTest extends SpringScenarioTest<Mo
                 .and()
                 .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
                 .and()
-                .open_banking_redirect_from_aspsp_ok_webhook_called();
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
         then()
                 .open_banking_has_consent_for_anton_brueckner_account_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
