@@ -5,9 +5,11 @@ import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.api.model.generated.UserProfile;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAuthorizationApi;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
+import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.ConsentService;
 import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
+import de.adorsys.opba.fintech.impl.tppclients.SessionCookieType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -24,10 +26,12 @@ import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_ID;
 @RestController
 @RequiredArgsConstructor
 public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
+
     private final AuthorizeService authorizeService;
     private final RedirectHandlerService redirectHandlerService;
     private final RestRequestContext restRequestContext;
     private final ConsentService consentService;
+    private final CookieConfigProperties cookieConfigProperties;
 
     @Override
     public ResponseEntity<InlineResponse200> loginPOST(LoginRequest loginRequest, UUID xRequestID) {
