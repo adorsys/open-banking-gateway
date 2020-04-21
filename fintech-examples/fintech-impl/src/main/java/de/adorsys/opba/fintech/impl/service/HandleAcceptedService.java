@@ -3,6 +3,7 @@ package de.adorsys.opba.fintech.impl.service;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
+import de.adorsys.opba.fintech.impl.tppclients.SessionCookieType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
@@ -39,7 +40,7 @@ public class HandleAcceptedService {
 
         String xsrfToken = UUID.randomUUID().toString();
         HttpHeaders responseHeaders = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), sessionEntity,
-                xsrfToken, cookieConfigProperties.getRedirectcookie());
+                xsrfToken, cookieConfigProperties, SessionCookieType.REDIRECT);
         responseHeaders.add(FIN_TECH_AUTH_ID, sessionEntity.getAuthId());
         responseHeaders.setLocation(location);
 
