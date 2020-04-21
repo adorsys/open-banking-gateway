@@ -125,6 +125,8 @@ public class Xs2aContext extends BaseContext {
      */
     private boolean redirectConsentOk;
 
+    private String className;
+
     @JsonIgnore
     public String getPsuPassword() {
         TransientDataEntry entry = this.transientStorage().get();

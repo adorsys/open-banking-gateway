@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @FeignClient(url = "${tpp.url}", name = "tppConsentClient")
-public interface TppConsenClient extends ConsentConfirmationApi {
+public interface TppConsentClient extends ConsentConfirmationApi {
     default Optional<ObjectMapper> getObjectMapper() {
         return Optional.empty();
     }
