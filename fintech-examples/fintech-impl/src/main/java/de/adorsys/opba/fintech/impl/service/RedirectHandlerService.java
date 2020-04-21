@@ -93,7 +93,8 @@ public class RedirectHandlerService {
 
     private ResponseEntity prepareRedirectToReadResultResponse(SessionEntity sessionEntity, RedirectUrlsEntity redirectUrls) {
         String xsrfToken = UUID.randomUUID().toString();
-        HttpHeaders authHeaders = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), sessionEntity, xsrfToken, cookieConfigProperties, SessionCookieType.REGULAR);
+        HttpHeaders authHeaders = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), sessionEntity,
+                xsrfToken, cookieConfigProperties, SessionCookieType.REGULAR);
         authHeaders.put(LOCATION_HEADER, singletonList(redirectUrls.getOkStatePath()));
         return new ResponseEntity<>(authHeaders, HttpStatus.ACCEPTED);
     }
