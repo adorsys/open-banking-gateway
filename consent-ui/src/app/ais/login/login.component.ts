@@ -14,8 +14,9 @@ export class LoginComponent implements OnInit {
   public static ROUTE = 'login';
 
   loginForm: FormGroup;
+  redirectCode: string;
+
   private route: ActivatedRouteSnapshot;
-  private redirectCode: string;
   private authId: string;
 
   constructor(
