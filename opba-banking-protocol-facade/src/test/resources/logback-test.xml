@@ -4,7 +4,14 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
         </encoder>
     </appender>
-    <root level="warn">
+    <root level="info">
         <appender-ref ref="STDOUT" />
     </root>
+
+    <logger name="liquibase.executor" level="WARN">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+    <logger name="liquibase.changelog" level="WARN">
+        <appender-ref ref="STDOUT"/>
+    </logger>
 </configuration>
