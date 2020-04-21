@@ -6,6 +6,8 @@ import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.domain.ValidationIssueException;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static de.adorsys.opba.protocol.api.common.Approach.EMBEDDED;
+import static de.adorsys.opba.protocol.api.common.Approach.REDIRECT;
 import static de.adorsys.opba.protocol.bpmnshared.dto.context.ContextMode.REAL_CALLS;
 
 
@@ -45,11 +49,16 @@ public class Xs2aValidator {
      * @param exec Current execution that will be updated with violations if present.
      * @param dtosToValidate ASPSP API call parameter objects to validate.
      */
-    public void validate(DelegateExecution exec, Object... dtosToValidate) {
+    public void validate(DelegateExecution exec, Xs2aContext context, Object... dtosToValidate) {
         Set<ConstraintViolation<Object>> allErrors = new HashSet<>();
 
+        Set<String> fieldsToIgnore = getFieldsToIgnoreValidate(context);
+
         for (Object value : dtosToValidate) {
-            Set<ConstraintViolation<Object>> errors = validator.validate(value);
+            Set<ConstraintViolation<Object>> errors = validator.validate(value)
+                    .stream()
+                    .filter(f -> fieldsToIgnore.contains(findInfoOnViolation(f).ctx().value().name()))
+                    .collect(Collectors.toSet());
             allErrors.addAll(errors);
         }
 
@@ -69,6 +78,16 @@ public class Xs2aValidator {
                     }
                 }
         );
+    }
+
+    private Set<String> getFieldsToIgnoreValidate(Xs2aContext context) {
+        String approach = context.getAspspScaApproach();
+        return context.getRequestScoped().getValidationRules().stream()
+                .filter(it -> !it.getEndpointClass().equals(context.getClassName()))
+                .filter(it -> it.isForEmbedded() && !EMBEDDED.name().equalsIgnoreCase(approach))
+                .filter(it -> it.isForRedirect() && !REDIRECT.name().equalsIgnoreCase(approach))
+                .map(bankValidationRuleDto -> bankValidationRuleDto.getValidationCode().toUpperCase())
+                .collect(Collectors.toSet());
     }
 
     private ValidationIssue toIssue(ConstraintViolation<Object> violation) {
