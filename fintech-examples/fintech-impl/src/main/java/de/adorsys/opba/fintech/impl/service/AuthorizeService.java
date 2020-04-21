@@ -5,6 +5,7 @@ import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
+import de.adorsys.opba.fintech.impl.properties.CookieConfigPropertiesSpecific;
 import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import de.adorsys.opba.fintech.impl.tppclients.SessionCookieType;
 import lombok.RequiredArgsConstructor;
@@ -73,53 +74,28 @@ public class AuthorizeService {
     @Transactional
     public HttpHeaders modifySessionEntityAndCreateNewAuthHeader(String xRequestID, SessionEntity sessionEntity, String xsrfToken,
                                                                  CookieConfigProperties cookieProps, SessionCookieType sessionCookieType) {
-        String oldSessionCookie = sessionEntity.getSessionCookieValue();
+        // String oldSessionCookie = sessionEntity.getSessionCookieValue();
         sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(sessionEntity.getFintechUserId(), xsrfToken));
         userRepository.save(sessionEntity);
 
         List<String> cookieValues = new ArrayList<>();
         int maxAge = 0;
 
-        // when redirect cookie should be set, old session cookie will be reset
         if (sessionCookieType.equals(SessionCookieType.REDIRECT)) {
-            {
-                String path = cookieProps.getRedirectcookie().getPath();
-                if (path.matches("(.*)" + AUTH_ID_VARIABLE + "(.*)")) {
-                    path = path.replaceAll(AUTH_ID_VARIABLE, sessionEntity.getAuthId());
-                }
-
-                String sessionCookieString = ResponseCookie.from(Consts.COOKIE_SESSION_COOKIE_NAME, sessionEntity.getSessionCookieValue())
-                        .httpOnly(cookieProps.getRedirectcookie().isHttpOnly())
-                        .sameSite(cookieProps.getRedirectcookie().getSameSite())
-                        .secure(cookieProps.getRedirectcookie().isSecure())
-                        .path(path)
-                        .maxAge(cookieProps.getRedirectcookie().getMaxAge())
-                        .build().toString();
-                cookieValues.add(sessionCookieString);
+            String path = cookieProps.getRedirectcookie().getPath();
+            if (path.matches("(.*)" + AUTH_ID_VARIABLE + "(.*)")) {
+                path = path.replaceAll(AUTH_ID_VARIABLE, sessionEntity.getAuthId());
             }
-            /*
+            cookieValues.add(createSessionCookieString(sessionEntity, cookieProps.getRedirectcookie(), path, cookieProps.getRedirectcookie().getMaxAge()));
+            /* try to delete old cookie
             if (oldSessionCookie != null) {
-                String sessionCookieString = ResponseCookie.from(Consts.COOKIE_SESSION_COOKIE_NAME, oldSessionCookie)
-                        .httpOnly(cookieProps.getSessioncookie().isHttpOnly())
-                        .sameSite(cookieProps.getSessioncookie().getSameSite())
-                        .secure(cookieProps.getSessioncookie().isSecure())
-                        .path(cookieProps.getSessioncookie().getPath())
-                        .maxAge(0)
-                        .build().toString();
-                cookieValues.add(sessionCookieString);
+                cookieValues.add(createSessionCookieString(sessionEntity, cookieProps.getSessioncookie(), cookieProps.getSessioncookie().getPath(), 0));
             }
             */
 
             maxAge = cookieProps.getRedirectcookie().getMaxAge();
         } else {
-            String sessionCookieString = ResponseCookie.from(Consts.COOKIE_SESSION_COOKIE_NAME, sessionEntity.getSessionCookieValue())
-                    .httpOnly(cookieProps.getSessioncookie().isHttpOnly())
-                    .sameSite(cookieProps.getSessioncookie().getSameSite())
-                    .secure(cookieProps.getSessioncookie().isSecure())
-                    .path(cookieProps.getSessioncookie().getPath())
-                    .maxAge(cookieProps.getSessioncookie().getMaxAge())
-                    .build().toString();
-            cookieValues.add(sessionCookieString);
+            cookieValues.add(createSessionCookieString(sessionEntity, cookieProps.getSessioncookie(), cookieProps.getSessioncookie().getPath(), cookieProps.getSessioncookie().getMaxAge()));
             maxAge = cookieProps.getSessioncookie().getMaxAge();
         }
 
@@ -135,6 +111,16 @@ public class AuthorizeService {
         }
 
         return responseHeaders;
+    }
+
+    private String createSessionCookieString(SessionEntity sessionEntity, CookieConfigPropertiesSpecific cookieProps, String path, int maxAge) {
+        return ResponseCookie.from(Consts.COOKIE_SESSION_COOKIE_NAME, sessionEntity.getSessionCookieValue())
+                .httpOnly(cookieProps.isHttpOnly())
+                .sameSite(cookieProps.getSameSite())
+                .secure(cookieProps.isSecure())
+                .path(path)
+                .maxAge(maxAge)
+                .build().toString();
     }
 
     @Transactional
