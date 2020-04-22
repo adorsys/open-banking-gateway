@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @ActiveProfiles("test")
 @SpringBootTest(classes = ApplicationTest.class)
-@Sql(statements = "DELETE FROM opb_fintech CASCADE;")
+@Sql(statements = "TRUNCATE opb_fintech CASCADE;")
 public class ServiceContextProviderTest {
 
     private static final String PASSWORD = "password";
