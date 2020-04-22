@@ -57,7 +57,7 @@ public class Xs2aValidator {
         for (Object value : dtosToValidate) {
             Set<ConstraintViolation<Object>> errors = validator.validate(value)
                     .stream()
-                    .filter(f -> fieldsToIgnore.contains(findInfoOnViolation(f).ctx().value().name()))
+                    .filter(f -> !fieldsToIgnore.contains(findInfoOnViolation(f).ctx().value().name()))
                     .collect(Collectors.toSet());
             allErrors.addAll(errors);
         }
