@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @SuppressWarnings("CPD-START") // Same steps are used, but that's fine for readability
 @ActiveProfiles("test")
-@Sql(statements = "DELETE FROM opb_fintech CASCADE;")
+@Sql(statements = "TRUNCATE opb_fintech CASCADE;")
 @SpringBootTest(classes = ListAccountsServiceTest.TestConfig.class)
 class ListAccountsServiceTest {
 
