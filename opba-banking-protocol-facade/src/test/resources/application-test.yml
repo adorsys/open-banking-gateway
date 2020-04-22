@@ -4,8 +4,6 @@ spring:
     username: postgres
     password: docker
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-  liquibase:
-    drop-first: true
 
 protocol:
   embedded-ui-base-url: http://localhost:1010
