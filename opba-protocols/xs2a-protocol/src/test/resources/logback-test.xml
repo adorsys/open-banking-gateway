@@ -5,16 +5,10 @@
         </encoder>
     </appender>
 
-    <logger name="org.springframework" level="WARN">
+    <logger name="org.springframework.boot.test" level="WARN">
         <appender-ref ref="STDOUT" />
     </logger>
-    <logger name="liquibase" level="WARN">
-        <appender-ref ref="STDOUT" />
-    </logger>
-    <logger name="org.hibernate" level="WARN">
-        <appender-ref ref="STDOUT" />
-    </logger>
-    <logger name="org.flowable" level="WARN">
+    <logger name="org.springframework.test.context" level="WARN">
         <appender-ref ref="STDOUT" />
     </logger>
 
