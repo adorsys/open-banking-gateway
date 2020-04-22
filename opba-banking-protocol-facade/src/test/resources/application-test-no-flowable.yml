@@ -1,3 +1,7 @@
+spring:
+  liquibase:
+    drop-first: true
+
 flowable:
   app:
     enabled: false
