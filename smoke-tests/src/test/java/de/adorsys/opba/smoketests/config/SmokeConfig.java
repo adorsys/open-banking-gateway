@@ -21,6 +21,11 @@ public class SmokeConfig {
     @Value("${test.smoke.opba.server-uri}")
     private String opbaServerUri;
 
+    // For non-browser tests. Cookie must reside on opba-ui domain if requests are proxied through UI
+    @Getter
+    @Value("${test.smoke.opba.ui-uri}")
+    private String uiUri;
+
     @Getter
     @Value("${test.smoke.aspsp-profile.server-uri}")
     private String aspspProfileServerUri;

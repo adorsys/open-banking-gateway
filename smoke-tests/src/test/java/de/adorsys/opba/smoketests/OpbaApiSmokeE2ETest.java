@@ -87,6 +87,8 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBa
             .and()
             .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
             .and()
+            .manually_set_authorization_cookie_on_domain(firefoxDriver, config.getUiUri())
+            .and()
             .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
             .and()
             .sandbox_anton_brueckner_inputs_username_and_password(firefoxDriver)
@@ -97,7 +99,7 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBa
             .and()
             .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
             .and()
-            .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_only(firefoxDriver);
+            .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
 
         then()
             .fintech_calls_consent_activation_for_current_authorization_id()
@@ -181,6 +183,8 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBa
             .and()
             .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
             .and()
+            .manually_set_authorization_cookie_on_domain(firefoxDriver, config.getUiUri())
+            .and()
             .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
             .and()
             .sandbox_anton_brueckner_inputs_username_and_password(firefoxDriver)
@@ -191,7 +195,7 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBa
             .and()
             .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
             .and()
-            .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_only(firefoxDriver);
+            .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
 
         AccountInformationResult result = then()
             .fintech_calls_consent_activation_for_current_authorization_id()
