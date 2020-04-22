@@ -1,8 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.config.flowable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
+import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.variable.api.types.ValueFields;
@@ -16,7 +15,7 @@ class LargeJsonCustomSerializer extends SerializableType {
 
     static final String JSON = "as_large_json";
 
-    private final TransientDataStorage transientDataStorage;
+    private final RequestScopedServicesProvider scopedServicesProvider;
     private final ObjectMapper mapper;
     private final List<String> allowOnlyClassesWithPrefix;
     private final int minLength;
@@ -47,22 +46,15 @@ class LargeJsonCustomSerializer extends SerializableType {
     }
 
     @Override
-    @SneakyThrows
     public byte[] serialize(Object o, ValueFields valueFields) {
         if (o == null) {
             return null;
         }
 
-        return mapper.writeValueAsBytes(
-                ImmutableMap.of(
-                        o.getClass().getCanonicalName(),
-                        o
-                )
-        );
+        return SerializerUtil.serialize(o, mapper);
     }
 
     @Override
-    @SneakyThrows
     public Object deserialize(byte[] bytes, ValueFields valueFields) {
         if (null == bytes) {
             return null;
@@ -72,7 +64,7 @@ class LargeJsonCustomSerializer extends SerializableType {
                 bytes,
                 mapper,
                 allowOnlyClassesWithPrefix,
-                transientDataStorage
+                scopedServicesProvider
         );
     }
 }

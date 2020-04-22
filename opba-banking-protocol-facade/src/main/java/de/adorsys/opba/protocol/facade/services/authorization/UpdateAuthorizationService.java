@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-import static de.adorsys.opba.db.domain.entity.ProtocolAction.UPDATE_AUTHORIZATION;
+import static de.adorsys.opba.protocol.api.common.ProtocolAction.UPDATE_AUTHORIZATION;
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
 
 @Service

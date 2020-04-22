@@ -14,14 +14,14 @@ import ActionEnum = ConsentAuth.ActionEnum;
   styleUrls: ['./consent-initiate.component.scss']
 })
 export class ConsentInitiateComponent implements OnInit {
+  private redirectCode: string;
+  private route: ActivatedRouteSnapshot;
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private sessionService: SessionService,
     private consentAuthService: ConsentAuthorizationService
   ) {}
-
-  private route: ActivatedRouteSnapshot;
 
   private static isInvalid(authorizationId: string, redirectCode: string): boolean {
     return !redirectCode || !authorizationId || '' === redirectCode || '' === authorizationId;
@@ -31,12 +31,15 @@ export class ConsentInitiateComponent implements OnInit {
     this.route = this.activatedRoute.snapshot;
 
     const authId = this.route.params.authId;
-    const redirectCode = this.route.queryParams.redirectCode;
+    this.redirectCode = this.route.queryParams.redirectCode;
+    if (this.redirectCode) {
+      this.sessionService.setRedirectCode(authId, this.redirectCode);
+    }
 
-    if (ConsentInitiateComponent.isInvalid(authId, redirectCode)) {
+    if (ConsentInitiateComponent.isInvalid(authId, this.redirectCode)) {
       this.abortUnauthorized();
     } else {
-      this.initiateConsentSession(authId, redirectCode);
+      this.initiateConsentSession(authId, this.redirectCode);
     }
   }
 
@@ -45,10 +48,16 @@ export class ConsentInitiateComponent implements OnInit {
   }
 
   private initiateConsentSession(authorizationId: string, redirectCode: string) {
-    this.consentAuthService.authUsingGET(authorizationId, redirectCode, 'response').subscribe(res => {
-      this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-      this.navigate(authorizationId, res.body.consentAuth);
-    });
+    this.consentAuthService.authUsingGET(authorizationId, redirectCode, 'response').subscribe(
+      res => {
+        this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+
+        this.navigate(authorizationId, res.body.consentAuth);
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
 
   private navigate(authorizationId: string, res: ConsentAuth) {

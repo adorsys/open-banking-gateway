@@ -1,8 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import de.adorsys.opba.db.domain.entity.Consent;
-import de.adorsys.opba.db.repository.jpa.ConsentRepository;
+import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
 import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aFlowableProperties;
 import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aObjectMapper;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
@@ -32,7 +31,6 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
     private final ContextMerger merger;
     private final Xs2aFlowableProperties properties;
     private final Xs2aObjectMapper mapper;
-    private final ConsentRepository consentRepository;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
@@ -46,23 +44,26 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
 
     @SneakyThrows
     private void loadContext(DelegateExecution execution, Xs2aContext context) {
-        Optional<Consent> consent = consentRepository.findByServiceSessionId(context.getServiceSessionId());
+        Optional<ProtocolFacingConsent> consent = context.consentAccess().findByCurrentServiceSession();
 
-        if (!consent.isPresent() || null == consent.get().getContext()) {
+        if (!consent.isPresent() || null == consent.get().getConsentContext()) {
             return;
         }
 
-        JsonNode value = mapper.readTree(consent.get().getContext());
+        ProtocolFacingConsent target = consent.get();
+
+        JsonNode value = mapper.readTree(target.getConsentContext());
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
 
         if (!properties.canSerialize(classNameAndValue.getKey())) {
             throw new IllegalArgumentException("Class deserialization not allowed " + classNameAndValue.getKey());
         }
 
-        Object ctx = mapper.getMapper().readValue(
+        Xs2aContext ctx = (Xs2aContext) mapper.getMapper().readValue(
                 classNameAndValue.getValue().traverse(),
                 Class.forName(classNameAndValue.getKey())
         );
+        ctx.setConsentId(target.getConsentId());
 
         // TODO - tidy up context merging
         if (ctx instanceof TransactionListXs2aContext && context instanceof TransactionListXs2aContext) {
@@ -77,6 +78,8 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
             merger.merge(context, (Xs2aContext) ctx);
         }
 
+        // Avoid ignoring MOCK mode due to Merged context received REAL mode
+        ctx.setMode(context.getMode());
         execution.setVariable(CONTEXT, ctx);
     }
 
@@ -87,21 +90,25 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
     )
     public interface ContextMerger {
 
+        @Mapping(target = "mode", ignore = true)
         @Mapping(target = "flowByAction", ignore = true)
         @Mapping(target = "psuPassword", ignore = true)
         @Mapping(target = "lastScaChallenge", ignore = true)
         void merge(Xs2aContext source, @MappingTarget Xs2aContext target);
 
+        @Mapping(target = "mode", ignore = true)
         @Mapping(target = "flowByAction", ignore = true)
         @Mapping(target = "psuPassword", ignore = true)
         @Mapping(target = "lastScaChallenge", ignore = true)
         void merge(Xs2aContext source, @MappingTarget TransactionListXs2aContext target);
 
+        @Mapping(target = "mode", ignore = true)
         @Mapping(target = "flowByAction", ignore = true)
         @Mapping(target = "psuPassword", ignore = true)
         @Mapping(target = "lastScaChallenge", ignore = true)
         void merge(TransactionListXs2aContext source, @MappingTarget TransactionListXs2aContext target);
 
+        @Mapping(target = "mode", ignore = true)
         @Mapping(target = "flowByAction", ignore = true)
         @Mapping(target = "psuPassword", ignore = true)
         @Mapping(target = "lastScaChallenge", ignore = true)

@@ -4,6 +4,7 @@ import de.adorsys.opba.consentapi.config.EnableConsentApi;
 import de.adorsys.opba.db.config.EnableBankingPersistence;
 import de.adorsys.opba.protocol.xs2a.EnableXs2aProtocol;
 import de.adorsys.opba.protocol.xs2a.EnableXs2aSandboxProtocol;
+import de.adorsys.opba.tppauthapi.config.EnableTppAuthApi;
 import de.adorsys.opba.tppbankingapi.config.EnableBankingApi;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableConsentApi
 @EnableBankingApi
+@EnableTppAuthApi
 @EnableXs2aProtocol
 @EnableXs2aSandboxProtocol
 @EnableBankingPersistence

@@ -1,25 +1,26 @@
 package de.adorsys.opba.protocol.facade.services.context;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.base.Strings;
+import de.adorsys.opba.db.domain.entity.BankProfile;
+import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
-import de.adorsys.opba.db.repository.jpa.AuthenticationSessionRepository;
+import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
+import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
-import de.adorsys.opba.protocol.api.dto.KeyDto;
-import de.adorsys.opba.protocol.api.dto.KeyWithParamsDto;
+import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
-import de.adorsys.opba.protocol.api.services.EncryptionService;
-import de.adorsys.opba.protocol.api.services.SecretKeyOperations;
-import de.adorsys.opba.protocol.facade.services.FacadeEncryptionServiceFactory;
-import de.adorsys.opba.protocol.facade.services.ServiceSessionWithEncryption;
+import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
+import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
+import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
+import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
+import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,15 +33,15 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
 
     public static final String FINTECH_CONTEXT_PROVIDER = "FINTECH_CONTEXT_PROVIDER";
 
-    private static final ObjectMapper MAPPER = new ObjectMapper()
-            .findAndRegisterModules()
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-            .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    protected final AuthorizationSessionRepository authSessions;
 
-    protected final AuthenticationSessionRepository authSessions;
+    private final FintechSecureStorage fintechSecureStorage;
+    private final FintechRepository fintechRepository;
+    private final BankProfileJpaRepository profileJpaRepository;
+    private final ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider;
+    private final RequestScopedProvider provider;
+    private final EncryptionKeySerde encryptionKeySerde;
     private final ServiceSessionRepository serviceSessions;
-    private final SecretKeyOperations secretKeyOperations;
-    private final FacadeEncryptionServiceFactory encryptionFactory;
 
     @Override
     @Transactional
@@ -50,22 +51,20 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
             throw new IllegalArgumentException("No serviceable body");
         }
         AuthSession authSession = extractAndValidateAuthSession(request);
-        ServiceSessionWithEncryption session = extractOrCreateServiceSession(request, authSession);
+        ServiceSession session = extractOrCreateServiceSession(request, authSession);
         return ServiceContext.<T>builder()
-                .encryptionService(session.getEncryption())
+                .requestScoped(getRequestScoped(request, session, authSession))
                 .serviceSessionId(session.getId())
                 .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
                 .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
                 .bankId(request.getFacadeServiceable().getBankId())
                 .authSessionId(null == authSession ? null : authSession.getId())
+                .authContext(null == authSession ? null : authSession.getContext())
                 // Currently 1-1 auth-session to service session
                 .futureAuthSessionId(session.getId())
                 .futureRedirectCode(UUID.randomUUID())
                 .futureAspspRedirectCode(UUID.randomUUID())
                 .request(request)
-                .authContext(null == authSession ? null : authSession.getContext())
-                .fintechRedirectOkUri(session.getFintechOkUri())
-                .fintechRedirectNokUri(session.getFintechNokUri())
                 .build();
     }
 
@@ -89,89 +88,34 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         return session;
     }
 
-    private <T extends FacadeServiceableGetter> ServiceSessionWithEncryption extractOrCreateServiceSession(
+    private <T extends FacadeServiceableGetter> ServiceSession extractOrCreateServiceSession(
             T request,
             AuthSession authSession
     ) {
         if (null != authSession) {
-            return readServiceSessionFromAuthSession(authSession, request.getFacadeServiceable());
+            return authSession.getParent();
         } else {
             return readOrCreateServiceSessionFromRequest(request.getFacadeServiceable());
         }
     }
 
-    private ServiceSessionWithEncryption readServiceSessionFromAuthSession(AuthSession authSession, FacadeServiceableRequest facadeServiceable) {
-        return serviceSessionWithEncryption(authSession.getParent(), facadeServiceable);
-    }
-
-    private ServiceSessionWithEncryption readOrCreateServiceSessionFromRequest(FacadeServiceableRequest facadeServiceable) {
+    private ServiceSession readOrCreateServiceSessionFromRequest(FacadeServiceableRequest facadeServiceable) {
         UUID serviceSessionId = facadeServiceable.getServiceSessionId();
 
         if (null == serviceSessionId) {
-            return createServiceSession(facadeServiceable);
+            return createServiceSession(UUID.randomUUID());
         }
 
         return serviceSessions.findById(serviceSessionId)
-            .map(it -> serviceSessionWithEncryption(it, facadeServiceable))
-            .orElseGet(() -> createServiceSession(facadeServiceable));
+            .orElseGet(() -> createServiceSession(serviceSessionId));
     }
 
     @NotNull
     @SneakyThrows
-    private ServiceSessionWithEncryption createServiceSession(FacadeServiceableRequest facadeServiceable) {
-        KeyWithParamsDto keyWithParams = newSecretKey(facadeServiceable.getSessionPassword());
-        EncryptionService encryptionService = encryptionFactory.provideEncryptionService(keyWithParams.getKey());
-        String encryptedContext = new String(encryptionService.encrypt(MAPPER.writeValueAsBytes(facadeServiceable)));
-
-        ServiceSession session = new ServiceSession();
-        session.setId(facadeServiceable.getServiceSessionId());
-        session.setContext(encryptedContext);
-        session.setFintechOkUri(facadeServiceable.getFintechRedirectUrlOk());
-        session.setFintechNokUri(facadeServiceable.getFintechRedirectUrlNok());
-        session.setSecretKey(secretKeyOperations.encrypt(keyWithParams.getKey()));
-        session.setAlgo(keyWithParams.getAlgorithm());
-        session.setSalt(keyWithParams.getSalt());
-        session.setIterCount(keyWithParams.getIterationCount());
-        return new ServiceSessionWithEncryption(serviceSessions.save(session), encryptionService);
-    }
-
-    @NotNull
-    private ServiceSessionWithEncryption serviceSessionWithEncryption(ServiceSession session, FacadeServiceableRequest facadeServiceable) {
-        KeyDto key = deriveFromSessionOrRequest(session, facadeServiceable.getSessionPassword());
-        EncryptionService encryptionService = encryptionFactory.provideEncryptionService(key.getKey());
-        return new ServiceSessionWithEncryption(session, encryptionService);
-    }
-
-    private KeyWithParamsDto deriveFromSessionOrRequest(ServiceSession session, String passwordFromRequest) {
-        if (null != passwordFromRequest) {
-            return recreateSecretKey(passwordFromRequest, session);
-        }
-
-        return savedKey(session);
-    }
-
-    @NotNull
-    private KeyWithParamsDto savedKey(ServiceSession session) {
-        byte[] secretKey = session.getSecretKey();
-        byte[] decryptedKey = secretKeyOperations.decrypt(secretKey);
-        return new KeyWithParamsDto(decryptedKey);
-    }
-
-    @NotNull
-    private KeyWithParamsDto recreateSecretKey(String sessionPassword, ServiceSession session) {
-        return secretKeyOperations.generateKey(
-                sessionPassword,
-                session.getAlgo(),
-                session.getSalt(),
-                session.getIterCount());
-    }
-
-    @NotNull
-    private KeyWithParamsDto newSecretKey(String sessionPassword) {
-        if (Strings.isNullOrEmpty(sessionPassword)) {
-            throw new IllegalStateException("No password. Can't generate secret key");
-        }
-        return secretKeyOperations.generateKey(sessionPassword);
+    private ServiceSession createServiceSession(UUID serviceSessionId) {
+        ServiceSession serviceSession = new ServiceSession();
+        serviceSession.setId(serviceSessionId);
+        return serviceSessions.save(serviceSession);
     }
 
     @SneakyThrows
@@ -190,5 +134,52 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         }
 
         return null;
+    }
+
+    @Nullable
+    private <T extends FacadeServiceableGetter> RequestScoped getRequestScoped(T request, ServiceSession session, AuthSession authSession) {
+        return null == request.getFacadeServiceable().getAuthorizationKey()
+                ? fintechFacingSecretKeyBasedEncryption(request, session)
+                : psuCookieBasedKeyEncryption(request, authSession);
+    }
+
+    private <T extends FacadeServiceableGetter> RequestScoped psuCookieBasedKeyEncryption(T request, AuthSession session) {
+        if (null == session) {
+            throw new IllegalArgumentException("Missing authorization session");
+        }
+
+        return provider.registerForPsuSession(
+                session,
+                consentAuthorizationEncryptionServiceProvider,
+                encryptionKeySerde.fromString(request.getFacadeServiceable().getAuthorizationKey())
+        );
+    }
+
+    /**
+     * To be consumed by {@link de.adorsys.opba.protocol.facade.services.NewAuthSessionHandler} if new auth session started.
+     */
+    private <T extends FacadeServiceableGetter> RequestScoped fintechFacingSecretKeyBasedEncryption(T request, ServiceSession session) {
+        BankProfile profile = profileJpaRepository.findByBankUuid(request.getFacadeServiceable().getBankId())
+                .orElseThrow(() -> new IllegalArgumentException("No bank profile for bank: " + request.getFacadeServiceable().getBankId()));
+
+        // FinTech requests should be signed, so creating Fintech entity if it does not exist.
+        Fintech fintech = fintechRepository.findByGlobalId(request.getFacadeServiceable().getAuthorization())
+                .orElseGet(() -> registerFintech(request, request.getFacadeServiceable().getAuthorization()));
+        fintechSecureStorage.validatePassword(fintech, () -> request.getFacadeServiceable().getSessionPassword().toCharArray());
+
+        return provider.registerForFintechSession(
+                fintech,
+                profile,
+                session,
+                consentAuthorizationEncryptionServiceProvider,
+                consentAuthorizationEncryptionServiceProvider.generateKey(),
+                () -> request.getFacadeServiceable().getSessionPassword().toCharArray()
+        );
+    }
+
+    private <T extends FacadeServiceableGetter> Fintech registerFintech(T request, String fintechId) {
+        Fintech fintech = fintechRepository.save(Fintech.builder().globalId(fintechId).build());
+        fintechSecureStorage.registerFintech(fintech, () -> request.getFacadeServiceable().getSessionPassword().toCharArray());
+        return fintech;
     }
 }

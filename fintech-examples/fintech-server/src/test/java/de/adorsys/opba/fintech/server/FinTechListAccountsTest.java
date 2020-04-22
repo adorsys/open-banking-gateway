@@ -26,9 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.AUTHORIZATION_SESSION_ID;
-import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.PSU_CONSENT_SESSION;
-import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.REDIRECT_CODE;
+import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.TPP_AUTH_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.SERVICE_SESSION_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -86,9 +84,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     @SneakyThrows
     public void testListAccountsFor303() {
         ResponseEntity accepted = ResponseEntity.accepted()
-                .header(AUTHORIZATION_SESSION_ID, "1")
-                .header(REDIRECT_CODE, "redirectCode")
-                .header(PSU_CONSENT_SESSION, "2")
+                .header(TPP_AUTH_ID, "1")
                 .header(SERVICE_SESSION_ID, "682dbd06-75d4-4f73-a7e7-9084150a1f10")
                 .location(new URI("affe"))
                 .build();
@@ -99,7 +95,6 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
 
         MvcResult mvcResult = plainListAccounts(result.getBankUUID());
         assertEquals(ACCEPTED.value(), mvcResult.getResponse().getStatus());
-        assertEquals("redirectCode", mvcResult.getResponse().getHeader(REDIRECT_CODE));
     }
 
 

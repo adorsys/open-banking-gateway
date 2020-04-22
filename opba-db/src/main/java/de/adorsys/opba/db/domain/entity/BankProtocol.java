@@ -2,6 +2,7 @@ package de.adorsys.opba.db.domain.entity;
 
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

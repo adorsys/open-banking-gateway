@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.api.dto.context;
 
-import de.adorsys.opba.protocol.api.services.EncryptionService;
+import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,13 +43,7 @@ public class ServiceContext<T> {
 
     private final String authContext;
 
-    @NonNull
-    private final String fintechRedirectOkUri;
-
-    @NonNull
-    private final String fintechRedirectNokUri;
-
-    private final EncryptionService encryptionService;
+    private final RequestScoped requestScoped;
 
     public String loggableBankId() {
         return String.format(
