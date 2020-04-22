@@ -4,6 +4,7 @@ import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
+import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import de.adorsys.opba.fintech.impl.service.mocks.TppListAccountsMock;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
@@ -24,8 +25,6 @@ public class AccountService extends HandleAcceptedService {
 
     private final FintechUiConfig uiConfig;
     private final TppAisClient tppAisClient;
-
-    @Autowired
     private RestRequestContext restRequestContext;
 
     @Autowired
@@ -35,10 +34,12 @@ public class AccountService extends HandleAcceptedService {
     private RedirectHandlerService redirectHandlerService;
 
 
-    public AccountService(AuthorizeService authorizeService, TppAisClient tppAisClient, FintechUiConfig uiConfig) {
-        super(authorizeService);
+    public AccountService(AuthorizeService authorizeService, TppAisClient tppAisClient, FintechUiConfig uiConfig,
+                          CookieConfigProperties cookieConfigProperties, RestRequestContext restRequestContext) {
+        super(authorizeService, cookieConfigProperties, restRequestContext);
         this.tppAisClient = tppAisClient;
         this.uiConfig = uiConfig;
+        this.restRequestContext = restRequestContext;
     }
 
     public ResponseEntity listAccounts(SessionEntity sessionEntity,
@@ -49,15 +50,15 @@ public class AccountService extends HandleAcceptedService {
             return new ResponseEntity<>(new TppListAccountsMock().getAccountList(), HttpStatus.OK);
         }
 
-        final String redirectCode = UUID.randomUUID().toString();
-        ResponseEntity accounts = readOpbaResponse(bankID, sessionEntity, redirectCode);
+        final String fintechRedirectCode = UUID.randomUUID().toString();
+        ResponseEntity accounts = readOpbaResponse(bankID, sessionEntity, fintechRedirectCode);
 
         switch (accounts.getStatusCode()) {
             case OK:
                 return new ResponseEntity<>(accounts.getBody(), HttpStatus.OK);
             case ACCEPTED:
-                log.info("create redirect entity for redirect code {}", redirectCode);
-                redirectHandlerService.registerRedirectStateForSession(redirectCode, fintechOkUrl, fintechNOKUrl);
+                log.info("create redirect entity for redirect code {}", fintechRedirectCode);
+                redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOKUrl);
                 return handleAccepted(sessionEntity, accounts.getHeaders());
             case UNAUTHORIZED:
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -77,7 +78,7 @@ public class AccountService extends HandleAcceptedService {
                     RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
                     UUID.fromString(restRequestContext.getRequestId()),
                     bankID,
-                    sessionEntity.getPsuConsentSession(),
+                    null,
                     sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null);
         } else {
             // FIXME: HACKETTY-HACK - force consent retrieval for transactions on ALL accounts
@@ -92,7 +93,7 @@ public class AccountService extends HandleAcceptedService {
                     RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
                     UUID.fromString(restRequestContext.getRequestId()),
                     bankID,
-                    sessionEntity.getPsuConsentSession(),
+                    null,
                     sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null,
                     null,
                     null,

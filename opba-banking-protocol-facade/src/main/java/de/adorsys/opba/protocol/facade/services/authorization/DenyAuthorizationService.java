@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-import static de.adorsys.opba.db.domain.entity.ProtocolAction.DENY_AUTHORIZATION;
+import static de.adorsys.opba.protocol.api.common.ProtocolAction.DENY_AUTHORIZATION;
 import static de.adorsys.opba.protocol.facade.services.context.NoRedirectCodeValidationServiceContextProvider.NO_REDIRECT_CODE_VALIDATION;
 
 @Service

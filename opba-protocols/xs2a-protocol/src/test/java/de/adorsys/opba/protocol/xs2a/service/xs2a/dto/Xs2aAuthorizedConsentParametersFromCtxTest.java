@@ -31,6 +31,6 @@ public class Xs2aAuthorizedConsentParametersFromCtxTest {
         Xs2aAuthorizedConsentParameters actual = mapper.map(mappingInput);
 
         // Then
-        assertThat(expected).isEqualToComparingFieldByFieldRecursively(actual);
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
     }
 }

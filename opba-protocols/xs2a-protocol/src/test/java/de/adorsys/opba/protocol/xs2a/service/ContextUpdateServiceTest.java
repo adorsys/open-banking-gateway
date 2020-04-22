@@ -1,10 +1,10 @@
 package de.adorsys.opba.protocol.xs2a.service;
 
-import de.adorsys.opba.db.config.EnableBankingPersistence;
 import de.adorsys.opba.protocol.xs2a.BaseMockitoTest;
 import de.adorsys.opba.protocol.xs2a.EnableXs2aProtocol;
 import de.adorsys.opba.protocol.xs2a.TestProfiles;
 import de.adorsys.opba.protocol.xs2a.constant.GlobalConst;
+import de.adorsys.xs2a.adapter.service.AspspReadOnlyRepository;
 import org.flowable.common.engine.api.FlowableOptimisticLockingException;
 import org.flowable.engine.RuntimeService;
 import org.junit.jupiter.api.Test;
@@ -29,6 +29,10 @@ class ContextUpdateServiceTest extends BaseMockitoTest {
     @Autowired
     private ContextUpdateService updateService;
 
+    @MockBean
+    @SuppressWarnings("PMD.UnusedPrivateField") // Injecting into Spring context
+    private AspspReadOnlyRepository aspspReadOnlyRepository;
+
     @Test
     void updateContextRetriesOnFlowableOptimisticLockingException() {
         String execId = "FOO-BAR";
@@ -45,7 +49,6 @@ class ContextUpdateServiceTest extends BaseMockitoTest {
         verify(runtimeService, times(2)).setVariable(execId, GlobalConst.CONTEXT, value);
     }
 
-    @EnableBankingPersistence
     @EnableXs2aProtocol
     @SpringBootApplication
     public static class TestConfig {

@@ -4,6 +4,7 @@
 /dist
 /tmp
 /out-tsc
+api-auth/
 # Only exists if Bazel was run
 /bazel-out
 

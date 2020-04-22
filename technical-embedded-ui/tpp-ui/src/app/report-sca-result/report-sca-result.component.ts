@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {Consts} from "../consts";
-import {FormControl, FormGroup} from "@angular/forms";
-import {ActivatedRoute} from "@angular/router";
-import {Helpers} from "../app.component";
-import {HttpClient} from "@angular/common/http";
+import { Consts } from "../consts";
+import { FormControl, FormGroup } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
+import { Helpers } from "../app.component";
+import { HttpClient } from "@angular/common/http";
 
 @Component({
   selector: 'app-report-sca-result',
@@ -35,7 +35,7 @@ export class ReportScaResultComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
       params => {
-        this.submissionUri = this.submissionUri + params['authorizationSessionId'] + '/embedded?redirectCode=' + params['redirectCode'];
+        this.submissionUri = this.submissionUri + params.authorizationSessionId[0] + '/embedded?redirectCode=' + params.redirectCode[0];
         this.label = params['q'];
       }
     );

@@ -32,6 +32,6 @@ public class UpdateAuthMapperAisMapperTest {
         AisConsentInitiateBody actual = mapper.map(mappingInput);
 
         // Then
-        assertThat(expected).isEqualToComparingFieldByFieldRecursively(actual);
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
     }
 }

@@ -33,6 +33,6 @@ public class UpdateAuthMapperFromAisRequestTransactionListTest {
         mapper.map(mappingInput, actual);
 
         // Then
-        assertThat(expected).isEqualToComparingFieldByFieldRecursively(actual);
+        assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
     }
 }

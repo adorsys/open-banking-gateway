@@ -36,6 +36,11 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-auth-rest-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
             <artifactId>opba-banking-protocol-facade</artifactId>
             <version>${project.version}</version>
         </dependency>

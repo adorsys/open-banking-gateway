@@ -11,7 +11,7 @@ const PROXY_CONFIG = {
   '/embedded-server/*': {
     target: getProp("EMBEDDED_SERVER_URL", "https://obg-dev-openbankinggateway.cloud.adorsys.de"),
     pathRewrite: {
-      "^/embedded-server": ""
+      "^/embedded-server/": ""
     },
     logLevel: "debug",
     secure: false,

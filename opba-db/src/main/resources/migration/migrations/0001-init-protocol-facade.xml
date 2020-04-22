@@ -1,0 +1,387 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="vbeex@adorsys.com.ua" id="2019-12-02-17">
+        <comment>Create initial table structure</comment>
+
+        <createTable tableName="${table-prefix}consent">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="service_session_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="psu_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="aspsp_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enc_consent_id" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enc_context" type="BLOB"/>
+            <column name="confirmed" type="boolean" defaultValue="false"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="${table-prefix}bank_protocol">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="bank_uuid" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="protocol_bean_name" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="bank_protocol_id_sequence" incrementBy="50"/>
+        <addUniqueConstraint tableName="${table-prefix}bank_protocol" columnNames="bank_uuid,action"/>
+
+        <createTable tableName="${table-prefix}bank_sub_protocol">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="protocol_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="action" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sub_protocol_bean_name" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="bank_sub_protocol_id_sequence" incrementBy="50"/>
+        <addUniqueConstraint tableName="${table-prefix}bank_sub_protocol" columnNames="protocol_id,action"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_bank_sub_protocol_bank_protocol"
+                                 baseTableName="${table-prefix}bank_sub_protocol"
+                                 baseColumnNames="protocol_id"
+                                 referencedTableName="${table-prefix}bank_protocol"
+                                 referencedColumnNames="id"/>
+
+        <createTable tableName="${table-prefix}service_session">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="service_id" type="BIGINT"/>
+            <column name="protocol_id" type="BIGINT"/>
+            <column name="version" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_service_session_bank_protocol"
+                                 baseTableName="${table-prefix}service_session"
+                                 baseColumnNames="protocol_id"
+                                 referencedTableName="${table-prefix}bank_protocol"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_consent_service_session"
+                                 baseTableName="${table-prefix}consent"
+                                 baseColumnNames="service_session_id"
+                                 referencedTableName="${table-prefix}service_session"
+                                 referencedColumnNames="id"/>
+
+        <createTable tableName="${table-prefix}psu">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="login" type="VARCHAR(256)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="keystore" type="BLOB"/>
+            <column name="pub_keys" type="BLOB"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="psu_id_sequence" incrementBy="50"/>
+
+        <createTable tableName="${table-prefix}fintech">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="global_id" type="VARCHAR(64)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="keystore" type="BLOB"/>
+            <column name="pub_keys" type="BLOB"/>
+        </createTable>
+        <createSequence sequenceName="fintech_id_sequence" incrementBy="50"/>
+
+        <createTable tableName="${table-prefix}fintech_user">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="psu_fintech_id" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fintech_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="keystore" type="BLOB"/>
+            <column name="pub_keys" type="BLOB"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="fintech_user_id_sequence" incrementBy="50"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_user_fintech"
+                                 baseTableName="${table-prefix}fintech_user"
+                                 baseColumnNames="fintech_id"
+                                 referencedTableName="${table-prefix}fintech"
+                                 referencedColumnNames="id"/>
+
+        <createTable tableName="${table-prefix}auth_session">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="redirect_code" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="aspsp_redirect_code" type="VARCHAR(64)"/>
+
+            <column name="protocol_id" type="BIGINT"/>
+            <column name="psu_id" type="BIGINT"/>
+            <column name="fintech_user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enc_consent_spec" type="BLOB"/>
+            <column name="context" type="VARCHAR(64)"/>
+            <column name="version" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_auth_session_service_session"
+                                 baseTableName="${table-prefix}auth_session"
+                                 baseColumnNames="id"
+                                 referencedTableName="${table-prefix}service_session"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_auth_session_psu"
+                                 baseTableName="${table-prefix}auth_session"
+                                 baseColumnNames="psu_id"
+                                 referencedTableName="${table-prefix}psu"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_auth_session_fintech_user"
+                                 baseTableName="${table-prefix}auth_session"
+                                 baseColumnNames="fintech_user_id"
+                                 referencedTableName="${table-prefix}fintech_user"
+                                 referencedColumnNames="id"/>
+
+        <createTable tableName="${table-prefix}psu_aspsp_pub_key">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="algo" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="format" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="data" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="${table-prefix}psu_aspsp_prv_key">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="psu_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="aspsp_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enc_data" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="psu_aspsp_prv_key_id_sequence" incrementBy="50"/>
+        <addUniqueConstraint tableName="${table-prefix}psu_aspsp_prv_key" columnNames="psu_id,aspsp_id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_psu_aspsp_prv_key_psu"
+                                 baseTableName="${table-prefix}psu_aspsp_prv_key"
+                                 baseColumnNames="psu_id"
+                                 referencedTableName="${table-prefix}psu"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_psu_aspsp_prv_key_bank"
+                                 baseTableName="${table-prefix}psu_aspsp_prv_key"
+                                 baseColumnNames="aspsp_id"
+                                 referencedTableName="${table-prefix}bank"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_psu_aspsp_pub_key_psu_aspsp_prv_key"
+                                 baseTableName="${table-prefix}psu_aspsp_pub_key"
+                                 baseColumnNames="id"
+                                 referencedTableName="${table-prefix}psu_aspsp_prv_key"
+                                 referencedColumnNames="id"
+                                 deferrable="true"/>
+
+        <createTable tableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="fintech_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="psu_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="aspsp_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enc_data" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_inbox_fintech"
+                                 baseTableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox"
+                                 baseColumnNames="fintech_id"
+                                 referencedTableName="${table-prefix}fintech"
+                                 referencedColumnNames="id"/>
+        <addUniqueConstraint tableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox" columnNames="psu_id,aspsp_id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_inbox_psu"
+                                 baseTableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox"
+                                 baseColumnNames="psu_id"
+                                 referencedTableName="${table-prefix}psu"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_inbox_bank"
+                                 baseTableName="${table-prefix}fintech_psu_aspsp_prv_key_inbox"
+                                 baseColumnNames="aspsp_id"
+                                 referencedTableName="${table-prefix}bank"
+                                 referencedColumnNames="id"/>
+
+        <createTable tableName="${table-prefix}fintech_psu_aspsp_prv_key">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="fintech_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="psu_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="aspsp_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enc_data" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_fintech"
+                                 baseTableName="${table-prefix}fintech_psu_aspsp_prv_key"
+                                 baseColumnNames="fintech_id"
+                                 referencedTableName="${table-prefix}fintech"
+                                 referencedColumnNames="id"/>
+        <addUniqueConstraint tableName="${table-prefix}fintech_psu_aspsp_prv_key" columnNames="psu_id,aspsp_id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_psu"
+                                 baseTableName="${table-prefix}fintech_psu_aspsp_prv_key"
+                                 baseColumnNames="psu_id"
+                                 referencedTableName="${table-prefix}psu"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_psu_aspsp_prv_key_bank"
+                                 baseTableName="${table-prefix}fintech_psu_aspsp_prv_key"
+                                 baseColumnNames="aspsp_id"
+                                 referencedTableName="${table-prefix}bank"
+                                 referencedColumnNames="id"/>
+
+        <createTable tableName="${table-prefix}fintech_consent_spec">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enc_data" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_consent_spec_fintech_user"
+                                 baseTableName="${table-prefix}fintech_consent_spec"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="${table-prefix}fintech_user"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_consent_spec_auth_session"
+                                 baseTableName="${table-prefix}fintech_consent_spec"
+                                 baseColumnNames="id"
+                                 referencedTableName="${table-prefix}auth_session"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_consent_psu"
+                                 baseTableName="${table-prefix}consent"
+                                 baseColumnNames="psu_id"
+                                 referencedTableName="${table-prefix}psu"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_consent_bank"
+                                 baseTableName="${table-prefix}consent"
+                                 baseColumnNames="aspsp_id"
+                                 referencedTableName="${table-prefix}bank"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="add-relation-bank-profile-protocol" author="mhr">
+        <addForeignKeyConstraint baseColumnNames="bank_uuid"
+                                 baseTableName="${table-prefix}bank_protocol"
+                                 constraintName="fk_bank_protocol_bank_profile"
+                                 deferrable="true"
+                                 initiallyDeferred="true"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="bank_uuid"
+                                 referencedTableName="${table-prefix}bank_profile"/>
+    </changeSet>
+</databaseChangeLog>

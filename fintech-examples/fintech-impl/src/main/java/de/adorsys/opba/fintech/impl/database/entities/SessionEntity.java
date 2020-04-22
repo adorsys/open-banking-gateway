@@ -41,7 +41,7 @@ public class SessionEntity {
     private String loginUserName;
     private String fintechUserId;
     private String password;
-    private String psuConsentSession;
+    private String authId;
     private UUID serviceSessionId;
     private String sessionCookieValue;
     // FIXME call 4c is missing
@@ -58,7 +58,6 @@ public class SessionEntity {
 
     @SneakyThrows
     public static String createSessionCookieValue(String fintechUserId, String xsrfToken) {
-        // TODO Hashing with SHA256
         ObjectMapper mapper = new ObjectMapper();
         return URLEncoder.encode(mapper.writeValueAsString(new SessionCookieValue(fintechUserId, hashAndHexconvert(xsrfToken))), JsonEncoding.UTF8.getJavaName());
     }

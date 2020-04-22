@@ -5,6 +5,7 @@ import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
+import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,7 @@ import static org.springframework.http.HttpStatus.SEE_OTHER;
 @ExtendWith(MockitoExtension.class)
 class RedirectHandlerServiceTest {
     private final String REDIRECT_STATE_VALUE = "682dbd06-75d4-4f73-a7e7-9084150a1f10";
-    private final String REDIRECT_ID_VALUE = "fd8a0548-6862-46cb-8d24-f4b5edc7f7cb";
+    private final String AUTH_ID_VALUE = "fd8a0548-6862-46cb-8d24-f4b5edc7f7cb";
     private final String REDIRECT_CODE_VALUE = "7ca3f778-b0bb-4c1a-8003-d176089d1455";
     private final String REDIRECT_URL = "http://localhost:4444/{redirectUri}/{redirectCode}";
     private final String EXCEPTION_URL = "http://localhost:4444/excaption-redirect";
@@ -66,13 +67,16 @@ class RedirectHandlerServiceTest {
     @InjectMocks
     private RedirectHandlerService redirectHandlerService;
 
+    @Mock
+    private CookieConfigProperties cookieConfigProperties;
+
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
 
         log.info("setup RestRequestContext");
         restRequestContext.setRequestId(UUID.randomUUID().toString());
-        redirectHandlerService = new RedirectHandlerService(uiConfig, redirectUrlRepository, authorizeService, restRequestContext);
+        redirectHandlerService = new RedirectHandlerService(uiConfig, redirectUrlRepository, authorizeService, restRequestContext, cookieConfigProperties);
     }
 
     @Test
@@ -93,14 +97,15 @@ class RedirectHandlerServiceTest {
     @Test
     void doRedirect_success() {
         // given
-        when(authorizeService.fillWithAuthorizationHeaders(sessionEntity, restRequestContext.getXsrfTokenHeaderField()))
+        when(authorizeService.modifySessionEntityAndCreateNewAuthHeader(any(), any(), any(), any(), any()))
                 .thenReturn(new HttpHeaders());
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.of(REDIRECT_URLS_ENTITY));
         when(authorizeService.getSession()).thenReturn(sessionEntity);
         when(authorizeService.isAuthorized()).thenReturn(true);
+        when(sessionEntity.getAuthId()).thenReturn(AUTH_ID_VALUE);
 
         // when
-        ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_ID_VALUE, REDIRECT_CODE_VALUE);
+        ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE);
 
         // then
         verify(authorizeService, times(1)).getSession();
@@ -114,7 +119,7 @@ class RedirectHandlerServiceTest {
     @Test
     void doRedirect_redirectCodeIsEmpty() {
         // when
-        ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_ID_VALUE, REDIRECT_CODE_VALUE);
+        ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE);
 
         // then
         verify(authorizeService, times(0)).getSession();
@@ -132,7 +137,7 @@ class RedirectHandlerServiceTest {
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.empty());
 
         // when
-        ResponseEntity responseEntity = redirectHandlerService.doRedirect(REDIRECT_ID_VALUE, REDIRECT_CODE_VALUE);
+        ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE);
 
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);

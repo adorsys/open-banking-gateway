@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.UUID;
+
 import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_SMOKE_TESTS;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.SMOKE_TEST;
@@ -37,6 +39,9 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SpringBootTest(classes = {JGivenConfig.class, SmokeConfig.class}, webEnvironment = NONE)
 @ActiveProfiles(profiles = {SMOKE_TEST})
 class OpbaApiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>, AccountInformationResult> {
+
+    private final String OPBA_LOGIN = UUID.randomUUID().toString();
+    private final String OPBA_PASSWORD = UUID.randomUUID().toString();
 
     @Autowired
     private SmokeConfig config;
@@ -76,6 +81,8 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBa
         when()
             .fintech_calls_list_transactions_for_anton_brueckner(accountResourceId)
             .and()
+            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+            .and()
             .user_anton_brueckner_provided_initial_parameters_to_list_transactions_with_single_account_consent()
             .and()
             .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
@@ -90,9 +97,10 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBa
             .and()
             .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
             .and()
-            .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(firefoxDriver);
+            .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_only(firefoxDriver);
 
         then()
+            .fintech_calls_consent_activation_for_current_authorization_id()
             .open_banking_reads_anton_brueckner_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
                 accountResourceId, DATE_FROM, DATE_TO, BOTH_BOOKING
             );
@@ -116,6 +124,8 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBa
         when()
             .fintech_calls_list_transactions_for_max_musterman(accountResourceId)
             .and()
+            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+            .and()
             .user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent()
             .and()
             .user_max_musterman_provided_password_to_embedded_authorization()
@@ -124,6 +134,7 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBa
             .and()
             .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
         then()
+            .fintech_calls_consent_activation_for_current_authorization_id()
             .open_banking_reads_max_musterman_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
                 accountResourceId, DATE_FROM, DATE_TO, BOTH_BOOKING
             );
@@ -132,10 +143,13 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBa
     private String embeddedListMaxMustermanAccounts() {
         given()
             .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
-            .rest_assured_points_to_opba_server(config.getOpbaServerUri());
+            .rest_assured_points_to_opba_server(config.getOpbaServerUri())
+            .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
             .fintech_calls_list_accounts_for_max_musterman()
+            .and()
+            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
             .and()
             .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
             .and()
@@ -146,6 +160,7 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBa
             .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
 
         AccountInformationResult result = then()
+            .fintech_calls_consent_activation_for_current_authorization_id()
             .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(false);
 
         return result.getResponseContent();
@@ -154,10 +169,13 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBa
     private String redirectListAntonBruecknerAccounts(FirefoxDriver firefoxDriver) {
         given()
             .enabled_redirect_sandbox_mode(config.getAspspProfileServerUri())
-            .rest_assured_points_to_opba_server(config.getOpbaServerUri());
+            .rest_assured_points_to_opba_server(config.getOpbaServerUri())
+            .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
             .fintech_calls_list_accounts_for_anton_brueckner()
+            .and()
+            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
             .and()
             .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
             .and()
@@ -173,9 +191,10 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBa
             .and()
             .sandbox_anton_brueckner_provides_sca_challenge_result(firefoxDriver)
             .and()
-            .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(firefoxDriver);
+            .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_only(firefoxDriver);
 
         AccountInformationResult result = then()
+            .fintech_calls_consent_activation_for_current_authorization_id()
             .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(false);
 
         return result.getResponseContent();
