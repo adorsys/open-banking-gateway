@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from '../../services/auth.service';
 import {StorageService} from '../../services/storage.service';
+import {Consts} from "../../models/consts";
 
 @Component({
   selector: 'app-navbar',
@@ -29,7 +30,7 @@ export class NavbarComponent implements OnInit {
   getSessionValidUntil(): string {
     const validUntilDate: Date = this.storageService.getValidUntilDate();
     if (validUntilDate != null) {
-      const validUntilDateString = validUntilDate.toLocaleString();
+      const validUntilDateString = Consts.toLocaleString(validUntilDate);
       let regEx = /.*([0-9]{2}:[0-9]{2}:[0-9]{2})/;
       let matches = validUntilDateString.match(regEx);
       if (matches.length != 2) {

@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {DocumentCookieService} from './document-cookie.service';
+import {Consts} from "../models/consts";
 
 @Injectable({
   providedIn: 'root'
@@ -52,7 +53,7 @@ export class StorageService {
   public setMaxAge(maxAge: number): void {
     const timestamp = new Date().getTime() + maxAge * 1000;
     localStorage.setItem(Session.MAX_VALID_UNTIL, '' + timestamp);
-    console.log("set max age " + maxAge + " till " + new Date(timestamp).toLocaleString());
+    console.log("set max age " + maxAge + " till " + Consts.toLocaleString(new Date(timestamp)));
   }
 
   public getValidUntilDate(): Date {
@@ -61,7 +62,7 @@ export class StorageService {
       return null;
     }
     const date =  new Date(parseInt(validUntilTimestamp));
-    if (date.toLocaleString() === "Invalid Date") {
+    if (Consts.toLocaleString(date) === "Invalid Date") {
       return null;
     }
     return date;
@@ -76,10 +77,10 @@ export class StorageService {
     const validUntil = validUntilDate.getTime();
     const timestamp = new Date().getTime();
     if (timestamp > validUntil) {
-//      console.log("valid until was " + validUntilDate.toLocaleString() + " now is " + new Date().toLocaleString() + ", so isMaxValid = false");
+      console.log("valid until was " + Consts.toLocaleString(validUntilDate) + " now is " + Consts.toLocaleString(new Date()) + ", so isMaxValid = false");
       return false;
     }
-//    console.log("valid until was " + validUntilDate.toLocaleString() + " now is " + new Date().toLocaleString() + ", so isMaxValid = true");
+    console.log("valid until was " + Consts.toLocaleString(validUntilDate) + " now is " + Consts.toLocaleString(new Date()) + ", so isMaxValid = true");
     return true;
   }
 
