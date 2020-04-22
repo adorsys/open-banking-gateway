@@ -1,10 +1,18 @@
 spring:
   datasource:
-    url: jdbc:tc:postgresql:12:////open_banking?TC_DAEMON=true&TC_INITSCRIPT=init.sql
+    url: jdbc:tc:postgresql:12:////open_banking?TC_DAEMON=true&TC_TMPFS=/testtmpfs:rw&TC_INITSCRIPT=init.sql
     username: postgres
     password: docker
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-
+    hikari:
+      schema: banking_protocol
+  liquibase:
+    drop-first: true
+    change-log: classpath:migration/master.xml
+    parameters:
+      table-prefix: opb_
+      adorsys-sandbox-url: http://localhost:20014
+      fill-with-mock-data: true
 protocol:
   embedded-ui-base-url: http://localhost:1010
 
