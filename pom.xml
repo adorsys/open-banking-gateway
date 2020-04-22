@@ -119,7 +119,7 @@
         <maven.replacer.version>1.5.3</maven.replacer.version>
 
         <!-- Adorsys libs -->
-        <xs2a-adapter.version>0.0.7</xs2a-adapter.version>
+        <xs2a-adapter.version>0.0.9</xs2a-adapter.version>
 
         <!-- Test libs -->
         <jacoco.version>0.8.5</jacoco.version>
