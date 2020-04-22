@@ -384,8 +384,8 @@
                                  referencedColumnNames="bank_uuid"
                                  referencedTableName="${table-prefix}bank_profile"/>
     </changeSet>
-    <changeSet id="bank_validation_rules_table" author="mhr">
-        <createTable tableName="bank_validation_rules">
+    <changeSet id="bank_validation_rule_table" author="mhr">
+        <createTable tableName="${table-prefix}bank_validation_rule">
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
@@ -401,8 +401,8 @@
             <column name="for_embedded" type="boolean" defaultValue="false"/>
             <column name="for_redirect" type="boolean" defaultValue="false"/>
         </createTable>
-        <addForeignKeyConstraint constraintName="${table-prefix}fk_validation_ignore_fields_bank_protocol"
-                                 baseTableName="${table-prefix}validation_ignore_fields"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_bank_validation_rule_bank_protocol"
+                                 baseTableName="${table-prefix}bank_validation_rule"
                                  baseColumnNames="protocol_id"
                                  referencedTableName="${table-prefix}bank_protocol"
                                  referencedColumnNames="id"/>
