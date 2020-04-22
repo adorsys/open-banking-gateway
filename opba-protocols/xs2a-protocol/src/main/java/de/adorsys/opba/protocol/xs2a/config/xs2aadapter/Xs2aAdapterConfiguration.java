@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.config.xs2aadapter;
 
 import com.google.common.io.Resources;
+import de.adorsys.xs2a.adapter.adapter.link.identity.IdentityLinksRewriter;
 import de.adorsys.xs2a.adapter.http.ApacheHttpClientFactory;
 import de.adorsys.xs2a.adapter.http.HttpClientFactory;
 import de.adorsys.xs2a.adapter.mapper.PaymentInitiationScaStatusResponseMapper;
@@ -13,12 +14,10 @@ import de.adorsys.xs2a.adapter.service.Pkcs12KeyStore;
 import de.adorsys.xs2a.adapter.service.impl.AccountInformationServiceImpl;
 import de.adorsys.xs2a.adapter.service.impl.DownloadServiceImpl;
 import de.adorsys.xs2a.adapter.service.impl.PaymentInitiationServiceImpl;
+import de.adorsys.xs2a.adapter.service.link.LinksRewriter;
 import de.adorsys.xs2a.adapter.service.loader.AdapterDelegatingOauth2Service;
 import de.adorsys.xs2a.adapter.service.loader.AdapterServiceLoader;
-import de.adorsys.xs2a.adapter.service.provider.AdapterServiceProvider;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import de.adorsys.xs2a.adapter.service.loader.Psd2AdapterServiceLoader;
 import lombok.SneakyThrows;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,9 +26,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.nio.file.Paths;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 public class Xs2aAdapterConfiguration {
@@ -53,9 +49,15 @@ public class Xs2aAdapterConfiguration {
     }
 
     @Bean
+    LinksRewriter xs2aLinksRewriter() {
+        return new IdentityLinksRewriter();
+    }
+
+    @Bean
     AdapterServiceLoader xs2aadapterServiceLoader(AspspReadOnlyRepository aspspRepository,
-                                                  Pkcs12KeyStore keyStore, HttpClientFactory httpClientFactory) {
-        return new ThreadSafeAdapterServiceLoader(aspspRepository, keyStore, httpClientFactory, chooseFirstFromMultipleAspsps);
+                                                  LinksRewriter linksRewriter, Pkcs12KeyStore keyStore,
+                                                  HttpClientFactory httpClientFactory) {
+        return new Psd2AdapterServiceLoader(aspspRepository, keyStore, httpClientFactory, linksRewriter, linksRewriter, chooseFirstFromMultipleAspsps);
     }
 
     @Bean
@@ -103,38 +105,5 @@ public class Xs2aAdapterConfiguration {
     private static HttpClientBuilder xs2aHttpClientBuilderWithSharedConfiguration() {
         return HttpClientBuilder.create()
                 .disableDefaultUserAgent();
-    }
-
-    // FIXME - remove it when https://github.com/adorsys/xs2a-adapter/issues/369 is done
-    static class ThreadSafeAdapterServiceLoader extends AdapterServiceLoader {
-
-        private final Object lock = new Object();
-        private final Map<ServiceKey, Optional<?>> providers = new ConcurrentHashMap<>();
-
-        ThreadSafeAdapterServiceLoader(
-                AspspReadOnlyRepository aspspRepository,
-                Pkcs12KeyStore keyStore,
-                HttpClientFactory httpClientFactory,
-                boolean chooseFirstFromMultipleAspsps
-        ) {
-            super(aspspRepository, keyStore, httpClientFactory, chooseFirstFromMultipleAspsps);
-        }
-
-        @Override
-        public <T extends AdapterServiceProvider> Optional<T> getServiceProvider(Class<T> klass, String adapterId) {
-            return (Optional<T>) providers.computeIfAbsent(new ServiceKey(klass, adapterId), id -> {
-                synchronized (lock) {
-                    return super.getServiceProvider(klass, adapterId);
-                }
-            });
-        }
-
-        @Getter
-        @EqualsAndHashCode
-        @AllArgsConstructor
-        private static class ServiceKey {
-            private Class clazz;
-            private String adapterId;
-        }
     }
 }
