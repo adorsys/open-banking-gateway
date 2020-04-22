@@ -3,3 +3,7 @@ flowable:
     enabled: false
   jpa-enabled: false
   async-executor-activate: false
+  process:
+    async-history:
+      executor:
+        timer-job-acquisition-enabled: false
