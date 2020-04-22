@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.UUID;
 
@@ -22,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @SuppressWarnings("CPD-START") // Same steps are used, but that's fine for readability
 @ActiveProfiles("test")
+@Sql(statements = "DELETE FROM opb_fintech CASCADE;")
 @SpringBootTest(classes = ListAccountsServiceTest.TestConfig.class)
 class ListAccountsServiceTest {
 
