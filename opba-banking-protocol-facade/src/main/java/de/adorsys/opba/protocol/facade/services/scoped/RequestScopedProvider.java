@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import org.jetbrains.annotations.NotNull;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -60,9 +61,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         ConsentAccess access = accessProvider.forFintech(fintech, session, fintechPassword);
         EncryptionService authorizationSessionEncService = encryptionService(encryptionServiceProvider, futureAuthorizationSessionKey);
 
-        List<BankValidationRule> bankValidationRules = bankValidationRuleRepository.findByProtocolId(
-                session.getProtocol().getId()
-        );
+        List<BankValidationRule> bankValidationRules = bankValidationRuleRepository.findAll();
         return doRegister(profile, access, authorizationSessionEncService, futureAuthorizationSessionKey, bankValidationRules);
     }
 
@@ -77,9 +76,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
                 session.getProtocol().getBankProfile().getBank(),
                 session.getParent()
         );
-        List<BankValidationRule> bankValidationRules = bankValidationRuleRepository.findByProtocolId(
-                session.getParent().getProtocol().getId()
-        );
+        List<BankValidationRule> bankValidationRules = bankValidationRuleRepository.findAll();
         return doRegister(session.getProtocol().getBankProfile(), access, encryptionService, key, bankValidationRules);
     }
 
@@ -165,6 +162,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
 
     @Mapper
     public interface ToRulesDto {
+        @Mapping(source = "protocol.id", target = "protocolId")
         BankValidationRuleDto map(BankValidationRule rules);
     }
 }
