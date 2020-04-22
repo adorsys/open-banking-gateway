@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
 import de.adorsys.opba.protocol.facade.config.ApplicationTest;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
+import de.adorsys.opba.protocol.facade.services.DbDropper;
 import de.adorsys.opba.protocol.facade.services.ProtocolResultHandler;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import lombok.SneakyThrows;
@@ -18,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -36,8 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @ActiveProfiles("test")
 @SpringBootTest(classes = ApplicationTest.class)
-@Sql(statements = "TRUNCATE opb_fintech CASCADE;")
-public class ServiceContextProviderTest {
+public class ServiceContextProviderTest extends DbDropper {
 
     private static final String PASSWORD = "password";
 
