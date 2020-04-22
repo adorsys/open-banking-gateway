@@ -34,13 +34,12 @@ export class AuthService {
       this.openLoginPage();
       return;
     }
-    this.finTechAuthorizationService
-      .logoutPOST('', '', 'response')
-      .toPromise()
-      .finally(() => {
-        this.deleteSessionData();
-        this.openLoginPage();
-      });
+      this.finTechAuthorizationService.logoutPOST('', '', 'response')
+        .toPromise()
+        .finally(() => {
+          this.deleteSessionData();
+          this.openLoginPage();
+        });
   }
 
   openLoginPage() {

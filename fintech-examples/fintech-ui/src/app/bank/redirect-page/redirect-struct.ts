@@ -1,4 +1,4 @@
 export class RedirectStruct {
-  okUrl: string;
+  okUrl : string;
   cancelUrl: string;
 }
