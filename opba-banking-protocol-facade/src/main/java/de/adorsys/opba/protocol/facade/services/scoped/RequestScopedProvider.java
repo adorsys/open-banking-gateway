@@ -35,7 +35,6 @@ import static de.adorsys.opba.protocol.facade.config.FacadeTransientDataConfig.F
 
 @Service
 public class RequestScopedProvider implements RequestScopedServicesProvider {
-    public static final ToRulesDto TO_RULES_DTO = Mappers.getMapper(ToRulesDto.class);
 
     private final Map<String, InternalRequestScoped> memoizedProviders;
     private final ConsentAccessFactory accessProvider;
@@ -120,6 +119,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
     @Getter
     @RequiredArgsConstructor
     public static class InternalRequestScoped implements RequestScoped {
+        public static final ToRulesDto TO_RULES_DTO = Mappers.getMapper(ToRulesDto.class);
 
         private final TransientStorage transientStorage = new TransientStorageImpl();
 
