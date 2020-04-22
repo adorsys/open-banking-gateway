@@ -1,3 +1,7 @@
+# As there is no consent UI running - we need to call server directly
 protocol:
   base-url: http://localhost:8080
-
+  redirect:
+    consent-accounts:
+      ok:  ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+      nok: ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
