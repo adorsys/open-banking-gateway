@@ -6,7 +6,7 @@ import * as uuid from 'uuid';
 import { HeaderConfig } from '../models/consts';
 import { StorageService } from '../services/storage.service';
 import { AuthService } from '../services/auth.service';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
