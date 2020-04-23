@@ -174,6 +174,15 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_without_psu_id() {
+        startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                "restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent-without-psu-id.json"
+        );
+
+        return self();
+    }
+
     public SELF user_denied_consent() {
         ExtractableResponse<Response> response = RestAssured
                 .given()

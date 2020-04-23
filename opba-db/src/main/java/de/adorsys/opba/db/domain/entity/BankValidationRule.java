@@ -2,10 +2,10 @@ package de.adorsys.opba.db.domain.entity;
 
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -20,7 +20,7 @@ import javax.persistence.SequenceGenerator;
 @Entity
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @DiscriminatorColumn(name = "mode")
