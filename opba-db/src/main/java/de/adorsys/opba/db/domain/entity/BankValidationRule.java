@@ -1,5 +1,6 @@
 package de.adorsys.opba.db.domain.entity;
 
+import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,9 +32,10 @@ public class BankValidationRule {
     @ManyToOne(optional = false)
     private BankProtocol protocol;
 
-    private String endpointClass;
+    private String endpointClassCanonicalName;
 
-    private String validationCode;
+    @Enumerated(EnumType.STRING)
+    private FieldCode validationCode;
 
     private boolean forEmbedded;
 

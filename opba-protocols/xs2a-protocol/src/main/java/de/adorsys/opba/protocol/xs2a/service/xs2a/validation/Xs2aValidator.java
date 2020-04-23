@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
+import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import de.adorsys.opba.protocol.xs2a.domain.ValidationIssueException;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;
@@ -49,15 +50,15 @@ public class Xs2aValidator {
      * @param exec Current execution that will be updated with violations if present.
      * @param dtosToValidate ASPSP API call parameter objects to validate.
      */
-    public void validate(DelegateExecution exec, Xs2aContext context, Object... dtosToValidate) {
+    public void validate(DelegateExecution exec, Xs2aContext context, Class invokerClass, Object... dtosToValidate) {
         Set<ConstraintViolation<Object>> allErrors = new HashSet<>();
 
-        Set<String> fieldsToIgnore = getFieldsToIgnoreValidate(context);
+        Set<FieldCode> fieldsToIgnore = getFieldsToIgnoreValidate(context, invokerClass);
 
         for (Object value : dtosToValidate) {
             Set<ConstraintViolation<Object>> errors = validator.validate(value)
                     .stream()
-                    .filter(f -> !fieldsToIgnore.contains(findInfoOnViolation(f).ctx().value().name()))
+                    .filter(f -> !fieldsToIgnore.contains(findInfoOnViolation(f).ctx().value()))
                     .collect(Collectors.toSet());
             allErrors.addAll(errors);
         }
@@ -80,13 +81,13 @@ public class Xs2aValidator {
         );
     }
 
-    private Set<String> getFieldsToIgnoreValidate(Xs2aContext context) {
+    private Set<FieldCode> getFieldsToIgnoreValidate(Xs2aContext context, Class invokerClass) {
         String approach = context.getAspspScaApproach();
         return context.getRequestScoped().getValidationRules().stream()
-                .filter(it -> !it.getEndpointClass().equals(context.getClassName()))
+                .filter(it -> !it.getEndpointClassCanonicalName().equals(invokerClass.getCanonicalName()))
                 .filter(it -> it.isForEmbedded() && !EMBEDDED.name().equalsIgnoreCase(approach))
                 .filter(it -> it.isForRedirect() && !REDIRECT.name().equalsIgnoreCase(approach))
-                .map(bankValidationRuleDto -> bankValidationRuleDto.getValidationCode().toUpperCase())
+                .map(bankValidationRuleDto -> bankValidationRuleDto.getValidationCode())
                 .collect(Collectors.toSet());
     }
 
