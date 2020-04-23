@@ -5,7 +5,7 @@ import {AuthGuard} from './guards/auth.guard';
 import {GuestGuard} from './guards/guest.guard';
 import {RedirectAfterConsentComponent} from './redirect-after-consent/redirect-after-consent.component';
 import {RedirectAfterConsentDeniedComponent} from './redirect-after-consent-denied/redirect-after-consent-denied.component';
-import {SessionExpiredComponent} from "./session-expired/session-expired.component";
+import {SessionExpiredComponent} from './session-expired/session-expired.component';
 
 const routes: Routes = [
   {

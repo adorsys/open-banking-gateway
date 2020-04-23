@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
 import { AccountReport } from '../../api';
 import { RedirectStruct } from '../redirect-page/redirect-struct';
-import {HeaderConfig} from "../../models/consts";
-import {StorageService} from "../../services/storage.service";
+import {HeaderConfig} from '../../models/consts';
+import {StorageService} from '../../services/storage.service';
 
 @Component({
   selector: 'app-list-transactions',
@@ -16,7 +16,10 @@ export class ListTransactionsComponent implements OnInit {
   bankId = '';
   makeVisible = false;
   transactions: AccountReport;
-  constructor(private router: Router, private route: ActivatedRoute, private aisService: AisService, private storageService: StorageService) {}
+  constructor(private router: Router,
+              private route: ActivatedRoute,
+              private aisService: AisService,
+              private storageService: StorageService) {}
 
   ngOnInit() {
     this.bankId = this.route.parent.snapshot.paramMap.get('bankid');

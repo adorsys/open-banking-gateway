@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RedirectStruct } from './redirect-struct';
 import { StorageService } from '../../services/storage.service';
-import {HeaderConfig} from "../../models/consts";
+import {HeaderConfig} from '../../models/consts';
 
 @Component({
   selector: 'app-redirect-page',
