@@ -1,10 +1,12 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.validation;
 
 import com.google.common.collect.Iterables;
+import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
+import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreBankValidationRuleDto;
 import de.adorsys.opba.protocol.xs2a.domain.ValidationIssueException;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;
@@ -82,12 +84,12 @@ public class Xs2aValidator {
     }
 
     private Set<FieldCode> getFieldsToIgnoreValidate(Xs2aContext context, Class invokerClass) {
-        String approach = context.getAspspScaApproach();
+        Approach approach = context.aspspProfile().getPreferredApproach();
         return context.getRequestScoped().getValidationRules().stream()
-                .filter(it -> !it.getEndpointClassCanonicalName().equals(invokerClass.getCanonicalName()))
-                .filter(it -> it.isForEmbedded() && !EMBEDDED.name().equalsIgnoreCase(approach))
-                .filter(it -> it.isForRedirect() && !REDIRECT.name().equalsIgnoreCase(approach))
-                .map(bankValidationRuleDto -> bankValidationRuleDto.getValidationCode())
+                .filter(it -> it.getEndpointClassCanonicalName().equals(invokerClass.getCanonicalName()))
+                .filter(it -> !EMBEDDED.equals(approach) || it.isForEmbedded())
+                .filter(it -> !REDIRECT.equals(approach) || it.isForRedirect())
+                .map(IgnoreBankValidationRuleDto::getValidationCode)
                 .collect(Collectors.toSet());
     }
 
