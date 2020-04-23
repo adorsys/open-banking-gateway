@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -22,6 +23,7 @@ import javax.persistence.SequenceGenerator;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@DiscriminatorColumn(name = "mode")
 public class BankValidationRule {
 
     @Id
