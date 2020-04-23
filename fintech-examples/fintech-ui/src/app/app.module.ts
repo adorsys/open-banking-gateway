@@ -29,7 +29,13 @@ export function apiConfigFactory(): Configuration {
 }
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RedirectAfterConsentComponent, NavbarComponent, RedirectAfterConsentDeniedComponent, SessionExpiredComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    RedirectAfterConsentComponent,
+    NavbarComponent,
+    RedirectAfterConsentDeniedComponent,
+    SessionExpiredComponent],
   imports: [
     AppRoutingModule,
     BrowserModule,

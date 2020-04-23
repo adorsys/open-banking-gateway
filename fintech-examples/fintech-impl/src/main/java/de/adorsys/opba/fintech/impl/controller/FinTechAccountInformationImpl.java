@@ -25,12 +25,10 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
     private final AccountService accountService;
     private final TransactionService transactionService;
 
-    // uaContext
     @Override
     public ResponseEntity<AccountList> aisAccountsGET(String bankId, UUID xRequestID, String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
-
-
         if (!authorizeService.isAuthorized()) {
+            log.warn("aisAccountsGET failed: user is not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
@@ -45,6 +43,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
                                                                    LocalDate dateFrom, LocalDate dateTo,
                                                                    String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
         if (!authorizeService.isAuthorized()) {
+            log.warn("aisTransactionsGET failed: user is not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         SessionEntity sessionEntity = authorizeService.getSession();

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {ConsentAuthorizationService} from '../bank/services/consent-authorization.service';
-import {StorageService} from "../services/storage.service";
+import {StorageService} from '../services/storage.service';
 
 @Component({
   selector: 'app-redirect-after-consent',
