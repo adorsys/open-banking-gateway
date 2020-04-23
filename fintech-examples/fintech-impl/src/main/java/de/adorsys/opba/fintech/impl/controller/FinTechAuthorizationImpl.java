@@ -58,6 +58,11 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
     @Override
     public ResponseEntity fromConsentOkGET(String authId, String finTechRedirectCode, UUID xRequestID, String xsrfToken) {
+        if (!authorizeService.isAuthorized()) {
+            log.warn("fromConsentOkGET failed: user is not authorized! - path is \"/v1/" + authId + "/fromConsentOk\"");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
         if (consentService.confirmConsent(authId, xRequestID)) {
             authorizeService.getSession().setConsentConfirmed(true);
         }
@@ -69,7 +74,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
         log.info("logoutPost is called");
 
         if (!authorizeService.isAuthorized()) {
-            log.warn("Request failed: Xsrf Token is wrong or user is not authorized!");
+            log.warn("logoutPOST failed: user is not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 

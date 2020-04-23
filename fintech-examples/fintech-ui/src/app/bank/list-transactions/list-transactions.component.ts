@@ -16,10 +16,11 @@ export class ListTransactionsComponent implements OnInit {
   bankId = '';
   makeVisible = false;
   transactions: AccountReport;
-  constructor(private router: Router,
-              private route: ActivatedRoute,
-              private aisService: AisService,
-              private storageService: StorageService) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private aisService: AisService,
+    private storageService: StorageService) {}
 
   ngOnInit() {
     this.bankId = this.route.parent.snapshot.paramMap.get('bankid');

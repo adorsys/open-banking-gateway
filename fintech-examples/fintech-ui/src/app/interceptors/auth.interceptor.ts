@@ -1,16 +1,17 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable, throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 import * as uuid from 'uuid';
-import { HeaderConfig } from '../models/consts';
-import { StorageService } from '../services/storage.service';
-import { AuthService } from '../services/auth.service';
+import {HeaderConfig} from '../models/consts';
+import {StorageService} from '../services/storage.service';
+import {AuthService} from '../services/auth.service';
 import {Router} from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private router: Router, private storageService: StorageService, private authService: AuthService) {}
+  constructor(private router: Router, private storageService: StorageService, private authService: AuthService) {
+  }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return this.handleRequest(request, next).pipe(
