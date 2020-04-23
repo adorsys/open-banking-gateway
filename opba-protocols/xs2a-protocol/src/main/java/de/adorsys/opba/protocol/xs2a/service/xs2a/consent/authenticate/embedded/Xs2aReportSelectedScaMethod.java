@@ -32,8 +32,7 @@ public class Xs2aReportSelectedScaMethod extends ValidatedExecution<Xs2aContext>
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
-        context.setClassName(this.getClass().getName());
-        validator.validate(execution, context, extractor.forValidation(context));
+        validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override
