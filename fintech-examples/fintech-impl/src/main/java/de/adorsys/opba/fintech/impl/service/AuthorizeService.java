@@ -64,7 +64,6 @@ public class AuthorizeService {
 
         // delete old cookies, if available
         sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(sessionEntity.getFintechUserId(), xsrfToken));
-
         sessionEntity.addLogin(OffsetDateTime.now());
 
         userRepository.save(sessionEntity);
@@ -74,7 +73,6 @@ public class AuthorizeService {
     @Transactional
     public HttpHeaders modifySessionEntityAndCreateNewAuthHeader(String xRequestID, SessionEntity sessionEntity, String xsrfToken,
                                                                  CookieConfigProperties cookieProps, SessionCookieType sessionCookieType) {
-        // String oldSessionCookie = sessionEntity.getSessionCookieValue();
         sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(sessionEntity.getFintechUserId(), xsrfToken));
         userRepository.save(sessionEntity);
 
@@ -82,19 +80,20 @@ public class AuthorizeService {
         int maxAge = 0;
 
         if (sessionCookieType.equals(SessionCookieType.REDIRECT)) {
+            // simply by passing the session cookie two times, the old will be deleted
+            cookieValues.add(createSessionCookieString(sessionEntity, cookieProps.getSessioncookie(), cookieProps.getSessioncookie().getPath(), 0));
+
             String path = cookieProps.getRedirectcookie().getPath();
             if (path.matches("(.*)" + AUTH_ID_VARIABLE + "(.*)")) {
                 path = path.replaceAll(AUTH_ID_VARIABLE, sessionEntity.getAuthId());
             }
             cookieValues.add(createSessionCookieString(sessionEntity, cookieProps.getRedirectcookie(), path, cookieProps.getRedirectcookie().getMaxAge()));
-            /* try to delete old cookie
-            if (oldSessionCookie != null) {
-                cookieValues.add(createSessionCookieString(sessionEntity, cookieProps.getSessioncookie(), cookieProps.getSessioncookie().getPath(), 0));
-            }
-            */
 
             maxAge = cookieProps.getRedirectcookie().getMaxAge();
         } else {
+            // simply by passing the session cookie two times, the old will be deleted
+            cookieValues.add(createSessionCookieString(sessionEntity, cookieProps.getSessioncookie(), cookieProps.getSessioncookie().getPath(), 0));
+
             cookieValues.add(createSessionCookieString(sessionEntity, cookieProps.getSessioncookie(), cookieProps.getSessioncookie().getPath(), cookieProps.getSessioncookie().getMaxAge()));
             maxAge = cookieProps.getSessioncookie().getMaxAge();
         }
@@ -120,7 +119,8 @@ public class AuthorizeService {
                 .secure(cookieProps.isSecure())
                 .path(path)
                 .maxAge(maxAge)
-                .build().toString();
+                .build()
+                .toString();
     }
 
     @Transactional

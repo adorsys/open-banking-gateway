@@ -53,24 +53,24 @@ public class RedirectHandlerService {
     @Transactional
     public ResponseEntity doRedirect(final String uiGivenAuthId, final String redirectCode) {
         if (StringUtils.isBlank(redirectCode)) {
-            log.warn("Validation redirect request was failed: redirect code is empty!");
+            log.warn("Validation redirect request failed: redirect code is empty!");
             return prepareErrorRedirectResponse(uiConfig.getExceptionUrl());
         }
 
         if (StringUtils.isBlank(uiGivenAuthId)) {
-            log.warn("Validation redirect request was failed: authId is empty!");
+            log.warn("Validation redirect request failed: authId is empty!");
             return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
         Optional<RedirectUrlsEntity> redirectUrls = redirectUrlRepository.findByRedirectCode(redirectCode);
 
         if (!redirectUrls.isPresent()) {
-            log.warn("Validation redirect request was failed: redirect code {} is wrong", redirectCode);
+            log.warn("Validation redirect request failed: redirect code {} is wrong", redirectCode);
             return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
         if (!authorizeService.isAuthorized()) {
-            log.warn("Validation redirect request was failed: Xsrf Token is wrong or user are not authorized!");
+            log.warn("Validation redirect request failed: user is not authorized!");
             return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
@@ -80,7 +80,7 @@ public class RedirectHandlerService {
         String storedAuthId = sessionEntity.getAuthId();
 
         if (!uiGivenAuthId.equals(storedAuthId)) {
-            log.warn("Validation redirect request was failed: authid expected was {}, but authid from ui was {}", storedAuthId, uiGivenAuthId);
+            log.warn("Validation redirect request failed: authid expected was {}, but authid from ui was {}", storedAuthId, uiGivenAuthId);
             return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
