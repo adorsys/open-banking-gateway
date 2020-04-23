@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.api.services.scoped.validation;
 
+import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import lombok.Builder;
 import lombok.Value;
 
@@ -7,8 +8,8 @@ import lombok.Value;
 @Value
 public class BankValidationRuleDto {
     Long protocolId;
-    String endpointClass;
-    String validationCode;
+    String endpointClassCanonicalName;
+    FieldCode validationCode;
     boolean forEmbedded;
     boolean forRedirect;
 }

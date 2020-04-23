@@ -47,8 +47,7 @@ public class CreateAisTransactionListConsentService extends ValidatedExecution<T
 
     @Override
     protected void doValidate(DelegateExecution execution, TransactionListXs2aContext context) {
-        context.setClassName(this.getClass().getName());
-        validator.validate(execution, context, extractor.forValidation(context));
+        validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override
