@@ -5,7 +5,7 @@ import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.transientdata.TransientStorage;
-import de.adorsys.opba.protocol.api.services.scoped.validation.BankValidationRuleDto;
+import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreBankValidationRuleDto;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -40,7 +40,7 @@ public class RequestScopedStub implements RequestScoped {
     }
 
     @Override
-    public List<BankValidationRuleDto> getValidationRules() {
+    public List<IgnoreBankValidationRuleDto> getValidationRules() {
         return null;
     }
 
