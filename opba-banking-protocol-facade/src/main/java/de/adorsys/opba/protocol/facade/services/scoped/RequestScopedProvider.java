@@ -2,18 +2,18 @@ package de.adorsys.opba.protocol.facade.services.scoped;
 
 import com.google.common.cache.CacheBuilder;
 import de.adorsys.opba.db.domain.entity.BankProfile;
-import de.adorsys.opba.db.domain.entity.BankValidationRule;
+import de.adorsys.opba.db.domain.entity.IgnoreBankValidationRule;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
-import de.adorsys.opba.db.repository.jpa.BankValidationRuleRepository;
+import de.adorsys.opba.db.repository.jpa.IgnoreBankValidationRuleRepository;
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.transientdata.TransientStorage;
-import de.adorsys.opba.protocol.api.services.scoped.validation.BankValidationRuleDto;
+import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreBankValidationRuleDto;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
 import lombok.Getter;
@@ -39,15 +39,15 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
 
     private final Map<String, InternalRequestScoped> memoizedProviders;
     private final ConsentAccessFactory accessProvider;
-    private final BankValidationRuleRepository bankValidationRuleRepository;
+    private final IgnoreBankValidationRuleRepository ignoreBankValidationRuleRepository;
 
     public RequestScopedProvider(
             @Qualifier(FACADE_CACHE_BUILDER) CacheBuilder cacheBuilder,
             ConsentAccessFactory accessProvider,
-            BankValidationRuleRepository bankValidationRuleRepository) {
+            IgnoreBankValidationRuleRepository ignoreBankValidationRuleRepository) {
         this.memoizedProviders = cacheBuilder.build().asMap();
         this.accessProvider = accessProvider;
-        this.bankValidationRuleRepository = bankValidationRuleRepository;
+        this.ignoreBankValidationRuleRepository = ignoreBankValidationRuleRepository;
     }
 
     public RequestScoped registerForFintechSession(
@@ -61,7 +61,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         ConsentAccess access = accessProvider.forFintech(fintech, session, fintechPassword);
         EncryptionService authorizationSessionEncService = encryptionService(encryptionServiceProvider, futureAuthorizationSessionKey);
 
-        List<BankValidationRule> bankValidationRules = bankValidationRuleRepository.findAll();
+        List<IgnoreBankValidationRule> bankValidationRules = ignoreBankValidationRuleRepository.findAll();
         return doRegister(profile, access, authorizationSessionEncService, futureAuthorizationSessionKey, bankValidationRules);
     }
 
@@ -76,7 +76,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
                 session.getProtocol().getBankProfile().getBank(),
                 session.getParent()
         );
-        List<BankValidationRule> bankValidationRules = bankValidationRuleRepository.findAll();
+        List<IgnoreBankValidationRule> bankValidationRules = ignoreBankValidationRuleRepository.findAll();
         return doRegister(session.getProtocol().getBankProfile(), access, encryptionService, key, bankValidationRules);
     }
 
@@ -99,7 +99,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
             ConsentAccess access,
             EncryptionService encryptionService,
             SecretKeyWithIv key,
-            List<BankValidationRule> validationRules) {
+            List<IgnoreBankValidationRule> validationRules) {
         InternalRequestScoped requestScoped = new InternalRequestScoped(
                 encryptionService.getEncryptionKeyId(),
                 key,
@@ -125,7 +125,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         private final CurrentBankProfile bankProfile;
         private final ConsentAccess access;
         private final EncryptionService encryptionService;
-        private final List<BankValidationRule> validationRules;
+        private final List<IgnoreBankValidationRule> validationRules;
 
         @Override
         public CurrentBankProfile aspspProfile() {
@@ -148,7 +148,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         }
 
         @Override
-        public List<BankValidationRuleDto> getValidationRules() {
+        public List<IgnoreBankValidationRuleDto> getValidationRules() {
             return validationRules.stream().map(TO_RULES_DTO::map).collect(Collectors.toList());
         }
     }
@@ -163,6 +163,6 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
     @Mapper
     public interface ToRulesDto {
         @Mapping(source = "protocol.id", target = "protocolId")
-        BankValidationRuleDto map(BankValidationRule rules);
+        IgnoreBankValidationRuleDto map(IgnoreBankValidationRule rules);
     }
 }
