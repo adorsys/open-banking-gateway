@@ -1,8 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.config.flowable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataStorage;
+import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.variable.api.types.ValueFields;
@@ -16,7 +15,7 @@ class JsonCustomSerializer implements VariableType {
 
     static final String JSON = "as_json";
 
-    private final TransientDataStorage transientDataStorage;
+    private final RequestScopedServicesProvider scopedServicesProvider;
     private final ObjectMapper mapper;
     private final List<String> allowOnlyClassesWithPrefix;
     private final int maxLength;
@@ -50,29 +49,25 @@ class JsonCustomSerializer implements VariableType {
     @SneakyThrows
     public void setValue(Object o, ValueFields valueFields) {
         if (o == null) {
-            valueFields.setTextValue(null);
+            valueFields.setBytes(null);
             return;
         }
 
-        valueFields.setTextValue(mapper.writeValueAsString(
-                ImmutableMap.of(
-                        o.getClass().getCanonicalName(),
-                        o
-        )));
+        valueFields.setBytes(SerializerUtil.serialize(o, mapper));
     }
 
     @Override
     @SneakyThrows
     public Object getValue(ValueFields valueFields) {
-        if (null == valueFields.getTextValue()) {
+        if (null == valueFields.getBytes()) {
             return null;
         }
 
         return SerializerUtil.deserialize(
-                valueFields.getTextValue().getBytes(),
+                valueFields.getBytes(),
                 mapper,
                 allowOnlyClassesWithPrefix,
-                transientDataStorage
+                scopedServicesProvider
         );
     }
 }

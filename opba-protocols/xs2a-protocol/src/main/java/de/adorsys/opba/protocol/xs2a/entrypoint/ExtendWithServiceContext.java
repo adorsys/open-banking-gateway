@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 public class ExtendWithServiceContext {
 
     public Xs2aContext extend(Xs2aContext context, ServiceContext serviceContext) {
+        context.setRequestScoped(serviceContext.getRequestScoped());
         context.setServiceSessionId(serviceContext.getServiceSessionId());
         context.setRedirectCodeIfAuthContinued(serviceContext.getFutureRedirectCode().toString());
         context.setAspspRedirectCode(serviceContext.getFutureAspspRedirectCode().toString());

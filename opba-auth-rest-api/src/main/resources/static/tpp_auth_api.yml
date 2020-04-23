@@ -1,0 +1,201 @@
+openapi: 3.0.1
+info:
+  version: "1.0.0"
+  title: Open Banking Gateway Tpp Authentication API
+  description: >-
+    This API provides PSU login and registration functionality on TPP side.
+externalDocs:
+  url: "https://adorsys.github.com/open-banking-gateway"
+
+paths:
+  /v1/psu/login:
+    post:
+      tags:
+        - Psu Authentication
+      operationId: login
+      summary: Login user to open-banking
+      description: TBD
+      requestBody:
+        description: User credentials object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PsuAuthBody'
+        required: true
+      parameters:
+        #common header parameter
+        - $ref: '#/components/parameters/X-Request-ID'
+      responses:
+        '202':
+          $ref: '#/components/responses/202_UserAccepted'
+        '401':
+          $ref: '#/components/responses/401_Unauthorised'
+  /v1/psu/ais/{authorization-id}/for-approval/login:
+    post:
+      tags:
+        - Psu Authentication and consent approval
+      operationId: loginForApproval
+      summary: Login user to open-banking
+      description: TBD
+      requestBody:
+        description: User credentials object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PsuAuthBody'
+        required: true
+      parameters:
+        #common header parameter
+        - $ref: '#/components/parameters/X-Request-ID'
+        #path
+        - $ref: "#/components/parameters/authorization-id"
+        #query
+        - $ref: "#/components/parameters/redirectCode"
+      responses:
+        '202':
+          $ref: '#/components/responses/202_UserAccepted'
+        '401':
+          $ref: '#/components/responses/401_Unauthorised'
+
+  /v1/psu/register:
+    post:
+      tags:
+        - Psu Authentication
+      operationId: registration
+      summary: registration user in open-banking db
+      description: TBD
+      requestBody:
+        description: User credentials object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PsuAuthBody'
+        required: true
+      parameters:
+        #common header parameter
+        - $ref: '#/components/parameters/X-Request-ID'
+      responses:
+        '201':
+          $ref: '#/components/responses/201_UserCreated'
+        '400':
+          $ref: '#/components/responses/400_BadRequest'
+
+components:
+  headers:
+    X-Request-ID:
+      required: true
+      description: >
+        Unique ID that identifies this request through common workflow.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+  parameters:
+    X-Request-ID:
+      name: X-Request-ID
+      in: header
+      required: true
+      description: |
+        Unique ID that identifies this request through common workflow.
+        Shall be contained in HTTP Response as well.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+    authorization-id:
+      name: authorization-id
+      in: path
+      description: Authorization session ID to approve
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+    redirectCode:
+      name: redirectCode
+      in: query
+      required: true
+      description: Redirect code that acts as a password protecting FinTech requested consent specification
+      example: "12345"
+      schema:
+        type: string
+  responses:
+    201_UserCreated:
+      description: User created sucessfully
+      headers:
+        Location:
+          schema:
+            type: string
+        X-Request-ID:
+          $ref: '#/components/parameters/X-Request-ID'
+      #NO RESPONSE BODY
+
+    202_UserAccepted:
+      description: User logged in
+      headers:
+        X-Request-ID:
+          $ref: '#/components/parameters/X-Request-ID'
+        Set-Cookie:
+          schema:
+            type: string
+            example: Authorization-Session-ID=abcde12345; Path=/; HttpOnly
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LoginResponse"
+
+    400_BadRequest:
+      description: |
+        Wrong registration parameters or user exist
+      headers:
+        X-Request-ID:
+          $ref: '#/components/parameters/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/generalError"
+
+    401_Unauthorised:
+      description: |
+        Bad username or password
+      headers:
+        X-Request-ID:
+          $ref: '#/components/parameters/X-Request-ID'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/generalError"
+
+  schemas:
+    PsuAuthBody:
+      type: object
+      required:
+        - login
+        - password
+      properties:
+        login:
+          type: string
+        password:
+          type: string
+      example:
+        {
+          "login": "user1",
+          "password": "123"
+        }
+
+    LoginResponse:
+      title: Login Response
+      type: object
+      properties:
+        xsrfToken:
+          type: string
+          description: Authorization cookie hash
+
+    generalError:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "ERROR_CODE"
+        message:
+          type: string
+          example: "Error description message"

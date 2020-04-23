@@ -1,9 +1,13 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.context;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.db.domain.entity.ProtocolAction;
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
+import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
+import de.adorsys.opba.protocol.api.services.scoped.UsesRequestScoped;
 import lombok.Data;
+import lombok.experimental.Delegate;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -12,7 +16,7 @@ import java.util.UUID;
 
 @Data
 // FIXME Entire class must be protected https://github.com/adorsys/open-banking-gateway/issues/251
-public class BaseContext {
+public class BaseContext implements RequestScoped, UsesRequestScoped {
 
     private ContextMode mode;
     // Application required
@@ -25,6 +29,7 @@ public class BaseContext {
     );
 
     private String sagaId;
+    private String requestId;
     // Used to find existing consent:
     private UUID serviceSessionId;
 
@@ -51,9 +56,16 @@ public class BaseContext {
     private Boolean wrongAuthCredentials;
 
     /**
+     * Request-scoped services and data.
+     */
+    @Delegate
+    @JsonIgnore
+    private RequestScoped requestScoped;
+
+    /**
      * Other helpful functions
      */
     public String getRequestId() {
-        return this.sagaId;
+        return this.requestId;
     }
 }

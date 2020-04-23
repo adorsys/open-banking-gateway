@@ -1,7 +1,7 @@
 package de.adorsys.opba.db.repository.jpa;
 
 import de.adorsys.opba.db.domain.entity.BankProtocol;
-import de.adorsys.opba.db.domain.entity.ProtocolAction;
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

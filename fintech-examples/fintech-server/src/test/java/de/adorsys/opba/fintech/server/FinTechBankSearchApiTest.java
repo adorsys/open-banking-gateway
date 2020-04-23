@@ -223,6 +223,16 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
         MvcResult result = plainauth(username, password);
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
         assertNotNull(result.getResponse().getHeader(Consts.HEADER_XSRF_TOKEN));
+
+        log.info("session cookie after login: {}", restRequestContext.getSessionCookieValue());
+        log.info("xsrftoken after login:      {}", restRequestContext.getXsrfTokenHeaderField());
+
+        String xsrfToken = restRequestContext.getXsrfTokenHeaderField();
+        int semicolon = xsrfToken.indexOf(';');
+        xsrfToken = xsrfToken.substring(0, semicolon);
+        restRequestContext.setXsrfTokenHeaderField(xsrfToken);
+        log.info("xsrftoken after login:      {}", restRequestContext.getXsrfTokenHeaderField());
+
         return restRequestContext.getSessionCookieValue();
     }
 

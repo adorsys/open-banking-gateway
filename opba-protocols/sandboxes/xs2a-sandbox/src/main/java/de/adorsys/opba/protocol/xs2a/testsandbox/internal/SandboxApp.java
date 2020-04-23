@@ -286,7 +286,8 @@ public enum SandboxApp {
                             "--spring.config.location=" + buildSpringConfigLocation(ctx),
                             "--primary.profile=" + getPrimaryConfigFile(),
                             "--testcontainers.postgres.port=" + ctx.getDbPort().get(),
-                            "--logging.level.root=" + getSandboxLogLevel()
+                            "--logging.level.root=" + getSandboxLogLevel(),
+                            "--feign.client.config.default.loggerLevel=NONE"
                     }
             );
         } catch (IllegalAccessException | InvocationTargetException ex) {

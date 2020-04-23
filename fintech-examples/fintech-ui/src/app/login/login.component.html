@@ -1,4 +1,4 @@
-<form (ngSubmit)="onSubmit()" [formGroup]="loginForm">
+<form (ngSubmit)="onSubmit()" [formGroup]="loginForm" #loginFormDir="ngForm">
   <div class="card card-frame">
     <div class="card-body">
       <h4 class="card-title">Hello!</h4>
@@ -13,8 +13,11 @@
             id="username"
             type="text"
           />
-          <div *ngIf="username?.errors?.required && username?.dirty" class="invalid-feedback">
+          <div *ngIf="username?.errors?.required && (username?.dirty || loginFormDir.submitted)" class="invalid-feedback d-block">
             Username is Required
+          </div>
+          <div *ngIf="username?.errors?.pattern && username?.dirty" class="invalid-feedback">
+            Username must contain only Letters or Digits
           </div>
         </div>
 
@@ -28,8 +31,11 @@
             id="password"
             type="password"
           />
-          <div *ngIf="password?.errors?.required && password?.dirty" class="invalid-feedback">
+          <div *ngIf="password?.errors?.required && (password?.dirty || loginFormDir.submitted)" class="invalid-feedback d-block">
             Password is Required
+          </div>
+          <div *ngIf="password?.errors?.pattern && password?.dirty" class="invalid-feedback">
+            Password must be 4 characters long
           </div>
         </div>
       </div>

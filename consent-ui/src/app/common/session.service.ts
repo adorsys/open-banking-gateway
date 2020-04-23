@@ -4,8 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class SessionService {
-
-  constructor() { }
+  constructor() {}
 
   public setRedirectCode(authorizationId: string, redirectCode: string) {
     sessionStorage.setItem(authorizationId + Session.REDIRECT_CODE, redirectCode);
@@ -24,10 +23,7 @@ export class SessionService {
       return null;
     }
 
-    return Object.assign(
-      factory(),
-      JSON.parse(sessionStorage.getItem(authorizationId + Session.CONSENT_STATE))
-    );
+    return Object.assign(factory(), JSON.parse(sessionStorage.getItem(authorizationId + Session.CONSENT_STATE)));
   }
 
   public setConsentObject(authorizationId: string, consentObject: any) {
@@ -39,10 +35,14 @@ export class SessionService {
       return null;
     }
 
-    return Object.assign(
-      factory(),
-      JSON.parse(sessionStorage.getItem(authorizationId + Session.CONSENT_OBJECT))
-    );
+    return Object.assign(factory(), JSON.parse(sessionStorage.getItem(authorizationId + Session.CONSENT_OBJECT)));
+  }
+
+  public setXsrfToken(token: string) {
+    sessionStorage.setItem(Session.XSRF_TOKEN, token);
+  }
+  public getXsrfToken() {
+    sessionStorage.getItem(Session.XSRF_TOKEN);
   }
 }
 
@@ -50,4 +50,5 @@ enum Session {
   REDIRECT_CODE = ':REDIRECT_CODE',
   CONSENT_STATE = ':CONSENT_STATE',
   CONSENT_OBJECT = ':CONSENT_OBJECT',
+  XSRF_TOKEN = 'XSRF_TOKEN'
 }

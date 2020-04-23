@@ -1,0 +1,26 @@
+<div>
+  <div style='width: 50%; display:inline-block; vertical-align:top;'>
+    <form ngNoForm>
+      <p>Login page for consent sharing/authorization</p>
+      <hr/>
+      <label for="login">Login: </label>
+      <input id="login" name="scaChallengeResult" type="text" [formControl]="login">
+      <br/>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" [formControl]="password">
+      <br/>
+
+      <div class="form-row">
+        <button type="button" [disabled]="!form.valid" (click)="doLogin()">Login</button>
+      </div>
+    </form>
+  </div>
+  <div style='width: 50%;  display:inline-block; vertical-align:top;'>
+    <h5>Templates</h5>
+    <input type="button" value="anton.brueckner" (click)="setDataFor(Users.ANTON)"/>
+    <br>
+    <input type="button" value="max.musterman" (click)="setDataFor(Users.MAX)"/>
+    <br>
+  </div>
+</div>
+
