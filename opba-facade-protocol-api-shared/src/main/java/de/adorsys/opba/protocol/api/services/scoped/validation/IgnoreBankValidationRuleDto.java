@@ -6,7 +6,7 @@ import lombok.Value;
 
 @Builder
 @Value
-public class BankValidationRuleDto {
+public class IgnoreBankValidationRuleDto {
     Long protocolId;
     String endpointClassCanonicalName;
     FieldCode validationCode;
