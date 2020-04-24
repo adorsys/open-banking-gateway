@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * The request to deny (embedded) current authorization.
+ */
 @Setter
 @Getter
 @Builder
@@ -15,5 +18,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DenyAuthorizationRequest implements FacadeServiceableGetter {
 
+    /**
+     * The request representation that is being serviced by facade.
+     */
     private FacadeServiceableRequest facadeServiceable;
 }
