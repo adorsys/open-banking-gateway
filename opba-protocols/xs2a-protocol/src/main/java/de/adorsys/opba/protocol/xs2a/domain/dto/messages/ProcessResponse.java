@@ -4,6 +4,9 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+/**
+ * The event that is typically sent when data from ASPSP is acquired. For example - when account list was received.
+ */
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class ProcessResponse extends InternalProcessResult {

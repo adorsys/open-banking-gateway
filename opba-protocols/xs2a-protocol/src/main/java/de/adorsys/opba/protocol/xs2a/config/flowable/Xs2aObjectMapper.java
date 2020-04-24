@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 
+/**
+ * Wrapper for {@link ObjectMapper} to clearly identify which container is used.
+ */
 @Getter
 @RequiredArgsConstructor
 public class Xs2aObjectMapper {

@@ -5,6 +5,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.RetryOperations;
 import org.springframework.retry.support.RetryTemplate;
 
+/**
+ * Retry template provider to handle certain transient errors. Note that Flowable has its own retry strategy and logic.
+ */
 @Configuration
 public class RetryConfig {
 

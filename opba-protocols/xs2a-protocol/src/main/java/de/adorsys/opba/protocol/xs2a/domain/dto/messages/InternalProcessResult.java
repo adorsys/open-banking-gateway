@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 
+/**
+ * Class that represents some generic internal process result.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

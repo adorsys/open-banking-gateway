@@ -13,13 +13,26 @@ import java.util.function.Consumer;
 
 import static com.google.common.cache.CacheBuilder.newBuilder;
 
+/**
+ * This class manages transient data that expires after some time. For example if some process result was not
+ * handled by {@link de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper} within some time window
+ * it will expire and will be removed from memory.
+ */
 @Configuration
 public class ExpirableDataConfig {
 
     private static final String PROTOCOL_CACHE_BUILDER = "protocol-cache-builder";
 
+    /**
+     * To avoid wrong configuration it is meaningful to require that expirable data will be alive for at least this
+     * amount of time.
+     */
     public static final long MIN_EXPIRE_SECONDS = 60L;
 
+    /**
+     * @param expireAfterWrite Duration for which the record will be alive and it will be removed when this time frame passes.
+     * @return Builder to build expirable maps.
+     */
     @Bean(PROTOCOL_CACHE_BUILDER)
     CacheBuilder protocolCacheBuilder(@Value("${protocol.expirable.expire-after-write}") Duration expireAfterWrite) {
         if (expireAfterWrite.getSeconds() < MIN_EXPIRE_SECONDS) {
@@ -32,11 +45,18 @@ public class ExpirableDataConfig {
                 .maximumSize(Integer.MAX_VALUE);
     }
 
+    /**
+     * Expirable subscribers to the process results. They will be alive for some time and then if no message
+     * comes in - will be removed.
+     */
     @Bean
     Map<String, Consumer<InternalProcessResult>> subscribers(@Qualifier(PROTOCOL_CACHE_BUILDER) CacheBuilder builder) {
         return builder.build().asMap();
     }
 
+    /**
+     * Expirable process results. They will be alive for some time and then if no handler consumes it - will be removed.
+     */
     @Bean
     Map<String, InternalProcessResult> deadLetterQueue(@Qualifier(PROTOCOL_CACHE_BUILDER) CacheBuilder builder) {
         return builder.build().asMap();

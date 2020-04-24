@@ -7,6 +7,9 @@ import lombok.NonNull;
 
 import java.net.URI;
 
+/**
+ * Generic response that represents we need to redirect user somewhere.
+ */
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class Redirect extends InternalProcessResult {
