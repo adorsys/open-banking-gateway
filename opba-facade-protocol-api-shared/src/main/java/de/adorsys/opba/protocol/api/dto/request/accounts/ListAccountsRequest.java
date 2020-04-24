@@ -12,6 +12,9 @@ import lombok.Setter;
 import java.util.EnumMap;
 import java.util.Map;
 
+/**
+ * The request by FinTech to list PSUs' accounts.
+ */
 // TODO Validation, Immutability
 @Setter
 @Getter
@@ -20,8 +23,14 @@ import java.util.Map;
 @AllArgsConstructor
 public class ListAccountsRequest implements FacadeServiceableGetter {
 
+    /**
+     * The request representation that is being serviced by facade.
+     */
     private FacadeServiceableRequest facadeServiceable;
 
+    /**
+     * Additional (protocol-customary) request parameters.
+     */
     @Builder.Default
     private Map<ExtraRequestParam, Object> extras = new EnumMap<>(ExtraRequestParam.class);
 }
