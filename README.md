@@ -32,6 +32,25 @@ The following picture displays the overall architecture of this banking gateway:
 The following picture displays the overall security concept of this banking gateway:
 ![Security concept](docs/img/security-concept.png)
 
+
+## Technical architecture
+
+The following picture displays the overall technical architecture concept of this banking gateway:
+![Technical architecture](docs/img/technical-architecture.svg)
+
+**Key components as shown on diagram**:
+
+**APIs:**
+ - [Banking API](opba-banking-rest-api) and its implementation [Banking API Impl](opba-banking-rest-impl)
+ - [Consent API](opba-consent-rest-api) and its implementation [Consent API Impl](opba-consent-rest-impl)
+
+ **Facade:**
+ - [Banking protocol facade](opba-banking-protocol-facade)
+ 
+ **Protocol:**
+  - [Banking protocol API](opba-protocols/opba-protocol-api)
+  - [XS2A compliant banking protocol Impl](opba-protocols/xs2a-protocol)
+
 ## Information for developers:
  
  - Starting with project: [How to start with project](https://github.com/adorsys/open-banking-gateway/tree/develop/how-to-start-with-project) 
