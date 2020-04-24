@@ -45,9 +45,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                 .until(() ->
                         wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
                 ).get(0);
-
-        // no consent UI for embedded test
-        this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI).replace("/embedded-server/", "/");
+        this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
         ExtractableResponse<Response> response = RestAssured
                 .given()
                     .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)

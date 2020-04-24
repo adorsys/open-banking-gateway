@@ -1,5 +1,0 @@
-flowable:
-  app:
-    enabled: false
-  jpa-enabled: false
-  async-executor-activate: false

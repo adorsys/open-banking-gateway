@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.com/adorsys/open-banking-gateway.svg?branch=develop)](https://travis-ci.com/adorsys/open-banking-gateway)
 [![codecov](https://codecov.io/gh/adorsys/open-banking-gateway/branch/develop/graph/badge.svg)](https://codecov.io/gh/adorsys/open-banking-gateway)
+[![Gitter](https://badges.gitter.im/adorsys/open-banking-gateway.svg)](https://gitter.im/adorsys/open-banking-gateway?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 # Open Banking Gateway
 Provides tools, adapters and connectors for transparent access to open banking apis. The initial effort focuses on the connectivity to banks that implement the European PSD2 directive either through one of the common market initiatives like : [The Berlin Group NextGenPSD2](https://www.berlin-group.org/psd2-access-to-bank-accounts), [The Open Banking UK](https://www.openbanking.org.uk/), [The Polish PSD2 API](https://polishapi.org/en/) or even through proprietary bank api like  [the ING’s PSD2 API](https://developer.ing.com/openbanking/).

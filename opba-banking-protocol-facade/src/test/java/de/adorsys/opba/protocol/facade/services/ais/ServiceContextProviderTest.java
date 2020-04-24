@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
 import de.adorsys.opba.protocol.facade.config.ApplicationTest;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
+import de.adorsys.opba.protocol.facade.services.DbDropper;
 import de.adorsys.opba.protocol.facade.services.ProtocolResultHandler;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import lombok.SneakyThrows;
@@ -35,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @ActiveProfiles("test")
 @SpringBootTest(classes = ApplicationTest.class)
-public class ServiceContextProviderTest {
+public class ServiceContextProviderTest extends DbDropper {
 
     private static final String PASSWORD = "password";
 
