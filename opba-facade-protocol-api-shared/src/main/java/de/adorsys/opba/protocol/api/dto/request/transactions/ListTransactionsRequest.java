@@ -13,6 +13,9 @@ import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.Map;
 
+/**
+ * The request by FinTech to list PSUs' transactions on some account.
+ */
 // TODO Validation, Immutability
 @Setter
 @Getter
@@ -21,15 +24,38 @@ import java.util.Map;
 @AllArgsConstructor
 public class ListTransactionsRequest implements FacadeServiceableGetter {
 
+    /**
+     * The request representation that is being serviced by facade.
+     */
     private FacadeServiceableRequest facadeServiceable;
 
+    /**
+     * ASPSP account ID to list transactions on.
+     */
     private String accountId;
+
+    /**
+     * Transactions starting date from.
+     */
     private LocalDate dateFrom;
+
+    /**
+     * Transactions ending date to.
+     */
     private LocalDate dateTo;
+
     private String entryReferenceFrom;
+
+    /**
+     * Transactions booking status - i.e. BOTH or BOOKED.
+     */
     private String bookingStatus;
+
     private Boolean deltaList;
 
+    /**
+     * Additional (protocol-customary) request parameters.
+     */
     @Builder.Default
     private Map<ExtraRequestParam, Object> extras = new EnumMap<>(ExtraRequestParam.class);
 }
