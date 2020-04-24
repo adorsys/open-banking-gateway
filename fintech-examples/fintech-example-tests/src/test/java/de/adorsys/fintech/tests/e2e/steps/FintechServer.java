@@ -2,8 +2,8 @@ package de.adorsys.fintech.tests.e2e.steps;
 
 import com.tngtech.jgiven.annotation.BeforeStage;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.db.domain.Approach;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
+import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.SandboxServers;
 import io.restassured.RestAssured;
 import io.restassured.config.RedirectConfig;
