@@ -39,8 +39,8 @@ class RedirectHandlerServiceTest {
     private final String AUTH_ID_VALUE = "fd8a0548-6862-46cb-8d24-f4b5edc7f7cb";
     private final String REDIRECT_CODE_VALUE = "7ca3f778-b0bb-4c1a-8003-d176089d1455";
     private final String REDIRECT_URL = "http://localhost:4444/{redirectUri}/{redirectCode}";
-    private final String EXCEPTION_URL = "http://localhost:4444/excaption-redirect";
-    private final String FULL_NOT_OK_URL = "http://localhost:4444/excaption-redirect";
+    private final String EXCEPTION_URL = "http://localhost:4444/redirect-after-consent-denied";
+    private final String FULL_NOT_OK_URL = "http://localhost:4444/redirect-after-consent-denied";
 
     private final String FINTECH_REDIRECT_OK = "redirect-ok/to/682dbd06-75d4-4f73-a7e7-9084150a1f10";
     private final String FINTECH_REDIRECT_NOT_OK = "redirect-no-ok/to/682dbd06-75d4-4f73-a7e7-9084150a1f10";

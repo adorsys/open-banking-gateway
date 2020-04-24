@@ -66,6 +66,10 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     @ProvidedScenarioState
     @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
+    protected String redirectNotOkUri;
+
+    @ProvidedScenarioState
+    @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
     protected String responseContent;
 
     @ScenarioState

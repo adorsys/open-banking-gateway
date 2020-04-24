@@ -22,12 +22,13 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withSignedHeadersWithoutIpAddress;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withSignatureHeaders;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withSignedHeadersWithoutIpAddress;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.COMPUTE_PSU_IP_ADDRESS;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP_ADDRESS;
+import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_NOK_REDIRECT_URI;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -57,6 +58,26 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                     .extract();
 
         assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
+
+        return self();
+    }
+
+    public SELF open_banking_redirect_from_aspsp_not_ok_webhook_called_for_api_test() {
+        LoggedRequest consentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
+                                                       .until(() ->
+                                                                      wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
+                                                       ).get(0);
+        this.redirectNotOkUri = consentInitiateRequest.getHeader(TPP_NOK_REDIRECT_URI);
+        ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
+                    .given()
+                        .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
+                    .when()
+                        .get(redirectNotOkUri)
+                    .then()
+                        .statusCode(HttpStatus.SEE_OTHER.value())
+                        .extract();
+
+        assertThat(response.header(LOCATION)).contains("redirect-after-consent-denied");
 
         return self();
     }
