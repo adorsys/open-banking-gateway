@@ -22,6 +22,9 @@ import java.util.concurrent.CompletableFuture;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 
+/**
+ * Operation that is called to Deny users' consent in Embedded SCA authorization mode.
+ */
 @Slf4j
 @Service("xs2aDenyAuthorization")
 @RequiredArgsConstructor

@@ -21,6 +21,10 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
+/**
+ * Mapper to convert from internal protocol result to facade facing protocol result.
+ * @param <T>
+ */
 @RequiredArgsConstructor
 public class OutcomeMapper<T> {
 

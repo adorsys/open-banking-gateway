@@ -14,6 +14,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Operation that is called when user returns back from ASPSP either with OK or NOK status in Redirect SCA
+ * authorization mode.
+ */
 @Service("xs2aFromAspspRedirect")
 @RequiredArgsConstructor
 public class Xs2aFromAspspRedirect implements FromAspspRedirect {

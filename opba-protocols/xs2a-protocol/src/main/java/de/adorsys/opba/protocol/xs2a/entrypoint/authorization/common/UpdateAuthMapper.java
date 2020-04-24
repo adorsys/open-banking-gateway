@@ -19,6 +19,9 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 
+/**
+ * Mapper that updates current context ({@link Xs2aContext}) with users' input.
+ */
 @Service
 @RequiredArgsConstructor
 public class UpdateAuthMapper {
@@ -43,6 +46,9 @@ public class UpdateAuthMapper {
         throw new IllegalArgumentException("Can't update authorization for: " + context.getClass().getCanonicalName());
     }
 
+    /**
+     * Updates account listing context with authorization request.
+     */
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = {UuidMapper.class, AisMapper.class}, nullValuePropertyMappingStrategy = IGNORE)
     public interface FromAisRequestAccountList extends DtoUpdatingMapper<AuthorizationRequest, AccountListXs2aContext> {
 
@@ -58,6 +64,9 @@ public class UpdateAuthMapper {
         }
     }
 
+    /**
+     * Updates transaction listing context with authorization request.
+     */
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = {UuidMapper.class, AisMapper.class}, nullValuePropertyMappingStrategy = IGNORE)
     public interface FromAisRequestTransactionList extends DtoUpdatingMapper<AuthorizationRequest, TransactionListXs2aContext> {
 
@@ -73,6 +82,9 @@ public class UpdateAuthMapper {
         }
     }
 
+    /**
+     * Maps the update the context with AIS consent specification object.
+     */
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface AisMapper extends DtoMapper<AisConsent, AisConsentInitiateBody> {
 

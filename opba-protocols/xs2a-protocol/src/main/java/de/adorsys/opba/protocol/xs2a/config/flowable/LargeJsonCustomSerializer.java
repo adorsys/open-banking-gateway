@@ -10,7 +10,8 @@ import org.flowable.variable.service.impl.types.SerializableType;
 import java.util.List;
 
 /**
- * JSON serializer for large classes (large resulting strings).
+ * JSON serializer for large classes (large resulting strings). Preserves the class name used, so deserialzation
+ *  returns the class that was used to serialize data.
  * Data is encrypted using {@link RequestScopedServicesProvider}.
  */
 @RequiredArgsConstructor
