@@ -86,6 +86,7 @@ public class Xs2aValidator {
     private Set<FieldCode> getFieldsToIgnoreValidate(Xs2aContext context, Class invokerClass) {
         Approach approach = context.aspspProfile().getPreferredApproach();
         return context.getRequestScoped().getValidationRules().stream()
+                .filter(it -> it.getEndpointClassCanonicalName().equals(invokerClass.getCanonicalName()))
                 .filter(it -> !EMBEDDED.equals(approach) || it.isForEmbedded())
                 .filter(it -> !REDIRECT.equals(approach) || it.isForRedirect())
                 .map(IgnoreBankValidationRuleDto::getValidationCode)
