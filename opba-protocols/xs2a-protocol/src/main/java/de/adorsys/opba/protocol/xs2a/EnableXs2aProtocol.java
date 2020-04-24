@@ -8,6 +8,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation to enable all XS2A protocol services.
+ */
 @Import(Xs2aProtocolConfiguration.class)
 @Inherited
 @Target(ElementType.TYPE)
