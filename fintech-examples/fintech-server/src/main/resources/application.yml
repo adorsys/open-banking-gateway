@@ -55,7 +55,7 @@ spring:
 fintech-ui:
   redirect-url: http://localhost:4444/redirect-after-consent?redirectCode={redirectCode}
   unauthorized-url: http://localhost:4444/
-  exception-url: http://localhost:4444/excaption-redirect
+  exception-url: http://localhost:4444/redirect-after-consent-denied
 
 security:
   # This is the example private key value used only for DEMO purposes
