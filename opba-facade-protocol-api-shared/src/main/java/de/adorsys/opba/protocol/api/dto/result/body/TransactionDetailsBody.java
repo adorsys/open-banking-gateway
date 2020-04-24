@@ -5,6 +5,9 @@ import lombok.Value;
 
 import java.time.LocalDate;
 
+/**
+ * Transaction details representation list transactions result from protocol.
+ */
 @Value
 @Builder
 public class TransactionDetailsBody {

@@ -5,6 +5,9 @@ import lombok.Value;
 
 import java.util.List;
 
+/**
+ * Account list result from protocol.
+ */
 @Value
 @Builder
 public class AccountListBody implements ResultBody {
