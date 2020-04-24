@@ -46,7 +46,7 @@ public class Xs2aResultBodyExtractor {
         }
 
         default void append(StringBuilder builder, String referenceType) {
-            if (!Strings.isNullOrEmpty(referenceType)) {
+            if (Strings.isNullOrEmpty(referenceType)) {
                return;
             }
 
