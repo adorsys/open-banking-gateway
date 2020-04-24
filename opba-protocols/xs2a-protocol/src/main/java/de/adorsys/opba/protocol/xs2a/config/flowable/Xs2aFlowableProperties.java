@@ -7,6 +7,10 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+/**
+ * Configures which classes can be serialized/deserialized in JSON form and configures threshold when to use
+ * {@link JsonCustomSerializer} or {@link LargeJsonCustomSerializer}
+ */
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "opba.xs2a.flowable")

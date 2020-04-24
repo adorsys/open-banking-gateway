@@ -27,6 +27,10 @@ import org.springframework.context.annotation.Profile;
 
 import java.nio.file.Paths;
 
+/**
+ * This is the embedded configuration of Adorsys-XS2A adapter (https://github.com/adorsys/xs2a-adapter) to serve requests to ASPSP.
+ * Basically this adapter acts as RestClient with typed interfaces for us and other useful functionality.
+ */
 @Configuration
 public class Xs2aAdapterConfiguration {
 
@@ -83,6 +87,11 @@ public class Xs2aAdapterConfiguration {
         return new AdapterDelegatingOauth2Service(adapterServiceLoader);
     }
 
+    /**
+     * The keystore for QWAC and QSEAL certificates.
+     * @param keystorePath Location of the keystore.
+     * @param keystorePassword Keystore password.
+     */
     @Bean
     @SneakyThrows
     Pkcs12KeyStore xs2aPkcs12KeyStore(
@@ -97,6 +106,9 @@ public class Xs2aAdapterConfiguration {
         );
     }
 
+    /**
+     * Service to download large reports (i.e. large transaction list).
+     */
     @Bean
     DownloadService xs2aDownloadService(AdapterServiceLoader adapterServiceLoader) {
         return new DownloadServiceImpl(adapterServiceLoader);

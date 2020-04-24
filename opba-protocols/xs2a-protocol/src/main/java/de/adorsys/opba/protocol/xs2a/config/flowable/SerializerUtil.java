@@ -16,6 +16,11 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Utility class for JSON serialization/deserialization with encryption provided by
+ * {@link RequestScopedServicesProvider} and {@link RequestScoped} that has
+ * {@link de.adorsys.opba.protocol.api.services.EncryptionService} itself.
+ */
 @UtilityClass
 @SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Lombok generates private ctor.
 public class SerializerUtil {

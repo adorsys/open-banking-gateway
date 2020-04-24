@@ -10,6 +10,10 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * General response that represents that we need some input from user (i.e. we need PSU ID to be filled by user)
+ * and points to page where we can get this input.
+ */
 @Getter
 @EqualsAndHashCode(callSuper = true)
 public class ValidationProblem extends InternalProcessResult {
