@@ -9,7 +9,10 @@ import org.flowable.variable.api.types.VariableType;
 
 import java.util.List;
 
-// TODO: Secure serialized values with some encryption, remove code duplication.
+/**
+ * JSON serializer for small classes (small resulting strings).
+ * Data is encrypted using {@link RequestScopedServicesProvider}.
+ */
 @RequiredArgsConstructor
 class JsonCustomSerializer implements VariableType {
 

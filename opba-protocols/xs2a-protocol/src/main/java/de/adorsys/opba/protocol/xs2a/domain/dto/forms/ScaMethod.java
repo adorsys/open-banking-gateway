@@ -8,12 +8,23 @@ import org.mapstruct.factory.Mappers;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 
+/**
+ * Class that represents available SCA methods and their names. I.e. SMS based second factor authorization,
+ * email based second factor authorization.
+ */
 @Data
 public class ScaMethod {
 
     public static final ScaMethod.FromAuthObject FROM_AUTH = Mappers.getMapper(ScaMethod.FromAuthObject.class);
 
+    /**
+     * The ID of SCA method.
+     */
     private String key;
+
+    /**
+     * User friendly name (caption) for SCA method.
+     */
     private String value;
 
     @Mapper(componentModel = SPRING_KEYWORD)
@@ -23,6 +34,9 @@ public class ScaMethod {
         ScaMethod map(AuthenticationObject auth);
     }
 
+    /**
+     * @return JSON representation of SCA method available.
+     */
     @Override
     public String toString() {
         return "{"

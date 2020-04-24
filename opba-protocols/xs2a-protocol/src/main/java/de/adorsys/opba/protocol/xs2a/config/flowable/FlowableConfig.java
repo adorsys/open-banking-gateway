@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 
-// TODO: Use async entries in process definition, so that when some execution fails, whole transaction is not rolled back
 @Configuration
 public class FlowableConfig {
 
@@ -42,6 +41,9 @@ public class FlowableConfig {
         };
     }
 
+    /**
+     * Dedicated ObjectMapper to be used in XS2A protocol.
+     */
     @Bean
     Xs2aObjectMapper mapper() {
         ObjectMapper mapper = new ObjectMapper();
