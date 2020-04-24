@@ -30,7 +30,7 @@ export class NavbarComponent implements OnInit {
   getSessionValidUntil(): string {
     const validUntilDate: Date = this.storageService.getValidUntilDate();
     if (validUntilDate !== null) {
-      const validUntilDateString = validUntilDate.toLocaleString();
+      const validUntilDateString = Consts.toLocaleString(validUntilDate);
       const regEx = /.*([0-9]{2}:[0-9]{2}:[0-9]{2})/;
       const matches = validUntilDateString.match(regEx);
       if (matches.length !== 2) {
