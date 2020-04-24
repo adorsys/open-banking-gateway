@@ -86,6 +86,12 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
                 .build();
         ignoreBankValidationRuleRepository.deleteAll();
         ignoreBankValidationRuleRepository.save(bankValidationRule);
+        bankValidationRule.setId(null);
+        bankValidationRule.setEndpointClassCanonicalName("de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateAisAccountListConsentService");
+        ignoreBankValidationRuleRepository.save(bankValidationRule);
+        bankValidationRule.setId(null);
+        bankValidationRule.setEndpointClassCanonicalName("de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate.StartConsentAuthorization");
+        ignoreBankValidationRuleRepository.save(bankValidationRule);
         return self();
     }
 }
