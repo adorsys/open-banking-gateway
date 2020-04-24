@@ -5,6 +5,10 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErr
 
 import java.net.URI;
 
+/**
+ * The result that represents that we need certain fields to be served as required inputs from the user.
+ * @param <T>
+ */
 public class ContextBasedValidationErrorResult<T> extends ValidationErrorResult<T, AuthStateBody> {
 
     private final String executionId;

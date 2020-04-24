@@ -33,6 +33,10 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 
+/**
+ * Entry point that handles ListAccounts request from the FinTech. Prepares the context and triggers BPMN engine for
+ * further actions.
+ */
 @Service("xs2aListAccounts")
 @RequiredArgsConstructor
 public class Xs2aListAccountsEntrypoint implements ListAccounts {
@@ -67,7 +71,9 @@ public class Xs2aListAccountsEntrypoint implements ListAccounts {
         return context;
     }
 
-
+    /**
+     * Mapper to convert incoming user request to processable request context.
+     */
     @Mapper(componentModel = SPRING_KEYWORD, uses = UuidMapper.class, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface FromRequest extends DtoMapper<ListAccountsRequest, AccountListXs2aContext> {
 
