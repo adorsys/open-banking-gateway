@@ -32,6 +32,9 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.LAST_VALIDATION
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 
+/**
+ * Entry point to get list of the required inputs from the user. BPMN process is not touched.
+ */
 @Service("xs2aGetAuthorizationState")
 @RequiredArgsConstructor
 public class Xs2aGetAuthorizationState implements GetAuthorizationState {
