@@ -9,7 +9,10 @@ import org.flowable.variable.service.impl.types.SerializableType;
 
 import java.util.List;
 
-// TODO: Secure serialized values with some encryption, remove code duplication.
+/**
+ * JSON serializer for large classes (large resulting strings).
+ * Data is encrypted using {@link RequestScopedServicesProvider}.
+ */
 @RequiredArgsConstructor
 class LargeJsonCustomSerializer extends SerializableType {
 
