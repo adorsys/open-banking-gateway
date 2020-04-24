@@ -21,8 +21,7 @@ export class StorageService {
     }
 
     localStorage.setItem(Session.XSRF_TOKEN, matches[1]);
-    const radix = parseInt(matches[2], 10);
-    this.setMaxAge(radix);
+    this.setMaxAge(parseInt(matches[2], 10));
   }
 
   public getUserName(): string {
@@ -77,12 +76,12 @@ export class StorageService {
     const validUntil = validUntilDate.getTime();
     const timestamp = new Date().getTime();
     if (timestamp > validUntil) {
-//      console.log('valid until was ' + validUntilDate.toLocaleString() + ' now is '
-//      + new Date().toLocaleString() + ', so isMaxValid = false');
+//      console.log('valid until was ' + validUntilDate.toLocaleString() +
+//      ' now is ' + new Date().toLocaleString() + ', so isMaxValid = false');
       return false;
     }
-//    console.log('valid until was ' + validUntilDate.toLocaleString() + ' now is '
-//    + new Date().toLocaleString() + ', so isMaxValid = true');
+//    console.log('valid until was ' + validUntilDate.toLocaleString() +
+//    ' now is ' + new Date().toLocaleString() + ', so isMaxValid = true');
     return true;
   }
 
