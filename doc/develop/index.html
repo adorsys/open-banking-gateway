@@ -63,6 +63,8 @@
         
             <li><a class="toctree-l3" href="#security-concept">Security concept</a></li>
         
+            <li><a class="toctree-l3" href="#technical-architecture">Technical architecture</a></li>
+        
             <li><a class="toctree-l3" href="#information-for-developers">Information for developers:</a></li>
         
             <li><a class="toctree-l3" href="#documentation">Documentation</a></li>
@@ -251,6 +253,18 @@
 <h2 id="security-concept">Security concept</h2>
 <p>The following picture displays the overall security concept of this banking gateway:
 <img alt="Security concept" src="img/security-concept.png" /></p>
+<h2 id="technical-architecture">Technical architecture</h2>
+<p>The following picture displays the overall technical architecture concept of this banking gateway:
+<img alt="Technical architecture" src="img/technical-architecture.svg" /></p>
+<p><strong>Key components as shown on diagram</strong>:</p>
+<p><strong>APIs:</strong>
+ - <a href="opba-banking-rest-api">Banking API</a> and its implementation <a href="opba-banking-rest-impl">Banking API Impl</a>
+ - <a href="opba-consent-rest-api">Consent API</a> and its implementation <a href="opba-consent-rest-impl">Consent API Impl</a></p>
+<p><strong>Facade:</strong>
+ - <a href="opba-banking-protocol-facade">Banking protocol facade</a></p>
+<p><strong>Protocol:</strong>
+  - <a href="opba-protocols/opba-protocol-api">Banking protocol API</a>
+  - <a href="opba-protocols/xs2a-protocol">XS2A compliant banking protocol Impl</a></p>
 <h2 id="information-for-developers">Information for developers:</h2>
 <ul>
 <li>Starting with project: <a href="https://github.com/adorsys/open-banking-gateway/tree/develop/how-to-start-with-project">How to start with project</a> </li>
@@ -337,5 +351,5 @@
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2020-04-24 15:09:49
+Build Date UTC : 2020-04-24 16:56:07
 -->
