@@ -11,7 +11,7 @@
         "matches" : "[0-9a-zA-z\\-]+"
       },
       "PSU-ID" : {
-        "equalTo" : "anton.brueckner"
+        "equalTo" : "[a-z\\.]*"
       },
       "PSU-IP-Address" : {
         "equalTo" : "1.1.1.1"

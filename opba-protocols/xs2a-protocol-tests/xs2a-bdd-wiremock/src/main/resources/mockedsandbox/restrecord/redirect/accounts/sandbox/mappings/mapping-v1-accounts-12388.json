@@ -8,7 +8,7 @@
         "matches" : "[0-9a-zA-z\\-]+"
       },
       "PSU-ID" : {
-        "equalTo" : "anton.brueckner"
+        "matches" : "[a-z\\.]*"
       },
       "Consent-ID" : {
         "matches" : "[=_0-9a-zA-z\\-]+"
