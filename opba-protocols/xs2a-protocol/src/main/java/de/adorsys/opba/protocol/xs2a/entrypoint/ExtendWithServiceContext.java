@@ -4,6 +4,9 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import org.springframework.stereotype.Service;
 
+/**
+ * Updates/extends already context with incoming service request by filling request fields.
+ */
 @Service
 public class ExtendWithServiceContext {
 

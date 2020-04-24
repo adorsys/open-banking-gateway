@@ -21,6 +21,9 @@ import static de.adorsys.opba.protocol.api.dto.parameters.ScaConst.PSU_PASSWORD;
 import static de.adorsys.opba.protocol.api.dto.parameters.ScaConst.SCA_CHALLENGE_DATA;
 import static de.adorsys.opba.protocol.api.dto.parameters.ScaConst.SCA_CHALLENGE_ID;
 
+/**
+ * Entry point to update context with the input from user and continue BPMN process.
+ */
 @Service("xs2aUpdateAuthorization")
 @RequiredArgsConstructor
 public class Xs2aUpdateAuthorization implements UpdateAuthorization {
