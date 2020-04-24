@@ -57,4 +57,3 @@ consent-spec:
     cipher-algo: AES/GCM/NoPadding
     iv-size: 12
     len: 128
-
