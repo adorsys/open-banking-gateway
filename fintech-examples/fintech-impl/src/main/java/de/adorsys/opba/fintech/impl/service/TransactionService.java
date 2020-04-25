@@ -86,7 +86,7 @@ public class TransactionService extends HandleAcceptedService {
             case ACCEPTED:
                 log.info("create redirect entity for lot for redirectcode {}", fintechRedirectCode);
                 redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
-                return handleAccepted(sessionEntity, transactions.getHeaders());
+                return handleAccepted(fintechRedirectCode, sessionEntity, transactions.getHeaders());
             case UNAUTHORIZED:
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             default:

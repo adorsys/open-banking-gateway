@@ -56,6 +56,14 @@ export class StorageService {
     console.log('set max age ' + maxAge + ' till ' + Consts.toLocaleString(new Date(timestamp)));
   }
 
+  public setRedirectCode(redirectCode: string): void {
+    localStorage.setItem(Session.REDIRECT_CODE, redirectCode);
+  }
+
+  public getRedirectCode(): string {
+    return localStorage.getItem(Session.REDIRECT_CODE);
+  }
+
   public getValidUntilDate(): Date {
     const validUntilTimestamp = localStorage.getItem(Session.MAX_VALID_UNTIL);
     if (validUntilTimestamp === undefined || validUntilTimestamp === null) {
@@ -86,8 +94,8 @@ export class StorageService {
     // console.log('valid until was ' + Consts.toLocaleString(validUntilDate) + ' now is '
     // + Consts.toLocaleString(new Date()) + ', so isMaxValid = true');
 
-   //    console.log('valid until was ' + validUntilDate.toLocaleString() +
-   //    ' now is ' + new Date().toLocaleString() + ', so isMaxValid = true');
+    //    console.log('valid until was ' + validUntilDate.toLocaleString() +
+    //    ' now is ' + new Date().toLocaleString() + ', so isMaxValid = true');
     return true;
   }
 
@@ -100,7 +108,7 @@ export class StorageService {
     if (active === undefined || active === null) {
       return false;
     }
-    return parseInt(active,0) === 1;
+    return parseInt(active, 0) === 1;
   }
 
   public clearStorage() {
@@ -122,5 +130,6 @@ enum Session {
   COOKIE_NAME_SESSION = 'SESSION-COOKIE',
   AUTH_ID = 'AUTH_ID',
   MAX_VALID_UNTIL = 'MAX_VALID_UNTIL_TIMESTAMP',
-  REDIRECT_ACTIVE = 'REDIRECT_ACTIVE'
+  REDIRECT_ACTIVE = 'REDIRECT_ACTIVE',
+  REDIRECT_CODE = 'REDIRECT_CODE'
 }

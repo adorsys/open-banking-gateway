@@ -16,7 +16,8 @@ export class RedirectPageComponent implements OnInit {
   private location;
   private cancelPath;
 
-  constructor(private authService:ConsentAuthorizationService, private router: Router, private route: ActivatedRoute, private storageService: StorageService) {}
+  constructor(private authService:ConsentAuthorizationService, private router: Router,
+              private route: ActivatedRoute, private storageService: StorageService) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(p => {
@@ -33,8 +34,9 @@ export class RedirectPageComponent implements OnInit {
 
   cancel(): void {
     const authId = this.storageService.getAuthId();
-    console.log('call from consent not ok with auth ' + authId);
-    this.authService.fromConsentOk(authId, 'notOk', 'no-redirect-code');
+    const redirectCode = this.storageService.getRedirectCode();
+    console.log('call from consent NOT ok with auth ' + authId);
+    this.authService.fromConsentOk(authId, 'notOk', redirectCode);
   }
 
   proceed(): void {

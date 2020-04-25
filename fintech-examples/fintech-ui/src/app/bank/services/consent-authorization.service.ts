@@ -15,7 +15,7 @@ export class ConsentAuthorizationService {
   ) {}
 
   fromConsentOk(authId: string, okOrNotOk: string, redirectCode: string) {
-    console.log('pass auth id:' + authId );
+    console.log('pass auth id:' + authId + ' okOrNotOk ' + okOrNotOk + ' redirect code ' + redirectCode);
     this.authService.fromConsentOkGET(
       authId,
       okOrNotOk,
@@ -27,6 +27,8 @@ export class ConsentAuthorizationService {
     console.log(resp);
       this.storageService.setXsrfToken(resp.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN));
       this.router.navigate([resp.headers.get('Location')]);
+      this.storageService.setRedirectActive(false);
+      this.storageService.setRedirectCode(null);
     });
   }
 }
