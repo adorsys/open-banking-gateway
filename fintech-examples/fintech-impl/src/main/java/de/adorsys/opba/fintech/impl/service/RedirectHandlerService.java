@@ -15,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -51,54 +49,59 @@ public class RedirectHandlerService {
     }
 
     @Transactional
-    public ResponseEntity doRedirect(final String uiGivenAuthId, final String redirectCode) {
+    public ResponseEntity doRedirect(final String uiGivenAuthId, final String redirectCode, final String okOrNotOk) {
+        // vulnerable for DOS
+        SessionEntity sessionEntity = authorizeService.getSession();
         if (StringUtils.isBlank(redirectCode)) {
             log.warn("Validation redirect request failed: redirect code is empty!");
-            return prepareErrorRedirectResponse(uiConfig.getExceptionUrl());
+            return prepareErrorRedirectResponse(sessionEntity, uiConfig.getExceptionUrl());
         }
-
-        if (StringUtils.isBlank(uiGivenAuthId)) {
-            log.warn("Validation redirect request failed: authId is empty!");
-            return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
-        }
-
         Optional<RedirectUrlsEntity> redirectUrls = redirectUrlRepository.findByRedirectCode(redirectCode);
 
         if (!redirectUrls.isPresent()) {
             log.warn("Validation redirect request failed: redirect code {} is wrong", redirectCode);
-            return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
+            return prepareErrorRedirectResponse(sessionEntity, uiConfig.getUnauthorizedUrl());
         }
+        redirectUrlRepository.delete(redirectUrls.get());
 
         if (!authorizeService.isAuthorized()) {
             log.warn("Validation redirect request failed: user is not authorized!");
-            return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
+            return prepareErrorRedirectResponse(sessionEntity, uiConfig.getUnauthorizedUrl());
         }
 
-        redirectUrlRepository.delete(redirectUrls.get());
+        if ("ok".equalsIgnoreCase(okOrNotOk)) {
+            if (StringUtils.isBlank(uiGivenAuthId)) {
+                log.warn("Validation redirect request failed: authId is empty!");
+                return prepareErrorRedirectResponse(sessionEntity, uiConfig.getUnauthorizedUrl());
+            }
 
-        SessionEntity sessionEntity = authorizeService.getSession();
-        String storedAuthId = sessionEntity.getAuthId();
+            String storedAuthId = sessionEntity.getAuthId();
 
-        if (!uiGivenAuthId.equals(storedAuthId)) {
-            log.warn("Validation redirect request failed: authid expected was {}, but authid from ui was {}", storedAuthId, uiGivenAuthId);
-            return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
+            if (!uiGivenAuthId.equals(storedAuthId)) {
+                log.warn("Validation redirect request failed: authid expected was {}, but authid from ui was {}", storedAuthId, uiGivenAuthId);
+                return prepareErrorRedirectResponse(sessionEntity, uiConfig.getUnauthorizedUrl());
+            }
+
+            log.info("authId {}", uiGivenAuthId);
+            sessionEntity.setConsentConfirmed(true);
+            return prepareRedirectToReadResultResponse(sessionEntity, redirectUrls.get().getOkStatePath());
         }
-
-        log.info("authId {}", uiGivenAuthId);
-        sessionEntity.setConsentConfirmed(true);
-        return prepareRedirectToReadResultResponse(sessionEntity, redirectUrls.get());
+        log.info("user aborted consent authorization for authid {}", uiGivenAuthId);
+        return prepareRedirectToReadResultResponse(sessionEntity, redirectUrls.get().getNokStatePath());
     }
 
-    private ResponseEntity prepareRedirectToReadResultResponse(SessionEntity sessionEntity, RedirectUrlsEntity redirectUrls) {
+    private ResponseEntity prepareRedirectToReadResultResponse(SessionEntity sessionEntity, String redirectUrl) {
         String xsrfToken = UUID.randomUUID().toString();
         HttpHeaders authHeaders = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), sessionEntity,
                 xsrfToken, cookieConfigProperties, SessionCookieType.REGULAR);
-        authHeaders.put(LOCATION_HEADER, singletonList(redirectUrls.getOkStatePath()));
+        authHeaders.put(LOCATION_HEADER, singletonList(redirectUrl));
         return new ResponseEntity<>(authHeaders, HttpStatus.ACCEPTED);
     }
 
-    private ResponseEntity prepareErrorRedirectResponse(String redirectUrl) {
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+    private ResponseEntity prepareErrorRedirectResponse(SessionEntity sessionEntity, String redirectUrl) {
+        String xsrfToken = UUID.randomUUID().toString();
+        HttpHeaders headers = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), sessionEntity,
+                xsrfToken, cookieConfigProperties, SessionCookieType.REGULAR);
         headers.put(LOCATION_HEADER, singletonList(redirectUrl));
 
         return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);

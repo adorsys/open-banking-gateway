@@ -1,9 +1,9 @@
 /**
  * Open Banking Gateway FinTech Example API
- * This is a sample API that shows how to develop FinTech use cases that invoke banking APIs.  #### User Agent and Cookies This Api assumes  * that the PsuUserAgent (hosting the FinTechUI) is a modern web browser that stores httpOnly cookies sent with the redirect under the given domain and path as defined by [RFC 6265](https://tools.ietf.org/html/rfc6265). * that any other PsuUserAgent like a native mobile or a desktop application can simulate this same behavior of a modern browser with respect to Cookies.  #### SessionCookies and XSRF After a PSU is authenticated with the FinTech environment (either through the simple login interface defined here, or through an identity provider), the FinTechApi will establish a session with the FinTechUI. This is done by the mean of using a cookie called SessionCookie. This SessionCookie is protected by a corresponding xsrfToken. The response that sets a SessionCookie also carries a corresponding xsrfToken in the response header named \"X-XSRF-TOKEN\".  It is the responsibility of the FinTechUI to : * parse and store this xsrfToken so that a refresh of a browser window can work. This shall be done using user agent capabilities.  A web browser application might decide to store the xsrfToken in the browser localStorage, as the cookie we set are all considered persistent. * make sure that each subsequent request that is carrying the SessionCookie also carries the corresponding xsrfToken as header field (see the request path). * remove this xsrfToken from the localStorage when the corresponding SessionCookie is deleted by a server response (setting cookie value to null).  The main difference between an xsrfToken and a SessionCookie is that the sessionCookie is automatically sent with each matching request. The xsrfToken must be explicitely read and sent by application.  #### API- vs. UI-Redirection For simplicity, this Framework is designed to redirect to FinTechUI not to FinTechApi.  #### Explicite vs. Implicite Redirection We define an \"Implicite redirection\" a case where a web browser react to 30X reponse and automatically redirects to the attached endpoint. We define an \"Explicite Redirection\" as a case where the UI-Application reacts to a 20X response, explicitely parses the attached __Location__ header an uses it to reload  the new page in the browser window (or start the new UI-Application in case of native apps).  This framework advocates for explicite redirection passing a __20X__ response to the FinTechUI toghether with the __Location__ parameter.  Processing a response that initiates a redirect, the FinTechUI makes sure following happens, * that the exisitng __SessionCookie__ is deleted, as the user will not have a chance for an explicite logout, * that the corresponding xsrfToken is deleted from the local storage, * that a RedirectCookie set is stored (in case UI is not a web browser), so the user can be authenticated against it when sent back to the FinTechUI. The expiration of the RedirectCookie shall be set to the expected duration of the redirect, * that the corresponding xsrfToken is stored in the local storage (under the same cookie path as the RedirectCookie)  #### Redirecting to the ConsentAuthorisationApi For a redirection to the ConsentAuthorisationApi, a generated AUTH-ID is added to the cookie path and used to distinguish authorization processes from each order.  This information (AUTH-ID) must be contained in the back redirect url sent to the ConsentAuthorisationApi in the back channel, so that the FinTechUI can invoke the correct code2Token endpoint when activated.
+ * This is a sample API that shows how to develop FinTech use cases that invoke banking APIs.  #### User Agent and Cookies This Api assumes  * that the PsuUserAgent (hosting the FinTechUI) is a modern web browser that stores httpOnly cookies sent with the redirect under the given domain and path as defined by [RFC 6265](https://tools.ietf.org/html/rfc6265). * that any other PsuUserAgent like a native mobile or a desktop application can simulate this same behavior of a modern browser with respect to Cookies.  #### SessionCookies and XSRF After a PSU is authenticated with the FinTech environment (either through the simple login interface defined here, or through an identity provider), the FinTechApi will establish a session with the FinTechUI. This is done by the mean of using a cookie called SessionCookie. This SessionCookie is protected by a corresponding xsrfToken. The response that sets a SessionCookie also carries a corresponding xsrfToken in the response header named \"X-XSRF-TOKEN\".  It is the responsibility of the FinTechUI to : * parse and store this xsrfToken so that a refresh of a browser window can work. This shall be done using user agent capabilities.  A web browser application might decide to store the xsrfToken in the browser localStorage, as the cookie we set are all considered persistent. * make sure that each subsequent request that is carrying the SessionCookie also carries the corresponding xsrfToken as header field (see the request path). * remove this xsrfToken from the localStorage when the corresponding SessionCookie is deleted by a server response (setting cookie value to null).  The main difference between an xsrfToken and a SessionCookie is that the sessionCookie is automatically sent with each matching request. The xsrfToken must be explicitely read and sent by application.  #### API- vs. UI-Redirection For simplicity, this Framework is designed to redirect to FinTechUI not to FinTechApi.  #### Explicite vs. Implicite Redirection We define an \"Implicite redirection\" a case where a web browser react to 30X reponse and automatically redirects to the attached endpoint. We define an \"Explicite Redirection\" as a case where the UI-Application reacts to a 20X response, explicitely parses the attached __Location__ header an uses it to reload  the new page in the browser window (or start the new UI-Application in case of native apps).  This framework advocates for explicite redirection passing a __20X__ response to the FinTechUI toghether with the __Location__ parameter.  Processing a response that initiates a redirect, the FinTechUI makes sure following happens, * that the exisitng __SessionCookie__ is deleted, as the user will not have a chance for an explicite logout, * that the corresponding xsrfToken is deleted from the local storage, * that a RedirectCookie set is stored (in case UI is not a web browser), so the user can be authenticated against it when sent back to the FinTechUI. The expiration of the RedirectCookie shall be set to the expected duration of the redirect, * that the corresponding xsrfToken is stored in the local storage (under the same cookie path as the RedirectCookie)  #### Redirecting to the ConsentAuthorisationApi For a redirection to the ConsentAuthorisationApi, a generated AUTH-ID is added to the cookie path and used to distinguish authorization processes from each order.  This information (AUTH-ID) must be contained in the back redirect url sent to the ConsentAuthorisationApi in the back channel, so that the FinTechUI can invoke the correct code2Token endpoint when activated. 
  *
  * The version of the OpenAPI document: 1.0.0
- *
+ * 
  *
  * NOTE: This class is auto generated by OpenAPI Generator (https://openapi-generator.tech).
  * https://openapi-generator.tech
@@ -11,15 +11,20 @@
  */
 /* tslint:disable:no-unused-variable member-ordering */
 
-import {Inject, Injectable, Optional} from '@angular/core';
-import {HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse} from '@angular/common/http';
-import {CustomHttpParameterCodec} from '../encoder';
-import {Observable} from 'rxjs';
-import {InlineResponse200} from '../model/inlineResponse200';
-import {LoginRequest} from '../model/loginRequest';
+import { Inject, Injectable, Optional }                      from '@angular/core';
+import { HttpClient, HttpHeaders, HttpParams,
+         HttpResponse, HttpEvent, HttpParameterCodec }       from '@angular/common/http';
+import { CustomHttpParameterCodec }                          from '../encoder';
+import { Observable }                                        from 'rxjs';
 
-import {BASE_PATH} from '../variables';
-import {Configuration} from '../configuration';
+import { ErrorResponse } from '../model/errorResponse';
+import { InlineResponse200 } from '../model/inlineResponse200';
+import { LoginRequest } from '../model/loginRequest';
+import { PsuMessage } from '../model/psuMessage';
+
+import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
+import { Configuration }                                     from '../configuration';
+
 
 
 @Injectable({
@@ -49,20 +54,24 @@ export class FinTechAuthorizationService {
 
     /**
      * Entry point when PSU is redirected back from ConsentAuthorisationApi to the FinTechUI.
-     * Entry point when PSU is redirected back from ConsentAuthorisationApi to the FinTechUI.
-     * @param authId
-     * @param redirectCode
-     * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well.
-     * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie.
+     * Entry point when PSU is redirected back from ConsentAuthorisationApi to the FinTechUI. 
+     * @param authId 
+     * @param okOrNotok 
+     * @param redirectCode 
+     * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
+     * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public fromConsentOkGET(authId: string, redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public fromConsentOkGET(authId: string, redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public fromConsentOkGET(authId: string, redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public fromConsentOkGET(authId: string, redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public fromConsentOkGET(authId: string, okOrNotok: string, redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public fromConsentOkGET(authId: string, okOrNotok: string, redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public fromConsentOkGET(authId: string, okOrNotok: string, redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public fromConsentOkGET(authId: string, okOrNotok: string, redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (authId === null || authId === undefined) {
             throw new Error('Required parameter authId was null or undefined when calling fromConsentOkGET.');
+        }
+        if (okOrNotok === null || okOrNotok === undefined) {
+            throw new Error('Required parameter okOrNotok was null or undefined when calling fromConsentOkGET.');
         }
         if (redirectCode === null || redirectCode === undefined) {
             throw new Error('Required parameter redirectCode was null or undefined when calling fromConsentOkGET.');
@@ -97,7 +106,7 @@ export class FinTechAuthorizationService {
         }
 
 
-        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/${encodeURIComponent(String(authId))}/fromConsentOk`,
+        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/${encodeURIComponent(String(authId))}/fromConsent/${encodeURIComponent(String(okOrNotok))}`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -110,8 +119,8 @@ export class FinTechAuthorizationService {
 
     /**
      * Identifies the PSU in the Realm of the FinTechApi.
-     * Simple login interface used to establish a session between PSU and FinTech. Real application will delegate login to an oAuth2 Identity provider.
-     * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well.
+     * Simple login interface used to establish a session between PSU and FinTech. Real application will delegate login to an oAuth2 Identity provider. 
+     * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
      * @param loginRequest Login request
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -165,8 +174,8 @@ export class FinTechAuthorizationService {
     /**
      * logs out user
      * If user can be authenticated, user will be logged out.
-     * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well.
-     * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie.
+     * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
+     * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
