@@ -21,7 +21,7 @@ export class AisService {
     const okurl = window.location.pathname;
     console.log('redirect url:' + okurl);
     return this.finTechAccountInformationService
-      .aisAccountsGET(bankId, '', '', okurl, 'not-ok-url', 'response')
+      .aisAccountsGET(bankId, '', '', okurl, okurl, 'response')
       .pipe(map(response => response));
   }
 
@@ -33,7 +33,7 @@ export class AisService {
       '',
       '',
       okurl,
-      'not-ok-url',
+      okurl,
       '1970-01-01',
       AisService.isoDate(new Date()),
       null,

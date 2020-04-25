@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RedirectStruct } from './redirect-struct';
 import { StorageService } from '../../services/storage.service';
 import {HeaderConfig} from '../../models/consts';
+import {ConsentAuthorizationService} from '../services/consent-authorization.service';
 
 @Component({
   selector: 'app-redirect-page',
@@ -15,7 +16,7 @@ export class RedirectPageComponent implements OnInit {
   private location;
   private cancelPath;
 
-  constructor(private router: Router, private route: ActivatedRoute, private storageService: StorageService) {}
+  constructor(private authService:ConsentAuthorizationService, private router: Router, private route: ActivatedRoute, private storageService: StorageService) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(p => {
@@ -31,7 +32,9 @@ export class RedirectPageComponent implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate([this.cancelPath], { relativeTo: this.route });
+    const authId = this.storageService.getAuthId();
+    console.log('call from consent not ok with auth ' + authId);
+    this.authService.fromConsentOk(authId, 'notOk', 'no-redirect-code');
   }
 
   proceed(): void {

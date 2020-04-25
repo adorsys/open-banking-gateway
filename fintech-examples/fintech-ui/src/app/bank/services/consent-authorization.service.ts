@@ -14,10 +14,11 @@ export class ConsentAuthorizationService {
     private storageService: StorageService
   ) {}
 
-  fromConsentOk(authId: string, redirectCode: string) {
+  fromConsentOk(authId: string, okOrNotOk: string, redirectCode: string) {
     console.log('pass auth id:' + authId );
     this.authService.fromConsentOkGET(
       authId,
+      okOrNotOk,
       redirectCode,
     '',
     '',

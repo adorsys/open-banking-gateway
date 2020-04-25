@@ -16,6 +16,6 @@ export class RedirectAfterConsentComponent implements OnInit {
     const redirectCode = this.route.snapshot.queryParams.redirectCode;
     const authId = this.storageService.getAuthId();
 
-    this.authService.fromConsentOk(authId, redirectCode);
+    this.authService.fromConsentOk(authId, 'ok', redirectCode);
   }
 }
