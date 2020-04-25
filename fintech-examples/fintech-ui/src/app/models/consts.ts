@@ -14,6 +14,7 @@ export class HeaderConfig {
   public static HEADER_FIELD_CONTENT_TYPE = 'Content-Type';
   public static HEADER_FIELD_LOCATION = 'location';
   public static HEADER_FIELD_AUTH_ID = 'Auth-ID';
+  public static HEADER_FIELD_REDIRECT_CODE = 'Fintech-Redirect-Code';
 }
 
 
