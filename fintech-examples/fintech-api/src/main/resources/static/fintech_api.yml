@@ -243,7 +243,7 @@ paths:
         '404':
           $ref: '#/components/responses/404_NotFound'
 
-  /v1/{auth-id}/fromConsentOk:
+  /v1/{auth-id}/fromConsent/{ok-or-notok}:
     get:
       tags:
         - FinTechAuthorization
@@ -254,6 +254,7 @@ paths:
       parameters:
         #path
         - $ref: "#/components/parameters/auth-id"
+        - $ref: "#/components/parameters/ok-or-notok"
         #query
         - $ref: "#/components/parameters/redirectCode"
         #header
@@ -407,6 +408,13 @@ components:
 
     auth-id:
       name: auth-id
+      in: path
+      required: true
+      schema:
+        type: string
+
+    ok-or-notok:
+      name: ok-or-notok
       in: path
       required: true
       schema:
