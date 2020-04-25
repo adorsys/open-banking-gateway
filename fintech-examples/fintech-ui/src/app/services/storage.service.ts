@@ -18,11 +18,11 @@ export class StorageService {
     const regEx = /(.*);\sMax-Age=(.*)/;
     const matches = xsrfToken.match(regEx);
     if (matches.length !== 3) {
-      throw Error('xsrfToken does not look like as expected:' + xsrfToken);
+      throw new Error('xsrfToken does not look like as expected:' + xsrfToken);
     }
 
     localStorage.setItem(Session.XSRF_TOKEN, matches[1]);
-    this.setMaxAge(parseInt(matches[2], 0));
+    this.setMaxAge(parseInt(matches[2], 10));
   }
 
   public getUserName(): string {
@@ -56,6 +56,14 @@ export class StorageService {
     console.log('set max age ' + maxAge + ' till ' + Consts.toLocaleString(new Date(timestamp)));
   }
 
+  public setRedirectCode(redirectCode: string): void {
+    localStorage.setItem(Session.REDIRECT_CODE, redirectCode);
+  }
+
+  public getRedirectCode(): string {
+    return localStorage.getItem(Session.REDIRECT_CODE);
+  }
+
   public getValidUntilDate(): Date {
     const validUntilTimestamp = localStorage.getItem(Session.MAX_VALID_UNTIL);
     if (validUntilTimestamp === undefined || validUntilTimestamp === null) {
@@ -64,6 +72,7 @@ export class StorageService {
     const date = new Date(parseInt(validUntilTimestamp, 0));
     if (Consts.toLocaleString(date) === 'Invalid Date') {
       console.log('HELLO VALENTYN, THIS IS WEIRED: ' + validUntilTimestamp + ' results in Invalid Date');
+
       return null;
     }
     return date;
@@ -72,7 +81,7 @@ export class StorageService {
   public isMaxAgeValid(): boolean {
     const validUntilDate: Date = this.getValidUntilDate();
     if (validUntilDate === null) {
-//      console.log("valid until unknown, so isMaxValid = false");
+//      console.log('valid until unknown, so isMaxValid = false');
       return false;
     }
     const validUntil = validUntilDate.getTime();
@@ -84,6 +93,9 @@ export class StorageService {
     }
     // console.log('valid until was ' + Consts.toLocaleString(validUntilDate) + ' now is '
     // + Consts.toLocaleString(new Date()) + ', so isMaxValid = true');
+
+    //    console.log('valid until was ' + validUntilDate.toLocaleString() +
+    //    ' now is ' + new Date().toLocaleString() + ', so isMaxValid = true');
     return true;
   }
 
@@ -96,12 +108,18 @@ export class StorageService {
     if (active === undefined || active === null) {
       return false;
     }
-    return parseInt(active,0) === 1;
+    return parseInt(active, 0) === 1;
   }
 
   public clearStorage() {
     localStorage.clear();
     this.documentCookieService.delete(Session.COOKIE_NAME_SESSION);
+    let retries = 100;
+    while (retries > 0 && this.documentCookieService.exists(Session.COOKIE_NAME_SESSION)) {
+      console.log('retry to delete');
+      this.documentCookieService.delete(Session.COOKIE_NAME_SESSION);
+      retries--;
+    }
   }
 }
 
@@ -112,5 +130,6 @@ enum Session {
   COOKIE_NAME_SESSION = 'SESSION-COOKIE',
   AUTH_ID = 'AUTH_ID',
   MAX_VALID_UNTIL = 'MAX_VALID_UNTIL_TIMESTAMP',
-  REDIRECT_ACTIVE = 'REDIRECT_ACTIVE'
+  REDIRECT_ACTIVE = 'REDIRECT_ACTIVE',
+  REDIRECT_CODE = 'REDIRECT_CODE'
 }

@@ -13,6 +13,7 @@ import java.net.URI;
 import java.util.UUID;
 
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.FIN_TECH_AUTH_ID;
+import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.FIN_TECH_REDIRECT_CODE;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.SERVICE_SESSION_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.TPP_AUTH_ID;
 import static org.springframework.http.HttpStatus.ACCEPTED;
@@ -31,7 +32,7 @@ public class HandleAcceptedService {
     }
 
 
-    ResponseEntity handleAccepted(SessionEntity sessionEntity, HttpHeaders headers) {
+    ResponseEntity handleAccepted(String fintechRedirectCode, SessionEntity sessionEntity, HttpHeaders headers) {
         sessionEntity.setAuthId(headers.getFirst(TPP_AUTH_ID));
         sessionEntity.setServiceSessionId(StringUtils.isBlank(headers.getFirst(SERVICE_SESSION_ID)) ? null : UUID.fromString(headers.getFirst(SERVICE_SESSION_ID)));
 
@@ -42,6 +43,7 @@ public class HandleAcceptedService {
         HttpHeaders responseHeaders = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), sessionEntity,
                 xsrfToken, cookieConfigProperties, SessionCookieType.REDIRECT);
         responseHeaders.add(FIN_TECH_AUTH_ID, sessionEntity.getAuthId());
+        responseHeaders.add(FIN_TECH_REDIRECT_CODE, fintechRedirectCode);
         responseHeaders.setLocation(location);
 
         authorizeService.updateUserSession(sessionEntity);

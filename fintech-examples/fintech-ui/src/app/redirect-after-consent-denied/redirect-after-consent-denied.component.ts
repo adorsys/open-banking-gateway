@@ -20,7 +20,7 @@ export class RedirectAfterConsentDeniedComponent implements OnInit {
 
   submit() {
     const authId = this.storageService.getAuthId();
-
+    this.redirectCode = this.route.snapshot.queryParams.redirectCode;
     this.authService.fromConsentOk(authId, 'notOk', this.redirectCode);
   }
 
