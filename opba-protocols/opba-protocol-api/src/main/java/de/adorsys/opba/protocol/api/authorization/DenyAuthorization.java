@@ -10,8 +10,8 @@ import de.adorsys.opba.protocol.api.dto.result.body.DenyAuthBody;
  * Typical outcomes:
  * <ul>
  *     <li>
- *         {@link de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationDeniedResult}<br/>
- *         Returned when request was successful. Causes consent to be declined if was created already.
+ *         {@link de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationDeniedResult}
+ *         <p>Returned when request was successful. Causes consent to be declined if was created already.</p>
  *     </li>
  * </ul>
  */

@@ -12,13 +12,13 @@ import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
  * Typical outcomes:
  * <ul>
  *     <li>
- *         {@link de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionResult}<br/>
- *         Points to the next page that must be shown to the user in order to proceed with authorization.
+ *         {@link de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionResult}
+ *         <p>Points to the next page that must be shown to the user in order to proceed with authorization.</p>
  *     </li>
  *     <li>
- *         {@link de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult}<br/>
- *         Contains list of fields that are required from PSU and points to the next page that must be shown to the
- *         user in order to proceed with authorization.
+ *         {@link de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult}
+ *         <p>Contains list of fields that are required from PSU and points to the next page that must be shown to the
+ *         user in order to proceed with authorization.</p>
  *     </li>
  * </ul>
  */

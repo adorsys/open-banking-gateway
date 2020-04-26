@@ -11,8 +11,8 @@ import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
  * Typical outcomes:
  * <ul>
  *     <li>
- *         {@link de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult}<br/>
- *         Contains list of fields that are required from PSU.
+ *         {@link de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult}
+ *         <p>Contains list of fields that are required from PSU.</p>
  *     </li>
  * </ul>
  */
