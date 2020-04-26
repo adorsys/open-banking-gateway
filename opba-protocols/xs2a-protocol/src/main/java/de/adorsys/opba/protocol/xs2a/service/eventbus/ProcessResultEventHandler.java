@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /**
+ * Naive implementation of internal event bus. Acts as the event registry.
+ * This registers handlers for the events that are emitted by BPMN engine.
  * Allows consumer to be registered after event addressed to him is published.
  * There can be only one undelivered message for unregistered consumer, multiple messages are
  * not supported.
@@ -16,14 +18,19 @@ import java.util.function.Consumer;
  */
 @Service
 @RequiredArgsConstructor
-public class ProcessResultEventHandler {
+class ProcessResultEventHandler {
 
     private final Object lock = new Object();
 
     private final Map<String, Consumer<InternalProcessResult>> subscribers;
     private final Map<String, InternalProcessResult> deadLetterQueue;
 
-    public void add(String processId, Consumer<InternalProcessResult> subscriber) {
+    /**
+     * Adds the subscriber to the BPMN process. If any already exists - old one will be removed.
+     * @param processId BPMN process id to subscribe to
+     * @param subscriber Internal BPMN event handling function
+     */
+    void add(String processId, Consumer<InternalProcessResult> subscriber) {
         InternalProcessResult delayedMessage;
 
         synchronized (lock) {
@@ -37,6 +44,10 @@ public class ProcessResultEventHandler {
         subscriber.accept(delayedMessage);
     }
 
+    /**
+     * Spring event-bus listener to listen for BPMN process result.
+     * @param result BPMN process message to notify with the subscribers.
+     */
     @TransactionalEventListener
     public void handleEvent(InternalProcessResult result) {
         Consumer<InternalProcessResult> consumer;
