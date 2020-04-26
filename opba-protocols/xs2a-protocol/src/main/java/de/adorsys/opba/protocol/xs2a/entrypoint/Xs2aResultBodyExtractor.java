@@ -15,7 +15,8 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 
 /**
- * Extracts Xs2a result from ASPSP response and does initial translation to Banking protocol native object.
+ * Extracts Xs2a result from ASPSP response and does initial translation to Banking protocol facade native object
+ * for transactions or accounts list.
  */
 @Service
 @RequiredArgsConstructor

@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 
 /**
  * Operation that is called when user returns back from ASPSP either with OK or NOK status in Redirect SCA
- * authorization mode.
+ * authorization mode. Triggers BPMN engine (both OK and NOK - {@link FromAspspRequest#getIsOk()}).
  */
 @Service("xs2aFromAspspRedirect")
 @RequiredArgsConstructor
