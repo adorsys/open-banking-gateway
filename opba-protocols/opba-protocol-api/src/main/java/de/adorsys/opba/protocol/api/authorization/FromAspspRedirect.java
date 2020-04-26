@@ -10,9 +10,9 @@ import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
  * Typical outcomes:
  * <ul>
  *     <li>
- *         {@link de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionResult}<br/>
- *         Returned when request was successful. Points to page showing Consent acquired/Acquisition failed
- *         and respective FinTech OK / FinTech NOK urls associated with that page.
+ *         {@link de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionResult}
+ *         <p>Returned when request was successful. Points to page showing Consent acquired/Acquisition failed
+ *         and respective FinTech OK / FinTech NOK urls associated with that page.</p>
  *     </li>
  * </ul>
  */

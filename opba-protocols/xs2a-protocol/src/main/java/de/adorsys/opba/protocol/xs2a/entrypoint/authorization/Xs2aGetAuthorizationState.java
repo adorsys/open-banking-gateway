@@ -102,15 +102,12 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
                                     List<ScaMethod> scaMethods,
                                     LastRedirectionTarget redirectionTarget) {
         String redirectTo = null == redirectionTarget ? null : redirectionTarget.getRedirectTo();
-        String redirectToUiScreen = null == redirectionTarget ? null : redirectionTarget.getRedirectToUiScreen();
 
         return new AuthStateBody(
             action.name(),
             violationsMapper.map(issues.getViolations()),
             scaMethodsMapper.map(scaMethods),
-            redirectTo,
-            redirectToUiScreen,
-            null
+            redirectTo
         );
     }
 
