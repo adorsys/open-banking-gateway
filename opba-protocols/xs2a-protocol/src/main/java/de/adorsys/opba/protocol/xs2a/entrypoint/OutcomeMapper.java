@@ -49,7 +49,7 @@ public class OutcomeMapper<T> {
                 new ContextBasedValidationErrorResult(
                     problem.getProvideMoreParamsDialog(),
                     problem.getExecutionId(),
-                    new AuthStateBody(null, errorMapper.map(problem.getIssues()), null, null, null, null)
+                    new AuthStateBody(null, errorMapper.map(problem.getIssues()), null, null)
                 )
         );
     }
