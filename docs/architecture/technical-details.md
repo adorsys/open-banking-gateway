@@ -24,6 +24,25 @@ In the essence, everything is based on the loop of 202 response codes indicating
 input some parameters. When 202 loop ends - user is redirected back to the FinTech and FinTech can read the
 account list - the presence of account list will be indicated by response code 200. 
 
+**Output class designation**
+
+| Layer (bottom-up)      | Output class                   | Used for                                                                                                                                                  |
+|------------------------|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| XS2A protocol API      | SuccessResult                  | Return response from protocol containing a useful payload i.e. Account list                                                                               |
+| XS2A protocol API      | ErrorResult                    | Error result that should be reported by redirecting the  user somewhere                                                                                   |
+| XS2A protocol API      | ValidationErrorResult          | Notify that some input is required from user and user should be redirected to the page where he can input missing data                                    |
+| XS2A protocol API      | ConsentAcquiredResult          | Notify that consent was acquired and user should be redirected somewhere                                                                                  |
+| XS2A protocol API      | AuthorizationRequiredResult    | Notify that consent was missing and to get new consent PSU authorization is required                                                                      |
+| XS2A protocol API      | AuthorizationDeniedResult      | During consent authorization either user or 3rd party decided to deny consent                                                                             |
+| Protocol facade        | FacadeSuccessResult            | Response with useful payload (i.e. users' account list)                                                                                                   |
+| Protocol facade        | FacadeErrorResult              | Fatal error result, no redirect possible                                                                                                                  |
+| Protocol facade        | FacadeStartAuthorizationResult | Consent missing and authorization session to perform new consent authorization was created                                                                |
+| Protocol facade        | FacadeRedirectResult           | PSU (or FinTech is required to provide PSU and redirect him) required to be redirected somewhere                                                          |
+| Protocol facade        | FacadeRedirectErrorResult      | Some error has happened, but the redirection is required to handle it                                                                                     |
+| API                    | Response entity, code 200      | Response with useful payload                                                                                                                              |
+| API                    | Response entity, code 202      | Redirection is required                                                                                                                                   |
+| API                    | Response entity, code 3xx      | Automatic web browser redirection                                                                                                                         |
+
 For example, the one of the commonly observed pattern for AIS list accounts service will be:
 
 1. FinTech calls OpenBanking REST API listAccounts endpoint
