@@ -1,6 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
+import de.adorsys.opba.fintech.impl.controller.OkOrNotOk;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
@@ -35,8 +36,6 @@ import static org.springframework.http.HttpStatus.SEE_OTHER;
 @Slf4j
 @ExtendWith(MockitoExtension.class)
 class RedirectHandlerServiceTest {
-    private final String OK = "ok";
-    private final String NOT_OK = "notOk";
     private final String REDIRECT_STATE_VALUE = "682dbd06-75d4-4f73-a7e7-9084150a1f10";
     private final String AUTH_ID_VALUE = "fd8a0548-6862-46cb-8d24-f4b5edc7f7cb";
     private final String REDIRECT_CODE_VALUE = "7ca3f778-b0bb-4c1a-8003-d176089d1455";
@@ -107,7 +106,7 @@ class RedirectHandlerServiceTest {
         when(sessionEntity.getAuthId()).thenReturn(AUTH_ID_VALUE);
 
         // when
-        ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE, OK);
+        ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE, OkOrNotOk.OK);
 
         // then
         verify(authorizeService, times(1)).getSession();
@@ -123,7 +122,7 @@ class RedirectHandlerServiceTest {
         // when
         when(authorizeService.modifySessionEntityAndCreateNewAuthHeader(any(), any(), any(), any(), any()))
                 .thenReturn(new HttpHeaders());
-        ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE, OK);
+        ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE, OkOrNotOk.OK);
 
         // then
         verify(authorizeService).getSession();
@@ -140,7 +139,7 @@ class RedirectHandlerServiceTest {
         // when
         when(authorizeService.modifySessionEntityAndCreateNewAuthHeader(any(), any(), any(), any(), any()))
                 .thenReturn(new HttpHeaders());
-        ResponseEntity responseEntity = redirectHandlerService.doRedirect(null, REDIRECT_CODE_VALUE, NOT_OK);
+        ResponseEntity responseEntity = redirectHandlerService.doRedirect(null, REDIRECT_CODE_VALUE, OkOrNotOk.NOT_OK);
 
         // then
         verify(authorizeService).getSession();
@@ -161,7 +160,7 @@ class RedirectHandlerServiceTest {
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.empty());
 
         // when
-        ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE, OK);
+        ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE, OkOrNotOk.OK);
 
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);

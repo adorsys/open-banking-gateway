@@ -1,7 +1,7 @@
 import {FinTechAuthorizationService} from '../../api';
 import {Router} from '@angular/router';
 import {Injectable} from '@angular/core';
-import {Consts, HeaderConfig} from '../../models/consts';
+import {Consent, HeaderConfig} from '../../models/consts';
 import {StorageService} from '../../services/storage.service';
 
 @Injectable({
@@ -14,9 +14,9 @@ export class ConsentAuthorizationService {
     private storageService: StorageService
   ) {}
 
-  fromConsentOk(authId: string, okOrNotOk: string, redirectCode: string) {
+  fromConsentOk(authId: string, okOrNotOk: Consent, redirectCode: string) {
     console.log('pass auth id:' + authId + ' okOrNotOk ' + okOrNotOk + ' redirect code ' + redirectCode);
-    this.authService.fromConsentOkGET(
+    this.authService.fromConsentGET(
       authId,
       okOrNotOk,
       redirectCode,

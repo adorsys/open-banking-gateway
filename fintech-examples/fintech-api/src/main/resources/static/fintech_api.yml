@@ -247,7 +247,7 @@ paths:
     get:
       tags:
         - FinTechAuthorization
-      operationId: fromConsentOkGET
+      operationId: fromConsentGET
       summary: Entry point when PSU is redirected back from ConsentAuthorisationApi to the FinTechUI.
       description: |
         Entry point when PSU is redirected back from ConsentAuthorisationApi to the FinTechUI.
@@ -357,7 +357,7 @@ components:
       description: |
         Entry point for loading the FinTechUI. This is generaly invoked when another application redirects an authenticated
         user to the FinTechUI. The FinTechUI after a reload must load the xsrfToken from the localStorage and invoke the
-        /v1/{auth-id}/fromConsentOk endpoint of the FinTechAPI
+        /v1/{auth-id}/fromConsent/{ok-or-notok} endpoint of the FinTechAPI
       schema:
         type: string
         example: http://localhost:8080/finTechUi?sessionState=ejxs.wersdzxxc23r.asdf
@@ -419,6 +419,9 @@ components:
       required: true
       schema:
         type: string
+        enum:
+          - "OK"
+          - "NOT_OK"
 
     redirectCode:
       name: redirectCode
@@ -630,16 +633,16 @@ components:
           $ref: '#/components/headers/Set-RedirectCookie'
           description: |
             Here the cookie set is called a RedirectCookie. Looks like
-            RDC=ejts.adsfa.adfaj; Path=/v1/XYZ/fromConsentOk. In the case XYZ is the
+            RDC=ejts.adsfa.adfaj; Path=/v1/XYZ/fromConsent. In the case XYZ is the
             auth used to keep track of different RDCs. As a user can
             initiate more than one sca from one browser instance.
-            * Note that the path of the RDC is Path=/v1/XYZ/fromConsentOk/.
+            * Note that the path of the RDC is Path=/v1/XYZ/fromConsent/.
             * So RDC are only sent to the server when a callback link
               commes from the ConsentAuthorisationApi
             * Also note that the callback link hast the structure
-              /v1/fromConsentOk?authId=auth-id; where the
+              /v1/fromConsent?authId=auth-id; where the
               auth-id is a simple random string (XYZ). The corresponding xsrfToken 
-              can be stored in the local storage under the path /v1/XYZ/fromConsentOk.
+              can be stored in the local storage under the path /v1/XYZ/fromConsent.
             * The callback link is not part of the location link. It is passed to
             the ConsentAuthorisationApi through the ConsentSession shared in the
             backend (BankingProtocol).

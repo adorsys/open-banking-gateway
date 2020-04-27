@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {DocumentCookieService} from './document-cookie.service';
-import {Consts} from '../models/consts';
+import {toLocaleString} from '../models/consts';
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +53,7 @@ export class StorageService {
   public setMaxAge(maxAge: number): void {
     const timestamp = new Date().getTime() + maxAge * 1000;
     localStorage.setItem(Session.MAX_VALID_UNTIL, '' + timestamp);
-    console.log('set max age ' + maxAge + ' till ' + Consts.toLocaleString(new Date(timestamp)));
+    console.log('set max age ' + maxAge + ' till ' + toLocaleString(new Date(timestamp)));
   }
 
   public setRedirectCode(redirectCode: string): void {
@@ -70,7 +70,7 @@ export class StorageService {
       return null;
     }
     const date = new Date(parseInt(validUntilTimestamp, 0));
-    if (Consts.toLocaleString(date) === 'Invalid Date') {
+    if (toLocaleString(date) === 'Invalid Date') {
       console.log('HELLO VALENTYN, THIS IS WEIRED: ' + validUntilTimestamp + ' results in Invalid Date');
 
       return null;
@@ -87,12 +87,12 @@ export class StorageService {
     const validUntil = validUntilDate.getTime();
     const timestamp = new Date().getTime();
     if (timestamp > validUntil) {
-      console.log('valid until was ' + Consts.toLocaleString(validUntilDate) + ' now is '
-        + Consts.toLocaleString(new Date()) + ', so isMaxValid = false');
+      console.log('valid until was ' + toLocaleString(validUntilDate) + ' now is '
+        + toLocaleString(new Date()) + ', so isMaxValid = false');
       return false;
     }
-    // console.log('valid until was ' + Consts.toLocaleString(validUntilDate) + ' now is '
-    // + Consts.toLocaleString(new Date()) + ', so isMaxValid = true');
+    // console.log('valid until was ' + tLocaleString(validUntilDate) + ' now is '
+    // + tLocaleString(new Date()) + ', so isMaxValid = true');
 
     //    console.log('valid until was ' + validUntilDate.toLocaleString() +
     //    ' now is ' + new Date().toLocaleString() + ', so isMaxValid = true');

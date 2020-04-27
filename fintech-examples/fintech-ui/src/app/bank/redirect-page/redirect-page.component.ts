@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RedirectStruct } from './redirect-struct';
 import { StorageService } from '../../services/storage.service';
-import {HeaderConfig} from '../../models/consts';
+import {Consent, HeaderConfig} from '../../models/consts';
 import {ConsentAuthorizationService} from '../services/consent-authorization.service';
 
 @Component({
@@ -36,7 +36,7 @@ export class RedirectPageComponent implements OnInit {
     const authId = this.storageService.getAuthId();
     const redirectCode = this.storageService.getRedirectCode();
     console.log('call from consent NOT ok with auth ' + authId);
-    this.authService.fromConsentOk(authId, 'notOk', redirectCode);
+    this.authService.fromConsentOk(authId, Consent.NOT_OK, redirectCode);
   }
 
   proceed(): void {

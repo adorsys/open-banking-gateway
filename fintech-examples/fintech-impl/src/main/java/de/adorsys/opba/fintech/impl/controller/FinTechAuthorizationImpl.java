@@ -57,16 +57,17 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
     }
 
     @Override
-    public ResponseEntity<Void> fromConsentOkGET(String authId, String okOrNotok, String finTechRedirectCode, UUID xRequestID, String xsrfToken) {
+    public ResponseEntity<Void> fromConsentGET(String authId, String okOrNotokString, String finTechRedirectCode, UUID xRequestID, String xsrfToken) {
+        OkOrNotOk okOrNotOk = OkOrNotOk.valueOf(okOrNotokString);
+        log.info("fromConsentGET path is \"/v1/{}/fromConsent/{}\"", authId, okOrNotOk);
         if (!authorizeService.isAuthorized()) {
-            log.warn("fromConsentOkGET failed: user is not authorized! - path is \"/v1/" + authId + "/fromConsentOk\"");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        if ("ok".equalsIgnoreCase(okOrNotok) && consentService.confirmConsent(authId, xRequestID)) {
+        if (okOrNotOk.equals(OkOrNotOk.OK) && consentService.confirmConsent(authId, xRequestID)) {
                 authorizeService.getSession().setConsentConfirmed(true);
         }
-        return redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotok);
+        return redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk);
     }
 
     @Override

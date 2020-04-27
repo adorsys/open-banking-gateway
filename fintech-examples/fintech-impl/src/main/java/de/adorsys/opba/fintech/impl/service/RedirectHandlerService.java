@@ -1,6 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
+import de.adorsys.opba.fintech.impl.controller.OkOrNotOk;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
@@ -49,7 +50,7 @@ public class RedirectHandlerService {
     }
 
     @Transactional
-    public ResponseEntity doRedirect(final String uiGivenAuthId, final String redirectCode, final String okOrNotOk) {
+    public ResponseEntity doRedirect(final String uiGivenAuthId, final String redirectCode, final OkOrNotOk okOrNotOk) {
         // vulnerable for DOS
         SessionEntity sessionEntity = authorizeService.getSession();
         if (StringUtils.isBlank(redirectCode)) {
@@ -69,7 +70,7 @@ public class RedirectHandlerService {
             return prepareErrorRedirectResponse(sessionEntity, uiConfig.getUnauthorizedUrl());
         }
 
-        if ("ok".equalsIgnoreCase(okOrNotOk)) {
+        if (okOrNotOk.equals(OkOrNotOk.OK)) {
             if (StringUtils.isBlank(uiGivenAuthId)) {
                 log.warn("Validation redirect request failed: authId is empty!");
                 return prepareErrorRedirectResponse(sessionEntity, uiConfig.getUnauthorizedUrl());
