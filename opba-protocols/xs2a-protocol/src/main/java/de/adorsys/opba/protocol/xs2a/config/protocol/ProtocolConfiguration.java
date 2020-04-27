@@ -82,7 +82,7 @@ public class ProtocolConfiguration {
             private String provideMore;
 
             /**
-             * Page where the user provides his TAN or ASPSP password.
+             * Page where the user provides his PIN or ASPSP password.
              */
             @NotBlank
             private String providePsuPassword;

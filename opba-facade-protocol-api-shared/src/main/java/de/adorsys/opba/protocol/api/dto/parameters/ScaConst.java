@@ -11,7 +11,7 @@ import lombok.experimental.UtilityClass;
 public class ScaConst {
 
     /**
-     * PSU password field name. (I.e. TAN/password used to login to ASPSP)
+     * PSU password field name. (I.e. PIN/password used to login to ASPSP)
      */
     public static final String PSU_PASSWORD = "PSU_PASSWORD";
 
