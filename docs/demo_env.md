@@ -16,7 +16,11 @@ Environment is hosted at:
 [https://obg-dev-fintechui.cloud.adorsys.de](https://obg-dev-fintechui.cloud.adorsys.de)
 
 
-## Guide
+## Demo video guide
+
+[![OpenBanking demo usecase](https://img.youtube.com/vi/01CmTj7-aQI/0.jpg)](https://www.youtube.com/watch?v=01CmTj7-aQI)
+
+## Guide transcript
 
 ### 1. Login to FinTech
 
