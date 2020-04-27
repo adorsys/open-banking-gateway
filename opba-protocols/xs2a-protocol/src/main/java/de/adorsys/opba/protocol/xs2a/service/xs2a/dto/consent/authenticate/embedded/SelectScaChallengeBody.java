@@ -16,9 +16,16 @@ import javax.validation.constraints.NotBlank;
 import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.SCA_METHOD_ID;
 import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;
 
+/**
+ * Mapper from {@link Xs2aContext} to {@link SelectPsuAuthenticationMethod} object to pass what kind of SCA method
+ * user wants to use to XS2A-adapter API.
+ */
 @Data
 public class SelectScaChallengeBody {
 
+    /**
+     * PSU SCA method selected id (id of SMS or id of EMAIL etc. SCA method).
+     */
     @ValidationInfo(ui = @FrontendCode(STRING), ctx = @ContextCode(SCA_METHOD_ID))
     @NotBlank(message = "{no.sca.challenge.method.selected}")
     private String authenticationMethodId;

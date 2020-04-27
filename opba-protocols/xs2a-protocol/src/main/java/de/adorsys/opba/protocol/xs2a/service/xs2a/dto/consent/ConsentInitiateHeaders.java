@@ -22,17 +22,29 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_IP_ADDRESS;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_NOK_REDIRECT_URI;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_URI;
 
+/**
+ * Object that represents request Headers that are necessary to call ASPSP API for consent initiation.
+ */
 @Getter
 @Setter
 public class ConsentInitiateHeaders extends WithBasicInfo {
 
+    /**
+     * PSU IP address - IP address of PSU device/browser.
+     */
     @ValidationInfo(ui = @FrontendCode(STRING), ctx = @ContextCode(FieldCode.PSU_IP_ADDRESS))
     @NotBlank(message = "{no.ctx.psuIpAddress}")
     private String psuIpAddress;
 
+    /**
+     * ASPSP redirect URL to be called if consent was granted.
+     */
     @NotBlank(message = "{redirect.ok}")
     private String redirectUriOk;
 
+    /**
+     * ASPSP redirect URL to be called if consent was declined.
+     */
     @NotBlank(message = "{redirect.nok}")
     private String redirectUriNok;
 
