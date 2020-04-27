@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * Declines already existing consent (maybe yet unauthorized fully) and deletes it from DB.
+ */
 @Service("abortConsent")
 @RequiredArgsConstructor
 public class AbortConsent {

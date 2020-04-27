@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Performs ASPSP API call to drop the consent.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

@@ -11,9 +11,12 @@ import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.protocol.xs2a.service.xs2a.consent.ConsentConst.CONSENT_FINALIZED;
 
-@Service("xs2aPerformScaChallenge")
+/**
+ * Asks PSU for his SCA challenge result by redirect him to password input page. Suspends process to wait for users' input.
+ */
+@Service("xs2aAskForScaChallenge")
 @RequiredArgsConstructor
-public class Xs2aPerformScaChallenge extends ValidatedExecution<Xs2aContext> {
+public class Xs2aAskForScaChallenge extends ValidatedExecution<Xs2aContext> {
 
     private final RuntimeService runtimeService;
     private final RedirectExecutor redirectExecutor;

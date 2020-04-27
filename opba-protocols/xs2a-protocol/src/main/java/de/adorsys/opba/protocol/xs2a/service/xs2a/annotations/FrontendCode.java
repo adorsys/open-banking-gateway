@@ -8,9 +8,15 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * Represents field type that should be used as input for current violation on frontend UI (i.e. date, password, etc.).
+ */
 @Target({ FIELD })
 @Retention(RUNTIME)
 public @interface FrontendCode {
 
+    /**
+     * Data/input type that is expected from frontend UI.
+     */
     TypeCode value();
 }

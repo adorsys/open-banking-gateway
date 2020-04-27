@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
+/**
+ * Redirects PSU to the page that shows that consent was granted and has button to redirect PSU back to FinTech.
+ */
 @Service("xs2aReportToFintechConsentAuthorized")
 @RequiredArgsConstructor
 public class ReportConsentAuthorizationFinished extends ValidatedExecution<Xs2aContext> {

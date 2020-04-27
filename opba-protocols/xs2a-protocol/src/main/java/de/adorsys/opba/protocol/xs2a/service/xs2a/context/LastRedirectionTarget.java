@@ -8,6 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Delegate;
 
+/**
+ * Object to store where the protocol was requesting user to redirect to.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

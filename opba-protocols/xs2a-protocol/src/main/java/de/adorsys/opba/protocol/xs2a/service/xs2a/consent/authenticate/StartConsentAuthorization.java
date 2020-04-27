@@ -22,6 +22,9 @@ import java.util.UUID;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 import static de.adorsys.xs2a.adapter.service.ResponseHeaders.ASPSP_SCA_APPROACH;
 
+/**
+ * Initiates the consent authorization. Optionally may provide preferred ASPSP approach.
+ */
 @Service("xs2aStartConsentAuthorization")
 @RequiredArgsConstructor
 public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
