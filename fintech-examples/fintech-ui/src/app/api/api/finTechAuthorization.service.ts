@@ -63,24 +63,24 @@ export class FinTechAuthorizationService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public fromConsentOkGET(authId: string, okOrNotok: string, redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public fromConsentOkGET(authId: string, okOrNotok: string, redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public fromConsentOkGET(authId: string, okOrNotok: string, redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public fromConsentOkGET(authId: string, okOrNotok: string, redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public fromConsentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public fromConsentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public fromConsentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public fromConsentGET(authId: string, okOrNotok: 'OK' | 'NOT_OK', redirectCode: string, xRequestID: string, X_XSRF_TOKEN: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (authId === null || authId === undefined) {
-            throw new Error('Required parameter authId was null or undefined when calling fromConsentOkGET.');
+            throw new Error('Required parameter authId was null or undefined when calling fromConsentGET.');
         }
         if (okOrNotok === null || okOrNotok === undefined) {
-            throw new Error('Required parameter okOrNotok was null or undefined when calling fromConsentOkGET.');
+            throw new Error('Required parameter okOrNotok was null or undefined when calling fromConsentGET.');
         }
         if (redirectCode === null || redirectCode === undefined) {
-            throw new Error('Required parameter redirectCode was null or undefined when calling fromConsentOkGET.');
+            throw new Error('Required parameter redirectCode was null or undefined when calling fromConsentGET.');
         }
         if (xRequestID === null || xRequestID === undefined) {
-            throw new Error('Required parameter xRequestID was null or undefined when calling fromConsentOkGET.');
+            throw new Error('Required parameter xRequestID was null or undefined when calling fromConsentGET.');
         }
         if (X_XSRF_TOKEN === null || X_XSRF_TOKEN === undefined) {
-            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling fromConsentOkGET.');
+            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling fromConsentGET.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});

@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {ConsentAuthorizationService} from '../bank/services/consent-authorization.service';
 import {StorageService} from '../services/storage.service';
+import {Consent} from '../models/consts';
 
 @Component({
   selector: 'app-redirect-after-consent',
@@ -16,6 +17,6 @@ export class RedirectAfterConsentComponent implements OnInit {
     const redirectCode = this.route.snapshot.queryParams.redirectCode;
     const authId = this.storageService.getAuthId();
 
-    this.authService.fromConsentOk(authId, 'ok', redirectCode);
+    this.authService.fromConsentOk(authId, Consent.OK, redirectCode);
   }
 }
