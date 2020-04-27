@@ -7,6 +7,10 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
 
+/**
+ * Switches execution mode from {@link ContextMode#MOCK_REAL_CALLS} (context validation to find parameters that
+ * are required from user) to {@link ContextMode#REAL_CALLS} (real calls to ASPSP API)
+ */
 @Service("updateToRealModeBpmnContext")
 public class UpdateToRealModeBpmnContext implements JavaDelegate {
 

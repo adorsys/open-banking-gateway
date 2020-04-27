@@ -14,6 +14,11 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.LAST_REDIRECTION_TARGET;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.LAST_VALIDATION_ISSUES;
 
+/**
+ * Restore the context as it was before validation. As executing validation process changes the context variables
+ * with i.e. stub values or intermediate values, this service restores the context to the state it was before
+ * validation process was executed.
+ */
 @RequiredArgsConstructor
 @Service("xs2aRestorePreValidationContext")
 public class Xs2aRestorePreValidationContext implements JavaDelegate {
