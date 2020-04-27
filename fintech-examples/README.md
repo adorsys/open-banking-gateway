@@ -19,8 +19,7 @@ Contains an example implementation of the api. Here the REST calls coming from t
 Fintech-UI are handled. For that the <i>TPPServer</i>s API is called. The imiplementation contains the
 Controllers to handle the Rest Calls and the Client Stubs, to
 call the <i>TPPServer</i>.
-To generate the client Stubs <code>spring-feign</code>
-is used.
+To generate the client Stubs <code>spring-feign</code> is used.
 
 ## fintech server
 
