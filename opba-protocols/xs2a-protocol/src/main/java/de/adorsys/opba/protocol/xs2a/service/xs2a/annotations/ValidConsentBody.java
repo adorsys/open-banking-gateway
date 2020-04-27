@@ -11,6 +11,10 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * Special validator for {@link de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AisConsentInitiateBody.AccountAccessBody}
+ * AIS consent specification that checks we can use the provided object to make call to ASPSP API.
+ */
 @Target({ FIELD })
 @Retention(RUNTIME)
 @Constraint(validatedBy = AccountAccessBodyValidator.class)

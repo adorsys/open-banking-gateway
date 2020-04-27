@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 
+/**
+ * Calls Xs2a API to initiate AIS consent.
+ */
 @Service
 public class CreateAisConsentService {
     void createConsent(

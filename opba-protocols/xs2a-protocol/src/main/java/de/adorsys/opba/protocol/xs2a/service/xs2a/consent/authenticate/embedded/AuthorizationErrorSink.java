@@ -11,12 +11,22 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+/**
+ * Special service to parse ASPSP authorization responses on certain error conditions. For example used to catch
+ * exception on wrong TAN/password input and if it is retryable to swallow the exception and call fallback
+ * routine.
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthorizationErrorSink {
 
     private final AspspMessages messageConfig;
 
+    /**
+     * Swallows retryable (like wrong password) authorization exceptions.
+     * @param tryAuthorize Authorization function to call
+     * @param onFail Fallback function to call if retryable exception occurred.
+     */
     public void swallowAuthorizationErrorForLooping(Runnable tryAuthorize, Consumer<ErrorResponseException> onFail) {
         try {
             tryAuthorize.run();

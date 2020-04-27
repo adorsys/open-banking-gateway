@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Represents all current context violations that should be fixed by the user providing relevant parameters.
  * Helper class to be very specific of what to save.
  */
 @Slf4j
