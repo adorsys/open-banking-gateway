@@ -21,7 +21,7 @@ public enum FieldCode {
     PSU_IP_ADDRESS,
 
     /**
-     * TAN password / password used to login to ASPSP
+     * PIN password / password used to login to ASPSP
      */
     PSU_PASSWORD,
 

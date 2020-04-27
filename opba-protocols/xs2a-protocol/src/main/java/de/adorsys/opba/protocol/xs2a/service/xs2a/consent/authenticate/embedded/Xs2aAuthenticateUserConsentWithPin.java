@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.stream.Collectors;
 
 /**
- * Send PSU TAN/Password from the context to ASPSP. The password is typically provided by
+ * Send PSU PIN/Password from the context to ASPSP. The password is typically provided by
  * {@link de.adorsys.opba.protocol.api.authorization.UpdateAuthorization}. Updates available SCA methods after
  * ASPSP returns the result.
  */
