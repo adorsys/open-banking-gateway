@@ -17,6 +17,11 @@ import java.net.URI;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.LAST_REDIRECTION_TARGET;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.LAST_VALIDATION_ISSUES;
 
+/**
+ * Reports that there were validation errors on context. As the result user should be redirected to the form,
+ * where he can provide missing data to the context to proceed with authorization. Typically that data is passed
+ * back to the context using {@link de.adorsys.opba.protocol.api.authorization.UpdateAuthorization}.
+ */
 @RequiredArgsConstructor
 @Service("xs2aReportValidationError")
 public class Xs2aReportValidationError implements JavaDelegate {
