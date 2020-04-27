@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ConsentAuthorizationService} from '../bank/services/consent-authorization.service';
+import {StorageService} from '../services/storage.service';
+import {Consent} from '../models/consts';
 
 @Component({
   selector: 'app-redirect-after-consent-denied',
@@ -7,12 +10,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./redirect-after-consent-denied.component.scss']
 })
 export class RedirectAfterConsentDeniedComponent implements OnInit {
-  constructor(private router: Router) {}
+  private redirectCode;
 
-  // TODO: call to fintech-server to reset redirect cookie and to consent initiation data. Not available now in the Fintech-server
-  ngOnInit() {}
-
-  toBankSearch(): void {
-    this.router.navigate(['/']);
+  constructor(private authService: ConsentAuthorizationService, private route: ActivatedRoute, private storageService: StorageService) {
   }
+
+  ngOnInit() {
+    this.redirectCode = this.route.snapshot.queryParams.redirectCode;
+  }
+
+  submit() {
+    const authId = this.storageService.getAuthId();
+    this.redirectCode = this.route.snapshot.queryParams.redirectCode;
+    this.authService.fromConsentOk(authId, Consent.NOT_OK, this.redirectCode);
+  }
+
 }

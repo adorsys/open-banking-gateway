@@ -104,7 +104,7 @@ cookie:
   max-age: PT300S
   http-only: true
   path: /
-  same-site: Strict
+  same-site: Lax
 psu:
   key-pair:
     cipher-algo: AES256_CBC

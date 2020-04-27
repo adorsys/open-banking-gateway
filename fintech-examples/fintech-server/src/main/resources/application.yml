@@ -3,18 +3,17 @@ server:
   controller:
     sessioncookie:
       secure: false
-      maxAge: 60
+      maxAge: 300
       httpOnly: true
       path: /
       sameSite: Strict
 
     redirectcookie:
       secure: false
-      maxAge: 300
+      maxAge: 1800
       httpOnly: true
-      # path: /v1/{auth-id}
-      path: /
-      sameSite: Strict
+      path: /fintech-api-proxy/v1/{auth-id}
+      sameSite: Lax
 
       # sameSite: Strict|Lax|none
       # samesite SameSite prevents the browser from sending this cookie along with cross-site requests. Possible values for the flag are lax or strict.
@@ -23,6 +22,8 @@ server:
 
 tpp:
   url: http://localhost:8085
+  # local testing
+  # url: http://localhost:18085
   fintechID: MY-SUPER-FINTECH-ID
   serviceSessionPassword: qwerty
 
@@ -34,6 +35,8 @@ mock:
 spring:
   datasource:
     url: jdbc:postgresql://localhost/open_banking?currentSchema=fintech
+    # local testing
+    # url: jdbc:postgresql://localhost:15432/open_banking?currentSchema=fintech
     username: postgres
     password: docker
     type: com.zaxxer.hikari.HikariDataSource
@@ -55,7 +58,7 @@ spring:
 fintech-ui:
   redirect-url: http://localhost:4444/redirect-after-consent?redirectCode={redirectCode}
   unauthorized-url: http://localhost:4444/
-  exception-url: http://localhost:4444/redirect-after-consent-denied
+  exception-url: http://localhost:4444/redirect-after-consent-denied?redirectCode={redirectCode}
 
 security:
   # This is the example private key value used only for DEMO purposes
