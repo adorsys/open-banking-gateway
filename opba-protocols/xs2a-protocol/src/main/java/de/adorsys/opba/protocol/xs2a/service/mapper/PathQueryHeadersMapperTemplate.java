@@ -21,6 +21,12 @@ public class PathQueryHeadersMapperTemplate<C extends BaseContext, P, Q, H> {
     private final DtoMapper<? super C, P> toPath;
     private final DtoMapper<? super C, Q> toQuery;
 
+    /**
+     * Converts context object into object that can be used for validation.
+     * @param context Context to convert
+     * @return Validatable object that can be used with {@link de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator}
+     * to check if all necessary parameters are present
+     */
     public PathQueryHeadersToValidate<P, Q, H> forValidation(C context) {
         return new PathQueryHeadersToValidate<>(
                 toPath.map(context),
@@ -29,6 +35,11 @@ public class PathQueryHeadersMapperTemplate<C extends BaseContext, P, Q, H> {
         );
     }
 
+    /**
+     * Converts context object into object that can be used for ASPSP API call.
+     * @param context Context to convert
+     * @return Object that can be used with {@code Xs2aAdapter} to perform ASPSP API calls
+     */
     public ValidatedPathQueryHeaders<P, Q, H> forExecution(C context) {
         return new ValidatedPathQueryHeaders<>(
                 toPath.map(context),

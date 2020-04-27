@@ -24,12 +24,12 @@ import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class Xs2aReportScaChallengeClearsScaTest extends BaseMockitoTest {
+class Xs2AAuthenticateConsentWithScaChallengeClearsScaTest extends BaseMockitoTest {
 
     private static final String SCA_VALUE = "123456";
 
     @Mock
-    private Xs2aReportScaChallenge.Extractor extractor;
+    private Xs2aAuthenticateConsentWithScaChallenge.Extractor extractor;
 
     @Mock
     private AccountInformationService ais;
@@ -50,7 +50,7 @@ class Xs2aReportScaChallengeClearsScaTest extends BaseMockitoTest {
     private ScaStatusResponse responseBody;
 
     @InjectMocks
-    private Xs2aReportScaChallengeTestable tested;
+    private Xs2AAuthenticateConsentWithScaChallengeTestable tested;
 
     @Test
     void scaChallengeCleaned() {
@@ -73,8 +73,8 @@ class Xs2aReportScaChallengeClearsScaTest extends BaseMockitoTest {
         assertThat(context.getPsuPassword()).isNull();
     }
 
-    public static class Xs2aReportScaChallengeTestable extends Xs2aReportScaChallenge {
-        public Xs2aReportScaChallengeTestable(Extractor extractor, Xs2aValidator validator, AccountInformationService ais, AuthorizationErrorSink errorSink) {
+    public static class Xs2AAuthenticateConsentWithScaChallengeTestable extends Xs2aAuthenticateConsentWithScaChallenge {
+        public Xs2AAuthenticateConsentWithScaChallengeTestable(Extractor extractor, Xs2aValidator validator, AccountInformationService ais, AuthorizationErrorSink errorSink) {
             super(extractor, validator, ais, errorSink);
         }
 

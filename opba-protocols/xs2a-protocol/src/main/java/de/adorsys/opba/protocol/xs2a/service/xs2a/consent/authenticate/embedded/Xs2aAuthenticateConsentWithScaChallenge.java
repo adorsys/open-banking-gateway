@@ -19,10 +19,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
+/**
+ * Send SCA challenge result from the context to ASPSP. The password is typically provided by
+ * {@link de.adorsys.opba.protocol.api.authorization.UpdateAuthorization}.
+ */
 @Slf4j
-@Service("xs2aReportScaChallenge")
+@Service("xs2aAuthenticateConsentWithScaChallenge")
 @RequiredArgsConstructor
-public class Xs2aReportScaChallenge extends ValidatedExecution<Xs2aContext> {
+public class Xs2aAuthenticateConsentWithScaChallenge extends ValidatedExecution<Xs2aContext> {
 
     private final Extractor extractor;
     private final Xs2aValidator validator;

@@ -8,6 +8,10 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateHea
 import de.adorsys.xs2a.adapter.service.model.Consents;
 import org.springframework.stereotype.Service;
 
+/**
+ * Maps the {@link de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent} from the context to XS2A adapter
+ * usable request parameters.
+ */
 @Service
 public class AisConsentInitiateExtractor extends HeadersBodyMapperTemplate<
     Xs2aAisContext,

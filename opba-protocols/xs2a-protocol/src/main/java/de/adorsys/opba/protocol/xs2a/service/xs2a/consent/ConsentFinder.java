@@ -5,6 +5,9 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service to find already existing consent based on the context.
+ */
 @Service("xs2aConsentFinder")
 @RequiredArgsConstructor
 public class ConsentFinder {
