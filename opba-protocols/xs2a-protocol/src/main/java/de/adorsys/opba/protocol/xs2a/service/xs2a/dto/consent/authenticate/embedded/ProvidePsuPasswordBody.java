@@ -16,9 +16,15 @@ import javax.validation.constraints.NotBlank;
 import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.PSU_PASSWORD;
 import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;
 
+/**
+ * Mapper from {@link Xs2aContext} to {@link UpdatePsuAuthentication} object to pass password/TAN to XS2A adapter.
+ */
 @Data
 public class ProvidePsuPasswordBody {
 
+    /**
+     * PSU TAN/password to call XS2A api with.
+     */
     @ValidationInfo(ui = @FrontendCode(STRING), ctx = @ContextCode(PSU_PASSWORD))
     @NotBlank(message = "{no.psu.password}")
     private String psuPassword;

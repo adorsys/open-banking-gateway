@@ -13,10 +13,16 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.CONSENT_ID;
 
+/**
+ * XS2A-adapter headers to be used after the consent was created.
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Xs2aWithConsentIdHeaders extends Xs2aStandardHeaders {
 
+    /**
+     * Consent ID that is used for current operation.
+     */
     @NotBlank // can't be provided manually
     private String consentId;
 

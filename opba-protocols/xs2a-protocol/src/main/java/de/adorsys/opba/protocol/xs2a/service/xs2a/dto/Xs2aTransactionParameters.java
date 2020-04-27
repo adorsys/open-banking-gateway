@@ -18,17 +18,29 @@ import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 
+/**
+ * XS2A transaction list describing parameters.
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Xs2aTransactionParameters extends Xs2aWithBalanceParameters {
 
+    /**
+     * Transaction booking status - i.e. PENDING/BOOKED.
+     */
     @ValidationInfo(ui = @FrontendCode(STRING), ctx = @ContextCode(BOOKING_STATUS))
     @NotBlank(message = "{no.ctx.bookingStatus}")
     private String bookingStatus;
 
+    /**
+     * Transaction list date from.
+     */
     @NotNull(message = "{no.ctx.dateFrom}")
     private LocalDate dateFrom;
 
+    /**
+     * Transaction list date to.
+     */
     @NotNull(message = "{no.ctx.dateTo}")
     private LocalDate dateTo;
 
