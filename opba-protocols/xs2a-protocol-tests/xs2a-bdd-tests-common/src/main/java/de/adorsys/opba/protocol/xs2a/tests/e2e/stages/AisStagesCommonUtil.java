@@ -35,8 +35,9 @@ public class AisStagesCommonUtil {
 
     public static final String DEFAULT_FINTECH_ID = "MY-SUPER-FINTECH-ID";
     public static final String SANDBOX_BANK_ID = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
-    public static final String FINTECH_REDIR_OK = "http://localhost:5500/fintech-callback/ok";
-    public static final String FINTECH_REDIR_NOK = "http://localhost:5500/fintech-callback/nok";
+    public static final String FINTECH_REDIR_OK = "http://localhost:4444/redirect-after-consent";
+    public static final String FINTECH_REDIR_NOK = "http://localhost:4444/redirect-after-consent-denied";
+
     public static final String SESSION_PASSWORD = "qwerty";
     public static final String ANTON_BRUECKNER = "anton.brueckner";
     public static final String MAX_MUSTERMAN = "max.musterman";

@@ -151,8 +151,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                 )
                 .isOk(false)
                 .build()
-        ).thenApply((FacadeResult<UpdateAuthBody> result) ->
-                mapper.translate(result, new NoOpMapper<>()));
+        ).thenApply(aspspMapper::translate);
     }
 
     public static class NoOpMapper<T> implements FacadeResponseBodyToRestBodyMapper<T, T> {
