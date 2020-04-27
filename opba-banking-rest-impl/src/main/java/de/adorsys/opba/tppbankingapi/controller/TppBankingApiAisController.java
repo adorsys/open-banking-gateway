@@ -38,12 +38,14 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
 
     @Override
     public CompletableFuture getAccounts(
-            String authorization,
             String serviceSessionPassword,
             String fintechUserID,
             String fintechRedirectURLOK,
             String fintechRedirectURLNOK,
             UUID xRequestID,
+            String xTimestampUTC,
+            String xRequestSignature,
+            String fintechId,
             String bankID,
             String psUConsentSession,
             UUID serviceSessionId
@@ -53,7 +55,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                         .facadeServiceable(FacadeServiceableRequest.builder()
                                 // Get rid of CGILIB here by copying:
                                 .uaContext(userAgentContext.toBuilder().build())
-                                .authorization(authorization)
+                                .authorization(fintechId)
                                 .sessionPassword(serviceSessionPassword)
                                 .fintechUserId(fintechUserID)
                                 .fintechRedirectUrlOk(fintechRedirectURLOK)
@@ -69,12 +71,14 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
     @Override
     public CompletableFuture getTransactions(
             String accountId,
-            String authorization,
             String serviceSessionPassword,
             String fintechUserID,
             String fintechRedirectURLOK,
             String fintechRedirectURLNOK,
             UUID xRequestID,
+            String xTimestampUTC,
+            String xRequestSignature,
+            String fintechId,
             String bankID,
             String psUConsentSession,
             UUID serviceSessionId,
@@ -89,7 +93,7 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
                         .facadeServiceable(FacadeServiceableRequest.builder()
                                 // Get rid of CGILIB here by copying:
                                 .uaContext(userAgentContext.toBuilder().build())
-                                .authorization(authorization)
+                                .authorization(fintechId)
                                 .sessionPassword(serviceSessionPassword)
                                 .fintechUserId(fintechUserID)
                                 .fintechRedirectUrlOk(fintechRedirectURLOK)

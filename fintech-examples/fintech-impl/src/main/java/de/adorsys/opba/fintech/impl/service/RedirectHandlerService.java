@@ -8,7 +8,6 @@ import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.tppclients.SessionCookieType;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +25,6 @@ import static java.util.Collections.singletonList;
 
 @Slf4j
 @Service
-@Setter
 @RequiredArgsConstructor
 public class RedirectHandlerService {
     private static final String LOCATION_HEADER = "Location";

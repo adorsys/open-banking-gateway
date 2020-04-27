@@ -1,11 +1,11 @@
 package de.adorsys.opba.consentapi.controller;
 
 import de.adorsys.opba.consentapi.Const;
-import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.DenyRequest;
 import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
 import de.adorsys.opba.consentapi.model.generated.PsuAuthRequest;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
+import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.resource.generated.ConsentAuthorizationApi;
 import de.adorsys.opba.consentapi.service.FromAspspMapper;
 import de.adorsys.opba.consentapi.service.mapper.AisConsentMapper;
@@ -57,7 +57,10 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
     private final FacadeServiceableRequest serviceableTemplate;
 
     @Override
-    public CompletableFuture authUsingGET(String authId, String redirectCode) {
+    public CompletableFuture authUsingGET(
+            String authId,
+            String redirectCode) {
+
         return authorizationStateService.execute(
                 AuthorizationRequest.builder()
                         .facadeServiceable(serviceableTemplate.toBuilder()
@@ -97,7 +100,12 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
     }
 
     @Override
-    public CompletableFuture denyUsingPOST(DenyRequest body, UUID xRequestID, String xXsrfToken, String authId) {
+    public CompletableFuture denyUsingPOST(
+            DenyRequest body,
+            UUID xRequestID,
+            String xXsrfToken,
+            String authId) {
+
         return denyAuthorizationService.execute(DenyAuthorizationRequest.builder()
                 .facadeServiceable(serviceableTemplate.toBuilder()
                         // Get rid of CGILIB here by copying:
@@ -112,9 +120,9 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
 
     @Override
     public CompletableFuture fromAspspOkUsingGET(
-        String authId,
-        String redirectState,
-        String redirectCode) {
+            String authId,
+            String redirectState,
+            String redirectCode) {
 
         return fromAspspRedirectHandler.execute(
             FromAspspRequest.builder()
@@ -130,9 +138,9 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
 
     @Override
     public CompletableFuture fromAspspNokUsingGET(
-        String authId,
-        String redirectState,
-        String redirectCode) {
+            String authId,
+            String redirectState,
+            String redirectCode) {
 
         return fromAspspRedirectHandler.execute(
             FromAspspRequest.builder()
@@ -143,8 +151,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                 )
                 .isOk(false)
                 .build()
-        ).thenApply((FacadeResult<UpdateAuthBody> result) ->
-                mapper.translate(result, new NoOpMapper<>()));
+        ).thenApply(aspspMapper::translate);
     }
 
     public static class NoOpMapper<T> implements FacadeResponseBodyToRestBodyMapper<T, T> {

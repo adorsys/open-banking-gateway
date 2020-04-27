@@ -111,6 +111,7 @@
         <liquibase.version>3.8.0</liquibase.version>
         <mapstruct.version>1.3.1.Final</mapstruct.version>
         <hibernate.version>5.4.9.Final</hibernate.version> <!-- Currently only for bytecode enhancer plugin, can't inherit Spring BOM -->
+        <jjwt.version>0.11.1</jjwt.version>
 
         <!-- Flowable BPMN -->
         <flowable.version>6.4.2</flowable.version>
