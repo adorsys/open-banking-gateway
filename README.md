@@ -20,6 +20,10 @@ Being a regulator driven initiative, PSD2 mandates the regulation of TPPs. With 
 ### Address Security Issues associated with PSU Access to Multiple Interfaces
 In the Open Banking Context, a payment service user (PSU or banking account holder) might have to deal with up to 3 different user interface to initiate, authorize and get the requested banking service executed. There being redirected back and forth from one UserAgent (resp. device) to another. This intensive use of redirection in Open Banking bearing a lot of risk of impersonating the PSU, we set a goal of this Framework to dissect the complexity involved with those redirection processes and open forums for discussion of possible solutions and sample implementations. Following papers are the first attempt to capture the problem ([UserAgent Redirection](docs/architecture/concepts/psu-device-redirection.md), [PSU Access Security Design](docs/architecture/concepts/psu-security-concept.md)).  
  
+ 
+## Project Demo
+ 
+ - [Demo deployment and guide](docs/demo_env.md)
 
 ## Big Picture
 
