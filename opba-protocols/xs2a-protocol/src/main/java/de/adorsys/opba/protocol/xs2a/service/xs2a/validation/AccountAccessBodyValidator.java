@@ -11,6 +11,9 @@ import javax.validation.ConstraintValidatorContext;
 import static de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AccountAccessType.ALL_ACCOUNTS;
 import static de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AccountAccessType.ALL_ACCOUNTS_WITH_BALANCES;
 
+/**
+ * Special validator to check that AIS consent scope object {@link AisConsentInitiateBody} can be used to call ASPSP.
+ */
 public class AccountAccessBodyValidator implements ConstraintValidator<ValidConsentBody, AisConsentInitiateBody.AccountAccessBody> {
 
     @Override
