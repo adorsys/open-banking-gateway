@@ -16,17 +16,18 @@ import java.util.UUID;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withHeadersWithoutIpAddress;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withSignedHeadersWithoutIpAddress;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withSignatureHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.COMPUTE_PSU_IP_ADDRESS;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP_ADDRESS;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
@@ -45,12 +46,10 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                 .until(() ->
                         wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
                 ).get(0);
-
-        // no consent UI for embedded test
-        this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI).replace("/embedded-server/", "/");
-        ExtractableResponse<Response> response = RestAssured
+        this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
+        ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
                 .given()
-                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
                 .when()
                     .get(redirectOkUri)
                 .then()
@@ -63,7 +62,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     }
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner_ip_address_compute() {
-        ExtractableResponse<Response> response = withHeadersWithoutIpAddress(ANTON_BRUECKNER)
+        ExtractableResponse<Response> response = withSignedHeadersWithoutIpAddress(ANTON_BRUECKNER)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                     .header(COMPUTE_PSU_IP_ADDRESS, true)
                 .when()
@@ -78,7 +77,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     }
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner_no_ip_address() {
-        ExtractableResponse<Response> response = withHeadersWithoutIpAddress(ANTON_BRUECKNER)
+        ExtractableResponse<Response> response = withSignedHeadersWithoutIpAddress(ANTON_BRUECKNER)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                     .header(COMPUTE_PSU_IP_ADDRESS, false)
                 .when()
@@ -97,8 +96,8 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
 
         ExtractableResponse<Response> response = RestAssured
                  .given()
-                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                      .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                      .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                      .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                      .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -141,8 +140,8 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     public SELF user_provided_initial_parameters_in_body_to_list_accounts_with_all_accounts_consent_with_ip_address_check(String body) {
         ExtractableResponse<Response> response = RestAssured
                  .given()
-                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                     .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -175,8 +174,8 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
 
         ExtractableResponse<Response> response = RestAssured
                  .given()
-                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                      .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                     .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                      .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                      .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                      .contentType(MediaType.APPLICATION_JSON_VALUE)

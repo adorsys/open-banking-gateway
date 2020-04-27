@@ -7,6 +7,7 @@ test:
   smoke:
     opba:
       server-uri: https://obg-dev-openbankinggateway.cloud.adorsys.de
+      ui-uri: https://obg-dev-consentui.cloud.adorsys.de
     aspsp-profile:
       server-uri: https://obg-bank-dev-aspspprofile.cloud.adorsys.de
   retry:

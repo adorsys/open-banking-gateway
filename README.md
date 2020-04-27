@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.com/adorsys/open-banking-gateway.svg?branch=develop)](https://travis-ci.com/adorsys/open-banking-gateway)
 [![codecov](https://codecov.io/gh/adorsys/open-banking-gateway/branch/develop/graph/badge.svg)](https://codecov.io/gh/adorsys/open-banking-gateway)
+[![Gitter](https://badges.gitter.im/adorsys/open-banking-gateway.svg)](https://gitter.im/adorsys/open-banking-gateway?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 # Open Banking Gateway
 Provides tools, adapters and connectors for transparent access to open banking apis. The initial effort focuses on the connectivity to banks that implement the European PSD2 directive either through one of the common market initiatives like : [The Berlin Group NextGenPSD2](https://www.berlin-group.org/psd2-access-to-bank-accounts), [The Open Banking UK](https://www.openbanking.org.uk/), [The Polish PSD2 API](https://polishapi.org/en/) or even through proprietary bank api like  [the ING’s PSD2 API](https://developer.ing.com/openbanking/).
@@ -30,6 +31,25 @@ The following picture displays the overall architecture of this banking gateway:
 
 The following picture displays the overall security concept of this banking gateway:
 ![Security concept](docs/img/security-concept.png)
+
+
+## Technical architecture
+
+The following picture displays the overall technical architecture concept of this banking gateway:
+![Technical architecture](docs/img/technical-architecture.svg)
+
+**Key components as shown on diagram**:
+
+**APIs:**
+ - [Banking API](opba-banking-rest-api) and its implementation [Banking API Impl](opba-banking-rest-impl)
+ - [Consent API](opba-consent-rest-api) and its implementation [Consent API Impl](opba-consent-rest-impl)
+
+ **Facade:**
+ - [Banking protocol facade](opba-banking-protocol-facade)
+ 
+ **Protocol:**
+  - [Banking protocol API](opba-protocols/opba-protocol-api)
+  - [XS2A compliant banking protocol Impl](opba-protocols/xs2a-protocol)
 
 ## Information for developers:
  

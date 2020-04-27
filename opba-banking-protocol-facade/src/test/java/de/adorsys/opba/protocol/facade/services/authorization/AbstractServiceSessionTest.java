@@ -4,6 +4,8 @@ import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
+import de.adorsys.opba.protocol.api.ais.ListAccounts;
+import de.adorsys.opba.protocol.api.authorization.UpdateAuthorization;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
@@ -15,12 +17,9 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
+import de.adorsys.opba.protocol.facade.services.DbDropper;
 import de.adorsys.opba.protocol.facade.services.ais.ListAccountsService;
-import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aListAccountsEntrypoint;
-import de.adorsys.opba.protocol.xs2a.entrypoint.authorization.Xs2aUpdateAuthorization;
-import liquibase.integration.spring.SpringLiquibase;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -38,7 +37,7 @@ import static org.awaitility.Durations.ONE_SECOND;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 
-abstract class AbstractServiceSessionTest {
+abstract class AbstractServiceSessionTest extends DbDropper {
     private static final String FINTECH_ID = "MY-SUPER-FINTECH";
     private static final String FINTECH_USER_ID = "user@fintech.com";
     private static final String PASSWORD = "password";
@@ -63,21 +62,11 @@ abstract class AbstractServiceSessionTest {
     @Autowired
     private AuthorizationSessionRepository authenticationSessions;
 
-    @Autowired
-    private SpringLiquibase liquibase;
+    @MockBean(name = "xs2aListAccounts")
+    private ListAccounts xs2aListAccountsEntrypoint;
 
-    @MockBean
-    private Xs2aListAccountsEntrypoint xs2aListAccountsEntrypoint;
-
-    @MockBean
-    private Xs2aUpdateAuthorization xs2aUpdateAuthorization;
-
-    @AfterEach
-    @SneakyThrows
-    void setup() {
-        // drop (drop-first: true) and re-create DB
-        liquibase.afterPropertiesSet();
-    }
+    @MockBean(name = "xs2aUpdateAuthorization")
+    private UpdateAuthorization xs2aUpdateAuthorization;
 
     @Test
     @SneakyThrows

@@ -30,8 +30,15 @@ public class TppBankSearchController implements TppBankSearchApi {
     private final BankService bankService;
 
     @Override
-    public ResponseEntity<BankSearchResponse> bankSearchGET(String authorization, UUID xRequestID, String keyword,
-                                                            Integer start, Integer max) {
+    public ResponseEntity<BankSearchResponse> bankSearchGET(
+            UUID xRequestID,
+            String keyword,
+            String xTimestampUTC,
+            String xRequestSignature,
+            String fintechId,
+            Integer start,
+            Integer max) {
+
         log.debug("Bank search get request. keyword:{}, start:{}, max:{}, xRequestID:{}", keyword, start, max, xRequestID);
         if (start == null) {
             start = defaultStart;
@@ -51,9 +58,13 @@ public class TppBankSearchController implements TppBankSearchApi {
     }
 
     @Override
-    public ResponseEntity<BankProfileResponse> bankProfileGET(String authorization,
-                                                              UUID xRequestID,
-                                                              String bankId) {
+    public ResponseEntity<BankProfileResponse> bankProfileGET(
+            UUID xRequestID,
+            String bankId,
+            String xTimestampUTC,
+            String xRequestSignature,
+            String fintechId) {
+
         log.debug("Bank profile request. bankId:{}, xRequestID:{}", xRequestID, bankId);
         Optional<BankProfileDescriptor> bankProfile = bankService.getBankProfile(bankId);
         if (!bankProfile.isPresent()) {
