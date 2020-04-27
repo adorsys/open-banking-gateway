@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.BEFORE_VALIDATION_CONTEXT;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 
+/**
+ * Stores the context before calling validation process, so that {@link Xs2aRestorePreValidationContext} can
+ * restore it to the state it was before validation.
+ */
 @Service("xs2aStorePreValidationContext")
 public class Xs2aStorePreValidationContext implements JavaDelegate {
 
