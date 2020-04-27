@@ -23,7 +23,7 @@ import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;
 public class ProvidePsuPasswordBody {
 
     /**
-     * PSU TAN/password to call XS2A api with.
+     * PSU PIN/password to call XS2A api with.
      */
     @ValidationInfo(ui = @FrontendCode(STRING), ctx = @ContextCode(PSU_PASSWORD))
     @NotBlank(message = "{no.psu.password}")

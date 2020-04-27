@@ -96,7 +96,7 @@ public class BaseContext implements RequestScoped, UsesRequestScoped {
      */
     private LastRedirectionTarget lastRedirection;
     /**
-     * Flag to indicate that last provided credentials (SCA challenge, TAN/password) were wrong
+     * Flag to indicate that last provided credentials (SCA challenge/TAN, PIN/password) were wrong
      */
     private Boolean wrongAuthCredentials;
 

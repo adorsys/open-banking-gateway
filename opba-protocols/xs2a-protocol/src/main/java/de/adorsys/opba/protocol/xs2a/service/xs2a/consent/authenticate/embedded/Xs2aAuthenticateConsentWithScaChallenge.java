@@ -20,7 +20,7 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
 /**
- * Send SCA challenge result from the context to ASPSP. The password is typically provided by
+ * Send SCA/TAN challenge result from the context to ASPSP. The password is typically provided by
  * {@link de.adorsys.opba.protocol.api.authorization.UpdateAuthorization}.
  */
 @Slf4j

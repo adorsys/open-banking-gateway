@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 /**
  * Special service to parse ASPSP authorization responses on certain error conditions. For example used to catch
- * exception on wrong TAN/password input and if it is retryable to swallow the exception and call fallback
+ * exception on wrong PIN/password input and if it is retryable to swallow the exception and call fallback
  * routine.
  */
 @Service
