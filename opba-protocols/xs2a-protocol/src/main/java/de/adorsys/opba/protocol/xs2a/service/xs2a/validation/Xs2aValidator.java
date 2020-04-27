@@ -23,6 +23,14 @@ import java.util.stream.Collectors;
 import static de.adorsys.opba.protocol.xs2a.service.xs2a.context.ContextMode.REAL_CALLS;
 
 
+/**
+ * Key validation service that uses Hibernate-validator to check that required parameters are available before doing
+ * ASPSP API call.
+ * For {@link de.adorsys.opba.protocol.xs2a.service.xs2a.context.ContextMode#MOCK_REAL_CALLS} collects
+ * all violations into the context to emit message that requires user to provide inputs that fix the violations.
+ * For {@link de.adorsys.opba.protocol.xs2a.service.xs2a.context.ContextMode#REAL_CALLS} causes Runtime error
+ * if API object fails the validation.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,6 +38,13 @@ public class Xs2aValidator {
 
     private final Validator validator;
 
+    /**
+     * Validates that all parameters necessary to perform ASPSP API call is present.
+     * In {@link de.adorsys.opba.protocol.xs2a.service.xs2a.context.ContextMode#MOCK_REAL_CALLS}
+     * reports all violations into {@link BaseContext#getViolations()} (merging with already existing ones)
+     * @param exec Current execution that will be updated with violations if present.
+     * @param dtosToValidate ASPSP API call parameter objects to validate.
+     */
     public void validate(DelegateExecution exec, Object... dtosToValidate) {
         Set<ConstraintViolation<Object>> allErrors = new HashSet<>();
 

@@ -18,17 +18,29 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_GTW_ASPSP_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 
+/**
+ * Typical headers that are required for all XS2A-adapter api calls.
+ */
 @Getter
 @Setter
 public class WithBasicInfo {
 
+    /**
+     * PSU ID - PSU login in ASPSP API.
+     */
     @ValidationInfo(ui = @FrontendCode(STRING), ctx = @ContextCode(FieldCode.PSU_ID))
     @NotBlank(message = "{no.ctx.psuId}")
     private String psuId;
 
+    /**
+     * ASPSP ID - bank ID to be used with Xs2a adapter.
+     */
     @NotBlank(message = "{no.ctx.aspspId}")
     private String aspspId;
 
+    /**
+     * X-Request-ID - request ID used for tracing.
+     */
     @NotBlank(message = "{no.ctx.requestId}")
     private String requestId;
 

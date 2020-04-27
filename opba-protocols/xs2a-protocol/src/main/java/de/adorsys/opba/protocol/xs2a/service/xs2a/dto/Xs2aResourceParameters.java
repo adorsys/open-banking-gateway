@@ -10,9 +10,16 @@ import javax.validation.constraints.NotNull;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 
+/**
+ * XS2A-adapter parameters that represent request that is scoped on some account (resourceId) - used for
+ * transaction listing.
+ */
 @Data
 public class Xs2aResourceParameters {
 
+    /**
+     * ASPSP internal resource ID (i.e. id of the account).
+     */
     @NotBlank(message = "{no.ctx.resourceId}")
     @NotNull(message = "{no.ctx.resourceId}")
     private String resourceId;
