@@ -9,6 +9,9 @@ import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
+/**
+ * Performs redirection to the ASPSP by sending him to the page with redirection button (to ASPSP) for the redirect approach.
+ */
 @Service("xs2aDoRedirectForScaChallenge")
 @RequiredArgsConstructor
 public class Xs2aDoScaRedirect extends ValidatedExecution<Xs2aContext> {

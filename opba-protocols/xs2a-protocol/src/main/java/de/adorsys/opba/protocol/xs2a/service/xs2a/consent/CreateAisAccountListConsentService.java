@@ -19,6 +19,10 @@ import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 
+/**
+ * Initiates Account list consent by sending mapped {@link de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent}
+ * from the context to ASPSP API.
+ */
 @Slf4j
 @Service("xs2aAccountListConsentInitiate")
 @RequiredArgsConstructor

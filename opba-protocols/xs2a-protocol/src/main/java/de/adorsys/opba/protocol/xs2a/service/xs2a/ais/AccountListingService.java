@@ -17,6 +17,10 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+/**
+ * Calls ASPSP XS2A API to list the accounts using already existing consent.
+ * The result with account list is published as {@link ProcessResponse} to the event bus.
+ */
 @Service("xs2aAccountListing")
 @RequiredArgsConstructor
 public class AccountListingService extends ValidatedExecution<Xs2aContext> {

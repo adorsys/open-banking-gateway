@@ -8,9 +8,12 @@ import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
-@Service("xs2aSelectScaMethod")
+/**
+ * Asks PSU to select SCA challenge method from the list by redirecting him to the page with SCA method selection.
+ */
+@Service("xs2aAskForSelectedScaMethod")
 @RequiredArgsConstructor
-public class Xs2aSelectScaMethod extends ValidatedExecution<Xs2aContext> {
+public class Xs2aAskForSelectedScaMethod extends ValidatedExecution<Xs2aContext> {
 
     private final RuntimeService runtimeService;
     private final RedirectExecutor redirectExecutor;

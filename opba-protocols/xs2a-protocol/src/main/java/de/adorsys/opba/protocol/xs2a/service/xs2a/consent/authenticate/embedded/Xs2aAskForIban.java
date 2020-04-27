@@ -12,6 +12,11 @@ import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 
+/**
+ * Special component to return PSU back to IBAN (dedicated consent) input page after the ASPSP replies that
+ * the IBAN list is incorrect (after {@link CreateConsentErrorSink} has captured an error).
+ * Suspends the process to wait for user input.
+ */
 @Service("xs2aAskForIban")
 @RequiredArgsConstructor
 public class Xs2aAskForIban extends ValidatedExecution<Xs2aContext> {
