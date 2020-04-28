@@ -16,6 +16,10 @@ $COLOR_BLACK: #000000;
 $COLOR_LIGHT_DARK: #333333;
 $COLOR_DARK_BLUE: #0f62a4;
 
+$COLOR_DARK_BODY: #21242C;
+
+$text-muted: #687AA8; // overwrite bootstrap
+
 $primary-gradient: linear-gradient(129.54deg, #0db0e2 0%, #10317d 100%);
 $danger-gradient: linear-gradient(129.54deg, lighten($danger, 7%) 0%, $danger 100%);
 
@@ -28,6 +32,7 @@ $danger-gradient: linear-gradient(129.54deg, lighten($danger, 7%) 0%, $danger 10
   --fontFamily: #{$font-family-base};
   --fontFamilySemiBold: #{$font-family-semiBold};
   --fontFamilyBold: #{$font-family-Bold};
+  --fontFamilyMedium: #{$font-family-Medium};
 
   /* Text sizes and weights */
 
@@ -43,7 +48,7 @@ $danger-gradient: linear-gradient(129.54deg, lighten($danger, 7%) 0%, $danger 10
   --h1FontSize: 2rem;
   --h1FontWeight: bold;
 
-  --h2FontSize: 2rem;
+  --h2FontSize: 2.25rem;
   --h2FontWeight: 700;
 
   --h3FontSize: 1rem;
@@ -73,7 +78,7 @@ $danger-gradient: linear-gradient(129.54deg, lighten($danger, 7%) 0%, $danger 10
   --gradientDanger: #{$danger-gradient};
 
   /* Body */
-  --bodyBG: #f7f8fb;
+  --bodyBG: #11233A;
   --bodyFontColor: #21242c;
 
   /* Main */
@@ -136,7 +141,7 @@ $danger-gradient: linear-gradient(129.54deg, lighten($danger, 7%) 0%, $danger 10
   --backButtonBorderStyle: 1px solid #{$primary};
 
   /* Inputs */
-  --inputBG: #e5ecfe;
+  --inputBG: #E5ECF5;
   --inputBorderStyleLeft: 1px solid #a0a0a0;
   --inputBorderStyleRight: 1px solid #a0a0a0;
   --inputBorderStyleBottom: 1px solid #a0a0a0;
