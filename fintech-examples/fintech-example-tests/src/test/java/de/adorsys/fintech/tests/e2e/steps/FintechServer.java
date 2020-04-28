@@ -2,6 +2,7 @@ package de.adorsys.fintech.tests.e2e.steps;
 
 import com.tngtech.jgiven.annotation.BeforeStage;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
+import de.adorsys.fintech.tests.e2e.config.SmokeConfig;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.SandboxServers;
@@ -17,10 +18,12 @@ import org.springframework.transaction.annotation.Transactional;
 @JGivenStage
 @Slf4j
 public class FintechServer<SELF extends FintechServer<SELF>> extends SandboxServers<SELF> {
-    private static final String ASPSP_PROFILE_BASE_URI = "http://localhost:20010";
 
     @LocalServerPort
     private int serverPort;
+
+    @Autowired
+    private SmokeConfig smokeConfig;
 
     @Autowired
     private BankProfileJpaRepository profiles;
@@ -37,11 +40,11 @@ public class FintechServer<SELF extends FintechServer<SELF>> extends SandboxServ
     }
 
     public SELF enabled_embedded_sandbox_mode() {
-        return enabled_embedded_sandbox_mode(ASPSP_PROFILE_BASE_URI);
+        return enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri());
     }
 
     public SELF enabled_redirect_sandbox_mode() {
-        return enabled_redirect_sandbox_mode(ASPSP_PROFILE_BASE_URI);
+        return enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri());
     }
 
     public SELF enabled_embedded_sandbox_mode(String aspspProfileUri) {
