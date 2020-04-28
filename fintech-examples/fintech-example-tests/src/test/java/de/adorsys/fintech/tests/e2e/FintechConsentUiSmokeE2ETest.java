@@ -91,10 +91,11 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and().user_navigates_to_page(firefoxDriver)
                 .and().user_sees_account_and_list_transactions(firefoxDriver);
 
-        String id = getInfoId(firefoxDriver);
+        String userId = getInfoId(firefoxDriver);
+        String bankId = getBankInfoId(firefoxDriver);
 
         then()
-                .fintech_can_read_anton_brueckner_accounts_and_transactions(id);
+                .fintech_can_read_anton_brueckner_accounts_and_transactions(userId, bankId);
     }
 
     @Test
@@ -123,8 +124,10 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and()
                 .user_sees_account_and_list_transactions(firefoxDriver);
 
-        String id = getInfoId(firefoxDriver);
-        then().fintech_can_read_max_musterman_accounts_and_transactions(id);
+        String userId = getInfoId(firefoxDriver);
+        String bankId = getBankInfoId(firefoxDriver);
+
+        then().fintech_can_read_max_musterman_accounts_and_transactions(userId, bankId);
     }
 
     @Test
@@ -151,10 +154,11 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and()
                 .user_sees_account_and_list_transactions(firefoxDriver);
 
-        String id = getInfoId(firefoxDriver);
+        String userId = getInfoId(firefoxDriver);
+        String bankId = getBankInfoId(firefoxDriver);
 
         then()
-                .fintech_can_read_anton_brueckner_accounts_and_transactions(id);
+                .fintech_can_read_anton_brueckner_accounts_and_transactions(userId, bankId);
 
     }
 
@@ -221,9 +225,10 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and()
                 .user_sees_account_and_list_transactions(firefoxDriver);
 
-        String id = getInfoId(firefoxDriver);
+        String userId = getInfoId(firefoxDriver);
+        String bankId = getBankInfoId(firefoxDriver);
 
-        then().fintech_can_read_max_musterman_accounts_and_transactions(id);
+        then().fintech_can_read_max_musterman_accounts_and_transactions(userId, bankId);
     }
 
     @SneakyThrows
@@ -232,7 +237,15 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
         String url = firefoxDriver.getCurrentUrl();
         URI uri = new URI(url);
         String path = uri.getPath();
-        String bankId = path.substring(path.lastIndexOf('/') + 1);
-        return bankId;
+        return path.substring(path.lastIndexOf('/') + 1);
+    }
+
+    @SneakyThrows
+    private String getBankInfoId(FirefoxDriver firefoxDriver) {
+
+        String url = firefoxDriver.getCurrentUrl();
+        URI uri = new URI(url);
+        String path = uri.getPath();
+        return path.substring(path.lastIndexOf("/bank/") + 1);
     }
 }
