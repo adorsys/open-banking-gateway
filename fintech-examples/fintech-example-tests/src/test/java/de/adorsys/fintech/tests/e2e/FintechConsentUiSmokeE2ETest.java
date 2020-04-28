@@ -57,8 +57,6 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
         when().user_already_login_in_bank_profile(firefoxDriver)
                 .and()
-                .user_accepts_to_get_redirected_to_consentui(firefoxDriver)
-                .and()
                 .user_anton_brueckner_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent(firefoxDriver)
                 .and()
                 .user_anton_brueckner_in_consent_ui_reviews_transaction_consent_and_accepts(firefoxDriver)
@@ -71,7 +69,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and()
                 .user_navigates_to_page(firefoxDriver)
                 .and()
-                .sandbox_anton_brueckner_confirms_consent_information(firefoxDriver)
+                .user_confirm_login(firefoxDriver)
                 .and()
                 .user_navigates_to_page(firefoxDriver)
                 .and()
@@ -88,8 +86,10 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .user_navigates_to_page(firefoxDriver)
                 .and()
                 .user_anton_brueckner_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver)
-                .and().user_navigates_to_page(firefoxDriver)
-                .and().user_sees_account_and_list_transactions(firefoxDriver);
+                .and()
+                .user_navigates_to_page(firefoxDriver)
+                .and()
+                .user_sees_account_and_list_transactions(firefoxDriver);
 
         String userId = getInfoId(firefoxDriver);
         String bankId = getBankInfoId(firefoxDriver);
@@ -103,8 +103,6 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
         given().enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri())
                 .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
         when().user_already_login_in_bank_profile(firefoxDriver)
-                .and()
-                .user_accepts_to_get_redirected_to_consentui(firefoxDriver)
                 .and()
                 .user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(firefoxDriver)
                 .and()
@@ -136,13 +134,9 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
         when().user_already_login_in_bank_profile(firefoxDriver)
                 .and()
-                .user_accepts_to_get_redirected_to_consentui(firefoxDriver)
-                .and()
-                .user_anton_brueckner_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent(firefoxDriver)
+                .user_anton_brueckner_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(firefoxDriver)
                 .and()
                 .user_anton_brueckner_in_consent_ui_reviews_transaction_consent_and_accepts(firefoxDriver)
-                .and()
-                .user_in_consent_ui_sees_redirection_info_to_aspsp_and_accepts(firefoxDriver)
                 .and()
                 .user_anton_brueckner_in_consent_ui_provides_pin(firefoxDriver)
                 .and()

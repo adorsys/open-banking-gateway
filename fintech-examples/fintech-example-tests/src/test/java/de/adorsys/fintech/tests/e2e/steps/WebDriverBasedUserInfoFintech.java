@@ -54,6 +54,14 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
+    public SELF user_anton_brueckner_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(WebDriver driver) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
+        sendText(driver, By.id("PSU_ID"), ANTON_BRUECKNER);
+        clickOnButton(driver, By.id("ALL_PSD2"));
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
     public SELF sandbox_max_musterman_provides_sca_challenge_result(WebDriver driver) {
         waitPlusTimer(driver, timeout.getSeconds());
         sendText(driver, By.name("authCode"), "123456");
@@ -111,9 +119,9 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_anton_brueckner_in_consent_ui_provides_pin(WebDriver driver) {
-        wait(driver);
-        sendText(driver, By.xpath("//button[@type='password']"), PIN_VALUE);
-        clickOnButton(driver, By.xpath("//button[@type='submit']"));
+        waitForPageLoadAndUrlContains(driver, "authenticate");
+        sendText(driver, By.id("pin"), PIN_VALUE);
+        clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
