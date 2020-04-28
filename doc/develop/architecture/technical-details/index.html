@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Technical description - Open Banking Gateway Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Technical description";
+    var mkdocs_page_input_path = "architecture/technical-details.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Open Banking Gateway Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../getting_started/">Getting started</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../ContributionGuidelines/">Contibution Guidelines</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../roadmap/">Roadmap</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../releasenotes/">Release notes</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../version_policy/">Version policy</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../drafts/initial_requirements/">Initial Requirements</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Architecture</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../dictionary/">Dictionary</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../building_blocks/01.Application_context/">Application context</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../building_blocks/02.Component_diagrams/">Component diagrams</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Concepts</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../concepts/psu-security-concept/">PSU Security Concept</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Use cases</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../use_cases/">Use cases</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../1-loginWithFinTech/">Login with FinTech Application</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../2-searchBank/">Search bank</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../3-selectBank/">Select bank</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../4a-aisListOfAccounts/">List of Accounts</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../4b-aisListOfTransactions/">List of Transactions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5-redirectPsuToConsentAPI/">Redirect to Consent Authorization API</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5a-psuAuthEmbeddedConsent/">Authorize Consent Embedded Approach</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../5b-psuAuthRedirectConsent/">Authorize Consent Redirect Approach</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../6-consume_api/">Consume Service</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../drafts/initial_requirements/">Draft</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../initial_requirements/">Initial requirements</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Open Banking Gateway Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Technical description</li>
+    <li class="wy-breadcrumbs-aside">
+      
+        <a href="https://github.com/adorsys/open-banking-gateway/edit/master/docs/architecture/technical-details.md"
+          class="icon icon-github"> Edit on GitHub</a>
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="technical-description">Technical description</h1>
+<h2 id="layered-architecture">Layered architecture</h2>
+<p>Application uses layered architecture that is composed of:</p>
+<ol>
+<li>REST API layer (Banking, Consent, Authentication). Responsible for consuming requests from external services.</li>
+<li>Protocol Facade. Responsible for protocol selection to serve the request, protocol result processing and encryption.</li>
+<li>Protocol layer. Modular layer that contains protocol implementation. Protocol is responsible to execute actual
+requests to ASPSP.</li>
+</ol>
+<p>The following picture represents them in graphical form:
+<img alt="Technical architecture" src="../../img/technical-architecture.svg" /></p>
+<h2 id="bottom-up-layers-communication">Bottom-up layers communication</h2>
+<p>Application request-response flow uses message like pattern - on each layer resulting outcome is 
+translated to the message(dto) that is native for current layer. This diagram shows the entire
+flow (idealized) from the protocol internals to endpoint output:</p>
+<p><img alt="Result flow by layers" src="../diagrams/components/ideal-result-mappings.svg" /></p>
+<p>Such flow allows application to perform dialog between PSU, FinTech and underlying protocol.
+In the essence, everything is based on the loop of 202 response codes indicating that PSU needs to be redirected somewhere to
+input some parameters. When 202 loop ends - user is redirected back to the FinTech and FinTech can read the
+account list - the presence of account list will be indicated by response code 200. </p>
+<p><strong>Output class designation</strong></p>
+<table>
+<thead>
+<tr>
+<th>Layer (bottom-up)</th>
+<th>Output class</th>
+<th>Used for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>XS2A protocol API</td>
+<td>SuccessResult</td>
+<td>Return response from protocol containing a useful payload i.e. Account list</td>
+</tr>
+<tr>
+<td>XS2A protocol API</td>
+<td>ErrorResult</td>
+<td>Error result that should be reported by redirecting the  user somewhere</td>
+</tr>
+<tr>
+<td>XS2A protocol API</td>
+<td>ValidationErrorResult</td>
+<td>Notify that some input is required from user and user should be redirected to the page where he can input missing data</td>
+</tr>
+<tr>
+<td>XS2A protocol API</td>
+<td>ConsentAcquiredResult</td>
+<td>Notify that consent was acquired and user should be redirected somewhere</td>
+</tr>
+<tr>
+<td>XS2A protocol API</td>
+<td>AuthorizationRequiredResult</td>
+<td>Notify that consent was missing and to get new consent PSU authorization is required</td>
+</tr>
+<tr>
+<td>XS2A protocol API</td>
+<td>AuthorizationDeniedResult</td>
+<td>During consent authorization either user or 3rd party decided to deny consent</td>
+</tr>
+<tr>
+<td>Protocol facade</td>
+<td>FacadeSuccessResult</td>
+<td>Response with useful payload (i.e. users' account list)</td>
+</tr>
+<tr>
+<td>Protocol facade</td>
+<td>FacadeErrorResult</td>
+<td>Fatal error result, no redirect possible</td>
+</tr>
+<tr>
+<td>Protocol facade</td>
+<td>FacadeStartAuthorizationResult</td>
+<td>Consent missing and authorization session to perform new consent authorization was created</td>
+</tr>
+<tr>
+<td>Protocol facade</td>
+<td>FacadeRedirectResult</td>
+<td>PSU (or FinTech is required to provide PSU and redirect him) required to be redirected somewhere</td>
+</tr>
+<tr>
+<td>Protocol facade</td>
+<td>FacadeRedirectErrorResult</td>
+<td>Some error has happened, but the redirection is required to handle it</td>
+</tr>
+<tr>
+<td>API</td>
+<td>Response entity, code 200</td>
+<td>Response with useful payload</td>
+</tr>
+<tr>
+<td>API</td>
+<td>Response entity, code 202</td>
+<td>Redirection is required</td>
+</tr>
+<tr>
+<td>API</td>
+<td>Response entity, code 3xx</td>
+<td>Automatic web browser redirection</td>
+</tr>
+</tbody>
+</table>
+<p>For example, the one of the commonly observed pattern for AIS list accounts service will be:</p>
+<ol>
+<li>FinTech calls OpenBanking REST API listAccounts endpoint</li>
+<li>The request is propagated to XS2A protocol</li>
+<li>XS2A protocol deduces that consent is missing and replies with <strong>AuthorizationRequiredResult</strong> or <strong>ValidationErrorResult</strong></li>
+<li>The outcome of XS2A protocol is translated to <strong>202 accepted-redirection</strong> for consent authorization</li>
+<li>FinTech receives 202 accepted with Location header pointing where it needs to bring PSU</li>
+<li>PSU enters consent authorization UI</li>
+<li>PSU provides the required parameters </li>
+<li>Protocol responds with <strong>ValidationErrorResult</strong> to users' input</li>
+<li>User is being redirected to next parameter input page using <strong>202 accepted-redirection</strong></li>
+<li>User provides more parameters</li>
+<li>Protocol responds with <strong>ConsentAcquired</strong> or <strong>Redirect</strong> result</li>
+<li>User is being redirected back to FinTech</li>
+<li>FinTech calls OpenBanking REST API listAccounts endpoint</li>
+<li>The request is propagated to XS2A protocol</li>
+<li>XS2A protocol calls the ASPSP and gets account list, returns <strong>SuccessResult</strong></li>
+<li>Fintech receives Response entity with status code 200 and account list</li>
+</ol>
+              
+            </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+          <a href="https://github.com/adorsys/open-banking-gateway/" class="fa fa-github" style="float: left; color: #fcfcfc"> GitHub</a>
+      
+      
+      
+    </span>
+</div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
+
+</body>
+</html>
