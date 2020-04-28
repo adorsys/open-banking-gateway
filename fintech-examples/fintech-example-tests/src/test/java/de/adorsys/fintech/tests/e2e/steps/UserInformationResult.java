@@ -26,12 +26,12 @@ public class UserInformationResult extends AccountInformationResult {
     private String respContent;
 
     @SneakyThrows
-    public UserInformationResult fintech_can_read_anton_brueckner_accounts_and_transactions(String antonBruecknerId) {
+    public UserInformationResult fintech_can_read_anton_brueckner_accounts_and_transactions(String antonBruecknerId, String bankId) {
         ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
                                                          .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                          .header(SESSION_COOKIE, UUID.randomUUID().toString())
                                                          .when()
-                                                         .get(BANKPROFILE_ENDPOINT + BANK_ID_VALUE + ACCOUNT + antonBruecknerId)
+                                                         .get(BANKPROFILE_ENDPOINT + bankId + ACCOUNT + antonBruecknerId)
                                                          .then()
                                                          .statusCode(HttpStatus.OK.value())
                                                          .extract();
@@ -39,12 +39,12 @@ public class UserInformationResult extends AccountInformationResult {
         return (UserInformationResult) self();
     }
 
-    public UserInformationResult fintech_can_read_max_musterman_accounts_and_transactions(String maxMustermanId) {
+    public UserInformationResult fintech_can_read_max_musterman_accounts_and_transactions(String maxMustermanId, String bankId) {
         ExtractableResponse<Response> response = withDefaultHeaders(MAX_MUSTERMAN)
                                                          .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                          .header(SESSION_COOKIE, UUID.randomUUID().toString())
                                                          .when()
-                                                         .get(BANKPROFILE_ENDPOINT + BANK_ID_VALUE + ACCOUNT + maxMustermanId)
+                                                         .get(BANKPROFILE_ENDPOINT + bankId + ACCOUNT + maxMustermanId)
                                                          .then()
                                                          .statusCode(HttpStatus.OK.value())
                                                          .extract();
