@@ -19,6 +19,12 @@ describe('LoginComponent', () => {
   let route;
   let authServiceSpy;
   let authService: AuthService;
+  let headersOpt = new HttpHeaders({ 'Location': 'httpw://localhost:9876/?id=77168991' });
+  let response = new HttpResponse({ body: { xsrfToken: 'tokenHere' }, headers: headersOpt, status: 200, statusText: 'geht' });
+  let form;
+  const usernameInput = 'alex';
+  const passwordInput = '1234';
+
 
   beforeEach(async(() => {
     route = new MockActivatedRoute();
@@ -34,7 +40,7 @@ describe('LoginComponent', () => {
         { provide: ActivatedRoute, useValue: route }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -42,6 +48,7 @@ describe('LoginComponent', () => {
     authService = fixture.debugElement.injector.get(AuthService);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    form = component.loginForm;
   });
 
   it('should create', () => {
@@ -49,44 +56,33 @@ describe('LoginComponent', () => {
   });
 
   it('should be true if the form is invalid', () => {
-    let headersOpt = new HttpHeaders({ 'Location': 'httpw://localhost:9876/?id=77168991' });
-    let response = new HttpResponse({ body: { xsrfToken: 'tokenHere' }, headers: headersOpt, status: 200, statusText: 'geht' });
-
     authServiceSpy = spyOn(authService, 'userLoginForConsent').and
       .returnValue( of(response) );
-    const form = component.loginForm;
-    form.controls['login'].setValue('alex');
+
+    form.controls['login'].setValue(usernameInput);
     form.controls['password'].setValue('');
     component.onSubmit();
     fixture.detectChanges();
 
     expect(component.loginForm.invalid).toBe(true);
   });
-
   it('should call login service', () => {
     authServiceSpy = spyOn(authService, 'userLoginForConsent').and.callThrough();
-    const form = component.loginForm;
-    console.log(route);
+
     let authID = route.snapshot.parent.params.authId;
     let redirectCode = 'redirectCode654';
-    form.controls['login'].setValue('alex');
-    form.controls['password'].setValue('1234');
+    form.controls['login'].setValue(usernameInput);
+    form.controls['password'].setValue(passwordInput);
     component.onSubmit();
     fixture.detectChanges();
 
-    expect(authServiceSpy).toHaveBeenCalledWith(authID, redirectCode, { login: 'alex', password: '1234' });
+    expect(authServiceSpy).toHaveBeenCalledWith(authID, redirectCode, { login: usernameInput, password: passwordInput });
   });
   it('should be invalid if password is not set', () => {
-    fixture.detectChanges();
-    let headersOpt = new HttpHeaders({ 'Location': 'httpw://localhost:9876/?id=77168991' });
-    let response = new HttpResponse({ body: { xsrfToken: 'tokenHere' }, headers: headersOpt, status: 200, statusText: 'geht' });
-
-
     authServiceSpy = spyOn(authService, 'userLoginForConsent').and
       .returnValue( of(response) );
 
-    const form = component.loginForm;
-    form.controls['login'].setValue('alex');
+    form.controls['login'].setValue(usernameInput);
     form.controls['password'].setValue('');
     component.onSubmit();
     fixture.detectChanges();
@@ -94,13 +90,10 @@ describe('LoginComponent', () => {
     expect(component.loginForm.invalid).toBe(true);
   });
   it('should be invalid if username is not set', () => {
-    fixture.detectChanges();
-    let headersOpt = new HttpHeaders({ 'Location': 'httpw://localhost:9876/?id=77168991' });
-    let response = new HttpResponse({ body: { xsrfToken: 'tokenHere' }, headers: headersOpt, status: 200, statusText: 'geht' });
     authServiceSpy = spyOn(authService, 'userLoginForConsent').and.returnValue(of(response));
-    const form = component.loginForm;
+
     form.controls['login'].setValue('');
-    form.controls['password'].setValue('asdasf');
+    form.controls['password'].setValue(passwordInput);
     component.onSubmit();
     fixture.detectChanges();
 
