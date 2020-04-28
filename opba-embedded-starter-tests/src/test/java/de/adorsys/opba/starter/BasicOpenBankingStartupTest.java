@@ -1,11 +1,14 @@
 package de.adorsys.opba.starter;
 
+import de.adorsys.opba.api.security.service.RequestSigningService;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aListAccountsEntrypoint;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aSandboxListTransactionsEntrypoint;
+import de.adorsys.opba.starter.config.RequestSigningTestConfig;
 import io.restassured.RestAssured;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -33,7 +36,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @ActiveProfiles("test")
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-@SpringBootTest(classes = OpenBankingEmbeddedApplication.class, webEnvironment = RANDOM_PORT)
+@SpringBootTest(classes = {OpenBankingEmbeddedApplication.class, RequestSigningTestConfig.class}, webEnvironment = RANDOM_PORT)
 class BasicOpenBankingStartupTest {
 
     @SpyBean
@@ -45,6 +48,9 @@ class BasicOpenBankingStartupTest {
     @LocalServerPort
     private int serverPort;
 
+    @Autowired
+    private RequestSigningService requestSigningService;
+
     @BeforeEach
     void setupRestAssured() {
         RestAssured.baseURI = "http://localhost:" + serverPort;
@@ -55,7 +61,7 @@ class BasicOpenBankingStartupTest {
     @Test
     @SneakyThrows
     void testXs2aProtocolIsWiredForSandboxAccountList() {
-        withDefaultHeaders(ANTON_BRUECKNER)
+        withDefaultHeaders(ANTON_BRUECKNER, requestSigningService)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
             .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
@@ -68,7 +74,7 @@ class BasicOpenBankingStartupTest {
     @Test
     @SneakyThrows
     void testXs2aProtocolIsWiredForSandboxTransactionList() {
-        withDefaultHeaders(ANTON_BRUECKNER)
+        withDefaultHeaders(ANTON_BRUECKNER, requestSigningService)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
             .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, "ACCOUNT-1")
