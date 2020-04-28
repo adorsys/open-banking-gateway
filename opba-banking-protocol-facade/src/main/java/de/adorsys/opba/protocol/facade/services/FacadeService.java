@@ -38,7 +38,7 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
     }
 
     protected ServiceContext<I> contextFor(I request) {
-        return provider.provide(request);
+        return provider.provide(request, action);
     }
 
     protected A selectAndSetProtocolTo(ServiceContext<I> ctx) {
