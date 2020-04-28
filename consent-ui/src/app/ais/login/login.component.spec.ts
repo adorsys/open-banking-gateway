@@ -40,7 +40,7 @@ describe('LoginComponent', () => {
         { provide: ActivatedRoute, useValue: route }
       ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {
