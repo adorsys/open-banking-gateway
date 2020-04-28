@@ -4,11 +4,13 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
+import de.adorsys.opba.api.security.service.RequestSigningService;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.awaitility.Durations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -41,6 +43,8 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     @ExpectedScenarioState
     private WireMockServer wireMock;
 
+    @Autowired
+    private RequestSigningService requestSigningService;
 
     public SELF open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test() {
         LoggedRequest consentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
@@ -50,7 +54,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
         ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
                 .given()
-                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie), requestSigningService)
                 .when()
                     .get(redirectOkUri)
                 .then()
@@ -70,7 +74,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         this.redirectNotOkUri = consentInitiateRequest.getHeader(TPP_NOK_REDIRECT_URI);
         ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
                     .given()
-                        .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
+                        .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie), requestSigningService)
                     .when()
                         .get(redirectNotOkUri)
                     .then()
@@ -83,7 +87,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     }
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner_ip_address_compute() {
-        ExtractableResponse<Response> response = withSignedHeadersWithoutIpAddress(ANTON_BRUECKNER)
+        ExtractableResponse<Response> response = withSignedHeadersWithoutIpAddress(ANTON_BRUECKNER, requestSigningService)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                     .header(COMPUTE_PSU_IP_ADDRESS, true)
                 .when()
@@ -98,7 +102,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     }
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner_no_ip_address() {
-        ExtractableResponse<Response> response = withSignedHeadersWithoutIpAddress(ANTON_BRUECKNER)
+        ExtractableResponse<Response> response = withSignedHeadersWithoutIpAddress(ANTON_BRUECKNER, requestSigningService)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                     .header(COMPUTE_PSU_IP_ADDRESS, false)
                 .when()
