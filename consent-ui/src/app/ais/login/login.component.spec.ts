@@ -1,19 +1,12 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-
 import {ReactiveFormsModule} from '@angular/forms';
 import {LoginComponent} from './login.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ActivatedRoute, ActivatedRouteSnapshot, Params} from '@angular/router';
-import {StubUtilTests} from '../common/stub-util-tests';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {Observable, of} from 'rxjs';
-import {HttpEventType, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {HttpHeaders, HttpResponse} from '@angular/common/http';
 import {AuthService} from '../../common/auth.service';
-import {LoginResponse} from '../../api-auth';
-import {ApiHeaders} from '../../api/api.headers';
-
-
-
 
 export class MockActivatedRoute {
   snapshot: ActivatedRouteSnapshot;
@@ -26,12 +19,6 @@ describe('LoginComponent', () => {
   let route;
   let authServiceSpy;
   let authService: AuthService;
-  let resHeaders: HttpHeaders;
-  let responseObj: HttpResponse<LoginResponse>;
-  let res: string;
-  let redirectUrl = '';
-  let responseOptions: any;
-
 
   beforeEach(async(() => {
     route = new MockActivatedRoute();
@@ -77,8 +64,6 @@ describe('LoginComponent', () => {
   });
 
   it('should call login service', () => {
-
-
     authServiceSpy = spyOn(authService, 'userLoginForConsent').and.callThrough();
     const form = component.loginForm;
     console.log(route);
