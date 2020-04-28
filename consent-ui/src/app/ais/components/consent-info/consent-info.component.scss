@@ -1,0 +1,8 @@
+@import 'src/assets/themes/variables';
+@import 'src/assets/themes/fonts';
+
+$info-color: #AABCD3;
+
+.text-secondary{
+  color: $info-color !important;
+}
