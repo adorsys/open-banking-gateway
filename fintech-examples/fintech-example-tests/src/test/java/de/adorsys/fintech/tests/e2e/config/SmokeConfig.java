@@ -8,14 +8,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.time.LocalDate;
-
 @Configuration
 public class SmokeConfig {
-
-    public static final LocalDate DATE_FROM = LocalDate.parse("2018-01-01");
-    public static final LocalDate DATE_TO = LocalDate.parse("2020-09-30");
-    public static final String BOTH_BOOKING = "BOTH";
 
     @Getter
     @Value("${test.fintech.uri}")
