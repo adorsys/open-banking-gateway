@@ -20,15 +20,19 @@
           </p>
           <div class="mb-5">
             <div *ngFor="let access of accountAccesses; let i = index" class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                [formControl]="selectedAccess"
-                [id]="access.id"
-                [checked]="selectedAccess.value.id === access.id"
-                (change)="handleMethodSelectedEvent(access)"
-              />
-              <label class="form-check-label ml-4" [for]="access.id">{{ access.message }}</label>
+
+              <label class="form-check-label" [for]="access.id">{{ access.message }}
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  [formControl]="selectedAccess"
+                  [id]="access.id"
+                  [checked]="selectedAccess.value.id === access.id"
+                  (change)="handleMethodSelectedEvent(access)"
+                  [ngClass]="{selected: selectedAccess.value.id === access.id}"
+                />
+                <span class="radioSelector"></span>
+              </label>
             </div>
           </div>
         </section>

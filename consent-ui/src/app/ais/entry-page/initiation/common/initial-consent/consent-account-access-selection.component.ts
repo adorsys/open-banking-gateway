@@ -67,6 +67,7 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
 
   handleMethodSelectedEvent(access: Access) {
     this.selectedAccess.setValue(access);
+    console.log(this.selectedAccess);
   }
 
   submitButtonMessage() {
