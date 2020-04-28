@@ -161,7 +161,19 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
     @Test
     public void testUserAfterLoginWantsToLogout(FirefoxDriver firefoxDriver) {
         given().fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
-        when().user_already_login_in_bank_profile(firefoxDriver)
+        when().user_opens_fintechui_login_page(firefoxDriver)
+                .and()
+                .user_login_with_its_credentials(firefoxDriver)
+                .and()
+                .user_confirm_login(firefoxDriver)
+                .and()
+                .user_navigates_to_page(firefoxDriver)
+                .and()
+                .user_looks_for_a_bank_in_the_bank_search_input_place(firefoxDriver)
+                .and()
+                .user_wait_for_the_result_in_bank_search(firefoxDriver)
+                .and()
+                .user_navigates_to_page(firefoxDriver)
                 .and()
                 .user_back_to_bank_search(firefoxDriver)
                 .and()
@@ -178,8 +190,6 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
         given().enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri())
                 .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
         when().user_already_login_in_bank_profile(firefoxDriver)
-                .and()
-                .user_accepts_to_get_redirected_to_consentui(firefoxDriver)
                 .and()
                 .user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent(firefoxDriver)
                 .and()

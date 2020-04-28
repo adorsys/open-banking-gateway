@@ -24,6 +24,7 @@ import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.USERNAME;
 public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFintech<SELF>> extends WebDriverBasedAccountInformation<SELF> {
 
     static final String FINTECH_URI = "https://obg-dev-fintechui.cloud.adorsys.de";
+    static String username = USERNAME + RandomString.make().toLowerCase();;
 
     @Autowired
     @Qualifier(TEST_RETRY_OPS)
@@ -138,7 +139,17 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
                 .and()
                 .user_navigates_to_page(firefoxDriver)
                 .and()
-                .user_select_account_button(firefoxDriver);
+                .user_select_account_button(firefoxDriver)
+                .and()
+                .user_accepts_to_get_redirected_to_consentui(firefoxDriver)
+                .and()
+                .user_click_on_register_button(firefoxDriver)
+                .and()
+                .user_register_on_consent(firefoxDriver)
+                .and()
+                .user_navigates_to_page(firefoxDriver)
+                .and()
+                .user_login_in_consent(firefoxDriver);
         return self();
     }
 
@@ -148,14 +159,13 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-
     public SELF user_navigates_to_page(WebDriver driver) {
         wait(driver);
         return self();
     }
 
     public SELF user_looks_for_a_bank_in_the_bank_search_input_place(WebDriver driver) {
-        wait(driver);
+        waitPlusTimer(driver, timeout.getSeconds());
         sendTestInSearchInput(driver, By.name("searchValue"), " xs2a");
         return self();
     }
@@ -186,6 +196,32 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
 
     public SELF user_select_account_button(WebDriver webDriver) {
         performClick(webDriver, By.linkText("Accounts"));
+        return self();
+    }
+
+    public SELF user_click_on_register_button(WebDriver webDriver) {
+        performClick(webDriver, By.id("register"));
+        return self();
+    }
+
+    public SELF user_click_on_login_button(WebDriver webDriver) {
+        performClick(webDriver, By.id("login"));
+        return self();
+    }
+
+    public SELF user_login_in_consent(WebDriver driver) {
+        waitForPageLoadAndUrlContains(driver, "/login");
+        sendText(driver, By.id("username"), username);
+        sendText(driver, By.id("password"), "12345");
+        clickOnButton(driver, By.xpath("//button[@type='submit']"));
+        return self();
+    }
+
+    public SELF user_register_on_consent(WebDriver driver) {
+        sendText(driver, By.id("username"), username);
+        sendText(driver, By.id("password"), "12345");
+        sendText(driver, By.id("confirmPassword"), "12345");
+        clickOnButton(driver, By.xpath("//button[@type='submit']"));
         return self();
     }
 
