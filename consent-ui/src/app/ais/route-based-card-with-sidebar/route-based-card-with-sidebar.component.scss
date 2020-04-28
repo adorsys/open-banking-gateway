@@ -1,3 +1,4 @@
+@import 'src/assets/themes/variables';
 .card-body {
   padding: 3rem;
 }
@@ -5,10 +6,10 @@
 @media (min-width: 768px) {
   .card {
     border-radius: 16px;
-    color: #2c2e2f;
+    color: $COLOR_DARK_BODY;
 
     &-frame {
-      margin: 4rem;
+      margin: 4rem auto;
       width: 761px;
       height: 100%;
     }
@@ -20,14 +21,13 @@
     }
   }
 
-  .sidebar {
-    min-width: 280px;
-    max-width: 280px;
-    height: 100vh;
-    background-color: white;
 
+  .info-block{
+    color: white;
+    opacity: 0.6;
+  }
     .container {
       padding: 4rem 20px;
     }
-  }
+
 }

@@ -29,8 +29,9 @@ body {
 }
 
 .logo {
-  width: 200px;
+  width: 163px;
   height: auto;
+  margin-bottom: 2.25rem;
 }
 
 .header {
@@ -98,6 +99,48 @@ a {
   background-color: $COLOR_WHITE;
   border: none;
 }
+.form-check{
+  padding-left: 0;
+
+  label{
+    font-family: var(--fontFamilyMedium);
+    color: #21242C;
+    font-size: 1.125rem;
+    position: relative;
+    padding-left: 2.625rem;
+
+    .radioSelector{
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: white;
+      border: 1px solid $text-muted;
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-60%);
+    }
+    input{
+      opacity: 0;
+      position: absolute;
+
+      &.selected ~ .radioSelector{
+        &:after {
+          content: '';
+          width: 9px;
+          height: 9px;
+          border-radius: 50%;
+          background-color: $text-muted;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate( -46%, -54% );
+        }
+      }
+    }
+  }
+}
 
 @media (max-width: 767px) {
   .bg-sm-light {
@@ -150,7 +193,7 @@ h3 {
 }
 
 section {
-  margin-bottom: 3rem;
+  margin-bottom: 2.625rem;
 }
 
 .pointer {
@@ -179,6 +222,9 @@ section {
 .btn {
   white-space: nowrap;
   border-radius: var(--buttonBorderRadius);
+  font-size: 1.25rem;
+  padding: 0.8rem 0.75rem 0.4rem 0.75rem;
+  border-radius: 5px;
 
   &-primary {
     color: var(--buttonTextColor);
@@ -256,6 +302,7 @@ section {
   background: var(--inputBG);
   outline: none;
   border: none;
+  border-radius: 0;
 }
 
 .flex-container {
@@ -277,6 +324,9 @@ section {
     width: 5.75rem;
     height: 5.75rem;
   }
+}
+label{
+  font-size: 1rem;
 }
 
 @media screen and (max-width: 768px) {
