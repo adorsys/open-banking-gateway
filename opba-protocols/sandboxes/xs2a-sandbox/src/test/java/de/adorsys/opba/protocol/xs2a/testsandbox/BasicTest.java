@@ -54,6 +54,7 @@ class BasicTest extends BaseMockitoTest {
 
     /**
      * Not really a test, but just launches entire sandbox for you.
+     * If run with intellij 2018.3 please set VM option to -DSTART_SANDBOX=true and environment-variable ENABLE_HEAVY_TESTS=true
      */
     @Test
     @SneakyThrows

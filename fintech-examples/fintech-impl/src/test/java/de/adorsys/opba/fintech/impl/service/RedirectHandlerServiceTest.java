@@ -1,6 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
+import de.adorsys.opba.fintech.impl.controller.OkOrNotOk;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
@@ -105,7 +106,7 @@ class RedirectHandlerServiceTest {
         when(sessionEntity.getAuthId()).thenReturn(AUTH_ID_VALUE);
 
         // when
-        ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE);
+        ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE, OkOrNotOk.OK);
 
         // then
         verify(authorizeService, times(1)).getSession();
@@ -119,10 +120,29 @@ class RedirectHandlerServiceTest {
     @Test
     void doRedirect_redirectCodeIsEmpty() {
         // when
-        ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE);
+        when(authorizeService.modifySessionEntityAndCreateNewAuthHeader(any(), any(), any(), any(), any()))
+                .thenReturn(new HttpHeaders());
+        ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE, OkOrNotOk.OK);
 
         // then
-        verify(authorizeService, times(0)).getSession();
+        verify(authorizeService).getSession();
+        verify(authorizeService, times(0)).updateUserSession(sessionEntity);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);
+        assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
+        assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(EXCEPTION_URL));
+        assertThat(responseEntity.getBody()).isNull();
+    }
+
+    @Test
+    void doRedirect_notOk() {
+        // when
+        when(authorizeService.modifySessionEntityAndCreateNewAuthHeader(any(), any(), any(), any(), any()))
+                .thenReturn(new HttpHeaders());
+        ResponseEntity responseEntity = redirectHandlerService.doRedirect(null, REDIRECT_CODE_VALUE, OkOrNotOk.NOT_OK);
+
+        // then
+        verify(authorizeService).getSession();
         verify(authorizeService, times(0)).updateUserSession(sessionEntity);
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);
@@ -133,11 +153,14 @@ class RedirectHandlerServiceTest {
 
     @Test
     void doRedirect_redirectCodeIsWrong() {
+        when(authorizeService.modifySessionEntityAndCreateNewAuthHeader(any(), any(), any(), any(), any()))
+                .thenReturn(new HttpHeaders());
+
         // given
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.empty());
 
         // when
-        ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE);
+        ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE, OkOrNotOk.OK);
 
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);

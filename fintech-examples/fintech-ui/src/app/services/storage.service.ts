@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {DocumentCookieService} from './document-cookie.service';
+import {toLocaleString} from '../models/consts';
 
 @Injectable({
   providedIn: 'root'
@@ -52,7 +53,15 @@ export class StorageService {
   public setMaxAge(maxAge: number): void {
     const timestamp = new Date().getTime() + maxAge * 1000;
     localStorage.setItem(Session.MAX_VALID_UNTIL, '' + timestamp);
-    console.log('set max age ' + maxAge + ' till ' + new Date(timestamp).toLocaleString());
+    console.log('set max age ' + maxAge + ' till ' + toLocaleString(new Date(timestamp)));
+  }
+
+  public setRedirectCode(redirectCode: string): void {
+    localStorage.setItem(Session.REDIRECT_CODE, redirectCode);
+  }
+
+  public getRedirectCode(): string {
+    return localStorage.getItem(Session.REDIRECT_CODE);
   }
 
   public getValidUntilDate(): Date {
@@ -60,8 +69,10 @@ export class StorageService {
     if (validUntilTimestamp === undefined || validUntilTimestamp === null) {
       return null;
     }
-    const date =  new Date(parseInt(validUntilTimestamp, 10));
-    if (date.toLocaleString() === 'Invalid Date') {
+    const date = new Date(parseInt(validUntilTimestamp, 0));
+    if (toLocaleString(date) === 'Invalid Date') {
+      console.log('HELLO VALENTYN, THIS IS WEIRED: ' + validUntilTimestamp + ' results in Invalid Date');
+
       return null;
     }
     return date;
@@ -76,12 +87,15 @@ export class StorageService {
     const validUntil = validUntilDate.getTime();
     const timestamp = new Date().getTime();
     if (timestamp > validUntil) {
-//      console.log('valid until was ' + validUntilDate.toLocaleString() +
-//      ' now is ' + new Date().toLocaleString() + ', so isMaxValid = false');
+      console.log('valid until was ' + toLocaleString(validUntilDate) + ' now is '
+        + toLocaleString(new Date()) + ', so isMaxValid = false');
       return false;
     }
-//    console.log('valid until was ' + validUntilDate.toLocaleString() +
-//    ' now is ' + new Date().toLocaleString() + ', so isMaxValid = true');
+    // console.log('valid until was ' + tLocaleString(validUntilDate) + ' now is '
+    // + tLocaleString(new Date()) + ', so isMaxValid = true');
+
+    //    console.log('valid until was ' + validUntilDate.toLocaleString() +
+    //    ' now is ' + new Date().toLocaleString() + ', so isMaxValid = true');
     return true;
   }
 
@@ -94,7 +108,7 @@ export class StorageService {
     if (active === undefined || active === null) {
       return false;
     }
-    return parseInt(active, 10) === 1;
+    return parseInt(active, 0) === 1;
   }
 
   public clearStorage() {
@@ -116,5 +130,6 @@ enum Session {
   COOKIE_NAME_SESSION = 'SESSION-COOKIE',
   AUTH_ID = 'AUTH_ID',
   MAX_VALID_UNTIL = 'MAX_VALID_UNTIL_TIMESTAMP',
-  REDIRECT_ACTIVE = 'REDIRECT_ACTIVE'
+  REDIRECT_ACTIVE = 'REDIRECT_ACTIVE',
+  REDIRECT_CODE = 'REDIRECT_CODE'
 }

@@ -58,19 +58,10 @@ services:
     environment:
       - TPP_URL=http://open-banking-gateway:8085
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/open_banking?currentSchema=fintech
-      - SPRING_JPA_DDL-AUTO=validate
-
-      - SERVER_CONTROLLER_SESSIONCOOKIE_SECURE=false
-      - SERVER_CONTROLLER_SESSIONCOOKIE_MAXAGE=200
-      - SERVER_CONTROLLER_SESSIONCOOKIE_HTTPONLY=false
-      - SERVER_CONTROLLER_SESSIONCOOKIE_PATH=/
-
-      - MOCK_TPPAIS_LISTTRANSACTIONS=false
-      - MOCK_TPPAIS_LISTACCOUNTS=false
 
       - FINTECH-UI_REDIRECT-URL=http://localhost:24200/redirect-after-consent?redirectCode={redirectCode}
       - FINTECH-UI_UNAUTHORIZED-URL=http://localhost:24200/
-      - FINTECH-UI_EXCEPTION-URL=http://localhost:24200/redirect-after-consent-denied
+      - FINTECH-UI_EXCEPTION-URL=http://localhost:24200/redirect-after-consent-denied?redirectCode={redirectCode}
 
     build: fintech-examples/fintech-server
     ports:

@@ -41,10 +41,11 @@ export class ListAccountsComponent implements OnInit {
           const location = encodeURIComponent(response.headers.get(HeaderConfig.HEADER_FIELD_LOCATION));
           this.storageService.setAuthId(response.headers.get(HeaderConfig.HEADER_FIELD_AUTH_ID));
           this.storageService.setXsrfToken(response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN));
+          this.storageService.setRedirectCode(response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE));
           this.storageService.setRedirectActive(true);
           const r = new RedirectStruct();
           r.okUrl = location;
-          r.cancelUrl = this.router.url.replace('/account', ''); // TODO this is wrong, server has to be called to get new sessionCookie
+          r.cancelUrl = 'this-url-must-be-known-by-server';
           this.router.navigate(['redirect', JSON.stringify(r)], { relativeTo: this.route });
           break;
         case 200:
