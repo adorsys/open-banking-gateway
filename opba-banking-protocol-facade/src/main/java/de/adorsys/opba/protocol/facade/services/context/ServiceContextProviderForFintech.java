@@ -9,6 +9,7 @@ import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
@@ -46,14 +47,14 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     @Override
     @Transactional
     @SneakyThrows
-    public <T extends FacadeServiceableGetter> ServiceContext<T> provide(T request) {
+    public <T extends FacadeServiceableGetter> ServiceContext<T> provide(T request, ProtocolAction protocolAction) {
         if (null == request.getFacadeServiceable()) {
             throw new IllegalArgumentException("No serviceable body");
         }
         AuthSession authSession = extractAndValidateAuthSession(request);
         ServiceSession session = extractOrCreateServiceSession(request, authSession);
         return ServiceContext.<T>builder()
-                .requestScoped(getRequestScoped(request, session, authSession))
+                .requestScoped(getRequestScoped(request, session, authSession, protocolAction))
                 .serviceSessionId(session.getId())
                 .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
                 .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
@@ -137,13 +138,21 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     @Nullable
-    private <T extends FacadeServiceableGetter> RequestScoped getRequestScoped(T request, ServiceSession session, AuthSession authSession) {
+    private <T extends FacadeServiceableGetter> RequestScoped getRequestScoped(
+            T request,
+            ServiceSession session,
+            AuthSession authSession,
+            ProtocolAction protocolAction) {
         return null == request.getFacadeServiceable().getAuthorizationKey()
-                ? fintechFacingSecretKeyBasedEncryption(request, session)
-                : psuCookieBasedKeyEncryption(request, authSession);
+                ? fintechFacingSecretKeyBasedEncryption(request, session, protocolAction)
+                : psuCookieBasedKeyEncryption(request, authSession, protocolAction);
     }
 
-    private <T extends FacadeServiceableGetter> RequestScoped psuCookieBasedKeyEncryption(T request, AuthSession session) {
+    private <T extends FacadeServiceableGetter> RequestScoped psuCookieBasedKeyEncryption(
+            T request,
+            AuthSession session,
+            ProtocolAction protocolAction
+    ) {
         if (null == session) {
             throw new IllegalArgumentException("Missing authorization session");
         }
@@ -151,14 +160,19 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         return provider.registerForPsuSession(
                 session,
                 consentAuthorizationEncryptionServiceProvider,
-                encryptionKeySerde.fromString(request.getFacadeServiceable().getAuthorizationKey())
+                encryptionKeySerde.fromString(request.getFacadeServiceable().getAuthorizationKey()),
+                protocolAction
         );
     }
 
     /**
      * To be consumed by {@link de.adorsys.opba.protocol.facade.services.NewAuthSessionHandler} if new auth session started.
      */
-    private <T extends FacadeServiceableGetter> RequestScoped fintechFacingSecretKeyBasedEncryption(T request, ServiceSession session) {
+    private <T extends FacadeServiceableGetter> RequestScoped fintechFacingSecretKeyBasedEncryption(
+            T request,
+            ServiceSession session,
+            ProtocolAction protocolAction
+    ) {
         BankProfile profile = profileJpaRepository.findByBankUuid(request.getFacadeServiceable().getBankId())
                 .orElseThrow(() -> new IllegalArgumentException("No bank profile for bank: " + request.getFacadeServiceable().getBankId()));
 
@@ -173,7 +187,8 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
                 session,
                 consentAuthorizationEncryptionServiceProvider,
                 consentAuthorizationEncryptionServiceProvider.generateKey(),
-                () -> request.getFacadeServiceable().getSessionPassword().toCharArray()
+                () -> request.getFacadeServiceable().getSessionPassword().toCharArray(),
+                protocolAction
         );
     }
 
