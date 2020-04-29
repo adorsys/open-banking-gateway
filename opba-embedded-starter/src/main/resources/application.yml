@@ -73,41 +73,13 @@ api:
     path: /
     same-site: Lax
 
-protocol:
-  xs2a:
-    urls:
-      redirect:
-        to-aspsp: ${protocol.xs2a.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
-        consent-accounts:
-          ok:  ${protocol.xs2a.urls.embedded-ui-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
-          nok: ${protocol.xs2a.urls.embedded-ui-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
-          result: ${protocol.xs2a.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
-        parameters:
-          max-array-size: 32
-          provide-more: ${protocol.xs2a.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
-          provide-psu-password: ${protocol.xs2a.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/authenticate?wrong=#{context.getWrongAuthCredentials()}
-          select-sca-method: ${protocol.xs2a.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
-          report-sca-result: ${protocol.xs2a.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/sca-result?wrong=#{context.getWrongAuthCredentials()}
-          provide-psu-iban: ${protocol.xs2a.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/entry-consent-transactions/dedicated-account-access?wrong=#{context.getWrongAuthCredentials()}
-      gateway-base-url: http://localhost:8085
-      embedded-ui-base-url: http://localhost:4200
-    expirable:
-      expire-after-write: PT600S
-    aspspmessages:
-      invalid-credentials: PSU_CREDENTIALS_INVALID
-      invalid-consent: FORMAT_ERROR
-    pkcs12:
-      keystore: sample-qwac.keystore
-      password: password
-    flowable:
-      process-definition-location-prefix: classpath*:/processes/**/
-
 facade:
   urls:
+    embedded-ui-base-url: http://localhost:4200
     redirect:
       # Redirection URL for consent association
       consent-login:
-        page: ${protocol.embedded-ui-base-url}/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
+        page: ${facade.urls.embedded-ui-base-url}/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
         password:
           byte-size: 8
     # Consent authorization cookie key path
@@ -135,3 +107,32 @@ facade:
         cipher-algo: AES/GCM/NoPadding
         iv-size: 12
         len: 128
+
+protocol:
+  xs2a:
+    urls:
+      redirect:
+        to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
+        consent-accounts:
+          ok:  ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
+          result: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+        parameters:
+          max-array-size: 32
+          provide-more: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+          provide-psu-password: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/authenticate?wrong=#{context.getWrongAuthCredentials()}
+          select-sca-method: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
+          report-sca-result: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/sca-result?wrong=#{context.getWrongAuthCredentials()}
+          provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/entry-consent-transactions/dedicated-account-access?wrong=#{context.getWrongAuthCredentials()}
+    expirable:
+      expire-after-write: PT600S
+    aspspmessages:
+      invalid-credentials: PSU_CREDENTIALS_INVALID
+      invalid-consent: FORMAT_ERROR
+    pkcs12:
+      keystore: sample-qwac.keystore
+      password: password
+
+# Flowable comes with XS2A protocol currently
+flowable:
+  process-definition-location-prefix: classpath*:/processes/**/

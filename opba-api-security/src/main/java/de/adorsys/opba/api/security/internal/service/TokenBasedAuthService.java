@@ -1,11 +1,11 @@
-package de.adorsys.opba.api.security.service;
+package de.adorsys.opba.api.security.internal.service;
 
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import de.adorsys.opba.api.security.config.TppTokenProperties;
+import de.adorsys.opba.api.security.internal.config.TppTokenProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;

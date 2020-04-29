@@ -1,4 +1,4 @@
-package de.adorsys.opba.api.security.domain;
+package de.adorsys.opba.api.security.external.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;

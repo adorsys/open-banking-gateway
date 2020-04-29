@@ -1,7 +1,7 @@
 package de.adorsys.opba.consentapi.config;
 
-import de.adorsys.opba.api.security.EnableTokenBasedApiSecurity;
-import de.adorsys.opba.api.security.service.TokenBasedAuthService;
+import de.adorsys.opba.api.security.internal.EnableTokenBasedApiSecurity;
+import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

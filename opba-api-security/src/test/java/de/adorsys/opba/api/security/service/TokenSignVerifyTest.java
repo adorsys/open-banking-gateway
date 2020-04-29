@@ -2,7 +2,8 @@ package de.adorsys.opba.api.security.service;
 
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.JWSVerifier;
-import de.adorsys.opba.api.security.EnableTokenBasedApiSecurity;
+import de.adorsys.opba.api.security.internal.EnableTokenBasedApiSecurity;
+import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;

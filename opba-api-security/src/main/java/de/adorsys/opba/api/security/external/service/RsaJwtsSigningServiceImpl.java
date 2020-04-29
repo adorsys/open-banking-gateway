@@ -1,7 +1,6 @@
-package de.adorsys.opba.api.security.service.impl;
+package de.adorsys.opba.api.security.external.service;
 
-import de.adorsys.opba.api.security.domain.DataToSign;
-import de.adorsys.opba.api.security.service.RequestSigningService;
+import de.adorsys.opba.api.security.external.domain.DataToSign;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
