@@ -22,9 +22,6 @@ describe('LoginComponent', () => {
   let headersOpt = new HttpHeaders({ 'Location': 'httpw://localhost:9876/?id=77168991' });
   let response = new HttpResponse({ body: { xsrfToken: 'tokenHere' }, headers: headersOpt, status: 200, statusText: 'geht' });
   let form;
-  const usernameInput = 'alex';
-  const passwordInput = '1234';
-
 
   beforeEach(async(() => {
     route = new MockActivatedRoute();
@@ -59,7 +56,7 @@ describe('LoginComponent', () => {
     authServiceSpy = spyOn(authService, 'userLoginForConsent').and
       .returnValue( of(response) );
 
-    form.controls['login'].setValue(usernameInput);
+    form.controls['login'].setValue('alex');
     form.controls['password'].setValue('');
     component.onSubmit();
     fixture.detectChanges();
@@ -71,18 +68,18 @@ describe('LoginComponent', () => {
 
     let authID = route.snapshot.parent.params.authId;
     let redirectCode = 'redirectCode654';
-    form.controls['login'].setValue(usernameInput);
-    form.controls['password'].setValue(passwordInput);
+    form.controls['login'].setValue('alex');
+    form.controls['password'].setValue('1234');
     component.onSubmit();
     fixture.detectChanges();
 
-    expect(authServiceSpy).toHaveBeenCalledWith(authID, redirectCode, { login: usernameInput, password: passwordInput });
+    expect(authServiceSpy).toHaveBeenCalledWith(authID, redirectCode, { login: 'alex', password: '1234' });
   });
   it('should be invalid if password is not set', () => {
     authServiceSpy = spyOn(authService, 'userLoginForConsent').and
       .returnValue( of(response) );
 
-    form.controls['login'].setValue(usernameInput);
+    form.controls['login'].setValue('alex');
     form.controls['password'].setValue('');
     component.onSubmit();
     fixture.detectChanges();
@@ -93,7 +90,7 @@ describe('LoginComponent', () => {
     authServiceSpy = spyOn(authService, 'userLoginForConsent').and.returnValue(of(response));
 
     form.controls['login'].setValue('');
-    form.controls['password'].setValue(passwordInput);
+    form.controls['password'].setValue('asdasf');
     component.onSubmit();
     fixture.detectChanges();
 
