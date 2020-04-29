@@ -8,7 +8,8 @@ import javax.persistence.Entity;
 
 @Entity
 @SuperBuilder
-@DiscriminatorValue("IGNORE")
+@DiscriminatorValue(IgnoreValidationRule.MODE_IGNORE)
 @NoArgsConstructor
-public class IgnoreBankValidationRule extends BankValidationRule {
+public class IgnoreValidationRule extends ValidationRule {
+    public static final String MODE_IGNORE = "IGNORE";
 }
