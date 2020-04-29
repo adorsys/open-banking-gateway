@@ -6,9 +6,7 @@ import de.adorsys.opba.db.domain.entity.BankProtocol;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
-import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
-import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
@@ -35,41 +33,36 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
 
     private final Map<String, InternalRequestScoped> memoizedProviders;
     private final ConsentAccessFactory accessProvider;
-    private final BankProtocolRepository protocolRepository;
     private final IgnoreFieldsLoader ignoreFieldsLoader;
 
     public RequestScopedProvider(
             @Qualifier(FACADE_CACHE_BUILDER) CacheBuilder cacheBuilder,
             ConsentAccessFactory accessProvider,
-            BankProtocolRepository protocolRepository,
             IgnoreFieldsLoader ignoreFieldsLoader) {
         this.memoizedProviders = cacheBuilder.build().asMap();
         this.accessProvider = accessProvider;
         this.ignoreFieldsLoader = ignoreFieldsLoader;
-        this.protocolRepository = protocolRepository;
     }
 
-    public RequestScoped registerForFintechSession(
+    public <A> RequestScoped registerForFintechSession(
             Fintech fintech,
             BankProfile profile,
             ServiceSession session,
             ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider,
             SecretKeyWithIv futureAuthorizationSessionKey,
             Supplier<char[]> fintechPassword,
-            ProtocolAction protocolAction
+            A protocol
     ) {
         ConsentAccess access = accessProvider.forFintech(fintech, session, fintechPassword);
         EncryptionService authorizationSessionEncService = encryptionService(encryptionServiceProvider, futureAuthorizationSessionKey);
-
-        return doRegister(profile, access, authorizationSessionEncService, futureAuthorizationSessionKey,
-                session.getProtocol(), protocolAction);
+        ignoreFieldsLoader.setProtocolId(((BankProtocol) protocol).getId());
+        return doRegister(profile, access, authorizationSessionEncService, futureAuthorizationSessionKey);
     }
 
     public RequestScoped registerForPsuSession(
             AuthSession authSession,
             ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider,
-            SecretKeyWithIv key,
-            ProtocolAction protocolAction
+            SecretKeyWithIv key
     ) {
         EncryptionService encryptionService = encryptionService(encryptionServiceProvider, key);
         ConsentAccess access = accessProvider.forPsuAndAspsp(
@@ -78,8 +71,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
                 authSession.getParent()
         );
 
-        return doRegister(authSession.getProtocol().getBankProfile(), access, encryptionService, key,
-                authSession.getParent().getProtocol(), protocolAction);
+        return doRegister(authSession.getProtocol().getBankProfile(), access, encryptionService, key);
     }
 
     public InternalRequestScoped deregister(RequestScoped requestScoped) {
@@ -100,15 +92,8 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
             BankProfile bankProfile,
             ConsentAccess access,
             EncryptionService encryptionService,
-            SecretKeyWithIv key,
-            BankProtocol bankProtocol,
-            ProtocolAction protocolAction
+            SecretKeyWithIv key
     ) {
-        ignoreFieldsLoader.setProtocolId(bankProtocol != null
-                ? bankProtocol.getId()
-                : protocolRepository.findByBankProfileUuidAndAction(bankProfile.getBank().getUuid(), protocolAction)
-                        .orElse(new BankProtocol()).getId());
-
         InternalRequestScoped requestScoped = new InternalRequestScoped(
                 encryptionService.getEncryptionKeyId(),
                 key,

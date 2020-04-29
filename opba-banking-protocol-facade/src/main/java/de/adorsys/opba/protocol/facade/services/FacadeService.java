@@ -26,6 +26,7 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
     public CompletableFuture<FacadeResult<O>> execute(I request) {
         ServiceContext<I> ctx = contextFor(request);
         A protocol = selectAndSetProtocolTo(ctx);
+        addRequestScopedFor(request, ctx, protocol);
         CompletableFuture<Result<O>> result = execute(protocol, ctx);
         // This one must exist in decoupled transaction
         return result.thenApply(
@@ -38,7 +39,11 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
     }
 
     protected ServiceContext<I> contextFor(I request) {
-        return provider.provide(request, action);
+        return provider.provide(request);
+    }
+
+    protected void addRequestScopedFor(I request, ServiceContext<I> ctx, A protocol) {
+        provider.provideRequestScoped(request, ctx, protocol);
     }
 
     protected A selectAndSetProtocolTo(ServiceContext<I> ctx) {
