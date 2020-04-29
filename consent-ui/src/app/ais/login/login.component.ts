@@ -42,14 +42,9 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.authService.userLoginForConsent(this.authId, this.redirectCode, this.loginForm.value).subscribe(
-      res => {
-        window.location.href = res.headers.get(ApiHeaders.LOCATION);
-      },
-      error => {
-        console.log(error);
-      }
-    );
+    this.authService.userLoginForConsent(this.authId, this.redirectCode, this.loginForm.value).subscribe(res => {
+      window.location.href = res.headers.get(ApiHeaders.LOCATION);
+    });
   }
 
   get login() {
