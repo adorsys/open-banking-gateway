@@ -86,7 +86,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
         psuAuthService.createPsuIfNotExist(psuAuthDto.getLogin(), psuAuthDto.getPassword());
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(LOCATION, authConfig.getRedirect().getLoginPage());
+        responseHeaders.add(LOCATION, authConfig.getRedirect().getConsentLogin().getPage());
         return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
     }
 
@@ -104,7 +104,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
 
     private String[] buildAuthorizationCookiesOnAllPaths(UUID authorizationId, String key) {
         String token = authService.generateToken(key);
-        return authConfig.getCookie().getPathTemplates().stream()
+        return authConfig.getAuthorizationSessionKey().getCookie().getPathTemplates().stream()
                 .map(it -> cookieString(authorizationId, it, token))
                 .toArray(String[]::new);
     }
@@ -113,8 +113,8 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
         ResponseCookie.ResponseCookieBuilder builder = tppAuthResponseCookieBuilder
                 .builder(AUTHORIZATION_SESSION_KEY,  token);
 
-        if (!Strings.isNullOrEmpty(authConfig.getCookie().getDomain())) {
-            builder = builder.domain(authConfig.getCookie().getDomain());
+        if (!Strings.isNullOrEmpty(authConfig.getAuthorizationSessionKey().getCookie().getDomain())) {
+            builder = builder.domain(authConfig.getAuthorizationSessionKey().getCookie().getDomain());
         }
 
         builder = builder.path(

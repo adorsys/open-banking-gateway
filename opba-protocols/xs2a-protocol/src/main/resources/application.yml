@@ -25,29 +25,29 @@ spring:
       fill-with-mock-data: true
 
 protocol:
-  redirect:
-    to-aspsp: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
-    consent-accounts:
-      ok:  ${protocol.embedded-ui-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
-      nok: ${protocol.embedded-ui-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
-      result: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
-    parameters:
-      max-array-size: 32
-      provide-more: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
-      provide-psu-password: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/authenticate?wrong=#{context.getWrongAuthCredentials()}
-      select-sca-method: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
-      report-sca-result: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/sca-result?wrong=#{context.getWrongAuthCredentials()}
-      provide-psu-iban: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/entry-consent-transactions/dedicated-account-access?wrong=#{context.getWrongAuthCredentials()}
-  gateway-base-url: http://localhost:8085
-  expirable:
-    expire-after-write: PT600S
-  aspspmessages:
-    invalid-credentials: PSU_CREDENTIALS_INVALID
-    invalid-consent: FORMAT_ERROR
-
-pkcs12:
-  keyStore: sample-qwac.keystore
-  password: password
-
-flowable:
-  process-definition-location-prefix: classpath*:/processes/**/
+  xs2a:
+    urls:
+      redirect:
+        to-aspsp: ${protocol.xs2a.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
+        consent-accounts:
+          ok:  ${protocol.xs2a.urls.embedded-ui-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+          nok: ${protocol.xs2a.urls.embedded-ui-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
+          result: ${protocol.xs2a.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+        parameters:
+          max-array-size: 32
+          provide-more: ${protocol.xs2a.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+          provide-psu-password: ${protocol.xs2a.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/authenticate?wrong=#{context.getWrongAuthCredentials()}
+          select-sca-method: ${protocol.xs2a.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
+          report-sca-result: ${protocol.xs2a.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/sca-result?wrong=#{context.getWrongAuthCredentials()}
+          provide-psu-iban: ${protocol.xs2a.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/entry-consent-transactions/dedicated-account-access?wrong=#{context.getWrongAuthCredentials()}
+      gateway-base-url: http://localhost:8085
+    expirable:
+      expire-after-write: PT600S
+    aspspmessages:
+      invalid-credentials: PSU_CREDENTIALS_INVALID
+      invalid-consent: FORMAT_ERROR
+    pkcs12:
+      keystore: sample-qwac.keystore
+      password: password
+    flowable:
+      process-definition-location-prefix: classpath*:/processes/**/

@@ -11,45 +11,62 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+import static de.adorsys.opba.protocol.facade.config.ConfigConst.FACADE_CONFIG_PREFIX;
+
 @Data
 @Validated
 @Configuration
-@ConfigurationProperties("facade")
+@ConfigurationProperties(FACADE_CONFIG_PREFIX + "urls")
 public class FacadeAuthConfig {
 
     @NotNull
     private Redirect redirect;
 
     @NotNull
-    private AuthorizationCookie cookie;
+    private AuthorizationSessionKey authorizationSessionKey;
 
     @Data
     @Validated
     public static class Redirect {
 
-        @NotBlank
-        private String loginPage;
-
-        @NotNull
-        private PasswordConfig password;
+        private ConsentLogin consentLogin;
 
         @Data
         @Validated
-        public static class PasswordConfig {
+        public static class ConsentLogin {
 
-            @Min(8)
-            @SuppressWarnings("checkstyle:MagicNumber") // Magic minimal value - at least 8 bytes of entropy
-            private int byteSize;
+            @NotBlank
+            private String page;
+
+            @NotNull
+            private PasswordConfig password;
+
+            @Data
+            @Validated
+            public static class PasswordConfig {
+
+                @Min(8)
+                @SuppressWarnings("checkstyle:MagicNumber") // Magic minimal value - at least 8 bytes of entropy
+                private int byteSize;
+            }
         }
     }
 
     @Data
     @Validated
-    public static class AuthorizationCookie {
+    public static class AuthorizationSessionKey {
 
-        @NotEmpty
-        private List<@NotBlank String> pathTemplates;
+        @NotNull
+        private Cookie cookie;
 
-        private String domain; // null allowed
+        @Data
+        @Validated
+        public static class Cookie {
+
+            @NotEmpty
+            private List<@NotBlank String> pathTemplates;
+
+            private String domain; // null allowed
+        }
     }
 }

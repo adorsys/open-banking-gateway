@@ -8,8 +8,10 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import static de.adorsys.opba.protocol.xs2a.config.ConfigConst.XS2A_PROTOCOL_CONFIG_PREFIX;
+
 /**
- * XS2A protocol configuration. Note that all URLs are expanded using {@link de.adorsys.opba.protocol.xs2a.service.ContextUtil}, so
+ * XS2A URL protocol configuration. Note that all URLs are expanded using {@link de.adorsys.opba.protocol.xs2a.service.ContextUtil}, so
  * you can use string interpolation like this:
  * http://localhost:8080/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
  * The aforementioned URL will get interpolated using {@link de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext} functions to i.e.
@@ -19,7 +21,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @Validated
 @Configuration
-@ConfigurationProperties("protocol")
+@ConfigurationProperties(XS2A_PROTOCOL_CONFIG_PREFIX + "urls")
 public class ProtocolConfiguration {
 
     /**
