@@ -28,11 +28,13 @@ import javax.annotation.PostConstruct;
 import java.security.Security;
 import java.util.function.Function;
 
+import static de.adorsys.opba.protocol.facade.config.ConfigConst.FACADE_CONFIG_PREFIX;
+
 @Configuration
 @RequiredArgsConstructor
 public class DatasafeConfig {
 
-    private static final String ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX = "${encryption.datasafe.read-keystore";
+    private static final String ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX = "${"+ FACADE_CONFIG_PREFIX + "encryption.datasafe.read-keystore";
 
     private final ObjectMapper mapper;
     private final FintechDatasafeStorage fintechStorage;

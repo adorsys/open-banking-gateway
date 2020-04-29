@@ -28,7 +28,7 @@ public class TokenBasedAuthService {
     @SneakyThrows
     public String generateToken(String subject) {
         ZonedDateTime currentTime = ZonedDateTime.now(ZoneOffset.UTC);
-        Duration duration = tppTokenProperties.getKeyValidityDuration();
+        Duration duration = tppTokenProperties.getTokenValidityDuration();
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
                 .expirationTime(Date.from(currentTime.plus(duration).toInstant()))
                 .issueTime(Date.from(currentTime.toInstant()))

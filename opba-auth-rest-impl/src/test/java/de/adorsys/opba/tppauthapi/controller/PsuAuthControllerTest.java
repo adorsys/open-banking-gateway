@@ -73,7 +73,9 @@ public class PsuAuthControllerTest {
 
         when(psuSecureStorage.privateService()).thenReturn(privateSpace);
         FacadeAuthConfig.Redirect redir = new FacadeAuthConfig.Redirect();
-        redir.setLoginPage(REDIRECT_TO);
+        FacadeAuthConfig.Redirect.ConsentLogin loginPage = new FacadeAuthConfig.Redirect.ConsentLogin();
+        loginPage.setPage(REDIRECT_TO);
+        redir.setConsentLogin(loginPage);
         when(facadeAuthConfig.getRedirect()).thenReturn(redir);
         when(authService.generateToken(LOGIN)).thenReturn("token");
         when(psuAuthService.tryAuthenticateUser(LOGIN, PASSWORD)).thenReturn(PSU);
