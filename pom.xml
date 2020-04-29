@@ -121,6 +121,7 @@
 
         <!-- Adorsys libs -->
         <xs2a-adapter.version>0.0.9</xs2a-adapter.version>
+        <multibanking.version>5.5.14</multibanking.version>
 
         <!-- Test libs -->
         <jacoco.version>0.8.5</jacoco.version>
