@@ -6,7 +6,7 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.annotation.ScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.api.security.service.RequestSigningService;
+import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
 import io.restassured.RestAssured;

@@ -1,4 +1,4 @@
-package de.adorsys.opba.api.security;
+package de.adorsys.opba.api.security.external;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,6 +15,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-@ComponentScan(basePackageClasses = EnableVerifySignatureBasedApiSecurity.class)
-public @interface EnableVerifySignatureBasedApiSecurity {
+@ComponentScan(basePackageClasses = EnableOpenBankingRequestSigning.class)
+public @interface EnableOpenBankingRequestSigning {
 }

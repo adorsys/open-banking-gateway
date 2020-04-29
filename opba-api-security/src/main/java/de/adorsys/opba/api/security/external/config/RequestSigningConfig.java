@@ -1,7 +1,7 @@
-package de.adorsys.opba.api.security.config;
+package de.adorsys.opba.api.security.external.config;
 
-import de.adorsys.opba.api.security.service.RequestSigningService;
-import de.adorsys.opba.api.security.service.impl.RsaJwtsSigningServiceImpl;
+import de.adorsys.opba.api.security.external.service.RequestSigningService;
+import de.adorsys.opba.api.security.external.service.RsaJwtsSigningServiceImpl;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

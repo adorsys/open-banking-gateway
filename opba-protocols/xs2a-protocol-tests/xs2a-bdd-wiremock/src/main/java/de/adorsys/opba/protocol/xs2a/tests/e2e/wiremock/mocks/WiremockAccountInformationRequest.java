@@ -4,7 +4,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.api.security.service.RequestSigningService;
+import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;

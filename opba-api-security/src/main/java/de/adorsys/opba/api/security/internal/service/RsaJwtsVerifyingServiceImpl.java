@@ -1,7 +1,6 @@
-package de.adorsys.opba.api.security.service.impl;
+package de.adorsys.opba.api.security.internal.service;
 
-import de.adorsys.opba.api.security.domain.DataToSign;
-import de.adorsys.opba.api.security.service.RequestVerifyingService;
+import de.adorsys.opba.api.security.external.domain.DataToSign;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;

@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox;
 
-import de.adorsys.opba.api.security.EnableTokenBasedApiSecurity;
+import de.adorsys.opba.api.security.internal.EnableTokenBasedApiSecurity;
 import de.adorsys.opba.consentapi.config.EnableConsentApi;
 import de.adorsys.opba.db.config.EnableBankingPersistence;
 import de.adorsys.opba.protocol.xs2a.EnableXs2aSandboxProtocol;

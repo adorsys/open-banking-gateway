@@ -34,7 +34,7 @@ import static de.adorsys.opba.protocol.facade.config.ConfigConst.FACADE_CONFIG_P
 @RequiredArgsConstructor
 public class DatasafeConfig {
 
-    private static final String ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX = "${"+ FACADE_CONFIG_PREFIX + "encryption.datasafe.read-keystore";
+    private static final String ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX = "${" + FACADE_CONFIG_PREFIX + "encryption.datasafe.read-keystore";
 
     private final ObjectMapper mapper;
     private final FintechDatasafeStorage fintechStorage;
