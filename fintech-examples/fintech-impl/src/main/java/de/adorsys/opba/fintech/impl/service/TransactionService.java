@@ -1,5 +1,6 @@
 package de.adorsys.opba.fintech.impl.service;
 
+import de.adorsys.opba.api.security.domain.OperationType;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
@@ -20,6 +21,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.UUID;
+
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_REQUEST_SIGNATURE;
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP_UTC;
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
 
 @Service
 @Slf4j
@@ -61,17 +66,19 @@ public class TransactionService extends HandleAcceptedService {
             log.warn("mocking call for list transactions");
             return new ResponseEntity<>(ManualMapper.fromTppToFintech(new TppListTransactionsMock().getTransactionsResponse()), HttpStatus.OK);
         }
-
         String fintechRedirectCode = UUID.randomUUID().toString();
 
         ResponseEntity<TransactionsResponse> transactions = tppAisClient.getTransactions(
                 accountId,
-                tppProperties.getFintechID(),
                 tppProperties.getServiceSessionPassword(),
                 sessionEntity.getLoginUserName(),
                 RedirectUrlsEntity.buildOkUrl(uiConfig, fintechRedirectCode),
                 RedirectUrlsEntity.buildNokUrl(uiConfig, fintechRedirectCode),
                 UUID.fromString(restRequestContext.getRequestId()),
+                COMPUTE_X_TIMESTAMP_UTC,
+                OperationType.AIS.toString(),
+                COMPUTE_X_REQUEST_SIGNATURE,
+                COMPUTE_FINTECH_ID,
                 bankId,
                 null,
                 sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null,
