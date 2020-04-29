@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.validation;
 
 import com.google.common.collect.Iterables;
-import de.adorsys.opba.protocol.api.common.Approach;
+import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreFieldsLoader;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
@@ -55,12 +55,16 @@ public class Xs2aValidator {
     public void validate(DelegateExecution exec, Xs2aContext context, Class invokerClass, Object... dtosToValidate) {
         Set<ConstraintViolation<Object>> allErrors = new HashSet<>();
 
-        Set<FieldCode> fieldsToIgnore = getFieldsToIgnoreValidate(context, invokerClass);
+        IgnoreFieldsLoader ignoreFieldsLoader = context.getRequestScoped().ignoreFieldsLoader();
 
         for (Object value : dtosToValidate) {
             Set<ConstraintViolation<Object>> errors = validator.validate(value)
                     .stream()
-                    .filter(f -> !fieldsToIgnore.contains(findInfoOnViolation(f).ctx().value()))
+                    .filter(f -> ignoreFieldsLoader.apply(
+                            findInfoOnViolation(f).ctx().value(),
+                            invokerClass,
+                            context.getRequestScoped().aspspProfile().getPreferredApproach()
+                    ))
                     .collect(Collectors.toSet());
             allErrors.addAll(errors);
         }
@@ -81,16 +85,6 @@ public class Xs2aValidator {
                     }
                 }
         );
-    }
-
-    private Set<FieldCode> getFieldsToIgnoreValidate(Xs2aContext context, Class invokerClass) {
-        Approach approach = context.aspspProfile().getPreferredApproach();
-        return context.getRequestScoped().getValidationRules().stream()
-                .filter(it -> it.getEndpointClassCanonicalName().equals(invokerClass.getCanonicalName()))
-                .filter(it -> !EMBEDDED.equals(approach) || it.isForEmbedded())
-                .filter(it -> !REDIRECT.equals(approach) || it.isForRedirect())
-                .map(IgnoreBankValidationRuleDto::getValidationCode)
-                .collect(Collectors.toSet());
     }
 
     private ValidationIssue toIssue(ConstraintViolation<Object> violation) {

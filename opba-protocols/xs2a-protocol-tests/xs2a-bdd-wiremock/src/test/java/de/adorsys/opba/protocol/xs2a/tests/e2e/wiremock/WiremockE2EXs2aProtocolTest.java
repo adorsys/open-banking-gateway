@@ -534,17 +534,16 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
     void testAccountsListWithConsentUsingRedirectWithMissingPsuId(Approach expectedApproach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .ignore_validation_rules_table_contains_field_psu_id()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
-                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD)
-                .ignore_validation_rules_table_contains_field_psu_id();
-
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
         when()
                 .fintech_calls_list_accounts_for_anton_brueckner()
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
-                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_without_psu_id(expectedApproach)
+                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_without_psu_id()
                 .and()
                 .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
                 .and()
