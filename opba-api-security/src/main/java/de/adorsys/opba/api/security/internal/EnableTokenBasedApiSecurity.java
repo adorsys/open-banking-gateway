@@ -1,4 +1,4 @@
-package de.adorsys.opba.api.security;
+package de.adorsys.opba.api.security.internal;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;

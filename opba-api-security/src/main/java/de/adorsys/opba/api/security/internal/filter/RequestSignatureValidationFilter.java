@@ -1,9 +1,9 @@
-package de.adorsys.opba.api.security.filter;
+package de.adorsys.opba.api.security.internal.filter;
 
 
-import de.adorsys.opba.api.security.domain.DataToSign;
-import de.adorsys.opba.api.security.domain.HttpHeaders;
-import de.adorsys.opba.api.security.service.RequestVerifyingService;
+import de.adorsys.opba.api.security.external.domain.DataToSign;
+import de.adorsys.opba.api.security.external.domain.HttpHeaders;
+import de.adorsys.opba.api.security.internal.service.RequestVerifyingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
@@ -27,7 +27,7 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
 
     private final RequestVerifyingService requestVerifyingService;
     private final Duration requestTimeLimit;
-    private final ConcurrentHashMap<String, String> fintechKeysMap;
+    private final ConcurrentHashMap<String, String> consumerKeysMap;
 
     private final AntPathMatcher matcher = new AntPathMatcher();
     private final UrlPathHelper pathHelper = new UrlPathHelper();
@@ -41,7 +41,7 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
 
         Instant instant = Instant.parse(requestTimeStamp);
 
-        String fintechApiKey = fintechKeysMap.get(fintechId);
+        String fintechApiKey = consumerKeysMap.get(fintechId);
 
         if (fintechApiKey == null) {
             log.error("Api key for fintech ID {} has not find ", fintechId);

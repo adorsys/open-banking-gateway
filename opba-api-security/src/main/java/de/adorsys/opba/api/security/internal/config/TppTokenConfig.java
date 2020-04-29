@@ -1,4 +1,4 @@
-package de.adorsys.opba.api.security.config;
+package de.adorsys.opba.api.security.internal.config;
 
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -9,6 +9,7 @@ import com.nimbusds.jose.crypto.RSASSAVerifier;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.annotation.Validated;
 
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -17,6 +18,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
+@Validated
 @Configuration
 public class TppTokenConfig {
 

@@ -49,5 +49,7 @@ protocol:
     pkcs12:
       keystore: sample-qwac.keystore
       password: password
-    flowable:
-      process-definition-location-prefix: classpath*:/processes/**/
+
+# Currently is standalone
+flowable:
+  process-definition-location-prefix: classpath*:/processes/**/

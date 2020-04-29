@@ -1,7 +1,7 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
-import de.adorsys.opba.api.security.domain.DataToSign;
-import de.adorsys.opba.api.security.service.RequestSigningService;
+import de.adorsys.opba.api.security.external.domain.DataToSign;
+import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.tppbankingapi.BaseMockitoTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +13,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.Instant;
 import java.util.UUID;
 
-import static de.adorsys.opba.api.security.domain.HttpHeaders.FINTECH_ID;
-import static de.adorsys.opba.api.security.domain.HttpHeaders.X_REQUEST_ID;
-import static de.adorsys.opba.api.security.domain.HttpHeaders.X_REQUEST_SIGNATURE;
-import static de.adorsys.opba.api.security.domain.HttpHeaders.X_TIMESTAMP_UTC;
+import static de.adorsys.opba.api.security.external.domain.HttpHeaders.FINTECH_ID;
+import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_REQUEST_ID;
+import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_REQUEST_SIGNATURE;
+import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_TIMESTAMP_UTC;
 import static de.adorsys.opba.tppbankingapi.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;

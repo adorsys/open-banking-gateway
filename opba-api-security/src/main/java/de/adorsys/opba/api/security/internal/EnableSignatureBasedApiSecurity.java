@@ -1,4 +1,4 @@
-package de.adorsys.opba.api.security;
+package de.adorsys.opba.api.security.internal;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,6 +15,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-@ComponentScan(basePackageClasses = EnableSignRequestBasedApiSecurity.class)
-public @interface EnableSignRequestBasedApiSecurity {
+@ComponentScan(basePackageClasses = EnableSignatureBasedApiSecurity.class)
+public @interface EnableSignatureBasedApiSecurity {
 }

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import de.adorsys.datasafe.privatestore.api.PasswordClearingOutputStream;
 import de.adorsys.datasafe.privatestore.api.PrivateSpaceService;
 import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
-import de.adorsys.opba.api.security.service.TokenBasedAuthService;
+import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
