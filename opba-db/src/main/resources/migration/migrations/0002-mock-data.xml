@@ -10,6 +10,7 @@
            insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (1, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'LIST_ACCOUNTS', 'xs2aListAccounts');
            insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (2, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
            insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (3, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'AUTHORIZATION', '');
+           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (4, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'INITIATE_PAYMENT', 'xs2aInitiateSinglePayment');
 
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (1, 3, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (2, 3, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
