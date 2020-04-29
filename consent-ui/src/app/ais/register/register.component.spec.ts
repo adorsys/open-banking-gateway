@@ -26,8 +26,7 @@ describe('RegisterComponent', () => {
           }
         }
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
