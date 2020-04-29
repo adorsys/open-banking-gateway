@@ -61,7 +61,7 @@ a {
 }
 
 .text-dark {
-  color: var(--bodyFontColor);
+  color: var(--bodyFontColor) !important;
 }
 
 .text-light-dark {
@@ -70,6 +70,8 @@ a {
 
 .card {
   border: none;
+  margin-right: auto;
+  margin-left: auto;
 
   &--large {
     padding: 2rem 2rem;
@@ -86,6 +88,7 @@ a {
     .form-control {
       padding: 1.5rem 1rem;
       transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+      font-size: 1.125rem;
     }
   }
 
@@ -94,10 +97,15 @@ a {
     padding-right: 0;
   }
 }
-
+.info-block{
+  padding-bottom: 1rem;
+}
 .no-bg-color {
   background-color: $COLOR_WHITE;
   border: none;
+}
+.form__margin{
+  margin-bottom: 1.5rem;
 }
 .form-check{
   padding-left: 0;
@@ -108,6 +116,7 @@ a {
     font-size: 1.125rem;
     position: relative;
     padding-left: 2.625rem;
+    line-height: 1.2;
 
     .radioSelector{
       width: 17px;
@@ -118,8 +127,7 @@ a {
       display: block;
       position: absolute;
       left: 0;
-      top: 50%;
-      transform: translateY(-60%);
+      top: calc(50% - 9px);
     }
     input{
       opacity: 0;
@@ -133,9 +141,8 @@ a {
           border-radius: 50%;
           background-color: $text-muted;
           position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate( -46%, -54% );
+          left: 3px;
+          top: 3px;
         }
       }
     }
@@ -325,8 +332,12 @@ section {
     height: 5.75rem;
   }
 }
+
 label{
   font-size: 1rem;
+}
+.text-secondary{
+  color: $COLOR_TEXT_LIGHT !important;
 }
 
 @media screen and (max-width: 768px) {
