@@ -3,20 +3,24 @@ package de.adorsys.opba.api.security.service;
 import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.JWSVerifier;
 import de.adorsys.opba.api.security.internal.EnableTokenBasedApiSecurity;
+import de.adorsys.opba.api.security.internal.config.TppTokenProperties;
 import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.validation.annotation.Validated;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.util.Base64;
 
+import static de.adorsys.opba.api.security.internal.config.ConfigConst.API_CONFIG_PREFIX;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
@@ -61,5 +65,11 @@ public class TokenSignVerifyTest {
     @Configuration
     @EnableTokenBasedApiSecurity
     public static class TestConfig {
+
+        @Validated
+        @Configuration
+        @ConfigurationProperties(API_CONFIG_PREFIX + "security")
+        public class TppTokenPropertiesConfig extends TppTokenProperties {
+        }
     }
 }
