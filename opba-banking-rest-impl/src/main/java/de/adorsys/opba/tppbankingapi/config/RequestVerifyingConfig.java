@@ -7,7 +7,6 @@ import de.adorsys.opba.api.security.service.impl.RsaJwtsVerifyingServiceImpl;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.env.Environment;
 
 import java.time.Duration;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,13 +16,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @EnableVerifySignatureBasedApiSecurity
 @ConfigurationProperties(prefix = "fintech.verification")
 public class RequestVerifyingConfig {
-    private Duration requestTimeLimit;
+
+    private Duration requestValidityWindow;
     private ConcurrentHashMap<String, String> fintechKeys;
     private String claimNameKey;
 
     @Bean
-    public RequestSignatureValidationFilter requestSignatureValidationFilter(Environment environment) {
+    public RequestSignatureValidationFilter requestSignatureValidationFilter() {
         RequestVerifyingService requestVerifyingService = new RsaJwtsVerifyingServiceImpl(claimNameKey);
-        return new RequestSignatureValidationFilter(requestVerifyingService, requestTimeLimit, fintechKeys);
+        return new RequestSignatureValidationFilter(requestVerifyingService, requestValidityWindow, fintechKeys);
     }
 }
