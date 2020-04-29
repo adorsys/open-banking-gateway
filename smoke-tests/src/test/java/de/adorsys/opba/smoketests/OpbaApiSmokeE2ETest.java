@@ -6,7 +6,7 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.SandboxServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
-import de.adorsys.opba.smoketests.config.RequestSigningTestConfig;
+import de.adorsys.opba.smoketests.config.FintechRequestSigningTestConfig;
 import de.adorsys.opba.smoketests.config.SandboxConsentAuthApproachState;
 import de.adorsys.opba.smoketests.config.SmokeConfig;
 import io.github.bonigarcia.seljup.SeleniumExtension;
@@ -37,7 +37,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @EnabledIfEnvironmentVariable(named = ENABLE_SMOKE_TESTS, matches = TRUE_BOOL)
 @ExtendWith(SeleniumExtension.class)
-@SpringBootTest(classes = {JGivenConfig.class, SmokeConfig.class, RequestSigningTestConfig.class}, webEnvironment = NONE)
+@SpringBootTest(classes = {JGivenConfig.class, SmokeConfig.class, FintechRequestSigningTestConfig.class}, webEnvironment = NONE)
 @ActiveProfiles(profiles = {SMOKE_TEST})
 class OpbaApiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>, AccountInformationResult> {
 
