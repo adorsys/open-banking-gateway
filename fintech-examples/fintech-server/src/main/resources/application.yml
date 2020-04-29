@@ -56,7 +56,8 @@ spring:
       ddl-auto: validate
 
 fintech-ui:
-  redirect-url: http://localhost:4444/redirect-after-consent?redirectCode={redirectCode}
-  unauthorized-url: http://localhost:4444/
-  exception-url: http://localhost:4444/redirect-after-consent-denied?redirectCode={redirectCode}
+  host: http://localhost:4444
+  redirect-url: ${fintech-ui.host}/redirect-after-consent?redirectCode={redirectCode}
+  unauthorized-url: ${fintech-ui.host}/
+  exception-url: ${fintech-ui.host}/redirect-after-consent-denied?redirectCode={redirectCode}
 
