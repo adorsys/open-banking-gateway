@@ -68,12 +68,14 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     @Override
-    public <T extends FacadeServiceableGetter, A> void provideRequestScoped(T request,
-                                                                         ServiceContext<T> ctx,
-                                                                         A protocol) {
-        AuthSession authSession = extractAndValidateAuthSession(request);
-        ServiceSession session = extractOrCreateServiceSession(request, authSession);
-        ctx.toBuilder().requestScoped(getRequestScoped(request, session, authSession, protocol));
+    public <T extends FacadeServiceableGetter> ServiceContext<T> provideRequestScoped(T request, ServiceContext<T> ctx) {
+        AuthSession authSession = null;
+        if (ctx.getAuthSessionId() != null) {
+            authSession = authSessions.findById(ctx.getAuthSessionId()).orElse(null);
+        }
+        ServiceSession session = serviceSessions.findById(ctx.getServiceSessionId())
+                .orElseThrow(() -> new IllegalStateException("No service session " + ctx.getServiceSessionId()));;
+        return ctx.toBuilder().requestScoped(getRequestScoped(request, session, authSession)).build();
     }
 
     protected <T extends FacadeServiceableGetter> void validateRedirectCode(T request, AuthSession session) {
@@ -145,13 +147,12 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     @Nullable
-    private <T extends FacadeServiceableGetter, A> RequestScoped getRequestScoped(
+    private <T extends FacadeServiceableGetter> RequestScoped getRequestScoped(
             T request,
             ServiceSession session,
-            AuthSession authSession,
-            A protocol) {
+            AuthSession authSession) {
         return null == request.getFacadeServiceable().getAuthorizationKey()
-                ? fintechFacingSecretKeyBasedEncryption(request, session, protocol)
+                ? fintechFacingSecretKeyBasedEncryption(request, session)
                 : psuCookieBasedKeyEncryption(request, authSession);
     }
 
@@ -173,10 +174,9 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     /**
      * To be consumed by {@link de.adorsys.opba.protocol.facade.services.NewAuthSessionHandler} if new auth session started.
      */
-    private <T extends FacadeServiceableGetter, A> RequestScoped fintechFacingSecretKeyBasedEncryption(
+    private <T extends FacadeServiceableGetter> RequestScoped fintechFacingSecretKeyBasedEncryption(
             T request,
-            ServiceSession session,
-            A protocol
+            ServiceSession session
     ) {
         BankProfile profile = profileJpaRepository.findByBankUuid(request.getFacadeServiceable().getBankId())
                 .orElseThrow(() -> new IllegalArgumentException("No bank profile for bank: " + request.getFacadeServiceable().getBankId()));
@@ -192,8 +192,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
                 session,
                 consentAuthorizationEncryptionServiceProvider,
                 consentAuthorizationEncryptionServiceProvider.generateKey(),
-                () -> request.getFacadeServiceable().getSessionPassword().toCharArray(),
-                protocol
+                () -> request.getFacadeServiceable().getSessionPassword().toCharArray()
         );
     }
 

@@ -11,7 +11,5 @@ public interface ServiceContextProvider {
     @SneakyThrows
     <T extends FacadeServiceableGetter> ServiceContext<T> provide(T request);
 
-    <T extends FacadeServiceableGetter, A> void provideRequestScoped(T request,
-                                                                    ServiceContext<T> ctx,
-                                                                    A protocol);
+    <T extends FacadeServiceableGetter> ServiceContext<T> provideRequestScoped(T request, ServiceContext<T> ctx);
 }
