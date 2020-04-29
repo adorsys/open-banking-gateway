@@ -29,8 +29,9 @@ spring:
       table-prefix: opb_
 
 fintech-ui:
-  redirect-url: http://localhost:4444?redirectCode={redirectCode}
-  exception-url: http://localhost:4444/redirect-after-consent-denied
+  host: http://localhost:4444
+  redirect-url: ${fintech-ui.host}?redirectCode={redirectCode}
+  exception-url: ${fintech-ui.host}/redirect-after-consent-denied
 
 security:
   # This is the example private key value used only for DEMO purposes
