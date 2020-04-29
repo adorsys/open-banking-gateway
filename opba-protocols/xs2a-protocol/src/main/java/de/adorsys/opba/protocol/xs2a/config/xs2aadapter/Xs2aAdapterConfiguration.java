@@ -27,6 +27,8 @@ import org.springframework.context.annotation.Profile;
 
 import java.nio.file.Paths;
 
+import static de.adorsys.opba.protocol.xs2a.config.ConfigConst.XS2A_PROTOCOL_CONFIG_PREFIX;
+
 /**
  * This is the embedded configuration of Adorsys-XS2A adapter (https://github.com/adorsys/xs2a-adapter) to serve requests to ASPSP.
  * Basically this adapter acts as RestClient with typed interfaces for us and other useful functionality.
@@ -34,7 +36,7 @@ import java.nio.file.Paths;
 @Configuration
 public class Xs2aAdapterConfiguration {
 
-    @Value("${xs2a-adapter.loader.choose-first-from-multiple-aspsps:false}")
+    @Value("${" + XS2A_PROTOCOL_CONFIG_PREFIX + "xs2a-adapter.loader.choose-first-from-multiple-aspsps:false}")
     private boolean chooseFirstFromMultipleAspsps;
 
     @Bean
@@ -95,8 +97,8 @@ public class Xs2aAdapterConfiguration {
     @Bean
     @SneakyThrows
     Pkcs12KeyStore xs2aPkcs12KeyStore(
-            @Value("${pkcs12.keyStore}") String keystorePath,
-            @Value("${pkcs12.password}") char[] keystorePassword
+            @Value("${" + XS2A_PROTOCOL_CONFIG_PREFIX + "pkcs12.keystore}") String keystorePath,
+            @Value("${" + XS2A_PROTOCOL_CONFIG_PREFIX + "pkcs12.password}") char[] keystorePassword
     ) {
         return new Pkcs12KeyStore(
                 Paths.get(keystorePath).toFile().exists()

@@ -7,13 +7,15 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+import static de.adorsys.opba.protocol.xs2a.config.ConfigConst.XS2A_PROTOCOL_CONFIG_PREFIX;
+
 /**
  * Configures which classes can be serialized/deserialized in JSON form and configures threshold when to use
  * {@link JsonCustomSerializer} or {@link LargeJsonCustomSerializer}
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "opba.xs2a.flowable")
+@ConfigurationProperties(prefix = XS2A_PROTOCOL_CONFIG_PREFIX + "flowable")
 public class Xs2aFlowableProperties {
 
     private List<String> serializeOnlyPackages = ImmutableList.of(

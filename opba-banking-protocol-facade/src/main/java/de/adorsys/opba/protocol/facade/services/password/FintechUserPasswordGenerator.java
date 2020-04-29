@@ -20,7 +20,7 @@ public class FintechUserPasswordGenerator {
     @SneakyThrows
     public String generate() {
         SecureRandom random = passwordGenRandom.getRandom();
-        byte[] bytes = new byte[facadeAuthConfig.getRedirect().getPassword().getByteSize()];
+        byte[] bytes = new byte[facadeAuthConfig.getRedirect().getConsentLogin().getPassword().getByteSize()];
         random.nextBytes(bytes);
         return Base64.getUrlEncoder().encodeToString(bytes);
     }
