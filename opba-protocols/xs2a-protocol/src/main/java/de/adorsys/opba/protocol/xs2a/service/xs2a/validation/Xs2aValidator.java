@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.validation;
 
 import com.google.common.collect.Iterables;
+import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreFieldsLoader;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
@@ -56,14 +57,16 @@ public class Xs2aValidator {
         Set<ConstraintViolation<Object>> allErrors = new HashSet<>();
 
         IgnoreFieldsLoader ignoreFieldsLoader = context.getRequestScoped().ignoreFieldsLoader();
-
+        Approach approach = context.getAspspScaApproach() == null
+                ?  context.getRequestScoped().aspspProfile().getPreferredApproach()
+                : Approach.valueOf(context.getAspspScaApproach());
         for (Object value : dtosToValidate) {
             Set<ConstraintViolation<Object>> errors = validator.validate(value)
                     .stream()
                     .filter(f -> ignoreFieldsLoader.apply(
                             findInfoOnViolation(f).ctx().value(),
                             invokerClass,
-                            context.getRequestScoped().aspspProfile().getPreferredApproach()
+                            approach
                     ))
                     .collect(Collectors.toSet());
             allErrors.addAll(errors);
