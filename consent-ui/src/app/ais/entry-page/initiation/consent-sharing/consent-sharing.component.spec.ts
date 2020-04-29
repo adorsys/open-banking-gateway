@@ -24,7 +24,8 @@ describe('ConsentSharingComponent', () => {
               queryParams: {}
             }
           }
-        }]
+        }
+      ]
     }).compileComponents();
   }));
 
