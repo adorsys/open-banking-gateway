@@ -15,11 +15,12 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "format:fix": "pretty-quick --pattern 'consent-ui/**/*'"
+    "format:fix": "pretty-quick --staged 'consent-ui/**/*'"
   },
   "private": true,
   "dependencies": {
     "@angular/animations": "~8.2.14",
+    "@angular/cdk": "^8.2.3",
     "@angular/common": "~8.2.14",
     "@angular/compiler": "~8.2.14",
     "@angular/core": "~8.2.14",
