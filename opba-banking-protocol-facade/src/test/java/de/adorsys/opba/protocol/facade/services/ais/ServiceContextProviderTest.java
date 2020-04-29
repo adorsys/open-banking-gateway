@@ -1,7 +1,6 @@
 package de.adorsys.opba.protocol.facade.services.ais;
 
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
-import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
@@ -73,7 +72,7 @@ public class ServiceContextProviderTest extends DbDropper {
                                 .build()
                 ).build();
 
-        ServiceContext<FacadeServiceableGetter> providedContext = serviceContextProvider.provide(request, ProtocolAction.LIST_ACCOUNTS);
+        ServiceContext<FacadeServiceableGetter> providedContext = serviceContextProvider.provide(request);
         URI redirectionTo = new URI("/");
         Result<URI> result = new ConsentAcquiredResult<>(redirectionTo, null);
         FacadeRedirectResult<URI, AuthStateBody> uriFacadeResult = (FacadeRedirectResult)
@@ -102,7 +101,7 @@ public class ServiceContextProviderTest extends DbDropper {
                                 .redirectCode(uriFacadeResult.getRedirectCode())
                                 .build()
                 ).build();
-        ServiceContext<FacadeServiceableGetter> providedContext2 = serviceContextProvider.provide(request2, ProtocolAction.LIST_ACCOUNTS);
+        ServiceContext<FacadeServiceableGetter> providedContext2 = serviceContextProvider.provide(request2);
 
         txTemplate.execute(callback -> {
             secondRequestCheck(sessionId);

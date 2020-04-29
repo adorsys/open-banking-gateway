@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.facade.services.context;
 
-import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import lombok.SneakyThrows;
@@ -10,5 +9,9 @@ public interface ServiceContextProvider {
 
     @Transactional
     @SneakyThrows
-    <T extends FacadeServiceableGetter> ServiceContext<T> provide(T request, ProtocolAction protocolAction);
+    <T extends FacadeServiceableGetter> ServiceContext<T> provide(T request);
+
+    <T extends FacadeServiceableGetter, A> void provideRequestScoped(T request,
+                                                                    ServiceContext<T> ctx,
+                                                                    A protocol);
 }
