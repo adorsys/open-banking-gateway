@@ -1,13 +1,10 @@
-package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.config;
+package de.adorsys.opba.api.security.config;
 
-import de.adorsys.opba.api.security.EnableSignRequestBasedApiSecurity;
 import de.adorsys.opba.api.security.service.RequestSigningService;
 import de.adorsys.opba.api.security.service.impl.RsaJwtsSigningServiceImpl;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
 import java.security.KeyFactory;
@@ -19,10 +16,7 @@ import java.util.Base64;
 
 @Data
 @Slf4j
-@EnableSignRequestBasedApiSecurity
-@ConfigurationProperties("security")
-@Validated
-public class RequestSigningTestConfig {
+public class RequestSigningConfig {
     @NotBlank
     private String encodedPrivateKey;
     @NotBlank
