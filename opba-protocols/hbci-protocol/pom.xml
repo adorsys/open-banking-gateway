@@ -8,13 +8,12 @@
         <version>0.0.7-SNAPSHOT</version>
     </parent>
 
-    <!-- BPMN based engine to talk to XS2A-compliant banks -->
-    <artifactId>xs2a-protocol</artifactId>
-    <name>opba-protocols/xs2a-protocol</name>
+    <artifactId>hbci-protocol</artifactId>
+    <name>opba-protocols/hbci-protocol</name>
 
     <properties>
       <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
-      Change this if depth changes. Current: /open-banking-gateway/opba-protocols/xs2a-protocol -->
+      Change this if depth changes. Current: /open-banking-gateway/opba-protocols/hbci-protocol -->
       <main.basedir>${project.parent.parent.basedir}</main.basedir>
     </properties>
 
@@ -46,10 +45,6 @@
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
         </dependency>
@@ -68,70 +63,13 @@
             <artifactId>guava</artifactId>
         </dependency>
 
-        <!-- Flowable BPMN -->
+        <!-- HBCI adapter start -->
         <dependency>
-            <groupId>org.flowable</groupId>
-            <artifactId>flowable-spring-boot-starter-process</artifactId>
-            <version>${flowable.version}</version>
+            <groupId>de.adorsys.multibanking</groupId>
+            <artifactId>onlinebanking-hbci4java</artifactId>
+            <version>${multibanking.version}</version>
         </dependency>
-
-        <!-- XS2A Adapter BEGIN -->
-        <!-- Adapter BOM -->
-        <dependency>
-            <groupId>de.adorsys.xs2a.adapter</groupId>
-            <artifactId>adapters</artifactId>
-            <version>${xs2a-adapter.version}</version>
-            <type>pom</type>
-        </dependency>
-
-        <dependency>
-            <groupId>de.adorsys.xs2a.adapter</groupId>
-            <artifactId>xs2a-adapter-rest-impl</artifactId>
-            <version>${xs2a-adapter.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>de.adorsys.xs2a.adapter</groupId>
-            <artifactId>xs2a-adapter-service-api</artifactId>
-            <version>${xs2a-adapter.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>de.adorsys.xs2a.adapter</groupId>
-            <artifactId>xs2a-adapter-service-loader</artifactId>
-            <version>${xs2a-adapter.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>de.adorsys.xs2a.adapter</groupId>
-            <artifactId>xs2a-adapter-aspsp-registry</artifactId>
-            <version>${xs2a-adapter.version}</version>
-        </dependency>
-        <!-- XS2A Adapter END -->
-
-        <!-- Mappers/Validators -->
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-            <version>${mapstruct.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path</artifactId>
-        </dependency>
-
-        <!-- Test only dependencies -->
-        <!-- BouncyCastle to generate P12 keystores -->
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
-            <version>${bouncycastle.version}</version>
-            <scope>test</scope>
-        </dependency>
+        <!-- HBCI adapter end -->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -143,26 +81,6 @@
                     <artifactId>junit</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <!-- Required for I18Config in tests -->
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
-            <version>3.0.1-b08</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${testcontainers.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -205,7 +123,6 @@
                 <configuration>
                     <excludeScope>test</excludeScope>
                     <includes>
-                        <include>processes/xs2a/**/*.xml</include>
                         <include>*.yml</include>
                         <include>*.sql</include>
                         <include>*.properties</include>
