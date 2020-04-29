@@ -13,6 +13,10 @@ describe('RegisterComponent', () => {
   let fixture: ComponentFixture<RegisterComponent>;
   let authServiceSpy;
   let authService: AuthService;
+  const usernameInput = 'alex';
+  const passwordInput  = 'password';
+  const notMachingPasswordInput = 'not matching password';
+  let form;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -38,6 +42,7 @@ describe('RegisterComponent', () => {
     authService = fixture.debugElement.injector.get(AuthService);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    form = component.registerForm;
   });
 
   it('should create', () => {
@@ -45,8 +50,8 @@ describe('RegisterComponent', () => {
   });
   it('should call registerUser in AuthService', () => {
     authServiceSpy = spyOn(authService, 'userRegister').and.callThrough();
-    const form = component.registerForm;
-    form.controls['login'].setValue('alex');
+
+    form.controls['login'].setValue(usernameInput);
     form.controls['password'].setValue('1234');
     component.onSubmit();
     fixture.detectChanges();
@@ -54,10 +59,10 @@ describe('RegisterComponent', () => {
   });
   it('should be true if the passwords are not same', () => {
     authServiceSpy = spyOn(authService, 'userRegister').and.callThrough();
-    const form = component.registerForm;
-    form.controls['login'].setValue('alex');
-    form.controls['password'].setValue('adf');
-    form.controls['confirmPassword'].setValue('asdf');
+
+    form.controls['login'].setValue(usernameInput);
+    form.controls['password'].setValue(passwordInput);
+    form.controls['confirmPassword'].setValue(notMachingPasswordInput);
     component.onSubmit();
     fixture.detectChanges();
 
@@ -65,8 +70,8 @@ describe('RegisterComponent', () => {
   });
   it('should be false if password is not set', () => {
     authServiceSpy = spyOn(authService, 'userRegister').and.callThrough();
-    const form = component.registerForm;
-    form.controls['login'].setValue('alex');
+
+    form.controls['login'].setValue(usernameInput);
     form.controls['password'].setValue('');
     form.controls['confirmPassword'].setValue('');
     component.onSubmit();
@@ -76,10 +81,10 @@ describe('RegisterComponent', () => {
   });
   it('should be false if username is not set', () => {
     authServiceSpy = spyOn(authService, 'userRegister').and.callThrough();
-    const form = component.registerForm;
+
     form.controls['login'].setValue('');
-    form.controls['password'].setValue('asdf');
-    form.controls['confirmPassword'].setValue('asdf');
+    form.controls['password'].setValue(passwordInput);
+    form.controls['confirmPassword'].setValue(passwordInput);
     component.onSubmit();
     fixture.detectChanges();
 
