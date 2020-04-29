@@ -1,11 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
-import {StubUtil} from '../common/stub-util';
-import {Subscription} from 'rxjs';
-import {ApiHeaders} from '../../api/api.headers';
-import {ConsentAuthorizationService} from '../../api';
-import {SessionService} from '../../common/session.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { StubUtil } from '../common/stub-util';
+import { Subscription } from 'rxjs';
+import { ApiHeaders } from '../../api/api.headers';
+import { ConsentAuthorizationService } from '../../api';
+import { SessionService } from '../../common/session.service';
 
 @Component({
   selector: 'consent-app-password-input-page',
@@ -53,18 +53,12 @@ export class PasswordInputPageComponent implements OnInit, OnDestroy {
           { scaAuthenticationData: { PSU_PASSWORD: this.passwordForm.get('pin').value } },
           'response'
         )
-        .subscribe(
-          res => {
-            // redirect to the provided location
-            this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-            console.log('REDIRECTING TO: ' + res.headers.get(ApiHeaders.LOCATION));
-            window.location.href = res.headers.get(ApiHeaders.LOCATION);
-          },
-          error => {
-            console.log(error);
-            // window.location.href = error.url;
-          }
-        )
+        .subscribe(res => {
+          // redirect to the provided location
+          this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+          console.log('REDIRECTING TO: ' + res.headers.get(ApiHeaders.LOCATION));
+          window.location.href = res.headers.get(ApiHeaders.LOCATION);
+        })
     );
   }
 }

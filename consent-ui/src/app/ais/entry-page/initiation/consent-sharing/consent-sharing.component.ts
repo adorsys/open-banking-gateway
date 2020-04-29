@@ -37,14 +37,9 @@ export class ConsentSharingComponent implements OnInit {
     const redirectCode = this.sessionService.getRedirectCode(this.authorizationId);
     this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
 
-    this.consentAuthorisation.authUsingGET(this.authorizationId, redirectCode, 'response').subscribe(
-      res => {
-        this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-      },
-      error => {
-        console.log(error);
-      }
-    );
+    this.consentAuthorisation.authUsingGET(this.authorizationId, redirectCode, 'response').subscribe(res => {
+      this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+    });
     this.loadRedirectUri(this.authorizationId, redirectCode);
   }
 

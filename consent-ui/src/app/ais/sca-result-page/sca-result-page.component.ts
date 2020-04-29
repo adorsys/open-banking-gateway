@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
-import {StubUtil} from '../common/stub-util';
-import {ConsentAuthorizationService} from '../../api';
-import {ApiHeaders} from '../../api/api.headers';
-import {SessionService} from '../../common/session.service';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { StubUtil } from '../common/stub-util';
+import { ConsentAuthorizationService } from '../../api';
+import { ApiHeaders } from '../../api/api.headers';
+import { SessionService } from '../../common/session.service';
 
 @Component({
   selector: 'consent-app-sca-result-page',
@@ -47,16 +47,11 @@ export class ReportScaResultComponent implements OnInit {
         { scaAuthenticationData: { SCA_CHALLENGE_DATA: this.reportScaResultForm.get('tan').value } },
         'response'
       )
-      .subscribe(
-        res => {
-          // redirect to the provided location
-          console.log('REDIRECTING TO: ' + res.headers.get(ApiHeaders.LOCATION));
-          this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-          window.location.href = res.headers.get(ApiHeaders.LOCATION);
-        },
-        error => {
-          console.log(error);
-        }
-      );
+      .subscribe(res => {
+        // redirect to the provided location
+        console.log('REDIRECTING TO: ' + res.headers.get(ApiHeaders.LOCATION));
+        this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        window.location.href = res.headers.get(ApiHeaders.LOCATION);
+      });
   }
 }
