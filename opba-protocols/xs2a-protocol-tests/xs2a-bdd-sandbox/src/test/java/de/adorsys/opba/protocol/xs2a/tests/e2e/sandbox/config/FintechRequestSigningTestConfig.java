@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.config;
+package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.config;
 
 import de.adorsys.opba.api.security.external.EnableOpenBankingRequestSigning;
 import de.adorsys.opba.api.security.external.config.RequestSigningConfig;
