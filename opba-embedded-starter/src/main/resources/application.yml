@@ -45,7 +45,7 @@ api:
             UNION
              SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bank_code) as sml
               FROM opb_bank WHERE word_similarity(:keyword, bank_code) >= 0.8
-            ORDER BY sml DESC
+            ORDER BY sml DESC, id
             LIMIT :max
             OFFSET :start"
     # Signature-based security of FinTech consumable API
