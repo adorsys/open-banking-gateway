@@ -60,9 +60,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/open_banking?currentSchema=fintech
 
       - FINTECH-UI_HOST=http://localhost:24200
-      - FINTECH-UI_REDIRECT-URL=http://localhost:24200/redirect-after-consent?redirectCode={redirectCode}
-      - FINTECH-UI_UNAUTHORIZED-URL=http://localhost:24200/
-      - FINTECH-UI_EXCEPTION-URL=http://localhost:24200/redirect-after-consent-denied?redirectCode={redirectCode}
 
     build: fintech-examples/fintech-server
     ports:
