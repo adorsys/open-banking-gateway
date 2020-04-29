@@ -6,7 +6,14 @@ import com.tngtech.jgiven.annotation.AfterScenario;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.db.domain.entity.BankProfile;
+import de.adorsys.opba.db.domain.entity.BankProtocol;
+import de.adorsys.opba.db.domain.entity.IgnoreBankValidationRule;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
+import de.adorsys.opba.db.repository.jpa.IgnoreBankValidationRuleRepository;
+import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.AccountListingService;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateAisAccountListConsentService;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate.StartConsentAuthorization;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.CommonGivenStages;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +28,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStages<SELF> {
 
+    public static final long AUTH_PROTOCOL_ID = 3L;
+    public static final long PROTOCOL_ID = 1L;
     @Autowired
     private BankProfileJpaRepository bankProfileJpaRepository;
+
+    @Autowired
+    private IgnoreBankValidationRuleRepository ignoreBankValidationRuleRepository;
 
     @ProvidedScenarioState
     private WireMockServer sandbox;
@@ -78,5 +90,34 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
         Assertions.assertThat(sandbox).isNotNull();
         Assertions.assertThat(sandbox.isRunning()).isTrue();
+    }
+
+    public SELF ignore_validation_rules_table_contains_field_psu_id() {
+        IgnoreBankValidationRule bankValidationRule = IgnoreBankValidationRule.builder()
+                .protocol(BankProtocol.builder().id(PROTOCOL_ID).build())
+                .endpointClassCanonicalName(AccountListingService.class.getCanonicalName())
+                .forEmbedded(true)
+                .forRedirect(true)
+                .validationCode(FieldCode.PSU_ID)
+                .build();
+        ignoreBankValidationRuleRepository.deleteAll();
+        ignoreBankValidationRuleRepository.save(bankValidationRule);
+        bankValidationRule.setId(null);
+        bankValidationRule.setEndpointClassCanonicalName(CreateAisAccountListConsentService.class.getCanonicalName());
+        ignoreBankValidationRuleRepository.save(bankValidationRule);
+        bankValidationRule.setId(null);
+        bankValidationRule.setEndpointClassCanonicalName(StartConsentAuthorization.class.getCanonicalName());
+        ignoreBankValidationRuleRepository.save(bankValidationRule);
+
+        bankValidationRule.setId(null);
+        bankValidationRule.setProtocol(BankProtocol.builder().id(AUTH_PROTOCOL_ID).build());
+        bankValidationRule.setEndpointClassCanonicalName(CreateAisAccountListConsentService.class.getCanonicalName());
+        ignoreBankValidationRuleRepository.save(bankValidationRule);
+        bankValidationRule.setId(null);
+        bankValidationRule.setProtocol(BankProtocol.builder().id(AUTH_PROTOCOL_ID).build());
+        bankValidationRule.setEndpointClassCanonicalName(StartConsentAuthorization.class.getCanonicalName());
+        ignoreBankValidationRuleRepository.save(bankValidationRule);
+
+        return self();
     }
 }

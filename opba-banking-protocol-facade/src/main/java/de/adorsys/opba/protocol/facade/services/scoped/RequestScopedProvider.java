@@ -3,12 +3,10 @@ package de.adorsys.opba.protocol.facade.services.scoped;
 import com.google.common.cache.CacheBuilder;
 import de.adorsys.opba.db.domain.entity.BankProfile;
 import de.adorsys.opba.db.domain.entity.BankProtocol;
-import de.adorsys.opba.db.domain.entity.IgnoreBankValidationRule;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
-import de.adorsys.opba.db.repository.jpa.IgnoreBankValidationRuleRepository;
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
@@ -16,25 +14,19 @@ import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.transientdata.TransientStorage;
-import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreBankValidationRuleDto;
+import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreFieldsLoader;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 import org.jetbrains.annotations.NotNull;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static de.adorsys.opba.protocol.facade.config.FacadeTransientDataConfig.FACADE_CACHE_BUILDER;
 
@@ -43,17 +35,17 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
 
     private final Map<String, InternalRequestScoped> memoizedProviders;
     private final ConsentAccessFactory accessProvider;
-    private final IgnoreBankValidationRuleRepository ignoreBankValidationRuleRepository;
     private final BankProtocolRepository protocolRepository;
+    private final IgnoreFieldsLoader ignoreFieldsLoader;
 
     public RequestScopedProvider(
             @Qualifier(FACADE_CACHE_BUILDER) CacheBuilder cacheBuilder,
             ConsentAccessFactory accessProvider,
-            IgnoreBankValidationRuleRepository ignoreBankValidationRuleRepository,
-            BankProtocolRepository protocolRepository) {
+            BankProtocolRepository protocolRepository,
+            IgnoreFieldsLoader ignoreFieldsLoader) {
         this.memoizedProviders = cacheBuilder.build().asMap();
         this.accessProvider = accessProvider;
-        this.ignoreBankValidationRuleRepository = ignoreBankValidationRuleRepository;
+        this.ignoreFieldsLoader = ignoreFieldsLoader;
         this.protocolRepository = protocolRepository;
     }
 
@@ -87,7 +79,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         );
 
         return doRegister(authSession.getProtocol().getBankProfile(), access, encryptionService, key,
-                authSession.getProtocol(), protocolAction);
+                authSession.getParent().getProtocol(), protocolAction);
     }
 
     public InternalRequestScoped deregister(RequestScoped requestScoped) {
@@ -112,14 +104,10 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
             BankProtocol bankProtocol,
             ProtocolAction protocolAction
     ) {
-        if (bankProtocol == null) {
-            Optional <BankProtocol> protocol = protocolRepository.findByBankProfileUuidAndAction(
-                    bankProfile.getBank().getUuid(), protocolAction
-            );
-            if (protocol.isPresent()) {
-                bankProtocol = protocol.get();
-            }
-        }
+        ignoreFieldsLoader.setProtocolId(bankProtocol != null
+                ? bankProtocol.getId()
+                : protocolRepository.findByBankProfileUuidAndAction(bankProfile.getBank().getUuid(), protocolAction)
+                        .orElse(new BankProtocol()).getId());
 
         InternalRequestScoped requestScoped = new InternalRequestScoped(
                 encryptionService.getEncryptionKeyId(),
@@ -127,7 +115,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
                 bankProfile,
                 access,
                 encryptionService,
-                ignoreBankValidationRuleRepository.findByProtocolId(bankProtocol.getId())
+                ignoreFieldsLoader
         );
 
         memoizedProviders.put(requestScoped.getEncryptionKeyId(), requestScoped);
@@ -137,7 +125,6 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
     @Getter
     @RequiredArgsConstructor
     public static class InternalRequestScoped implements RequestScoped {
-        public static final ToRulesDto TO_RULES_DTO = Mappers.getMapper(ToRulesDto.class);
 
         private final TransientStorage transientStorage = new TransientStorageImpl();
 
@@ -146,7 +133,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         private final CurrentBankProfile bankProfile;
         private final ConsentAccess access;
         private final EncryptionService encryptionService;
-        private final List<IgnoreBankValidationRule> validationRules;
+        private final IgnoreFieldsLoader ignoreFieldsLoader;
 
         @Override
         public CurrentBankProfile aspspProfile() {
@@ -169,8 +156,8 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         }
 
         @Override
-        public List<IgnoreBankValidationRuleDto> getValidationRules() {
-            return validationRules.stream().map(TO_RULES_DTO::map).collect(Collectors.toList());
+        public IgnoreFieldsLoader ignoreFieldsLoader() {
+            return ignoreFieldsLoader;
         }
     }
 
@@ -179,11 +166,5 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         @Delegate
         @SuppressWarnings("PMD.UnusedPrivateField") // it is used through Delegate - via TransientStorage interface
         private final AtomicReference<Object> value = new AtomicReference<>();
-    }
-
-    @Mapper
-    public interface ToRulesDto {
-        @Mapping(source = "protocol.id", target = "protocolId")
-        IgnoreBankValidationRuleDto map(IgnoreBankValidationRule rules);
     }
 }
