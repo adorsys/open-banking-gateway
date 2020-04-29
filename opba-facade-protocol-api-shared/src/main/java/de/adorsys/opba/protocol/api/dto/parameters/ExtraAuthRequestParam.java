@@ -11,6 +11,11 @@ public enum ExtraAuthRequestParam {
     PSU_ID,
 
     /**
+     * PIN password / password used to login to ASPSP
+     */
+    PSU_PASSWORD,
+
+    /**
      * Users' (PSU) IP address.
      */
     PSU_IP_ADDRESS;
