@@ -4,6 +4,7 @@ package de.adorsys.opba.api.security.internal.filter;
 import de.adorsys.opba.api.security.external.domain.DataToSign;
 import de.adorsys.opba.api.security.external.domain.HttpHeaders;
 import de.adorsys.opba.api.security.internal.service.RequestVerifyingService;
+import de.adorsys.opba.api.security.domain.OperationType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
@@ -37,6 +38,7 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
         String fintechId = request.getHeader(HttpHeaders.FINTECH_ID);
         String xRequestId = request.getHeader(HttpHeaders.X_REQUEST_ID);
         String requestTimeStamp = request.getHeader(HttpHeaders.X_TIMESTAMP_UTC);
+        String operationType = request.getHeader(HttpHeaders.X_OPERATION_TYPE);
         String xRequestSignature = request.getHeader(HttpHeaders.X_REQUEST_SIGNATURE);
 
         Instant instant = Instant.parse(requestTimeStamp);
@@ -49,7 +51,7 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
             return;
         }
 
-        DataToSign dataToSign = new DataToSign(UUID.fromString(xRequestId), instant);
+        DataToSign dataToSign = new DataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType));
 
         boolean verificationResult = requestVerifyingService.verify(xRequestSignature, fintechApiKey, dataToSign);
 

@@ -1,5 +1,6 @@
 package de.adorsys.opba.fintech.impl.service;
 
+import de.adorsys.opba.api.security.domain.OperationType;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
@@ -82,6 +83,7 @@ public class AccountService extends HandleAcceptedService {
                     RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
                     xRequestId,
                     COMPUTE_X_TIMESTAMP_UTC,
+                    OperationType.AIS.toString(),
                     COMPUTE_X_REQUEST_SIGNATURE,
                     COMPUTE_FINTECH_ID,
                     bankID,
@@ -99,6 +101,7 @@ public class AccountService extends HandleAcceptedService {
                     RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
                     xRequestId,
                     COMPUTE_X_TIMESTAMP_UTC,
+                    OperationType.AIS.toString(),
                     COMPUTE_X_REQUEST_SIGNATURE,
                     COMPUTE_FINTECH_ID,
                     bankID,

@@ -1,5 +1,6 @@
 package de.adorsys.opba.fintech.impl.service;
 
+import de.adorsys.opba.api.security.domain.OperationType;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import de.adorsys.opba.fintech.impl.tppclients.TppConsentClient;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class ConsentService {
                 xRequestId,
                 tppProperties.getServiceSessionPassword(),
                 COMPUTE_X_TIMESTAMP_UTC,
+                OperationType.TOKEN.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID
         ).getStatusCode();

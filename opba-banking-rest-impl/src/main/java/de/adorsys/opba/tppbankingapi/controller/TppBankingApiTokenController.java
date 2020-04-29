@@ -23,6 +23,7 @@ public class TppBankingApiTokenController implements ConsentConfirmationApi {
                                                                     UUID xRequestID,
                                                                     String serviceSessionPassword,
                                                                     String xTimestampUTC,
+                                                                    String xOperationType,
                                                                     String xRequestSignature,
                                                                     String fintechID) {
         UUID authorizationSessionId = UUID.fromString(authId);
