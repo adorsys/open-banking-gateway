@@ -8,6 +8,7 @@ import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreFieldsLoade
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
@@ -19,6 +20,7 @@ import static de.adorsys.opba.protocol.api.common.Approach.REDIRECT;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@Service
 public class IgnoreFieldsLoaderImpl implements IgnoreFieldsLoader {
 
     private Long protocolId;
@@ -34,6 +36,6 @@ public class IgnoreFieldsLoaderImpl implements IgnoreFieldsLoader {
                 .filter(it -> !REDIRECT.equals(approach) || it.isForRedirect())
                 .map(IgnoreBankValidationRule::getValidationCode)
                 .collect(Collectors.toSet());
-        return fieldsToIgnore.contains(fieldCode);
+        return !fieldsToIgnore.contains(fieldCode);
     }
 }

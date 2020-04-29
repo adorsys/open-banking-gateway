@@ -2,7 +2,6 @@ package de.adorsys.opba.protocol.facade.services.scoped;
 
 import com.google.common.cache.CacheBuilder;
 import de.adorsys.opba.db.domain.entity.BankProfile;
-import de.adorsys.opba.db.domain.entity.BankProtocol;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
@@ -44,18 +43,17 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         this.ignoreFieldsLoader = ignoreFieldsLoader;
     }
 
-    public <A> RequestScoped registerForFintechSession(
+    public RequestScoped registerForFintechSession(
             Fintech fintech,
             BankProfile profile,
             ServiceSession session,
             ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider,
             SecretKeyWithIv futureAuthorizationSessionKey,
-            Supplier<char[]> fintechPassword,
-            A protocol
+            Supplier<char[]> fintechPassword
     ) {
         ConsentAccess access = accessProvider.forFintech(fintech, session, fintechPassword);
         EncryptionService authorizationSessionEncService = encryptionService(encryptionServiceProvider, futureAuthorizationSessionKey);
-        ignoreFieldsLoader.setProtocolId(((BankProtocol) protocol).getId());
+        ignoreFieldsLoader.setProtocolId(session.getProtocol().getId());
         return doRegister(profile, access, authorizationSessionEncService, futureAuthorizationSessionKey);
     }
 
@@ -70,7 +68,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
                 authSession.getProtocol().getBankProfile().getBank(),
                 authSession.getParent()
         );
-
+        ignoreFieldsLoader.setProtocolId(authSession.getParent().getProtocol().getId());
         return doRegister(authSession.getProtocol().getBankProfile(), access, encryptionService, key);
     }
 
