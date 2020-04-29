@@ -3,7 +3,7 @@ package de.adorsys.opba.starter;
 import de.adorsys.opba.api.security.service.RequestSigningService;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aListAccountsEntrypoint;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aSandboxListTransactionsEntrypoint;
-import de.adorsys.opba.starter.config.RequestSigningTestConfig;
+import de.adorsys.opba.starter.config.FintechRequestSigningTestConfig;
 import io.restassured.RestAssured;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +36,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @ActiveProfiles("test")
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-@SpringBootTest(classes = {OpenBankingEmbeddedApplication.class, RequestSigningTestConfig.class}, webEnvironment = RANDOM_PORT)
+@SpringBootTest(classes = {OpenBankingEmbeddedApplication.class, FintechRequestSigningTestConfig.class}, webEnvironment = RANDOM_PORT)
 class BasicOpenBankingStartupTest {
 
     @SpyBean
