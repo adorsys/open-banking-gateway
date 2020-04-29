@@ -35,6 +35,11 @@ public class AuthorizationRequest implements FacadeServiceableGetter {
     private AisConsent aisConsent;
 
     /**
+     * Payment access scope object.
+     */
+    private SinglePaymentBody singlePayment;
+
+    /**
      * SCA authentication data like challenge result (i.e. secret code from SMS 2FA)
      */
     private Map<String, String> scaAuthenticationData = new ConcurrentHashMap<>();

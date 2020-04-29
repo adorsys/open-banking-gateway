@@ -12,9 +12,9 @@ import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.IgnoreValidationRuleRepository;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.Xs2aAccountListingService;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.StartConsentAuthorization;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.embedded.Xs2aAisAuthenticateUserConsentWithPin;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateAisAccountListConsentService;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate.StartConsentAuthorization;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate.embedded.Xs2aAuthenticateUserConsentWithPin;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.CommonGivenStages;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -144,7 +144,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
         bankValidationRule.setId(null);
         bankValidationRule.setProtocol(BankProtocol.builder().id(AUTH_PROTOCOL_ID).build());
-        bankValidationRule.setEndpointClassCanonicalName(Xs2aAuthenticateUserConsentWithPin.class.getCanonicalName());
+        bankValidationRule.setEndpointClassCanonicalName(Xs2aAisAuthenticateUserConsentWithPin.class.getCanonicalName());
         ignoreValidationRuleRepository.save(bankValidationRule);
 
         return self();

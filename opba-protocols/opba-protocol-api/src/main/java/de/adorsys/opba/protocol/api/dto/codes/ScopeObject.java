@@ -22,5 +22,11 @@ public enum ScopeObject {
      * This field is inside AIS (Account Information Services) Consent Scope form. I.e. it is IBAN list of accounts
      * that are going to be available for this consent.
      */
-    AIS_CONSENT_SCOPE
+    AIS_CONSENT_SCOPE,
+
+    /**
+     * This field is inside AIS (Account Information Services) consent form. I.e. the form where user can select
+     * what kind of consent it is - 'All accounts', 'All accounts with balances', etc.
+     */
+    PIS_CONSENT
 }
