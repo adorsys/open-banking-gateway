@@ -3,7 +3,7 @@ package de.adorsys.opba.tppauthapi.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.api.security.service.TokenBasedAuthService;
+import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
 import de.adorsys.opba.protocol.facade.config.auth.UriExpandConst;

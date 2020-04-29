@@ -1,4 +1,4 @@
-package de.adorsys.opba.api.security.config;
+package de.adorsys.opba.api.security.internal.config;
 
 import lombok.experimental.UtilityClass;
 

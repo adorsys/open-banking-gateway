@@ -1,11 +1,11 @@
 package de.adorsys.opba.smoketests.config;
 
-import de.adorsys.opba.api.security.EnableSignRequestBasedApiSecurity;
-import de.adorsys.opba.api.security.config.RequestSigningConfig;
+import de.adorsys.opba.api.security.external.EnableOpenBankingRequestSigning;
+import de.adorsys.opba.api.security.external.config.RequestSigningConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 
-@EnableSignRequestBasedApiSecurity
+@EnableOpenBankingRequestSigning
 @ConfigurationProperties("security")
 public class FintechRequestSigningTestConfig extends RequestSigningConfig {
 }

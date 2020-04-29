@@ -1,4 +1,4 @@
-package de.adorsys.opba.api.security.domain;
+package de.adorsys.opba.api.security.external.domain;
 
 import lombok.experimental.UtilityClass;
 

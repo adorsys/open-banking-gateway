@@ -1,12 +1,12 @@
 package de.adorsys.opba.starter.config;
 
-import de.adorsys.opba.api.security.EnableSignRequestBasedApiSecurity;
-import de.adorsys.opba.api.security.config.RequestSigningConfig;
+import de.adorsys.opba.api.security.external.EnableOpenBankingRequestSigning;
+import de.adorsys.opba.api.security.external.config.RequestSigningConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 
-@EnableSignRequestBasedApiSecurity
+@EnableOpenBankingRequestSigning
 @ConfigurationProperties("security")
 @Validated
 public class FintechRequestSigningTestConfig extends RequestSigningConfig {
