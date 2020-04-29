@@ -11,6 +11,7 @@ import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import lombok.RequiredArgsConstructor;
 
+import javax.transaction.Transactional;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -23,17 +24,18 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
     private final ServiceContextProvider provider;
     private final ProtocolResultHandler handler;
 
+    @Transactional
     public CompletableFuture<FacadeResult<O>> execute(I request) {
         ServiceContext<I> ctx = contextFor(request);
         A protocol = selectAndSetProtocolTo(ctx);
-        addRequestScopedFor(request, ctx, protocol);
-        CompletableFuture<Result<O>> result = execute(protocol, ctx);
+        ServiceContext<I> ctxWithRequestScope = addRequestScopedFor(request, ctx);
+        CompletableFuture<Result<O>> result = execute(protocol, ctxWithRequestScope);
         // This one must exist in decoupled transaction
         return result.thenApply(
                 res -> handleResult(
                         res,
                         request.getFacadeServiceable(),
-                        ctx
+                        ctxWithRequestScope
                 )
         );
     }
@@ -42,8 +44,8 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
         return provider.provide(request);
     }
 
-    protected void addRequestScopedFor(I request, ServiceContext<I> ctx, A protocol) {
-        provider.provideRequestScoped(request, ctx, protocol);
+    protected ServiceContext<I> addRequestScopedFor(I request, ServiceContext<I> ctx) {
+        return provider.provideRequestScoped(request, ctx);
     }
 
     protected A selectAndSetProtocolTo(ServiceContext<I> ctx) {
