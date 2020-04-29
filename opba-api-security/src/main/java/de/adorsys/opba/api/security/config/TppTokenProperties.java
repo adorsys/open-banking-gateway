@@ -9,10 +9,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
 
+import static de.adorsys.opba.api.security.config.ConfigConst.API_CONFIG_PREFIX;
+
 @Data
 @Validated
 @Configuration
-@ConfigurationProperties(prefix = "security.tpp")
+@ConfigurationProperties(API_CONFIG_PREFIX + "security")
 public class TppTokenProperties {
 
     @NotBlank
@@ -25,7 +27,7 @@ public class TppTokenProperties {
     private String signAlgo;
 
     @NotNull
-    private Duration keyValidityDuration;
+    private Duration tokenValidityDuration;
 
     @NotBlank
     private String jwsAlgo;

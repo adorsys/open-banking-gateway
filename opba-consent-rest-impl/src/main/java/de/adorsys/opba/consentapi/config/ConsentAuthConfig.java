@@ -34,7 +34,7 @@ public class ConsentAuthConfig {
                 .filter(it -> AUTHORIZATION_SESSION_KEY.equals(it.getName()))
                 .findFirst()
                 .map(Cookie::getValue)
-                .orElse(null);
+                .orElseThrow(() -> new IllegalStateException("Authorization-Session-Key cookie is missing"));
 
         String subjectValue = authService.validateTokenAndGetSubject(authCookieValue);
 
