@@ -3,13 +3,14 @@ package de.adorsys.opba.api.security.external.domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.sun.tools.javac.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -22,23 +23,24 @@ public class DataToSign<T> {
     private final ObjectMapper localMapper = buildObjectMapper();
     private UUID xRequestId;
     private Instant instant;
+    private OperationType operationType;
     private final T additionalFields;
 
-    public DataToSign(UUID xRequestId, Instant instant) {
-        this.xRequestId = xRequestId;
-        this.instant = instant;
-        this.additionalFields = null;
+    public DataToSign(UUID xRequestId, Instant instant, OperationType operationType) {
+        this(xRequestId, instant, operationType, null);
     }
 
-    public DataToSign(UUID xRequestId, Instant instant, T additionalFields) {
+    public DataToSign(UUID xRequestId, Instant instant, OperationType operationType, T additionalFields) {
         this.xRequestId = xRequestId;
         this.instant = instant;
+        this.operationType = operationType;
         this.additionalFields = additionalFields;
     }
 
     public String convertDataToString() {
         return new StringBuilder().append(xRequestId)
                        .append(instant)
+                       .append(operationType)
                        .append(mapAdditionalFieldsToString())
                        .toString();
     }
@@ -59,9 +61,8 @@ public class DataToSign<T> {
             return nodes.asText();
         }
 
-        Map<String, String> unSortedMap = objectToUnsortedMap(nodes);
-        LinkedHashMap<String, String> sortedMap = sortMap(unSortedMap);
-        LinkedHashMap<String, String> filteredMap = valueNotNullFilter(sortedMap);
+        LinkedHashMap<String, String> map = objectToMap(nodes);
+        LinkedHashMap<String, String> filteredMap = valueNotNullFilter(map);
 
         String mapAsString = valueAsString(filteredMap);
 
@@ -72,8 +73,8 @@ public class DataToSign<T> {
         return mapAsString;
     }
 
-    private Map<String, String> objectToUnsortedMap(JsonNode objectNode) {
-        Map<String, String> unSortedMap = new HashMap<>();
+    private LinkedHashMap<String, String> objectToMap(JsonNode objectNode) {
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
         Iterator<Map.Entry<String, JsonNode>> iter = objectNode.fields();
 
         while (iter.hasNext()) {
@@ -86,20 +87,9 @@ public class DataToSign<T> {
                 throw new IllegalArgumentException(message);
             }
 
-            unSortedMap.put(entry.getKey(), entry.getValue().asText());
+            map.put(entry.getKey(), entry.getValue().asText());
         }
-        return unSortedMap;
-    }
-
-    private LinkedHashMap<String, String> sortMap(Map<String, String> unSortedMap) {
-        LinkedHashMap<String, String> sortedMap = new LinkedHashMap<>();
-
-        unSortedMap.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey())
-                .forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
-
-        return sortedMap;
+        return map;
     }
 
     private LinkedHashMap<String, String> valueNotNullFilter(LinkedHashMap<String, String> sortedMap) {
@@ -122,6 +112,7 @@ public class DataToSign<T> {
     private ObjectMapper buildObjectMapper() {
         ObjectMapper localObjectMapper = new ObjectMapper();
         localObjectMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+        localObjectMapper.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
         localObjectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         localObjectMapper.registerModule(new JavaTimeModule());
         return localObjectMapper;

@@ -110,6 +110,16 @@ components:
       schema:
         type: string
 
+    X-Operation-Type:
+      name: X-Operation-Type
+      in: header
+      required: false
+      description: |
+        The type of the fintech request.
+      example: "AIS"
+      schema:
+        type: string
+
     X-Request-Signature:
       name: X-Request-Signature
       in: header
