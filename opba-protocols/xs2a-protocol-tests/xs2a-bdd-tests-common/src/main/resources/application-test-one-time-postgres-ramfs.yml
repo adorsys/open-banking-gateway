@@ -111,6 +111,13 @@ facade:
         len: 128
 
 protocol:
+  pis:
+    redirect:
+      to-aspsp: ${protocol.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
+      payments:
+        ok:  ${protocol.embedded-ui-base-url}/v1/payment/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+        nok: ${protocol.embedded-ui-base-url}/v1/payment/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
+        result: ${protocol.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
   xs2a:
     urls:
       redirect:
