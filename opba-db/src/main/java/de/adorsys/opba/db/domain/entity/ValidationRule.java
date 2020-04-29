@@ -24,7 +24,7 @@ import javax.persistence.SequenceGenerator;
 @AllArgsConstructor
 @NoArgsConstructor
 @DiscriminatorColumn(name = "mode")
-public class BankValidationRule {
+public class ValidationRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_validation_rule_id_generator")
