@@ -74,7 +74,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
             authSession = authSessions.findById(ctx.getAuthSessionId()).orElse(null);
         }
         ServiceSession session = serviceSessions.findById(ctx.getServiceSessionId())
-                .orElseThrow(() -> new IllegalStateException("No service session " + ctx.getServiceSessionId()));;
+                .orElseThrow(() -> new IllegalStateException("No service session " + ctx.getServiceSessionId()));
         return ctx.toBuilder().requestScoped(getRequestScoped(request, session, authSession)).build();
     }
 

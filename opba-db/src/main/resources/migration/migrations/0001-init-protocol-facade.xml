@@ -392,15 +392,19 @@
             <column name="protocol_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="endpoint_class_canonical_name" type="VARCHAR(256)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="endpoint_class_canonical_name" type="VARCHAR(256)"/>
             <column name="validation_code" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="for_embedded" type="boolean" defaultValue="false"/>
-            <column name="for_redirect" type="boolean" defaultValue="false"/>
-            <column name="mode" type="VARCHAR(32)" defaultValue="IGNORE"/>
+            <column name="for_embedded" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="for_redirect" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mode" type="VARCHAR(32)" defaultValue="IGNORE">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_bank_validation_rule_bank_protocol"
                                  baseTableName="${table-prefix}bank_validation_rule"

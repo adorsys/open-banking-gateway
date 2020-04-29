@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.facade.services.scoped;
 
-import de.adorsys.opba.db.domain.entity.IgnoreBankValidationRule;
+import de.adorsys.opba.db.domain.entity.IgnoreValidationRule;
 import de.adorsys.opba.db.repository.jpa.IgnoreBankValidationRuleRepository;
 import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
@@ -29,12 +29,12 @@ public class IgnoreFieldsLoaderImpl implements IgnoreFieldsLoader {
 
     @Override
     public boolean apply(FieldCode fieldCode, Class invokerClass, Approach approach) {
-        List<IgnoreBankValidationRule> validationRules = ignoreBankValidationRuleRepository.findByProtocolId(protocolId);
+        List<IgnoreValidationRule> validationRules = ignoreBankValidationRuleRepository.findByProtocolId(protocolId);
         Set<FieldCode> fieldsToIgnore = validationRules.stream()
-                .filter(it -> it.getEndpointClassCanonicalName().equals(invokerClass.getCanonicalName()))
-                .filter(it -> !EMBEDDED.equals(approach) || it.isForEmbedded())
-                .filter(it -> !REDIRECT.equals(approach) || it.isForRedirect())
-                .map(IgnoreBankValidationRule::getValidationCode)
+                .filter(it -> null == it.getEndpointClassCanonicalName() || it.getEndpointClassCanonicalName().equals(invokerClass.getCanonicalName()))
+                .filter(it -> !(EMBEDDED.equals(approach) && it.isForEmbedded()))
+                .filter(it -> !(REDIRECT.equals(approach) && it.isForRedirect()))
+                .map(IgnoreValidationRule::getValidationCode)
                 .collect(Collectors.toSet());
         return !fieldsToIgnore.contains(fieldCode);
     }

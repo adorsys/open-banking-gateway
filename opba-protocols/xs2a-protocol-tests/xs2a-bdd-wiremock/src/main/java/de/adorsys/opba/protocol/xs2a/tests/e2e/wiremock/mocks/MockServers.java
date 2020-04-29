@@ -7,7 +7,7 @@ import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.db.domain.entity.BankProfile;
 import de.adorsys.opba.db.domain.entity.BankProtocol;
-import de.adorsys.opba.db.domain.entity.IgnoreBankValidationRule;
+import de.adorsys.opba.db.domain.entity.IgnoreValidationRule;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.IgnoreBankValidationRuleRepository;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
@@ -94,7 +94,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     }
 
     public SELF ignore_validation_rules_table_contains_field_psu_id() {
-        IgnoreBankValidationRule bankValidationRule = IgnoreBankValidationRule.builder()
+        IgnoreValidationRule bankValidationRule = IgnoreValidationRule.builder()
                 .protocol(BankProtocol.builder().id(PROTOCOL_ID).build())
                 .endpointClassCanonicalName(AccountListingService.class.getCanonicalName())
                 .forEmbedded(true)
