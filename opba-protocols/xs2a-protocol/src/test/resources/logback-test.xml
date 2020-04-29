@@ -11,6 +11,18 @@
     <logger name="org.springframework.test.context" level="WARN">
         <appender-ref ref="STDOUT" />
     </logger>
+    <logger name="org.testcontainers" level="WARN">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="org.flowable" level="WARN">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="org.hibernate" level="WARN">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="com.zaxxer.hikari.HikariDataSource" level="WARN">
+        <appender-ref ref="STDOUT" />
+    </logger>
 
     <root level="info">
         <appender-ref ref="STDOUT" />
