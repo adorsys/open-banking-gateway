@@ -3,12 +3,8 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 import com.google.common.collect.ImmutableMap;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.db.domain.entity.BankProtocol;
-import de.adorsys.opba.db.domain.entity.IgnoreBankValidationRule;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
-import de.adorsys.opba.db.repository.jpa.IgnoreBankValidationRuleRepository;
 import de.adorsys.opba.protocol.api.common.Approach;
-import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import io.restassured.RestAssured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -34,9 +30,6 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
 
     @Autowired
     private BankProfileJpaRepository profiles;
-
-    @Autowired
-    private IgnoreBankValidationRuleRepository ignoreBankValidationRuleRepository;
 
     @Transactional
     public SELF preferred_sca_approach_selected_for_all_banks_in_opba(Approach expectedApproach) {
@@ -73,26 +66,6 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
                 .then()
                     .statusCode(HttpStatus.CREATED.value());
 
-        return self();
-    }
-
-    public SELF ignore_validation_rules_table_contains_field_psu_id() {
-        IgnoreBankValidationRule bankValidationRule = IgnoreBankValidationRule.builder()
-                .protocol(BankProtocol.builder().id(1L).build())
-                .endpointClassCanonicalName("de.adorsys.opba.protocol.xs2a.service.xs2a.ais.AccountListingService")
-                .forEmbedded(false)
-                .forRedirect(true)
-                .validationCode(FieldCode.PSU_ID)
-                .build();
-        ignoreBankValidationRuleRepository.deleteAll();
-        ignoreBankValidationRuleRepository.save(bankValidationRule);
-        bankValidationRule.setId(null);
-        bankValidationRule.setEndpointClassCanonicalName("de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateAisAccountListConsentService");
-        ignoreBankValidationRuleRepository.save(bankValidationRule);
-        bankValidationRule.setId(null);
-        bankValidationRule.setProtocol(BankProtocol.builder().id(3L).build());
-        bankValidationRule.setEndpointClassCanonicalName("de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate.StartConsentAuthorization");
-        ignoreBankValidationRuleRepository.save(bankValidationRule);
         return self();
     }
 }

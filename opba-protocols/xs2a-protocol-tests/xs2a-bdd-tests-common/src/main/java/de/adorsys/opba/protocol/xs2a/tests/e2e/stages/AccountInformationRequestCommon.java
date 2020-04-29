@@ -9,7 +9,6 @@ import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
-import de.adorsys.opba.protocol.api.common.Approach;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -175,11 +174,10 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_without_psu_id(Approach expectedApproach) {
-        String resource = expectedApproach == Approach.EMBEDDED
-                ? "restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"
-                : "restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent-without-psu-id.json";
-        startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT, resource);
+    public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_without_psu_id() {
+        startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT,
+                "restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent-without-psu-id.json"
+        );
         return self();
     }
 
