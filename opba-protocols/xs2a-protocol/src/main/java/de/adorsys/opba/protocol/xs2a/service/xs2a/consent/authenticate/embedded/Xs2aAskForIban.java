@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate.embedded;
 
+import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.RedirectExecutor;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;

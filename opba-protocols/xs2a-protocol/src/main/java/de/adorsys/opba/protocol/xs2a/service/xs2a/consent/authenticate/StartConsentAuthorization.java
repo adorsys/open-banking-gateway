@@ -1,9 +1,9 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate;
 
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
+import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
+import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
-import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
