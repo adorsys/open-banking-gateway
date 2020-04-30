@@ -73,18 +73,19 @@ facade:
   expirable:
     expire-after-write: PT10M
   encryption:
-    # Consent protection settings
+    # Consent encryption keys protection settings
     datasafe:
       read-keystore:
         psu: I-M-A-SAMPLE-PSU-PASSWORD-REPLACE-ME
         fintech: I-M-A-SAMPLE-FINTECH-PASSWORD-REPLACE-ME
         fintech-user: I-M-A-SAMPLE-FINTECH-USER-PASSWORD-REPLACE-ME
-    # Intermediate data protection settings
+    # PSU consent encryption
     psu:
       key-pair:
         cipher-algo: AES256_CBC
         key-algo: RSA
         len: 2048
+    # Consent requirements encryption
     consent-spec:
       secret-key:
         key-algo: AES
