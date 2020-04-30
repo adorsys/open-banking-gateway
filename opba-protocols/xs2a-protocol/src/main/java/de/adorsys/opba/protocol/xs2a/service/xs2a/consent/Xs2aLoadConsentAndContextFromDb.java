@@ -2,8 +2,8 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
-import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aFlowableProperties;
-import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aObjectMapper;
+import de.adorsys.opba.protocol.bpmnshared.config.flowable.Xs2aFlowableProperties;
+import de.adorsys.opba.protocol.bpmnshared.config.flowable.Xs2aObjectMapper;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.AccountListXs2aContext;
