@@ -3,112 +3,39 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>open-banking-gateway</artifactId>
         <groupId>de.adorsys.opba</groupId>
+        <artifactId>fintech-examples</artifactId>
         <version>0.0.7-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>last-module-codecoverage</artifactId>
-    <name>last-module-codecoverage</name>
+    <artifactId>fintech-last-module-codecoverage</artifactId>
+    <name>fintech-examples/last-module-codecoverage</name>
     <packaging>pom</packaging>
 
     <properties>
         <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
-        Change this if depth changes. Current: /open-banking-gateway/last-module-codecoverage -->
-        <main.basedir>${project.parent.basedir}</main.basedir>
+        Change this if depth changes. Current: /fintech-examples/last-module-codecoverage -->
+        <main.basedir>${project.parent.parent.basedir}</main.basedir>
     </properties>
 
     <dependencies>
         <!-- ROOT DIR -->
-        <!-- Excluding fintech-examples as they are not production code -->
         <dependency>
             <groupId>de.adorsys.opba</groupId>
-            <artifactId>opba-rest-api-shared</artifactId>
+            <artifactId>fintech-api</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>de.adorsys.opba</groupId>
-            <artifactId>opba-banking-protocol-facade</artifactId>
+            <artifactId>fintech-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>de.adorsys.opba</groupId>
-            <artifactId>opba-banking-rest-api</artifactId>
+            <artifactId>fintech-server</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>de.adorsys.opba</groupId>
-            <artifactId>opba-banking-rest-impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.opba</groupId>
-            <artifactId>opba-consent-rest-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.opba</groupId>
-            <artifactId>opba-consent-rest-impl</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.opba</groupId>
-            <artifactId>opba-db</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.opba</groupId>
-            <artifactId>opba-embedded-starter</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.opba</groupId>
-            <artifactId>opba-embedded-starter-tests</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.opba</groupId>
-            <artifactId>opba-facade-protocol-api-shared</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <!-- Excluding sandbox-test as it is testing framework setup -->
-
-        <!-- OPBA-PROTOCOLS DIR -->
-        <dependency>
-            <groupId>de.adorsys.opba</groupId>
-            <artifactId>xs2a-protocol</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.opba</groupId>
-            <artifactId>xs2a-sandbox-protocol</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <!-- Excluding sandbox-test as it is testing framework setup -->
-        <!-- XS2A-PROTOCOL-TESTS DIR -->
-        <dependency>
-            <groupId>de.adorsys.opba</groupId>
-            <artifactId>xs2a-bdd-sandbox</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- Skipping xs2a-bdd-tests-common as it is test-common -->
-        <dependency>
-            <groupId>de.adorsys.opba</groupId>
-            <artifactId>xs2a-bdd-wiremock</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.adorsys.opba</groupId>
-            <artifactId>xs2a-stress-test</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <!-- END XS2A-PROTOCOL-TESTS DIR -->
-        <!-- END OPBA-PROTOCOLS DIR -->
     </dependencies>
 
     <build>
