@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
  * Selects sub-process name to be executed using {@link BaseContext}. I.e.: calls different sub-processes for account
  * listing and transaction listing.
  */
-@Service("flowNameSelector")
+@Service("xs2aFlowNameSelector")
 @RequiredArgsConstructor
-public class FlowNameSelector {
+public class Xs2aFlowNameSelector {
 
     /**
      * Sub-process name for current context (PSU/FinTech input) validation.

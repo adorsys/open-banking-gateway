@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
  * </ul>
  */
 @Slf4j
-@Service("executionErrorHandler")
-public class ExecutionErrorHandler implements JavaDelegate {
+@Service("xs2ExecutionErrorHandler")
+public class Xs2aExecutionErrorHandler implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) {

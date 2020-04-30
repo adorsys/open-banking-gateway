@@ -32,7 +32,7 @@ public class GlobalConst {
     /**
      * General request handler flowable process.
      */
-    public static final String REQUEST_SAGA = "request-saga";
+    public static final String XS2A_REQUEST_SAGA = "xs2a-request-saga";
 
     /**
      * Validation error exception code.

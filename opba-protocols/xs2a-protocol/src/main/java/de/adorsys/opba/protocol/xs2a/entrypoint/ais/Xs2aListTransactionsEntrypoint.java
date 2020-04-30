@@ -28,9 +28,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
-import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.REQUEST_SAGA;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
+import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_REQUEST_SAGA;
 import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 
 /**
@@ -51,7 +51,7 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
     @Override
     public CompletableFuture<Result<TransactionsResponseBody>> execute(ServiceContext<ListTransactionsRequest> serviceContext) {
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(
-                REQUEST_SAGA,
+                XS2A_REQUEST_SAGA,
                 new ConcurrentHashMap<>(ImmutableMap.of(CONTEXT, prepareContext(serviceContext)))
         );
 
