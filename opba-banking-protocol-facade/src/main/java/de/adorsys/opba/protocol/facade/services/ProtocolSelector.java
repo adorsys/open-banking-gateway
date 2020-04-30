@@ -6,7 +6,6 @@ import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
-import de.adorsys.opba.protocol.api.dto.context.Context;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +23,7 @@ public class ProtocolSelector {
 
     @Transactional
     public <A> A selectAndPersistProtocolFor(
-        Context<?> ctx,
+        InternalContext<?> ctx,
         ProtocolAction protocolAction,
         Map<String, A> actionBeans) {
         Optional<BankProtocol> bankProtocol;
@@ -41,7 +39,7 @@ public class ProtocolSelector {
         }
 
         return bankProtocol
-                .map(protocol -> setProtocolOnSession(protocol, ctx.getServiceSessionId()))
+                .map(protocol -> setProtocolOnSession(protocol, ctx.getSession()))
                 .map(protocol -> findActionBean(protocol, actionBeans, protocolAction))
                 .orElseThrow(() ->
                         new IllegalStateException(
@@ -50,10 +48,7 @@ public class ProtocolSelector {
                 );
     }
 
-    private BankProtocol setProtocolOnSession(BankProtocol protocol, UUID serviceSessionId) {
-        ServiceSession session = sessions.findById(serviceSessionId)
-                .orElseThrow(() -> new IllegalStateException("Missing session " + serviceSessionId));
-
+    private BankProtocol setProtocolOnSession(BankProtocol protocol, ServiceSession session) {
         if (null == session.getService()) {
             session.setService(protocol);
         }

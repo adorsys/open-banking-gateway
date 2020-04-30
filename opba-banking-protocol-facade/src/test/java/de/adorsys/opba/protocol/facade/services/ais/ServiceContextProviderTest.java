@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.facade.services.ais;
 
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
@@ -13,6 +14,7 @@ import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedi
 import de.adorsys.opba.protocol.facade.services.DbDropper;
 import de.adorsys.opba.protocol.facade.services.InternalContext;
 import de.adorsys.opba.protocol.facade.services.ProtocolResultHandler;
+import de.adorsys.opba.protocol.facade.services.ProtocolSelector;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -25,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
@@ -52,7 +56,13 @@ public class ServiceContextProviderTest extends DbDropper {
     private ServiceSessionRepository serviceSessionRepository;
 
     @Autowired
+    private ListAccountsService listAccountsService;
+
+    @Autowired
     private TransactionTemplate txTemplate;
+
+    @Autowired
+    private ProtocolSelector protocolSelector;
 
     @Test
     @SneakyThrows
@@ -74,6 +84,8 @@ public class ServiceContextProviderTest extends DbDropper {
                 ).build();
 
         InternalContext<FacadeServiceableGetter> internalContext = serviceContextProvider.provide(request);
+        Map<String, ListAccountsService> actionBeans = Collections.singletonMap("xs2aListAccounts", listAccountsService);
+        protocolSelector.selectAndPersistProtocolFor(internalContext, ProtocolAction.LIST_ACCOUNTS, actionBeans);
         ServiceContext<FacadeServiceableGetter> providedContext = serviceContextProvider.provideRequestScoped(request, internalContext);
         URI redirectionTo = new URI("/");
         Result<URI> result = new ConsentAcquiredResult<>(redirectionTo, null);
