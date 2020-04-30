@@ -1,9 +1,9 @@
-package de.adorsys.opba.protocol.xs2a.service.eventbus;
+package de.adorsys.opba.protocol.bpmnshared.service.eventbus;
 
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ConsentAcquired;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ProcessResponse;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Redirect;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ValidationProblem;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.ConsentAcquired;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.Redirect;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
 import de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class ProcessEventHandlerRegistrar {
      *               {@link de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result} that is expected by
      *               an entrypoint that triggered the process.
      * @param <T> Expected result class. This class will be mapped from internal process result
-     * ({@link de.adorsys.opba.protocol.xs2a.domain.dto.messages.InternalProcessResult}) by {@code mapper}
+     * ({@link de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalProcessResult}) by {@code mapper}
      */
     public <T> void addHandler(String processId, OutcomeMapper<T> mapper) {
         handler.add(

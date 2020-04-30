@@ -1,28 +1,28 @@
-package de.adorsys.opba.protocol.xs2a.config.flowable;
+package de.adorsys.opba.protocol.bpmnshared.config.flowable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.variable.api.types.ValueFields;
-import org.flowable.variable.api.types.VariableType;
+import org.flowable.variable.service.impl.types.SerializableType;
 
 import java.util.List;
 
 /**
- * JSON serializer for small classes (small resulting strings). Preserves the class name used, so deserialzation
- * returns the class that was used to serialize data.
+ * JSON serializer for large classes (large resulting strings). Preserves the class name used, so deserialzation
+ *  returns the class that was used to serialize data.
  * Data is encrypted using {@link RequestScopedServicesProvider}.
  */
 @RequiredArgsConstructor
-class JsonCustomSerializer implements VariableType {
+class LargeJsonCustomSerializer extends SerializableType {
 
-    static final String JSON = "as_json";
+    static final String JSON = "as_large_json";
 
     private final RequestScopedServicesProvider scopedServicesProvider;
     private final ObjectMapper mapper;
     private final List<String> allowOnlyClassesWithPrefix;
-    private final int maxLength;
+    private final int minLength;
 
     @Override
     public String getTypeName() {
@@ -46,29 +46,26 @@ class JsonCustomSerializer implements VariableType {
         }
 
         String value = mapper.writeValueAsString(o);
-        return value.length() < maxLength;
+        return value.length() > minLength;
     }
 
     @Override
-    @SneakyThrows
-    public void setValue(Object o, ValueFields valueFields) {
+    public byte[] serialize(Object o, ValueFields valueFields) {
         if (o == null) {
-            valueFields.setBytes(null);
-            return;
+            return null;
         }
 
-        valueFields.setBytes(SerializerUtil.serialize(o, mapper));
+        return SerializerUtil.serialize(o, mapper);
     }
 
     @Override
-    @SneakyThrows
-    public Object getValue(ValueFields valueFields) {
-        if (null == valueFields.getBytes()) {
+    public Object deserialize(byte[] bytes, ValueFields valueFields) {
+        if (null == bytes) {
             return null;
         }
 
         return SerializerUtil.deserialize(
-                valueFields.getBytes(),
+                bytes,
                 mapper,
                 allowOnlyClassesWithPrefix,
                 scopedServicesProvider

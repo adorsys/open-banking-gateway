@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.ais;
 
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ProcessResponse;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathQueryHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathQueryHeadersMapperTemplate;

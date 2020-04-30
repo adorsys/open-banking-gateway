@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.config.flowable;
+package de.adorsys.opba.protocol.bpmnshared.config.flowable;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;

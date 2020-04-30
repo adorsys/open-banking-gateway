@@ -1,9 +1,9 @@
 package de.adorsys.opba.protocol.xs2a.config;
 
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
-import de.adorsys.opba.protocol.xs2a.config.flowable.FlowableConfig;
-import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aFlowableProperties;
-import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aObjectMapper;
+import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableConfig;
+import de.adorsys.opba.protocol.bpmnshared.config.flowable.Xs2aFlowableProperties;
+import de.adorsys.opba.protocol.bpmnshared.config.flowable.Xs2aObjectMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.RequestScopedStub;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import lombok.SneakyThrows;
