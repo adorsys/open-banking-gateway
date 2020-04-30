@@ -13,4 +13,5 @@ bash <(curl -s https://codecov.io/bash) -s './last-module-codecoverage*' -F back
 bash <(curl -s https://codecov.io/bash) -s './consent-ui*' -F frontend -B "$BRANCH";
 
 # Example code
+bash <(curl -s https://codecov.io/bash) -s './fintech-examples/fintech-last-module-codecoverage*' -F fintech  -B "$BRANCH";
 bash <(curl -s https://codecov.io/bash) -s './fintech-examples/fintech-ui*' -F fintech -B "$BRANCH";
