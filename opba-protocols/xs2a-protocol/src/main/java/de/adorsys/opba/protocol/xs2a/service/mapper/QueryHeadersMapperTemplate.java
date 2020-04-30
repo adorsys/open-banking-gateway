@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.mapper;
 
-import de.adorsys.opba.protocol.xs2a.context.BaseContext;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.QueryHeadersToValidate;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedQueryHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;

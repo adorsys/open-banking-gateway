@@ -1,6 +1,9 @@
 package de.adorsys.opba.protocol.xs2a.context;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.ImmutableMap;
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataEntry;
 import de.adorsys.xs2a.adapter.service.model.AuthenticationObject;
@@ -9,6 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Generic XS2A context
@@ -28,6 +32,14 @@ public class Xs2aContext extends BaseContext {
      * Requested content type.
      */
     private String contentType = "application/json";
+
+    /**
+     * Hardcoded process names based on the action name.
+     */
+    private Map<ProtocolAction, String> flowByAction = ImmutableMap.of(
+            ProtocolAction.LIST_ACCOUNTS, "xs2a-list-accounts",
+            ProtocolAction.LIST_TRANSACTIONS, "xs2a-list-transactions"
+    );
 
     ///////////////////////////////////////// Mandatory dynamic
     /**

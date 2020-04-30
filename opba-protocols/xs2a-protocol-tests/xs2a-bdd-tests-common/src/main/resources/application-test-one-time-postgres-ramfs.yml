@@ -134,9 +134,9 @@ bpmnshared:
   flowable:
     serialization:
       serialize-only-packages:
+        - de.adorsys.opba.protocol.bpmnshared.dto.context
         - de.adorsys.opba.protocol.xs2a.context
         - de.adorsys.opba.protocol.hbci.context
-        - de.adorsys.xs2a.adapter.service.model
     expirable:
       expire-after-write: PT600S
 flowable:
