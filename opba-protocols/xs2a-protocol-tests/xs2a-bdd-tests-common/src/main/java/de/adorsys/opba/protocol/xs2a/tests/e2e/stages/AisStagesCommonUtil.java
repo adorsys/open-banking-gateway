@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
 import de.adorsys.opba.api.security.external.domain.DataToSign;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
+import de.adorsys.opba.api.security.domain.OperationType;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import lombok.experimental.UtilityClass;
@@ -18,6 +19,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PA
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_TIMESTAMP_UTC;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_OPERATION_TYPE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.COMPUTE_PSU_IP_ADDRESS;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP_ADDRESS;
 
@@ -49,13 +51,13 @@ public class AisStagesCommonUtil {
     public static final String COMPUTE_IP_ADDRESS = "false";
     public static final String IP_ADDRESS = "1.1.1.1";
 
-    public static RequestSpecification withDefaultHeaders(String fintechUserId, RequestSigningService requestSigningService) {
-        return withSignedHeadersWithoutIpAddress(fintechUserId, requestSigningService)
+    public static RequestSpecification withDefaultHeaders(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType) {
+        return withSignedHeadersWithoutIpAddress(fintechUserId, requestSigningService, operationType)
                 .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
                 .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
-    public static RequestSpecification withSignedHeadersWithoutIpAddress(String fintechUserId, RequestSigningService requestSigningService) {
+    public static RequestSpecification withSignedHeadersWithoutIpAddress(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
@@ -69,10 +71,11 @@ public class AisStagesCommonUtil {
                            .header(FINTECH_ID, DEFAULT_FINTECH_ID)
                            .header(X_REQUEST_ID, xRequestId.toString())
                            .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
-                           .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new DataToSign(xRequestId, xTimestampUtc)));
+                           .header(X_OPERATION_TYPE, operationType)
+                           .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new DataToSign(xRequestId, xTimestampUtc, operationType)));
     }
 
-    public static RequestSpecification withSignatureHeaders(RequestSpecification specification, RequestSigningService requestSigningService) {
+    public static RequestSpecification withSignatureHeaders(RequestSpecification specification, RequestSigningService requestSigningService, OperationType operationType) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
@@ -80,6 +83,7 @@ public class AisStagesCommonUtil {
                        .header(FINTECH_ID, DEFAULT_FINTECH_ID)
                        .header(X_REQUEST_ID, xRequestId.toString())
                        .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
-                       .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new DataToSign(xRequestId, xTimestampUtc)));
+                       .header(X_OPERATION_TYPE, operationType)
+                       .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new DataToSign(xRequestId, xTimestampUtc, operationType)));
     }
 }

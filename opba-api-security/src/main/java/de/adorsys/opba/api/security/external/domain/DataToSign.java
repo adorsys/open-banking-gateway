@@ -7,12 +7,11 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.sun.tools.javac.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -61,8 +60,8 @@ public class DataToSign<T> {
             return nodes.asText();
         }
 
-        LinkedHashMap<String, String> map = objectToMap(nodes);
-        LinkedHashMap<String, String> filteredMap = valueNotNullFilter(map);
+        Map<String, String> map = objectToMap(nodes);
+        Map<String, String> filteredMap = valueNotNullFilter(map);
 
         String mapAsString = valueAsString(filteredMap);
 
@@ -73,8 +72,8 @@ public class DataToSign<T> {
         return mapAsString;
     }
 
-    private LinkedHashMap<String, String> objectToMap(JsonNode objectNode) {
-        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+    private Map<String, String> objectToMap(JsonNode objectNode) {
+        Map<String, String> map = new HashMap<>();
         Iterator<Map.Entry<String, JsonNode>> iter = objectNode.fields();
 
         while (iter.hasNext()) {
@@ -92,11 +91,11 @@ public class DataToSign<T> {
         return map;
     }
 
-    private LinkedHashMap<String, String> valueNotNullFilter(LinkedHashMap<String, String> sortedMap) {
+    private Map<String, String> valueNotNullFilter(Map<String, String> sortedMap) {
         return sortedMap.entrySet()
                        .stream()
                        .filter(e -> Objects.nonNull(e.getValue()))
-                       .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y, LinkedHashMap::new));
+                       .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> y));
     }
 
     private String valueAsString(Object value) {
