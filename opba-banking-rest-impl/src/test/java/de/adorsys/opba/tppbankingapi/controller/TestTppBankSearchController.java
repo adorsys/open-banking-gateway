@@ -2,6 +2,7 @@ package de.adorsys.opba.tppbankingapi.controller;
 
 import de.adorsys.opba.api.security.external.domain.DataToSign;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
+import de.adorsys.opba.api.security.domain.OperationType;
 import de.adorsys.opba.tppbankingapi.BaseMockitoTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import static de.adorsys.opba.api.security.external.domain.HttpHeaders.FINTECH_I
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_REQUEST_ID;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_TIMESTAMP_UTC;
+import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_OPERATION_TYPE;
 import static de.adorsys.opba.tppbankingapi.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -43,7 +45,8 @@ class TestTppBankSearchController extends BaseMockitoTest {
 
                         .header(X_REQUEST_ID, xRequestId)
                         .header(X_TIMESTAMP_UTC, xTimestampUtc)
-                        .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new DataToSign(xRequestId, xTimestampUtc)))
+                        .header(X_OPERATION_TYPE, OperationType.BANK_SEARCH)
+                        .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new DataToSign(xRequestId, xTimestampUtc, OperationType.BANK_SEARCH)))
                         .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
                         .param("keyword", "commerz")
                         .param("max", "10")
@@ -68,7 +71,8 @@ class TestTppBankSearchController extends BaseMockitoTest {
 
                         .header(X_REQUEST_ID, xRequestId)
                         .header(X_TIMESTAMP_UTC, xTimestampUtc)
-                        .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new DataToSign(xRequestId, xTimestampUtc)))
+                        .header(X_OPERATION_TYPE, OperationType.BANK_SEARCH)
+                        .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new DataToSign(xRequestId, xTimestampUtc, OperationType.BANK_SEARCH)))
                         .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
 
                         .param("bankId", "4eee696c-b2d2-45ac-86c7-b77a810a261b"))
@@ -90,7 +94,8 @@ class TestTppBankSearchController extends BaseMockitoTest {
 
                         .header(X_REQUEST_ID, xRequestId)
                         .header(X_TIMESTAMP_UTC, xTimestampUtc)
-                        .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new DataToSign(xRequestId, xTimestampUtc)))
+                        .header(X_OPERATION_TYPE, OperationType.BANK_SEARCH)
+                        .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new DataToSign(xRequestId, xTimestampUtc, OperationType.BANK_SEARCH)))
                         .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
 
                         .param("keyword", "Sandbox")
