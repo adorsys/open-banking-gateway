@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
+import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataEntry;
 import de.adorsys.xs2a.adapter.service.model.AuthenticationObject;
@@ -145,5 +146,12 @@ public class Xs2aContext extends BaseContext {
     @JsonIgnore
     public void setLastScaChallenge(String scaChallengeResult) {
         this.transientStorage().set(new TransientDataEntry(null, scaChallengeResult));
+    }
+
+    @JsonIgnore
+    public Approach getActiveScaApproach() {
+        return this.getAspspScaApproach() == null
+                ?  this.getRequestScoped().aspspProfile().getPreferredApproach()
+                : Approach.valueOf(this.getAspspScaApproach());
     }
 }

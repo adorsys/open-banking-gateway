@@ -5,37 +5,30 @@ import de.adorsys.opba.db.repository.jpa.IgnoreBankValidationRuleRepository;
 import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreFieldsLoader;
-import lombok.Getter;
+import de.adorsys.opba.protocol.api.services.scoped.validation.Rules;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import static de.adorsys.opba.protocol.api.common.Approach.EMBEDDED;
-import static de.adorsys.opba.protocol.api.common.Approach.REDIRECT;
+import static java.util.stream.Collectors.toMap;
 
-@Getter
-@Setter
 @RequiredArgsConstructor
-@Service
 public class IgnoreFieldsLoaderImpl implements IgnoreFieldsLoader {
 
-    private Long protocolId;
-
+    private final Long protocolId;
     private final IgnoreBankValidationRuleRepository ignoreBankValidationRuleRepository;
 
     @Override
-    public boolean apply(FieldCode fieldCode, Class invokerClass, Approach approach) {
-        List<IgnoreValidationRule> validationRules = ignoreBankValidationRuleRepository.findByProtocolId(protocolId);
-        Set<FieldCode> fieldsToIgnore = validationRules.stream()
-                .filter(it -> null == it.getEndpointClassCanonicalName() || it.getEndpointClassCanonicalName().equals(invokerClass.getCanonicalName()))
-                .filter(it -> !(EMBEDDED.equals(approach) && it.isForEmbedded()))
-                .filter(it -> !(REDIRECT.equals(approach) && it.isForRedirect()))
-                .map(IgnoreValidationRule::getValidationCode)
-                .collect(Collectors.toSet());
-        return !fieldsToIgnore.contains(fieldCode);
+    public <T> Map<FieldCode, Rules> getValidationRules(Class<T> invokerClass, Approach approach) {
+        Map<FieldCode, List<IgnoreValidationRule>> codeListMap = ignoreBankValidationRuleRepository
+                .findByProtocolId(protocolId).stream()
+                .collect(Collectors.groupingBy(IgnoreValidationRule::getValidationCode));
+
+        return codeListMap.entrySet().stream().collect(toMap(
+                Map.Entry::getKey,
+                it -> new RulesImpl<T>(it.getValue(), invokerClass, approach)
+        ));
     }
 }
