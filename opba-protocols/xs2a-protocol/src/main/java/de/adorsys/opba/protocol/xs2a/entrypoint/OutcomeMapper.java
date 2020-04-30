@@ -8,10 +8,10 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.Authorization
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ConsentAcquired;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ProcessResponse;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Redirect;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ValidationProblem;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.ConsentAcquired;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.Redirect;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
 import de.adorsys.opba.protocol.xs2a.entrypoint.dto.ContextBasedValidationErrorResult;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import lombok.RequiredArgsConstructor;

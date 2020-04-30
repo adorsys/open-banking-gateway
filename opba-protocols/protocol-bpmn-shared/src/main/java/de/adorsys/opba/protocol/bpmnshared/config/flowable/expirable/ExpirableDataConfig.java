@@ -1,7 +1,6 @@
-package de.adorsys.opba.protocol.xs2a.config.expirable;
+package de.adorsys.opba.protocol.bpmnshared.config.flowable.expirable;
 
 import com.google.common.cache.CacheBuilder;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.InternalProcessResult;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

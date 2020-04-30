@@ -21,6 +21,7 @@
 
     <modules>
         <module>opba-protocol-api</module>
+        <module>protocol-bpmn-shared</module>
         <!-- XS2A -->
         <module>xs2a-protocol</module>
         <module>xs2a-sandbox-protocol</module>
