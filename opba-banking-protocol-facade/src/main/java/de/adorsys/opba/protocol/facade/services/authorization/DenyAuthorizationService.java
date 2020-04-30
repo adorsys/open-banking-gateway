@@ -9,6 +9,7 @@ import de.adorsys.opba.protocol.facade.services.ProtocolSelector;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Map;
 
@@ -22,7 +23,8 @@ public class DenyAuthorizationService extends FacadeService<DenyAuthorizationReq
             Map<String, ? extends DenyAuthorization> actionProviders,
             ProtocolSelector selector,
             @Qualifier(NO_REDIRECT_CODE_VALIDATION) ServiceContextProvider provider,
-            ProtocolResultHandler handler) {
-        super(DENY_AUTHORIZATION, actionProviders, selector, provider, handler);
+            ProtocolResultHandler handler,
+            TransactionTemplate txTemplate) {
+        super(DENY_AUTHORIZATION, actionProviders, selector, provider, handler, txTemplate);
     }
 }

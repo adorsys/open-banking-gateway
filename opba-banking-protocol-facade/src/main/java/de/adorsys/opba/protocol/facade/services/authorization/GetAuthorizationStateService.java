@@ -9,6 +9,7 @@ import de.adorsys.opba.protocol.facade.services.ProtocolSelector;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Map;
 
@@ -22,7 +23,8 @@ public class GetAuthorizationStateService extends FacadeService<AuthorizationReq
         Map<String, ? extends GetAuthorizationState> actionProviders,
         ProtocolSelector selector,
         @Qualifier(FINTECH_CONTEXT_PROVIDER) ServiceContextProvider provider,
-        ProtocolResultHandler handler) {
-        super(GET_AUTHORIZATION_STATE, actionProviders, selector, provider, handler);
+        ProtocolResultHandler handler,
+        TransactionTemplate txTemplate) {
+        super(GET_AUTHORIZATION_STATE, actionProviders, selector, provider, handler, txTemplate);
     }
 }
