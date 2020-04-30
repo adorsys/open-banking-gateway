@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a;
 
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.Redirect;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.Redirect;
 import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.LastRedirectionTarget;

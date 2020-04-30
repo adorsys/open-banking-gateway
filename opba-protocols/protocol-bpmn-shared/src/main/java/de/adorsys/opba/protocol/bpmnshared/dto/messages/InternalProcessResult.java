@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.domain.dto.messages;
+package de.adorsys.opba.protocol.bpmnshared.dto.messages;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
