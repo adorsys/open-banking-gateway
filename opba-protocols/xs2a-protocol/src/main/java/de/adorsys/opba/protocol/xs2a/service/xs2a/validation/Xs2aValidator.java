@@ -1,13 +1,14 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.validation;
 
 import com.google.common.collect.Iterables;
-import de.adorsys.opba.protocol.api.common.Approach;
-import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreFieldsLoader;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreBankValidationRuleDto;
+import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
+import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreFieldsLoader;
+import de.adorsys.opba.protocol.api.services.scoped.validation.Rules;
 import de.adorsys.opba.protocol.xs2a.domain.ValidationIssueException;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;
@@ -23,6 +24,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.lang.reflect.Field;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,21 +55,21 @@ public class Xs2aValidator {
      * @param exec Current execution that will be updated with violations if present.
      * @param dtosToValidate ASPSP API call parameter objects to validate.
      */
-    public void validate(DelegateExecution exec, Xs2aContext context, Class invokerClass, Object... dtosToValidate) {
+    public <T> void validate(DelegateExecution exec, Xs2aContext context, Class<T> invokerClass, Object... dtosToValidate) {
         Set<ConstraintViolation<Object>> allErrors = new HashSet<>();
 
         IgnoreFieldsLoader ignoreFieldsLoader = context.getRequestScoped().ignoreFieldsLoader();
-        Approach approach = context.getAspspScaApproach() == null
-                ?  context.getRequestScoped().aspspProfile().getPreferredApproach()
-                : Approach.valueOf(context.getAspspScaApproach());
+        Map<FieldCode, Rules> rulesMap = ignoreFieldsLoader.getValidationRules(
+                invokerClass,
+                context.getActiveScaApproach()
+        );
         for (Object value : dtosToValidate) {
             Set<ConstraintViolation<Object>> errors = validator.validate(value)
                     .stream()
-                    .filter(f -> ignoreFieldsLoader.apply(
-                            findInfoOnViolation(f).ctx().value(),
-                            invokerClass,
-                            approach
-                    ))
+                    .filter(f -> {
+                        FieldCode fieldCode = findInfoOnViolation(f).ctx().value();
+                        return !(rulesMap.containsKey(fieldCode) && !rulesMap.get(fieldCode).apply());
+                    })
                     .collect(Collectors.toSet());
             allErrors.addAll(errors);
         }

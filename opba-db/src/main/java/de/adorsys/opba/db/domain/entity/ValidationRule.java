@@ -27,8 +27,8 @@ import javax.persistence.SequenceGenerator;
 public class ValidationRule {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_validation_rule_id_generator")
-    @SequenceGenerator(name = "bank_validation_rule_id_generator", sequenceName = "bank_validation_rule_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "validation_rule_id_generator")
+    @SequenceGenerator(name = "validation_rule_id_generator", sequenceName = "validation_rule_sequence")
     private Long id;
 
     @ManyToOne(optional = false)

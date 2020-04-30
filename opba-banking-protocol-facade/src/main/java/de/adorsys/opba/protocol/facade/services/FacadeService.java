@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.facade.services;
 
 import de.adorsys.opba.protocol.api.Action;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
+import de.adorsys.opba.protocol.api.dto.context.Context;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
@@ -10,8 +11,8 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.support.TransactionTemplate;
 
-import javax.transaction.Transactional;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -23,32 +24,37 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
     private final ProtocolSelector selector;
     private final ServiceContextProvider provider;
     private final ProtocolResultHandler handler;
+    private final TransactionTemplate txTemplate;
 
-    @Transactional
     public CompletableFuture<FacadeResult<O>> execute(I request) {
-        ServiceContext<I> ctx = contextFor(request);
-        A protocol = selectAndSetProtocolTo(ctx);
-        ServiceContext<I> ctxWithRequestScope = addRequestScopedFor(request, ctx);
-        CompletableFuture<Result<O>> result = execute(protocol, ctxWithRequestScope);
+        ProtocolWithCtx<A, I> protocolWithCtx = txTemplate.execute(callback -> {
+            InternalContext<I> internalContext = contextFor(request);
+            A protocol = selectAndSetProtocolTo(internalContext.getCtx());
+            ServiceContext<I> serviceContext = addRequestScopedFor(request, internalContext);
+            return new ProtocolWithCtx<>(protocol, serviceContext);
+        });
+        assert protocolWithCtx != null;
+
+        CompletableFuture<Result<O>> result = execute(protocolWithCtx.getProtocol(), protocolWithCtx.getIServiceContext());
         // This one must exist in decoupled transaction
         return result.thenApply(
                 res -> handleResult(
                         res,
                         request.getFacadeServiceable(),
-                        ctxWithRequestScope
+                        protocolWithCtx.getIServiceContext()
                 )
         );
     }
 
-    protected ServiceContext<I> contextFor(I request) {
+    protected InternalContext<I> contextFor(I request) {
         return provider.provide(request);
     }
 
-    protected ServiceContext<I> addRequestScopedFor(I request, ServiceContext<I> ctx) {
+    protected ServiceContext<I> addRequestScopedFor(I request, InternalContext<I> ctx) {
         return provider.provideRequestScoped(request, ctx);
     }
 
-    protected A selectAndSetProtocolTo(ServiceContext<I> ctx) {
+    protected A selectAndSetProtocolTo(Context<I> ctx) {
         return selector.selectAndPersistProtocolFor(
                 ctx,
                 action,
