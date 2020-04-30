@@ -2,7 +2,6 @@ package de.adorsys.opba.protocol.facade.services;
 
 import de.adorsys.opba.protocol.api.Action;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
-import de.adorsys.opba.protocol.api.dto.context.Context;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
@@ -29,7 +28,7 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
     public CompletableFuture<FacadeResult<O>> execute(I request) {
         ProtocolWithCtx<A, I> protocolWithCtx = txTemplate.execute(callback -> {
             InternalContext<I> internalContext = contextFor(request);
-            A protocol = selectAndSetProtocolTo(internalContext.getCtx());
+            A protocol = selectAndSetProtocolTo(internalContext);
             ServiceContext<I> serviceContext = addRequestScopedFor(request, internalContext);
             return new ProtocolWithCtx<>(protocol, serviceContext);
         });
@@ -54,7 +53,7 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
         return provider.provideRequestScoped(request, ctx);
     }
 
-    protected A selectAndSetProtocolTo(Context<I> ctx) {
+    protected A selectAndSetProtocolTo(InternalContext<I> ctx) {
         return selector.selectAndPersistProtocolFor(
                 ctx,
                 action,
