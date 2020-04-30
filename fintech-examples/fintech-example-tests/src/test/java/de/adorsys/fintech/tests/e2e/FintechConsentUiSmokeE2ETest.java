@@ -9,7 +9,6 @@ import de.adorsys.fintech.tests.e2e.steps.UserInformationResult;
 import de.adorsys.fintech.tests.e2e.steps.WebDriverBasedUserInfoFintech;
 import de.adorsys.opba.api.security.config.TppTokenProperties;
 import de.adorsys.opba.api.security.service.RequestSigningService;
-import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import io.github.bonigarcia.seljup.SeleniumExtension;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.SneakyThrows;

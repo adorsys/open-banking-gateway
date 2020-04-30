@@ -3,10 +3,15 @@ package de.adorsys.fintech.tests.e2e.steps;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
 import net.bytebuddy.utility.RandomString;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.RetryOperations;
 
@@ -15,6 +20,7 @@ import java.time.Duration;
 
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.PIN;
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.USERNAME;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableConfig.TEST_RETRY_OPS;
 
 
 @JGivenStage
@@ -25,6 +31,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     static String username = USERNAME + RandomString.make().toLowerCase();;
 
     @Autowired
+    @Qualifier(TEST_RETRY_OPS)
     private RetryOperations withRetry;
 
     @Value("${test.webdriver.timeout}")
