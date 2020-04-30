@@ -6,6 +6,7 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.annotation.ScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
+import de.adorsys.opba.api.security.service.RequestSigningService;
 import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
 import io.restassured.RestAssured;
@@ -13,6 +14,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -72,11 +74,14 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
     protected String responseContent;
 
+    @Autowired
+    private RequestSigningService requestSigningService;
+
     @ScenarioState
     private List<ScaUserData> availableScas;
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner() {
-        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
+        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER, requestSigningService)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -90,7 +95,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_accounts_for_max_musterman() {
-        ExtractableResponse<Response> response = withDefaultHeaders(MAX_MUSTERMAN)
+        ExtractableResponse<Response> response = withDefaultHeaders(MAX_MUSTERMAN, requestSigningService)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -105,7 +110,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_anton_brueckner(String resourceId) {
-        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
+        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER, requestSigningService)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
@@ -124,7 +129,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId) {
-        ExtractableResponse<Response> response = withDefaultHeaders(MAX_MUSTERMAN)
+        ExtractableResponse<Response> response = withDefaultHeaders(MAX_MUSTERMAN, requestSigningService)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
@@ -189,7 +194,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp() {
-        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
+        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER, requestSigningService)
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
             .when()

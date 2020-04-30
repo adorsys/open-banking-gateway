@@ -15,6 +15,10 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
+/**
+ * Handler class to continue authorization process by triggering it (triggering BPMN process that is associated
+ * with current request).
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthorizationContinuationService {

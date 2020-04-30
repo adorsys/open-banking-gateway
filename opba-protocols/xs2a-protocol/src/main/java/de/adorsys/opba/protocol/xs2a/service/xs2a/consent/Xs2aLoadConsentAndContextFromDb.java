@@ -24,6 +24,12 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 
+/**
+ * Loads the associated context with the consent from databases and merges it with current context. The process
+ * continues with merged context.
+ * Merging is necessary in order to work with i.e. dedicated consent as it is possible to validate
+ * IBAN list the consent was granted for.
+ */
 @Service("xs2aLoadConsentAndContextFromDb")
 @RequiredArgsConstructor
 public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aContext> {

@@ -1,5 +1,7 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
+import de.adorsys.opba.api.security.domain.DataToSign;
+import de.adorsys.opba.api.security.service.RequestSigningService;
 import de.adorsys.opba.tppbankingapi.BaseMockitoTest;
 import de.adorsys.opba.tppbankingapi.dto.TestResult;
 import de.adorsys.opba.tppbankingapi.services.StatisticService;
@@ -14,15 +16,21 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.testcontainers.shaded.org.apache.commons.lang.RandomStringUtils;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static de.adorsys.opba.api.security.domain.HttpHeaders.FINTECH_ID;
+import static de.adorsys.opba.api.security.domain.HttpHeaders.X_REQUEST_ID;
+import static de.adorsys.opba.api.security.domain.HttpHeaders.X_REQUEST_SIGNATURE;
+import static de.adorsys.opba.api.security.domain.HttpHeaders.X_TIMESTAMP_UTC;
 import static de.adorsys.opba.tppbankingapi.TestProfiles.ONE_TIME_POSTGRES_ON_DISK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -43,6 +51,9 @@ class TestBankSearchPerformance extends BaseMockitoTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private RequestSigningService requestSigningService;
 
     @Test
     void testBankSearch() throws Exception {
@@ -79,15 +90,20 @@ class TestBankSearchPerformance extends BaseMockitoTest {
             int cnt = counter.incrementAndGet();
             String searchString = searchStrings.get(cnt - 1);
             long start = System.currentTimeMillis();
+
+            UUID xRequestId = UUID.randomUUID();
+            Instant xTimestampUtc = Instant.now();
+
             try {
                 MvcResult mvcResult = mockMvc.perform(
                         get("/v1/banking/search/bank-search")
                                 .header("Authorization", "123")
-                                .header("X-Request-ID", "3ab706f2-8cc8-462e-8393-a43f6ee87e53")
                                 .header("Compute-PSU-IP-Address", "true")
-                                .header("X-Timestamp-UTC", "2020-04-17T13:45:17.069Z")
-                                .header("X-Request-Signature", "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJmaW50ZWNoQGF3ZXNvbWUtZmludGVjaC5jb20iLCJpc3MiOiJmaW50ZWNoLmNvbSIsInNpZ24tZGF0YSI6IjNhYjcwNmYyLThjYzgtNDYyZS04MzkzLWE0M2Y2ZWU4N2U1MzIwMjAtMDQtMTdUMTM6NDU6MTcuMDY5WiJ9.S3L4XdAhlzJBXYHTXMXVNlLmABBkUvYqF03znEmzKQU9vOF-n0cT6yWWjvm6T82ISzZ5OYrJaA2QJekFsw78vraY-t7vxhWVn9hO_C1tJR_rV3SFWi6mtZeuSCGDSJxEB_8gmMqFomQs0sEdBayiC1mkW9R3TQGhmLkXyM4GHGR_rHL1oLFjG3Ueo0tYmLVIJDyQ6oqFHhDdNro41O2E1S9BOOVLbANLU7r_jN8KIuujmFIBF3S7L0P2yvIHQ3Sme3W2550m-LdPI3f2SFD4ZRLG6Xsc8LyrDuXtEuk9H3nHqPenbhQnMPHK7OUcsEN2VFqvUQ9SWTgUz4P9nuU2ng")
-                                .header("Fintech-ID", "MY-SUPER-FINTECH-ID")
+
+                                .header(X_REQUEST_ID, xRequestId)
+                                .header(X_TIMESTAMP_UTC, xTimestampUtc)
+                                .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new DataToSign(xRequestId, xTimestampUtc)))
+                                .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
                                 .param("keyword", searchString)
                                 .param("max", "10")
                                 .param("start", "0"))

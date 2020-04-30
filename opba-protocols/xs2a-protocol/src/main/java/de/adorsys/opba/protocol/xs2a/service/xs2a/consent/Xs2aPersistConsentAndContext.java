@@ -10,6 +10,10 @@ import lombok.SneakyThrows;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
+/**
+ * Persists the context and the associated context with it to the database. The context is necessary for future reuse -
+ * to validate the consent type, if it can be applied to current operation, etc.
+ */
 @Service("xs2aPersistConsentAndContext")
 @RequiredArgsConstructor
 public class Xs2aPersistConsentAndContext extends ValidatedExecution<Xs2aContext> {

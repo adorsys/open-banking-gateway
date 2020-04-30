@@ -3,7 +3,7 @@
   <process id="xs2a-authorize-consent" name="xs2a-authorize-consent" isExecutable="true">
     <documentation>XS2A consent authorization process</documentation>
     <startEvent id="start" name="start" flowable:formFieldValidation="true"></startEvent>
-    <serviceTask id="startAuthorization" name="Start SCA authorization" flowable:async="true" flowable:delegateExpression="${xs2aStartConsentAuthorization}">
+    <serviceTask id="startAuthorization" name="Start consent authorization" flowable:async="true" flowable:delegateExpression="${xs2aStartConsentAuthorization}">
       <documentation>scaStatus: recieved -&gt; psuIdentified</documentation>
     </serviceTask>
     <endEvent id="end" name="end"></endEvent>
@@ -19,8 +19,8 @@
     <serviceTask id="authenticateUser" name="Authenticate user" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAuthenticateUserConsentWithPin}">
       <documentation>scaStatus: psuIdentified -&gt; psuAuthenticated</documentation>
     </serviceTask>
-    <serviceTask id="selectScaMethod" name="Ask user to select SCA method. Suspends to wait" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aSelectScaMethod}" flowable:triggerable="true"></serviceTask>
-    <serviceTask id="embeddedScaChallenge" name="Inform user about SCA challenge. Suspends to wait for reply" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aPerformScaChallenge}" flowable:triggerable="true"></serviceTask>
+    <serviceTask id="selectScaMethod" name="Ask user to select SCA method. Suspends to wait" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAskForSelectedScaMethod}" flowable:triggerable="true"></serviceTask>
+    <serviceTask id="embeddedScaChallenge" name="Inform user about SCA challenge. Suspends to wait for reply" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAskForScaChallenge}" flowable:triggerable="true"></serviceTask>
     <exclusiveGateway id="isMultipleScaAvailable" name="Multiple SCA available?" default="oneScaAvailable"></exclusiveGateway>
     <exclusiveGateway id="isScaFinalized" name="SCA finalized?" default="moreScaChallenges"></exclusiveGateway>
     <serviceTask id="persistConsentAndContext" name="Persist consent and its context for future service session invocation" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aPersistConsentAndContext}"></serviceTask>
@@ -38,7 +38,7 @@
       <documentation>ASPSP selected embedded SCA</documentation>
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isEmbedded(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
-    <serviceTask id="sendChallengeResult" name="Sends SCA challenge result" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aReportScaChallenge}"></serviceTask>
+    <serviceTask id="sendChallengeResult" name="Sends SCA challenge result" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAuthenticateConsentWithScaChallenge}"></serviceTask>
     <sequenceFlow id="sid-BC0026EE-A538-4399-8BA7-080F7C2383C9" sourceRef="sendChallengeResult" targetRef="isScaFinalized"></sequenceFlow>
     <sequenceFlow id="sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6" sourceRef="embeddedScaChallenge" targetRef="sendChallengeResult"></sequenceFlow>
     <serviceTask id="reportSelectedScaMethod" name="Notify ASPS with selected SCA method" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aReportSelectedScaMethod}"></serviceTask>

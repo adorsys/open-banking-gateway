@@ -19,6 +19,10 @@ import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 
+/**
+ * Initiates Account list consent by sending mapped {@link de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent}
+ * from the context to ASPSP API.
+ */
 @Slf4j
 @Service("xs2aAccountListConsentInitiate")
 @RequiredArgsConstructor
@@ -43,7 +47,7 @@ public class CreateAisAccountListConsentService extends ValidatedExecution<Accou
 
     @Override
     protected void doValidate(DelegateExecution execution, AccountListXs2aContext context) {
-        validator.validate(execution, extractor.forValidation(context)); // flatten path
+        validator.validate(execution, extractor.forValidation(context));
     }
 
     @Override

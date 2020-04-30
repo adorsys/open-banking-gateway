@@ -19,6 +19,10 @@ import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 
+/**
+ * Initiates Transaction list consent by sending mapped {@link de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent}
+ * from the context to ASPSP API.
+ */
 @Slf4j
 @Service("xs2aTransactionListConsentInitiate")
 @RequiredArgsConstructor
@@ -43,7 +47,7 @@ public class CreateAisTransactionListConsentService extends ValidatedExecution<T
 
     @Override
     protected void doValidate(DelegateExecution execution, TransactionListXs2aContext context) {
-        validator.validate(execution, extractor.forValidation(context)); // flatten path
+        validator.validate(execution, extractor.forValidation(context));
     }
 
     @Override

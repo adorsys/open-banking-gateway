@@ -2,6 +2,7 @@
   "aspspId": "11111-11111",
   "sagaId": "22222-22222",
   "psuId": "12345-67890",
+  "requestId": "33333-33333",
   "contentType": "application/json",
   "psuIpAddress": "1.1.1.1",
   "aspspScaApproach": null,

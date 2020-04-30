@@ -9,19 +9,21 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+/**
+ * Represents the validation issue type and location in the context.
+ */
 @Target({ FIELD })
 @Retention(RUNTIME)
 public @interface ContextCode {
 
     /**
-     * Direct path in context class or other type of field identifier. Is used for de-duplication and frontend rendering.
-     * Also they can be used to read current context values (FUTURE dev).
+     * Code of the field that violates constraint.
      */
     FieldCode value() default FieldCode.NONE;
 
     /**
-     * Whether the field belongs to AIS consent object. In such case its value/prefix is ignored.
-     * Used for frontend rendering.
+     * Logical location of the field that violates constraint within context. I.e. field PSU_ID may be shown in
+     * general input form or in AIS consent object input form.
      */
     ScopeObject target() default ScopeObject.GENERAL;
 }

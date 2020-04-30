@@ -18,6 +18,10 @@ import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
+/**
+ * Send the selected SCA method by the user to the ASPSP. The challenge is typically provided by
+ * {@link de.adorsys.opba.protocol.api.authorization.UpdateAuthorization}.
+ */
 @Service("xs2aReportSelectedScaMethod")
 @RequiredArgsConstructor
 public class Xs2aReportSelectedScaMethod extends ValidatedExecution<Xs2aContext> {

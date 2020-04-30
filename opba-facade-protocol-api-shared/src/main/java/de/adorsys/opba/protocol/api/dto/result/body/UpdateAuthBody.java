@@ -1,10 +1,7 @@
 package de.adorsys.opba.protocol.api.dto.result.body;
 
-import lombok.Data;
-
-@Data
+/**
+ * Update authorization result object. Returned in response to user provided i.e. PSU ID.
+ */
 public class UpdateAuthBody implements ResultBody {
-
-    // FIXME add type-type mapping
-    private Object auth;
 }

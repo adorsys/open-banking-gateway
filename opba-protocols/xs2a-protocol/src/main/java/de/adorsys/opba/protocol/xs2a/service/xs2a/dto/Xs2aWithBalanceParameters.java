@@ -8,10 +8,16 @@ import org.mapstruct.Mapper;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 
+/**
+ * XS2A account withBalance describing parameters.
+ */
 @Data
 public class Xs2aWithBalanceParameters {
 
     // Optional
+    /**
+     * Does consent require account balance access.
+     */
     private Boolean withBalance;
 
     // TODO - MapStruct?
