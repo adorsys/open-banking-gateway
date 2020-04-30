@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.Xs2aAisContext;
+import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateHeaders;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;

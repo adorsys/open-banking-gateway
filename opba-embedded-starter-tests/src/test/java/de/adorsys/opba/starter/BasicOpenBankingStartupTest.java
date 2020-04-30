@@ -59,6 +59,11 @@ class BasicOpenBankingStartupTest {
     }
 
     @Test
+    void testAppStartsUp() {
+        // NOP - just test that context loads OK
+    }
+
+    @Test
     @SneakyThrows
     void testXs2aProtocolIsWiredForSandboxAccountList() {
         withDefaultHeaders(ANTON_BRUECKNER, requestSigningService)

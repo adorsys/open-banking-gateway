@@ -22,9 +22,9 @@ public class FlowableConfig {
      */
     @Bean
     EngineConfigurationConfigurer<SpringProcessEngineConfiguration> customizeListenerAndJsonSerializer(
-        RequestScopedServicesProvider scopedServicesProvider,
-        Xs2aFlowableProperties flowableProperties,
-        Xs2aObjectMapper mapper
+            RequestScopedServicesProvider scopedServicesProvider,
+            FlowableProperties flowableProperties,
+            FlowableObjectMapper mapper
     ) {
         int maxLength = flowableProperties.getMaxLength();
 
@@ -45,7 +45,7 @@ public class FlowableConfig {
      * Dedicated ObjectMapper to be used in XS2A protocol.
      */
     @Bean
-    Xs2aObjectMapper mapper() {
+    FlowableObjectMapper mapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -56,6 +56,6 @@ public class FlowableConfig {
                 .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
                 .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
                 .withCreatorVisibility(JsonAutoDetect.Visibility.ANY));
-        return new Xs2aObjectMapper(mapper);
+        return new FlowableObjectMapper(mapper);
     }
 }
