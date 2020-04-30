@@ -1,8 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.service.protocol;
 
-import de.adorsys.opba.protocol.xs2a.context.ContextMode;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.ContextMode;
+import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;

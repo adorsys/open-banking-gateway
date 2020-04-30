@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.validation;
 
-import de.adorsys.opba.protocol.xs2a.context.BaseContext;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

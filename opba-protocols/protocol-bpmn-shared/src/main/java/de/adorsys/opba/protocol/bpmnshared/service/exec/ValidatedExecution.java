@@ -1,7 +1,8 @@
-package de.adorsys.opba.protocol.xs2a.service;
+package de.adorsys.opba.protocol.bpmnshared.service.exec;
 
-import de.adorsys.opba.protocol.xs2a.context.BaseContext;
-import de.adorsys.opba.protocol.xs2a.context.ContextMode;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.ContextMode;
+import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.BpmnError;
 import org.flowable.engine.delegate.DelegateExecution;

@@ -1,7 +1,6 @@
-package de.adorsys.opba.protocol.xs2a.context;
+package de.adorsys.opba.protocol.bpmnshared.dto.context;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
@@ -10,12 +9,11 @@ import lombok.Data;
 import lombok.experimental.Delegate;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
 /**
- * XS2A general context. Represents general knowledge about currently executed request,
+ * General context. Represents general knowledge about currently executed request,
  * for example, contains outcome results from previous requests as well as the user input.
  */
 @Data
@@ -40,14 +38,6 @@ public class BaseContext implements RequestScoped, UsesRequestScoped {
      * Currently executed action.
      */
     private ProtocolAction action;
-
-    /**
-     * Hardcoded process names based on the action name.
-     */
-    private Map<ProtocolAction, String> flowByAction = ImmutableMap.of(
-            ProtocolAction.LIST_ACCOUNTS, "xs2a-list-accounts",
-            ProtocolAction.LIST_TRANSACTIONS, "xs2a-list-transactions"
-    );
 
     /**
      * Process identifier - used to uniquely identify current process execution.

@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.ais.sandbox;
 
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.AccountListingService;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.Xs2aAccountListingService;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -11,9 +11,9 @@ import org.springframework.context.ApplicationEventPublisher;
  * Special service that does not publish account listing result anywhere. Not a service, so that context is not
  * polluted.
  */
-class NoResponseAccountListingService extends AccountListingService {
+class NoResponseXs2aAccountListingService extends Xs2aAccountListingService {
 
-    NoResponseAccountListingService(
+    NoResponseXs2aAccountListingService(
             Extractor extractor, Xs2aValidator validator, AccountInformationService ais
     ) {
         super(new BlackHoleEventPublisher(), extractor, validator, ais);

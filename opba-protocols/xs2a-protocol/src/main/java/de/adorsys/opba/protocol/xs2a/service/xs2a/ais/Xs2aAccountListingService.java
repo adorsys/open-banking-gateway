@@ -1,8 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.ais;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
+import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedQueryHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.QueryHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
  */
 @Service("xs2aAccountListing")
 @RequiredArgsConstructor
-public class AccountListingService extends ValidatedExecution<Xs2aContext> {
+public class Xs2aAccountListingService extends ValidatedExecution<Xs2aContext> {
 
     private final ApplicationEventPublisher eventPublisher;
     private final Extractor extractor;

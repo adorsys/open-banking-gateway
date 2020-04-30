@@ -1,11 +1,11 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a;
 
+import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.Redirect;
+import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
-import de.adorsys.opba.protocol.xs2a.context.BaseContext;
-import de.adorsys.opba.protocol.xs2a.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.context.ApplicationEventPublisher;
