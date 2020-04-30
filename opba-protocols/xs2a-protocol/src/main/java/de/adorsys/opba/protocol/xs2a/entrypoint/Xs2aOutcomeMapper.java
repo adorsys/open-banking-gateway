@@ -12,6 +12,7 @@ import de.adorsys.opba.protocol.bpmnshared.dto.messages.ConsentAcquired;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.Redirect;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
+import de.adorsys.opba.protocol.bpmnshared.outcome.OutcomeMapper;
 import de.adorsys.opba.protocol.xs2a.entrypoint.dto.ContextBasedValidationErrorResult;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import lombok.RequiredArgsConstructor;
@@ -26,16 +27,18 @@ import java.util.function.Function;
  * @param <T>
  */
 @RequiredArgsConstructor
-public class OutcomeMapper<T> {
+public class Xs2aOutcomeMapper<T> implements OutcomeMapper<T> {
 
     protected final CompletableFuture<Result<T>> channel;
     protected final Function<ProcessResponse, T> extractBodyOnSuccess;
     protected final DtoMapper<Set<ValidationIssue>, Set<ValidationError>> errorMapper;
 
+    @Override
     public void onSuccess(ProcessResponse responseResult) {
         channel.complete(new SuccessResult<>(extractBodyOnSuccess.apply(responseResult)));
     }
 
+    @Override
     public void onRedirect(Redirect redirectResult) {
         channel.complete(
                 new ContextBasedAuthorizationRequiredResult<>(
@@ -44,6 +47,7 @@ public class OutcomeMapper<T> {
         );
     }
 
+    @Override
     public void onValidationProblem(ValidationProblem problem) {
         channel.complete(
                 new ContextBasedValidationErrorResult(
@@ -54,6 +58,7 @@ public class OutcomeMapper<T> {
         );
     }
 
+    @Override
     public void onConsentAcquired(ConsentAcquired acquired) {
         channel.complete(
             // Facade knows redirection target
@@ -61,6 +66,7 @@ public class OutcomeMapper<T> {
         );
     }
 
+    @Override
     public void onError() {
         channel.complete(new ErrorResult<>());
     }

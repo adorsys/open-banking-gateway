@@ -6,8 +6,8 @@ import de.adorsys.opba.protocol.api.dto.request.authorization.DenyAuthorizationR
 import de.adorsys.opba.protocol.api.dto.result.body.DenyAuthBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationDeniedResult;
+import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.AbortConsent;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.Xs2aAisContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.common.engine.api.FlowableObjectNotFoundException;

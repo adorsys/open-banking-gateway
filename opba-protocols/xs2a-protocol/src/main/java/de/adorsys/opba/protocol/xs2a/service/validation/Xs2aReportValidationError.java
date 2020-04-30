@@ -2,10 +2,10 @@ package de.adorsys.opba.protocol.xs2a.service.validation;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
+import de.adorsys.opba.protocol.xs2a.context.BaseContext;
+import de.adorsys.opba.protocol.xs2a.context.LastRedirectionTarget;
+import de.adorsys.opba.protocol.xs2a.context.LastViolations;
 import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.LastRedirectionTarget;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.LastViolations;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
