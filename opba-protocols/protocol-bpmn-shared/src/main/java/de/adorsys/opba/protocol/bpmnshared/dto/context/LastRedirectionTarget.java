@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.context;
+package de.adorsys.opba.protocol.bpmnshared.dto.context;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;

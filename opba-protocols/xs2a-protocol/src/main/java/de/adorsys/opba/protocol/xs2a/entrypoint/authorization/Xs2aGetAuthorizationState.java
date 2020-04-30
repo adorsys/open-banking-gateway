@@ -8,7 +8,7 @@ import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationReque
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
-import de.adorsys.opba.protocol.xs2a.context.LastRedirectionTarget;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.xs2a.context.LastViolations;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;

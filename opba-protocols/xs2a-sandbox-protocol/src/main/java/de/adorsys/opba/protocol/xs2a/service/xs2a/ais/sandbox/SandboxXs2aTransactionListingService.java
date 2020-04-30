@@ -1,8 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.ais.sandbox;
 
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.AccountListingService;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.TransactionListingService;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.Xs2aAccountListingService;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.Xs2aTransactionListingService;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -10,18 +10,18 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service("xs2aSandboxTransactionListing")
-public class SandboxTransactionListingService extends TransactionListingService {
+public class SandboxXs2aTransactionListingService extends Xs2aTransactionListingService {
 
-    private final NoResponseAccountListingService accountListingService;
+    private final NoResponseXs2aAccountListingService accountListingService;
 
-    public SandboxTransactionListingService(
+    public SandboxXs2aTransactionListingService(
             ApplicationEventPublisher eventPublisher,
-            TransactionListingService.Extractor extractor,
-            AccountListingService.Extractor accountListExtractor,
+            Xs2aTransactionListingService.Extractor extractor,
+            Xs2aAccountListingService.Extractor accountListExtractor,
             Xs2aValidator validator,
             AccountInformationService ais) {
         super(eventPublisher, extractor, validator, ais);
-        this.accountListingService = new NoResponseAccountListingService(accountListExtractor, validator, ais);
+        this.accountListingService = new NoResponseXs2aAccountListingService(accountListExtractor, validator, ais);
     }
 
     @Override

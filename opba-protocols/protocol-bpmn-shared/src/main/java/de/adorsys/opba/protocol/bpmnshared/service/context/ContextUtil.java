@@ -1,6 +1,7 @@
-package de.adorsys.opba.protocol.xs2a.service;
+package de.adorsys.opba.protocol.bpmnshared.service.context;
 
 import com.google.common.net.UrlEscapers;
+import de.adorsys.opba.protocol.bpmnshared.GlobalConst;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
@@ -11,8 +12,6 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import java.util.function.Consumer;
-
-import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 
 /**
  * Utility class to work with Flowable BPMN engine process context.
@@ -25,7 +24,7 @@ public class ContextUtil {
      * Read context from current execution.
      */
     public <T> T getContext(DelegateExecution execution, Class<T> ctxType) {
-        return execution.getVariable(CONTEXT, ctxType);
+        return execution.getVariable(GlobalConst.CONTEXT, ctxType);
     }
 
     /**
@@ -33,9 +32,9 @@ public class ContextUtil {
      */
     public <T> void getAndUpdateContext(DelegateExecution execution, Consumer<T> contextUpdater) {
         @SuppressWarnings("unchecked")
-        T ctx = (T) execution.getVariable(CONTEXT);
+        T ctx = (T) execution.getVariable(GlobalConst.CONTEXT);
         contextUpdater.accept(ctx);
-        execution.setVariable(CONTEXT, ctx);
+        execution.setVariable(GlobalConst.CONTEXT, ctx);
     }
 
     /**
