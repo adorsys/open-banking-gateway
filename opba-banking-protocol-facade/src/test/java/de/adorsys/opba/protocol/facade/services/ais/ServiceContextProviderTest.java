@@ -11,6 +11,7 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquir
 import de.adorsys.opba.protocol.facade.config.ApplicationTest;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
 import de.adorsys.opba.protocol.facade.services.DbDropper;
+import de.adorsys.opba.protocol.facade.services.InternalContext;
 import de.adorsys.opba.protocol.facade.services.ProtocolResultHandler;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import lombok.SneakyThrows;
@@ -72,13 +73,14 @@ public class ServiceContextProviderTest extends DbDropper {
                                 .build()
                 ).build();
 
-        ServiceContext<FacadeServiceableGetter> providedContext = serviceContextProvider.provide(request);
+        InternalContext<FacadeServiceableGetter> internalContext = serviceContextProvider.provide(request);
+        ServiceContext<FacadeServiceableGetter> providedContext = serviceContextProvider.provideRequestScoped(request, internalContext);
         URI redirectionTo = new URI("/");
         Result<URI> result = new ConsentAcquiredResult<>(redirectionTo, null);
         FacadeRedirectResult<URI, AuthStateBody> uriFacadeResult = (FacadeRedirectResult)
             handler.handleResult(result, request.getFacadeServiceable(), providedContext);
 
-        assertThat(providedContext.getRequest().getFacadeServiceable().getSessionPassword()).isEqualTo(PASSWORD);
+        assertThat(providedContext.getCtx().getRequest().getFacadeServiceable().getSessionPassword()).isEqualTo(PASSWORD);
 
         txTemplate.execute(callback -> {
             checkSavedSession(sessionId);
@@ -101,7 +103,7 @@ public class ServiceContextProviderTest extends DbDropper {
                                 .redirectCode(uriFacadeResult.getRedirectCode())
                                 .build()
                 ).build();
-        ServiceContext<FacadeServiceableGetter> providedContext2 = serviceContextProvider.provide(request2);
+        InternalContext<FacadeServiceableGetter> providedContext2 = serviceContextProvider.provide(request2);
 
         txTemplate.execute(callback -> {
             secondRequestCheck(sessionId);

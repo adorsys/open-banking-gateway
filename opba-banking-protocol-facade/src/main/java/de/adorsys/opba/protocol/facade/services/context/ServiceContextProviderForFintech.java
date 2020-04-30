@@ -9,6 +9,7 @@ import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
+import de.adorsys.opba.protocol.api.dto.context.Context;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
@@ -16,6 +17,7 @@ import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
+import de.adorsys.opba.protocol.facade.services.InternalContext;
 import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -46,36 +48,36 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     @Override
     @Transactional
     @SneakyThrows
-    public <T extends FacadeServiceableGetter> ServiceContext<T> provide(T request) {
+    public <T extends FacadeServiceableGetter> InternalContext<T> provide(T request) {
         if (null == request.getFacadeServiceable()) {
             throw new IllegalArgumentException("No serviceable body");
         }
         AuthSession authSession = extractAndValidateAuthSession(request);
         ServiceSession session = extractOrCreateServiceSession(request, authSession);
-        return ServiceContext.<T>builder()
-                .serviceSessionId(session.getId())
-                .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
-                .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
-                .bankId(request.getFacadeServiceable().getBankId())
-                .authSessionId(null == authSession ? null : authSession.getId())
-                .authContext(null == authSession ? null : authSession.getContext())
-                // Currently 1-1 auth-session to service session
-                .futureAuthSessionId(session.getId())
-                .futureRedirectCode(UUID.randomUUID())
-                .futureAspspRedirectCode(UUID.randomUUID())
-                .request(request)
+        return InternalContext.<T>builder()
+                .ctx(Context.<T>builder()
+                        .serviceSessionId(session.getId())
+                        .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getProtocol().getId())
+                        .authorizationBankProtocolId(null == authSession ? null : authSession.getProtocol().getId())
+                        .bankId(request.getFacadeServiceable().getBankId())
+                        .authSessionId(null == authSession ? null : authSession.getId())
+                        .authContext(null == authSession ? null : authSession.getContext())
+                        // Currently 1-1 auth-session to service session
+                        .futureAuthSessionId(session.getId())
+                        .futureRedirectCode(UUID.randomUUID())
+                        .futureAspspRedirectCode(UUID.randomUUID())
+                        .request(request)
+                        .build()
+                )
+                .authSession(authSession)
+                .session(session)
                 .build();
     }
 
     @Override
-    public <T extends FacadeServiceableGetter> ServiceContext<T> provideRequestScoped(T request, ServiceContext<T> ctx) {
-        AuthSession authSession = null;
-        if (ctx.getAuthSessionId() != null) {
-            authSession = authSessions.findById(ctx.getAuthSessionId()).orElse(null);
-        }
-        ServiceSession session = serviceSessions.findById(ctx.getServiceSessionId())
-                .orElseThrow(() -> new IllegalStateException("No service session " + ctx.getServiceSessionId()));
-        return ctx.toBuilder().requestScoped(getRequestScoped(request, session, authSession)).build();
+    public <T extends FacadeServiceableGetter> ServiceContext<T> provideRequestScoped(T request, InternalContext<T> ctx) {
+        RequestScoped requestScoped = getRequestScoped(request, ctx.getSession(), ctx.getAuthSession());
+        return ServiceContext.<T>builder().ctx(ctx.getCtx()).requestScoped(requestScoped).build();
     }
 
     protected <T extends FacadeServiceableGetter> void validateRedirectCode(T request, AuthSession session) {

@@ -32,15 +32,15 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
 
     private final Map<String, InternalRequestScoped> memoizedProviders;
     private final ConsentAccessFactory accessProvider;
-    private final IgnoreFieldsLoader ignoreFieldsLoader;
+    private final IgnoreFieldsLoaderFactory ignoreFieldsLoaderFactory;
 
     public RequestScopedProvider(
             @Qualifier(FACADE_CACHE_BUILDER) CacheBuilder cacheBuilder,
             ConsentAccessFactory accessProvider,
-            IgnoreFieldsLoader ignoreFieldsLoader) {
+            IgnoreFieldsLoaderFactory ignoreFieldsLoaderFactory) {
         this.memoizedProviders = cacheBuilder.build().asMap();
         this.accessProvider = accessProvider;
-        this.ignoreFieldsLoader = ignoreFieldsLoader;
+        this.ignoreFieldsLoaderFactory = ignoreFieldsLoaderFactory;
     }
 
     public RequestScoped registerForFintechSession(
@@ -53,8 +53,8 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
     ) {
         ConsentAccess access = accessProvider.forFintech(fintech, session, fintechPassword);
         EncryptionService authorizationSessionEncService = encryptionService(encryptionServiceProvider, futureAuthorizationSessionKey);
-        ignoreFieldsLoader.setProtocolId(session.getProtocol().getId());
-        return doRegister(profile, access, authorizationSessionEncService, futureAuthorizationSessionKey);
+        Long protocolId = session.getProtocol().getId();
+        return doRegister(profile, access, authorizationSessionEncService, futureAuthorizationSessionKey, protocolId);
     }
 
     public RequestScoped registerForPsuSession(
@@ -68,8 +68,8 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
                 authSession.getProtocol().getBankProfile().getBank(),
                 authSession.getParent()
         );
-        ignoreFieldsLoader.setProtocolId(authSession.getParent().getProtocol().getId());
-        return doRegister(authSession.getProtocol().getBankProfile(), access, encryptionService, key);
+        Long protocolId = authSession.getParent().getProtocol().getId();
+        return doRegister(authSession.getProtocol().getBankProfile(), access, encryptionService, key, protocolId);
     }
 
     public InternalRequestScoped deregister(RequestScoped requestScoped) {
@@ -90,7 +90,8 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
             BankProfile bankProfile,
             ConsentAccess access,
             EncryptionService encryptionService,
-            SecretKeyWithIv key
+            SecretKeyWithIv key,
+            Long protocolId
     ) {
         InternalRequestScoped requestScoped = new InternalRequestScoped(
                 encryptionService.getEncryptionKeyId(),
@@ -98,7 +99,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
                 bankProfile,
                 access,
                 encryptionService,
-                ignoreFieldsLoader
+                ignoreFieldsLoaderFactory.createIgnoreFieldsLoader(protocolId)
         );
 
         memoizedProviders.put(requestScoped.getEncryptionKeyId(), requestScoped);

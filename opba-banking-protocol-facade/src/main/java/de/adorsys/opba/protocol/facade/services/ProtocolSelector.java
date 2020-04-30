@@ -6,7 +6,7 @@ import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
-import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
+import de.adorsys.opba.protocol.api.dto.context.Context;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ public class ProtocolSelector {
 
     @Transactional
     public <A> A selectAndPersistProtocolFor(
-        ServiceContext<?> ctx,
+        Context<?> ctx,
         ProtocolAction protocolAction,
         Map<String, A> actionBeans) {
         Optional<BankProtocol> bankProtocol;

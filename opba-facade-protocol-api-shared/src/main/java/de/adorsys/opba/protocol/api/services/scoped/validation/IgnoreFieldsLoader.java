@@ -3,7 +3,8 @@ package de.adorsys.opba.protocol.api.services.scoped.validation;
 import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 
+import java.util.Map;
+
 public interface IgnoreFieldsLoader {
-    void setProtocolId(Long protocolId);
-    boolean apply(FieldCode fieldCode, Class invokerClass, Approach approach);
+    <T> Map<FieldCode, Rules> getValidationRules(Class<T> invokerClass, Approach approach);
 }
