@@ -39,6 +39,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @EnabledIfEnvironmentVariable(named = ENABLE_SMOKE_TESTS, matches = TRUE_BOOL)
 @ExtendWith({SeleniumExtension.class, WebDriverErrorReportAspectAndWatcher.class})
 @SpringBootTest(classes = {JGivenConfig.class, SmokeConfig.class, FintechRequestSigningTestConfig.class}, webEnvironment = NONE)
+// Use @ActiveProfiles(profiles = {SMOKE_TEST, "test-smoke-local"}) to run the test on local env.
 @ActiveProfiles(profiles = {SMOKE_TEST})
 class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SandboxServers, WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>, AccountInformationResult> {
 

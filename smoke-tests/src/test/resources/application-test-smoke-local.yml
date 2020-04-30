@@ -1,0 +1,8 @@
+test:
+  smoke:
+    opba:
+      server-uri: http://localhost:8085
+      # Necessary to use 127.0.0.1 as localhost will fail to resolve to host in WebDriver when trying to set cookie
+      ui-uri: http://127.0.0.1:4200
+    aspsp-profile:
+      server-uri: http://localhost:20010

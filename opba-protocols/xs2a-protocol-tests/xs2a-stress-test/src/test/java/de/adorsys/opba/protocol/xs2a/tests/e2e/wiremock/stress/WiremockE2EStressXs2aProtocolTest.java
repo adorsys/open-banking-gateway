@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
@@ -48,11 +49,17 @@ class WiremockE2EStressXs2aProtocolTest extends SpringScenarioTest<MockServers, 
     @Autowired
     private ProtocolConfiguration configuration;
 
+    @Autowired
+    private AutowireCapableBeanFactory signingService;
+
     // See https://github.com/spring-projects/spring-boot/issues/14879 for the 'why setting port'
     void beforeEach() {
         ProtocolConfiguration.Redirect.Consent consent = configuration.getRedirect().getConsentAccounts();
         consent.setOk(consent.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
         consent.setNok(consent.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
+
+        // Forcefully injecting signer
+        E2EStress.PARENT_SPRING_CTX_AUTOWIRER.set(signingService);
     }
 
     // JGivenConfig doesn't seem to be applied
