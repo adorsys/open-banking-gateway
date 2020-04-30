@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.xs2a.entrypoint;
 import com.google.common.base.Strings;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ProcessResponse;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.xs2a.adapter.service.model.AccountListHolder;
 import de.adorsys.xs2a.adapter.service.model.RemittanceInformationStructured;
 import de.adorsys.xs2a.adapter.service.model.TransactionsReport;

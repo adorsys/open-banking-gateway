@@ -78,6 +78,11 @@
         <!-- OPBA-PROTOCOLS DIR -->
         <dependency>
             <groupId>de.adorsys.opba</groupId>
+            <artifactId>protocol-bpmn-shared</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
             <artifactId>xs2a-protocol</artifactId>
             <version>${project.version}</version>
         </dependency>

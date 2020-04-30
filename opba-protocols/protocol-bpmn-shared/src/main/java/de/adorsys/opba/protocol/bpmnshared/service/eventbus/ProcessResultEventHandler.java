@@ -1,6 +1,6 @@
-package de.adorsys.opba.protocol.xs2a.service.eventbus;
+package de.adorsys.opba.protocol.bpmnshared.service.eventbus;
 
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.InternalProcessResult;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalProcessResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
