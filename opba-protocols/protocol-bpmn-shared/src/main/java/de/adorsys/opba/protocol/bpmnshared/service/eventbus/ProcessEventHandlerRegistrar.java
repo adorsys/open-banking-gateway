@@ -4,7 +4,7 @@ import de.adorsys.opba.protocol.bpmnshared.dto.messages.ConsentAcquired;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.Redirect;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
-import de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper;
+import de.adorsys.opba.protocol.bpmnshared.outcome.OutcomeMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
