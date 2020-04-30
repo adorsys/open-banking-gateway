@@ -16,7 +16,7 @@ script:
   - docker run -it --rm -v "$PWD":/opt/app-root/src -w /opt/app-root/src -u "$(id -u "${USER}"):$(id -g "${USER}")" trion/ng-cli-karma make consent-ui
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - bash scripts/upload_coverage_to_codecov.sh
 
 deploy:
   - provider: script
