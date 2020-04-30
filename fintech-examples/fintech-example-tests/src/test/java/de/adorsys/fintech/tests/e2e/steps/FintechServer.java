@@ -4,7 +4,6 @@ import com.tngtech.jgiven.annotation.BeforeStage;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.fintech.tests.e2e.config.SmokeConfig;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
-import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.SandboxServers;
 import io.restassured.RestAssured;
 import io.restassured.config.RedirectConfig;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 
 @JGivenStage
 @Slf4j
@@ -71,22 +69,6 @@ public class FintechServer<SELF extends FintechServer<SELF>> extends SandboxServ
                 .statusCode(HttpStatus.OK.value());
 
         return self();
-    }
-
-    @Transactional
-    public SELF preferred_sca_approach_selected_for_all_banks_in_opba(Approach approach) {
-        profiles.findAll().stream()
-                .map(it -> {
-                    it.setPreferredApproach(approach);
-                    return it;
-                })
-                .forEach(profiles::save);
-
-        return self();
-    }
-
-    public SELF rest_assured_points_to_opba_server() {
-        return rest_assured_points_to_opba_server("http://localhost:" + serverPort);
     }
 
     public SELF rest_assured_points_to_opba_server(String opbaServerUri) {
