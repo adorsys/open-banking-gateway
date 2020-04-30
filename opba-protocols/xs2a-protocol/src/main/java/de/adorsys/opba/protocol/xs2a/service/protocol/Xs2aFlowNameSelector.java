@@ -1,11 +1,11 @@
 package de.adorsys.opba.protocol.xs2a.service.protocol;
 
-import de.adorsys.opba.protocol.xs2a.context.BaseContext;
+import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
- * Selects sub-process name to be executed using {@link BaseContext}. I.e.: calls different sub-processes for account
+ * Selects sub-process name to be executed using {@link Xs2aContext}. I.e.: calls different sub-processes for account
  * listing and transaction listing.
  */
 @Service("xs2aFlowNameSelector")
@@ -15,18 +15,18 @@ public class Xs2aFlowNameSelector {
     /**
      * Sub-process name for current context (PSU/FinTech input) validation.
      */
-    public String getNameForValidation(BaseContext ctx) {
+    public String getNameForValidation(Xs2aContext ctx) {
         return actionName(ctx);
     }
 
     /**
      * Sub-process name for current context (PSU/FinTech input) execution (real calls to ASPSP API).
      */
-    public String getNameForExecution(BaseContext ctx) {
+    public String getNameForExecution(Xs2aContext ctx) {
         return actionName(ctx);
     }
 
-    private String actionName(BaseContext ctx) {
+    private String actionName(Xs2aContext ctx) {
         return ctx.getFlowByAction().get(ctx.getAction());
     }
 }

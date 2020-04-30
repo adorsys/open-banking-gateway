@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.context;
+package de.adorsys.opba.protocol.bpmnshared.dto.context;
 
 /**
  * The mode of current context. Inner BPMN process (list-accounts as example) is called twice:
