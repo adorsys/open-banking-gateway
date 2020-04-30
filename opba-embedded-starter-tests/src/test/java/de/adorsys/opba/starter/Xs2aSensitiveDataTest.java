@@ -32,14 +32,8 @@ public class Xs2aSensitiveDataTest {
         context.setSagaId("1234");
         context.setPsuPassword("PASSWORD");
 
-        assertThat(mapper.writeValueAsString(context))
-                .isEqualTo("{\"flowByAction\":"
-                        + "{\"LIST_ACCOUNTS\":\"xs2a-list-accounts\",\"LIST_TRANSACTIONS\":\"xs2a-list-transactions\"},"
-                        + "\"sagaId\":\"1234\","
-                        + "\"violations\":[],"
-                        + "\"contentType\":\"application/json\","
-                        + "\"redirectConsentOk\":false}"
-                );
+        assertThat(mapper.writeValueAsString(context)).doesNotContain("psuPassword");
+        assertThat(mapper.writeValueAsString(context)).doesNotContain("PASSWORD");
     }
 
     @Test
@@ -50,14 +44,8 @@ public class Xs2aSensitiveDataTest {
         context.setSagaId("1234");
         context.setLastScaChallenge("Challenge!");
 
-        assertThat(mapper.writeValueAsString(context))
-                .isEqualTo("{\"flowByAction\":"
-                        + "{\"LIST_ACCOUNTS\":\"xs2a-list-accounts\",\"LIST_TRANSACTIONS\":\"xs2a-list-transactions\"},"
-                        + "\"sagaId\":\"1234\","
-                        + "\"violations\":[],"
-                        + "\"contentType\":\"application/json\","
-                        + "\"redirectConsentOk\":false}"
-                );
+        assertThat(mapper.writeValueAsString(context)).doesNotContain("lastScaChallenge");
+        assertThat(mapper.writeValueAsString(context)).doesNotContain("Challenge!");
     }
 }
 
