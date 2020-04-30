@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.service.xs2a.context;
+package de.adorsys.opba.protocol.xs2a.context;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;

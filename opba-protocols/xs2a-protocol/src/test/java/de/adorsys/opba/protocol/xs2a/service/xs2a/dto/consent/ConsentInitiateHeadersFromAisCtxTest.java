@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent;
 
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.Xs2aAisContext;
+import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
 import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;

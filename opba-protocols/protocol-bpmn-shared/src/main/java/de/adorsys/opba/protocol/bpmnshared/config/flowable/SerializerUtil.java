@@ -11,8 +11,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
+import org.jetbrains.annotations.NotNull;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
 

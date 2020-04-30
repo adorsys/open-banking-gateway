@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @ComponentScan(basePackages = {
         "de.adorsys.opba.protocol.xs2a.config",
-        "de.adorsys.opba.protocol.xs2a.controller",
         "de.adorsys.opba.protocol.xs2a.service",
         "de.adorsys.opba.protocol.xs2a.entrypoint"
 })

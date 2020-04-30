@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais;
+package de.adorsys.opba.protocol.xs2a.context.ais;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

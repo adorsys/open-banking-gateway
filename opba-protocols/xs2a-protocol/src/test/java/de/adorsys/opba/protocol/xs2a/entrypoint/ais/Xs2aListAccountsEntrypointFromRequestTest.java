@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.xs2a.entrypoint.ais;
 
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.AccountListXs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;

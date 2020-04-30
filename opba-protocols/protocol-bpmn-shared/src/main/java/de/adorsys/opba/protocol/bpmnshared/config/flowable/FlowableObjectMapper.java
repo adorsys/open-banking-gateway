@@ -10,7 +10,7 @@ import lombok.experimental.Delegate;
  */
 @Getter
 @RequiredArgsConstructor
-public class Xs2aObjectMapper {
+public class FlowableObjectMapper {
 
     @Delegate
     private final ObjectMapper mapper;

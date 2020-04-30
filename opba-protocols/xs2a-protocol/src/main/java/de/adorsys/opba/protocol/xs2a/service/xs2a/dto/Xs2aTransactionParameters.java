@@ -1,9 +1,9 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.dto;
 
+import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ContextCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.xs2a.adapter.service.RequestParams;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

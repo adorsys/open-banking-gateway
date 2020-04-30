@@ -1,13 +1,12 @@
 package de.adorsys.opba.protocol.bpmnshared.config.flowable;
 
-import com.google.common.collect.ImmutableList;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
-import static de.adorsys.opba.protocol.xs2a.config.ConfigConst.XS2A_PROTOCOL_CONFIG_PREFIX;
+import static de.adorsys.opba.protocol.bpmnshared.config.flowable.ConfigConst.FLOWABLE_SHARED_CONFIG_PREFIX;
 
 /**
  * Configures which classes can be serialized/deserialized in JSON form and configures threshold when to use
@@ -15,13 +14,10 @@ import static de.adorsys.opba.protocol.xs2a.config.ConfigConst.XS2A_PROTOCOL_CON
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix = XS2A_PROTOCOL_CONFIG_PREFIX + "flowable")
-public class Xs2aFlowableProperties {
+@ConfigurationProperties(prefix = FLOWABLE_SHARED_CONFIG_PREFIX + "serialization")
+public class FlowableProperties {
 
-    private List<String> serializeOnlyPackages = ImmutableList.of(
-            "de.adorsys.opba.protocol.xs2a.service.xs2a.context",
-            "de.adorsys.xs2a.adapter.service.model"
-    );
+    private List<String> serializeOnlyPackages;
 
     @SuppressWarnings("checkstyle:MagicNumber")
     private int maxLength = 2048;

@@ -10,11 +10,11 @@ import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.bpmnshared.service.eventbus.ProcessEventHandlerRegistrar;
+import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
-import de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper;
+import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aOutcomeMapper;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
 import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.UuidMapper;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
@@ -59,7 +59,7 @@ public class Xs2aListTransactionsEntrypoint implements ListTransactions {
 
         registrar.addHandler(
                 instance.getProcessInstanceId(),
-                new OutcomeMapper<>(result, extractor::extractTransactionsReport, errorMapper)
+                new Xs2aOutcomeMapper<>(result, extractor::extractTransactionsReport, errorMapper)
         );
 
         return result;

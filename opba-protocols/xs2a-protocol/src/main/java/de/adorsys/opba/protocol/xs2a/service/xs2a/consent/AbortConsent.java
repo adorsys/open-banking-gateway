@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.Xs2aAisContext;
+import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
