@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
  * Sets {@link ContextMode} to {@link ContextMode#MOCK_REAL_CALLS}, so that the execution is initiated in
  * validation mode to find what parameters are necessary to be provided by PSU during authorization.
  */
-@Service("fillBpmnContext")
-public class FillBpmnContext implements JavaDelegate {
+@Service("xs2afillBpmnContext")
+public class Xs2aFillBpmnContext implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) {
