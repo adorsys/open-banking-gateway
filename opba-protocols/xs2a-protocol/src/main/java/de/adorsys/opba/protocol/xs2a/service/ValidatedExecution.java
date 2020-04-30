@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service;
 
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ContextMode;
+import de.adorsys.opba.protocol.xs2a.context.BaseContext;
+import de.adorsys.opba.protocol.xs2a.context.ContextMode;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.BpmnError;
 import org.flowable.engine.delegate.DelegateExecution;

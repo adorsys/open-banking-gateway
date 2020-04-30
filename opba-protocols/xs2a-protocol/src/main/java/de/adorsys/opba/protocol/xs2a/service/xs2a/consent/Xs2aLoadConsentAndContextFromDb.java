@@ -2,12 +2,12 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
-import de.adorsys.opba.protocol.bpmnshared.config.flowable.Xs2aFlowableProperties;
-import de.adorsys.opba.protocol.bpmnshared.config.flowable.Xs2aObjectMapper;
+import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
+import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableProperties;
+import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.ais.AccountListXs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.AccountListXs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -35,8 +35,8 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
 public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aContext> {
 
     private final ContextMerger merger;
-    private final Xs2aFlowableProperties properties;
-    private final Xs2aObjectMapper mapper;
+    private final FlowableProperties properties;
+    private final FlowableObjectMapper mapper;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {

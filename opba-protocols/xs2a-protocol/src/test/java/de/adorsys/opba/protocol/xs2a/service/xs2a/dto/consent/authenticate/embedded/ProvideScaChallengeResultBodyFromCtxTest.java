@@ -1,8 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.authenticate.embedded;
 
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
+import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.RequestScopedStub;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;

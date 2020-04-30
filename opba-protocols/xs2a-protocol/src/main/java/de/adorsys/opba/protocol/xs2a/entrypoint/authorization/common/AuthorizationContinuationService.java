@@ -5,7 +5,7 @@ import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.bpmnshared.service.eventbus.ProcessEventHandlerRegistrar;
-import de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper;
+import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aOutcomeMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
@@ -29,7 +29,7 @@ public class AuthorizationContinuationService {
 
     public <T> CompletableFuture<Result<T>> handleAuthorizationProcessContinuation(
         String executionId,
-        Function<CompletableFuture<Result<T>>, OutcomeMapper<T>> mapperFactory
+        Function<CompletableFuture<Result<T>>, Xs2aOutcomeMapper<T>> mapperFactory
     ) {
         CompletableFuture<Result<T>> result = new CompletableFuture<>();
         registrar.addHandler(
@@ -45,7 +45,7 @@ public class AuthorizationContinuationService {
     public CompletableFuture<Result<UpdateAuthBody>> handleAuthorizationProcessContinuation(String executionId) {
         return handleAuthorizationProcessContinuation(
             executionId,
-            res -> new OutcomeMapper<>(res, resp -> new UpdateAuthBody(), errorMapper)
+            res -> new Xs2aOutcomeMapper<>(res, resp -> new UpdateAuthBody(), errorMapper)
         );
     }
 }

@@ -1,7 +1,7 @@
 package de.adorsys.opba.starter;
 
-import de.adorsys.opba.protocol.bpmnshared.config.flowable.Xs2aObjectMapper;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
+import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 public class Xs2aSensitiveDataTest {
 
     @Autowired
-    private Xs2aObjectMapper mapper;
+    private FlowableObjectMapper mapper;
 
     @Test
     @SneakyThrows

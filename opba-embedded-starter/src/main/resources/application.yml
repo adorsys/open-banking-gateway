@@ -125,8 +125,6 @@ protocol:
           select-sca-method: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
           report-sca-result: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/sca-result?wrong=#{context.getWrongAuthCredentials()}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/entry-consent-transactions/dedicated-account-access?wrong=#{context.getWrongAuthCredentials()}
-    expirable:
-      expire-after-write: PT600S
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
       invalid-consent: FORMAT_ERROR
@@ -134,6 +132,15 @@ protocol:
       keystore: sample-qwac.keystore
       password: password
 
-# Flowable comes with XS2A protocol currently
+# Flowable comes for all protocols shared
+bpmnshared:
+  flowable:
+    serialization:
+      serialize-only-packages:
+        - de.adorsys.opba.protocol.xs2a.context
+        - de.adorsys.opba.protocol.hbci.context
+        - de.adorsys.xs2a.adapter.service.model
+    expirable:
+      expire-after-write: PT600S
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
