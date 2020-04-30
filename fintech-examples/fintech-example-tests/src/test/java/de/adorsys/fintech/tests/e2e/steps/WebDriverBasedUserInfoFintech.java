@@ -7,14 +7,12 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.RetryOperations;
 
 import java.net.URI;
 import java.time.Duration;
 
-import static de.adorsys.fintech.tests.e2e.config.RetryableConfig.TEST_RETRY_OPS;
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.PIN;
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.USERNAME;
 
@@ -27,7 +25,6 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     static String username = USERNAME + RandomString.make().toLowerCase();;
 
     @Autowired
-    @Qualifier(TEST_RETRY_OPS)
     private RetryOperations withRetry;
 
     @Value("${test.webdriver.timeout}")

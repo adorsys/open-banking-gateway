@@ -16,7 +16,7 @@ public class FintechStagesUtils {
     public static final String BANKPROFILE_ENDPOINT = "/bank/";
     public static final String BANKSEARCH_LOGIN = "/login";
 
-    public static RequestSpecification withDefaultHeaders() {
+    public static RequestSpecification withDefaultHeaders(String maxMusterman) {
         return RestAssured.given().header(X_REQUEST_ID, UUID.randomUUID().toString());
     }
 }
