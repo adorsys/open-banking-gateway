@@ -28,7 +28,7 @@ public class IgnoreFieldsLoaderImpl implements IgnoreFieldsLoader {
 
         return codeListMap.entrySet().stream().collect(toMap(
                 Map.Entry::getKey,
-                it -> new RulesImpl<T>(it.getValue(), invokerClass, approach)
+                it -> new RulesImpl<>(it.getValue(), invokerClass, approach)
         ));
     }
 }
