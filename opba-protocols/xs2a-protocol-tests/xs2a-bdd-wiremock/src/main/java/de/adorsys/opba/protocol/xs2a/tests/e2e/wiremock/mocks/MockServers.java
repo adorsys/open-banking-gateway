@@ -57,6 +57,14 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    public SELF redirect_mock_of_sandbox_nopsu_for_anton_brueckner_accounts_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/accounts/sandboxnopsu/");
+        startWireMock(config);
+
+        return self();
+    }
+
     public SELF redirect_mock_of_sandbox_for_anton_brueckner_transactions_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/transactions/sandbox/");
