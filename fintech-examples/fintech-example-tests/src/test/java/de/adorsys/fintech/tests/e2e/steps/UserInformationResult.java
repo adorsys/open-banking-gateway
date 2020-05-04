@@ -12,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import java.util.UUID;
 
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
 
 
 @JGivenStage
@@ -26,7 +24,7 @@ public class UserInformationResult extends AccountInformationResult {
 
     @SneakyThrows
     public UserInformationResult fintech_can_read_anton_brueckner_accounts_and_transactions(String antonBruecknerId, String bankId) {
-        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
+        ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .given()
                                                              .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                              .header(SESSION_COOKIE, UUID.randomUUID().toString())
@@ -40,7 +38,7 @@ public class UserInformationResult extends AccountInformationResult {
     }
 
     public UserInformationResult fintech_can_read_max_musterman_accounts_and_transactions(String maxMustermanId, String bankId) {
-        ExtractableResponse<Response> response = withDefaultHeaders(MAX_MUSTERMAN)
+        ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .given()
                                                              .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                              .header(SESSION_COOKIE, UUID.randomUUID().toString())
@@ -54,7 +52,7 @@ public class UserInformationResult extends AccountInformationResult {
     }
 
     public UserInformationResult fintech_navigates_back_to_login_after_user_logs_out() {
-        ExtractableResponse<Response> response = withDefaultHeaders(MAX_MUSTERMAN)
+        ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .when()
                                                             .get(BANKSEARCH_LOGIN)
                                                          .then()
@@ -64,8 +62,8 @@ public class UserInformationResult extends AccountInformationResult {
         return (UserInformationResult) self();
     }
 
-    public UserInformationResult fintech_get_bank_infos(String username) {
-        ExtractableResponse<Response> response = withDefaultHeaders(username)
+    public UserInformationResult fintech_get_bank_infos() {
+        ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .given()
                                                              .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                              .header(SESSION_COOKIE, UUID.randomUUID().toString())
@@ -78,8 +76,8 @@ public class UserInformationResult extends AccountInformationResult {
         return (UserInformationResult) self();
     }
 
-    public UserInformationResult fintech_get_user_infos(String username) {
-        ExtractableResponse<Response> response = withDefaultHeaders(username)
+    public UserInformationResult fintech_get_user_infos() {
+        ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .given()
                                                          .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                          .header(SESSION_COOKIE, UUID.randomUUID().toString())

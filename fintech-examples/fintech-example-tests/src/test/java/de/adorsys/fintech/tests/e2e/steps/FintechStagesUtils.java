@@ -10,13 +10,14 @@ public class FintechStagesUtils {
     public static final String X_REQUEST_ID = "X_REQUEST_ID";
     public static final String PIN = "1234";
     public static String USERNAME = "bob";
+    public static String FINTECH_LOGIN = "tom";
     public static final String X_XSRF_TOKEN = "xsrfToken";
     public static final String SESSION_COOKIE = "sessionCookie";
     public static final String ACCOUNT = "account/";
     public static final String BANKPROFILE_ENDPOINT = "/bank/";
     public static final String BANKSEARCH_LOGIN = "/login";
 
-    public static RequestSpecification withDefaultHeaders(String maxMusterman) {
+    public static RequestSpecification withDefaultHeaders() {
         return RestAssured.given().header(X_REQUEST_ID, UUID.randomUUID().toString());
     }
 }

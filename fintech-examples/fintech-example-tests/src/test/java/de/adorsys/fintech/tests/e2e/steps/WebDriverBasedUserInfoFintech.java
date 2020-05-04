@@ -18,8 +18,7 @@ import org.springframework.retry.RetryOperations;
 import java.net.URI;
 import java.time.Duration;
 
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.PIN;
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.USERNAME;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableConfig.TEST_RETRY_OPS;
 
 
@@ -28,7 +27,8 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.Ret
 public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFintech<SELF>> extends WebDriverBasedAccountInformation<SELF> {
 
     static final String FINTECH_URI = "https://obg-dev-fintechui.cloud.adorsys.de";
-    static String username = USERNAME + RandomString.make().toLowerCase();;
+    static String username = USERNAME + RandomString.make().toLowerCase();
+    static String fintech_login = FINTECH_LOGIN + RandomString.make().toLowerCase();
 
     @Autowired
     @Qualifier(TEST_RETRY_OPS)
@@ -111,7 +111,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_login_with_its_credentials(WebDriver driver) {
-        sendText(driver, By.id("username"), USERNAME + RandomString.make().toLowerCase());
+        sendText(driver, By.id("username"), fintech_login);
         sendText(driver, By.id("password"), PIN);
         return self();
     }
@@ -216,8 +216,8 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF user_click_on_login_button(WebDriver webDriver) {
-        performClick(webDriver, By.id("login"));
+    public SELF user_click_on_confirm_button(WebDriver webDriver) {
+        performClick(webDriver, By.id(SUBMIT_ID));
         return self();
     }
 

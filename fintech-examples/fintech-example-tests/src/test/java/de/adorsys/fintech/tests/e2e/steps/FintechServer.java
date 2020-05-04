@@ -37,6 +37,12 @@ public class FintechServer<SELF extends FintechServer<SELF>> extends SandboxServ
         return self();
     }
 
+    public SELF fintech_points_to_fintechui_bank_search(String uri) {
+        RestAssured.baseURI = uri;
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+        return self();
+    }
+
     public SELF enabled_embedded_sandbox_mode() {
         return enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri());
     }
