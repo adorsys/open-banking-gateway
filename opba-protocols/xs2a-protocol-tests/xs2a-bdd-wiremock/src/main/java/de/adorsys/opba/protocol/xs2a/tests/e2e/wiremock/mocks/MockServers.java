@@ -9,7 +9,7 @@ import de.adorsys.opba.db.domain.entity.BankProfile;
 import de.adorsys.opba.db.domain.entity.BankProtocol;
 import de.adorsys.opba.db.domain.entity.IgnoreValidationRule;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
-import de.adorsys.opba.db.repository.jpa.IgnoreBankValidationRuleRepository;
+import de.adorsys.opba.db.repository.jpa.IgnoreValidationRuleRepository;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.AccountListingService;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateAisAccountListConsentService;
@@ -41,7 +41,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     private BankProfileJpaRepository bankProfileJpaRepository;
 
     @Autowired
-    private IgnoreBankValidationRuleRepository ignoreBankValidationRuleRepository;
+    private IgnoreValidationRuleRepository ignoreValidationRuleRepository;
 
     @ProvidedScenarioState
     private WireMockServer sandbox;
@@ -124,28 +124,28 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
                 .forRedirect(true)
                 .validationCode(FieldCode.PSU_ID)
                 .build();
-        ignoreBankValidationRuleRepository.deleteAll();
-        ignoreBankValidationRuleRepository.save(bankValidationRule);
+        ignoreValidationRuleRepository.deleteAll();
+        ignoreValidationRuleRepository.save(bankValidationRule);
         bankValidationRule.setId(null);
         bankValidationRule.setEndpointClassCanonicalName(CreateAisAccountListConsentService.class.getCanonicalName());
-        ignoreBankValidationRuleRepository.save(bankValidationRule);
+        ignoreValidationRuleRepository.save(bankValidationRule);
         bankValidationRule.setId(null);
         bankValidationRule.setEndpointClassCanonicalName(StartConsentAuthorization.class.getCanonicalName());
-        ignoreBankValidationRuleRepository.save(bankValidationRule);
+        ignoreValidationRuleRepository.save(bankValidationRule);
 
         bankValidationRule.setId(null);
         bankValidationRule.setProtocol(BankProtocol.builder().id(AUTH_PROTOCOL_ID).build());
         bankValidationRule.setEndpointClassCanonicalName(CreateAisAccountListConsentService.class.getCanonicalName());
-        ignoreBankValidationRuleRepository.save(bankValidationRule);
+        ignoreValidationRuleRepository.save(bankValidationRule);
         bankValidationRule.setId(null);
         bankValidationRule.setProtocol(BankProtocol.builder().id(AUTH_PROTOCOL_ID).build());
         bankValidationRule.setEndpointClassCanonicalName(StartConsentAuthorization.class.getCanonicalName());
-        ignoreBankValidationRuleRepository.save(bankValidationRule);
+        ignoreValidationRuleRepository.save(bankValidationRule);
 
         bankValidationRule.setId(null);
         bankValidationRule.setProtocol(BankProtocol.builder().id(AUTH_PROTOCOL_ID).build());
         bankValidationRule.setEndpointClassCanonicalName(Xs2aAuthenticateUserConsentWithPin.class.getCanonicalName());
-        ignoreBankValidationRuleRepository.save(bankValidationRule);
+        ignoreValidationRuleRepository.save(bankValidationRule);
 
         return self();
     }

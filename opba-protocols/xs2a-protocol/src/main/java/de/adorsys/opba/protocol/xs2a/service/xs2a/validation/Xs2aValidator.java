@@ -7,8 +7,8 @@ import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreBankValidationRuleDto;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
-import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreFieldsLoader;
-import de.adorsys.opba.protocol.api.services.scoped.validation.Rules;
+import de.adorsys.opba.protocol.api.services.scoped.validation.FieldsToIgnoreLoader;
+import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreValidationRule;
 import de.adorsys.opba.protocol.xs2a.domain.ValidationIssueException;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;
@@ -58,8 +58,8 @@ public class Xs2aValidator {
     public <T> void validate(DelegateExecution exec, Xs2aContext context, Class<T> invokerClass, Object... dtosToValidate) {
         Set<ConstraintViolation<Object>> allErrors = new HashSet<>();
 
-        IgnoreFieldsLoader ignoreFieldsLoader = context.getRequestScoped().ignoreFieldsLoader();
-        Map<FieldCode, Rules> rulesMap = ignoreFieldsLoader.getValidationRules(
+        FieldsToIgnoreLoader fieldsToIgnoreLoader = context.getRequestScoped().fieldsToIgnoreLoader();
+        Map<FieldCode, IgnoreValidationRule> rulesMap = fieldsToIgnoreLoader.getIgnoreValidationRules(
                 invokerClass,
                 context.getActiveScaApproach()
         );

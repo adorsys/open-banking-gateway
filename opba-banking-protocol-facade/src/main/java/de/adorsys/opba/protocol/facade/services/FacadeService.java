@@ -32,15 +32,17 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
             ServiceContext<I> serviceContext = addRequestScopedFor(request, internalContext);
             return new ProtocolWithCtx<>(protocol, serviceContext);
         });
-        assert protocolWithCtx != null;
+        if (protocolWithCtx == null) {
+            throw new NullPointerException("can't create service context or determine protocol");
+        }
 
-        CompletableFuture<Result<O>> result = execute(protocolWithCtx.getProtocol(), protocolWithCtx.getIServiceContext());
+        CompletableFuture<Result<O>> result = execute(protocolWithCtx.getProtocol(), protocolWithCtx.getServiceContext());
         // This one must exist in decoupled transaction
         return result.thenApply(
                 res -> handleResult(
                         res,
                         request.getFacadeServiceable(),
-                        protocolWithCtx.getIServiceContext()
+                        protocolWithCtx.getServiceContext()
                 )
         );
     }

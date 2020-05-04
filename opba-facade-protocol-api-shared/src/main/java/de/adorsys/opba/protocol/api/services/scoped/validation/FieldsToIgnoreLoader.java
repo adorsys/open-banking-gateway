@@ -5,6 +5,6 @@ import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 
 import java.util.Map;
 
-public interface IgnoreFieldsLoader {
-    <T> Map<FieldCode, Rules> getValidationRules(Class<T> invokerClass, Approach approach);
+public interface FieldsToIgnoreLoader {
+    <T> Map<FieldCode, IgnoreValidationRule> getIgnoreValidationRules(Class<T> invokerClass, Approach approach);
 }
