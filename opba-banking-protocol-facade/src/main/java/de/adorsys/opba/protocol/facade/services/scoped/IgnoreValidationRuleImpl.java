@@ -1,8 +1,7 @@
 package de.adorsys.opba.protocol.facade.services.scoped;
 
-import de.adorsys.opba.db.domain.entity.IgnoreValidationRule;
 import de.adorsys.opba.protocol.api.common.Approach;
-import de.adorsys.opba.protocol.api.services.scoped.validation.Rules;
+import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreValidationRule;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -11,8 +10,8 @@ import static de.adorsys.opba.protocol.api.common.Approach.EMBEDDED;
 import static de.adorsys.opba.protocol.api.common.Approach.REDIRECT;
 
 @RequiredArgsConstructor
-public class RulesImpl<T> implements Rules {
-    private final List<IgnoreValidationRule> validationRules;
+public class IgnoreValidationRuleImpl<T> implements IgnoreValidationRule {
+    private final List<de.adorsys.opba.db.domain.entity.IgnoreValidationRule> validationRules;
     private final Class<T> invokerClass;
     private final Approach approach;
 

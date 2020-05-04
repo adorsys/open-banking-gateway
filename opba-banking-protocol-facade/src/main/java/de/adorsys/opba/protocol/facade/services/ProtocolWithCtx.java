@@ -8,5 +8,5 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProtocolWithCtx<A, I> {
     private final A protocol;
-    private final ServiceContext<I> iServiceContext;
+    private final ServiceContext<I> serviceContext;
 }

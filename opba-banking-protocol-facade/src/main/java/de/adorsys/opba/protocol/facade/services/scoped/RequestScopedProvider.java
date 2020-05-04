@@ -11,7 +11,7 @@ import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.transientdata.TransientStorage;
-import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreFieldsLoader;
+import de.adorsys.opba.protocol.api.services.scoped.validation.FieldsToIgnoreLoader;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
 import lombok.Getter;
@@ -117,7 +117,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         private final CurrentBankProfile bankProfile;
         private final ConsentAccess access;
         private final EncryptionService encryptionService;
-        private final IgnoreFieldsLoader ignoreFieldsLoader;
+        private final FieldsToIgnoreLoader fieldsToIgnoreLoader;
 
         @Override
         public CurrentBankProfile aspspProfile() {
@@ -140,8 +140,8 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         }
 
         @Override
-        public IgnoreFieldsLoader ignoreFieldsLoader() {
-            return ignoreFieldsLoader;
+        public FieldsToIgnoreLoader fieldsToIgnoreLoader() {
+            return fieldsToIgnoreLoader;
         }
     }
 
