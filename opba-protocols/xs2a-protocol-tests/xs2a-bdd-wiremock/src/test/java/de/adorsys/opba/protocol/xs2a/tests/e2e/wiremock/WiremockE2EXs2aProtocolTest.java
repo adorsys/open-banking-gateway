@@ -11,6 +11,7 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.Xs2aProtocolApplication;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.Path;
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
@@ -531,9 +533,9 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
 
     @ParameterizedTest
     @EnumSource(Approach.class)
-    void testAccountsListWithConsentUsingRedirectWithMissingPsuId(Approach expectedApproach) {
+    void testAccountsListWithConsentUsingRedirectWithMissingPsuId(Approach expectedApproach, @TempDir Path tempDir) {
         given()
-                .redirect_mock_of_sandbox_nopsu_for_anton_brueckner_accounts_running()
+                .redirect_mock_of_sandbox_nopsu_for_anton_brueckner_accounts_running(tempDir)
                 .ignore_validation_rules_table_contains_field_psu_id()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()

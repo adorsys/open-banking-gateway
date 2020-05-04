@@ -20,6 +20,12 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.FileSystemUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Path;
 
 /**
  * Runs Sandbox as json-backed mock.
@@ -57,9 +63,18 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
-    public SELF redirect_mock_of_sandbox_nopsu_for_anton_brueckner_accounts_running() {
+    public SELF redirect_mock_of_sandbox_nopsu_for_anton_brueckner_accounts_running(Path tempDir) {
+        URL resource = getClass().getClassLoader().getResource("mockedsandbox/restrecord/redirect/accounts/sandbox/");
+        URL resource2 = getClass().getClassLoader().getResource("mockedsandbox/restrecord/redirect/accounts/sandboxnopsu/");
+        try {
+            FileSystemUtils.copyRecursively(new File(resource.getFile()), tempDir.toFile());
+            FileSystemUtils.copyRecursively(new File(resource2.getFile()), tempDir.toFile());
+        } catch (IOException e) {
+            log.error("files copy to temporary directory error", e);
+        }
+
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/accounts/sandboxnopsu/");
+                .usingFilesUnderDirectory(tempDir.toString());
         startWireMock(config);
 
         return self();
