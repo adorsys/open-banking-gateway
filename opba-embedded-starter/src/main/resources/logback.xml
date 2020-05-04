@@ -4,11 +4,7 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
         </encoder>
     </appender>
-    <!-- please do not remove but replace log level, thx peter -->
-    <logger name="de.adorsys.opba.tppbankingapi.mapper.generated.AccountListFacadeToRestMapper" level="WARN"/>
-    <logger name="de.adorsys.opba.tppbankingapi.mapper.generated.TransactionsFacadeToRestMapperImpl" level="WARN"/>
-    <logger name="de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil" level="WARN"/>
-    <logger name="de.adorsys.opba.protocol.xs2a.service.mappers.generated.Xs2aResultBodyExtractor$Xs2aToFacadeMapperImpl" level="WARN"/>
+
 
     <root level="info">
         <appender-ref ref="STDOUT" />

@@ -3,7 +3,7 @@ package de.adorsys.opba.tppauthapi.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
+import de.adorsys.opba.api.security.service.TokenBasedAuthService;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
 import de.adorsys.opba.protocol.facade.config.auth.UriExpandConst;
@@ -86,8 +86,19 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
         psuAuthService.createPsuIfNotExist(psuAuthDto.getLogin(), psuAuthDto.getPassword());
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(LOCATION, authConfig.getRedirect().getConsentLogin().getPage());
+        responseHeaders.add(LOCATION, authConfig.getRedirect().getLoginPage());
         return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<Void> renewalAuthorizationSessionKey(UUID xRequestId, UUID authorizationId) {
+        log.info("PETER NYI {}", xRequestId);
+        PsuLoginForAisService.Outcome outcome = aisService.renewAuthorizationSessionKey(xRequestId, authorizationId);
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .header(X_REQUEST_ID, xRequestId.toString())
+                .header(SET_COOKIE, buildAuthorizationCookiesOnAllPaths(authorizationId, outcome.getKey()))
+                .build();
     }
 
     // TODO: https://github.com/adorsys/open-banking-gateway/issues/559
@@ -104,17 +115,22 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
 
     private String[] buildAuthorizationCookiesOnAllPaths(UUID authorizationId, String key) {
         String token = authService.generateToken(key);
-        return authConfig.getAuthorizationSessionKey().getCookie().getPathTemplates().stream()
+        String[] strings = authConfig.getCookie().getPathTemplates().stream()
                 .map(it -> cookieString(authorizationId, it, token))
                 .toArray(String[]::new);
+        for (String s : strings) {
+            log.info("PETER authorization cookie {}, id: {} and token {}", s, authorizationId, token);
+        }
+        return strings;
+
     }
 
     private String cookieString(UUID authorizationId, String path, String token) {
         ResponseCookie.ResponseCookieBuilder builder = tppAuthResponseCookieBuilder
                 .builder(AUTHORIZATION_SESSION_KEY,  token);
 
-        if (!Strings.isNullOrEmpty(authConfig.getAuthorizationSessionKey().getCookie().getDomain())) {
-            builder = builder.domain(authConfig.getAuthorizationSessionKey().getCookie().getDomain());
+        if (!Strings.isNullOrEmpty(authConfig.getCookie().getDomain())) {
+            builder = builder.domain(authConfig.getCookie().getDomain());
         }
 
         builder = builder.path(
