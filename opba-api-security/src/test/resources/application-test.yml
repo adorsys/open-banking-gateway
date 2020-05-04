@@ -1,6 +1,6 @@
-security:
-  tpp:
-    key-validity-duration: P7D
+api:
+  security:
+    token-validity-duration: P7D
     jws-algo: RS256
     # Example private-public keypair for DEMO-purposes. Generated using TokenSignVerifyTest.generateNewTppKeyPair(). Production use should load private key from secure place.
     # Base-64 encoded PKCS8

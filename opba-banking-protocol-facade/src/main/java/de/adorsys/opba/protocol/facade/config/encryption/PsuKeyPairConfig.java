@@ -17,10 +17,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Map;
 
+import static de.adorsys.opba.protocol.facade.config.ConfigConst.FACADE_CONFIG_PREFIX;
+
 @Data
 @Validated
 @Configuration
-@ConfigurationProperties("psu.key-pair")
+@ConfigurationProperties(FACADE_CONFIG_PREFIX + "encryption.psu.key-pair")
 public class PsuKeyPairConfig implements CmsEncSpec {
 
     @NotBlank

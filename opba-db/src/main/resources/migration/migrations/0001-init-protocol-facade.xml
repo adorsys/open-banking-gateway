@@ -384,4 +384,33 @@
                                  referencedColumnNames="bank_uuid"
                                  referencedTableName="${table-prefix}bank_profile"/>
     </changeSet>
+    <changeSet id="validation_rule_table" author="mhr">
+        <createTable tableName="${table-prefix}validation_rule">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="protocol_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="endpoint_class_canonical_name" type="VARCHAR(256)"/>
+            <column name="validation_code" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="for_embedded" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="for_redirect" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="mode" type="VARCHAR(32)" defaultValue="IGNORE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_validation_rule_bank_protocol"
+                                 baseTableName="${table-prefix}validation_rule"
+                                 baseColumnNames="protocol_id"
+                                 referencedTableName="${table-prefix}bank_protocol"
+                                 referencedColumnNames="id"/>
+        <createSequence sequenceName="validation_rule_sequence" incrementBy="50"/>
+    </changeSet>
 </databaseChangeLog>

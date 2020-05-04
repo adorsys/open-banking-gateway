@@ -9,13 +9,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
+import static de.adorsys.opba.protocol.xs2a.config.ConfigConst.XS2A_PROTOCOL_CONFIG_PREFIX;
+
 /**
  * This class aggregates message templates that can be received from ASPSP.
  */
 @Validated
 @Data
 @Configuration
-@ConfigurationProperties("protocol.aspspmessages")
+@ConfigurationProperties(XS2A_PROTOCOL_CONFIG_PREFIX + "aspspmessages")
 public class AspspMessages {
 
     /**

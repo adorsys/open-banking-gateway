@@ -1,7 +1,7 @@
 package de.adorsys.opba.starter;
 
-import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aObjectMapper;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
+import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 public class Xs2aSensitiveDataTest {
 
     @Autowired
-    private Xs2aObjectMapper mapper;
+    private FlowableObjectMapper mapper;
 
     @Test
     @SneakyThrows
@@ -32,14 +32,8 @@ public class Xs2aSensitiveDataTest {
         context.setSagaId("1234");
         context.setPsuPassword("PASSWORD");
 
-        assertThat(mapper.writeValueAsString(context))
-                .isEqualTo("{\"flowByAction\":"
-                        + "{\"LIST_ACCOUNTS\":\"xs2a-list-accounts\",\"LIST_TRANSACTIONS\":\"xs2a-list-transactions\"},"
-                        + "\"sagaId\":\"1234\","
-                        + "\"violations\":[],"
-                        + "\"contentType\":\"application/json\","
-                        + "\"redirectConsentOk\":false}"
-                );
+        assertThat(mapper.writeValueAsString(context)).doesNotContain("psuPassword");
+        assertThat(mapper.writeValueAsString(context)).doesNotContain("PASSWORD");
     }
 
     @Test
@@ -50,14 +44,8 @@ public class Xs2aSensitiveDataTest {
         context.setSagaId("1234");
         context.setLastScaChallenge("Challenge!");
 
-        assertThat(mapper.writeValueAsString(context))
-                .isEqualTo("{\"flowByAction\":"
-                        + "{\"LIST_ACCOUNTS\":\"xs2a-list-accounts\",\"LIST_TRANSACTIONS\":\"xs2a-list-transactions\"},"
-                        + "\"sagaId\":\"1234\","
-                        + "\"violations\":[],"
-                        + "\"contentType\":\"application/json\","
-                        + "\"redirectConsentOk\":false}"
-                );
+        assertThat(mapper.writeValueAsString(context)).doesNotContain("lastScaChallenge");
+        assertThat(mapper.writeValueAsString(context)).doesNotContain("Challenge!");
     }
 }
 

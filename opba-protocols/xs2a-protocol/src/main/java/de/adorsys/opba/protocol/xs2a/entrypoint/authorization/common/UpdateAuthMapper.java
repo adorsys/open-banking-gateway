@@ -2,10 +2,10 @@ package de.adorsys.opba.protocol.xs2a.entrypoint.authorization.common;
 
 import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
+import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.ais.AccountListXs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.UuidMapper;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.AccountListXs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoUpdatingMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AisConsentInitiateBody;
@@ -31,7 +31,7 @@ public class UpdateAuthMapper {
 
     /**
      * Due to JsonCustomSerializer, Xs2aContext will always have the type it had started with, for example
-     * {@link de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.AccountListXs2aContext} will be
+     * {@link de.adorsys.opba.protocol.xs2a.context.ais.AccountListXs2aContext} will be
      * always properly deserialized.
      */
     public Xs2aContext updateContext(Xs2aContext context, AuthorizationRequest request) {

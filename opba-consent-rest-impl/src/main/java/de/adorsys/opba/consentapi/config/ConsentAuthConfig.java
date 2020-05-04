@@ -1,7 +1,7 @@
 package de.adorsys.opba.consentapi.config;
 
-import de.adorsys.opba.api.security.EnableTokenBasedApiSecurity;
-import de.adorsys.opba.api.security.service.TokenBasedAuthService;
+import de.adorsys.opba.api.security.internal.EnableTokenBasedApiSecurity;
+import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -34,7 +34,7 @@ public class ConsentAuthConfig {
                 .filter(it -> AUTHORIZATION_SESSION_KEY.equals(it.getName()))
                 .findFirst()
                 .map(Cookie::getValue)
-                .orElse(null);
+                .orElseThrow(() -> new IllegalStateException("Authorization-Session-Key cookie is missing"));
 
         String subjectValue = authService.validateTokenAndGetSubject(authCookieValue);
 

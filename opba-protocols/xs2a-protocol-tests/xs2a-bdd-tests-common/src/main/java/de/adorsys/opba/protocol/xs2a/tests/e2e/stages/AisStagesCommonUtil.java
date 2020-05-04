@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
-import de.adorsys.opba.api.security.domain.DataToSign;
-import de.adorsys.opba.api.security.service.RequestSigningService;
+import de.adorsys.opba.api.security.external.domain.DataToSign;
+import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import lombok.experimental.UtilityClass;

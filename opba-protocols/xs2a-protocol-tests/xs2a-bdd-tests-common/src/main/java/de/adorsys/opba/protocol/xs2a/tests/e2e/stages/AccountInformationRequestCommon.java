@@ -6,7 +6,7 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.annotation.ScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.api.security.service.RequestSigningService;
+import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
 import io.restassured.RestAssured;
@@ -171,6 +171,13 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             "restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"
         );
 
+        return self();
+    }
+
+    public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_without_psu_id() {
+        startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT,
+                "restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent-without-psu-id.json"
+        );
         return self();
     }
 

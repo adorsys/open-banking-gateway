@@ -1,6 +1,6 @@
 package de.adorsys.opba.starter;
 
-import de.adorsys.opba.api.security.service.RequestSigningService;
+import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aListAccountsEntrypoint;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aSandboxListTransactionsEntrypoint;
 import de.adorsys.opba.starter.config.FintechRequestSigningTestConfig;
@@ -56,6 +56,11 @@ class BasicOpenBankingStartupTest {
         RestAssured.baseURI = "http://localhost:" + serverPort;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         config = config().redirect(redirectConfig().followRedirects(false));
+    }
+
+    @Test
+    void testAppStartsUp() {
+        // NOP - just test that context loads OK
     }
 
     @Test

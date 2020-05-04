@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>de.adorsys.opba</groupId>
+        <artifactId>fintech-examples</artifactId>
+        <version>0.0.7-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>fintech-last-module-codecoverage</artifactId>
+    <name>fintech-examples/last-module-codecoverage</name>
+    <packaging>pom</packaging>
+
+    <properties>
+        <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
+        Change this if depth changes. Current: /fintech-examples/last-module-codecoverage -->
+        <main.basedir>${project.parent.parent.basedir}</main.basedir>
+    </properties>
+
+    <dependencies>
+        <!-- ROOT DIR -->
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>fintech-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>fintech-impl</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>fintech-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>**/generated/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven-resources-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <id>copy-resources</id>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/site/jacoco-aggregate</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/dtd/jacoco</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>xml-maven-plugin</artifactId>
+                <version>${xml-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>transform</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <transformationSets>
+                        <transformationSet>
+                            <dir>target/site/jacoco-aggregate</dir>
+                            <includes>
+                                <include>jacoco.xml</include>
+                            </includes>
+                            <stylesheet>src/main/xsl/analyse.jacoco.result.xsl</stylesheet>
+                            <parameters>
+                                <parameter>
+                                    <name>lowerlimit</name>
+                                    <value>20</value>
+                                </parameter>
+                                <parameter>
+                                    <name>outputdir</name>
+                                    <value>${project.basedir}/target</value>
+                                </parameter>
+                            </parameters>
+                            <outputDir>target</outputDir>
+                        </transformationSet>
+                    </transformationSets>
+                    <skip>${skipTests}</skip>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sf.saxon</groupId>
+                        <artifactId>saxon</artifactId>
+                        <version>${saxon.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>

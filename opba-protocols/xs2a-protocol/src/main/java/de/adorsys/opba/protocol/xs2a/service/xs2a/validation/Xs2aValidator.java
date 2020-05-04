@@ -2,10 +2,14 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.validation;
 
 import com.google.common.collect.Iterables;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
+import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
+import de.adorsys.opba.protocol.api.services.scoped.validation.FieldsToIgnoreLoader;
+import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreValidationRule;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
+import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
+import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.domain.ValidationIssueException;
-import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -17,18 +21,19 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.lang.reflect.Field;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static de.adorsys.opba.protocol.xs2a.service.xs2a.context.ContextMode.REAL_CALLS;
+import static de.adorsys.opba.protocol.bpmnshared.dto.context.ContextMode.REAL_CALLS;
 
 
 /**
  * Key validation service that uses Hibernate-validator to check that required parameters are available before doing
  * ASPSP API call.
- * For {@link de.adorsys.opba.protocol.xs2a.service.xs2a.context.ContextMode#MOCK_REAL_CALLS} collects
+ * For {@link de.adorsys.opba.protocol.bpmnshared.dto.context.ContextMode#MOCK_REAL_CALLS} collects
  * all violations into the context to emit message that requires user to provide inputs that fix the violations.
- * For {@link de.adorsys.opba.protocol.xs2a.service.xs2a.context.ContextMode#REAL_CALLS} causes Runtime error
+ * For {@link de.adorsys.opba.protocol.bpmnshared.dto.context.ContextMode#REAL_CALLS} causes Runtime error
  * if API object fails the validation.
  */
 @Slf4j
@@ -40,16 +45,27 @@ public class Xs2aValidator {
 
     /**
      * Validates that all parameters necessary to perform ASPSP API call is present.
-     * In {@link de.adorsys.opba.protocol.xs2a.service.xs2a.context.ContextMode#MOCK_REAL_CALLS}
+     * In {@link de.adorsys.opba.protocol.bpmnshared.dto.context.ContextMode#MOCK_REAL_CALLS}
      * reports all violations into {@link BaseContext#getViolations()} (merging with already existing ones)
      * @param exec Current execution that will be updated with violations if present.
      * @param dtosToValidate ASPSP API call parameter objects to validate.
      */
-    public void validate(DelegateExecution exec, Object... dtosToValidate) {
+    public <T> void validate(DelegateExecution exec, Xs2aContext context, Class<T> invokerClass, Object... dtosToValidate) {
         Set<ConstraintViolation<Object>> allErrors = new HashSet<>();
 
+        FieldsToIgnoreLoader fieldsToIgnoreLoader = context.getRequestScoped().fieldsToIgnoreLoader();
+        Map<FieldCode, IgnoreValidationRule> rulesMap = fieldsToIgnoreLoader.getIgnoreValidationRules(
+                invokerClass,
+                context.getActiveScaApproach()
+        );
         for (Object value : dtosToValidate) {
-            Set<ConstraintViolation<Object>> errors = validator.validate(value);
+            Set<ConstraintViolation<Object>> errors = validator.validate(value)
+                    .stream()
+                    .filter(f -> {
+                        FieldCode fieldCode = findInfoOnViolation(f).ctx().value();
+                        return !(rulesMap.containsKey(fieldCode) && !rulesMap.get(fieldCode).apply());
+                    })
+                    .collect(Collectors.toSet());
             allErrors.addAll(errors);
         }
 

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import de.adorsys.datasafe.privatestore.api.PasswordClearingOutputStream;
 import de.adorsys.datasafe.privatestore.api.PrivateSpaceService;
 import de.adorsys.datasafe.types.api.types.ReadKeyPassword;
-import de.adorsys.opba.api.security.service.TokenBasedAuthService;
+import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.repository.jpa.psu.PsuRepository;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
@@ -73,7 +73,9 @@ public class PsuAuthControllerTest {
 
         when(psuSecureStorage.privateService()).thenReturn(privateSpace);
         FacadeAuthConfig.Redirect redir = new FacadeAuthConfig.Redirect();
-        redir.setLoginPage(REDIRECT_TO);
+        FacadeAuthConfig.Redirect.ConsentLogin loginPage = new FacadeAuthConfig.Redirect.ConsentLogin();
+        loginPage.setPage(REDIRECT_TO);
+        redir.setConsentLogin(loginPage);
         when(facadeAuthConfig.getRedirect()).thenReturn(redir);
         when(authService.generateToken(LOGIN)).thenReturn("token");
         when(psuAuthService.tryAuthenticateUser(LOGIN, PASSWORD)).thenReturn(PSU);

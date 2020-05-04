@@ -92,7 +92,7 @@ public class NewAuthSessionHandler {
         );
         result.setRedirectionTo(
                 UriComponentsBuilder
-                        .fromHttpUrl(facadeAuthConfig.getRedirect().getLoginPage())
+                        .fromHttpUrl(facadeAuthConfig.getRedirect().getConsentLogin().getPage())
                         .buildAndExpand(ImmutableMap.of(
                                 FINTECH_USER_TEMP_PASSWORD, newPassword,
                                 AUTHORIZATION_SESSION_ID, newAuth.getId()

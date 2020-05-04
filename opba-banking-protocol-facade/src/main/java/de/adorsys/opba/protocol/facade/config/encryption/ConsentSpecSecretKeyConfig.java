@@ -8,10 +8,12 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
+import static de.adorsys.opba.protocol.facade.config.ConfigConst.FACADE_CONFIG_PREFIX;
+
 @Data
 @Validated
 @Configuration
-@ConfigurationProperties("consent-spec.secret-key")
+@ConfigurationProperties(FACADE_CONFIG_PREFIX + "encryption.consent-spec.secret-key")
 public class ConsentSpecSecretKeyConfig implements SymmetricEncSpec {
 
     @NotBlank

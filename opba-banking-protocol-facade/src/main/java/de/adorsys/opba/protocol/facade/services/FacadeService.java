@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -22,26 +23,39 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
     private final ProtocolSelector selector;
     private final ServiceContextProvider provider;
     private final ProtocolResultHandler handler;
+    private final TransactionTemplate txTemplate;
 
     public CompletableFuture<FacadeResult<O>> execute(I request) {
-        ServiceContext<I> ctx = contextFor(request);
-        A protocol = selectAndSetProtocolTo(ctx);
-        CompletableFuture<Result<O>> result = execute(protocol, ctx);
+        ProtocolWithCtx<A, I> protocolWithCtx = txTemplate.execute(callback -> {
+            InternalContext<I> internalContext = contextFor(request);
+            A protocol = selectAndSetProtocolTo(internalContext);
+            ServiceContext<I> serviceContext = addRequestScopedFor(request, internalContext);
+            return new ProtocolWithCtx<>(protocol, serviceContext);
+        });
+        if (protocolWithCtx == null) {
+            throw new NullPointerException("can't create service context or determine protocol");
+        }
+
+        CompletableFuture<Result<O>> result = execute(protocolWithCtx.getProtocol(), protocolWithCtx.getServiceContext());
         // This one must exist in decoupled transaction
         return result.thenApply(
                 res -> handleResult(
                         res,
                         request.getFacadeServiceable(),
-                        ctx
+                        protocolWithCtx.getServiceContext()
                 )
         );
     }
 
-    protected ServiceContext<I> contextFor(I request) {
+    protected InternalContext<I> contextFor(I request) {
         return provider.provide(request);
     }
 
-    protected A selectAndSetProtocolTo(ServiceContext<I> ctx) {
+    protected ServiceContext<I> addRequestScopedFor(I request, InternalContext<I> ctx) {
+        return provider.provideRequestScoped(request, ctx);
+    }
+
+    protected A selectAndSetProtocolTo(InternalContext<I> ctx) {
         return selector.selectAndPersistProtocolFor(
                 ctx,
                 action,
