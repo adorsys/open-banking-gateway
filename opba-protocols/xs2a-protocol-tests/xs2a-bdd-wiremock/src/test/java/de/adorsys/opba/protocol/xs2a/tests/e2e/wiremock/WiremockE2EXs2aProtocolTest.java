@@ -533,7 +533,7 @@ class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, Wiremo
     @EnumSource(Approach.class)
     void testAccountsListWithConsentUsingRedirectWithMissingPsuId(Approach expectedApproach) {
         given()
-                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .redirect_mock_of_sandbox_nopsu_for_anton_brueckner_accounts_running()
                 .ignore_validation_rules_table_contains_field_psu_id()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
