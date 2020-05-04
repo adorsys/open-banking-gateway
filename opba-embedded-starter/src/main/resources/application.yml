@@ -27,23 +27,24 @@ spring:
 bank-search:
   start: 0
   max: 10
-  query: "SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, name) as sml
-          FROM opb_bank WHERE word_similarity(:keyword, name) >= 0.6
-        UNION
-         SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bic) as sml
-          FROM opb_bank WHERE word_similarity(:keyword, bic) >= 0.8
-        UNION
-         SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bank_code) as sml
-          FROM opb_bank WHERE word_similarity(:keyword, bank_code) >= 0.8
-        ORDER BY sml DESC
-        LIMIT :max
-        OFFSET :start"
+  query:
+    "SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, name) as sml
+    FROM opb_bank WHERE word_similarity(:keyword, name) >= 0.6
+    UNION
+    SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bic) as sml
+    FROM opb_bank WHERE word_similarity(:keyword, bic) >= 0.8
+    UNION
+    SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bank_code) as sml
+    FROM opb_bank WHERE word_similarity(:keyword, bank_code) >= 0.8
+    ORDER BY sml DESC
+    LIMIT :max
+    OFFSET :start"
 
 protocol:
   redirect:
     to-aspsp: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
     consent-accounts:
-      ok:  ${protocol.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+      ok: ${protocol.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
       nok: ${protocol.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
       result: ${protocol.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
     parameters:
@@ -78,7 +79,7 @@ facade:
     password:
       byte-size: 8
   cookie:
-    path-templates: /embedded-server/v1/consent/{authorizationSessionId}
+    path-templates: /embedded-server/v1/consent/{authorizationSessionId}, /embedded-server/v1/psu/ais/{authorizationSessionId}/renew-authorization-session-key
   expirable:
     expire-after-write: PT10M
 
