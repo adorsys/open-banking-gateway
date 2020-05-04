@@ -20,16 +20,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PsuAuthBody'
+              $ref: "#/components/schemas/PsuAuthBody"
         required: true
       parameters:
         #common header parameter
-        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: "#/components/parameters/X-Request-ID"
       responses:
-        '202':
-          $ref: '#/components/responses/202_UserAccepted'
-        '401':
-          $ref: '#/components/responses/401_Unauthorised'
+        "202":
+          $ref: "#/components/responses/202_UserAccepted"
+        "401":
+          $ref: "#/components/responses/401_Unauthorised"
   /v1/psu/ais/{authorization-id}/for-approval/login:
     post:
       tags:
@@ -42,20 +42,39 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PsuAuthBody'
+              $ref: "#/components/schemas/PsuAuthBody"
         required: true
       parameters:
         #common header parameter
-        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: "#/components/parameters/X-Request-ID"
         #path
         - $ref: "#/components/parameters/authorization-id"
         #query
         - $ref: "#/components/parameters/redirectCode"
       responses:
-        '202':
-          $ref: '#/components/responses/202_UserAccepted'
-        '401':
-          $ref: '#/components/responses/401_Unauthorised'
+        "202":
+          $ref: "#/components/responses/202_UserAccepted"
+        "401":
+          $ref: "#/components/responses/401_Unauthorised"
+
+  /v1/psu/ais/{authorization-id}/renewal-authorization-session-key:
+    get:
+      tags:
+        - Psu Authentication
+      operationId: renewalAuthorizationSessionKey
+      summary: the AuthorizationSessionKey is replaces with a new one
+      description: Input is the old cookie, response is empty with a new cookie
+      parameters:
+        #common header parameter
+        - $ref: "#/components/parameters/X-Request-ID"
+        #path
+        - $ref: "#/components/parameters/authorization-id"
+
+      responses:
+        "202":
+          $ref: "#/components/responses/202_RenewalAuthorizationSessionKey"
+        "401":
+          $ref: "#/components/responses/401_Unauthorised"
 
   /v1/psu/register:
     post:
@@ -69,16 +88,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PsuAuthBody'
+              $ref: "#/components/schemas/PsuAuthBody"
         required: true
       parameters:
         #common header parameter
-        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: "#/components/parameters/X-Request-ID"
       responses:
-        '201':
-          $ref: '#/components/responses/201_UserCreated'
-        '400':
-          $ref: '#/components/responses/400_BadRequest'
+        "201":
+          $ref: "#/components/responses/201_UserCreated"
+        "400":
+          $ref: "#/components/responses/400_BadRequest"
 
 components:
   headers:
@@ -126,14 +145,25 @@ components:
           schema:
             type: string
         X-Request-ID:
-          $ref: '#/components/parameters/X-Request-ID'
+          $ref: "#/components/parameters/X-Request-ID"
+      #NO RESPONSE BODY
+
+    202_RenewalAuthorizationSessionKey:
+      description: User logged in
+      headers:
+        X-Request-ID:
+          $ref: "#/components/parameters/X-Request-ID"
+        Set-Cookie:
+          schema:
+            type: string
+            example: Authorization-Session-ID=abcde12345; Path=/; HttpOnly
       #NO RESPONSE BODY
 
     202_UserAccepted:
       description: User logged in
       headers:
         X-Request-ID:
-          $ref: '#/components/parameters/X-Request-ID'
+          $ref: "#/components/parameters/X-Request-ID"
         Set-Cookie:
           schema:
             type: string
@@ -148,7 +178,7 @@ components:
         Wrong registration parameters or user exist
       headers:
         X-Request-ID:
-          $ref: '#/components/parameters/X-Request-ID'
+          $ref: "#/components/parameters/X-Request-ID"
       content:
         application/json:
           schema:
@@ -159,7 +189,7 @@ components:
         Bad username or password
       headers:
         X-Request-ID:
-          $ref: '#/components/parameters/X-Request-ID'
+          $ref: "#/components/parameters/X-Request-ID"
       content:
         application/json:
           schema:
@@ -176,11 +206,7 @@ components:
           type: string
         password:
           type: string
-      example:
-        {
-          "login": "user1",
-          "password": "123"
-        }
+      example: { "login": "user1", "password": "123" }
 
     LoginResponse:
       title: Login Response
