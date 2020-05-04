@@ -11,7 +11,7 @@ import de.adorsys.opba.db.domain.entity.IgnoreValidationRule;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.IgnoreValidationRuleRepository;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.AccountListingService;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.Xs2aAccountListingService;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateAisAccountListConsentService;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate.StartConsentAuthorization;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate.embedded.Xs2aAuthenticateUserConsentWithPin;
@@ -119,7 +119,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public SELF ignore_validation_rules_table_contains_field_psu_id() {
         IgnoreValidationRule bankValidationRule = IgnoreValidationRule.builder()
                 .protocol(BankProtocol.builder().id(PROTOCOL_ID).build())
-                .endpointClassCanonicalName(AccountListingService.class.getCanonicalName())
+                .endpointClassCanonicalName(Xs2aAccountListingService.class.getCanonicalName())
                 .forEmbedded(true)
                 .forRedirect(true)
                 .validationCode(FieldCode.PSU_ID)
