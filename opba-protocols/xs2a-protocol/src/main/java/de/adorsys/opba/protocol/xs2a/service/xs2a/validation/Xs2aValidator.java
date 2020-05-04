@@ -2,17 +2,14 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.validation;
 
 import com.google.common.collect.Iterables;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
-import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
-import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
-import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
-import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreBankValidationRuleDto;
 import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import de.adorsys.opba.protocol.api.services.scoped.validation.FieldsToIgnoreLoader;
 import de.adorsys.opba.protocol.api.services.scoped.validation.IgnoreValidationRule;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
+import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
+import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.domain.ValidationIssueException;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.BaseContext;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +25,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static de.adorsys.opba.protocol.api.common.Approach.EMBEDDED;
-import static de.adorsys.opba.protocol.api.common.Approach.REDIRECT;
 import static de.adorsys.opba.protocol.bpmnshared.dto.context.ContextMode.REAL_CALLS;
 
 
