@@ -31,8 +31,3 @@ security:
     # Base-64 encoded X509
     public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu8LW1QQQ1pWUleybA4BBwUxwU9BR9GGYfelsBT8oPPCKrIn9V79/GaBqnB4WC7MMsxYjchLmVm5c2tb9OS1/qVuKFND4vyE1+G4lEK+aRarklVdKjgWDn9CQs8SA7CitU4hcYc9wkRWftQ13NMeWSQEqisTsFX/qwkiiN8gdGe+vgCVH0W9Moi7zFt/IlpAu/ViXMl1x5A/DhhL8iWnW7IqUMcQzho8zNH2v7wc3fBHkXKQvH7MXx/3fFieKAe39unltnU2NsCmoZYGiso5pnOwyE6zxfJ0Vt/YR+eAw27Wk8lgl+r944PYsHIGJAfQFi2GMc8keJ9lbmxgV6Ys4awIDAQAB
     sign-algo: RSA
-  endpoint:
-    allowed-path:
-      AIS: "/v1/banking/ais"
-      BANK_SEARCH: "/v1/banking/search"
-      CONFIRM_CONSENT: "/v1/banking/consents"

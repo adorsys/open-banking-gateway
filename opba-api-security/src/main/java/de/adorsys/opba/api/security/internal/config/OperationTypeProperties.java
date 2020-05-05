@@ -1,4 +1,4 @@
-package de.adorsys.opba.api.security.config;
+package de.adorsys.opba.api.security.internal.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Data
 @Validated
 @Configuration
-@ConfigurationProperties(prefix = "security.endpoint")
+@ConfigurationProperties(prefix = "api.security.endpoint")
 public class OperationTypeProperties {
     @NotEmpty
     private ConcurrentHashMap<String, String> allowedPath;
