@@ -5,8 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 
 @Data
 @Validated
@@ -14,5 +15,5 @@ import java.util.concurrent.ConcurrentHashMap;
 @ConfigurationProperties(prefix = "api.security.endpoint")
 public class OperationTypeProperties {
     @NotEmpty
-    private ConcurrentHashMap<String, String> allowedPath;
+    private Map<@NotBlank String, @NotBlank String> allowedPath;
 }
