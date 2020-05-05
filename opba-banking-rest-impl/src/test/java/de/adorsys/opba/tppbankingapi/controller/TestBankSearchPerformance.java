@@ -2,7 +2,7 @@ package de.adorsys.opba.tppbankingapi.controller;
 
 import de.adorsys.opba.api.security.external.domain.DataToSign;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
-import de.adorsys.opba.api.security.domain.OperationType;
+import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.tppbankingapi.BaseMockitoTest;
 import de.adorsys.opba.tppbankingapi.dto.TestResult;
 import de.adorsys.opba.tppbankingapi.services.StatisticService;

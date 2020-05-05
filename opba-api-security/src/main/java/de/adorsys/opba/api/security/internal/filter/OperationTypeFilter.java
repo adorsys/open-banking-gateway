@@ -1,7 +1,7 @@
-package de.adorsys.opba.api.security.filter;
+package de.adorsys.opba.api.security.internal.filter;
 
-import de.adorsys.opba.api.security.config.OperationTypeProperties;
-import de.adorsys.opba.api.security.domain.HttpHeaders;
+import de.adorsys.opba.api.security.external.domain.HttpHeaders;
+import de.adorsys.opba.api.security.internal.config.OperationTypeProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;

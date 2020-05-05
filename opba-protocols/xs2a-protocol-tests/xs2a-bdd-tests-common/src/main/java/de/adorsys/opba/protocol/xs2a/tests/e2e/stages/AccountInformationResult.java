@@ -7,7 +7,7 @@ import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
-import de.adorsys.opba.api.security.domain.OperationType;
+import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
