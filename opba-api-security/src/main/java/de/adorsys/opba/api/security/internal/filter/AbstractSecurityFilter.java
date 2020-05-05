@@ -1,4 +1,4 @@
-package de.adorsys.opba.api.security.filter;
+package de.adorsys.opba.api.security.internal.filter;
 
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;

@@ -4,7 +4,7 @@ package de.adorsys.opba.api.security.internal.filter;
 import de.adorsys.opba.api.security.external.domain.DataToSign;
 import de.adorsys.opba.api.security.external.domain.HttpHeaders;
 import de.adorsys.opba.api.security.internal.service.RequestVerifyingService;
-import de.adorsys.opba.api.security.domain.OperationType;
+import de.adorsys.opba.api.security.external.domain.OperationType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;

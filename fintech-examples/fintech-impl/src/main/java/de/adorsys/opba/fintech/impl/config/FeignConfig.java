@@ -2,8 +2,7 @@ package de.adorsys.opba.fintech.impl.config;
 
 import de.adorsys.opba.api.security.external.domain.DataToSign;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
-import de.adorsys.opba.api.security.domain.OperationType;
-import de.adorsys.opba.api.security.service.RequestSigningService;
+import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import feign.Request;
 import feign.RequestInterceptor;
