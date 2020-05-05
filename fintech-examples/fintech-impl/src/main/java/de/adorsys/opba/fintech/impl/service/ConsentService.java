@@ -1,6 +1,6 @@
 package de.adorsys.opba.fintech.impl.service;
 
-import de.adorsys.opba.api.security.domain.OperationType;
+import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import de.adorsys.opba.fintech.impl.tppclients.TppConsentClient;
 import lombok.RequiredArgsConstructor;
