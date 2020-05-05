@@ -7,9 +7,7 @@ import de.adorsys.opba.api.security.internal.service.RequestVerifyingService;
 import de.adorsys.opba.api.security.domain.OperationType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.AntPathMatcher;
-import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.UrlPathHelper;
+import org.springframework.core.annotation.Order;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -22,16 +20,13 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
+@Order(1)
 @RequiredArgsConstructor
-public class RequestSignatureValidationFilter extends OncePerRequestFilter {
-    public static final String OPBA_BANKING_PATH = "/v1/banking/**";
+public class RequestSignatureValidationFilter extends AbstractSecurityFilter {
 
     private final RequestVerifyingService requestVerifyingService;
     private final Duration requestTimeLimit;
     private final ConcurrentHashMap<String, String> consumerKeysMap;
-
-    private final AntPathMatcher matcher = new AntPathMatcher();
-    private final UrlPathHelper pathHelper = new UrlPathHelper();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -68,11 +63,6 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        return !matcher.match(OPBA_BANKING_PATH, pathHelper.getPathWithinApplication(request));
     }
 
     private boolean isRequestExpired(Instant operationTime) {
