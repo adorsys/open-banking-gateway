@@ -1,6 +1,7 @@
 package de.adorsys.opba.tppbankingapi.config;
 
 import de.adorsys.opba.api.security.internal.EnableSignatureBasedApiSecurity;
+import de.adorsys.opba.api.security.internal.config.OperationTypeProperties;
 import de.adorsys.opba.api.security.internal.filter.RequestSignatureValidationFilter;
 import de.adorsys.opba.api.security.internal.service.RequestVerifyingService;
 import de.adorsys.opba.api.security.internal.service.RsaJwtsVerifyingServiceImpl;
@@ -33,8 +34,8 @@ public class RequestVerifyingConfig {
     private String claimNameKey;
 
     @Bean
-    public RequestSignatureValidationFilter requestSignatureValidationFilter() {
+    public RequestSignatureValidationFilter requestSignatureValidationFilter(OperationTypeProperties properties) {
         RequestVerifyingService requestVerifyingService = new RsaJwtsVerifyingServiceImpl(claimNameKey);
-        return new RequestSignatureValidationFilter(requestVerifyingService, requestValidityWindow, consumerPublicKeys);
+        return new RequestSignatureValidationFilter(requestVerifyingService, requestValidityWindow, consumerPublicKeys, properties);
     }
 }
