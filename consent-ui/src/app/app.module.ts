@@ -14,6 +14,8 @@ import { BASE_PATH } from './api';
 import { environment } from '../environments/environment';
 
 import { BASE_PATH as BASE_PATH_AUTH } from './api-auth';
+import { SimpleTimer } from 'ng2-simple-timer';
+import {CookieRenewalService} from "./ais/common/cookie-renewal/CookieRenewalService";
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,6 +28,8 @@ import { BASE_PATH as BASE_PATH_AUTH } from './api-auth';
     InfoModule
   ],
   providers: [
+    SimpleTimer,
+    CookieRenewalService,
     ErrorService,
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
     { provide: BASE_PATH, useValue: environment.API_BASE_PATH },
