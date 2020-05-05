@@ -39,12 +39,6 @@ public class PsuLoginForAisService {
         );
     }
 
-    @Transactional
-    public Outcome renewAuthorizationSessionKey(UUID xrequestID, UUID authorizationId) {
-        return null;
-    }
-
-
     @Getter
     @RequiredArgsConstructor
     public static class Outcome {
