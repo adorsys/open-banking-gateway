@@ -80,6 +80,7 @@ facade:
       byte-size: 8
   cookie:
     path-templates: /embedded-server/v1/consent/{authorizationSessionId}, /embedded-server/v1/psu/ais/{authorizationSessionId}/renew-authorization-session-key
+
   expirable:
     expire-after-write: PT10M
 
@@ -102,7 +103,8 @@ security:
     sign-algo: RSA
 cookie:
   secure: false # localhost-only - TODO application-dev.yml for dev env?
-  max-age: PT300S
+  # max-age: PT300S
+  max-age: PT5S
   http-only: true
   path: /
   same-site: Lax
