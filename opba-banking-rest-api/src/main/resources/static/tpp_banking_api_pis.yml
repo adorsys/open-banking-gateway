@@ -1,0 +1,79 @@
+openapi: 3.0.1
+info:
+  version: "1.0.0"
+  title: Open Banking Gateway Tpp Banking API
+  description: >-
+    This API provides FinTech possibilities to perform use-cases specific calls to the bank of PSU.
+externalDocs:
+  url: "https://adorsys.github.com/open-banking-gateway"
+
+paths:
+  /v1/banking/pis/payments:
+    post:
+      requestBody:
+        $ref : '#/components/requestBodies/paymentInitiation'
+      responses:
+        201:
+          description: ''
+          content: {}
+        400:
+          description: ''
+          content: {}
+        401:
+          description: ''
+          content: {}
+      security:
+        - {}
+        - BearerAuthOAuth: []
+      x-codegen-request-body-name: body
+
+components:
+  requestBodies:
+    paymentInitiation:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/paymentInitiation'
+      required: true
+  schemas:
+    paymentInitiation:
+      required:
+        - creditorAccount
+        - creditorName
+        - debtorAccount
+        - instructedAmount
+      type: object
+      properties:
+        endToEndIdentification:
+          maxLength: 35
+          type: string
+        debtorAccount:
+          $ref: './tpp_banking_api_commons.yml#/components/schemas/accountReference'
+        instructedAmount:
+          $ref: './tpp_banking_api_commons.yml#/components/schemas/amount'
+        creditorAccount:
+          $ref: './tpp_banking_api_commons.yml#/components/schemas/accountReference'
+        creditorAgent:
+          $ref: './tpp_banking_api_commons.yml#/components/schemas/bicfi'
+        creditorAgentName:
+          $ref: './tpp_banking_api_commons.yml#/components/schemas/creditorAgentName'
+        creditorName:
+          $ref: './tpp_banking_api_commons.yml#/components/schemas/creditorName'
+        creditorAddress:
+          $ref: './tpp_banking_api_commons.yml#/components/schemas/address'
+
+  securitySchemes:
+    BearerAuthOAuth:
+      description: |
+        Bearer Token.
+      type: http
+      scheme: bearer
+    accessCode:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: 'http://example.com/oauth/auth'
+          tokenUrl: 'http://example.com/oauth/token'
+          scopes:
+            write: allows modifying resources
+            read: allows reading resources
