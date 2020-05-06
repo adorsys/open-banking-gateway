@@ -29,6 +29,7 @@ public class ConsentAuthConfig {
     @Bean
     @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public FacadeServiceableRequest provideCurrentFacadeServiceable(HttpServletRequest httpServletRequest) {
+        authCookieValue = null;
         if (null == httpServletRequest.getCookies()) {
             return FacadeServiceableRequest.builder().build();
         }

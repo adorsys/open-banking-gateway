@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {CookieRenewalService} from "../common/cookie-renewal/CookieRenewalService";
 import {ActivatedRoute} from "@angular/router";
+import {ApiHeaders} from "../../api/api.headers";
 
 @Component({
   selector: 'consent-app-entry-page',

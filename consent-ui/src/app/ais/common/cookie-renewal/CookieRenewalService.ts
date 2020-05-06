@@ -17,7 +17,7 @@ export class CookieRenewalService implements OnInit, OnDestroy {
 
 
   activate(authid): void {
-    this.simpleTimer.newTimerCD(CookieRenewalService.TIMER_NAME, 10);
+    this.simpleTimer.newTimerCD(CookieRenewalService.TIMER_NAME, 1, 1);
     this.simpleTimer.subscribe(CookieRenewalService.TIMER_NAME, () => this.cookieRenewal(authid));
   }
 
@@ -30,14 +30,37 @@ export class CookieRenewalService implements OnInit, OnDestroy {
   }
 
   cookieRenewal(authid): void {
-    console.log(new Date().toLocaleString() + ' renew timer');
+
+    const ttl = this.getTTL();
+    if (ttl === 0) {
+      return;
+    }
+
+    console.log(new Date().toLocaleString() + ' delete old timer');
+    this.simpleTimer.unsubscribe(CookieRenewalService.TIMER_NAME);
+    this.simpleTimer.delTimer(CookieRenewalService.TIMER_NAME);
 
     this.psuAuthService.renewalAuthorizationSessionKey('' + uuid.v4(), authid, 'response')
       .subscribe(res => {
         console.log("got response from server ", res.status);
         localStorage.setItem(ApiHeaders.COOKIE_TTL, res.headers.get(ApiHeaders.COOKIE_TTL));
         console.log(new Date().toLocaleString() + ' next time should be in  ' + localStorage.getItem(ApiHeaders.COOKIE_TTL));
-    });
+
+        console.log(new Date().toLocaleString() + ' activate new timer');
+        this.simpleTimer.newTimerCD(CookieRenewalService.TIMER_NAME, ttl-2, ttl-2);
+        this.simpleTimer.subscribe(CookieRenewalService.TIMER_NAME, () => this.cookieRenewal(authid));
+
+      });
+  }
+
+  getTTL() : number {
+    const ttlstring = localStorage.getItem(ApiHeaders.COOKIE_TTL);
+    if (ttlstring === null || ttlstring === '0') {
+      console.log(new Date().toLocaleString() + ' timer is idle');
+      return 0;
+    }
+
+    return parseInt(ttlstring,0);
   }
 
 }
