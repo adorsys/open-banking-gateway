@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Duration;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
@@ -74,7 +75,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
                 .status(HttpStatus.ACCEPTED)
                 .header(X_REQUEST_ID, xRequestID.toString())
                 .header(SET_COOKIE, cookieString)
-                .header(COOKIE_TTL, "" + cookieProperties.getMaxAge())
+                .header(COOKIE_TTL, "" + cookieProperties.getMaxAge().getSeconds())
                 .body(loginResponse);
     }
 
@@ -85,7 +86,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
                 .status(HttpStatus.ACCEPTED)
                 .header(LOCATION, outcome.getRedirectLocation().toASCIIString())
                 .header(X_REQUEST_ID, xRequestId.toString())
-                .header(COOKIE_TTL, "" + cookieProperties.getMaxAge())
+                .header(COOKIE_TTL, "" + cookieProperties.getMaxAge().getSeconds())
                 .header(SET_COOKIE, buildAuthorizationCookiesOnAllPaths(authorizationId, outcome.getKey()))
                 .build();
     }
@@ -106,7 +107,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
                 .header(X_REQUEST_ID, xRequestId.toString())
-                .header(COOKIE_TTL, "" + cookieProperties.getMaxAge())
+                .header(COOKIE_TTL, "" + cookieProperties.getMaxAge().getSeconds())
                 .header(SET_COOKIE, buildAuthorizationCookiesOnAllPathsWithToken(authorizationId, consentAuthConfig.getAuthCookieValue()))
                 .build();
     }
