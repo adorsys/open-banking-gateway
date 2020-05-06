@@ -24,7 +24,5 @@ export class GlobalErrorHandler implements ErrorHandler {
         severity: 'error'
       });
     });
-
-    throw error;
   }
 }
