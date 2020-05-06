@@ -44,14 +44,14 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
         String xRequestSignature = request.getHeader(HttpHeaders.X_REQUEST_SIGNATURE);
         String requestPath = request.getRequestURI();
         String expectedPath = properties.getAllowedPath().get(operationType);
+        Instant instant = Instant.parse(requestTimeStamp);
+        String fintechApiKey = consumerKeysMap.get(fintechId);
 
         if (isNotAllowedOperation(requestPath, expectedPath)) {
             log.error("Request operation type is not allowed");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Wrong Operation Type");
             return;
         }
-
-        Instant instant = Instant.parse(requestTimeStamp);
-        String fintechApiKey = consumerKeysMap.get(fintechId);
 
         if (fintechApiKey == null) {
             log.error("Api key for fintech ID {} has not find ", fintechId);
