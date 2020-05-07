@@ -5,6 +5,7 @@ import { CustomValidators } from '../../utilities/customValidators';
 import { AuthService } from '../../common/auth.service';
 import { LoginComponent } from '../login/login.component';
 import { PsuAuthBody } from '../../api-auth';
+import { SessionService } from '../../common/session.service';
 
 @Component({
   selector: 'consent-app-register',
@@ -22,7 +23,8 @@ export class RegisterComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private sessionService: SessionService
   ) {}
 
   ngOnInit() {
@@ -36,7 +38,7 @@ export class RegisterComponent implements OnInit {
     );
 
     this.authId = this.activatedRoute.snapshot.parent.params.authId;
-    this.redirectCode = this.activatedRoute.snapshot.queryParams.redirectCode;
+    this.redirectCode = this.sessionService.getRedirectCode(this.authId);
   }
 
   onSubmit() {
@@ -47,8 +49,7 @@ export class RegisterComponent implements OnInit {
     this.authService.userRegister(credentials).subscribe(res => {
       if (res.status === 201) {
         this.router.navigate([LoginComponent.ROUTE], {
-          relativeTo: this.activatedRoute.parent,
-          queryParams: { redirectCode: this.redirectCode }
+          relativeTo: this.activatedRoute.parent
         });
       }
     });
