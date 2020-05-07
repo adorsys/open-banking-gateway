@@ -7,17 +7,47 @@
 @font-face {
   font-family: geometric-regular;
   font-weight: normal;
-  src: url('src/assets/fonts/Geometric/URWGeometric-Regular.otf') format('opentype');
+  src: url('src/assets/fonts/Geometric/URWGeometricCond-Regular.otf') format('opentype');
 }
 
 @font-face {
   font-family: geometric-SemiBold;
   font-weight: bold;
-  src: url('src/assets/fonts/Geometric/URWGeometric-SemiBold.otf') format('opentype');
+  src: url('src/assets/fonts/Geometric/URWGeometricCond-SemiBold.otf') format('opentype');
 }
 
 @font-face {
   font-family: geometric-Bold;
   font-weight: bold;
-  src: url('src/assets/fonts/Geometric/URWGeometric-Bold.otf') format('opentype');
+  src: url('src/assets/fonts/Geometric/URWGeometricCond-ExtraBold.otf') format('opentype');
 }
+
+@font-face {
+  font-family: geometric-medium;
+  font-weight: normal;
+  src: url('src/assets/fonts/Geometric/URWGeometricCond-Medium.otf') format('opentype');
+}
+
+//@font-face {
+//  font-family: geometric-light;
+//  src: url('src/assets/fonts/Geometric/URWGeometric-Light.otf');
+//  src: url('src/assets/fonts/Geometric/URWGeometric-Light.otf') format('opentype');
+//}
+//
+//@font-face {
+//  font-family: geometric-regular;
+//  font-weight: normal;
+//  src: url('src/assets/fonts/Geometric/URWGeometric-Regular.otf') format('opentype');
+//}
+//
+//@font-face {
+//  font-family: geometric-SemiBold;
+//  font-weight: bold;
+//  src: url('src/assets/fonts/Geometric/URWGeometric-SemiBold.otf') format('opentype');
+//}
+//
+//@font-face {
+//  font-family: geometric-Bold;
+//  font-weight: bold;
+//  src: url('src/assets/fonts/Geometric/URWGeometric-Bold.otf') format('opentype');
+//}

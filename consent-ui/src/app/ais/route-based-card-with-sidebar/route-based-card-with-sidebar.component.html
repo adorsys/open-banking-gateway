@@ -1,18 +1,23 @@
-<div class="d-md-flex">
-  <div class="sidebar mt-md-0 mt-3">
-    <div class="container">
-      <nav class="mb-5">
-        <a class="navbar-brand" href="#">
-          <img class="logo" [src]="customizeService.getLogo()" />
-        </a>
-      </nav>
-      <consent-app-consent-info></consent-app-consent-info>
+<div class="container">
+  <div class="row">
+    <div class="card card-frame">
+      <div class="card-body">
+        <img class="logo" [src]="customizeService.getLogo()" />
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="info-block col">
+<!--        <nav class="mb-5">-->
+<!--          <a class="navbar-brand" href="#">-->
+<!--            <img class="logo" [src]="customizeService.getLogo()" />-->
+<!--          </a>-->
+<!--        </nav>-->
+        <consent-app-consent-info></consent-app-consent-info>
     </div>
   </div>
 
-  <div class="card card-frame">
-    <div class="card-body">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
+
+
 </div>

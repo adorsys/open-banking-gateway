@@ -5,8 +5,10 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.CommonGivenStages;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockAccountInformationRequest;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.BOTH_BOOKING;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockConst.DATE_FROM;
@@ -18,6 +20,9 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockCon
  */
 class E2EStress extends ScenarioTest<CommonGivenStages<? extends CommonGivenStages<?>>, WiremockAccountInformationRequest<? extends WiremockAccountInformationRequest<?>>, AccountInformationResult> {
 
+    // need to find way to inject spring beans for load test, currently using static hack
+    public static final AtomicReference<AutowireCapableBeanFactory> PARENT_SPRING_CTX_AUTOWIRER = new AtomicReference<>();
+
     private final String ACCOUNTS_OPBA_USERNAME = UUID.randomUUID().toString();
     private final String ACCOUNTS_OPBA_PASSWORD = UUID.randomUUID().toString();
     private final String TRANSACTIONS_OPBA_USERNAME = UUID.randomUUID().toString();
@@ -25,6 +30,8 @@ class E2EStress extends ScenarioTest<CommonGivenStages<? extends CommonGivenStag
 
     @Test
     void embeddedAccountList() {
+        // Injecting parent spring context
+        prepareContext();
 
         given()
             .user_registered_in_opba_with_credentials(ACCOUNTS_OPBA_USERNAME, ACCOUNTS_OPBA_PASSWORD);
@@ -49,6 +56,9 @@ class E2EStress extends ScenarioTest<CommonGivenStages<? extends CommonGivenStag
 
     @Test
     void embeddedTransactionList() {
+        // Injecting parent spring context
+        prepareContext();
+
         given()
             .user_registered_in_opba_with_credentials(TRANSACTIONS_OPBA_USERNAME, TRANSACTIONS_OPBA_PASSWORD);
 
@@ -70,5 +80,12 @@ class E2EStress extends ScenarioTest<CommonGivenStages<? extends CommonGivenStag
             .open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
                 MAX_MUSTERMAN_RESOURCE_ID, DATE_FROM, DATE_TO, BOTH_BOOKING
             );
+    }
+
+    private void prepareContext() {
+        PARENT_SPRING_CTX_AUTOWIRER.get().autowireBean(this.given());
+        PARENT_SPRING_CTX_AUTOWIRER.get().autowireBean(this.when());
+        PARENT_SPRING_CTX_AUTOWIRER.get().autowireBean(this.then());
+        PARENT_SPRING_CTX_AUTOWIRER.get().autowireBean(this);
     }
 }

@@ -1,5 +1,6 @@
 package de.adorsys.opba.fintech.impl.service;
 
+import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
@@ -65,7 +66,6 @@ public class TransactionService extends HandleAcceptedService {
             log.warn("mocking call for list transactions");
             return new ResponseEntity<>(ManualMapper.fromTppToFintech(new TppListTransactionsMock().getTransactionsResponse()), HttpStatus.OK);
         }
-        UUID xRequestId = UUID.fromString(restRequestContext.getRequestId());
         String fintechRedirectCode = UUID.randomUUID().toString();
 
         ResponseEntity<TransactionsResponse> transactions = tppAisClient.getTransactions(
@@ -74,8 +74,9 @@ public class TransactionService extends HandleAcceptedService {
                 sessionEntity.getLoginUserName(),
                 RedirectUrlsEntity.buildOkUrl(uiConfig, fintechRedirectCode),
                 RedirectUrlsEntity.buildNokUrl(uiConfig, fintechRedirectCode),
-                xRequestId,
+                UUID.fromString(restRequestContext.getRequestId()),
                 COMPUTE_X_TIMESTAMP_UTC,
+                OperationType.AIS.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
                 bankId,

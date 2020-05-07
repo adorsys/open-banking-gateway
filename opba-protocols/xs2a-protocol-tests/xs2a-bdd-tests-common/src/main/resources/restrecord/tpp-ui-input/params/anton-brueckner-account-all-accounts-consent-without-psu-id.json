@@ -1,0 +1,15 @@
+{
+  "extras": {
+  },
+  "consentAuth": {
+    "consent": {
+      "recurringIndicator": true,
+      "combinedServiceIndicator": false,
+      "access": {
+        "availableAccounts": "ALL_ACCOUNTS"
+      },
+      "frequencyPerDay": 12,
+      "validUntil": "2030-01-31"
+    }
+  }
+}

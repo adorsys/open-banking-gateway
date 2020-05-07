@@ -1,7 +1,8 @@
 package de.adorsys.opba.fintech.impl.config;
 
-import de.adorsys.opba.api.security.domain.DataToSign;
-import de.adorsys.opba.api.security.service.RequestSigningService;
+import de.adorsys.opba.api.security.external.domain.DataToSign;
+import de.adorsys.opba.api.security.external.service.RequestSigningService;
+import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import feign.Request;
 import feign.RequestInterceptor;
@@ -13,11 +14,12 @@ import org.springframework.context.annotation.Configuration;
 import java.time.Instant;
 import java.util.UUID;
 
-import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_SIGNATURE;
-import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.FINTECH_ID;
-import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_TIMESTAMP_UTC;
-import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.COMPUTE_PSU_IP_ADDRESS;
+import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.FINTECH_ID;
+import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_ID;
+import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_OPERATION_TYPE;
+import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_SIGNATURE;
+import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_TIMESTAMP_UTC;
 
 /**
  * This class enhances requests, so that the include PSU IP address headers. This header should either become
@@ -49,7 +51,8 @@ public class FeignConfig {
 
     private String calculateSignature(Request request, Instant instant) {
         String xRequestId = request.headers().get(X_REQUEST_ID).stream().findFirst().orElse(null);
-        DataToSign dataToSign = new DataToSign(UUID.fromString(xRequestId), instant);
+        String operationType = request.headers().get(X_OPERATION_TYPE).stream().findFirst().orElse(null);
+        DataToSign dataToSign = new DataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType));
         return requestSigningService.signature(dataToSign);
     }
 }

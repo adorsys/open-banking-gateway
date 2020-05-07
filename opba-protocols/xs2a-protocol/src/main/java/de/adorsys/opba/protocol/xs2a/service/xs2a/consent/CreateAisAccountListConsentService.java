@@ -1,11 +1,11 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
+import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
+import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
-import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
-import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
+import de.adorsys.opba.protocol.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate.embedded.CreateConsentErrorSink;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
@@ -47,7 +47,7 @@ public class CreateAisAccountListConsentService extends ValidatedExecution<Accou
 
     @Override
     protected void doValidate(DelegateExecution execution, AccountListXs2aContext context) {
-        validator.validate(execution, extractor.forValidation(context));
+        validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override

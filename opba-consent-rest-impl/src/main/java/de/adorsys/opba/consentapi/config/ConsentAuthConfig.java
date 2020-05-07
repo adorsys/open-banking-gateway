@@ -1,9 +1,8 @@
 package de.adorsys.opba.consentapi.config;
 
-import de.adorsys.opba.api.security.EnableTokenBasedApiSecurity;
-import de.adorsys.opba.api.security.service.TokenBasedAuthService;
+import de.adorsys.opba.api.security.internal.EnableTokenBasedApiSecurity;
+import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,25 +19,22 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_K
 @Configuration
 @EnableTokenBasedApiSecurity
 @RequiredArgsConstructor
-@Getter
 public class ConsentAuthConfig {
 
     private final TokenBasedAuthService authService;
-    private String authCookieValue;
 
     @Bean
     @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public FacadeServiceableRequest provideCurrentFacadeServiceable(HttpServletRequest httpServletRequest) {
-        authCookieValue = null;
         if (null == httpServletRequest.getCookies()) {
             return FacadeServiceableRequest.builder().build();
         }
 
-        authCookieValue = Arrays.stream(httpServletRequest.getCookies())
+        String authCookieValue = Arrays.stream(httpServletRequest.getCookies())
                 .filter(it -> AUTHORIZATION_SESSION_KEY.equals(it.getName()))
                 .findFirst()
                 .map(Cookie::getValue)
-                .orElse(null);
+                .orElseThrow(() -> new IllegalStateException("Authorization-Session-Key cookie is missing"));
 
         String subjectValue = authService.validateTokenAndGetSubject(authCookieValue);
 
