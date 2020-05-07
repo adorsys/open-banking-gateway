@@ -13,9 +13,7 @@ import static de.adorsys.opba.protocol.facade.config.ConfigConst.FACADE_CONFIG_P
 @Configuration
 public class FacadeTransientDataConfig {
 
-    // TODO PETER
-    // public static final long MIN_EXPIRE_SECONDS = 60L;
-    public static final long MIN_EXPIRE_SECONDS = 1L;
+    public static final long MIN_EXPIRE_SECONDS = 60L;
     public static final String FACADE_CACHE_BUILDER = "facade-cache-builder";
 
     @Bean(FACADE_CACHE_BUILDER)

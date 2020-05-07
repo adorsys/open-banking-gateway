@@ -1,13 +1,13 @@
-import {Injectable, OnDestroy, OnInit} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {SimpleTimer} from 'ng2-simple-timer';
 import {PsuAuthenticationService} from '../../../api-auth';
 import * as uuid from 'uuid';
-import {ApiHeaders} from "../../../api/api.headers";
+import {ApiHeaders} from '../../../api/api.headers';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CookieRenewalService implements OnInit, OnDestroy {
+export class CookieRenewalService {
 
   public static TIMER_NAME = 'cookie-renewal-timer';
   public static ROUTE = 'login';
@@ -21,14 +21,6 @@ export class CookieRenewalService implements OnInit, OnDestroy {
     this.simpleTimer.subscribe(CookieRenewalService.TIMER_NAME, () => this.cookieRenewal(authid));
   }
 
-  ngOnInit(): void {
-    console.log("CookieRenewalService is initialized");
-  }
-
-  ngOnDestroy(): void {
-    console.log("CookieRenewalService is destroyed");
-  }
-
   cookieRenewal(authid): void {
 
     const ttl = this.getTTL();
@@ -40,9 +32,11 @@ export class CookieRenewalService implements OnInit, OnDestroy {
     this.simpleTimer.unsubscribe(CookieRenewalService.TIMER_NAME);
     this.simpleTimer.delTimer(CookieRenewalService.TIMER_NAME);
 
+    // timer is deleted. If following call fails due to whatever reason, session cookie is not valid but
+    // timer does not retry to renew it, which is fine, so error handling of call is not needed
     this.psuAuthService.renewalAuthorizationSessionKey('' + uuid.v4(), authid, 'response')
       .subscribe(res => {
-        console.log("got response from server ", res.status);
+        console.log('got new cookie from server ', res.status);
         localStorage.setItem(ApiHeaders.COOKIE_TTL, res.headers.get(ApiHeaders.COOKIE_TTL));
         console.log(new Date().toLocaleString() + ' next time should be in  ' + localStorage.getItem(ApiHeaders.COOKIE_TTL));
 

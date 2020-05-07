@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {CookieRenewalService} from "../common/cookie-renewal/CookieRenewalService";
-import {ActivatedRoute} from "@angular/router";
-import {ApiHeaders} from "../../api/api.headers";
+import {CookieRenewalService} from '../common/cookie-renewal/CookieRenewalService';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'consent-app-entry-page',
@@ -14,10 +13,10 @@ export class EntryPageComponent implements OnInit {
   constructor(private route: ActivatedRoute, private cookieRenewalService: CookieRenewalService) { }
 
   ngOnInit() {
-    console.log("EntryPageComponent onInit");
+    console.log('EntryPageComponent onInit');
     this.route.paramMap.subscribe(p => {
       this.authid = p.get('authId');
-      console.log("authid is now:", this.authid);
+      console.log('authid is now:', this.authid);
       this.cookieRenewalService.activate(this.authid);
     });
   }
