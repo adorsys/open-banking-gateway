@@ -3,13 +3,13 @@ package de.adorsys.opba.tppauthapi.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.api.security.service.TokenBasedAuthService;
-import de.adorsys.opba.consentapi.config.ConsentAuthConfig;
+import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
 import de.adorsys.opba.protocol.facade.config.auth.UriExpandConst;
 import de.adorsys.opba.protocol.facade.services.authorization.PsuLoginForAisService;
 import de.adorsys.opba.protocol.facade.services.psu.PsuAuthService;
+import de.adorsys.opba.tppauthapi.config.AuthorizationSessionKeyConfig;
 import de.adorsys.opba.tppauthapi.config.CookieProperties;
 import de.adorsys.opba.tppauthapi.model.generated.LoginResponse;
 import de.adorsys.opba.tppauthapi.model.generated.PsuAuthBody;
@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.Duration;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
@@ -51,10 +50,8 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     private final TokenBasedAuthService authService;
     private final FacadeAuthConfig authConfig;
     private final TppAuthResponseCookieTemplate tppAuthResponseCookieBuilder;
-    private final ConsentAuthConfig consentAuthConfig;
+    private final AuthorizationSessionKeyConfig.AuthorizationSessionKeyFromHttpRequest authorizationKeyFromHttpRequest;
     private final CookieProperties cookieProperties;
-
-
 
     // TODO - probably this operation is not needed. At least for simple usecase.
     @Override
@@ -75,18 +72,17 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
                 .status(HttpStatus.ACCEPTED)
                 .header(X_REQUEST_ID, xRequestID.toString())
                 .header(SET_COOKIE, cookieString)
-                .header(COOKIE_TTL, "" + cookieProperties.getMaxAge().getSeconds())
                 .body(loginResponse);
     }
 
     @Override
     public ResponseEntity<LoginResponse> loginForApproval(PsuAuthBody body, UUID xRequestId, String redirectCode, UUID authorizationId) {
         PsuLoginForAisService.Outcome outcome = aisService.loginAndAssociateAuthSession(body.getLogin(), body.getPassword(), authorizationId, redirectCode);
+        log.info("KEY AFTER LOGIN IS {}", outcome.getKey());
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
                 .header(LOCATION, outcome.getRedirectLocation().toASCIIString())
                 .header(X_REQUEST_ID, xRequestId.toString())
-                .header(COOKIE_TTL, "" + cookieProperties.getMaxAge().getSeconds())
                 .header(SET_COOKIE, buildAuthorizationCookiesOnAllPaths(authorizationId, outcome.getKey()))
                 .build();
     }
@@ -96,20 +92,8 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
         psuAuthService.createPsuIfNotExist(psuAuthDto.getLogin(), psuAuthDto.getPassword());
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(X_REQUEST_ID, xRequestID.toString());
-        responseHeaders.add(LOCATION, authConfig.getRedirect().getLoginPage());
+        responseHeaders.add(LOCATION, authConfig.getRedirect().getConsentLogin().getPage());
         return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
-    }
-
-    @Override
-    public ResponseEntity<Void> renewalAuthorizationSessionKey(UUID xRequestId, UUID authorizationId) {
-        log.info("cookie renewal {} for token {}", xRequestId, consentAuthConfig.getAuthCookieValue());
-        return ResponseEntity
-                .status(HttpStatus.ACCEPTED)
-                .header(X_REQUEST_ID, xRequestId.toString())
-                .header(COOKIE_TTL, "" + cookieProperties.getMaxAge().getSeconds())
-                .header(SET_COOKIE, buildAuthorizationCookiesOnAllPathsWithToken(authorizationId, consentAuthConfig.getAuthCookieValue()))
-                .build();
     }
 
     // TODO: https://github.com/adorsys/open-banking-gateway/issues/559
@@ -124,13 +108,26 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
         return Optional.empty();
     }
 
-    private String[] buildAuthorizationCookiesOnAllPaths(UUID authorizationId, String key) {
-        String token = authService.generateToken(key);
-        return buildAuthorizationCookiesOnAllPathsWithToken(authorizationId, token);
+    @Override
+    public ResponseEntity<Void> renewalAuthorizationSessionKey(UUID xRequestId, UUID authorizationId) {
+        if (!authorizationKeyFromHttpRequest.isPresent()) {
+            log.warn("No Cookie provied, call not accepted");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        String[] cookies = buildAuthorizationCookiesOnAllPaths(authorizationId, authorizationKeyFromHttpRequest.get());
+        String ttl = Long.toString(cookieProperties.getMaxAge().getSeconds());
+        log.info("cookie is renewed for time {} with new value: {}", ttl, cookies[0]);
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .header(X_REQUEST_ID, xRequestId.toString())
+                .header(COOKIE_TTL, ttl)
+                .header(SET_COOKIE, cookies)
+                .build();
     }
 
-    private String[] buildAuthorizationCookiesOnAllPathsWithToken(UUID authorizationId, String token) {
-        return authConfig.getCookie().getPathTemplates().stream()
+    private String[] buildAuthorizationCookiesOnAllPaths(UUID authorizationId, String key) {
+        String token = authService.generateToken(key);
+        return authConfig.getAuthorizationSessionKey().getCookie().getPathTemplates().stream()
                 .map(it -> cookieString(authorizationId, it, token))
                 .toArray(String[]::new);
     }
@@ -139,8 +136,8 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
         ResponseCookie.ResponseCookieBuilder builder = tppAuthResponseCookieBuilder
                 .builder(AUTHORIZATION_SESSION_KEY,  token);
 
-        if (!Strings.isNullOrEmpty(authConfig.getCookie().getDomain())) {
-            builder = builder.domain(authConfig.getCookie().getDomain());
+        if (!Strings.isNullOrEmpty(authConfig.getAuthorizationSessionKey().getCookie().getDomain())) {
+            builder = builder.domain(authConfig.getAuthorizationSessionKey().getCookie().getDomain());
         }
 
         builder = builder.path(
