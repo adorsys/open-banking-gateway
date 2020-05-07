@@ -19,8 +19,8 @@ describe('LoginComponent', () => {
   let route;
   let authServiceSpy;
   let authService: AuthService;
-  let headersOpt = new HttpHeaders({ 'Location': 'httpw://localhost:9876/?id=77168991' });
-  let response = new HttpResponse({ body: { xsrfToken: 'tokenHere' }, headers: headersOpt, status: 200, statusText: 'geht' });
+  const headersOpt = new HttpHeaders({ Location: 'httpw://localhost:9876/?id=77168991' });
+  const response = new HttpResponse({ body: { xsrfToken: 'tokenHere' }, headers: headersOpt, status: 200, statusText: 'geht' });
   let form;
   const usernameInput = 'alex';
   const passwordInput = '1234';
@@ -58,8 +58,8 @@ describe('LoginComponent', () => {
     authServiceSpy = spyOn(authService, 'userLoginForConsent').and
       .returnValue( of(response) );
 
-    form.controls['login'].setValue(usernameInput);
-    form.controls['password'].setValue('');
+    form.controls.login.setValue(usernameInput);
+    form.controls.password.setValue('');
     component.onSubmit();
     fixture.detectChanges();
 
@@ -68,10 +68,10 @@ describe('LoginComponent', () => {
   it('should call login service', () => {
     authServiceSpy = spyOn(authService, 'userLoginForConsent').and.callThrough();
 
-    let authID = route.snapshot.parent.params.authId;
-    let redirectCode = 'redirectCode654';
-    form.controls['login'].setValue(usernameInput);
-    form.controls['password'].setValue(passwordInput);
+    const authID = route.snapshot.parent.params.authId;
+    const redirectCode = 'redirectCode654';
+    form.controls.login.setValue(usernameInput);
+    form.controls.password.setValue(passwordInput);
     component.onSubmit();
     fixture.detectChanges();
 
@@ -81,8 +81,8 @@ describe('LoginComponent', () => {
     authServiceSpy = spyOn(authService, 'userLoginForConsent').and
       .returnValue( of(response) );
 
-    form.controls['login'].setValue(usernameInput);
-    form.controls['password'].setValue('');
+    form.controls.login.setValue(usernameInput);
+    form.controls.password.setValue('');
     component.onSubmit();
     fixture.detectChanges();
 
@@ -91,8 +91,8 @@ describe('LoginComponent', () => {
   it('should be invalid if username is not set', () => {
     authServiceSpy = spyOn(authService, 'userLoginForConsent').and.returnValue(of(response));
 
-    form.controls['login'].setValue('');
-    form.controls['password'].setValue(passwordInput);
+    form.controls.login.setValue('');
+    form.controls.password.setValue(passwordInput);
     component.onSubmit();
     fixture.detectChanges();
 

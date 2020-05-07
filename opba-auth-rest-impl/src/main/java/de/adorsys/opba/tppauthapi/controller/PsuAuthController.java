@@ -111,25 +111,25 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     @Override
     public ResponseEntity<Void> renewalAuthorizationSessionKey(UUID xRequestId, UUID authorizationId) {
         if (!authorizationKeyFromHttpRequest.isPresent()) {
-            log.info("No Cookie provied, call not accepted");
+            log.warn("No Cookie provied, call not accepted");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        log.info("KEY FOR RENEWAL IS {}", authorizationKeyFromHttpRequest.get());
+        String[] cookies = buildAuthorizationCookiesOnAllPaths(authorizationId, authorizationKeyFromHttpRequest.get());
+        String ttl = Long.toString(cookieProperties.getMaxAge().getSeconds());
+        log.info("cookie is renewed for time {} with new value: {}", ttl, cookies[0]);
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
                 .header(X_REQUEST_ID, xRequestId.toString())
-                .header(COOKIE_TTL, "" + cookieProperties.getMaxAge().getSeconds())
-                .header(SET_COOKIE, buildAuthorizationCookiesOnAllPaths(authorizationId, authorizationKeyFromHttpRequest.get()))
+                .header(COOKIE_TTL, ttl)
+                .header(SET_COOKIE, cookies)
                 .build();
     }
 
     private String[] buildAuthorizationCookiesOnAllPaths(UUID authorizationId, String key) {
         String token = authService.generateToken(key);
-        String[] strings = authConfig.getAuthorizationSessionKey().getCookie().getPathTemplates().stream()
+        return authConfig.getAuthorizationSessionKey().getCookie().getPathTemplates().stream()
                 .map(it -> cookieString(authorizationId, it, token))
                 .toArray(String[]::new);
-        log.info("cookie value is " + strings[0]);
-        return strings;
     }
 
     private String cookieString(UUID authorizationId, String path, String token) {

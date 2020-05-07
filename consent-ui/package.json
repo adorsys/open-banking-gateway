@@ -67,7 +67,7 @@
   },
   "husky": {
     "hooks": {
-      "disable-pre-commit": "run-s format:fix lint"
+      "pre-commit": "run-s format:fix lint"
     }
   }
 }
