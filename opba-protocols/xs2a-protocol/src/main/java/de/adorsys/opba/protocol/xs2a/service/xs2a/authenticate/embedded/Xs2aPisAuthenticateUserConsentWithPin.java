@@ -1,11 +1,11 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.embedded;
 
+import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
+import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
+import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
-import de.adorsys.opba.protocol.xs2a.service.ContextUtil;
-import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aAuthorizedPaymentParameters;
@@ -41,7 +41,7 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aPisContext context) {
-        validator.validate(execution, extractor.forValidation(context));
+        validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override

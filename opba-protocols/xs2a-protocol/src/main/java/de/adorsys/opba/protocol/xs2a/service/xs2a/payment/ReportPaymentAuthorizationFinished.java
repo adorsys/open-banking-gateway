@@ -1,8 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.payment;
 
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.PaymentAcquired;
+import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.PaymentAcquired;
-import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.RedirectExecutor;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.pis.Xs2aPisContext;
 import lombok.RequiredArgsConstructor;

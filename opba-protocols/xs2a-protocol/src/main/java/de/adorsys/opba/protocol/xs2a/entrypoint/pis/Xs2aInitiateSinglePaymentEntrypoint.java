@@ -10,11 +10,11 @@ import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRe
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.pis.SinglePayment;
+import de.adorsys.opba.protocol.bpmnshared.service.eventbus.ProcessEventHandlerRegistrar;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
-import de.adorsys.opba.protocol.xs2a.entrypoint.OutcomeMapper;
+import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aOutcomeMapper;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
 import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.UuidMapper;
-import de.adorsys.opba.protocol.xs2a.service.eventbus.ProcessEventHandlerRegistrar;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.pis.SinglePaymentXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +29,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
-import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.REQUEST_SAGA;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
+import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_REQUEST_SAGA;
 import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 
 /**
@@ -52,7 +52,7 @@ public class Xs2aInitiateSinglePaymentEntrypoint implements SinglePayment {
     @Override
     public CompletableFuture<Result<SinglePaymentBody>> execute(ServiceContext<InitiateSinglePaymentRequest> serviceContext) {
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(
-                REQUEST_SAGA,
+                XS2A_REQUEST_SAGA,
                 new ConcurrentHashMap<>(ImmutableMap.of(CONTEXT, prepareContext(serviceContext)))
         );
 
@@ -60,7 +60,7 @@ public class Xs2aInitiateSinglePaymentEntrypoint implements SinglePayment {
 
         registrar.addHandler(
                 instance.getProcessInstanceId(),
-                new OutcomeMapper<>(result, extractor::extractSinglePaymentBody, errorMapper)
+                new Xs2aOutcomeMapper<>(result, extractor::extractSinglePaymentBody, errorMapper)
         );
         return result;
     }

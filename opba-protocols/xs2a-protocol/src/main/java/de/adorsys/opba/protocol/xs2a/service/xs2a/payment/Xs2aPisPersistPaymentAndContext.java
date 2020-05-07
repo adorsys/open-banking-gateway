@@ -2,8 +2,8 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.payment;
 
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
-import de.adorsys.opba.protocol.xs2a.config.flowable.Xs2aObjectMapper;
-import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
+import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
+import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.pis.Xs2aPisContext;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class Xs2aPisPersistPaymentAndContext extends ValidatedExecution<Xs2aPisContext> {
 
-    private final Xs2aObjectMapper mapper;
+    private final FlowableObjectMapper mapper;
 
     @Override
     @SneakyThrows

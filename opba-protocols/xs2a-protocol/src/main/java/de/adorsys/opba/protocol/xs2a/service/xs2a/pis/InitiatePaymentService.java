@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.pis;
 
-import de.adorsys.opba.protocol.xs2a.domain.dto.messages.ProcessResponse;
-import de.adorsys.opba.protocol.xs2a.service.ValidatedExecution;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
+import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.context.pis.Xs2aPisContext;
@@ -30,7 +30,7 @@ public class InitiatePaymentService extends ValidatedExecution<Xs2aPisContext> {
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aPisContext context) {
-        validator.validate(execution, extractor.forValidation(context));
+        validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
     }
 
     @Override
