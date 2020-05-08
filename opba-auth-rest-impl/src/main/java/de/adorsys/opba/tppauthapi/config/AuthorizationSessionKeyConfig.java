@@ -31,9 +31,8 @@ public class AuthorizationSessionKeyConfig {
     @Bean
     @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public AuthorizationSessionKeyFromHttpRequest getAuthorizationSessionKeyFromHttpRequest(HttpServletRequest httpServletRequest) {
-        log.info("REQUEST COMMING IN {}",  httpServletRequest.getRequestURI());
+        log.debug("REQUEST COMMING IN {}",  httpServletRequest.getRequestURI());
         if (null == httpServletRequest.getCookies()) {
-            log.info("rest request without authorization {}", httpServletRequest.getRequestURI());
             return new AuthorizationSessionKeyFromHttpRequest(Optional.empty());
         }
 

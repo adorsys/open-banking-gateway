@@ -53,7 +53,6 @@ public class TokenBasedAuthService {
             throw new IllegalArgumentException("Wrong token");
         }
 
-        log.info("jwt is valid until {}", jwt.getJWTClaimsSet().getExpirationTime().toString());
         if (Instant.now().isAfter(jwt.getJWTClaimsSet().getExpirationTime().toInstant())) {
             throw new IllegalArgumentException("Expired token");
         }

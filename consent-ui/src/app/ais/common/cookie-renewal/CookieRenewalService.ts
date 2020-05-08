@@ -3,6 +3,7 @@ import { SimpleTimer } from 'ng2-simple-timer';
 import { PsuAuthenticationService } from '../../../api-auth';
 import * as uuid from 'uuid';
 import { ApiHeaders } from '../../../api/api.headers';
+import { SessionService } from '../../../common/session.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,10 +12,14 @@ export class CookieRenewalService {
   public static TIMER_NAME = 'cookie-renewal-timer';
   public static ROUTE = 'login';
 
-  constructor(private simpleTimer: SimpleTimer, private psuAuthService: PsuAuthenticationService) {}
+  constructor(
+    private simpleTimer: SimpleTimer,
+    private psuAuthService: PsuAuthenticationService,
+    private sessionService: SessionService
+  ) {}
 
   activate(authid): void {
-    const timer = this.getTimer();
+    const timer = this.getTimer(authid);
     console.log(new Date().toLocaleString() + ' activate timer in ' + timer);
     this.simpleTimer.newTimerCD(CookieRenewalService.TIMER_NAME, timer, timer);
     this.simpleTimer.subscribe(CookieRenewalService.TIMER_NAME, () => this.cookieRenewal(authid));
@@ -30,19 +35,23 @@ export class CookieRenewalService {
     // timer is deleted. If following call fails due to whatever reason, session cookie is not valid but
     // timer does not retry to renew it, which is fine, so error handling of call is not needed
     this.psuAuthService.renewalAuthorizationSessionKey('' + uuid.v4(), authid, 'response').subscribe(res => {
-      console.log(new Date().toLocaleString() + ' got new cookie from server ', res.status);
-      localStorage.setItem(ApiHeaders.COOKIE_TTL, res.headers.get(ApiHeaders.COOKIE_TTL));
-      const timer = this.getTimer();
-
-      console.log(new Date().toLocaleString() + ' activate next timer in ' + timer);
+      this.sessionService.setTTL(authid, res.headers.get(ApiHeaders.COOKIE_TTL));
+      const timer = this.getTimer(authid);
+      console.log(
+        new Date().toLocaleString(),
+        ' got new cookie from server ',
+        res.status,
+        ' and activate next timer in ',
+        timer
+      );
       this.simpleTimer.newTimerCD(CookieRenewalService.TIMER_NAME, timer, timer);
       this.simpleTimer.subscribe(CookieRenewalService.TIMER_NAME, () => this.cookieRenewal(authid));
     });
   }
 
-  getTimer(): number {
-    const ttl = parseInt(localStorage.getItem(ApiHeaders.COOKIE_TTL), 0);
-    // backend minimum for ttl is 60 secs
+  getTimer(authid): number {
+    const ttl = parseInt(this.sessionService.getTTL(authid), 0);
+    // backend minimum for ttl is 60 secs see FacadeTransientDataConfig.MIN_EXPIRE_SECONDS = 60L;
     return isNaN(ttl) ? 58 : ttl - 2;
   }
 }
