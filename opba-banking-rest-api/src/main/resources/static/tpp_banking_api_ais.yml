@@ -37,8 +37,8 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
-        - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
-        - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-OK"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-Consent-Session"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
@@ -74,8 +74,8 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
-        - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
-        - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-OK"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-Consent-Session"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
@@ -185,37 +185,6 @@ components:
       required: false
       schema:
         type: string
-
-    Fintech-Redirect-URL-OK:
-      name: Fintech-Redirect-URL-OK
-      in: header
-      desription: |
-        This header provides the desired URL where PSU will be redirected back after authorisation session in case of
-        successful authorisation. This URL might contain unique Identifier of this User and/or Session,
-        recognisable by FinTech.
-        Since authorisation may be mandated by the bank at any time, this header to be included to all
-        service requests, even if PsuConsentSession already exists.
-      required: true
-      schema:
-        type: string
-      example: "https://example.com/myservice/sf3-3r33-3535?authResult=success"
-
-    Fintech-Redirect-URL-NOK:
-      name: Fintech-Redirect-URL-NOK
-      in: header
-      desription: |
-        This header provides the desired URL where PSU will be redirected back  after authorisation session in case of
-        unsuccessful authorisation (i.e. PSU's authorisation reject, technical failure, lack of credentials etc.).
-        This URL might contain unique Identifier of this User and/or Session,
-        recognisable by FinTech.
-        Since authorisation may be mandated by the bank at any time, this header to be included to all
-        service requests, even if PsuConsentSession already exists.
-      required: true
-      schema:
-        type: string
-      example: "https://example.com/myservice/sf3-3r33-3535/failure"
-
-
 
   responses:
     200_AccountsTransactions:
