@@ -6,6 +6,12 @@ import { Injectable } from '@angular/core';
 export class SessionService {
   constructor() {}
 
+  public setTTL(authorizationId: string, ttl: string) {
+    sessionStorage.setItem(authorizationId + Session.COOKIE_TTL, ttl);
+  }
+  public getTTL(authorizationId: string): string {
+    return sessionStorage.getItem(authorizationId + Session.COOKIE_TTL);
+  }
   public setRedirectCode(authorizationId: string, redirectCode: string) {
     sessionStorage.setItem(authorizationId + Session.REDIRECT_CODE, redirectCode);
   }
@@ -50,5 +56,6 @@ enum Session {
   REDIRECT_CODE = ':REDIRECT_CODE',
   CONSENT_STATE = ':CONSENT_STATE',
   CONSENT_OBJECT = ':CONSENT_OBJECT',
-  XSRF_TOKEN = 'XSRF_TOKEN'
+  XSRF_TOKEN = 'XSRF_TOKEN',
+  COOKIE_TTL = 'Cookie-TTL'
 }
