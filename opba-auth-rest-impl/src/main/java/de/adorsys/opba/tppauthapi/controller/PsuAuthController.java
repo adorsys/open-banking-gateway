@@ -78,7 +78,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     @Override
     public ResponseEntity<LoginResponse> loginForApproval(PsuAuthBody body, UUID xRequestId, String redirectCode, UUID authorizationId) {
         PsuLoginForAisService.Outcome outcome = aisService.loginAndAssociateAuthSession(body.getLogin(), body.getPassword(), authorizationId, redirectCode);
-        log.info("KEY AFTER LOGIN IS {}", outcome.getKey());
+        log.debug("created new session cookie for authid {}", authorizationId);
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
                 .header(LOCATION, outcome.getRedirectLocation().toASCIIString())
@@ -111,12 +111,12 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     @Override
     public ResponseEntity<Void> renewalAuthorizationSessionKey(UUID xRequestId, UUID authorizationId) {
         if (!authorizationKeyFromHttpRequest.isPresent()) {
-            log.warn("No Cookie provied, call not accepted");
+            log.warn("Authorization session key renewal call failed for {} authorization - missing cookie", authorizationId);
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         String[] cookies = buildAuthorizationCookiesOnAllPaths(authorizationId, authorizationKeyFromHttpRequest.get());
         String ttl = Long.toString(cookieProperties.getMaxAge().getSeconds());
-        log.info("cookie is renewed for time {} with new value: {}", ttl, cookies[0]);
+        log.debug("cookie is renewed for authid {} for time {}", authorizationId, ttl);
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
                 .header(X_REQUEST_ID, xRequestId.toString())

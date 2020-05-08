@@ -37,17 +37,18 @@ api:
     bank-search:
       start: 0
       max: 10
-      query: "SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, name) as sml
-              FROM opb_bank WHERE word_similarity(:keyword, name) >= 0.6
-            UNION
-             SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bic) as sml
-              FROM opb_bank WHERE word_similarity(:keyword, bic) >= 0.8
-            UNION
-             SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bank_code) as sml
-              FROM opb_bank WHERE word_similarity(:keyword, bank_code) >= 0.8
-            ORDER BY sml DESC, id
-            LIMIT :max
-            OFFSET :start"
+      query:
+        "SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, name) as sml
+        FROM opb_bank WHERE word_similarity(:keyword, name) >= 0.6
+        UNION
+        SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bic) as sml
+        FROM opb_bank WHERE word_similarity(:keyword, bic) >= 0.8
+        UNION
+        SELECT id, uuid, name, bic, bank_code, word_similarity(:keyword, bank_code) as sml
+        FROM opb_bank WHERE word_similarity(:keyword, bank_code) >= 0.8
+        ORDER BY sml DESC, id
+        LIMIT :max
+        OFFSET :start"
     # Signature-based security of FinTech consumable API
     security:
       verification:
@@ -74,7 +75,7 @@ api:
   # Common cookie template
   cookie:
     secure: false # localhost-only - TODO application-dev.yml for dev env?
-    max-age: PT5M # PLEASE SYNC api.security.token-validity-duration, api.cookie.max-age and facade.expirable.expire-after-write
+    max-age: ${api.security.token-validity-duration} # PLEASE SYNC api.security.token-validity-duration, api.cookie.max-age and facade.expirable.expire-after-write
     http-only: true
     path: /
     same-site: Lax
@@ -122,7 +123,7 @@ protocol:
       redirect:
         to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
         consent-accounts:
-          ok:  ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
           nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
           result: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
         parameters:
