@@ -8,6 +8,7 @@ export class GlobalErrorHandler implements ErrorHandler {
   constructor(private zone: NgZone, private injector: Injector) {}
 
   handleError(error) {
+    console.error(error);
     const errorService = this.injector.get(ErrorService);
     const infoService = this.injector.get(InfoService);
 
