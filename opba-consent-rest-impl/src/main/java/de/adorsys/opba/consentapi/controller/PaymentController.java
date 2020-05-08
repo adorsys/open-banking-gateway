@@ -24,7 +24,6 @@ import de.adorsys.opba.restapi.shared.service.RedirectionOnlyToOkMapper;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,14 +52,14 @@ public class PaymentController {
     private final AuthStateBodyToApiMapper authStateMapper;
     private final RedirectionOnlyToOkMapper redirectionOnlyToOkMapper;
 
-    @RequestMapping(value = "/v1/payment/{auth-id}/embedded",
+    @RequestMapping(value = "/v1/payment/embedded",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
     public CompletableFuture initiatePaymentPost(
             @RequestHeader(value = "X-Request-ID", required = true) UUID xRequestID,
             @RequestHeader(value = "X-XSRF-TOKEN", required = true) String xXsrfToken,
-            @PathVariable("auth-id") String authId,
+            //@PathVariable("auth-id") String authId,
             @RequestBody PsuAuthRequest body,
             @RequestParam(value = "redirectCode", required = false) String redirectCode) {
         return singlePaymentService.execute(

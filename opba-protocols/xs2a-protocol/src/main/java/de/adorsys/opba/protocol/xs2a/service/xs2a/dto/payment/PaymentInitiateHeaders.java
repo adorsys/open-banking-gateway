@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment;
 
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.pis.Xs2aPisContext;
+import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.InitiateHeaders;
 import org.mapstruct.Mapper;

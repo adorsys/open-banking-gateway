@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.payment;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.PaymentAcquired;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.RedirectExecutor;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.pis.Xs2aPisContext;
+import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;

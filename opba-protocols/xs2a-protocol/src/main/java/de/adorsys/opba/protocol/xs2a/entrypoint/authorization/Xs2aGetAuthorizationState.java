@@ -48,18 +48,13 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
     public CompletableFuture<Result<AuthStateBody>> execute(ServiceContext<AuthorizationRequest> serviceContext) {
         String executionId = serviceContext.getAuthContext();
 
-        AuthStateBody result = readFromHistory(executionId);
-        AuthStateBody result3 = readFromRuntime(executionId);
-        System.out.println(result3);
-        /* TODO RETURN!!!!!!!!!!!!!!!
-
-           if (null != runtimeService.createExecutionQuery().executionId(executionId).singleResult()) {
-
+        AuthStateBody result;
+        if (null != runtimeService.createExecutionQuery().executionId(executionId).singleResult()) {
             result = readFromRuntime(executionId);
         } else {
             result = readFromHistory(executionId);
         }
-*/
+
         return CompletableFuture.completedFuture(
             new ContextBasedValidationErrorResult<>(
                     null == result.getRedirectTo() ? null : URI.create(result.getRedirectTo()),

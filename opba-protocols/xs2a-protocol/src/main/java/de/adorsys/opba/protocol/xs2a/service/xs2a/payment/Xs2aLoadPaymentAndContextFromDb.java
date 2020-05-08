@@ -6,7 +6,7 @@ import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
 import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableProperties;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.context.pis.Xs2aPisContext;
+import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.engine.delegate.DelegateExecution;
