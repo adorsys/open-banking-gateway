@@ -10,12 +10,29 @@ externalDocs:
 paths:
   /v1/banking/pis/payments:
     post:
+      summary: Payment initiation request
+      description: This method is used to initiate a payment at the ASPSP.
+      operationId: initiatePayment
+      tags:
+        - TPP Banking API Payment initiation service (PIS)
+      parameters:
+        #header
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-OK"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-Consent-Session"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
       requestBody:
         $ref : '#/components/requestBodies/paymentInitiation'
       responses:
         201:
-          description: ''
-          content: {}
+          $ref: '#/components/responses/201_PaymentInitiationResponse'
         400:
           description: ''
           content: {}
@@ -35,6 +52,18 @@ components:
           schema:
             $ref: '#/components/schemas/paymentInitiation'
       required: true
+  responses:
+    201_PaymentInitiationResponse:
+      description: CREATED
+      headers:
+        X-Request-ID:
+          $ref: '#/components/headers/X-Request-ID'
+        Location:
+          $ref: '#/components/headers/Location'
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/paymentInitiationResponse"
   schemas:
     paymentInitiation:
       required:
@@ -61,6 +90,23 @@ components:
           $ref: './tpp_banking_api_commons.yml#/components/schemas/creditorName'
         creditorAddress:
           $ref: './tpp_banking_api_commons.yml#/components/schemas/address'
+
+    paymentInitiationResponse:
+      description: Body of the response for a successful payment initiation request.
+      type: object
+      required:
+        - transactionStatus
+        - paymentId
+        - _links
+      properties:
+        transactionStatus:
+          description: 4 letter ISO 20022 status code
+          type: string
+        paymentId:
+          description: Resource identification of the generated payment initiation resource.
+          type: string
+        transactionFees:
+          $ref: './tpp_banking_api_commons.yml#/components/schemas/amount'
 
   securitySchemes:
     BearerAuthOAuth:
