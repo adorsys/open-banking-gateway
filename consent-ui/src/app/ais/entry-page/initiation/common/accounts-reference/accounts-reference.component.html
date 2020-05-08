@@ -21,7 +21,7 @@
       class="invalid-feedback mb-2"
       *ngIf="targetForm.controls[account.id].touched && targetForm.controls[account.id].errors; else noErrors"
     >
-      IBAN must be at least 5 characters
+      Please enter a valid IBAN
     </div>
     <ng-template #noErrors>
       <br />
