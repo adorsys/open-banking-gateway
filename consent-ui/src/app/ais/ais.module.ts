@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { AngularIbanModule } from 'angular-iban';
 import { AisRoutingModule } from './ais-routing.module';
 import { ResultPageComponent } from './result-page/result-page.component';
 import { PasswordInputPageComponent } from './password-input-page/password-input-page.component';
@@ -53,6 +54,6 @@ import { ConsentSharingComponent } from './entry-page/initiation/consent-sharing
     RegisterComponent,
     ConsentSharingComponent
   ],
-  imports: [CommonModule, AisRoutingModule, ReactiveFormsModule]
+  imports: [CommonModule, AisRoutingModule, ReactiveFormsModule, AngularIbanModule]
 })
 export class AisModule {}

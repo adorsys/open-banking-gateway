@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { uuid } from 'uuidv4';
 import { Subscription } from 'rxjs';
+import { ValidatorService } from 'angular-iban';
 
 @Component({
   selector: 'consent-app-account-selector',
@@ -42,7 +43,7 @@ export class AccountsReferenceComponent implements OnInit, OnDestroy {
   }
 
   private addControlToForm(account: AccountReference): FormControl {
-    const formControl = new FormControl('', [Validators.required, Validators.minLength(5)]);
+    const formControl = new FormControl('', [ValidatorService.validateIban, Validators.required]);
     this.targetForm.addControl(account.id, formControl);
     this.subscriptions[account.id] = formControl.valueChanges.subscribe(it => (account.iban = it));
     return formControl;
