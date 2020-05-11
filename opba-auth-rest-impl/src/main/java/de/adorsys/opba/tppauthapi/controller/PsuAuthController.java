@@ -110,10 +110,6 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
 
     @Override
     public ResponseEntity<Void> renewalAuthorizationSessionKey(UUID xRequestId, UUID authorizationId) {
-        if (!authorizationKeyFromHttpRequest.isPresent()) {
-            log.warn("Authorization session key renewal call failed for {} authorization - missing cookie", authorizationId);
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
         String[] cookies = buildAuthorizationCookiesOnAllPaths(authorizationId, authorizationKeyFromHttpRequest.get());
         String ttl = Long.toString(cookieProperties.getMaxAge().getSeconds());
         log.debug("cookie is renewed for authid {} for time {}", authorizationId, ttl);
