@@ -97,54 +97,82 @@ a {
     padding-right: 0;
   }
 }
-.info-block{
+
+.info-block {
   padding-bottom: 1rem;
 }
+
 .no-bg-color {
   background-color: $COLOR_WHITE;
   border: none;
 }
-.form__margin{
+
+.form__margin {
   margin-bottom: 1.5rem;
 }
-.form-check{
+
+.form-check {
   padding-left: 0;
 
-  label{
-    font-family: var(--fontFamilyMedium);
-    color: #21242C;
-    font-size: 1.125rem;
-    position: relative;
-    padding-left: 2.625rem;
-    line-height: 1.2;
+  input[type='radio']:checked,
+  input[type='radio']:not(:checked) {
+    // visually hide radio buttons
+    position: absolute;
+    left: -9999px;
 
-    .radioSelector{
-      width: 17px;
-      height: 17px;
-      border-radius: 50%;
-      background: white;
-      border: 1px solid $text-muted;
-      display: block;
-      position: absolute;
-      left: 0;
-      top: calc(50% - 9px);
-    }
-    input{
-      opacity: 0;
-      position: absolute;
+    // style labels
+    + label {
+      position: relative;
+      padding-left: 2.625rem;
+      cursor: pointer;
+      line-height: 1.2;
+      display: inline-block;
+      color: #21242c;
 
-      &.selected ~ .radioSelector{
-        &:after {
-          content: '';
-          width: 9px;
-          height: 9px;
-          border-radius: 50%;
-          background-color: $text-muted;
-          position: absolute;
-          left: 3px;
-          top: 3px;
-        }
+      // visual reprehension of big circles in radio button
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 17px;
+        height: 17px;
+        border: 1px solid #687aa8;
+        border-radius: 100%;
+        background: white;
       }
+
+      // visual reprehension of small circles in radio button
+      &::after {
+        content: '';
+        width: 9px;
+        height: 9px;
+        background: #687aa8;
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        border-radius: 100%;
+        -webkit-transition: all 0.2s ease;
+        transition: all 0.2s ease;
+      }
+    }
+  }
+
+  // unchecked circle
+  input[type='radio']:not(:checked) {
+    + label:after {
+      opacity: 0;
+      -webkit-transform: scale(0);
+      transform: scale(0);
+    }
+  }
+
+  // checked circle
+  input[type='radio']:checked {
+    + label:after {
+      opacity: 1;
+      -webkit-transform: scale(1);
+      transform: scale(1);
     }
   }
 }
@@ -333,10 +361,11 @@ section {
   }
 }
 
-label{
+label {
   font-size: 1rem;
 }
-.text-secondary{
+
+.text-secondary {
   color: $COLOR_TEXT_LIGHT !important;
 }
 
