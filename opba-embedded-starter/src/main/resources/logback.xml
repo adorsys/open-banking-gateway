@@ -7,6 +7,7 @@
 
     <logger name="de.adorsys.opba.tppauthapi.controller.PsuAuthController" level="debug"/>
     <logger name="de.adorsys.opba.tppauthapi.config.AuthorizationSessionKeyConfig" level="debug"/>
+    <logger name="de.adorsys.opba.tppauthapi.filter" level="debug"/>
 
     <root level="info">
         <appender-ref ref="STDOUT" />
