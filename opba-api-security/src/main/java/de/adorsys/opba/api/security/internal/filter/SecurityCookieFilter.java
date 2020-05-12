@@ -36,19 +36,16 @@ public class SecurityCookieFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
 
-        if (httpServletRequest.getRequestURI().startsWith("/v1/consent")) {
-            if (!isCookieAvailable(httpServletRequest)) {
-                log.warn("no cookie available for {}{}. call is denied", httpServletRequest.getMethod(), httpServletRequest.getRequestURI());
-                res.setStatus(HttpStatus.UNAUTHORIZED.value());
-                return;
+        if (!isCookieAvailable(httpServletRequest)) {
+            if (httpServletRequest.getRequestURI().endsWith("renewal-authorization-session-key")) {
+                log.debug("no cookie available for {}, {}. call is denied", httpServletRequest.getMethod(), httpServletRequest.getRequestURI());
+            } else {
+                log.warn("no cookie available for {}, {}. call is denied", httpServletRequest.getMethod(), httpServletRequest.getRequestURI());
             }
-        }
-
-        if (httpServletRequest.getRequestURI().endsWith("renewal-authorization-session-key") && !isCookieAvailable(httpServletRequest)) {
-            log.debug("no cookie available for {}{}. call is denied", httpServletRequest.getMethod(), httpServletRequest.getRequestURI());
             res.setStatus(HttpStatus.UNAUTHORIZED.value());
             return;
         }
+
         log.debug("cookie available for {}{}.", httpServletRequest.getMethod(), httpServletRequest.getRequestURI());
         chain.doFilter(request, response);
     }
