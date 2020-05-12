@@ -57,13 +57,13 @@ components:
       description: CREATED
       headers:
         X-Request-ID:
-          $ref: '#/components/headers/X-Request-ID'
+          $ref: './tpp_banking_api_commons.yml#/components/headers/X-Request-ID'
         Location:
-          $ref: '#/components/headers/Location'
+          $ref: './tpp_banking_api_commons.yml#/components/headers/Location'
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/paymentInitiationResponse"
+            $ref: '#/components/schemas/paymentInitiationResponse'
   schemas:
     paymentInitiation:
       required:
@@ -90,6 +90,20 @@ components:
           $ref: './tpp_banking_api_commons.yml#/components/schemas/creditorName'
         creditorAddress:
           $ref: './tpp_banking_api_commons.yml#/components/schemas/address'
+        remittanceInformationUnstructured:
+          $ref: './tpp_banking_api_commons.yml#/components/schemas/remittanceInformationUnstructured'
+        requestedExecutionDate:
+          type: string
+          format: date
+        requestedExecutionTime:
+          type: string
+
+    remittanceInformationUnstructured:
+      description: |
+        Unstructured remittance information.
+      type: string
+      maxLength: 140
+      example: "Ref Number Merchant"
 
     paymentInitiationResponse:
       description: Body of the response for a successful payment initiation request.
