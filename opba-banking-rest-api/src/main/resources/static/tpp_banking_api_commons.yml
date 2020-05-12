@@ -352,6 +352,13 @@ components:
       maxLength: 70
       example: Creditor Agent Name
 
+    remittanceInformationUnstructured:
+      description: |
+        Unstructured remittance information.
+      type: string
+      maxLength: 140
+      example: "Ref Number Merchant"
+
     generalError:
       type: object
       properties:
