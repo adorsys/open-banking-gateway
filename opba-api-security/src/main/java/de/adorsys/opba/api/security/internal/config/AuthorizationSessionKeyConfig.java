@@ -1,4 +1,4 @@
-package de.adorsys.opba.tppauthapi.config;
+package de.adorsys.opba.api.security.internal.config;
 
 import de.adorsys.opba.api.security.internal.EnableTokenBasedApiSecurity;
 import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
@@ -34,7 +34,8 @@ public class AuthorizationSessionKeyConfig {
                 .filter(it -> AUTHORIZATION_SESSION_KEY.equals(it.getName()))
                 .findFirst()
                 .map(Cookie::getValue)
-                .orElseThrow(() -> new RuntimeException("programming error: no cookie supplied, filter must be wrong"));
+                .orElseThrow(() -> new RuntimeException("programming error: no cookie supplied, filter must be wrong "
+                        + httpServletRequest.getMethod() + " " + httpServletRequest.getRequestURI()));
         return new AuthorizationSessionKeyFromHttpRequest(authService.validateTokenAndGetSubject(authCookieValue));
     }
 
