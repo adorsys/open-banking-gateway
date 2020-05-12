@@ -3,6 +3,8 @@ package de.adorsys.opba.api.security.internal.filter;
 
 import de.adorsys.opba.api.security.external.domain.DataToSign;
 import de.adorsys.opba.api.security.external.domain.HttpHeaders;
+import de.adorsys.opba.api.security.external.domain.OperationType;
+import de.adorsys.opba.api.security.internal.config.OperationTypeProperties;
 import de.adorsys.opba.api.security.internal.service.RequestVerifyingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,7 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
     private final RequestVerifyingService requestVerifyingService;
     private final Duration requestTimeLimit;
     private final ConcurrentHashMap<String, String> consumerKeysMap;
+    private final OperationTypeProperties properties;
 
     private final AntPathMatcher matcher = new AntPathMatcher();
     private final UrlPathHelper pathHelper = new UrlPathHelper();
@@ -37,10 +40,17 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
         String fintechId = request.getHeader(HttpHeaders.FINTECH_ID);
         String xRequestId = request.getHeader(HttpHeaders.X_REQUEST_ID);
         String requestTimeStamp = request.getHeader(HttpHeaders.X_TIMESTAMP_UTC);
+        String operationType = request.getHeader(HttpHeaders.X_OPERATION_TYPE);
         String xRequestSignature = request.getHeader(HttpHeaders.X_REQUEST_SIGNATURE);
+        String requestPath = request.getRequestURI();
+        String expectedPath = properties.getAllowedPath().get(operationType);
+
+        if (isNotAllowedOperation(requestPath, expectedPath)) {
+            log.error("Request operation type is not allowed");
+            return;
+        }
 
         Instant instant = Instant.parse(requestTimeStamp);
-
         String fintechApiKey = consumerKeysMap.get(fintechId);
 
         if (fintechApiKey == null) {
@@ -49,8 +59,7 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
             return;
         }
 
-        DataToSign dataToSign = new DataToSign(UUID.fromString(xRequestId), instant);
-
+        DataToSign dataToSign = new DataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType));
         boolean verificationResult = requestVerifyingService.verify(xRequestSignature, fintechApiKey, dataToSign);
 
         if (!verificationResult) {
@@ -77,5 +86,9 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
         Instant now = Instant.now();
         return now.plus(requestTimeLimit).isBefore(operationTime)
                        || now.minus(requestTimeLimit).isAfter(operationTime);
+    }
+
+    private boolean isNotAllowedOperation(String requestURI, String expectedPath) {
+        return expectedPath == null || !requestURI.startsWith(expectedPath);
     }
 }

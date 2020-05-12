@@ -6,3 +6,11 @@ security:
   signSubject: fintech@awesome-fintech.com
   algorithm: RSA
   claim-name-key: sign-data
+
+api:
+  security:
+    endpoint:
+      allowed-path:
+        AIS: "/v1/banking/ais"
+        BANK_SEARCH: "/v1/banking/search"
+        CONFIRM_CONSENT: "/v1/banking/consents"
