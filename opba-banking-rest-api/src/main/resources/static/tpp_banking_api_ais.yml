@@ -692,13 +692,6 @@ components:
         - "UBIL"
         - "WTER"
 
-    remittanceInformationUnstructured:
-      description: |
-        Unstructured remittance information.
-      type: string
-      maxLength: 140
-      example: "Ref Number Merchant"
-
     reportExchangeRateList:
       description: Array of exchange rates.
       type: array
@@ -786,7 +779,7 @@ components:
         ultimateDebtor:
           $ref: "#/components/schemas/ultimateDebtor"
         remittanceInformationUnstructured:
-          $ref: "#/components/schemas/remittanceInformationUnstructured"
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/remittanceInformationUnstructured"
         remittanceInformationStructured:
           description: |
             Reference as contained in the structured remittance reference structure (without the surrounding XML structure).

@@ -69,6 +69,7 @@ api:
     endpoint:
       allowed-path:
         AIS: "/v1/banking/ais"
+        PIS: "/v1/banking/pis"
         BANK_SEARCH: "/v1/banking/search"
         CONFIRM_CONSENT: "/v1/banking/consents"
 
