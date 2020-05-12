@@ -7,15 +7,16 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.authorization.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
+import de.adorsys.opba.protocol.api.dto.result.body.StandardPaymentProduct;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.pis.SinglePayment;
 import de.adorsys.opba.protocol.bpmnshared.service.eventbus.ProcessEventHandlerRegistrar;
+import de.adorsys.opba.protocol.xs2a.context.pis.SinglePaymentXs2aContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aOutcomeMapper;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
 import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.UuidMapper;
-import de.adorsys.opba.protocol.xs2a.context.pis.SinglePaymentXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
@@ -87,8 +88,16 @@ public class Xs2aInitiateSinglePaymentEntrypoint implements SinglePayment {
         @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType", nullValuePropertyMappingStrategy = IGNORE)
         @Mapping(source = "singlePayment", target = "payment", nullValuePropertyMappingStrategy = IGNORE)
         @Mapping(source = "singlePayment.paymentId", target = "paymentId")
-        @Mapping(source = "singlePayment.paymentProduct", target = "paymentProduct")
+        @Mapping(expression = "java(mapStandardPaymentProductToString(ctx.getSinglePayment().getPaymentProduct()))", target = "paymentProduct")
         @Mapping(source = "singlePayment.creditorAddress", target = "payment.creditorAddress")
         SinglePaymentXs2aContext map(InitiateSinglePaymentRequest ctx);
+
+        default String mapStandardPaymentProductToString(StandardPaymentProduct from) {
+            if (null == from) {
+                return null;
+            }
+
+            return from.toString();
+        }
     }
 }

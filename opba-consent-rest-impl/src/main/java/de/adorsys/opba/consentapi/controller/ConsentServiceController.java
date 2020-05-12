@@ -102,7 +102,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                         // TODO return
                         .singlePayment(null == body3.getConsentAuth() ? null : pisSinglePaymentMapper
                                                                                       .map(body3.getConsentAuth().getSinglePayment()))
-                        .scaAuthenticationData(body.getScaAuthenticationData())
+                        .scaAuthenticationData(body3.getScaAuthenticationData())
                         .extras(extrasMapper.map(body.getExtras()))
                         .build()
         ).thenApply((FacadeResult<UpdateAuthBody> result) ->
@@ -198,24 +198,21 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                                     + "        \"city\": \"Nürnberg\",\n"
                                     + "        \"country\": \"DE\",\n"
                                     + "        \"postalCode\": \"90543\",\n"
-                                    + "        \"street\": \"WBG Straße\"\n"
-                                    + "      },\n"
-                                    + "      \"creditorAgent\": \"AAAADEBBXXX\",\n"
-                                    + "      \"creditorName\": \"WBG\",\n"
-                                    + "      \"debtorAccount\": {\n"
+                                    + "        \"street\": \"WBG Straße\"\n" + "      },\n" + "      \"creditorAgent\": \"AAAADEBBXXX\",\n"
+                                    + "      \"creditorName\": \"WBG\",\n" + "      \"debtorAccount\": {\n"
                                     + "        \"currency\": \"EUR\",\n"
                                     + "        \"iban\": \"{{iban_multiple}}\"\n"
                                     + "      },\n"
                                     + "      \"endToEndIdentification\": \"WBG-123456789\",\n"
-                                    + "      \"instructedAmount\": {\n"
-                                    + "        \"currency\": \"EUR\",\n"
-                                    + "        \"amount\": \"0.01\"\n"
-                                    + "      },\n"
+                                    + "      \"instructedAmount\": {\n" + "        \"currency\": \"EUR\",\n"
+                                    + "        \"amount\": \"0.01\"\n" + "      },\n"
                                     + "      \"paymentProduct\": \"SEPA\",\n"
                                     + "      \"remittanceInformationUnstructured\": \"Ref. Number WBG-1222\"\n"
                                     + "    }\n"
                                     + "  },\n"
-                                    + "  \"scaAuthenticationData\": {},\n  \"extras\": {\n     \"PSU_ID\": \"max.musterman\"\n } }";
+                                    + "  \"scaAuthenticationData\": {\n" + "  \t\"PSU_ID\": \"max.musterman\",\n"
+                                    + "    \"PSU_PASSWORD\": \"12345\"\n" + "  \t\n"
+                                    + "  },\n  \"extras\": {\n     \"PSU_ID\": \"max.musterman\"\n } }";
 
         try {
            return new ObjectMapper().readValue(strPayment, PsuAuthRequest.class);

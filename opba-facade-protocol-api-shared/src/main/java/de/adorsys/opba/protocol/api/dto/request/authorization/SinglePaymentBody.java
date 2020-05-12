@@ -4,6 +4,7 @@ import de.adorsys.opba.protocol.api.dto.result.body.AccountReference;
 import de.adorsys.opba.protocol.api.dto.result.body.Address;
 import de.adorsys.opba.protocol.api.dto.result.body.Amount;
 import de.adorsys.opba.protocol.api.dto.result.body.ResultBody;
+import de.adorsys.opba.protocol.api.dto.result.body.StandardPaymentProduct;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -24,7 +25,7 @@ public class SinglePaymentBody implements ResultBody {
     private String endToEndIdentification;
     private Amount instructedAmount;
 
-    private String paymentProduct;
+    private StandardPaymentProduct paymentProduct;
     private String paymentStatus;
 
     // optional
