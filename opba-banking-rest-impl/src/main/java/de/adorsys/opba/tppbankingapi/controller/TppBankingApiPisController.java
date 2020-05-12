@@ -45,6 +45,8 @@ public class TppBankingApiPisController implements TppBankingApiPaymentInitiatio
                                              String psUConsentSession,
                                              UUID serviceSessionID
     ) {
+        SinglePaymentBody singlePayment = pisSinglePaymentMapper.map(body);
+        singlePayment.setPaymentProduct("sepa-credit-transfers");
         return payments.execute(
                 InitiateSinglePaymentRequest.builder()
                         .facadeServiceable(serviceableTemplate.toBuilder()
@@ -60,7 +62,7 @@ public class TppBankingApiPisController implements TppBankingApiPaymentInitiatio
                                 .bankId(bankID)
                                 .build()
                         )
-                        .singlePayment(pisSinglePaymentMapper.map(body))
+                        .singlePayment(singlePayment)
                         .build()
         ).thenApply((FacadeResult<SinglePaymentBody> result) -> mapper.translate(result, paymentResponseMapper));
     }

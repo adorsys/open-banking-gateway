@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
-import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.authorization.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.StandardPaymentProduct;
@@ -70,7 +69,6 @@ public class Xs2aInitiateSinglePaymentEntrypoint implements SinglePayment {
         SinglePaymentXs2aContext context = mapper.map(serviceContext.getRequest());
         context.setAction(ProtocolAction.INITIATE_PAYMENT);
         extender.extend(context, serviceContext);
-        context.setPsuId(serviceContext.getRequest().getExtras().get(ExtraAuthRequestParam.PSU_ID).toString());
         return context;
     }
 
