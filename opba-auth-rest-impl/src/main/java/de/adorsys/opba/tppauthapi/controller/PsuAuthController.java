@@ -32,7 +32,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_ID;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_KEY;
+import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.COOKIE_TTL;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 import static org.springframework.http.HttpHeaders.LOCATION;
@@ -110,7 +110,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
 
     @Override
     public ResponseEntity<Void> renewalAuthorizationSessionKey(UUID xRequestId, UUID authorizationId) {
-        String[] cookies = buildAuthorizationCookiesOnAllPaths(authorizationId, authorizationKeyFromHttpRequest.get());
+        String[] cookies = buildAuthorizationCookiesOnAllPaths(authorizationId, authorizationKeyFromHttpRequest.getKey());
         String ttl = Long.toString(cookieProperties.getMaxAge().getSeconds());
         log.debug("cookie is renewed for authid {} for time {}", authorizationId, ttl);
         return ResponseEntity

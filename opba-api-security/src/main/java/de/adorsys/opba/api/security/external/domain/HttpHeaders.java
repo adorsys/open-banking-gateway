@@ -16,4 +16,5 @@ public class HttpHeaders {
     public static final String X_OPERATION_TYPE = "X-Operation-Type";
     public static final String X_REQUEST_SIGNATURE = "X-Request-Signature";
     public static final String FINTECH_ID = "Fintech-ID";
+    public static final String AUTHORIZATION_SESSION_KEY = "Authorization-Session-Key";
 }
