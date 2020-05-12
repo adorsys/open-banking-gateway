@@ -8,7 +8,6 @@ import com.nimbusds.jwt.SignedJWT;
 import de.adorsys.opba.api.security.internal.config.TppTokenProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -17,7 +16,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TokenBasedAuthService {

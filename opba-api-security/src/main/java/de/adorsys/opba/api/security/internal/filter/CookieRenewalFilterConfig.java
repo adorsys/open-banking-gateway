@@ -1,4 +1,4 @@
-package de.adorsys.opba.tppauthapi.filter;
+package de.adorsys.opba.api.security.internal.filter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
