@@ -1,6 +1,7 @@
-package de.adorsys.opba.tppauthapi.filter;
+package de.adorsys.opba.api.security.internal.filter;
 
 
+import de.adorsys.opba.api.security.external.domain.HttpHeaders;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 
 @Slf4j
 @Order(1)
@@ -37,7 +37,7 @@ public class CookieRenewalFilter implements Filter {
             String authCookieValue = null;
             if (httpServletRequest.getCookies() != null) {
                 authCookieValue = Arrays.stream(httpServletRequest.getCookies())
-                        .filter(it -> AUTHORIZATION_SESSION_KEY.equals(it.getName()))
+                        .filter(it -> HttpHeaders.AUTHORIZATION_SESSION_KEY.equals(it.getName()))
                         .findFirst()
                         .map(Cookie::getValue)
                         .orElse(null);

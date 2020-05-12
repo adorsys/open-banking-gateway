@@ -2,7 +2,6 @@ package de.adorsys.opba.tppauthapi.config;
 
 import de.adorsys.opba.api.security.internal.EnableTokenBasedApiSecurity;
 import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
-import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_KEY;
+import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 
 @Configuration
 @EnableTokenBasedApiSecurity
@@ -30,7 +29,7 @@ public class AuthorizationSessionKeyConfig {
     @Bean
     @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public AuthorizationSessionKeyFromHttpRequest getAuthorizationSessionKeyFromHttpRequest(HttpServletRequest httpServletRequest) {
-        log.debug("REQUEST COMMING IN {}",  httpServletRequest.getRequestURI());
+        log.debug("Incomming request {}", httpServletRequest.getRequestURI());
         String authCookieValue = Arrays.stream(httpServletRequest.getCookies())
                 .filter(it -> AUTHORIZATION_SESSION_KEY.equals(it.getName()))
                 .findFirst()
@@ -39,11 +38,9 @@ public class AuthorizationSessionKeyConfig {
         return new AuthorizationSessionKeyFromHttpRequest(authService.validateTokenAndGetSubject(authCookieValue));
     }
 
-    @AllArgsConstructor
+    @RequiredArgsConstructor
+    @Getter
     public static class AuthorizationSessionKeyFromHttpRequest {
-        private String key;
-        public String get() {
-            return key;
-        }
+        private final String key;
     }
 }
