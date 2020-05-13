@@ -4,6 +4,7 @@ import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
+import de.adorsys.opba.protocol.api.dto.result.body.StandardPaymentProduct;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.pis.SinglePaymentService;
 import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
@@ -38,13 +39,15 @@ public class TppBankingApiPisController implements TppBankingApiPaymentInitiatio
                                              String fintechRedirectURLOK,
                                              String fintechRedirectURLNOK,
                                              UUID xRequestID,
+                                             String paymentProduct,
                                              String xTimestampUTC,
                                              String xRequestSignature,
                                              String fintechID,
                                              String bankID,
-                                             String psUConsentSession,
                                              UUID serviceSessionID
     ) {
+        SinglePaymentBody singlePayment = pisSinglePaymentMapper.map(body);
+        singlePayment.setPaymentProduct(StandardPaymentProduct.fromValue(paymentProduct));
         return payments.execute(
                 InitiateSinglePaymentRequest.builder()
                         .facadeServiceable(serviceableTemplate.toBuilder()
@@ -60,7 +63,7 @@ public class TppBankingApiPisController implements TppBankingApiPaymentInitiatio
                                 .bankId(bankID)
                                 .build()
                         )
-                        .singlePayment(pisSinglePaymentMapper.map(body))
+                        .singlePayment(singlePayment)
                         .build()
         ).thenApply((FacadeResult<SinglePaymentBody> result) -> mapper.translate(result, paymentResponseMapper));
     }
