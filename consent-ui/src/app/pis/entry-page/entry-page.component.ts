@@ -7,7 +7,7 @@ import { CustomizeService } from '../../services/customize.service';
   styleUrls: ['./entry-page.component.scss']
 })
 export class EntryPageComponent implements OnInit {
-  constructor(private customizeService: CustomizeService) {}
+  constructor(public customizeService: CustomizeService) {}
 
   ngOnInit() {}
 }
