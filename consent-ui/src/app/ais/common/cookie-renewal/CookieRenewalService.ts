@@ -21,16 +21,16 @@ export class CookieRenewalService {
   activate(authid): void {
     const timer = this.getTimer(authid);
     console.log(new Date().toLocaleString() + ' activate timer in ' + timer);
-    this.simpleTimer.newTimerCD(CookieRenewalService.TIMER_NAME, timer, timer);
-    this.simpleTimer.subscribe(CookieRenewalService.TIMER_NAME, () => this.cookieRenewal(authid));
+    this.simpleTimer.newTimerCD(this.getTimerName(authid), timer, timer);
+    this.simpleTimer.subscribe(this.getTimerName(authid), () => this.cookieRenewal(authid));
   }
 
   cookieRenewal(authid): void {
     console.log(new Date().toLocaleString() + ' timer rings, request for cookie renewal');
 
     // delete old timer
-    this.simpleTimer.unsubscribe(CookieRenewalService.TIMER_NAME);
-    this.simpleTimer.delTimer(CookieRenewalService.TIMER_NAME);
+    this.simpleTimer.unsubscribe(this.getTimerName(authid));
+    this.simpleTimer.delTimer(this.getTimerName(authid));
 
     // timer is deleted. If following call fails due to whatever reason, session cookie is not valid but
     // timer does not retry to renew it, which is fine, so error handling of call is not needed
@@ -41,11 +41,14 @@ export class CookieRenewalService {
         new Date().toLocaleString(),
         ' got new cookie from server ',
         res.status,
-        ' and activate next timer in ',
-        timer
+        ' and activate next timer ',
+        this.getTimerName(authid),
+        ' in ',
+        timer,
+        ' secs'
       );
-      this.simpleTimer.newTimerCD(CookieRenewalService.TIMER_NAME, timer, timer);
-      this.simpleTimer.subscribe(CookieRenewalService.TIMER_NAME, () => this.cookieRenewal(authid));
+      this.simpleTimer.newTimerCD(this.getTimerName(authid), timer, timer);
+      this.simpleTimer.subscribe(this.getTimerName(authid), () => this.cookieRenewal(authid));
     });
   }
 
@@ -53,5 +56,9 @@ export class CookieRenewalService {
     const ttl = parseInt(this.sessionService.getTTL(authid), 0);
     // backend minimum for ttl is 60 secs see FacadeTransientDataConfig.MIN_EXPIRE_SECONDS = 60L;
     return isNaN(ttl) ? 58 : ttl - 2;
+  }
+
+  getTimerName(authid: string): string {
+    return CookieRenewalService.TIMER_NAME + authid;
   }
 }
