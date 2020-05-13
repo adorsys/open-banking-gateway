@@ -38,6 +38,8 @@ export class LoginComponent implements OnInit {
     this.redirectCode = this.route.queryParams.redirectCode;
     if (this.redirectCode) {
       this.sessionService.setRedirectCode(this.authId, this.redirectCode);
+    } else {
+      this.redirectCode = this.sessionService.getRedirectCode(this.authId);
     }
   }
 

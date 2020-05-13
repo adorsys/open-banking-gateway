@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { StubUtilTests } from '../common/stub-util-tests';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import {AuthService} from '../../common/auth.service';
+import { AuthService } from '../../common/auth.service';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -14,7 +14,7 @@ describe('RegisterComponent', () => {
   let authServiceSpy;
   let authService: AuthService;
   const usernameInput = 'alex';
-  const passwordInput  = 'password';
+  const passwordInput = 'password';
   const notMachingPasswordInput = 'not matching password';
   let form;
 
