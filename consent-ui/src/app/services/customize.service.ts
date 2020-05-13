@@ -4,14 +4,13 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class CustomizeService {
-
   private DEFAULT_THEME: Theme = {
     globalSettings: {
       logo: '../../assets/UI/Logo_OPBA.png'
-    },
+    }
   };
 
-  constructor() { }
+  constructor() {}
 
   getLogo() {
     return this.DEFAULT_THEME.globalSettings.logo;

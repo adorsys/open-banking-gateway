@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 import { AngularIbanModule } from 'angular-iban';
 import { AisRoutingModule } from './ais-routing.module';
@@ -9,7 +8,6 @@ import { EntryPageComponent } from './entry-page/entry-page.component';
 import { ScaSelectPageComponent } from './sca-select-page/sca-select-page.component';
 import { ReportScaResultComponent } from './sca-result-page/sca-result-page.component';
 import { AccountDetailsComponent } from './common/account-details/account-details.component';
-import { ReactiveFormsModule } from '@angular/forms';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { RouteBasedCardWithSidebarComponent } from './route-based-card-with-sidebar/route-based-card-with-sidebar.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -27,6 +25,7 @@ import { ConsentInfoComponent } from './components/consent-info/consent-info.com
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ConsentSharingComponent } from './entry-page/initiation/consent-sharing/consent-sharing.component';
+import { SharedModule } from '../common/shared.module';
 
 @NgModule({
   declarations: [
@@ -54,6 +53,6 @@ import { ConsentSharingComponent } from './entry-page/initiation/consent-sharing
     RegisterComponent,
     ConsentSharingComponent
   ],
-  imports: [CommonModule, AisRoutingModule, ReactiveFormsModule, AngularIbanModule]
+  imports: [SharedModule, AisRoutingModule, AngularIbanModule]
 })
 export class AisModule {}
