@@ -4,10 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthConsentState } from '../../../../common/dto/auth-state';
 import { SessionService } from '../../../../../common/session.service';
 import { StubUtil } from '../../../../common/stub-util';
-import {AccountAccessLevel, AisConsentToGrant} from '../../../../common/dto/ais-consent';
+import { AccountAccessLevel, AisConsentToGrant } from '../../../../common/dto/ais-consent';
 import { ConsentUtil } from '../../../../common/consent-util';
-import {ConsentAuthorizationService, DenyRequest} from '../../../../../api';
-import {ApiHeaders} from '../../../../../api/api.headers';
+import { ConsentAuthorizationService, DenyRequest } from '../../../../../api';
+import { ApiHeaders } from '../../../../../api/api.headers';
 
 @Component({
   selector: 'consent-app-access-selection',
@@ -86,15 +86,17 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
   }
 
   onDeny() {
-    this.consentAuthorizationService.denyUsingPOST(
+    this.consentAuthorizationService
+      .denyUsingPOST(
         this.authorizationId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
         StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
         {} as DenyRequest,
         'response'
-    ).subscribe(res => {
-      window.location.href = res.headers.get(ApiHeaders.LOCATION);
-    })
+      )
+      .subscribe(res => {
+        window.location.href = res.headers.get(ApiHeaders.LOCATION);
+      });
   }
 
   private updateConsentObject() {
