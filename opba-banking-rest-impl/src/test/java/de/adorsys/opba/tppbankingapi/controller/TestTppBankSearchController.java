@@ -1,15 +1,18 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
-import de.adorsys.opba.api.security.external.domain.DataToSign;
+import de.adorsys.opba.api.security.external.domain.signdata.BankProfileDataToSign;
+import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.tppbankingapi.BaseMockitoTest;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -38,20 +41,9 @@ class TestTppBankSearchController extends BaseMockitoTest {
     void testBankSearch() throws Exception {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
+        String keyword = "commerz";
 
-        mockMvc.perform(
-                get("/v1/banking/search/bank-search")
-                        .header("Compute-PSU-IP-Address", "true")
-
-                        .header(X_REQUEST_ID, xRequestId)
-                        .header(X_TIMESTAMP_UTC, xTimestampUtc)
-                        .header(X_OPERATION_TYPE, OperationType.BANK_SEARCH)
-                        .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new DataToSign(xRequestId, xTimestampUtc, OperationType.BANK_SEARCH)))
-                        .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
-                        .param("keyword", "commerz")
-                        .param("max", "10")
-                        .param("start", "0"))
-                .andExpect(status().isOk())
+        performBankSearchRequest(xRequestId, xTimestampUtc, keyword)
                 .andExpect(jsonPath("$.bankDescriptor.length()").value("10"))
                 .andExpect(jsonPath("$.bankDescriptor[0].bankName").value("Commerzbank"))
                 .andExpect(jsonPath("$.bankDescriptor[0].bic").value("COBADEFFXXX"))
@@ -72,7 +64,7 @@ class TestTppBankSearchController extends BaseMockitoTest {
                         .header(X_REQUEST_ID, xRequestId)
                         .header(X_TIMESTAMP_UTC, xTimestampUtc)
                         .header(X_OPERATION_TYPE, OperationType.BANK_SEARCH)
-                        .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new DataToSign(xRequestId, xTimestampUtc, OperationType.BANK_SEARCH)))
+                        .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new BankProfileDataToSign(xRequestId, xTimestampUtc, OperationType.BANK_SEARCH)))
                         .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
 
                         .param("bankId", "4eee696c-b2d2-45ac-86c7-b77a810a261b"))
@@ -87,22 +79,27 @@ class TestTppBankSearchController extends BaseMockitoTest {
     void testSimilarityThreshold() throws Exception {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
+        String keyword = "Sandbox";
 
-        mockMvc.perform(
+        performBankSearchRequest(xRequestId, xTimestampUtc, keyword)
+                .andExpect(jsonPath("$.bankDescriptor.length()").value("0"))
+                .andReturn();
+    }
+
+    @NotNull
+    private ResultActions performBankSearchRequest(UUID xRequestId, Instant xTimestampUtc, String keyword) throws Exception {
+        return mockMvc.perform(
                 get("/v1/banking/search/bank-search")
                         .header("Compute-PSU-IP-Address", "true")
 
                         .header(X_REQUEST_ID, xRequestId)
                         .header(X_TIMESTAMP_UTC, xTimestampUtc)
                         .header(X_OPERATION_TYPE, OperationType.BANK_SEARCH)
-                        .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new DataToSign(xRequestId, xTimestampUtc, OperationType.BANK_SEARCH)))
+                        .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new BankSearchDataToSign(xRequestId, xTimestampUtc, OperationType.BANK_SEARCH, keyword)))
                         .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
-
-                        .param("keyword", "Sandbox")
+                        .param("keyword", keyword)
                         .param("max", "10")
                         .param("start", "0"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.bankDescriptor.length()").value("0"))
-                .andReturn();
+                       .andExpect(status().isOk());
     }
 }

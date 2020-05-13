@@ -11,6 +11,10 @@ public class HttpHeaders {
     public static final String REDIRECT_CODE = "Redirect-Code";
     public static final String X_REQUEST_ID = "X-Request-ID";
     public static final String COMPUTE_PSU_IP_ADDRESS = "Compute-PSU-IP-Address";
+    public static final String BANK_ID = "Bank-ID";
+    public static final String FINTECH_USER_ID = "Fintech-User-ID";
+    public static final String FINTECH_REDIRECT_URL_OK = "Fintech-Redirect-URL-OK";
+    public static final String FINTECH_REDIRECT_URL_NOK = "Fintech-Redirect-URL-NOK";
 
     public static final String X_TIMESTAMP_UTC = "X-Timestamp-UTC";
     public static final String X_OPERATION_TYPE = "X-Operation-Type";
