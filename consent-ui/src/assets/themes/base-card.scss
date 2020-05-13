@@ -1,0 +1,33 @@
+@import 'variables';
+
+.card-body {
+  padding: 3rem;
+}
+.card-frame {
+  margin: 4rem auto;
+}
+@media (min-width: 768px) {
+  .card {
+    border-radius: 16px;
+    color: $COLOR_DARK_BODY;
+
+    &-frame {
+      width: 761px;
+      height: 100%;
+    }
+
+    &-title {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+    }
+  }
+
+  .info-block {
+    color: white;
+    opacity: 0.6;
+  }
+  .container {
+    padding: 4rem 20px;
+  }
+}
