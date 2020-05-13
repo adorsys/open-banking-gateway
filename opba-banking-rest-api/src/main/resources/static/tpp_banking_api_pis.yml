@@ -8,7 +8,7 @@ externalDocs:
   url: "https://adorsys.github.com/open-banking-gateway"
 
 paths:
-  /v1/banking/pis/payments:
+  /v1/banking/pis/payments/{payment-product}:
     post:
       summary: Payment initiation request
       description: This method is used to initiate a payment at the ASPSP.
@@ -25,28 +25,39 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-Consent-Session"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        #path
+        - $ref: '#/components/parameters/PaymentProduct'
       requestBody:
-        $ref : '#/components/requestBodies/paymentInitiation'
+        $ref : '#/components/requestBodies/PaymentInitiation'
       responses:
         201:
           $ref: '#/components/responses/201_PaymentInitiationResponse'
-        400:
-          description: ''
-          content: {}
-        401:
-          description: ''
-          content: {}
       security:
         - {}
         - BearerAuthOAuth: []
       x-codegen-request-body-name: body
 
 components:
+  parameters:
+    PaymentProduct:
+      name: payment-product
+      in: path
+      required: true
+      schema:
+        type: string
+        enum:
+          - sepa-credit-transfers
+          - instant-sepa-credit-transfers
+          - target-2-payments
+          - cross-border-credit-transfers
+          - pain.001-sepa-credit-transfers
+          - pain.001-instant-sepa-credit-transfers
+          - pain.001-target-2-payments
+          - pain.001-cross-border-credit-transfers
   requestBodies:
-    paymentInitiation:
+    PaymentInitiation:
       content:
         application/json:
           schema:
