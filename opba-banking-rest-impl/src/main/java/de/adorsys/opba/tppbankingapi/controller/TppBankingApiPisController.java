@@ -27,7 +27,6 @@ public class TppBankingApiPisController implements TppBankingApiPaymentInitiatio
     private final UserAgentContext userAgentContext;
     private final FacadeResponseMapper mapper;
     private final SinglePaymentService payments;
-    private final FacadeServiceableRequest serviceableTemplate;
     private final PaymentRestRequestBodyToSinglePaymentMapper pisSinglePaymentMapper;
     private final PaymentFacadeResponseBodyToRestBodyMapper paymentResponseMapper;
 
@@ -47,7 +46,7 @@ public class TppBankingApiPisController implements TppBankingApiPaymentInitiatio
     ) {
         return payments.execute(
                 InitiateSinglePaymentRequest.builder()
-                        .facadeServiceable(serviceableTemplate.toBuilder()
+                        .facadeServiceable(FacadeServiceableRequest.builder()
                                 // Get rid of CGILIB here by copying:
                                 .uaContext(userAgentContext.toBuilder().build())
                                 .authorization(fintechID)

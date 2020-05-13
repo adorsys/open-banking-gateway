@@ -27,7 +27,8 @@
   "action": "LIST_ACCOUNTS",
   "flowByAction": {
     "LIST_ACCOUNTS": "xs2a-list-accounts",
-    "LIST_TRANSACTIONS": "xs2a-list-transactions"
+    "LIST_TRANSACTIONS": "xs2a-list-transactions",
+    "INITIATE_PAYMENT": "xs2a-single-payments"
   },
   "requestId": "cef0cbf3-6458-4f13-a418-ee4d7e750511",
   "sagaId": "25e0c2a1-6751-11ea-9989-acde48001122",
