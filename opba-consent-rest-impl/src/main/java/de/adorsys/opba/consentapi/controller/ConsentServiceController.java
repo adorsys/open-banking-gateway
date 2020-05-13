@@ -85,9 +85,6 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
             String authId,
             PsuAuthRequest body,
             String redirectCode) {
-
-        PsuAuthRequest  body3 =  getPayment();
-
         return updateAuthorizationService.execute(
                 AuthorizationRequest.builder()
                         .facadeServiceable(serviceableTemplate.toBuilder()
@@ -99,10 +96,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                                 .build()
                         )
                         .aisConsent(null == body.getConsentAuth() ? null : aisConsentMapper.map(body))
-                        // TODO return
-                        .singlePayment(null == body3.getConsentAuth() ? null : pisSinglePaymentMapper
-                                                                                      .map(body3.getConsentAuth().getSinglePayment()))
-                        .scaAuthenticationData(body3.getScaAuthenticationData())
+                        .scaAuthenticationData(body.getScaAuthenticationData())
                         .extras(extrasMapper.map(body.getExtras()))
                         .build()
         ).thenApply((FacadeResult<UpdateAuthBody> result) ->
