@@ -4,6 +4,7 @@ import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aListAccountsEntrypoint;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aSandboxListTransactionsEntrypoint;
+import de.adorsys.opba.protocol.xs2a.tests.GetTransactionsQueryParams;
 import de.adorsys.opba.starter.config.FintechRequestSigningTestConfig;
 import io.restassured.RestAssured;
 import lombok.SneakyThrows;
@@ -23,7 +24,8 @@ import java.util.UUID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withAccountsHeaders;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withTransactionsHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static io.restassured.RestAssured.config;
 import static io.restassured.config.RedirectConfig.redirectConfig;
@@ -67,7 +69,7 @@ class BasicOpenBankingStartupTest {
     @Test
     @SneakyThrows
     void testXs2aProtocolIsWiredForSandboxAccountList() {
-        withDefaultHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
+        withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
             .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
@@ -80,7 +82,7 @@ class BasicOpenBankingStartupTest {
     @Test
     @SneakyThrows
     void testXs2aProtocolIsWiredForSandboxTransactionList() {
-        withDefaultHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
+        withTransactionsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
             .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, "ACCOUNT-1")
