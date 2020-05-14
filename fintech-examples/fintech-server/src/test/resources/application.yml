@@ -27,6 +27,13 @@ spring:
     change-log: classpath:migration/master.xml
     parameters:
       table-prefix: opb_
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy:
+          de.adorsys.opba.fintech.impl.database.hibernate.PrefixAndSnakeCasePhysicalNamingStrategy
+          # DDL is handled by Liquibase
+      ddl-auto: create-drop
 
 fintech-ui:
   host: http://localhost:4444
