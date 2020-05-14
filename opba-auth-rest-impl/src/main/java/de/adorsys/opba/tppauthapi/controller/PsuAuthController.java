@@ -9,6 +9,8 @@ import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
 import de.adorsys.opba.protocol.facade.config.auth.UriExpandConst;
 import de.adorsys.opba.protocol.facade.services.authorization.PsuLoginForAisService;
 import de.adorsys.opba.protocol.facade.services.psu.PsuAuthService;
+import de.adorsys.opba.api.security.internal.config.AuthorizationSessionKeyConfig;
+import de.adorsys.opba.tppauthapi.config.CookieProperties;
 import de.adorsys.opba.tppauthapi.model.generated.LoginResponse;
 import de.adorsys.opba.tppauthapi.model.generated.PsuAuthBody;
 import de.adorsys.opba.tppauthapi.resource.generated.PsuAuthenticationAndConsentApprovalApi;
@@ -30,7 +32,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_ID;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_KEY;
+import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.COOKIE_TTL;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
@@ -47,6 +50,8 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     private final TokenBasedAuthService authService;
     private final FacadeAuthConfig authConfig;
     private final TppAuthResponseCookieTemplate tppAuthResponseCookieBuilder;
+    private final AuthorizationSessionKeyConfig.AuthorizationSessionKeyFromHttpRequest authorizationKeyFromHttpRequest;
+    private final CookieProperties cookieProperties;
 
     // TODO - probably this operation is not needed. At least for simple usecase.
     @Override
@@ -73,6 +78,7 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     @Override
     public ResponseEntity<LoginResponse> loginForApproval(PsuAuthBody body, UUID xRequestId, String redirectCode, UUID authorizationId) {
         PsuLoginForAisService.Outcome outcome = aisService.loginAndAssociateAuthSession(body.getLogin(), body.getPassword(), authorizationId, redirectCode);
+        log.debug("created new session cookie for authid {}", authorizationId);
         return ResponseEntity
                 .status(HttpStatus.ACCEPTED)
                 .header(LOCATION, outcome.getRedirectLocation().toASCIIString())
@@ -100,6 +106,19 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     @Override
     public Optional<HttpServletRequest> getRequest() {
         return Optional.empty();
+    }
+
+    @Override
+    public ResponseEntity<Void> renewalAuthorizationSessionKey(UUID xRequestId, UUID authorizationId) {
+        String[] cookies = buildAuthorizationCookiesOnAllPaths(authorizationId, authorizationKeyFromHttpRequest.getKey());
+        String ttl = Long.toString(cookieProperties.getMaxAge().getSeconds());
+        log.debug("cookie is renewed for authid {} for time {}", authorizationId, ttl);
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .header(X_REQUEST_ID, xRequestId.toString())
+                .header(COOKIE_TTL, ttl)
+                .header(SET_COOKIE, cookies)
+                .build();
     }
 
     private String[] buildAuthorizationCookiesOnAllPaths(UUID authorizationId, String key) {
