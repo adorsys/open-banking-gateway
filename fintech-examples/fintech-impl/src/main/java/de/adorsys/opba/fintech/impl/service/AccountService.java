@@ -78,7 +78,7 @@ public class AccountService extends HandleAcceptedService {
         if (null != sessionEntity.getServiceSessionId() && sessionEntity.getConsentConfirmed()) {
             accounts = tppAisClient.getAccounts(
                     tppProperties.getServiceSessionPassword(),
-                    sessionEntity.getLoginUserName(),
+                    sessionEntity.getUserEntity().getLoginUserName(),
                     RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
                     RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
                     xRequestId,
@@ -96,7 +96,7 @@ public class AccountService extends HandleAcceptedService {
             accounts = tppAisClient.getTransactions(
                     UUID.randomUUID().toString(), // As consent is missing this will be ignored
                     tppProperties.getServiceSessionPassword(),
-                    sessionEntity.getLoginUserName(),
+                    sessionEntity.getUserEntity().getLoginUserName(),
                     RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
                     RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
                     xRequestId,

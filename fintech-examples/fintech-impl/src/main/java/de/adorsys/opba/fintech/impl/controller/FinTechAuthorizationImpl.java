@@ -43,9 +43,9 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
             InlineResponse200 response = new InlineResponse200();
             UserProfile userProfile = new UserProfile();
-            userProfile.setName(sessionEntity.getLoginUserName());
-            if (!sessionEntity.getLogins().isEmpty()) {
-                userProfile.setLastLogin(sessionEntity.getLastLogin());
+            userProfile.setName(sessionEntity.getUserEntity().getLoginUserName());
+            if (!sessionEntity.getUserEntity().getLogins().isEmpty()) {
+                userProfile.setLastLogin(sessionEntity.getUserEntity().getLastLogin());
             }
             response.setUserProfile(userProfile);
 

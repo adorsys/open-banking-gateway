@@ -3,6 +3,8 @@ package de.adorsys.opba.fintech.impl.service;
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
+import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
+import de.adorsys.opba.fintech.impl.database.repositories.SessionRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigPropertiesSpecific;
@@ -31,11 +33,12 @@ import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_ID;
 @Configuration
 @RequiredArgsConstructor
 public class AuthorizeService {
-    private static final String UNIVERSAL_PASSWORD = "1234";
     private static final String AUTH_ID_VARIABLE = "\\{auth-id}";
 
     private final UserRepository userRepository;
+    private final SessionRepository sessionRepository;
     private final RestRequestContext restRequestContext;
+    private final CookieConfigProperties cookieConfigProperties;
 
     /**
      * @param loginRequest
@@ -48,33 +51,35 @@ public class AuthorizeService {
         generateUserIfUserDoesNotExistYet(loginRequest);
 
         // find user by id
-        Optional<SessionEntity> optionalUserEntity = userRepository.findById(loginRequest.getUsername());
+        Optional<UserEntity> optionalUserEntity = userRepository.findById(loginRequest.getUsername());
         if (!optionalUserEntity.isPresent()) {
+            // user not found
             return Optional.empty();
         }
 
-        SessionEntity sessionEntity = optionalUserEntity.get();
-        if (!sessionEntity.getPassword().equals(loginRequest.getPassword())) {
+        if (!optionalUserEntity.get().getPassword().equals(loginRequest.getPassword())) {
+            // wrong password
             return Optional.empty();
         }
-
-        log.info("login for user {}", optionalUserEntity.get().getLoginUserName());
 
         // password is ok, so log in
+        log.info("login for user {}", optionalUserEntity.get().getLoginUserName());
 
-        // delete old cookies, if available
-        sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(sessionEntity.getFintechUserId(), xsrfToken));
-        sessionEntity.addLogin(OffsetDateTime.now());
+        // new session is created, even if an old one exists
+        SessionEntity sessionEntity = new SessionEntity(cookieConfigProperties.getSessioncookie().getMaxAge());
+        sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(xsrfToken));
+        optionalUserEntity.get().addLogin(OffsetDateTime.now());
+        optionalUserEntity.get().getSessions().add(sessionEntity);
 
-        userRepository.save(sessionEntity);
+        sessionRepository.save(sessionEntity);
         return Optional.of(sessionEntity);
     }
 
     @Transactional
     public HttpHeaders modifySessionEntityAndCreateNewAuthHeader(String xRequestID, SessionEntity sessionEntity, String xsrfToken,
                                                                  CookieConfigProperties cookieProps, SessionCookieType sessionCookieType) {
-        sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(sessionEntity.getFintechUserId(), xsrfToken));
-        userRepository.save(sessionEntity);
+        sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(xsrfToken));
+        sessionRepository.save(sessionEntity);
 
         List<String> cookieValues = new ArrayList<>();
         int maxAge = 0;
@@ -125,7 +130,7 @@ public class AuthorizeService {
 
     @Transactional
     public SessionEntity updateUserSession(SessionEntity sessionEntity) {
-        return userRepository.save(sessionEntity);
+        return sessionRepository.save(sessionEntity);
     }
 
     private void generateUserIfUserDoesNotExistYet(LoginRequest loginRequest) {
@@ -133,11 +138,10 @@ public class AuthorizeService {
             return;
         }
         userRepository.save(
-                SessionEntity.builder()
+                UserEntity.builder()
                         .loginUserName(loginRequest.getUsername())
                         .fintechUserId(createID(loginRequest.getUsername()))
-                        .password(UNIVERSAL_PASSWORD)
-                        .consentConfirmed(false)
+                        .password(loginRequest.getPassword())
                         .build());
     }
 
@@ -160,26 +164,25 @@ public class AuthorizeService {
         SessionEntity.validateSessionCookieValue(sessionCookieValue, restRequestContext.getXsrfTokenHeaderField());
 
         // now check that this sessionCookie is really known in DB
-        Optional<SessionEntity> optionalUserEntity = userRepository.findBySessionCookieValue(restRequestContext.getSessionCookieValue());
-        if (!optionalUserEntity.isPresent()) {
+        Optional<SessionEntity> optionalSessionEntity = sessionRepository.findBySessionCookieValue(restRequestContext.getSessionCookieValue());
+        if (!optionalSessionEntity.isPresent()) {
             log.error("session cookie might be old. However it is not found in DB and thus not valid {} ", restRequestContext.getSessionCookieValue());
             return false;
         }
 
-        // now make sure, session is known to server
-        return optionalUserEntity.get().getSessionCookieValue().equals(sessionCookieValue);
+        return true;
     }
 
 
     @Transactional
     public void logout() {
         SessionEntity sessionEntity = getSession();
-        log.info("logout for user {}", sessionEntity.getLoginUserName());
-        sessionEntity.setSessionCookieValue(null);
+        log.info("logout for user {}", sessionEntity.getUserEntity().getLoginUserName());
+        sessionRepository.delete(sessionEntity);
     }
 
     public SessionEntity getSession() {
         String sessionCookieValue = restRequestContext.getSessionCookieValue();
-        return userRepository.findBySessionCookieValue(sessionCookieValue).get();
+        return sessionRepository.findBySessionCookieValue(sessionCookieValue).get();
     }
 }
