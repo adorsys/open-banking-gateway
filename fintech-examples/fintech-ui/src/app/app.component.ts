@@ -14,6 +14,5 @@ export class AppComponent {
     ngbModalConfig.backdrop = 'static';
     ngbModalConfig.centered = true;
     ngbModalConfig.keyboard = false;
-
   }
 }

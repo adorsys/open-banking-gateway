@@ -159,4 +159,48 @@ export class PsuAuthenticationService {
         );
     }
 
+    /**
+     * the AuthorizationSessionKey is replaces with a new one
+     * Input is the old cookie, response is empty with a new cookie
+     * @param xRequestID Unique ID that identifies this request through common workflow. Shall be contained in HTTP Response as well. 
+     * @param authorizationId Authorization session ID to approve
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public renewalAuthorizationSessionKey(xRequestID: string, authorizationId: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public renewalAuthorizationSessionKey(xRequestID: string, authorizationId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public renewalAuthorizationSessionKey(xRequestID: string, authorizationId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public renewalAuthorizationSessionKey(xRequestID: string, authorizationId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (xRequestID === null || xRequestID === undefined) {
+            throw new Error('Required parameter xRequestID was null or undefined when calling renewalAuthorizationSessionKey.');
+        }
+        if (authorizationId === null || authorizationId === undefined) {
+            throw new Error('Required parameter authorizationId was null or undefined when calling renewalAuthorizationSessionKey.');
+        }
+
+        let headers = this.defaultHeaders;
+        if (xRequestID !== undefined && xRequestID !== null) {
+            headers = headers.set('X-Request-ID', String(xRequestID));
+        }
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/psu/ais/${encodeURIComponent(String(authorizationId))}/renewal-authorization-session-key`,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
 }
