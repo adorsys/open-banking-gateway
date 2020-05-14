@@ -2,6 +2,7 @@ package de.adorsys.opba.fintech.server;
 
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
+import de.adorsys.opba.fintech.impl.database.repositories.SessionRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import de.adorsys.opba.fintech.server.config.TestConfig;
@@ -53,6 +54,9 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SessionRepository sessionRepository;
 
     @Test
     @SneakyThrows
@@ -132,9 +136,9 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     }
 
     protected void setServiceSessionId(UUID serviceSessionId) {
-        SessionEntity session = userRepository.findBySessionCookieValue(restRequestContext.getSessionCookieValue()).get();
+        SessionEntity session = sessionRepository.findBySessionCookieValue(restRequestContext.getSessionCookieValue()).get();
         session.setServiceSessionId(serviceSessionId);
         session.setConsentConfirmed(true);
-        userRepository.save(session);
+        sessionRepository.save(session);
     }
 }
