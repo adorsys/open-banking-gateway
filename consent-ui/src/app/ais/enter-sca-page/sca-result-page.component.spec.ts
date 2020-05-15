@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-import { ReportScaResultComponent } from './sca-result-page.component';
+import { EnterScaComponent } from './sca-result-page.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -10,15 +11,15 @@ import { ConsentAuthorizationService } from '../../api';
 import { of } from 'rxjs';
 
 describe('ReportScaResultComponent', () => {
-  let component: ReportScaResultComponent;
-  let fixture: ComponentFixture<ReportScaResultComponent>;
+  let component: EnterScaComponent;
+  let fixture: ComponentFixture<EnterScaComponent>;
   let consentAuthorizationService: ConsentAuthorizationService;
   let consentAuthorizationServiceSpy;
-  let form;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ReportScaResultComponent],
+      declarations: [EnterScaComponent],
+      schemas: [NO_ERRORS_SCHEMA],
       imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
       providers: [
         {
@@ -33,28 +34,19 @@ describe('ReportScaResultComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ReportScaResultComponent);
+    fixture = TestBed.createComponent(EnterScaComponent);
     component = fixture.componentInstance;
     consentAuthorizationService = fixture.debugElement.injector.get(ConsentAuthorizationService);
     fixture.detectChanges();
-    form = component.reportScaResultForm;
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should be true if the reportScaResultForm is invalid', () => {
+  it('should call method embeddedUsingPOST', () => {
     consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'embeddedUsingPOST').and.returnValue(of());
-    form.get('tan').setValue('');
-    component.submit();
-    expect(component.reportScaResultForm.invalid).toBe(true);
-  });
-
-  it('should be true if the reportScaResultForm is valid', () => {
-    consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'embeddedUsingPOST').and.returnValue(of());
-    form.get('tan').setValue(StubUtilTests.SCA_METHOD_VALUE);
-    component.submit();
-    expect(component.reportScaResultForm.valid).toBe(true);
+    component.onSubmit(StubUtilTests.DUMMY_INPUT);
+    expect(consentAuthorizationServiceSpy).toHaveBeenCalled();
   });
 });

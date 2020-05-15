@@ -34,7 +34,7 @@ describe('ScaResultLayoutComponent', () => {
   });
 
   it('should be true if the form is valid', () => {
-    form.get('pin').setValue(StubUtilTests.DUMMY_STRING);
+    form.get('pin').setValue(StubUtilTests.DUMMY_INPUT);
     component.onSubmit();
     fixture.detectChanges();
     expect(component.pinForm.valid).toBe(true);
