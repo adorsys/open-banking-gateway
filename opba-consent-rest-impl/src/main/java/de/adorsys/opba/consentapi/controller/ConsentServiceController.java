@@ -85,9 +85,6 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
             String authId,
             PsuAuthRequest body,
             String redirectCode) {
-
-        PsuAuthRequest  body3 =  getPayment();
-
         return updateAuthorizationService.execute(
                 AuthorizationRequest.builder()
                         .facadeServiceable(serviceableTemplate.toBuilder()
@@ -99,10 +96,7 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
                                 .build()
                         )
                         .aisConsent(null == body.getConsentAuth() ? null : aisConsentMapper.map(body))
-                        // TODO return
-                        .singlePayment(null == body3.getConsentAuth() ? null : pisSinglePaymentMapper
-                                                                                      .map(body3.getConsentAuth().getSinglePayment()))
-                        .scaAuthenticationData(body3.getScaAuthenticationData())
+                        .scaAuthenticationData(body.getScaAuthenticationData())
                         .extras(extrasMapper.map(body.getExtras()))
                         .build()
         ).thenApply((FacadeResult<UpdateAuthBody> result) ->
@@ -184,44 +178,4 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
             return ConsentAuth.ActionEnum.fromValue(value);
         }
     }
-
-    private PsuAuthRequest getPayment() {
-        String strPayment = "{\n"
-                                    + "  \"consentAuth\": {\n"
-                                    + "    \"singlePayment\": {\n"
-                                    + "      \"creditorAccount\": {\n"
-                                    + "        \"currency\": \"EUR\",\n"
-                                    + "        \"iban\": \"{{iban_multiple}}\"\n"
-                                    + "      },\n"
-                                    + "      \"creditorAddress\": {\n"
-                                    + "        \"buildingNumber\": \"56\",\n"
-                                    + "        \"city\": \"Nürnberg\",\n"
-                                    + "        \"country\": \"DE\",\n"
-                                    + "        \"postalCode\": \"90543\",\n"
-                                    + "        \"street\": \"WBG Straße\"\n" + "      },\n" + "      \"creditorAgent\": \"AAAADEBBXXX\",\n"
-                                    + "      \"creditorName\": \"WBG\",\n" + "      \"debtorAccount\": {\n"
-                                    + "        \"currency\": \"EUR\",\n"
-                                    + "        \"iban\": \"{{iban_multiple}}\"\n"
-                                    + "      },\n"
-                                    + "      \"endToEndIdentification\": \"WBG-123456789\",\n"
-                                    + "      \"instructedAmount\": {\n" + "        \"currency\": \"EUR\",\n"
-                                    + "        \"amount\": \"0.01\"\n" + "      },\n"
-                                    + "      \"paymentProduct\": \"SEPA\",\n"
-                                    + "      \"remittanceInformationUnstructured\": \"Ref. Number WBG-1222\"\n"
-                                    + "    }\n"
-                                    + "  },\n"
-                                    + "  \"scaAuthenticationData\": {\n" + "  \t\"PSU_ID\": \"max.musterman\",\n"
-                                    + "    \"PSU_PASSWORD\": \"12345\"\n" + "  \t\n"
-                                    + "  },\n  \"extras\": {\n     \"PSU_ID\": \"max.musterman\"\n } }";
-
-        try {
-           return new ObjectMapper().readValue(strPayment, PsuAuthRequest.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-    }
-
-
 }

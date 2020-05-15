@@ -25,6 +25,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -67,10 +68,18 @@ public class Xs2aInitiateSinglePaymentEntrypoint implements SinglePayment {
     }
 
     protected SinglePaymentXs2aContext prepareContext(ServiceContext<InitiateSinglePaymentRequest> serviceContext) {
-        SinglePaymentXs2aContext context = mapper.map(serviceContext.getRequest());
+        InitiateSinglePaymentRequest request = serviceContext.getRequest();
+
+        SinglePaymentXs2aContext context = mapper.map(request);
         context.setAction(ProtocolAction.INITIATE_PAYMENT);
         extender.extend(context, serviceContext);
-        context.setPsuId(serviceContext.getRequest().getExtras().get(ExtraAuthRequestParam.PSU_ID).toString());
+
+        Optional<String> psuIdOptional = Optional.ofNullable(request.getExtras())
+                                                 .map(ex -> ex.get(ExtraAuthRequestParam.PSU_ID))
+                                                 .map(Object::toString);
+
+        psuIdOptional.ifPresent(context::setPsuId);
+
         return context;
     }
 
