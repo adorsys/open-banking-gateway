@@ -1,4 +1,3 @@
-/*
 package de.adorsys.opba.tppbankingapi.config;
 
 import de.adorsys.opba.api.security.internal.EnableSignatureBasedApiSecurity;
@@ -40,4 +39,3 @@ public class RequestVerifyingConfig {
         return new RequestSignatureValidationFilter(requestVerifyingService, requestValidityWindow, consumerPublicKeys, properties);
     }
 }
-*/
