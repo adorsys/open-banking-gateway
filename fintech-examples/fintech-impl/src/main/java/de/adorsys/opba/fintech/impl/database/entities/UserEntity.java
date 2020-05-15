@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.CascadeType;
@@ -29,7 +28,6 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Slf4j
 public class UserEntity {
     @Id
@@ -38,13 +36,12 @@ public class UserEntity {
     private String fintechUserId;
 
 
-    // TODO orphanRemoval should be true, but than deleting fails. Dont know how to
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<LoginEntity> logins = new ArrayList<>();
 
     // each time user logs in, user gets new session
     // might be for different devices or different tabs
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = false)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "userEntity")
     private List<SessionEntity> sessions = new ArrayList<>();
 
     public void addLogin(OffsetDateTime time) {
