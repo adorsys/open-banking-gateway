@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { PaymentInitiateComponent } from './initiation/payment-initiate.component';
 import { EntryPageComponent } from './entry-page/entry-page.component';
 import { EnterPinPageComponent } from './enter-pin-page/enter-pin-page.component';
+import { EnterScaPageComponent } from './enter-sca-page/enter-sca-page.component';
 
 const routes: Routes = [
   {
@@ -10,7 +11,8 @@ const routes: Routes = [
     component: EntryPageComponent,
     children: [
       { path: '', component: PaymentInitiateComponent },
-      { path: EnterPinPageComponent.ROUTE, component: EnterPinPageComponent }
+      { path: EnterPinPageComponent.ROUTE, component: EnterPinPageComponent },
+      { path: EnterScaPageComponent.ROUTE, component: EnterScaPageComponent }
     ]
   }
 ];
