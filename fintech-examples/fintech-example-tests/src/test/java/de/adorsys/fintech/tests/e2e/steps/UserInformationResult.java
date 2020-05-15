@@ -13,8 +13,6 @@ import org.springframework.http.MediaType;
 import java.util.UUID;
 
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
-import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon.REDIRECT_CODE_QUERY;
 
@@ -67,13 +65,11 @@ public class UserInformationResult extends AccountInformationResult {
         return (UserInformationResult) self();
     }
 
+    @SneakyThrows
     public UserInformationResult fintech_get_bank_infos() {
         ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .given()
-                                                         .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                                                         .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                                                         .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                                                         .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                                                         .cookies("set-cookies", authSessionCookie)
                                                          .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                          .when()
                                                              .get(BANKPROFILE_ENDPOINT + KEYWORD)
@@ -87,8 +83,6 @@ public class UserInformationResult extends AccountInformationResult {
     public UserInformationResult fintech_get_user_infos() {
         ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .given()
-                                                         .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                                                         .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                          .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                                                          .cookie("set-cookie", authSessionCookie)
                                                          .contentType(MediaType.APPLICATION_JSON_VALUE)
