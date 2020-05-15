@@ -28,7 +28,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_SMOKE_TESTS;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 @ActiveProfiles("test-mocked-fintech")
@@ -247,32 +246,6 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
         then().fintech_can_read_max_musterman_accounts_and_transactions(accountResourceId, bankId);
     }
 
-    @SneakyThrows
-    @Test
-    public void user_can_see_its_transactions(FirefoxDriver firefoxDriver) {
-        given().fintech_points_to_fintechui_bank_search(smokeConfig.getFintechSearchUri());
-
-        when().user_opens_fintechui_login_page(firefoxDriver)
-                .and()
-                .user_login_with_its_credentials(firefoxDriver)
-                .and()
-                .user_confirm_login(firefoxDriver)
-                .and()
-                .user_navigates_to_page(firefoxDriver)
-                .and()
-                .user_looks_for_a_bank_in_the_bank_search_input_place(firefoxDriver)
-                .and()
-                .user_wait_for_the_result_in_bank_search(firefoxDriver)
-                .and()
-                .user_navigates_to_page(firefoxDriver)
-                .and()
-                .user_select_account_button(firefoxDriver);
-
-        UserInformationResult result = then().fintech_get_user_infos();
-
-        assertThat(result).hasNoNullFieldsOrProperties();
-
-    }
 
     private String getBankProfile(FirefoxDriver firefoxDriver) {
         given().enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri())
@@ -283,7 +256,6 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                .user_wait_for_the_result_in_bank_search(firefoxDriver);
 
         UserInformationResult result = then().fintech_get_bank_infos();
-        System.out.println("RESULT 1 " + result);
 
         return result.getRespContent();
     }
@@ -295,7 +267,6 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
         when().user_sees_account_and_list_transactions(firefoxDriver);
 
         UserInformationResult result = then().fintech_get_user_infos();
-        System.out.println("RESULT 2 " + result);
 
         return result.getRespContent();
     }
