@@ -69,7 +69,7 @@ public class AuthorizeService {
         SessionEntity sessionEntity = new SessionEntity(optionalUserEntity.get(), cookieConfigProperties.getSessioncookie().getMaxAge());
         sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(xsrfToken));
         optionalUserEntity.get().addLogin(OffsetDateTime.now());
-        optionalUserEntity.get().getSessions().add(sessionEntity);
+//        optionalUserEntity.get().getSessions().add(sessionEntity);
 
         sessionRepository.save(sessionEntity);
         return Optional.of(sessionEntity);
