@@ -11,5 +11,4 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule, InfoModule, NgbModalModule],
   exports: [CommonModule, ReactiveFormsModule, HttpClientModule, InfoModule, SearchComponent, NgbModalModule]
 })
-export class ShareModule {
-}
+export class ShareModule {}

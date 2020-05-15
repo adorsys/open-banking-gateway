@@ -50,8 +50,8 @@ describe('RegisterComponent', () => {
   it('should call registerUser in AuthService', () => {
     authServiceSpy = spyOn(authService, 'userRegister').and.callThrough();
 
-    form.get('login').setValue(usernameInput);
-    form.get('password').setValue('1234');
+    form.controls.login.setValue(usernameInput);
+    form.controls.password.setValue('1234');
     component.onSubmit();
     fixture.detectChanges();
     expect(authServiceSpy).toHaveBeenCalledWith({ login: 'alex', password: '1234' });
@@ -59,9 +59,9 @@ describe('RegisterComponent', () => {
   it('should be true if the passwords are not same', () => {
     authServiceSpy = spyOn(authService, 'userRegister').and.callThrough();
 
-    form.get('login').setValue(usernameInput);
-    form.get('password').setValue(passwordInput);
-    form.get('confirmPassword').setValue(notMachingPasswordInput);
+    form.controls.login.setValue(usernameInput);
+    form.controls.password.setValue(passwordInput);
+    form.controls.confirmPassword.setValue(notMachingPasswordInput);
     component.onSubmit();
     fixture.detectChanges();
 
@@ -70,9 +70,9 @@ describe('RegisterComponent', () => {
   it('should be false if password is not set', () => {
     authServiceSpy = spyOn(authService, 'userRegister').and.callThrough();
 
-    form.get('login').setValue(usernameInput);
-    form.get('password').setValue('');
-    form.get('confirmPassword').setValue('');
+    form.controls.login.setValue(usernameInput);
+    form.controls.password.setValue('');
+    form.controls.confirmPassword.setValue('');
     component.onSubmit();
     fixture.detectChanges();
 
@@ -81,9 +81,9 @@ describe('RegisterComponent', () => {
   it('should be false if username is not set', () => {
     authServiceSpy = spyOn(authService, 'userRegister').and.callThrough();
 
-    form.get('login').setValue('');
-    form.get('password').setValue(passwordInput);
-    form.get('confirmPassword').setValue(passwordInput);
+    form.controls.login.setValue('');
+    form.controls.password.setValue(passwordInput);
+    form.controls.confirmPassword.setValue(passwordInput);
     component.onSubmit();
     fixture.detectChanges();
 
