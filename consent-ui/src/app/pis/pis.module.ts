@@ -5,9 +5,16 @@ import { PisRoutingModule } from './pis-routing.module';
 import { EntryPageComponent } from './entry-page/entry-page.component';
 import { EnterPinPageComponent } from './enter-pin-page/enter-pin-page.component';
 import { EnterScaPageComponent } from './enter-sca-page/enter-sca-page.component';
+import { SelectScaPageComponent } from './select-sca-page/select-sca-page.component';
 
 @NgModule({
-  declarations: [PaymentInitiateComponent, EntryPageComponent, EnterPinPageComponent, EnterScaPageComponent],
+  declarations: [
+    PaymentInitiateComponent,
+    EntryPageComponent,
+    EnterPinPageComponent,
+    EnterScaPageComponent,
+    SelectScaPageComponent
+  ],
   imports: [SharedModule, PisRoutingModule]
 })
 export class PisModule {}
