@@ -6,7 +6,7 @@ import { ResultPageComponent } from './result-page/result-page.component';
 import { EnterPinPageComponent } from './enter-pin-page/enter-pin-page.component';
 import { EntryPageComponent } from './entry-page/entry-page.component';
 import { ScaSelectPageComponent } from './sca-select-page/sca-select-page.component';
-import { ReportScaResultComponent } from './sca-result-page/sca-result-page.component';
+import { EnterScaComponent } from './enter-sca-page/sca-result-page.component';
 import { AccountDetailsComponent } from './common/account-details/account-details.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { RouteBasedCardWithSidebarComponent } from './route-based-card-with-sidebar/route-based-card-with-sidebar.component';
@@ -33,7 +33,7 @@ import { SharedModule } from '../common/shared.module';
     EnterPinPageComponent,
     EntryPageComponent,
     ScaSelectPageComponent,
-    ReportScaResultComponent,
+    EnterScaComponent,
     AccountDetailsComponent,
     ConsentAccountAccessSelectionComponent,
     EntryPageTransactionsComponent,
