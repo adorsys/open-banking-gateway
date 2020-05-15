@@ -3,7 +3,6 @@ package de.adorsys.opba.fintech.server;
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.SessionRepository;
-import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import de.adorsys.opba.fintech.server.config.TestConfig;
 import de.adorsys.opba.fintech.server.feignmocks.TppAisClientFeignMock;
@@ -27,8 +26,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.TPP_AUTH_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.SERVICE_SESSION_ID;
+import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.TPP_AUTH_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -51,9 +50,6 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     @SuppressWarnings("PMD.UnusedPrivateField")
     @MockBean
     protected TppBankingApiAccountInformationServiceAisApi mockedTppBankingApiAccountInformationServiceAisApi;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private SessionRepository sessionRepository;

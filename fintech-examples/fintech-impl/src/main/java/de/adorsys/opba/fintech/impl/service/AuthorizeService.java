@@ -66,7 +66,7 @@ public class AuthorizeService {
         log.info("login for user {}", optionalUserEntity.get().getLoginUserName());
 
         // new session is created, even if an old one exists
-        SessionEntity sessionEntity = new SessionEntity(cookieConfigProperties.getSessioncookie().getMaxAge());
+        SessionEntity sessionEntity = new SessionEntity(optionalUserEntity.get(), cookieConfigProperties.getSessioncookie().getMaxAge());
         sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(xsrfToken));
         optionalUserEntity.get().addLogin(OffsetDateTime.now());
         optionalUserEntity.get().getSessions().add(sessionEntity);
