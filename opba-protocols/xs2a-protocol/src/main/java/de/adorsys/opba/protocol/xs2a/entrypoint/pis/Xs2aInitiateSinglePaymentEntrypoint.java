@@ -7,7 +7,7 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.authorization.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
-import de.adorsys.opba.protocol.api.dto.result.body.StandardPaymentProduct;
+import de.adorsys.opba.protocol.api.dto.result.body.PaymentProductDetails;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.pis.SinglePayment;
@@ -101,7 +101,7 @@ public class Xs2aInitiateSinglePaymentEntrypoint implements SinglePayment {
         @Mapping(source = "singlePayment.creditorAddress", target = "payment.creditorAddress")
         SinglePaymentXs2aContext map(InitiateSinglePaymentRequest ctx);
 
-        default String mapStandardPaymentProductToString(StandardPaymentProduct from) {
+        default String mapStandardPaymentProductToString(PaymentProductDetails from) {
             if (null == from) {
                 return null;
             }
