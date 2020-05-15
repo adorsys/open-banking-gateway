@@ -18,10 +18,12 @@ public class FintechStagesUtils {
     public static final String BANKSEARCH_LOGIN = "/login";
     public static final String KEYWORD = "adorsys xs2a";
     public static final String ACCOUNT_ENDPOINT = "https://obg-dev-fintechserver.cloud.adorsys.de/v1/ais/banks/{bank-id}/accounts";
+    public static final String FINTECH_SERVER_LOGIN = "https://obg-dev-fintechserver.cloud.adorsys.de/v1/login";
 
     public static RequestSpecification withDefaultHeaders() {
         return RestAssured
                        .given()
-                       .header(X_REQUEST_ID, UUID.randomUUID().toString());
-    }
+                       .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                       .header(X_XSRF_TOKEN, UUID.randomUUID().toString());
+         }
 }

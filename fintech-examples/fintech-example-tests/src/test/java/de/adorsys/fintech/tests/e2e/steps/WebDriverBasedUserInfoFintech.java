@@ -3,11 +3,7 @@ package de.adorsys.fintech.tests.e2e.steps;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
 import net.bytebuddy.utility.RandomString;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,8 +138,6 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
                 .user_login_with_its_credentials(firefoxDriver)
                 .and()
                 .user_confirm_login(firefoxDriver)
-                .and()
-                .user_navigates_to_page(firefoxDriver)
                 .and()
                 .user_looks_for_a_bank_in_the_bank_search_input_place(firefoxDriver)
                 .and()
