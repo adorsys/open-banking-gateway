@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import java.util.UUID;
 
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
 
 
 @JGivenStage
@@ -24,7 +26,7 @@ public class UserInformationResult extends AccountInformationResult {
 
     @SneakyThrows
     public UserInformationResult fintech_can_read_anton_brueckner_accounts_and_transactions(String antonBruecknerId, String bankId) {
-        ExtractableResponse<Response> response = withDefaultHeaders()
+        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
                                                          .given()
                                                              .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                              .header(SESSION_COOKIE, UUID.randomUUID().toString())
@@ -38,7 +40,7 @@ public class UserInformationResult extends AccountInformationResult {
     }
 
     public UserInformationResult fintech_can_read_max_musterman_accounts_and_transactions(String maxMustermanId, String bankId) {
-        ExtractableResponse<Response> response = withDefaultHeaders()
+        ExtractableResponse<Response> response = withDefaultHeaders(MAX_MUSTERMAN)
                                                          .given()
                                                              .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                              .header(SESSION_COOKIE, UUID.randomUUID().toString())
@@ -70,7 +72,6 @@ public class UserInformationResult extends AccountInformationResult {
                                                          .when()
                                                              .get(BANKPROFILE_ENDPOINT)
                                                          .then()
-                                                             .statusCode(HttpStatus.OK.value())
                                                              .extract();
         this.respContent = response.body().asString();
         return (UserInformationResult) self();
@@ -82,11 +83,12 @@ public class UserInformationResult extends AccountInformationResult {
                                                          .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                          .header(SESSION_COOKIE, UUID.randomUUID().toString())
                                                          .when()
-                                                         .get(ACCOUNT)
+                                                         .get(BANKPROFILE_ENDPOINT)
                                                          .then()
                                                          .statusCode(HttpStatus.OK.value())
                                                          .extract();
         this.respContent = response.body().asString();
+
         return (UserInformationResult) self();
     }
 }

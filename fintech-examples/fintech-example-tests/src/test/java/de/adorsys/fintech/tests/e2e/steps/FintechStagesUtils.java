@@ -17,7 +17,16 @@ public class FintechStagesUtils {
     public static final String BANKPROFILE_ENDPOINT = "/bank/";
     public static final String BANKSEARCH_LOGIN = "/login";
 
+    public static RequestSpecification withDefaultHeaders(String username) {
+        return RestAssured
+                       .given()
+                       .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                       .header("username", username);
+    }
+
     public static RequestSpecification withDefaultHeaders() {
-        return RestAssured.given().header(X_REQUEST_ID, UUID.randomUUID().toString());
+        return RestAssured
+                       .given()
+                       .header(X_REQUEST_ID, UUID.randomUUID().toString());
     }
 }
