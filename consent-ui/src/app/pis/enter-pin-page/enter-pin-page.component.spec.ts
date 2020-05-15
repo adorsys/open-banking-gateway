@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { EnterPinPageComponent } from './enter-pin-page.component';
 
@@ -8,7 +9,8 @@ describe('EnterPinPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EnterPinPageComponent]
+      declarations: [EnterPinPageComponent],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
   }));
 
