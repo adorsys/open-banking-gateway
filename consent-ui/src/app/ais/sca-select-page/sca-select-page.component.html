@@ -1,14 +1,5 @@
-<h2>Select Sca method</h2>
-<hr />
-<form (ngSubmit)="onSubmit()" *ngIf="scaMethods.length > 0" [formGroup]="scaMethodForm" autocomplete="off" novalidate>
-  <div class="form-group">
-    <label for="scaMethod">
-      <h6>Please select which authentication method you want to use</h6>
-    </label>
-    <select [formControl]="selectedMethod" class="form-control" id="scaMethod">
-      <option *ngFor="let scaMethod of scaMethods" [value]="scaMethod.id">{{ scaMethod.methodValue }}</option>
-    </select>
-  </div>
-
-  <button id="do_submit" class="btn btn-primary w-100" type="submit" [disabled]="!selectedMethod.value">Submit</button>
-</form>
+<consent-app-select-sca
+  [scaMethods]="scaMethods"
+  [selectedMethod]="selectedMethod"
+  (selectedValue)="onSubmit($event)"
+></consent-app-select-sca>
