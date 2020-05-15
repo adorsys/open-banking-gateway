@@ -4,7 +4,7 @@ import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
-import de.adorsys.opba.protocol.api.dto.result.body.StandardPaymentProduct;
+import de.adorsys.opba.protocol.api.dto.result.body.PaymentProductDetails;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.pis.SinglePaymentService;
 import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
@@ -60,15 +60,14 @@ public class TppBankingApiPisController implements TppBankingApiPaymentInitiatio
                                                    .bankId(bankID)
                                                    .build()
                         )
-                        .singlePayment(pisSinglePaymentMapper.map(body, StandardPaymentProduct.fromValue(paymentProduct)))
+                        .singlePayment(pisSinglePaymentMapper.map(body, PaymentProductDetails.fromValue(paymentProduct)))
                         .build()
         ).thenApply((FacadeResult<SinglePaymentBody> result) -> mapper.translate(result, paymentResponseMapper));
     }
 
-
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = API_MAPPERS_PACKAGE)
     public interface PaymentRestRequestBodyToSinglePaymentMapper {
-        SinglePaymentBody map(PaymentInitiation body, StandardPaymentProduct paymentProduct);
+        SinglePaymentBody map(PaymentInitiation body, PaymentProductDetails paymentProduct);
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = API_MAPPERS_PACKAGE)

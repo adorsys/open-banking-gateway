@@ -1,7 +1,5 @@
 package de.adorsys.opba.consentapi.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.opba.consentapi.Const;
 import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.DenyRequest;
@@ -12,7 +10,6 @@ import de.adorsys.opba.consentapi.resource.generated.ConsentAuthorizationApi;
 import de.adorsys.opba.consentapi.service.FromAspspMapper;
 import de.adorsys.opba.consentapi.service.mapper.AisConsentMapper;
 import de.adorsys.opba.consentapi.service.mapper.AisExtrasMapper;
-import de.adorsys.opba.consentapi.service.mapper.PisSinglePaymentMapper;
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
@@ -58,7 +55,6 @@ public class ConsentServiceController implements ConsentAuthorizationApi {
     private final UpdateAuthorizationService updateAuthorizationService;
     private final FromAspspRedirectHandler fromAspspRedirectHandler;
     private final FacadeServiceableRequest serviceableTemplate;
-    private final PisSinglePaymentMapper pisSinglePaymentMapper;
 
     @Override
     public CompletableFuture authUsingGET(
