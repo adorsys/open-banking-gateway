@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -20,11 +21,13 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @Slf4j
 @EnableFinTechImplConfig
 @SpringBootTest
 @SpringBootApplication
+@DirtiesContext(classMode=AFTER_EACH_TEST_METHOD)
 public class DatabaseTest {
 
     @Autowired
@@ -52,6 +55,7 @@ public class DatabaseTest {
     public void testDeleteInOneTx() {
         createUserEntity("peter", "1");
         UserEntity userEntity = userRepository.findById("peter").get();
+        sessionRepository.deleteAll(sessionRepository.findByUserEntity(userEntity));
         userRepository.delete(userEntity);
     }
 
@@ -59,10 +63,12 @@ public class DatabaseTest {
     public void testFindAllSessions() {
         String[] sessionCookieValues = {"1","2","3"};
         createUserEntity("peter", sessionCookieValues);
+        UserEntity userEntity = userRepository.findById("peter").get();
 
         // find from users side
-        UserEntity userEntity = userRepository.findById("peter").get();
-        assertArrayEquals(sessionCookieValues,userEntity.getSessions().stream().map(SessionEntity::getSessionCookieValue).collect(Collectors.toList()).toArray());
+        List<SessionEntity> petersSessions = new ArrayList<>();
+        sessionRepository.findByUserEntity(userEntity).forEach(petersSessions::add);
+        assertArrayEquals(sessionCookieValues,petersSessions.stream().map(SessionEntity::getSessionCookieValue).collect(Collectors.toList()).toArray());
 
         List<SessionEntity> sessions = new ArrayList<>();
         sessionRepository.findAll().forEach(sessions::add);
@@ -75,29 +81,31 @@ public class DatabaseTest {
     public void testDeleteASession() {
         String[] sessionCookieValues = {"1","2","3"};
         createUserEntity("peter", sessionCookieValues);
+        UserEntity userEntity = userRepository.findById("peter").get();
 
         // find from users side
-        UserEntity userEntity = userRepository.findById("peter").get();
-        assertArrayEquals(sessionCookieValues,userEntity.getSessions().stream().map(SessionEntity::getSessionCookieValue).collect(Collectors.toList()).toArray());
+        List<SessionEntity> petersSessions = new ArrayList<>();
+        sessionRepository.findByUserEntity(userEntity).forEach(petersSessions::add);
+        assertArrayEquals(sessionCookieValues,petersSessions.stream().map(SessionEntity::getSessionCookieValue).collect(Collectors.toList()).toArray());
 
         String[] reducedSessionCookieValues = {"1","3"};
         sessionRepository.delete(sessionRepository.findBySessionCookieValue("2").get());
-//        Assertions.assertArrayEquals(reducedSessionCookieValues,userEntity.getSessions().stream().map(SessionEntity::getSessionCookieValue).collect(Collectors.toList()).toArray());
+        petersSessions.clear();
+        sessionRepository.findByUserEntity(userEntity).forEach(petersSessions::add);
+        assertArrayEquals(reducedSessionCookieValues,petersSessions.stream().map(SessionEntity::getSessionCookieValue).collect(Collectors.toList()).toArray());
     }
 
     private void createUserEntity(String username, String... sessionCookieValues) {
         UserEntity userEntity = UserEntity.builder()
                 .loginUserName(username)
                 .password("affe")
-                .sessions(new ArrayList<>())
                 .build();
 
+        userRepository.save(userEntity);
         for (String sessionCookieValue:sessionCookieValues) {
             SessionEntity sessionEntity = new SessionEntity(userEntity, 10);
             sessionEntity.setSessionCookieValue(sessionCookieValue);
-            userEntity.getSessions().add(sessionEntity);
             userEntity.addLogin(OffsetDateTime.now());
-            userRepository.save(userEntity);
             sessionRepository.save(sessionEntity);
         }
     }
