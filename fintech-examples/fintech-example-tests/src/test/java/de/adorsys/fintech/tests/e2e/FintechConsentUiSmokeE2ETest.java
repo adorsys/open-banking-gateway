@@ -26,8 +26,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_SMOKE_TESTS;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 @ActiveProfiles("test-mocked-fintech")
@@ -105,7 +103,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
         String bankId = JsonPath.parse(getBankProfile(firefoxDriver))
                                 .read("$.bankDescriptor[0].uuid");
 
-        String  accountResourceId  = JsonPath.parse(afterLoginAndAuthorizeAccountGetAccountId(firefoxDriver, ANTON_BRUECKNER))
+        String  accountResourceId  = JsonPath.parse(afterLoginAndAuthorizeAccountGetAccountId(firefoxDriver))
                                              .read("$.accounts[0].resourceId");
 
         then().fintech_can_read_anton_brueckner_accounts_and_transactions( accountResourceId , bankId);
@@ -133,13 +131,13 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and()
                 .user_anton_brueckner_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
 
-        String  accountResourceId  = JsonPath.parse(afterLoginAndAuthorizeAccountGetAccountId(firefoxDriver, MAX_MUSTERMAN))
+        String  accountResourceId  = JsonPath.parse(afterLoginAndAuthorizeAccountGetAccountId(firefoxDriver))
                                              .read("$.accounts[0].resourceId");
 
         String bankId = JsonPath.parse(getBankProfile(firefoxDriver))
                                 .read("$.bankDescriptor[0].uuid");
 
-        then().fintech_can_read_max_musterman_accounts_and_transactions(accountResourceId, bankId);
+        then().fintech_can_read_user_accounts_and_transactions(accountResourceId, bankId);
     }
 
     @Test
@@ -164,7 +162,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and()
                 .user_sees_account_and_list_transactions(firefoxDriver);
 
-        String  accountResourceId  = JsonPath.parse(afterLoginAndAuthorizeAccountGetAccountId(firefoxDriver, ANTON_BRUECKNER))
+        String  accountResourceId  = JsonPath.parse(afterLoginAndAuthorizeAccountGetAccountId(firefoxDriver))
                                              .read("$.accounts[0].resourceId");
 
         String bankId = JsonPath.parse(getBankProfile(firefoxDriver))
@@ -237,31 +235,26 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and()
                 .user_sees_account_and_list_transactions(firefoxDriver);
 
-        String  accountResourceId  = JsonPath.parse(afterLoginAndAuthorizeAccountGetAccountId(firefoxDriver, MAX_MUSTERMAN))
+        String  accountResourceId  = JsonPath.parse(afterLoginAndAuthorizeAccountGetAccountId(firefoxDriver))
                                              .read("$.accounts[0].resourceId");
 
         String bankId = JsonPath.parse(getBankProfile(firefoxDriver))
                                 .read("$(bankDescriptor[0].uuid)");
 
-        then().fintech_can_read_max_musterman_accounts_and_transactions(accountResourceId, bankId);
+        then().fintech_can_read_user_accounts_and_transactions(accountResourceId, bankId);
     }
 
-
     private String getBankProfile(FirefoxDriver firefoxDriver) {
-        given().enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri())
-               .fintech_points_to_fintechui_bank_search(smokeConfig.getFintechServerUri())  ;
+        given().enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri()) ;
 
-        when() .user_back_to_bank_search(firefoxDriver)
-               .user_looks_for_a_bank_in_the_bank_search_input_place(firefoxDriver)
-               .user_wait_for_the_result_in_bank_search(firefoxDriver);
+        when() .user_navigates_to_page(firefoxDriver);
 
         UserInformationResult result = then().fintech_get_bank_infos();
 
         return result.getRespContent();
     }
 
-    @SneakyThrows
-    private String afterLoginAndAuthorizeAccountGetAccountId(FirefoxDriver firefoxDriver, String username) {
+    private String afterLoginAndAuthorizeAccountGetAccountId(FirefoxDriver firefoxDriver) {
         given().enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri());
 
         when().user_sees_account_and_list_transactions(firefoxDriver);
