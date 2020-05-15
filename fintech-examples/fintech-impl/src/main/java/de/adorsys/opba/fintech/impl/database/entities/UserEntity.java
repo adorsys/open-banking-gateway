@@ -35,14 +35,9 @@ public class UserEntity {
     private String password;
     private String fintechUserId;
 
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<LoginEntity> logins = new ArrayList<>();
 
-    // each time user logs in, user gets new session
-    // might be for different devices or different tabs
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "userEntity")
-    private List<SessionEntity> sessions = new ArrayList<>();
 
     public void addLogin(OffsetDateTime time) {
         if (logins == null) {
