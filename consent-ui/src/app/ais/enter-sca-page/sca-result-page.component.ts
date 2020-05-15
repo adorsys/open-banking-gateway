@@ -7,44 +7,37 @@ import { ApiHeaders } from '../../api/api.headers';
 import { SessionService } from '../../common/session.service';
 
 @Component({
-  selector: 'consent-app-sca-result-page',
-  templateUrl: './sca-result-page.component.html',
-  styleUrls: ['./sca-result-page.component.scss']
+  selector: 'consent-app-enter-sca-page',
+  templateUrl: './enter-sca-page.component.html',
+  styleUrls: ['./enter-sca-page.component.scss']
 })
-export class ReportScaResultComponent implements OnInit {
+export class EnterScaComponent implements OnInit {
   public static ROUTE = 'sca-result';
 
-  reportScaResultForm: FormGroup;
   private authorizationSessionId: string;
   private redirectCode: string;
-
   wrongSca: boolean;
 
   constructor(
     private sessionService: SessionService,
     private consentAuthorizationService: ConsentAuthorizationService,
-    private activatedRoute: ActivatedRoute,
-    private formBuilder: FormBuilder
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    this.reportScaResultForm = this.formBuilder.group({
-      tan: ['', Validators.required]
-    });
-
     this.authorizationSessionId = this.activatedRoute.parent.snapshot.paramMap.get('authId');
     this.wrongSca = this.activatedRoute.snapshot.queryParamMap.get('wrong') === 'true';
     this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
   }
 
-  submit(): void {
+  onSubmit(sca: string): void {
     this.consentAuthorizationService
       .embeddedUsingPOST(
         this.authorizationSessionId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
         StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
         this.redirectCode,
-        { scaAuthenticationData: { SCA_CHALLENGE_DATA: this.reportScaResultForm.get('tan').value } },
+        { scaAuthenticationData: { SCA_CHALLENGE_DATA: sca } },
         'response'
       )
       .subscribe(res => {

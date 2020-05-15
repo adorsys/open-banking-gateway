@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { EntryPageComponent } from './entry-page/entry-page.component';
 import { EnterPinPageComponent } from './enter-pin-page/enter-pin-page.component';
-import { ReportScaResultComponent } from './sca-result-page/sca-result-page.component';
+import { EnterScaComponent } from './enter-sca-page/sca-result-page.component';
 import { ResultPageComponent } from './result-page/result-page.component';
 import { ScaSelectPageComponent } from './sca-select-page/sca-select-page.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
@@ -53,8 +53,8 @@ const routes: Routes = [
         component: ScaSelectPageComponent
       },
       {
-        path: ReportScaResultComponent.ROUTE,
-        component: ReportScaResultComponent
+        path: EnterScaComponent.ROUTE,
+        component: EnterScaComponent
       },
       {
         path: 'report-sca-result',

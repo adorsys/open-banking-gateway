@@ -1,1 +1,40 @@
-<p>sca-select-layout works!</p>
+<form (ngSubmit)="onSubmit()" [formGroup]="reportScaResultForm">
+  <div class="card">
+    <div class="card-body">
+      <section>
+        <h2>Input confirmation number</h2>
+        <p class="text-secondary">
+          We have sent you the confirmation number. Please check your email and fill in the field below.
+        </p>
+        <div class="form-group">
+          <label class="text-secondary" for="sca">SCA confirmation number:</label><br />
+          <input
+            [ngClass]="{
+              'is-invalid': reportScaResultForm.controls['sca'].touched && reportScaResultForm.controls['sca'].errors
+            }"
+            class="form-control"
+            formControlName="sca"
+            id="sca"
+            name="sca"
+            placeholder="Enter your number"
+            type="password"
+          />
+          <div
+            *ngIf="
+              reportScaResultForm.controls['sca'].touched && reportScaResultForm.controls['sca'].hasError('required')
+            "
+            class="invalid-feedback"
+          >
+            TAN is required
+          </div>
+          <div *ngIf="wrongSca" class="invalid-feedback d-block">
+            SCA challenge is incorrect
+          </div>
+        </div>
+      </section>
+      <button id="do_submit" type="submit" class="btn btn-primary w-100" [disabled]="reportScaResultForm.invalid">
+        Confirm
+      </button>
+    </div>
+  </div>
+</form>
