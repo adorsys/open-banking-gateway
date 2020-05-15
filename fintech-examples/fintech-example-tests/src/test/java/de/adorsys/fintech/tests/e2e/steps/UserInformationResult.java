@@ -8,12 +8,15 @@ import io.restassured.response.Response;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 import java.util.UUID;
 
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
+import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon.REDIRECT_CODE_QUERY;
 
 
 @JGivenStage
@@ -26,7 +29,7 @@ public class UserInformationResult extends AccountInformationResult {
 
     @SneakyThrows
     public UserInformationResult fintech_can_read_anton_brueckner_accounts_and_transactions(String antonBruecknerId, String bankId) {
-        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
+        ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .given()
                                                              .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                              .header(SESSION_COOKIE, UUID.randomUUID().toString())
@@ -39,13 +42,13 @@ public class UserInformationResult extends AccountInformationResult {
         return (UserInformationResult) self();
     }
 
-    public UserInformationResult fintech_can_read_max_musterman_accounts_and_transactions(String maxMustermanId, String bankId) {
-        ExtractableResponse<Response> response = withDefaultHeaders(MAX_MUSTERMAN)
+    public UserInformationResult fintech_can_read_user_accounts_and_transactions(String accountId, String bankId) {
+        ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .given()
                                                              .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                              .header(SESSION_COOKIE, UUID.randomUUID().toString())
                                                          .when()
-                                                             .get(BANKPROFILE_ENDPOINT + bankId + ACCOUNT + maxMustermanId)
+                                                             .get(BANKPROFILE_ENDPOINT + bankId + ACCOUNT + accountId)
                                                          .then()
                                                              .statusCode(HttpStatus.OK.value())
                                                              .extract();
@@ -67,11 +70,15 @@ public class UserInformationResult extends AccountInformationResult {
     public UserInformationResult fintech_get_bank_infos() {
         ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .given()
-                                                             .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                                                             .header(SESSION_COOKIE, UUID.randomUUID().toString())
+                                                         .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                                                         .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                                                         .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                                                         .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                                                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                          .when()
-                                                             .get(BANKPROFILE_ENDPOINT)
+                                                             .get(BANKPROFILE_ENDPOINT + KEYWORD)
                                                          .then()
+                                                             .statusCode(HttpStatus.OK.value())
                                                              .extract();
         this.respContent = response.body().asString();
         return (UserInformationResult) self();
@@ -80,15 +87,17 @@ public class UserInformationResult extends AccountInformationResult {
     public UserInformationResult fintech_get_user_infos() {
         ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .given()
+                                                         .header(X_REQUEST_ID, UUID.randomUUID().toString())
                                                          .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                                                         .header(SESSION_COOKIE, UUID.randomUUID().toString())
+                                                         .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                                                         .cookie("set-cookie", authSessionCookie)
+                                                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                          .when()
-                                                         .get(BANKPROFILE_ENDPOINT)
+                                                             .get(ACCOUNT_ENDPOINT)
                                                          .then()
-                                                         .statusCode(HttpStatus.OK.value())
-                                                         .extract();
+                                                             .statusCode(HttpStatus.OK.value())
+                                                             .extract();
         this.respContent = response.body().asString();
-
         return (UserInformationResult) self();
     }
 }
