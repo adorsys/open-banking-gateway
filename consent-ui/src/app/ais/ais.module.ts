@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { AngularIbanModule } from 'angular-iban';
 import { AisRoutingModule } from './ais-routing.module';
 import { ResultPageComponent } from './result-page/result-page.component';
-import { PasswordInputPageComponent } from './password-input-page/password-input-page.component';
+import { EnterPinPageComponent } from './enter-pin-page/enter-pin-page.component';
 import { EntryPageComponent } from './entry-page/entry-page.component';
 import { ScaSelectPageComponent } from './sca-select-page/sca-select-page.component';
 import { ReportScaResultComponent } from './sca-result-page/sca-result-page.component';
@@ -30,7 +30,7 @@ import { SharedModule } from '../common/shared.module';
 @NgModule({
   declarations: [
     ResultPageComponent,
-    PasswordInputPageComponent,
+    EnterPinPageComponent,
     EntryPageComponent,
     ScaSelectPageComponent,
     ReportScaResultComponent,

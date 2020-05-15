@@ -1,4 +1,4 @@
-<form (ngSubmit)="submit()" [formGroup]="passwordForm">
+<form (ngSubmit)="onSubmit()" [formGroup]="pinForm">
   <div class="card">
     <div class="card-body">
       <section>
@@ -7,7 +7,7 @@
         <div class="form-group">
           <label class="text-secondary" for="pin">Pin:</label><br />
           <input
-            [ngClass]="{ 'is-invalid': passwordForm.controls['pin'].touched && passwordForm.controls['pin'].errors }"
+            [ngClass]="{ 'is-invalid': pinForm.controls['pin'].touched && pinForm.controls['pin'].errors }"
             class="form-control"
             formControlName="pin"
             id="pin"
@@ -16,7 +16,7 @@
             type="password"
           />
           <div
-            *ngIf="passwordForm.controls['pin'].touched && passwordForm.controls['pin'].hasError('required')"
+            *ngIf="pinForm.controls['pin'].touched && pinForm.controls['pin'].hasError('required')"
             class="invalid-feedback"
           >
             Pin is required
@@ -27,7 +27,7 @@
         </div>
       </section>
 
-      <button id="do_submit" type="submit" class="btn btn-primary w-100" [disabled]="passwordForm.invalid">
+      <button id="do_submit" type="submit" class="btn btn-primary w-100" [disabled]="pinForm.invalid">
         Confirm
       </button>
     </div>
