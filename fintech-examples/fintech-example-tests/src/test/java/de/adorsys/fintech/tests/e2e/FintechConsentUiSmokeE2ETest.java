@@ -235,11 +235,12 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and()
                 .user_sees_account_and_list_transactions(firefoxDriver);
 
-        String accountResourceId = JsonPath.parse(afterLoginAndAuthorizeAccountGetAccountId(firefoxDriver))
-                                           .read("$.accounts[0].resourceId");
 
         String bankId = JsonPath.parse(getBankProfile(firefoxDriver))
                                 .read("$(bankDescriptor[0].uuid)");
+
+        String accountResourceId = JsonPath.parse(afterLoginAndAuthorizeAccountGetAccountId(firefoxDriver))
+                                           .read("$.accounts[0].resourceId");
 
         then().fintech_can_read_user_accounts_and_transactions(accountResourceId, bankId);
     }
