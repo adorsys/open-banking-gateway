@@ -14,8 +14,6 @@ import org.springframework.http.MediaType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
@@ -30,7 +28,11 @@ public class UserInformationResult extends AccountInformationResult {
     @ExpectedScenarioState
     private String respContent;
 
-    private static String xsrfToken;
+    @ExpectedScenarioState
+    protected String xsrfToken;
+
+    @ExpectedScenarioState
+    protected String sessionCookie;
 
     @SneakyThrows
     public UserInformationResult fintech_can_read_anton_brueckner_accounts_and_transactions(String accountId, String bankId) {
@@ -75,23 +77,19 @@ public class UserInformationResult extends AccountInformationResult {
     @SneakyThrows
     public UserInformationResult fintech_get_bank_infos() {
         UserInformationResult resp = login_and_get_cookies();
-        Pattern pattern = Pattern.compile("(?<=hashedXsrfToken=)\\d+");
-        Matcher matcher = pattern.matcher(resp.respContent);
-        xsrfToken = matcher.group();
-
         ExtractableResponse<Response> response = RestAssured
                                                          .given()
                                                          .header(X_REQUEST_ID, UUID.randomUUID().toString())
                                                          .header(X_XSRF_TOKEN, xsrfToken)
-                                                         .cookie("SESSION-COOKIE", resp.respContent)
+                                                         .queryParam("keyword", KEYWORD)
+                                                         .cookie("SESSION-COOKIE", sessionCookie)
                                                          .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                          .when()
-                                                             .get(BANKSEARCH_ENDPOINT + KEYWORD)
+                                                             .get(BANKSEARCH_ENDPOINT)
                                                          .then()
                                                              .statusCode(HttpStatus.OK.value())
                                                              .extract();
         this.respContent = response.body().asString();
-        xsrfToken = response.header(X_XSRF_TOKEN);
         return (UserInformationResult) self();
     }
 
@@ -111,7 +109,8 @@ public class UserInformationResult extends AccountInformationResult {
                                                          .then()
                                                          .statusCode(HttpStatus.OK.value())
                                                          .extract();
-        this.respContent = response.cookie("SESSION-COOKIE");
+        this.respContent = response.body().asString();
+        xsrfToken = response.header(X_XSRF_TOKEN);
         return (UserInformationResult) self();
     }
 
