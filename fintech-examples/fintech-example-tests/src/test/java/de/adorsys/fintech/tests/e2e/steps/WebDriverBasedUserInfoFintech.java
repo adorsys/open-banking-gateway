@@ -2,7 +2,6 @@ package de.adorsys.fintech.tests.e2e.steps;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
-import net.bytebuddy.utility.RandomString;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -22,9 +21,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.Ret
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFintech<SELF>> extends WebDriverBasedAccountInformation<SELF> {
 
-    static final String FINTECH_URI = "https://obg-dev-fintechui.cloud.adorsys.de";
-    static String username = USERNAME + RandomString.make().toLowerCase();
-    static String fintech_login = FINTECH_LOGIN + RandomString.make().toLowerCase();
 
     @Autowired
     @Qualifier(TEST_RETRY_OPS)
@@ -34,7 +30,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     private Duration timeout;
 
     public SELF user_opens_fintechui_login_page(WebDriver driver) {
-        driver.get(FINTECH_URI);
+        driver.get(FINTECH_UI_URI);
         return self();
     }
 

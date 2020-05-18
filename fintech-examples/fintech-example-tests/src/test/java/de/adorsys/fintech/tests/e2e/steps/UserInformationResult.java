@@ -11,6 +11,8 @@ import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
@@ -27,13 +29,13 @@ public class UserInformationResult extends AccountInformationResult {
     private String respContent;
 
     @SneakyThrows
-    public UserInformationResult fintech_can_read_anton_brueckner_accounts_and_transactions(String antonBruecknerId, String bankId) {
+    public UserInformationResult fintech_can_read_anton_brueckner_accounts_and_transactions(String accountId, String bankId) {
         ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .given()
                                                              .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                              .header(SESSION_COOKIE, UUID.randomUUID().toString())
                                                          .when()
-                                                             .get(BANKPROFILE_ENDPOINT + bankId + ACCOUNT + antonBruecknerId)
+                                                             .get(BANKPROFILE_ENDPOINT + bankId + ACCOUNT + accountId)
                                                          .then()
                                                              .statusCode(HttpStatus.OK.value())
                                                              .extract();
@@ -68,11 +70,14 @@ public class UserInformationResult extends AccountInformationResult {
 
     @SneakyThrows
     public UserInformationResult fintech_get_bank_infos() {
+        UserInformationResult resp = login_and_get_cookies();
+
+
         ExtractableResponse<Response> response = RestAssured
                                                          .given()
                                                          .header(X_REQUEST_ID, UUID.randomUUID().toString())
                                                          .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-//                                                         .cookies("set-cookies", authSessionCookie)
+                                                         .header("set-cookie", resp)
                                                          .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                          .when()
                                                              .get(BANKSEARCH_ENDPOINT + KEYWORD)
@@ -83,13 +88,33 @@ public class UserInformationResult extends AccountInformationResult {
         return (UserInformationResult) self();
     }
 
+    public UserInformationResult login_and_get_cookies() {
+
+        Map<String, String> request = new HashMap<>();
+        request.put("password", "1234");
+        request.put("username", fintech_login);
+
+        ExtractableResponse<Response> response = RestAssured
+                                                         .given()
+                                                         .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                                                         .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                                                         .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                         .body(request)
+                                                         .when()
+                                                         .post(FINTECH_SERVER_LOGIN)
+                                                         .then()
+                                                         .statusCode(HttpStatus.OK.value())
+                                                         .extract();
+        this.respContent = response.cookie("set-cookie");
+        return (UserInformationResult) self();
+    }
+
     public UserInformationResult fintech_get_user_infos() {
         ExtractableResponse<Response> response = RestAssured
                                                          .given()
                                                          .header(X_REQUEST_ID, UUID.randomUUID().toString())
                                                          .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                          .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-//                                                         .cookie("set-cookie", authSessionCookie)
                                                          .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                          .when()
                                                              .get(ACCOUNT_ENDPOINT)
