@@ -75,7 +75,7 @@ public class UserInformationResult extends AccountInformationResult {
         UserInformationResult resp = login_and_get_cookies();
         Pattern pattern = Pattern.compile("hashedXsrfToken=(.*?)");
         Matcher matcher = pattern.matcher(resp.respContent);
-        String xsrfToken = matcher.group("hashedXsrfToken");
+        String xsrfToken = matcher.group(2);
 
         ExtractableResponse<Response> response = RestAssured
                                                          .given()
