@@ -73,9 +73,9 @@ public class UserInformationResult extends AccountInformationResult {
     @SneakyThrows
     public UserInformationResult fintech_get_bank_infos() {
         UserInformationResult resp = login_and_get_cookies();
-        Pattern pattern = Pattern.compile("hashedXsrfToken=(.*?)");
+        Pattern pattern = Pattern.compile("(?<=hashedXsrfToken=)\\d+");
         Matcher matcher = pattern.matcher(resp.respContent);
-        String xsrfToken = matcher.group(2);
+        String xsrfToken = matcher.group();
 
         ExtractableResponse<Response> response = RestAssured
                                                          .given()
