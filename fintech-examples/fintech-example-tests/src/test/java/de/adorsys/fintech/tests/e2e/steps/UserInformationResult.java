@@ -77,13 +77,15 @@ public class UserInformationResult extends AccountInformationResult {
     @SneakyThrows
     public UserInformationResult fintech_get_bank_infos() {
         UserInformationResult resp = login_and_get_cookies();
+        Map<String, String> request = new HashMap<>();
+        request.put("username", fintech_login);
         ExtractableResponse<Response> response = RestAssured
                                                          .given()
                                                          .header(X_REQUEST_ID, UUID.randomUUID().toString())
                                                          .header(X_XSRF_TOKEN, xsrfToken)
                                                          .queryParam("keyword", KEYWORD)
-                                                         .cookie("SESSION-COOKIE", sessionCookie)
                                                          .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                                         .body(request)
                                                          .when()
                                                              .get(BANKSEARCH_ENDPOINT)
                                                          .then()
@@ -111,6 +113,7 @@ public class UserInformationResult extends AccountInformationResult {
                                                          .extract();
         this.respContent = response.body().asString();
         xsrfToken = response.header(X_XSRF_TOKEN);
+        sessionCookie = response.cookie("SESSION-COOKIE");
         return (UserInformationResult) self();
     }
 
