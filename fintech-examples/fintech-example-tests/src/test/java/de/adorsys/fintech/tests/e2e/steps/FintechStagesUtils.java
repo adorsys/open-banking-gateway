@@ -16,7 +16,7 @@ public class FintechStagesUtils {
     public static final String SESSION_COOKIE = "sessionCookie";
     public static final String ACCOUNT = "/account/";
     public static final String BANKPROFILE_ENDPOINT = "https://obg-dev-fintechserver.cloud.adorsys.de/v1/search/bankProfile?bankId=";
-    public static final String BANKSEARCH_ENDPOINT = "https://obg-dev-fintechserver.cloud.adorsys.de/v1/search/bankSearch?keyword=";
+    public static final String BANKSEARCH_ENDPOINT = "https://obg-dev-fintechserver.cloud.adorsys.de/v1/search/bankSearch";
     public static final String BANKSEARCH_LOGIN = "/login";
     public static final String KEYWORD = "adorsys xs2a";
     public static final String ACCOUNT_ENDPOINT = "https://obg-dev-fintechserver.cloud.adorsys.de/v1/ais/banks/{bank-id}/accounts";
