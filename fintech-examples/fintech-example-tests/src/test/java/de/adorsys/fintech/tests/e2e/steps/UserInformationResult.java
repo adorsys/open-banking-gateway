@@ -30,6 +30,8 @@ public class UserInformationResult extends AccountInformationResult {
     @ExpectedScenarioState
     private String respContent;
 
+    private static String xsrfToken;
+
     @SneakyThrows
     public UserInformationResult fintech_can_read_anton_brueckner_accounts_and_transactions(String accountId, String bankId) {
         ExtractableResponse<Response> response = withDefaultHeaders()
@@ -75,7 +77,7 @@ public class UserInformationResult extends AccountInformationResult {
         UserInformationResult resp = login_and_get_cookies();
         Pattern pattern = Pattern.compile("(?<=hashedXsrfToken=)\\d+");
         Matcher matcher = pattern.matcher(resp.respContent);
-        String xsrfToken = matcher.group();
+        xsrfToken = matcher.group();
 
         ExtractableResponse<Response> response = RestAssured
                                                          .given()
@@ -89,6 +91,7 @@ public class UserInformationResult extends AccountInformationResult {
                                                              .statusCode(HttpStatus.OK.value())
                                                              .extract();
         this.respContent = response.body().asString();
+        xsrfToken = response.header(X_XSRF_TOKEN);
         return (UserInformationResult) self();
     }
 
