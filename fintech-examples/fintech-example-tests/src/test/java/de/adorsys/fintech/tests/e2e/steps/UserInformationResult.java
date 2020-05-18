@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
@@ -71,13 +73,15 @@ public class UserInformationResult extends AccountInformationResult {
     @SneakyThrows
     public UserInformationResult fintech_get_bank_infos() {
         UserInformationResult resp = login_and_get_cookies();
-
+        Pattern pattern = Pattern.compile("hashedXsrfToken=(.*?)");
+        Matcher matcher = pattern.matcher(resp.respContent);
+        String xsrfToken = matcher.group("hashedXsrfToken");
 
         ExtractableResponse<Response> response = RestAssured
                                                          .given()
                                                          .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                                                         .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                                                         .header("set-cookie", resp)
+                                                         .header(X_XSRF_TOKEN, xsrfToken)
+                                                         .cookie("SESSION-COOKIE", resp.respContent)
                                                          .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                          .when()
                                                              .get(BANKSEARCH_ENDPOINT + KEYWORD)
@@ -89,7 +93,6 @@ public class UserInformationResult extends AccountInformationResult {
     }
 
     public UserInformationResult login_and_get_cookies() {
-
         Map<String, String> request = new HashMap<>();
         request.put("password", "1234");
         request.put("username", fintech_login);
@@ -105,7 +108,7 @@ public class UserInformationResult extends AccountInformationResult {
                                                          .then()
                                                          .statusCode(HttpStatus.OK.value())
                                                          .extract();
-        this.respContent = response.cookie("set-cookie");
+        this.respContent = response.cookie("SESSION-COOKIE");
         return (UserInformationResult) self();
     }
 
