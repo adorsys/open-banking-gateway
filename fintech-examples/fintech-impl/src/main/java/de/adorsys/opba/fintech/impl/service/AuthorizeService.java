@@ -2,8 +2,10 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
+import de.adorsys.opba.fintech.impl.database.entities.LoginEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
+import de.adorsys.opba.fintech.impl.database.repositories.LoginRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.SessionRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
@@ -18,7 +20,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +38,7 @@ public class AuthorizeService {
 
     private final UserRepository userRepository;
     private final SessionRepository sessionRepository;
+    private final LoginRepository loginRepository;
     private final RestRequestContext restRequestContext;
     private final CookieConfigProperties cookieConfigProperties;
 
@@ -62,15 +64,14 @@ public class AuthorizeService {
             return Optional.empty();
         }
 
+        UserEntity userEntity = optionalUserEntity.get();
         // password is ok, so log in
-        log.info("login for user {}", optionalUserEntity.get().getLoginUserName());
+        log.info("login for user {} as password check is ok", userEntity.getLoginUserName());
 
         // new session is created, even if an old one exists
-        SessionEntity sessionEntity = new SessionEntity(optionalUserEntity.get(), cookieConfigProperties.getSessioncookie().getMaxAge());
+        SessionEntity sessionEntity = new SessionEntity(userEntity, cookieConfigProperties.getSessioncookie().getMaxAge());
         sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(xsrfToken));
-        optionalUserEntity.get().addLogin(OffsetDateTime.now());
-//        optionalUserEntity.get().getSessions().add(sessionEntity);
-
+        loginRepository.save(new LoginEntity(userEntity));
         sessionRepository.save(sessionEntity);
         return Optional.of(sessionEntity);
     }
@@ -134,9 +135,12 @@ public class AuthorizeService {
     }
 
     private void generateUserIfUserDoesNotExistYet(LoginRequest loginRequest) {
-        if (userRepository.findById(loginRequest.getUsername()).isPresent()) {
+        if (userRepository.existsById(loginRequest.getUsername())) {
+            log.info("User {} exists ", loginRequest.getUsername());
             return;
         }
+        log.info("create on the fly user {}", loginRequest.getUsername());
+
         userRepository.save(
                 UserEntity.builder()
                         .loginUserName(loginRequest.getUsername())

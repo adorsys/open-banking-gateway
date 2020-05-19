@@ -34,7 +34,7 @@ public class HandleAcceptedService {
 
     ResponseEntity handleAccepted(String fintechRedirectCode, SessionEntity sessionEntity, HttpHeaders headers) {
         sessionEntity.setAuthId(headers.getFirst(TPP_AUTH_ID));
-        sessionEntity.setServiceSessionId(StringUtils.isBlank(headers.getFirst(SERVICE_SESSION_ID)) ? null : UUID.fromString(headers.getFirst(SERVICE_SESSION_ID)));
+        sessionEntity.setTppServiceSessionId(StringUtils.isBlank(headers.getFirst(SERVICE_SESSION_ID)) ? null : UUID.fromString(headers.getFirst(SERVICE_SESSION_ID)));
 
         URI location = headers.getLocation();
         log.info("call was accepted, but redirect has to be done for authID:{} location:{}", sessionEntity.getAuthId(), location);

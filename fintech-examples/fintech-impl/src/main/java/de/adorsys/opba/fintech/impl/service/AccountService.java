@@ -7,27 +7,22 @@ import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
-import de.adorsys.opba.fintech.impl.service.mocks.TppListAccountsMock;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP_UTC;
-import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
 
 @Service
 @Slf4j
 public class AccountService extends HandleAcceptedService {
-    @Value("${mock.tppais.listaccounts:false}")
-    String mockTppAisString;
-
     private final FintechUiConfig uiConfig;
     private final TppAisClient tppAisClient;
     private RestRequestContext restRequestContext;
@@ -50,10 +45,6 @@ public class AccountService extends HandleAcceptedService {
     public ResponseEntity listAccounts(SessionEntity sessionEntity,
                                        String fintechOkUrl, String fintechNOKUrl,
                                        String bankID) {
-        if (mockTppAisString != null && mockTppAisString.equalsIgnoreCase("true") ? true : false) {
-            log.warn("Mocking call to list accounts");
-            return new ResponseEntity<>(new TppListAccountsMock().getAccountList(), HttpStatus.OK);
-        }
 
         final String fintechRedirectCode = UUID.randomUUID().toString();
         ResponseEntity accounts = readOpbaResponse(bankID, sessionEntity, fintechRedirectCode);
@@ -75,7 +66,7 @@ public class AccountService extends HandleAcceptedService {
     private ResponseEntity readOpbaResponse(String bankID, SessionEntity sessionEntity, String redirectCode) {
         UUID xRequestId = UUID.fromString(restRequestContext.getRequestId());
         ResponseEntity accounts;
-        if (null != sessionEntity.getServiceSessionId() && sessionEntity.getConsentConfirmed()) {
+        if (null != sessionEntity.getTppServiceSessionId() && sessionEntity.getConsentConfirmed()) {
             accounts = tppAisClient.getAccounts(
                     tppProperties.getServiceSessionPassword(),
                     sessionEntity.getUserEntity().getLoginUserName(),
@@ -88,7 +79,7 @@ public class AccountService extends HandleAcceptedService {
                     COMPUTE_FINTECH_ID,
                     bankID,
                     null,
-                    sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null);
+                    sessionEntity.getConsentConfirmed() ? sessionEntity.getTppServiceSessionId() : null);
         } else {
             // FIXME: HACKETTY-HACK - force consent retrieval for transactions on ALL accounts
             // Should be superseded and fixed with
@@ -106,7 +97,7 @@ public class AccountService extends HandleAcceptedService {
                     COMPUTE_FINTECH_ID,
                     bankID,
                     null,
-                    sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null,
+                    sessionEntity.getConsentConfirmed() ? sessionEntity.getTppServiceSessionId() : null,
                     null, null, null, null, null);
         }
         return accounts;

@@ -4,7 +4,9 @@ import de.adorsys.opba.fintech.api.model.generated.InlineResponse200;
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.api.model.generated.UserProfile;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAuthorizationApi;
+import de.adorsys.opba.fintech.impl.database.entities.LoginEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
+import de.adorsys.opba.fintech.impl.database.repositories.LoginRepository;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.ConsentService;
@@ -17,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,28 +36,34 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
     private final RestRequestContext restRequestContext;
     private final ConsentService consentService;
     private final CookieConfigProperties cookieConfigProperties;
+    private final LoginRepository loginRepository;
 
     @Override
     public ResponseEntity<InlineResponse200> loginPOST(LoginRequest loginRequest, UUID xRequestID) {
         log.debug("loginPost is called for {}", loginRequest.getUsername());
         String xsrfToken = UUID.randomUUID().toString();
-        Optional<SessionEntity> optionalUserEntity = authorizeService.login(loginRequest, xsrfToken);
-        if (optionalUserEntity.isPresent()) {
-            SessionEntity sessionEntity = optionalUserEntity.get();
-
-            InlineResponse200 response = new InlineResponse200();
-            UserProfile userProfile = new UserProfile();
-            userProfile.setName(sessionEntity.getUserEntity().getLoginUserName());
-            if (!sessionEntity.getUserEntity().getLogins().isEmpty()) {
-                userProfile.setLastLogin(sessionEntity.getUserEntity().getLastLogin());
-            }
-            response.setUserProfile(userProfile);
-
-            HttpHeaders responseHeaders = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), optionalUserEntity.get(),
-                    xsrfToken, cookieConfigProperties, SessionCookieType.REGULAR);
-            return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
+        Optional<SessionEntity> optionalSessionEntity = authorizeService.login(loginRequest, xsrfToken);
+        if (!optionalSessionEntity.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        SessionEntity sessionEntity = optionalSessionEntity.get();
+        InlineResponse200 response = new InlineResponse200();
+        UserProfile userProfile = new UserProfile();
+        userProfile.setName(sessionEntity.getUserEntity().getLoginUserName());
+        List<LoginEntity> logins = new ArrayList<>();
+        loginRepository.findByUserEntityOrderByLoginTimeDesc(sessionEntity.getUserEntity()).forEach(logins::add);
+        if (logins.size() > 1) {
+            userProfile.setLastLogin(logins.get(1).getLoginTime());
+            log.info("last login was {}", userProfile.getLastLogin());
+        } else {
+            log.info("this was very first login");
+        }
+        response.setUserProfile(userProfile);
+
+        HttpHeaders responseHeaders = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), optionalSessionEntity.get(),
+                xsrfToken, cookieConfigProperties, SessionCookieType.REGULAR);
+        return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
     }
 
     @Override
@@ -65,7 +75,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
         }
 
         if (okOrNotOk.equals(OkOrNotOk.OK) && consentService.confirmConsent(authId, xRequestID)) {
-                authorizeService.getSession().setConsentConfirmed(true);
+            authorizeService.getSession().setConsentConfirmed(true);
         }
         return redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk);
     }
