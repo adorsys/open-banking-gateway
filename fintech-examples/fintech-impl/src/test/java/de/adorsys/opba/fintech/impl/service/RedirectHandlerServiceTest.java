@@ -98,12 +98,13 @@ class RedirectHandlerServiceTest {
     @Test
     void doRedirect_success() {
         // given
-        when(authorizeService.modifySessionEntityAndCreateNewAuthHeader(any(), any(), any(), any(), any()))
+        when(authorizeService.modifySessionEntityAndCreateNewAuthHeader(any(), any(), any(), any(), any(), any()))
                 .thenReturn(new HttpHeaders());
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.of(REDIRECT_URLS_ENTITY));
         when(authorizeService.getSession()).thenReturn(sessionEntity);
         when(authorizeService.isAuthorized()).thenReturn(true);
-        when(sessionEntity.getAuthId()).thenReturn(AUTH_ID_VALUE);
+        //  TODO PETER
+        // when(consentEntity.getAuthId()).thenReturn(AUTH_ID_VALUE);
 
         // when
         ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE, OkOrNotOk.OK);
@@ -120,7 +121,7 @@ class RedirectHandlerServiceTest {
     @Test
     void doRedirect_redirectCodeIsEmpty() {
         // when
-        when(authorizeService.modifySessionEntityAndCreateNewAuthHeader(any(), any(), any(), any(), any()))
+        when(authorizeService.modifySessionEntityAndCreateNewAuthHeader(any(), any(), any(), any(), any(), any()))
                 .thenReturn(new HttpHeaders());
         ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE, OkOrNotOk.OK);
 
@@ -137,7 +138,7 @@ class RedirectHandlerServiceTest {
     @Test
     void doRedirect_notOk() {
         // when
-        when(authorizeService.modifySessionEntityAndCreateNewAuthHeader(any(), any(), any(), any(), any()))
+        when(authorizeService.modifySessionEntityAndCreateNewAuthHeader(any(), any(), any(), any(), any(), any()))
                 .thenReturn(new HttpHeaders());
         ResponseEntity responseEntity = redirectHandlerService.doRedirect(null, REDIRECT_CODE_VALUE, OkOrNotOk.NOT_OK);
 
@@ -153,7 +154,7 @@ class RedirectHandlerServiceTest {
 
     @Test
     void doRedirect_redirectCodeIsWrong() {
-        when(authorizeService.modifySessionEntityAndCreateNewAuthHeader(any(), any(), any(), any(), any()))
+        when(authorizeService.modifySessionEntityAndCreateNewAuthHeader(any(), any(), any(), any(), any(), any()))
                 .thenReturn(new HttpHeaders());
 
         // given

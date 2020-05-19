@@ -23,7 +23,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.OffsetDateTime;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -33,7 +32,6 @@ import java.util.UUID;
 public class SessionEntity {
     public SessionEntity(UserEntity userEntity, int maxAge) {
         this.validUntil = OffsetDateTime.now().minusSeconds(maxAge);
-        this.consentConfirmed = false;
         this.userEntity = userEntity;
     }
 
@@ -44,17 +42,10 @@ public class SessionEntity {
 
     @Column(nullable = false)
     private OffsetDateTime validUntil;
-    private String authId;
     private String sessionCookieValue;
-    private UUID tppServiceSessionId;
 
-    // each time user logs in, user gets new session
-    // might be for different devices or different tabs
     @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity userEntity;
-
-    @Column(nullable = false)
-    private Boolean consentConfirmed;
 
     @SneakyThrows
     public static String createSessionCookieValue(String xsrfToken) {
