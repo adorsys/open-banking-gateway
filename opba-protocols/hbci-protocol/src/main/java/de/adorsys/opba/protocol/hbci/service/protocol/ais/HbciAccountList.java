@@ -55,8 +55,8 @@ public class HbciAccountList extends ValidatedExecution<HbciContext> {
         bankInfo.setPinTanAddress("http://localhost:8090/hbci-mock/");
         bankInfo.setPinTanVersion(HBCI_300);
         bankInfo.setBic(System.getProperty("bic"));
-        HBCIUtils.addBankInfo(bankInfo);
         onlineBankingService = new HbciBanking(new HBCIProduct("product", "300"), sysIdExpirationTimeMs, updExpirationTimeMs);
+        HBCIUtils.addBankInfo(bankInfo);
     }
 
     @Override
