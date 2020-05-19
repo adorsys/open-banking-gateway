@@ -39,25 +39,30 @@ public class HbciContext extends BaseContext {
      */
     private String fintechRedirectUriNok;
 
+    /**
+     * Indicates whether TAN challenge was required.
+     */
+    private boolean tanChallengeRequired;
+
     @JsonIgnore
-    public String getPsuPassword() {
+    public String getPsuPin() {
         TransientDataEntry entry = this.transientStorage().get();
-        return null != entry ? entry.getPsuPassword() : null;
+        return null != entry ? entry.getPsuPin() : null;
     }
 
     @JsonIgnore
-    public String getLastScaChallenge() {
+    public String getPsuTan() {
         TransientDataEntry entry = this.transientStorage().get();
-        return null != entry ? entry.getScaChallengeResult() : null;
+        return null != entry ? entry.getTanValue() : null;
     }
 
     @JsonIgnore
-    public void setPsuPassword(String psuPassword) {
+    public void setPsuPin(String psuPassword) {
         this.transientStorage().set(new TransientDataEntry(psuPassword, null));
     }
 
     @JsonIgnore
-    public void setLastScaChallenge(String scaChallengeResult) {
+    public void setPsuTan(String scaChallengeResult) {
         this.transientStorage().set(new TransientDataEntry(null, scaChallengeResult));
     }
 }
