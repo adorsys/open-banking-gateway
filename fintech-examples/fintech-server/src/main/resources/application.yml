@@ -53,7 +53,7 @@ spring:
       naming:
         physical-strategy: de.adorsys.opba.fintech.impl.database.hibernate.PrefixAndSnakeCasePhysicalNamingStrategy
       # DDL is handled by Liquibase
-      ddl-auto: create-drop
+      ddl-auto: validate
 
 fintech-ui:
   host: http://localhost:4444

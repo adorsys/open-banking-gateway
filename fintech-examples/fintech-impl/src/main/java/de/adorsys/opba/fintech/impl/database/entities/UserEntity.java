@@ -8,14 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Contains the "static data" of the user
@@ -34,28 +28,5 @@ public class UserEntity {
     private String loginUserName;
     private String password;
     private String fintechUserId;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<LoginEntity> logins = new ArrayList<>();
-
-
-    public void addLogin(OffsetDateTime time) {
-        if (logins == null) {
-            logins = new ArrayList<>();
-        }
-        logins.add(LoginEntity.builder().loginTime(time).build());
-    }
-
-    public OffsetDateTime getLastLogin() {
-        if (logins.isEmpty()) {
-            throw new RuntimeException("PROGRAMMING ERROR: at least one successful login must be known yet");
-        }
-        int size = logins.size();
-        if (size == 1) {
-            return null;
-        }
-        return logins.get(size - 1).getLoginTime();
-    }
-
 
 }

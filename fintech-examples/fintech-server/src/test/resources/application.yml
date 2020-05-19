@@ -23,17 +23,15 @@ spring:
     username: SA
     password:
     driver-class-name: org.h2.Driver
+  jpa:
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
   liquibase:
+    enabled: false
     change-log: classpath:migration/master.xml
     parameters:
       table-prefix: opb_
-  jpa:
-    hibernate:
-      naming:
-        physical-strategy:
-          de.adorsys.opba.fintech.impl.database.hibernate.PrefixAndSnakeCasePhysicalNamingStrategy
-          # DDL is handled by Liquibase
-      ddl-auto: create-drop
 
 fintech-ui:
   host: http://localhost:4444

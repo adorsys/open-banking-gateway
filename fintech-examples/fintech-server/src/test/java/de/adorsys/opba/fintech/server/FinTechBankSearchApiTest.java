@@ -15,6 +15,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
@@ -73,6 +74,9 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    @AfterEach
+    public void finish() {
+    }
     @Autowired
     protected MockMvc mvc;
 
@@ -85,6 +89,7 @@ class FinTechBankSearchApiTest extends FinTechApiBaseTest {
     @Test
     @SneakyThrows
     public void loginPostUnAuthorized() {
+        plainauth("peter", "1234");
         MvcResult result = plainauth("peter", "12345");
         assertEquals(HttpStatus.UNAUTHORIZED.value(), result.getResponse().getStatus());
         assertNull(result.getResponse().getCookie("XSRF-TOKEN"));

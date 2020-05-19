@@ -1,8 +1,10 @@
 package de.adorsys.opba.fintech.impl.database;
 
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
+import de.adorsys.opba.fintech.impl.database.entities.LoginEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
+import de.adorsys.opba.fintech.impl.database.repositories.LoginRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.SessionRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +14,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +36,10 @@ public class DatabaseTest {
 
     @Autowired
     protected SessionRepository sessionRepository;
+
+    @Autowired
+    protected LoginRepository loginRepository;
+
     @Test
     public void testSimpleSearch() {
         createUserEntity("peter", "1");
@@ -52,10 +57,31 @@ public class DatabaseTest {
     }
 
     @Test
+    public void testLogins() {
+        assertFalse(userRepository.findById("peter").isPresent());
+        assertFalse(userRepository.existsById("peter"));
+        createUserEntity("peter", "1");
+        UserEntity userEntity = userRepository.findById("peter").get();
+
+        loginRepository.save(new LoginEntity(userEntity));
+        loginRepository.save(new LoginEntity(userEntity));
+        loginRepository.save(new LoginEntity(userEntity));
+
+        createUserEntity("maksym", "1");
+        UserEntity userEntity2 = userRepository.findById("peter").get();
+
+        loginRepository.save(new LoginEntity(userEntity2));
+        loginRepository.save(new LoginEntity(userEntity2));
+        loginRepository.save(new LoginEntity(userEntity2));
+
+    }
+
+    @Test
     public void testDeleteInOneTx() {
         createUserEntity("peter", "1");
         UserEntity userEntity = userRepository.findById("peter").get();
         sessionRepository.deleteAll(sessionRepository.findByUserEntity(userEntity));
+        loginRepository.deleteAll(loginRepository.findByUserEntityOrderByLoginTimeDesc(userEntity));
         userRepository.delete(userEntity);
     }
 
@@ -67,8 +93,9 @@ public class DatabaseTest {
 
         // find from users side
         List<SessionEntity> petersSessions = new ArrayList<>();
-        sessionRepository.findByUserEntity(userEntity).forEach(petersSessions::add);
-        assertArrayEquals(sessionCookieValues,petersSessions.stream().map(SessionEntity::getSessionCookieValue).collect(Collectors.toList()).toArray());
+        //sessionRepository.findByUserEntity(userEntity).forEach(petersSessions::add);
+        sessionRepository.findByUserEntityLoginUserName("peter").forEach(petersSessions::add);
+        // assertArrayEquals(sessionCookieValues,petersSessions.stream().map(SessionEntity::getSessionCookieValue).collect(Collectors.toList()).toArray());
 
         List<SessionEntity> sessions = new ArrayList<>();
         sessionRepository.findAll().forEach(sessions::add);
@@ -105,7 +132,7 @@ public class DatabaseTest {
         for (String sessionCookieValue:sessionCookieValues) {
             SessionEntity sessionEntity = new SessionEntity(userEntity, 10);
             sessionEntity.setSessionCookieValue(sessionCookieValue);
-            userEntity.addLogin(OffsetDateTime.now());
+            loginRepository.save(new LoginEntity(userEntity));
             sessionRepository.save(sessionEntity);
         }
     }

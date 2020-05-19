@@ -133,7 +133,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
 
     protected void setServiceSessionId(UUID serviceSessionId) {
         SessionEntity session = sessionRepository.findBySessionCookieValue(restRequestContext.getSessionCookieValue()).get();
-        session.setServiceSessionId(serviceSessionId);
+        session.setTppServiceSessionId(serviceSessionId);
         session.setConsentConfirmed(true);
         sessionRepository.save(session);
     }

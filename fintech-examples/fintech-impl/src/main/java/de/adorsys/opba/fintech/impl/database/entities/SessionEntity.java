@@ -7,15 +7,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Hex;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -26,23 +28,25 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@ToString
 @Slf4j
 @NoArgsConstructor
 public class SessionEntity {
     public SessionEntity(UserEntity userEntity, int maxAge) {
-        this.serviceSessionId = UUID.randomUUID();
         this.validUntil = OffsetDateTime.now().minusSeconds(maxAge);
         this.consentConfirmed = false;
         this.userEntity = userEntity;
     }
 
     @Id
-    private UUID serviceSessionId;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_generator")
+    @SequenceGenerator(name = "session_generator", sequenceName = "session_id_seq")
+    private Long id;
+
     @Column(nullable = false)
     private OffsetDateTime validUntil;
     private String authId;
     private String sessionCookieValue;
+    private UUID tppServiceSessionId;
 
     // each time user logs in, user gets new session
     // might be for different devices or different tabs
