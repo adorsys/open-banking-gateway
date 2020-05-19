@@ -8,13 +8,10 @@ import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.mapper.ManualMapper;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
-import de.adorsys.opba.fintech.impl.service.mocks.TppListTransactionsMock;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,16 +19,13 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP_UTC;
-import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
 
 @Service
 @Slf4j
 public class TransactionService extends HandleAcceptedService {
-    @Value("${mock.tppais.listtransactions:false}")
-    String mockTppAisString;
-
     private final FintechUiConfig uiConfig;
     private final TppAisClient tppAisClient;
 
@@ -62,10 +56,6 @@ public class TransactionService extends HandleAcceptedService {
                                            String bookingStatus,
                                            Boolean deltaList) {
 
-        if (BooleanUtils.toBoolean(mockTppAisString)) {
-            log.warn("mocking call for list transactions");
-            return new ResponseEntity<>(ManualMapper.fromTppToFintech(new TppListTransactionsMock().getTransactionsResponse()), HttpStatus.OK);
-        }
         String fintechRedirectCode = UUID.randomUUID().toString();
 
         ResponseEntity<TransactionsResponse> transactions = tppAisClient.getTransactions(
@@ -81,7 +71,7 @@ public class TransactionService extends HandleAcceptedService {
                 COMPUTE_FINTECH_ID,
                 bankId,
                 null,
-                sessionEntity.getConsentConfirmed() ? sessionEntity.getServiceSessionId() : null,
+                sessionEntity.getConsentConfirmed() ? sessionEntity.getTppServiceSessionId() : null,
                 dateFrom,
                 dateTo,
                 entryReferenceFrom,
