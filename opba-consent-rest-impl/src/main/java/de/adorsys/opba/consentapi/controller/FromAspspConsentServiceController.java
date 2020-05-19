@@ -1,6 +1,6 @@
 package de.adorsys.opba.consentapi.controller;
 
-import de.adorsys.opba.consentapi.resource.generated.ConsentAuthorizationApi;
+import de.adorsys.opba.consentapi.resource.generated.FromAspspConsentAuthorizationApi;
 import de.adorsys.opba.consentapi.service.FromAspspMapper;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.fromaspsp.FromAspspRequest;
@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequiredArgsConstructor
-public class FromAspspConsentServiceController implements ConsentAuthorizationApi {
+public class FromAspspConsentServiceController implements FromAspspConsentAuthorizationApi {
 
     private final FromAspspMapper aspspMapper;
     private final FromAspspRedirectHandler fromAspspRedirectHandler;
