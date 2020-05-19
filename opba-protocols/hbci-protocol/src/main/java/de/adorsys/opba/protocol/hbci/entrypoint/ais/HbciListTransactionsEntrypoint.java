@@ -65,7 +65,7 @@ public class HbciListTransactionsEntrypoint implements ListTransactions {
 
     protected TransactionListHbciContext prepareContext(ServiceContext<ListTransactionsRequest> serviceContext) {
         TransactionListHbciContext context = mapper.map(serviceContext.getRequest());
-        context.setAction(ProtocolAction.LIST_ACCOUNTS);
+        context.setAction(ProtocolAction.LIST_TRANSACTIONS);
         extender.extend(context, serviceContext);
         return context;
     }
