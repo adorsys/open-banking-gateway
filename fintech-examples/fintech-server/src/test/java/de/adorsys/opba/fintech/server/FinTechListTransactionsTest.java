@@ -32,7 +32,7 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
     @SneakyThrows
     public void testListTransactionsForOk() {
         BankProfileTestResult  result= getBankProfileTestResult();
-        setServiceSessionId(UUID.randomUUID());
+        createConsent(UUID.randomUUID().toString(), UUID.randomUUID());
         List<String> accountIDs = listAccountsForOk(result);
         when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
                                                    any(), any(), any(), any(), any(), any(), any(), any()))
@@ -51,7 +51,7 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
                 .build();
 
         BankProfileTestResult result = getBankProfileTestResult();
-        setServiceSessionId(UUID.randomUUID());
+        createConsent(UUID.randomUUID().toString(), UUID.randomUUID());
         when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
                                                    any(), any(), any(), any(), any(), any(), any(), any()))
                 .thenReturn(accepted);
