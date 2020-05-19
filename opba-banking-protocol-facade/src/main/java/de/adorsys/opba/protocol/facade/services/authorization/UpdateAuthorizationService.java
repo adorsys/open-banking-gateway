@@ -20,11 +20,11 @@ import static de.adorsys.opba.protocol.facade.services.context.ServiceContextPro
 public class UpdateAuthorizationService extends FacadeService<AuthorizationRequest, UpdateAuthBody, UpdateAuthorization> {
 
     public UpdateAuthorizationService(
-        Map<String, ? extends UpdateAuthorization> actionProviders,
-        ProtocolSelector selector,
-        @Qualifier(FINTECH_CONTEXT_PROVIDER) ServiceContextProvider provider,
-        ProtocolResultHandler handler,
-        TransactionTemplate txTemplate) {
+            Map<String, ? extends UpdateAuthorization> actionProviders,
+            ProtocolSelector selector,
+            @Qualifier(FINTECH_CONTEXT_PROVIDER) ServiceContextProvider provider,
+            ProtocolResultHandler handler,
+            TransactionTemplate txTemplate) {
         super(UPDATE_AUTHORIZATION, actionProviders, selector, provider, handler, txTemplate);
     }
 }
