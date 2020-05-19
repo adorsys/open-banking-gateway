@@ -10,6 +10,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TransientDataEntry {
 
-    private final String psuPassword;
-    private final String scaChallengeResult;
+    private final String psuPin;
+    private final String tanValue;
 }
