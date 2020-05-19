@@ -21,7 +21,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.Ret
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFintech<SELF>> extends WebDriverBasedAccountInformation<SELF> {
 
-
     @Autowired
     @Qualifier(TEST_RETRY_OPS)
     private RetryOperations withRetry;
