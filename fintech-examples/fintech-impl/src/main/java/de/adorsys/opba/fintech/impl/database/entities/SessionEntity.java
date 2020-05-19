@@ -31,7 +31,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 public class SessionEntity {
     public SessionEntity(UserEntity userEntity, int maxAge) {
-        this.validUntil = OffsetDateTime.now().minusSeconds(maxAge);
+        this.validUntil = OffsetDateTime.now().plusSeconds(maxAge);
         this.userEntity = userEntity;
     }
 
