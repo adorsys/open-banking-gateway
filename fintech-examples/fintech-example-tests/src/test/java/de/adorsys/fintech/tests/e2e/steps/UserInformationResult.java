@@ -24,6 +24,8 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationR
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class UserInformationResult extends AccountInformationResult {
 
+    private static final String  SESSION_COOKIE = "SESSION-COOKIE";
+
     @Getter
     @ExpectedScenarioState
     private String respContent;
@@ -35,13 +37,13 @@ public class UserInformationResult extends AccountInformationResult {
     protected String sessionCookie;
 
     @SneakyThrows
-    public UserInformationResult fintech_can_read_anton_brueckner_accounts_and_transactions() {
+    public UserInformationResult fintech_can_read_anton_brueckner_accounts_and_transactions(String accountId, String bankId) {
         ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .given()
                                                              .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                              .header(SESSION_COOKIE, UUID.randomUUID().toString())
                                                          .when()
-                                                             .get(ACCOUNT )
+                                                             .get(BANKPROFILE_ENDPOINT + bankId + ACCOUNT + accountId)
                                                          .then()
                                                              .statusCode(HttpStatus.OK.value())
                                                              .extract();
@@ -49,13 +51,13 @@ public class UserInformationResult extends AccountInformationResult {
         return (UserInformationResult) self();
     }
 
-    public UserInformationResult fintech_can_read_user_accounts_and_transactions() {
+    public UserInformationResult fintech_can_read_user_accounts_and_transactions(String accountId, String bankId) {
         ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .given()
                                                              .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                              .header(SESSION_COOKIE, UUID.randomUUID().toString())
                                                          .when()
-                                                             .get(ACCOUNT )
+                                                             .get(BANKPROFILE_ENDPOINT + bankId + ACCOUNT + accountId)
                                                          .then()
                                                              .statusCode(HttpStatus.OK.value())
                                                              .extract();
@@ -75,19 +77,17 @@ public class UserInformationResult extends AccountInformationResult {
     }
 
     @SneakyThrows
-    public UserInformationResult fintech_get_bank_infos(String username) {
-        UserInformationResult resp = login_and_get_cookies(username);
-        Map<String, String> request = new HashMap<>();
-        request.put("username", username);
+    public UserInformationResult fintech_get_bank_infos() {
+        login_and_get_cookies();
         ExtractableResponse<Response> response = RestAssured
                                                          .given()
                                                          .header(X_REQUEST_ID, UUID.randomUUID().toString())
                                                          .header(X_XSRF_TOKEN, xsrfToken)
+                                                         .cookie(SESSION_COOKIE, sessionCookie)
                                                          .queryParam("keyword", KEYWORD)
                                                          .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                         .body(request)
                                                          .when()
-                                                             .get(FINTECH_UI_URI + "/search")
+                                                             .get(BANKSEARCH_ENDPOINT)
                                                          .then()
                                                              .statusCode(HttpStatus.OK.value())
                                                              .extract();
@@ -95,15 +95,14 @@ public class UserInformationResult extends AccountInformationResult {
         return (UserInformationResult) self();
     }
 
-    public UserInformationResult login_and_get_cookies(String username) {
+    public UserInformationResult login_and_get_cookies() {
         Map<String, String> request = new HashMap<>();
         request.put("password", "1234");
-        request.put("username", username);
+        request.put("username", fintech_login);
 
         ExtractableResponse<Response> response = RestAssured
                                                          .given()
                                                          .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                                                         .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                          .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                          .body(request)
                                                          .when()
@@ -112,8 +111,8 @@ public class UserInformationResult extends AccountInformationResult {
                                                          .statusCode(HttpStatus.OK.value())
                                                          .extract();
         this.respContent = response.body().asString();
-        xsrfToken = response.header(X_XSRF_TOKEN);
-        sessionCookie = response.cookie("SESSION-COOKIE");
+        xsrfToken = response.header(X_XSRF_TOKEN).split(";")[0].trim();
+        sessionCookie = response.cookie(SESSION_COOKIE);
         return (UserInformationResult) self();
     }
 
