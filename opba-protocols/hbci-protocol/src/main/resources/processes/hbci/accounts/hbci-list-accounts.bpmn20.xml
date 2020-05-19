@@ -98,7 +98,7 @@
                 <omgdi:waypoint x="402.0" y="213.41667"/>
                 <omgdi:waypoint x="774.1666" y="213.41667"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="sid-7b9b028a-4414-4740-a48a-087ed56e1c78" id="c9fc03cf-b8be-4c6b-a306-5610892d2fb2">
+            <bpmndi:BPMNEdge bpmnElement="sid-7b9b028a-4414-4740-a48a-087ed56e1c78" id="sid-c9fc03cf-b8be-4c6b-a306-5610892d2fb2">
                 <omgdi:waypoint x="689.2743" y="95.361115"/>
                 <omgdi:waypoint x="788.1668" y="95.36112"/>
                 <omgdi:waypoint x="788.16675" y="198.0"/>
