@@ -9,6 +9,7 @@
        <sql>
 
            <!--  ADORSYS ASPSP  -->
+           /* XS2A */
            insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (1, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'LIST_ACCOUNTS', 'xs2aListAccounts');
            insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (2, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
            insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (3, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'AUTHORIZATION', '');
@@ -46,21 +47,15 @@
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (10, 15, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (11, 15, 'FROM_ASPSP_REDIRECT', 'xs2aFromAspspRedirect');
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (12, 15, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
+
+           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (1000, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'LIST_ACCOUNTS', 'hbciListAccounts');
+           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (2000, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'LIST_TRANSACTIONS', 'hbciListTransactions');
+           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (3000, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'AUTHORIZATION', '');
+
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (1000, 3000, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (2000, 3000, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (3000, 3000, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (4000, 3000, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
        </sql>
-    </changeSet>
-
-    <changeSet author="rye@golden-dimension.com" id="2020-06-10-01">
-        <comment>Updates ASPSPs in order to force preferred approaches</comment>
-        <update tableName="${table-prefix}bank_profile">
-            <column name="preferred_approach" value="REDIRECT"/>
-            <column name="try_to_use_preferred_approach" value="true"/>
-            <where>bank_uuid='2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc'</where>
-        </update>
-
-        <update tableName="${table-prefix}bank_profile">
-            <column name="preferred_approach" value="EMBEDDED"/>
-            <column name="try_to_use_preferred_approach" value="true"/>
-            <where>bank_uuid='aa750320-2958-455e-9926-e9fca5ddfa92'</where>
-        </update>
     </changeSet>
 </databaseChangeLog>
