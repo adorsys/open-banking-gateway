@@ -4,7 +4,7 @@ import de.adorsys.opba.consentapi.Const;
 import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
-import de.adorsys.opba.consentapi.resource.generated.ConsentAuthorizationApi;
+import de.adorsys.opba.consentapi.resource.generated.AuthStateConsentAuthorizationApi;
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
@@ -25,7 +25,7 @@ import static de.adorsys.opba.consentapi.Const.SPRING_KEYWORD;
 
 @RestController
 @RequiredArgsConstructor
-public class AuthStateConsentServiceController implements ConsentAuthorizationApi {
+public class AuthStateConsentServiceController implements AuthStateConsentAuthorizationApi {
 
     private final FacadeServiceableRequest serviceableTemplate;
     private final UserAgentContext userAgentContext;
