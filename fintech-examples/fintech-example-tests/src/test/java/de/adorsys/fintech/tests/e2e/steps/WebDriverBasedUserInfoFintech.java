@@ -102,8 +102,8 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF user_login_with_its_credentials(WebDriver driver) {
-        sendText(driver, By.id("username"), fintech_login);
+    public SELF user_login_with_its_credentials(WebDriver driver, String username) {
+        sendText(driver, By.id("username"), username);
         sendText(driver, By.id("password"), PIN);
         return self();
     }
@@ -128,10 +128,10 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF user_already_login_in_bank_profile(WebDriver firefoxDriver) {
+    public SELF user_already_login_in_bank_profile(WebDriver firefoxDriver, String username, String fintech) {
         user_opens_fintechui_login_page(firefoxDriver)
                 .and()
-                .user_login_with_its_credentials(firefoxDriver)
+                .user_login_with_its_credentials(firefoxDriver, username)
                 .and()
                 .user_confirm_login(firefoxDriver)
                 .and()
@@ -147,11 +147,11 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
                 .and()
                 .user_click_on_register_button(firefoxDriver)
                 .and()
-                .user_register_on_consent(firefoxDriver)
+                .user_register_on_consent(firefoxDriver, fintech)
                 .and()
                 .user_navigates_to_page(firefoxDriver)
                 .and()
-                .user_login_in_consent(firefoxDriver);
+                .user_login_in_consent(firefoxDriver, fintech);
         return self();
     }
 
@@ -211,16 +211,16 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF user_login_in_consent(WebDriver driver) {
+    public SELF user_login_in_consent(WebDriver driver, String fintech) {
         waitForPageLoadAndUrlContains(driver, "/login");
-        sendText(driver, By.id("username"), username);
+        sendText(driver, By.id("username"), fintech);
         sendText(driver, By.id("password"), "12345");
         clickOnButton(driver, By.xpath("//button[@type='submit']"));
         return self();
     }
 
-    public SELF user_register_on_consent(WebDriver driver) {
-        sendText(driver, By.id("username"), username);
+    public SELF user_register_on_consent(WebDriver driver, String fintech) {
+        sendText(driver, By.id("username"), fintech);
         sendText(driver, By.id("password"), "12345");
         sendText(driver, By.id("confirmPassword"), "12345");
         clickOnButton(driver, By.xpath("//button[@type='submit']"));
