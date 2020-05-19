@@ -22,4 +22,11 @@ public class HbciConsentInfo {
     public boolean isTanChallengeRequired(HbciContext ctx) {
         return null != ctx.getPsuPin();
     }
+
+    /**
+     * Any kind of consent exists?
+     */
+    public boolean isConsentExists(HbciContext ctx) {
+        return false;
+    }
 }
