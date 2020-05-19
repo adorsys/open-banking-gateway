@@ -81,9 +81,6 @@
             <bpmndi:BPMNShape bpmnElement="reportViolations" id="BPMNShape_reportViolations">
         <omgdc:Bounds height="80.0" width="100.0" x="405.0" y="330.0"/>
       </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="sid-DF609782-B965-42E8-AFDE-94DABF994E40" id="BPMNShape_sid-DF609782-B965-42E8-AFDE-94DABF994E40">
-        <omgdc:Bounds height="0.45573029685533584" width="43.75010849811497" x="1067.4999457509425" y="174.01822860157233"/>
-      </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge bpmnElement="sid-C66278C4-EC81-438B-8264-C15C99FDDD18" id="BPMNEdge_sid-C66278C4-EC81-438B-8264-C15C99FDDD18">
         <omgdi:waypoint x="1202.002087738753" y="230.94999811889036"/>
         <omgdi:waypoint x="1202.0134069863645" y="312.0"/>

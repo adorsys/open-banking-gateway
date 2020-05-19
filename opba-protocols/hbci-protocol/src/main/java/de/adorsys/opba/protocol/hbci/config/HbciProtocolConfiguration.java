@@ -22,7 +22,7 @@ import static de.adorsys.opba.protocol.hbci.config.ConfigConst.HBCI_PROTOCOL_CON
 @Validated
 @Configuration
 @ConfigurationProperties(HBCI_PROTOCOL_CONFIG_PREFIX + "urls")
-public class ProtocolConfiguration {
+public class HbciProtocolConfiguration {
 
     /**
      * Redirect links for UI screens - i.e. which screen to use for password input.

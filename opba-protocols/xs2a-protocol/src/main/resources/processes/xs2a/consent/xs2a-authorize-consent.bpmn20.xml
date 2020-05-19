@@ -18,7 +18,7 @@
         <sequenceFlow id="sid-D15341DB-F89B-491F-9F3D-FFA8D98F770F" sourceRef="startAuthorization" targetRef="scaChallengeSelector"></sequenceFlow>
         <serviceTask id="notifyUserWithRedirect" name="Notify user with redirect url for challenge. Suspends to wait" flowable:async="true" flowable:delegateExpression="${xs2aDoRedirectForScaChallenge}" flowable:triggerable="true"></serviceTask>
         <sequenceFlow id="redirect" name="redirect" sourceRef="scaChallengeSelector" targetRef="notifyUserWithRedirect">
-            <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isRedirsect(CONTEXT)}]]></conditionExpression>
+            <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isRedirect(CONTEXT)}]]></conditionExpression>
         </sequenceFlow>
         <serviceTask id="authenticateUser" name="Authenticate user" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAuthenticateUserConsentWithPin}">
             <documentation>scaStatus: psuIdentified -&gt; psuAuthenticated</documentation>
@@ -71,9 +71,6 @@
         <sequenceFlow id="sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643" name="On consent denied" sourceRef="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A" targetRef="sid-xs2aReportToFintechConsentDenied"></sequenceFlow>
         <serviceTask id="sid-xs2aReportToFintechConsentDenied" name="Calls FinTech webhook to notify  revoke authorization" flowable:async="true" flowable:delegateExpression="${xs2aReportToFintechConsentDenied}"></serviceTask>
         <sequenceFlow id="sid-74F0F25F-E309-400F-ABEF-378D608C16C1" sourceRef="sid-xs2aReportToFintechConsentDenied" targetRef="end"></sequenceFlow>
-        <serviceTask id="9a33e24b-ca71-4a71-ae90-75d72c04ee10" name="A tesst" flowable:class="de.adorsys.opba.protocol.xs2a.service.xs2a.consent.authenticate.redirect.Xs2aDoScaRedirect" flowable:skipExpression="#{xs2aConsentFinder.consentExists(CONTEXT)}"></serviceTask>
-        <sequenceFlow id="b34ded2e-9bdf-4b87-ab0c-c7940bffc856" sourceRef="9a33e24b-ca71-4a71-ae90-75d72c04ee10" targetRef="startAuthorization"></sequenceFlow>
-        <sequenceFlow id="982b1768-1304-4d5f-96ea-7d474a35e3e5" sourceRef="9a33e24b-ca71-4a71-ae90-75d72c04ee10" targetRef="notifyUserWithRedirect"></sequenceFlow>
     </process>
     <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
         <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
@@ -131,81 +128,6 @@
             <bpmndi:BPMNShape bpmnElement="sid-xs2aReportToFintechConsentDenied" id="BPMNShape_sid-xs2aReportToFintechConsentDenied">
                 <omgdc:Bounds height="79.99999999999994" width="100.0" x="1485.0000000000002" y="495.00000000000006"></omgdc:Bounds>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="9a33e24b-ca71-4a71-ae90-75d72c04ee10" id="BPMNShape_9a33e24b-ca71-4a71-ae90-75d72c04ee10">
-                <omgdc:Bounds height="80.0" width="100.0" x="192.3046" y="527.61523"></omgdc:Bounds>
-            </bpmndi:BPMNShape>
-            <bpmndi:BPMNEdge bpmnElement="wrongPassword" id="BPMNEdge_wrongPassword">
-                <omgdi:waypoint x="765.0" y="254.94463997850616"></omgdi:waypoint>
-                <omgdi:waypoint x="765.0" y="421.0"></omgdi:waypoint>
-                <omgdi:waypoint x="550.0" y="421.0"></omgdi:waypoint>
-                <omgdi:waypoint x="550.0" y="383.95000000000005"></omgdi:waypoint>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE" id="BPMNEdge_sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE">
-                <omgdi:waypoint x="879.9499999999999" y="475.0"></omgdi:waypoint>
-                <omgdi:waypoint x="975.0" y="475.0"></omgdi:waypoint>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="noUserPasswordPresent" id="BPMNEdge_noUserPasswordPresent">
-                <omgdi:waypoint x="410.0" y="254.9408570119157"></omgdi:waypoint>
-                <omgdi:waypoint x="410.0" y="344.0"></omgdi:waypoint>
-                <omgdi:waypoint x="499.9999999998886" y="344.0"></omgdi:waypoint>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="sid-54FE7BD4-78A9-4391-8A37-1D323F32A029" id="BPMNEdge_sid-54FE7BD4-78A9-4391-8A37-1D323F32A029">
-                <omgdi:waypoint x="694.9499999999756" y="235.0"></omgdi:waypoint>
-                <omgdi:waypoint x="745.0" y="235.0"></omgdi:waypoint>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="b34ded2e-9bdf-4b87-ab0c-c7940bffc856" id="BPMNEdge_b34ded2e-9bdf-4b87-ab0c-c7940bffc856">
-                <omgdi:waypoint x="292.25459999999134" y="567.3035488071581"></omgdi:waypoint>
-                <omgdi:waypoint x="341.0" y="567.0"></omgdi:waypoint>
-                <omgdi:waypoint x="341.0" y="495.0"></omgdi:waypoint>
-                <omgdi:waypoint x="226.0" y="495.0"></omgdi:waypoint>
-                <omgdi:waypoint x="232.67741935483872" y="379.95000000000005"></omgdi:waypoint>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="oneScaAvailable" id="BPMNEdge_oneScaAvailable">
-                <omgdi:waypoint x="784.946931713082" y="235.0"></omgdi:waypoint>
-                <omgdi:waypoint x="1039.9999999999827" y="235.0"></omgdi:waypoint>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="scaFinalized" id="BPMNEdge_scaFinalized">
-                <omgdi:waypoint x="1379.9420263788604" y="235.0"></omgdi:waypoint>
-                <omgdi:waypoint x="1485.0" y="235.0"></omgdi:waypoint>
-                <omgdi:waypoint x="1485.0" y="300.0"></omgdi:waypoint>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="982b1768-1304-4d5f-96ea-7d474a35e3e5" id="BPMNEdge_982b1768-1304-4d5f-96ea-7d474a35e3e5">
-                <omgdi:waypoint x="292.2545999999975" y="569.2656081374457"></omgdi:waypoint>
-                <omgdi:waypoint x="829.0" y="587.0"></omgdi:waypoint>
-                <omgdi:waypoint x="829.6428571428571" y="514.95"></omgdi:waypoint>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="sid-F1C336CA-1C21-44CA-9CB4-C1E83F5ED1CE" id="BPMNEdge_sid-F1C336CA-1C21-44CA-9CB4-C1E83F5ED1CE">
-                <omgdi:waypoint x="909.9499999999999" y="104.0"></omgdi:waypoint>
-                <omgdi:waypoint x="944.9999999999961" y="104.0"></omgdi:waypoint>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643" id="BPMNEdge_sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643">
-                <omgdi:waypoint x="995.0" y="494.9334026622295"></omgdi:waypoint>
-                <omgdi:waypoint x="995.0" y="535.0"></omgdi:waypoint>
-                <omgdi:waypoint x="1485.0000000000002" y="535.0"></omgdi:waypoint>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="multipleScaAvailable" id="BPMNEdge_multipleScaAvailable">
-                <omgdi:waypoint x="765.0" y="215.0"></omgdi:waypoint>
-                <omgdi:waypoint x="765.0" y="104.0"></omgdi:waypoint>
-                <omgdi:waypoint x="810.0" y="104.0"></omgdi:waypoint>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="sid-74F0F25F-E309-400F-ABEF-378D608C16C1" id="BPMNEdge_sid-74F0F25F-E309-400F-ABEF-378D608C16C1">
-                <omgdi:waypoint x="1584.9500000000003" y="535.0"></omgdi:waypoint>
-                <omgdi:waypoint x="1640.0" y="535.0"></omgdi:waypoint>
-                <omgdi:waypoint x="1640.0" y="462.9499383700888"></omgdi:waypoint>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="passwordAvailable" id="BPMNEdge_passwordAvailable">
-                <omgdi:waypoint x="429.94575712457055" y="235.0"></omgdi:waypoint>
-                <omgdi:waypoint x="594.9999999999643" y="235.0"></omgdi:waypoint>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="embedded" id="BPMNEdge_embedded">
-                <omgdi:waypoint x="355.0" y="318.0"></omgdi:waypoint>
-                <omgdi:waypoint x="355.0" y="235.0"></omgdi:waypoint>
-                <omgdi:waypoint x="390.0" y="235.0"></omgdi:waypoint>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="sid-59AE4CB4-9545-4CD9-9495-6A5D8AF74CBE" id="BPMNEdge_sid-59AE4CB4-9545-4CD9-9495-6A5D8AF74CBE">
-                <omgdi:waypoint x="1534.95" y="340.0"></omgdi:waypoint>
-                <omgdi:waypoint x="1590.0" y="340.0"></omgdi:waypoint>
-            </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="sid-1139B3D0-261B-4594-B84F-638928669262" id="BPMNEdge_sid-1139B3D0-261B-4594-B84F-638928669262">
                 <omgdi:waypoint x="119.94999891869115" y="340.0"></omgdi:waypoint>
                 <omgdi:waypoint x="185.0" y="340.0"></omgdi:waypoint>
@@ -214,6 +136,12 @@
                 <omgdi:waypoint x="355.0" y="357.9427242888402"></omgdi:waypoint>
                 <omgdi:waypoint x="355.0" y="475.0"></omgdi:waypoint>
                 <omgdi:waypoint x="779.9999999990612" y="475.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="wrongPassword" id="BPMNEdge_wrongPassword">
+                <omgdi:waypoint x="765.0" y="254.94463997850616"></omgdi:waypoint>
+                <omgdi:waypoint x="765.0" y="421.0"></omgdi:waypoint>
+                <omgdi:waypoint x="550.0" y="421.0"></omgdi:waypoint>
+                <omgdi:waypoint x="550.0" y="383.95000000000005"></omgdi:waypoint>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="sid-D15341DB-F89B-491F-9F3D-FFA8D98F770F" id="BPMNEdge_sid-D15341DB-F89B-491F-9F3D-FFA8D98F770F">
                 <omgdi:waypoint x="284.9499999999989" y="339.1666666666667"></omgdi:waypoint>
@@ -236,6 +164,19 @@
                 <omgdi:waypoint x="1065.0" y="104.0"></omgdi:waypoint>
                 <omgdi:waypoint x="1082.3664122137404" y="195.0"></omgdi:waypoint>
             </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE" id="BPMNEdge_sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE">
+                <omgdi:waypoint x="879.9499999999999" y="475.0"></omgdi:waypoint>
+                <omgdi:waypoint x="975.0" y="475.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="noUserPasswordPresent" id="BPMNEdge_noUserPasswordPresent">
+                <omgdi:waypoint x="410.0" y="254.9408570119157"></omgdi:waypoint>
+                <omgdi:waypoint x="410.0" y="344.0"></omgdi:waypoint>
+                <omgdi:waypoint x="499.9999999998886" y="344.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-54FE7BD4-78A9-4391-8A37-1D323F32A029" id="BPMNEdge_sid-54FE7BD4-78A9-4391-8A37-1D323F32A029">
+                <omgdi:waypoint x="694.9499999999756" y="235.0"></omgdi:waypoint>
+                <omgdi:waypoint x="745.0" y="235.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="moreScaChallenges" id="BPMNEdge_moreScaChallenges">
                 <omgdi:waypoint x="1360.0" y="254.94267083027182"></omgdi:waypoint>
                 <omgdi:waypoint x="1360.0" y="371.0"></omgdi:waypoint>
@@ -246,18 +187,59 @@
                 <omgdi:waypoint x="1640.0" y="379.95000000000005"></omgdi:waypoint>
                 <omgdi:waypoint x="1640.0" y="435.0"></omgdi:waypoint>
             </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="oneScaAvailable" id="BPMNEdge_oneScaAvailable">
+                <omgdi:waypoint x="784.946931713082" y="235.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1039.9999999999827" y="235.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="scaFinalized" id="BPMNEdge_scaFinalized">
+                <omgdi:waypoint x="1379.9420263788604" y="235.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1485.0" y="235.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1485.0" y="300.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-F1C336CA-1C21-44CA-9CB4-C1E83F5ED1CE" id="BPMNEdge_sid-F1C336CA-1C21-44CA-9CB4-C1E83F5ED1CE">
+                <omgdi:waypoint x="909.9499999999999" y="104.0"></omgdi:waypoint>
+                <omgdi:waypoint x="944.9999999999961" y="104.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="sid-C9002EF3-5531-4787-8754-96515CEFCE8C" id="BPMNEdge_sid-C9002EF3-5531-4787-8754-96515CEFCE8C">
                 <omgdi:waypoint x="599.9499999998807" y="344.0"></omgdi:waypoint>
                 <omgdi:waypoint x="645.0" y="344.0"></omgdi:waypoint>
                 <omgdi:waypoint x="645.0" y="274.95000000000005"></omgdi:waypoint>
             </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643" id="BPMNEdge_sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643">
+                <omgdi:waypoint x="995.0" y="494.9334026622295"></omgdi:waypoint>
+                <omgdi:waypoint x="995.0" y="535.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1485.0000000000002" y="535.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="multipleScaAvailable" id="BPMNEdge_multipleScaAvailable">
+                <omgdi:waypoint x="765.0" y="215.0"></omgdi:waypoint>
+                <omgdi:waypoint x="765.0" y="104.0"></omgdi:waypoint>
+                <omgdi:waypoint x="810.0" y="104.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6" id="BPMNEdge_sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6">
                 <omgdi:waypoint x="1139.95" y="235.0"></omgdi:waypoint>
                 <omgdi:waypoint x="1190.0" y="235.0"></omgdi:waypoint>
             </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-74F0F25F-E309-400F-ABEF-378D608C16C1" id="BPMNEdge_sid-74F0F25F-E309-400F-ABEF-378D608C16C1">
+                <omgdi:waypoint x="1584.9500000000003" y="535.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1640.0" y="535.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1640.0" y="462.9499383700888"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="sid-BC0026EE-A538-4399-8BA7-080F7C2383C9" id="BPMNEdge_sid-BC0026EE-A538-4399-8BA7-080F7C2383C9">
                 <omgdi:waypoint x="1289.9499999999755" y="235.0"></omgdi:waypoint>
                 <omgdi:waypoint x="1340.0" y="235.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="passwordAvailable" id="BPMNEdge_passwordAvailable">
+                <omgdi:waypoint x="429.94575712457055" y="235.0"></omgdi:waypoint>
+                <omgdi:waypoint x="594.9999999999643" y="235.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="embedded" id="BPMNEdge_embedded">
+                <omgdi:waypoint x="355.0" y="318.0"></omgdi:waypoint>
+                <omgdi:waypoint x="355.0" y="235.0"></omgdi:waypoint>
+                <omgdi:waypoint x="390.0" y="235.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-59AE4CB4-9545-4CD9-9495-6A5D8AF74CBE" id="BPMNEdge_sid-59AE4CB4-9545-4CD9-9495-6A5D8AF74CBE">
+                <omgdi:waypoint x="1534.95" y="340.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1590.0" y="340.0"></omgdi:waypoint>
             </bpmndi:BPMNEdge>
         </bpmndi:BPMNPlane>
     </bpmndi:BPMNDiagram>

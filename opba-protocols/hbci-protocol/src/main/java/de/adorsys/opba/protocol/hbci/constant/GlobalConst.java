@@ -10,11 +10,6 @@ import lombok.experimental.UtilityClass;
 public class GlobalConst {
 
     /**
-     * Flowable context variable name.
-     */
-    public static final String CONTEXT = "CONTEXT";
-
-    /**
      * Flowable variable name to carry validation issues (like missing PSU ID).
      */
     public static final String LAST_VALIDATION_ISSUES = "LAST_VALIDATION_ISSUES";
@@ -32,7 +27,7 @@ public class GlobalConst {
     /**
      * General request handler flowable process.
      */
-    public static final String XS2A_REQUEST_SAGA = "xs2a-request-saga";
+    public static final String HBCI_REQUEST_SAGA = "hbci-request-saga";
 
     /**
      * Validation error exception code.
@@ -42,10 +37,5 @@ public class GlobalConst {
     /**
      * Package for generated mappers for DTOs.
      */
-    public static final String XS2A_MAPPERS_PACKAGE = "de.adorsys.opba.protocol.xs2a.service.mappers.generated";
-
-    /**
-     * Commonly used keyword for DTO mappers.
-     */
-    public static final String SPRING_KEYWORD = "spring";
+    public static final String HBCI_MAPPERS_PACKAGE = "de.adorsys.opba.protocol.hbci.service.mappers.generated";
 }
