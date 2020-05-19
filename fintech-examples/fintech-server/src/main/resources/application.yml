@@ -27,11 +27,6 @@ tpp:
   fintechID: MY-SUPER-FINTECH-ID
   serviceSessionPassword: qwerty
 
-mock:
-  tppais:
-    listaccounts: false
-    listtransactions: false
-
 spring:
   datasource:
     url: jdbc:postgresql://localhost/open_banking?currentSchema=fintech
