@@ -1,11 +1,11 @@
-package de.adorsys.opba.protocol.xs2a.service.xs2a;
+package de.adorsys.opba.protocol.hbci.service;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.Redirect;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
-import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
-import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.hbci.config.HbciProtocolConfiguration;
+import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.context.ApplicationEventPublisher;
@@ -20,23 +20,23 @@ import java.util.function.Function;
  */
 @Service
 @RequiredArgsConstructor
-public class RedirectExecutor {
+public class HbciRedirectExecutor {
 
-    private final ProtocolUrlsConfiguration urlsConfiguration;
+    private final HbciProtocolConfiguration configuration;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     /**
      * Redirects PSU to some page (or emits FinTech redirection required) by performing interpolation of the
-     * string returned by {@code urlSelector}
+     * string returned by {@code redirectSelector}
      * @param execution Execution context of the current process
-     * @param context Current XS2A context
-     * @param urlSelector Redirection URL configurer - selects which URL template to use
+     * @param context Current HBCI context
+     * @param redirectSelector Redirection URL configurer - selects which URL template to use
      */
     public void redirect(
             DelegateExecution execution,
-            Xs2aContext context,
-            Function<ProtocolUrlsConfiguration, String> urlSelector) {
-        String uiScreenUri = urlSelector.apply(urlsConfiguration);
+            HbciContext context,
+            Function<HbciProtocolConfiguration.Redirect, String> redirectSelector) {
+        String uiScreenUri = redirectSelector.apply(configuration.getRedirect());
         redirect(execution, context, uiScreenUri, null);
     }
 
@@ -44,14 +44,14 @@ public class RedirectExecutor {
      * Redirects PSU to some page (or emits FinTech redirection required) by performing interpolation of the
      * string returned by {@code uiScreenUriSpel}
      * @param execution Execution context of the current process
-     * @param context Current XS2A context
+     * @param context Current HBCI context
      * @param uiScreenUriSpel UI screen SpEL expression to interpolate
      * @param destinationUri URL where UI screen should redirect user to if he clicks OK (i.e. to ASPSP redirection
      *                       where user must click OK button in order to be redirected to ASPSP)
      */
     public void redirect(
         DelegateExecution execution,
-        Xs2aContext context,
+        HbciContext context,
         String uiScreenUriSpel,
         String destinationUri
     ) {
@@ -62,7 +62,7 @@ public class RedirectExecutor {
      * Redirects PSU to some page (or emits FinTech redirection required) by performing interpolation of the
      * string returned by {@code uiScreenUriSpel}
      * @param execution Execution context of the current process
-     * @param context Current XS2A context
+     * @param context Current HBCI context
      * @param uiScreenUriSpel UI screen SpEL expression to interpolate
      * @param destinationUri URL where UI screen should redirect user to if he clicks OK (i.e. to ASPSP redirection
      *                       where user must click OK button in order to be redirected to ASPSP)
@@ -70,7 +70,7 @@ public class RedirectExecutor {
      */
     public void redirect(
         DelegateExecution execution,
-        Xs2aContext context,
+        HbciContext context,
         String uiScreenUriSpel,
         String destinationUri,
         Function<Redirect.RedirectBuilder, ? extends Redirect> eventFactory

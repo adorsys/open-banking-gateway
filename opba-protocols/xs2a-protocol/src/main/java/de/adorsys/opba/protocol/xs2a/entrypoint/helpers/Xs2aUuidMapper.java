@@ -11,7 +11,7 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
  * Mapper for mapstruct to convert from UUID to String.
  */
 @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
-public interface UuidMapper {
+public interface Xs2aUuidMapper {
 
     default String map(UUID from) {
         if (null == from) {
