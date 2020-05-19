@@ -27,6 +27,18 @@ public class HbciContext extends BaseContext {
             ProtocolAction.LIST_TRANSACTIONS, "hbci-list-transactions"
     );
 
+    /**
+     * FinTech WebHook that will be called by OpenBanking (and user will be redirected to) if the consent
+     * was <b>granted</b> during authorization.
+     */
+    private String fintechRedirectUriOk;
+
+    /**
+     * FinTech WebHook that will be called by OpenBanking (and user will be redirected to) if the consent
+     * was <b>declined</b> during authorization.
+     */
+    private String fintechRedirectUriNok;
+
     @JsonIgnore
     public String getPsuPassword() {
         TransientDataEntry entry = this.transientStorage().get();
