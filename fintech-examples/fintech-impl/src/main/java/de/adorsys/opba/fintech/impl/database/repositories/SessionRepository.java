@@ -10,6 +10,4 @@ import java.util.UUID;
 public interface SessionRepository extends CrudRepository<SessionEntity, UUID> {
     Optional<SessionEntity> findBySessionCookieValue(String sessionCookieValue);
     Iterable<SessionEntity> findByUserEntity(UserEntity userEntity);
-    Iterable<SessionEntity> findByUserEntityLoginUserName(String id);
-    void deleteBySessionCookieValue(String sessionCookieValue);
 }

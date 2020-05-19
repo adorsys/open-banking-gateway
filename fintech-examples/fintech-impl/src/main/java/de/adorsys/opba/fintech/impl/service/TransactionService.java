@@ -3,11 +3,14 @@ package de.adorsys.opba.fintech.impl.service;
 import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
+import de.adorsys.opba.fintech.impl.database.entities.ConsentEntity;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
+import de.adorsys.opba.fintech.impl.database.repositories.ConsentRepository;
 import de.adorsys.opba.fintech.impl.mapper.ManualMapper;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
+import de.adorsys.opba.fintech.impl.tppclients.ConsentType;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
@@ -38,6 +42,9 @@ public class TransactionService extends HandleAcceptedService {
     @Autowired
     private RedirectHandlerService redirectHandlerService;
 
+    @Autowired
+    private ConsentRepository consentRepository;
+
     public TransactionService(AuthorizeService authorizeService, TppAisClient tppAisClient, FintechUiConfig uiConfig,
                               CookieConfigProperties cookieConfigProperties, RestRequestContext restRequestContext) {
         super(authorizeService, cookieConfigProperties, restRequestContext);
@@ -45,18 +52,17 @@ public class TransactionService extends HandleAcceptedService {
         this.uiConfig = uiConfig;
     }
 
-    public ResponseEntity listTransactions(SessionEntity sessionEntity,
-                                           String fintechOkUrl,
-                                           String fintechNOkUrl,
-                                           String bankId,
-                                           String accountId,
-                                           LocalDate dateFrom,
-                                           LocalDate dateTo,
-                                           String entryReferenceFrom,
-                                           String bookingStatus,
-                                           Boolean deltaList) {
+    public ResponseEntity listTransactions(SessionEntity sessionEntity, String fintechOkUrl, String fintechNOkUrl, String bankId,
+                                           String accountId, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
 
         String fintechRedirectCode = UUID.randomUUID().toString();
+        Optional<ConsentEntity> optionalConsent = consentRepository.findByUserEntityAndBankIdAndConsentTypeAndConsentConfirmed(sessionEntity.getUserEntity(),
+                bankId, ConsentType.AIS, Boolean.TRUE);
+        if (optionalConsent.isPresent()) {
+            log.info("LoT found valid ais consent for user {} bank {}", sessionEntity.getUserEntity().getLoginUserName(), bankId);
+        } else {
+            log.info("LoT no valid ais consent for user {} bank {} available", sessionEntity.getUserEntity().getLoginUserName(), bankId);
+        }
 
         ResponseEntity<TransactionsResponse> transactions = tppAisClient.getTransactions(
                 accountId,
@@ -69,11 +75,7 @@ public class TransactionService extends HandleAcceptedService {
                 OperationType.AIS.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
-                bankId,
-                null,
-                sessionEntity.getConsentConfirmed() ? sessionEntity.getTppServiceSessionId() : null,
-                dateFrom,
-                dateTo,
+                bankId, null, optionalConsent.isPresent() ? optionalConsent.get().getTppServiceSessionId() : null, dateFrom, dateTo,
                 entryReferenceFrom,
                 bookingStatus,
                 deltaList);
@@ -83,7 +85,7 @@ public class TransactionService extends HandleAcceptedService {
             case ACCEPTED:
                 log.info("create redirect entity for lot for redirectcode {}", fintechRedirectCode);
                 redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
-                return handleAccepted(fintechRedirectCode, sessionEntity, transactions.getHeaders());
+                return handleAccepted(consentRepository, ConsentType.AIS, bankId, fintechRedirectCode, sessionEntity, transactions.getHeaders());
             case UNAUTHORIZED:
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             default:

@@ -78,7 +78,7 @@ public class AuthorizeService {
 
     @Transactional
     public HttpHeaders modifySessionEntityAndCreateNewAuthHeader(String xRequestID, SessionEntity sessionEntity, String xsrfToken,
-                                                                 CookieConfigProperties cookieProps, SessionCookieType sessionCookieType) {
+                                                                 CookieConfigProperties cookieProps, SessionCookieType sessionCookieType, String authId) {
         sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(xsrfToken));
         sessionRepository.save(sessionEntity);
 
@@ -86,20 +86,14 @@ public class AuthorizeService {
         int maxAge = 0;
 
         if (sessionCookieType.equals(SessionCookieType.REDIRECT)) {
-            // simply by passing the session cookie two times, the old will be deleted
-            cookieValues.add(createSessionCookieString(sessionEntity, cookieProps.getSessioncookie(), cookieProps.getSessioncookie().getPath(), 0));
-
             String path = cookieProps.getRedirectcookie().getPath();
             if (path.matches("(.*)" + AUTH_ID_VARIABLE + "(.*)")) {
-                path = path.replaceAll(AUTH_ID_VARIABLE, sessionEntity.getAuthId());
+                path = path.replaceAll(AUTH_ID_VARIABLE, authId);
             }
             cookieValues.add(createSessionCookieString(sessionEntity, cookieProps.getRedirectcookie(), path, cookieProps.getRedirectcookie().getMaxAge()));
 
             maxAge = cookieProps.getRedirectcookie().getMaxAge();
         } else {
-            // simply by passing the session cookie two times, the old will be deleted
-            cookieValues.add(createSessionCookieString(sessionEntity, cookieProps.getSessioncookie(), cookieProps.getSessioncookie().getPath(), 0));
-
             cookieValues.add(createSessionCookieString(sessionEntity, cookieProps.getSessioncookie(), cookieProps.getSessioncookie().getPath(), cookieProps.getSessioncookie().getMaxAge()));
             maxAge = cookieProps.getSessioncookie().getMaxAge();
         }

@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
@@ -93,14 +92,8 @@ public class DatabaseTest {
 
         // find from users side
         List<SessionEntity> petersSessions = new ArrayList<>();
-        //sessionRepository.findByUserEntity(userEntity).forEach(petersSessions::add);
-        sessionRepository.findByUserEntityLoginUserName("peter").forEach(petersSessions::add);
-        // assertArrayEquals(sessionCookieValues,petersSessions.stream().map(SessionEntity::getSessionCookieValue).collect(Collectors.toList()).toArray());
-
-        List<SessionEntity> sessions = new ArrayList<>();
-        sessionRepository.findAll().forEach(sessions::add);
-        assertEquals(sessionCookieValues.length, sessions.size());
-        sessions.stream().forEach(session -> assertTrue(session.getUserEntity().getLoginUserName().equals(userEntity.getLoginUserName())));
+        sessionRepository.findByUserEntity(userEntity).forEach(petersSessions::add);
+        assertArrayEquals(sessionCookieValues,petersSessions.stream().map(SessionEntity::getSessionCookieValue).collect(Collectors.toList()).toArray());
     }
 
 

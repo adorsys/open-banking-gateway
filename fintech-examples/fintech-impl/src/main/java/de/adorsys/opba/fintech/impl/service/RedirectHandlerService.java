@@ -50,7 +50,7 @@ public class RedirectHandlerService {
     }
 
     @Transactional
-    public ResponseEntity doRedirect(final String uiGivenAuthId, final String redirectCode, final OkOrNotOk okOrNotOk) {
+    public ResponseEntity doRedirect(final String authId, final String redirectCode, final OkOrNotOk okOrNotOk) {
         // vulnerable for DOS
         SessionEntity sessionEntity = authorizeService.getSession();
         if (StringUtils.isBlank(redirectCode)) {
@@ -71,40 +71,32 @@ public class RedirectHandlerService {
         }
 
         if (okOrNotOk.equals(OkOrNotOk.OK)) {
-            if (StringUtils.isBlank(uiGivenAuthId)) {
+            if (StringUtils.isBlank(authId)) {
                 log.warn("Validation redirect request failed: authId is empty!");
                 return prepareErrorRedirectResponse(sessionEntity, uiConfig.getUnauthorizedUrl());
             }
 
-            String storedAuthId = sessionEntity.getAuthId();
-
-            if (!uiGivenAuthId.equals(storedAuthId)) {
-                log.warn("Validation redirect request failed: authid expected was {}, but authid from ui was {}", storedAuthId, uiGivenAuthId);
-                return prepareErrorRedirectResponse(sessionEntity, uiConfig.getUnauthorizedUrl());
-            }
-
-            log.info("authId {}", uiGivenAuthId);
-            sessionEntity.setConsentConfirmed(true);
             return prepareRedirectToReadResultResponse(sessionEntity, redirectUrls.get().getOkStatePath());
         }
-        log.info("user aborted consent authorization for authid {}", uiGivenAuthId);
+        log.info("user aborted consent authorization for authid {}", authId);
         return prepareRedirectToReadResultResponse(sessionEntity, redirectUrls.get().getNokStatePath());
     }
 
     private ResponseEntity prepareRedirectToReadResultResponse(SessionEntity sessionEntity, String redirectUrl) {
-        String xsrfToken = UUID.randomUUID().toString();
-        HttpHeaders authHeaders = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), sessionEntity,
-                xsrfToken, cookieConfigProperties, SessionCookieType.REGULAR);
-        authHeaders.put(LOCATION_HEADER, singletonList(redirectUrl));
-        return new ResponseEntity<>(authHeaders, HttpStatus.ACCEPTED);
+        return prepareResponse(sessionEntity, redirectUrl, HttpStatus.ACCEPTED);
     }
 
     private ResponseEntity prepareErrorRedirectResponse(SessionEntity sessionEntity, String redirectUrl) {
+        return prepareResponse(sessionEntity, redirectUrl, HttpStatus.SEE_OTHER);
+    }
+
+    private ResponseEntity prepareResponse(SessionEntity sessionEntity, String redirectUrl, HttpStatus status) {
         String xsrfToken = UUID.randomUUID().toString();
         HttpHeaders headers = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), sessionEntity,
-                xsrfToken, cookieConfigProperties, SessionCookieType.REGULAR);
+                xsrfToken, cookieConfigProperties, SessionCookieType.REGULAR, null);
         headers.put(LOCATION_HEADER, singletonList(redirectUrl));
 
-        return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
+        return new ResponseEntity<>(headers, status);
+
     }
 }

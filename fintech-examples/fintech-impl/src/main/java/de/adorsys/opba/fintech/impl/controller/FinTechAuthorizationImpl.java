@@ -4,8 +4,10 @@ import de.adorsys.opba.fintech.api.model.generated.InlineResponse200;
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.api.model.generated.UserProfile;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAuthorizationApi;
+import de.adorsys.opba.fintech.impl.database.entities.ConsentEntity;
 import de.adorsys.opba.fintech.impl.database.entities.LoginEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
+import de.adorsys.opba.fintech.impl.database.repositories.ConsentRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.LoginRepository;
 import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
@@ -37,6 +39,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
     private final ConsentService consentService;
     private final CookieConfigProperties cookieConfigProperties;
     private final LoginRepository loginRepository;
+    private final ConsentRepository consentRepository;
 
     @Override
     public ResponseEntity<InlineResponse200> loginPOST(LoginRequest loginRequest, UUID xRequestID) {
@@ -62,7 +65,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
         response.setUserProfile(userProfile);
 
         HttpHeaders responseHeaders = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), optionalSessionEntity.get(),
-                xsrfToken, cookieConfigProperties, SessionCookieType.REGULAR);
+                xsrfToken, cookieConfigProperties, SessionCookieType.REGULAR, null);
         return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
     }
 
@@ -75,7 +78,16 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
         }
 
         if (okOrNotOk.equals(OkOrNotOk.OK) && consentService.confirmConsent(authId, xRequestID)) {
-            authorizeService.getSession().setConsentConfirmed(true);
+
+            Optional<ConsentEntity> consent = consentRepository.findByAuthId(authId);
+
+            if (!consent.isPresent()) {
+                throw new RuntimeException("consent for authid " + authId + " can not be found");
+            }
+
+            log.info("consent with authId {} is now valid", authId);
+            consent.get().setConsentConfirmed(true);
+            consentRepository.save(consent.get());
         }
         return redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk);
     }
