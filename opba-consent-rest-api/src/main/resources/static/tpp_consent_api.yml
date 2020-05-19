@@ -68,7 +68,7 @@ paths:
       summary: |
         Redirect entry point for initiating a consent authorization process.
       tags:
-      - Consent Authorization
+      - Auth State Consent Authorization
       description: |
         This is the <b>entry point</b> for processing a consent redirected
         by the TppBankingApi to this ConsentAuthorisationApi.
@@ -91,7 +91,7 @@ paths:
     post:
       operationId: embeddedUsingPOST
       tags:
-      - Consent Authorization
+      - Update Consent Authorization
       summary: |
         Generic challenge response end point for updating consent session with
         PSU authentication data while requesting remaining challenges for the ongoing
@@ -128,7 +128,7 @@ paths:
     post:
       operationId: toAspspGrantUsingPOST
       tags:
-      - Consent Authorization
+      - Update Consent Authorization
       summary: |
         Provides the ConsentAuthorisationApi with the opportunity to redirect the PSU to the ASPSP.
       description: |
@@ -157,7 +157,7 @@ paths:
     post:
       operationId: denyUsingPOST
       tags:
-      - Consent Authorization
+      - Update Consent Authorization
       summary: |
         Consent authorization is denied - consent is blocked.
         Closes this session and redirects the PSU back to the FinTechApi or close the application window.
@@ -189,7 +189,7 @@ paths:
     get:
       operationId: fromAspspOkUsingGET
       tags:
-      - Consent Authorization
+      - From ASPSP Consent Authorization
       summary: Redirecting back from ASPSP to ConsentAuthorisationApi after a successful
         consent authorization.
       description: |
@@ -228,7 +228,7 @@ paths:
     get:
       operationId: fromAspspNokUsingGET
       tags:
-      - Consent Authorization
+      - From ASPSP Consent Authorization
       summary: Redirecting back from ASPSP to TPP after a failed consent authorization.
       description: |
         Redirecting back from ASPSP to TPP after a failed consent authorization.

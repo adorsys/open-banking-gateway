@@ -2,7 +2,7 @@ package de.adorsys.opba.consentapi.controller;
 
 import de.adorsys.opba.consentapi.model.generated.DenyRequest;
 import de.adorsys.opba.consentapi.model.generated.PsuAuthRequest;
-import de.adorsys.opba.consentapi.resource.generated.ConsentAuthorizationApi;
+import de.adorsys.opba.consentapi.resource.generated.UpdateConsentAuthorizationApi;
 import de.adorsys.opba.consentapi.service.mapper.AisConsentMapper;
 import de.adorsys.opba.consentapi.service.mapper.AisExtrasMapper;
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
@@ -24,7 +24,7 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequiredArgsConstructor
-public class UpdateAuthConsentServiceController implements ConsentAuthorizationApi {
+public class UpdateAuthConsentServiceController implements UpdateConsentAuthorizationApi {
 
     private final FacadeServiceableRequest serviceableTemplate;
     private final UserAgentContext userAgentContext;
