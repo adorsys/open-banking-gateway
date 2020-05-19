@@ -13,13 +13,13 @@ public class HbciConsentInfo {
      * Is the PSU password present in the context.
      */
     public boolean isPasswordPresent(HbciContext ctx) {
-        return null != ctx.getPsuPassword();
+        return null != ctx.getPsuPin();
     }
 
     /**
      * Is the TAN challenge required.
      */
     public boolean isTanChallengeRequired(HbciContext ctx) {
-        return null != ctx.getPsuPassword();
+        return null != ctx.getPsuPin();
     }
 }

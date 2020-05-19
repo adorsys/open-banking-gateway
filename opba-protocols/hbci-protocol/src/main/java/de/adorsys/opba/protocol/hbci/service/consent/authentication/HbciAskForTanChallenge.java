@@ -29,7 +29,7 @@ public class HbciAskForTanChallenge extends ValidatedExecution<HbciContext> {
         ContextUtil.getAndUpdateContext(
             execution,
             (HbciContext ctx) -> {
-                ctx.setLastScaChallenge("mock-challenge");
+                ctx.setPsuTan("mock-challenge");
             }
         );
         runtimeService.trigger(execution.getId());
