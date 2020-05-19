@@ -2,13 +2,13 @@ package de.adorsys.opba.protocol.xs2a.entrypoint.authorization.common;
 
 import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
+import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
+import de.adorsys.opba.protocol.bpmnshared.dto.DtoUpdatingMapper;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.pis.SinglePaymentXs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
-import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.UuidMapper;
-import de.adorsys.opba.protocol.xs2a.context.pis.SinglePaymentXs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoUpdatingMapper;
+import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.Xs2aUuidMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AisConsentInitiateBody;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
@@ -73,7 +73,7 @@ public class UpdateAuthMapper {
     /**
      * Updates account listing context with authorization request.
      */
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = {UuidMapper.class, AisMapper.class}, nullValuePropertyMappingStrategy = IGNORE)
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = {Xs2aUuidMapper.class, AisMapper.class}, nullValuePropertyMappingStrategy = IGNORE)
     public interface FromAisRequestAccountList extends DtoUpdatingMapper<AuthorizationRequest, AccountListXs2aContext> {
 
         @Mapping(source = "facadeServiceable.requestId", target = "requestId")
@@ -91,7 +91,7 @@ public class UpdateAuthMapper {
     /**
      * Updates transaction listing context with authorization request.
      */
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = {UuidMapper.class, AisMapper.class}, nullValuePropertyMappingStrategy = IGNORE)
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = {Xs2aUuidMapper.class, AisMapper.class}, nullValuePropertyMappingStrategy = IGNORE)
     public interface FromAisRequestTransactionList extends DtoUpdatingMapper<AuthorizationRequest, TransactionListXs2aContext> {
 
         @Mapping(source = "facadeServiceable.requestId", target = "requestId")

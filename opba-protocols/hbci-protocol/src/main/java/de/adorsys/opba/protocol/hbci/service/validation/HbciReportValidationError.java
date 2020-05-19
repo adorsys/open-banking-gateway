@@ -4,7 +4,7 @@ import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
-import de.adorsys.opba.protocol.hbci.config.ProtocolConfiguration;
+import de.adorsys.opba.protocol.hbci.config.HbciProtocolConfiguration;
 import de.adorsys.opba.protocol.hbci.context.LastViolations;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -22,10 +22,10 @@ import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.LAST_VALIDATION
  * back to the context using {@link de.adorsys.opba.protocol.api.authorization.UpdateAuthorization}.
  */
 @RequiredArgsConstructor
-@Service("xs2aReportValidationError")
-public class Xs2aReportValidationError implements JavaDelegate {
+@Service("hbciReportValidationError")
+public class HbciReportValidationError implements JavaDelegate {
 
-    private final ProtocolConfiguration configuration;
+    private final HbciProtocolConfiguration configuration;
     private final ApplicationEventPublisher eventPublisher;
 
     @Override

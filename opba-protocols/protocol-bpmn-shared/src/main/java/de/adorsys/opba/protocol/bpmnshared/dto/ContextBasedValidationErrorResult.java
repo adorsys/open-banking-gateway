@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.entrypoint.dto;
+package de.adorsys.opba.protocol.bpmnshared.dto;
 
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult;

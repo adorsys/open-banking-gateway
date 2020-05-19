@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.xs2a.entrypoint;
+package de.adorsys.opba.protocol.hbci.entrypoint;
 
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
@@ -27,7 +27,7 @@ import java.util.function.Function;
  * @param <T>
  */
 @RequiredArgsConstructor
-public class Xs2aOutcomeMapper<T> implements OutcomeMapper<T> {
+public class HbciOutcomeMapper<T> implements OutcomeMapper<T> {
 
     protected final CompletableFuture<Result<T>> channel;
     protected final Function<ProcessResponse, T> extractBodyOnSuccess;
