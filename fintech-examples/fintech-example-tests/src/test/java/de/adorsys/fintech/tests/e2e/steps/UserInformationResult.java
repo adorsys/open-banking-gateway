@@ -24,6 +24,8 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationR
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class UserInformationResult extends AccountInformationResult {
 
+    private static final String  SESSION_COOKIE = "SESSION-COOKIE";
+
     @Getter
     @ExpectedScenarioState
     private String respContent;
@@ -76,16 +78,14 @@ public class UserInformationResult extends AccountInformationResult {
 
     @SneakyThrows
     public UserInformationResult fintech_get_bank_infos() {
-        UserInformationResult resp = login_and_get_cookies();
-        Map<String, String> request = new HashMap<>();
-        request.put("username", fintech_login);
+        login_and_get_cookies();
         ExtractableResponse<Response> response = RestAssured
                                                          .given()
                                                          .header(X_REQUEST_ID, UUID.randomUUID().toString())
                                                          .header(X_XSRF_TOKEN, xsrfToken)
+                                                         .cookie(SESSION_COOKIE, sessionCookie)
                                                          .queryParam("keyword", KEYWORD)
                                                          .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                                         .body(request)
                                                          .when()
                                                              .get(BANKSEARCH_ENDPOINT)
                                                          .then()
@@ -103,7 +103,6 @@ public class UserInformationResult extends AccountInformationResult {
         ExtractableResponse<Response> response = RestAssured
                                                          .given()
                                                          .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                                                         .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                          .contentType(MediaType.APPLICATION_JSON_VALUE)
                                                          .body(request)
                                                          .when()
@@ -112,8 +111,8 @@ public class UserInformationResult extends AccountInformationResult {
                                                          .statusCode(HttpStatus.OK.value())
                                                          .extract();
         this.respContent = response.body().asString();
-        xsrfToken = response.header(X_XSRF_TOKEN);
-        sessionCookie = response.cookie("SESSION-COOKIE");
+        xsrfToken = response.header(X_XSRF_TOKEN).split(";")[0].trim();
+        sessionCookie = response.cookie(SESSION_COOKIE);
         return (UserInformationResult) self();
     }
 
