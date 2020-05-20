@@ -16,7 +16,7 @@
         <sequenceFlow id="hbciPinNeeded" sourceRef="hbciCheckPinPresent" targetRef="hbciAskForPin">
             <conditionExpression xsi:type="tFormalExpression"/>
         </sequenceFlow>
-        <sequenceFlow id="sid-9796e53b-4891-4072-b34f-8a9587bef409" sourceRef="hbciAskForPin" targetRef="hbciListAccounts"/>
+        <sequenceFlow id="sid-9796e53b-4891-4072-b34f-8a9587bef409" sourceRef="hbciAskForPin" targetRef="hbciCheckPinPresent"/>
         <exclusiveGateway default="hbciTanNotNeeded" id="hbciCheckTanNeeded"/>
         <serviceTask flowable:async="true" flowable:delegateExpression="${hbciAskForTanChallenge}" flowable:exclusive="false" flowable:triggerable="true" id="askUserForTAN" name="Ask user to provide TAN. Suspends to wait"/>
         <serviceTask flowable:async="true" flowable:delegateExpression="${hbciAccountListWithTan}" flowable:exclusive="false" flowable:triggerable="false" id="provideAccountListResult" name="Provide account list result">
@@ -70,9 +70,8 @@
             <bpmndi:BPMNEdge bpmnElement="sid-9796e53b-4891-4072-b34f-8a9587bef409" id="sid-70a56964-b80c-448a-ab1a-b8ce582b855a">
                 <omgdi:waypoint x="308.98804" y="288.0"/>
                 <omgdi:waypoint x="357.78806" y="287.99997"/>
-                <omgdi:waypoint x="357.7881" y="192.99998"/>
-                <omgdi:waypoint x="258.98804" y="192.99997"/>
-                <omgdi:waypoint x="258.98804" y="110.586655"/>
+                <omgdi:waypoint x="357.7881" y="178.0"/>
+                <omgdi:waypoint x="159.98804" y="178.0"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNShape bpmnElement="hbciCheckTanNeeded" id="sid-2935bfb3-05c3-4b72-ae7d-13587a24b78a">
                 <omgdc:Bounds height="40.0" width="40.0" x="381.99997" y="50.586662"/>
