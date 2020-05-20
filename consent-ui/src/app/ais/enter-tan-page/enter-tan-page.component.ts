@@ -12,7 +12,7 @@ import { SessionService } from '../../common/session.service';
   styleUrls: ['./enter-tan-page.component.scss']
 })
 export class EnterTanPageComponent implements OnInit {
-  public static ROUTE = 'enter-tan';
+  public static ROUTE = 'sca-result';
 
   private authorizationSessionId: string;
   private redirectCode: string;
