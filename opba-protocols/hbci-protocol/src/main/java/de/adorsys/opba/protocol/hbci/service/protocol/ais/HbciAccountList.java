@@ -11,10 +11,11 @@ import de.adorsys.multibanking.domain.transaction.AbstractTransaction;
 import de.adorsys.multibanking.domain.transaction.LoadAccounts;
 import de.adorsys.multibanking.hbci.HbciBanking;
 import de.adorsys.multibanking.hbci.model.HbciConsent;
-import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
+import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
+import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListAccountsResult;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.Resources;
@@ -22,7 +23,6 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.kapott.hbci.manager.BankInfo;
 import org.kapott.hbci.manager.HBCIProduct;
 import org.kapott.hbci.manager.HBCIUtils;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -31,20 +31,17 @@ import static org.kapott.hbci.manager.HBCIVersion.HBCI_300;
 
 @Slf4j
 @Service("hbciAccountList")
-public class HbciAccountList extends ValidatedExecution<HbciContext> {
+public class HbciAccountList extends ValidatedExecution<AccountListHbciContext> {
 
     private static final String MOCK_BANK_CODE = "123456";
 
     private long sysIdExpirationTimeMs = 10000L;
     private long updExpirationTimeMs = 1000L;
 
-    private final ApplicationEventPublisher eventPublisher;
     private final OnlineBankingService onlineBankingService;
 
     @SneakyThrows
-    public HbciAccountList(ApplicationEventPublisher eventPublisher) {
-        this.eventPublisher = eventPublisher;
-
+    public HbciAccountList() {
         try (InputStream is = Resources.getInputStream("blz.properties")) {
             HBCIUtils.refreshBLZList(is);
         }
@@ -60,7 +57,7 @@ public class HbciAccountList extends ValidatedExecution<HbciContext> {
     }
 
     @Override
-    protected void doRealExecution(DelegateExecution execution, HbciContext context) {
+    protected void doRealExecution(DelegateExecution execution, AccountListHbciContext context) {
         Bank bank = new Bank();
         bank.setBankCode(MOCK_BANK_CODE);
         HbciConsent consent = new HbciConsent();
@@ -75,7 +72,11 @@ public class HbciAccountList extends ValidatedExecution<HbciContext> {
         AccountInformationResponse response = onlineBankingService.loadBankAccounts(request);
 
         if (null == response.getAuthorisationCodeResponse()) {
-            eventPublisher.publishEvent(new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), response.getBankAccounts()));
+            ContextUtil.getAndUpdateContext(
+                    execution,
+                    (AccountListHbciContext ctx) -> ctx.setResponse(
+                            new AisListAccountsResult(response.getBankAccounts()))
+            );
             return;
         }
 
