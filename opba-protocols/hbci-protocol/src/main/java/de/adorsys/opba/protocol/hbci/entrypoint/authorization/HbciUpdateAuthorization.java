@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.hbci.entrypoint.authorization;
 
 import de.adorsys.opba.protocol.api.authorization.UpdateAuthorization;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
+import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
@@ -35,6 +36,7 @@ public class HbciUpdateAuthorization implements UpdateAuthorization {
         ctxUpdater.updateContext(
                 executionId,
                 (HbciContext toUpdate) -> {
+                    updateWithExtras(toUpdate, serviceContext.getRequest().getExtras());
                     updateWithScaChallenges(toUpdate, serviceContext.getRequest().getScaAuthenticationData());
                     toUpdate = extender.extend(toUpdate, serviceContext);
                     return toUpdate;
@@ -44,6 +46,15 @@ public class HbciUpdateAuthorization implements UpdateAuthorization {
         return continuationService.handleAuthorizationProcessContinuation(executionId);
     }
 
+    private void updateWithExtras(HbciContext context, Map<ExtraAuthRequestParam, Object> extras) {
+        if (null == extras) {
+            return;
+        }
+
+        if (extras.containsKey(ExtraAuthRequestParam.PSU_ID)) {
+            context.setPsuId((String) extras.get(ExtraAuthRequestParam.PSU_ID));
+        }
+    }
     private void updateWithScaChallenges(HbciContext context, Map<String, String> scaChallenges) {
         if (null == scaChallenges) {
             return;
