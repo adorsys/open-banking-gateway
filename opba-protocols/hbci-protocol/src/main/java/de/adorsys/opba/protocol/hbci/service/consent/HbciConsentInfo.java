@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.hbci.service.consent;
 
+import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class HbciConsentInfo {
     /**
      * Any kind of consent exists?
      */
-    public boolean isConsentExists(HbciContext ctx) {
-        return false;
+    public boolean isCachedAccountListMissing(AccountListHbciContext ctx) {
+        return null == ctx.getCachedResult();
     }
 }
