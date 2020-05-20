@@ -27,7 +27,7 @@ export class SidebarComponent implements OnInit {
       this.bankName = response.bankName;
       this.showListAccounts = response.services.includes('LIST_ACCOUNTS');
       this.showListTransactions = response.services.includes('LIST_TRANSACTIONS');
-      this.showInitiatePayment = response.services.includes('INITIATE_PAYMENT');
+      this.showInitiatePayment = response.services.includes('SINGLE_PAYMENT');
     });
   }
 

@@ -13,7 +13,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Map;
 
-import static de.adorsys.opba.protocol.api.common.ProtocolAction.INITIATE_PAYMENT;
+import static de.adorsys.opba.protocol.api.common.ProtocolAction.SINGLE_PAYMENT;
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
 
 @Service
@@ -25,6 +25,6 @@ public class SinglePaymentService extends FacadeService<InitiateSinglePaymentReq
             @Qualifier(FINTECH_CONTEXT_PROVIDER) ServiceContextProvider provider,
             ProtocolResultHandler handler,
             TransactionTemplate txTemplate) {
-        super(INITIATE_PAYMENT, actionProviders, selector, provider, handler, txTemplate);
+        super(SINGLE_PAYMENT, actionProviders, selector, provider, handler, txTemplate);
     }
 }

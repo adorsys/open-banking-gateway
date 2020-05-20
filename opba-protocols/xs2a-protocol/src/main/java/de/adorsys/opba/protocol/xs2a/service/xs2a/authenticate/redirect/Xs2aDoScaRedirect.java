@@ -25,7 +25,7 @@ public class Xs2aDoScaRedirect extends ValidatedExecution<Xs2aContext> {
         redirectExecutor.redirect(
                 execution,
                 context,
-                configuration.getRedirect().getToAspsp(),
+                configuration.getRedirect().getAis().getToAspsp(),
                 context.getStartScaProcessResponse().getLinks().get("scaRedirect").getHref()
         );
     }
