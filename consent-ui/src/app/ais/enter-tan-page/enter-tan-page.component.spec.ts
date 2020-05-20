@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-import { EnterScaComponent } from './sca-result-page.component';
+import { EnterTanPageComponent } from './enter-tan-page.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -10,15 +10,15 @@ import { StubUtilTests } from '../common/stub-util-tests';
 import { ConsentAuthorizationService } from '../../api';
 import { of } from 'rxjs';
 
-describe('ReportScaResultComponent', () => {
-  let component: EnterScaComponent;
-  let fixture: ComponentFixture<EnterScaComponent>;
+describe('EnterTanPageComponent', () => {
+  let component: EnterTanPageComponent;
+  let fixture: ComponentFixture<EnterTanPageComponent>;
   let consentAuthorizationService: ConsentAuthorizationService;
   let consentAuthorizationServiceSpy;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EnterScaComponent],
+      declarations: [EnterTanPageComponent],
       schemas: [NO_ERRORS_SCHEMA],
       imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
       providers: [
@@ -34,7 +34,7 @@ describe('ReportScaResultComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EnterScaComponent);
+    fixture = TestBed.createComponent(EnterTanPageComponent);
     component = fixture.componentInstance;
     consentAuthorizationService = fixture.debugElement.injector.get(ConsentAuthorizationService);
     fixture.detectChanges();
