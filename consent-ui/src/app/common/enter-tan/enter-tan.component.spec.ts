@@ -1,23 +1,23 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { EnterScaComponent } from './enter-sca.component';
+import { EnterTanComponent } from './enter-tan.component';
 import { StubUtilTests } from '../../ais/common/stub-util-tests';
 
-describe('ScaSelectComponent', () => {
-  let component: EnterScaComponent;
-  let fixture: ComponentFixture<EnterScaComponent>;
+describe('EnterTanComponent', () => {
+  let component: EnterTanComponent;
+  let fixture: ComponentFixture<EnterTanComponent>;
   let form;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EnterScaComponent],
+      declarations: [EnterTanComponent],
       imports: [ReactiveFormsModule]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EnterScaComponent);
+    fixture = TestBed.createComponent(EnterTanComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     form = component.reportScaResultForm;
@@ -34,7 +34,7 @@ describe('ScaSelectComponent', () => {
   });
 
   it('should be true if the form is valid', () => {
-    form.get('sca').setValue(StubUtilTests.DUMMY_INPUT);
+    form.get('tan').setValue(StubUtilTests.DUMMY_INPUT);
     component.onSubmit();
     fixture.detectChanges();
     expect(component.reportScaResultForm.valid).toBe(true);

@@ -7,12 +7,12 @@ import { ApiHeaders } from '../../api/api.headers';
 import { SessionService } from '../../common/session.service';
 
 @Component({
-  selector: 'consent-app-enter-sca-page',
-  templateUrl: './enter-sca-page.component.html',
-  styleUrls: ['./enter-sca-page.component.scss']
+  selector: 'consent-app-enter-tan-page',
+  templateUrl: './enter-tan-page.component.html',
+  styleUrls: ['./enter-tan-page.component.scss']
 })
-export class EnterScaComponent implements OnInit {
-  public static ROUTE = 'sca-result';
+export class EnterTanPageComponent implements OnInit {
+  public static ROUTE = 'enter-tan';
 
   private authorizationSessionId: string;
   private redirectCode: string;
@@ -30,14 +30,14 @@ export class EnterScaComponent implements OnInit {
     this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
   }
 
-  onSubmit(sca: string): void {
+  onSubmit(tan: string): void {
     this.consentAuthorizationService
       .embeddedUsingPOST(
         this.authorizationSessionId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
         StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
         this.redirectCode,
-        { scaAuthenticationData: { SCA_CHALLENGE_DATA: sca } },
+        { scaAuthenticationData: { SCA_CHALLENGE_DATA: tan } },
         'response'
       )
       .subscribe(res => {
