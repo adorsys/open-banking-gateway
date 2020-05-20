@@ -110,7 +110,7 @@ Note `CONTEXT` in above snippet.
 
 ## Protocol customization
 
-To customize beans that are getting called in XS2A-protocol (for example to implement bank protocol tha calls some 
+To customize beans that are getting called in XS2A-protocol (for example to implement bank protocol that calls some 
 custom beans, but follows XS2A flow) one can check [xs2a-sandbox-protocol](../xs2a-sandbox-protocol) directory.
 Customization is done by replacing bean names in generated xml files.
 

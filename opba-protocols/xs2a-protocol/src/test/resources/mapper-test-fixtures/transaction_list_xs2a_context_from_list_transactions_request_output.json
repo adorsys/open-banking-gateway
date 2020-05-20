@@ -26,7 +26,7 @@
   "flowByAction": {
     "LIST_ACCOUNTS": "xs2a-list-accounts",
     "LIST_TRANSACTIONS": "xs2a-list-transactions",
-    "INITIATE_PAYMENT": "xs2a-single-payments"
+    "SINGLE_PAYMENT": "xs2a-single-payments"
   },
   "sagaId": null,
   "serviceSessionId": null,
