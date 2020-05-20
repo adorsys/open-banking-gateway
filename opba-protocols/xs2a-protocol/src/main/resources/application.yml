@@ -25,8 +25,22 @@ spring:
       fill-with-mock-data: true
 
 protocol:
+  pis:
+    redirect:
+      to-aspsp: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
+      payments:
+        ok:  ${facade.urls.embedded-ui-base-url}/v1/payment/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+        nok: ${facade.urls.embedded-ui-base-url}/v1/payment/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
+        result: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
   xs2a:
     urls:
+      pis:
+        redirect:
+          to-aspsp: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
+          payments:
+            ok:  ${facade.urls.embedded-ui-base-url}/v1/payment/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+            nok: ${facade.urls.embedded-ui-base-url}/v1/payment/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
+            result: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
       redirect:
         to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
         consent-accounts:

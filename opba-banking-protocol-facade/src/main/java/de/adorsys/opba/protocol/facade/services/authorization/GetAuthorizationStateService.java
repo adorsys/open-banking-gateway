@@ -20,11 +20,11 @@ import static de.adorsys.opba.protocol.facade.services.context.ServiceContextPro
 public class GetAuthorizationStateService extends FacadeService<AuthorizationRequest, AuthStateBody, GetAuthorizationState> {
 
     public GetAuthorizationStateService(
-        Map<String, ? extends GetAuthorizationState> actionProviders,
-        ProtocolSelector selector,
-        @Qualifier(FINTECH_CONTEXT_PROVIDER) ServiceContextProvider provider,
-        ProtocolResultHandler handler,
-        TransactionTemplate txTemplate) {
+            Map<String, ? extends GetAuthorizationState> actionProviders,
+            ProtocolSelector selector,
+            @Qualifier(FINTECH_CONTEXT_PROVIDER) ServiceContextProvider provider,
+            ProtocolResultHandler handler,
+            TransactionTemplate txTemplate) {
         super(GET_AUTHORIZATION_STATE, actionProviders, selector, provider, handler, txTemplate);
     }
 }
