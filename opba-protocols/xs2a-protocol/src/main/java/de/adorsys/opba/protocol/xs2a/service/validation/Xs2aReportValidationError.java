@@ -44,7 +44,7 @@ public class Xs2aReportValidationError implements JavaDelegate {
                         .executionId(execution.getId())
                         .provideMoreParamsDialog(
                                 ContextUtil.evaluateSpelForCtx(
-                                        configuration.getRedirect().getParameters().getProvideMore(),
+                                        configuration.getRedirect().getAis().getParameters().getProvideMore(),
                                         execution,
                                         current,
                                         URI.class)

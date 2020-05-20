@@ -54,7 +54,7 @@ class WiremockE2EStressXs2aProtocolTest extends SpringScenarioTest<MockServers, 
 
     // See https://github.com/spring-projects/spring-boot/issues/14879 for the 'why setting port'
     void beforeEach() {
-        ProtocolConfiguration.Redirect.Consent consent = configuration.getRedirect().getConsentAccounts();
+        ProtocolConfiguration.Ais.Consent consent = configuration.getRedirect().getAis().getConsentAccounts();
         consent.setOk(consent.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
         consent.setNok(consent.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
 

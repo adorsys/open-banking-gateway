@@ -30,15 +30,24 @@ public class ProtocolConfiguration {
     @NotNull
     private Redirect redirect;
 
-    /**
-     * Payment related urls .
-     */
-    @NotNull
-    private Pis pis;
-
     @Data
     public static class Redirect {
 
+        /**
+         * Account related urls .
+         */
+        @NotNull
+        private Ais ais;
+
+        /**
+         * Payment related urls .
+         */
+        @NotNull
+        private Pis pis;
+    }
+
+    @Data
+    public static class Ais {
         /**
          * Consent related urls - Consent with IBANs input form, etc.
          */
@@ -117,47 +126,39 @@ public class ProtocolConfiguration {
 
     @Data
     public static class Pis {
+
         /**
-         * Redirect links for UI screens - i.e. which screen to use for password input.
+         * To ASPSP redirection page (for Redirect SCA).
+         */
+        @NotBlank
+        private String toAspsp;
+
+        /**
+         * To ASPSP redirection page (for Redirect SCA).
          */
         @NotNull
-        private Redirect redirect;
+        private Payment payments;
 
         @Data
-        public static class Redirect {
+        public static class Payment {
+
             /**
-             * To ASPSP redirection page (for Redirect SCA).
+             * URL that represents page saying that payment creation was OK (comes before payment result page).
              */
             @NotBlank
-            private String toAspsp;
+            private String ok;
 
             /**
-             * To ASPSP redirection page (for Redirect SCA).
+             * URL that represents page saying that payment creation was not OK (comes before payment result page).
              */
-            @NotNull
-            private Payment payments;
+            @NotBlank
+            private String nok;
 
-            @Data
-            public static class Payment {
-
-                /**
-                 * URL that represents page saying that payment creation was OK (comes before payment result page).
-                 */
-                @NotBlank
-                private String ok;
-
-                /**
-                 * URL that represents page saying that payment creation was not OK (comes before payment result page).
-                 */
-                @NotBlank
-                private String nok;
-
-                /**
-                 * URL that represents payment acquisition result.
-                 */
-                @NotBlank
-                private String result;
-            }
+            /**
+             * URL that represents payment acquisition result.
+             */
+            @NotBlank
+            private String result;
         }
     }
 }

@@ -806,7 +806,7 @@ components:
       properties:
         action:
           type: string
-          enum: [LIST_ACCOUNTS, LIST_TRANSACTIONS, INITIATE_PAYMENT]
+          enum: [LIST_ACCOUNTS, LIST_TRANSACTIONS, SINGLE_PAYMENT]
         violations:
           type: array
           items:

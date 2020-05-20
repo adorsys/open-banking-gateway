@@ -40,7 +40,7 @@ public class Xs2aContext extends BaseContext {
     private Map<ProtocolAction, String> flowByAction = ImmutableMap.of(
             ProtocolAction.LIST_ACCOUNTS, "xs2a-list-accounts",
             ProtocolAction.LIST_TRANSACTIONS, "xs2a-list-transactions",
-            ProtocolAction.INITIATE_PAYMENT, "xs2a-single-payments"
+            ProtocolAction.SINGLE_PAYMENT, "xs2a-single-payments"
     );
 
     ///////////////////////////////////////// Mandatory dynamic
