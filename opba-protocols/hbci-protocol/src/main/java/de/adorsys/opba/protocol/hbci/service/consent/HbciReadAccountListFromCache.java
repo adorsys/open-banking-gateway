@@ -1,13 +1,13 @@
 package de.adorsys.opba.protocol.hbci.service.consent;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import de.adorsys.multibanking.domain.response.AccountInformationResponse;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
 import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
 import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableProperties;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
+import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListAccountsResult;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -42,14 +42,14 @@ public class HbciReadAccountListFromCache extends ValidatedExecution<AccountList
             throw new IllegalArgumentException("Class deserialization not allowed " + classNameAndValue.getKey());
         }
 
-        AccountInformationResponse response = (AccountInformationResponse) mapper.getMapper().readValue(
+        AisListAccountsResult response = (AisListAccountsResult) mapper.getMapper().readValue(
                 classNameAndValue.getValue().traverse(),
                 Class.forName(classNameAndValue.getKey())
         );
 
         ContextUtil.getAndUpdateContext(
                 execution,
-                (AccountListHbciContext toUpdate) -> toUpdate.setCachedResult(response)
+                (AccountListHbciContext toUpdate) -> toUpdate.setResponse(response)
         );
     }
 }
