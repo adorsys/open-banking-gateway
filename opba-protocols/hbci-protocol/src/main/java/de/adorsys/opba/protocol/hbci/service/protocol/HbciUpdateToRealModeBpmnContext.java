@@ -18,7 +18,10 @@ public class HbciUpdateToRealModeBpmnContext implements JavaDelegate {
     public void execute(DelegateExecution execution) {
         ContextUtil.getAndUpdateContext(
                 execution,
-                (HbciContext ctx) -> ctx.setMode(ContextMode.REAL_CALLS)
+                (HbciContext ctx) -> {
+                    ctx.setMode(ContextMode.REAL_CALLS);
+                    ctx.setPsuPin(null);
+                }
         );
     }
 }

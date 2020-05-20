@@ -36,17 +36,18 @@
         <sequenceFlow id="sid-3f0ca2d6-371a-4c18-bdde-6fd5b6981862" sourceRef="cachedAccountListChecker" targetRef="accountListInitiateConsent">
             <conditionExpression xsi:type="tFormalExpression">#{hbciConsentInfo.isCachedAccountListMissing(CONTEXT)}</conditionExpression>
         </sequenceFlow>
-        <sequenceFlow id="sid-fa73dc16-6a29-4281-a2ef-b101821d3e48" sourceRef="hbciCheckTanNeeded" targetRef="cacheAccountList">
-            <conditionExpression xsi:type="tFormalExpression"/>
-        </sequenceFlow>
         <sequenceFlow id="hbciTanNotNeeded" sourceRef="hbciCheckTanNeeded" targetRef="cacheAccountList">
             <conditionExpression xsi:type="tFormalExpression"/>
         </sequenceFlow>
         <exclusiveGateway default="hbciTanNotNeeded" id="hbciCheckTanNeeded" name="Check if TAN challenge is needed"/>
         <serviceTask flowable:async="true" flowable:delegateExpression="${hbciReadAccountListFromCache}" flowable:exclusive="false" flowable:triggerable="false" id="readAccountListFromCache" name="Read account list from cache"/>
-        <sequenceFlow id="sid-05fe18f0-a41f-4112-ac7b-f15e6f9cbee4" sourceRef="cachedAccountListChecker" targetRef="end"/>
-        <sequenceFlow id="sid-a706977a-d880-47e9-aee2-d1d7de72ae8f" sourceRef="cacheAccountList" targetRef="end"/>
+        <sequenceFlow id="sid-05fe18f0-a41f-4112-ac7b-f15e6f9cbee4" sourceRef="cachedAccountListChecker" targetRef="publishAccountListResult"/>
+        <sequenceFlow id="sid-a706977a-d880-47e9-aee2-d1d7de72ae8f" sourceRef="cacheAccountList" targetRef="reportConsentAuthorized"/>
         <sequenceFlow id="sid-48d18d7a-caad-4c63-bf4a-c6298716dafc" sourceRef="start" targetRef="readAccountListFromCache"/>
+        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciPublishAccountListResult}" flowable:exclusive="false" flowable:triggerable="false" id="publishAccountListResult" name="Publish account list result"/>
+        <sequenceFlow id="sid-63b1b1ba-b99f-4a82-b22a-3082075f25e4" sourceRef="publishAccountListResult" targetRef="end"/>
+        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciReportToFintechConsentAuthorized}" flowable:exclusive="false" flowable:triggerable="false" id="reportConsentAuthorized" name="Report to FinTech that consent was authorized"/>
+        <sequenceFlow id="sid-5b1e9eba-c5ab-4baf-9472-b7f269f96a72" sourceRef="reportConsentAuthorized" targetRef="publishAccountListResult"/>
     </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_hbci-list-accounts">
     <bpmndi:BPMNPlane bpmnElement="hbci-list-accounts" id="BPMNPlane_hbci-list-accounts">
@@ -54,7 +55,7 @@
         <omgdc:Bounds height="30.0" width="30.0" x="-458.14835" y="265.26996"/>
       </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
-        <omgdc:Bounds height="28.0" width="28.0" x="888.3779" y="218.13669"/>
+        <omgdc:Bounds height="28.0" width="28.0" x="1016.71124" y="218.1367"/>
       </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="hbciListAccounts" id="sid-22a0a985-8045-4aee-b78a-3367173eff86">
                 <omgdc:Bounds height="80.0" width="100.0" x="208.988" y="30.586658"/>
@@ -127,11 +128,6 @@
                 <omgdi:waypoint x="-129.00272" y="178.0"/>
                 <omgdi:waypoint x="-61.0" y="178.0"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="sid-fa73dc16-6a29-4281-a2ef-b101821d3e48" id="edge-00c101f5-8596-4e82-b426-c1f136858c72">
-                <omgdi:waypoint x="402.54272" y="90.58665"/>
-                <omgdi:waypoint x="402.54272" y="232.13666"/>
-                <omgdi:waypoint x="589.27435" y="232.13669"/>
-            </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="hbciTanNotNeeded" id="edge-5e5abd84-dac1-4875-9bfb-1d935405b22a">
                 <omgdi:waypoint x="402.54272" y="90.58665"/>
                 <omgdi:waypoint x="402.54272" y="232.13666"/>
@@ -146,16 +142,30 @@
             <bpmndi:BPMNEdge bpmnElement="sid-05fe18f0-a41f-4112-ac7b-f15e6f9cbee4" id="edge-5e23c6f8-02a9-41fc-b10b-897f23027abd">
                 <omgdi:waypoint x="-129.00273" y="300.27"/>
                 <omgdi:waypoint x="-129.00278" y="393.00775"/>
-                <omgdi:waypoint x="902.5699" y="393.00778"/>
-                <omgdi:waypoint x="902.56995" y="248.00002"/>
+                <omgdi:waypoint x="891.5855" y="393.00772"/>
+                <omgdi:waypoint x="891.5856" y="272.13672"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="sid-a706977a-d880-47e9-aee2-d1d7de72ae8f" id="edge-f209e4af-c61e-4232-817b-8293f2a7ae47">
                 <omgdi:waypoint x="689.2743" y="232.13667"/>
-                <omgdi:waypoint x="888.57" y="232.13669"/>
+                <omgdi:waypoint x="714.97107" y="232.13669"/>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="sid-48d18d7a-caad-4c63-bf4a-c6298716dafc" id="edge-cd41ea11-c089-478a-bb49-f6072c80d685">
                 <omgdi:waypoint x="-428.14832" y="280.26996"/>
                 <omgdi:waypoint x="-322.43185" y="280.26996"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="publishAccountListResult" id="shape-f18a2bea-eee1-4ef1-981e-e5c4cef6ff95">
+                <omgdc:Bounds height="80.0" width="100.0" x="841.5856" y="192.1367"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="sid-63b1b1ba-b99f-4a82-b22a-3082075f25e4" id="edge-513a6aa6-d580-4d03-b57c-69bd0dc66d41">
+                <omgdi:waypoint x="941.58563" y="232.13672"/>
+                <omgdi:waypoint x="1016.7112" y="232.1367"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="reportConsentAuthorized" id="shape-bdf859b0-57bf-4bca-9667-27b6c703675e">
+                <omgdc:Bounds height="80.0" width="100.0" x="714.97107" y="192.13669"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="sid-5b1e9eba-c5ab-4baf-9472-b7f269f96a72" id="edge-209bc3ee-bdf8-4a4d-9039-56a789340c2f">
+                <omgdi:waypoint x="814.97107" y="232.13669"/>
+                <omgdi:waypoint x="841.5856" y="232.13669"/>
             </bpmndi:BPMNEdge>
         </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
