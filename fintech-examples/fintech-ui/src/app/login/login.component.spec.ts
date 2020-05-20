@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
 
@@ -13,14 +12,12 @@ import { BankSearchModule } from '../bank-search/bank-search.module';
 
 import { DocumentCookieService } from '../services/document-cookie.service';
 import { AuthService } from '../services/auth.service';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('LoginComponent', () => {
+fdescribe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let authService: AuthService;
   let authServiceSpy;
-  let de: DebugElement;
   let el: HTMLElement;
   let router: Router;
 
@@ -40,13 +37,13 @@ describe('LoginComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
-
-    authService = fixture.debugElement.injector.get(AuthService);
-    de = fixture.debugElement.query(By.css('form'));
-    el = de.nativeElement;
+    authService = TestBed.get(AuthService);
     router = TestBed.get(Router);
-
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    TestBed.resetTestingModule();
   });
 
   it('should create', () => {
@@ -67,7 +64,6 @@ describe('LoginComponent', () => {
     expect(authServiceSpy).toHaveBeenCalled();
   });
 
-  // TODO: fix this test when component Validators are properly set
   it('loginForm should be invalid when at least one field is empty', () => {
     expect(component.loginForm.valid).toBeFalsy();
   });
