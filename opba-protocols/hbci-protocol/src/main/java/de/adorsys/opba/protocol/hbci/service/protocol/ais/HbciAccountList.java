@@ -66,8 +66,7 @@ public class HbciAccountList extends ValidatedExecution<HbciContext> {
         HbciConsent consent = new HbciConsent();
         consent.setHbciProduct(new HBCIProduct("product", "300"));
         consent.setCredentials(Credentials.builder()
-                .customerId("foo-bar")
-                .userId("user-id")
+                .userId(context.getPsuId())
                 .pin(context.getPsuPin())
                 .build()
         );

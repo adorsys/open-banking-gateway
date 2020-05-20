@@ -189,6 +189,7 @@ bpmnshared:
         - de.adorsys.opba.protocol.bpmnshared.dto.context
         - de.adorsys.opba.protocol.xs2a.context
         - de.adorsys.opba.protocol.hbci.context
+        - de.adorsys.multibanking.domain.response
     expirable:
       expire-after-write: PT600S
 flowable:
