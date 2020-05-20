@@ -1,21 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-import { EnterScaPageComponent } from './enter-sca-page.component';
+import { EnterTanPageComponent } from './enter-tan-page.component';
 
 describe('EnterScaPageComponent', () => {
-  let component: EnterScaPageComponent;
-  let fixture: ComponentFixture<EnterScaPageComponent>;
+  let component: EnterTanPageComponent;
+  let fixture: ComponentFixture<EnterTanPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [EnterScaPageComponent],
+      declarations: [EnterTanPageComponent],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EnterScaPageComponent);
+    fixture = TestBed.createComponent(EnterTanPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
