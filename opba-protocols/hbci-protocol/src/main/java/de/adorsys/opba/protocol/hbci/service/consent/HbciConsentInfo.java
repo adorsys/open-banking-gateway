@@ -21,13 +21,13 @@ public class HbciConsentInfo {
      * Is the TAN challenge required.
      */
     public boolean isTanChallengeRequired(HbciContext ctx) {
-        return null != ctx.getPsuPin();
+        return ctx.isTanChallengeRequired();
     }
 
     /**
      * Any kind of consent exists?
      */
     public boolean isCachedAccountListMissing(AccountListHbciContext ctx) {
-        return null == ctx.getCachedResult();
+        return null == ctx.getResponse();
     }
 }

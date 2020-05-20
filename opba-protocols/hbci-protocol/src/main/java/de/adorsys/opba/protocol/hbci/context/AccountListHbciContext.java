@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.hbci.context;
 
-import de.adorsys.multibanking.domain.response.AccountInformationResponse;
+import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListAccountsResult;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,12 +9,7 @@ import lombok.EqualsAndHashCode;
 public class AccountListHbciContext extends HbciContext {
 
     /**
-     * Real-time result of the operation as HBCI protocol does not have support for consent.
+     * Real-time or cached result of the operation as HBCI protocol does not have support for consent.
      */
-    private AccountInformationResponse response;
-
-    /**
-     * Cached result of the operation as HBCI protocol does not have support for consent.
-     */
-    private AccountInformationResponse cachedResult;
+    private AisListAccountsResult response;
 }
