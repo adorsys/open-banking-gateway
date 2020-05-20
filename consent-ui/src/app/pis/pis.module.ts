@@ -4,7 +4,7 @@ import { PaymentInitiateComponent } from './initiation/payment-initiate.componen
 import { PisRoutingModule } from './pis-routing.module';
 import { EntryPageComponent } from './entry-page/entry-page.component';
 import { EnterPinPageComponent } from './enter-pin-page/enter-pin-page.component';
-import { EnterScaPageComponent } from './enter-sca-page/enter-sca-page.component';
+import { EnterTanPageComponent } from './enter-tan-page/enter-tan-page.component';
 import { SelectScaPageComponent } from './select-sca-page/select-sca-page.component';
 
 @NgModule({
@@ -12,7 +12,7 @@ import { SelectScaPageComponent } from './select-sca-page/select-sca-page.compon
     PaymentInitiateComponent,
     EntryPageComponent,
     EnterPinPageComponent,
-    EnterScaPageComponent,
+    EnterTanPageComponent,
     SelectScaPageComponent
   ],
   imports: [SharedModule, PisRoutingModule]

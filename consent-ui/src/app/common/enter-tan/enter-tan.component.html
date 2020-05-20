@@ -7,21 +7,21 @@
           We have sent you the confirmation number. Please check your email and fill in the field below.
         </p>
         <div class="form-group">
-          <label class="text-secondary" for="sca">SCA confirmation number:</label><br />
+          <label class="text-secondary" for="tan">SCA confirmation number:</label><br />
           <input
             [ngClass]="{
-              'is-invalid': reportScaResultForm.controls['sca'].touched && reportScaResultForm.controls['sca'].errors
+              'is-invalid': reportScaResultForm.controls['tan'].touched && reportScaResultForm.controls['tan'].errors
             }"
             class="form-control"
-            formControlName="sca"
-            id="sca"
-            name="sca"
+            formControlName="tan"
+            id="tan"
+            name="tan"
             placeholder="Enter your number"
             type="password"
           />
           <div
             *ngIf="
-              reportScaResultForm.controls['sca'].touched && reportScaResultForm.controls['sca'].hasError('required')
+              reportScaResultForm.controls['tan'].touched && reportScaResultForm.controls['tan'].hasError('required')
             "
             class="invalid-feedback"
           >

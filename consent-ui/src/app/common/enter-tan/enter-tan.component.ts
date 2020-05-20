@@ -2,11 +2,11 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'consent-app-enter-sca',
-  templateUrl: './enter-sca.component.html',
-  styleUrls: ['./enter-sca.component.scss']
+  selector: 'consent-app-enter-tan',
+  templateUrl: './enter-tan.component.html',
+  styleUrls: ['./enter-tan.component.scss']
 })
-export class EnterScaComponent implements OnInit {
+export class EnterTanComponent implements OnInit {
   reportScaResultForm: FormGroup;
   @Input() wrongSca: boolean;
   @Output() enteredSca = new EventEmitter<string>();
@@ -15,11 +15,11 @@ export class EnterScaComponent implements OnInit {
 
   ngOnInit() {
     this.reportScaResultForm = this.formBuilder.group({
-      sca: ['', Validators.required]
+      tan: ['', Validators.required]
     });
   }
 
   onSubmit() {
-    this.enteredSca.emit(this.reportScaResultForm.get('sca').value);
+    this.enteredSca.emit(this.reportScaResultForm.get('tan').value);
   }
 }
