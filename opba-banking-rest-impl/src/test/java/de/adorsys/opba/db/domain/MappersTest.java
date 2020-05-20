@@ -45,7 +45,7 @@ class MappersTest {
         Map<ProtocolAction, BankProtocol> actionMap = new HashMap<>();
         actionMap.put(ProtocolAction.LIST_TRANSACTIONS, new BankProtocol());
         actionMap.put(ProtocolAction.LIST_ACCOUNTS, new BankProtocol());
-        actionMap.put(ProtocolAction.INITIATE_PAYMENT, new BankProtocol());
+        actionMap.put(ProtocolAction.SINGLE_PAYMENT, new BankProtocol());
         bankProfile.setActions(actionMap);
 
         BankProfileDescriptor bankProfileDescriptor = BankProfile.TO_BANK_PROFILE_DESCRIPTOR.map(bankProfile);

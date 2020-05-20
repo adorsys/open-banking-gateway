@@ -48,10 +48,10 @@ export interface ConsentAuth {
     singlePayment?: SinglePayment;
 }
 export namespace ConsentAuth {
-    export type ActionEnum = 'LIST_ACCOUNTS' | 'LIST_TRANSACTIONS' | 'INITIATE_PAYMENT';
+    export type ActionEnum = 'LIST_ACCOUNTS' | 'LIST_TRANSACTIONS' | 'SINGLE_PAYMENT';
     export const ActionEnum = {
         ACCOUNTS: 'LIST_ACCOUNTS' as ActionEnum,
-        INITIATE_PAYMENT: 'INITIATE_PAYMENT' as ActionEnum,
+        SINGLE_PAYMENT: 'SINGLE_PAYMENT' as ActionEnum,
         TRANSACTIONS: 'LIST_TRANSACTIONS' as ActionEnum
     };
 }
