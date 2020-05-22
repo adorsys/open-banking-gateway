@@ -123,7 +123,7 @@ public class DatabaseTest {
 
         userRepository.save(userEntity);
         for (String sessionCookieValue:sessionCookieValues) {
-            SessionEntity sessionEntity = new SessionEntity(userEntity, 10);
+            SessionEntity sessionEntity = new SessionEntity(userEntity, 10, null);
             sessionEntity.setSessionCookieValue(sessionCookieValue);
             loginRepository.save(new LoginEntity(userEntity));
             sessionRepository.save(sessionEntity);
