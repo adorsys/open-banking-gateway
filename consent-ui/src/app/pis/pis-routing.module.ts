@@ -5,6 +5,7 @@ import { EntryPageComponent } from './entry-page/entry-page.component';
 import { EnterPinPageComponent } from './enter-pin-page/enter-pin-page.component';
 import { EnterTanPageComponent } from './enter-tan-page/enter-tan-page.component';
 import { SelectScaPageComponent } from './select-sca-page/select-sca-page.component';
+import { ResultPageComponent } from './result-page/result-page.component';
 
 const routes: Routes = [
   {
@@ -14,7 +15,8 @@ const routes: Routes = [
       { path: '', component: PaymentInitiateComponent },
       { path: EnterPinPageComponent.ROUTE, component: EnterPinPageComponent },
       { path: EnterTanPageComponent.ROUTE, component: EnterTanPageComponent },
-      { path: SelectScaPageComponent.ROUTE, component: SelectScaPageComponent }
+      { path: SelectScaPageComponent.ROUTE, component: SelectScaPageComponent },
+      { path: ResultPageComponent.ROUTE, component: ResultPageComponent }
     ]
   }
 ];
