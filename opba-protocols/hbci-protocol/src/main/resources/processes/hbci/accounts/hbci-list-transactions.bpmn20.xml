@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:flowable="http://flowable.org/bpmn" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef" typeLanguage="http://www.w3.org/2001/XMLSchema">
-  <process id="hbci-list-accounts" isExecutable="true" name="hbci-list-accounts">
-        <documentation>HBCI compatible account list</documentation>
+  <process id="hbci-list-transactions" isExecutable="true" name="hbci-list-transactions">
+        <documentation>HBCI compatible transactions list</documentation>
         <startEvent flowable:formFieldValidation="true" id="start" name="start">
-      <documentation>Starts HBCI account listing flow</documentation>
+      <documentation>Starts HBCI transaction listing flow</documentation>
     </startEvent>
         <endEvent id="end" name="end"/>
-        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciAccountList}" flowable:exclusive="false" flowable:triggerable="false" id="hbciListAccounts" name="Call HBCI account list"/>
+        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciTransactionList}" flowable:exclusive="false" flowable:triggerable="false" id="hbciListTransactions" name="Call HBCI transaction list"/>
         <exclusiveGateway default="hbciPinNeeded" id="hbciCheckPinPresent" name="Check pin is present"/>
         <sequenceFlow id="hbciPinNotNeeded" sourceRef="hbciCheckPinPresent" targetRef="initiateHbciDialogSendPin">
             <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{hbciConsentInfo.isPasswordPresent(CONTEXT)}]]></conditionExpression>
@@ -17,47 +17,47 @@
         </sequenceFlow>
         <sequenceFlow id="sid-9796e53b-4891-4072-b34f-8a9587bef409" sourceRef="hbciAskForPin" targetRef="hbciCheckPinPresent"/>
         <serviceTask flowable:async="true" flowable:delegateExpression="${hbciAskForTanChallenge}" flowable:exclusive="false" flowable:triggerable="true" id="askUserForTAN" name="Ask user to provide TAN. Suspends to wait"/>
-        <sequenceFlow id="sid-56d50940-9b81-4d42-b75d-dbe9a18fa7bd" sourceRef="hbciListAccounts" targetRef="hbciCheckTanNeeded"/>
+        <sequenceFlow id="sid-56d50940-9b81-4d42-b75d-dbe9a18fa7bd" sourceRef="hbciListTransactions" targetRef="hbciCheckTanNeeded"/>
         <sequenceFlow id="hbciTanNeeded" sourceRef="hbciCheckTanNeeded" targetRef="askUserForTAN">
             <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{hbciConsentInfo.isTanChallengeRequired(CONTEXT)}]]></conditionExpression>
         </sequenceFlow>
-        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciAskForPsuId}" flowable:exclusive="false" flowable:triggerable="false" id="accountListInitiateConsent" name="Ask user to provide his PSU id">
+        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciAskForPsuId}" flowable:exclusive="false" flowable:triggerable="false" id="transactiontListInitiateConsent" name="Ask user to provide his PSU id">
             <documentation>Ensures that user opens UI landing page after login</documentation>
         </serviceTask>
-        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciStoreAccountListToCache}" flowable:exclusive="false" flowable:triggerable="false" id="cacheAccountList" name="Cache account list"/>
-        <exclusiveGateway default="sid-05fe18f0-a41f-4112-ac7b-f15e6f9cbee4" id="cachedAccountListChecker" name="Cached account list present?"/>
-        <sequenceFlow id="sid-8528c97f-afbd-45df-97dc-527e05ef6d9a" sourceRef="readAccountListFromCache" targetRef="cachedAccountListChecker"/>
-        <sequenceFlow id="sid-3f0ca2d6-371a-4c18-bdde-6fd5b6981862" sourceRef="cachedAccountListChecker" targetRef="accountListInitiateConsent">
-            <conditionExpression xsi:type="tFormalExpression">#{hbciConsentInfo.isCachedAccountListMissing(CONTEXT)}</conditionExpression>
+        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciStoreTransactionListToCache}" flowable:exclusive="false" flowable:triggerable="false" id="cacheTransactionList" name="Cache transaction list"/>
+        <exclusiveGateway default="sid-05fe18f0-a41f-4112-ac7b-f15e6f9cbee4" id="cachedTransactionListChecker" name="Cached transaction list present?"/>
+        <sequenceFlow id="sid-8528c97f-afbd-45df-97dc-527e05ef6d9a" sourceRef="readTransactionsListFromCache" targetRef="cachedTransactionListChecker"/>
+        <sequenceFlow id="sid-3f0ca2d6-371a-4c18-bdde-6fd5b6981862" sourceRef="cachedTransactionListChecker" targetRef="transactiontListInitiateConsent">
+            <conditionExpression xsi:type="tFormalExpression">#{hbciConsentInfo.isCachedTransactionListMissing(CONTEXT)}</conditionExpression>
         </sequenceFlow>
-        <sequenceFlow id="hbciTanNotNeeded" sourceRef="hbciCheckTanNeeded" targetRef="cacheAccountList">
+        <sequenceFlow id="hbciTanNotNeeded" sourceRef="hbciCheckTanNeeded" targetRef="cacheTransactionList">
             <conditionExpression xsi:type="tFormalExpression"/>
         </sequenceFlow>
         <exclusiveGateway default="hbciTanNotNeeded" id="hbciCheckTanNeeded" name="Check if TAN challenge is needed"/>
-        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciReadAccountListFromCache}" flowable:exclusive="false" flowable:triggerable="false" id="readAccountListFromCache" name="Read account list from cache"/>
-        <sequenceFlow id="sid-05fe18f0-a41f-4112-ac7b-f15e6f9cbee4" sourceRef="cachedAccountListChecker" targetRef="publishAccountListResult"/>
-        <sequenceFlow id="sid-a706977a-d880-47e9-aee2-d1d7de72ae8f" sourceRef="cacheAccountList" targetRef="reportConsentAuthorized"/>
-        <sequenceFlow id="sid-48d18d7a-caad-4c63-bf4a-c6298716dafc" sourceRef="start" targetRef="readAccountListFromCache"/>
-        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciPublishAccountListResult}" flowable:exclusive="false" flowable:triggerable="false" id="publishAccountListResult" name="Publish account list result"/>
-        <sequenceFlow id="sid-63b1b1ba-b99f-4a82-b22a-3082075f25e4" sourceRef="publishAccountListResult" targetRef="end"/>
+        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciReadTransactionListFromCache}" flowable:exclusive="false" flowable:triggerable="false" id="readTransactionsListFromCache" name="Read transactions list from cache"/>
+        <sequenceFlow id="sid-05fe18f0-a41f-4112-ac7b-f15e6f9cbee4" sourceRef="cachedTransactionListChecker" targetRef="publishTransactionListResult"/>
+        <sequenceFlow id="sid-a706977a-d880-47e9-aee2-d1d7de72ae8f" sourceRef="cacheTransactionList" targetRef="reportConsentAuthorized"/>
+        <sequenceFlow id="sid-48d18d7a-caad-4c63-bf4a-c6298716dafc" sourceRef="start" targetRef="readTransactionsListFromCache"/>
+        <serviceTask flowable:async="true" flowable:delegateExpression="${hbciPublishTransactionListResult}" flowable:exclusive="false" flowable:triggerable="false" id="publishTransactionListResult" name="Publish transaction list result"/>
+        <sequenceFlow id="sid-63b1b1ba-b99f-4a82-b22a-3082075f25e4" sourceRef="publishTransactionListResult" targetRef="end"/>
         <serviceTask flowable:async="true" flowable:delegateExpression="${hbciReportToFintechConsentAuthorized}" flowable:exclusive="false" flowable:triggerable="false" id="reportConsentAuthorized" name="Report to FinTech that consent was authorized"/>
         <sequenceFlow id="sid-5b1e9eba-c5ab-4baf-9472-b7f269f96a72" sourceRef="reportConsentAuthorized" targetRef="end"/>
-        <sequenceFlow id="sid-4d4aae34-b457-44f9-82bf-f401a374fdb6" sourceRef="askUserForTAN" targetRef="hbciListAccounts"/>
+        <sequenceFlow id="sid-4d4aae34-b457-44f9-82bf-f401a374fdb6" sourceRef="askUserForTAN" targetRef="hbciListTransactions"/>
         <serviceTask flowable:async="true" flowable:delegateExpression="${hbciInitiateSendPinAndPsuId}" flowable:exclusive="false" flowable:triggerable="false" id="initiateHbciDialogSendPin" name="Initiate HBCI dialog. Send PIN/customer id">
             <documentation>Initiates HBCI dialog by sending psu id and PIN</documentation>
         </serviceTask>
-        <sequenceFlow id="sid-cacfe18a-3a27-4f3f-b063-8f259c1ca514" sourceRef="initiateHbciDialogSendPin" targetRef="hbciListAccounts"/>
-        <sequenceFlow id="sid-38dddf5d-ed9e-45d5-9e10-ac0f648ff046" sourceRef="accountListInitiateConsent" targetRef="hbciCheckPinPresent"/>
+        <sequenceFlow id="sid-cacfe18a-3a27-4f3f-b063-8f259c1ca514" sourceRef="initiateHbciDialogSendPin" targetRef="hbciListTransactions"/>
+        <sequenceFlow id="sid-38dddf5d-ed9e-45d5-9e10-ac0f648ff046" sourceRef="transactiontListInitiateConsent" targetRef="hbciCheckPinPresent"/>
     </process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_hbci-list-accounts">
-    <bpmndi:BPMNPlane bpmnElement="hbci-list-accounts" id="BPMNPlane_hbci-list-accounts">
+  <bpmndi:BPMNDiagram id="BPMNDiagram_hbci-list-transactions">
+    <bpmndi:BPMNPlane bpmnElement="hbci-list-transactions" id="BPMNPlane_hbci-list-transactions">
             <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
         <omgdc:Bounds height="30.0" width="30.0" x="-458.14835" y="265.26996"/>
       </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
         <omgdc:Bounds height="28.0" width="28.0" x="918.7113" y="170.0"/>
       </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="hbciListAccounts" id="sid-22a0a985-8045-4aee-b78a-3367173eff86">
+            <bpmndi:BPMNShape bpmnElement="hbciListTransactions" id="sid-22a0a985-8045-4aee-b78a-3367173eff86">
                 <omgdc:Bounds height="80.0" width="100.0" x="434.34802" y="30.586666"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="hbciCheckPinPresent" id="sid-7fde1797-dcac-48d6-a3cc-06a8772d0f0f">
@@ -94,13 +94,13 @@
                 <omgdi:waypoint x="598.55994" y="-64.49228"/>
                 <omgdi:waypoint x="534.348" y="-64.49228"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="accountListInitiateConsent" id="shape-4a868931-419c-4cce-bd75-360163277230">
+            <bpmndi:BPMNShape bpmnElement="transactiontListInitiateConsent" id="shape-4a868931-419c-4cce-bd75-360163277230">
                 <omgdc:Bounds height="80.0" width="100.0" x="-98.0" y="138.0"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="cacheAccountList" id="shape-65af5d72-0641-46bd-852c-8cd5a2c97132">
+            <bpmndi:BPMNShape bpmnElement="cacheTransactionList" id="shape-65af5d72-0641-46bd-852c-8cd5a2c97132">
                 <omgdc:Bounds height="80.0" width="100.0" x="657.2343" y="30.586655"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="cachedAccountListChecker" id="shape-a945c333-2ed9-4a2e-b511-1417c212ddac">
+            <bpmndi:BPMNShape bpmnElement="cachedTransactionListChecker" id="shape-a945c333-2ed9-4a2e-b511-1417c212ddac">
                 <omgdc:Bounds height="40.0" width="40.0" x="-149.00273" y="260.26996"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge bpmnElement="sid-8528c97f-afbd-45df-97dc-527e05ef6d9a" id="edge-5d144f8b-530a-4707-8690-9446be0d2313">
@@ -119,7 +119,7 @@
             <bpmndi:BPMNShape bpmnElement="hbciCheckTanNeeded" id="shape-9becd5ca-a249-40f1-ac67-a5472370eaef">
                 <omgdc:Bounds height="40.0" width="40.0" x="579.1028" y="50.586662"/>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="readAccountListFromCache" id="shape-87b1d5d9-de3c-4241-b01c-ad2a14546d20">
+            <bpmndi:BPMNShape bpmnElement="readTransactionsListFromCache" id="shape-87b1d5d9-de3c-4241-b01c-ad2a14546d20">
                 <omgdc:Bounds height="80.0" width="100.0" x="-322.4319" y="240.26996"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge bpmnElement="sid-05fe18f0-a41f-4112-ac7b-f15e6f9cbee4" id="edge-5e23c6f8-02a9-41fc-b10b-897f23027abd">
@@ -135,7 +135,7 @@
                 <omgdi:waypoint x="-428.14832" y="280.26996"/>
                 <omgdi:waypoint x="-322.43185" y="280.26996"/>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNShape bpmnElement="publishAccountListResult" id="shape-f18a2bea-eee1-4ef1-981e-e5c4cef6ff95">
+            <bpmndi:BPMNShape bpmnElement="publishTransactionListResult" id="shape-f18a2bea-eee1-4ef1-981e-e5c4cef6ff95">
                 <omgdc:Bounds height="80.0" width="100.0" x="518.2743" y="296.13672"/>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge bpmnElement="sid-63b1b1ba-b99f-4a82-b22a-3082075f25e4" id="edge-513a6aa6-d580-4d03-b57c-69bd0dc66d41">
