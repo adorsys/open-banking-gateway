@@ -1,9 +1,9 @@
 package de.adorsys.opba.fintech.impl.service;
 
+import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.OkOrNotOk;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
-import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,8 +37,7 @@ class RedirectHandlerServiceTest {
     private final String REDIRECT_STATE_VALUE = "682dbd06-75d4-4f73-a7e7-9084150a1f10";
     private final String AUTH_ID_VALUE = "fd8a0548-6862-46cb-8d24-f4b5edc7f7cb";
     private final String REDIRECT_CODE_VALUE = "7ca3f778-b0bb-4c1a-8003-d176089d1455";
-    private final String EXCEPTION_URL = "http://localhost:4444/redirect-after-consent-denied";
-    private final String FULL_NOT_OK_URL = "http://localhost:4444/redirect-after-consent-denied";
+    private final String UNAUTH_URL = "http://unauthorized";
 
     private final String FINTECH_REDIRECT_OK = "redirect-ok/to/682dbd06-75d4-4f73-a7e7-9084150a1f10";
     private final String FINTECH_REDIRECT_NOT_OK = "redirect-no-ok/to/682dbd06-75d4-4f73-a7e7-9084150a1f10";
@@ -52,6 +51,9 @@ class RedirectHandlerServiceTest {
     private RestRequestContext restRequestContext;
 
     @Mock
+    private FintechUiConfig uiConfig;
+
+    @Mock
     private RedirectUrlRepository redirectUrlRepository;
 
     @Mock
@@ -60,18 +62,14 @@ class RedirectHandlerServiceTest {
     @Mock
     private SessionLogicService sessionLogicService;
 
-    @Mock
-    private SessionEntity sessionEntity;
-
-    @Mock
     private RedirectHandlerService redirectHandlerService;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.initMocks(this);
-
         log.info("setup RestRequestContext");
         restRequestContext.setRequestId(UUID.randomUUID().toString());
+        redirectHandlerService = new RedirectHandlerService(uiConfig, redirectUrlRepository, authorizeService, sessionLogicService);
     }
 
     @Test
@@ -94,16 +92,13 @@ class RedirectHandlerServiceTest {
         // given
         when(sessionLogicService.finishRedirect()).thenReturn(new HttpHeaders());
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.of(REDIRECT_URLS_ENTITY));
-        when(authorizeService.getSession()).thenReturn(sessionEntity);
         when(authorizeService.isAuthorized()).thenReturn(true);
-        //  TODO PETER
-        // when(consentEntity.getAuthId()).thenReturn(AUTH_ID_VALUE);
 
         // when
         ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE, OkOrNotOk.OK);
 
         // then
-        verify(authorizeService, times(1)).getSession();
+        verify(sessionLogicService, times(1)).finishRedirect();
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(ACCEPTED);
         assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
@@ -113,38 +108,45 @@ class RedirectHandlerServiceTest {
 
     @Test
     void doRedirect_redirectCodeIsEmpty() {
+        // given
+        when(uiConfig.getUnauthorizedUrl()).thenReturn(UNAUTH_URL);
+        when(sessionLogicService.finishRedirect()).thenReturn(new HttpHeaders());
+
         // when
         ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE, OkOrNotOk.OK);
 
         // then
-        verify(authorizeService).getSession();
+        verify(sessionLogicService).finishRedirect();
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);
-        assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
-        assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(EXCEPTION_URL));
+        assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(UNAUTH_URL));
         assertThat(responseEntity.getBody()).isNull();
     }
 
     @Test
     void doRedirect_notOk() {
-        // when
+        // given
+        when(uiConfig.getUnauthorizedUrl()).thenReturn(UNAUTH_URL);
         when(sessionLogicService.finishRedirect()).thenReturn(new HttpHeaders());
+
+        // when
         ResponseEntity responseEntity = redirectHandlerService.doRedirect(null, REDIRECT_CODE_VALUE, OkOrNotOk.NOT_OK);
 
         // then
-        verify(authorizeService).getSession();
+        verify(sessionLogicService).finishRedirect();
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);
         assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
-        assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(EXCEPTION_URL));
+        log.info("header {}", responseEntity.getHeaders().get(LOCATION_HEADER));
+        assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(UNAUTH_URL));
         assertThat(responseEntity.getBody()).isNull();
     }
 
     @Test
     void doRedirect_redirectCodeIsWrong() {
-        when(sessionLogicService.finishRedirect()).thenReturn(new HttpHeaders());
-
         // given
+        when(uiConfig.getUnauthorizedUrl()).thenReturn(UNAUTH_URL);
+        when(sessionLogicService.finishRedirect()).thenReturn(new HttpHeaders());
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.empty());
 
         // when
@@ -153,7 +155,7 @@ class RedirectHandlerServiceTest {
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(SEE_OTHER);
         assertThat(responseEntity.getHeaders().size()).isEqualTo(1);
-        assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(FULL_NOT_OK_URL));
+        assertThat(responseEntity.getHeaders().get(LOCATION_HEADER)).isEqualTo(singletonList(UNAUTH_URL));
         assertThat(responseEntity.getBody()).isNull();
     }
 
