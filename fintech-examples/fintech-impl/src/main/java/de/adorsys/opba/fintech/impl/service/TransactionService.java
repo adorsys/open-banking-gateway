@@ -8,13 +8,12 @@ import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.ConsentRepository;
 import de.adorsys.opba.fintech.impl.mapper.ManualMapper;
-import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import de.adorsys.opba.fintech.impl.tppclients.ConsentType;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
 import de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,30 +26,18 @@ import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP_UTC;
 
+
 @Service
 @Slf4j
-public class TransactionService extends HandleAcceptedService {
+@RequiredArgsConstructor
+public class TransactionService {
     private final FintechUiConfig uiConfig;
     private final TppAisClient tppAisClient;
-
-    @Autowired
-    private RestRequestContext restRequestContext;
-
-    @Autowired
-    private TppProperties tppProperties;
-
-    @Autowired
-    private RedirectHandlerService redirectHandlerService;
-
-    @Autowired
-    private ConsentRepository consentRepository;
-
-    public TransactionService(AuthorizeService authorizeService, TppAisClient tppAisClient, FintechUiConfig uiConfig,
-                              CookieConfigProperties cookieConfigProperties, RestRequestContext restRequestContext) {
-        super(authorizeService, cookieConfigProperties, restRequestContext);
-        this.tppAisClient = tppAisClient;
-        this.uiConfig = uiConfig;
-    }
+    private final RestRequestContext restRequestContext;
+    private final TppProperties tppProperties;
+    private final RedirectHandlerService redirectHandlerService;
+    private final ConsentRepository consentRepository;
+    private final HandleAcceptedService handleAcceptedService;
 
     public ResponseEntity listTransactions(SessionEntity sessionEntity, String fintechOkUrl, String fintechNOkUrl, String bankId,
                                            String accountId, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
@@ -85,7 +72,7 @@ public class TransactionService extends HandleAcceptedService {
             case ACCEPTED:
                 log.info("create redirect entity for lot for redirectcode {}", fintechRedirectCode);
                 redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
-                return handleAccepted(consentRepository, ConsentType.AIS, bankId, fintechRedirectCode, sessionEntity, transactions.getHeaders());
+                return handleAcceptedService.handleAccepted(consentRepository, ConsentType.AIS, bankId, fintechRedirectCode, sessionEntity, transactions.getHeaders());
             case UNAUTHORIZED:
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             default:
