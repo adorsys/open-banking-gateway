@@ -24,9 +24,17 @@ public class HbciReadAccountListFromCache extends ValidatedExecution<AccountList
     private final FlowableObjectMapper mapper;
 
     @Override
-    @SneakyThrows
     protected void doRealExecution(DelegateExecution execution, AccountListHbciContext context) {
+        convertConsentToResponseIfPresent(execution, context);
+    }
 
+    @Override
+    protected void doMockedExecution(DelegateExecution execution, AccountListHbciContext context) {
+        convertConsentToResponseIfPresent(execution, context);
+    }
+
+    @SneakyThrows
+    private void convertConsentToResponseIfPresent(DelegateExecution execution, AccountListHbciContext context) {
         Optional<ProtocolFacingConsent> consent = context.consentAccess().findByCurrentServiceSession();
 
         if (!consent.isPresent() || null == consent.get().getConsentContext()) {
