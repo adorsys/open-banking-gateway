@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.hbci.service.consent;
 import com.google.common.base.Strings;
 import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
+import de.adorsys.opba.protocol.hbci.context.TransactionListHbciContext;
 import org.springframework.stereotype.Service;
 
 /**
@@ -36,6 +37,13 @@ public class HbciConsentInfo {
      * Any kind of consent exists?
      */
     public boolean isCachedAccountListMissing(AccountListHbciContext ctx) {
+        return null == ctx.getResponse();
+    }
+
+    /**
+     * Any kind of consent exists?
+     */
+    public boolean isCachedTransactionListMissing(TransactionListHbciContext ctx) {
         return null == ctx.getResponse();
     }
 }
