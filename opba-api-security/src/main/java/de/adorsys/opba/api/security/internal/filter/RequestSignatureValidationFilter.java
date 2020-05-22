@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.format.DateTimeParseException;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -46,41 +48,119 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
         FilterValidationHeaderValues headerValues = buildRequestValidationData(request);
         String expectedPath = properties.getAllowedPath().get(headerValues.getOperationType());
 
-        if (isNotAllowedOperation(headerValues.getRequestPath(), expectedPath)) {
-            log.error("Request operation type is not allowed");
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Wrong Operation Type");
+        if (isInvalidOperationType(headerValues, expectedPath, response)) {
+            return;
+        }
+
+        if (isUnparsableRequestTimeStamp(headerValues.getRequestTimeStamp(), response)
+                    || isMissingFintechId(headerValues.getFintechId(), response)
+                    || isUnparsableXRequestId(headerValues.getXRequestId(), response)) {
             return;
         }
 
         Instant instant = Instant.parse(headerValues.getRequestTimeStamp());
         String fintechApiKey = consumerKeysMap.get(headerValues.getFintechId());
 
-        if (fintechApiKey == null) {
-            log.error("Api key for fintech ID {} has not find ", headerValues.getFintechId());
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Wrong Fintech ID");
+        if (isMissingFintechApiKey(fintechApiKey, headerValues.getFintechId(), response)) {
             return;
         }
 
         boolean verificationResult = verifyRequestSignature(request, headerValues, instant, fintechApiKey);
 
-        if (!verificationResult) {
-            log.error("Signature verification error ");
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Signature verification error");
-            return;
+        if (validateVerificationResult(verificationResult, response) && validateExpirationDate(instant, response)) {
+            filterChain.doFilter(request, response);
         }
-
-        if (isRequestExpired(instant)) {
-            log.error("Timestamp validation failed");
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Timestamp validation failed");
-            return;
-        }
-
-        filterChain.doFilter(request, response);
     }
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         return !matcher.match(OPBA_BANKING_PATH, pathHelper.getPathWithinApplication(request));
+    }
+
+    private boolean isInvalidOperationType(FilterValidationHeaderValues headerValues, String expectedPath, HttpServletResponse response) throws IOException {
+        if (isNotAllowedOperation(headerValues.getRequestPath(), expectedPath)) {
+            log.error("Request operation type is not allowed");
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Wrong Operation Type");
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isMissingFintechApiKey(String fintechApiKey, String fintechId, HttpServletResponse response) throws IOException {
+        if (fintechApiKey == null) {
+            log.error("Api key for fintech ID {} has not found ", fintechId);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Wrong Fintech ID");
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isUnparsableRequestTimeStamp(String requestTimeStamp, HttpServletResponse response) throws IOException {
+        if (requestTimeStamp == null) {
+            log.error("Required 'X-Timestamp-UTC' header is missing");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "X-Timestamp-UTC is missing");
+            return true;
+        }
+
+        try {
+            Instant.parse(requestTimeStamp);
+        } catch (DateTimeParseException e) {
+            log.error("'X-Timestamp-UTC' header is not a valid ISO8601 date");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Wrong X-Timestamp-UTC");
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isUnparsableXRequestId(String xRequestId, HttpServletResponse response) throws IOException {
+        if (xRequestId == null) {
+            log.error("Required 'X-Request-ID' header is missing");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "X-Request-ID is missing");
+            return true;
+        }
+
+        try {
+            UUID.fromString(xRequestId);
+        } catch (IllegalArgumentException e) {
+            log.error("''X-Request-ID' header is not a valid UUID");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Wrong X-Request-ID");
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isMissingFintechId(String fintechId, HttpServletResponse response) throws IOException {
+        if (fintechId == null) {
+            log.error("'Fintech-ID' header is missing");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Fintech ID is missing");
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean validateVerificationResult(boolean verificationResult, HttpServletResponse response) throws IOException {
+        if (!verificationResult) {
+            log.error("Signature verification error ");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Signature verification error");
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean validateExpirationDate(Instant instant, HttpServletResponse response) throws IOException {
+        if (isRequestExpired(instant)) {
+            log.error("Timestamp validation failed");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Timestamp validation failed");
+            return false;
+        }
+
+        return true;
     }
 
     private boolean verifyRequestSignature(HttpServletRequest request, FilterValidationHeaderValues headerValues, Instant instant, String fintechApiKey) {
