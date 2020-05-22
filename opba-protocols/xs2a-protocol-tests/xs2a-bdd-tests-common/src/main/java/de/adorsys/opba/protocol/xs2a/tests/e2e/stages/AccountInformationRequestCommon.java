@@ -41,7 +41,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withAccountsHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withTransactionsHeaders;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
