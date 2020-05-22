@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
  * Initiates Account list consent. Forcefully redirects user to consent initiation screen.
  */
 @Slf4j
-@Service("hbciAisConsentInitiate")
+@Service("hbciAskForPsuId")
 @RequiredArgsConstructor
 public class HbciAisConsentService extends ValidatedExecution<AccountListHbciContext> {
 
