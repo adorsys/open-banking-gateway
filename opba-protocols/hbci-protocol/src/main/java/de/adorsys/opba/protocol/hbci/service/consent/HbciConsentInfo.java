@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.hbci.service.consent;
 
+import com.google.common.base.Strings;
 import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,13 @@ import org.springframework.stereotype.Service;
  */
 @Service("hbciConsentInfo")
 public class HbciConsentInfo {
+
+    /**
+     * Is the PSU ID present in the context.
+     */
+    public boolean isPsuIdPresent(HbciContext ctx) {
+        return !Strings.isNullOrEmpty(ctx.getPsuId());
+    }
 
     /**
      * Is the PSU password present in the context.
