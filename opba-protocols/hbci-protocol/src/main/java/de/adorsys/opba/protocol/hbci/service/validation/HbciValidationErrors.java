@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
 public class HbciValidationErrors {
 
     public boolean isPresent(BaseContext ctx) {
-        return !ctx.getViolations().isEmpty();
+        return null != ctx.getViolations() && !ctx.getViolations().isEmpty();
     }
 }
