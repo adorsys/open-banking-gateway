@@ -2,12 +2,8 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.OkOrNotOk;
-import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
-import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
-import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
-import de.adorsys.opba.fintech.impl.tppclients.SessionCookieType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static java.util.Collections.singletonList;
 
@@ -30,8 +25,7 @@ public class RedirectHandlerService {
     private final FintechUiConfig uiConfig;
     private final RedirectUrlRepository redirectUrlRepository;
     private final AuthorizeService authorizeService;
-    private final RestRequestContext restRequestContext;
-    private final CookieConfigProperties cookieConfigProperties;
+    private final SessionLogicService sessionLogicService;
 
     @Transactional
     public RedirectUrlsEntity registerRedirectStateForSession(final String finTechRedirectCode, final String okPath, final String nokPath) {
@@ -51,52 +45,44 @@ public class RedirectHandlerService {
 
     @Transactional
     public ResponseEntity doRedirect(final String authId, final String redirectCode, final OkOrNotOk okOrNotOk) {
-        // vulnerable for DOS
-        SessionEntity sessionEntity = authorizeService.getSession();
         if (StringUtils.isBlank(redirectCode)) {
             log.warn("Validation redirect request failed: redirect code is empty!");
-            return prepareErrorRedirectResponse(sessionEntity, uiConfig.getExceptionUrl());
+            return prepareErrorRedirectResponse(uiConfig.getExceptionUrl());
         }
         Optional<RedirectUrlsEntity> redirectUrls = redirectUrlRepository.findByRedirectCode(redirectCode);
 
         if (!redirectUrls.isPresent()) {
             log.warn("Validation redirect request failed: redirect code {} is wrong", redirectCode);
-            return prepareErrorRedirectResponse(sessionEntity, uiConfig.getUnauthorizedUrl());
+            return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
         redirectUrlRepository.delete(redirectUrls.get());
 
         if (!authorizeService.isAuthorized()) {
             log.warn("Validation redirect request failed: user is not authorized!");
-            return prepareErrorRedirectResponse(sessionEntity, uiConfig.getUnauthorizedUrl());
+            return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
 
         if (okOrNotOk.equals(OkOrNotOk.OK)) {
             if (StringUtils.isBlank(authId)) {
                 log.warn("Validation redirect request failed: authId is empty!");
-                return prepareErrorRedirectResponse(sessionEntity, uiConfig.getUnauthorizedUrl());
+                return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
             }
 
-            return prepareRedirectToReadResultResponse(sessionEntity, redirectUrls.get().getOkStatePath());
+            return prepareRedirectToReadResultResponse(redirectUrls.get().getOkStatePath());
         }
         log.info("user aborted consent authorization for authid {}", authId);
-        return prepareRedirectToReadResultResponse(sessionEntity, redirectUrls.get().getNokStatePath());
+        return prepareRedirectToReadResultResponse(redirectUrls.get().getNokStatePath());
     }
 
-    private ResponseEntity prepareRedirectToReadResultResponse(SessionEntity sessionEntity, String redirectUrl) {
-        return prepareResponse(sessionEntity, redirectUrl, HttpStatus.ACCEPTED);
-    }
-
-    private ResponseEntity prepareErrorRedirectResponse(SessionEntity sessionEntity, String redirectUrl) {
-        return prepareResponse(sessionEntity, redirectUrl, HttpStatus.SEE_OTHER);
-    }
-
-    private ResponseEntity prepareResponse(SessionEntity sessionEntity, String redirectUrl, HttpStatus status) {
-        String xsrfToken = UUID.randomUUID().toString();
-        HttpHeaders headers = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), sessionEntity,
-                xsrfToken, cookieConfigProperties, SessionCookieType.REGULAR, null);
+    private ResponseEntity prepareRedirectToReadResultResponse(String redirectUrl) {
+        HttpHeaders headers = sessionLogicService.finishRedirect();
         headers.put(LOCATION_HEADER, singletonList(redirectUrl));
+        return new ResponseEntity<>(headers, HttpStatus.ACCEPTED);
+    }
 
-        return new ResponseEntity<>(headers, status);
-
+    private ResponseEntity prepareErrorRedirectResponse(String redirectUrl) {
+        HttpHeaders headers = sessionLogicService.finishRedirect();
+        headers.put(LOCATION_HEADER, singletonList(redirectUrl));
+        return new ResponseEntity<>(headers, HttpStatus.SEE_OTHER);
     }
 }

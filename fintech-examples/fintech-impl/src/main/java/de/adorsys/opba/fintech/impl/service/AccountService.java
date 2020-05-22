@@ -7,12 +7,11 @@ import de.adorsys.opba.fintech.impl.database.entities.ConsentEntity;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.ConsentRepository;
-import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import de.adorsys.opba.fintech.impl.tppclients.ConsentType;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,29 +23,18 @@ import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP_UTC;
 
+
 @Service
 @Slf4j
-public class AccountService extends HandleAcceptedService {
+@RequiredArgsConstructor
+public class AccountService {
     private final FintechUiConfig uiConfig;
     private final TppAisClient tppAisClient;
     private RestRequestContext restRequestContext;
-
-    @Autowired
-    private TppProperties tppProperties;
-
-    @Autowired
-    private RedirectHandlerService redirectHandlerService;
-
-    @Autowired
-    private ConsentRepository consentRepository;
-
-    public AccountService(AuthorizeService authorizeService, TppAisClient tppAisClient, FintechUiConfig uiConfig,
-                          CookieConfigProperties cookieConfigProperties, RestRequestContext restRequestContext) {
-        super(authorizeService, cookieConfigProperties, restRequestContext);
-        this.tppAisClient = tppAisClient;
-        this.uiConfig = uiConfig;
-        this.restRequestContext = restRequestContext;
-    }
+    private final TppProperties tppProperties;
+    private final RedirectHandlerService redirectHandlerService;
+    private final ConsentRepository consentRepository;
+    private final HandleAcceptedService handleAcceptedService;
 
     public ResponseEntity listAccounts(SessionEntity sessionEntity,
                                        String fintechOkUrl, String fintechNOKUrl,
@@ -61,7 +49,7 @@ public class AccountService extends HandleAcceptedService {
             case ACCEPTED:
                 log.info("create redirect entity for redirect code {}", fintechRedirectCode);
                 redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOKUrl);
-                return handleAccepted(consentRepository, ConsentType.AIS, bankID, fintechRedirectCode, sessionEntity, accounts.getHeaders());
+                return handleAcceptedService.handleAccepted(consentRepository, ConsentType.AIS, bankID, fintechRedirectCode, sessionEntity, accounts.getHeaders());
             case UNAUTHORIZED:
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             default:

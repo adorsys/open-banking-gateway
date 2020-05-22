@@ -30,15 +30,18 @@ import java.time.OffsetDateTime;
 @Slf4j
 @NoArgsConstructor
 public class SessionEntity {
-    public SessionEntity(UserEntity userEntity, int maxAge) {
+    public SessionEntity(UserEntity userEntity, int maxAge, Long parentSession) {
         this.validUntil = OffsetDateTime.now().plusSeconds(maxAge);
         this.userEntity = userEntity;
+        this.parentSession = parentSession;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_generator")
     @SequenceGenerator(name = "session_generator", sequenceName = "session_id_seq")
     private Long id;
+
+    private Long parentSession;
 
     @Column(nullable = false)
     private OffsetDateTime validUntil;

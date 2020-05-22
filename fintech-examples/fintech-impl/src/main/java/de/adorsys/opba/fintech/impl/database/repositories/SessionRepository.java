@@ -5,9 +5,8 @@ import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
-import java.util.UUID;
 
-public interface SessionRepository extends CrudRepository<SessionEntity, UUID> {
+public interface SessionRepository extends CrudRepository<SessionEntity, Long> {
     Optional<SessionEntity> findBySessionCookieValue(String sessionCookieValue);
     Iterable<SessionEntity> findByUserEntity(UserEntity userEntity);
 }
