@@ -19,9 +19,9 @@ tpp:
   serviceSessionPassword: qwerty
 
 fintech-ui:
-  host: http://localhost:4444
-  redirect-url: ${fintech-ui.host}?redirectCode={redirectCode}
-  exception-url: ${fintech-ui.host}/redirect-after-consent-denied
+  redirect-url: ${fintech-ui.host}/redirect-after-consent?redirectCode={redirectCode}
+  unauthorized-url: ${fintech-ui.host}/
+  exception-url: ${fintech-ui.host}/redirect-after-consent-denied?redirectCode={redirectCode}
 
 server:
   controller:

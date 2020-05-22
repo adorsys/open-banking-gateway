@@ -30,7 +30,7 @@ import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP
 public class AccountService {
     private final FintechUiConfig uiConfig;
     private final TppAisClient tppAisClient;
-    private RestRequestContext restRequestContext;
+    private final RestRequestContext restRequestContext;
     private final TppProperties tppProperties;
     private final RedirectHandlerService redirectHandlerService;
     private final ConsentRepository consentRepository;
