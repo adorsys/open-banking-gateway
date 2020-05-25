@@ -63,6 +63,7 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
         UpdatePsuAuthenticationRequest request = new UpdatePsuAuthenticationRequest();
         request.setCredentials(consent.getCredentials());
         request.setBankApiConsentData(consent);
+        request.setBank(bank);
         UpdateAuthResponse response =
                 onlineBankingService.getStrongCustomerAuthorisation().updatePsuAuthentication(request);
     }
