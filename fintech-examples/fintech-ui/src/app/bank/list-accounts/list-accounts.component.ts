@@ -3,8 +3,8 @@ import { AccountDetails } from '../../api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
 import { RedirectStruct } from '../redirect-page/redirect-struct';
-import {HeaderConfig} from '../../models/consts';
-import {StorageService} from '../../services/storage.service';
+import { HeaderConfig } from '../../models/consts';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-list-accounts',
@@ -16,10 +16,12 @@ export class ListAccountsComponent implements OnInit {
   selectedAccount: string;
   bankId = '';
 
-  constructor(private router: Router,
-              private route: ActivatedRoute,
-              private aisService: AisService,
-              private storageService: StorageService) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private aisService: AisService,
+    private storageService: StorageService
+  ) {}
 
   ngOnInit() {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
@@ -39,13 +41,16 @@ export class ListAccountsComponent implements OnInit {
       switch (response.status) {
         case 202:
           const location = encodeURIComponent(response.headers.get(HeaderConfig.HEADER_FIELD_LOCATION));
-          this.storageService.setAuthId(response.headers.get(HeaderConfig.HEADER_FIELD_AUTH_ID));
-          this.storageService.setXsrfToken(response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN));
-          this.storageService.setRedirectCode(response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE));
-          this.storageService.setRedirectActive(true);
+          this.storageService.setRedirect(
+            response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE),
+            response.headers.get(HeaderConfig.HEADER_FIELD_AUTH_ID),
+            response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN),
+            parseInt(response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE), 0)
+          );
           const r = new RedirectStruct();
           r.okUrl = location;
           r.cancelUrl = 'this-url-must-be-known-by-server';
+          r.redirectCode = response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE);
           this.router.navigate(['redirect', JSON.stringify(r)], { relativeTo: this.route });
           break;
         case 200:

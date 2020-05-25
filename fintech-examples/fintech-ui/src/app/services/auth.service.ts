@@ -34,12 +34,13 @@ export class AuthService {
       this.openLoginPage();
       return;
     }
-      this.finTechAuthorizationService.logoutPOST('', '', 'response')
-        .toPromise()
-        .finally(() => {
-          this.deleteSessionData();
-          this.openLoginPage();
-        });
+    this.finTechAuthorizationService
+      .logoutPOST('', '', 'response')
+      .toPromise()
+      .finally(() => {
+        this.deleteSessionData();
+        this.openLoginPage();
+      });
   }
 
   openLoginPage() {
@@ -48,11 +49,16 @@ export class AuthService {
 
   public isLoggedIn(): boolean {
     const token = this.storageService.getXsrfToken();
-    return token !== undefined && token !== null && this.storageService.isMaxAgeValid();
+    const log = token !== undefined && token !== null;
+    // console.log("islogged in is ", log);
+    return log;
   }
 
   private setSessionData(response: any, credentials: Credentials): void {
-    this.storageService.setXsrfToken(response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN));
+    this.storageService.setXsrfToken(
+      response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN),
+      response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE)
+    );
     this.storageService.setUserName(credentials.username);
   }
 

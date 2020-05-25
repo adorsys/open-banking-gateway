@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RedirectStruct } from './redirect-struct';
+import { RedirectStruct, RedirectTupelForMap } from './redirect-struct';
 import { StorageService } from '../../services/storage.service';
-import {Consent, HeaderConfig} from '../../models/consts';
-import {ConsentAuthorizationService} from '../services/consent-authorization.service';
+import { Consent, HeaderConfig } from '../../models/consts';
+import { ConsentAuthorizationService } from '../services/consent-authorization.service';
 
 @Component({
   selector: 'app-redirect-page',
@@ -15,15 +15,21 @@ export class RedirectPageComponent implements OnInit {
   public bankName;
   private location;
   private cancelPath;
+  private redirectCode;
 
-  constructor(private authService:ConsentAuthorizationService, private router: Router,
-              private route: ActivatedRoute, private storageService: StorageService) {}
+  constructor(
+    private authService: ConsentAuthorizationService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private storageService: StorageService
+  ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(p => {
       const r: RedirectStruct = JSON.parse(p.get(HeaderConfig.HEADER_FIELD_LOCATION));
       this.location = decodeURIComponent(r.okUrl);
       this.cancelPath = decodeURIComponent(r.cancelUrl);
+      this.redirectCode = r.redirectCode;
       console.log('LOCATION IS ', this.location);
     });
     // TODO this is no more the routing path approach
@@ -33,10 +39,8 @@ export class RedirectPageComponent implements OnInit {
   }
 
   cancel(): void {
-    const authId = this.storageService.getAuthId();
-    const redirectCode = this.storageService.getRedirectCode();
-    console.log('call from consent NOT ok with auth ' + authId);
-    this.authService.fromConsentOk(authId, Consent.NOT_OK, redirectCode);
+    console.log('call from consent NOT ok for redirect ' + this.redirectCode);
+    this.authService.fromConsentOk(Consent.NOT_OK, this.redirectCode);
   }
 
   proceed(): void {

@@ -42,8 +42,7 @@ public class HandleAcceptedService {
         URI location = headers.getLocation();
         log.info("call was accepted, but redirect has to be done for authID:{} location:{}", consent.getAuthId(), location);
 
-        String xsrfToken = UUID.randomUUID().toString();
-        HttpHeaders responseHeaders = sessionLogicService.startRedirect(sessionEntity.getUserEntity(), consent.getAuthId(), xsrfToken);
+        HttpHeaders responseHeaders = sessionLogicService.startRedirect(sessionEntity.getUserEntity(), consent.getAuthId());
         responseHeaders.add(FIN_TECH_REDIRECT_CODE, fintechRedirectCode);
         responseHeaders.setLocation(location);
 

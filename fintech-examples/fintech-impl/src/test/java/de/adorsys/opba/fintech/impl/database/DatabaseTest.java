@@ -8,10 +8,12 @@ import de.adorsys.opba.fintech.impl.database.repositories.LoginRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.SessionRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.ArrayList;
@@ -53,6 +55,13 @@ public class DatabaseTest {
         assertFalse(sessionRepository.findBySessionCookieValue("4").isPresent());
         assertTrue(sessionRepository.findBySessionCookieValue("1").get().getUserEntity().getLoginUserName().equals("peter"));
 
+    }
+
+    @Test
+    public void testCookieValueIsUnique() {
+        createUserEntity("peter", "1");
+        createUserEntity("maksym", "1");
+        Assertions.assertThrows(IncorrectResultSizeDataAccessException.class, () -> sessionRepository.findBySessionCookieValue("1"));
     }
 
     @Test

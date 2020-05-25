@@ -21,14 +21,20 @@ public class RestRequestContextConfig {
     @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
     public RestRequestContext provideCurrentRestRequest(HttpServletRequest httpServletRequest) {
         String sessionCookieValue = null;
+        String redirectCookieValue = null;
         if (httpServletRequest.getCookies() != null) {
             Optional<Cookie> sessionCookie = Arrays.stream(httpServletRequest.getCookies()).filter(cookie -> Consts.COOKIE_SESSION_COOKIE_NAME.equalsIgnoreCase(cookie.getName())).findFirst();
             if (sessionCookie.isPresent()) {
                 sessionCookieValue = sessionCookie.get().getValue();
             }
+            Optional<Cookie> redirectCookie = Arrays.stream(httpServletRequest.getCookies()).filter(cookie -> Consts.COOKIE_REDIRECT_COOKIE_NAME.equalsIgnoreCase(cookie.getName())).findFirst();
+            if (redirectCookie.isPresent()) {
+                redirectCookieValue = redirectCookie.get().getValue();
+            }
         }
         return RestRequestContext.builder()
                 .sessionCookieValue(sessionCookieValue)
+                .redirectCookieValue(redirectCookieValue)
                 .xsrfTokenHeaderField(httpServletRequest.getHeader(Consts.HEADER_XSRF_TOKEN))
                 .requestId(httpServletRequest.getHeader(Consts.HEADER_X_REQUEST_ID))
                 .build();
