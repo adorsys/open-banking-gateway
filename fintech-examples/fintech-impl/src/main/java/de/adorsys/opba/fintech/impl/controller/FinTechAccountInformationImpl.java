@@ -27,7 +27,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
 
     @Override
     public ResponseEntity<AccountList> aisAccountsGET(String bankId, UUID xRequestID, String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
-        if (!authorizeService.isAuthorized()) {
+        if (!authorizeService.isSessionAuthorized()) {
             log.warn("aisAccountsGET failed: user is not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -42,7 +42,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
                                                                    String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK,
                                                                    LocalDate dateFrom, LocalDate dateTo,
                                                                    String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
-        if (!authorizeService.isAuthorized()) {
+        if (!authorizeService.isSessionAuthorized()) {
             log.warn("aisTransactionsGET failed: user is not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }

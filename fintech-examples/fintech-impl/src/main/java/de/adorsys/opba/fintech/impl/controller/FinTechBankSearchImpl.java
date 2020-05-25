@@ -25,7 +25,7 @@ public class FinTechBankSearchImpl implements FinTechBankSearchApi {
 
     @Override
     public ResponseEntity<InlineResponse2001> bankSearchGET(UUID xRequestID, String fintechToken, String keyword, Integer start, Integer max) {
-        if (!authorizeService.isAuthorized()) {
+        if (!authorizeService.isSessionAuthorized()) {
             log.warn("bankSearchGET failed: user is not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -34,7 +34,7 @@ public class FinTechBankSearchImpl implements FinTechBankSearchApi {
 
     @Override
     public ResponseEntity<InlineResponse2002> bankProfileGET(UUID xRequestID, String fintechToken, String bankId) {
-        if (!authorizeService.isAuthorized()) {
+        if (!authorizeService.isSessionAuthorized()) {
             log.warn("bankProfileGET failed: user is not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }

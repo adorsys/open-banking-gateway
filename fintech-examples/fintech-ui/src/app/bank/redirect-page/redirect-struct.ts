@@ -1,4 +1,11 @@
 export class RedirectStruct {
-  okUrl : string;
+  okUrl: string;
   cancelUrl: string;
+  redirectCode: string;
+}
+
+export class RedirectTupelForMap {
+  authId: string;
+  xsrfToken: string;
+  validUntil: Date;
 }
