@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.FIN_TECH_AUTH_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_ID;
@@ -51,9 +52,10 @@ public class SessionLogicService {
     }
 
     @Transactional
-    public HttpHeaders startRedirect(UserEntity userEntity, String authId, String xsrfToken) {
+    public HttpHeaders startRedirect(UserEntity userEntity, String authId) {
         Long parentSessionId = sessionRepository.findBySessionCookieValue(restRequestContext.getSessionCookieValue()).get().getId();
         SessionEntity sessionEntity = new SessionEntity(userEntity, cookieConfigProperties.getRedirectcookie().getMaxAge(), parentSessionId);
+        String xsrfToken = UUID.randomUUID().toString();
         sessionEntity.setSessionCookieValue(SessionEntity.createSessionCookieValue(xsrfToken));
         sessionRepository.save(sessionEntity);
 
@@ -84,9 +86,9 @@ public class SessionLogicService {
 
     @Transactional
     public HttpHeaders finishRedirect() {
-        SessionEntity sessionEntity = sessionRepository.findBySessionCookieValue(restRequestContext.getSessionCookieValue()).get();
-        if (!sessionEntity.getParentSession().equals(null)) {
-            throw new RuntimeException("programming error, expected session for cookie value " + restRequestContext.getSessionCookieValue() + " to be redirect session");
+        SessionEntity sessionEntity = sessionRepository.findBySessionCookieValue(restRequestContext.getRedirectCookieValue()).get();
+        if (sessionEntity.getParentSession().equals(null)) {
+            throw new RuntimeException("programming error, expected session for cookie value " + restRequestContext.getRedirectCookieValue() + " to be redirect session");
         }
         SessionEntity parentSession = sessionRepository.findById(sessionEntity.getParentSession()).get();
         sessionRepository.delete(sessionEntity);

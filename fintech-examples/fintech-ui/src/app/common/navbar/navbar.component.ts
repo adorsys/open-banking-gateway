@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../../services/auth.service';
-import {StorageService} from '../../services/storage.service';
-import {toLocaleString} from '../../models/consts';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
+import { StorageService } from '../../services/storage.service';
+import { toLocaleString } from '../../models/consts';
+import { RedirectTupelForMap } from '../../bank/redirect-page/redirect-struct';
 
 @Component({
   selector: 'app-navbar',
@@ -9,11 +10,9 @@ import {toLocaleString} from '../../models/consts';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  constructor(private authService: AuthService, private storageService: StorageService) {
-  }
+  constructor(private authService: AuthService, private storageService: StorageService) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onLogout() {
     this.authService.logout();
@@ -28,7 +27,17 @@ export class NavbarComponent implements OnInit {
   }
 
   getSessionValidUntil(): string {
-    const validUntilDate: Date = this.storageService.getValidUntilDate();
+    return this.getSessionValidUntilAsString(this.storageService.getValidUntilDate());
+  }
+
+  getRedirectSessionsKeys(): string[] {
+    return Array.from(this.storageService.getRedirectMap().keys());
+  }
+
+  getRedirectSessionValidUntil(redirectCode: string): string {
+    return this.getSessionValidUntilAsString(this.storageService.getRedirectMap().get(redirectCode).validUntil);
+  }
+  private getSessionValidUntilAsString(validUntilDate: Date): string {
     if (validUntilDate !== null) {
       const validUntilDateString = toLocaleString(validUntilDate);
       const regEx = /.*([0-9]{2}:[0-9]{2}:[0-9]{2})/;
@@ -39,6 +48,5 @@ export class NavbarComponent implements OnInit {
       return matches[1];
     }
     return '';
-
   }
 }

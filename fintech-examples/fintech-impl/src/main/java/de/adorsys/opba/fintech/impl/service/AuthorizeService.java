@@ -52,7 +52,7 @@ public class AuthorizeService {
     }
 
     @Transactional
-    public boolean isAuthorized() {
+    public boolean isSessionAuthorized() {
         log.info(restRequestContext.toString());
         if (restRequestContext.getSessionCookieValue() == null || restRequestContext.getXsrfTokenHeaderField() == null || restRequestContext.getRequestId() == null) {
             log.error("unauthorized call due to missing {}",
@@ -66,9 +66,33 @@ public class AuthorizeService {
         SessionEntity.validateSessionCookieValue(sessionCookieValue, restRequestContext.getXsrfTokenHeaderField());
 
         // now check that this sessionCookie is really known in DB
-        Optional<SessionEntity> optionalSessionEntity = sessionRepository.findBySessionCookieValue(restRequestContext.getSessionCookieValue());
+        Optional<SessionEntity> optionalSessionEntity = sessionRepository.findBySessionCookieValue(sessionCookieValue);
         if (!optionalSessionEntity.isPresent()) {
-            log.error("session cookie might be old. However it is not found in DB and thus not valid {} ", restRequestContext.getSessionCookieValue());
+            log.error("session cookie might be old. However it is not found in DB and thus not valid {} ", sessionCookieValue);
+            return false;
+        }
+
+        return true;
+    }
+
+    @Transactional
+    public boolean isRedirectAuthorized() {
+        log.info(restRequestContext.toString());
+        if (restRequestContext.getRedirectCookieValue() == null || restRequestContext.getXsrfTokenHeaderField() == null || restRequestContext.getRequestId() == null) {
+            log.error("unauthorized call due to missing {}",
+                    restRequestContext.getRedirectCookieValue() == null
+                            ? "redirect cookie" : restRequestContext.getXsrfTokenHeaderField() == null ? "XSRFToken" : "RequestID");
+            return false;
+        }
+
+        // first check token with session without any DB
+        String redirectCookieValue = restRequestContext.getRedirectCookieValue();
+        SessionEntity.validateSessionCookieValue(redirectCookieValue, restRequestContext.getXsrfTokenHeaderField());
+
+        // now check that this sessionCookie is really known in DB
+        Optional<SessionEntity> optionalSessionEntity = sessionRepository.findBySessionCookieValue(redirectCookieValue);
+        if (!optionalSessionEntity.isPresent()) {
+            log.error("redirect cookie might be old. However it is not found in DB and thus not valid {} ", redirectCookieValue);
             return false;
         }
 

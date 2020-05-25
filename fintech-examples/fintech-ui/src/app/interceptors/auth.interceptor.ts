@@ -1,17 +1,16 @@
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable, throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import * as uuid from 'uuid';
-import {HeaderConfig} from '../models/consts';
-import {StorageService} from '../services/storage.service';
-import {AuthService} from '../services/auth.service';
-import {Router} from '@angular/router';
+import { HeaderConfig } from '../models/consts';
+import { StorageService } from '../services/storage.service';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private router: Router, private storageService: StorageService, private authService: AuthService) {
-  }
+  constructor(private router: Router, private storageService: StorageService, private authService: AuthService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return this.handleRequest(request, next).pipe(
@@ -22,17 +21,15 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private handleRequest(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (this.storageService.getXsrfToken() != null) {
-      if (!this.storageService.isMaxAgeValid()) {
-        this.router.navigate(['session-expired'])
-        return new Observable();
-      }
-    }
-
     const xRequestID = uuid.v4();
-    const xsrfToken = this.storageService.getXsrfToken();
-
+    let xsrfToken = null;
     let headers;
+    if (request.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN) !== '') {
+      xsrfToken = request.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN);
+      console.log('xsrf token is set, so we do not change it', xsrfToken);
+    } else {
+      xsrfToken = this.storageService.getXsrfToken();
+    }
     if (this.authService.isLoggedIn()) {
       headers = request.headers
         .set(HeaderConfig.HEADER_FIELD_X_REQUEST_ID, xRequestID)

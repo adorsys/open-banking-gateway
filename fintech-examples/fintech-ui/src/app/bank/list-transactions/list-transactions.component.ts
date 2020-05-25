@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
 import { AccountReport } from '../../api';
 import { RedirectStruct } from '../redirect-page/redirect-struct';
-import {HeaderConfig} from '../../models/consts';
-import {StorageService} from '../../services/storage.service';
+import { HeaderConfig } from '../../models/consts';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-list-transactions',
@@ -20,7 +20,8 @@ export class ListTransactionsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private aisService: AisService,
-    private storageService: StorageService) {}
+    private storageService: StorageService
+  ) {}
 
   ngOnInit() {
     this.bankId = this.route.parent.snapshot.paramMap.get('bankid');
@@ -34,11 +35,17 @@ export class ListTransactionsComponent implements OnInit {
         case 202:
           console.log('list tx got REDIRECT');
           const location = encodeURIComponent(response.headers.get(HeaderConfig.HEADER_FIELD_LOCATION));
-          this.storageService.setAuthId(response.headers.get(HeaderConfig.HEADER_FIELD_AUTH_ID));
+          this.storageService.setRedirect(
+            response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE),
+            response.headers.get(HeaderConfig.HEADER_FIELD_AUTH_ID),
+            response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN),
+            parseInt(response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE), 0)
+          );
           const r = new RedirectStruct();
           const currentUrl = this.router.url;
           r.okUrl = location;
           r.cancelUrl = currentUrl.substring(0, currentUrl.indexOf('/account'));
+          r.redirectCode = response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE);
           this.router.navigate(['redirect', JSON.stringify(r)], { relativeTo: this.route });
           break;
         case 200:
