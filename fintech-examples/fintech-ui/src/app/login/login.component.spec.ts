@@ -12,8 +12,9 @@ import { BankSearchModule } from '../bank-search/bank-search.module';
 
 import { DocumentCookieService } from '../services/document-cookie.service';
 import { AuthService } from '../services/auth.service';
+import { of } from 'rxjs';
 
-fdescribe('LoginComponent', () => {
+describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let authService: AuthService;
@@ -51,7 +52,8 @@ fdescribe('LoginComponent', () => {
   });
 
   it('should call login on the service', () => {
-    authServiceSpy = spyOn(authService, 'login').and.callThrough();
+    authServiceSpy = spyOn(authService, 'login').and.returnValue(of(true));
+    const routerSpy = spyOn(router, 'navigate');
 
     const form = component.loginForm;
     form.controls['username'].setValue('test');
@@ -61,7 +63,7 @@ fdescribe('LoginComponent', () => {
     el.click();
 
     expect(authServiceSpy).toHaveBeenCalledWith({ username: 'test', password: '12345' });
-    expect(authServiceSpy).toHaveBeenCalled();
+    expect(routerSpy).toHaveBeenCalledWith(['/search']);
   });
 
   it('loginForm should be invalid when at least one field is empty', () => {
@@ -96,5 +98,12 @@ fdescribe('LoginComponent', () => {
     password.setValue('12345');
     errors = password.errors || {};
     expect(errors['required']).toBeFalsy();
+  });
+
+  it('should navigate after successful login', () => {
+    const form = component.loginForm;
+    form.controls['username'].setValue('username');
+    const username = component.username;
+    expect(username.value).toEqual('username');
   });
 });
