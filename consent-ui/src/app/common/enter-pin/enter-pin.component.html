@@ -1,0 +1,35 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="pinForm">
+  <div class="card">
+    <div class="card-body">
+      <section>
+        <h2>Input PIN</h2>
+        <p class="text-secondary">Please enter pin to you bank in order to confirm the consent.</p>
+        <div class="form-group">
+          <label class="text-secondary" for="pin">Pin:</label><br />
+          <input
+            [ngClass]="{ 'is-invalid': pinForm.controls['pin'].touched && pinForm.controls['pin'].errors }"
+            class="form-control"
+            formControlName="pin"
+            id="pin"
+            name="pin"
+            placeholder="Enter your pin"
+            type="password"
+          />
+          <div
+            *ngIf="pinForm.controls['pin'].touched && pinForm.controls['pin'].hasError('required')"
+            class="invalid-feedback"
+          >
+            Pin is required
+          </div>
+          <div *ngIf="wrongPassword" class="invalid-feedback d-block">
+            Password is incorrect
+          </div>
+        </div>
+      </section>
+
+      <button id="do_submit" type="submit" class="btn btn-primary w-100" [disabled]="pinForm.invalid">
+        Confirm
+      </button>
+    </div>
+  </div>
+</form>

@@ -1,8 +1,8 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
-import de.adorsys.opba.api.security.external.domain.DataToSign;
-import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.external.domain.OperationType;
+import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
+import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.tppbankingapi.BaseMockitoTest;
 import de.adorsys.opba.tppbankingapi.dto.TestResult;
 import de.adorsys.opba.tppbankingapi.services.StatisticService;
@@ -29,10 +29,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.FINTECH_ID;
+import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_OPERATION_TYPE;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_REQUEST_ID;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_TIMESTAMP_UTC;
-import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_OPERATION_TYPE;
 import static de.adorsys.opba.tppbankingapi.TestProfiles.ONE_TIME_POSTGRES_ON_DISK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -90,7 +90,7 @@ class TestBankSearchPerformance extends BaseMockitoTest {
     private Runnable getBanksEndpoint(StatisticService statisticService, List<String> searchStrings) {
         return () -> {
             int cnt = counter.incrementAndGet();
-            String searchString = searchStrings.get(cnt - 1);
+            String keyword = searchStrings.get(cnt - 1);
             long start = System.currentTimeMillis();
 
             UUID xRequestId = UUID.randomUUID();
@@ -105,15 +105,15 @@ class TestBankSearchPerformance extends BaseMockitoTest {
                                 .header(X_REQUEST_ID, xRequestId)
                                 .header(X_TIMESTAMP_UTC, xTimestampUtc)
                                 .header(X_OPERATION_TYPE, OperationType.BANK_SEARCH)
-                                .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new DataToSign(xRequestId, xTimestampUtc, OperationType.BANK_SEARCH)))
+                                .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new BankSearchDataToSign(xRequestId, xTimestampUtc, OperationType.BANK_SEARCH, keyword)))
                                 .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
-                                .param("keyword", searchString)
+                                .param("keyword", keyword)
                                 .param("max", "10")
                                 .param("start", "0"))
                         .andExpect(status().isOk())
                         .andReturn();
                 long end = System.currentTimeMillis();
-                TestResult testResult = new TestResult(start, end, searchString, mvcResult.getResponse().getContentAsString());
+                TestResult testResult = new TestResult(start, end, keyword, mvcResult.getResponse().getContentAsString());
                 statisticService.getTestResult().add(testResult);
                 latch.countDown();
             } catch (Exception e) {

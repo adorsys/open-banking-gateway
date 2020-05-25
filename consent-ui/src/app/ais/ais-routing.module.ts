@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { EntryPageComponent } from './entry-page/entry-page.component';
-import { PasswordInputPageComponent } from './password-input-page/password-input-page.component';
-import { ReportScaResultComponent } from './sca-result-page/sca-result-page.component';
+import { EnterPinPageComponent } from './enter-pin-page/enter-pin-page.component';
+import { EnterTanPageComponent } from './enter-tan-page/enter-tan-page.component';
 import { ResultPageComponent } from './result-page/result-page.component';
 import { ScaSelectPageComponent } from './sca-select-page/sca-select-page.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
@@ -44,7 +44,7 @@ const routes: Routes = [
       { path: ResultPageComponent.ROUTE, component: ResultPageComponent },
       {
         path: 'authenticate',
-        component: PasswordInputPageComponent
+        component: EnterPinPageComponent
       },
       { path: LoginComponent.ROUTE, component: LoginComponent },
       { path: RegisterComponent.ROUTE, component: RegisterComponent },
@@ -53,8 +53,8 @@ const routes: Routes = [
         component: ScaSelectPageComponent
       },
       {
-        path: ReportScaResultComponent.ROUTE,
-        component: ReportScaResultComponent
+        path: EnterTanPageComponent.ROUTE,
+        component: EnterTanPageComponent
       },
       {
         path: 'report-sca-result',
