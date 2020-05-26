@@ -1,28 +1,47 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { AccountsReferenceComponent } from './accounts-reference.component';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {AccountReference, AccountsReferenceComponent} from './accounts-reference.component';
+import {FormGroup, ReactiveFormsModule} from '@angular/forms';
 
 describe('AccountsReferenceComponent', () => {
-  let component: AccountsReferenceComponent;
-  let fixture: ComponentFixture<AccountsReferenceComponent>;
+    let component: AccountsReferenceComponent;
+    let fixture: ComponentFixture<AccountsReferenceComponent>;
+    let form;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [AccountsReferenceComponent],
-      imports: [ReactiveFormsModule]
-    }).compileComponents();
-  }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [AccountsReferenceComponent],
+            imports: [ReactiveFormsModule]
+        }).compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(AccountsReferenceComponent);
-    component = fixture.componentInstance;
-    component.targetForm = new FormGroup({});
-    component.accounts = [];
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(AccountsReferenceComponent);
+        component = fixture.componentInstance;
+        component.targetForm = new FormGroup({});
+        component.accounts = [];
+        form = component.targetForm;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+
+    it('should call addAccount', () => {
+        component.addAccount();
+        expect(component.accounts.length).toEqual(1);
+    });
+
+    it('should call removeAccount', () => {
+        const account :  AccountReference = {
+            id: "12345",
+            iban: "DE12344313232222"
+        };
+
+        spyOn(component, 'removeAccount').withArgs(account);
+        component.removeAccount(account);
+        expect(component.removeAccount).toHaveBeenCalledWith(account);
+        expect(component.accounts.length).toEqual(0);
+    });
 });
