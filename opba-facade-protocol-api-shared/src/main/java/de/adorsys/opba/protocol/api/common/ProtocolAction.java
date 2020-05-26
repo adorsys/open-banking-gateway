@@ -39,7 +39,11 @@ public enum ProtocolAction {
     FROM_ASPSP_REDIRECT("from-aspsp", AUTHORIZATION),
 
     // PIS
-    SINGLE_PAYMENT("single-payment");
+    SINGLE_PAYMENT("single-payment"),
+
+    GET_PAYMENT_STATUS("get-payment-status"),
+
+    GET_PAYMENT_INFORMATION("get-payment-information");
 
     private final String name;
 
