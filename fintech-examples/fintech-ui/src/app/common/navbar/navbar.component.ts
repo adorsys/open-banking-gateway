@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
   private static TIMER_NAME = 'TIMER_NAME';
-  private sessionValidUntil: string = '';
+  private sessionValidUntil = '';
   private redirectsValidUntil = Array.from(new Array<string>());
 
   constructor(
@@ -24,21 +24,21 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.simpleTimer.newTimerCD(NavbarComponent.TIMER_NAME, 1, 1);
+    this.simpleTimer.newTimerCD(NavbarComponent.TIMER_NAME, 1, 2);
     this.simpleTimer.subscribe(NavbarComponent.TIMER_NAME, () => this.timerRings());
   }
 
   public timerRings(): void {
     if (!this.isLoggedIn()) {
       console.log('user is no more logged in');
+      this.storageService.clearStorage();
       this.router.navigate(['/login']);
     }
-    console.log('user is logged in and timer has rang');
     this.sessionValidUntil = this.getSessionValidUntilAsString(this.storageService.getValidUntilDate());
 
     this.redirectsValidUntil = new Array<string>();
-    for (let s of Array.from(this.storageService.getRedirectMap().values())) {
-      this.redirectsValidUntil.push(this.getSessionValidUntilAsString(s.validUntil));
+    for (const s of Array.from(this.storageService.getRedirectMap().values())) {
+      this.redirectsValidUntil.push(this.getSessionValidUntilAsString(new Date(s.validUntil)));
     }
   }
 
@@ -47,7 +47,7 @@ export class NavbarComponent implements OnInit {
   }
 
   isLoggedIn(): boolean {
-    return this.authService.isLoggedIn();
+    return this.storageService.isLoggedIn();
   }
 
   getUserName(): string {
@@ -64,15 +64,15 @@ export class NavbarComponent implements OnInit {
       }
       // return matches[1];
 
-      console.log('1');
-      const now = Date.now().valueOf();
-      console.log('2');
-      const ses = validUntilDate.valueOf();
-      console.log('3');
-      const diff = Math.floor((ses - now) / 1000);
-      console.log('4');
+      const now: number = Date.now().valueOf();
+      const ses: number = validUntilDate.valueOf();
+      let diff: number = Math.floor((ses - now) / 1000);
+      if (diff < 0) {
+        diff = 0;
+      }
       return '' + diff;
     }
+    console.log('validUntilDate is NULL');
     return '';
   }
 }

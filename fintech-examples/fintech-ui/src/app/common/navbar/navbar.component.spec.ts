@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { SimpleTimer } from 'ng2-simple-timer';
 
 describe('NavbarComponent', () => {
   let component: NavbarComponent;
@@ -13,7 +14,7 @@ describe('NavbarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [AuthService],
+      providers: [AuthService, SimpleTimer],
       declarations: [NavbarComponent],
       imports: [RouterTestingModule, HttpClientTestingModule]
     }).compileComponents();
