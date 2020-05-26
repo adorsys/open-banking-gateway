@@ -30,7 +30,7 @@ export class AuthInterceptor implements HttpInterceptor {
     } else {
       xsrfToken = this.storageService.getXsrfToken();
     }
-    if (this.authService.isLoggedIn()) {
+    if (this.storageService.isLoggedIn()) {
       headers = request.headers
         .set(HeaderConfig.HEADER_FIELD_X_REQUEST_ID, xRequestID)
         .set(HeaderConfig.HEADER_FIELD_CONTENT_TYPE, 'application/json')

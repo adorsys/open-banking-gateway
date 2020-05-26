@@ -14,7 +14,7 @@ import { BankSearchModule } from '../bank-search/bank-search.module';
 import { DocumentCookieService } from '../services/document-cookie.service';
 import { AuthService } from '../services/auth.service';
 
-xdescribe('LoginComponent', () => {
+describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let authService: AuthService;

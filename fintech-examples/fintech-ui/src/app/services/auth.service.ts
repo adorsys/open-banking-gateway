@@ -30,7 +30,7 @@ export class AuthService {
   }
 
   logout(): void {
-    if (!this.isLoggedIn()) {
+    if (!this.storageService.isLoggedIn()) {
       this.openLoginPage();
       return;
     }
@@ -45,15 +45,6 @@ export class AuthService {
 
   openLoginPage() {
     this.router.navigate(['/login']);
-  }
-
-  public isLoggedIn(): boolean {
-    const token = this.storageService.getXsrfToken();
-    const log = token !== undefined && token !== null;
-    if (!log) {
-      return false;
-    }
-    return this.storageService.isAnySessionValid();
   }
 
   private setSessionData(response: any, credentials: Credentials): void {

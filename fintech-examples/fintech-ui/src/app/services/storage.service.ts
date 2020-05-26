@@ -12,7 +12,7 @@ export class StorageService {
 
   public setXsrfToken(xsrfToken: string, maxAge: number): void {
     localStorage.setItem(Session.XSRF_TOKEN, xsrfToken);
-    this.setMaxAge(maxAge);
+    localStorage.setItem(Session.MAX_VALID_UNTIL, JSON.stringify(this.getMaxAgeDate(maxAge)));
   }
 
   public setRedirect(redirectCode: string, authId: string, xsrfToken: string, maxAge: number): void {
@@ -49,10 +49,10 @@ export class StorageService {
     localStorage.setItem(Session.BANK_NAME, bankName);
   }
 
-  private setMaxAge(maxAge: number): void {
-    const timestamp = new Date().getTime() + maxAge * 1000;
-    localStorage.setItem(Session.MAX_VALID_UNTIL, '' + timestamp);
-    console.log('set max age ' + maxAge + ' till ' + toLocaleString(new Date(timestamp)));
+  private getMaxAgeDate(maxAge: number): Date {
+    const date = new Date(new Date().getTime() + maxAge * 1000);
+    console.log('set max age ' + maxAge + ' till ' + toLocaleString(date));
+    return date;
   }
 
   public getValidUntilDate(): Date {
@@ -60,7 +60,7 @@ export class StorageService {
     if (validUntilTimestamp === undefined || validUntilTimestamp === null) {
       return null;
     }
-    const date = new Date(parseInt(validUntilTimestamp, 0));
+    const date: Date = new Date(JSON.parse(validUntilTimestamp));
     if (toLocaleString(date) === 'Invalid Date') {
       console.log('programming error: ' + validUntilTimestamp + ' results in Invalid Date');
       throw Error('programming error: ' + validUntilTimestamp + ' results in Invalid Date');
@@ -77,13 +77,17 @@ export class StorageService {
     return new Map(JSON.parse(mapString));
   }
 
-  public isAnySessionValid(): boolean {
+  public isLoggedIn(): boolean {
+    return this.isAnySessionValid();
+  }
+
+  private isAnySessionValid(): boolean {
     const date: Date = this.getValidUntilDate();
     if (this.isDateValid(date)) {
       return true;
     }
-    for (let redirectSession of Array.from(this.getRedirectMap().values())) {
-      if (this.isDateValid(redirectSession.validUntil)) {
+    for (const redirectSession of Array.from(this.getRedirectMap().values())) {
+      if (this.isDateValid(new Date(redirectSession.validUntil))) {
         return true;
       }
     }
@@ -94,8 +98,8 @@ export class StorageService {
     if (validUntilDate === null) {
       return false;
     }
-    const validUntil = validUntilDate.getTime();
-    const timestamp = new Date().getTime();
+    const validUntil: number = validUntilDate.getTime();
+    const timestamp: number = new Date().getTime();
     if (timestamp > validUntil) {
       console.log(
         'valid until was ' +
