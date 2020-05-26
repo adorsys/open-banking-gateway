@@ -23,7 +23,7 @@ public class Xs2aAskForScaChallenge extends ValidatedExecution<Xs2aContext> {
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        redirectExecutor.redirect(execution, context, redir -> redir.getParameters().getReportScaResult());
+        redirectExecutor.redirect(execution, context, urls -> urls.getCommonUrls().getReportScaResult());
     }
 
     @Override

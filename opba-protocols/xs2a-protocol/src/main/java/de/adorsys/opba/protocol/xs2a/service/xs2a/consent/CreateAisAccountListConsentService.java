@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
-import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
+import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateHeaders;
@@ -30,18 +30,17 @@ public class CreateAisAccountListConsentService extends ValidatedExecution<Accou
     private final AisConsentInitiateExtractor extractor;
     private final AccountInformationService ais;
     private final Xs2aValidator validator;
-    private final ProtocolConfiguration configuration;
+    private final ProtocolUrlsConfiguration urlsConfiguration;
     private final CreateConsentErrorSink errorSink;
     private final CreateAisConsentService createAisConsentService;
 
     @Override
     protected void doPrepareContext(DelegateExecution execution, AccountListXs2aContext context) {
-        ProtocolConfiguration.Redirect.Ais aisUrls = configuration.getRedirect().getAis();
         context.setRedirectUriOk(
-                ContextUtil.evaluateSpelForCtx(aisUrls.getOk(), execution, context)
+                ContextUtil.evaluateSpelForCtx(urlsConfiguration.getCommonUrls().getOk(), execution, context)
         );
         context.setRedirectUriNok(
-                ContextUtil.evaluateSpelForCtx(aisUrls.getNok(), execution, context)
+                ContextUtil.evaluateSpelForCtx(urlsConfiguration.getCommonUrls().getNok(), execution, context)
         );
     }
 

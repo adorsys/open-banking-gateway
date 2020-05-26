@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.stress;
 
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
-import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
+import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.MockServers;
@@ -47,16 +47,16 @@ class WiremockE2EStressXs2aProtocolTest extends SpringScenarioTest<MockServers, 
     private int port;
 
     @Autowired
-    private ProtocolConfiguration configuration;
+    private ProtocolUrlsConfiguration urlsConfiguration;
 
     @Autowired
     private AutowireCapableBeanFactory signingService;
 
     // See https://github.com/spring-projects/spring-boot/issues/14879 for the 'why setting port'
     void beforeEach() {
-        ProtocolConfiguration.Redirect.Ais aisUrls = configuration.getRedirect().getAis();
-        aisUrls.setOk(aisUrls.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
-        aisUrls.setNok(aisUrls.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
+        ProtocolUrlsConfiguration.CommonUrls urls = urlsConfiguration.getCommonUrls();
+        urls.setOk(urls.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
+        urls.setNok(urls.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
 
         // Forcefully injecting signer
         E2EStress.PARENT_SPRING_CTX_AUTOWIRER.set(signingService);
