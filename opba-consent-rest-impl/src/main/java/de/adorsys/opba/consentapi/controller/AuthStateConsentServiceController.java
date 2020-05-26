@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.CompletableFuture;
 
-import static de.adorsys.opba.consentapi.Const.SPRING_KEYWORD;
+import static de.adorsys.opba.restapi.shared.GlobalConst.SPRING_KEYWORD;
 
 @RestController
 @RequiredArgsConstructor

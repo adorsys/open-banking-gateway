@@ -2,7 +2,7 @@ package de.adorsys.opba.tppbankingapi.controller;
 
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
-import de.adorsys.opba.protocol.api.dto.request.authorization.SinglePaymentBody;
+import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.PaymentProductDetails;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
@@ -11,7 +11,7 @@ import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
 import de.adorsys.opba.tppbankingapi.pis.model.generated.PaymentInitiation;
 import de.adorsys.opba.tppbankingapi.pis.model.generated.PaymentInitiationResponse;
-import de.adorsys.opba.tppbankingapi.pis.resource.generated.TppBankingApiPaymentInitiationServicePisApi;
+import de.adorsys.opba.tppbankingapi.pis.resource.generated.TppBankingApiSinglePaymentPisApi;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +24,7 @@ import static de.adorsys.opba.tppbankingapi.Const.API_MAPPERS_PACKAGE;
 
 @RestController
 @RequiredArgsConstructor
-public class TppBankingApiPisController implements TppBankingApiPaymentInitiationServicePisApi {
+public class TppBankingApiPisController implements TppBankingApiSinglePaymentPisApi {
     private final UserAgentContext userAgentContext;
     private final FacadeResponseMapper mapper;
     private final SinglePaymentService payments;

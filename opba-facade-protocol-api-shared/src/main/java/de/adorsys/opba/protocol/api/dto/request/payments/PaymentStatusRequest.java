@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.api.dto.request.payments;
 
-import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import lombok.AllArgsConstructor;
@@ -9,11 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 /**
- * The request by FinTech to initiate payment
+ * The request to get payment status.
  */
 // TODO Validation, Immutability
 @Setter
@@ -21,21 +17,9 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InitiateSinglePaymentRequest implements FacadeServiceableGetter {
-
+public class PaymentStatusRequest implements FacadeServiceableGetter {
     /**
      * The request representation that is being serviced by facade.
      */
     private FacadeServiceableRequest facadeServiceable;
-
-    /**
-     * Payment access scope object.
-     */
-    private SinglePaymentBody singlePayment;
-
-    /**
-     * Additional (protocol-customary) request parameters.
-     */
-    @Builder.Default
-    private Map<ExtraAuthRequestParam, Object> extras = new EnumMap<>(ExtraAuthRequestParam.class);
 }
