@@ -10,27 +10,12 @@ import {StubUtilTests} from '../../../../common/stub-util-tests';
 import {SessionService} from "../../../../../common/session.service";
 import {ConsentAuthorizationService} from "../../../../../api";
 import {Location} from "@angular/common";
-import {StubUtil} from "../../../../common/stub-util";
-import {AisConsentToGrant} from "../../../../common/dto/ais-consent";
-import {MockActivatedRoute} from "../../../../login/login.component.spec";
-import {HttpHeaders, HttpResponse} from "@angular/common/http";
 
 fdescribe('TransactionsConsentReviewComponent', () => {
     let component: TransactionsConsentReviewComponent;
     let fixture: ComponentFixture<TransactionsConsentReviewComponent>;
     let consentAuthorizationServiceSpy;
     let consentAuthorizationService: ConsentAuthorizationService;
-    let sessionService: SessionService;
-    let aisConsent: AisConsentToGrant;
-    let sessionServiceSpy;
-    let route;
-    const headersOpt = new HttpHeaders({ Location: 'httpw://localhost:9876/?id=77168991' });
-    const response = new HttpResponse({
-        body: { xsrfToken: 'tokenHere' },
-        headers: headersOpt,
-        status: 200,
-        statusText: 'geht'
-    });
 
     const locationStub = {
         back: jasmine.createSpy('onBack')
@@ -54,16 +39,8 @@ fdescribe('TransactionsConsentReviewComponent', () => {
     }));
 
     beforeEach(() => {
-        route = new MockActivatedRoute();
-        route.snapshot = {
-            queryParams: { redirectCode: 'redirectCode654' },
-            parent: { params: { authId: 'authIdHere' } }
-        };
-
         fixture = TestBed.createComponent(TransactionsConsentReviewComponent);
         component = fixture.componentInstance;
-        route = TestBed.get(ActivatedRoute);
-        sessionService = TestBed.get(SessionService);
         fixture.detectChanges();
         consentAuthorizationService = fixture.debugElement.injector.get(ConsentAuthorizationService);
     });
