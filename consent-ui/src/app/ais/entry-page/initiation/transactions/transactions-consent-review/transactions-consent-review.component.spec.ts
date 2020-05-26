@@ -11,7 +11,7 @@ import {SessionService} from "../../../../../common/session.service";
 import {ConsentAuthorizationService} from "../../../../../api";
 import {Location} from "@angular/common";
 
-fdescribe('TransactionsConsentReviewComponent', () => {
+describe('TransactionsConsentReviewComponent', () => {
     let component: TransactionsConsentReviewComponent;
     let fixture: ComponentFixture<TransactionsConsentReviewComponent>;
     let consentAuthorizationServiceSpy;
