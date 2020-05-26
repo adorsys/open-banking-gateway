@@ -7,12 +7,14 @@ import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.LoginRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.SessionRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
+import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Hex;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 /**
@@ -27,6 +29,7 @@ public class AuthorizeService {
     private final SessionRepository sessionRepository;
     private final LoginRepository loginRepository;
     private final RestRequestContext restRequestContext;
+    private final CookieConfigProperties configProperties;
 
     /**
      * @param loginRequest
@@ -71,6 +74,10 @@ public class AuthorizeService {
             log.error("session cookie might be old. However it is not found in DB and thus not valid {} ", sessionCookieValue);
             return false;
         }
+
+        log.info("renew max age for session and persist it");
+        optionalSessionEntity.get().setValidUntil(OffsetDateTime.now().plusSeconds(configProperties.getSessioncookie().getMaxAge()));
+        sessionRepository.save(optionalSessionEntity.get());
 
         return true;
     }

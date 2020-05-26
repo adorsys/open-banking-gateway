@@ -1,4 +1,4 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -52,6 +52,10 @@ export class AuthInterceptor implements HttpInterceptor {
 
     console.log('REQUEST ' + request.url + ' has ' + HeaderConfig.HEADER_FIELD_X_REQUEST_ID + ' ' + xRequestID);
 
+    // when call is done, session is renewed
+    if (this.storageService.isLoggedIn()) {
+      this.storageService.extendSessionAge();
+    }
     return next.handle(request);
   }
 }

@@ -13,6 +13,13 @@ export class StorageService {
   public setXsrfToken(xsrfToken: string, maxAge: number): void {
     localStorage.setItem(Session.XSRF_TOKEN, xsrfToken);
     localStorage.setItem(Session.MAX_VALID_UNTIL, JSON.stringify(this.getMaxAgeDate(maxAge)));
+    localStorage.setItem(Session.SESSION_MAX_AGE, '' + maxAge);
+  }
+
+  public extendSessionAge(): void {
+    console.log('extend session duration');
+    const maxAge = parseInt(localStorage.getItem(Session.SESSION_MAX_AGE), 0);
+    localStorage.setItem(Session.MAX_VALID_UNTIL, JSON.stringify(this.getMaxAgeDate(maxAge)));
   }
 
   public setRedirect(redirectCode: string, authId: string, xsrfToken: string, maxAge: number): void {
@@ -128,5 +135,6 @@ enum Session {
   XSRF_TOKEN = 'XSRF_TOKEN',
   COOKIE_NAME_SESSION = 'SESSION-COOKIE',
   MAX_VALID_UNTIL = 'MAX_VALID_UNTIL_TIMESTAMP',
-  REDIRECT_MAP = 'REDIRECT_MAP'
+  REDIRECT_MAP = 'REDIRECT_MAP',
+  SESSION_MAX_AGE = 'SESSION_MAX_AGE'
 }
