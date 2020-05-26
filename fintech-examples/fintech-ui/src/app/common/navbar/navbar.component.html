@@ -3,9 +3,9 @@
     <img class="logo" [src]="" />
     <span class="ml-3">Fintechui</span>
     <ul class="list-group">
-      <li class="list-group-item tinyRedirect">session valid until {{ getSessionValidUntil() }}</li>
-      <li class="list-group-item tinyRedirect" *ngFor="let redirectCode of getRedirectSessionsKeys()">
-        redirect session {{ redirectCode }} {{ getRedirectSessionValidUntil(redirectCode) }}
+      <li class="list-group-item tinyRedirect">session expires {{ sessionValidUntil }}</li>
+      <li class="list-group-item tinyRedirect" *ngFor="let validUntil of redirectsValidUntil">
+        redirect session {{ validUntil }}
       </li>
     </ul>
   </a>

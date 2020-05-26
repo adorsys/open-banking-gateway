@@ -77,22 +77,37 @@ export class StorageService {
     return new Map(JSON.parse(mapString));
   }
 
-  /*
-    public isMaxAgeValid(): boolean {
-      const validUntilDate: Date = this.getValidUntilDate();
-      if (validUntilDate === null) {
-        return false;
-      }
-      const validUntil = validUntilDate.getTime();
-      const timestamp = new Date().getTime();
-      if (timestamp > validUntil) {
-        console.log('valid until was ' + toLocaleString(validUntilDate) + ' now is '
-          + toLocaleString(new Date()) + ', so isMaxValid = false');
-        return false;
-      }
+  public isAnySessionValid(): boolean {
+    const date: Date = this.getValidUntilDate();
+    if (this.isDateValid(date)) {
       return true;
     }
-  */
+    for (let redirectSession of Array.from(this.getRedirectMap().values())) {
+      if (this.isDateValid(redirectSession.validUntil)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private isDateValid(validUntilDate: Date): boolean {
+    if (validUntilDate === null) {
+      return false;
+    }
+    const validUntil = validUntilDate.getTime();
+    const timestamp = new Date().getTime();
+    if (timestamp > validUntil) {
+      console.log(
+        'valid until was ' +
+          toLocaleString(validUntilDate) +
+          ' now is ' +
+          toLocaleString(new Date()) +
+          ', so isMaxValid = false'
+      );
+      return false;
+    }
+    return true;
+  }
 
   public clearStorage() {
     localStorage.clear();
