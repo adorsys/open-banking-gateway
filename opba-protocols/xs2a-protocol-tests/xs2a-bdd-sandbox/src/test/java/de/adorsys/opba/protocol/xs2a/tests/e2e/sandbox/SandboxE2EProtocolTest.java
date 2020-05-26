@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox;
 import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
 import de.adorsys.opba.protocol.api.common.Approach;
-import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
+import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.SandboxServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
@@ -72,7 +72,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
     private int port;
 
     @Autowired
-    private ProtocolConfiguration configuration;
+    private ProtocolUrlsConfiguration urlsConfiguration;
 
     @BeforeAll
     static void startSandbox() {
@@ -95,9 +95,9 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
     // See https://github.com/spring-projects/spring-boot/issues/14879 for the 'why setting port'
     @BeforeEach
     void setBaseUrl() {
-        ProtocolConfiguration.Redirect.Ais aisUrls = configuration.getRedirect().getAis();
-        aisUrls.setOk(aisUrls.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
-        aisUrls.setNok(aisUrls.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
+        ProtocolUrlsConfiguration.CommonUrls urls = urlsConfiguration.getCommonUrls();
+        urls.setOk(urls.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
+        urls.setNok(urls.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
     }
 
     @ParameterizedTest

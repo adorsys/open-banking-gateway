@@ -21,7 +21,7 @@ public class Xs2aAskForPassword extends ValidatedExecution<Xs2aContext> {
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        redirectExecutor.redirect(execution, context, redir -> redir.getParameters().getProvidePsuPassword());
+        redirectExecutor.redirect(execution, context, urls -> urls.getCommonUrls().getProvidePsuPassword());
     }
 
     @Override

@@ -4,7 +4,7 @@ import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
-import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
+import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.LastViolations;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -26,7 +26,7 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.LAST_VALIDATION
 @Service("xs2aReportValidationError")
 public class Xs2aReportValidationError implements JavaDelegate {
 
-    private final ProtocolConfiguration configuration;
+    private final ProtocolUrlsConfiguration urlsConfiguration;
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
@@ -44,7 +44,7 @@ public class Xs2aReportValidationError implements JavaDelegate {
                         .executionId(execution.getId())
                         .provideMoreParamsDialog(
                                 ContextUtil.evaluateSpelForCtx(
-                                        configuration.getRedirect().getParameters().getProvideMore(),
+                                        urlsConfiguration.getCommonUrls().getProvideMore(),
                                         execution,
                                         current,
                                         URI.class)

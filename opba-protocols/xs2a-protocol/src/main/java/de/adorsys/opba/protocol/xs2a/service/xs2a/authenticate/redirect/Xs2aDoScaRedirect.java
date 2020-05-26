@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.redirect;
 
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
-import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
+import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.RedirectExecutor;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class Xs2aDoScaRedirect extends ValidatedExecution<Xs2aContext> {
 
-    private final ProtocolConfiguration configuration;
+    private final ProtocolUrlsConfiguration urlsConfiguration;
     private final RuntimeService runtimeService;
     private final RedirectExecutor redirectExecutor;
 
@@ -25,7 +25,7 @@ public class Xs2aDoScaRedirect extends ValidatedExecution<Xs2aContext> {
         redirectExecutor.redirect(
                 execution,
                 context,
-                configuration.getRedirect().getAis().getToAspsp(),
+                urlsConfiguration.getAis().getToAspsp(),
                 context.getStartScaProcessResponse().getLinks().get("scaRedirect").getHref()
         );
     }
