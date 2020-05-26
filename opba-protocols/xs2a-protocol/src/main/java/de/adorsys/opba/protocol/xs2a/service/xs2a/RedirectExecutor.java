@@ -4,7 +4,7 @@ import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.Redirect;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
-import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
+import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -22,21 +22,21 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class RedirectExecutor {
 
-    private final ProtocolConfiguration configuration;
+    private final ProtocolUrlsConfiguration urlsConfiguration;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     /**
      * Redirects PSU to some page (or emits FinTech redirection required) by performing interpolation of the
-     * string returned by {@code redirectSelector}
+     * string returned by {@code urlSelector}
      * @param execution Execution context of the current process
      * @param context Current XS2A context
-     * @param redirectSelector Redirection URL configurer - selects which URL template to use
+     * @param urlSelector Redirection URL configurer - selects which URL template to use
      */
     public void redirect(
             DelegateExecution execution,
             Xs2aContext context,
-            Function<ProtocolConfiguration.Redirect, String> redirectSelector) {
-        String uiScreenUri = redirectSelector.apply(configuration.getRedirect());
+            Function<ProtocolUrlsConfiguration, String> urlSelector) {
+        String uiScreenUri = urlSelector.apply(urlsConfiguration);
         redirect(execution, context, uiScreenUri, null);
     }
 

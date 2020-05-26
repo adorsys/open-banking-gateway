@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.payment;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.PaymentAcquired;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
-import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
+import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.RedirectExecutor;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +17,14 @@ import org.springframework.stereotype.Service;
 public class ReportPaymentAuthorizationFinished extends ValidatedExecution<Xs2aPisContext> {
 
     private final RedirectExecutor redirectExecutor;
-    private final ProtocolConfiguration configuration;
+    private final ProtocolUrlsConfiguration urlsConfiguration;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aPisContext context) {
         redirectExecutor.redirect(
                 execution,
                 context,
-                configuration.getRedirect().getPis().getResult(),
+                urlsConfiguration.getPis().getResult(),
                 context.getFintechRedirectUriOk(),
                 redirect -> new PaymentAcquired(redirect.build()));
     }
