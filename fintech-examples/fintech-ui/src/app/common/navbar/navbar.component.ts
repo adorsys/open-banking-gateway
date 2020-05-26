@@ -13,8 +13,8 @@ import { Router } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
   private static TIMER_NAME = 'TIMER_NAME';
-  private sessionValidUntil = '';
-  private redirectsValidUntil = Array.from(new Array<string>());
+  sessionValidUntil = '';
+  redirectsValidUntil = Array.from(new Array<string>());
 
   constructor(
     private simpleTimer: SimpleTimer,
