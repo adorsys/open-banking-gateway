@@ -44,15 +44,6 @@ public class ProtocolConfiguration {
          */
         @NotNull
         private Pis pis;
-    }
-
-    @Data
-    public static class Ais {
-        /**
-         * Consent related urls - Consent with IBANs input form, etc.
-         */
-        @NotNull
-        private Consent consentAccounts;
 
         /**
          * Generic parameters input urls - i.e. password page.
@@ -60,14 +51,13 @@ public class ProtocolConfiguration {
         @NotNull
         private Parameters parameters;
 
-        /**
-         * To ASPSP redirection page (for Redirect SCA).
-         */
-        @NotBlank
-        private String toAspsp;
-
         @Data
-        public static class Consent {
+        public static class Ais {
+            /**
+             * To ASPSP redirection page (for Redirect SCA).
+             */
+            @NotBlank
+            private String toAspsp;
 
             /**
              * URL that represents page saying that consent creation was OK (comes before consent result page).
@@ -83,6 +73,34 @@ public class ProtocolConfiguration {
 
             /**
              * URL that represents consent acquisition result.
+             */
+            @NotBlank
+            private String result;
+        }
+
+        @Data
+        public static class Pis {
+
+            /**
+             * To ASPSP redirection page (for Redirect SCA).
+             */
+            @NotBlank
+            private String toAspsp;
+
+            /**
+             * URL that represents page saying that payment creation was OK (comes before payment result page).
+             */
+            @NotBlank
+            private String ok;
+
+            /**
+             * URL that represents page saying that payment creation was not OK (comes before payment result page).
+             */
+            @NotBlank
+            private String nok;
+
+            /**
+             * URL that represents payment acquisition result.
              */
             @NotBlank
             private String result;
@@ -121,44 +139,6 @@ public class ProtocolConfiguration {
              */
             @NotBlank
             private String providePsuIban;
-        }
-    }
-
-    @Data
-    public static class Pis {
-
-        /**
-         * To ASPSP redirection page (for Redirect SCA).
-         */
-        @NotBlank
-        private String toAspsp;
-
-        /**
-         * To ASPSP redirection page (for Redirect SCA).
-         */
-        @NotNull
-        private Payment payments;
-
-        @Data
-        public static class Payment {
-
-            /**
-             * URL that represents page saying that payment creation was OK (comes before payment result page).
-             */
-            @NotBlank
-            private String ok;
-
-            /**
-             * URL that represents page saying that payment creation was not OK (comes before payment result page).
-             */
-            @NotBlank
-            private String nok;
-
-            /**
-             * URL that represents payment acquisition result.
-             */
-            @NotBlank
-            private String result;
         }
     }
 }
