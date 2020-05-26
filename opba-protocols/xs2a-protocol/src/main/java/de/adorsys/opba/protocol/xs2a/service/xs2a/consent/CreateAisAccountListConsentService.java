@@ -36,12 +36,12 @@ public class CreateAisAccountListConsentService extends ValidatedExecution<Accou
 
     @Override
     protected void doPrepareContext(DelegateExecution execution, AccountListXs2aContext context) {
-        ProtocolConfiguration.Ais.Consent consentAccounts = configuration.getRedirect().getAis().getConsentAccounts();
+        ProtocolConfiguration.Redirect.Ais aisUrls = configuration.getRedirect().getAis();
         context.setRedirectUriOk(
-                ContextUtil.evaluateSpelForCtx(consentAccounts.getOk(), execution, context)
+                ContextUtil.evaluateSpelForCtx(aisUrls.getOk(), execution, context)
         );
         context.setRedirectUriNok(
-                ContextUtil.evaluateSpelForCtx(consentAccounts.getNok(), execution, context)
+                ContextUtil.evaluateSpelForCtx(aisUrls.getNok(), execution, context)
         );
     }
 
