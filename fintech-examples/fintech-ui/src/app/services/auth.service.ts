@@ -50,8 +50,10 @@ export class AuthService {
   public isLoggedIn(): boolean {
     const token = this.storageService.getXsrfToken();
     const log = token !== undefined && token !== null;
-    // console.log("islogged in is ", log);
-    return log;
+    if (!log) {
+      return false;
+    }
+    return this.storageService.isAnySessionValid();
   }
 
   private setSessionData(response: any, credentials: Credentials): void {
