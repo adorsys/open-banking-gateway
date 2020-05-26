@@ -45,7 +45,7 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
 
     @Override
     protected void doPrepareContext(DelegateExecution execution, Xs2aPisContext context) {
-        ProtocolConfiguration.Pis.Payment payments = configuration.getRedirect().getPis().getPayments();
+        ProtocolConfiguration.Redirect.Pis payments = configuration.getRedirect().getPis();
         context.setRedirectUriOk(
                 ContextUtil.evaluateSpelForCtx(configuration.getPis().getRedirect().getPayments().getOk(), execution, context)
         );
