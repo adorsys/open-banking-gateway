@@ -146,13 +146,12 @@ protocol:
           ok:  ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
           nok: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
           result: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
-      parameters:
-        max-array-size: 32
-        provide-more: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
-        provide-psu-password: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/authenticate?wrong=#{context.getWrongAuthCredentials()}
-        select-sca-method: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
-        report-sca-result: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/sca-result?wrong=#{context.getWrongAuthCredentials()}
-        provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/entry-consent-transactions/dedicated-account-access?wrong=#{context.getWrongAuthCredentials()}
+        parameters:
+          provide-more: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+          provide-psu-password: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/authenticate?wrong=#{context.getWrongAuthCredentials()}
+          select-sca-method: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
+          report-sca-result: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/sca-result?wrong=#{context.getWrongAuthCredentials()}
+          provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/entry-consent-transactions/dedicated-account-access?wrong=#{context.getWrongAuthCredentials()}
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
       invalid-consent: FORMAT_ERROR
