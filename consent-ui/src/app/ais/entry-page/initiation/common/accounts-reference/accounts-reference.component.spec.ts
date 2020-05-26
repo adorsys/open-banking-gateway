@@ -7,6 +7,7 @@ describe('AccountsReferenceComponent', () => {
     let component: AccountsReferenceComponent;
     let fixture: ComponentFixture<AccountsReferenceComponent>;
     let form;
+    let removeAccountSpy;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -39,9 +40,9 @@ describe('AccountsReferenceComponent', () => {
             iban: "DE12344313232222"
         };
 
-        spyOn(component, 'removeAccount').withArgs(account);
+        removeAccountSpy = spyOn(component, 'removeAccount');
         component.removeAccount(account);
-        expect(component.removeAccount).toHaveBeenCalledWith(account);
+        expect(removeAccountSpy).toHaveBeenCalledWith(account);
         expect(component.accounts.length).toEqual(0);
     });
 });
