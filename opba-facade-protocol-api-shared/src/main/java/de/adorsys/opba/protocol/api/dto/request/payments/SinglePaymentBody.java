@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.api.dto.request.authorization;
+package de.adorsys.opba.protocol.api.dto.request.payments;
 
 import de.adorsys.opba.protocol.api.dto.result.body.AccountReference;
 import de.adorsys.opba.protocol.api.dto.result.body.Address;

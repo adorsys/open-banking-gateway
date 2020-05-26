@@ -2,7 +2,7 @@ package de.adorsys.opba.consentapi.service.mapper;
 
 import de.adorsys.opba.consentapi.model.generated.PaymentProduct;
 import de.adorsys.opba.consentapi.model.generated.SinglePayment;
-import de.adorsys.opba.protocol.api.dto.request.authorization.SinglePaymentBody;
+import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.result.body.PaymentProductDetails;
 import org.mapstruct.Mapper;
 

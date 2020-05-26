@@ -7,5 +7,4 @@ import lombok.experimental.UtilityClass;
 public class Const {
 
     public static final String API_MAPPERS_PACKAGE = "de.adorsys.opba.consentapi.mapper.generated";
-    public static final String SPRING_KEYWORD = "spring";
 }
