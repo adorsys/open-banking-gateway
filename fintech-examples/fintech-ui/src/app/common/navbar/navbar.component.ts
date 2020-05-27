@@ -63,8 +63,7 @@ export class NavbarComponent implements OnInit {
         diff = 0;
       }
 
-      let timerTimeAsString = this.getTimerTimeAsString(diff);
-      return timerTimeAsString;
+      return this.getTimerTimeAsString(diff);
     }
     console.log('validUntilDate is NULL');
     return '';

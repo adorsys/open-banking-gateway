@@ -5,7 +5,6 @@ import de.adorsys.opba.fintech.api.model.generated.TransactionsResponse;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAccountInformationApi;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.service.AccountService;
-import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.SessionLogicService;
 import de.adorsys.opba.fintech.impl.service.TransactionService;
 import lombok.RequiredArgsConstructor;
