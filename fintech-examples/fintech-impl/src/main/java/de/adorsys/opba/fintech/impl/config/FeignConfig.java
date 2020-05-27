@@ -11,7 +11,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.COMPUTE_PSU_IP_ADDRESS;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.FINTECH_ID;
@@ -49,26 +54,49 @@ public class FeignConfig {
     }
 
     private String calculateSignature(RequestTemplate requestTemplate, Instant instant) {
-        String requestOperationType = requestTemplate.headers().get(HttpHeaders.X_OPERATION_TYPE).stream().findFirst()
-                                       .orElseThrow(() -> new IllegalStateException(HttpHeaders.X_OPERATION_TYPE + MISSING_HEADER_ERROR_MESSAGE));
+        Map<String, Collection<String>> headers = requestTemplate.headers();
+        String requestOperationType = headers.get(HttpHeaders.X_OPERATION_TYPE).stream().findFirst()
+                                              .orElseThrow(() -> new IllegalStateException(HttpHeaders.X_OPERATION_TYPE + MISSING_HEADER_ERROR_MESSAGE));
         OperationType operationType = OperationType.valueOf(requestOperationType);
         FeignTemplateToDataToSignMapper mapper = new FeignTemplateToDataToSignMapper();
+        Map<String, String> queries = requestTemplate.queries().entrySet().stream()
+                                              .collect(Collectors.toMap(Map.Entry::getKey, e -> decodeQueryValue(e.getValue())));
 
         switch (operationType) {
             case AIS:
                 if (OperationType.isTransactionsPath(requestTemplate.path())) {
-                    return requestSigningService.signature(mapper.mapToListTransactions(requestTemplate, instant));
+                    return requestSigningService.signature(mapper.mapToListTransactions(headers, queries, instant));
                 }
-                return requestSigningService.signature(mapper.mapToListAccounts(requestTemplate, instant));
+                return requestSigningService.signature(mapper.mapToListAccounts(headers, instant));
             case BANK_SEARCH:
                 if (OperationType.isBankSearchPath(requestTemplate.path())) {
-                    return requestSigningService.signature(mapper.mapToBankSearch(requestTemplate, instant));
+                    return requestSigningService.signature(mapper.mapToBankSearch(headers, queries, instant));
                 }
-                return requestSigningService.signature(mapper.mapToBankProfile(requestTemplate, instant));
+                return requestSigningService.signature(mapper.mapToBankProfile(headers, instant));
             case CONFIRM_CONSENT:
-                return requestSigningService.signature(mapper.mapToConfirmConsent(requestTemplate, instant));
+                return requestSigningService.signature(mapper.mapToConfirmConsent(headers, instant));
             default:
                 throw new IllegalArgumentException(String.format("Unsupported operation type %s", operationType));
+        }
+    }
+
+    private String decodeQueryValue(Collection<String> value) {
+        if (value == null) {
+            return null;
+        }
+
+        return value.stream()
+                       .findFirst()
+                       .map(this::decodeQueryParam)
+                       .orElse(null);
+    }
+
+
+    private String decodeQueryParam(String param) {
+        try {
+            return URLDecoder.decode(param, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException(e);
         }
     }
 }
