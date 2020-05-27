@@ -3,21 +3,14 @@ package de.adorsys.opba.fintech.impl.controller;
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse2001;
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse2002;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechBankSearchApi;
-import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.BankSearchService;
 import de.adorsys.opba.fintech.impl.service.SessionLogicService;
-import de.adorsys.opba.fintech.impl.tppclients.Consts;
-import de.adorsys.opba.fintech.impl.tppclients.HeaderFields;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
