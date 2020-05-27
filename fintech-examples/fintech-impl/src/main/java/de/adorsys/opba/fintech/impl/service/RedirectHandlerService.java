@@ -57,7 +57,7 @@ public class RedirectHandlerService {
         }
         redirectUrlRepository.delete(redirectUrls.get());
 
-        if (!authorizeService.isRedirectAuthorized()) {
+        if (!sessionLogicService.isRedirectAuthorized()) {
             log.warn("Validation redirect request failed: user is not authorized!");
             return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
