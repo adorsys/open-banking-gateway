@@ -82,11 +82,19 @@ public class FeignTemplateToDataToSignMapper {
     }
 
     private String extractRequiredValue(Map<String, Collection<String>> headers, String valueName) {
+        if (headers.get(valueName) == null) {
+            throw new IllegalStateException(valueName + MISSING_HEADER_ERROR_MESSAGE);
+        }
+
         return headers.get(valueName).stream().findFirst()
                        .orElseThrow(() -> new IllegalStateException(valueName + MISSING_HEADER_ERROR_MESSAGE));
     }
 
     private String extractNonRequiredValue(Map<String, Collection<String>> headers, String valueName) {
+        if (headers.get(valueName) == null) {
+            return null;
+        }
+
         return headers.get(valueName).stream().findFirst().orElse(null);
     }
 }
