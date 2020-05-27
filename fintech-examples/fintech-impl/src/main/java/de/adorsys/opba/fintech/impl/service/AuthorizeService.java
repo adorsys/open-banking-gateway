@@ -27,9 +27,7 @@ import java.util.Optional;
 public class AuthorizeService {
     private final UserRepository userRepository;
     private final SessionRepository sessionRepository;
-    private final LoginRepository loginRepository;
-    private final RestRequestContext restRequestContext;
-    private final CookieConfigProperties configProperties;
+    private final SessionLogicService sessionLogicService;
 
     /**
      * @param loginRequest
@@ -54,62 +52,10 @@ public class AuthorizeService {
         return optionalUserEntity;
     }
 
-    @Transactional
-    public boolean isSessionAuthorized() {
-        log.info(restRequestContext.toString());
-        if (restRequestContext.getSessionCookieValue() == null || restRequestContext.getXsrfTokenHeaderField() == null || restRequestContext.getRequestId() == null) {
-            log.error("unauthorized call due to missing {}",
-                    restRequestContext.getSessionCookieValue() == null
-                            ? "session cookie" : restRequestContext.getXsrfTokenHeaderField() == null ? "XSRFToken" : "RequestID");
-            return false;
-        }
-
-        // first check token with session without any DB
-        String sessionCookieValue = restRequestContext.getSessionCookieValue();
-        SessionEntity.validateSessionCookieValue(sessionCookieValue, restRequestContext.getXsrfTokenHeaderField());
-
-        // now check that this sessionCookie is really known in DB
-        Optional<SessionEntity> optionalSessionEntity = sessionRepository.findBySessionCookieValue(sessionCookieValue);
-        if (!optionalSessionEntity.isPresent()) {
-            log.error("session cookie might be old. However it is not found in DB and thus not valid {} ", sessionCookieValue);
-            return false;
-        }
-
-        log.info("renew max age for session and persist it");
-        optionalSessionEntity.get().setValidUntil(OffsetDateTime.now().plusSeconds(configProperties.getSessioncookie().getMaxAge()));
-        sessionRepository.save(optionalSessionEntity.get());
-
-        return true;
-    }
-
-    @Transactional
-    public boolean isRedirectAuthorized() {
-        log.info(restRequestContext.toString());
-        if (restRequestContext.getRedirectCookieValue() == null || restRequestContext.getXsrfTokenHeaderField() == null || restRequestContext.getRequestId() == null) {
-            log.error("unauthorized call due to missing {}",
-                    restRequestContext.getRedirectCookieValue() == null
-                            ? "redirect cookie" : restRequestContext.getXsrfTokenHeaderField() == null ? "XSRFToken" : "RequestID");
-            return false;
-        }
-
-        // first check token with session without any DB
-        String redirectCookieValue = restRequestContext.getRedirectCookieValue();
-        SessionEntity.validateSessionCookieValue(redirectCookieValue, restRequestContext.getXsrfTokenHeaderField());
-
-        // now check that this sessionCookie is really known in DB
-        Optional<SessionEntity> optionalSessionEntity = sessionRepository.findBySessionCookieValue(redirectCookieValue);
-        if (!optionalSessionEntity.isPresent()) {
-            log.error("redirect cookie might be old. However it is not found in DB and thus not valid {} ", redirectCookieValue);
-            return false;
-        }
-
-        return true;
-    }
-
 
     @Transactional
     public void logout() {
-        SessionEntity sessionEntity = getSession();
+        SessionEntity sessionEntity = sessionLogicService.getSession();
         log.info("logout for user {}", sessionEntity.getUserEntity().getLoginUserName());
         sessionRepository.delete(sessionEntity);
     }
@@ -131,12 +77,6 @@ public class AuthorizeService {
 
     private String createID(String username) {
         return new String(Hex.encode(username.getBytes()));
-    }
-
-
-    public SessionEntity getSession() {
-        String sessionCookieValue = restRequestContext.getSessionCookieValue();
-        return sessionRepository.findBySessionCookieValue(sessionCookieValue).get();
     }
 
 }

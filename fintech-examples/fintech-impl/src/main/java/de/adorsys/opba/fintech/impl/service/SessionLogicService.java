@@ -1,6 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
 
+import de.adorsys.opba.fintech.api.model.generated.InlineResponse2001;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
@@ -10,11 +11,15 @@ import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.FIN_TECH_AUTH_ID;
@@ -106,7 +111,77 @@ public class SessionLogicService {
         responseHeaders.set(X_REQUEST_ID, restRequestContext.getRequestId());
         responseHeaders.add(Consts.HEADER_SESSION_MAX_AGE, "" + cookieConfigProperties.getSessioncookie().getMaxAge());
         return responseHeaders;
+    }
 
+    @Transactional
+    public boolean isSessionAuthorized() {
+        log.info(restRequestContext.toString());
+        if (restRequestContext.getSessionCookieValue() == null || restRequestContext.getXsrfTokenHeaderField() == null || restRequestContext.getRequestId() == null) {
+            log.error("unauthorized call due to missing {}",
+                    restRequestContext.getSessionCookieValue() == null
+                            ? "session cookie" : restRequestContext.getXsrfTokenHeaderField() == null ? "XSRFToken" : "RequestID");
+            return false;
+        }
+
+        // first check token with session without any DB
+        String sessionCookieValue = restRequestContext.getSessionCookieValue();
+        SessionEntity.validateSessionCookieValue(sessionCookieValue, restRequestContext.getXsrfTokenHeaderField());
+
+        // now check that this sessionCookie is really known in DB
+        Optional<SessionEntity> optionalSessionEntity = sessionRepository.findBySessionCookieValue(sessionCookieValue);
+        if (!optionalSessionEntity.isPresent()) {
+            log.error("session cookie might be old. However it is not found in DB and thus not valid {} ", sessionCookieValue);
+            return false;
+        }
+
+        log.info("renew max age for session and persist it");
+        optionalSessionEntity.get().setValidUntil(OffsetDateTime.now().plusSeconds(cookieConfigProperties.getSessioncookie().getMaxAge()));
+        sessionRepository.save(optionalSessionEntity.get());
+
+        return true;
+    }
+
+    @Transactional
+    public boolean isRedirectAuthorized() {
+        log.info(restRequestContext.toString());
+        if (restRequestContext.getRedirectCookieValue() == null || restRequestContext.getXsrfTokenHeaderField() == null || restRequestContext.getRequestId() == null) {
+            log.error("unauthorized call due to missing {}",
+                    restRequestContext.getRedirectCookieValue() == null
+                            ? "redirect cookie" : restRequestContext.getXsrfTokenHeaderField() == null ? "XSRFToken" : "RequestID");
+            return false;
+        }
+
+        // first check token with session without any DB
+        String redirectCookieValue = restRequestContext.getRedirectCookieValue();
+        SessionEntity.validateSessionCookieValue(redirectCookieValue, restRequestContext.getXsrfTokenHeaderField());
+
+        // now check that this sessionCookie is really known in DB
+        Optional<SessionEntity> optionalSessionEntity = sessionRepository.findBySessionCookieValue(redirectCookieValue);
+        if (!optionalSessionEntity.isPresent()) {
+            log.error("redirect cookie might be old. However it is not found in DB and thus not valid {} ", redirectCookieValue);
+            return false;
+        }
+
+        return true;
+    }
+
+
+    public SessionEntity getSession() {
+        String sessionCookieValue = restRequestContext.getSessionCookieValue();
+        return sessionRepository.findBySessionCookieValue(sessionCookieValue).get();
+    }
+
+
+    public ResponseEntity addSessionMaxAgeToHeader(ResponseEntity e) {
+        List<String> headers = e.getHeaders().get(Consts.HEADER_SESSION_MAX_AGE);
+        if (headers == null) {
+            log.info("add header field for max age to response");
+            HttpHeaders h = HttpHeaders.writableHttpHeaders(e.getHeaders());
+            h.set(Consts.HEADER_SESSION_MAX_AGE, "" + cookieConfigProperties.getSessioncookie().getMaxAge());
+            return new ResponseEntity<>(e.getBody(), h, e.getStatusCode());
+        }
+        log.info("header field for max age is already inresponse");
+        return e;
     }
 
     private HttpHeaders createHttpHeaders(String cookieAsString, int maxAge, String xsrfToken) {

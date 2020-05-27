@@ -1,7 +1,7 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import * as uuid from 'uuid';
 import { HeaderConfig } from '../models/consts';
 import { StorageService } from '../services/storage.service';
@@ -14,6 +14,16 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return this.handleRequest(request, next).pipe(
+      tap(response => {
+        if (response instanceof HttpResponse) {
+          const maxAge = response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE);
+          if (maxAge !== null) {
+            this.storageService.extendSessionAge(parseInt(maxAge, 0));
+          } else {
+            console.log('max agae not set for call ', request.url);
+          }
+        }
+      }),
       catchError(errors => {
         return throwError(errors);
       })
@@ -52,10 +62,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
     console.log('REQUEST ' + request.url + ' has ' + HeaderConfig.HEADER_FIELD_X_REQUEST_ID + ' ' + xRequestID);
 
-    // when call is done, session is renewed
-    if (this.storageService.isLoggedIn()) {
-      this.storageService.extendSessionAge();
-    }
     return next.handle(request);
   }
 }
