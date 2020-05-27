@@ -275,7 +275,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         ExtractableResponse<Response> response =
                 startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT, resource, HttpStatus.ACCEPTED);
 
-        assertThat(this.redirectUriToGetUserParams).contains("ais").contains("authenticate").contains("wrong=false");
+        assertThat(this.redirectUriToGetUserParams).contains("authenticate").contains("wrong=false");
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -307,14 +307,14 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF user_max_musterman_provided_correct_password_after_wrong_to_embedded_authorization() {
-        assertThat(this.redirectUriToGetUserParams).contains("ais").contains("authenticate").contains("wrong=true");
+        assertThat(this.redirectUriToGetUserParams).contains("authenticate").contains("wrong=true");
         max_musterman_provides_password();
         updateAvailableScas();
         return self();
     }
 
     public SELF user_max_musterman_provided_password_to_embedded_authorization() {
-        assertThat(this.redirectUriToGetUserParams).contains("ais").contains("authenticate").doesNotContain("wrong=true");
+        assertThat(this.redirectUriToGetUserParams).contains("authenticate").doesNotContain("wrong=true");
         max_musterman_provides_password();
         updateAvailableScas();
         return self();
@@ -327,7 +327,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 HttpStatus.ACCEPTED
         );
 
-        assertThat(response.header(LOCATION)).contains("ais").contains("authenticate").contains("wrong=true");
+        assertThat(response.header(LOCATION)).contains("authenticate").contains("wrong=true");
         return self();
     }
 
@@ -350,14 +350,14 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
-        assertThat(this.redirectUriToGetUserParams).contains("ais").contains("sca-result").contains("wrong=true");
+        assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
         assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
         return self();
     }
 
     public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
-        assertThat(this.redirectUriToGetUserParams).contains("ais").contains("sca-result").doesNotContain("wrong=true");
+        assertThat(this.redirectUriToGetUserParams).contains("sca-result").doesNotContain("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
         assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
         return self();
@@ -370,7 +370,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 HttpStatus.ACCEPTED
         );
 
-        assertThat(response.header(LOCATION)).contains("ais").contains("sca-result").contains("wrong=true");
+        assertThat(response.header(LOCATION)).contains("sca-result").contains("wrong=true");
         return self();
     }
 

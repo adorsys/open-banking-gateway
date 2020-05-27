@@ -134,7 +134,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                      .statusCode(HttpStatus.ACCEPTED.value())
                      .extract();
 
-        assertThat(response.header(LOCATION)).contains("ais").contains("redirectCode").doesNotContain("consent-result");
+        assertThat(response.header(LOCATION)).contains("redirectCode").doesNotContain("consent-result");
 
         this.responseContent = response.body().asString();
         this.redirectUriToGetUserParams = response.header(LOCATION);

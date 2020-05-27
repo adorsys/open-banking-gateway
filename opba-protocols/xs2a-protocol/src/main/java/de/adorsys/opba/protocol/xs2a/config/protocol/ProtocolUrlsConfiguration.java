@@ -54,6 +54,12 @@ public class ProtocolUrlsConfiguration {
          */
         @NotBlank
         private String result;
+
+        /**
+         * Page where the user can provide IBAN list for dedicated consent.
+         */
+        @NotBlank
+        private String providePsuIban;
     }
 
     @Data
@@ -110,11 +116,5 @@ public class ProtocolUrlsConfiguration {
          */
         @NotBlank
         private String reportScaResult;
-
-        /**
-         * Page where the user can provide IBAN list for dedicated consent.
-         */
-        @NotBlank
-        private String providePsuIban;
     }
 }
