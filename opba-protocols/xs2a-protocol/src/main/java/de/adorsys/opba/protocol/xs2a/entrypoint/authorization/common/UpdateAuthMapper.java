@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.UuidMapper;
+import de.adorsys.opba.protocol.xs2a.context.pis.SinglePaymentXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoUpdatingMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AisConsentInitiateBody;
@@ -28,6 +29,7 @@ public class UpdateAuthMapper {
 
     private final UpdateAuthMapper.FromAisRequestAccountList aisAccountsMapper;
     private final UpdateAuthMapper.FromAisRequestTransactionList aisTransactionsMapper;
+    private final UpdateAuthMapper.FromPisRequestSinglePaymentInitiation pisRequestSinglePaymentInitiation;
 
     /**
      * Due to JsonCustomSerializer, Xs2aContext will always have the type it had started with, for example
@@ -43,7 +45,29 @@ public class UpdateAuthMapper {
             return aisTransactionsMapper.map(request, (TransactionListXs2aContext) context);
         }
 
+        if (context instanceof SinglePaymentXs2aContext) {
+            return pisRequestSinglePaymentInitiation.map(request, (SinglePaymentXs2aContext) context);
+        }
+
         throw new IllegalArgumentException("Can't update authorization for: " + context.getClass().getCanonicalName());
+    }
+
+    /**
+     * Updates single payment context with authorization request.
+     */
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = {UuidMapper.class, AisMapper.class}, nullValuePropertyMappingStrategy = IGNORE)
+    public interface FromPisRequestSinglePaymentInitiation extends DtoUpdatingMapper<AuthorizationRequest, SinglePaymentXs2aContext> {
+
+        @Mapping(source = "facadeServiceable.requestId", target = "requestId")
+        @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress")
+        @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType")
+        void mapTo(AuthorizationRequest request, @MappingTarget SinglePaymentXs2aContext context);
+
+        @Override
+        default SinglePaymentXs2aContext map(AuthorizationRequest from, SinglePaymentXs2aContext toUpdate) {
+            mapTo(from, toUpdate);
+            return toUpdate;
+        }
     }
 
     /**

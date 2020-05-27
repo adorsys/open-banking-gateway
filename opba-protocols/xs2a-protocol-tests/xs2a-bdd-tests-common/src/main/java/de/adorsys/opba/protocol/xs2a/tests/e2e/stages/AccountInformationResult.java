@@ -9,6 +9,7 @@ import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
+import de.adorsys.opba.protocol.xs2a.tests.GetTransactionsQueryParams;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -35,7 +36,8 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.CONFIRM_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.SESSION_PASSWORD;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withAccountsHeaders;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withTransactionsHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withSignatureHeaders;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
@@ -119,7 +121,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     public AccountInformationResult open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(
         boolean validateResourceId
     ) {
-        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
                     .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -145,7 +147,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     public AccountInformationResult open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
         boolean validateResourceId
     ) {
-        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
                     .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -205,7 +207,8 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     private ExtractableResponse<Response> getTransactionListFor(
         String psuId, String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
-        return withDefaultHeaders(psuId, requestSigningService, OperationType.AIS)
+        GetTransactionsQueryParams queryParams = new GetTransactionsQueryParams(dateFrom.format(ISO_DATE), dateTo.format(ISO_DATE), null, bookingStatus, null);
+        return withTransactionsHeaders(psuId, requestSigningService, OperationType.AIS, queryParams)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam("dateFrom", dateFrom.format(ISO_DATE))
                 .queryParam("dateTo", dateTo.format(ISO_DATE))
@@ -220,7 +223,8 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     public AccountInformationResult open_banking_can_read_anton_brueckner_transactions_data_using_consent_bound_to_service_session(
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
-        withDefaultHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
+        GetTransactionsQueryParams queryParams = new GetTransactionsQueryParams(dateFrom.format(ISO_DATE), dateTo.format(ISO_DATE), null, bookingStatus, null);
+        withTransactionsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS, queryParams)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam("dateFrom", dateFrom.format(ISO_DATE))
                 .queryParam("dateTo", dateTo.format(ISO_DATE))
@@ -249,7 +253,8 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     public AccountInformationResult open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
-        withDefaultHeaders(MAX_MUSTERMAN, requestSigningService, OperationType.AIS)
+        GetTransactionsQueryParams queryParams = new GetTransactionsQueryParams(dateFrom.format(ISO_DATE), dateTo.format(ISO_DATE), null, bookingStatus, null);
+        withTransactionsHeaders(MAX_MUSTERMAN, requestSigningService, OperationType.AIS, queryParams)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam("dateFrom", dateFrom.format(ISO_DATE))
                 .queryParam("dateTo", dateTo.format(ISO_DATE))
