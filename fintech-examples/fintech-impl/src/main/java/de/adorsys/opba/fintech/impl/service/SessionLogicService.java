@@ -1,7 +1,6 @@
 package de.adorsys.opba.fintech.impl.service;
 
 
-import de.adorsys.opba.fintech.api.model.generated.InlineResponse2001;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
@@ -11,7 +10,6 @@ import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
