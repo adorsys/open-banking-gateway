@@ -3,14 +3,14 @@ server:
   controller:
     sessioncookie:
       secure: false
-      maxAge: 60
+      maxAge: 600
       httpOnly: true
       path: /
       sameSite: Strict
 
     redirectcookie:
       secure: false
-      maxAge: 120
+      maxAge: 1200
       httpOnly: true
       path: /fintech-api-proxy/v1/{auth-id}
       sameSite: Lax

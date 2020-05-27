@@ -56,23 +56,25 @@ export class NavbarComponent implements OnInit {
 
   private getSessionValidUntilAsString(validUntilDate: Date): string {
     if (validUntilDate !== null) {
-      const validUntilDateString = toLocaleString(validUntilDate);
-      const regEx = /.*([0-9]{2}:[0-9]{2}:[0-9]{2})/;
-      const matches = validUntilDateString.match(regEx);
-      if (matches.length !== 2) {
-        throw new Error('valid until is not parsable ' + validUntilDateString);
-      }
-      // return matches[1];
-
       const now: number = Date.now().valueOf();
       const ses: number = validUntilDate.valueOf();
       let diff: number = Math.floor((ses - now) / 1000);
       if (diff < 0) {
         diff = 0;
       }
-      return '' + diff;
+
+      let timerTimeAsString = this.getTimerTimeAsString(diff);
+      console.log('time result is ', timerTimeAsString);
+      return timerTimeAsString;
     }
     console.log('validUntilDate is NULL');
     return '';
+  }
+
+  private getTimerTimeAsString(value: number): string {
+    const h: number = Math.floor(value / 3600);
+    const m: number = Math.floor((value - h * 3600) / 60);
+    const s: number = Math.floor(value - h * 3600 - m * 60);
+    return (h > 0 ? ('00' + h).slice(-2) + ':' : '') + ('00' + m).slice(-2) + ':' + ('00' + s).slice(-2);
   }
 }
