@@ -17,4 +17,5 @@ public class RestRequestContext {
     String redirectCookieValue;
     String xsrfTokenHeaderField;
     String requestId;
+    String uri;
 }

@@ -45,7 +45,7 @@ export class ListAccountsComponent implements OnInit {
             response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE),
             response.headers.get(HeaderConfig.HEADER_FIELD_AUTH_ID),
             response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN),
-            parseInt(response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE), 0)
+            parseInt(response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_X_MAX_AGE), 0)
           );
           const r = new RedirectStruct();
           r.okUrl = location;
