@@ -6,6 +6,7 @@ public class Consts {
     public static final String COOKIE_REDIRECT_COOKIE_NAME = "REDIRECT-COOKIE";
     public static final String HEADER_XSRF_TOKEN = "X-XSRF-TOKEN";
     public static final String HEADER_SESSION_MAX_AGE = "X-SESSION-MAX-AGE";
+    public static final String HEADER_REDIRECT_MAX_AGE = "X-REDIRECT-MAX-AGE";
     public static final String HEADER_X_REQUEST_ID = "X-REQUEST-ID";
 
     // Actual values are set in feign request interceptor (FeignConfig.java)

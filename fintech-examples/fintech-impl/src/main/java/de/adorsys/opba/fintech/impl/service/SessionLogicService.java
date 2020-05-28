@@ -51,7 +51,10 @@ public class SessionLogicService {
 
         log.info("create new session for user {} with cookie {}", userEntity.getLoginUserName(), cookieAsString);
 
-        return createHttpHeaders(cookieAsString, cookieConfigProperties.getSessioncookie().getMaxAge(), xsrfToken);
+        HttpHeaders httpHeaders = createHttpHeaders(cookieAsString, xsrfToken);
+        httpHeaders.add(Consts.HEADER_SESSION_MAX_AGE, "" + cookieConfigProperties.getSessioncookie().getMaxAge());
+        return httpHeaders;
+
     }
 
     @Transactional
@@ -68,7 +71,6 @@ public class SessionLogicService {
         }
         path = path.replaceAll(AUTH_ID_VARIABLE, authId);
 
-
         String cookieAsString = ResponseCookie.from(Consts.COOKIE_REDIRECT_COOKIE_NAME, sessionEntity.getSessionCookieValue())
                 .httpOnly(cookieConfigProperties.getRedirectcookie().isHttpOnly())
                 .sameSite(cookieConfigProperties.getRedirectcookie().getSameSite())
@@ -78,7 +80,8 @@ public class SessionLogicService {
                 .build()
                 .toString();
 
-        HttpHeaders responseHeaders = createHttpHeaders(cookieAsString, cookieConfigProperties.getRedirectcookie().getMaxAge(), xsrfToken);
+        HttpHeaders responseHeaders = createHttpHeaders(cookieAsString, xsrfToken);
+        responseHeaders.add(Consts.HEADER_REDIRECT_MAX_AGE, "" + cookieConfigProperties.getRedirectcookie().getMaxAge());
         responseHeaders.add(FIN_TECH_AUTH_ID, authId);
 
         log.info("create new redirect session for user {} with cookie {}", userEntity.getLoginUserName(), cookieAsString);
@@ -95,27 +98,31 @@ public class SessionLogicService {
         }
         SessionEntity parentSession = sessionRepository.findById(sessionEntity.getParentSession()).get();
         sessionRepository.delete(sessionEntity);
-        OffsetDateTime validUntil = parentSession.getValidUntil();
         OffsetDateTime now = OffsetDateTime.now();
-        if (now.isAfter(validUntil)) {
-            log.info("old session will be renewed with new duration time");
-            parentSession.setValidUntil(now.plusSeconds(cookieConfigProperties.getSessioncookie().getMaxAge()));
-            sessionRepository.save(parentSession);
-        } else {
-            log.info("old session does not need to be renewed");
-        }
+        log.info("old session will be renewed with new duration time");
+        parentSession.setValidUntil(now.plusSeconds(cookieConfigProperties.getSessioncookie().getMaxAge()));
+        sessionRepository.save(parentSession);
 
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set(X_REQUEST_ID, restRequestContext.getRequestId());
-        responseHeaders.add(Consts.HEADER_SESSION_MAX_AGE, "" + cookieConfigProperties.getSessioncookie().getMaxAge());
-        return responseHeaders;
+        String cookieAsString = ResponseCookie.from(Consts.COOKIE_SESSION_COOKIE_NAME, parentSession.getSessionCookieValue())
+                .httpOnly(cookieConfigProperties.getSessioncookie().isHttpOnly())
+                .sameSite(cookieConfigProperties.getSessioncookie().getSameSite())
+                .secure(cookieConfigProperties.getSessioncookie().isSecure())
+                .path(cookieConfigProperties.getSessioncookie().getPath())
+                .maxAge(cookieConfigProperties.getSessioncookie().getMaxAge())
+                .build()
+                .toString();
+
+        HttpHeaders httpHeaders = createHttpHeaders(cookieAsString, null);
+        httpHeaders.set(X_REQUEST_ID, restRequestContext.getRequestId());
+        httpHeaders.add(Consts.HEADER_SESSION_MAX_AGE, "" + cookieConfigProperties.getSessioncookie().getMaxAge());
+        return httpHeaders;
     }
 
     @Transactional
     public boolean isSessionAuthorized() {
         log.info(restRequestContext.toString());
         if (restRequestContext.getSessionCookieValue() == null || restRequestContext.getXsrfTokenHeaderField() == null || restRequestContext.getRequestId() == null) {
-            log.error("unauthorized call due to missing {}",
+            log.error("unauthorized call {} due to missing {}", restRequestContext.getUri(),
                     restRequestContext.getSessionCookieValue() == null
                             ? "session cookie" : restRequestContext.getXsrfTokenHeaderField() == null ? "XSRFToken" : "RequestID");
             return false;
@@ -143,7 +150,7 @@ public class SessionLogicService {
     public boolean isRedirectAuthorized() {
         log.info(restRequestContext.toString());
         if (restRequestContext.getRedirectCookieValue() == null || restRequestContext.getXsrfTokenHeaderField() == null || restRequestContext.getRequestId() == null) {
-            log.error("unauthorized call due to missing {}",
+            log.error("unauthorized redirect call {} due to missing {}", restRequestContext.getUri(),
                     restRequestContext.getRedirectCookieValue() == null
                             ? "redirect cookie" : restRequestContext.getXsrfTokenHeaderField() == null ? "XSRFToken" : "RequestID");
             return false;
@@ -182,12 +189,13 @@ public class SessionLogicService {
         return e;
     }
 
-    private HttpHeaders createHttpHeaders(String cookieAsString, int maxAge, String xsrfToken) {
+    private HttpHeaders createHttpHeaders(String cookieAsString, String xsrfToken) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set(X_REQUEST_ID, restRequestContext.getRequestId());
         responseHeaders.add(HttpHeaders.SET_COOKIE, cookieAsString);
-        responseHeaders.add(Consts.HEADER_XSRF_TOKEN, xsrfToken);
-        responseHeaders.add(Consts.HEADER_SESSION_MAX_AGE, "" + maxAge);
+        if (xsrfToken != null) {
+            responseHeaders.add(Consts.HEADER_XSRF_TOKEN, xsrfToken);
+        }
         return responseHeaders;
 
     }

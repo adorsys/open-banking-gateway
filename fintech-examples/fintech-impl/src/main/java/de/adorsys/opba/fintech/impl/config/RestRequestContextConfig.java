@@ -37,6 +37,7 @@ public class RestRequestContextConfig {
                 .redirectCookieValue(redirectCookieValue)
                 .xsrfTokenHeaderField(httpServletRequest.getHeader(Consts.HEADER_XSRF_TOKEN))
                 .requestId(httpServletRequest.getHeader(Consts.HEADER_X_REQUEST_ID))
+                .uri(httpServletRequest.getRequestURI())
                 .build();
     }
 
