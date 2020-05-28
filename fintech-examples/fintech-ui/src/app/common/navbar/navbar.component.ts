@@ -24,15 +24,15 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.simpleTimer.newTimerCD(NavbarComponent.TIMER_NAME, 1, 2);
+    console.log(new Date() + ' start timer');
+    this.simpleTimer.newTimerCD(NavbarComponent.TIMER_NAME, 1, 1);
     this.simpleTimer.subscribe(NavbarComponent.TIMER_NAME, () => this.timerRings());
   }
 
   public timerRings(): void {
     if (!this.isLoggedIn()) {
-      console.log('user is no more logged in');
-      this.storageService.clearStorage();
-      this.router.navigate(['/login']);
+      console.log(new Date() + 'user is not logged in');
+      return;
     }
     this.sessionValidUntil = this.getSessionValidUntilAsString(this.storageService.getValidUntilDate());
 
@@ -65,7 +65,6 @@ export class NavbarComponent implements OnInit {
 
       return this.getTimerTimeAsString(diff);
     }
-    console.log('validUntilDate is NULL');
     return '';
   }
 
