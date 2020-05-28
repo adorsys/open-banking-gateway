@@ -8,6 +8,7 @@ import de.adorsys.opba.protocol.facade.services.ProtocolResultHandler;
 import de.adorsys.opba.protocol.facade.services.ProtocolSelector;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Map;
 import static de.adorsys.opba.protocol.api.common.ProtocolAction.GET_PAYMENT_STATUS;
 import static de.adorsys.opba.protocol.facade.services.context.ServiceContextProviderForFintech.FINTECH_CONTEXT_PROVIDER;
 
+@Service
 public class GetPaymentStatusService  extends FacadeService<PaymentStatusRequest, PaymentStatusBody, GetPaymentStatusState> {
     public GetPaymentStatusService(
             Map<String, ? extends GetPaymentStatusState> actionProviders,

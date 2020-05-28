@@ -42,7 +42,7 @@ public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
                 RequestHeaders.fromMap(new HashMap<>()),
                 RequestParams.fromMap(new HashMap<>()));
 
-        Result<PaymentStatusBody> result = new SuccessResult<PaymentStatusBody>(mapper.map(paymentStatus.getBody()));
+        Result<PaymentStatusBody> result = new SuccessResult<>(mapper.map(paymentStatus.getBody()));
         return CompletableFuture.completedFuture(result);
     }
 
