@@ -2,6 +2,7 @@ package de.adorsys.opba.fintech.impl.database.entities;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -57,7 +58,7 @@ public class SessionEntity {
     }
 
     @SneakyThrows
-    public static void validateSessionCookieValue(String sessionCookieValueString, String xsrfToken) {
+    public static void validateSessionCookieValue(String sessionCookieValueString, String xsrfToken, RestRequestContext restRequestContext) {
         String decode = URLDecoder.decode(sessionCookieValueString, JsonEncoding.UTF8.getJavaName());
         ObjectMapper mapper = new ObjectMapper();
         SessionCookieValue sessionCookieValue = mapper.readValue(decode, SessionCookieValue.class);
@@ -65,7 +66,8 @@ public class SessionEntity {
             log.info("validation of token for session ok {}", sessionCookieValue);
             return;
         }
-        throw new RuntimeException("session cookie not valid " + sessionCookieValue);
+        throw new RuntimeException("(redirect or) session cookie xsrftoken hash:\"" + sessionCookieValue.getHashedXsrfToken()
+                + "\" does not match xsrf tokenhash \"" + hashAndHexconvert(xsrfToken) + "\" for " + restRequestContext);
     }
 
     @Data

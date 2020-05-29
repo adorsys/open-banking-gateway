@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
-import { toLocaleString } from '../../models/consts';
-import { RedirectTupelForMap } from '../../bank/redirect-page/redirect-struct';
 import { SimpleTimer } from 'ng2-simple-timer';
 import { Router } from '@angular/router';
 
@@ -31,7 +29,7 @@ export class NavbarComponent implements OnInit {
 
   public timerRings(): void {
     if (!this.isLoggedIn()) {
-      console.log(new Date() + 'user is not logged in');
+      // console.log(new Date() + 'user is not logged in');
       return;
     }
     this.sessionValidUntil = this.getSessionValidUntilAsString(this.storageService.getValidUntilDate());

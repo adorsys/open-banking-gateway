@@ -19,8 +19,9 @@ export class AuthInterceptor implements HttpInterceptor {
           const maxAge = response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE);
           if (maxAge !== null) {
             this.storageService.extendSessionAge(parseInt(maxAge, 0));
+            console.log('max age', maxAge, ' set for call ', request.url);
           } else {
-            console.log('max agae not set for call ', request.url);
+            console.log('NO max age for call ', request.url);
           }
         }
       }),
@@ -34,33 +35,31 @@ export class AuthInterceptor implements HttpInterceptor {
     const xRequestID = uuid.v4();
     let xsrfToken = null;
     let headers;
+    console.log('request is going to ', request.url);
     if (request.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN) !== '') {
       xsrfToken = request.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN);
       console.log('xsrf token is set, so we do not change it', xsrfToken);
     } else {
       xsrfToken = this.storageService.getXsrfToken();
+      console.log('xsrf token taken from  storage ', xsrfToken);
     }
     if (this.storageService.isLoggedIn()) {
       headers = request.headers
         .set(HeaderConfig.HEADER_FIELD_X_REQUEST_ID, xRequestID)
         .set(HeaderConfig.HEADER_FIELD_CONTENT_TYPE, 'application/json')
         .set(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN, xsrfToken);
-
-      // TODO: is supposed to be sent automatically when X-XSRF cookie exists, check why not
-      // Propably because it is mentioned in the api and thus overwritten by
-      // generated service with not passed in XSRF-TOKEN (peters remark)
+      console.log('OUTGOING REQUEST ' + request.url + ' has xsrftoken ' + xsrfToken);
     } else {
       headers = request.headers
         .set(HeaderConfig.HEADER_FIELD_X_REQUEST_ID, xRequestID)
         .set(HeaderConfig.HEADER_FIELD_CONTENT_TYPE, 'application/json');
+      console.log('OUTGOING REQUEST ' + request.url + ' without xsrftoken');
     }
 
     request = request.clone({
       withCredentials: true,
       headers
     });
-
-    console.log('REQUEST ' + request.url + ' has ' + HeaderConfig.HEADER_FIELD_X_REQUEST_ID + ' ' + xRequestID);
 
     return next.handle(request);
   }
