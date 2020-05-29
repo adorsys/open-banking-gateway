@@ -6,8 +6,6 @@ import {FormGroup, ReactiveFormsModule} from '@angular/forms';
 describe('AccountsReferenceComponent', () => {
     let component: AccountsReferenceComponent;
     let fixture: ComponentFixture<AccountsReferenceComponent>;
-    let form;
-    let removeAccountSpy;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -21,7 +19,6 @@ describe('AccountsReferenceComponent', () => {
         component = fixture.componentInstance;
         component.targetForm = new FormGroup({});
         component.accounts = [];
-        form = component.targetForm;
         fixture.detectChanges();
     });
 
@@ -35,12 +32,12 @@ describe('AccountsReferenceComponent', () => {
     });
 
     it('should call removeAccount', () => {
-        const account :  AccountReference = {
+        const account: AccountReference = {
             id: "12345",
             iban: "DE12344313232222"
         };
 
-        removeAccountSpy = spyOn(component, 'removeAccount');
+        const removeAccountSpy = spyOn(component, 'removeAccount');
         component.removeAccount(account);
         expect(removeAccountSpy).toHaveBeenCalledWith(account);
         expect(component.accounts.length).toEqual(0);
