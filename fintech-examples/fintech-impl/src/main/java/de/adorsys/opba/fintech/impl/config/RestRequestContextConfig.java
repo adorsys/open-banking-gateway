@@ -32,13 +32,14 @@ public class RestRequestContextConfig {
                 redirectCookieValue = redirectCookie.get().getValue();
             }
         }
-        return RestRequestContext.builder()
+        RestRequestContext c = RestRequestContext.builder()
                 .sessionCookieValue(sessionCookieValue)
                 .redirectCookieValue(redirectCookieValue)
                 .xsrfTokenHeaderField(httpServletRequest.getHeader(Consts.HEADER_XSRF_TOKEN))
                 .requestId(httpServletRequest.getHeader(Consts.HEADER_X_REQUEST_ID))
                 .uri(httpServletRequest.getRequestURI())
                 .build();
+        return c;
     }
 
 }
