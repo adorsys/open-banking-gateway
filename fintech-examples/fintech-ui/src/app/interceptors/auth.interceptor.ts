@@ -19,9 +19,6 @@ export class AuthInterceptor implements HttpInterceptor {
           const maxAge = response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE);
           if (maxAge !== null) {
             this.storageService.extendSessionAge(parseInt(maxAge, 0));
-            console.log('max age', maxAge, ' set for call ', request.url);
-          } else {
-            console.log('NO max age for call ', request.url);
           }
         }
       }),
@@ -33,27 +30,22 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private handleRequest(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const xRequestID = uuid.v4();
-    let xsrfToken = null;
     let headers;
-    console.log('request is going to ', request.url);
-    if (request.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN) !== '') {
-      xsrfToken = request.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN);
-      console.log('xsrf token is set, so we do not change it', xsrfToken);
-    } else {
-      xsrfToken = this.storageService.getXsrfToken();
-      console.log('xsrf token taken from  storage ', xsrfToken);
-    }
     if (this.storageService.isLoggedIn()) {
+      let xsrfToken = null;
+      if (request.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN) !== '') {
+        xsrfToken = request.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN);
+      } else {
+        xsrfToken = this.storageService.getXsrfToken();
+      }
       headers = request.headers
         .set(HeaderConfig.HEADER_FIELD_X_REQUEST_ID, xRequestID)
         .set(HeaderConfig.HEADER_FIELD_CONTENT_TYPE, 'application/json')
         .set(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN, xsrfToken);
-      console.log('OUTGOING REQUEST ' + request.url + ' has xsrftoken ' + xsrfToken);
     } else {
       headers = request.headers
         .set(HeaderConfig.HEADER_FIELD_X_REQUEST_ID, xRequestID)
         .set(HeaderConfig.HEADER_FIELD_CONTENT_TYPE, 'application/json');
-      console.log('OUTGOING REQUEST ' + request.url + ' without xsrftoken');
     }
 
     request = request.clone({

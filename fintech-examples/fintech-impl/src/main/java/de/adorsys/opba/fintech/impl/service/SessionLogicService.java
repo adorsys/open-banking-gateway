@@ -75,15 +75,15 @@ public class SessionLogicService {
 
     @Transactional
     public HttpHeaders finishRedirect() {
-        SessionEntity sessionEntity = sessionRepository.findBySessionCookieValue(restRequestContext.getRedirectCookieValue()).get();
-        if (sessionEntity.getParentSession().equals(null)) {
+        SessionEntity redirectSessionEntity = sessionRepository.findBySessionCookieValue(restRequestContext.getRedirectCookieValue()).get();
+        if (redirectSessionEntity.getParentSession().equals(null)) {
             throw new RuntimeException("programming error, expected session for cookie value " + restRequestContext.getRedirectCookieValue() + " to be redirect session");
         }
-        SessionEntity parentSession = sessionRepository.findById(sessionEntity.getParentSession()).get();
-        sessionRepository.delete(sessionEntity);
+        SessionEntity sessionEntity = sessionRepository.findById(redirectSessionEntity.getParentSession()).get();
+        sessionRepository.delete(redirectSessionEntity);
         OffsetDateTime now = OffsetDateTime.now();
-        parentSession.setValidUntil(now.plusSeconds(cookieConfigProperties.getSessioncookie().getMaxAge()));
-        sessionRepository.save(parentSession);
+        sessionEntity.setValidUntil(now.plusSeconds(cookieConfigProperties.getSessioncookie().getMaxAge()));
+        sessionRepository.save(sessionEntity);
 
         log.info("renewed old session for user {}", sessionEntity.getUserEntity().getLoginUserName());
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -94,7 +94,7 @@ public class SessionLogicService {
 
     @Transactional
     public boolean isSessionAuthorized() {
-        log.info("==> is authorized {} ", restRequestContext);
+        log.info("==> is authorized session {} ", restRequestContext);
         if (restRequestContext.getSessionCookieValue() == null || restRequestContext.getXsrfTokenHeaderField() == null || restRequestContext.getRequestId() == null) {
             log.error("unauthorized call {} due to missing {}", restRequestContext.getUri(),
                     restRequestContext.getSessionCookieValue() == null
@@ -122,7 +122,7 @@ public class SessionLogicService {
 
     @Transactional
     public boolean isRedirectAuthorized() {
-        log.info("==> is authorized {} ", restRequestContext);
+        log.info("==> is authorized redirect session {} ", restRequestContext);
         if (restRequestContext.getRedirectCookieValue() == null || restRequestContext.getXsrfTokenHeaderField() == null || restRequestContext.getRequestId() == null) {
             log.error("unauthorized redirect call {} due to missing {}", restRequestContext.getUri(),
                     restRequestContext.getRedirectCookieValue() == null
@@ -153,7 +153,7 @@ public class SessionLogicService {
     public ResponseEntity addSessionMaxAgeToHeader(ResponseEntity e) {
         List<String> headers = e.getHeaders().get(Consts.HEADER_SESSION_MAX_AGE);
         if (headers != null) {
-            log.info("respons already contains max age for session of uri {}", restRequestContext.getUri());
+            log.info("response already contains max age for session of uri {}", restRequestContext.getUri());
             return e;
         }
         String sessionCookieValue = restRequestContext.getSessionCookieValue();

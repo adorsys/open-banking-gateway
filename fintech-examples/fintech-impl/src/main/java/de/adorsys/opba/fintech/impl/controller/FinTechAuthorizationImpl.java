@@ -55,9 +55,9 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
         Iterator<LoginEntity> loginEntitiesIterator = loginRepository.findByUserEntityOrderByLoginTimeDesc(userEntity).iterator();
         if (loginEntitiesIterator.hasNext()) {
             userProfile.setLastLogin(loginEntitiesIterator.next().getLoginTime());
-            log.info("last login was {}", userProfile.getLastLogin());
+            log.info("last login for user {} was {}", userEntity.getLoginUserName(), userProfile.getLastLogin());
         } else {
-            log.info("this was very first login");
+            log.info("this was very first login for user {}", userEntity.getLoginUserName());
         }
         response.setUserProfile(userProfile);
         loginRepository.save(new LoginEntity(userEntity));
@@ -69,7 +69,6 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
     @Override
     public ResponseEntity<Void> fromConsentGET(String authId, String okOrNotokString, String finTechRedirectCode, UUID xRequestID, String xsrfToken) {
         OkOrNotOk okOrNotOk = OkOrNotOk.valueOf(okOrNotokString);
-        log.info("fromConsentGET path is \"/v1/{}/fromConsent/{}\"", authId, okOrNotOk);
         if (!sessionLogicService.isRedirectAuthorized()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -82,7 +81,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
                 throw new RuntimeException("consent for authid " + authId + " can not be found");
             }
 
-            log.info("consent with authId {} is now valid", authId);
+            log.debug("consent with authId {} is now valid", authId);
             consent.get().setConsentConfirmed(true);
             consentRepository.save(consent.get());
         }
@@ -92,7 +91,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
     @Override
     public ResponseEntity<Void> logoutPOST(UUID xRequestID, String xsrfToken) {
-        log.info("logoutPost is called");
+        log.debug("logoutPost is called for {}", restRequestContext);
 
         if (!sessionLogicService.isSessionAuthorized()) {
             log.warn("logoutPOST failed: user is not authorized!");

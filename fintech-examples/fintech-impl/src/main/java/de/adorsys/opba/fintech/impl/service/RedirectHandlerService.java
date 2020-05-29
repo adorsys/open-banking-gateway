@@ -29,8 +29,6 @@ public class RedirectHandlerService {
 
     @Transactional
     public RedirectUrlsEntity registerRedirectStateForSession(final String finTechRedirectCode, final String okPath, final String nokPath) {
-        log.debug("ONLY FOR DEBUG: finTechRedirectCode: {}", finTechRedirectCode);
-
         String localOkPath = okPath.replaceAll("^/", "");
         String localNokPath = nokPath.replaceAll("^/", "");
 
@@ -56,11 +54,7 @@ public class RedirectHandlerService {
             return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
         }
         redirectUrlRepository.delete(redirectUrls.get());
-
-        if (!sessionLogicService.isRedirectAuthorized()) {
-            log.warn("Validation redirect request failed: user is not authorized!");
-            return prepareErrorRedirectResponse(uiConfig.getUnauthorizedUrl());
-        }
+        // if (!sessionLogicService.isRedirectAuthorized()) has been tested before
 
         if (okOrNotOk.equals(OkOrNotOk.OK)) {
             if (StringUtils.isBlank(authId)) {

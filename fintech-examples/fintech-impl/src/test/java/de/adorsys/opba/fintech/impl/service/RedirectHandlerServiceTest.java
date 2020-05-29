@@ -92,7 +92,6 @@ class RedirectHandlerServiceTest {
         // given
         when(sessionLogicService.finishRedirect()).thenReturn(new HttpHeaders());
         when(redirectUrlRepository.findByRedirectCode(REDIRECT_CODE_VALUE)).thenReturn(Optional.of(REDIRECT_URLS_ENTITY));
-        when(sessionLogicService.isRedirectAuthorized()).thenReturn(true);
 
         // when
         ResponseEntity responseEntity = redirectHandlerService.doRedirect(AUTH_ID_VALUE, REDIRECT_CODE_VALUE, OkOrNotOk.OK);

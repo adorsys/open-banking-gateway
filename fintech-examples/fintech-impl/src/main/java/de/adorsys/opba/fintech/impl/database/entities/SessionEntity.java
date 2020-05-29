@@ -63,7 +63,7 @@ public class SessionEntity {
         ObjectMapper mapper = new ObjectMapper();
         SessionCookieValue sessionCookieValue = mapper.readValue(decode, SessionCookieValue.class);
         if (sessionCookieValue.getHashedXsrfToken().equals(hashAndHexconvert(xsrfToken))) {
-            log.info("validation of token for session ok {}", sessionCookieValue);
+            log.debug("validation of token for session ok {}", sessionCookieValue);
             return;
         }
         throw new RuntimeException("(redirect or) session cookie xsrftoken hash:\"" + sessionCookieValue.getHashedXsrfToken()

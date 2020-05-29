@@ -17,12 +17,12 @@ export class GlobalErrorHandler implements ErrorHandler {
 
     if (error instanceof HttpErrorResponse) {
       // Server Error
-      if (error.status === 401) {
-        authService.logout();
-        message = 'Please enter a valid username or password';
-      } else {
-        message = errorService.getServerMessage(error);
-      }
+      // if (error.status === 401) {
+      // authService.logout();
+      // does not make sense, as logout only works if user is logged in,
+      // getting 401 means session cookie not valid, so logout will fails anyway
+      // message = 'Please enter a valid username or password';
+      message = errorService.getServerMessage(error);
     } else {
       // Client Error
       message = errorService.getClientMessage(error);

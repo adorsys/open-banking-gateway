@@ -55,7 +55,6 @@ export class StorageService {
 
   private getMaxAgeDate(maxAge: number): Date {
     const date = new Date(new Date().getTime() + maxAge * 1000);
-    console.log('set max age ' + maxAge + ' till ' + toLocaleString(date));
     return date;
   }
 
@@ -125,7 +124,6 @@ enum Session {
   USERNAME = 'USERNAME',
   BANK_NAME = 'BANK_NAME',
   XSRF_TOKEN = 'XSRF_TOKEN',
-  COOKIE_NAME_SESSION = 'SESSION-COOKIE',
   MAX_VALID_UNTIL = 'MAX_VALID_UNTIL_TIMESTAMP',
   REDIRECT_MAP = 'REDIRECT_MAP'
 }
