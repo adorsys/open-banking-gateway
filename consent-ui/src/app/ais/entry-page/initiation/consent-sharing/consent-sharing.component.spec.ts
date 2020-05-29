@@ -1,15 +1,21 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ConsentSharingComponent } from './consent-sharing.component';
-import { ActivatedRoute } from '@angular/router';
-import { StubUtilTests } from '../../../common/stub-util-tests';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { of } from 'rxjs';
-import { ConsentAuthorizationService } from '../../../../api';
+import {
+  async,
+  ComponentFixture,
+  TestBed
+} from '@angular/core/testing';
 
-describe('ConsentSharingComponent', () => {
+import {ConsentSharingComponent} from './consent-sharing.component';
+import {ActivatedRoute} from '@angular/router';
+import {StubUtilTests} from '../../../common/stub-util-tests';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {of} from "rxjs";
+import {ConsentAuthorizationService} from "../../../../api";
+
+fdescribe('ConsentSharingComponent', () => {
   let component: ConsentSharingComponent;
   let consentAuthorizationService: ConsentAuthorizationService;
   let fixture: ComponentFixture<ConsentSharingComponent>;
+  let consentAuthorizationServiceSpy;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -20,7 +26,7 @@ describe('ConsentSharingComponent', () => {
           provide: ActivatedRoute,
           useValue: {
             parent: {
-              snapshot: { params: { authId: StubUtilTests.AUTH_ID } }
+              snapshot: {params: {authId: StubUtilTests.AUTH_ID}}
             },
             snapshot: {
               queryParams: {}
@@ -34,7 +40,7 @@ describe('ConsentSharingComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ConsentSharingComponent);
     component = fixture.componentInstance;
-    consentAuthorizationService = TestBed.get(ConsentAuthorizationService);
+    consentAuthorizationService = fixture.debugElement.injector.get(ConsentAuthorizationService);
     fixture.detectChanges();
   });
 
@@ -43,14 +49,8 @@ describe('ConsentSharingComponent', () => {
   });
 
   it('should call denyUsingPOST', () => {
-    const consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'denyUsingPOST').and.returnValue(of());
+    consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'denyUsingPOST').and.returnValue(of());
     component.onDeny();
     expect(consentAuthorizationServiceSpy).toHaveBeenCalled();
-  });
-
-  it('should call onConfirm', () => {
-    const urlSpy = spyOn(component, 'onConfirm');
-    component.onConfirm();
-    expect(urlSpy).toHaveBeenCalled();
   });
 });
