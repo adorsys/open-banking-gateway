@@ -58,7 +58,7 @@ public class AuthorizeService {
 
     private void generateUserIfUserDoesNotExistYet(LoginRequest loginRequest) {
         if (userRepository.existsById(loginRequest.getUsername())) {
-            log.info("User {} exists ", loginRequest.getUsername());
+            log.debug("User {} exists ", loginRequest.getUsername());
             return;
         }
         log.info("create on the fly user {}", loginRequest.getUsername());
