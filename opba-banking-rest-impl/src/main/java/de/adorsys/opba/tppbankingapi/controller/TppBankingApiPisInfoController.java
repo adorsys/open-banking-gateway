@@ -26,9 +26,8 @@ import static de.adorsys.opba.restapi.shared.GlobalConst.SPRING_KEYWORD;
 @RestController
 @RequiredArgsConstructor
 public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatusPisApi {
-    private final FacadeServiceableRequest serviceableTemplate;
-    GetPaymentStatusService paymentStatusService;
-    GetPaymentInformationService paymentInfoService;
+    private final GetPaymentStatusService paymentStatusService;
+    private final GetPaymentInformationService paymentInfoService;
     private final UserAgentContext userAgentContext;
     private final FacadeResponseMapper mapper;
     private final PaymentInfoBodyToApiMapper paymentInfoResponseMapper;
@@ -39,7 +38,7 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
     public CompletableFuture getPaymentInformation(UUID xRequestID) {
         return paymentInfoService.execute(
                 PaymentInfoRequest.builder()
-                        .facadeServiceable(serviceableTemplate.toBuilder()
+                        .facadeServiceable(FacadeServiceableRequest.builder()
                                 // Get rid of CGILIB here by copying:
                                 .uaContext(userAgentContext.toBuilder().build())
                                 .build()
@@ -52,7 +51,7 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
     public CompletableFuture getPaymentInitiationStatus(UUID xRequestID) {
         return paymentStatusService.execute(
                 PaymentStatusRequest.builder()
-                        .facadeServiceable(serviceableTemplate.toBuilder()
+                        .facadeServiceable(FacadeServiceableRequest.builder()
                                 // Get rid of CGILIB here by copying:
                                 .uaContext(userAgentContext.toBuilder().build())
                                 .build()
