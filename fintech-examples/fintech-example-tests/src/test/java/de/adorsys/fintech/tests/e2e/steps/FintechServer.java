@@ -13,6 +13,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+@SuppressWarnings({"PMD.UnusedPrivateField"})
 @JGivenStage
 @Slf4j
 public class FintechServer<SELF extends FintechServer<SELF>> extends SandboxServers<SELF> {

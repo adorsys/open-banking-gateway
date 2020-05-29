@@ -28,6 +28,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_SMOKE_TESTS;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
+@SuppressWarnings({"PMD.UnusedPrivateField"})
 @ActiveProfiles("test-mocked-fintech")
 @EnabledIfEnvironmentVariable(named = ENABLE_SMOKE_TESTS, matches = TRUE_BOOL)
 @ExtendWith({SeleniumExtension.class})
