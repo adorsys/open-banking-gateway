@@ -105,13 +105,8 @@ export class StorageService {
     const validUntil: number = validUntilDate.getTime();
     const timestamp: number = new Date().getTime();
     if (timestamp > validUntil) {
-      console.log(
-        'valid until was ' +
-          toLocaleString(validUntilDate) +
-          ' now is ' +
-          toLocaleString(new Date()) +
-          ', so isMaxValid = false'
-      );
+      // console.log('valid until was ' + toLocaleString(validUntilDate) + ' now is ' + toLocaleString(new Date())
+      // + ', so isMaxValid = false');
       return false;
     }
     return true;

@@ -62,8 +62,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
         response.setUserProfile(userProfile);
         loginRepository.save(new LoginEntity(userEntity));
 
-        String xsrfToken = UUID.randomUUID().toString();
-        HttpHeaders responseHeaders = sessionLogicService.login(userEntity, xsrfToken);
+        HttpHeaders responseHeaders = sessionLogicService.login(userEntity);
         return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
     }
 
@@ -87,7 +86,8 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
             consent.get().setConsentConfirmed(true);
             consentRepository.save(consent.get());
         }
-        return redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk);
+        return sessionLogicService.addSessionMaxAgeToHeader(
+                redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk));
     }
 
     @Override
