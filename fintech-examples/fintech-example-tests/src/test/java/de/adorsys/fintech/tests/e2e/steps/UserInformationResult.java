@@ -76,7 +76,6 @@ public class UserInformationResult extends AccountInformationResult {
 
     @SneakyThrows
     public UserInformationResult fintech_get_bank_infos(String username) {
-        UserInformationResult resp = login_and_get_cookies(username);
         Map<String, String> request = new HashMap<>();
         request.put("username", username);
         ExtractableResponse<Response> response = RestAssured
