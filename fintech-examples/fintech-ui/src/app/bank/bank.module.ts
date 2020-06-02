@@ -5,11 +5,10 @@ import { ShareModule } from '../common/share.module';
 import { CommonModule } from '@angular/common';
 import { ListAccountsModule } from './list-accounts/list-accounts.module';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [SidebarComponent, BankComponent],
-  imports: [CommonModule, ShareModule, BankRoutingModule, ListAccountsModule, NgxSpinnerModule],
+  imports: [CommonModule, ShareModule, BankRoutingModule, ListAccountsModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class BankModule {}

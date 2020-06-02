@@ -6,11 +6,10 @@ import { ListTransactionsComponent } from '../list-transactions/list-transaction
 import { ListAccountsComponent } from './list-accounts.component';
 import { RedirectPageComponent } from '../redirect-page/redirect-page.component';
 import { RedirectCardComponent } from '../redirect-card/redirect-card.component';
-import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [ListAccountsComponent, ListTransactionsComponent, RedirectPageComponent, RedirectCardComponent],
-  imports: [CommonModule, ListAccountsRoutingModule,  NgxSpinnerModule],
+  imports: [CommonModule, ListAccountsRoutingModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ListAccountsModule {}
