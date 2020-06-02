@@ -9,6 +9,8 @@ import { BankComponent } from '../bank.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HttpResponse } from '@angular/common/http';
 import { TransactionsResponse } from '../../api';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ListTransactionsComponent', () => {
   let component: ListTransactionsComponent;
@@ -18,7 +20,7 @@ describe('ListTransactionsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
+      imports: [HttpClientTestingModule, RouterTestingModule,NgxSpinnerModule, NoopAnimationsModule],
       declarations: [ListTransactionsComponent, BankComponent, SidebarComponent],
       providers: [
         AisService,

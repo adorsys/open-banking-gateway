@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { StorageService } from '../../services/storage.service';
 import { SimpleTimer } from 'ng2-simple-timer';
@@ -9,8 +9,10 @@ import { Router } from '@angular/router';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements AfterViewInit {
   private static TIMER_NAME = 'TIMER_NAME';
+  expired = false;
+
   sessionValidUntil = '';
   redirectsValidUntil = Array.from(new Array<string>());
 
@@ -19,9 +21,10 @@ export class NavbarComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private storageService: StorageService
-  ) {}
+  ) {
+  }
 
-  ngOnInit() {
+  ngAfterViewInit(): void {
     console.log(new Date() + ' start timer');
     this.simpleTimer.newTimerCD(NavbarComponent.TIMER_NAME, 1, 1);
     this.simpleTimer.subscribe(NavbarComponent.TIMER_NAME, () => this.timerRings());
@@ -29,9 +32,13 @@ export class NavbarComponent implements OnInit {
 
   public timerRings(): void {
     if (!this.isLoggedIn()) {
-      // console.log(new Date() + 'user is not logged in');
+      if (this.expired) {
+        this.router.navigate(['/session-expired']);
+        this.expired = false;
+      }
       return;
     }
+    this.expired = true;
     this.sessionValidUntil = this.getSessionValidUntilAsString(this.storageService.getValidUntilDate());
 
     this.redirectsValidUntil = new Array<string>();
