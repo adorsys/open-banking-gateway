@@ -2,6 +2,7 @@ import { ErrorHandler, Injectable, Injector, NgZone } from '@angular/core';
 import { ErrorService } from './error.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { InfoService } from './info/info.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -15,12 +16,8 @@ export class GlobalErrorHandler implements ErrorHandler {
 
     if (error instanceof HttpErrorResponse) {
       if (error.status === 401) {
-
-        // authService.logout();
-        // does not make sense, as logout only works if user is logged in,
-        // getting 401 means session cookie not valid, so logout will fails anyway
-        // message = 'Please enter a valid username or password';
-
+        console.log('status was 401');
+        this.router.navigate(['/session-expired']);
       } else {
         message = errorService.getServerMessage(error);
       }
@@ -37,5 +34,9 @@ export class GlobalErrorHandler implements ErrorHandler {
         });
       }
     });
+  }
+
+  get router(): Router {
+    return this.injector.get(Router);
   }
 }

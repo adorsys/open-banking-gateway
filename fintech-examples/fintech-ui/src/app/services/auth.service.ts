@@ -31,7 +31,7 @@ export class AuthService {
   }
 
   logout(): void {
-    if (!this.storageService.isLoggedIn()) {
+    if (!this.isLoggedIn()) {
       this.openLoginPage();
       return;
     }
