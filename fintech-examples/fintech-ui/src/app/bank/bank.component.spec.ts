@@ -8,11 +8,8 @@ import { AuthService } from '../services/auth.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BankProfileService } from '../bank-search/services/bank-profile.service';
-import { BankProfile } from '../api';
 import { of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { NgxSpinnerModule } from 'ngx-spinner';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('BankComponent', () => {
   let component: BankComponent;
@@ -23,7 +20,7 @@ describe('BankComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [SidebarComponent, BankComponent, NavbarComponent],
-      imports: [RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule, NgxSpinnerModule, NoopAnimationsModule],
+      imports: [RouterTestingModule, HttpClientTestingModule, ReactiveFormsModule],
       providers: [
         BankProfileService,
         {
