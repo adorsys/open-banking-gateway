@@ -60,7 +60,7 @@ export class ConsentInitiateComponent implements OnInit {
         this.sessionService.setConsentState(authorizationId, new AuthConsentState(res.violations));
         this.router.navigate([EntryPageAccountsComponent.ROUTE], { relativeTo: this.activatedRoute.parent });
         break;
-      case ActionEnum.SINGLE_PAYMENT:
+      case ActionEnum.INITIATE_PAYMENT:
         this.sessionService.setConsentState(authorizationId, new AuthConsentState(res.violations));
         this.router.navigate([EntryPageAccountsComponent.ROUTE], { relativeTo: this.activatedRoute.parent });
         break;

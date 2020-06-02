@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.config.protocol;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
@@ -39,7 +40,7 @@ public class ProtocolUrlsConfiguration {
      * Generic parameters input urls - i.e. password page.
      */
     @NotNull
-    private ProtocolUrlsConfiguration.CommonUrls commonUrls;
+    private Common common;
 
     @Data
     public static class Ais {
@@ -50,11 +51,83 @@ public class ProtocolUrlsConfiguration {
         private String toAspsp;
 
         /**
+         * Return from ASPSP urls
+         */
+        @NotNull
+        private WebHooksWithResult webHooks;
+
+        /**
+         * Generic parameters input urls - i.e. password page.
+         */
+        @NotNull
+        private AisParameters parameters;
+    }
+
+    @Data
+    public static class Pis {
+        /**
+         * To ASPSP redirection page (for Redirect SCA).
+         */
+        @NotBlank
+        private String toAspsp;
+
+        /**
+         * Return from ASPSP urls
+         */
+        @NotNull
+        private WebHooksWithResult webHooks;
+
+        /**
+         * Generic parameters input urls - i.e. password page.
+         */
+        @NotNull
+        private Parameters parameters;
+    }
+
+    @Data
+    public static class Common {
+        /**
+         * Return from ASPSP urls
+         */
+        @NotNull
+        private WebHooks webHooks;
+
+        /**
+         * Generic parameters input urls - i.e. password page.
+         */
+        @NotNull
+        private Parameters parameters;
+    }
+
+    @Data
+    public static class WebHooks {
+        /**
+         * URL that represents page saying that consent creation was OK (comes before consent result page).
+         */
+        @NotBlank
+        private String ok;
+
+        /**
+         * URL that represents page saying that consent creation was not OK (comes before consent result page).
+         */
+        @NotBlank
+        private String nok;
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    public static class WebHooksWithResult extends WebHooks {
+        /**
          * URL that represents consent acquisition result.
          */
         @NotBlank
         private String result;
+    }
 
+
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    public static class AisParameters extends Parameters {
         /**
          * Page where the user can provide IBAN list for dedicated consent.
          */
@@ -63,34 +136,7 @@ public class ProtocolUrlsConfiguration {
     }
 
     @Data
-    public static class Pis {
-
-        /**
-         * To ASPSP redirection page (for Redirect SCA).
-         */
-        @NotBlank
-        private String toAspsp;
-
-        /**
-         * URL that represents payment acquisition result.
-         */
-        @NotBlank
-        private String result;
-    }
-
-    @Data
-    public static class CommonUrls {
-        /**
-         * URL that represents page saying that payment creation was OK (comes before payment result page).
-         */
-        @NotBlank
-        private String ok;
-
-        /**
-         * URL that represents page saying that payment creation was not OK (comes before payment result page).
-         */
-        @NotBlank
-        private String nok;
+    public static class Parameters {
 
         /**
          * Page with generic consent input form and other parameters like PSU ID, can be thought as landing page

@@ -20,7 +20,7 @@ public class Xs2aAskForSelectedScaMethod extends ValidatedExecution<Xs2aContext>
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        redirectExecutor.redirect(execution, context, urls -> urls.getCommonUrls().getSelectScaMethod());
+        redirectExecutor.redirect(execution, context, urls -> urls.getCommon().getParameters().getSelectScaMethod());
     }
 
     @Override
