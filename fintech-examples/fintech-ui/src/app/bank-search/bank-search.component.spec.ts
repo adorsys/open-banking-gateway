@@ -5,8 +5,6 @@ import { SearchComponent } from '../common/search/search.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { NgxSpinnerModule } from 'ngx-spinner';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('BankSearchComponent', () => {
   let component: BankSearchComponent;
@@ -14,7 +12,7 @@ describe('BankSearchComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule, NgxSpinnerModule, NoopAnimationsModule],
+      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
       declarations: [BankSearchComponent, SearchComponent]
     }).compileComponents();
   }));

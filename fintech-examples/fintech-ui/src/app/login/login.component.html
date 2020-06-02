@@ -13,7 +13,10 @@
             id="username"
             type="text"
           />
-          <div *ngIf="username?.errors?.required && (username?.dirty || loginFormDir.submitted)" class="invalid-feedback d-block">
+          <div
+            *ngIf="username?.errors?.required && (username?.dirty || loginFormDir.submitted)"
+            class="invalid-feedback d-block"
+          >
             Username is Required
           </div>
           <div *ngIf="username?.errors?.pattern && username?.dirty" class="invalid-feedback">
@@ -31,7 +34,10 @@
             id="password"
             type="password"
           />
-          <div *ngIf="password?.errors?.required && (password?.dirty || loginFormDir.submitted)" class="invalid-feedback d-block">
+          <div
+            *ngIf="password?.errors?.required && (password?.dirty || loginFormDir.submitted)"
+            class="invalid-feedback d-block"
+          >
             Password is Required
           </div>
           <div *ngIf="password?.errors?.pattern && password?.dirty" class="invalid-feedback">
@@ -43,4 +49,3 @@
     </div>
   </div>
 </form>
-<ngx-spinner></ngx-spinner>

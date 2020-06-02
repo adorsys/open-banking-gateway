@@ -4,11 +4,12 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './common/navbar/navbar.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DocumentCookieService } from './services/document-cookie.service';
+import { NgHttpLoaderModule } from 'ng-http-loader';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule, HttpClientTestingModule],
+      imports: [RouterTestingModule, HttpClientTestingModule, NgHttpLoaderModule],
       declarations: [AppComponent, NavbarComponent],
       providers: [DocumentCookieService]
     }).compileComponents();

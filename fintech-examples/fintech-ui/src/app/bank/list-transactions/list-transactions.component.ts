@@ -5,7 +5,6 @@ import { AccountReport } from '../../api';
 import { RedirectStruct } from '../redirect-page/redirect-struct';
 import { HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
-import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-list-transactions',
@@ -21,8 +20,7 @@ export class ListTransactionsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private aisService: AisService,
-    private storageService: StorageService,
-    private spinner: NgxSpinnerService
+    private storageService: StorageService
   ) {}
 
   ngOnInit() {
@@ -32,7 +30,6 @@ export class ListTransactionsComponent implements OnInit {
   }
 
   private loadTransactions(): void {
-    this.spinner.show();
     this.aisService.getTransactions(this.bankId, this.accountId).subscribe(response => {
       switch (response.status) {
         case 202:
@@ -56,6 +53,6 @@ export class ListTransactionsComponent implements OnInit {
           this.transactions = response.body.transactions;
           this.makeVisible = true;
       }
-    }).add(() => this.spinner.hide());
+    });
   }
 }

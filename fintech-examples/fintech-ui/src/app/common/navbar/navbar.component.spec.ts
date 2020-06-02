@@ -6,7 +6,6 @@ import { AuthService } from '../../services/auth.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SimpleTimer } from 'ng2-simple-timer';
-import { NgxSpinnerModule } from 'ngx-spinner';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('NavbarComponent', () => {
@@ -18,7 +17,7 @@ describe('NavbarComponent', () => {
     TestBed.configureTestingModule({
       providers: [AuthService, SimpleTimer],
       declarations: [NavbarComponent],
-      imports: [RouterTestingModule, HttpClientTestingModule, NgxSpinnerModule, NoopAnimationsModule]
+      imports: [RouterTestingModule, HttpClientTestingModule]
     }).compileComponents();
   }));
 
