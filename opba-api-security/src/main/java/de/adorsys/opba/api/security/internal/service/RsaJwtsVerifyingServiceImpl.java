@@ -2,12 +2,14 @@ package de.adorsys.opba.api.security.internal.service;
 
 import de.adorsys.opba.api.security.external.domain.DataToSign;
 import de.adorsys.opba.api.security.external.domain.HttpHeaders;
+import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.api.security.external.domain.QueryParams;
 import de.adorsys.opba.api.security.external.domain.signdata.AisListAccountsDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.AisListTransactionsDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.BankProfileDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.ConfirmConsentDataToSign;
+import de.adorsys.opba.api.security.external.domain.signdata.PaymentInitiationDataToSign;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -19,9 +21,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
+import java.time.Instant;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,14 +34,8 @@ public class RsaJwtsVerifyingServiceImpl implements RequestVerifyingService {
 
     @Override
     public boolean verify(String signature, String encodedPublicKey, AisListAccountsDataToSign data) {
-        Map<String, String> values = new HashMap<>();
-        values.put(HttpHeaders.BANK_ID, data.getBankId());
-        values.put(HttpHeaders.FINTECH_USER_ID, data.getFintechUserId());
-        values.put(HttpHeaders.FINTECH_REDIRECT_URL_OK, data.getRedirectOk());
-        values.put(HttpHeaders.FINTECH_REDIRECT_URL_NOK, data.getRedirectNok());
-        DataToSign dataToSign = new DataToSign(data.getXRequestId(), data.getInstant(), data.getOperationType(), values);
-
-        return verify(signature, encodedPublicKey, dataToSign);
+        return createDataToSign(signature, encodedPublicKey, data.getBankId(), data.getFintechUserId(), data.getRedirectOk(), data.getRedirectNok(), data.getXRequestId(), data.getInstant(),
+                                data.getOperationType());
     }
 
     @Override
@@ -82,6 +80,24 @@ public class RsaJwtsVerifyingServiceImpl implements RequestVerifyingService {
                 data.getInstant(),
                 data.getOperationType()
         ));
+    }
+
+    @Override
+    public boolean verify(String signature, String encodedPublicKey, PaymentInitiationDataToSign data) {
+        return createDataToSign(signature, encodedPublicKey, data.getBankId(), data.getFintechUserId(), data.getRedirectOk(), data.getRedirectNok(), data.getXRequestId(), data.getInstant(),
+                                data.getOperationType());
+    }
+
+    private boolean createDataToSign(String signature, String encodedPublicKey, String bankId, String fintechUserId, String redirectOk, String redirectNok, UUID xRequestId, Instant instant,
+                                     OperationType operationType) {
+        Map<String, String> values = new HashMap<>();
+        values.put(HttpHeaders.BANK_ID, bankId);
+        values.put(HttpHeaders.FINTECH_USER_ID, fintechUserId);
+        values.put(HttpHeaders.FINTECH_REDIRECT_URL_OK, redirectOk);
+        values.put(HttpHeaders.FINTECH_REDIRECT_URL_NOK, redirectNok);
+        DataToSign dataToSign = new DataToSign(xRequestId, instant, operationType, values);
+
+        return verify(signature, encodedPublicKey, dataToSign);
     }
 
     private boolean verify(String signature, String encodedPublicKey, DataToSign dataToSign) {
