@@ -186,6 +186,9 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
             case CONFIRM_CONSENT:
                 verificationResult = requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToConfirmConsent(request, instant));
                 break;
+            case PIS:
+                verificationResult = requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToPaymentInititation(request, instant));
+                break;
             default:
                 throw new IllegalArgumentException(String.format("Unsupported operation type %s", operationType));
         }

@@ -13,7 +13,8 @@ import org.springframework.retry.RetryOperations;
 import java.net.URI;
 import java.time.Duration;
 
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.PIN;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.FINTECH_UI_URI;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableConfig.TEST_RETRY_OPS;
 
 
