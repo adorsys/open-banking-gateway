@@ -26,7 +26,7 @@ public class Xs2aAskForIban extends ValidatedExecution<Xs2aContext> {
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        redirectExecutor.redirect(execution, context, urls -> urls.getAis().getProvidePsuIban());
+        redirectExecutor.redirect(execution, context, urls -> urls.getAis().getParameters().getProvidePsuIban());
     }
 
     protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
