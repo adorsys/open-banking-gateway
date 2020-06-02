@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { AccountDetails } from '../../api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
 import { RedirectStruct } from '../redirect-page/redirect-struct';
 import { HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-list-accounts',
@@ -20,7 +21,8 @@ export class ListAccountsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private aisService: AisService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit() {
@@ -37,6 +39,7 @@ export class ListAccountsComponent implements OnInit {
   }
 
   private loadAccount(): void {
+    this.spinner.show();
     this.aisService.getAccounts(this.bankId).subscribe(response => {
       switch (response.status) {
         case 202:
@@ -62,6 +65,6 @@ export class ListAccountsComponent implements OnInit {
         case 200:
           this.accounts = response.body.accounts;
       }
-    });
+    }).add(() => this.spinner.hide());
   }
 }

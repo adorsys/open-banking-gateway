@@ -13,6 +13,8 @@ import { BankSearchModule } from '../bank-search/bank-search.module';
 
 import { DocumentCookieService } from '../services/document-cookie.service';
 import { AuthService } from '../services/auth.service';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -29,6 +31,7 @@ describe('LoginComponent', () => {
         BankSearchModule,
         ReactiveFormsModule,
         HttpClientModule,
+        NgxSpinnerModule, NoopAnimationsModule,
         RouterTestingModule.withRoutes([{ path: 'search', component: BankSearchComponent }])
       ],
       providers: [AuthService, DocumentCookieService],

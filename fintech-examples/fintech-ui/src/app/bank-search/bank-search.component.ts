@@ -3,6 +3,7 @@ import { BankSearchService } from './services/bank-search.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BankDescriptor } from '../api';
 import { StorageService } from '../services/storage.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-bank-search',
@@ -17,14 +18,16 @@ export class BankSearchComponent {
     private bankSearchService: BankSearchService,
     private storageService: StorageService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) {}
 
   onSearch(keyword: string): void {
     if (keyword && keyword.trim()) {
+      this.spinner.show();
       this.bankSearchService.searchBanks(keyword).subscribe(bankDescriptor => {
         this.searchedBanks = bankDescriptor.bankDescriptor;
-      });
+      }).add(() => this.spinner.hide());
     } else {
       this.bankUnselect();
     }

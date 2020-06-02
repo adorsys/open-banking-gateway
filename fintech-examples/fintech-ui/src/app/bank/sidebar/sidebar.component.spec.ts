@@ -7,6 +7,8 @@ import { BankProfileService } from '../../bank-search/services/bank-profile.serv
 import { BankProfile } from '../../api';
 import { of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -16,7 +18,7 @@ describe('SidebarComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [SidebarComponent],
-      imports: [RouterTestingModule, HttpClientTestingModule],
+      imports: [RouterTestingModule, HttpClientTestingModule, NgxSpinnerModule, NoopAnimationsModule],
       providers: [
         BankProfileService,
         {
