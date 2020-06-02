@@ -51,12 +51,6 @@ export class ListAccountsComponent implements OnInit {
           r.okUrl = location;
           r.cancelUrl = 'this-url-must-be-known-by-server';
           r.redirectCode = response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE);
-
-          //          const tabUrl = window.location.protocol + '//' + window.location.host +
-          //          window.location.pathname + '/redirect:' + JSON.stringify(r);
-          //          console.log("open new tab in ",tabUrl);
-          //          window.open(tabUrl, '_blank');
-
           this.router.navigate(['redirect', JSON.stringify(r)], { relativeTo: this.route });
           break;
         case 200:

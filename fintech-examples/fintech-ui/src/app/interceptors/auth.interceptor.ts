@@ -9,29 +9,18 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private router: Router, private authService: AuthService) {
-  }
+  constructor(private router: Router, private authService: AuthService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return this.handleRequest(request, next).pipe(
       tap(response => {
-          if (response instanceof HttpResponse) {
-            const maxAge = response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE);
-            if (maxAge !== null) {
-              this.authService.extendSessionAge(parseInt(maxAge, 0));
-            }
+        if (response instanceof HttpResponse) {
+          const maxAge = response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE);
+          if (maxAge !== null) {
+            this.authService.extendSessionAge(parseInt(maxAge, 0));
           }
-        },
-        error => {
-          if (error.status === 401 /*HTTP_STATUS_UNAUTHORIZED*/) {
-            console.log('status was 401');
-            this.router.navigate(['/session-expired']);
-            return;
-          } else {
-            console.log('another error occured ');
-            return throwError(error);
-          }
-        })
+        }
+      })
     );
   }
 
