@@ -24,7 +24,7 @@ public class ReportConsentAuthorizationFinished extends ValidatedExecution<Xs2aC
         redirectExecutor.redirect(
             execution,
             context,
-            urlsConfiguration.getAis().getResult(),
+            urlsConfiguration.getAis().getWebHooks().getResult(),
             context.getFintechRedirectUriOk(),
             redirect -> new ConsentAcquired(redirect.build()));
     }

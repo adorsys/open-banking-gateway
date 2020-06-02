@@ -37,10 +37,10 @@ public class CreateAisTransactionListConsentService extends ValidatedExecution<T
     @Override
     protected void doPrepareContext(DelegateExecution execution, TransactionListXs2aContext context) {
         context.setRedirectUriOk(
-                ContextUtil.evaluateSpelForCtx(urlsConfiguration.getCommonUrls().getOk(), execution, context)
+                ContextUtil.evaluateSpelForCtx(urlsConfiguration.getAis().getWebHooks().getOk(), execution, context)
         );
         context.setRedirectUriNok(
-                ContextUtil.evaluateSpelForCtx(urlsConfiguration.getCommonUrls().getNok(), execution, context)
+                ContextUtil.evaluateSpelForCtx(urlsConfiguration.getAis().getWebHooks().getNok(), execution, context)
         );
     }
 
