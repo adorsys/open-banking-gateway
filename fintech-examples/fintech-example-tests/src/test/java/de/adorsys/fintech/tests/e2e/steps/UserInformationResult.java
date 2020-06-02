@@ -15,8 +15,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.ACCOUNT;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.BANKSEARCH_LOGIN;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.KEYWORD;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.FINTECH_UI_URI;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.SESSION_COOKIE;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.FINTECH_SERVER_LOGIN;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.ACCOUNT_ENDPOINT;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.X_REQUEST_ID;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.X_XSRF_TOKEN;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.withDefaultHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon.REDIRECT_CODE_QUERY;
 
 

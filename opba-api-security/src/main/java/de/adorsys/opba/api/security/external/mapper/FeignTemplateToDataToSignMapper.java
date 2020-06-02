@@ -8,6 +8,7 @@ import de.adorsys.opba.api.security.external.domain.signdata.AisListTransactions
 import de.adorsys.opba.api.security.external.domain.signdata.BankProfileDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.ConfirmConsentDataToSign;
+import de.adorsys.opba.api.security.external.domain.signdata.PaymentInitiationDataToSign;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -66,6 +67,17 @@ public class FeignTemplateToDataToSignMapper {
         String xRequestId = extractRequiredValue(headers, HttpHeaders.X_REQUEST_ID);
 
         return new ConfirmConsentDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType));
+    }
+
+    public PaymentInitiationDataToSign mapToPaymenyInitiation(Map<String, Collection<String>> headers, Instant instant) {
+        String operationType = extractRequiredValue(headers, HttpHeaders.X_OPERATION_TYPE);
+        String xRequestId = extractRequiredValue(headers, HttpHeaders.X_REQUEST_ID);
+        String bankId = extractNonRequiredValue(headers, HttpHeaders.BANK_ID);
+        String fintechUserId = extractRequiredValue(headers, HttpHeaders.FINTECH_USER_ID);
+        String redirectOkUrl = extractRequiredValue(headers, HttpHeaders.FINTECH_REDIRECT_URL_OK);
+        String redirectNokUrl = extractRequiredValue(headers, HttpHeaders.FINTECH_REDIRECT_URL_NOK);
+
+        return new PaymentInitiationDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType), bankId, fintechUserId, redirectOkUrl, redirectNokUrl);
     }
 
     private String extractRequiredValue(Map<String, Collection<String>> values, String valueName) {

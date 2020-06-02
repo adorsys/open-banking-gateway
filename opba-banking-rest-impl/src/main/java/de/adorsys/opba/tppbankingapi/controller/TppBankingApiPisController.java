@@ -41,6 +41,7 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                              String paymentProduct,
                                              String xOperationType,
                                              String xTimestampUTC,
+                                             String xOperationType,
                                              String xRequestSignature,
                                              String fintechID,
                                              String bankID
