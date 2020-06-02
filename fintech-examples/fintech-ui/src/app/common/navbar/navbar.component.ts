@@ -1,6 +1,5 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { StorageService } from '../../services/storage.service';
 import { SimpleTimer } from 'ng2-simple-timer';
 import { Router } from '@angular/router';
 
@@ -19,8 +18,7 @@ export class NavbarComponent implements AfterViewInit {
   constructor(
     private simpleTimer: SimpleTimer,
     private authService: AuthService,
-    private router: Router,
-    private storageService: StorageService
+    private router: Router
   ) {
   }
 
@@ -39,10 +37,10 @@ export class NavbarComponent implements AfterViewInit {
       return;
     }
     this.expired = true;
-    this.sessionValidUntil = this.getSessionValidUntilAsString(this.storageService.getValidUntilDate());
+    this.sessionValidUntil = this.getSessionValidUntilAsString(this.authService.getValidUntilDate());
 
     this.redirectsValidUntil = new Array<string>();
-    for (const s of Array.from(this.storageService.getRedirectMap().values())) {
+    for (const s of Array.from(this.authService.getRedirectMap().values())) {
       this.redirectsValidUntil.push(this.getSessionValidUntilAsString(new Date(s.validUntil)));
     }
   }
@@ -52,11 +50,11 @@ export class NavbarComponent implements AfterViewInit {
   }
 
   isLoggedIn(): boolean {
-    return this.storageService.isLoggedIn();
+    return this.authService.isLoggedIn();
   }
 
   getUserName(): string {
-    return this.storageService.getUserName();
+    return this.authService.getUserName();
   }
 
   private getSessionValidUntilAsString(validUntilDate: Date): string {

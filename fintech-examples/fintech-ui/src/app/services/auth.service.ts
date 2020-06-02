@@ -7,6 +7,7 @@ import { Credentials } from '../models/credentials.model';
 import { HeaderConfig } from '../models/consts';
 import { DocumentCookieService } from './document-cookie.service';
 import { StorageService } from './storage.service';
+import { RedirectTupelForMap } from '../bank/redirect-page/redirect-struct';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,30 @@ export class AuthService {
 
   openLoginPage() {
     this.router.navigate(['/login']);
+  }
+
+  public isLoggedIn(): boolean {
+    return this.storageService.isLoggedIn();
+  }
+
+  public getUserName(): string {
+    return this.storageService.getUserName();
+  }
+
+  public getValidUntilDate(): Date {
+    return this.storageService.getValidUntilDate();
+  }
+
+  public getRedirectMap(): Map<string, RedirectTupelForMap> {
+    return this.storageService.getRedirectMap();
+  }
+
+  public extendSessionAge(maxAge: number): void {
+    this.storageService.extendSessionAge(maxAge);
+  }
+
+  public getXsrfToken(): string {
+    return this.storageService.getXsrfToken();
   }
 
   private setSessionData(response: any, credentials: Credentials): void {

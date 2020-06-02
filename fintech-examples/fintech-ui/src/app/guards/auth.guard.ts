@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
-import { StorageService } from '../services/storage.service';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService, private storageService: StorageService) {}
+  constructor(private authService: AuthService) {}
 
   canActivate(): boolean {
-    const logged =  this.storageService.isLoggedIn();
+    const logged =  this.authService.isLoggedIn();
     if (! logged) {
       this.authService.logout();
     }
