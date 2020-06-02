@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,8 @@ import { AuthService } from '../services/auth.service';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private router: Router, private authService: AuthService) {}
+  constructor(private formBuilder: FormBuilder, private router: Router, private authService: AuthService,
+              private spinner: NgxSpinnerService) {}
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -22,11 +24,12 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     if (this.loginForm.valid) {
+      this.spinner.show();
       this.authService.login(this.loginForm.value).subscribe(success => {
         if (success) {
           this.router.navigate(['/search']);
         }
-      });
+      }).add(() => this.spinner.hide());
     }
   }
 

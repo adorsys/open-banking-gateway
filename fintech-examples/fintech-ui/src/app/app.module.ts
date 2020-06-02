@@ -1,5 +1,5 @@
 import { HTTP_INTERCEPTORS, HttpClientXsrfModule } from '@angular/common/http';
-import { ErrorHandler, NgModule } from '@angular/core';
+import { ErrorHandler, NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { environment } from '../environments/environment';
@@ -19,6 +19,7 @@ import { DocumentCookieService } from './services/document-cookie.service';
 import { RedirectAfterConsentDeniedComponent } from './redirect-after-consent-denied/redirect-after-consent-denied.component';
 import { SessionExpiredComponent } from './session-expired/session-expired.component';
 import { SimpleTimer } from 'ng2-simple-timer';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -47,7 +48,8 @@ export function apiConfigFactory(): Configuration {
       cookieName: 'XSRF-TOKEN',
       headerName: 'X-XSRF-TOKEN'
     }),
-    ApiModule.forRoot(apiConfigFactory)
+    ApiModule.forRoot(apiConfigFactory),
+    NgxSpinnerModule
   ],
   providers: [
     SimpleTimer,
@@ -61,6 +63,7 @@ export function apiConfigFactory(): Configuration {
     },
     { provide: ErrorHandler, useClass: GlobalErrorHandler }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {}
