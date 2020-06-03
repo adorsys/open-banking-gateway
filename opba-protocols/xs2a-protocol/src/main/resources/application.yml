@@ -24,6 +24,10 @@ spring:
       table-prefix: opb_
       fill-with-mock-data: true
 
+facade:
+  urls:
+    embedded-ui-base-url: http://localhost:4200
+
 protocol:
   xs2a:
     urls:
