@@ -1,0 +1,108 @@
+<form [formGroup]="paymentForm">
+  <section class="payment">
+    <h2>Tranfert money</h2>
+    <p class="text-secondary">Enter the data of the recipient of your payment</p>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label class="text-secondary" for="name">Name:</label><br />
+        <input
+          [ngClass]="{ 'is-invalid': paymentForm.controls['name'].touched && paymentForm.controls['name'].errors }"
+          class="form-control"
+          formControlName="name"
+          id="name"
+          name="name"
+          type="text"
+        />
+        <div
+          *ngIf="paymentForm.controls['name'].touched && paymentForm.controls['name'].errors"
+          class="invalid-feedback"
+        >
+          Name is required
+        </div>
+      </div>
+      <div class="form-group col-md-6">
+        <label class="text-secondary" for="ibanDebitor">IBAN Debitor:</label><br />
+        <input
+          [ngClass]="{
+            'is-invalid': paymentForm.controls['ibanDebitor'].touched && paymentForm.controls['ibanDebitor'].errors
+          }"
+          class="form-control"
+          formControlName="ibanDebitor"
+          id="ibanDebitor"
+          name="ibanDebitor"
+          type="text"
+        />
+        <div
+          *ngIf="paymentForm.controls['ibanDebitor'].touched && paymentForm.controls['ibanDebitor'].errors"
+          class="invalid-feedback"
+        >
+          IBAN Debitor is required
+        </div>
+      </div>
+      <div class="form-group col-md-6">
+        <label class="text-secondary" for="ibanCreditor">IBAN Creditor:</label><br />
+        <input
+          [ngClass]="{
+            'is-invalid': paymentForm.controls['ibanCreditor'].touched && paymentForm.controls['ibanCreditor'].errors
+          }"
+          class="form-control"
+          formControlName="ibanCreditor"
+          id="ibanCreditor"
+          name="ibanCreditor"
+          type="text"
+        />
+        <div
+          *ngIf="paymentForm.controls['ibanCreditor'].touched && paymentForm.controls['ibanCreditor'].errors"
+          class="invalid-feedback"
+        >
+          IBAN Creditor is required
+        </div>
+      </div>
+      <div class="form-group col-md-6">
+        <label class="text-secondary" for="amount">Amount:</label><br />
+        <input
+          [ngClass]="{ 'is-invalid': paymentForm.controls['amount'].touched && paymentForm.controls['amount'].errors }"
+          class="form-control"
+          formControlName="amount"
+          id="amount"
+          name="amount"
+          placeholder="0"
+          min="0"
+          type="number"
+        />
+        <div *ngIf="paymentForm.controls['amount'].errors?.required" class="invalid-feedback">
+          Amount is required
+        </div>
+        <div *ngIf="paymentForm.controls['amount'].errors?.min" class="invalid-feedback">
+          The amount should be more than 0
+        </div>
+      </div>
+      <div class="form-group col-md-6">
+        <label class="text-secondary" for="purpose">Purpose of payment:</label><br />
+        <input
+          [ngClass]="{
+            'is-invalid': paymentForm.controls['purpose'].touched && paymentForm.controls['purpose'].errors
+          }"
+          class="form-control"
+          formControlName="purpose"
+          id="purpose"
+          name="purpose"
+          type="text"
+        />
+      </div>
+    </div>
+  </section>
+
+  <div class="d-sm-flex">
+    <button (click)="onDeny()" class="btn btn-outline-secondary w-100 mr-4" id="do_deny">Cancel</button>
+    <button
+      (click)="onConfirm()"
+      [disabled]="paymentForm.invalid"
+      class="btn btn-primary w-100"
+      id="do_submit"
+      type="button"
+    >
+      Ok
+    </button>
+  </div>
+</form>
