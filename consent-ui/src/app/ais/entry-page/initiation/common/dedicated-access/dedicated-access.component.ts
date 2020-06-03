@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SharedRoutes } from '../shared-routes';
-import { StubUtil } from '../../../../common/stub-util';
+import { StubUtil } from '../../../../../common/utils/stub-util';
 import { AccountReference } from '../accounts-reference/accounts-reference.component';
 import { SessionService } from '../../../../../common/session.service';
 import { ConsentUtil } from '../../../../common/consent-util';
