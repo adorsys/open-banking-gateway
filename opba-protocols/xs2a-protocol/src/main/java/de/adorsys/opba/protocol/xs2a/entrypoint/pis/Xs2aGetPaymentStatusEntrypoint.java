@@ -11,8 +11,8 @@ import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsen
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.UuidMapper;
-import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedQueryHeaders;
-import de.adorsys.opba.protocol.xs2a.service.mapper.QueryHeadersMapperTemplate;
+import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeaders;
+import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentStateHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentStateParameters;
@@ -35,7 +35,6 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
 @Service("xs2aGetPaymentStatusState")
 @RequiredArgsConstructor
 public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
-    public static final String SEPA_CREDIT_TRANSFERS = "sepa-credit-transfers";
     private final PaymentInitiationService pis;
     private final PaymentStatusToBodyMapper mapper;
     private final Xs2aGetPaymentStatusEntrypoint.Extractor extractor;
@@ -44,16 +43,15 @@ public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
 
     @Override
     public CompletableFuture<Result<PaymentStatusBody>> execute(ServiceContext<PaymentStatusRequest> context) {
-        ProtocolFacingConsent consent = context.getRequestScoped().consentAccess().findByCurrentServiceSession()
-                .orElseThrow(() -> new IllegalStateException("Context not found"));
+        ProtocolFacingConsent consent = context.getRequestScoped().consentAccess().getByCurrentSession();
 
-        ValidatedQueryHeaders<PaymentStateParameters, PaymentStateHeaders> params = extractor.forExecution(prepareContext(context));
+        ValidatedPathHeaders<PaymentStateParameters, PaymentStateHeaders> params = extractor.forExecution(prepareContext(context));
 
         Response<PaymentInitiationStatus> paymentStatus = pis.getSinglePaymentInitiationStatus(
-                SEPA_CREDIT_TRANSFERS,
+                params.getPath().getPaymentProduct(),
                 consent.getConsentId(),
                 params.getHeaders().toHeaders(),
-                params.getQuery().toParameters()
+                params.getPath().toParameters()
         );
 
         Result<PaymentStatusBody> result = new SuccessResult<>(mapper.map(paymentStatus.getBody()));
@@ -85,15 +83,15 @@ public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
     }
 
     @Service
-    public static class Extractor extends QueryHeadersMapperTemplate<
-            Xs2aPisContext,
-            PaymentStateParameters,
-            PaymentStateHeaders> {
+    public static class Extractor extends PathHeadersMapperTemplate<
+                Xs2aPisContext,
+                PaymentStateParameters,
+                PaymentStateHeaders> {
 
         public Extractor(
                 DtoMapper<Xs2aPisContext, PaymentStateHeaders> toHeaders,
-                DtoMapper<Xs2aPisContext, PaymentStateParameters> toQuery) {
-            super(toHeaders, toQuery);
+                DtoMapper<Xs2aPisContext, PaymentStateParameters> toParameters) {
+            super(toHeaders, toParameters);
         }
     }
 }
