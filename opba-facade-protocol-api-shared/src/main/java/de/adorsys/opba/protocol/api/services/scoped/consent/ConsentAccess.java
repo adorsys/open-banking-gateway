@@ -32,4 +32,12 @@ public interface ConsentAccess {
      * Lists all consents that are available for current PSU.
      */
     Collection<ProtocolFacingConsent> getAvailableConsentsForCurrentPsu();
+
+    /**
+     * Available consent for current session execution with throwing exception
+     */
+    default ProtocolFacingConsent getByCurrentSession() {
+        return findByCurrentServiceSession()
+                .orElseThrow(() -> new IllegalStateException("Context not found"));
+    }
 }
