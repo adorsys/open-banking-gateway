@@ -10,6 +10,10 @@ const routes: Routes = [
       {
         path: 'account',
         loadChildren: () => import('./list-accounts/list-accounts.module').then(m => m.ListAccountsModule)
+      },
+      {
+        path: 'payment',
+        loadChildren: () => import('../payment/payment.module').then(m => m.PaymentModule)
       }
     ]
   }
