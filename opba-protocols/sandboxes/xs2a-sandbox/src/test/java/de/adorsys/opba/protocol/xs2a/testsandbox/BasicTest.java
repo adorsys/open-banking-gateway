@@ -5,27 +5,27 @@ import de.adorsys.opba.protocol.xs2a.testsandbox.internal.StarterContext;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
+import org.testcontainers.containers.DockerComposeContainer;
 
-import static de.adorsys.opba.protocol.xs2a.testsandbox.Const.*;
+import java.io.File;
+
+import static de.adorsys.opba.protocol.xs2a.testsandbox.Const.ENABLE_HEAVY_TESTS;
+import static de.adorsys.opba.protocol.xs2a.testsandbox.Const.TRUE_BOOL;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.core.StringContains.containsString;
 
-
 @Slf4j
 @EnabledIfEnvironmentVariable(named = ENABLE_HEAVY_TESTS, matches = TRUE_BOOL)
 class BasicTest extends BaseMockitoTest {
-
     private static final SandboxAppsStarter executor = new SandboxAppsStarter();
     private static StarterContext ctx;
 
-    @BeforeAll
-    static void startSandbox() {
+    static void startSandboxWithJars() {
         ctx = executor.runAll();
         executor.awaitForAllStarted();
     }
@@ -41,7 +41,7 @@ class BasicTest extends BaseMockitoTest {
     @Test
     @SneakyThrows
     void testEnvStartsUp() {
-        executor.awaitForAllStarted();
+        startSandboxWithJars();
 
         assertThat(SandboxApp.values()).extracting(it -> ctx.getLoader().get(it)).isNotNull();
         // Dockerized UI can reach backend
@@ -53,16 +53,33 @@ class BasicTest extends BaseMockitoTest {
     }
 
     /**
+     * Not really a test, but just launches entire old version sandbox for you.
+     * If run with intellij 2018.3 please set VM option to -DSTART_SANDBOX_OLD=true and environment-variable ENABLE_HEAVY_TESTS=true
+     */
+    @Test
+    @SneakyThrows
+    @EnabledIfSystemProperty(named = "START_SANDBOX_OLD", matches = TRUE_BOOL)
+    void startTheSandbox() {
+        startSandboxWithJars();
+
+        assertThat(SandboxApp.values()).extracting(it -> ctx.getLoader().get(it)).isNotNull();
+
+        // Loop forever.
+        await().forever().until(() -> false);
+    }
+
+    /**
      * Not really a test, but just launches entire sandbox for you.
      * If run with intellij 2018.3 please set VM option to -DSTART_SANDBOX=true and environment-variable ENABLE_HEAVY_TESTS=true
      */
     @Test
     @SneakyThrows
     @EnabledIfSystemProperty(named = "START_SANDBOX", matches = TRUE_BOOL)
-    void startTheSandbox() {
-        executor.awaitForAllStarted();
-
-        assertThat(SandboxApp.values()).extracting(it -> ctx.getLoader().get(it)).isNotNull();
+    void startTheSandboxInDocker() {
+        DockerComposeContainer environment = new DockerComposeContainer(new File("./../../../how-to-start-with-project/xs2a-sandbox-only/docker-compose.yml"))
+                                                     .withLocalCompose(true)
+                                                     .withTailChildContainers(true);
+        environment.start();
 
         // Loop forever.
         await().forever().until(() -> false);
