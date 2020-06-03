@@ -10,8 +10,9 @@ spring:
 
 # Forcing `fixed` bank profile for redirect approach in local configuration
 # Points to this file, section 'setting'
-bank_profile:
-  path: ${primary.profile}
+xs2a:
+  bank_profile:
+    path: ${primary.profile}
 
 # Sandbox environment has very different URLS compared to what is declared in bank_profile.yaml,
 # setting to sandbox alike
@@ -26,6 +27,7 @@ setting:
       notConfirmedConsentExpirationTimeMs: 86400000
       maxConsentValidityDays: 0
       accountOwnerInformationSupported: false
+      trustedBeneficiariesSupported: false
     redirectLinkToOnlineBanking:
       aisRedirectUrlToAspsp: http://localhost:4400/account-information/login?encryptedConsentId={encrypted-consent-id}&redirectId={redirect-id}
     transactionParameters:
@@ -58,7 +60,7 @@ setting:
     supportedTransactionStatusFormats:
       - application/json
   piis:
-    piisConsentSupported: FALSE
+    piisConsentSupported: NOT_SUPPORTED
   common:
     scaApproachesSupported:
       - REDIRECT
@@ -78,3 +80,9 @@ setting:
     aisPisSessionsSupported: FALSE
     signingBasketSupported: FALSE
     checkTppRolesFromCertificateSupported: TRUE
+    aspspNotificationsSupported:
+      - NONE
+    authorisationConfirmationRequestMandated: FALSE
+    authorisationConfirmationCheckByXs2a: FALSE
+    checkUriComplianceToDomainSupported: FALSE
+    tppUriComplianceResponse: WARNING

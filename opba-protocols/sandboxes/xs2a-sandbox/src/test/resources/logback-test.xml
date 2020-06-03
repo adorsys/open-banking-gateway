@@ -1,10 +1,13 @@
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %cyan(%logger{36}) - %msg %n</pattern>
         </encoder>
     </appender>
-    <root level="warn">
+
+    <variable name="SANDBOX_LOG_LEVEL" value="${SANDBOX_LOG_LEVEL:-INFO}" />
+
+    <root level="${SANDBOX_LOG_LEVEL}">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>
