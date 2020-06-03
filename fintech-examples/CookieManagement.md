@@ -6,9 +6,9 @@ To make it possible to do two redirects in two tabs of same browser the session 
 
 As soon as any redirect ends, redirect cookie will be removed and old session cookie is in charge again.
 
-Further each call to fintech server extends duration of session to new maximum.
-If session cookie has ttl 5 Minutes and after login user is idle for one minute and than does call (for exampl search bank) session cookie is renewed to be alive for new 5 minutes.
+Further each call to the fintech server extends duration of session to new maximum.
+Suggest, session cookie has ttl 5 minutes. If user after login is idle for one minute and than does call (for exampl search bank) session cookie is renewed to be alive for new 5 minutes.
 
-In case of redirect it might happen, that during redirect session cookie ttl exceeds. This does not matter as long as redirect returns in ttl of redirect cookie. As soon as redirect is finished, old session cookie is valid again for 5 minutes.
+In case of redirect it might happen, that during redirect session cookie ttl exceeds. This does not matter as long as redirect returns in ttl of redirect cookie. As soon as redirect is finished, old session cookie is renewed and valid again for 5 minutes.
 
 ![FinTech bank selection](../docs/img/demo/fintech-cookie-handling.png)
