@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { StubUtil } from '../common/stub-util';
+import { StubUtil } from '../../common/utils/stub-util';
 import { ConsentAuthorizationService } from '../../api';
 import { ApiHeaders } from '../../api/api.headers';
 import { SessionService } from '../../common/session.service';
