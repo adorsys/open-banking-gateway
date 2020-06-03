@@ -17,8 +17,7 @@ const routes: Routes = [
       { path: EnterPinPageComponent.ROUTE, component: EnterPinPageComponent },
       { path: EnterTanPageComponent.ROUTE, component: EnterTanPageComponent },
       { path: SelectScaPageComponent.ROUTE, component: SelectScaPageComponent },
-      { path: ToAspspPageComponent.ROUTE, component: ToAspspPageComponent }
-      { path: SelectScaPageComponent.ROUTE, component: SelectScaPageComponent },
+      { path: ToAspspPageComponent.ROUTE, component: ToAspspPageComponent },
       { path: ResultPageComponent.ROUTE, component: ResultPageComponent }
     ]
   }
