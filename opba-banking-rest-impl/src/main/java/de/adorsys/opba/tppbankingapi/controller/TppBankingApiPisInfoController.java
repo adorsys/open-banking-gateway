@@ -39,8 +39,6 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
         return paymentInfoService.execute(
                 PaymentInfoRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
-                                // Get rid of CGILIB here by copying:
-                                .uaContext(userAgentContext.toBuilder().build())
                                 .build()
                         )
                         .build()
@@ -52,8 +50,6 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
         return paymentStatusService.execute(
                 PaymentStatusRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
-                                // Get rid of CGILIB here by copying:
-                                .uaContext(userAgentContext.toBuilder().build())
                                 .build()
                         )
                         .build()
