@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StubUtil } from '../../ais/common/stub-util';
+import { StubUtil } from '../../common/utils/stub-util';
 
 @Component({
   selector: 'consent-app-result-page',
