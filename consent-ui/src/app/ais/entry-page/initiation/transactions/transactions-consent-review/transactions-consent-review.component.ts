@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { SessionService } from '../../../../../common/session.service';
 import { AccountAccessLevel, AisConsentToGrant } from '../../../../common/dto/ais-consent';
-import { StubUtil } from '../../../../common/stub-util';
+import { StubUtil } from '../../../../../common/utils/stub-util';
 import { ConsentUtil } from '../../../../common/consent-util';
 import { ApiHeaders } from '../../../../../api/api.headers';
 import { ConsentAuth, ConsentAuthorizationService, PsuAuthRequest } from '../../../../../api';

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { StubUtil } from '../common/stub-util';
+import { StubUtil } from '../../common/utils/stub-util';
 import { ApiHeaders } from '../../api/api.headers';
 import { ConsentAuthorizationService } from '../../api';
 import { SessionService } from '../../common/session.service';
