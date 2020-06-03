@@ -7,6 +7,7 @@ import { Credentials } from '../models/credentials.model';
 import { HeaderConfig } from '../models/consts';
 import { DocumentCookieService } from './document-cookie.service';
 import { StorageService } from './storage.service';
+import { RedirectTupelForMap } from '../bank/redirect-page/redirect-struct';
 
 @Injectable({
   providedIn: 'root'
@@ -34,12 +35,13 @@ export class AuthService {
       this.openLoginPage();
       return;
     }
-      this.finTechAuthorizationService.logoutPOST('', '', 'response')
-        .toPromise()
-        .finally(() => {
-          this.deleteSessionData();
-          this.openLoginPage();
-        });
+    this.finTechAuthorizationService
+      .logoutPOST('', '', 'response')
+      .toPromise()
+      .finally(() => {
+        this.deleteSessionData();
+        this.openLoginPage();
+      });
   }
 
   openLoginPage() {
@@ -47,12 +49,34 @@ export class AuthService {
   }
 
   public isLoggedIn(): boolean {
-    const token = this.storageService.getXsrfToken();
-    return token !== undefined && token !== null && this.storageService.isMaxAgeValid();
+    return this.storageService.isLoggedIn();
+  }
+
+  public getUserName(): string {
+    return this.storageService.getUserName();
+  }
+
+  public getValidUntilDate(): Date {
+    return this.storageService.getValidUntilDate();
+  }
+
+  public getRedirectMap(): Map<string, RedirectTupelForMap> {
+    return this.storageService.getRedirectMap();
+  }
+
+  public extendSessionAge(maxAge: number): void {
+    this.storageService.extendSessionAge(maxAge);
+  }
+
+  public getXsrfToken(): string {
+    return this.storageService.getXsrfToken();
   }
 
   private setSessionData(response: any, credentials: Credentials): void {
-    this.storageService.setXsrfToken(response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN));
+    this.storageService.setXsrfToken(
+      response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN),
+      response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE)
+    );
     this.storageService.setUserName(credentials.username);
   }
 

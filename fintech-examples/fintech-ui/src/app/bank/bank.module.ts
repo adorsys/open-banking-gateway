@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BankComponent } from './bank.component';
 import { BankRoutingModule } from './bank-routing.module';
 import { ShareModule } from '../common/share.module';
@@ -8,6 +8,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 
 @NgModule({
   declarations: [SidebarComponent, BankComponent],
-  imports: [CommonModule, ShareModule, BankRoutingModule, ListAccountsModule]
+  imports: [CommonModule, ShareModule, BankRoutingModule, ListAccountsModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class BankModule {}

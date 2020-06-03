@@ -1,28 +1,40 @@
-import {Injectable} from '@angular/core';
-import {DocumentCookieService} from './document-cookie.service';
-import {toLocaleString} from '../models/consts';
+import { Injectable } from '@angular/core';
+import { toLocaleString } from '../models/consts';
+import { RedirectTupelForMap } from '../bank/redirect-page/redirect-struct';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
-  constructor(private documentCookieService: DocumentCookieService) {
-  }
-
   public getXsrfToken(): string {
     return localStorage.getItem(Session.XSRF_TOKEN);
   }
 
-  public setXsrfToken(xsrfToken: string): void {
-    // the xsrf token must contain the maxAge of the sessionCookie
-    const regEx = /(.*);\sMax-Age=(.*)/;
-    const matches = xsrfToken.match(regEx);
-    if (matches.length !== 3) {
-      throw new Error('xsrfToken does not look like as expected:' + xsrfToken);
-    }
+  public setXsrfToken(xsrfToken: string, maxAge: number): void {
+    localStorage.setItem(Session.XSRF_TOKEN, xsrfToken);
+    localStorage.setItem(Session.MAX_VALID_UNTIL, JSON.stringify(this.getMaxAgeDate(maxAge)));
+  }
 
-    localStorage.setItem(Session.XSRF_TOKEN, matches[1]);
-    this.setMaxAge(parseInt(matches[2], 10));
+  public extendSessionAge(maxAge: number): void {
+    localStorage.setItem(Session.MAX_VALID_UNTIL, JSON.stringify(this.getMaxAgeDate(maxAge)));
+  }
+
+  public setRedirect(redirectCode: string, authId: string, xsrfToken: string, maxAge: number): void {
+    console.log('REDIRECT STARTED ', redirectCode);
+    const tupel: RedirectTupelForMap = new RedirectTupelForMap();
+    tupel.authId = authId;
+    tupel.xsrfToken = xsrfToken;
+    tupel.validUntil = new Date(new Date().getTime() + maxAge * 1000);
+    const redirectMap = this.getRedirectMap();
+    redirectMap.set(redirectCode, tupel);
+    this.setRedirectMap(redirectMap);
+  }
+
+  resetRedirectCode(redirectCode: string) {
+    console.log('REDIRECT FINISHED ', redirectCode);
+    const redirectMap = this.getRedirectMap();
+    redirectMap.delete(redirectCode);
+    this.setRedirectMap(redirectMap);
   }
 
   public getUserName(): string {
@@ -41,27 +53,9 @@ export class StorageService {
     localStorage.setItem(Session.BANK_NAME, bankName);
   }
 
-  public getAuthId(): string {
-    return localStorage.getItem(Session.AUTH_ID);
-  }
-
-  public setAuthId(authId: string): void {
-    console.log('set authid to ' + authId);
-    localStorage.setItem(Session.AUTH_ID, authId);
-  }
-
-  public setMaxAge(maxAge: number): void {
-    const timestamp = new Date().getTime() + maxAge * 1000;
-    localStorage.setItem(Session.MAX_VALID_UNTIL, '' + timestamp);
-    console.log('set max age ' + maxAge + ' till ' + toLocaleString(new Date(timestamp)));
-  }
-
-  public setRedirectCode(redirectCode: string): void {
-    localStorage.setItem(Session.REDIRECT_CODE, redirectCode);
-  }
-
-  public getRedirectCode(): string {
-    return localStorage.getItem(Session.REDIRECT_CODE);
+  private getMaxAgeDate(maxAge: number): Date {
+    const date = new Date(new Date().getTime() + maxAge * 1000);
+    return date;
   }
 
   public getValidUntilDate(): Date {
@@ -69,57 +63,60 @@ export class StorageService {
     if (validUntilTimestamp === undefined || validUntilTimestamp === null) {
       return null;
     }
-    const date = new Date(parseInt(validUntilTimestamp, 0));
+    const date: Date = new Date(JSON.parse(validUntilTimestamp));
     if (toLocaleString(date) === 'Invalid Date') {
-      console.log('HELLO VALENTYN, THIS IS WEIRED: ' + validUntilTimestamp + ' results in Invalid Date');
-
-      return null;
+      console.log('programming error: ' + validUntilTimestamp + ' results in Invalid Date');
+      throw Error('programming error: ' + validUntilTimestamp + ' results in Invalid Date');
     }
     return date;
   }
 
-  public isMaxAgeValid(): boolean {
-    const validUntilDate: Date = this.getValidUntilDate();
+  public getRedirectMap(): Map<string, RedirectTupelForMap> {
+    let mapString = localStorage.getItem(Session.REDIRECT_MAP);
+    if (mapString == null) {
+      this.setRedirectMap(new Map<string, RedirectTupelForMap>());
+      mapString = localStorage.getItem(Session.REDIRECT_MAP);
+    }
+    return new Map(JSON.parse(mapString));
+  }
+
+  public isLoggedIn(): boolean {
+    return this.isAnySessionValid();
+  }
+
+  private isAnySessionValid(): boolean {
+    const date: Date = this.getValidUntilDate();
+    if (this.isDateValid(date)) {
+      return true;
+    }
+    for (const redirectSession of Array.from(this.getRedirectMap().values())) {
+      if (this.isDateValid(new Date(redirectSession.validUntil))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private isDateValid(validUntilDate: Date): boolean {
     if (validUntilDate === null) {
-//      console.log('valid until unknown, so isMaxValid = false');
       return false;
     }
-    const validUntil = validUntilDate.getTime();
-    const timestamp = new Date().getTime();
+    const validUntil: number = validUntilDate.getTime();
+    const timestamp: number = new Date().getTime();
     if (timestamp > validUntil) {
-      console.log('valid until was ' + toLocaleString(validUntilDate) + ' now is '
-        + toLocaleString(new Date()) + ', so isMaxValid = false');
+      // console.log('valid until was ' + toLocaleString(validUntilDate) + ' now is ' + toLocaleString(new Date())
+      // + ', so isMaxValid = false');
       return false;
     }
-    // console.log('valid until was ' + tLocaleString(validUntilDate) + ' now is '
-    // + tLocaleString(new Date()) + ', so isMaxValid = true');
-
-    //    console.log('valid until was ' + validUntilDate.toLocaleString() +
-    //    ' now is ' + new Date().toLocaleString() + ', so isMaxValid = true');
     return true;
-  }
-
-  public setRedirectActive(val: boolean): void {
-    localStorage.setItem(Session.REDIRECT_ACTIVE, val ? '1' : '0');
-  }
-
-  public getRedirectActive(): boolean {
-    const active = localStorage.getItem(Session.REDIRECT_ACTIVE);
-    if (active === undefined || active === null) {
-      return false;
-    }
-    return parseInt(active, 0) === 1;
   }
 
   public clearStorage() {
     localStorage.clear();
-    this.documentCookieService.delete(Session.COOKIE_NAME_SESSION);
-    let retries = 100;
-    while (retries > 0 && this.documentCookieService.exists(Session.COOKIE_NAME_SESSION)) {
-      console.log('retry to delete');
-      this.documentCookieService.delete(Session.COOKIE_NAME_SESSION);
-      retries--;
-    }
+  }
+
+  private setRedirectMap(map: Map<string, RedirectTupelForMap>) {
+    localStorage.setItem(Session.REDIRECT_MAP, JSON.stringify(Array.from(map.entries())));
   }
 }
 
@@ -127,9 +124,6 @@ enum Session {
   USERNAME = 'USERNAME',
   BANK_NAME = 'BANK_NAME',
   XSRF_TOKEN = 'XSRF_TOKEN',
-  COOKIE_NAME_SESSION = 'SESSION-COOKIE',
-  AUTH_ID = 'AUTH_ID',
   MAX_VALID_UNTIL = 'MAX_VALID_UNTIL_TIMESTAMP',
-  REDIRECT_ACTIVE = 'REDIRECT_ACTIVE',
-  REDIRECT_CODE = 'REDIRECT_CODE'
+  REDIRECT_MAP = 'REDIRECT_MAP'
 }
