@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 
 import { AisConsentToGrant } from '../common/dto/ais-consent';
-import { StubUtil } from '../common/stub-util';
+import { StubUtil } from '../../common/utils/stub-util';
 import { SessionService } from '../../common/session.service';
 import { ConsentUtil } from '../common/consent-util';
 import { ApiHeaders } from '../../api/api.headers';
@@ -19,6 +19,7 @@ export class ToAspspRedirectionComponent implements OnInit {
 
   public finTechName = StubUtil.FINTECH_NAME;
   public aspspName = StubUtil.ASPSP_NAME;
+  public consent = StubUtil.CONSENT;
 
   redirectTo: string;
 

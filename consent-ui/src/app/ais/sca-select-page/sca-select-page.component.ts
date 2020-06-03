@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { ConsentAuthorizationService, ScaUserData } from '../../api';
 import { SessionService } from '../../common/session.service';
 import { ApiHeaders } from '../../api/api.headers';
-import { StubUtil } from '../common/stub-util';
+import { StubUtil } from '../../common/utils/stub-util';
 
 @Component({
   selector: 'consent-app-sca-select-page',
