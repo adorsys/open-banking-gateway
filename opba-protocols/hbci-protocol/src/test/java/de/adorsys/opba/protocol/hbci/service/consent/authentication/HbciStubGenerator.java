@@ -139,7 +139,8 @@ class HbciStubGenerator {
             "BPD.Params_*.Template2DPar.secclass", "BPD.Params_*.TAN2StepPar6.ParTAN2Step.TAN2StepParams.id", "BPD.Params_*.TAN2StepPar6.SegHead.version",
             "BPD.Params_*.ChangePINPar1.SegHead.ref", "BPD.Params_*.DauerSEPAEditPar1.ParDauerSEPAEdit.usageeditable", "BPD.Params_*.DauerSEPAEditPar1.SegHead.seq",
             "BPD.Params_*.DauerSEPAEditPar1.ParDauerSEPAEdit.daysperweek", "BPD.CommListRes.SegHead.code",
-            "BPD.Params_*.TAN2StepPar6.ParTAN2Step.TAN2StepParams_4.initmode", "BPD.Params_*.TAN2StepPar6.ParTAN2Step.TAN2StepParams_3.needsmsaccount"
+            "BPD.Params_*.TAN2StepPar6.ParTAN2Step.TAN2StepParams_4.initmode", "BPD.Params_*.TAN2StepPar6.ParTAN2Step.TAN2StepParams_3.needsmsaccount",
+            "Sync.mode", "Sync.SegHead.seq", "Sync.SegHead.version", "Sync.SegHead.code", "TAN2Step6.notlasttan"
     ).stream().flatMap(it -> generateFromStarsRange100(it).stream()).collect(Collectors.toSet());
 
     private static final Set<String> SENSITIVE_FIELDS = ImmutableSet.of(
@@ -149,7 +150,8 @@ class HbciStubGenerator {
             "UPD.KInfo.KTV.number", "UPD.KInfo.accountdata", "UPD.KInfo.acctype", "UPD.KInfo.customerid",
             "UPD.KInfo.iban", "UPD.KInfo.konto", "UPD.KInfo.name1", "UPD.KInfo_*.KTV.number", "UPD.KInfo_*.acctype",
             "UPD.KInfo_*.customerid", "UPD.KInfo_*.iban", "UPD.KInfo_*.konto", "UPD.KInfo_*.name1",
-            "UPD.UPA.userdata", "UPD.UPA.userid", "UPD.UPA.username", "BPD.Params_*.PinTanPar2.ParPinTan.info_customerid"
+            "UPD.UPA.userdata", "UPD.UPA.userid", "UPD.UPA.username", "BPD.Params_*.PinTanPar2.ParPinTan.info_customerid",
+            "SigTail.UserSig.pin", "SigTail.UserSig.tan", "TAN2Step6.orderref"
     ).stream().flatMap(it -> generateFromStarsRange100(it).stream()).collect(Collectors.toSet());
 
     /**
