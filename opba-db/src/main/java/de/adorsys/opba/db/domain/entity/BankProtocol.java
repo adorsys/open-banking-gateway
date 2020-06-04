@@ -25,6 +25,7 @@ import java.util.Collection;
 
 // TODO - do we need sequence?
 @Entity
+@Table(name = "bank_action")
 @Getter
 @Setter
 @Builder
@@ -33,8 +34,8 @@ import java.util.Collection;
 public class BankProtocol {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_protocol_id_generator")
-    @SequenceGenerator(name = "bank_protocol_id_generator", sequenceName = "bank_protocol_id_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_action_id_generator")
+    @SequenceGenerator(name = "bank_action_id_generator", sequenceName = "bank_action_id_sequence")
     private Long id;
 
     @ManyToOne

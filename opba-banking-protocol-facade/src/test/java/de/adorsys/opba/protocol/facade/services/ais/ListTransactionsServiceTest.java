@@ -35,7 +35,7 @@ As we redefine list accounts for adorsys-sandbox bank to sandbox customary one
 (and it doesn't make sense to import sandbox module here) moving it back to plain xs2a bean:
  */
 @SuppressWarnings("CPD-START") // Same steps are used, but that's fine for readability
-@Sql(statements = "UPDATE opb_bank_protocol SET protocol_bean_name = 'xs2aListTransactions' WHERE protocol_bean_name = 'xs2aSandboxListTransactions'")
+@Sql(statements = "UPDATE opb_bank_action SET protocol_bean_name = 'xs2aListTransactions' WHERE protocol_bean_name = 'xs2aSandboxListTransactions'")
 @SpringBootTest(classes = ListTransactionsServiceTest.TestConfig.class)
 class ListTransactionsServiceTest extends DbDropper {
 
