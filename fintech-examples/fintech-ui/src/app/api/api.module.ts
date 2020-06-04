@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { FinTechAccountInformationService } from './api/finTechAccountInformation.service';
 import { FinTechAuthorizationService } from './api/finTechAuthorization.service';
 import { FinTechBankSearchService } from './api/finTechBankSearch.service';
+import { FintechSinglePaymentInitiationService } from './api/fintechSinglePaymentInitiation.service';
 
 @NgModule({
   imports:      [],
@@ -14,7 +15,8 @@ import { FinTechBankSearchService } from './api/finTechBankSearch.service';
   providers: [
     FinTechAccountInformationService,
     FinTechAuthorizationService,
-    FinTechBankSearchService ]
+    FinTechBankSearchService,
+    FintechSinglePaymentInitiationService ]
 })
 export class ApiModule {
     public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders {

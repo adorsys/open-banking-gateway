@@ -18,6 +18,7 @@ export * from './loginRequest';
 export * from './psuMessage';
 export * from './purposeCode';
 export * from './reportExchangeRate';
+export * from './singlePaymentInitiationRequest';
 export * from './transactionDetails';
 export * from './transactionsResponse';
 export * from './userProfile';
