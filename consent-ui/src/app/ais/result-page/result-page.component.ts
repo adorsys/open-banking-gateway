@@ -5,7 +5,8 @@ import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { SessionService } from '../../common/session.service';
 import { ConsentUtil } from '../common/consent-util';
 import { ApiHeaders } from '../../api/api.headers';
-import { ConsentAuthorizationService, DenyRequest } from '../../api';
+import { UpdateConsentAuthorizationService } from '../../api';
+import { AuthStateConsentAuthorizationService, DenyRequest } from '../../api';
 import { Location } from '@angular/common';
 
 @Component({
@@ -29,7 +30,8 @@ export class ResultPageComponent implements OnInit {
     private location: Location,
     private activatedRoute: ActivatedRoute,
     private sessionService: SessionService,
-    private consentAuthorisation: ConsentAuthorizationService
+    private updateConsentAuthorizationService: UpdateConsentAuthorizationService,
+    private authStateConsentAuthorizationService: AuthStateConsentAuthorizationService
   ) {}
 
   ngOnInit() {
@@ -45,7 +47,7 @@ export class ResultPageComponent implements OnInit {
   }
 
   onDeny() {
-    this.consentAuthorisation
+    this.updateConsentAuthorizationService
       .denyUsingPOST(
         this.authorizationId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
@@ -59,11 +61,13 @@ export class ResultPageComponent implements OnInit {
   }
 
   private loadRedirectUri(authId: string, redirectCode: string) {
-    this.consentAuthorisation.authUsingGET(authId, redirectCode, 'response').subscribe(res => {
-      console.log(res);
-      this.sessionService.setRedirectCode(authId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-      this.redirectTo = res.headers.get(ApiHeaders.LOCATION);
-    });
+    this.authStateConsentAuthorizationService
+      .authUsingGET(authId, redirectCode, 'response')
+      .subscribe(res => {
+        console.log(res);
+        this.sessionService.setRedirectCode(authId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.redirectTo = res.headers.get(ApiHeaders.LOCATION);
+      });
   }
 
   public confirm(value: boolean): void {

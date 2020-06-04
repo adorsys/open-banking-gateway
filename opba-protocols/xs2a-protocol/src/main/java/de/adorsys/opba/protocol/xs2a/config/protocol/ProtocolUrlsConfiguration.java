@@ -1,7 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.config.protocol;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
@@ -28,64 +27,28 @@ public class ProtocolUrlsConfiguration {
      * Account related urls .
      */
     @NotNull
-    private Ais ais;
+    private UrlSet ais;
 
     /**
      * Payment related urls .
      */
     @NotNull
-    private Pis pis;
+    private UrlSet pis;
 
     /**
      * Generic parameters input urls - i.e. password page.
      */
     @NotNull
-    private Common common;
+    private UrlSet common;
 
     @Data
-    public static class Ais {
+    public static class UrlSet {
         /**
          * To ASPSP redirection page (for Redirect SCA).
          */
         @NotBlank
         private String toAspsp;
 
-        /**
-         * Return from ASPSP urls
-         */
-        @NotNull
-        private WebHooksWithResult webHooks;
-
-        /**
-         * Generic parameters input urls - i.e. password page.
-         */
-        @NotNull
-        private AisParameters parameters;
-    }
-
-    @Data
-    public static class Pis {
-        /**
-         * To ASPSP redirection page (for Redirect SCA).
-         */
-        @NotBlank
-        private String toAspsp;
-
-        /**
-         * Return from ASPSP urls
-         */
-        @NotNull
-        private WebHooksWithResult webHooks;
-
-        /**
-         * Generic parameters input urls - i.e. password page.
-         */
-        @NotNull
-        private Parameters parameters;
-    }
-
-    @Data
-    public static class Common {
         /**
          * Return from ASPSP urls
          */
@@ -112,27 +75,12 @@ public class ProtocolUrlsConfiguration {
          */
         @NotBlank
         private String nok;
-    }
 
-    @Data
-    @EqualsAndHashCode(callSuper = true)
-    public static class WebHooksWithResult extends WebHooks {
         /**
          * URL that represents consent acquisition result.
          */
         @NotBlank
         private String result;
-    }
-
-
-    @Data
-    @EqualsAndHashCode(callSuper = true)
-    public static class AisParameters extends Parameters {
-        /**
-         * Page where the user can provide IBAN list for dedicated consent.
-         */
-        @NotBlank
-        private String providePsuIban;
     }
 
     @Data
@@ -162,5 +110,11 @@ public class ProtocolUrlsConfiguration {
          */
         @NotBlank
         private String reportScaResult;
+
+        /**
+         * Page where the user can provide IBAN list for dedicated consent.
+         */
+        @NotBlank
+        private String providePsuIban;
     }
 }

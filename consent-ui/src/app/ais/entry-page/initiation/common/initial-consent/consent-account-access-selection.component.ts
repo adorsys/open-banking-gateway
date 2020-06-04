@@ -6,7 +6,7 @@ import { SessionService } from '../../../../../common/session.service';
 import { StubUtil } from '../../../../../common/utils/stub-util';
 import { AccountAccessLevel, AisConsentToGrant } from '../../../../common/dto/ais-consent';
 import { ConsentUtil } from '../../../../common/consent-util';
-import { ConsentAuthorizationService, DenyRequest } from '../../../../../api';
+import { UpdateConsentAuthorizationService, DenyRequest } from '../../../../../api';
 import { ApiHeaders } from '../../../../../api/api.headers';
 
 @Component({
@@ -34,7 +34,7 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private sessionService: SessionService,
-    private consentAuthorizationService: ConsentAuthorizationService
+    private updateConsentAuthorizationService: UpdateConsentAuthorizationService
   ) {
     this.accountAccessForm = this.formBuilder.group({});
   }
@@ -86,7 +86,7 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
   }
 
   onDeny() {
-    this.consentAuthorizationService
+    this.updateConsentAuthorizationService
       .denyUsingPOST(
         this.authorizationId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
