@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SessionService } from '../../../../common/session.service';
-import { ConsentAuthorizationService, DenyRequest } from '../../../../api';
+import { AuthStateConsentAuthorizationService } from '../../../../api';
+import { UpdateConsentAuthorizationService, DenyRequest } from '../../../../api';
 import { ApiHeaders } from '../../../../api/api.headers';
 import { StubUtil } from '../../../../common/utils/stub-util';
 import { AccountAccessLevel, AisConsentToGrant } from '../../../common/dto/ais-consent';
@@ -28,7 +29,8 @@ export class ConsentSharingComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private sessionService: SessionService,
-    private consentAuthorisation: ConsentAuthorizationService
+    private authStateConsentAuthorizationService: AuthStateConsentAuthorizationService,
+    private updateConsentAuthorizationService: UpdateConsentAuthorizationService
   ) {}
 
   ngOnInit() {
@@ -37,9 +39,11 @@ export class ConsentSharingComponent implements OnInit {
     const redirectCode = this.sessionService.getRedirectCode(this.authorizationId);
     this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
 
-    this.consentAuthorisation.authUsingGET(this.authorizationId, redirectCode, 'response').subscribe(res => {
-      this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-    });
+    this.authStateConsentAuthorizationService
+      .authUsingGET(this.authorizationId, redirectCode, 'response')
+      .subscribe(res => {
+        this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+      });
     this.loadRedirectUri(this.authorizationId, redirectCode);
   }
 
@@ -48,7 +52,7 @@ export class ConsentSharingComponent implements OnInit {
   }
 
   onDeny() {
-    this.consentAuthorisation
+    this.updateConsentAuthorizationService
       .denyUsingPOST(
         this.authorizationId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs

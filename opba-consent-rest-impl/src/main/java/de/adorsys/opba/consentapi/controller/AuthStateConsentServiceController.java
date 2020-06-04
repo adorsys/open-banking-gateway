@@ -1,5 +1,6 @@
 package de.adorsys.opba.consentapi.controller;
 
+import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.consentapi.Const;
 import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
@@ -19,6 +20,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import static de.adorsys.opba.restapi.shared.GlobalConst.SPRING_KEYWORD;
@@ -27,6 +29,8 @@ import static de.adorsys.opba.restapi.shared.GlobalConst.SPRING_KEYWORD;
 @RequiredArgsConstructor
 public class AuthStateConsentServiceController implements AuthStateConsentAuthorizationApi {
 
+    private static final Map<String, String> TRANSLATE_ACTIONS = ImmutableMap
+            .of("SINGLE_PAYMENT", "INITIATE_PAYMENT");
     private final FacadeServiceableRequest serviceableTemplate;
     private final UserAgentContext userAgentContext;
     private final GetAuthorizationStateService authorizationStateService;
@@ -62,7 +66,7 @@ public class AuthStateConsentServiceController implements AuthStateConsentAuthor
         ScaUserData fromScaMethod(ScaMethod method);
 
         default ConsentAuth.ActionEnum fromString(String value) {
-            return ConsentAuth.ActionEnum.fromValue(value);
+            return ConsentAuth.ActionEnum.fromValue(TRANSLATE_ACTIONS.getOrDefault(value, value));
         }
     }
 }
