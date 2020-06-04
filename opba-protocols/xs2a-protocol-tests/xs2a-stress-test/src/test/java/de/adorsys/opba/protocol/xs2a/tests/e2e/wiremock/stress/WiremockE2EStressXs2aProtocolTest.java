@@ -54,7 +54,7 @@ class WiremockE2EStressXs2aProtocolTest extends SpringScenarioTest<MockServers, 
 
     // See https://github.com/spring-projects/spring-boot/issues/14879 for the 'why setting port'
     void beforeEach() {
-        ProtocolUrlsConfiguration.WebHooksWithResult aisUrls = urlsConfiguration.getAis().getWebHooks();
+        ProtocolUrlsConfiguration.WebHooks aisUrls = urlsConfiguration.getAis().getWebHooks();
         aisUrls.setOk(aisUrls.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
         aisUrls.setNok(aisUrls.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
 

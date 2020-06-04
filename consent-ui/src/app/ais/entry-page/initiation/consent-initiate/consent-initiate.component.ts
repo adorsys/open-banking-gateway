@@ -5,7 +5,7 @@ import { EntryPageAccountsComponent } from '../accounts/entry-page-accounts/entr
 import { SessionService } from '../../../../common/session.service';
 import { ApiHeaders } from '../../../../api/api.headers';
 import { AuthConsentState } from '../../../common/dto/auth-state';
-import { ConsentAuth, ConsentAuthorizationService } from '../../../../api';
+import { ConsentAuth, AuthStateConsentAuthorizationService } from '../../../../api';
 import ActionEnum = ConsentAuth.ActionEnum;
 
 @Component({
@@ -20,7 +20,7 @@ export class ConsentInitiateComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private sessionService: SessionService,
-    private consentAuthService: ConsentAuthorizationService
+    private authStateConsentAuthorizationService: AuthStateConsentAuthorizationService
   ) {}
 
   private static isInvalid(authorizationId: string, redirectCode: string): boolean {
@@ -48,23 +48,25 @@ export class ConsentInitiateComponent implements OnInit {
   }
 
   private initiateConsentSession(authorizationId: string, redirectCode: string) {
-    this.consentAuthService.authUsingGET(authorizationId, redirectCode, 'response').subscribe(res => {
-      this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-      this.navigate(authorizationId, res.body.consentAuth);
-    });
+    this.authStateConsentAuthorizationService
+      .authUsingGET(authorizationId, redirectCode, 'response')
+      .subscribe(res => {
+        this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.navigate(authorizationId, res.body.consentAuth);
+      });
   }
 
   private navigate(authorizationId: string, res: ConsentAuth) {
     switch (res.action) {
-      case ActionEnum.ACCOUNTS:
+      case ActionEnum.LISTACCOUNTS:
         this.sessionService.setConsentState(authorizationId, new AuthConsentState(res.violations));
         this.router.navigate([EntryPageAccountsComponent.ROUTE], { relativeTo: this.activatedRoute.parent });
         break;
-      case ActionEnum.INITIATE_PAYMENT:
+      case ActionEnum.INITIATEPAYMENT:
         this.sessionService.setConsentState(authorizationId, new AuthConsentState(res.violations));
         this.router.navigate([EntryPageAccountsComponent.ROUTE], { relativeTo: this.activatedRoute.parent });
         break;
-      case ActionEnum.TRANSACTIONS:
+      case ActionEnum.LISTTRANSACTIONS:
         this.sessionService.setConsentState(authorizationId, new AuthConsentState(res.violations));
         this.router.navigate([EntryPageTransactionsComponent.ROUTE], { relativeTo: this.activatedRoute.parent });
         break;

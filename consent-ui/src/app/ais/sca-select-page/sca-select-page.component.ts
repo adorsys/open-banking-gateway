@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import { ConsentAuthorizationService, ScaUserData } from '../../api';
+import { UpdateConsentAuthorizationService, ScaUserData } from '../../api';
+import { AuthStateConsentAuthorizationService } from '../../api';
 import { SessionService } from '../../common/session.service';
 import { ApiHeaders } from '../../api/api.headers';
 import { StubUtil } from '../../common/utils/stub-util';
@@ -19,7 +20,8 @@ export class ScaSelectPageComponent implements OnInit {
 
   constructor(
     private sessionService: SessionService,
-    private consentAuthorizationService: ConsentAuthorizationService,
+    private updateConsentAuthorizationService: UpdateConsentAuthorizationService,
+    private authStateConsentAuthorizationService: AuthStateConsentAuthorizationService,
     private route: ActivatedRoute
   ) {}
 
@@ -30,7 +32,7 @@ export class ScaSelectPageComponent implements OnInit {
   }
 
   onSubmit(selectedMethodValue: string): void {
-    this.consentAuthorizationService
+    this.updateConsentAuthorizationService
       .embeddedUsingPOST(
         this.authorizationSessionId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
@@ -48,7 +50,7 @@ export class ScaSelectPageComponent implements OnInit {
   }
 
   private loadAvailableMethods(): void {
-    this.consentAuthorizationService
+    this.authStateConsentAuthorizationService
       .authUsingGET(this.authorizationSessionId, this.redirectCode, 'response')
       .subscribe(consentAuth => {
         this.sessionService.setRedirectCode(
