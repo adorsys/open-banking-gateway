@@ -9,14 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { HrefType } from './hrefType';
 
 
-/**
- * Links to the account, which can be directly used for retrieving account information from this dedicated account.  Links to \"balances\" and/or \"transactions\"  These links are only supported, when the corresponding consent has been already granted. 
- */
-export interface LinksAccountDetails { 
-    balances?: HrefType;
-    transactions?: HrefType;
+export interface SinglePaymentInitiationRequest { 
+    name: string;
+    creditorIban: string;
+    debitorIban: string;
+    amount: string;
+    purpose?: string;
 }
 

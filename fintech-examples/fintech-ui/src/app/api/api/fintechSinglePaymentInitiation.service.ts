@@ -18,9 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { ErrorResponse } from '../model/errorResponse';
-import { InlineResponse2001 } from '../model/inlineResponse2001';
-import { InlineResponse2002 } from '../model/inlineResponse2002';
-import { PsuMessage } from '../model/psuMessage';
+import { SinglePaymentInitiationRequest } from '../model/singlePaymentInitiationRequest';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -30,7 +28,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class FinTechBankSearchService {
+export class FintechSinglePaymentInitiationService {
 
     protected basePath = 'http://localhost';
     public defaultHeaders = new HttpHeaders();
@@ -53,31 +51,38 @@ export class FinTechBankSearchService {
 
 
     /**
-     * Request the profile of the bank identified with id (bankId).
-     * Request the profile of the bank identified with id (bankId).
+     * Single payment initiation request
+     * This method is used to initiate a payment at the Fintech Server.
      * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
      * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
-     * @param bankId Identifier of the bank to be loaded.
+     * @param fintechRedirectURLOK 
+     * @param fintechRedirectURLNOK 
+     * @param bankId 
+     * @param singlePaymentInitiationRequest Single payment initiation request
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public bankProfileGET(xRequestID: string, X_XSRF_TOKEN: string, bankId: string, observe?: 'body', reportProgress?: boolean): Observable<InlineResponse2002>;
-    public bankProfileGET(xRequestID: string, X_XSRF_TOKEN: string, bankId: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<InlineResponse2002>>;
-    public bankProfileGET(xRequestID: string, X_XSRF_TOKEN: string, bankId: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<InlineResponse2002>>;
-    public bankProfileGET(xRequestID: string, X_XSRF_TOKEN: string, bankId: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public initiateSinglePayment(xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, bankId: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public initiateSinglePayment(xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, bankId: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public initiateSinglePayment(xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, bankId: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public initiateSinglePayment(xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, bankId: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (xRequestID === null || xRequestID === undefined) {
-            throw new Error('Required parameter xRequestID was null or undefined when calling bankProfileGET.');
+            throw new Error('Required parameter xRequestID was null or undefined when calling initiateSinglePayment.');
         }
         if (X_XSRF_TOKEN === null || X_XSRF_TOKEN === undefined) {
-            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling bankProfileGET.');
+            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling initiateSinglePayment.');
+        }
+        if (fintechRedirectURLOK === null || fintechRedirectURLOK === undefined) {
+            throw new Error('Required parameter fintechRedirectURLOK was null or undefined when calling initiateSinglePayment.');
+        }
+        if (fintechRedirectURLNOK === null || fintechRedirectURLNOK === undefined) {
+            throw new Error('Required parameter fintechRedirectURLNOK was null or undefined when calling initiateSinglePayment.');
         }
         if (bankId === null || bankId === undefined) {
-            throw new Error('Required parameter bankId was null or undefined when calling bankProfileGET.');
+            throw new Error('Required parameter bankId was null or undefined when calling initiateSinglePayment.');
         }
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (bankId !== undefined && bankId !== null) {
-            queryParameters = queryParameters.set('bankId', <any>bankId);
+        if (singlePaymentInitiationRequest === null || singlePaymentInitiationRequest === undefined) {
+            throw new Error('Required parameter singlePaymentInitiationRequest was null or undefined when calling initiateSinglePayment.');
         }
 
         let headers = this.defaultHeaders;
@@ -87,8 +92,13 @@ export class FinTechBankSearchService {
         if (X_XSRF_TOKEN !== undefined && X_XSRF_TOKEN !== null) {
             headers = headers.set('X-XSRF-TOKEN', String(X_XSRF_TOKEN));
         }
+        if (fintechRedirectURLOK !== undefined && fintechRedirectURLOK !== null) {
+            headers = headers.set('Fintech-Redirect-URL-OK', String(fintechRedirectURLOK));
+        }
+        if (fintechRedirectURLNOK !== undefined && fintechRedirectURLNOK !== null) {
+            headers = headers.set('Fintech-Redirect-URL-NOK', String(fintechRedirectURLNOK));
+        }
 
-        // authentication (sessionCookie) required
         // to determine the Accept header
         const httpHeaderAccepts: string[] = [
             'application/json'
@@ -99,75 +109,18 @@ export class FinTechBankSearchService {
         }
 
 
-        return this.httpClient.get<InlineResponse2002>(`${this.configuration.basePath}/v1/search/bankProfile`,
-            {
-                params: queryParameters,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * Issues an incremental bank search request to the FinTechApi.
-     * Issues an incremental bank search request to the FinTechApi.
-     * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
-     * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
-     * @param keyword 
-     * @param start 
-     * @param max 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public bankSearchGET(xRequestID: string, X_XSRF_TOKEN: string, keyword: string, start?: number, max?: number, observe?: 'body', reportProgress?: boolean): Observable<InlineResponse2001>;
-    public bankSearchGET(xRequestID: string, X_XSRF_TOKEN: string, keyword: string, start?: number, max?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<InlineResponse2001>>;
-    public bankSearchGET(xRequestID: string, X_XSRF_TOKEN: string, keyword: string, start?: number, max?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<InlineResponse2001>>;
-    public bankSearchGET(xRequestID: string, X_XSRF_TOKEN: string, keyword: string, start?: number, max?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-        if (xRequestID === null || xRequestID === undefined) {
-            throw new Error('Required parameter xRequestID was null or undefined when calling bankSearchGET.');
-        }
-        if (X_XSRF_TOKEN === null || X_XSRF_TOKEN === undefined) {
-            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling bankSearchGET.');
-        }
-        if (keyword === null || keyword === undefined) {
-            throw new Error('Required parameter keyword was null or undefined when calling bankSearchGET.');
-        }
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (keyword !== undefined && keyword !== null) {
-            queryParameters = queryParameters.set('keyword', <any>keyword);
-        }
-        if (start !== undefined && start !== null) {
-            queryParameters = queryParameters.set('start', <any>start);
-        }
-        if (max !== undefined && max !== null) {
-            queryParameters = queryParameters.set('max', <any>max);
-        }
-
-        let headers = this.defaultHeaders;
-        if (xRequestID !== undefined && xRequestID !== null) {
-            headers = headers.set('X-Request-ID', String(xRequestID));
-        }
-        if (X_XSRF_TOKEN !== undefined && X_XSRF_TOKEN !== null) {
-            headers = headers.set('X-XSRF-TOKEN', String(X_XSRF_TOKEN));
-        }
-
-        // authentication (sessionCookie) required
-        // to determine the Accept header
-        const httpHeaderAccepts: string[] = [
+        // to determine the Content-Type header
+        const consumes: string[] = [
             'application/json'
         ];
-        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-
-        return this.httpClient.get<InlineResponse2001>(`${this.configuration.basePath}/v1/search/bankSearch`,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/pis/banks/${encodeURIComponent(String(bankId))}/payments/single`,
+            singlePaymentInitiationRequest,
             {
-                params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
