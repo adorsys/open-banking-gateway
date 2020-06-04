@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { StubUtil } from '../../common/utils/stub-util';
-import { ConsentAuthorizationService } from '../../api';
+import { UpdateConsentAuthorizationService } from '../../api';
 import { ApiHeaders } from '../../api/api.headers';
 import { SessionService } from '../../common/session.service';
 
@@ -20,7 +19,7 @@ export class EnterTanPageComponent implements OnInit {
 
   constructor(
     private sessionService: SessionService,
-    private consentAuthorizationService: ConsentAuthorizationService,
+    private updateConsentAuthorizationService: UpdateConsentAuthorizationService,
     private activatedRoute: ActivatedRoute
   ) {}
 
@@ -31,7 +30,7 @@ export class EnterTanPageComponent implements OnInit {
   }
 
   onSubmit(tan: string): void {
-    this.consentAuthorizationService
+    this.updateConsentAuthorizationService
       .embeddedUsingPOST(
         this.authorizationSessionId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs

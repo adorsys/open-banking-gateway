@@ -8,7 +8,7 @@ import { AccountAccessLevel, AisConsentToGrant } from '../../../../common/dto/ai
 import { StubUtil } from '../../../../../common/utils/stub-util';
 import { ConsentUtil } from '../../../../common/consent-util';
 import { ApiHeaders } from '../../../../../api/api.headers';
-import { ConsentAuth, ConsentAuthorizationService, PsuAuthRequest } from '../../../../../api';
+import { ConsentAuth, UpdateConsentAuthorizationService, PsuAuthRequest } from '../../../../../api';
 
 @Component({
   selector: 'consent-app-transactions-consent-review',
@@ -22,7 +22,7 @@ export class TransactionsConsentReviewComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private sessionService: SessionService,
-    private consentAuthorisation: ConsentAuthorizationService
+    private updateConsentAuthorizationService: UpdateConsentAuthorizationService
   ) {}
 
   public static ROUTE = SharedRoutes.REVIEW;
@@ -49,7 +49,7 @@ export class TransactionsConsentReviewComponent implements OnInit {
       body.consentAuth = { consent: this.aisConsent.consent } as ConsentAuth;
     }
 
-    this.consentAuthorisation
+    this.updateConsentAuthorizationService
       .embeddedUsingPOST(
         this.authorizationId,
         StubUtil.X_XSRF_TOKEN,

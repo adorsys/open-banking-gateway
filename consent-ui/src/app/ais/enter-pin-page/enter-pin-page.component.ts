@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { StubUtil } from '../../common/utils/stub-util';
 import { ApiHeaders } from '../../api/api.headers';
-import { ConsentAuthorizationService } from '../../api';
+import { UpdateConsentAuthorizationService } from '../../api';
 import { SessionService } from '../../common/session.service';
 
 @Component({
@@ -16,7 +16,7 @@ export class EnterPinPageComponent implements OnInit {
   private redirectCode: string;
 
   constructor(
-    private consentAuthorizationService: ConsentAuthorizationService,
+    private updateConsentAuthorizationService: UpdateConsentAuthorizationService,
     private activatedRoute: ActivatedRoute,
     private sessionService: SessionService
   ) {}
@@ -29,7 +29,7 @@ export class EnterPinPageComponent implements OnInit {
   }
 
   submit(pin: string): void {
-    this.consentAuthorizationService
+    this.updateConsentAuthorizationService
       .embeddedUsingPOST(
         this.authorizationSessionId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
