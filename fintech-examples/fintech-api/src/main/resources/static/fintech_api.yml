@@ -15,25 +15,25 @@ info:
     After a PSU is authenticated with the FinTech environment (either through the simple login interface defined here, or through an identity provider),
     the FinTechApi will establish a session with the FinTechUI. This is done by the mean of using a cookie called SessionCookie.
     This SessionCookie is protected by a corresponding xsrfToken. The response that sets a SessionCookie also carries a corresponding xsrfToken in the response header named "X-XSRF-TOKEN".
-    
+
     It is the responsibility of the FinTechUI to :
-    * parse and store this xsrfToken so that a refresh of a browser window can work. This shall be done using user agent capabilities. 
+    * parse and store this xsrfToken so that a refresh of a browser window can work. This shall be done using user agent capabilities.
     A web browser application might decide to store the xsrfToken in the browser localStorage, as the cookie we set are all considered persistent.
     * make sure that each subsequent request that is carrying the SessionCookie also carries the corresponding xsrfToken as header field (see the request path).
     * remove this xsrfToken from the localStorage when the corresponding SessionCookie is deleted by a server response (setting cookie value to null).
-    
+
     The main difference between an xsrfToken and a SessionCookie is that the sessionCookie is automatically sent with each matching request. The xsrfToken must be explicitely read and sent by application.
-    
+
     #### API- vs. UI-Redirection
     For simplicity, this Framework is designed to redirect to FinTechUI not to FinTechApi.
-    
+
     #### Explicite vs. Implicite Redirection
     We define an "Implicite redirection" a case where a web browser react to 30X reponse and automatically redirects to the attached endpoint. We define an
-    "Explicite Redirection" as a case where the UI-Application reacts to a 20X response, explicitely parses the attached __Location__ header an uses it to reload 
+    "Explicite Redirection" as a case where the UI-Application reacts to a 20X response, explicitely parses the attached __Location__ header an uses it to reload
     the new page in the browser window (or start the new UI-Application in case of native apps).
-    
+
     This framework advocates for explicite redirection passing a __20X__ response to the FinTechUI toghether with the __Location__ parameter.
-    
+
     Processing a response that initiates a redirect, the FinTechUI makes sure following happens,
     * that the exisitng __SessionCookie__ is deleted, as the user will not have a chance for an explicite logout,
     * that the corresponding xsrfToken is deleted from the local storage,
@@ -41,7 +41,7 @@ info:
     * that the corresponding xsrfToken is stored in the local storage (under the same cookie path as the RedirectCookie)
 
     #### Redirecting to the ConsentAuthorisationApi
-    For a redirection to the ConsentAuthorisationApi, a generated AUTH-ID is added to the cookie path and used to distinguish authorization processes from each order. 
+    For a redirection to the ConsentAuthorisationApi, a generated AUTH-ID is added to the cookie path and used to distinguish authorization processes from each order.
     This information (AUTH-ID) must be contained in the back redirect url sent to the ConsentAuthorisationApi in the back channel, so that the FinTechUI can invoke
     the correct code2Token endpoint when activated.
 
@@ -270,6 +270,34 @@ paths:
         '404':
           $ref: '#/components/responses/404_NotFound'
 
+  /v1/pis/banks/{bank-id}/payments/single:
+    post:
+      summary: Single payment initiation request
+      description: This method is used to initiate a payment at the Fintech Server.
+      operationId: initiateSinglePayment
+      tags:
+        - FintechSinglePaymentInitiation
+      parameters:
+        #header
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
+        - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
+        #path
+        - $ref: "#/components/parameters/bank-id"
+      requestBody:
+        description: Single payment initiation request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/singlePaymentInitiationRequest'
+        required: true
+      responses:
+        '202':
+          $ref: '#/components/responses/202_ReloadUI'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+
 components:
 
   securitySchemes:
@@ -280,7 +308,7 @@ components:
       description: >
         This is the SessionCookie used to maintain the login session
         between the FinTechUI and the FinTechApi. If this cookie is set, the
-        response of the LoginRequest will contain a required X-XSRF-TOKEN header 
+        response of the LoginRequest will contain a required X-XSRF-TOKEN header
         used later to check the cookie agains CSRF.
 
   headers:
@@ -288,12 +316,12 @@ components:
     Set-SessionCookie:
       name: Set-Cookie
       description: |
-        SessionCookie used to maintain the login session between the FinTechUI and the FinTechApi. 
-        This cookie is validated using an X-XSRF-TOKEN sent with the request header. 
+        SessionCookie used to maintain the login session between the FinTechUI and the FinTechApi.
+        This cookie is validated using an X-XSRF-TOKEN sent with the request header.
         This cookie must contain a hash reference to the corresponding XSRF-TOKEN -> hash(XSRF-TOKEN).
         So in order to verify that the request originate from the FinTechUI application, a server
         component will hash the given XSRF-TOKEN and compare it with the result in the cookie.
-        
+
         Remember  that the XSRF-TOKEN value must be extracted from the request parameter named X-XSRF-TOKEN
         and not from a cookie header. This is important to mention as some implementation might return the
         XSRF-TOKEN to the FinTechUI in form of a cookie.
@@ -335,7 +363,7 @@ components:
         XSRF parameter used to validate a SessionCookie. This token is produced by the FinTechAPI by either
         * Storing a hash value of the XSRF-TOKEN in the SessionCookie or
         * Using the XSRF-TOKEN to encrypt the content of the SessionCookie.
-        
+
         The XSRF-TOKEN is returned to the FinTechUI as a response header with the header value X-XSRF-TOKEN.
         It is the responsibility of the FinTechUI will take care of ensuring the persistence of the XSRF-TOKEN.
       example: faadsf93nlas32wx
@@ -717,6 +745,7 @@ components:
 
   schemas:
 
+
     # Technical data for sessionState and errorResponse
     sessionState:
       title: SessionState
@@ -752,6 +781,28 @@ components:
           type: string
         text:
           type: string
+
+    # Single Paymement Initiation
+    singlePaymentInitiationRequest:
+      title: Single Paymement Initiation
+      type: object
+      required:
+        - name
+        - creditorIban
+        - debitorIban
+        - amount
+      properties:
+        name:
+          type: string
+        creditorIban:
+          type: string
+        debitorIban:
+          type: string
+        amount:
+          type: string
+        purpose:
+          type: string
+
 
     # Login
     loginRequest:
