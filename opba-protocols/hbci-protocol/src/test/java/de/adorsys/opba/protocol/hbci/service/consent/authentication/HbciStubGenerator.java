@@ -142,7 +142,13 @@ class HbciStubGenerator {
             "BPD.Params_*.TAN2StepPar6.ParTAN2Step.TAN2StepParams_4.initmode", "BPD.Params_*.TAN2StepPar6.ParTAN2Step.TAN2StepParams_3.needsmsaccount",
             "Sync.mode", "Sync.SegHead.seq", "Sync.SegHead.version", "Sync.SegHead.code", "TAN2Step6.notlasttan",
             "GVRes.KUmsZeitRes5.SegHead.code", "GVRes.KUmsZeitRes5.SegHead.version", "GVRes.KUmsZeitRes5.SegHead.ref",
-            "GVRes.KUmsZeitRes5.SegHead.seq"
+            "GVRes.KUmsZeitRes5.SegHead.seq", "BPD.Params_*.DauerSEPAEditPar1.ParDauerSEPAEdit.turnusmonths",
+            "BPD.Params_*.TAN2StepPar6.ParTAN2Step.TAN2StepParams.cantandelay", "BPD.Params_*.TermUebSEPAListPar1.SegHead.ref",
+            "BPD.Params_*.TAN2StepPar6.ParTAN2Step.TAN2StepParams.needsmsaccount", "BPD.Params_*.SEPAInfoPar1.ParSEPAInfo.suppformats",
+            "BPD.Params_*.TAN2StepPar6.SegHead.code", "BPD.Params_*.DauerSEPANewPar1.ParDauerSEPANew.turnusmonths",
+            "BPD.SecMethod.mixing", "BPD.Params_*.TermUebSEPAEditPar1.ParTermUebSEPAEdit.minpretime",
+            "BPD.Params_*.SaldoPar5.SegHead.ref", "BPD.Params_*.Template2DPar.minsigs", "BPD.Params_*.DauerSEPAEditPar1.SegHead.code",
+            "BPD.Params_*.UmbPar1.SegHead.version", "BPD.Params_*.PinTanPar2.ParPinTan.pinlen_max", "BPD.Params_*.TAN2StepPar6.secclass"
     ).stream().flatMap(it -> generateFromStarsRange100(it).stream()).collect(Collectors.toSet());
 
     private static final Set<String> SENSITIVE_FIELDS = ImmutableSet.of(
@@ -153,7 +159,8 @@ class HbciStubGenerator {
             "UPD.KInfo.iban", "UPD.KInfo.konto", "UPD.KInfo.name1", "UPD.KInfo_*.KTV.number", "UPD.KInfo_*.acctype",
             "UPD.KInfo_*.customerid", "UPD.KInfo_*.iban", "UPD.KInfo_*.konto", "UPD.KInfo_*.name1",
             "UPD.UPA.userdata", "UPD.UPA.userid", "UPD.UPA.username", "BPD.Params_*.PinTanPar2.ParPinTan.info_customerid",
-            "SigTail.UserSig.pin", "SigTail.UserSig.tan", "TAN2Step6.orderref", "GVRes.KUmsZeitRes5.booked"
+            "SigTail.UserSig.pin", "SigTail.UserSig.tan", "TAN2Step6.orderref", "GVRes.KUmsZeitRes5.booked",
+            "BPD.Params_*.PinTanPar2.ParPinTan.info_userid=Kundennummer"
     ).stream().flatMap(it -> generateFromStarsRange100(it).stream()).collect(Collectors.toSet());
 
     /**
