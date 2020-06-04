@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 @Entity
+@Table(name = "bank_sub_action")
 @Getter
 @Setter
 @Builder
@@ -26,8 +27,8 @@ import javax.persistence.SequenceGenerator;
 public class BankSubProtocol {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_sub_protocol_id_generator")
-    @SequenceGenerator(name = "bank_sub_protocol_id_generator", sequenceName = "bank_sub_protocol_id_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_sub_action_id_generator")
+    @SequenceGenerator(name = "bank_sub_action_id_generator", sequenceName = "bank_sub_action_id_sequence")
     private Long id;
 
     @ManyToOne(optional = false)
