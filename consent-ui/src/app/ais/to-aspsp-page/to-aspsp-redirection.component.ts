@@ -8,6 +8,7 @@ import { SessionService } from '../../common/session.service';
 import { ConsentUtil } from '../common/consent-util';
 import { ApiHeaders } from '../../api/api.headers';
 import { ConsentAuthorizationService, DenyRequest } from '../../api';
+import { Action } from '../../common/utils/action';
 
 @Component({
   selector: 'consent-app-to-aspsp-redirection',
@@ -19,7 +20,7 @@ export class ToAspspRedirectionComponent implements OnInit {
 
   public finTechName = StubUtil.FINTECH_NAME;
   public aspspName = StubUtil.ASPSP_NAME;
-  public consent = StubUtil.CONSENT;
+  public account = Action.ACCOUNT;
 
   redirectTo: string;
 
