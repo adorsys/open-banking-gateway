@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.hbci.service.consent.authentication;
 
 import de.adorsys.multibanking.domain.Credentials;
+import de.adorsys.multibanking.domain.ScaStatus;
 import de.adorsys.multibanking.domain.request.UpdatePsuAuthenticationRequest;
 import de.adorsys.multibanking.domain.response.UpdateAuthResponse;
 import de.adorsys.multibanking.domain.spi.OnlineBankingService;
@@ -38,9 +39,30 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
         UpdateAuthResponse response =
                 onlineBankingService.getStrongCustomerAuthorisation().updatePsuAuthentication(request);
 
+        if (handleScaChallengeRequired(execution, response)) {
+            return;
+        }
+
         ContextUtil.getAndUpdateContext(
                 execution,
                 (HbciContext ctx) -> ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData())
         );
+    }
+
+    private boolean handleScaChallengeRequired(DelegateExecution execution, UpdateAuthResponse response) {
+        if (ScaStatus.PSUAUTHENTICATED == response.getScaStatus()
+                && null != response.getScaMethods()
+                && response.getScaMethods().size() > 0) {
+            ContextUtil.getAndUpdateContext(
+                    execution,
+                    (HbciContext ctx) -> {
+                        ctx.setTanChallengeRequired(true);
+                        ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
+                    }
+            );
+
+            return true;
+        }
+        return false;
     }
 }
