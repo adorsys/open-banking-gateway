@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import {UpdateConsentAuthorizationService} from "../../api";
+import {ActivatedRoute} from "@angular/router";
+import {SessionService} from "../../common/session.service";
+import {StubUtil} from "../../ais/common/stub-util";
+import {ApiHeaders} from "../../api/api.headers";
 
 @Component({
   selector: 'consent-app-enter-pin-page',
@@ -6,13 +11,38 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./enter-pin-page.component.scss']
 })
 export class EnterPinPageComponent implements OnInit {
-  public static ROUTE = 'enter-pin';
-
   wrongPassword = false;
+  private authorizationSessionId: string;
+  private redirectCode: string;
 
-  constructor() {}
+  constructor(
+    private updateConsentAuthorizationService: UpdateConsentAuthorizationService,
+    private activatedRoute: ActivatedRoute,
+    private sessionService: SessionService
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.authorizationSessionId = this.activatedRoute.parent.snapshot.paramMap.get('authId');
+    this.wrongPassword = this.activatedRoute.snapshot.queryParamMap.get('wrong') === 'true';
+    this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
+    console.log('REDIRECT CODE: ', this.redirectCode);
+  }
 
-  onSubmit(pin: string): void {}
+  submit(pin: string): void {
+    this.updateConsentAuthorizationService
+      .embeddedUsingPOST(
+        this.authorizationSessionId,
+        StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
+        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
+        this.redirectCode,
+        { scaAuthenticationData: { PSU_PASSWORD: pin } },
+        'response'
+      )
+      .subscribe(res => {
+        // redirect to the provided location
+        this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        console.log('REDIRECTING TO: ' + res.headers.get(ApiHeaders.LOCATION));
+        window.location.href = res.headers.get(ApiHeaders.LOCATION);
+      });
+  }
 }

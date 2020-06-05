@@ -88,11 +88,16 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
     }
 
     @Override
+    public ResponseEntity<LoginResponse> loginForPaymentApproval(PsuAuthBody body, UUID xRequestId, String redirectCode, UUID authorizationId) {
+        return loginForApproval(body, xRequestId, redirectCode, authorizationId);
+    }
+
+    @Override
     public ResponseEntity<Void> registration(PsuAuthBody psuAuthDto, UUID xRequestID) {
         psuAuthService.createPsuIfNotExist(psuAuthDto.getLogin(), psuAuthDto.getPassword());
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add(LOCATION, authConfig.getRedirect().getConsentLogin().getPage());
+        responseHeaders.add(LOCATION, authConfig.getRedirect().getConsentLogin().getPage().getForAis());
         return new ResponseEntity<>(responseHeaders, HttpStatus.CREATED);
     }
 

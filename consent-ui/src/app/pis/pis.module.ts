@@ -8,6 +8,11 @@ import { EnterTanPageComponent } from './enter-tan-page/enter-tan-page.component
 import { SelectScaPageComponent } from './select-sca-page/select-sca-page.component';
 import { ToAspspPageComponent } from './to-aspsp-page/to-aspsp-page.component';
 import { ResultPageComponent } from './result-page/result-page.component';
+import { LoginComponent } from './login/login.component';
+import { EntryPagePaymentsComponent } from './entry-page-payments/entry-page-payments.component';
+import { PaymentsConsentReviewComponent } from './payments-consent-review/payments-consent-review.component';
+import { ConsentPaymentAccessSelectionComponent } from './consent-payment-access-selection/consent-payment-access-selection.component';
+import { DynamicInputsComponent } from './dynamic-inputs/dynamic-inputs.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +22,12 @@ import { ResultPageComponent } from './result-page/result-page.component';
     EnterTanPageComponent,
     SelectScaPageComponent,
     ToAspspPageComponent,
-    ResultPageComponent
+    ResultPageComponent,
+    LoginComponent,
+    EntryPagePaymentsComponent,
+    PaymentsConsentReviewComponent,
+    ConsentPaymentAccessSelectionComponent,
+    DynamicInputsComponent
   ],
   imports: [SharedModule, PisRoutingModule]
 })
