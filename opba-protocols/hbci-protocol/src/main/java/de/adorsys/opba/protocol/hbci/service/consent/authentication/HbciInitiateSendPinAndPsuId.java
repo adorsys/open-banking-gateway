@@ -7,6 +7,7 @@ import de.adorsys.multibanking.domain.response.UpdateAuthResponse;
 import de.adorsys.multibanking.domain.spi.OnlineBankingService;
 import de.adorsys.multibanking.hbci.HbciBanking;
 import de.adorsys.multibanking.hbci.model.HbciConsent;
+import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import lombok.RequiredArgsConstructor;
@@ -66,5 +67,10 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
         request.setBank(bank);
         UpdateAuthResponse response =
                 onlineBankingService.getStrongCustomerAuthorisation().updatePsuAuthentication(request);
+
+        ContextUtil.getAndUpdateContext(
+                execution,
+                (HbciContext ctx) -> ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData())
+        );
     }
 }

@@ -3,7 +3,6 @@ package de.adorsys.opba.protocol.hbci.service.protocol.ais;
 import de.adorsys.multibanking.domain.Bank;
 import de.adorsys.multibanking.domain.BankAccess;
 import de.adorsys.multibanking.domain.BankApiUser;
-import de.adorsys.multibanking.domain.Credentials;
 import de.adorsys.multibanking.domain.request.TransactionRequest;
 import de.adorsys.multibanking.domain.response.AccountInformationResponse;
 import de.adorsys.multibanking.domain.spi.OnlineBankingService;
@@ -60,14 +59,8 @@ public class HbciAccountList extends ValidatedExecution<AccountListHbciContext> 
     protected void doRealExecution(DelegateExecution execution, AccountListHbciContext context) {
         Bank bank = new Bank();
         bank.setBankCode(MOCK_BANK_CODE);
-        HbciConsent consent = new HbciConsent();
-        consent.setHbciProduct(new HBCIProduct("product", "300"));
-        consent.setCredentials(Credentials.builder()
-                .userId(context.getPsuId())
-                .pin(context.getPsuPin())
-                .build()
-        );
 
+        HbciConsent consent = context.getHbciDialogConsent();
         TransactionRequest<LoadAccounts> request = create(new LoadAccounts(), new BankApiUser(), new BankAccess(), bank, consent);
         AccountInformationResponse response = onlineBankingService.loadBankAccounts(request);
 
@@ -77,10 +70,17 @@ public class HbciAccountList extends ValidatedExecution<AccountListHbciContext> 
                     (AccountListHbciContext ctx) -> ctx.setResponse(
                             new AisListAccountsResult(response.getBankAccounts()))
             );
+
             return;
         }
 
-        ContextUtil.getAndUpdateContext(execution, (HbciContext ctx) -> ctx.setTanChallengeRequired(true));
+        ContextUtil.getAndUpdateContext(
+                execution,
+                (HbciContext ctx) -> {
+                    ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
+                    ctx.setTanChallengeRequired(true);
+                }
+        );
     }
 
     public static <T extends AbstractTransaction> TransactionRequest<T> create(T transaction,
