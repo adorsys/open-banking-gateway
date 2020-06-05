@@ -1,0 +1,55 @@
+<div class="card">
+  <div class="card-body">
+    <section>
+      <h2>Access permission for accounts in {{ aspspName }}</h2>
+      <p class="text-secondary">
+        Review an account access level for <strong>{{ finTechName }}</strong>
+      </p>
+    </section>
+    <ng-container [ngSwitch]="aisConsent.level">
+      <section>
+        <ng-container *ngSwitchCase="accountAccessLevel.ALL_ACCOUNTS">
+          <div class="flex-container">
+            <img src="assets/icons/icons8-mark_view_as_non_hidden.png" alt="accounts" class="icons" />
+            <p>All your accounts will be visible</p>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="accountAccessLevel.ALL_ACCOUNTS_WITH_BALANCES">
+          <div class="flex-container">
+            <img src="assets/icons/icons8-mark_view_as_non_hidden.png" alt="accounts" class="icons" />
+            <p>All your accounts with balances will be visible</p>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="accountAccessLevel.FINE_GRAINED">
+          <div class="flex-container">
+            <img src="assets/icons/icons8-mark_view_as_non_hidden.png" alt="accounts" class="icons" />
+            <p>Dedicated access to <strong>account details and transactions</strong> for following accounts IBAN's:</p>
+          </div>
+          <div class="ml-4">
+            <ul class="list-group ml-5 mb-4">
+              <li *ngFor="let account of aisConsent.consent.access.accounts">
+                <strong>{{ account }}</strong>
+              </li>
+            </ul>
+          </div>
+        </ng-container>
+        <div class="flex-container">
+          <img src="assets/icons/icons8-approval.png" alt="approval" class="icons" />
+          <p>
+            The consent will be valid until <strong>{{ aisConsent.consent.validUntil }}</strong>
+          </p>
+        </div>
+        <div class="flex-container">
+          <img src="assets/icons/icons8-last_24_hours.png" alt="24_hours" class="icons" />
+          <p>
+            The consent can be used <strong>{{ aisConsent.consent.frequencyPerDay }} times per day </strong>
+          </p>
+        </div>
+      </section>
+    </ng-container>
+    <div class="form-group d-flex flex-row justify-content-lg-between">
+      <button id="do_back" class="btn md-6 w-100 mr-sm-2 mr-md-3 btn-outline-back" (click)="onBack()">Back</button>
+      <button id="do_submit" type="button" class="btn md-6 w-100 btn-primary" (click)="onConfirm()">Confirm</button>
+    </div>
+  </div>
+</div>

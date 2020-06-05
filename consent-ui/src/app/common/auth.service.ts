@@ -26,6 +26,17 @@ export class AuthService {
     );
   }
 
+  public userLoginForPayment(authorizationId: string, redirectCode: string, credentials: PsuAuthBody) {
+    const xRequestID = uuid.v4();
+    return this.psuAuthForConsentApproval.loginForPaymentApproval(
+      xRequestID,
+      authorizationId,
+      redirectCode,
+      credentials,
+      'response'
+    );
+  }
+
   public userLogin(credentials: PsuAuthBody) {
     const xRequestID = uuid.v4();
     return this.psuAuthService.login(xRequestID, credentials, 'response');

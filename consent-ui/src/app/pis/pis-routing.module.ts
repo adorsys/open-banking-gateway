@@ -7,6 +7,9 @@ import { EnterTanPageComponent } from './enter-tan-page/enter-tan-page.component
 import { SelectScaPageComponent } from './select-sca-page/select-sca-page.component';
 import { ToAspspPageComponent } from './to-aspsp-page/to-aspsp-page.component';
 import { ResultPageComponent } from './result-page/result-page.component';
+import { LoginComponent } from "./login/login.component";
+import { EntryPagePaymentsComponent } from "./entry-page-payments/entry-page-payments.component";
+import {PaymentsConsentReviewComponent} from "./payments-consent-review/payments-consent-review.component";
 
 const routes: Routes = [
   {
@@ -14,11 +17,27 @@ const routes: Routes = [
     component: EntryPageComponent,
     children: [
       { path: '', component: PaymentInitiateComponent },
-      { path: EnterPinPageComponent.ROUTE, component: EnterPinPageComponent },
       { path: EnterTanPageComponent.ROUTE, component: EnterTanPageComponent },
       { path: SelectScaPageComponent.ROUTE, component: SelectScaPageComponent },
       { path: ToAspspPageComponent.ROUTE, component: ToAspspPageComponent },
-      { path: ResultPageComponent.ROUTE, component: ResultPageComponent }
+      { path: ResultPageComponent.ROUTE, component: ResultPageComponent },
+      { path: LoginComponent.ROUTE, component: LoginComponent },
+      {
+        path: EntryPagePaymentsComponent.ROUTE,
+        children: [
+          { path: '', component: EntryPagePaymentsComponent },
+          { path: PaymentsConsentReviewComponent.ROUTE, component: PaymentsConsentReviewComponent }
+        ]
+      },
+      { path: ResultPageComponent.ROUTE, component: ResultPageComponent },
+      {
+        path: 'authenticate',
+        component: EnterPinPageComponent
+      },
+      {
+        path: 'report-sca-result',
+        component: ResultPageComponent
+      }
     ]
   }
 ];

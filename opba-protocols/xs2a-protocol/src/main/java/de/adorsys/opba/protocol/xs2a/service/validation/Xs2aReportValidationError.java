@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.validation;
 
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
@@ -38,16 +39,17 @@ public class Xs2aReportValidationError implements JavaDelegate {
         current.setLastRedirection(redirectionTarget);
         current.setViolations(violations.getViolations());
 
+        ProtocolUrlsConfiguration.UrlSet urlSet = ProtocolAction.SINGLE_PAYMENT.equals(current.getAction())
+                ? urlsConfiguration.getPis() : urlsConfiguration.getAis();
+
         eventPublisher.publishEvent(
                 ValidationProblem.builder()
                         .processId(current.getSagaId())
                         .executionId(execution.getId())
                         .provideMoreParamsDialog(
                                 ContextUtil.evaluateSpelForCtx(
-                                        urlsConfiguration.getCommon().getParameters().getProvideMore(),
-                                        execution,
-                                        current,
-                                        URI.class)
+                                        urlSet.getParameters().getProvideMore(), execution, current, URI.class
+                                )
                         )
                         .issues(current.getViolations())
                         .build()
