@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ValidatorService } from 'angular-iban';
 
 @Component({
   selector: 'app-initiate',
@@ -15,16 +16,24 @@ export class InitiateComponent implements OnInit {
   ngOnInit() {
     this.paymentForm = this.formBuilder.group({
       name: ['', Validators.required],
-      ibanDebitor: ['', Validators.required],
-      ibanCreditor: ['', Validators.required],
-      amount: ['', [Validators.required, Validators.min(0)]],
+      debitorIban: ['', [ValidatorService.validateIban, Validators.required]],
+      creditorIban: ['', [ValidatorService.validateIban, Validators.required]],
+      amount: ['', [Validators.pattern('^[1-9]\\d*(\\.\\d{1,2})?$'), Validators.required]],
       purpose: ['']
     });
   }
 
   onConfirm() {
-    console.log(this.paymentForm.get('pin').value);
+    console.log(this.paymentForm.getRawValue());
   }
 
   onDeny() {}
+
+  get debitorIban() {
+    return this.paymentForm.get('debitorIban');
+  }
+
+  get creditorIban() {
+    return this.paymentForm.get('creditorIban');
+  }
 }
