@@ -15,7 +15,13 @@ fdescribe('ConsentSharingComponent', () => {
   let component: ConsentSharingComponent;
   let consentAuthorizationService: ConsentAuthorizationService;
   let fixture: ComponentFixture<ConsentSharingComponent>;
-  let consentAuthorizationServiceSpy;
+  const MockWindow = {
+    location: {
+      _href: '',
+      set href(url: string) { this._href = url },
+      get href() { return this._href }
+    }
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -42,6 +48,8 @@ fdescribe('ConsentSharingComponent', () => {
     component = fixture.componentInstance;
     consentAuthorizationService = fixture.debugElement.injector.get(ConsentAuthorizationService);
     fixture.detectChanges();
+    const setHrefSpy = spyOnProperty(MockWindow.location, 'href', 'set');
+    const getHrefSpy = spyOnProperty(MockWindow.location, 'href', 'get');
   });
 
   it('should create', () => {
@@ -49,8 +57,12 @@ fdescribe('ConsentSharingComponent', () => {
   });
 
   it('should call denyUsingPOST', () => {
-    consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'denyUsingPOST').and.returnValue(of());
+    const consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'denyUsingPOST').and.returnValue(of());
     component.onDeny();
     expect(consentAuthorizationServiceSpy).toHaveBeenCalled();
   });
+
+  it('should call onConfirm', () => {
+
+  })
 });
