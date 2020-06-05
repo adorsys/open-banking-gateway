@@ -15,3 +15,13 @@ api:
         PIS: "/v1/banking/pis"
         BANK_SEARCH: "/v1/banking/search"
         CONFIRM_CONSENT: "/v1/banking/consents"
+
+# As there is no consent UI running - we need to call server directly
+protocol:
+  gateway-base-url: http://localhost:8085
+  xs2a:
+    urls:
+      ais:
+        web-hooks:
+          ok:  ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+          nok: ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
