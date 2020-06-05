@@ -27,7 +27,9 @@ facade:
     redirect:
       # Redirection URL for consent association
       consent-login:
-        page: http://localhost:1010/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
+        page:
+          for-ais: http://localhost:1010/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
+          for-pis: http://localhost:1010/pis/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
         password:
           byte-size: 8
     # Consent authorization cookie key path
