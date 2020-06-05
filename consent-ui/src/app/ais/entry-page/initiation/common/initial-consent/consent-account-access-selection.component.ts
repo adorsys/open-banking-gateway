@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthConsentState } from '../../../../common/dto/auth-state';
 import { SessionService } from '../../../../../common/session.service';
-import { StubUtil } from '../../../../common/stub-util';
+import { StubUtil } from '../../../../../common/utils/stub-util';
 import { AccountAccessLevel, AisConsentToGrant } from '../../../../common/dto/ais-consent';
 import { ConsentUtil } from '../../../../common/consent-util';
 import { ConsentAuthorizationService, DenyRequest } from '../../../../../api';

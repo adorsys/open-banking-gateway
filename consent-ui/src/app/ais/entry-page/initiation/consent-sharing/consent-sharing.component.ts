@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SessionService } from '../../../../common/session.service';
 import { ConsentAuthorizationService, DenyRequest } from '../../../../api';
 import { ApiHeaders } from '../../../../api/api.headers';
-import { StubUtil } from '../../../common/stub-util';
+import { StubUtil } from '../../../../common/utils/stub-util';
 import { AccountAccessLevel, AisConsentToGrant } from '../../../common/dto/ais-consent';
 import { ConsentUtil } from '../../../common/consent-util';
 

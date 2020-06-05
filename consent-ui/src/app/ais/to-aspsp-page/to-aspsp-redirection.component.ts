@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { AisConsentToGrant } from '../common/dto/ais-consent';
-import { StubUtil } from '../common/stub-util';
+import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+
+import { AisConsentToGrant } from '../common/dto/ais-consent';
+import { StubUtil } from '../../common/utils/stub-util';
 import { SessionService } from '../../common/session.service';
 import { ConsentUtil } from '../common/consent-util';
 import { ApiHeaders } from '../../api/api.headers';
 import { ConsentAuthorizationService, DenyRequest } from '../../api';
-import { Location } from '@angular/common';
+import { Action } from '../../common/utils/action';
 
 @Component({
   selector: 'consent-app-to-aspsp-redirection',
@@ -18,6 +20,7 @@ export class ToAspspRedirectionComponent implements OnInit {
 
   public finTechName = StubUtil.FINTECH_NAME;
   public aspspName = StubUtil.ASPSP_NAME;
+  public account = Action.ACCOUNT;
 
   redirectTo: string;
 
@@ -37,10 +40,6 @@ export class ToAspspRedirectionComponent implements OnInit {
       this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
       this.loadRedirectUri();
     });
-  }
-
-  onConfirm() {
-    window.location.href = this.redirectTo;
   }
 
   private loadRedirectUri() {
