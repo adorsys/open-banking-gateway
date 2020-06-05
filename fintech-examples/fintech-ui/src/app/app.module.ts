@@ -1,4 +1,4 @@
-import { HTTP_INTERCEPTORS, HttpClientXsrfModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -18,6 +18,8 @@ import { NavbarComponent } from './common/navbar/navbar.component';
 import { DocumentCookieService } from './services/document-cookie.service';
 import { RedirectAfterConsentDeniedComponent } from './redirect-after-consent-denied/redirect-after-consent-denied.component';
 import { SessionExpiredComponent } from './session-expired/session-expired.component';
+import { SimpleTimer } from 'ng2-simple-timer';
+import { NgHttpLoaderModule } from 'ng-http-loader';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -29,13 +31,21 @@ export function apiConfigFactory(): Configuration {
 }
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, RedirectAfterConsentComponent,
-      NavbarComponent, RedirectAfterConsentDeniedComponent, SessionExpiredComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    RedirectAfterConsentComponent,
+    NavbarComponent,
+    RedirectAfterConsentDeniedComponent,
+    SessionExpiredComponent
+  ],
   imports: [
     AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
     ShareModule,
+    HttpClientModule,
+    NgHttpLoaderModule.forRoot(),
     HttpClientXsrfModule.withOptions({
       cookieName: 'XSRF-TOKEN',
       headerName: 'X-XSRF-TOKEN'
@@ -43,6 +53,7 @@ export function apiConfigFactory(): Configuration {
     ApiModule.forRoot(apiConfigFactory)
   ],
   providers: [
+    SimpleTimer,
     AuthGuard,
     ErrorService,
     DocumentCookieService,

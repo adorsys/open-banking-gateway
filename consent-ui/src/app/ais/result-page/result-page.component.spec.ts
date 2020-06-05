@@ -1,9 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ResultPageComponent } from './result-page.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+
+import { ResultPageComponent } from './result-page.component';
 import { StubUtilTests } from '../common/stub-util-tests';
 
 describe('ResultPageComponent', () => {
@@ -13,6 +14,7 @@ describe('ResultPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ResultPageComponent],
+      schemas: [NO_ERRORS_SCHEMA],
       imports: [RouterTestingModule, HttpClientTestingModule],
       providers: [
         {

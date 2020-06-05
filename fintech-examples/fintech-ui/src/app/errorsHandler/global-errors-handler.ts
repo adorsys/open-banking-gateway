@@ -2,7 +2,7 @@ import { ErrorHandler, Injectable, Injector, NgZone } from '@angular/core';
 import { ErrorService } from './error.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { InfoService } from './info/info.service';
-import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -11,15 +11,13 @@ export class GlobalErrorHandler implements ErrorHandler {
   handleError(error) {
     const errorService = this.injector.get(ErrorService);
     const infoService = this.injector.get(InfoService);
-    const authService = this.injector.get(AuthService);
 
-    let message = 'Something went wrong';
+    let message = null;
 
     if (error instanceof HttpErrorResponse) {
-      // Server Error
       if (error.status === 401) {
-        authService.logout();
-        message = 'Please enter a valid username or password';
+        console.log('status was 401');
+        this.router.navigate(['/session-expired']);
       } else {
         message = errorService.getServerMessage(error);
       }
@@ -29,10 +27,16 @@ export class GlobalErrorHandler implements ErrorHandler {
     }
 
     this.zone.run(() => {
-      infoService.openFeedback(message, {
-        severity: 'error',
-        duration: 60000
-      });
+      if (message !== null) {
+        infoService.openFeedback(message, {
+          severity: 'error',
+          duration: 60000
+        });
+      }
     });
+  }
+
+  get router(): Router {
+    return this.injector.get(Router);
   }
 }

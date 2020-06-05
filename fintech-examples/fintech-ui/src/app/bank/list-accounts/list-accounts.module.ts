@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ListAccountsRoutingModule } from './list-accounts-routing.module';
@@ -9,6 +9,7 @@ import { RedirectCardComponent } from '../redirect-card/redirect-card.component'
 
 @NgModule({
   declarations: [ListAccountsComponent, ListTransactionsComponent, RedirectPageComponent, RedirectCardComponent],
-  imports: [CommonModule, ListAccountsRoutingModule]
+  imports: [CommonModule, ListAccountsRoutingModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ListAccountsModule {}

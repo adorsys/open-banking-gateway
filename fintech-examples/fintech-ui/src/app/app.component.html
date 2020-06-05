@@ -1,2 +1,6 @@
 <app-navbar></app-navbar>
 <router-outlet></router-outlet>
+<ng-http-loader spinner="sk-double-bounce">
+  [backdrop]="false" [backgroundColor]="'#ff0000'" [debounceDelay]="100" [extraDuration]="300" [minDuration]="300"
+  [opacity]=".6"
+</ng-http-loader>
