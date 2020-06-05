@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {StubUtil} from "../../ais/common/stub-util";
+import {StubUtil} from "../../common/utils/stub-util";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {AuthConsentState} from "../../ais/common/dto/auth-state";
 import {AccountAccessLevel, AisConsentToGrant} from "../../ais/common/dto/ais-consent";
