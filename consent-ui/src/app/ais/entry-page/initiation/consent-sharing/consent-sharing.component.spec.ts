@@ -1,9 +1,4 @@
-import {
-  async,
-  ComponentFixture,
-  TestBed
-} from '@angular/core/testing';
-
+import { async,ComponentFixture,  TestBed } from '@angular/core/testing';
 import {ConsentSharingComponent} from './consent-sharing.component';
 import {ActivatedRoute} from '@angular/router';
 import {StubUtilTests} from '../../../common/stub-util-tests';
@@ -39,7 +34,7 @@ describe('ConsentSharingComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ConsentSharingComponent);
     component = fixture.componentInstance;
-    consentAuthorizationService = fixture.debugElement.injector.get(ConsentAuthorizationService);
+    consentAuthorizationService = TestBed.get(ConsentAuthorizationService);
     fixture.detectChanges();
   });
 
