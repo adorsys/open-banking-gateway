@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.hbci.context;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableMap;
+import de.adorsys.multibanking.domain.Bank;
 import de.adorsys.multibanking.hbci.model.HbciConsent;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
@@ -44,6 +45,11 @@ public class HbciContext extends BaseContext {
      * Indicates whether TAN challenge was required.
      */
     private boolean tanChallengeRequired;
+
+    /**
+     * HBCI bank profile.
+     */
+    private Bank bank;
 
     /**
      * HBCI dialog requires this entity to be persisted (i.e. for systemDialogId). It contains sensitive data like PIN/TAN,
