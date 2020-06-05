@@ -1,8 +1,11 @@
 package de.adorsys.opba.fintech.server;
 
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
-import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
+import de.adorsys.opba.fintech.impl.database.entities.ConsentEntity;
+import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
+import de.adorsys.opba.fintech.impl.database.repositories.ConsentRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
+import de.adorsys.opba.fintech.impl.tppclients.ConsentType;
 import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import de.adorsys.opba.fintech.server.config.TestConfig;
 import de.adorsys.opba.fintech.server.feignmocks.TppAisClientFeignMock;
@@ -26,8 +29,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.TPP_AUTH_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.SERVICE_SESSION_ID;
+import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.TPP_AUTH_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -52,13 +55,16 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     protected TppBankingApiAccountInformationServiceAisApi mockedTppBankingApiAccountInformationServiceAisApi;
 
     @Autowired
+    private ConsentRepository consentRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Test
     @SneakyThrows
     public void testListAccountsFor200() {
         BankProfileTestResult result = getBankProfileTestResult();
-        setServiceSessionId(UUID.randomUUID());
+        createConsent(UUID.randomUUID().toString(), UUID.randomUUID());
         List<String> accountIDs = listAccountsForOk(result);
         assertTrue(accountIDs.containsAll(Arrays.asList(new String[]{"12345", "67890"})));
     }
@@ -89,7 +95,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
                 .location(new URI("affe"))
                 .build();
         BankProfileTestResult result = getBankProfileTestResult();
-        setServiceSessionId(null);
+        createConsent(null, null);
         when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(), any())).thenReturn(accepted);
 
@@ -131,10 +137,14 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     public void loginPostUnAuthorized() {
     }
 
-    protected void setServiceSessionId(UUID serviceSessionId) {
-        SessionEntity session = userRepository.findBySessionCookieValue(restRequestContext.getSessionCookieValue()).get();
-        session.setServiceSessionId(serviceSessionId);
-        session.setConsentConfirmed(true);
-        userRepository.save(session);
+    protected void createConsent(String authId, UUID serviceSessionId) {
+        if (authId == null) {
+            return;
+        }
+        final String bankId = "af062b06-ee6e-45f9-9163-b97320c6881a";
+        UserEntity userEntity = userRepository.findById("peter").get();
+        ConsentEntity consentEntity = new ConsentEntity(ConsentType.AIS, userEntity, bankId, authId, serviceSessionId);
+        consentEntity.setConsentConfirmed(true);
+        consentRepository.save(consentEntity);
     }
 }

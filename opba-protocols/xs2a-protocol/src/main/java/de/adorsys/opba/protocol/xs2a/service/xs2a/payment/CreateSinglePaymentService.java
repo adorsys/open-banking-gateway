@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.payment;
 
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
-import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
+import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
@@ -39,17 +39,17 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
 
     private final PaymentInitiationService pis;
     private final Xs2aValidator validator;
-    private final ProtocolConfiguration configuration;
+    private final ProtocolUrlsConfiguration urlsConfiguration;
     private final CreateConsentErrorSink errorSink;
     private final Extractor extractor;
 
     @Override
     protected void doPrepareContext(DelegateExecution execution, Xs2aPisContext context) {
         context.setRedirectUriOk(
-                ContextUtil.evaluateSpelForCtx(configuration.getRedirect().getConsentAccounts().getOk(), execution, context)
+                ContextUtil.evaluateSpelForCtx(urlsConfiguration.getPis().getWebHooks().getOk(), execution, context)
         );
         context.setRedirectUriNok(
-                ContextUtil.evaluateSpelForCtx(configuration.getRedirect().getConsentAccounts().getNok(), execution, context)
+                ContextUtil.evaluateSpelForCtx(urlsConfiguration.getPis().getWebHooks().getNok(), execution, context)
         );
     }
 

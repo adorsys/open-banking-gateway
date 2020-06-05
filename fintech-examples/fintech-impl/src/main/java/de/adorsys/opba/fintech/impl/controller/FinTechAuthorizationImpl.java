@@ -4,12 +4,15 @@ import de.adorsys.opba.fintech.api.model.generated.InlineResponse200;
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.api.model.generated.UserProfile;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAuthorizationApi;
-import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
-import de.adorsys.opba.fintech.impl.properties.CookieConfigProperties;
+import de.adorsys.opba.fintech.impl.database.entities.ConsentEntity;
+import de.adorsys.opba.fintech.impl.database.entities.LoginEntity;
+import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
+import de.adorsys.opba.fintech.impl.database.repositories.ConsentRepository;
+import de.adorsys.opba.fintech.impl.database.repositories.LoginRepository;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.ConsentService;
 import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
-import de.adorsys.opba.fintech.impl.tppclients.SessionCookieType;
+import de.adorsys.opba.fintech.impl.service.SessionLogicService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,50 +35,65 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
     private final RedirectHandlerService redirectHandlerService;
     private final RestRequestContext restRequestContext;
     private final ConsentService consentService;
-    private final CookieConfigProperties cookieConfigProperties;
+    private final LoginRepository loginRepository;
+    private final ConsentRepository consentRepository;
+    private final SessionLogicService sessionLogicService;
 
     @Override
     public ResponseEntity<InlineResponse200> loginPOST(LoginRequest loginRequest, UUID xRequestID) {
         log.debug("loginPost is called for {}", loginRequest.getUsername());
-        String xsrfToken = UUID.randomUUID().toString();
-        Optional<SessionEntity> optionalUserEntity = authorizeService.login(loginRequest, xsrfToken);
-        if (optionalUserEntity.isPresent()) {
-            SessionEntity sessionEntity = optionalUserEntity.get();
-
-            InlineResponse200 response = new InlineResponse200();
-            UserProfile userProfile = new UserProfile();
-            userProfile.setName(sessionEntity.getLoginUserName());
-            if (!sessionEntity.getLogins().isEmpty()) {
-                userProfile.setLastLogin(sessionEntity.getLastLogin());
-            }
-            response.setUserProfile(userProfile);
-
-            HttpHeaders responseHeaders = authorizeService.modifySessionEntityAndCreateNewAuthHeader(restRequestContext.getRequestId(), optionalUserEntity.get(),
-                    xsrfToken, cookieConfigProperties, SessionCookieType.REGULAR);
-            return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
+        Optional<UserEntity> optionalUserEntity = authorizeService.login(loginRequest);
+        if (!optionalUserEntity.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        UserEntity userEntity = optionalUserEntity.get();
+        InlineResponse200 response = new InlineResponse200();
+        UserProfile userProfile = new UserProfile();
+        userProfile.setName(userEntity.getLoginUserName());
+
+        Iterator<LoginEntity> loginEntitiesIterator = loginRepository.findByUserEntityOrderByLoginTimeDesc(userEntity).iterator();
+        if (loginEntitiesIterator.hasNext()) {
+            userProfile.setLastLogin(loginEntitiesIterator.next().getLoginTime());
+            log.info("last login for user {} was {}", userEntity.getLoginUserName(), userProfile.getLastLogin());
+        } else {
+            log.info("this was very first login for user {}", userEntity.getLoginUserName());
+        }
+        response.setUserProfile(userProfile);
+        loginRepository.save(new LoginEntity(userEntity));
+
+        HttpHeaders responseHeaders = sessionLogicService.login(userEntity);
+        return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Void> fromConsentGET(String authId, String okOrNotokString, String finTechRedirectCode, UUID xRequestID, String xsrfToken) {
         OkOrNotOk okOrNotOk = OkOrNotOk.valueOf(okOrNotokString);
-        log.info("fromConsentGET path is \"/v1/{}/fromConsent/{}\"", authId, okOrNotOk);
-        if (!authorizeService.isAuthorized()) {
+        if (!sessionLogicService.isRedirectAuthorized()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         if (okOrNotOk.equals(OkOrNotOk.OK) && consentService.confirmConsent(authId, xRequestID)) {
-                authorizeService.getSession().setConsentConfirmed(true);
+
+            Optional<ConsentEntity> consent = consentRepository.findByAuthId(authId);
+
+            if (!consent.isPresent()) {
+                throw new RuntimeException("consent for authid " + authId + " can not be found");
+            }
+
+            log.debug("consent with authId {} is now valid", authId);
+            consent.get().setConsentConfirmed(true);
+            consentRepository.save(consent.get());
         }
-        return redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk);
+        return sessionLogicService.addSessionMaxAgeToHeader(
+                redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk));
     }
 
     @Override
     public ResponseEntity<Void> logoutPOST(UUID xRequestID, String xsrfToken) {
-        log.info("logoutPost is called");
+        log.debug("logoutPost is called for {}", restRequestContext);
 
-        if (!authorizeService.isAuthorized()) {
+        if (!sessionLogicService.isSessionAuthorized()) {
             log.warn("logoutPOST failed: user is not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }

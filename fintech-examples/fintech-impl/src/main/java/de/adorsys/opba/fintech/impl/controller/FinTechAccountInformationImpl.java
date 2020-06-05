@@ -5,7 +5,7 @@ import de.adorsys.opba.fintech.api.model.generated.TransactionsResponse;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAccountInformationApi;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.service.AccountService;
-import de.adorsys.opba.fintech.impl.service.AuthorizeService;
+import de.adorsys.opba.fintech.impl.service.SessionLogicService;
 import de.adorsys.opba.fintech.impl.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,20 +21,19 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class FinTechAccountInformationImpl implements FinTechAccountInformationApi {
 
-    private final AuthorizeService authorizeService;
+    private final SessionLogicService sessionLogicService;
     private final AccountService accountService;
     private final TransactionService transactionService;
 
     @Override
     public ResponseEntity<AccountList> aisAccountsGET(String bankId, UUID xRequestID, String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
-        if (!authorizeService.isAuthorized()) {
+        if (!sessionLogicService.isSessionAuthorized()) {
             log.warn("aisAccountsGET failed: user is not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        SessionEntity sessionEntity = authorizeService.getSession();
-
-        return accountService.listAccounts(sessionEntity, fintechRedirectURLOK, fintechRedirectURLNOK, bankId);
+        SessionEntity sessionEntity = sessionLogicService.getSession();
+        return sessionLogicService.addSessionMaxAgeToHeader(accountService.listAccounts(sessionEntity, fintechRedirectURLOK, fintechRedirectURLNOK, bankId));
     }
 
     @Override
@@ -42,13 +41,13 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
                                                                    String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK,
                                                                    LocalDate dateFrom, LocalDate dateTo,
                                                                    String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
-        if (!authorizeService.isAuthorized()) {
+        if (!sessionLogicService.isSessionAuthorized()) {
             log.warn("aisTransactionsGET failed: user is not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        SessionEntity sessionEntity = authorizeService.getSession();
-
-        return transactionService.listTransactions(sessionEntity, fintechRedirectURLOK, fintechRedirectURLNOK,
-                bankId, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList);
+        SessionEntity sessionEntity = sessionLogicService.getSession();
+        return sessionLogicService.addSessionMaxAgeToHeader(
+                transactionService.listTransactions(sessionEntity, fintechRedirectURLOK, fintechRedirectURLNOK,
+                bankId, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList));
     }
 }

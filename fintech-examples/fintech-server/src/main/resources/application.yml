@@ -3,14 +3,14 @@ server:
   controller:
     sessioncookie:
       secure: false
-      maxAge: 300
+      maxAge: 600
       httpOnly: true
       path: /
       sameSite: Strict
 
     redirectcookie:
       secure: false
-      maxAge: 1800
+      maxAge: 1200
       httpOnly: true
       path: /fintech-api-proxy/v1/{auth-id}
       sameSite: Lax
@@ -26,11 +26,6 @@ tpp:
   # url: http://localhost:18085
   fintechID: MY-SUPER-FINTECH-ID
   serviceSessionPassword: qwerty
-
-mock:
-  tppais:
-    listaccounts: false
-    listtransactions: false
 
 spring:
   datasource:
