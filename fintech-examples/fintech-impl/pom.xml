@@ -21,6 +21,10 @@
             ${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_ais.yml
         </tpp-ais-location>
         <tpp-ais-prefix>de.adorsys.opba.tpp.ais</tpp-ais-prefix>
+        <tpp-pis-location>
+            ${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_pis.yml
+        </tpp-pis-location>
+        <tpp-pis-prefix>de.adorsys.opba.tpp.pis</tpp-pis-prefix>
         <open-banking-api-spec-location>
             ${main.basedir}/opba-banking-rest-api/src/main/resources/static/tpp_banking_api_token.yml
         </open-banking-api-spec-location>
@@ -224,6 +228,37 @@
                                 <modelPackage>${tpp-ais-prefix}.api.model.generated</modelPackage>
                                 <apiPackage>${tpp-ais-prefix}.api.resource.generated</apiPackage>
                                 <invokerPackage>${tpp-ais-prefix}.client.generated</invokerPackage>
+                                <interfaceOnly>true</interfaceOnly>
+                                <skipOverwrite>true</skipOverwrite>
+                                <dateLibrary>java8</dateLibrary>
+                                <java8>false</java8>
+                                <useTags>true</useTags>
+                                <defaultInterfaces>false</defaultInterfaces>
+                                <implicitHeaders>false</implicitHeaders>
+                                <generateForOpenFeign>true</generateForOpenFeign>
+                                <library>spring-cloud</library>
+                                <swaggerDocketConfig>false</swaggerDocketConfig>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>pis</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${tpp-pis-location}</inputSpec>
+                            <language>spring</language>
+                            <output>${project.build.directory}/generated-sources/open-api/</output>
+                            <generateApiTests>false</generateApiTests>
+                            <generateModelTests>false</generateModelTests>
+                            <configOptions>
+                                <sourceFolder>src/main/java</sourceFolder>
+                                <basePackage>${tpp-pis-prefix}.api.generated</basePackage>
+                                <configPackage>${tpp-pis-prefix}.api.config.generated</configPackage>
+                                <modelPackage>${tpp-pis-prefix}.api.model.generated</modelPackage>
+                                <apiPackage>${tpp-pis-prefix}.api.resource.generated</apiPackage>
+                                <invokerPackage>${tpp-pis-prefix}.client.generated</invokerPackage>
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipOverwrite>true</skipOverwrite>
                                 <dateLibrary>java8</dateLibrary>
