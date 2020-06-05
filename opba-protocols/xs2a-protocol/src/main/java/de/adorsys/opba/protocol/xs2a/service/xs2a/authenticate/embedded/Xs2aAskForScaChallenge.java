@@ -1,7 +1,9 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.embedded;
 
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
+import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.RedirectExecutor;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +25,11 @@ public class Xs2aAskForScaChallenge extends ValidatedExecution<Xs2aContext> {
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        redirectExecutor.redirect(execution, context, urls -> urls.getCommon().getParameters().getReportScaResult());
+        redirectExecutor.redirect(execution, context, urls -> {
+            ProtocolUrlsConfiguration.UrlSet urlSet = ProtocolAction.SINGLE_PAYMENT.equals(context.getAction())
+                    ? urls.getPis() : urls.getAis();
+            return urlSet.getParameters().getReportScaResult();
+        });
     }
 
     @Override
