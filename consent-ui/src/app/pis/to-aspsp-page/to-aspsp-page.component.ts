@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StubUtil } from '../../common/utils/stub-util';
+import { Action } from '../../common/utils/action';
 
 @Component({
   selector: 'consent-app-to-aspsp-page',
@@ -11,7 +12,7 @@ export class ToAspspPageComponent implements OnInit {
 
   public finTechName = StubUtil.FINTECH_NAME;
   public aspspName = StubUtil.ASPSP_NAME;
-  public payment = StubUtil.PAYMENT;
+  public payment = Action.PAYMENT;
 
   redirectTo: string;
 
