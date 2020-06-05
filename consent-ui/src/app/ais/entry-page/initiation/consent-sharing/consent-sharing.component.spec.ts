@@ -11,7 +11,7 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {of} from "rxjs";
 import {ConsentAuthorizationService} from "../../../../api";
 
-fdescribe('ConsentSharingComponent', () => {
+describe('ConsentSharingComponent', () => {
   let component: ConsentSharingComponent;
   let consentAuthorizationService: ConsentAuthorizationService;
   let fixture: ComponentFixture<ConsentSharingComponent>;
