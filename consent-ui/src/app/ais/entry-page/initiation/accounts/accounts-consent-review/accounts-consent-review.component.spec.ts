@@ -1,14 +1,22 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { AccountsConsentReviewComponent } from './accounts-consent-review.component';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { of } from 'rxjs';
-import { StubUtilTests } from '../../../../common/stub-util-tests';
-import { SessionService } from '../../../../../common/session.service';
-import { ConsentAuthorizationService } from '../../../../../api';
-import { Location } from '@angular/common';
+import {
+  async,
+  ComponentFixture,
+  TestBed
+} from '@angular/core/testing';
+
+import {AccountsConsentReviewComponent} from './accounts-consent-review.component';
+import {RouterTestingModule} from '@angular/router/testing';
+import {ReactiveFormsModule} from '@angular/forms';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {
+  ActivatedRoute,
+  convertToParamMap
+} from '@angular/router';
+import {of} from 'rxjs';
+import {StubUtilTests} from '../../../../common/stub-util-tests';
+import {SessionService} from "../../../../../common/session.service";
+import {ConsentAuthorizationService} from "../../../../../api";
+import {Location} from "@angular/common";
 
 describe('AccountsConsentReviewComponent', () => {
   let component: AccountsConsentReviewComponent;
@@ -26,11 +34,11 @@ describe('AccountsConsentReviewComponent', () => {
       providers: [
         SessionService,
         ConsentAuthorizationService,
-        { provide: Location, useValue: locationStub },
+        {provide: Location, useValue: locationStub},
         {
           provide: ActivatedRoute,
           useValue: {
-            parent: { parent: { params: of(convertToParamMap({ authId: StubUtilTests.AUTH_ID })) } }
+            parent: {parent: {params: of(convertToParamMap({authId: StubUtilTests.AUTH_ID}))}}
           }
         }
       ]
@@ -55,11 +63,10 @@ describe('AccountsConsentReviewComponent', () => {
   });
 
   it('should call onConfirm', () => {
-    const consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'embeddedUsingPOST').and.returnValue(
-      of()
-    );
+    const consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'embeddedUsingPOST').and.returnValue(of());
     component.onConfirm();
     fixture.detectChanges();
     expect(consentAuthorizationServiceSpy).toHaveBeenCalled();
-  });
+  })
+
 });
