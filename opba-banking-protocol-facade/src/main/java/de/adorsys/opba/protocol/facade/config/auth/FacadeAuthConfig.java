@@ -35,8 +35,17 @@ public class FacadeAuthConfig {
         @Validated
         public static class ConsentLogin {
 
-            @NotBlank
-            private String page;
+            private Page page;
+
+            @Data
+            @Validated
+            public static class Page {
+                @NotBlank
+                private String forAis;
+
+                @NotBlank
+                private String forPis;
+            }
 
             @NotNull
             private PasswordConfig password;
