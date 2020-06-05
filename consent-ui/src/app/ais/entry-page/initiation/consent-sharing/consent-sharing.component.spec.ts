@@ -1,10 +1,10 @@
-import { async,ComponentFixture,  TestBed } from '@angular/core/testing';
+import {async,ComponentFixture,  TestBed} from '@angular/core/testing';
 import {ConsentSharingComponent} from './consent-sharing.component';
 import {ActivatedRoute} from '@angular/router';
 import {StubUtilTests} from '../../../common/stub-util-tests';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {of} from "rxjs";
-import {ConsentAuthorizationService} from "../../../../api";
+import {of} from 'rxjs';
+import {ConsentAuthorizationService} from '../../../../api';
 
 describe('ConsentSharingComponent', () => {
   let component: ConsentSharingComponent;
