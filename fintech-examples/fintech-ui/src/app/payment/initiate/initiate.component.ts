@@ -28,22 +28,27 @@ export class InitiateComponent implements OnInit {
   ngOnInit() {
     this.paymentForm = this.formBuilder.group({
       name: ['peter', Validators.required],
-      ibanDebitor: ['DE38', Validators.required],
-      ibanCreditor: ['DE39', Validators.required],
+      ibanDebitor: ['DE80760700240271232400', Validators.required],
+      ibanCreditor: ['DE80760700240271232400', Validators.required],
       amount: ['12.34', [Validators.required, Validators.min(0)]],
       purpose: ['money test']
     });
   }
 
   onConfirm() {
+    // TODO
+    const okurl = window.location.pathname;
+    const notOkUrl = okurl;
+    console.log('WARNING set ok url to {}', okurl);
+
     const paymentRequest = new ClassSinglePaymentInitiationRequest();
     paymentRequest.amount = this.paymentForm.getRawValue().amount;
     paymentRequest.name = this.paymentForm.getRawValue().name;
     paymentRequest.creditorIban = this.paymentForm.getRawValue().ibanCreditor;
     paymentRequest.debitorIban = this.paymentForm.getRawValue().ibanDebitor;
     paymentRequest.purpose = this.paymentForm.getRawValue().purpose;
-    this.fintechSinglePaymentInitiationService.initiateSinglePayment('', '', '',
-      '', this.bankId, paymentRequest).subscribe(() => console.log('call was done'));
+    this.fintechSinglePaymentInitiationService.initiateSinglePayment('', '', okurl,
+      notOkUrl, this.bankId, paymentRequest).subscribe(() => console.log('call was done'));
   }
 
   onDeny() {
