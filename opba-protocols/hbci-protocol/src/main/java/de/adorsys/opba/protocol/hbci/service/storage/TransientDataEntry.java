@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * Transient data entry that should not be persisted.
+ * Transient data entry that should not be persisted. For HBCI pretty much useless as PIN/TAN must be persisted.
  */
 @Getter
 @RequiredArgsConstructor

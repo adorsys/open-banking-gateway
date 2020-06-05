@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.hbci.service.consent.authentication;
 
-import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.service.HbciRedirectExecutor;
@@ -10,26 +9,21 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
 /**
- * Asks PSU for his SCA challenge result by redirect him to password input page. Suspends process to wait for users' input.
+ * Asks user to select SCA TAN challenge if multiple challenges are available.
  */
-@Service("hbciAskForTanChallenge")
+@Service("hbciAskToSelectTanChallenge")
 @RequiredArgsConstructor
-public class HbciAskForTanChallenge extends ValidatedExecution<HbciContext> {
+public class HbciAskToSelectTanChallenge extends ValidatedExecution<HbciContext> {
 
     private final RuntimeService runtimeService;
     private final HbciRedirectExecutor redirectExecutor;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
-        redirectExecutor.redirect(execution, context, redir -> redir.getParameters().getReportScaResult());
     }
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, HbciContext context) {
-        ContextUtil.getAndUpdateContext(
-            execution,
-            (HbciContext ctx) -> ctx.setPsuTan("mock-challenge")
-        );
         runtimeService.trigger(execution.getId());
     }
 }

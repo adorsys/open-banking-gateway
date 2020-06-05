@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.hbci.entrypoint.ais;
 
 import com.google.common.collect.ImmutableMap;
+import de.adorsys.multibanking.domain.Bank;
 import de.adorsys.opba.protocol.api.ais.ListTransactions;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
@@ -67,6 +68,9 @@ public class HbciListTransactionsEntrypoint implements ListTransactions {
         TransactionListHbciContext context = mapper.map(serviceContext.getRequest());
         context.setAction(ProtocolAction.LIST_TRANSACTIONS);
         extender.extend(context, serviceContext);
+        Bank bank = new Bank();
+        bank.setBankCode(serviceContext.getRequestScoped().aspspProfile().getBic());
+        context.setBank(bank);
         return context;
     }
 
