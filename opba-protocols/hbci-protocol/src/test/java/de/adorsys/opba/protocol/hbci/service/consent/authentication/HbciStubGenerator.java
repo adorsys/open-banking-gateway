@@ -148,7 +148,13 @@ class HbciStubGenerator {
             "BPD.Params_*.TAN2StepPar6.SegHead.code", "BPD.Params_*.DauerSEPANewPar1.ParDauerSEPANew.turnusmonths",
             "BPD.SecMethod.mixing", "BPD.Params_*.TermUebSEPAEditPar1.ParTermUebSEPAEdit.minpretime",
             "BPD.Params_*.SaldoPar5.SegHead.ref", "BPD.Params_*.Template2DPar.minsigs", "BPD.Params_*.DauerSEPAEditPar1.SegHead.code",
-            "BPD.Params_*.UmbPar1.SegHead.version", "BPD.Params_*.PinTanPar2.ParPinTan.pinlen_max", "BPD.Params_*.TAN2StepPar6.secclass"
+            "BPD.Params_*.UmbPar1.SegHead.version", "BPD.Params_*.PinTanPar2.ParPinTan.pinlen_max", "BPD.Params_*.TAN2StepPar6.secclass",
+            "SyncRes.SegHead.seq", "RetSeg_*.RetVal_*.text", "SyncRes.SegHead.code", "RetSeg_*.RetVal.parm",
+            "RetSeg_*.RetVal_*.code", "SyncRes.SegHead.ref", "SyncRes.SegHead.version", "GVRes.TANMediaListRes4.MediaInfo.mediacategory",
+            "GVRes.TANMediaListRes4.SegHead.ref", "GVRes.TANMediaListRes4.MediaInfo.medianame", "GVRes.TANMediaListRes4.MediaInfo.status",
+            "GVRes.TANMediaListRes4.SegHead.version", "GVRes.TANMediaListRes4.SegHead.seq", "GVRes.TANMediaListRes4.SegHead.code",
+            "GVRes.TANMediaListRes4.tanoption", "RetSeg.RetVal.parm", "GVRes_*.KUmsZeitCamtRes1.format", "GVRes_*.KUmsZeitCamtRes1.SegHead.code",
+            "GVRes_*.KUmsZeitCamtRes1.SegHead.seq", "GVRes_*.KUmsZeitCamtRes1.SegHead.ref", "GVRes_*.KUmsZeitCamtRes1.SegHead.version"
     ).stream().flatMap(it -> generateFromStarsRange100(it).stream()).collect(Collectors.toSet());
 
     private static final Set<String> SENSITIVE_FIELDS = ImmutableSet.of(
@@ -160,7 +166,8 @@ class HbciStubGenerator {
             "UPD.KInfo_*.customerid", "UPD.KInfo_*.iban", "UPD.KInfo_*.konto", "UPD.KInfo_*.name1",
             "UPD.UPA.userdata", "UPD.UPA.userid", "UPD.UPA.username", "BPD.Params_*.PinTanPar2.ParPinTan.info_customerid",
             "SigTail.UserSig.pin", "SigTail.UserSig.tan", "TAN2Step6.orderref", "GVRes.KUmsZeitRes5.booked",
-            "BPD.Params_*.PinTanPar2.ParPinTan.info_userid=Kundennummer"
+            "BPD.Params_*.PinTanPar2.ParPinTan.info_userid", "SyncRes.sysid", "UPD.KInfo_*.accountdata",
+            "GVRes_*.KUmsZeitCamtRes1.booked.message", "GVRes_*.KUmsZeitCamtRes1.KTV.iban", "GVRes_*.KUmsZeitCamtRes1.KTV.bic"
     ).stream().flatMap(it -> generateFromStarsRange100(it).stream()).collect(Collectors.toSet());
 
     /**
