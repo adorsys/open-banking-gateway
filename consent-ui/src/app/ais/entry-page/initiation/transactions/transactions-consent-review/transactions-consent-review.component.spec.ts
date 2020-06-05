@@ -8,14 +8,14 @@ import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { StubUtilTests } from '../../../../common/stub-util-tests';
 import { SessionService } from '../../../../../common/session.service';
-import { ConsentAuthorizationService } from '../../../../../api';
+import { UpdateConsentAuthorizationService } from '../../../../../api';
 import { Location } from '@angular/common';
 
 describe('TransactionsConsentReviewComponent', () => {
   let component: TransactionsConsentReviewComponent;
   let fixture: ComponentFixture<TransactionsConsentReviewComponent>;
   let consentAuthorizationServiceSpy;
-  let consentAuthorizationService: ConsentAuthorizationService;
+  let consentAuthorizationService: UpdateConsentAuthorizationService;
 
   const locationStub = {
     back: jasmine.createSpy('onBack')
@@ -27,7 +27,7 @@ describe('TransactionsConsentReviewComponent', () => {
       imports: [RouterTestingModule, ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         SessionService,
-        ConsentAuthorizationService,
+        UpdateConsentAuthorizationService,
         FormBuilder,
         { provide: Location, useValue: locationStub },
         {
@@ -42,7 +42,7 @@ describe('TransactionsConsentReviewComponent', () => {
     fixture = TestBed.createComponent(TransactionsConsentReviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    consentAuthorizationService = fixture.debugElement.injector.get(ConsentAuthorizationService);
+    consentAuthorizationService = fixture.debugElement.injector.get(UpdateConsentAuthorizationService);
   });
 
   it('should create', () => {

@@ -1,16 +1,17 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EntryPagePaymentsComponent } from './entry-page-payments.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
-describe('EntryPagePaymentsComponent', () => {
+describe('EntryPageAccountsComponent', () => {
   let component: EntryPagePaymentsComponent;
   let fixture: ComponentFixture<EntryPagePaymentsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EntryPagePaymentsComponent ]
-    })
-    .compileComponents();
+      declarations: [EntryPagePaymentsComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

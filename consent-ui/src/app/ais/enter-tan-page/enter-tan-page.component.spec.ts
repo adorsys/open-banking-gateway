@@ -7,13 +7,13 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { StubUtilTests } from '../common/stub-util-tests';
-import { ConsentAuthorizationService } from '../../api';
+import { UpdateConsentAuthorizationService } from '../../api';
 import { of } from 'rxjs';
 
 describe('EnterTanPageComponent', () => {
   let component: EnterTanPageComponent;
   let fixture: ComponentFixture<EnterTanPageComponent>;
-  let consentAuthorizationService: ConsentAuthorizationService;
+  let consentAuthorizationService: UpdateConsentAuthorizationService;
   let consentAuthorizationServiceSpy;
 
   beforeEach(async(() => {
@@ -36,7 +36,7 @@ describe('EnterTanPageComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(EnterTanPageComponent);
     component = fixture.componentInstance;
-    consentAuthorizationService = fixture.debugElement.injector.get(ConsentAuthorizationService);
+    consentAuthorizationService = fixture.debugElement.injector.get(UpdateConsentAuthorizationService);
     fixture.detectChanges();
   });
 
