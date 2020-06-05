@@ -1,5 +1,4 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-
 import {TransactionsConsentReviewComponent} from './transactions-consent-review.component';
 import {RouterTestingModule} from '@angular/router/testing';
 import {FormBuilder, ReactiveFormsModule} from '@angular/forms';
@@ -42,7 +41,7 @@ describe('TransactionsConsentReviewComponent', () => {
         fixture = TestBed.createComponent(TransactionsConsentReviewComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        consentAuthorizationService = fixture.debugElement.injector.get(ConsentAuthorizationService);
+        consentAuthorizationService = TestBed.get(ConsentAuthorizationService);
     });
 
     it('should create', () => {
