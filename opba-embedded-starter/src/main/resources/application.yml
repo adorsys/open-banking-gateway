@@ -166,6 +166,9 @@ protocol:
       keystore: sample-qwac.keystore
       password: password
   hbci:
+    adapter:
+      hbci-product: product
+      hbci-version: 300
     urls:
       redirect:
         to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection

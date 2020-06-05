@@ -41,4 +41,9 @@ public interface CurrentBankProfile {
      * ASPSP tries to use preferred SCA approach.
      */
     boolean isTryToUsePreferredApproach();
+
+    /**
+     * Bank identification code.
+     */
+    String getBic();
 }
