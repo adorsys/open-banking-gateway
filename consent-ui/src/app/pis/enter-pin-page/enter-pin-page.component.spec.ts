@@ -2,6 +2,11 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { EnterPinPageComponent } from './enter-pin-page.component';
+import {ReactiveFormsModule} from "@angular/forms";
+import {HttpClientTestingModule} from "@angular/common/http/testing";
+import {RouterTestingModule} from "@angular/router/testing";
+import {ActivatedRoute, convertToParamMap} from "@angular/router";
+import {StubUtilTests} from "../../ais/common/stub-util-tests";
 
 describe('EnterPinPageComponent', () => {
   let component: EnterPinPageComponent;
@@ -10,7 +15,17 @@ describe('EnterPinPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [EnterPinPageComponent],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: { queryParamMap: convertToParamMap({}) },
+            parent: { snapshot: { paramMap: convertToParamMap({ authId: StubUtilTests.AUTH_ID }) } }
+          }
+        }
+      ]
     }).compileComponents();
   }));
 
