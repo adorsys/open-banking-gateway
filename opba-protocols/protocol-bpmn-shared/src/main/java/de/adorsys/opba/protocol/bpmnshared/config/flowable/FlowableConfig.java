@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 public class FlowableConfig {
@@ -45,11 +46,12 @@ public class FlowableConfig {
      * Dedicated ObjectMapper to be used in XS2A protocol.
      */
     @Bean
-    FlowableObjectMapper mapper() {
+    FlowableObjectMapper mapper(List<? extends JacksonMixin> mixins) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mixins.forEach(it -> mapper.addMixIn(it.getType(), it.getMixin()));
         // Ignoring getters and setters as we are using 'rich' domain model:
         mapper.setVisibility(mapper.getSerializationConfig().getDefaultVisibilityChecker()
                 .withFieldVisibility(JsonAutoDetect.Visibility.ANY)

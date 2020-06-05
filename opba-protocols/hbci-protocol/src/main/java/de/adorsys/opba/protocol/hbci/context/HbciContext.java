@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.hbci.context;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableMap;
+import de.adorsys.multibanking.hbci.model.HbciConsent;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.hbci.service.storage.TransientDataEntry;
@@ -43,6 +44,13 @@ public class HbciContext extends BaseContext {
      * Indicates whether TAN challenge was required.
      */
     private boolean tanChallengeRequired;
+
+    /**
+     * HBCI dialog requires this entity to be persisted (i.e. for systemDialogId). It contains sensitive data like PIN/TAN,
+     * user account. Protected by {@code de.adorsys.opba.protocol.bpmnshared.config.flowable.JsonCustomSerializer}
+     * and {@code de.adorsys.opba.protocol.bpmnshared.config.flowable.LargeJsonCustomSerializer}
+     */
+    private HbciConsent hbciDialogConsent;
 
     @JsonIgnore
     public String getPsuPin() {
