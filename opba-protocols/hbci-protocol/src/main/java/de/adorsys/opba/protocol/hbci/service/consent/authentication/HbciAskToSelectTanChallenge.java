@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.hbci.service.consent.authentication;
 
+import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.service.HbciRedirectExecutor;
@@ -20,6 +21,17 @@ public class HbciAskToSelectTanChallenge extends ValidatedExecution<HbciContext>
 
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
+        if (context.getAvailableSca().size() >= 2) {
+            redirectExecutor.redirect(execution, context, redir -> redir.getParameters().getSelectScaMethod());
+        } else {
+            // Nothing to select by user
+            ContextUtil.getAndUpdateContext(
+                    execution,
+                    (HbciContext ctx) -> ctx.setUserSelectScaId(ctx.getAvailableSca().get(0).getKey())
+            );
+
+            runtimeService.trigger(execution.getId());
+        }
     }
 
     @Override

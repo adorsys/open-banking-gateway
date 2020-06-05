@@ -5,11 +5,13 @@ import com.google.common.collect.ImmutableMap;
 import de.adorsys.multibanking.domain.Bank;
 import de.adorsys.multibanking.hbci.model.HbciConsent;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
+import de.adorsys.opba.protocol.api.dto.result.body.ScaMethod;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.hbci.service.storage.TransientDataEntry;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -42,11 +44,6 @@ public class HbciContext extends BaseContext {
     private String fintechRedirectUriNok;
 
     /**
-     * Indicates whether TAN challenge was required.
-     */
-    private boolean tanChallengeRequired;
-
-    /**
      * HBCI bank profile.
      */
     private Bank bank;
@@ -57,6 +54,21 @@ public class HbciContext extends BaseContext {
      * and {@code de.adorsys.opba.protocol.bpmnshared.config.flowable.LargeJsonCustomSerializer}
      */
     private HbciConsent hbciDialogConsent;
+
+    /**
+     * Indicates whether TAN challenge was required.
+     */
+    private boolean tanChallengeRequired;
+
+    /**
+     * Available SCA methods (i.e. SMS,email) for consent SCA challenge (2FA/multifactor authorization - 2nd factor)
+     */
+    private List<ScaMethod> availableSca;
+
+    /**
+     * The ID of SCA method that was selected by the user.
+     */
+    private String userSelectScaId;
 
     @JsonIgnore
     public String getPsuPin() {
