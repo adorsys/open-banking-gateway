@@ -14,7 +14,7 @@ paths:
       description: This method is used to initiate a payment at the ASPSP.
       operationId: initiatePayment
       tags:
-        - TPP Banking API Single Payment (PIS)
+        - TPP Banking API Payment initiation service (PIS)
       parameters:
         #header
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
@@ -26,71 +26,20 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"        #path
         #path
         - $ref: '#/components/parameters/PaymentProduct'
       requestBody:
         $ref : '#/components/requestBodies/PaymentInitiation'
       responses:
-        202:
-          $ref: '#/components/responses/202_PaymentInitiationResponse'
+        201:
+          $ref: '#/components/responses/201_PaymentInitiationResponse'
       security:
         - {}
         - BearerAuthOAuth: []
       x-codegen-request-body-name: body
 
-    get:
-      summary: Get payment information
-      description: Returns the content of a payment object
-      operationId: getPaymentInformation
-      tags:
-        - TPP Banking API Payment Status (PIS)
-      security:
-        - {}
-        - BearerAuthOAuth: []
-      parameters:
-        #header
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Operation-Type"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
-        #path
-        - $ref: "#/components/parameters/PaymentProduct"
-      responses:
-        '200':
-          $ref: '#/components/responses/OK_200_PaymentInitiationInformation'
-
-  /v1/banking/pis/payments/{payment-product}/status:
-    get:
-      summary: Payment initiation status request
-      description: Check the transaction status of a payment initiation.
-      operationId: getPaymentInitiationStatus
-      tags:
-        - TPP Banking API Payment Status (PIS)
-      security:
-        - {}
-        - BearerAuthOAuth: []
-      parameters:
-        #header
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Operation-Type"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
-        #path
-        - $ref: "#/components/parameters/PaymentProduct"
-      responses:
-        '200':
-          $ref: '#/components/responses/OK_200_PaymentInitiationStatus'
 components:
   parameters:
     PaymentProduct:
@@ -116,46 +65,17 @@ components:
             $ref: '#/components/schemas/paymentInitiation'
       required: true
   responses:
-    202_PaymentInitiationResponse:
-      description: ACCEPTED
+    201_PaymentInitiationResponse:
+      description: CREATED
       headers:
         X-Request-ID:
           $ref: './tpp_banking_api_commons.yml#/components/headers/X-Request-ID'
-        Service-Session-ID:
-          $ref: './tpp_banking_api_commons.yml#/components/headers/Service-Session-ID'
-        Authorization-Session-ID:
-          $ref: './tpp_banking_api_commons.yml#/components/headers/Authorization-Session-ID'
-        Redirect-Code:
-          $ref: './tpp_banking_api_commons.yml#/components/headers/Redirect-Code'
         Location:
           $ref: './tpp_banking_api_commons.yml#/components/headers/Location'
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/paymentInitiationResponse'
-    OK_200_PaymentInitiationInformation:
-      description: OK
-      headers:
-        X-Request-ID:
-          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
-        Service-Session-ID:
-          $ref: './tpp_banking_api_commons.yml#/components/headers/Service-Session-ID'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/paymentInitiationWithStatusResponse'
-    OK_200_PaymentInitiationStatus:
-      description: OK
-      headers:
-        X-Request-ID:
-          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
-        Service-Session-ID:
-          $ref: './tpp_banking_api_commons.yml#/components/headers/Service-Session-ID'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/paymentInitiationStatusResponse'
-
   schemas:
     paymentInitiation:
       required:
@@ -200,63 +120,19 @@ components:
     paymentInitiationResponse:
       description: Body of the response for a successful payment initiation request.
       type: object
-      properties:
-        msg:
-          type: string
-          description: use redirect link message
-
-    paymentInitiationWithStatusResponse:
-      description: |
-        Generic JSON response body consistion of the corresponding payment initation JSON body together with an optional transaction status field.
-      type: object
-      required:
-        - debtorAccount
-        - instructedAmount
-        - creditorAccount
-        - creditorName
-      properties:
-        endToEndIdentification:
-          type: string
-          maxLength: 35
-        debtorAccount:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/accountReference'
-        instructedAmount:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/amount'
-        creditorAccount:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/accountReference'
-        creditorAgent:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/bicfi'
-        creditorName:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/creditorName'
-        creditorAddress:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/address'
-        remittanceInformationUnstructured:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/remittanceInformationUnstructured'
-        transactionStatus:
-          $ref: '#/components/schemas/transactionStatus'
-
-    paymentInitiationStatusResponse:
-      description: Body of the response for a successful payment initiation status request in case of an JSON based endpoint.
-      type: object
       required:
         - transactionStatus
+        - paymentId
+        - _links
       properties:
         transactionStatus:
-          $ref: '#/components/schemas/transactionStatus'
-        fundsAvailable:
-          $ref: '#/components/schemas/fundsAvailable'
-        psuMessage:
-          $ref: '#/components/schemas/psuMessageText'
-    transactionStatus:
-      description: The transaction status
-      type: string
-    fundsAvailable:
-      description: Equals true if sufficient funds are available at the time of the request, false otherwise.
-      type: boolean
-    psuMessageText:
-      description: Text to be displayed to the PSU.
-      type: string
-      maxLength: 500
+          description: 4 letter ISO 20022 status code
+          type: string
+        paymentId:
+          description: Resource identification of the generated payment initiation resource.
+          type: string
+        transactionFees:
+          $ref: './tpp_banking_api_commons.yml#/components/schemas/amount'
 
   securitySchemes:
     BearerAuthOAuth:
