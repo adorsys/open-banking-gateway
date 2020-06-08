@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DocumentCookieService } from './document-cookie.service';
 import { Consts } from '../models/consts';
 import { StorageService } from './storage.service';
@@ -46,8 +46,8 @@ describe('AuthService', () => {
   });
 
   it('should test logout when user is logged in', () => {
-    const getXsrfTokenSpy = spyOn(storageService, 'getXsrfToken').and.returnValue('tokenValue');
-    const isMaxAgeValidSpy = spyOn(storageService, 'isMaxAgeValid').and.returnValue(true);
+    // stub user logged in
+    const loggedInSpy = spyOn(storageService, 'isLoggedIn').and.returnValue(true);
     const finTechAuthorizationServiceSpy = spyOn(finTechAuthorizationService, 'logoutPOST').and.returnValue(
       of(new HttpResponse({ status: 200 }))
     );
@@ -55,20 +55,16 @@ describe('AuthService', () => {
     authService.logout();
 
     // token must be retrieved and validated
-    expect(getXsrfTokenSpy).toHaveBeenCalled();
-    expect(isMaxAgeValidSpy).toHaveBeenCalled();
+    expect(loggedInSpy).toHaveBeenCalled();
     // logout call to the backend must be called
     expect(finTechAuthorizationServiceSpy).toHaveBeenCalled();
   });
 
   it('should test logout when user not logged in', () => {
-    const getXsrfTokenSpy = spyOn(storageService, 'getXsrfToken').and.returnValue(null);
     const navigateSpy = spyOn(router, 'navigate');
 
     authService.logout();
 
-    // token must be retrieved and validated
-    expect(getXsrfTokenSpy).toHaveBeenCalled();
     // user must be navigated to login page
     expect(navigateSpy).toHaveBeenCalledWith(['/login']);
   });
