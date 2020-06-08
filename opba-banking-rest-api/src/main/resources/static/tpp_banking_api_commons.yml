@@ -45,7 +45,7 @@ components:
     Redirect-Code:
       required: true
       description: |
-        Unique ID.
+        Unique ID acts as a password protecting FinTech requested consent specification
       example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
       schema:
         type: string

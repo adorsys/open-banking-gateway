@@ -191,7 +191,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
                 .extracting(it -> new BigDecimal((String) it))
                 .usingElementComparator(BIG_DECIMAL_COMPARATOR)
                 // Looks like returned order by Sandbox is not stable
-                .containsOnly(
+                .contains(
                         new BigDecimal("-150.00"),
                         new BigDecimal("-100.00"),
                         new BigDecimal("-2300.00"),
