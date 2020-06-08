@@ -50,12 +50,20 @@ paths:
         - {}
         - BearerAuthOAuth: []
       parameters:
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Operation-Type"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
       responses:
         '200':
           $ref: '#/components/responses/OK_200_PaymentInitiationInformation'
 
-  /v1/{payment-service}/{payment-product}/{paymentId}/status:
+  /v1/banking/pis/payments/{payment-product}/{paymentId}/status:
     get:
       summary: Payment initiation status request
       description: Check the transaction status of a payment initiation.
@@ -66,6 +74,14 @@ paths:
         - {}
         - BearerAuthOAuth: []
       parameters:
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Operation-Type"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
       responses:
         '200':
