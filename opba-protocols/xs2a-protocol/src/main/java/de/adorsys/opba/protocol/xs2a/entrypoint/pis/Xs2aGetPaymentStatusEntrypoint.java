@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CompletableFuture;
 
-import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.PAYMENT_PRODUCT_SEPA;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 
@@ -51,7 +50,7 @@ public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
         ValidatedPathHeaders<PaymentStateParameters, PaymentStateHeaders> params = extractor.forExecution(prepareContext(context));
 
         Response<PaymentInitiationStatus> paymentStatus = pis.getSinglePaymentInitiationStatus(
-                PAYMENT_PRODUCT_SEPA,
+                context.getRequest().getPaymentProduct().toString(),
                 consent.getConsentId(),
                 params.getHeaders().toHeaders(),
                 params.getPath().toParameters()
