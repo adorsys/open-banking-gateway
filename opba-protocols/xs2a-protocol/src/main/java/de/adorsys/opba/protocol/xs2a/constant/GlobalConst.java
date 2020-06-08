@@ -48,4 +48,9 @@ public class GlobalConst {
      * Commonly used keyword for DTO mappers.
      */
     public static final String SPRING_KEYWORD = "spring";
+
+    /**
+     * Default payment product for getting payment info or payment status
+     */
+    public static final String PAYMENT_PRODUCT_SEPA = "sepa-credit-transfers";
 }

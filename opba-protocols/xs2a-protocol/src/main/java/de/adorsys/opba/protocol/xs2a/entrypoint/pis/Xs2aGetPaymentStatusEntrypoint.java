@@ -23,9 +23,11 @@ import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.CompletableFuture;
 
+import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.PAYMENT_PRODUCT_SEPA;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 
@@ -42,13 +44,14 @@ public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
     private final ExtendWithServiceContext extender;
 
     @Override
+    @Transactional
     public CompletableFuture<Result<PaymentStatusBody>> execute(ServiceContext<PaymentStatusRequest> context) {
         ProtocolFacingConsent consent = context.getRequestScoped().consentAccess().getByCurrentSession();
 
         ValidatedPathHeaders<PaymentStateParameters, PaymentStateHeaders> params = extractor.forExecution(prepareContext(context));
 
         Response<PaymentInitiationStatus> paymentStatus = pis.getSinglePaymentInitiationStatus(
-                params.getPath().getPaymentProduct(),
+                PAYMENT_PRODUCT_SEPA,
                 consent.getConsentId(),
                 params.getHeaders().toHeaders(),
                 params.getPath().toParameters()
