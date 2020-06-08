@@ -24,6 +24,33 @@ components:
         type: string
         format: uuid
 
+    Service-Session-ID:
+      required: true
+      description: |
+        Unique ID that identifies service session. Can be used for batch processing to correlate input and output.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+
+    Authorization-Session-ID:
+      required: true
+      description: |
+        Unique ID that identifies authorization session.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+
+    Redirect-Code:
+      required: true
+      description: |
+        Unique ID.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+
   parameters:
     Authorization:
       name: Authorization
