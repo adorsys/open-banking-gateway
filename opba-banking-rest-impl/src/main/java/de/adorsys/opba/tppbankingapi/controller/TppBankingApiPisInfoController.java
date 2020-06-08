@@ -2,6 +2,7 @@ package de.adorsys.opba.tppbankingapi.controller;
 
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
+import de.adorsys.opba.protocol.api.dto.result.body.PaymentProductDetails;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.pis.GetPaymentInformationService;
 import de.adorsys.opba.protocol.facade.services.pis.GetPaymentStatusService;
@@ -56,6 +57,7 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
                                 .serviceSessionId(serviceSessionID)
                                 .build()
                         )
+                        .paymentProduct(PaymentProductDetails.fromValue(paymentProduct))
                         .build()
         ).thenApply((FacadeResult<PaymentInfoBody> result) -> mapper.translate(result, paymentInfoResponseMapper));
     }
@@ -82,6 +84,7 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
                                 .serviceSessionId(serviceSessionID)
                                 .build()
                         )
+                        .paymentProduct(PaymentProductDetails.fromValue(paymentProduct))
                         .build()
         ).thenApply((FacadeResult<PaymentStatusBody> result) -> mapper.translate(result, paymentStatusResponseMapper));
     }
