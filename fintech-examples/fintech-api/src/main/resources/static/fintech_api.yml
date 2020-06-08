@@ -294,7 +294,7 @@ paths:
         required: true
       responses:
         '202':
-          $ref: '#/components/responses/202_ReloadUI'
+          $ref: '#/components/responses/202_ToConsentAuthApi'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
 
