@@ -26,20 +26,19 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
         #path
         - $ref: '#/components/parameters/PaymentProduct'
       requestBody:
         $ref : '#/components/requestBodies/PaymentInitiation'
       responses:
-        201:
-          $ref: '#/components/responses/201_PaymentInitiationResponse'
+        202:
+          $ref: '#/components/responses/202_PaymentInitiationResponse'
       security:
         - {}
         - BearerAuthOAuth: []
       x-codegen-request-body-name: body
-  /v1/banking/pis/payments/{payment-product}/{payment-id}:
+
     get:
       summary: Get payment information
       description: Returns the content of a payment object
@@ -50,6 +49,7 @@ paths:
         - {}
         - BearerAuthOAuth: []
       parameters:
+        #header
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Operation-Type"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
@@ -59,11 +59,13 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        #path
+        - $ref: "#/components/parameters/PaymentProduct"
       responses:
         '200':
           $ref: '#/components/responses/OK_200_PaymentInitiationInformation'
 
-  /v1/banking/pis/payments/{payment-product}/{paymentId}/status:
+  /v1/banking/pis/payments/{payment-product}/status:
     get:
       summary: Payment initiation status request
       description: Check the transaction status of a payment initiation.
@@ -74,6 +76,7 @@ paths:
         - {}
         - BearerAuthOAuth: []
       parameters:
+        #header
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Operation-Type"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
@@ -83,6 +86,8 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        #path
+        - $ref: "#/components/parameters/PaymentProduct"
       responses:
         '200':
           $ref: '#/components/responses/OK_200_PaymentInitiationStatus'
@@ -111,11 +116,17 @@ components:
             $ref: '#/components/schemas/paymentInitiation'
       required: true
   responses:
-    201_PaymentInitiationResponse:
-      description: CREATED
+    202_PaymentInitiationResponse:
+      description: ACCEPTED
       headers:
         X-Request-ID:
           $ref: './tpp_banking_api_commons.yml#/components/headers/X-Request-ID'
+        Service-Session-ID:
+          $ref: './tpp_banking_api_commons.yml#/components/headers/Service-Session-ID'
+        Authorization-Session-ID:
+          $ref: './tpp_banking_api_commons.yml#/components/headers/Authorization-Session-ID'
+        Redirect-Code:
+          $ref: './tpp_banking_api_commons.yml#/components/headers/Redirect-Code'
         Location:
           $ref: './tpp_banking_api_commons.yml#/components/headers/Location'
       content:
@@ -127,6 +138,8 @@ components:
       headers:
         X-Request-ID:
           $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
+        Service-Session-ID:
+          $ref: './tpp_banking_api_commons.yml#/components/headers/Service-Session-ID'
       content:
         application/json:
           schema:
@@ -136,6 +149,8 @@ components:
       headers:
         X-Request-ID:
           $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
+        Service-Session-ID:
+          $ref: './tpp_banking_api_commons.yml#/components/headers/Service-Session-ID'
       content:
         application/json:
           schema:
@@ -185,19 +200,10 @@ components:
     paymentInitiationResponse:
       description: Body of the response for a successful payment initiation request.
       type: object
-      required:
-        - transactionStatus
-        - paymentId
-        - _links
       properties:
-        transactionStatus:
-          description: 4 letter ISO 20022 status code
+        msg:
           type: string
-        paymentId:
-          description: Resource identification of the generated payment initiation resource.
-          type: string
-        transactionFees:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/amount'
+          description: use redirect link message
 
     paymentInitiationWithStatusResponse:
       description: |

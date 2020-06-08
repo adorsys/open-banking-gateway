@@ -43,8 +43,7 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                              String xTimestampUTC,
                                              String xRequestSignature,
                                              String fintechID,
-                                             String bankID,
-                                             UUID serviceSessionID
+                                             String bankID
     ) {
         return payments.execute(
                 InitiateSinglePaymentRequest.builder()
@@ -56,7 +55,6 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                                    .fintechUserId(fintechUserID)
                                                    .fintechRedirectUrlOk(fintechRedirectURLOK)
                                                    .fintechRedirectUrlNok(fintechRedirectURLNOK)
-                                                   .serviceSessionId(serviceSessionID)
                                                    .requestId(xRequestID)
                                                    .bankId(bankID)
                                                    .build()
