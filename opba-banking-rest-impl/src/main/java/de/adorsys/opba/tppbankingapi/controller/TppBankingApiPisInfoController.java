@@ -35,10 +35,24 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
 
 
     @Override
-    public CompletableFuture getPaymentInformation(UUID xRequestID) {
+    public CompletableFuture getPaymentInformation(String serviceSessionPassword,
+                                                   String fintechUserID,
+                                                   UUID xRequestID,
+                                                   String xTimestampUTC,
+                                                   String xOperationType,
+                                                   String xRequestSignature,
+                                                   String fintechID,
+                                                   String bankID,
+                                                   UUID serviceSessionID) {
         return paymentInfoService.execute(
                 PaymentInfoRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
+                                .requestId(xRequestID)
+                                .bankId(bankID)
+                                .sessionPassword(serviceSessionPassword)
+                                .fintechUserId(fintechUserID)
+                                .authorization(fintechID)
+                                .serviceSessionId(serviceSessionID)
                                 .build()
                         )
                         .build()
@@ -46,10 +60,24 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
     }
 
     @Override
-    public CompletableFuture getPaymentInitiationStatus(UUID xRequestID) {
+    public CompletableFuture getPaymentInitiationStatus(String serviceSessionPassword,
+                                                        String fintechUserID,
+                                                        UUID xRequestID,
+                                                        String xTimestampUTC,
+                                                        String xOperationType,
+                                                        String xRequestSignature,
+                                                        String fintechID,
+                                                        String bankID,
+                                                        UUID serviceSessionID) {
         return paymentStatusService.execute(
                 PaymentStatusRequest.builder()
                         .facadeServiceable(FacadeServiceableRequest.builder()
+                                .requestId(xRequestID)
+                                .bankId(bankID)
+                                .sessionPassword(serviceSessionPassword)
+                                .fintechUserId(fintechUserID)
+                                .authorization(fintechID)
+                                .serviceSessionId(serviceSessionID)
                                 .build()
                         )
                         .build()
