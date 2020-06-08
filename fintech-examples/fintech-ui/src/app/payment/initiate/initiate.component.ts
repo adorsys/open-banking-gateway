@@ -3,6 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FintechSinglePaymentInitiationService } from '../../api/api/fintechSinglePaymentInitiation.service';
 import { ClassSinglePaymentInitiationRequest } from '../../api/model-classes/ClassSinglePaymentInitiationRequest';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HeaderConfig } from '../../models/consts';
+import { RedirectStruct } from '../../bank/redirect-page/redirect-struct';
+import { map } from 'rxjs/operators';
 
 
 @Component({
@@ -47,8 +50,19 @@ export class InitiateComponent implements OnInit {
     paymentRequest.creditorIban = this.paymentForm.getRawValue().ibanCreditor;
     paymentRequest.debitorIban = this.paymentForm.getRawValue().ibanDebitor;
     paymentRequest.purpose = this.paymentForm.getRawValue().purpose;
-    this.fintechSinglePaymentInitiationService.initiateSinglePayment('', '', okurl,
-      notOkUrl, this.bankId, paymentRequest).subscribe(() => console.log('call was done'));
+    this.fintechSinglePaymentInitiationService.initiateSinglePayment('', '',
+      okurl, notOkUrl, this.bankId, paymentRequest, 'response')
+      .pipe(map(response => response))
+      .subscribe(
+        response => {
+          console.log('response status of payment call is ', response.status)
+          switch (response.status) {
+            case 202:
+              const location = response.headers.get(HeaderConfig.HEADER_FIELD_LOCATION);
+              console.log('location is ', location);
+              window.location.href = location;
+          }
+        });
   }
 
   onDeny() {

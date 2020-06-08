@@ -73,7 +73,10 @@ public class PaymentService {
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID, bankId, null
         );
-        log.info("finished call for payment");
+        if (responseOfTpp.getStatusCode() != HttpStatus.ACCEPTED) {
+            throw new RuntimeException("Did expect status 202 from tpp, but got " + responseOfTpp.getStatusCodeValue());
+        }
+        log.info("finished call for payment {}", responseOfTpp.getStatusCodeValue());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(responseOfTpp.getHeaders().getLocation());
         log.info("redirection to {}", httpHeaders.getLocation());
