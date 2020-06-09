@@ -79,6 +79,11 @@
             <artifactId>onlinebanking-hbci4java</artifactId>
             <version>${multibanking.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.iban4j</groupId>
+            <artifactId>iban4j</artifactId>
+            <version>${iban.4j.version}</version>
+        </dependency>
         <!-- HBCI adapter end -->
 
         <!-- Mappers/Validators -->
