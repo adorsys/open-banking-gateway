@@ -1,0 +1,25 @@
+{
+  "creditorAccount": {
+    "currency": "EUR",
+    "iban": "DE80760700240271232400"
+  },
+  "creditorAddress": {
+    "buildingNumber": "56",
+    "townName": "Nürnberg",
+    "country": "DE",
+    "postCode": "90543",
+    "streetName": "WBG Straße"
+  },
+  "creditorAgent": "AAAADEBBXXX",
+  "creditorName": "WBG",
+  "debtorAccount": {
+    "currency": "EUR",
+    "iban": "DE80760700240271232400"
+  },
+  "endToEndIdentification": "WBG-123456789",
+  "instructedAmount": {
+    "currency": "EUR",
+    "amount": "1.03"
+  },
+  "remittanceInformationUnstructured": "Ref. Number WBG-1222"
+}
