@@ -69,7 +69,8 @@ public class HbciListTransactionsEntrypoint implements ListTransactions {
         context.setAction(ProtocolAction.LIST_TRANSACTIONS);
         extender.extend(context, serviceContext);
         Bank bank = new Bank();
-        bank.setBankCode(serviceContext.getRequestScoped().aspspProfile().getBic());
+        bank.setBic(serviceContext.getRequestScoped().aspspProfile().getBic());
+        bank.setBankCode(serviceContext.getRequestScoped().aspspProfile().getBankCode());
         context.setBank(bank);
         return context;
     }
