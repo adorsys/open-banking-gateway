@@ -69,7 +69,7 @@ public class FeignTemplateToDataToSignMapper {
         return new ConfirmConsentDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType));
     }
 
-    public PaymentInitiationDataToSign mapToPaymenyInitiation(Map<String, Collection<String>> headers, Instant instant) {
+    public PaymentInitiationDataToSign mapToPaymentInitiation(Map<String, Collection<String>> headers, Instant instant) {
         String operationType = extractRequiredValue(headers, HttpHeaders.X_OPERATION_TYPE);
         String xRequestId = extractRequiredValue(headers, HttpHeaders.X_REQUEST_ID);
         String bankId = extractNonRequiredValue(headers, HttpHeaders.BANK_ID);
