@@ -67,6 +67,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
 
     @Enumerated(EnumType.STRING)
     private Approach preferredApproach;
+    private boolean tryToUsePreferredApproach;
 
     @OneToMany(mappedBy = "bankProfile", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "action")
