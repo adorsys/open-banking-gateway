@@ -7,6 +7,7 @@ import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListAccountsResult;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.HBCI_MAPPERS_PA
  * Extracts HBCI result from ASPSP response and does initial translation to Banking protocol facade native object
  * for transactions or accounts list.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class HbciResultBodyExtractor {
@@ -25,7 +27,8 @@ public class HbciResultBodyExtractor {
     private final HbciToFacadeMapper mapper;
 
     public AccountListBody extractAccountList(ProcessResponse result) {
-        return mapper.map((AisListAccountsResult) result.getResult());
+        AisListAccountsResult accountsResult = (AisListAccountsResult) result.getResult();
+        return mapper.map(accountsResult);
     }
 
     public TransactionsResponseBody extractTransactionsReport(ProcessResponse result) {
@@ -40,7 +43,6 @@ public class HbciResultBodyExtractor {
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE)
     public interface HbciToAccountBodyMapper {
-
         @Mapping(source = "iban", target = "resourceId")
         AccountListDetailBody map(BankAccount accountList);
     }
