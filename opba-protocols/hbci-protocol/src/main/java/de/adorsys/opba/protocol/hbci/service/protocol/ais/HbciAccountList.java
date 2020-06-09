@@ -36,13 +36,16 @@ public class HbciAccountList extends ValidatedExecution<AccountListHbciContext> 
         if (null == response.getAuthorisationCodeResponse()) {
             ContextUtil.getAndUpdateContext(
                     execution,
-                    (AccountListHbciContext ctx) -> ctx.setResponse(
-                            new AisListAccountsResult(response.getBankAccounts()))
+                    (AccountListHbciContext ctx) -> {
+                        ctx.setResponse(new AisListAccountsResult(response.getBankAccounts()));
+                        ctx.setTanChallengeRequired(false);
+                    }
             );
 
             return;
         }
 
+        onlineBankingService.getStrongCustomerAuthorisation().afterExecute(consent, response.getAuthorisationCodeResponse());
         ContextUtil.getAndUpdateContext(
                 execution,
                 (HbciContext ctx) -> {
