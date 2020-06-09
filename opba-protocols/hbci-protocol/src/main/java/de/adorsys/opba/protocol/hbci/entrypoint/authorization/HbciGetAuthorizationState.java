@@ -21,7 +21,6 @@ import org.mapstruct.Mapper;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -74,7 +73,7 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
                 null == ctx.getViolations() || ctx.getViolations().isEmpty()
                         ? (LastViolations) runtimeService.getVariable(executionId, LAST_VALIDATION_ISSUES)
                         : new LastViolations(ctx.getViolations()),
-                Collections.emptyList(),
+                ctx.getAvailableSca(),
                 null == ctx.getLastRedirection()
                         ? (LastRedirectionTarget) runtimeService.getVariable(executionId, LAST_REDIRECTION_TARGET)
                         : ctx.getLastRedirection()
@@ -95,7 +94,7 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
                 .singleResult()
                 .getValue();
 
-        return buildBody(ctx.getAction(), new LastViolations(ctx.getViolations()), Collections.emptyList(), ctx.getLastRedirection());
+        return buildBody(ctx.getAction(), new LastViolations(ctx.getViolations()), ctx.getAvailableSca(), ctx.getLastRedirection());
     }
 
     private AuthStateBody buildBody(ProtocolAction action,

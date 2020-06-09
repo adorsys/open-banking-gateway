@@ -18,6 +18,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static de.adorsys.opba.protocol.api.dto.parameters.ScaConst.PSU_PASSWORD;
 import static de.adorsys.opba.protocol.api.dto.parameters.ScaConst.SCA_CHALLENGE_DATA;
+import static de.adorsys.opba.protocol.api.dto.parameters.ScaConst.SCA_CHALLENGE_ID;
 
 /**
  * Entry point to update context with the input from user and continue process.
@@ -66,6 +67,10 @@ public class HbciUpdateAuthorization implements UpdateAuthorization {
 
         if (null != scaChallenges.get(SCA_CHALLENGE_DATA)) {
             context.setPsuTan(scaChallenges.get(SCA_CHALLENGE_DATA));
+        }
+
+        if (null != scaChallenges.get(SCA_CHALLENGE_ID)) {
+            context.setUserSelectScaId(scaChallenges.get(SCA_CHALLENGE_ID));
         }
     }
 }
