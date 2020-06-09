@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.facade.services.pis;
 
-import de.adorsys.opba.protocol.api.dto.request.authorization.SinglePaymentBody;
+import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
 import de.adorsys.opba.protocol.api.pis.SinglePayment;
 import de.adorsys.opba.protocol.facade.services.FacadeService;

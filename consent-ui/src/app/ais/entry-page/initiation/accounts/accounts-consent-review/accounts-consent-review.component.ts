@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { SharedRoutes } from '../../common/shared-routes';
 import { AccountAccessLevel, AisConsentToGrant } from '../../../../common/dto/ais-consent';
-import { StubUtil } from '../../../../common/stub-util';
+import { StubUtil } from '../../../../../common/utils/stub-util';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { SessionService } from '../../../../../common/session.service';
 import { ConsentUtil } from '../../../../common/consent-util';
 import { ApiHeaders } from '../../../../../api/api.headers';
-import { ConsentAuth, ConsentAuthorizationService, PsuAuthRequest } from '../../../../../api';
+import { ConsentAuth, UpdateConsentAuthorizationService, PsuAuthRequest } from '../../../../../api';
 
 @Component({
   selector: 'consent-app-accounts-consent-review',
@@ -22,7 +22,7 @@ export class AccountsConsentReviewComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private sessionService: SessionService,
-    private consentAuthorisation: ConsentAuthorizationService
+    private updateConsentAuthorizationService: UpdateConsentAuthorizationService
   ) {}
 
   public static ROUTE = SharedRoutes.REVIEW;
@@ -49,7 +49,7 @@ export class AccountsConsentReviewComponent implements OnInit {
       body.consentAuth = { consent: this.aisConsent.consent } as ConsentAuth;
     }
 
-    this.consentAuthorisation
+    this.updateConsentAuthorizationService
       .embeddedUsingPOST(
         this.authorizationId,
         StubUtil.X_XSRF_TOKEN,

@@ -6,17 +6,19 @@ spring:
   profiles:
     # FIXME: Maybe mock-qwac is not good idea
     active: postgres,mock-qwac,remote
-
-aspsp-profile:
-  baseurl: ${common.apps.mapping.aspsp}/api/v1
-consent-service:
-  baseurl: ${common.apps.mapping.consentmgmt}/api/v1
-ledgers:
-  url: ${common.apps.mapping.ledgersapp}
-cms:
-  url: ${common.apps.mapping.consentmgmt}
-online-banking:
-  url: ${common.apps.mapping.onlinebanking}/api/v1/consents/confirm/{userLogin}/{consentId}/{authorizationId}/{tan}
+xs2a:
+  cms:
+    url: ${common.apps.mapping.consentmgmt}
+    aspsp-profile:
+      baseurl: ${common.apps.mapping.aspsp}/api/v1
+    consent-service:
+      baseurl: ${common.apps.mapping.consentmgmt}/api/v1
+xs2asandbox:
+  ledgers:
+    url: ${common.apps.mapping.ledgersapp}
+    tppui:
+      online-banking:
+        url: ${common.apps.mapping.onlinebanking}/api/v1/consents/confirm/{userLogin}/{consentId}/{authorizationId}/{tan}
 
 # To verify:
 skip_ssl_certificate_verification: true

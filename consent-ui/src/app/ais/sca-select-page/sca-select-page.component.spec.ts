@@ -4,7 +4,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StubUtilTests } from '../common/stub-util-tests';
-import { ConsentAuthorizationService } from '../../api';
+import { UpdateConsentAuthorizationService } from '../../api';
 import { ScaSelectPageComponent } from './sca-select-page.component';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -12,7 +12,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 describe('ScaSelectPageComponent', () => {
   let component: ScaSelectPageComponent;
   let fixture: ComponentFixture<ScaSelectPageComponent>;
-  let consentAuthorizationService: ConsentAuthorizationService;
+  let consentAuthorizationService: UpdateConsentAuthorizationService;
   let consentAuthorizationServiceSpy;
 
   beforeEach(async(() => {
@@ -40,7 +40,7 @@ describe('ScaSelectPageComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ScaSelectPageComponent);
     component = fixture.componentInstance;
-    consentAuthorizationService = fixture.debugElement.injector.get(ConsentAuthorizationService);
+    consentAuthorizationService = fixture.debugElement.injector.get(UpdateConsentAuthorizationService);
     fixture.detectChanges();
   });
 

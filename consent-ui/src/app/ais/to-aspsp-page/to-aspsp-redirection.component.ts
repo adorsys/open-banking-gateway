@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { AisConsentToGrant } from '../common/dto/ais-consent';
-import { StubUtil } from '../common/stub-util';
+import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+
+import { AisConsentToGrant } from '../common/dto/ais-consent';
+import { StubUtil } from '../../common/utils/stub-util';
 import { SessionService } from '../../common/session.service';
 import { ConsentUtil } from '../common/consent-util';
 import { ApiHeaders } from '../../api/api.headers';
-import { ConsentAuthorizationService, DenyRequest } from '../../api';
-import { Location } from '@angular/common';
+import { Action } from '../../common/utils/action';
+import { AuthStateConsentAuthorizationService } from '../../api';
+import { UpdateConsentAuthorizationService, DenyRequest } from '../../api';
 
 @Component({
   selector: 'consent-app-to-aspsp-redirection',
@@ -18,6 +21,7 @@ export class ToAspspRedirectionComponent implements OnInit {
 
   public finTechName = StubUtil.FINTECH_NAME;
   public aspspName = StubUtil.ASPSP_NAME;
+  public account = Action.ACCOUNT;
 
   redirectTo: string;
 
@@ -28,7 +32,8 @@ export class ToAspspRedirectionComponent implements OnInit {
     private location: Location,
     private activatedRoute: ActivatedRoute,
     private sessionService: SessionService,
-    private consentAuthorisation: ConsentAuthorizationService
+    private authStateConsentAuthorizationService: AuthStateConsentAuthorizationService,
+    private updateConsentAuthorizationService: UpdateConsentAuthorizationService
   ) {}
 
   ngOnInit() {
@@ -39,12 +44,8 @@ export class ToAspspRedirectionComponent implements OnInit {
     });
   }
 
-  onConfirm() {
-    window.location.href = this.redirectTo;
-  }
-
   private loadRedirectUri() {
-    this.consentAuthorisation
+    this.authStateConsentAuthorizationService
       .authUsingGET(this.authorizationId, this.sessionService.getRedirectCode(this.authorizationId), 'response')
       .subscribe(res => {
         this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
@@ -53,7 +54,7 @@ export class ToAspspRedirectionComponent implements OnInit {
   }
 
   onDeny() {
-    this.consentAuthorisation
+    this.updateConsentAuthorizationService
       .denyUsingPOST(
         this.authorizationId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs

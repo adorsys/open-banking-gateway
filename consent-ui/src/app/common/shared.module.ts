@@ -7,9 +7,10 @@ import { EnterTanComponent } from './enter-tan/enter-tan.component';
 import { EnterPinComponent } from './enter-pin/enter-pin.component';
 import { SelectScaComponent } from './select-sca/select-sca.component';
 import { ResultComponent } from './result/result.component';
+import { ToAspspComponent } from './to-aspsp/to-aspsp.component';
 
 @NgModule({
-  declarations: [EnterTanComponent, EnterPinComponent, SelectScaComponent, ResultComponent],
+  declarations: [EnterTanComponent, EnterPinComponent, SelectScaComponent, ToAspspComponent, ResultComponent],
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule, InfoModule],
   exports: [
     CommonModule,
@@ -19,6 +20,7 @@ import { ResultComponent } from './result/result.component';
     EnterTanComponent,
     EnterPinComponent,
     SelectScaComponent,
+    ToAspspComponent,
     ResultComponent
   ]
 })

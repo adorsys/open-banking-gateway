@@ -12,6 +12,7 @@ import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechUserRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
+import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
 import de.adorsys.opba.protocol.facade.config.auth.FacadeAuthConfig;
 import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechConsentSpecSecureStorage;
@@ -90,9 +91,12 @@ public class NewAuthSessionHandler {
                         null
                 )
         );
+        String url = session.getRequest() instanceof InitiateSinglePaymentRequest
+                ? facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPis()
+                : facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForAis();
         result.setRedirectionTo(
                 UriComponentsBuilder
-                        .fromHttpUrl(facadeAuthConfig.getRedirect().getConsentLogin().getPage())
+                        .fromHttpUrl(url)
                         .buildAndExpand(ImmutableMap.of(
                                 FINTECH_USER_TEMP_PASSWORD, newPassword,
                                 AUTHORIZATION_SESSION_ID, newAuth.getId()

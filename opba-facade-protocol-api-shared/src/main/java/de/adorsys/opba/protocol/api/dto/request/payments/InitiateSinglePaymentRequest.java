@@ -3,7 +3,6 @@ package de.adorsys.opba.protocol.api.dto.request.payments;
 import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
-import de.adorsys.opba.protocol.api.dto.request.authorization.SinglePaymentBody;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
