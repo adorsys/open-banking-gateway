@@ -36,7 +36,8 @@ public class HandleAcceptedService {
         }
         ConsentEntity consent = new ConsentEntity(consentType, sessionEntity.getUserEntity(), bankId, headers.getFirst(TPP_AUTH_ID),
                 UUID.fromString(headers.getFirst(SERVICE_SESSION_ID)));
-        log.debug("created consent which is not confirmend yet for bank {}, user {}, auth {}", bankId, sessionEntity.getUserEntity().getLoginUserName(), consent.getAuthId());
+        log.debug("created consent which is not confirmend yet for bank {}, user {}, type {}, auth {}",
+                bankId, sessionEntity.getUserEntity().getLoginUserName(), consentType, consent.getAuthId());
         consentRepository.save(consent);
 
         URI location = headers.getLocation();

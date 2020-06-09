@@ -2,9 +2,13 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.fintech.api.model.generated.SinglePaymentInitiationRequest;
+import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
+import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
+import de.adorsys.opba.fintech.impl.database.repositories.ConsentRepository;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
+import de.adorsys.opba.fintech.impl.tppclients.ConsentType;
 import de.adorsys.opba.fintech.impl.tppclients.TppPisClient;
 import de.adorsys.opba.tpp.pis.api.model.generated.AccountReference;
 import de.adorsys.opba.tpp.pis.api.model.generated.Amount;
@@ -35,52 +39,55 @@ public class PaymentService {
     private final TppProperties tppProperties;
     private final RestRequestContext restRequestContext;
     private final SessionLogicService sessionLogicService;
+    private final FintechUiConfig uiConfig;
+    private final RedirectHandlerService redirectHandlerService;
+    private final HandleAcceptedService handleAcceptedService;
+    private final ConsentRepository consentRepository;
 
-    public ResponseEntity<Void> initiateSinglePayment(String bankId,
-                                                      SinglePaymentInitiationRequest singlePaymentInitiationRequest,
-                                                      String okUrl,
-                                                      String notOkUrl) {
+    public ResponseEntity<Void> initiateSinglePayment(String bankId, SinglePaymentInitiationRequest singlePaymentInitiationRequest,
+                                                      String fintechOkUrl, String fintechNOkUrl) {
         log.info("fill paramemeters for payment");
+        final String fintechRedirectCode = UUID.randomUUID().toString();
+
         SessionEntity sessionEntity = sessionLogicService.getSession();
         PaymentInitiation payment = new PaymentInitiation();
-        // creditor
-        AccountReference creditorAccount = new AccountReference();
-        creditorAccount.setIban(singlePaymentInitiationRequest.getCreditorIban());
-        payment.setCreditorAccount(creditorAccount);
-        // debitor
-        AccountReference debitorAccount = new AccountReference();
-        debitorAccount.setIban(singlePaymentInitiationRequest.getDebitorIban());
-        payment.setDebtorAccount(debitorAccount);
-        // name
+        payment.setCreditorAccount(getAccountReference(singlePaymentInitiationRequest.getCreditorIban()));
+        payment.setDebtorAccount(getAccountReference(singlePaymentInitiationRequest.getDebitorIban()));
         payment.setCreditorName(singlePaymentInitiationRequest.getName());
-        // amount
-        Amount amount = new Amount();
-        amount.setCurrency(currency);
-        amount.setAmount(singlePaymentInitiationRequest.getAmount());
-        payment.setInstructedAmount(amount);
-        // purpose
+        payment.setInstructedAmount(getAmountWithCurrency(singlePaymentInitiationRequest.getAmount()));
         payment.endToEndIdentification(singlePaymentInitiationRequest.getPurpose());
-        log.info("start call for payment {} {}", okUrl, notOkUrl);
+        log.info("start call for payment {} {}", fintechOkUrl, fintechNOkUrl);
         ResponseEntity<PaymentInitiationResponse> responseOfTpp = tppPisClient.initiatePayment(
                 payment,
                 tppProperties.getServiceSessionPassword(),
                 sessionEntity.getUserEntity().getFintechUserId(),
-                okUrl, notOkUrl,
+                RedirectUrlsEntity.buildOkUrl(uiConfig, fintechRedirectCode),
+                RedirectUrlsEntity.buildNokUrl(uiConfig, fintechRedirectCode),
                 UUID.fromString(restRequestContext.getRequestId()),
-                paymentProduct, COMPUTE_X_TIMESTAMP_UTC,
+                paymentProduct,
+                COMPUTE_X_TIMESTAMP_UTC,
                 // TODO has to be PIS
                 OperationType.AIS.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
-                COMPUTE_FINTECH_ID, bankId, null
-        );
+                COMPUTE_FINTECH_ID,
+                bankId);
         if (responseOfTpp.getStatusCode() != HttpStatus.ACCEPTED) {
             throw new RuntimeException("Did expect status 202 from tpp, but got " + responseOfTpp.getStatusCodeValue());
         }
-        log.info("finished call for payment {}", responseOfTpp.getStatusCodeValue());
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(responseOfTpp.getHeaders().getLocation());
-        log.info("redirection to {}", httpHeaders.getLocation());
-        return new ResponseEntity<>(null, httpHeaders, HttpStatus.ACCEPTED);
+        redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
+        return handleAcceptedService.handleAccepted(consentRepository, ConsentType.PIS, bankId, fintechRedirectCode, sessionEntity, responseOfTpp.getHeaders());
     }
 
+    private AccountReference getAccountReference(String iban) {
+        AccountReference account = new AccountReference();
+        account.setIban(iban);
+        return account;
+    }
+
+    private Amount getAmountWithCurrency(String amountWihthoutCurrency) {
+        Amount amount = new Amount();
+        amount.setCurrency(currency);
+        amount.setAmount(amountWihthoutCurrency);
+        return amount;
+    }
 }
