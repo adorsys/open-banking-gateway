@@ -41,7 +41,7 @@ As we redefine list accounts for adorsys-sandbox bank to sandbox customary one
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {Xs2aProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
-class WiremockE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, WiremockAccountInformationRequest<? extends WiremockAccountInformationRequest<?>>, AccountInformationResult> {
+class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, WiremockAccountInformationRequest<? extends WiremockAccountInformationRequest<?>>, AccountInformationResult> {
 
     private final String OPBA_LOGIN = UUID.randomUUID().toString();
     private final String OPBA_PASSWORD = UUID.randomUUID().toString();
