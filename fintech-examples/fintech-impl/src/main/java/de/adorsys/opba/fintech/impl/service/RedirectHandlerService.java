@@ -24,7 +24,6 @@ public class RedirectHandlerService {
     private static final String LOCATION_HEADER = "Location";
     private final FintechUiConfig uiConfig;
     private final RedirectUrlRepository redirectUrlRepository;
-    private final AuthorizeService authorizeService;
     private final SessionLogicService sessionLogicService;
 
     @Transactional
