@@ -1,0 +1,80 @@
+server:
+  port: ${common.apps.local.aspspprofile.port}
+
+spring:
+  profiles:
+    # debug_mode allows to change bank profiles for test purposes
+    active: debug_mode
+
+# This file is for ASPSP-Profile application
+
+# Forcing `fixed` bank profile for redirect approach in local configuration
+# Points to this file, section 'setting'
+bank_profile:
+  path: ${primary.profile}
+
+# Sandbox environment has very different URLS compared to what is declared in bank_profile.yaml,
+# setting to sandbox alike
+# Assuming OBA-UI from XS2A-Sandbox runs on port 4400
+setting:
+  ais:
+    consentTypes:
+      bankOfferedConsentSupported: TRUE
+      globalConsentSupported: TRUE
+      availableAccountsConsentSupported: TRUE
+      accountAccessFrequencyPerDay: 100
+      notConfirmedConsentExpirationTimeMs: 86400000
+      maxConsentValidityDays: 0
+      accountOwnerInformationSupported: false
+    redirectLinkToOnlineBanking:
+      aisRedirectUrlToAspsp: http://localhost:4400/account-information/login?encryptedConsentId={encrypted-consent-id}&redirectId={redirect-id}
+    transactionParameters:
+      availableBookingStatuses:
+        - BOTH
+        - BOOKED
+        - PENDING
+      transactionsWithoutBalancesSupported: FALSE
+      supportedTransactionApplicationTypes:
+        - application/json
+    deltaReportSettings:
+      entryReferenceFromSupported: FALSE
+      deltaListSupported: FALSE
+    scaRequirementsForOneTimeConsents:
+      scaByOneTimeAvailableAccountsConsentRequired: TRUE
+      scaByOneTimeGlobalConsentRequired: TRUE
+  pis:
+    supportedPaymentTypeAndProductMatrix:
+      SINGLE:
+        - sepa-credit-transfers
+        - instant-sepa-credit-transfers
+    maxTransactionValidityDays: 0
+    notConfirmedPaymentExpirationTimeMs: 86400000
+    paymentCancellationAuthorisationMandated: FALSE
+    redirectLinkToOnlineBanking:
+      pisRedirectUrlToAspsp: http://localhost:4400/payment-initiation/login?paymentId={encrypted-payment-id}&redirectId={redirect-id}
+      pisPaymentCancellationRedirectUrlToAspsp: http://localhost:4400/payment-cancellation/login?paymentId={encrypted-payment-id}&redirectId={redirect-id}
+      paymentCancellationRedirectUrlExpirationTimeMs: 600000
+    countryValidationSupported: DE
+    supportedTransactionStatusFormats:
+      - application/json
+  piis:
+    piisConsentSupported: FALSE
+  common:
+    scaApproachesSupported:
+      - REDIRECT
+    scaRedirectFlow: REDIRECT
+    # FIXME: Local IDP server is not on 4400
+    oauthConfigurationUrl: http://localhost:4400/oauth/authorization-server
+    startAuthorisationMode: auto
+    tppSignatureRequired: FALSE
+    psuInInitialRequestMandated: FALSE
+    redirectUrlExpirationTimeMs: 600000
+    authorisationExpirationTimeMs: 86400000
+    forceXs2aBaseLinksUrl: FALSE
+    xs2aBaseLinksUrl: http://myhost.com/
+    supportedAccountReferenceFields:
+      - IBAN
+    multicurrencyAccountLevelSupported: SUBACCOUNT
+    aisPisSessionsSupported: FALSE
+    signingBasketSupported: FALSE
+    checkTppRolesFromCertificateSupported: TRUE

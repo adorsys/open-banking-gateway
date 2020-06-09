@@ -64,13 +64,13 @@ import static org.awaitility.Awaitility.await;
 @Getter
 public enum SandboxApp {
 
-    ONLINE_BANKING_UI("adorsys/xs2a-online-banking-ui:2.9", true), // adorsys/xs2a-online-banking-ui
+    ONLINE_BANKING_UI("adorsys/xs2a-online-banking-ui:2.9", true, false), // adorsys/xs2a-online-banking-ui
     LEDGERS_APP("ledgers-app-2.8.jar"), // adorsys/ledgers
-    LEDGERS_GATEWAY("gateway-app-5.10.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP)), // adorsys/xs2a-connector-examples
-    ASPSP_PROFILE("aspsp-profile-server-5.10-exec.jar"), // adorsys/xs2a-aspsp-profile
-    CONSENT_MGMT("cms-standalone-service-5.10.jar"), // adorsys/xs2a-consent-management
-    ONLINE_BANKING("online-banking-app-2.9.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP)), // adorsys/xs2a-online-banking
-    TPP_REST("tpp-rest-server-2.9.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP)), // adorsys/xs2a-tpp-rest-server
+    LEDGERS_GATEWAY("gateway-app-5.10.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP), true), // adorsys/xs2a-connector-examples
+    ASPSP_PROFILE("aspsp-profile-server-5.10-exec.jar", false, true), // adorsys/xs2a-aspsp-profile
+    CONSENT_MGMT("cms-standalone-service-5.10.jar", false, true), // adorsys/xs2a-consent-management
+    ONLINE_BANKING("online-banking-app-2.9.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP), true), // adorsys/xs2a-online-banking
+    TPP_REST("tpp-rest-server-2.9.jar", false, ImmutableSet.of(ONLINE_BANKING_UI, LEDGERS_APP), false), // adorsys/xs2a-tpp-rest-server
     CERT_GENERATOR("certificate-generator-2.9.jar"); // adorsys/xs2a-certificate-generator
 
 
@@ -91,6 +91,7 @@ public enum SandboxApp {
     private final String jarOrDockerFile;
     private final String mainClass;
     private final Set<SandboxApp> dependsOn;
+    private boolean useOldProperties;
 
     SandboxApp(String jarOrDockerFile) {
         this.jarOrDockerFile = jarOrDockerFile;
@@ -106,18 +107,20 @@ public enum SandboxApp {
         this.dependsOn = null;
     }
 
-    SandboxApp(String jarOrDockerImage, boolean dockerized) {
+    SandboxApp(String jarOrDockerImage, boolean dockerized, boolean useOldProperties) {
         this.jarOrDockerFile = jarOrDockerImage;
         this.mainClass = null;
         this.dockerized = dockerized;
         this.dependsOn = null;
+        this.useOldProperties = useOldProperties;
     }
 
-    SandboxApp(String jarOrDockerImage, boolean dockerized, Set<SandboxApp> dependsOn) {
+    SandboxApp(String jarOrDockerImage, boolean dockerized, Set<SandboxApp> dependsOn, boolean useOldProperties) {
         this.jarOrDockerFile = jarOrDockerImage;
         this.mainClass = null;
         this.dockerized = dockerized;
         this.dependsOn = dependsOn;
+        this.useOldProperties = useOldProperties;
     }
 
     @SneakyThrows
@@ -208,7 +211,8 @@ public enum SandboxApp {
             JsonNode commonConfig = YML.readTree(Resources.getResource("sandbox/application-test-common.yml"));
             // sandbox/application-test-${appName}.yml
             String pointer = "/env";
-            JsonNode appConfig = YML.readTree(Resources.getResource("sandbox/application-" + testProfileName() + ".yml"));
+            String resourceName = "sandbox/application-" + testProfileName() + (useOldProperties ? "-old" : "") + ".yml";
+            JsonNode appConfig = YML.readTree(Resources.getResource(resourceName));
             JsonNode declaredVars = appConfig.at(pointer);
 
             declaredVars.fields().forEachRemaining(entry -> readYamlVariableToMap(entry, commonConfig, envVars));
@@ -313,7 +317,7 @@ public enum SandboxApp {
     }
 
     private String getPrimaryConfigFile() {
-        return getAndValidatePathFromResource("sandbox/application-" + testProfileName() + ".yml");
+        return getAndValidatePathFromResource("sandbox/application-" + testProfileName() + (useOldProperties ? "-old" : "") + ".yml");
     }
 
     @SneakyThrows
@@ -343,7 +347,8 @@ public enum SandboxApp {
     // Profiles from spring.profile.active are not always applied, forcing it.
     @SneakyThrows
     public Set<String> extraProfiles() {
-        JsonNode tree = YML.readTree(Resources.getResource("sandbox/application-" + testProfileName() + ".yml"));
+        String resourceName = "sandbox/application-" + testProfileName() + (useOldProperties ? "-old" : "") + ".yml";
+        JsonNode tree = YML.readTree(Resources.getResource(resourceName));
         String pointer = "/spring/profiles/active";
         JsonNode activeProfiles = tree.at(pointer);
 
