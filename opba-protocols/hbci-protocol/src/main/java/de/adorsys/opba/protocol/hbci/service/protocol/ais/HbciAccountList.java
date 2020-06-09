@@ -69,12 +69,12 @@ public class HbciAccountList extends ValidatedExecution<AccountListHbciContext> 
 
 
     BankAccount validateAndFixAccountIbans(DelegateExecution execution, BankAccount account) {
-        if (Strings.isNullOrEmpty(account.getIban())) {
+        if (!Strings.isNullOrEmpty(account.getIban())) {
             return account;
         }
 
         log.warn("HBCI returned data without IBAN for execution ID {}, will compute IBAN", execution.getId());
-        
+
         if (Strings.isNullOrEmpty(account.getBlz())) {
             throw new IllegalArgumentException("No BLZ to calculate IBAN");
         }
