@@ -8,8 +8,8 @@ import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStartPaymentAuthorizationParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStartPaymentAuthorizationParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
 import de.adorsys.xs2a.adapter.service.RequestParams;
@@ -35,6 +35,7 @@ public class StartPaymentAuthorization extends ValidatedExecution<Xs2aPisContext
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final PaymentInitiationService pis;
+    private final TppRedirectPreferredResolver tppRedirectPreferredResolver;
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aPisContext context) {
@@ -45,6 +46,8 @@ public class StartPaymentAuthorization extends ValidatedExecution<Xs2aPisContext
     protected void doRealExecution(DelegateExecution execution, Xs2aPisContext context) {
         CurrentBankProfile config = context.aspspProfile();
         ValidatedPathHeaders<Xs2aStartPaymentAuthorizationParameters, Xs2aStandardHeaders> params = extractor.forExecution(context);
+
+        params.getHeaders().setTppRedirectPreferred(tppRedirectPreferredResolver.isRedirectApproachPreferred(config));
 
         Response<StartScaProcessResponse> scaStart = pis.startSinglePaymentAuthorisation(
                 params.getPath().getPaymentProduct(),

@@ -64,6 +64,7 @@ setting:
   common:
     scaApproachesSupported:
       - REDIRECT
+      - EMBEDDED
     scaRedirectFlow: REDIRECT
     # FIXME: Local IDP server is not on 4400
     oauthConfigurationUrl: http://localhost:4400/oauth/authorization-server
