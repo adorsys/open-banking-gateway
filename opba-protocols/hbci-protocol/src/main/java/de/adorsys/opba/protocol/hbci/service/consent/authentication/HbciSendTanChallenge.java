@@ -10,7 +10,6 @@ import de.adorsys.multibanking.hbci.model.HbciConsent;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
-import de.adorsys.opba.protocol.hbci.service.HbciRedirectExecutor;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 public class HbciSendTanChallenge extends ValidatedExecution<HbciContext> {
 
     private final OnlineBankingService onlineBankingService;
-    private final HbciRedirectExecutor redirectExecutor;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {

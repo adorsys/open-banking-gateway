@@ -26,9 +26,9 @@ import org.springframework.stereotype.Service;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Service("hbciAccountList")
+@Service("hbciAccountListing")
 @RequiredArgsConstructor
-public class HbciAccountList extends ValidatedExecution<AccountListHbciContext> {
+public class HbciAccountListing extends ValidatedExecution<AccountListHbciContext> {
 
     private final OnlineBankingService onlineBankingService;
 
