@@ -71,7 +71,7 @@ public class Xs2aInitiateSinglePaymentEntrypoint implements SinglePayment {
         InitiateSinglePaymentRequest request = serviceContext.getRequest();
 
         SinglePaymentXs2aContext context = mapper.map(request);
-        context.setAction(ProtocolAction.INITIATE_PAYMENT);
+        context.setAction(ProtocolAction.SINGLE_PAYMENT);
         extender.extend(context, serviceContext);
 
         Optional<String> psuIdOptional = Optional.ofNullable(request.getExtras())

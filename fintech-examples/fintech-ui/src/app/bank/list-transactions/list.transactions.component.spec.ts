@@ -9,6 +9,7 @@ import { BankComponent } from '../bank.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HttpResponse } from '@angular/common/http';
 import { TransactionsResponse } from '../../api';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ListTransactionsComponent', () => {
   let component: ListTransactionsComponent;

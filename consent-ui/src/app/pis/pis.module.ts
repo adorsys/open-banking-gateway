@@ -6,6 +6,8 @@ import { EntryPageComponent } from './entry-page/entry-page.component';
 import { EnterPinPageComponent } from './enter-pin-page/enter-pin-page.component';
 import { EnterTanPageComponent } from './enter-tan-page/enter-tan-page.component';
 import { SelectScaPageComponent } from './select-sca-page/select-sca-page.component';
+import { ToAspspPageComponent } from './to-aspsp-page/to-aspsp-page.component';
+import { ResultPageComponent } from './result-page/result-page.component';
 
 @NgModule({
   declarations: [
@@ -13,7 +15,9 @@ import { SelectScaPageComponent } from './select-sca-page/select-sca-page.compon
     EntryPageComponent,
     EnterPinPageComponent,
     EnterTanPageComponent,
-    SelectScaPageComponent
+    SelectScaPageComponent,
+    ToAspspPageComponent,
+    ResultPageComponent
   ],
   imports: [SharedModule, PisRoutingModule]
 })

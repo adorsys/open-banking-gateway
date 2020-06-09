@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { StubUtil } from '../common/stub-util';
+import { StubUtil } from '../../common/utils/stub-util';
 import { AisConsentToGrant } from '../common/dto/ais-consent';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { SessionService } from '../../common/session.service';
@@ -17,7 +17,7 @@ export class ResultPageComponent implements OnInit {
   public static ROUTE = 'consent-result';
 
   public finTechName = StubUtil.FINTECH_NAME;
-
+  public title = 'Consent has been granted';
   redirectTo: string;
 
   private route: ActivatedRouteSnapshot;
@@ -64,5 +64,13 @@ export class ResultPageComponent implements OnInit {
       this.sessionService.setRedirectCode(authId, res.headers.get(ApiHeaders.REDIRECT_CODE));
       this.redirectTo = res.headers.get(ApiHeaders.LOCATION);
     });
+  }
+
+  public confirm(value: boolean): void {
+    if (value) {
+      this.onConfirm();
+    } else {
+      this.onDeny();
+    }
   }
 }

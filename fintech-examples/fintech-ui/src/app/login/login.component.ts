@@ -15,11 +15,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.pattern('^[a-z0-9]+$')]],
+      username: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]+$')]],
       password: ['', Validators.required]
-
-      // who put in this validation, and why, does not make sense to me (peter)
-      // password: ['', [Validators.required, Validators.pattern('.{4}')]]
     });
   }
 

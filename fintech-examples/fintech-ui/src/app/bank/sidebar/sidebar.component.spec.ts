@@ -7,6 +7,7 @@ import { BankProfileService } from '../../bank-search/services/bank-profile.serv
 import { BankProfile } from '../../api';
 import { of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
