@@ -57,9 +57,6 @@ class RedirectHandlerServiceTest {
     private RedirectUrlRepository redirectUrlRepository;
 
     @Mock
-    private AuthorizeService authorizeService;
-
-    @Mock
     private SessionLogicService sessionLogicService;
 
     private RedirectHandlerService redirectHandlerService;
@@ -69,7 +66,7 @@ class RedirectHandlerServiceTest {
         MockitoAnnotations.initMocks(this);
         log.info("setup RestRequestContext");
         restRequestContext.setRequestId(UUID.randomUUID().toString());
-        redirectHandlerService = new RedirectHandlerService(uiConfig, redirectUrlRepository, authorizeService, sessionLogicService);
+        redirectHandlerService = new RedirectHandlerService(uiConfig, redirectUrlRepository, sessionLogicService);
     }
 
     @Test

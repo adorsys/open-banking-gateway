@@ -2,9 +2,13 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.fintech.api.model.generated.SinglePaymentInitiationRequest;
+import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
+import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
+import de.adorsys.opba.fintech.impl.database.repositories.ConsentRepository;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
+import de.adorsys.opba.fintech.impl.tppclients.ConsentType;
 import de.adorsys.opba.fintech.impl.tppclients.TppPisClient;
 import de.adorsys.opba.tpp.pis.api.model.generated.AccountReference;
 import de.adorsys.opba.tpp.pis.api.model.generated.Amount;
@@ -35,10 +39,16 @@ public class PaymentService {
     private final TppProperties tppProperties;
     private final RestRequestContext restRequestContext;
     private final SessionLogicService sessionLogicService;
+    private final FintechUiConfig uiConfig;
+    private final RedirectHandlerService redirectHandlerService;
+    private final HandleAcceptedService handleAcceptedService;
+    private final ConsentRepository consentRepository;
 
     public ResponseEntity<Void> initiateSinglePayment(String bankId, SinglePaymentInitiationRequest singlePaymentInitiationRequest,
-                                                      String okUrl, String notOkUrl) {
+                                                      String fintechOkUrl, String fintechNOkUrl) {
         log.info("fill paramemeters for payment");
+        final String fintechRedirectCode = UUID.randomUUID().toString();
+
         SessionEntity sessionEntity = sessionLogicService.getSession();
         PaymentInitiation payment = new PaymentInitiation();
         payment.setCreditorAccount(getAccountReference(singlePaymentInitiationRequest.getCreditorIban()));
@@ -46,13 +56,13 @@ public class PaymentService {
         payment.setCreditorName(singlePaymentInitiationRequest.getName());
         payment.setInstructedAmount(getAmountWithCurrency(singlePaymentInitiationRequest.getAmount()));
         payment.endToEndIdentification(singlePaymentInitiationRequest.getPurpose());
-        log.info("start call for payment {} {}", okUrl, notOkUrl);
+        log.info("start call for payment {} {}", fintechOkUrl, fintechNOkUrl);
         ResponseEntity<PaymentInitiationResponse> responseOfTpp = tppPisClient.initiatePayment(
                 payment,
                 tppProperties.getServiceSessionPassword(),
                 sessionEntity.getUserEntity().getFintechUserId(),
-                okUrl,
-                notOkUrl,
+                RedirectUrlsEntity.buildOkUrl(uiConfig, fintechRedirectCode),
+                RedirectUrlsEntity.buildNokUrl(uiConfig, fintechRedirectCode),
                 UUID.fromString(restRequestContext.getRequestId()),
                 paymentProduct,
                 COMPUTE_X_TIMESTAMP_UTC,
@@ -64,10 +74,8 @@ public class PaymentService {
         if (responseOfTpp.getStatusCode() != HttpStatus.ACCEPTED) {
             throw new RuntimeException("Did expect status 202 from tpp, but got " + responseOfTpp.getStatusCodeValue());
         }
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(responseOfTpp.getHeaders().getLocation());
-        log.info("finished call for payment with redirection to {}", httpHeaders.getLocation());
-        return new ResponseEntity<>(null, httpHeaders, HttpStatus.ACCEPTED);
+        redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
+        return handleAcceptedService.handleAccepted(consentRepository, ConsentType.PIS, bankId, fintechRedirectCode, sessionEntity, responseOfTpp.getHeaders());
     }
 
     private AccountReference getAccountReference(String iban) {
@@ -82,5 +90,4 @@ public class PaymentService {
         amount.setAmount(amountWihthoutCurrency);
         return amount;
     }
-
 }
