@@ -1,14 +1,14 @@
 package de.adorsys.opba.fintech.impl.tppclients;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.opba.tpp.pis.api.resource.generated.TppBankingApiPaymentInitiationServicePisApi;
+import de.adorsys.opba.tpp.pis.api.resource.generated.TppBankingApiSinglePaymentPisApi;
 import org.springframework.cloud.openfeign.FeignClient;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @FeignClient(url = "${tpp.url}", name = "tppPisClient")
-public interface TppPisClient extends TppBankingApiPaymentInitiationServicePisApi {
+public interface TppPisClient extends TppBankingApiSinglePaymentPisApi {
     default Optional<ObjectMapper> getObjectMapper() {
         return Optional.empty();
     }

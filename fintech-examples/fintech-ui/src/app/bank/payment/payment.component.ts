@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment',
@@ -9,7 +8,5 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class PaymentComponent implements OnInit {
   constructor() {}
 
-
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }

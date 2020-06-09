@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FintechSinglePaymentInitiationService } from '../../api/api/fintechSinglePaymentInitiation.service';
-import { ClassSinglePaymentInitiationRequest } from '../../api/model-classes/ClassSinglePaymentInitiationRequest';
+import { ValidatorService } from 'angular-iban';
+import { FintechSinglePaymentInitiationService } from '../../../api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HeaderConfig } from '../../models/consts';
-import { RedirectStruct } from '../../bank/redirect-page/redirect-struct';
+import { ClassSinglePaymentInitiationRequest } from '../../../api/model-classes/ClassSinglePaymentInitiationRequest';
 import { map } from 'rxjs/operators';
-
+import { HeaderConfig } from '../../../models/consts';
 
 @Component({
   selector: 'app-initiate',
@@ -15,15 +14,13 @@ import { map } from 'rxjs/operators';
 })
 export class InitiateComponent implements OnInit {
   public static ROUTE = 'initiate';
-  bankId = null;
+  bankId = '';
 
   paymentForm: FormGroup;
-
   constructor(private formBuilder: FormBuilder,
               private fintechSinglePaymentInitiationService: FintechSinglePaymentInitiationService,
               private router: Router,
-              private route: ActivatedRoute
-  ) {
+              private route: ActivatedRoute) {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
     console.log('bankid:' + this.bankId);
   }
@@ -31,10 +28,10 @@ export class InitiateComponent implements OnInit {
   ngOnInit() {
     this.paymentForm = this.formBuilder.group({
       name: ['peter', Validators.required],
-      ibanDebitor: ['DE80760700240271232400', Validators.required],
-      ibanCreditor: ['DE80760700240271232400', Validators.required],
-      amount: ['12.34', [Validators.required, Validators.min(0)]],
-      purpose: ['money test']
+      debitorIban: ['DE80760700240271232400', [ValidatorService.validateIban, Validators.required]],
+      creditorIban: ['DE80760700240271232400', [ValidatorService.validateIban, Validators.required]],
+      amount: ['12.34', [Validators.pattern('^[1-9]\\d*(\\.\\d{1,2})?$'), Validators.required]],
+      purpose: ['test transfer']
     });
   }
 
@@ -47,8 +44,8 @@ export class InitiateComponent implements OnInit {
     const paymentRequest = new ClassSinglePaymentInitiationRequest();
     paymentRequest.amount = this.paymentForm.getRawValue().amount;
     paymentRequest.name = this.paymentForm.getRawValue().name;
-    paymentRequest.creditorIban = this.paymentForm.getRawValue().ibanCreditor;
-    paymentRequest.debitorIban = this.paymentForm.getRawValue().ibanDebitor;
+    paymentRequest.creditorIban = this.paymentForm.getRawValue().debitorIban;
+    paymentRequest.debitorIban = this.paymentForm.getRawValue().creditorIban;
     paymentRequest.purpose = this.paymentForm.getRawValue().purpose;
     this.fintechSinglePaymentInitiationService.initiateSinglePayment('', '',
       okurl, notOkUrl, this.bankId, paymentRequest, 'response')
@@ -65,6 +62,13 @@ export class InitiateComponent implements OnInit {
         });
   }
 
-  onDeny() {
+  onDeny() {}
+
+  get debitorIban() {
+    return this.paymentForm.get('debitorIban');
+  }
+
+  get creditorIban() {
+    return this.paymentForm.get('creditorIban');
   }
 }

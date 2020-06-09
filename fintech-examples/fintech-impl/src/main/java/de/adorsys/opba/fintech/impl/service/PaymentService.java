@@ -36,51 +36,51 @@ public class PaymentService {
     private final RestRequestContext restRequestContext;
     private final SessionLogicService sessionLogicService;
 
-    public ResponseEntity<Void> initiateSinglePayment(String bankId,
-                                                      SinglePaymentInitiationRequest singlePaymentInitiationRequest,
-                                                      String okUrl,
-                                                      String notOkUrl) {
+    public ResponseEntity<Void> initiateSinglePayment(String bankId, SinglePaymentInitiationRequest singlePaymentInitiationRequest,
+                                                      String okUrl, String notOkUrl) {
         log.info("fill paramemeters for payment");
         SessionEntity sessionEntity = sessionLogicService.getSession();
         PaymentInitiation payment = new PaymentInitiation();
-        // creditor
-        AccountReference creditorAccount = new AccountReference();
-        creditorAccount.setIban(singlePaymentInitiationRequest.getCreditorIban());
-        payment.setCreditorAccount(creditorAccount);
-        // debitor
-        AccountReference debitorAccount = new AccountReference();
-        debitorAccount.setIban(singlePaymentInitiationRequest.getDebitorIban());
-        payment.setDebtorAccount(debitorAccount);
-        // name
+        payment.setCreditorAccount(getAccountReference(singlePaymentInitiationRequest.getCreditorIban()));
+        payment.setDebtorAccount(getAccountReference(singlePaymentInitiationRequest.getDebitorIban()));
         payment.setCreditorName(singlePaymentInitiationRequest.getName());
-        // amount
-        Amount amount = new Amount();
-        amount.setCurrency(currency);
-        amount.setAmount(singlePaymentInitiationRequest.getAmount());
-        payment.setInstructedAmount(amount);
-        // purpose
+        payment.setInstructedAmount(getAmountWithCurrency(singlePaymentInitiationRequest.getAmount()));
         payment.endToEndIdentification(singlePaymentInitiationRequest.getPurpose());
         log.info("start call for payment {} {}", okUrl, notOkUrl);
         ResponseEntity<PaymentInitiationResponse> responseOfTpp = tppPisClient.initiatePayment(
                 payment,
                 tppProperties.getServiceSessionPassword(),
                 sessionEntity.getUserEntity().getFintechUserId(),
-                okUrl, notOkUrl,
+                okUrl,
+                notOkUrl,
                 UUID.fromString(restRequestContext.getRequestId()),
-                paymentProduct, COMPUTE_X_TIMESTAMP_UTC,
+                paymentProduct,
+                COMPUTE_X_TIMESTAMP_UTC,
                 // TODO has to be PIS
                 OperationType.AIS.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
-                COMPUTE_FINTECH_ID, bankId, null
-        );
+                COMPUTE_FINTECH_ID,
+                bankId);
         if (responseOfTpp.getStatusCode() != HttpStatus.ACCEPTED) {
             throw new RuntimeException("Did expect status 202 from tpp, but got " + responseOfTpp.getStatusCodeValue());
         }
-        log.info("finished call for payment {}", responseOfTpp.getStatusCodeValue());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(responseOfTpp.getHeaders().getLocation());
-        log.info("redirection to {}", httpHeaders.getLocation());
+        log.info("finished call for payment with redirection to {}", httpHeaders.getLocation());
         return new ResponseEntity<>(null, httpHeaders, HttpStatus.ACCEPTED);
+    }
+
+    private AccountReference getAccountReference(String iban) {
+        AccountReference account = new AccountReference();
+        account.setIban(iban);
+        return account;
+    }
+
+    private Amount getAmountWithCurrency(String amountWihthoutCurrency) {
+        Amount amount = new Amount();
+        amount.setCurrency(currency);
+        amount.setAmount(amountWihthoutCurrency);
+        return amount;
     }
 
 }
