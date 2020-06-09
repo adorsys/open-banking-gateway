@@ -1,11 +1,14 @@
 package de.adorsys.opba.protocol.hbci.entrypoint;
 
+import de.adorsys.multibanking.domain.BankAccount;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
+import de.adorsys.opba.protocol.api.dto.result.body.AccountListDetailBody;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListAccountsResult;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.protocol.bpmnshared.GlobalConst.SPRING_KEYWORD;
@@ -29,9 +32,16 @@ public class HbciResultBodyExtractor {
         return null;
     }
 
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE)
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE, uses = HbciToAccountBodyMapper.class)
     public interface HbciToFacadeMapper {
 
         AccountListBody map(AisListAccountsResult accountList);
+    }
+
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE)
+    public interface HbciToAccountBodyMapper {
+
+        @Mapping(source = "iban", target = "resourceId")
+        AccountListDetailBody map(BankAccount accountList);
     }
 }
