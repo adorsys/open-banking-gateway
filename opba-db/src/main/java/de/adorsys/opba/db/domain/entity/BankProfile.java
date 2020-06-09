@@ -107,4 +107,14 @@ public class BankProfile implements Serializable, CurrentBankProfile {
 
         return bank.getBic();
     }
+
+    @Override
+    public String getBankCode() {
+        Bank bank = getBank();
+        if (null == bank) {
+            return null;
+        }
+
+        return bank.getBankCode();
+    }
 }

@@ -46,4 +46,9 @@ public interface CurrentBankProfile {
      * Bank identification code.
      */
     String getBic();
+
+    /**
+     * Bank code.
+     */
+    String getBankCode();
 }
