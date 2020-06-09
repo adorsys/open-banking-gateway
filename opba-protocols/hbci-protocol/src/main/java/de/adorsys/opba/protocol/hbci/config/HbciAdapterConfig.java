@@ -35,7 +35,7 @@ public class HbciAdapterConfig {
 
         // Initiate MOCK bank, should come after HbciBanking is created
         BankInfo bankInfo = new BankInfo();
-        bankInfo.setBlz("ADORSYS");
+        bankInfo.setBlz("10000001");
         bankInfo.setPinTanAddress("http://localhost:8090/hbci-mock/");
         bankInfo.setPinTanVersion(HBCIVersion.byId(properties.getHbciVersion()));
         bankInfo.setBic("ADORSYS");
