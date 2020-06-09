@@ -32,6 +32,7 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
+    private final TppRedirectPreferredResolver tppRedirectPreferredResolver;
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
@@ -44,6 +45,9 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
 
         ValidatedPathHeaders<Xs2aInitialConsentParameters, Xs2aStandardHeaders> params =
                 extractor.forExecution(context);
+
+        params.getHeaders().setTppRedirectPreferred(tppRedirectPreferredResolver.isRedirectApproachPreferred(config));
+
         Response<StartScaProcessResponse> scaStart = ais.startConsentAuthorisation(
                 params.getPath().getConsentId(),
                 params.getHeaders().toHeaders()
