@@ -40,7 +40,6 @@ export class ListAccountsComponent implements OnInit {
     this.aisService.getAccounts(this.bankId).subscribe(response => {
       switch (response.status) {
         case 202:
-          const location = encodeURIComponent(response.headers.get(HeaderConfig.HEADER_FIELD_LOCATION));
           this.storageService.setRedirect(
             response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE),
             response.headers.get(HeaderConfig.HEADER_FIELD_AUTH_ID),
@@ -49,9 +48,10 @@ export class ListAccountsComponent implements OnInit {
             RedirectType.AIS
           );
           const r = new RedirectStruct();
-          r.okUrl = location;
-          r.cancelUrl = 'this-url-must-be-known-by-server';
+          r.redirectUrl = encodeURIComponent(response.headers.get(HeaderConfig.HEADER_FIELD_LOCATION));
           r.redirectCode = response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE);
+          r.bankId = this.bankId;
+          r.bankName = this.storageService.getBankName();
           this.router.navigate(['redirect', JSON.stringify(r)], { relativeTo: this.route });
           break;
         case 200:

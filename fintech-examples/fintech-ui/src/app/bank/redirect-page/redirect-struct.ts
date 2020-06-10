@@ -1,7 +1,8 @@
 export class RedirectStruct {
-  okUrl: string;
-  cancelUrl: string;
+  redirectUrl: string;
   redirectCode: string;
+  bankId: string;
+  bankName: string;
 }
 
 export class RedirectTupelForMap {

@@ -8,6 +8,7 @@ import { map } from 'rxjs/operators';
 import { HeaderConfig } from '../../../models/consts';
 import { RedirectStruct, RedirectType } from '../../redirect-page/redirect-struct';
 import { StorageService } from '../../../services/storage.service';
+import { ConfirmData } from '../confirm/confirm.data';
 
 @Component({
   selector: 'app-initiate',
@@ -31,8 +32,8 @@ export class InitiateComponent implements OnInit {
   ngOnInit() {
     this.paymentForm = this.formBuilder.group({
       name: ['peter', Validators.required],
+      creditorIban: ['AL90208110080000001039531801', [ValidatorService.validateIban, Validators.required]],
       debitorIban: ['DE80760700240271232400', [ValidatorService.validateIban, Validators.required]],
-      creditorIban: ['DE80760700240271232400', [ValidatorService.validateIban, Validators.required]],
       amount: ['12.34', [Validators.pattern('^[1-9]\\d*(\\.\\d{1,2})?$'), Validators.required]],
       purpose: ['test transfer']
     });
@@ -47,8 +48,8 @@ export class InitiateComponent implements OnInit {
     const paymentRequest = new ClassSinglePaymentInitiationRequest();
     paymentRequest.amount = this.paymentForm.getRawValue().amount;
     paymentRequest.name = this.paymentForm.getRawValue().name;
-    paymentRequest.creditorIban = this.paymentForm.getRawValue().debitorIban;
-    paymentRequest.debitorIban = this.paymentForm.getRawValue().creditorIban;
+    paymentRequest.creditorIban = this.paymentForm.getRawValue().creditorIban;
+    paymentRequest.debitorIban = this.paymentForm.getRawValue().debitorIban;
     paymentRequest.purpose = this.paymentForm.getRawValue().purpose;
     this.fintechSinglePaymentInitiationService.initiateSinglePayment('', '',
       okurl, notOkUrl, this.bankId, paymentRequest, 'response')
@@ -66,13 +67,24 @@ export class InitiateComponent implements OnInit {
                 parseInt(response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_X_MAX_AGE), 0),
                 RedirectType.PIS
               );
-              console.log('location is ', location);
-              window.location.href = location;
+
+              const confirmData = new ConfirmData();
+              confirmData.paymentRequest = paymentRequest;
+              confirmData.redirectStruct = new RedirectStruct();
+              confirmData.redirectStruct.redirectUrl = encodeURIComponent(location);
+              confirmData.redirectStruct.redirectCode = response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE);
+              confirmData.redirectStruct.bankId = this.bankId;
+              confirmData.redirectStruct.bankName = this.storageService.getBankName();
+
+              this.router.navigate(['../confirm', JSON.stringify(confirmData)], { relativeTo: this.route });
+              break;
           }
         });
   }
 
-  onDeny() {}
+  onDeny() {
+    this.router.navigate(['../../'], { relativeTo: this.route });
+  }
 
   get debitorIban() {
     return this.paymentForm.get('debitorIban');
