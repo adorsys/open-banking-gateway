@@ -7,37 +7,38 @@
         </preConditions>
         <comment>Fills tables with mock data</comment>
        <sql>
-           <!--  ADORSYS ASPSP  -->
-           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (1, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'LIST_ACCOUNTS', 'xs2aListAccounts');
-           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (2, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
-           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (3, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'AUTHORIZATION', '');
-           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (4, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
 
-           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (1, 3, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
-           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (2, 3, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
-           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (3, 3, 'FROM_ASPSP_REDIRECT', 'xs2aFromAspspRedirect');
-           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (4, 3, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
+           <!--  ADORSYS ASPSP  -->
+           insert into ${table-prefix}bank_action (id, bank_uuid, action, protocol_bean_name) values (1, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'LIST_ACCOUNTS', 'xs2aListAccounts');
+           insert into ${table-prefix}bank_action (id, bank_uuid, action, protocol_bean_name) values (2, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
+           insert into ${table-prefix}bank_action (id, bank_uuid, action, protocol_bean_name) values (3, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'AUTHORIZATION', '');
+           insert into ${table-prefix}bank_action (id, bank_uuid, action, protocol_bean_name) values (4, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
+
+           insert into ${table-prefix}bank_sub_action (id, protocol_id, action, sub_protocol_bean_name) values (1, 3, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
+           insert into ${table-prefix}bank_sub_action (id, protocol_id, action, sub_protocol_bean_name) values (2, 3, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
+           insert into ${table-prefix}bank_sub_action (id, protocol_id, action, sub_protocol_bean_name) values (3, 3, 'FROM_ASPSP_REDIRECT', 'xs2aFromAspspRedirect');
+           insert into ${table-prefix}bank_sub_action (id, protocol_id, action, sub_protocol_bean_name) values (4, 3, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
 
            <!--  ADORSYS REDIRECT ASPSP  -->
-           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (7, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'LIST_ACCOUNTS', 'xs2aListAccounts');
-           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (8, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
-           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (9, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'AUTHORIZATION', '');
-           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (10, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
-           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (11, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
-           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (12, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
+           insert into ${table-prefix}bank_action (id, bank_uuid, action, protocol_bean_name) values (7, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'LIST_ACCOUNTS', 'xs2aListAccounts');
+           insert into ${table-prefix}bank_action (id, bank_uuid, action, protocol_bean_name) values (8, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
+           insert into ${table-prefix}bank_action (id, bank_uuid, action, protocol_bean_name) values (9, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'AUTHORIZATION', '');
+           insert into ${table-prefix}bank_action (id, bank_uuid, action, protocol_bean_name) values (10, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
+           insert into ${table-prefix}bank_action (id, bank_uuid, action, protocol_bean_name) values (11, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
+           insert into ${table-prefix}bank_action (id, bank_uuid, action, protocol_bean_name) values (12, '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
 
-           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (5, 9, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
-           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (6, 9, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
-           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (7, 9, 'FROM_ASPSP_REDIRECT', 'xs2aFromAspspRedirect');
-           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (8, 9, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
+           insert into ${table-prefix}bank_sub_action (id, protocol_id, action, sub_protocol_bean_name) values (5, 9, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
+           insert into ${table-prefix}bank_sub_action (id, protocol_id, action, sub_protocol_bean_name) values (6, 9, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
+           insert into ${table-prefix}bank_sub_action (id, protocol_id, action, sub_protocol_bean_name) values (7, 9, 'FROM_ASPSP_REDIRECT', 'xs2aFromAspspRedirect');
+           insert into ${table-prefix}bank_sub_action (id, protocol_id, action, sub_protocol_bean_name) values (8, 9, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
 
            <!--  ADORSYS EMBEDDED ASPSP  -->
-           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (13, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'LIST_ACCOUNTS', 'xs2aListAccounts');
-           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (14, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
-           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (15, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'AUTHORIZATION', '');
-           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (16, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
-           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (17, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
-           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (18, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
+           insert into ${table-prefix}bank_action (id, bank_uuid, action, protocol_bean_name) values (13, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'LIST_ACCOUNTS', 'xs2aListAccounts');
+           insert into ${table-prefix}bank_action (id, bank_uuid, action, protocol_bean_name) values (14, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
+           insert into ${table-prefix}bank_action (id, bank_uuid, action, protocol_bean_name) values (15, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'AUTHORIZATION', '');
+           insert into ${table-prefix}bank_action (id, bank_uuid, action, protocol_bean_name) values (16, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'SINGLE_PAYMENT', 'xs2aInitiateSinglePayment');
+           insert into ${table-prefix}bank_action (id, bank_uuid, action, protocol_bean_name) values (17, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'GET_PAYMENT_INFORMATION', 'xs2aGetPaymentInfoState');
+           insert into ${table-prefix}bank_action (id, bank_uuid, action, protocol_bean_name) values (18, 'aa750320-2958-455e-9926-e9fca5ddfa92', 'GET_PAYMENT_STATUS', 'xs2aGetPaymentStatusState');
 
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (9, 15, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (10, 15, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
@@ -63,6 +64,10 @@
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (20000, 30000, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (30000, 30000, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (40000, 30000, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
+           insert into ${table-prefix}bank_sub_action (id, protocol_id, action, sub_protocol_bean_name) values (9, 15, 'GET_AUTHORIZATION_STATE', 'xs2aGetAuthorizationState');
+           insert into ${table-prefix}bank_sub_action (id, protocol_id, action, sub_protocol_bean_name) values (10, 15, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
+           insert into ${table-prefix}bank_sub_action (id, protocol_id, action, sub_protocol_bean_name) values (11, 15, 'FROM_ASPSP_REDIRECT', 'xs2aFromAspspRedirect');
+           insert into ${table-prefix}bank_sub_action (id, protocol_id, action, sub_protocol_bean_name) values (12, 15, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
        </sql>
     </changeSet>
 
