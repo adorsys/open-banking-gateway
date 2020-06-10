@@ -36,12 +36,22 @@ body {
     margin-bottom: 2rem;
     font-size: 2rem;
     font-family: geometric-SemiBold, sans-serif;
+
+    &--normal {
+      text-align: inherit;
+      margin-bottom: 8px;
+    }
   }
 
   &-img {
     width: 136px;
     height: 136px;
   }
+}
+
+.font-weight-bold,
+.text-bold {
+  font-family: geometric-SemiBold, sans-serif;
 }
 
 .modal {
