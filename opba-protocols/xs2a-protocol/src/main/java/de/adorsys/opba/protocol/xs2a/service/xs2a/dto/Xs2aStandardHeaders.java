@@ -8,6 +8,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.xs2a.adapter.service.RequestHeaders;
 import lombok.Data;
+import org.jetbrains.annotations.Nullable;
 import org.mapstruct.Mapper;
 
 import javax.validation.constraints.NotBlank;
@@ -17,6 +18,7 @@ import java.util.Map;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_ID;
+import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_PREFERRED;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_GTW_ASPSP_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 
@@ -45,12 +47,23 @@ public class Xs2aStandardHeaders {
     @NotBlank // can't be provided manually
     private String requestId;
 
+    /**
+     * TPP-Redirect-Preferred - If value is null then approach is irrelevant for TPP.
+     * If value is 'true' then Redirect approach is preferred for TPP, if 'false' then other approaches more preferred then Redirect.
+     */
+    @Nullable
+    private Boolean tppRedirectPreferred;
+
     public RequestHeaders toHeaders() {
         Map<String, String> allValues = new HashMap<>();
 
         allValues.put(PSU_ID, psuId);
         allValues.put(X_REQUEST_ID, requestId);
         allValues.put(X_GTW_ASPSP_ID, aspspId);
+
+        if (tppRedirectPreferred != null) {
+            allValues.put(TPP_REDIRECT_PREFERRED, String.valueOf(tppRedirectPreferred));
+        }
 
         return RequestHeaders.fromMap(allValues);
     }

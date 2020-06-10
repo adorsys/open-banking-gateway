@@ -36,4 +36,9 @@ public interface CurrentBankProfile {
      * Preferred SCA approach for this ASPSP.
      */
     Approach getPreferredApproach();
+
+    /**
+     * ASPSP tries to use preferred SCA approach.
+     */
+    boolean isTryToUsePreferredApproach();
 }
