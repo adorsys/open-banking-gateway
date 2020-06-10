@@ -60,5 +60,60 @@ public enum FieldCode {
      * When multiple SCA challenges (2-factor or multifactor authorization) are available
      * (i.e. SMS from ASPSP, EMAIL from ASPSP) - the identifier of SCA challenge.
      */
-    SCA_METHOD_ID
+    SCA_METHOD_ID,
+
+    /**
+     * ASPSP redirect URL to be called if consent was declined
+     */
+    REDIRECT_URI_NOK,
+
+    /**
+     * IP port of IP address between PSU and TPP.
+     */
+    PSU_IP_PORT,
+
+    /**
+     * DebtorAccount is required from user in order to payment initiate.
+     */
+    DEBTOR_ACCOUNT,
+
+    /**
+     * Instructed amount is required from user in order to payment initiate.
+     */
+    INSTRUCTED_AMOUNT,
+
+    /**
+     * Creditor account is required from user in order to payment initiate.
+     */
+    CREDITOR_ACCOUNT,
+
+    /**
+     * Creditor name is required in order to payment initiate.
+     */
+    CREDITOR_NAME,
+
+    /**
+     * Creditor agent is additional information about ASPSP. Used in order to payment initiate.
+     */
+    CREDITOR_AGENT,
+
+    /**
+     * Creditor address is additional information about ASPSP. Used in order to payment initiate.
+     */
+    CREDITOR_ADDRESS,
+
+    /**
+     * Remittance information is additional data about Payment
+     */
+    REMITTANCE_INFORMATION,
+
+    /**
+     * End to end identification is unique end to end identity
+     */
+    END_TO_END_IDENTIFICATION,
+
+    /**
+     * Tpp redirect Preferred
+     */
+    TPP_REDIRECT_PREFERRED
 }

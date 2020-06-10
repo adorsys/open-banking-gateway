@@ -533,7 +533,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
 
     @ParameterizedTest
     @EnumSource(Approach.class)
-    void testAccountsListWithConsentUsingRedirectWithMissingPsuId(Approach expectedApproach, @TempDir Path tempDir) {
+    void testAccountsListWithConsentWithMissingPsuId(Approach expectedApproach, @TempDir Path tempDir) {
         given()
                 .redirect_mock_of_sandbox_nopsu_for_anton_brueckner_accounts_running(tempDir)
                 .ignore_validation_rules_table_contains_field_psu_id()
@@ -554,5 +554,124 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .open_banking_has_consent_for_anton_brueckner_account_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
                 .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testAccountsListWithConsentUsingEmbeddedWithMissingIpAddressWhenItIsMandatoryByDefault(Approach expectedApproach) {
+        given()
+                .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .rest_assured_points_to_opba_server()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_list_accounts_for_max_musterman_missing_ip_address()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .fintech_calls_get_consent_auth_state_to_read_violations_with_missing_ip_address()
+                .and()
+                .user_max_musterman_provided_initial_parameters_with_ip_address_to_list_accounts_all_accounts_consent()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+                .open_banking_has_consent_for_max_musterman_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testAccountsListWithConsentUsingEmbeddedWithMissingIpAddressWhenItIsOptionalInDb(Approach expectedApproach) {
+        given()
+                .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
+                .ignore_validation_rules_table_ignore_missing_ip_address()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .rest_assured_points_to_opba_server()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_list_accounts_for_max_musterman_missing_ip_address()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .fintech_calls_get_consent_auth_state_to_read_violations_without_missing_ip_address()
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+                .open_banking_has_consent_for_max_musterman_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testAccountsListWithConsentUsingEmbeddedWithPsuIpPortWhenItIsRequiredInDb(Approach expectedApproach) {
+        given()
+                .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
+                .ignore_validation_rules_table_do_not_ignore_missing_psu_ip_port()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .rest_assured_points_to_opba_server()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_list_accounts_for_max_musterman()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .fintech_calls_get_consent_auth_state_to_read_violations_about_missing_psu_ip_port()
+                .and()
+                .user_max_musterman_provided_initial_parameters_with_psu_ip_port_to_list_accounts_all_accounts_consent()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+                .open_banking_has_consent_for_max_musterman_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testAccountsListWithConsentUsingEmbeddedWithPsuIpPortWhenItIsOptionalInDb(Approach expectedApproach) {
+        given()
+                .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
+                .ignore_validation_rules_table_ignore_missing_psu_ip_port()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .rest_assured_points_to_opba_server()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_list_accounts_for_max_musterman()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .fintech_calls_get_consent_auth_state_to_read_violations_without_missing_psu_ip_port()
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+                .open_banking_has_consent_for_max_musterman_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
     }
 }

@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.domain.ValidationIssueException;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ValidationMode;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -60,11 +61,8 @@ public class Xs2aValidator {
         );
         for (Object value : dtosToValidate) {
             Set<ConstraintViolation<Object>> errors = validator.validate(value)
-                    .stream()
-                    .filter(f -> {
-                        FieldCode fieldCode = findInfoOnViolation(f).ctx().value();
-                        return !(rulesMap.containsKey(fieldCode) && !rulesMap.get(fieldCode).apply());
-                    })
+                                                              .stream()
+                                                              .filter(f -> doNotIgnoreValidationError(f, rulesMap))
                     .collect(Collectors.toSet());
             allErrors.addAll(errors);
         }
@@ -95,6 +93,19 @@ public class Xs2aValidator {
                 .code(info.ctx().value())
                 .captionMessage(violation.getMessage())
                 .build();
+    }
+
+    private boolean doNotIgnoreValidationError(ConstraintViolation<Object> constraint, Map<FieldCode, IgnoreValidationRule> rulesMap) {
+        ValidationInfo info = findInfoOnViolation(constraint);
+        boolean doNotIgnoreValidationError = info.validationMode() == ValidationMode.MANDATORY;
+
+        FieldCode fieldCode = info.ctx().value();
+        IgnoreValidationRule ignoreRule = rulesMap.get(fieldCode);
+        if (ignoreRule != null) {
+            doNotIgnoreValidationError = ignoreRule.applies();
+        }
+
+        return doNotIgnoreValidationError;
     }
 
     @SneakyThrows
