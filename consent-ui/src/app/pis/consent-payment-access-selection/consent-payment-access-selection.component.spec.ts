@@ -1,18 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConsentPaymentAccessSelectionComponent, Access } from './consent-payment-access-selection.component';
-import {ReactiveFormsModule} from "@angular/forms";
-import {RouterTestingModule} from "@angular/router/testing";
-import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {ActivatedRoute} from "@angular/router";
-import {of} from "rxjs";
-import {StubUtilTests} from "../../ais/common/stub-util-tests";
-import {SessionService} from "../../common/session.service";
-import {AccountAccessLevel, AisConsentToGrant} from "../../ais/common/dto/ais-consent";
-import {AuthConsentState} from "../../ais/common/dto/auth-state";
-import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
-import {DedicatedAccessComponent} from "../../ais/entry-page/initiation/common/dedicated-access/dedicated-access.component";
-import {PaymentsConsentReviewComponent} from "../payments-consent-review/payments-consent-review.component";
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ActivatedRoute } from '@angular/router';
+import { of } from 'rxjs';
+import { StubUtilTests } from '../../ais/common/stub-util-tests';
+import { SessionService } from '../../common/session.service';
+import { AccountAccessLevel, AisConsentToGrant } from '../../ais/common/dto/ais-consent';
+import { AuthConsentState } from '../../ais/common/dto/auth-state';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { DedicatedAccessComponent } from '../../ais/entry-page/initiation/common/dedicated-access/dedicated-access.component';
+import { PaymentsConsentReviewComponent } from '../payments-consent-review/payments-consent-review.component';
 
 describe('ConsentPaymentAccessSelectionComponent', () => {
   let component: ConsentPaymentAccessSelectionComponent;

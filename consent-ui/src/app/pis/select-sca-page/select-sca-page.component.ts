@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthStateConsentAuthorizationService, ScaUserData, UpdateConsentAuthorizationService} from '../../api';
+import { AuthStateConsentAuthorizationService, ScaUserData, UpdateConsentAuthorizationService } from '../../api';
 import { FormControl } from '@angular/forms';
-import {SessionService} from "../../common/session.service";
-import {ActivatedRoute} from "@angular/router";
-import {StubUtil} from "../../common/utils/stub-util";
-import {ApiHeaders} from "../../api/api.headers";
+import { SessionService } from '../../common/session.service';
+import { ActivatedRoute } from '@angular/router';
+import { StubUtil } from '../../common/utils/stub-util';
+import { ApiHeaders } from '../../api/api.headers';
 
 @Component({
   selector: 'consent-app-select-sca-page',

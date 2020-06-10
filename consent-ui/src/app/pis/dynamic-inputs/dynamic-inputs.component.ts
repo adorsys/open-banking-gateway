@@ -1,7 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {AuthViolation} from "../../api";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {AisConsentToGrant} from "../../ais/common/dto/ais-consent";
+import { Component, Input, OnInit } from '@angular/core';
+import { AuthViolation } from '../../api';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AisConsentToGrant } from '../../ais/common/dto/ais-consent';
 
 @Component({
   selector: 'consent-app-dynamic-inputs',
