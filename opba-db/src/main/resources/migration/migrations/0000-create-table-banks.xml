@@ -37,6 +37,9 @@
                 <constraints unique="true"/>
             </column>
             <column name="preferred_approach" type="VARCHAR(32)"/>
+            <column name="try_to_use_preferred_approach" type="BOOLEAN" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <addNotNullConstraint tableName="${table-prefix}bank_profile" columnName="bank_uuid" columnDataType="VARCHAR(255)"/>
     </changeSet>
@@ -123,27 +126,4 @@
         </sql>
     </changeSet>
 
-    <changeSet author="rye@golden-dimension.com" id="2020-06-10-01">
-        <comment>Add 'try_to_use_preferred_approach' column to 'bank_profile' table</comment>
-        <addColumn tableName="${table-prefix}bank_profile">
-            <column name="try_to_use_preferred_approach" type="BOOLEAN" defaultValue="false">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-
-    <changeSet author="rye@golden-dimension.com" id="2020-06-10-02">
-        <comment>Updates ASPSPs in order to force preferred approaches</comment>
-        <update tableName="${table-prefix}bank_profile">
-            <column name="preferred_approach" value="REDIRECT"/>
-            <column name="try_to_use_preferred_approach" value="true"/>
-            <where>bank_uuid='2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc'</where>
-        </update>
-
-        <update tableName="${table-prefix}bank_profile">
-            <column name="preferred_approach" value="EMBEDDED"/>
-            <column name="try_to_use_preferred_approach" value="true"/>
-            <where>bank_uuid='aa750320-2958-455e-9926-e9fca5ddfa92'</where>
-        </update>
-    </changeSet>
 </databaseChangeLog>
