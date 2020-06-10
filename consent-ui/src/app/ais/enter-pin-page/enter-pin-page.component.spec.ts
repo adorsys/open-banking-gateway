@@ -1,4 +1,4 @@
-import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { ReactiveFormsModule } from '@angular/forms';
@@ -9,12 +9,7 @@ import { EnterPinPageComponent } from './enter-pin-page.component';
 import { StubUtilTests } from '../common/stub-util-tests';
 import { SessionService } from '../../common/session.service';
 import { ConsentAuthorizationService } from '../../api';
-import { HttpResponse } from '@angular/common/http';
-import { InlineResponse200 } from '../../api/model/inlineResponse200';
-import { of } from 'rxjs';
-import { StubUtil } from '../common/stub-util';
 import any = jasmine.any;
-import anything = jasmine.anything;
 
 describe('EnterPinPageComponent', () => {
   let component: EnterPinPageComponent;
