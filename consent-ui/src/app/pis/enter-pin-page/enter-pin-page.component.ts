@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {UpdateConsentAuthorizationService} from "../../api";
-import {ActivatedRoute} from "@angular/router";
-import {SessionService} from "../../common/session.service";
-import {StubUtil} from "../../common/utils/stub-util";
-import {ApiHeaders} from "../../api/api.headers";
+import { UpdateConsentAuthorizationService } from '../../api';
+import { ActivatedRoute } from '@angular/router';
+import { SessionService } from '../../common/session.service';
+import { StubUtil } from '../../common/utils/stub-util';
+import { ApiHeaders } from '../../api/api.headers';
 
 @Component({
   selector: 'consent-app-enter-pin-page',

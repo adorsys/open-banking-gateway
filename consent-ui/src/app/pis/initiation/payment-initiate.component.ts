@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, ActivatedRouteSnapshot, Router} from "@angular/router";
-import {SessionService} from "../../common/session.service";
-import {AuthStateConsentAuthorizationService, ConsentAuth} from "../../api";
-import {ApiHeaders} from "../../api/api.headers";
-import {AuthConsentState} from "../../ais/common/dto/auth-state";
-import {EntryPagePaymentsComponent} from "../entry-page-payments/entry-page-payments.component";
+import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { SessionService } from '../../common/session.service';
+import { AuthStateConsentAuthorizationService, ConsentAuth } from '../../api';
+import { ApiHeaders } from '../../api/api.headers';
+import { AuthConsentState } from '../../ais/common/dto/auth-state';
+import { EntryPagePaymentsComponent } from '../entry-page-payments/entry-page-payments.component';
 
 @Component({
   selector: 'consent-app-initiation',
@@ -46,12 +46,10 @@ export class PaymentInitiateComponent implements OnInit {
   }
 
   private initiateConsentSession(authorizationId: string, redirectCode: string) {
-    this.authStateConsentAuthorizationService
-      .authUsingGET(authorizationId, redirectCode, 'response')
-      .subscribe(res => {
-        this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-        this.navigate(authorizationId, res.body.consentAuth);
-      });
+    this.authStateConsentAuthorizationService.authUsingGET(authorizationId, redirectCode, 'response').subscribe(res => {
+      this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+      this.navigate(authorizationId, res.body.consentAuth);
+    });
   }
 
   private navigate(authorizationId: string, res: ConsentAuth) {

@@ -8,14 +8,14 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { EnterPinPageComponent } from './enter-pin-page.component';
 import { StubUtilTests } from '../common/stub-util-tests';
 import { SessionService } from '../../common/session.service';
-import { ConsentAuthorizationService } from '../../api';
+import { UpdateConsentAuthorizationService } from '../../api';
 import any = jasmine.any;
 
 describe('EnterPinPageComponent', () => {
   let component: EnterPinPageComponent;
   let fixture: ComponentFixture<EnterPinPageComponent>;
   let sessionService: SessionService;
-  let consentAuthService: ConsentAuthorizationService;
+  let consentAuthService: UpdateConsentAuthorizationService;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -39,7 +39,7 @@ describe('EnterPinPageComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     sessionService = TestBed.get(SessionService);
-    consentAuthService = TestBed.get(ConsentAuthorizationService);
+    consentAuthService = TestBed.get(UpdateConsentAuthorizationService);
   });
 
   it('should create', () => {

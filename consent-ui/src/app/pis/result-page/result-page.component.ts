@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { StubUtil } from '../../common/utils/stub-util';
-import {ActivatedRoute, ActivatedRouteSnapshot} from "@angular/router";
-import {AisConsentToGrant} from "../../ais/common/dto/ais-consent";
-import {Location} from "@angular/common";
-import {SessionService} from "../../common/session.service";
-import {AuthStateConsentAuthorizationService, DenyRequest, UpdateConsentAuthorizationService} from "../../api";
-import {ConsentUtil} from "../../ais/common/consent-util";
-import {ApiHeaders} from "../../api/api.headers";
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { AisConsentToGrant } from '../../ais/common/dto/ais-consent';
+import { Location } from '@angular/common';
+import { SessionService } from '../../common/session.service';
+import { AuthStateConsentAuthorizationService, DenyRequest, UpdateConsentAuthorizationService } from '../../api';
+import { ConsentUtil } from '../../ais/common/consent-util';
+import { ApiHeaders } from '../../api/api.headers';
 
 @Component({
   selector: 'consent-app-result-page',
@@ -61,13 +61,11 @@ export class ResultPageComponent implements OnInit {
   }
 
   private loadRedirectUri(authId: string, redirectCode: string) {
-    this.authStateConsentAuthorizationService
-      .authUsingGET(authId, redirectCode, 'response')
-      .subscribe(res => {
-        console.log(res);
-        this.sessionService.setRedirectCode(authId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-        this.redirectTo = res.headers.get(ApiHeaders.LOCATION);
-      });
+    this.authStateConsentAuthorizationService.authUsingGET(authId, redirectCode, 'response').subscribe(res => {
+      console.log(res);
+      this.sessionService.setRedirectCode(authId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+      this.redirectTo = res.headers.get(ApiHeaders.LOCATION);
+    });
   }
 
   public confirm(value: boolean): void {
