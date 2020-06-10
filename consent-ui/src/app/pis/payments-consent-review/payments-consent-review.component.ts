@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import {Location} from "@angular/common";
-import {ActivatedRoute, Router} from "@angular/router";
-import {FormBuilder} from "@angular/forms";
-import {SessionService} from "../../common/session.service";
-import {ConsentAuth, PsuAuthRequest, UpdateConsentAuthorizationService} from "../../api";
-import {SharedRoutes} from "../../ais/entry-page/initiation/common/shared-routes";
-import {AccountAccessLevel, AisConsentToGrant} from "../../ais/common/dto/ais-consent";
-import {StubUtil} from "../../common/utils/stub-util";
-import {ConsentUtil} from "../../ais/common/consent-util";
-import {ApiHeaders} from "../../api/api.headers";
+import { Location } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder } from '@angular/forms';
+import { SessionService } from '../../common/session.service';
+import { ConsentAuth, PsuAuthRequest, UpdateConsentAuthorizationService } from '../../api';
+import { SharedRoutes } from '../../ais/entry-page/initiation/common/shared-routes';
+import { AccountAccessLevel, AisConsentToGrant } from '../../ais/common/dto/ais-consent';
+import { StubUtil } from '../../common/utils/stub-util';
+import { ConsentUtil } from '../../ais/common/consent-util';
+import { ApiHeaders } from '../../api/api.headers';
 
 @Component({
   selector: 'consent-app-payments-consent-review',

@@ -1,16 +1,16 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {StubUtil} from "../../common/utils/stub-util";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {AuthConsentState} from "../../ais/common/dto/auth-state";
-import {AccountAccessLevel, AisConsentToGrant} from "../../ais/common/dto/ais-consent";
-import {ActivatedRoute, Router} from "@angular/router";
-import {SessionService} from "../../common/session.service";
-import {DenyRequest, UpdateConsentAuthorizationService} from "../../api";
-import {ConsentUtil} from "../../ais/common/consent-util";
-import {ApiHeaders} from "../../api/api.headers";
+import { Component, Input, OnInit } from '@angular/core';
+import { StubUtil } from '../../common/utils/stub-util';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthConsentState } from '../../ais/common/dto/auth-state';
+import { AccountAccessLevel, AisConsentToGrant } from '../../ais/common/dto/ais-consent';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SessionService } from '../../common/session.service';
+import { DenyRequest, UpdateConsentAuthorizationService } from '../../api';
+import { ConsentUtil } from '../../ais/common/consent-util';
+import { ApiHeaders } from '../../api/api.headers';
 
 @Component({
-  selector: 'consent-payment-access-selection',
+  selector: 'consent-app-payment-access-selection',
   templateUrl: './consent-payment-access-selection.component.html',
   styleUrls: ['./consent-payment-access-selection.component.scss']
 })

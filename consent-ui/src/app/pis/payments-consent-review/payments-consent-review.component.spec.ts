@@ -1,12 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PaymentsConsentReviewComponent } from './payments-consent-review.component';
-import {RouterTestingModule} from "@angular/router/testing";
-import {ReactiveFormsModule} from "@angular/forms";
-import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {ActivatedRoute, convertToParamMap} from "@angular/router";
-import {of} from "rxjs";
-import {StubUtilTests} from "../../ais/common/stub-util-tests";
+import { RouterTestingModule } from '@angular/router/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { of } from 'rxjs';
+import { StubUtilTests } from '../../ais/common/stub-util-tests';
 
 describe('PaymentsConsentReviewComponent', () => {
   let component: PaymentsConsentReviewComponent;
