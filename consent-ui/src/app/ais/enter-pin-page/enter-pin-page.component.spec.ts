@@ -55,6 +55,7 @@ describe('EnterPinPageComponent', () => {
   it('should call consent auth service on submit', () => {
     spyOn(sessionService, 'getRedirectCode').and.returnValue(StubUtilTests.REDIRECT_ID);
     const consentAuthServiceSpy = spyOn(consentAuthService, 'embeddedUsingPOST').and.callThrough();
+    fixture.detectChanges();
 
     component.submit(StubUtilTests.DUMMY_INPUT);
 
