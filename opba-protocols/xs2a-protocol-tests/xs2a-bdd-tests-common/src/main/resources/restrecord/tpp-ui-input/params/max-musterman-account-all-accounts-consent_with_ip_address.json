@@ -1,0 +1,17 @@
+{
+  "extras": {
+    "PSU_ID": "max.musterman",
+    "PSU_IP_ADDRESS": "9.9.1.1"
+  },
+  "consentAuth": {
+    "consent": {
+      "recurringIndicator": true,
+      "combinedServiceIndicator": false,
+      "access": {
+        "availableAccounts": "ALL_ACCOUNTS"
+      },
+      "frequencyPerDay": 12,
+      "validUntil": "2030-01-31"
+    }
+  }
+}

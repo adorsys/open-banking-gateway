@@ -64,6 +64,15 @@ public class AisStagesCommonUtil {
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
+    public static RequestSpecification withAccountsHeadersMissingIpAddress(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType) {
+        UUID xRequestId = UUID.randomUUID();
+        Instant xTimestampUtc = Instant.now();
+
+        return withSignedHeadersWithoutIpAddress(fintechUserId, operationType, xRequestId, xTimestampUtc)
+                       .header(X_REQUEST_SIGNATURE, calculateAccountsSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId))
+                       .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS);
+    }
+
     public static RequestSpecification withTransactionsHeaders(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType, GetTransactionsQueryParams params) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();

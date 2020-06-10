@@ -157,4 +157,91 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
         return self();
     }
+
+    public SELF ignore_validation_rules_table_do_not_ignore_missing_ip_address() {
+        IgnoreValidationRule bankValidationRuleForInit = IgnoreValidationRule.builder()
+                                                          .protocol(BankProtocol.builder().id(PROTOCOL_ID).build())
+                                                          .forEmbedded(false)
+                                                          .forRedirect(false)
+                                                          .validationCode(FieldCode.PSU_IP_ADDRESS)
+                                                          .build();
+
+        IgnoreValidationRule bankValidationRuleForAuth = IgnoreValidationRule.builder()
+                                                          .protocol(BankProtocol.builder().id(AUTH_PROTOCOL_ID).build())
+                                                          .forEmbedded(false)
+                                                          .forRedirect(false)
+                                                          .validationCode(FieldCode.PSU_IP_ADDRESS)
+                                                          .build();
+
+        ignoreValidationRuleRepository.deleteAll();
+        ignoreValidationRuleRepository.save(bankValidationRuleForInit);
+        ignoreValidationRuleRepository.save(bankValidationRuleForAuth);
+
+        return self();
+    }
+
+    public SELF ignore_validation_rules_table_ignore_missing_ip_address() {
+        IgnoreValidationRule bankValidationRuleForInit = IgnoreValidationRule.builder()
+                                                          .protocol(BankProtocol.builder().id(PROTOCOL_ID).build())
+                                                          .forEmbedded(true)
+                                                          .forRedirect(true)
+                                                          .validationCode(FieldCode.PSU_IP_ADDRESS)
+                                                          .build();
+
+        IgnoreValidationRule bankValidationRuleForAuth = IgnoreValidationRule.builder()
+                                                                 .protocol(BankProtocol.builder().id(AUTH_PROTOCOL_ID).build())
+                                                                 .forEmbedded(true)
+                                                                 .forRedirect(true)
+                                                                 .validationCode(FieldCode.PSU_IP_ADDRESS)
+                                                                 .build();
+
+        ignoreValidationRuleRepository.deleteAll();
+        ignoreValidationRuleRepository.save(bankValidationRuleForInit);
+        ignoreValidationRuleRepository.save(bankValidationRuleForAuth);
+
+        return self();
+    }
+
+    public SELF ignore_validation_rules_table_do_not_ignore_missing_psu_ip_port() {
+        IgnoreValidationRule bankValidationRuleForInit = IgnoreValidationRule.builder()
+                                                          .protocol(BankProtocol.builder().id(PROTOCOL_ID).build())
+                                                          .forEmbedded(false)
+                                                          .forRedirect(false)
+                                                          .validationCode(FieldCode.PSU_IP_PORT)
+                                                          .build();
+
+        IgnoreValidationRule bankValidationRuleForAuth = IgnoreValidationRule.builder()
+                                                                 .protocol(BankProtocol.builder().id(AUTH_PROTOCOL_ID).build())
+                                                                 .forEmbedded(false)
+                                                                 .forRedirect(false)
+                                                                 .validationCode(FieldCode.PSU_IP_PORT)
+                                                                 .build();
+        ignoreValidationRuleRepository.deleteAll();
+        ignoreValidationRuleRepository.save(bankValidationRuleForInit);
+        ignoreValidationRuleRepository.save(bankValidationRuleForAuth);
+
+        return self();
+    }
+
+    public SELF ignore_validation_rules_table_ignore_missing_psu_ip_port() {
+        IgnoreValidationRule bankValidationRuleForInit = IgnoreValidationRule.builder()
+                                                          .protocol(BankProtocol.builder().id(PROTOCOL_ID).build())
+                                                          .forEmbedded(true)
+                                                          .forRedirect(true)
+                                                          .validationCode(FieldCode.PSU_IP_PORT)
+                                                          .build();
+
+        IgnoreValidationRule bankValidationRuleForAuth = IgnoreValidationRule.builder()
+                                                                 .protocol(BankProtocol.builder().id(AUTH_PROTOCOL_ID).build())
+                                                                 .forEmbedded(true)
+                                                                 .forRedirect(true)
+                                                                 .validationCode(FieldCode.PSU_IP_PORT)
+                                                                 .build();
+
+        ignoreValidationRuleRepository.deleteAll();
+        ignoreValidationRuleRepository.save(bankValidationRuleForInit);
+        ignoreValidationRuleRepository.save(bankValidationRuleForAuth);
+
+        return self();
+    }
 }
