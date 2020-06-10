@@ -3,6 +3,8 @@ uuid,name,bic,url,adapter_id,bank_code,idp_url,aspsp_sca_approaches
 2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc,adorsys redirect,ADORSYS RE,http://localhost:20014,adorsys-integ-adapter,,,
 aa750320-2958-455e-9926-e9fca5ddfa92,adorsys embedded,ADORSYS EM,http://localhost:20014,adorsys-integ-adapter,,,
 53c47f54-b9a4-465a-8f77-bc6cd5f0cf46,adorsys xs2a,ADORSYS,http://localhost:20014,adorsys-integ-adapter,,,
+2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc,adorsys redirect,ADORSYS RE,http://localhost:20014,adorsys-integ-adapter,,,
+aa750320-2958-455e-9926-e9fca5ddfa92,adorsys embedded,ADORSYS EM,http://localhost:20014,adorsys-integ-adapter,,,
 8025d980-1ba3-43ff-ac69-c97ffc9d76e1,Bundesbank,MARKDEF1100,https://psd2.bvxs2a.de/bundesbank,verlag-adapter,10000000,,
 b168ecfa-fbee-4e11-b65a-b5cc0589fe7c,Isbank Berlin,ISBKDEFXXXX,https://psd2.bvxs2a.de/isbank,verlag-adapter,10130600,,
 c2794b1e-02d4-4c7c-9c48-4737944c1208,Isbank Hamburg,ISBKDEFXXXX,https://psd2.bvxs2a.de/isbank,verlag-adapter,20230600,,
