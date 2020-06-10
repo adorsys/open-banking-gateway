@@ -4,21 +4,7 @@
     <p class="text-secondary">Enter the data of the recipient of your payment</p>
     <div class="row">
       <div class="form-group col-md-6">
-        <label class="text-secondary" for="name">Name:</label><br />
-        <input
-          [ngClass]="{ 'is-invalid': paymentForm.controls['name'].dirty && paymentForm.controls['name'].errors }"
-          class="form-control"
-          formControlName="name"
-          id="name"
-          name="name"
-          type="text"
-        />
-        <div *ngIf="paymentForm.controls['name'].dirty && paymentForm.controls['name'].errors" class="invalid-feedback">
-          Name is required
-        </div>
-      </div>
-      <div class="form-group col-md-6">
-        <label class="text-secondary" for="debitorIban">IBAN Debitor:</label><br />
+        <label class="text-secondary" for="debitorIban">My account:</label><br/>
         <input
           [ngClass]="{
             'is-invalid': debitorIban.dirty && debitorIban.errors
@@ -39,7 +25,7 @@
         </div>
       </div>
       <div class="form-group col-md-6">
-        <label class="text-secondary" for="creditorIban">IBAN Creditor:</label><br />
+        <label class="text-secondary" for="creditorIban">IBAN:</label><br/>
         <input
           [ngClass]="{
             'is-invalid': creditorIban.dirty && creditorIban.errors
@@ -59,8 +45,40 @@
           </div>
         </div>
       </div>
+
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="text-secondary" for="name">Name:</label><br/>
+        <input
+          [ngClass]="{ 'is-invalid': paymentForm.controls['name'].dirty && paymentForm.controls['name'].errors }"
+          class="form-control"
+          formControlName="name"
+          id="name"
+          name="name"
+          type="text"
+        />
+        <div *ngIf="paymentForm.controls['name'].dirty && paymentForm.controls['name'].errors" class="invalid-feedback">
+          Name is required
+        </div>
+      </div>
+      <div class="form-group col-md-12">
+        <label class="text-secondary" for="purpose">Purpose of payment:</label><br/>
+        <input
+          [ngClass]="{
+            'is-invalid': paymentForm.controls['purpose'].dirty && paymentForm.controls['purpose'].errors
+          }"
+          class="form-control"
+          formControlName="purpose"
+          id="purpose"
+          name="purpose"
+          type="text"
+        />
+      </div>
+      <div class="form-group col-md-6"></div>
+
       <div class="form-group col-md-6">
-        <label class="text-secondary" for="amount">Amount:</label><br />
+        <label class="text-secondary" for="amount">Amount:</label><br/>
         <input
           [ngClass]="{ 'is-invalid': paymentForm.controls['amount'].dirty && paymentForm.controls['amount'].errors }"
           class="form-control"
@@ -77,19 +95,6 @@
         <div *ngIf="paymentForm.controls['amount'].errors?.pattern" class="invalid-feedback">
           The amount should be more than 0 or doesn't fit the pattern ##.##
         </div>
-      </div>
-      <div class="form-group col-md-6">
-        <label class="text-secondary" for="purpose">Purpose of payment:</label><br />
-        <input
-          [ngClass]="{
-            'is-invalid': paymentForm.controls['purpose'].dirty && paymentForm.controls['purpose'].errors
-          }"
-          class="form-control"
-          formControlName="purpose"
-          id="purpose"
-          name="purpose"
-          type="text"
-        />
       </div>
     </div>
   </section>
