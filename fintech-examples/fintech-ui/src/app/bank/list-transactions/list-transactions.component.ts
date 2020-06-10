@@ -34,7 +34,6 @@ export class ListTransactionsComponent implements OnInit {
       switch (response.status) {
         case 202:
           console.log('list tx got REDIRECT');
-          const location = encodeURIComponent(response.headers.get(HeaderConfig.HEADER_FIELD_LOCATION));
           this.storageService.setRedirect(
             response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE),
             response.headers.get(HeaderConfig.HEADER_FIELD_AUTH_ID),
@@ -43,10 +42,10 @@ export class ListTransactionsComponent implements OnInit {
             RedirectType.AIS
           );
           const r = new RedirectStruct();
-          const currentUrl = this.router.url;
-          r.okUrl = location;
-          r.cancelUrl = currentUrl.substring(0, currentUrl.indexOf('/account'));
+          r.redirectUrl = encodeURIComponent(response.headers.get(HeaderConfig.HEADER_FIELD_LOCATION));
           r.redirectCode = response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE);
+          r.bankId = this.bankId;
+          r.bankName = this.storageService.getBankName();
           this.router.navigate(['redirect', JSON.stringify(r)], { relativeTo: this.route });
           break;
         case 200:
