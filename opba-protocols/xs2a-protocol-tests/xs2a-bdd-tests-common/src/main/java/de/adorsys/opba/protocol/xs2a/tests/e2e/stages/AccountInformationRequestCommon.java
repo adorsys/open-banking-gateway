@@ -6,8 +6,9 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.annotation.ScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.external.domain.OperationType;
+import de.adorsys.opba.api.security.external.service.RequestSigningService;
+import de.adorsys.opba.consentapi.model.generated.AuthViolation;
 import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
 import de.adorsys.opba.protocol.xs2a.tests.GetTransactionsQueryParams;
@@ -24,6 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 import java.util.UUID;
 
+import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
@@ -38,10 +40,10 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.LOGIN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.PASSWORD;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withAccountsHeaders;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withAccountsHeadersMissingIpAddress;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withTransactionsHeaders;
-import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -84,6 +86,9 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     @ScenarioState
     private List<ScaUserData> availableScas;
 
+    @ScenarioState
+    private List<AuthViolation> violations;
+
     public SELF fintech_calls_list_accounts_for_anton_brueckner() {
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
@@ -106,6 +111,21 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .then()
                     .statusCode(HttpStatus.ACCEPTED.value())
                     .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
+        return self();
+    }
+
+    public SELF fintech_calls_list_accounts_for_max_musterman_missing_ip_address() {
+        ExtractableResponse<Response> response = withAccountsHeadersMissingIpAddress(MAX_MUSTERMAN, requestSigningService, OperationType.AIS)
+                      .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                 .when()
+                      .get(AIS_ACCOUNTS_ENDPOINT)
+                 .then()
+                      .statusCode(HttpStatus.ACCEPTED.value())
+                      .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -246,6 +266,22 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_max_musterman_provided_initial_parameters_with_ip_address_to_list_accounts_all_accounts_consent() {
+        startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                "restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent_with_ip_address.json"
+        );
+        return self();
+    }
+
+    public SELF user_max_musterman_provided_initial_parameters_with_psu_ip_port_to_list_accounts_all_accounts_consent() {
+        startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                "restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent_with_psu_ip_port.json"
+        );
+        return self();
+    }
+
     public SELF user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
@@ -374,6 +410,62 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    @SneakyThrows
+    public SELF fintech_calls_get_consent_auth_state_to_read_violations_with_missing_ip_address() {
+        readViolations();
+
+        AuthViolation authViolationIpAddress = new AuthViolation()
+                                                       .type("STRING")
+                                                       .scope("GENERAL")
+                                                       .code("PSU_IP_ADDRESS")
+                                                       .captionMessage("{no.ctx.psuIpAddress}");
+        assertThat(this.violations).contains(authViolationIpAddress);
+
+        return self();
+    }
+
+    @SneakyThrows
+    public SELF fintech_calls_get_consent_auth_state_to_read_violations_without_missing_ip_address() {
+        readViolations();
+
+        AuthViolation authViolationIpAddress = new AuthViolation()
+                                                       .type("STRING")
+                                                       .scope("GENERAL")
+                                                       .code("PSU_IP_ADDRESS")
+                                                       .captionMessage("{no.ctx.psuIpAddress}");
+        assertThat(this.violations).doesNotContain(authViolationIpAddress);
+
+        return self();
+    }
+
+    @SneakyThrows
+    public SELF fintech_calls_get_consent_auth_state_to_read_violations_about_missing_psu_ip_port() {
+        readViolations();
+
+        AuthViolation authViolationIpPort = new AuthViolation()
+                                                       .type("STRING")
+                                                       .scope("GENERAL")
+                                                       .code("PSU_IP_PORT")
+                                                       .captionMessage("{no.ctx.psuIpPort}");
+        assertThat(this.violations).contains(authViolationIpPort);
+
+        return self();
+    }
+
+    @SneakyThrows
+    public SELF fintech_calls_get_consent_auth_state_to_read_violations_without_missing_psu_ip_port() {
+        readViolations();
+
+        AuthViolation authViolationIpPort = new AuthViolation()
+                                                    .type("STRING")
+                                                    .scope("GENERAL")
+                                                    .code("PSU_IP_PORT")
+                                                    .captionMessage("{no.ctx.psuIpPort}");
+        assertThat(this.violations).doesNotContain(authViolationIpPort);
+
+        return self();
+    }
+
     private void startInitialInternalConsentAuthorization(String uriPath, String resource) {
         ExtractableResponse<Response> response =
                 startInitialInternalConsentAuthorization(uriPath, resource, HttpStatus.ACCEPTED);
@@ -436,23 +528,36 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     @SneakyThrows
     private void updateAvailableScas() {
-        ExtractableResponse<Response> response = RestAssured
-                .given()
-                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                .when()
-                    .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
-                .then()
-                    .statusCode(HttpStatus.OK.value())
-                .extract();
-
+        ExtractableResponse<Response> response = provideGetConsentAuthStateRequest();
         InlineResponse200 parsedValue = new ObjectMapper()
-            .readValue(response.body().asString(), InlineResponse200.class);
+                                                .readValue(response.body().asString(), InlineResponse200.class);
 
         this.availableScas = parsedValue.getConsentAuth().getScaMethods();
         updateRedirectCode(response);
+    }
+
+    @SneakyThrows
+    private void readViolations() {
+        ExtractableResponse<Response> response = provideGetConsentAuthStateRequest();
+        InlineResponse200 parsedValue = new ObjectMapper()
+                                                 .readValue(response.body().asString(), InlineResponse200.class);
+
+        this.violations = parsedValue.getConsentAuth().getViolations();
+        updateRedirectCode(response);
+    }
+
+    private  ExtractableResponse<Response> provideGetConsentAuthStateRequest() {
+         return RestAssured
+                     .given()
+                            .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                            .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                            .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                            .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                     .when()
+                            .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
+                     .then()
+                            .statusCode(HttpStatus.OK.value())
+                     .extract();
     }
 
     private String selectedScaBody(String scaName) {

@@ -13,5 +13,10 @@ public enum ExtraAuthRequestParam {
     /**
      * Users' (PSU) IP address.
      */
-    PSU_IP_ADDRESS;
+    PSU_IP_ADDRESS,
+
+    /**
+     * IP port of IP address between PSU and TPP
+     */
+    PSU_IP_PORT;
 }
