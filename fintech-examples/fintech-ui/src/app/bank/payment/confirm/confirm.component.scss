@@ -1,0 +1,17 @@
+@import 'src/assets/themes/variables';
+
+p {
+  margin-bottom: 0;
+}
+
+.form-group {
+  .title {
+    font-size: 1.25rem;
+    color: $dark-90;
+  }
+
+  .card-img {
+    width: 48px;
+    height: auto;
+  }
+}
