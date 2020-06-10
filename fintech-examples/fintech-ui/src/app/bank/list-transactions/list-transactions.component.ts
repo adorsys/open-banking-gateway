@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
 import { AccountReport } from '../../api';
-import { RedirectStruct } from '../redirect-page/redirect-struct';
+import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
 import { HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 
@@ -39,7 +39,8 @@ export class ListTransactionsComponent implements OnInit {
             response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE),
             response.headers.get(HeaderConfig.HEADER_FIELD_AUTH_ID),
             response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN),
-            parseInt(response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE), 0)
+            parseInt(response.headers.get(HeaderConfig.HEADER_FIELD_X_MAX_AGE), 0),
+            RedirectType.AIS
           );
           const r = new RedirectStruct();
           const currentUrl = this.router.url;

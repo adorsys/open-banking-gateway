@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ClassSinglePaymentInitiationRequest } from '../../../api/model-classes/ClassSinglePaymentInitiationRequest';
 import { map } from 'rxjs/operators';
 import { HeaderConfig } from '../../../models/consts';
+import { RedirectStruct, RedirectType } from '../../redirect-page/redirect-struct';
+import { StorageService } from '../../../services/storage.service';
 
 @Component({
   selector: 'app-initiate',
@@ -20,7 +22,8 @@ export class InitiateComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private fintechSinglePaymentInitiationService: FintechSinglePaymentInitiationService,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private storageService: StorageService) {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
     console.log('bankid:' + this.bankId);
   }
@@ -56,6 +59,13 @@ export class InitiateComponent implements OnInit {
           switch (response.status) {
             case 202:
               const location = response.headers.get(HeaderConfig.HEADER_FIELD_LOCATION);
+              this.storageService.setRedirect(
+                response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE),
+                response.headers.get(HeaderConfig.HEADER_FIELD_AUTH_ID),
+                response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN),
+                parseInt(response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_X_MAX_AGE), 0),
+                RedirectType.PIS
+              );
               console.log('location is ', location);
               window.location.href = location;
           }
