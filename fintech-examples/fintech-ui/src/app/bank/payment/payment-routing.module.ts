@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PaymentComponent } from './payment.component';
 import { InitiateComponent } from './initiate/initiate.component';
+import { ConfirmComponent } from './confirm/confirm.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
       {
         path: InitiateComponent.ROUTE,
         component: InitiateComponent
+      },
+      {
+        path: ConfirmComponent.ROUTE,
+        component: ConfirmComponent
       }
     ]
   }
