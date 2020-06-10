@@ -48,4 +48,19 @@
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (12, 15, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
        </sql>
     </changeSet>
+
+    <changeSet author="rye@golden-dimension.com" id="2020-06-10-02">
+        <comment>Updates ASPSPs in order to force preferred approaches</comment>
+        <update tableName="${table-prefix}bank_profile">
+            <column name="preferred_approach" value="REDIRECT"/>
+            <column name="try_to_use_preferred_approach" value="true"/>
+            <where>bank_uuid='2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc'</where>
+        </update>
+
+        <update tableName="${table-prefix}bank_profile">
+            <column name="preferred_approach" value="EMBEDDED"/>
+            <column name="try_to_use_preferred_approach" value="true"/>
+            <where>bank_uuid='aa750320-2958-455e-9926-e9fca5ddfa92'</where>
+        </update>
+    </changeSet>
 </databaseChangeLog>
