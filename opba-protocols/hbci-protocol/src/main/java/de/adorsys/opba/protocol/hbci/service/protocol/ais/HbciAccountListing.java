@@ -23,6 +23,7 @@ import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -47,7 +48,8 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
                                 new AisListAccountsResult(
                                         response.getBankAccounts().stream()
                                                 .map(it -> validateAndFixAccountIbans(execution, it))
-                                                .collect(Collectors.toList())
+                                                .collect(Collectors.toList()),
+                                        Instant.now()
                                 )
                         );
                         ctx.setTanChallengeRequired(false);
