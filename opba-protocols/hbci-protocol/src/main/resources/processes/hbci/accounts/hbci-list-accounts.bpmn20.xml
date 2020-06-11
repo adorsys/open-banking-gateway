@@ -75,7 +75,7 @@
         <omgdc:Bounds height="30.0" width="30.0" x="-458.14835" y="265.26996"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
-        <omgdc:Bounds height="28.0" width="28.0" x="1104.7593" y="170.00003"/>
+        <omgdc:Bounds height="28.0" width="28.0" x="1106.1992" y="206.00003"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="hbciListAccountsAfterTan" id="sid-22a0a985-8045-4aee-b78a-3367173eff86">
         <omgdc:Bounds height="80.0" width="100.0" x="576.85205" y="30.586666"/>
@@ -160,16 +160,16 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="sid-63b1b1ba-b99f-4a82-b22a-3082075f25e4" id="edge-513a6aa6-d580-4d03-b57c-69bd0dc66d41">
         <omgdi:waypoint x="487.69208" y="372.13672"/>
-        <omgdi:waypoint x="1118.7593" y="372.13675"/>
-        <omgdi:waypoint x="1118.7593" y="198.00003"/>
+        <omgdi:waypoint x="1119.4794" y="372.13672"/>
+        <omgdi:waypoint x="1120.1992" y="234.00003"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape bpmnElement="reportConsentAuthorized" id="shape-bdf859b0-57bf-4bca-9667-27b6c703675e">
         <omgdc:Bounds height="80.0" width="100.0" x="998.0991" y="30.586658"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="sid-5b1e9eba-c5ab-4baf-9472-b7f269f96a72" id="edge-209bc3ee-bdf8-4a4d-9039-56a789340c2f">
         <omgdi:waypoint x="1098.0991" y="70.58666"/>
-        <omgdi:waypoint x="1118.7594" y="70.58669"/>
-        <omgdi:waypoint x="1118.7593" y="170.00006"/>
+        <omgdi:waypoint x="1119.4792" y="70.58668"/>
+        <omgdi:waypoint x="1120.1992" y="206.00006"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-4d4aae34-b457-44f9-82bf-f401a374fdb6" id="edge-c19ff9c1-20f7-4436-b9b2-e3c8190e9e8b">
         <omgdi:waypoint x="626.85205" y="-25.681671"/>

@@ -72,6 +72,7 @@ public class HbciListTransactionsEntrypoint implements ListTransactions {
         bank.setBic(serviceContext.getRequestScoped().aspspProfile().getBic());
         bank.setBankCode(serviceContext.getRequestScoped().aspspProfile().getBankCode());
         context.setBank(bank);
+        context.setAccountIban(serviceContext.getRequest().getAccountId());
         return context;
     }
 
