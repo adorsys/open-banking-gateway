@@ -16,7 +16,8 @@ public class HbciFlowableConfig {
         return new JacksonMixin<>(Credentials.class, CredentialsMixin.class);
     }
 
-    public static abstract class CredentialsMixin {
+    @SuppressWarnings({"PMD.UnusedFormalParameter"}) // Ctor' arguments are used for Jackson magic
+    public abstract static class CredentialsMixin {
 
         CredentialsMixin(
                 @JsonProperty("customerId") String customerId,
