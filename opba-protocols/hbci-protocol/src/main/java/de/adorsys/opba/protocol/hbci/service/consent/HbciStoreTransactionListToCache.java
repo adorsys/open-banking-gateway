@@ -1,36 +1,30 @@
 package de.adorsys.opba.protocol.hbci.service.consent;
 
-import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
-import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.TransactionListHbciContext;
+import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.HbciResultCache;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 @Service("hbciStoreTransactionListToCache")
 @RequiredArgsConstructor
 public class HbciStoreTransactionListToCache extends ValidatedExecution<TransactionListHbciContext> {
 
-    private final FlowableObjectMapper mapper;
+    private final HbciCachedResultAccessor hbciCachedResultAccessor;
 
     @Override
     @SneakyThrows
     protected void doRealExecution(DelegateExecution execution, TransactionListHbciContext context) {
-        ProtocolFacingConsent consent = context.consentAccess().createDoNotPersist();
+        HbciResultCache cached = hbciCachedResultAccessor.resultFromCache(context).orElseGet(HbciResultCache::new);
+        if (null == cached.getTransactionsByIban()) {
+            cached.setTransactionsByIban(new HashMap<>());
+        }
 
-        consent.setConsentContext(
-                mapper.writeValueAsString(
-                        ImmutableMap.of(
-                                context.getResponse().getClass().getCanonicalName(),
-                                context.getResponse()
-                        )
-                )
-        );
-
-        consent.setConsentId(context.getSagaId());
-        context.consentAccess().save(consent);
+        cached.getTransactionsByIban().put(context.getAccountIban(), context.getResponse());
+        hbciCachedResultAccessor.resultToCache(context, cached);
     }
 }

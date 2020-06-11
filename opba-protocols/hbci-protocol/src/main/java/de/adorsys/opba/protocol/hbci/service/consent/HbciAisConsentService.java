@@ -8,7 +8,6 @@ import de.adorsys.opba.protocol.api.dto.codes.ScopeObject;
 import de.adorsys.opba.protocol.api.dto.codes.TypeCode;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
-import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,15 +20,15 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service("hbciAskForPsuId")
 @RequiredArgsConstructor
-public class HbciAisConsentService extends ValidatedExecution<AccountListHbciContext> {
+public class HbciAisConsentService extends ValidatedExecution<HbciContext> {
 
     @Override
-    protected void doRealExecution(DelegateExecution execution, AccountListHbciContext context) {
+    protected void doRealExecution(DelegateExecution execution, HbciContext context) {
         ContextUtil.getAndUpdateContext(execution, (HbciContext ctx) -> ctx.setViolations(ImmutableSet.of()));
     }
 
     @Override
-    protected void doMockedExecution(DelegateExecution execution, AccountListHbciContext context) {
+    protected void doMockedExecution(DelegateExecution execution, HbciContext context) {
         if (!Strings.isNullOrEmpty(context.getPsuId())) {
             return;
         }

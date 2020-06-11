@@ -9,6 +9,11 @@ import lombok.EqualsAndHashCode;
 public class TransactionListHbciContext extends HbciContext {
 
     /**
+     * Account IBAN to list transactions for.
+     */
+    private String accountIban;
+
+    /**
      * Real-time or cached result of the operation as HBCI protocol does not have support for consent.
      */
     private AisListTransactionsResult response;

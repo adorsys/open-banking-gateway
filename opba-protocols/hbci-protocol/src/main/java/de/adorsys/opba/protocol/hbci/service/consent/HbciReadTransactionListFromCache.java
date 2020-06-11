@@ -1,27 +1,22 @@
 package de.adorsys.opba.protocol.hbci.service.consent;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
-import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
-import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableProperties;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.TransactionListHbciContext;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListTransactionsResult;
+import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.HbciResultCache;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.Optional;
 
 @Service("hbciReadTransactionListFromCache")
 @RequiredArgsConstructor
 public class HbciReadTransactionListFromCache extends ValidatedExecution<TransactionListHbciContext> {
 
-    private final FlowableProperties properties;
-    private final FlowableObjectMapper mapper;
+    private final HbciCachedResultAccessor cachedResultReader;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, TransactionListHbciContext context) {
@@ -35,29 +30,21 @@ public class HbciReadTransactionListFromCache extends ValidatedExecution<Transac
 
     @SneakyThrows
     private void convertConsentToResponseIfPresent(DelegateExecution execution, TransactionListHbciContext context) {
-        Optional<ProtocolFacingConsent> consent = context.consentAccess().findByCurrentServiceSession();
+        Optional<HbciResultCache> hbciResult = cachedResultReader.resultFromCache(context);
 
-        if (!consent.isPresent() || null == consent.get().getConsentContext()) {
+        if (!hbciResult.isPresent() || null == hbciResult.get().getTransactionsByIban()) {
             return;
         }
 
-        ProtocolFacingConsent target = consent.get();
+        AisListTransactionsResult transactions = hbciResult.get().getTransactionsByIban().get(context.getAccountIban());
 
-        JsonNode value = mapper.readTree(target.getConsentContext());
-        Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
-
-        if (!properties.canSerialize(classNameAndValue.getKey())) {
-            throw new IllegalArgumentException("Class deserialization not allowed " + classNameAndValue.getKey());
+        if (null == transactions) {
+            return;
         }
-
-        AisListTransactionsResult response = (AisListTransactionsResult) mapper.getMapper().readValue(
-                classNameAndValue.getValue().traverse(),
-                Class.forName(classNameAndValue.getKey())
-        );
 
         ContextUtil.getAndUpdateContext(
                 execution,
-                (TransactionListHbciContext toUpdate) -> toUpdate.setResponse(response)
+                (TransactionListHbciContext toUpdate) -> toUpdate.setResponse(transactions)
         );
     }
 }
