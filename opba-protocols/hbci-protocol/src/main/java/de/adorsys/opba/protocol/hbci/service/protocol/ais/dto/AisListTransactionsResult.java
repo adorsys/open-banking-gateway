@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -15,4 +16,5 @@ public class AisListTransactionsResult {
 
     private List<Booking> bookings;
     private BalancesReport balancesReport;
+    private Instant cachedAt = Instant.now();
 }

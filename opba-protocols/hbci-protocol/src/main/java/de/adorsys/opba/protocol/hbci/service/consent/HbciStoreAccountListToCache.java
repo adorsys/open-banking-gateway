@@ -1,10 +1,8 @@
 package de.adorsys.opba.protocol.hbci.service.consent;
 
-import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
-import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
+import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.HbciResultCache;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -14,23 +12,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class HbciStoreAccountListToCache extends ValidatedExecution<AccountListHbciContext> {
 
-    private final FlowableObjectMapper mapper;
+    private final HbciCachedResultAccessor hbciCachedResultAccessor;
 
     @Override
     @SneakyThrows
     protected void doRealExecution(DelegateExecution execution, AccountListHbciContext context) {
-        ProtocolFacingConsent consent = context.consentAccess().createDoNotPersist();
-
-        consent.setConsentContext(
-                mapper.writeValueAsString(
-                        ImmutableMap.of(
-                                context.getResponse().getClass().getCanonicalName(),
-                                context.getResponse()
-                        )
-                )
-        );
-
-        consent.setConsentId(context.getSagaId());
-        context.consentAccess().save(consent);
+        HbciResultCache cached = hbciCachedResultAccessor.resultFromCache(context).orElseGet(HbciResultCache::new);
+        cached.setAccounts(context.getResponse());
+        hbciCachedResultAccessor.resultToCache(context, cached);
     }
 }
