@@ -1,8 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment;
 
 import de.adorsys.opba.protocol.api.dto.payment.PaymentType;
+import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import de.adorsys.xs2a.adapter.service.RequestParams;
 import lombok.Data;
 import org.mapstruct.Mapper;
