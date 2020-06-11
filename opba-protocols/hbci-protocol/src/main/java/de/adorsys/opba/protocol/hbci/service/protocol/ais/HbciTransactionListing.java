@@ -17,9 +17,9 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-@Service("hbciTransactionList")
+@Service("hbciTransactionListing")
 @RequiredArgsConstructor
-public class HbciTransactionList extends ValidatedExecution<HbciContext> {
+public class HbciTransactionListing extends ValidatedExecution<HbciContext> {
 
     private final ApplicationEventPublisher eventPublisher;
     private final OnlineBankingService onlineBankingService;
