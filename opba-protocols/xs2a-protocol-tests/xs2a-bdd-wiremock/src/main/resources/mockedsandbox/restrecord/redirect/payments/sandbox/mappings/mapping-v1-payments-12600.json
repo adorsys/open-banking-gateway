@@ -1,29 +1,25 @@
 {
-  "id": "50c02872-029b-3c8b-a29c-e8290789dcb1",
+  "id": "50c02872-029b-3c8b-a29c-e8290789dcb4",
   "request": {
-    "url": "/v1/banking/pis/payments/sepa-credit-transfers",
+    "url": "/v1/consent/{auth-id}/embedded",
     "method": "POST",
     "headers": {
       "X-Request-ID": {
         "matches": "[0-9a-zA-z\\-]+"
       },
+      "PSU-ID": {
+        "equalTo": "anton.brueckner"
+      },
       "PSU-IP-Address": {
         "matches": "^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$"
-      },
-      "Fintech-Redirect-URL-OK": {
-        "matches": "http://localhost:\\d+/redirect-after-consent"
-      },
-      "Fintech-Redirect-URL-NOK": {
-        "matches": "http://localhost:\\d+/redirect-after-consent-denied"
       }
     }
   },
   "response": {
-    "status": 202,
-    "bodyFileName": "body-v1-payments-12388.json",
+    "status": 200,
+    "body" : "",
     "headers": {
       "X-Request-Id": "34ee6161-3233-11ea-b535-e2b5b1f1970b",
-      "Content-Type": "application/json",
       "Date": "Wed, 08 Jan 2020 16:24:06 GMT"
     }
   },
