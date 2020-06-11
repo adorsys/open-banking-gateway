@@ -28,10 +28,11 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP
 public class PaymentStagesCommonUtil {
 
     public static final String INITIATE_PAYMENT_ENDPOINT = "/v1/banking/pis/payments/{payment-product}";
-    public static final String SEPA_PAYMENT = "sepa-credit-transfers";
-
     public static final String PIS_LOGIN_USER_ENDPOINT = "/v1/psu/ais/{authorizationId}/for-approval/login";
+    public static final String GET_PAYMENT_AUTH_STATE = "/v1/consent/{serviceSessionId}";
+    public static final String AUTHORIZE_PAYMENT_ENDPOINT = "/v1/consent/{serviceSessionId}/embedded";
 
+    public static final String SEPA_PAYMENT = "sepa-credit-transfers";
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
 
@@ -52,18 +53,18 @@ public class PaymentStagesCommonUtil {
 
         return RestAssured
                        .given()
-                       .header(BANK_ID, SANDBOX_BANK_ID)
-                       .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
-                       .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
-                       .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
-                       .header(FINTECH_USER_ID, fintechUserId)
-                       .header(FINTECH_ID, DEFAULT_FINTECH_ID)
-                       .header(X_XSRF_TOKEN, XSRF_TOKEN)
-                       .header(X_REQUEST_ID, xRequestId.toString())
-                       .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
-                       .header(X_OPERATION_TYPE, operationType)
-                       .header(X_REQUEST_SIGNATURE, calculatePaymentSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId))
-                       .header(PSU_IP_ADDRESS, IP_ADDRESS);
+                           .header(BANK_ID, SANDBOX_BANK_ID)
+                           .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
+                           .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
+                           .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
+                           .header(FINTECH_USER_ID, fintechUserId)
+                           .header(FINTECH_ID, DEFAULT_FINTECH_ID)
+                           .header(X_XSRF_TOKEN, XSRF_TOKEN)
+                           .header(X_REQUEST_ID, xRequestId.toString())
+                           .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
+                           .header(X_OPERATION_TYPE, operationType)
+                           .header(X_REQUEST_SIGNATURE, calculatePaymentSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId))
+                           .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
     private static String calculatePaymentSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
