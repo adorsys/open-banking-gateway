@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class HbciAccountListing extends ValidatedExecution<AccountListHbciContext> {
 
+    private static final int BLZ_LEN = 8;
+    private static final int ACCOUNT_NUMBER_LEN = 10;
     private final OnlineBankingService onlineBankingService;
 
     @Override
@@ -92,8 +94,8 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
         // C = Account number ( Kontonummer in German )
         Iban iban = new Iban.Builder()
                 .countryCode(CountryCode.DE) // Don't expect to see HBCI outside of Germany
-                .bankCode(Strings.padStart(account.getBlz(), 8, '0'))
-                .accountNumber(Strings.padStart(account.getAccountNumber(), 10, '0'))
+                .bankCode(Strings.padStart(account.getBlz(), BLZ_LEN, '0'))
+                .accountNumber(Strings.padStart(account.getAccountNumber(), ACCOUNT_NUMBER_LEN, '0'))
                 .build();
 
         account.setIban(iban.toString());
