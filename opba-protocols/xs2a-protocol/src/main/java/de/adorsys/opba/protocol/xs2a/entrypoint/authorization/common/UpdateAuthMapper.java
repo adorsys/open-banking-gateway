@@ -5,9 +5,9 @@ import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationReque
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoUpdatingMapper;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
-import de.adorsys.opba.protocol.xs2a.context.pis.SinglePaymentXs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.pis.SinglePaymentXs2aContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.Xs2aUuidMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AisConsentInitiateBody;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +55,7 @@ public class UpdateAuthMapper {
     /**
      * Updates single payment context with authorization request.
      */
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = {UuidMapper.class, AisMapper.class}, nullValuePropertyMappingStrategy = IGNORE)
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = {Xs2aUuidMapper.class, AisMapper.class}, nullValuePropertyMappingStrategy = IGNORE)
     public interface FromPisRequestSinglePaymentInitiation extends DtoUpdatingMapper<AuthorizationRequest, SinglePaymentXs2aContext> {
 
         @Mapping(source = "facadeServiceable.requestId", target = "requestId")

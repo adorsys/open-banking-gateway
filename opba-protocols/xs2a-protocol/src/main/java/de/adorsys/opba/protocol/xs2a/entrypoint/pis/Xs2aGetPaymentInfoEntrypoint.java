@@ -8,12 +8,12 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
 import de.adorsys.opba.protocol.api.pis.GetPaymentInfoState;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
+import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
-import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.UuidMapper;
+import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.Xs2aUuidMapper;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersMapperTemplate;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInfoHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInfoParameters;
 import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
@@ -70,7 +70,7 @@ public class Xs2aGetPaymentInfoEntrypoint implements GetPaymentInfoState {
     /**
      * Mapper to convert incoming user request to processable request context.
      */
-    @Mapper(componentModel = SPRING_KEYWORD, uses = UuidMapper.class, implementationPackage = XS2A_MAPPERS_PACKAGE)
+    @Mapper(componentModel = SPRING_KEYWORD, uses = Xs2aUuidMapper.class, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface FromRequest extends DtoMapper<PaymentInfoRequest, Xs2aPisContext> {
 
         @Mapping(source = "facadeServiceable.bankId", target = "aspspId")

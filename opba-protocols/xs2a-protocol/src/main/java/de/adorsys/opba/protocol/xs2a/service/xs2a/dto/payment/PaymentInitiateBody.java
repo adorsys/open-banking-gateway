@@ -1,10 +1,10 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment;
 
+import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
+import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ContextCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
-import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
 import de.adorsys.xs2a.adapter.service.model.SinglePaymentInitiationBody;
 import lombok.Getter;
 import lombok.Setter;
