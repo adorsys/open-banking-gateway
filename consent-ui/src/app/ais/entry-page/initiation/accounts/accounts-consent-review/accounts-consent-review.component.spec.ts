@@ -9,12 +9,11 @@ import { StubUtilTests } from '../../../../common/stub-util-tests';
 import { SessionService } from '../../../../../common/session.service';
 import { Location } from '@angular/common';
 import { ConsentAuthorizationService } from '../../../../../api/api/consentAuthorization.service';
-import { UpdateConsentAuthorizationService } from '../../../../../api';
 
 describe('AccountsConsentReviewComponent', () => {
   let component: AccountsConsentReviewComponent;
   let fixture: ComponentFixture<AccountsConsentReviewComponent>;
-  let consentAuthorizationService: UpdateConsentAuthorizationService;
+  let consentAuthorizationService: ConsentAuthorizationService;
 
   const locationStub = {
     back: jasmine.createSpy('onBack')
@@ -26,7 +25,7 @@ describe('AccountsConsentReviewComponent', () => {
       imports: [RouterTestingModule, ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         SessionService,
-        UpdateConsentAuthorizationService,
+        ConsentAuthorizationService,
         { provide: Location, useValue: locationStub },
         {
           provide: ActivatedRoute,
@@ -42,7 +41,7 @@ describe('AccountsConsentReviewComponent', () => {
     fixture = TestBed.createComponent(AccountsConsentReviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    consentAuthorizationService = TestBed.get(ConsentAuthorizationService);
+    consentAuthorizationService = fixture.debugElement.injector.get(ConsentAuthorizationService);
   });
 
   it('should create', () => {
