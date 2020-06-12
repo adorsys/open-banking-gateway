@@ -4,11 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 import { StubUtilTests } from '../../../common/stub-util-tests';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
-import { ConsentAuthorizationService } from '../../../../api';
+import { ConsentAuthorizationService } from '../../../../api/api/consentAuthorization.service';
+import { UpdateConsentAuthorizationService } from '../../../../api';
 
 describe('ConsentSharingComponent', () => {
   let component: ConsentSharingComponent;
-  let consentAuthorizationService: ConsentAuthorizationService;
+  let consentAuthorizationService: UpdateConsentAuthorizationService;
   let fixture: ComponentFixture<ConsentSharingComponent>;
 
   beforeEach(async(() => {
@@ -34,7 +35,7 @@ describe('ConsentSharingComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ConsentSharingComponent);
     component = fixture.componentInstance;
-    consentAuthorizationService = TestBed.get(ConsentAuthorizationService);
+    consentAuthorizationService = TestBed.get(UpdateConsentAuthorizationService);
     fixture.detectChanges();
   });
 

@@ -8,12 +8,12 @@ import { of } from 'rxjs';
 import { StubUtilTests } from '../../../../common/stub-util-tests';
 import { SessionService } from '../../../../../common/session.service';
 import { Location } from '@angular/common';
-import { ConsentAuthorizationService } from '../../../../../api/api/consentAuthorization.service';
+import { UpdateConsentAuthorizationService } from '../../../../../api';
 
 describe('AccountsConsentReviewComponent', () => {
   let component: AccountsConsentReviewComponent;
   let fixture: ComponentFixture<AccountsConsentReviewComponent>;
-  let consentAuthorizationService: ConsentAuthorizationService;
+  let consentAuthorizationService: UpdateConsentAuthorizationService;
 
   const locationStub = {
     back: jasmine.createSpy('onBack')
@@ -25,7 +25,7 @@ describe('AccountsConsentReviewComponent', () => {
       imports: [RouterTestingModule, ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         SessionService,
-        ConsentAuthorizationService,
+        UpdateConsentAuthorizationService,
         { provide: Location, useValue: locationStub },
         {
           provide: ActivatedRoute,
@@ -41,7 +41,7 @@ describe('AccountsConsentReviewComponent', () => {
     fixture = TestBed.createComponent(AccountsConsentReviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    consentAuthorizationService = fixture.debugElement.injector.get(ConsentAuthorizationService);
+    consentAuthorizationService = TestBed.get(UpdateConsentAuthorizationService);
   });
 
   it('should create', () => {
