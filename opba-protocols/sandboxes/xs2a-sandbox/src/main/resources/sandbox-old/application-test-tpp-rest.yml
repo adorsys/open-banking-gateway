@@ -1,0 +1,25 @@
+localapp:
+  schema:
+    # seem to be shared
+    name: consent
+
+spring:
+  datasource:
+    url: ${common.db.url}
+    username: testtpprest
+    password: testtpprest
+    driver-class-name: ${common.db.driver}
+  liquibase:
+    enabled: true
+server:
+  port: ${common.apps.local.tpprest.port}
+
+ledgers:
+  url: ${common.apps.mapping.ledgersapp}
+
+iban_generator_bankcode_nisp: 76070025
+iban_generator_bankcode_random: 90000001
+iban_generator_countrycode: DE
+
+# To verify
+server_key: 12345

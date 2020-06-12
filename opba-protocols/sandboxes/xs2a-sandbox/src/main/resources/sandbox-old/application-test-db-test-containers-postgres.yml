@@ -1,0 +1,12 @@
+# Note that applications will start in isolated mode, so you can safely use variables defined in app specific profile
+# like ${localapp.schema.name} that will come from app-specific profile
+common:
+  # Database instance for sandbox applications, one should assume that username and password are same and are
+  # equal to application profile without '-', ' ', etc.:
+  db:
+    url: jdbc:postgresql://localhost:${testcontainers.postgres.port}/sandbox_apps?currentSchema=${localapp.schema.name}
+    driver: org.postgresql.Driver
+
+spring:
+  profiles:
+    active: postgres

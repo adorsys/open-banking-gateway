@@ -1,0 +1,31 @@
+localapp:
+  schema:
+    name: ledgers
+
+spring:
+  profiles:
+    active: develop,sandbox
+  datasource:
+    url: ${common.db.url}
+    username: testledgersapp
+    password: testledgersapp
+    driver-class-name: ${common.db.driver}
+  liquibase:
+    enabled: true
+    change-log: classpath:liquibase-master-changelog.xml
+  mail:
+    properties:
+      mail-smtp-auth: false
+      mail-from: dev-bankinggateway-sandbox@adorsys.de
+      smtp-starttls-enable: false
+    host: 127.0.0.1
+    port: 59999
+    username: foo
+    password: bar
+server:
+  port: ${common.apps.local.ledgersapp.port}
+
+# To verify:
+application_security_encryptionalgorithm: PBEWITHSHA1ANDDESEDE
+application_security_masterpassword: 12345
+sca_multilevel_enabled: false
