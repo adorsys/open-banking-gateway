@@ -3,6 +3,8 @@ import { Consent, Consts } from '../../../models/consts';
 import { ConfirmData } from './confirm.data';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsentAuthorizationService } from '../../services/consent-authorization.service';
+import { ClassSinglePaymentInitiationRequest } from '../../../api/model-classes/ClassSinglePaymentInitiationRequest';
+import { RedirectStruct } from '../../redirect-page/redirect-struct';
 
 @Component({
   selector: 'app-confirm',
@@ -10,17 +12,18 @@ import { ConsentAuthorizationService } from '../../services/consent-authorizatio
   styleUrls: ['./confirm.component.scss']
 })
 export class ConfirmComponent implements OnInit {
-
   public static ROUTE = 'confirm/:' + Consts.CONFIRM_PAYMENT;
 
-  constructor(private router: Router,
-              private route: ActivatedRoute,
-              private consentAuthorizationService: ConsentAuthorizationService
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private consentAuthorizationService: ConsentAuthorizationService
   ) {
-
+    this.confirmData.paymentRequest = new ClassSinglePaymentInitiationRequest();
+    this.confirmData.redirectStruct = new RedirectStruct();
   }
 
-  confirmData: ConfirmData;
+  confirmData: ConfirmData = new ConfirmData();
 
   ngOnInit() {
     this.route.paramMap.subscribe(p => {

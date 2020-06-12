@@ -1,13 +1,11 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {RouterTestingModule} from '@angular/router/testing';
-import {ActivatedRoute} from '@angular/router';
-import {of} from 'rxjs';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute } from '@angular/router';
 
-
-import {RedirectPageComponent} from './redirect-page.component';
-import {RedirectCardComponent} from '../redirect-card/redirect-card.component';
-import {StorageService} from '../../services/storage.service';
-import {ConsentAuthorizationService} from '../services/consent-authorization.service';
+import { RedirectPageComponent } from './redirect-page.component';
+import { RedirectCardComponent } from '../redirect-card/redirect-card.component';
+import { ConsentAuthorizationService } from '../services/consent-authorization.service';
+import { RedirectStruct } from './redirect-struct';
 
 describe('RedirectPageComponent', () => {
   let component: RedirectPageComponent;
@@ -24,20 +22,13 @@ describe('RedirectPageComponent', () => {
             {
               provide: ActivatedRoute,
               useValue: {
-                params: of({location: 'adorsys.de'}),
                 paramMap: {
                   subscribe(location: string): string {
-                    return 'adorsys.de';
+                    const r: RedirectStruct = new RedirectStruct();
+                    r.bankName = 'peter';
+                    r.redirectUrl = 'redirectUrl';
+                    return JSON.stringify(r);
                   }
-                }
-              }
-            },
-            {
-              provide: StorageService,
-              useValue: {
-                getBankName(): string {
-                  return 'peters bank';
-
                 }
               }
             },
@@ -56,9 +47,7 @@ describe('RedirectPageComponent', () => {
     fixture.detectChanges();
   });
 
-  /* TODO Hergie help me
   it('should create', () => {
-   expect(component).toBeTruthy();
+    expect(component).toBeTruthy();
   });
-  */
 });
