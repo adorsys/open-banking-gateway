@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.multibanking.domain.Bank;
 import de.adorsys.multibanking.hbci.model.HbciConsent;
+import de.adorsys.multibanking.hbci.model.HbciTanSubmit;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.result.body.ScaMethod;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
@@ -56,6 +57,13 @@ public class HbciContext extends BaseContext {
     private HbciConsent hbciDialogConsent;
 
     /**
+     * This is typed as Object in HbciConsent which causes serialize/deserialize issues as its type is not saved.
+     * In order not to get dirty with Jackson class serialization (in particular additional sanitization layer),
+     * storing this field separately.
+     */
+    private HbciTanSubmit hbciTanSubmit;
+
+    /**
      * Indicates whether TAN challenge was required.
      */
     private boolean tanChallengeRequired;
@@ -69,6 +77,16 @@ public class HbciContext extends BaseContext {
      * The ID of SCA method that was selected by the user.
      */
     private String userSelectScaId;
+
+    public HbciConsent getHbciDialogConsent() {
+        hbciDialogConsent.setHbciTanSubmit(hbciTanSubmit);
+        return hbciDialogConsent;
+    }
+
+    public void setHbciDialogConsent(HbciConsent hbciDialogConsent) {
+        this.hbciDialogConsent = hbciDialogConsent;
+        this.hbciTanSubmit = (HbciTanSubmit) hbciDialogConsent.getHbciTanSubmit();
+    }
 
     @JsonIgnore
     public String getPsuPin() {
