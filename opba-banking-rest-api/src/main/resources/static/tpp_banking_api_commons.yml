@@ -24,6 +24,33 @@ components:
         type: string
         format: uuid
 
+    Service-Session-ID:
+      required: true
+      description: |
+        Unique ID that identifies service session. Can be used for batch processing to correlate input and output.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+
+    Authorization-Session-ID:
+      required: true
+      description: |
+        Unique ID that identifies authorization session.
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+
+    Redirect-Code:
+      required: true
+      description: |
+        Unique ID acts as a password protecting FinTech requested consent specification
+      example: "99391c7e-ad88-49ec-a2ad-99ddcb1f7721"
+      schema:
+        type: string
+        format: uuid
+
   parameters:
     Authorization:
       name: Authorization
@@ -168,7 +195,6 @@ components:
         type: string
       example: "https://example.com/myservice/sf3-3r33-3535/failure"
 
-
   responses:
     401_UNAUTHORIZED:
       description: |
@@ -272,11 +298,7 @@ components:
           $ref: "#/components/schemas/currencyCode"
         amount:
           $ref: "#/components/schemas/amountValue"
-      example:
-        {
-          "currency": "EUR",
-          "amount": "123"
-        }
+      example: { "currency": "EUR", "amount": "123" }
 
     amountValue:
       description: |
@@ -331,7 +353,7 @@ components:
           buildingnNumber: "89",
           city: "Paris",
           postalCode: "75000",
-          country: "FR"
+          country: "FR",
         }
 
     countryCode:

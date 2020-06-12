@@ -95,7 +95,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
     // See https://github.com/spring-projects/spring-boot/issues/14879 for the 'why setting port'
     @BeforeEach
     void setBaseUrl() {
-        ProtocolUrlsConfiguration.WebHooksWithResult aisUrls = urlsConfiguration.getAis().getWebHooks();
+        ProtocolUrlsConfiguration.WebHooks aisUrls = urlsConfiguration.getAis().getWebHooks();
         aisUrls.setOk(aisUrls.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
         aisUrls.setNok(aisUrls.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
     }

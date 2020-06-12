@@ -7,14 +7,15 @@ import { Location } from '@angular/common';
 import { of } from 'rxjs';
 import { StubUtilTests } from '../../../../common/stub-util-tests';
 import { SessionService } from '../../../../../common/session.service';
-import { ConsentAuthorizationService } from '../../../../../api';
 import { TransactionsConsentReviewComponent } from './transactions-consent-review.component';
+import { UpdateConsentAuthorizationService } from '../../../../../api';
+import { ConsentAuthorizationService } from '../../../../../api/api/consentAuthorization.service';
 
 describe('TransactionsConsentReviewComponent', () => {
   let component: TransactionsConsentReviewComponent;
   let fixture: ComponentFixture<TransactionsConsentReviewComponent>;
   let consentAuthorizationServiceSpy;
-  let consentAuthorizationService: ConsentAuthorizationService;
+  let consentAuthorizationService: UpdateConsentAuthorizationService;
 
   const locationStub = {
     back: jasmine.createSpy('onBack')
@@ -26,7 +27,7 @@ describe('TransactionsConsentReviewComponent', () => {
       imports: [RouterTestingModule, ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         SessionService,
-        ConsentAuthorizationService,
+        UpdateConsentAuthorizationService,
         FormBuilder,
         { provide: Location, useValue: locationStub },
         {

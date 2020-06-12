@@ -3,14 +3,18 @@ import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
 
-import { ConsentAuthorizationService } from './api/consentAuthorization.service';
+import { AuthStateConsentAuthorizationService } from './api/authStateConsentAuthorization.service';
+import { FromASPSPConsentAuthorizationService } from './api/fromASPSPConsentAuthorization.service';
+import { UpdateConsentAuthorizationService } from './api/updateConsentAuthorization.service';
 
 @NgModule({
   imports:      [],
   declarations: [],
   exports:      [],
   providers: [
-    ConsentAuthorizationService ]
+    AuthStateConsentAuthorizationService,
+    FromASPSPConsentAuthorizationService,
+    UpdateConsentAuthorizationService ]
 })
 export class ApiModule {
     public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders {
