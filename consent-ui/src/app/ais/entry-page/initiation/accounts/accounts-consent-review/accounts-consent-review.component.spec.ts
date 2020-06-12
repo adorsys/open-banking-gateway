@@ -7,8 +7,8 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { of } from 'rxjs';
 import { StubUtilTests } from '../../../../common/stub-util-tests';
 import { SessionService } from '../../../../../common/session.service';
-import { ConsentAuthorizationService } from '../../../../../api';
 import { Location } from '@angular/common';
+import { ConsentAuthorizationService } from '../../../../../api/api/consentAuthorization.service';
 
 describe('AccountsConsentReviewComponent', () => {
   let component: AccountsConsentReviewComponent;

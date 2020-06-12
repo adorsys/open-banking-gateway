@@ -14,7 +14,7 @@ import { DocumentCookieService } from '../services/document-cookie.service';
 import { AuthService } from '../services/auth.service';
 import { of } from 'rxjs';
 
-xdescribe('LoginComponent', () => {
+describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let authService: AuthService;
