@@ -9,9 +9,8 @@ import { EnterPinPageComponent } from './enter-pin-page.component';
 import { StubUtilTests } from '../common/stub-util-tests';
 import { SessionService } from '../../common/session.service';
 import { UpdateConsentAuthorizationService } from '../../api';
-import any = jasmine.any;
 
-fdescribe('EnterPinPageComponent', () => {
+describe('EnterPinPageComponent', () => {
   let component: EnterPinPageComponent;
   let fixture: ComponentFixture<EnterPinPageComponent>;
   let sessionService: SessionService;
