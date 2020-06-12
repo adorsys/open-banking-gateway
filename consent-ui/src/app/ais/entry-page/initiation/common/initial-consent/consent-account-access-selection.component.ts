@@ -6,7 +6,7 @@ import { SessionService } from '../../../../../common/session.service';
 import { StubUtil } from '../../../../../common/utils/stub-util';
 import { AccountAccessLevel, AisConsentToGrant } from '../../../../common/dto/ais-consent';
 import { ConsentUtil } from '../../../../common/consent-util';
-import { UpdateConsentAuthorizationService, DenyRequest } from '../../../../../api';
+import { DenyRequest, UpdateConsentAuthorizationService } from '../../../../../api';
 import { ApiHeaders } from '../../../../../api/api.headers';
 
 @Component({
