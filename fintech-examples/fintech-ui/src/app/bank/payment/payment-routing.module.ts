@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { PaymentComponent } from './payment.component';
 import { InitiateComponent } from './initiate/initiate.component';
 import { ConfirmComponent } from './confirm/confirm.component';
+import { ResultComponent } from './result/result.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
       {
         path: ConfirmComponent.ROUTE,
         component: ConfirmComponent
+      },
+      {
+        path: ResultComponent.ROUTE,
+        component: ResultComponent
       }
     ]
   }
