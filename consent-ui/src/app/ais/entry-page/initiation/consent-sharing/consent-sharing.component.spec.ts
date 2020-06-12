@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { StubUtilTests } from '../../../common/stub-util-tests';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { of } from 'rxjs';
-import { ConsentAuthorizationService } from '../../../../api';
+import { ConsentAuthorizationService } from '../../../../api/api/consentAuthorization.service';
 
 describe('ConsentSharingComponent', () => {
   let component: ConsentSharingComponent;
