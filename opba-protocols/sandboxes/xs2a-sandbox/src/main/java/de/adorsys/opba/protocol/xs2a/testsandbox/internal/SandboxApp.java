@@ -134,7 +134,7 @@ public enum SandboxApp {
             return false;
         }
 
-        JsonNode tree = YML.readTree(Resources.getResource("sandbox/application-test-common.yml"));
+        JsonNode tree = YML.readTree(Resources.getResource("sandbox-old/application-test-common.yml"));
         String pointer = "/common/apps/local/" + name().toLowerCase().replaceAll("_", "") + "/port";
         JsonNode port = tree.at(pointer);
 
@@ -205,10 +205,10 @@ public enum SandboxApp {
         try {
             Map<String, String> envVars = new HashMap<>();
             // sandbox/application-test-common.yml
-            JsonNode commonConfig = YML.readTree(Resources.getResource("sandbox/application-test-common.yml"));
+            JsonNode commonConfig = YML.readTree(Resources.getResource("sandbox-old/application-test-common.yml"));
             // sandbox/application-test-${appName}.yml
             String pointer = "/env";
-            JsonNode appConfig = YML.readTree(Resources.getResource("sandbox/application-" + testProfileName() + ".yml"));
+            JsonNode appConfig = YML.readTree(Resources.getResource("sandbox-old/application-" + testProfileName() + ".yml"));
             JsonNode declaredVars = appConfig.at(pointer);
 
             declaredVars.fields().forEachRemaining(entry -> readYamlVariableToMap(entry, commonConfig, envVars));
@@ -306,14 +306,14 @@ public enum SandboxApp {
         return Joiner.on(",").join(
                 "classpath:/",
                 // Due to different classloader used by Spring we can't reference these in other way:
-                getAndValidatePathFromResource("sandbox/application-" + dbProfileAndStartDbIfNeeded(ctx) + ".yml"),
-                getAndValidatePathFromResource("sandbox/application-test-common.yml"),
+                getAndValidatePathFromResource("sandbox-old/application-" + dbProfileAndStartDbIfNeeded(ctx) + ".yml"),
+                getAndValidatePathFromResource("sandbox-old/application-test-common.yml"),
                 getPrimaryConfigFile()
         );
     }
 
     private String getPrimaryConfigFile() {
-        return getAndValidatePathFromResource("sandbox/application-" + testProfileName() + ".yml");
+        return getAndValidatePathFromResource("sandbox-old/application-" + testProfileName() + ".yml");
     }
 
     @SneakyThrows
@@ -343,7 +343,7 @@ public enum SandboxApp {
     // Profiles from spring.profile.active are not always applied, forcing it.
     @SneakyThrows
     public Set<String> extraProfiles() {
-        JsonNode tree = YML.readTree(Resources.getResource("sandbox/application-" + testProfileName() + ".yml"));
+        JsonNode tree = YML.readTree(Resources.getResource("sandbox-old/application-" + testProfileName() + ".yml"));
         String pointer = "/spring/profiles/active";
         JsonNode activeProfiles = tree.at(pointer);
 
