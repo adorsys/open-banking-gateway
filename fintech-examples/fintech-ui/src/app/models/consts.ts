@@ -2,6 +2,7 @@ export class Consts {
   public static LOCAL_STORAGE_XSRF_TOKEN = 'XSRF_TOKEN';
   public static CONSENT_OK = 'OK';
   public static CONSENT_NOT_OK = 'NOT_OK';
+  public static CONFIRM_PAYMENT = 'confirmationData';
 }
 
 export class HeaderConfig {
