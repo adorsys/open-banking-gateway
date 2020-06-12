@@ -1,12 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ConsentSharingComponent } from './consent-sharing.component';
 import { ActivatedRoute } from '@angular/router';
 import { StubUtilTests } from '../../../common/stub-util-tests';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
+import { ConsentAuthorizationService } from '../../../../api/api/consentAuthorization.service';
+import { UpdateConsentAuthorizationService } from '../../../../api';
 
 describe('ConsentSharingComponent', () => {
   let component: ConsentSharingComponent;
+  let consentAuthorizationService: UpdateConsentAuthorizationService;
   let fixture: ComponentFixture<ConsentSharingComponent>;
 
   beforeEach(async(() => {
@@ -32,10 +35,23 @@ describe('ConsentSharingComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ConsentSharingComponent);
     component = fixture.componentInstance;
+    consentAuthorizationService = TestBed.get(UpdateConsentAuthorizationService);
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should call denyUsingPOST', () => {
+    const consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'denyUsingPOST').and.returnValue(of());
+    component.onDeny();
+    expect(consentAuthorizationServiceSpy).toHaveBeenCalled();
+  });
+
+  it('should call onConfirm', () => {
+    const urlSpy = spyOn(component, 'onConfirm');
+    component.onConfirm();
+    expect(urlSpy).toHaveBeenCalled();
   });
 });

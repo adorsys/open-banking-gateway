@@ -1,16 +1,23 @@
 <ng-container *ngFor="let violation of violations">
   <form [formGroup]="targetForm">
-    <label [for]="violation.code" class="text-muted">{{violation.captionMessage}}</label><br>
-    <input type="text"
-           [id]="violation.code"
-           [name]="violation.code"
-           [formControlName]="violation.code"
-           [placeholder]="violation.captionMessage"
-           [ngClass]="{ 'is-invalid': targetForm.controls[violation.code].touched && targetForm.controls[violation.code].errors }"
-           class="form-control">
-    <div class="invalid-feedback"
-         *ngIf="targetForm.controls[violation.code].touched && targetForm.controls[violation.code].hasError('required')">
-      {{violation.captionMessage}} is required
+    <label [for]="violation.code" class="text-muted">{{ violation.captionMessage }}</label
+    ><br />
+    <input
+      type="text"
+      [id]="violation.code"
+      [name]="violation.code"
+      [formControlName]="violation.code"
+      [placeholder]="violation.captionMessage"
+      [ngClass]="{
+        'is-invalid': targetForm.controls[violation.code].touched && targetForm.controls[violation.code].errors
+      }"
+      class="form-control"
+    />
+    <div
+      class="invalid-feedback"
+      *ngIf="targetForm.controls[violation.code].touched && targetForm.controls[violation.code].hasError('required')"
+    >
+      {{ violation.captionMessage }} is required
     </div>
   </form>
 </ng-container>
