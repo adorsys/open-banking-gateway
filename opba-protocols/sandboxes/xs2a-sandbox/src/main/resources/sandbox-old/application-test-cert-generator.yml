@@ -1,0 +1,2 @@
+server:
+  port: ${common.apps.local.certgenerator.port}
