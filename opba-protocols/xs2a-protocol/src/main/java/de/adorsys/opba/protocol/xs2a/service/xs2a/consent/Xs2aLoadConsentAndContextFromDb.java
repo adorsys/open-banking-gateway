@@ -50,7 +50,7 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
 
     @SneakyThrows
     private void loadContext(DelegateExecution execution, Xs2aContext context) {
-        Optional<ProtocolFacingConsent> consent = context.consentAccess().findByCurrentServiceSession();
+        Optional<ProtocolFacingConsent> consent = context.consentAccess().findSingleByCurrentServiceSession();
 
         if (!consent.isPresent() || null == consent.get().getConsentContext()) {
             return;

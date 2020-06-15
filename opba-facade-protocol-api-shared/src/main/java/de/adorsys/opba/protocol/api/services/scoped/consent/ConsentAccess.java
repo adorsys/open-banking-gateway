@@ -24,9 +24,14 @@ public interface ConsentAccess {
     void delete(ProtocolFacingConsent consent);
 
     /**
+     * Available consents for current session execution.
+     */
+    Collection<ProtocolFacingConsent> findByCurrentServiceSession();
+
+    /**
      * Available consent for current session execution.
      */
-    Optional<ProtocolFacingConsent> findByCurrentServiceSession();
+    Optional<ProtocolFacingConsent> findSingleByCurrentServiceSession();
 
     /**
      * Lists all consents that are available for current PSU.
@@ -36,8 +41,12 @@ public interface ConsentAccess {
     /**
      * Available consent for current session execution with throwing exception
      */
-    default ProtocolFacingConsent getByCurrentSession() {
-        return findByCurrentServiceSession()
-                .orElseThrow(() -> new IllegalStateException("Context not found"));
+    default ProtocolFacingConsent getFirstByCurrentSession() {
+        Collection<ProtocolFacingConsent> consents = findByCurrentServiceSession();
+        if (consents.isEmpty()) {
+            throw new IllegalStateException("Context not found");
+        }
+
+        return consents.iterator().next();
     }
 }
