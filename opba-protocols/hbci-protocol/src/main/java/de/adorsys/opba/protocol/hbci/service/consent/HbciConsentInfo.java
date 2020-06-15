@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.hbci.service.consent;
 
-import com.google.common.base.Strings;
 import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.TransactionListHbciContext;
@@ -11,13 +10,6 @@ import org.springframework.stereotype.Service;
  */
 @Service("hbciConsentInfo")
 public class HbciConsentInfo {
-
-    /**
-     * Is the PSU ID present in the context.
-     */
-    public boolean isPsuIdPresent(HbciContext ctx) {
-        return !Strings.isNullOrEmpty(ctx.getPsuId());
-    }
 
     /**
      * Is the PSU password present in the context.
@@ -34,16 +26,24 @@ public class HbciConsentInfo {
     }
 
     /**
-     * Any kind of consent exists?
+     * Any kind of list account consent exists?
      */
     public boolean isCachedAccountListMissing(AccountListHbciContext ctx) {
         return null == ctx.getResponse();
     }
 
     /**
-     * Any kind of consent exists?
+     * Any kind of list transaction consent exists?
      */
     public boolean isCachedTransactionListMissing(TransactionListHbciContext ctx) {
         return null == ctx.getResponse();
+    }
+
+    /**
+     * Any kind of consent exists?
+     */
+    public boolean noConsentPresent(HbciContext ctx) {
+        return ctx.isConsentIncompatible()
+                || !ctx.getRequestScoped().consentAccess().findByCurrentServiceSession().isPresent();
     }
 }

@@ -174,7 +174,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     /**
-     * To be consumed by {@link de.adorsys.opba.protocol.facade.services.NewAuthSessionHandler} if new auth session started.
+     * To be consumed by {@link de.adorsys.opba.protocol.facade.services.AuthSessionHandler} if new auth session started.
      */
     private <T extends FacadeServiceableGetter> RequestScoped fintechFacingSecretKeyBasedEncryption(
             T request,
