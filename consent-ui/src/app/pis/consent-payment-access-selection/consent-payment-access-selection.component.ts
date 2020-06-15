@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { StubUtil } from '../../common/utils/stub-util';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthConsentState } from '../../ais/common/dto/auth-state';
 import { AccountAccessLevel, AisConsentToGrant } from '../../ais/common/dto/ais-consent';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,7 +19,6 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
   public aspspName = StubUtil.ASPSP_NAME;
 
   @Input() paymentReviewPage: string;
-  @Input() dedicatedConsentPage: string;
 
   public paymentAccessForm: FormGroup;
   public state: AuthConsentState;
@@ -41,20 +40,12 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
     this.activatedRoute.parent.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
       this.state = this.sessionService.getConsentState(this.authorizationId, () => new AuthConsentState());
-      if (!this.hasInputs()) {
+      if (!this.hasGeneralViolations()) {
         this.moveToReviewPayment();
       }
 
       this.consent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     });
-  }
-
-  hasInputs(): boolean {
-    return this.hasPisViolations() || this.hasGeneralViolations();
-  }
-
-  hasPisViolations(): boolean {
-    return this.state.hasPisViolation();
   }
 
   hasGeneralViolations(): boolean {
