@@ -45,6 +45,8 @@ public class BankProtocol {
 
     private String protocolBeanName;
 
+    private boolean consentSupported;
+
     @OneToMany(mappedBy = "protocol", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<BankSubProtocol> subProtocols;
 

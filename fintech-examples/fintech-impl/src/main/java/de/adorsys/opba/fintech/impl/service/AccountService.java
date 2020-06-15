@@ -8,8 +8,10 @@ import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.ConsentRepository;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
+import de.adorsys.opba.fintech.impl.tppclients.Actions;
 import de.adorsys.opba.fintech.impl.tppclients.ConsentType;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
+import de.adorsys.opba.tpp.banksearch.api.model.generated.BankProfileResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,6 +36,7 @@ public class AccountService {
     private final RedirectHandlerService redirectHandlerService;
     private final ConsentRepository consentRepository;
     private final HandleAcceptedService handleAcceptedService;
+    private final BankSearchService searchService;
 
     public ResponseEntity listAccounts(SessionEntity sessionEntity,
                                        String fintechOkUrl, String fintechNOKUrl,
@@ -77,11 +80,27 @@ public class AccountService {
                     optionalConsent.get().getTppServiceSessionId());
         }
         log.info("LoA no valid ais consent for user {} bank {} available", sessionEntity.getUserEntity().getLoginUserName(), bankID);
-        // FIXME: HACKETTY-HACK - force consent retrieval for transactions on ALL accounts
-        // Should be superseded and fixed with
-        // https://github.com/adorsys/open-banking-gateway/issues/303
-        return tppAisClient.getTransactions(
-                UUID.randomUUID().toString(), // As consent is missing this will be ignored
+
+        BankProfileResponse bankProfile = searchService.getBankProfileById(bankID).getBody();
+        if ("true".equals(bankProfile.getBankProfileDescriptor().getConsentSupportByService().get(Actions.LIST_ACCOUNTS.name()))) {
+            // FIXME: HACKETTY-HACK - force consent retrieval for transactions on ALL accounts
+            // Should be superseded and fixed with
+            // https://github.com/adorsys/open-banking-gateway/issues/303
+            return tppAisClient.getTransactions(
+                    UUID.randomUUID().toString(), // As consent is missing this will be ignored
+                    tppProperties.getServiceSessionPassword(),
+                    sessionEntity.getUserEntity().getLoginUserName(),
+                    RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
+                    RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
+                    xRequestId,
+                    COMPUTE_X_TIMESTAMP_UTC,
+                    OperationType.AIS.toString(),
+                    COMPUTE_X_REQUEST_SIGNATURE,
+                    COMPUTE_FINTECH_ID,
+                    bankID, null, null, null, null, null, null, null);
+        }
+
+        return tppAisClient.getAccounts(
                 tppProperties.getServiceSessionPassword(),
                 sessionEntity.getUserEntity().getFintechUserId(),
                 RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
@@ -91,6 +110,8 @@ public class AccountService {
                 OperationType.AIS.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
-                bankID, null, null, null, null, null, null, null);
+                bankID,
+                null,
+                null);
     }
 }

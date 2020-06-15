@@ -34,6 +34,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -73,7 +74,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     @MapKey(name = "action")
     private Map<ProtocolAction, BankProtocol> actions = new HashMap<>();
 
-    @Mapper
+    @Mapper(uses = ToConsentSupported.class)
     public interface ToBankProfileDescriptor {
         @Mapping(source = "bank.name", target = "bankName")
         @Mapping(source = "bank.bic", target = "bic")
@@ -82,6 +83,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
                 + ".map(Enum::name)"
                 + ".collect(java.util.stream.Collectors.toList()))",
                 target = "serviceList")
+        @Mapping(source = "actions", target = "consentSupportByService")
         BankProfileDescriptor map(BankProfile bankProfile);
     }
 
@@ -96,6 +98,15 @@ public class BankProfile implements Serializable, CurrentBankProfile {
                 + ".collect(java.util.stream.Collectors.toList()))",
                 target = "scaApproaches")
         Aspsp map(BankProfile bankProfile);
+    }
+
+    @Mapper
+    public interface ToConsentSupported {
+
+        default Map<String, String> map(Map<ProtocolAction, BankProtocol> actions) {
+            return actions.entrySet().stream()
+                    .collect(Collectors.toMap(it -> it.getKey().name(), it -> String.valueOf(it.getValue().isConsentSupported())));
+        }
     }
 
     @Override
