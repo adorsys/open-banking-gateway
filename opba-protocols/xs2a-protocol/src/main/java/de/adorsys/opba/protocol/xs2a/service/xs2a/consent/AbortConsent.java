@@ -19,7 +19,7 @@ public class AbortConsent {
 
     @Transactional
     public void abortConsent(Xs2aAisContext ctx) {
-        Optional<ProtocolFacingConsent> consent = ctx.consentAccess().findByCurrentServiceSession();
+        Optional<ProtocolFacingConsent> consent = ctx.consentAccess().findSingleByCurrentServiceSession();
 
         if (!consent.isPresent()) {
             return;

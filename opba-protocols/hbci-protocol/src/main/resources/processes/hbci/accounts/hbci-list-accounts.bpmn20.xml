@@ -70,12 +70,12 @@
     </sequenceFlow>
     <serviceTask id="reportConsentIncompatible" isForCompensation="false" flowable:async="true" flowable:exclusive="false" flowable:triggerable="false" name="Report consent is incompatible" flowable:delegateExpression="${hbciReportConsentIncompatible}"/>
     <sequenceFlow id="sid-785cc0bb-71b3-4bd0-a67f-579bad536166" sourceRef="reportConsentIncompatible" targetRef="accountListInitiateConsent"/>
-    <exclusiveGateway id="anyKindOfConsentExists" default="sid-a8cf7edb-0927-485a-a10e-8a81219c03b4" name="Any kind of consent exists?"/>
+    <exclusiveGateway id="anyKindOfConsentExists" default="sid-559ae419-0486-42fd-90ac-3b0545472283" name="Any kind of consent exists?"/>
     <sequenceFlow id="sid-a8cf7edb-0927-485a-a10e-8a81219c03b4" sourceRef="anyKindOfConsentExists" targetRef="reportConsentIncompatible">
-      <conditionExpression xsi:type="tFormalExpression"/>
+      <conditionExpression xsi:type="tFormalExpression">#{hbciConsentInfo.noAccountsConsentPresent(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-559ae419-0486-42fd-90ac-3b0545472283" sourceRef="anyKindOfConsentExists" targetRef="accountListInitiateConsent">
-      <conditionExpression xsi:type="tFormalExpression">#{hbciConsentInfo.noConsentPresent(CONTEXT)}</conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_hbci-list-accounts">

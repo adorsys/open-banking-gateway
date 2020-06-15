@@ -34,8 +34,18 @@ public class HandleAcceptedService {
         if (StringUtils.isBlank(headers.getFirst(TPP_AUTH_ID))) {
             throw new RuntimeException("Did not expect headerfield " + TPP_AUTH_ID + " to be null");
         }
-        ConsentEntity consent = new ConsentEntity(consentType, sessionEntity.getUserEntity(), bankId, headers.getFirst(TPP_AUTH_ID),
-                UUID.fromString(headers.getFirst(SERVICE_SESSION_ID)));
+        String authId = headers.getFirst(TPP_AUTH_ID);
+
+        ConsentEntity consent = consentRepository.findByAuthId(authId)
+                .orElseGet(() -> consentRepository.save(
+                        new ConsentEntity(
+                                consentType,
+                                sessionEntity.getUserEntity(),
+                                bankId,
+                                authId,
+                                UUID.fromString(headers.getFirst(SERVICE_SESSION_ID))
+                        ))
+                );
         log.debug("created consent which is not confirmend yet for bank {}, user {}, type {}, auth {}",
                 bankId, sessionEntity.getUserEntity().getLoginUserName(), consentType, consent.getAuthId());
         consentRepository.save(consent);
