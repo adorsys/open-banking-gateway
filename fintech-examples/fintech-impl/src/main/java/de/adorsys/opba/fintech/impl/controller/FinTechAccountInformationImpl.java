@@ -26,19 +26,23 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
     private final TransactionService transactionService;
 
     @Override
-    public ResponseEntity<AccountList> aisAccountsGET(String bankId, UUID xRequestID, String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK) {
+    public ResponseEntity<AccountList> aisAccountsGET(String bankId, UUID xRequestID, String xsrfToken,
+                                                      String fintechRedirectURLOK, String fintechRedirectURLNOK,
+                                                      String loARetrievalInformation) {
         if (!sessionLogicService.isSessionAuthorized()) {
             log.warn("aisAccountsGET failed: user is not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
         SessionEntity sessionEntity = sessionLogicService.getSession();
-        return sessionLogicService.addSessionMaxAgeToHeader(accountService.listAccounts(sessionEntity, fintechRedirectURLOK, fintechRedirectURLNOK, bankId));
+        return sessionLogicService.addSessionMaxAgeToHeader(accountService.listAccounts(sessionEntity,
+                fintechRedirectURLOK, fintechRedirectURLNOK, bankId, LoARetrievalInformation.valueOf(loARetrievalInformation)));
     }
 
     @Override
     public ResponseEntity<TransactionsResponse> aisTransactionsGET(String bankId, String accountId, UUID xRequestID,
                                                                    String xsrfToken, String fintechRedirectURLOK, String fintechRedirectURLNOK,
+                                                                   String loTRetrievalInformation,
                                                                    LocalDate dateFrom, LocalDate dateTo,
                                                                    String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
         if (!sessionLogicService.isSessionAuthorized()) {
@@ -48,6 +52,6 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
         SessionEntity sessionEntity = sessionLogicService.getSession();
         return sessionLogicService.addSessionMaxAgeToHeader(
                 transactionService.listTransactions(sessionEntity, fintechRedirectURLOK, fintechRedirectURLNOK,
-                bankId, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList));
+                bankId, accountId, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList, LoTRetrievalInformation.valueOf(loTRetrievalInformation)));
     }
 }

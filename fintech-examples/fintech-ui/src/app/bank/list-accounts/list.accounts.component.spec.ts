@@ -10,6 +10,7 @@ import { BankComponent } from '../bank.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HttpResponse } from '@angular/common/http';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { LoARetrievalInformation } from '../../models/consts';
 
 describe('ListAccountsComponent', () => {
   let component: ListAccountsComponent;
@@ -45,13 +46,14 @@ describe('ListAccountsComponent', () => {
 
   it('should load accounts', () => {
     const bankId = route.snapshot.paramMap.get('bankid');
+    const loaRetrievalInformation = LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
     const mockAccounts: HttpResponse<AccountList> = {} as HttpResponse<AccountList>;
 
     spyOn(aisService, 'getAccounts')
       .withArgs(bankId)
       .and.returnValue(of(mockAccounts));
     expect(component.bankId).toEqual(bankId);
-    aisService.getAccounts(bankId).subscribe(res => {
+    aisService.getAccounts(bankId, loaRetrievalInformation).subscribe(res => {
       expect(res).toEqual(mockAccounts);
     });
   });
