@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock;
 
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
 import de.adorsys.opba.protocol.api.common.Approach;
-import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolConfiguration;
+import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentResult;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.MockServers;
@@ -44,14 +44,14 @@ public class WiremockPaymentE2EXs2aProtocolTest extends SpringScenarioTest<MockS
     private int port;
 
     @Autowired
-    private ProtocolConfiguration configuration;
+    private ProtocolUrlsConfiguration urlsConfiguration;
 
     // See https://github.com/spring-projects/spring-boot/issues/14879 for the 'why setting port'
     @BeforeEach
     void setBaseUrl() {
-        ProtocolConfiguration.Redirect.Consent consent = configuration.getRedirect().getConsentAccounts();
-        consent.setOk(consent.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
-        consent.setNok(consent.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
+        ProtocolUrlsConfiguration.WebHooks aisUrls = urlsConfiguration.getAis().getWebHooks();
+        aisUrls.setOk(aisUrls.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
+        aisUrls.setNok(aisUrls.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
     }
 
 
