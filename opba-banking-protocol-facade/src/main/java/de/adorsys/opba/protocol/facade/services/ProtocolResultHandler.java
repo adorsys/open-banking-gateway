@@ -11,6 +11,7 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationDeniedResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationRequiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentIncompatibleResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
@@ -38,7 +39,7 @@ import java.util.UUID;
 public class ProtocolResultHandler {
 
     private final RequestScopedProvider provider;
-    private final NewAuthSessionHandler newAuthSessionHandler;
+    private final AuthSessionHandler authSessionHandler;
     private final ServiceSessionRepository sessions;
     private final AuthorizationSessionRepository authorizationSessions;
 
@@ -117,8 +118,23 @@ public class ProtocolResultHandler {
         Optional<AuthSession> authSession = authorizationSessions.findByParentId(session.getServiceSessionId());
 
         return authSession
-                .map(value -> handleExistingAuthSession(result, request, session, value))
+                .map(it -> handleExistingAuthSession(it, result, request, session, sessionKey))
                 .orElseGet(() -> handleNewAuthSession(result, request, session, sessionKey));
+    }
+
+    @NotNull
+    private <O, R extends FacadeServiceableGetter> FacadeResultRedirectable<O, AuthStateBody> handleExistingAuthSession(
+            AuthSession session,
+            RedirectionResult<O, ?> result,
+            FacadeServiceableRequest request,
+            ServiceContext<R> context,
+            SecretKeyWithIv sessionKey
+    ) {
+        if (result instanceof ConsentIncompatibleResult) {
+            return handleAuthRequiredForExistingAuthSession(result, request, context, sessionKey, session);
+        }
+
+        return handleExistingAuthSessionForAuthContinuation(result, request, context, session);
     }
 
     protected <O> FacadeRedirectResult<O, AuthStateBody> doHandleAbortAuthorization(
@@ -173,7 +189,7 @@ public class ProtocolResultHandler {
 
 
     @NotNull
-    private <O, R extends FacadeServiceableGetter> FacadeResultRedirectable<O, AuthStateBody> handleExistingAuthSession(
+    private <O, R extends FacadeServiceableGetter> FacadeResultRedirectable<O, AuthStateBody> handleExistingAuthSessionForAuthContinuation(
             RedirectionResult<O, ?> result,
             FacadeServiceableRequest request,
             ServiceContext<R> session,
@@ -195,10 +211,27 @@ public class ProtocolResultHandler {
     ) {
         FacadeStartAuthorizationResult<O, AuthStateBody> mappedResult =
                 (FacadeStartAuthorizationResult<O, AuthStateBody>) FacadeStartAuthorizationResult.FROM_PROTOCOL.map(result);
-        AuthSession newAuthSession = newAuthSessionHandler.createNewAuthSession(request, sessionKey, session, mappedResult);
+        AuthSession newAuthSession = authSessionHandler.createNewAuthSessionAndEnhanceResult(request, sessionKey, session, mappedResult);
         addAuthorizationSessionData(result, newAuthSession, request, session, mappedResult);
         mappedResult.setCause(mapCause(result));
         setAspspRedirectCodeIfRequired(result, newAuthSession, session);
+        return mappedResult;
+    }
+
+    @NotNull
+    private <O, R extends FacadeServiceableGetter> FacadeResultRedirectable<O, AuthStateBody> handleAuthRequiredForExistingAuthSession(
+            RedirectionResult<O, ?> result,
+            FacadeServiceableRequest request,
+            ServiceContext<R> session,
+            SecretKeyWithIv sessionKey,
+            AuthSession authSession
+    ) {
+        FacadeStartAuthorizationResult<O, AuthStateBody> mappedResult =
+                (FacadeStartAuthorizationResult<O, AuthStateBody>) FacadeStartAuthorizationResult.FROM_PROTOCOL.map(result);
+        AuthSession updatedSession = authSessionHandler.reuseAuthSessionAndEnhanceResult(authSession, sessionKey, session, mappedResult);
+        addAuthorizationSessionData(result, updatedSession, request, session, mappedResult);
+        mappedResult.setCause(mapCause(result));
+        setAspspRedirectCodeIfRequired(result, updatedSession, session);
         return mappedResult;
     }
 
