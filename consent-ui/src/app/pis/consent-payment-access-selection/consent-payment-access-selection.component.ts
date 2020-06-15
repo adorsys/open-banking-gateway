@@ -70,19 +70,9 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
     console.log(this.selectedAccess);
   }
 
-  submitButtonMessage() {
-    return this.selectedAccess.value.id === AccountAccessLevel.FINE_GRAINED ? 'Specify access' : 'Grant access';
-  }
-
   onConfirm() {
     this.updateConsentObject();
-
-    if (this.selectedAccess.value.id === AccountAccessLevel.FINE_GRAINED) {
-      this.handleDedicatedAccess();
-      return;
-    }
-
-    this.handleGenericAccess();
+    this.moveToReviewPayment();
   }
 
   onDeny() {
@@ -120,15 +110,6 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
     }
 
     this.sessionService.setConsentObject(this.authorizationId, consentObj);
-  }
-
-  private handleGenericAccess() {
-    this.moveToReviewPayment();
-  }
-
-  private handleDedicatedAccess() {
-    this.router.navigate([this.dedicatedConsentPage], { relativeTo: this.activatedRoute });
-    return;
   }
 
   private moveToReviewPayment() {
