@@ -70,8 +70,8 @@ public class AccountService {
         log.info("LoA no valid ais consent for user {} bank {} available", sessionEntity.getUserEntity().getLoginUserName(), bankID);
 
         BankProfileResponse bankProfile = searchService.getBankProfileById(bankID).getBody();
-        if (null != bankProfile.getBankProfileDescriptor().getConsentSupportByService() &&
-                "true".equals(bankProfile.getBankProfileDescriptor().getConsentSupportByService().get(Actions.LIST_ACCOUNTS.name()))) {
+        if (null != bankProfile.getBankProfileDescriptor().getConsentSupportByService()
+                && "true".equals(bankProfile.getBankProfileDescriptor().getConsentSupportByService().get(Actions.LIST_ACCOUNTS.name()))) {
             return doListTransactionsAsTransactionsConsentRequired(bankID, sessionEntity, redirectCode, xRequestId);
         }
 
