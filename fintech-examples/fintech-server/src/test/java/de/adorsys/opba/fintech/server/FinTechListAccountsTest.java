@@ -11,6 +11,7 @@ import de.adorsys.opba.fintech.server.config.TestConfig;
 import de.adorsys.opba.fintech.server.feignmocks.TppAisClientFeignMock;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
 import de.adorsys.opba.tpp.ais.api.resource.generated.TppBankingApiAccountInformationServiceAisApi;
+import de.adorsys.opba.tpp.banksearch.api.model.generated.BankProfileResponse;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -34,6 +35,9 @@ import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.TPP_AUTH_ID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.OK;
@@ -46,6 +50,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @Slf4j
 public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     private static final String FIN_TECH_LIST_ACCOUNTS_URL = "/v1/ais/banks/{bank-id}/accounts";
+
+    private static final String NO_CONSENT_BANK_ID = "aaaaaaaaa-ee6e-45f9-9163-b97320c6881a";
+    private static final String USERNAME = "peter";
+    private static final String PASSWORD = "1234";
 
     @MockBean
     protected TppAisClientFeignMock tppAisClientFeignMock;
@@ -101,6 +109,33 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
 
         MvcResult mvcResult = plainListAccounts(result.getBankUUID());
         assertEquals(ACCEPTED.value(), mvcResult.getResponse().getStatus());
+        verify(tppAisClientFeignMock).getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(), any());
+        verify(tppAisClientFeignMock, never()).getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
+    }
+
+    @Test
+    @SneakyThrows
+    public void testListAccountsFor303NoConsentSupport() {
+        when(tppBankSearchClientFeignMock.bankProfileGET(any(), eq(NO_CONSENT_BANK_ID), any(), any(), any(), any()))
+                .thenReturn(ResponseEntity.ok(GSON.fromJson(readFile(getFilenameBankProfile(NO_CONSENT_BANK_ID)), BankProfileResponse.class)));
+        when(restRequestContext.getRequestId()).thenReturn(UUID.randomUUID().toString());
+
+        authOk(USERNAME, PASSWORD);
+        ResponseEntity accepted = ResponseEntity.accepted()
+                .header(TPP_AUTH_ID, "1")
+                .header(SERVICE_SESSION_ID, "682dbd06-75d4-4f73-a7e7-9084150a1f10")
+                .location(new URI("affe"))
+                .build();
+        createConsent(null, null);
+        when(tppAisClientFeignMock.getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                any())).thenReturn(accepted);
+
+        MvcResult mvcResult = plainListAccounts(NO_CONSENT_BANK_ID);
+        assertEquals(ACCEPTED.value(), mvcResult.getResponse().getStatus());
+        verify(tppAisClientFeignMock, never()).getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+                any(), any(), any(), any(), any(), any(), any());
+        verify(tppAisClientFeignMock).getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
     }
 
 
