@@ -34,7 +34,7 @@ describe('ConsentPaymentAccessSelectionComponent', () => {
           provide: SessionService,
           useValue: {
             getConsentObject: () => new AisConsentToGrant(),
-            hasAisViolation: () => false,
+            hasPisViolation: () => false,
             hasGeneralViolation: () => false,
             getConsentState: () => new AuthConsentState([])
           }
