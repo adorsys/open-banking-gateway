@@ -25,6 +25,10 @@ public class HbciCachedResultAccessor {
     @SneakyThrows
     @Transactional
     public Optional<HbciResultCache> resultFromCache(HbciContext context) {
+        if (context.isConsentIncompatible()) {
+            return Optional.empty();
+        }
+
         Optional<ProtocolFacingConsent> consent = context.consentAccess().findByCurrentServiceSession();
 
         if (!consent.isPresent() || null == consent.get().getConsentContext()) {
