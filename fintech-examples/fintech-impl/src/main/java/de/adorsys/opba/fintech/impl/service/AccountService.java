@@ -65,41 +65,20 @@ public class AccountService {
                 bankID, ConsentType.AIS, Boolean.TRUE);
         if (optionalConsent.isPresent()) {
             log.info("LoA found valid ais consent for user {} bank {}", sessionEntity.getUserEntity().getLoginUserName(), bankID);
-            return tppAisClient.getAccounts(
-                    tppProperties.getServiceSessionPassword(),
-                    sessionEntity.getUserEntity().getFintechUserId(),
-                    RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
-                    RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
-                    xRequestId,
-                    COMPUTE_X_TIMESTAMP_UTC,
-                    OperationType.AIS.toString(),
-                    COMPUTE_X_REQUEST_SIGNATURE,
-                    COMPUTE_FINTECH_ID,
-                    bankID,
-                    null,
-                    optionalConsent.get().getTppServiceSessionId());
+            return doListAccountsAsConsentNotAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent.get().getTppServiceSessionId());
         }
         log.info("LoA no valid ais consent for user {} bank {} available", sessionEntity.getUserEntity().getLoginUserName(), bankID);
 
         BankProfileResponse bankProfile = searchService.getBankProfileById(bankID).getBody();
-        if ("true".equals(bankProfile.getBankProfileDescriptor().getConsentSupportByService().get(Actions.LIST_ACCOUNTS.name()))) {
-            // FIXME: HACKETTY-HACK - force consent retrieval for transactions on ALL accounts
-            // Should be superseded and fixed with
-            // https://github.com/adorsys/open-banking-gateway/issues/303
-            return tppAisClient.getTransactions(
-                    UUID.randomUUID().toString(), // As consent is missing this will be ignored
-                    tppProperties.getServiceSessionPassword(),
-                    sessionEntity.getUserEntity().getLoginUserName(),
-                    RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
-                    RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
-                    xRequestId,
-                    COMPUTE_X_TIMESTAMP_UTC,
-                    OperationType.AIS.toString(),
-                    COMPUTE_X_REQUEST_SIGNATURE,
-                    COMPUTE_FINTECH_ID,
-                    bankID, null, null, null, null, null, null, null);
+        if (null != bankProfile.getBankProfileDescriptor().getConsentSupportByService() &&
+                "true".equals(bankProfile.getBankProfileDescriptor().getConsentSupportByService().get(Actions.LIST_ACCOUNTS.name()))) {
+            return doListTransactionsAsTransactionsConsentRequired(bankID, sessionEntity, redirectCode, xRequestId);
         }
 
+        return doListAccountsAsConsentNotAvailable(bankID, sessionEntity, redirectCode, xRequestId, null);
+    }
+
+    private ResponseEntity doListAccountsAsConsentNotAvailable(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId, UUID o) {
         return tppAisClient.getAccounts(
                 tppProperties.getServiceSessionPassword(),
                 sessionEntity.getUserEntity().getFintechUserId(),
@@ -112,6 +91,24 @@ public class AccountService {
                 COMPUTE_FINTECH_ID,
                 bankID,
                 null,
-                null);
+                o);
+    }
+
+    private ResponseEntity doListTransactionsAsTransactionsConsentRequired(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId) {
+        // FIXME: HACKETTY-HACK - force consent retrieval for transactions on ALL accounts
+        // Should be superseded and fixed with
+        // https://github.com/adorsys/open-banking-gateway/issues/303
+        return tppAisClient.getTransactions(
+                UUID.randomUUID().toString(), // As consent is missing this will be ignored
+                tppProperties.getServiceSessionPassword(),
+                sessionEntity.getUserEntity().getLoginUserName(),
+                RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
+                RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
+                xRequestId,
+                COMPUTE_X_TIMESTAMP_UTC,
+                OperationType.AIS.toString(),
+                COMPUTE_X_REQUEST_SIGNATURE,
+                COMPUTE_FINTECH_ID,
+                bankID, null, null, null, null, null, null, null);
     }
 }
