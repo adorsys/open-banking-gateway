@@ -34,7 +34,7 @@ import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.FINTECH
 // FIXME - this class needs refactoring - some other class should handle FinTech user registration
 @Service
 @RequiredArgsConstructor
-public class NewAuthSessionHandler {
+public class AuthSessionHandler {
 
     private final FacadeAuthConfig facadeAuthConfig;
     private final BankProtocolRepository protocolRepository;
@@ -49,18 +49,38 @@ public class NewAuthSessionHandler {
     @SneakyThrows
     @Transactional
     @SuppressWarnings("checkstyle:MethodLength") //  FIXME - https://github.com/adorsys/open-banking-gateway/issues/555
-    protected <O> AuthSession createNewAuthSession(
+    public <O> AuthSession createNewAuthSessionAndEnhanceResult(
             FacadeServiceableRequest request,
             SecretKeyWithIv sessionKey,
-            ServiceContext session,
+            ServiceContext context,
+            FacadeResultRedirectable<O, ?> result
+    ) {
+        return fillAuthSessionData(request, context, sessionKey, result);
+    }
+
+    @NotNull
+    @SneakyThrows
+    @Transactional
+    @SuppressWarnings("checkstyle:MethodLength") //  FIXME - https://github.com/adorsys/open-banking-gateway/issues/555
+    public <O> AuthSession reuseAuthSessionAndEnhanceResult(
+            AuthSession authSession,
+            SecretKeyWithIv sessionKey,
+            ServiceContext context,
+            FacadeResultRedirectable<O, ?> result) {
+        return fillAuthSessionData(authSession, context, sessionKey, result);
+    }
+
+    private <O> AuthSession fillAuthSessionData(
+            FacadeServiceableRequest request,
+            ServiceContext context,
+            SecretKeyWithIv sessionKey,
             FacadeResultRedirectable<O, ?> result
     ) {
         BankProtocol authProtocol = protocolRepository
-                .findByBankProfileUuidAndAction(session.getBankId(), AUTHORIZATION)
+                .findByBankProfileUuidAndAction(context.getBankId(), AUTHORIZATION)
                 .orElseThrow(
-                        () -> new IllegalStateException("Missing update authorization handler for " + session.getBankId())
+                        () -> new IllegalStateException("Missing update authorization handler for " + context.getBankId())
                 );
-
         Fintech fintech = fintechs.findByGlobalId(request.getAuthorization())
                 .orElseThrow(() -> new IllegalStateException("No registered FinTech: " + request.getAuthorization()));
 
@@ -74,24 +94,62 @@ public class NewAuthSessionHandler {
         );
         fintechUserVault.registerFintechUser(user, newPassword::toCharArray);
 
-        AuthSession newAuth = authenticationSessions.save(
+        AuthSession session = authenticationSessions.save(
                 AuthSession.builder()
-                        .parent(entityManager.find(ServiceSession.class, session.getServiceSessionId()))
+                        .parent(entityManager.find(ServiceSession.class, context.getServiceSessionId()))
                         .protocol(authProtocol)
                         .fintechUser(user)
-                        .redirectCode(session.getFutureRedirectCode().toString())
+                        .redirectCode(context.getFutureRedirectCode().toString())
                         .build()
         );
 
+        return createInboxDataAndUpdateAuthSession(context, sessionKey, result, session, newPassword);
+    }
+
+    private <O> AuthSession fillAuthSessionData(
+            AuthSession authSession,
+            ServiceContext context,
+            SecretKeyWithIv sessionKey,
+            FacadeResultRedirectable<O, ?> result
+    ) {
+        AuthSession session = authSession;
+        Fintech fintech = authSession.getFintechUser().getFintech();
+
+        String newPassword = passwordGenerator.generate();
+        // Always create new user entity, as this is more like authorization dummy user.
+        FintechUser oldUser = authSession.getFintechUser();
+        fintechUsers.delete(oldUser);
+        FintechUser user = fintechUsers.save(
+                FintechUser.builder()
+                        .psuFintechId(oldUser.getPsuFintechId())
+                        .fintech(fintech)
+                        .build()
+        );
+        fintechUserVault.registerFintechUser(user, newPassword::toCharArray);
+        session.setFintechUser(user);
+        session.setRedirectCode(context.getFutureRedirectCode().toString());
+        session = authenticationSessions.save(session);
+
+        return createInboxDataAndUpdateAuthSession(context, sessionKey, result, session, newPassword);
+    }
+
+    @NotNull
+    private <O> AuthSession createInboxDataAndUpdateAuthSession(
+            ServiceContext context,
+            SecretKeyWithIv sessionKey,
+            FacadeResultRedirectable<O, ?> result,
+            AuthSession session,
+            String newPassword
+    ) {
         fintechUserVault.toInboxForAuth(
-                newAuth,
+                session,
                 new FintechConsentSpecSecureStorage.FinTechUserInboxData(
                         result.getRedirectionTo(),
                         new EncryptionKeySerde.SecretKeyWithIvContainer(sessionKey),
                         null
                 )
         );
-        String url = session.getRequest() instanceof InitiateSinglePaymentRequest
+        String url = context.getRequest() instanceof InitiateSinglePaymentRequest
                 ? facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPis()
                 : facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForAis();
         result.setRedirectionTo(
@@ -99,10 +157,10 @@ public class NewAuthSessionHandler {
                         .fromHttpUrl(url)
                         .buildAndExpand(ImmutableMap.of(
                                 FINTECH_USER_TEMP_PASSWORD, newPassword,
-                                AUTHORIZATION_SESSION_ID, newAuth.getId()
+                                AUTHORIZATION_SESSION_ID, session.getId()
                         )).toUri()
         );
 
-        return newAuth;
+        return session;
     }
 }

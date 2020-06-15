@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.hbci.service.consent;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ConsentAcquired;
+import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.config.HbciProtocolConfiguration;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
@@ -21,6 +22,7 @@ public class ReportConsentAuthorizationFinished extends ValidatedExecution<HbciC
 
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
+        ContextUtil.getAndUpdateContext(execution, (HbciContext ctx) -> ctx.setConsentIncompatible(false));
         redirectExecutor.redirect(
             execution,
             context,

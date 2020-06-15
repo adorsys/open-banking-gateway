@@ -78,6 +78,11 @@ public class HbciContext extends BaseContext {
      */
     private String userSelectScaId;
 
+    /**
+     * Indicates that while consent exists, it is incompatible.
+     */
+    private boolean consentIncompatible;
+
     public HbciConsent getHbciDialogConsent() {
         hbciDialogConsent.setHbciTanSubmit(hbciTanSubmit);
         return hbciDialogConsent;
