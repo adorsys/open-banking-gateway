@@ -1,0 +1,39 @@
+{
+  "id" : "233b50f7-147f-3114-bbc6-ebabd072111c",
+  "request" : {
+    "url" : "/v1/payments/sepa-credit-transfers",
+    "method" : "POST",
+    "headers" : {
+      "X-Request-ID" : {
+        "equalTo" : "12b34483-242a-428b-8295-2f4805bb0a30"
+      },
+      "PSU-ID" : {
+        "equalTo" : "anton.brueckner"
+      },
+      "PSU-IP-Address" : {
+        "equalTo" : "1.1.1.1"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/json; charset=UTF-8"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"debtorAccount\":{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"},\"instructedAmount\":{\"currency\":\"EUR\",\"amount\":\"1.03\"},\"creditorAccount\":{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"},\"creditorName\":\"WBG\",\"creditorAgent\":\"AAAADEBBXXX\",\"creditorAddress\":{\"streetName\":\"WBG Straße\",\"buildingNumber\":\"56\",\"postCode\":\"90543\",\"country\":\"DE\"},\"remittanceInformationUnstructured\":\"Ref. Number WBG-1222\",\"endToEndIdentification\":\"WBG-123456789\"}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-v1-payments-sepa-credit-transfers-11246.json",
+    "headers" : {
+      "Aspsp-Sca-Approach" : "REDIRECT",
+      "Location" : "http://127.0.0.1:20014/v1/payments/sepa-credit-transfers/ZmKrFV1N5n5mgDQi5Ik_qYVmmNo0VQ0fQ3pCOOsQSTW-Cn1FUKfaIqPYTpfSkPrFcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q",
+      "ASPSP-Notification-Support" : "false",
+      "X-Request-Id" : "12b34483-242a-428b-8295-2f4805bb0a30",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Date" : "Mon, 15 Jun 2020 05:15:16 GMT"
+    }
+  },
+  "uuid" : "233b50f7-147f-3114-bbc6-ebabd072111c"
+}
