@@ -47,7 +47,7 @@ describe('ConsentPaymentAccessSelectionComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ConsentPaymentAccessSelectionComponent);
     component = fixture.componentInstance;
-    component.consentReviewPage = PaymentsConsentReviewComponent.ROUTE;
+    component.paymentReviewPage = PaymentsConsentReviewComponent.ROUTE;
     component.dedicatedConsentPage = DedicatedAccessComponent.ROUTE;
     component.accountAccesses = [new Access(AccountAccessLevel.ALL_ACCOUNTS, 'access to all accounts')];
     fixture.detectChanges();
