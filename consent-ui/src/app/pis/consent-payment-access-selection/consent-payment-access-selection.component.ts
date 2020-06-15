@@ -18,11 +18,9 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
   public finTechName = StubUtil.FINTECH_NAME;
   public aspspName = StubUtil.ASPSP_NAME;
 
-  @Input() accountAccesses: Access[];
   @Input() paymentReviewPage: string;
   @Input() dedicatedConsentPage: string;
 
-  public selectedAccess;
   public paymentAccessForm: FormGroup;
   public state: AuthConsentState;
   public consent: AisConsentToGrant;
@@ -47,8 +45,6 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
         this.moveToReviewPayment();
       }
 
-      this.selectedAccess = new FormControl(this.accountAccesses[0], Validators.required);
-      this.paymentAccessForm.addControl('accountAccess', this.selectedAccess);
       this.consent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     });
   }
@@ -92,16 +88,6 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
       this.state
         .getGeneralViolations()
         .forEach(it => (consentObj.extras[it.code] = this.paymentAccessForm.get(it.code).value));
-    }
-
-    consentObj.level = this.selectedAccess.value.id;
-
-    if (this.selectedAccess.value.id !== AccountAccessLevel.FINE_GRAINED) {
-      if (this.selectedAccess.value.id === AccountAccessLevel.ALL_PSD2) {
-        consentObj.consent.access.allPsd2 = AccountAccessLevel.ALL_ACCOUNTS;
-      } else {
-        consentObj.consent.access.availableAccounts = this.selectedAccess.value.id;
-      }
     }
 
     this.sessionService.setConsentObject(this.authorizationId, consentObj);
