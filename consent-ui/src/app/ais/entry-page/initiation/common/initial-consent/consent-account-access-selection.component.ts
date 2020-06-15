@@ -58,7 +58,7 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
   }
 
   hasAisViolations(): boolean {
-    return this.state.hasPisViolation();
+    return this.state.hasAisViolation();
   }
 
   hasGeneralViolations(): boolean {
