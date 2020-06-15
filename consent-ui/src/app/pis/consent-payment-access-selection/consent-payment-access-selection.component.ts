@@ -19,7 +19,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
   public aspspName = StubUtil.ASPSP_NAME;
 
   @Input() accountAccesses: Access[];
-  @Input() consentReviewPage: string;
+  @Input() paymentReviewPage: string;
   @Input() dedicatedConsentPage: string;
 
   public selectedAccess;
@@ -44,7 +44,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
       this.authorizationId = res.authId;
       this.state = this.sessionService.getConsentState(this.authorizationId, () => new AuthConsentState());
       if (!this.hasInputs()) {
-        this.moveToReviewConsent();
+        this.moveToReviewPayment();
       }
 
       this.selectedAccess = new FormControl(this.accountAccesses[0], Validators.required);
@@ -123,7 +123,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
   }
 
   private handleGenericAccess() {
-    this.moveToReviewConsent();
+    this.moveToReviewPayment();
   }
 
   private handleDedicatedAccess() {
@@ -131,8 +131,8 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
     return;
   }
 
-  private moveToReviewConsent() {
-    this.router.navigate([this.consentReviewPage], { relativeTo: this.activatedRoute });
+  private moveToReviewPayment() {
+    this.router.navigate([this.paymentReviewPage], { relativeTo: this.activatedRoute });
   }
 }
 
