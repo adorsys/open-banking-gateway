@@ -8,6 +8,7 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.Authorization
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
+import de.adorsys.opba.protocol.bpmnshared.dto.ContextBasedConsentIncompatibleWithValidationErrorResult;
 import de.adorsys.opba.protocol.bpmnshared.dto.ContextBasedValidationErrorResult;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ConsentAcquired;
@@ -49,6 +50,17 @@ public class HbciOutcomeMapper<T> implements OutcomeMapper<T> {
 
     @Override
     public void onValidationProblem(ValidationProblem problem) {
+        if (problem.isConsentIncompatible()) {
+            channel.complete(
+                    new ContextBasedConsentIncompatibleWithValidationErrorResult(
+                            problem.getProvideMoreParamsDialog(),
+                            problem.getExecutionId(),
+                            new AuthStateBody(null, errorMapper.map(problem.getIssues()), null, null)
+                    )
+            );
+            return;
+        }
+
         channel.complete(
                 new ContextBasedValidationErrorResult(
                     problem.getProvideMoreParamsDialog(),

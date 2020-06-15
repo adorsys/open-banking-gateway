@@ -25,9 +25,15 @@ import java.util.Set;
 public class LastViolations implements UsesRequestScoped, RequestScoped {
 
     private Set<ValidationIssue> violations = new HashSet<>();
+    private boolean consentIncompatible;
 
     public LastViolations(Set<ValidationIssue> violations) {
         this.violations = violations;
+    }
+
+    public LastViolations(Set<ValidationIssue> violations, boolean consentIncompatible) {
+        this.violations = violations;
+        this.consentIncompatible = consentIncompatible;
     }
 
     /**

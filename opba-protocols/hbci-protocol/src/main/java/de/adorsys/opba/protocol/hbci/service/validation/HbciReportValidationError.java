@@ -1,10 +1,10 @@
 package de.adorsys.opba.protocol.hbci.service.validation;
 
-import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.hbci.config.HbciProtocolConfiguration;
+import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.LastViolations;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -31,7 +31,7 @@ public class HbciReportValidationError implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) {
         // Make transient context with all violations for clear mapping
-        BaseContext current = ContextUtil.getContext(execution, BaseContext.class);
+        HbciContext current = ContextUtil.getContext(execution, HbciContext.class);
         LastViolations violations = execution.getVariable(LAST_VALIDATION_ISSUES, LastViolations.class);
         LastRedirectionTarget redirectionTarget = execution.getVariable(LAST_REDIRECTION_TARGET, LastRedirectionTarget.class);
         current.setLastRedirection(redirectionTarget);
@@ -41,6 +41,7 @@ public class HbciReportValidationError implements JavaDelegate {
                 ValidationProblem.builder()
                         .processId(current.getSagaId())
                         .executionId(execution.getId())
+                        .consentIncompatible(violations.isConsentIncompatible())
                         .provideMoreParamsDialog(
                                 ContextUtil.evaluateSpelForCtx(
                                         configuration.getRedirect().getParameters().getProvideMore(),
