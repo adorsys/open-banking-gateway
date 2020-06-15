@@ -52,7 +52,7 @@ describe('EnterPinPageComponent', () => {
     expect(sessionServiceSpy).toHaveBeenCalledWith(StubUtilTests.AUTH_ID);
   });
 
-  fit('should call consent auth service on submit', () => {
+  it('should call consent auth service on submit', () => {
     spyOn(sessionService, 'getRedirectCode').and.returnValue(StubUtilTests.REDIRECT_ID);
     const consentAuthServiceSpy = spyOn(consentAuthService, 'embeddedUsingPOST').and.callThrough();
     // call explicitly
