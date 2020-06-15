@@ -1,19 +1,25 @@
 package de.adorsys.opba.db.repository.jpa;
 
-import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.Consent;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface ConsentRepository extends JpaRepository<Consent, Long> {
 
-    Optional<Consent> findByServiceSessionId(UUID serviceSessionId);
+    Collection<Consent> findByServiceSessionId(UUID serviceSessionId);
     Collection<Consent> findByPsu(Psu owner);
-    Optional<Consent> findByPsuAndAspsp(Psu psu, Bank aspsp);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Consent c SET c.confirmed = true WHERE c.serviceSession.id = :serviceSessionId")
+    int setConfirmed(@Param("serviceSessionId") UUID serviceSessionId);
 }
