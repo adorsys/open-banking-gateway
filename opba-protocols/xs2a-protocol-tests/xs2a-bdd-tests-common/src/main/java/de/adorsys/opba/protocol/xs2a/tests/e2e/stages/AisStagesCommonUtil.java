@@ -35,10 +35,12 @@ public class AisStagesCommonUtil {
     public static final String AUTHORIZE_CONSENT_ENDPOINT = "/v1/consent/{serviceSessionId}/embedded";
     public static final String AIS_ACCOUNTS_ENDPOINT = "/v1/banking/ais/accounts";
     public static final String AIS_TRANSACTIONS_ENDPOINT = "/v1/banking/ais/accounts/{resourceId}/transactions";
+    public static final String PIS_SINGLE_PAYMENT_ENDPOINT = "/v1/banking/pis/payments/{payment-product}";
 
     public static final String REGISTER_USER_ENDPOINT = "/v1/psu/register";
     public static final String AIS_LOGIN_USER_ENDPOINT = "/v1/psu/ais/{authorizationId}/for-approval/login";
     public static final String CONFIRM_CONSENT_ENDPOINT = "/v1/banking/consents/{authorizationId}/confirm";
+    public static final String PIS_LOGIN_USER_ENDPOINT = "/v1/psu/pis/{authorizationId}/for-approval/login";
 
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
