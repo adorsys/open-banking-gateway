@@ -52,11 +52,11 @@ describe('EnterPinPageComponent', () => {
     expect(sessionServiceSpy).toHaveBeenCalledWith(StubUtilTests.AUTH_ID);
   });
 
-  it('should call consent auth service on submit', () => {
+  fit('should call consent auth service on submit', () => {
     spyOn(sessionService, 'getRedirectCode').and.returnValue(StubUtilTests.REDIRECT_ID);
     const consentAuthServiceSpy = spyOn(consentAuthService, 'embeddedUsingPOST').and.callThrough();
     // call explicitly
-    fixture.detectChanges();
+    component.ngOnInit();
     // submit input
     component.submit(StubUtilTests.DUMMY_INPUT);
     // check if called with args
