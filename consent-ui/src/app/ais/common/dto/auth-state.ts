@@ -3,8 +3,8 @@ import { AuthViolation } from '../../../api';
 export class AuthConsentState {
   constructor(public violations?: AuthViolation[]) {}
 
-  public hasPisViolation(): boolean {
-    return this.violations && this.violations.filter(it => it.scope && it.scope.startsWith('PIS')).length > 0;
+  public hasAisViolation(): boolean {
+    return this.violations && this.violations.filter(it => it.scope && it.scope.startsWith('AIS')).length > 0;
   }
 
   public hasGeneralViolation(): boolean {
