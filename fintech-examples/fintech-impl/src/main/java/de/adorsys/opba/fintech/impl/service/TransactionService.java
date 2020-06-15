@@ -44,6 +44,7 @@ public class TransactionService {
                                            String accountId, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom,
                                            String bookingStatus, Boolean deltaList, LoTRetrievalInformation loTRetrievalInformation) {
 
+        log.info("LoT {}", loTRetrievalInformation);
         String fintechRedirectCode = UUID.randomUUID().toString();
         Optional<ConsentEntity> optionalConsent = consentRepository.findByUserEntityAndBankIdAndConsentTypeAndConsentConfirmed(sessionEntity.getUserEntity(),
                 bankId, ConsentType.AIS, Boolean.TRUE);
