@@ -54,11 +54,11 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
   }
 
   hasInputs(): boolean {
-    return this.hasAisViolations() || this.hasGeneralViolations();
+    return this.hasPisViolations() || this.hasGeneralViolations();
   }
 
-  hasAisViolations(): boolean {
-    return this.state.hasAisViolation();
+  hasPisViolations(): boolean {
+    return this.state.hasPisViolation();
   }
 
   hasGeneralViolations(): boolean {
