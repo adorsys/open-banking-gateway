@@ -10,7 +10,7 @@ import { Access } from '../../ais/entry-page/initiation/common/initial-consent/c
   styleUrls: ['./entry-page-payments.component.scss']
 })
 export class EntryPagePaymentsComponent implements OnInit {
-  public static ROUTE = 'entry-consent-payments';
+  public static ROUTE = 'entry-payments';
 
   accountAccess = [
     new Access(AccountAccessLevel.ALL_ACCOUNTS, 'Allow seeing a list of all your accounts'),
