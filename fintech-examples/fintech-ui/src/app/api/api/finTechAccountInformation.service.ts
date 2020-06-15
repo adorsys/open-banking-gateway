@@ -60,13 +60,14 @@ export class FinTechAccountInformationService {
      * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
      * @param fintechRedirectURLOK 
      * @param fintechRedirectURLNOK 
+     * @param loARetrievalInformation 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, observe?: 'body', reportProgress?: boolean): Observable<AccountList>;
-    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<AccountList>>;
-    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<AccountList>>;
-    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'fromTppWithAvailableConsent' | 'fromTppWithNewConsent' | 'fromFintechCache', observe?: 'body', reportProgress?: boolean): Observable<AccountList>;
+    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'fromTppWithAvailableConsent' | 'fromTppWithNewConsent' | 'fromFintechCache', observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<AccountList>>;
+    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'fromTppWithAvailableConsent' | 'fromTppWithNewConsent' | 'fromFintechCache', observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<AccountList>>;
+    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'fromTppWithAvailableConsent' | 'fromTppWithNewConsent' | 'fromFintechCache', observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (bankId === null || bankId === undefined) {
             throw new Error('Required parameter bankId was null or undefined when calling aisAccountsGET.');
         }
@@ -82,6 +83,9 @@ export class FinTechAccountInformationService {
         if (fintechRedirectURLNOK === null || fintechRedirectURLNOK === undefined) {
             throw new Error('Required parameter fintechRedirectURLNOK was null or undefined when calling aisAccountsGET.');
         }
+        if (loARetrievalInformation === null || loARetrievalInformation === undefined) {
+            throw new Error('Required parameter loARetrievalInformation was null or undefined when calling aisAccountsGET.');
+        }
 
         let headers = this.defaultHeaders;
         if (xRequestID !== undefined && xRequestID !== null) {
@@ -95,6 +99,9 @@ export class FinTechAccountInformationService {
         }
         if (fintechRedirectURLNOK !== undefined && fintechRedirectURLNOK !== null) {
             headers = headers.set('Fintech-Redirect-URL-NOK', String(fintechRedirectURLNOK));
+        }
+        if (loARetrievalInformation !== undefined && loARetrievalInformation !== null) {
+            headers = headers.set('LoARetrievalInformation', String(loARetrievalInformation));
         }
 
         // authentication (sessionCookie) required
@@ -127,6 +134,7 @@ export class FinTechAccountInformationService {
      * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
      * @param fintechRedirectURLOK 
      * @param fintechRedirectURLNOK 
+     * @param loTRetrievalInformation 
      * @param dateFrom Conditional: Starting date (inclusive the date dateFrom) of the transaction list, mandated if no delta access is required.  For booked transactions, the relevant date is the booking date.  For pending transactions, the relevant date is the entry date, which may not be transparent neither in this API nor other channels of the ASPSP. 
      * @param dateTo End date (inclusive the data dateTo) of the transaction list, default is \&quot;now\&quot; if not given.  Might be ignored if a delta function is used.  For booked transactions, the relevant date is the booking date.  For pending transactions, the relevant date is the entry date, which may not be transparent neither in this API nor other channels of the ASPSP. 
      * @param entryReferenceFrom This data attribute is indicating that the AISP is in favour to get all transactions after the transaction with identification entryReferenceFrom alternatively to the above defined period. This is a implementation of a delta access. If this data element is contained, the entries \&quot;dateFrom\&quot; and \&quot;dateTo\&quot; might be ignored by the ASPSP if a delta report is supported.  Optional if supported by API provider. 
@@ -135,10 +143,10 @@ export class FinTechAccountInformationService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, observe?: 'body', reportProgress?: boolean): Observable<TransactionsResponse>;
-    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TransactionsResponse>>;
-    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TransactionsResponse>>;
-    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loTRetrievalInformation: 'fromTppWithAvailableConsent' | 'fromTppWithNewConsent', dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, observe?: 'body', reportProgress?: boolean): Observable<TransactionsResponse>;
+    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loTRetrievalInformation: 'fromTppWithAvailableConsent' | 'fromTppWithNewConsent', dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TransactionsResponse>>;
+    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loTRetrievalInformation: 'fromTppWithAvailableConsent' | 'fromTppWithNewConsent', dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TransactionsResponse>>;
+    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loTRetrievalInformation: 'fromTppWithAvailableConsent' | 'fromTppWithNewConsent', dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (bankId === null || bankId === undefined) {
             throw new Error('Required parameter bankId was null or undefined when calling aisTransactionsGET.');
         }
@@ -156,6 +164,9 @@ export class FinTechAccountInformationService {
         }
         if (fintechRedirectURLNOK === null || fintechRedirectURLNOK === undefined) {
             throw new Error('Required parameter fintechRedirectURLNOK was null or undefined when calling aisTransactionsGET.');
+        }
+        if (loTRetrievalInformation === null || loTRetrievalInformation === undefined) {
+            throw new Error('Required parameter loTRetrievalInformation was null or undefined when calling aisTransactionsGET.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -187,6 +198,9 @@ export class FinTechAccountInformationService {
         }
         if (fintechRedirectURLNOK !== undefined && fintechRedirectURLNOK !== null) {
             headers = headers.set('Fintech-Redirect-URL-NOK', String(fintechRedirectURLNOK));
+        }
+        if (loTRetrievalInformation !== undefined && loTRetrievalInformation !== null) {
+            headers = headers.set('LoTRetrievalInformation', String(loTRetrievalInformation));
         }
 
         // authentication (sessionCookie) required

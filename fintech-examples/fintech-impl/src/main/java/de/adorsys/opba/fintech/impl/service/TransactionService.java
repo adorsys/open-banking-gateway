@@ -2,6 +2,7 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
+import de.adorsys.opba.fintech.impl.controller.LoTRetrievalInformation;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.ConsentEntity;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
@@ -40,7 +41,8 @@ public class TransactionService {
     private final HandleAcceptedService handleAcceptedService;
 
     public ResponseEntity listTransactions(SessionEntity sessionEntity, String fintechOkUrl, String fintechNOkUrl, String bankId,
-                                           String accountId, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom, String bookingStatus, Boolean deltaList) {
+                                           String accountId, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom,
+                                           String bookingStatus, Boolean deltaList, LoTRetrievalInformation loTRetrievalInformation) {
 
         String fintechRedirectCode = UUID.randomUUID().toString();
         Optional<ConsentEntity> optionalConsent = consentRepository.findByUserEntityAndBankIdAndConsentTypeAndConsentConfirmed(sessionEntity.getUserEntity(),
