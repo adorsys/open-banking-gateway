@@ -94,7 +94,9 @@
         <comment>Updates Xs2a Adorsys Sandbox adapter URL</comment>
         <update tableName="${table-prefix}bank_profile">
             <column name="url" value="${adorsys-sandbox-url}"/>
-            <where>bank_uuid='53c47f54-b9a4-465a-8f77-bc6cd5f0cf46'</where>
+            <where>bank_uuid='53c47f54-b9a4-465a-8f77-bc6cd5f0cf46'
+                or bank_uuid='2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc'
+                or bank_uuid='aa750320-2958-455e-9926-e9fca5ddfa92' </where>
         </update>
     </changeSet>
 
