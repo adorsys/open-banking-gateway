@@ -88,7 +88,3 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
     this.router.navigate([this.paymentReviewPage], { relativeTo: this.activatedRoute });
   }
 }
-
-export class Access {
-  constructor(public id: AccountAccessLevel, public message: string) {}
-}

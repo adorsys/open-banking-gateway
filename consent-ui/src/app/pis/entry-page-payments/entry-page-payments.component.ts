@@ -12,13 +12,7 @@ import { Access } from '../../ais/entry-page/initiation/common/initial-consent/c
 export class EntryPagePaymentsComponent implements OnInit {
   public static ROUTE = 'entry-payments';
 
-  accountAccess = [
-    new Access(AccountAccessLevel.ALL_ACCOUNTS, 'Allow seeing a list of all your accounts'),
-    new Access(AccountAccessLevel.ALL_ACCOUNTS_WITH_BALANCES, 'Allow seeing a list of all your accounts with balances'),
-    new Access(AccountAccessLevel.FINE_GRAINED, 'Limit access to specific accounts')
-  ];
   accountsConsentReviewPage = PaymentsConsentReviewComponent.ROUTE;
-  dedicatedConsentPage = DedicatedAccessComponent.ROUTE;
 
   constructor() {}
 
