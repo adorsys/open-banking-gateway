@@ -23,7 +23,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
   @Input() dedicatedConsentPage: string;
 
   public selectedAccess;
-  public accountAccessForm: FormGroup;
+  public paymentAccessForm: FormGroup;
   public state: AuthConsentState;
   public consent: AisConsentToGrant;
 
@@ -36,7 +36,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
     private sessionService: SessionService,
     private updateConsentAuthorizationService: UpdateConsentAuthorizationService
   ) {
-    this.accountAccessForm = this.formBuilder.group({});
+    this.paymentAccessForm = this.formBuilder.group({});
   }
 
   ngOnInit() {
@@ -48,7 +48,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
       }
 
       this.selectedAccess = new FormControl(this.accountAccesses[0], Validators.required);
-      this.accountAccessForm.addControl('accountAccess', this.selectedAccess);
+      this.paymentAccessForm.addControl('accountAccess', this.selectedAccess);
       this.consent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     });
   }
@@ -63,11 +63,6 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
 
   hasGeneralViolations(): boolean {
     return this.state.hasGeneralViolation();
-  }
-
-  handleMethodSelectedEvent(access: Access) {
-    this.selectedAccess.setValue(access);
-    console.log(this.selectedAccess);
   }
 
   onConfirm() {
@@ -96,7 +91,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
       consentObj.extras = consentObj.extras ? consentObj.extras : {};
       this.state
         .getGeneralViolations()
-        .forEach(it => (consentObj.extras[it.code] = this.accountAccessForm.get(it.code).value));
+        .forEach(it => (consentObj.extras[it.code] = this.paymentAccessForm.get(it.code).value));
     }
 
     consentObj.level = this.selectedAccess.value.id;
