@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
 import { AccountReport } from '../../api';
 import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
-import { HeaderConfig } from '../../models/consts';
+import { HeaderConfig, LoTRetrievalInformation } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 
 @Component({
@@ -16,6 +16,7 @@ export class ListTransactionsComponent implements OnInit {
   bankId = '';
   makeVisible = false;
   transactions: AccountReport;
+  loTRetrievalInformation: LoTRetrievalInformation = LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -30,7 +31,7 @@ export class ListTransactionsComponent implements OnInit {
   }
 
   private loadTransactions(): void {
-    this.aisService.getTransactions(this.bankId, this.accountId).subscribe(response => {
+    this.aisService.getTransactions(this.bankId, this.accountId, this.loTRetrievalInformation).subscribe(response => {
       switch (response.status) {
         case 202:
           console.log('list tx got REDIRECT');

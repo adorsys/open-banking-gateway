@@ -1,7 +1,5 @@
 export class Consts {
   public static LOCAL_STORAGE_XSRF_TOKEN = 'XSRF_TOKEN';
-  public static CONSENT_OK = 'OK';
-  public static CONSENT_NOT_OK = 'NOT_OK';
   public static CONFIRM_PAYMENT = 'confirmationData';
 }
 
@@ -25,4 +23,15 @@ export function toLocaleString(date: Date): string {
 export enum Consent {
   OK = 'OK',
   NOT_OK = 'NOT_OK'
+}
+
+export enum LoARetrievalInformation {
+  FROM_TPP_WITH_AVAILABLE_CONSENT = 'fromTppWithAvailableConsent',
+  FROM_TPP_WITH_NEW_CONSENT = 'fromTppWithNewConsent',
+  FROM_FINTECH_CACHE = 'fromFintechCache'
+}
+
+export enum LoTRetrievalInformation {
+  FROM_TPP_WITH_AVAILABLE_CONSENT = 'fromTppWithAvailableConsent',
+  FROM_TPP_WITH_NEW_CONSENT = 'fromTppWithNewConsent',
 }

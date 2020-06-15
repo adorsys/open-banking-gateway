@@ -3,7 +3,7 @@ import { AccountDetails } from '../../api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
 import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
-import { HeaderConfig } from '../../models/consts';
+import { HeaderConfig, LoARetrievalInformation } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 
 @Component({
@@ -15,6 +15,7 @@ export class ListAccountsComponent implements OnInit {
   accounts: AccountDetails[];
   selectedAccount: string;
   bankId = '';
+  loARetrievalInformation = LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
 
   constructor(
     private router: Router,
@@ -37,7 +38,7 @@ export class ListAccountsComponent implements OnInit {
   }
 
   private loadAccount(): void {
-    this.aisService.getAccounts(this.bankId).subscribe(response => {
+    this.aisService.getAccounts(this.bankId, this.loARetrievalInformation).subscribe(response => {
       switch (response.status) {
         case 202:
           this.storageService.setRedirect(
