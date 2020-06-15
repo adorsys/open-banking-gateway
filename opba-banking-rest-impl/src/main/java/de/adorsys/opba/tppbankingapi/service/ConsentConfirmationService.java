@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.PrivateKey;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,13 +29,13 @@ public class ConsentConfirmationService {
             return false;
         }
 
-        Optional<Consent> consent = consentRepository.findByServiceSessionId(session.get().getParent().getId());
+        Collection<Consent> consent = consentRepository.findByServiceSessionId(session.get().getParent().getId());
 
-        if (!consent.isPresent()) {
+        if (consent.isEmpty()) {
             return false;
         }
 
-        consent.get().setConfirmed(true);
+        consentRepository.setConfirmed(session.get().getParent().getId());
         PrivateKey psuAspspKey = vault.psuAspspKeyFromInbox(
                 session.get(),
                 finTechPassword::toCharArray

@@ -68,14 +68,12 @@
     <sequenceFlow id="tanChallengeNotRequired" sourceRef="sid-4a733d76-e455-425a-8369-a2db2cb23c4c" targetRef="cacheTransactionList">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
-    <exclusiveGateway id="anyKindOfConsentExists" default="sid-2dcb6d04-f0e8-4b8e-968d-781ac3e2c47c" name="Any kind of consent exists?"/>
+    <exclusiveGateway id="anyKindOfConsentExists" default="sid-93a4a2a9-b2f6-4af4-b930-115e292a8f3a" name="Any kind of consent exists?"/>
     <serviceTask id="reportConsentIncompatible" isForCompensation="false" flowable:async="true" flowable:exclusive="false" flowable:triggerable="false" name="Report consent is incompatible" flowable:delegateExpression="${hbciReportConsentIncompatible}"/>
     <sequenceFlow id="sid-2dcb6d04-f0e8-4b8e-968d-781ac3e2c47c" sourceRef="anyKindOfConsentExists" targetRef="reportConsentIncompatible">
-      <conditionExpression xsi:type="tFormalExpression"/>
+      <conditionExpression xsi:type="tFormalExpression">#{hbciConsentInfo.noTransactionConsentPresent(CONTEXT)}</conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-93a4a2a9-b2f6-4af4-b930-115e292a8f3a" sourceRef="anyKindOfConsentExists" targetRef="transactionListInitiateConsent">
-      <conditionExpression xsi:type="tFormalExpression">#{hbciConsentInfo.noConsentPresent(CONTEXT)}</conditionExpression>
-    </sequenceFlow>
+    <sequenceFlow id="sid-93a4a2a9-b2f6-4af4-b930-115e292a8f3a" sourceRef="anyKindOfConsentExists" targetRef="transactionListInitiateConsent"/>
     <sequenceFlow id="sid-d535c0d8-223a-4832-a1a4-b348b83117c5" sourceRef="reportConsentIncompatible" targetRef="transactionListInitiateConsent"/>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_hbci-list-transactions">
@@ -249,7 +247,7 @@
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-f80a1be4-7de6-4414-8f5f-12ab54c58885" bpmnElement="sid-2dcb6d04-f0e8-4b8e-968d-781ac3e2c47c">
         <omgdi:waypoint x="-129.00275" y="70.00001"/>
         <omgdi:waypoint x="-129.00275" y="11.666664"/>
-        <omgdi:waypoint x="-52.16667" y="11.666664"/>
+        <omgdi:waypoint x="-52.166668" y="11.666667"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-111f26b3-4b54-4897-8649-01e4b9caae9c" bpmnElement="sid-93a4a2a9-b2f6-4af4-b930-115e292a8f3a">
         <omgdi:waypoint x="-109.00273" y="90.0"/>
