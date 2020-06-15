@@ -26,7 +26,7 @@ describe('LoginComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         BankSearchModule,
-        ReactiveFormsModuledo
+        ReactiveFormsModule,
         HttpClientModule,
         RouterTestingModule.withRoutes([{ path: 'search', component: BankSearchComponent }])
       ],
