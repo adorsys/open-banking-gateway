@@ -123,6 +123,9 @@
         <xs2a-adapter.version>0.0.9</xs2a-adapter.version>
         <multibanking.version>5.5.14</multibanking.version>
 
+        <!-- Util libs -->
+        <iban.4j.version>3.2.1</iban.4j.version>
+
         <!-- Test libs -->
         <jacoco.version>0.8.5</jacoco.version>
         <jupiter.version>5.5.2</jupiter.version>

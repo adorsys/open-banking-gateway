@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { toLocaleString } from '../models/consts';
-import { RedirectTupelForMap } from '../bank/redirect-page/redirect-struct';
+import { RedirectTupelForMap, RedirectType } from '../bank/redirect-page/redirect-struct';
 
 @Injectable({
   providedIn: 'root'
@@ -19,12 +19,13 @@ export class StorageService {
     localStorage.setItem(Session.MAX_VALID_UNTIL, JSON.stringify(this.getMaxAgeDate(maxAge)));
   }
 
-  public setRedirect(redirectCode: string, authId: string, xsrfToken: string, maxAge: number): void {
+  public setRedirect(redirectCode: string, authId: string, xsrfToken: string, maxAge: number, redirectType: RedirectType): void {
     console.log('REDIRECT STARTED ', redirectCode);
     const tupel: RedirectTupelForMap = new RedirectTupelForMap();
     tupel.authId = authId;
     tupel.xsrfToken = xsrfToken;
     tupel.validUntil = new Date(new Date().getTime() + maxAge * 1000);
+    tupel.redirectType = redirectType;
     const redirectMap = this.getRedirectMap();
     redirectMap.set(redirectCode, tupel);
     this.setRedirectMap(redirectMap);
