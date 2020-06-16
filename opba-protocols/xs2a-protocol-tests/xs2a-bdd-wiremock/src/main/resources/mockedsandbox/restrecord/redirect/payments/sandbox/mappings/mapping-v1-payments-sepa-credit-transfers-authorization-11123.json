@@ -5,7 +5,7 @@
     "method" : "POST",
     "headers" : {
       "X-Request-ID" : {
-        "equalTo" : "12b34483-242a-428b-8295-2f4805bb0a30"
+        "matches" : "[0-9a-zA-z\\-]+"
       },
       "PSU-ID" : {
         "equalTo" : "anton.brueckner"
