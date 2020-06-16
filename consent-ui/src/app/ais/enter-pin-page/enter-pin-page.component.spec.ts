@@ -9,6 +9,7 @@ import { EnterPinPageComponent } from './enter-pin-page.component';
 import { StubUtilTests } from '../common/stub-util-tests';
 import { SessionService } from '../../common/session.service';
 import { UpdateConsentAuthorizationService } from '../../api';
+import any = jasmine.any;
 
 describe('EnterPinPageComponent', () => {
   let component: EnterPinPageComponent;
@@ -54,10 +55,18 @@ describe('EnterPinPageComponent', () => {
   it('should call consent auth service on submit', () => {
     spyOn(sessionService, 'getRedirectCode').and.returnValue(StubUtilTests.REDIRECT_ID);
     const consentAuthServiceSpy = spyOn(consentAuthService, 'embeddedUsingPOST').and.callThrough();
-    fixture.detectChanges();
-
+    // call explicitly
+    component.ngOnInit();
+    // submit input
     component.submit(StubUtilTests.DUMMY_INPUT);
-
-    expect(consentAuthServiceSpy).toHaveBeenCalled();
+    // check if called with args
+    expect(consentAuthServiceSpy).toHaveBeenCalledWith(
+      StubUtilTests.AUTH_ID,
+      any(String), // these values are stubbed in component
+      any(String), // these values are stubbed in component
+      StubUtilTests.REDIRECT_ID,
+      { scaAuthenticationData: { PSU_PASSWORD: StubUtilTests.DUMMY_INPUT } },
+      'response'
+    );
   });
 });
