@@ -2,7 +2,7 @@
   "endToEndIdentification": "WBG-123456789",
   "debtorAccount": {
     "currency": "EUR",
-    "iban": "DE80760700240271232400"
+    "iban": "DE38760700240320465700"
   },
   "instructedAmount": {
     "currency": "EUR",
@@ -10,7 +10,7 @@
   },
   "creditorAccount": {
     "currency": "EUR",
-    "iban": "DE80760700240271232400"
+    "iban": "DE38760700240320465700"
   },
   "creditorAgent" : "AAAADEBBXXX",
   "creditorName": "WBG",
