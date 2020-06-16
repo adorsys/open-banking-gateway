@@ -58,7 +58,7 @@ public class HbciCachedResultAccessor {
         return Optional.of(result);
     }
 
-    @SuppressWarnings("PMD.ExtendsObject") // Parentheses are used for readability
+    @SuppressWarnings("PMD.UselessParentheses") // Parentheses are used for readability
     private boolean checkCacheIsNewer(HbciResultCache result, HbciResultCache consent) {
         return null == result.getAccounts()
                 || (null != consent.getAccounts() && consent.getAccounts().getCachedAt().isAfter(result.getAccounts().getCachedAt()));
