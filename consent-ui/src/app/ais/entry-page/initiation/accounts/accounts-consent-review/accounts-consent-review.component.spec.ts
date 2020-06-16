@@ -8,7 +8,6 @@ import { of } from 'rxjs';
 import { StubUtilTests } from '../../../../common/stub-util-tests';
 import { SessionService } from '../../../../../common/session.service';
 import { Location } from '@angular/common';
-import { ConsentAuthorizationService } from '../../../../../api/api/consentAuthorization.service';
 import { UpdateConsentAuthorizationService } from '../../../../../api';
 
 describe('AccountsConsentReviewComponent', () => {
@@ -42,7 +41,7 @@ describe('AccountsConsentReviewComponent', () => {
     fixture = TestBed.createComponent(AccountsConsentReviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    consentAuthorizationService = TestBed.get(ConsentAuthorizationService);
+    consentAuthorizationService = TestBed.get(UpdateConsentAuthorizationService);
   });
 
   it('should create', () => {

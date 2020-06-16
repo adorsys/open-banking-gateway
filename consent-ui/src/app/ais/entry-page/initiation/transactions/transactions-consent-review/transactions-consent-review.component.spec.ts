@@ -9,7 +9,6 @@ import { StubUtilTests } from '../../../../common/stub-util-tests';
 import { SessionService } from '../../../../../common/session.service';
 import { TransactionsConsentReviewComponent } from './transactions-consent-review.component';
 import { UpdateConsentAuthorizationService } from '../../../../../api';
-import { ConsentAuthorizationService } from '../../../../../api/api/consentAuthorization.service';
 
 describe('TransactionsConsentReviewComponent', () => {
   let component: TransactionsConsentReviewComponent;
@@ -42,7 +41,7 @@ describe('TransactionsConsentReviewComponent', () => {
     fixture = TestBed.createComponent(TransactionsConsentReviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    consentAuthorizationService = TestBed.get(ConsentAuthorizationService);
+    consentAuthorizationService = TestBed.get(UpdateConsentAuthorizationService);
   });
 
   it('should create', () => {
@@ -55,7 +54,7 @@ describe('TransactionsConsentReviewComponent', () => {
     expect(location.back).toHaveBeenCalled();
   });
 
-  it('should confirm transanction when confirm button is pressed', () => {
+  it('should confirm transaction when confirm button is pressed', () => {
     consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'embeddedUsingPOST').and.returnValue(of());
     component.onConfirm();
     fixture.detectChanges();
