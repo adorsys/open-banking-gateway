@@ -76,7 +76,13 @@ public class FeignConfig {
             case CONFIRM_CONSENT:
                 return requestSigningService.signature(mapper.mapToConfirmConsent(headers, instant));
             case PIS:
-                return requestSigningService.signature(mapper.mapToPaymentInitiation(headers, instant));
+                if (OperationType.isGetPaymentStatus(requestTemplate.path())) {
+                    return requestSigningService.signature(mapper.mapToGetPaymentStatus(headers, instant));
+                }
+                if (OperationType.isGetPayment(requestTemplate.method())) {
+                    return requestSigningService.signature(mapper.mapToGetPayment(headers, instant));
+                }
+                return requestSigningService.signature(mapper.mapToPaymentInitiation(headers, instant, requestTemplate.requestBody().asString()));
             default:
                 throw new IllegalArgumentException(String.format("Unsupported operation type %s", operationType));
         }
