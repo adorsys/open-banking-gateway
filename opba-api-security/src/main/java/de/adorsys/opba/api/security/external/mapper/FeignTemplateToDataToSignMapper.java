@@ -8,6 +8,8 @@ import de.adorsys.opba.api.security.external.domain.signdata.AisListTransactions
 import de.adorsys.opba.api.security.external.domain.signdata.BankProfileDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.ConfirmConsentDataToSign;
+import de.adorsys.opba.api.security.external.domain.signdata.GetPaymentDataToSign;
+import de.adorsys.opba.api.security.external.domain.signdata.GetPaymentStatusDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.PaymentInitiationDataToSign;
 
 import java.time.Instant;
@@ -69,7 +71,7 @@ public class FeignTemplateToDataToSignMapper {
         return new ConfirmConsentDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType));
     }
 
-    public PaymentInitiationDataToSign mapToPaymentInitiation(Map<String, Collection<String>> headers, Instant instant) {
+    public PaymentInitiationDataToSign mapToPaymentInitiation(Map<String, Collection<String>> headers, Instant instant, String body) {
         String operationType = extractRequiredValue(headers, HttpHeaders.X_OPERATION_TYPE);
         String xRequestId = extractRequiredValue(headers, HttpHeaders.X_REQUEST_ID);
         String bankId = extractNonRequiredValue(headers, HttpHeaders.BANK_ID);
@@ -77,7 +79,26 @@ public class FeignTemplateToDataToSignMapper {
         String redirectOkUrl = extractRequiredValue(headers, HttpHeaders.FINTECH_REDIRECT_URL_OK);
         String redirectNokUrl = extractRequiredValue(headers, HttpHeaders.FINTECH_REDIRECT_URL_NOK);
 
-        return new PaymentInitiationDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType), bankId, fintechUserId, redirectOkUrl, redirectNokUrl);
+        return new PaymentInitiationDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType),
+                                               bankId, fintechUserId, redirectOkUrl, redirectNokUrl, null, null);
+    }
+
+    public GetPaymentDataToSign mapToGetPayment(Map<String, Collection<String>> headers, Instant instant) {
+        String operationType = extractRequiredValue(headers, HttpHeaders.X_OPERATION_TYPE);
+        String xRequestId = extractRequiredValue(headers, HttpHeaders.X_REQUEST_ID);
+        String bankId = extractNonRequiredValue(headers, HttpHeaders.BANK_ID);
+        String fintechUserId = extractRequiredValue(headers, HttpHeaders.FINTECH_USER_ID);
+
+        return new GetPaymentDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType), bankId, fintechUserId);
+    }
+
+    public GetPaymentStatusDataToSign mapToGetPaymentStatus(Map<String, Collection<String>> headers, Instant instant) {
+        String operationType = extractRequiredValue(headers, HttpHeaders.X_OPERATION_TYPE);
+        String xRequestId = extractRequiredValue(headers, HttpHeaders.X_REQUEST_ID);
+        String bankId = extractNonRequiredValue(headers, HttpHeaders.BANK_ID);
+        String fintechUserId = extractRequiredValue(headers, HttpHeaders.FINTECH_USER_ID);
+
+        return new GetPaymentStatusDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType), bankId, fintechUserId);
     }
 
     private String extractRequiredValue(Map<String, Collection<String>> values, String valueName) {
