@@ -155,7 +155,7 @@ public class ConsentAccessFactory {
 
             PrivateKey psuAspspKey = fintechVault.psuAspspKeyFromPrivate(serviceSession, fintech, fintechPassword);
             EncryptionService enc = encryptionService.forPrivateKey(psuAspspPrivateKey.get().getId(), psuAspspKey);
-            return consent.stream().map(it -> new ProtocolFacingConsentImpl(it ,enc)).collect(Collectors.toList());
+            return consent.stream().map(it -> new ProtocolFacingConsentImpl(it, enc)).collect(Collectors.toList());
         }
 
         @Override
