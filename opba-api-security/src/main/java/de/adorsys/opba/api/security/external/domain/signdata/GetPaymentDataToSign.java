@@ -7,23 +7,16 @@ import java.time.Instant;
 import java.util.UUID;
 
 /**
- * The header and body values in http request from fintech to opba, that take part in signature verification.
+ * The header values in http request from fintech to opba, that take part in signature verification.
  * The 'X-Request-Signature' header contains signed representation of each the following field.
  * This values are signed on the side of fintech and are verified in a spring filter on the side of opba.
  */
 @Value
-public class PaymentInitiationDataToSign {
-    // Header values
+public class GetPaymentDataToSign {
     UUID xRequestId;
     Instant instant;
     OperationType operationType;
 
     String bankId;
     String fintechUserId;
-    String redirectOk;
-    String redirectNok;
-
-    //Body values
-    String currency;
-    String amount;
 }
