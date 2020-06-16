@@ -43,7 +43,7 @@ public class HbciCachedResultAccessor {
 
         HbciResultCache result = new HbciResultCache();
         for (HbciResultCache consent : consents) {
-            if (null == result.getAccounts() || (null != consent.getAccounts() && consent.getAccounts().getCachedAt().isAfter(result.getAccounts().getCachedAt()))) {
+            if (checkCacheIsNewer(result, consent)) {
                 result.setAccounts(consent.getAccounts());
             }
 
@@ -56,6 +56,12 @@ public class HbciCachedResultAccessor {
             }
         }
         return Optional.of(result);
+    }
+
+    @SuppressWarnings("PMD.ExtendsObject") // Parentheses are used for readability
+    private boolean checkCacheIsNewer(HbciResultCache result, HbciResultCache consent) {
+        return null == result.getAccounts()
+                || (null != consent.getAccounts() && consent.getAccounts().getCachedAt().isAfter(result.getAccounts().getCachedAt()));
     }
 
     private void mergeTransactions(HbciResultCache result, HbciResultCache consent) {
