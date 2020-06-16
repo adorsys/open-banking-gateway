@@ -98,6 +98,10 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
         ProtocolUrlsConfiguration.WebHooks aisUrls = urlsConfiguration.getAis().getWebHooks();
         aisUrls.setOk(aisUrls.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
         aisUrls.setNok(aisUrls.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
+
+        ProtocolUrlsConfiguration.WebHooks pisUrls = urlsConfiguration.getPis().getWebHooks();
+        pisUrls.setOk(pisUrls.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
+        pisUrls.setNok(pisUrls.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
     }
 
     @ParameterizedTest
@@ -207,8 +211,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
 
         then()
             .open_banking_has_consent_for_max_musterman_account_list()
-            .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(false);
+            .fintech_calls_consent_activation_for_current_authorization_id();
     }
 
     @ParameterizedTest
@@ -227,7 +230,7 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
             .and()
             .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
             .and()
-            .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+            .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_pis()
             .and()
             .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
             .and()
@@ -241,9 +244,8 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
             .and()
             .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
         then()
-                .open_banking_has_consent_for_anton_brueckner_account_list()
-                .fintech_calls_consent_activation_for_current_authorization_id()
-                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(false);
+            .open_banking_has_consent_for_anton_brueckner_account_list()
+            .fintech_calls_consent_activation_for_current_authorization_id();
     }
 
     private String embeddedListMaxMustermanAccounts(Approach expectedApproach) {

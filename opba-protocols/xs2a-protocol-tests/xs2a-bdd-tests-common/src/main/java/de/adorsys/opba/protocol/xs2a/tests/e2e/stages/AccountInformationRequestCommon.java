@@ -40,6 +40,8 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.LOGIN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.PASSWORD;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.PIS_LOGIN_USER_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.PIS_SINGLE_PAYMENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withAccountsHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withAccountsHeadersMissingIpAddress;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
@@ -565,5 +567,84 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 "{\"scaAuthenticationData\":{\"SCA_CHALLENGE_ID\":\"%s\"}}",
                 this.availableScas.stream().filter(it -> it.getMethodValue().equals(scaName)).findFirst().get().getId()
         );
+    }
+
+    public SELF fintech_calls_initiate_payment_for_anton_brueckner() {
+        String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-initiate-payment-body.json");
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.PIS)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(body)
+        .when()
+            .post(PIS_SINGLE_PAYMENT_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+        .then()
+            .statusCode(HttpStatus.ACCEPTED.value())
+            .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
+        return self();
+    }
+
+    public SELF fintech_calls_initiate_payment_for_max_musterman() {
+        String body = readResource("restrecord/tpp-ui-input/params/max-musterman-initiate-payment-body.json");
+        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, requestSigningService, OperationType.PIS)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(body)
+        .when()
+            .post(PIS_SINGLE_PAYMENT_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+        .then()
+            .statusCode(HttpStatus.ACCEPTED.value())
+            .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
+        return self();
+    }
+
+    public SELF user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url_pis(String username, String password) {
+        String fintechUserTempPassword = UriComponentsBuilder
+                .fromHttpUrl(redirectUriToGetUserParams).build()
+                .getQueryParams()
+                .getFirst(REDIRECT_CODE_QUERY);
+
+        ExtractableResponse<Response> response =  RestAssured
+                .given()
+                .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
+                .body(ImmutableMap.of(LOGIN, username, PASSWORD, password))
+                .when()
+                .post(PIS_LOGIN_USER_ENDPOINT, serviceSessionId)
+                .then()
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
+
+        this.authSessionCookie = response.cookie(AUTHORIZATION_SESSION_KEY);
+        return self();
+    }
+
+    public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok_pis() {
+        assertThat(this.redirectUriToGetUserParams).contains("sca-result").doesNotContain("wrong=true");
+        ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
+        assertThat(response.header(LOCATION)).contains("pis").contains("consent-result");
+        return self();
+    }
+
+    public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_pis() {
+        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.PIS)
+                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .when()
+                .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .extract();
+
+        this.redirectUriToGetUserParams = response.header(LOCATION);
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        return self();
     }
 }
