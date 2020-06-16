@@ -23,7 +23,7 @@ import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.SESSION_COOK
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.FINTECH_SERVER_LOGIN;
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.ACCOUNT_ENDPOINT;
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.X_REQUEST_ID;
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.X_XSRF_TOKEN;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.withDefaultHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon.REDIRECT_CODE_QUERY;
 
