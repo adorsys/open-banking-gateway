@@ -7,7 +7,6 @@
         </preConditions>
         <comment>Fills tables with mock data</comment>
        <sql>
-
            <!--  ADORSYS ASPSP  -->
            insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (1, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'LIST_ACCOUNTS', 'xs2aListAccounts');
            insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (2, '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46', 'LIST_TRANSACTIONS', 'xs2aSandboxListTransactions');
@@ -46,6 +45,26 @@
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (10, 15, 'UPDATE_AUTHORIZATION', 'xs2aUpdateAuthorization');
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (11, 15, 'FROM_ASPSP_REDIRECT', 'xs2aFromAspspRedirect');
            insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (12, 15, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
+
+           <!-- MOCK-HBCI  -->
+           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (1000, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'LIST_ACCOUNTS', 'hbciListAccounts');
+           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (2000, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'LIST_TRANSACTIONS', 'hbciListTransactions');
+           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (3000, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'AUTHORIZATION', '');
+
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (1000, 3000, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (2000, 3000, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (3000, 3000, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (4000, 3000, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
+
+           <!--  ING-HBCI  -->
+           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (10000, '4c47e75a-760f-4d99-8d88-490221b39f98', 'LIST_ACCOUNTS', 'hbciListAccounts');
+           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (20000, '4c47e75a-760f-4d99-8d88-490221b39f98', 'LIST_TRANSACTIONS', 'hbciListTransactions');
+           insert into ${table-prefix}bank_protocol (id, bank_uuid, action, protocol_bean_name) values (30000, '4c47e75a-760f-4d99-8d88-490221b39f98', 'AUTHORIZATION', '');
+
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (10000, 30000, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (20000, 30000, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (30000, 30000, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
+           insert into ${table-prefix}bank_sub_protocol (id, protocol_id, action, sub_protocol_bean_name) values (40000, 30000, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
        </sql>
     </changeSet>
 

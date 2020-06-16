@@ -3,7 +3,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.redirect;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.RedirectExecutor;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.Xs2aRedirectExecutor;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -18,7 +18,7 @@ public class Xs2aDoScaRedirect extends ValidatedExecution<Xs2aContext> {
 
     private final ProtocolUrlsConfiguration urlsConfiguration;
     private final RuntimeService runtimeService;
-    private final RedirectExecutor redirectExecutor;
+    private final Xs2aRedirectExecutor redirectExecutor;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {

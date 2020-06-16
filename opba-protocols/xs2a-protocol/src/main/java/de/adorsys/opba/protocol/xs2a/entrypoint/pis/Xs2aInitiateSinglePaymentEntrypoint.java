@@ -5,19 +5,19 @@ import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
-import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
+import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.result.body.PaymentProductDetails;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.pis.SinglePayment;
+import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.service.eventbus.ProcessEventHandlerRegistrar;
 import de.adorsys.opba.protocol.xs2a.context.pis.SinglePaymentXs2aContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aOutcomeMapper;
 import de.adorsys.opba.protocol.xs2a.entrypoint.Xs2aResultBodyExtractor;
-import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.UuidMapper;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.DtoMapper;
+import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.Xs2aUuidMapper;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.runtime.ProcessInstance;
@@ -86,7 +86,7 @@ public class Xs2aInitiateSinglePaymentEntrypoint implements SinglePayment {
     /**
      * Mapper to convert incoming user request to processable request context.
      */
-    @Mapper(componentModel = SPRING_KEYWORD, uses = UuidMapper.class, implementationPackage = XS2A_MAPPERS_PACKAGE)
+    @Mapper(componentModel = SPRING_KEYWORD, uses = Xs2aUuidMapper.class, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface FromRequest extends DtoMapper<InitiateSinglePaymentRequest, SinglePaymentXs2aContext> {
 
         @Mapping(source = "facadeServiceable.bankId", target = "aspspId")

@@ -1,39 +1,42 @@
 <section class="payment">
-  <h2 class="card-title card-title--normal">Confirm your Payment</h2>
-  <p class="text-secondary">Please check your payment information you about to execute, the confirm with "Next".</p>
+  <div class="d-flex justify-content-center mt-5">
+    <img alt="redirection" class="card-img" src="assets/icons/icons8-network 2.png" />
+  </div>
+  <br>
+  <h2 class="card-title  justify-content-center">Please confirm redirection to consent ui</h2>
+  <p class="text-secondary">When you confirm, you will be redirected to consent ui to authorize payment.</p>
+
   <div class="row mt-4 mb-3">
     <div class="form-group col-md-6">
       <div class="d-md-flex align-items-center">
         <img alt="redirection" class="card-img mb-4 mb-md-0 mr-4" src="assets/icons/card_payment.png" />
         <div class="">
-          <label class="text-bold title">Creditor account</label>
-          <p class="description">DE89 3704 0044 0532 0130 00</p>
+          <label class="text-bold title">My account</label>
+          <p class="description">{{confirmData.paymentRequest.debitorIban}}</p>
         </div>
       </div>
     </div>
-    <div class="form-group col-md-3 text-md-right">
-      <label>creditor name</label>
-      <p class="text-bold">WBG</p>
-    </div>
-    <div class="form-group col-md-3 text-md-right">
-      <label>Payment amount</label>
-      <p class="text-bold">50 EUR</p>
-    </div>
-  </div>
-  <div class="row">
     <div class="form-group col-md-6">
       <div class="d-md-flex align-items-center">
         <img alt="redirection" class="card-img mb-4 mb-md-0 mr-4" src="assets/icons/receive_dollar.png" />
         <div class="">
-          <label class="text-bold title">Debtor account</label>
-          <p class="description">DE44 2564 0044 0532 0130 00</p>
+          <label class="text-bold title">IBAN</label>
+          <p class="description">{{confirmData.paymentRequest.creditorIban}}</p>
         </div>
       </div>
     </div>
-    <div class="form-group col-md-3 text-md-right">
-      <label>Total amount:</label>
-      <p class="text-bold">50 EUR</p>
-    </div>
+  </div>
+  <div class="form-group col-md-12">
+    <label>Name</label>
+    <p class="text-bold">{{confirmData.paymentRequest.name}}</p>
+  </div>
+  <div class="form-group col-md-12">
+    <label>Purpose of payment</label>
+    <p class="text-bold">{{confirmData.paymentRequest.purpose}}</p>
+  </div>
+  <div class="form-group col-md-12 text-md-right">
+    <label>Amount</label>
+    <p class="text-bold">{{confirmData.paymentRequest.amount}} EUR</p>
   </div>
 </section>
 

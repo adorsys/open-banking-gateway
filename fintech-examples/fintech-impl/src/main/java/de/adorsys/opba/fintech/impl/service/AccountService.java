@@ -23,7 +23,6 @@ import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_X_TIMESTAMP_UTC;
 
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -65,7 +64,7 @@ public class AccountService {
             log.info("LoA found valid ais consent for user {} bank {}", sessionEntity.getUserEntity().getLoginUserName(), bankID);
             return tppAisClient.getAccounts(
                     tppProperties.getServiceSessionPassword(),
-                    sessionEntity.getUserEntity().getLoginUserName(),
+                    sessionEntity.getUserEntity().getFintechUserId(),
                     RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
                     RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
                     xRequestId,
@@ -84,7 +83,7 @@ public class AccountService {
         return tppAisClient.getTransactions(
                 UUID.randomUUID().toString(), // As consent is missing this will be ignored
                 tppProperties.getServiceSessionPassword(),
-                sessionEntity.getUserEntity().getLoginUserName(),
+                sessionEntity.getUserEntity().getFintechUserId(),
                 RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
                 RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
                 xRequestId,
