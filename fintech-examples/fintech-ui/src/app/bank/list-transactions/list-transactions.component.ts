@@ -5,6 +5,8 @@ import { AccountReport } from '../../api';
 import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
 import { HeaderConfig, LoTRetrievalInformation } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
+import { tap } from 'rxjs/operators';
+import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-list-transactions',
@@ -16,13 +18,16 @@ export class ListTransactionsComponent implements OnInit {
   bankId = '';
   makeVisible = false;
   transactions: AccountReport;
-  loTRetrievalInformation: LoTRetrievalInformation = LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
+  loTRetrievalInformation;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private aisService: AisService,
-    private storageService: StorageService
-  ) {}
+    private storageService: StorageService,
+    private settingsService: SettingsService
+  ) {
+    this.settingsService.getLoA().pipe(tap(el => this.loTRetrievalInformation = el)).subscribe();
+  }
 
   ngOnInit() {
     this.bankId = this.route.parent.snapshot.paramMap.get('bankid');

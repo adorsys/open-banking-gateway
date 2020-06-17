@@ -5,6 +5,8 @@ import { AisService } from '../services/ais.service';
 import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
 import { HeaderConfig, LoARetrievalInformation } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
+import { SettingsService } from '../services/settings.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-list-accounts',
@@ -15,15 +17,17 @@ export class ListAccountsComponent implements OnInit {
   accounts: AccountDetails[];
   selectedAccount: string;
   bankId = '';
-  // loARetrievalInformation = LoARetrievalInformation.FROM_FINTECH_CACHE;
-  loARetrievalInformation = LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
+  loARetrievalInformation;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private aisService: AisService,
-    private storageService: StorageService
-  ) {}
+    private storageService: StorageService,
+    private settingsService: SettingsService
+  ) {
+    this.settingsService.getLoA().pipe(tap(el => this.loARetrievalInformation = el)).subscribe();
+  }
 
   ngOnInit() {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
