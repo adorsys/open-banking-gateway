@@ -62,6 +62,10 @@ public class Xs2aUpdateAuthorization implements UpdateAuthorization {
         if (extras.containsKey(ExtraAuthRequestParam.PSU_IP_ADDRESS)) {
             context.setPsuIpAddress((String) extras.get(ExtraAuthRequestParam.PSU_IP_ADDRESS));
         }
+
+        if (extras.containsKey(ExtraAuthRequestParam.PSU_IP_PORT)) {
+            context.setPsuIpPort((String) extras.get(ExtraAuthRequestParam.PSU_IP_PORT));
+        }
     }
 
     private void updateWithScaChallenges(Xs2aContext context, Map<String, String> scaChallenges) {
