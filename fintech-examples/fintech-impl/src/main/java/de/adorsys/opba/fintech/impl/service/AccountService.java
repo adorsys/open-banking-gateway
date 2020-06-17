@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,38 +49,32 @@ public class AccountService {
     private final ConsentRepository consentRepository;
     private final HandleAcceptedService handleAcceptedService;
     private final AccountRepository accountRepository;
+    private final ConsentService consentService;
 
     public ResponseEntity listAccounts(SessionEntity sessionEntity,
                                        String fintechOkUrl, String fintechNOKUrl,
-                                       String bankID, LoARetrievalInformation loARetrievalInformation) {
+                                       String bankId, LoARetrievalInformation loARetrievalInformation) {
 
         log.info("List of accounts {}", loARetrievalInformation);
         if (loARetrievalInformation.equals(LoARetrievalInformation.fromFintechCache)) {
-            return createLoAResponseFromDatabase(sessionEntity.getUserEntity(), bankID);
+            return createLoAResponseFromDatabase(sessionEntity.getUserEntity(), bankId);
         }
 
         final String fintechRedirectCode = UUID.randomUUID().toString();
 
         if (loARetrievalInformation.equals(LoARetrievalInformation.fromTppWithNewConsent)) {
-            Optional<ConsentEntity> optionalConsent = consentRepository.findByUserEntityAndBankIdAndConsentTypeAndConsentConfirmed(sessionEntity.getUserEntity(),
-                    bankID, ConsentType.AIS, Boolean.TRUE);
-            if (optionalConsent.isPresent()) {
-                log.info("List of accounts. Consent for LoA existed but has been removed to retrieve new consent");
-                consentRepository.delete(optionalConsent.get());
-            } else {
-                log.info("List of accounts. Consent for LoA did not exist anyway");
-            }
+            consentService.deleteConsent(sessionEntity.getUserEntity(), ConsentType.AIS, bankId);
         }
-        ResponseEntity accounts = readOpbaResponse(bankID, sessionEntity, fintechRedirectCode);
+        ResponseEntity accounts = readOpbaResponse(bankId, sessionEntity, fintechRedirectCode);
 
         switch (accounts.getStatusCode()) {
             case OK:
-                mergeKnownAccountsWithNewAccounts(sessionEntity.getUserEntity(), bankID, (AccountList) accounts.getBody());
+                mergeKnownAccountsWithNewAccounts(sessionEntity.getUserEntity(), bankId, (AccountList) accounts.getBody());
                 return new ResponseEntity<>(accounts.getBody(), HttpStatus.OK);
             case ACCEPTED:
                 log.debug("create redirect entity for redirect code {}", fintechRedirectCode);
                 redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOKUrl);
-                return handleAcceptedService.handleAccepted(consentRepository, ConsentType.AIS, bankID, fintechRedirectCode, sessionEntity, accounts.getHeaders());
+                return handleAcceptedService.handleAccepted(consentRepository, ConsentType.AIS, bankId, fintechRedirectCode, sessionEntity, accounts.getHeaders());
             case UNAUTHORIZED:
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             default:
@@ -87,24 +82,27 @@ public class AccountService {
         }
     }
 
-    private ResponseEntity createLoAResponseFromDatabase(UserEntity userEntity, String bankID) {
+    private ResponseEntity createLoAResponseFromDatabase(UserEntity userEntity, String bankid) {
         List<AccountEntity> accountEntityList = new ArrayList<>();
-        accountRepository.findByUserEntityAndBankId(userEntity,bankID).forEach(el -> accountEntityList.add(el));
+        accountRepository.findByUserEntityAndBankId(userEntity, bankid).forEach(el -> accountEntityList.add(el));
         List<AccountDetails> accountDetailList = new ArrayList<>();
-        for (AccountEntity accountEntity:accountEntityList) {
+        for (AccountEntity accountEntity : accountEntityList) {
             AccountDetails accountDetails = new AccountDetails();
             accountDetails.setIban(accountEntity.getIban());
+            accountDetails.setName(accountEntity.getName());
+            accountDetails.setResourceId(accountEntity.getResourceId());
             accountDetails.setCurrency(accountEntity.getCurrency());
             accountDetails.setStatus(AccountStatus.fromValue(accountEntity.getStatus()));
             accountDetailList.add(accountDetails);
         }
         AccountList accountList = new AccountList();
         accountList.setAccounts(accountDetailList);
+        log.info("found {} accounts for bankd {} for user {}", accountDetailList.size(), bankid, userEntity.getLoginUserName());
         return new ResponseEntity<>(accountList, HttpStatus.OK);
     }
 
-
-    private void mergeKnownAccountsWithNewAccounts(UserEntity userEntity, String bankId, AccountList tppAccountList) {
+    @Transactional
+    void mergeKnownAccountsWithNewAccounts(UserEntity userEntity, String bankId, AccountList tppAccountList) {
         Map<String, AccountEntity> fintechAccountMap = new HashMap<>();
         accountRepository.findByUserEntityAndBankId(userEntity, bankId).forEach(el -> fintechAccountMap.put(el.getIban(), el));
         Set<String> fintechIbans = fintechAccountMap.keySet();
@@ -113,36 +111,36 @@ public class AccountService {
         tppAccountList.getAccounts().forEach(el -> tppAccountMap.put(el.getIban(), el));
         Set<String> tppIbans = tppAccountMap.keySet();
 
-        fintechIbans.stream().forEach(iban -> log.info("before merge: fintechIban:{}", iban));
-        tppIbans.stream().forEach(iban -> log.info("before merge: tppIban:    {}", iban));
-
         Set<String> becameUnknownIbans = new HashSet<>(fintechIbans);
         becameUnknownIbans.removeAll(tppIbans);
+
         // these ibans were known before, now they are unknown
         for (String unknownIban : becameUnknownIbans) {
             fintechAccountMap.get(unknownIban).setUnknown(true);
             accountRepository.save(fintechAccountMap.get(unknownIban));
         }
-
         Set<String> newIbans = new HashSet<>(tppIbans);
         newIbans.removeAll(fintechIbans);
+
         // these ibans are new and have to be persisted
         for (String newIban : newIbans) {
             AccountDetails tppAccountDetails = tppAccountMap.get(newIban);
-
             accountRepository.save(
                     AccountEntity.builder()
-                            .bankId(bankId)
-                            .iban(newIban)
+                            .name(tppAccountDetails.getName())
+                            .resourceId(tppAccountDetails.getResourceId())
+                            .bankId(bankId).iban(newIban)
                             .currency(tppAccountDetails.getCurrency())
                             .status(tppAccountDetails.getStatus().toString())
+                            .userEntity(userEntity)
                             .unknown(false)
                             .build()
             );
         }
-
-        becameUnknownIbans.stream().forEach(iban -> log.info("after merge unknown fintech iban: {}", iban));
-        newIbans.stream().forEach(iban -> log.info("after merge new fintech iban:     {}", iban));
+        fintechIbans.stream().forEach(iban -> log.debug("before merge: fintechIban:{}", iban));
+        tppIbans.stream().forEach(iban -> log.debug("before merge: tppIban:    {}", iban));
+        becameUnknownIbans.stream().forEach(iban -> log.debug("after merge unknown fintech iban: {}", iban));
+        newIbans.stream().forEach(iban -> log.debug("after merge new fintech iban:     {}", iban));
     }
 
     private ResponseEntity readOpbaResponse(String bankID, SessionEntity sessionEntity, String redirectCode) {
