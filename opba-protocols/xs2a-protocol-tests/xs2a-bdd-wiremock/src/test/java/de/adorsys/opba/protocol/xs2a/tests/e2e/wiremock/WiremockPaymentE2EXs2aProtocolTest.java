@@ -37,14 +37,14 @@ As we redefine list accounts for adorsys-sandbox bank to sandbox customary one
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
 public class WiremockPaymentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers, WiremockPaymentRequest<? extends WiremockPaymentRequest<?>>, PaymentResult> {
 
-    private final String OPBA_LOGIN = UUID.randomUUID().toString();
     private final String OPBA_PASSWORD = UUID.randomUUID().toString();
-
-    @LocalServerPort
-    private int port;
+    private final String OPBA_LOGIN = UUID.randomUUID().toString();
 
     @Autowired
     private ProtocolUrlsConfiguration urlsConfiguration;
+
+    @LocalServerPort
+    private int port;
 
     // See https://github.com/spring-projects/spring-boot/issues/14879 for the 'why setting port'
     @BeforeEach
