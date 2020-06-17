@@ -41,7 +41,7 @@ public class HandleAcceptedService {
         consentRepository.save(consent);
 
         URI location = headers.getLocation();
-        log.debug("call was accepted, but redirect has to be done for authID:{} location:{}", consent.getAuthId(), location);
+        log.info("call was accepted, but redirect has to be done for authID:{} location:{}", consent.getAuthId(), location);
 
         HttpHeaders responseHeaders = sessionLogicService.startRedirect(sessionEntity.getUserEntity(), consent.getAuthId());
         responseHeaders.add(FIN_TECH_REDIRECT_CODE, fintechRedirectCode);

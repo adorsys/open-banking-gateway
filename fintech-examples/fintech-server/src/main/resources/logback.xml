@@ -5,7 +5,7 @@
         </encoder>
     </appender>
 
-    <logger name="de.adorsys.opba.fintech" level="debug" additivity="false">
+    <logger name="de.adorsys.opba.fintech" level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 
