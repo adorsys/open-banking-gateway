@@ -1,10 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import com.tngtech.jgiven.Stage;
-import com.tngtech.jgiven.annotation.ProvidedScenarioState;
-import com.tngtech.jgiven.annotation.ScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
@@ -15,14 +11,11 @@ import de.adorsys.opba.protocol.xs2a.tests.GetTransactionsQueryParams;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
 import java.util.UUID;
 
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
@@ -40,13 +33,10 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.LOGIN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.PASSWORD;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.PIS_LOGIN_USER_ENDPOINT;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.PIS_SINGLE_PAYMENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withAccountsHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withAccountsHeadersMissingIpAddress;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withTransactionsHeaders;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.LOCATION;
@@ -54,39 +44,7 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 @Slf4j
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
-public class AccountInformationRequestCommon<SELF extends AccountInformationRequestCommon<SELF>> extends Stage<SELF> {
-
-    public static final String REDIRECT_CODE_QUERY = "redirectCode";
-
-    @ProvidedScenarioState
-    protected String authSessionCookie;
-
-    @ProvidedScenarioState
-    protected String redirectUriToGetUserParams;
-
-    @ProvidedScenarioState
-    protected String serviceSessionId;
-
-    @ProvidedScenarioState
-    protected String redirectCode;
-
-    @ProvidedScenarioState
-    @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
-    protected String redirectOkUri;
-
-    @ProvidedScenarioState
-    @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
-    protected String redirectNotOkUri;
-
-    @ProvidedScenarioState
-    @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
-    protected String responseContent;
-
-    @Autowired
-    private RequestSigningService requestSigningService;
-
-    @ScenarioState
-    private List<ScaUserData> availableScas;
+public class AccountInformationRequestCommon<SELF extends AccountInformationRequestCommon<SELF>> extends RequestCommon<SELF> {
 
     @ScenarioState
     private List<AuthViolation> violations;
