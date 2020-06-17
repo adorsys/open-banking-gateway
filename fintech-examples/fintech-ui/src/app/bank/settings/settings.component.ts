@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
+import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-settings',
@@ -22,9 +23,14 @@ export class SettingsComponent implements OnInit {
 
   settingsForm: FormGroup;
 
-  constructor(private route: ActivatedRoute, fb: FormBuilder) {
-  this.bankId = this.route.snapshot.paramMap.get('bankid');
-    this.settingsForm = fb.group({
+  constructor(
+    private route: ActivatedRoute,
+    private settingsService: SettingsService,
+    private router: Router,
+    private formBuilder: FormBuilder)
+  {
+    this.bankId = this.route.snapshot.paramMap.get('bankid');
+    this.settingsForm = formBuilder.group({
       loa: [this.loa, Validators.required],
       lot: [this.lot, Validators.required]
     });
@@ -39,7 +45,11 @@ export class SettingsComponent implements OnInit {
   }
 
   onConfirm() {
-
+    this.loa = this.settingsForm.getRawValue().loa;
+    this.lot = this.settingsForm.getRawValue().lot;
+    this.settingsService.setLoA(this.loa);
+    this.settingsService.setLoT(this.lot);
+    this.router.navigate(['..'], { relativeTo: this.route });
   }
 
 }
