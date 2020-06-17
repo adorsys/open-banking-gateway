@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.hbci.service.protocol.ais.dto;
 
+import de.adorsys.multibanking.hbci.model.HbciConsent;
 import lombok.Data;
 
 import java.util.Map;
@@ -9,6 +10,11 @@ import java.util.Map;
  */
 @Data
 public class HbciResultCache {
+
+    /**
+     * Last HBCI consent.
+     */
+    private HbciConsent consent;
 
     /**
      * Last account list result.

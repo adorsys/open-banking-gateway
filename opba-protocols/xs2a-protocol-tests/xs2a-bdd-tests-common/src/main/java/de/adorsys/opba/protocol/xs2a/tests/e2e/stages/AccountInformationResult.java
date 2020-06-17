@@ -6,8 +6,8 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.external.domain.OperationType;
+import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import de.adorsys.opba.protocol.xs2a.tests.GetTransactionsQueryParams;
 import io.restassured.RestAssured;
@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
@@ -37,9 +38,8 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.SESSION_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withAccountsHeaders;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withTransactionsHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withSignatureHeaders;
-import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withTransactionsHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -81,34 +81,34 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     @SneakyThrows
     @Transactional
     public SELF open_banking_has_consent_for_anton_brueckner_account_list() {
-        assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isNotEmpty();
+        assertThat(consents.findByServiceSessionIdOrderByModifiedAtDesc(UUID.fromString(serviceSessionId))).isNotEmpty();
         return self();
     }
 
     @SneakyThrows
     @Transactional
     public SELF open_banking_has_no_consent() {
-        assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isEmpty();
+        assertThat(consents.findByServiceSessionIdOrderByModifiedAtDesc(UUID.fromString(serviceSessionId))).isEmpty();
         return self();
     }
 
     @Transactional
     public SELF open_banking_has_consent_for_max_musterman_account_list() {
-        assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isNotEmpty();
+        assertThat(consents.findByServiceSessionIdOrderByModifiedAtDesc(UUID.fromString(serviceSessionId))).isNotEmpty();
         return self();
     }
 
     @SneakyThrows
     @Transactional
     public SELF open_banking_has_consent_for_anton_brueckner_transaction_list() {
-        assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isNotEmpty();
+        assertThat(consents.findByServiceSessionIdOrderByModifiedAtDesc(UUID.fromString(serviceSessionId))).isNotEmpty();
         return self();
     }
 
     @SneakyThrows
     @Transactional
     public SELF open_banking_has_consent_for_max_musterman_transaction_list() {
-        assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isNotEmpty();
+        assertThat(consents.findByServiceSessionIdOrderByModifiedAtDesc(UUID.fromString(serviceSessionId))).isNotEmpty();
         return self();
     }
 

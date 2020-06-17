@@ -37,7 +37,10 @@ public class HbciReadAccountListFromCache extends ValidatedExecution<AccountList
 
         ContextUtil.getAndUpdateContext(
                 execution,
-                (AccountListHbciContext toUpdate) -> toUpdate.setResponse(hbciResult.get().getAccounts())
+                (AccountListHbciContext toUpdate) -> {
+                    toUpdate.setResponse(hbciResult.get().getAccounts());
+                    toUpdate.setHbciDialogConsent(hbciResult.get().getConsent());
+                }
         );
     }
 }

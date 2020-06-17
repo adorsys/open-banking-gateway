@@ -41,7 +41,7 @@ public class HbciAdapterConfig {
         BankInfo bankInfo = new BankInfo();
         bankInfo.setBlz("10000001");
         bankInfo.setPinTanAddress("http://localhost:8090/hbci-mock/");
-        bankInfo.setPinTanVersion(HBCIVersion.byId(properties.getHbciVersion()));
+        bankInfo.setPinTanVersion(HBCIVersion.HBCI_300);
         bankInfo.setBic("ADORSYS");
         HBCIUtils.addBankInfo(bankInfo);
 

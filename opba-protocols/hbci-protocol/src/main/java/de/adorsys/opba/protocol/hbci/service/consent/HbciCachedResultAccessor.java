@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.hbci.service.consent;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
@@ -12,8 +13,8 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ public class HbciCachedResultAccessor {
             return Optional.empty();
         }
 
-        Collection<HbciResultCache> consents = context.consentAccess().findByCurrentServiceSession()
+        List<HbciResultCache> consents = context.consentAccess().findByCurrentServiceSessionOrderByModifiedDesc()
                 .stream()
                 .map(this::readCachedEntry)
                 .collect(Collectors.toList());
@@ -55,6 +56,8 @@ public class HbciCachedResultAccessor {
                 mergeTransactions(result, consent);
             }
         }
+
+        result.setConsent(consents.get(0).getConsent());
         return Optional.of(result);
     }
 
@@ -81,15 +84,18 @@ public class HbciCachedResultAccessor {
     public void resultToCache(HbciContext context, HbciResultCache result) {
         ProtocolFacingConsent newConsent = context.getRequestScoped().consentAccess().createDoNotPersist();
         newConsent.setConsentId(context.getSagaId());
+        newConsent.setConsentContext(safeSerialize(result));
+        context.getRequestScoped().consentAccess().save(newConsent);
+    }
 
+    private String safeSerialize(Object result) throws JsonProcessingException {
         // Support for versioning using class name
         String className = result.getClass().getCanonicalName();
         if (!properties.canSerialize(className)) {
             throw new IllegalArgumentException("Class deserialization not allowed " + className);
         }
 
-        newConsent.setConsentContext(mapper.writeValueAsString(ImmutableMap.of(className, result)));
-        context.getRequestScoped().consentAccess().save(newConsent);
+        return mapper.writeValueAsString(ImmutableMap.of(className, result));
     }
 
     @SneakyThrows

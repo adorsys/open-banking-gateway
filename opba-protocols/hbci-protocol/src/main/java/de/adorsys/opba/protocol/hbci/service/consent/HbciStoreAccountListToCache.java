@@ -19,6 +19,7 @@ public class HbciStoreAccountListToCache extends ValidatedExecution<AccountListH
     protected void doRealExecution(DelegateExecution execution, AccountListHbciContext context) {
         HbciResultCache cached = hbciCachedResultAccessor.resultFromCache(context).orElseGet(HbciResultCache::new);
         cached.setAccounts(context.getResponse());
+        cached.setConsent(context.getHbciDialogConsent());
         hbciCachedResultAccessor.resultToCache(context, cached);
     }
 }
