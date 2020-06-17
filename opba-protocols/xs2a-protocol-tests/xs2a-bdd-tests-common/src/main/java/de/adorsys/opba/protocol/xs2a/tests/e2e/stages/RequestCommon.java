@@ -7,6 +7,7 @@ import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.annotation.ScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
+import de.adorsys.opba.consentapi.model.generated.AuthViolation;
 import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
 import io.restassured.RestAssured;
@@ -70,6 +71,9 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
     @ProvidedScenarioState
     @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
     protected String redirectNotOkUri;
+
+    @ScenarioState
+    protected List<AuthViolation> violations;
 
     public SELF user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(String username, String password, String path) {
         String fintechUserTempPassword = UriComponentsBuilder
@@ -154,23 +158,36 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
 
     @SneakyThrows
     protected void updateAvailableScas() {
-        ExtractableResponse<Response> response = RestAssured
-                .given()
-                .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                .when()
-                .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
-                .then()
-                .statusCode(HttpStatus.OK.value())
-                .extract();
-
+        ExtractableResponse<Response> response = provideGetConsentAuthStateRequest();
         InlineResponse200 parsedValue = new ObjectMapper()
                 .readValue(response.body().asString(), InlineResponse200.class);
 
         this.availableScas = parsedValue.getConsentAuth().getScaMethods();
         updateRedirectCode(response);
+    }
+
+    @SneakyThrows
+    protected void readViolations() {
+        ExtractableResponse<Response> response = provideGetConsentAuthStateRequest();
+        InlineResponse200 parsedValue = new ObjectMapper()
+                .readValue(response.body().asString(), InlineResponse200.class);
+
+        this.violations = parsedValue.getConsentAuth().getViolations();
+        updateRedirectCode(response);
+    }
+
+    private  ExtractableResponse<Response> provideGetConsentAuthStateRequest() {
+        return RestAssured
+                .given()
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .when()
+                    .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
+                    .then()
+                    .statusCode(HttpStatus.OK.value())
+                .extract();
     }
 
     protected String selectedScaBody(String scaName) {
