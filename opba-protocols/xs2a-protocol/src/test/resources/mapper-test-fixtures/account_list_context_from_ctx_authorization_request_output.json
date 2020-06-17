@@ -7,5 +7,6 @@
     "frequencyPerDay": 10,
     "combinedServiceIndicator": false
   },
-  "psuIpAddress": "1.1.1.1"
+  "psuIpAddress": "1.1.1.1",
+  "psuIpPort": "5555"
 }
