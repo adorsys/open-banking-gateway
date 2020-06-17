@@ -70,13 +70,13 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     protected String authSessionCookie;
 
     @Autowired
-    private ConsentRepository consents;
+    protected ConsentRepository consents;
 
     @ProvidedScenarioState
     protected String redirectCode;
 
     @Autowired
-    private RequestSigningService requestSigningService;
+    protected RequestSigningService requestSigningService;
 
     @SneakyThrows
     @Transactional

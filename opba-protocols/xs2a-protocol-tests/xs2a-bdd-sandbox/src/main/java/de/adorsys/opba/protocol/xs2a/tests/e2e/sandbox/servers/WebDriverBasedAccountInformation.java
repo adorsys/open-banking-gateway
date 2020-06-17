@@ -245,7 +245,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
 
     // Sending cookie with last request as it doesn't exist in browser for API tests
     // null for cookieDomain is the valid value for localhost tests. This works correctly for localhost.
-    public SELF sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(WebDriver driver) {
+    public SELF sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(WebDriver driver, String authSessionCookie) {
         waitForPageLoad(driver);
         driver.manage().addCookie(new Cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie));
         try {
@@ -254,6 +254,10 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
             driver.manage().deleteCookieNamed(AUTHORIZATION_SESSION_KEY);
         }
         return self();
+    }
+
+    public SELF sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(WebDriver driver) {
+        return sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(driver, authSessionCookie);
     }
 
     public SELF sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(WebDriver driver) {
