@@ -1,9 +1,11 @@
 package de.adorsys.opba.protocol.hbci.config;
 
+import com.google.common.base.Strings;
 import de.adorsys.multibanking.domain.spi.OnlineBankingService;
 import de.adorsys.multibanking.hbci.HbciBanking;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.Resources;
 import org.kapott.hbci.manager.BankInfo;
 import org.kapott.hbci.manager.HBCIProduct;
@@ -14,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.InputStream;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class HbciAdapterConfig {
@@ -46,6 +49,10 @@ public class HbciAdapterConfig {
 
     @Bean
     HBCIProduct product() {
+        if (Strings.isNullOrEmpty(properties.getHbciProduct())) {
+            log.warn("No HBCI product defined");
+        }
+
         return new HBCIProduct(properties.getHbciProduct(), properties.getHbciVersion());
     }
 }
