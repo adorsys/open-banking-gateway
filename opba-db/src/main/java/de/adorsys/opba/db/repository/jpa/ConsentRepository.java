@@ -10,12 +10,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface ConsentRepository extends JpaRepository<Consent, Long> {
 
-    Collection<Consent> findByServiceSessionId(UUID serviceSessionId);
+    List<Consent> findByServiceSessionIdOrderByModifiedAtDesc(UUID serviceSessionId);
     Collection<Consent> findByPsu(Psu owner);
 
     @Modifying

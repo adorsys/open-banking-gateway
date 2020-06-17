@@ -44,7 +44,10 @@ public class HbciReadTransactionListFromCache extends ValidatedExecution<Transac
 
         ContextUtil.getAndUpdateContext(
                 execution,
-                (TransactionListHbciContext toUpdate) -> toUpdate.setResponse(transactions)
+                (TransactionListHbciContext toUpdate) -> {
+                    toUpdate.setResponse(transactions);
+                    toUpdate.setHbciDialogConsent(hbciResult.get().getConsent());
+                }
         );
     }
 }

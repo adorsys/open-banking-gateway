@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.api.services.scoped.consent;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,7 +27,7 @@ public interface ConsentAccess {
     /**
      * Available consents for current session execution.
      */
-    Collection<ProtocolFacingConsent> findByCurrentServiceSession();
+    List<ProtocolFacingConsent> findByCurrentServiceSessionOrderByModifiedDesc();
 
     /**
      * Available consent for current session execution.
@@ -42,11 +43,11 @@ public interface ConsentAccess {
      * Available consent for current session execution with throwing exception
      */
     default ProtocolFacingConsent getFirstByCurrentSession() {
-        Collection<ProtocolFacingConsent> consents = findByCurrentServiceSession();
+        List<ProtocolFacingConsent> consents = findByCurrentServiceSessionOrderByModifiedDesc();
         if (consents.isEmpty()) {
             throw new IllegalStateException("Context not found");
         }
 
-        return consents.iterator().next();
+        return consents.get(0);
     }
 }
