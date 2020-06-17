@@ -15,8 +15,8 @@ export class ListAccountsComponent implements OnInit {
   accounts: AccountDetails[];
   selectedAccount: string;
   bankId = '';
-  loARetrievalInformation = LoARetrievalInformation.FROM_FINTECH_CACHE;
-  // loARetrievalInformation = LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
+  // loARetrievalInformation = LoARetrievalInformation.FROM_FINTECH_CACHE;
+  loARetrievalInformation = LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
 
   constructor(
     private router: Router,
