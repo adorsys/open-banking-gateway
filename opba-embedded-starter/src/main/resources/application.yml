@@ -167,8 +167,8 @@ protocol:
       password: password
   hbci:
     adapter:
-      hbci-product: product
-      hbci-version: 300
+      # hbci-product: product - Your product ID here
+      # hbci-version: 300 - Your HBCI ID here
     urls:
       redirect:
         to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
