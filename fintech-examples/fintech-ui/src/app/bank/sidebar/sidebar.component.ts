@@ -11,7 +11,7 @@ export class SidebarComponent implements OnInit {
   showListAccounts = false;
   showListTransactions = false;
   showInitiatePayment = false;
-  showSettings = false;
+  showSettings = true;
   bankId: string;
   bankName: string;
 

@@ -1,0 +1,82 @@
+<div class="container">
+  <div class="row">
+    <div class="card card-frame--big">
+      <div class="card-body">
+        <form [formGroup]="settingsForm">
+          <section class="settings">
+            <h2 class="card-title--normal">Settings for bank {{bankId}}</h2>
+            <p class="text-secondary">These settings affect result of calls</p>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <h4><label class="text-secondary">List of Accounts</label></h4>
+              </div>
+            </div>
+            <div class="group">
+              <div class="row">
+                <div class="col-md-12">
+                  <label>
+                    <input type="radio" value="{{loaFromFintechCache}}" formControlName="loa">
+                    <span>from fintech cache (no call to tpp)</span>
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <label>
+                    <input type="radio" value="{{loaFromTppWithAvailableConsent}}" formControlName="loa">
+                    <span>from tpp. if consent available without redirect</span>
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <label>
+                    <input type="radio" value="{{loaFromTppWithNewConsent}}" formControlName="loa">
+                    <span>from tpp with redirect for new consent</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="form-group col-md-6">
+                <h4><label class="text-secondary">List of Transactions</label></h4>
+              </div>
+            </div>
+            <div class="group">
+              <div class="row">
+                <div class="col-md-12">
+                  <label>
+                    <input type="radio" value="{{lotFromTppWithAvailableConsent}}" formControlName="lot">
+                    <span>from tpp. if consent available without redirect</span>
+                  </label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <label>
+                    <input type="radio" value="{{lotFromTppWithNewConsent}}" formControlName="lot">
+                    <span>from tpp with redirect for new consent</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+          </section>
+
+          <div class="d-sm-flex">
+            <button (click)="onDeny()" class="btn btn-outline-secondary w-100 mr-4" id="do_deny">Cancel</button>
+            <button
+              (click)="onConfirm()"
+              class="btn btn-primary w-100"
+              id="do_submit"
+              type="button"
+            >
+              Apply
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
