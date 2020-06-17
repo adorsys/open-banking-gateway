@@ -24,6 +24,7 @@ import javax.persistence.EntityManager;
 import java.security.PrivateKey;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -84,12 +85,12 @@ public class ConsentAccessFactory {
 
         @Override
         public Optional<ProtocolFacingConsent> findSingleByCurrentServiceSession() {
-            return getProtocolFacingConsent(findByCurrentServiceSession());
+            return getProtocolFacingConsent(findByCurrentServiceSessionOrderByModifiedDesc());
         }
 
         @Override
-        public Collection<ProtocolFacingConsent> findByCurrentServiceSession() {
-            return consentRepository.findByServiceSessionId(serviceSession.getId())
+        public List<ProtocolFacingConsent> findByCurrentServiceSessionOrderByModifiedDesc() {
+            return consentRepository.findByServiceSessionIdOrderByModifiedAtDesc(serviceSession.getId())
                     .stream()
                     .map(it -> new ProtocolFacingConsentImpl(it, encryptionService))
                     .collect(Collectors.toList());
@@ -133,11 +134,11 @@ public class ConsentAccessFactory {
 
         @Override
         public Optional<ProtocolFacingConsent> findSingleByCurrentServiceSession() {
-            return getProtocolFacingConsent(findByCurrentServiceSession());
+            return getProtocolFacingConsent(findByCurrentServiceSessionOrderByModifiedDesc());
         }
 
         @Override
-        public Collection<ProtocolFacingConsent> findByCurrentServiceSession() {
+        public List<ProtocolFacingConsent> findByCurrentServiceSessionOrderByModifiedDesc() {
             ServiceSession serviceSession = entityManager.find(ServiceSession.class, serviceSessionId);
             if (null == serviceSession || null == serviceSession.getAuthSession()) {
                 return Collections.emptyList();
@@ -148,7 +149,7 @@ public class ConsentAccessFactory {
                     serviceSession.getAuthSession().getPsu().getId(),
                     serviceSession.getAuthSession().getAction().getBankProfile().getBank().getId()
             );
-            Collection<Consent> consent = consents.findByServiceSessionId(serviceSession.getId());
+            List<Consent> consent = consents.findByServiceSessionIdOrderByModifiedAtDesc(serviceSession.getId());
             if (!psuAspspPrivateKey.isPresent() || consent.isEmpty()) {
                 return Collections.emptyList();
             }

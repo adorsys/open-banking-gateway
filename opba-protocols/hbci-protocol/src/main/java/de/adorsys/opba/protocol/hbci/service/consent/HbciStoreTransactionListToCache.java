@@ -24,6 +24,7 @@ public class HbciStoreTransactionListToCache extends ValidatedExecution<Transact
             cached.setTransactionsByIban(new HashMap<>());
         }
 
+        cached.setConsent(context.getHbciDialogConsent());
         cached.getTransactionsByIban().put(context.getAccountIban(), context.getResponse());
         hbciCachedResultAccessor.resultToCache(context, cached);
     }
