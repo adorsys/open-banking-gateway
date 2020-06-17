@@ -28,6 +28,8 @@ public class AccountEntity {
     @SequenceGenerator(name = "account_generator", sequenceName = "account_id_seq")
     private Long id;
 
+    private String name;
+    private String resourceId;
     private String bankId;
     private String iban;
     private String status;
