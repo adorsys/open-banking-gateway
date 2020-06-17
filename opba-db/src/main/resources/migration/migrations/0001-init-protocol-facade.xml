@@ -55,7 +55,7 @@
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="protocol_id" type="BIGINT">
+            <column name="action_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="action" type="VARCHAR(32)">
@@ -66,10 +66,10 @@
             </column>
         </createTable>
         <createSequence sequenceName="bank_sub_action_id_sequence" incrementBy="50"/>
-        <addUniqueConstraint tableName="${table-prefix}bank_sub_action" columnNames="protocol_id,action"/>
+        <addUniqueConstraint tableName="${table-prefix}bank_sub_action" columnNames="action_id,action"/>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_bank_sub_action_bank_action"
                                  baseTableName="${table-prefix}bank_sub_action"
-                                 baseColumnNames="protocol_id"
+                                 baseColumnNames="action_id"
                                  referencedTableName="${table-prefix}bank_action"
                                  referencedColumnNames="id"/>
 
@@ -78,7 +78,7 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="service_id" type="BIGINT"/>
-            <column name="protocol_id" type="BIGINT"/>
+            <column name="action_id" type="BIGINT"/>
             <column name="version" type="INT">
                 <constraints nullable="false"/>
             </column>
@@ -91,7 +91,7 @@
         </createTable>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_service_session_bank_action"
                                  baseTableName="${table-prefix}service_session"
-                                 baseColumnNames="protocol_id"
+                                 baseColumnNames="action_id"
                                  referencedTableName="${table-prefix}bank_action"
                                  referencedColumnNames="id"/>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_consent_service_session"
@@ -165,7 +165,7 @@
             </column>
             <column name="aspsp_redirect_code" type="VARCHAR(64)"/>
 
-            <column name="protocol_id" type="BIGINT"/>
+            <column name="action_id" type="BIGINT"/>
             <column name="psu_id" type="BIGINT"/>
             <column name="fintech_user_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -392,7 +392,7 @@
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="protocol_id" type="BIGINT">
+            <column name="action_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="endpoint_class_canonical_name" type="VARCHAR(256)"/>
@@ -411,7 +411,7 @@
         </createTable>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_validation_rule_bank_action"
                                  baseTableName="${table-prefix}validation_rule"
-                                 baseColumnNames="protocol_id"
+                                 baseColumnNames="action_id"
                                  referencedTableName="${table-prefix}bank_action"
                                  referencedColumnNames="id"/>
         <createSequence sequenceName="validation_rule_sequence" incrementBy="50"/>
