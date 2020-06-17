@@ -29,7 +29,7 @@ public class ConsentConfirmationService {
             return false;
         }
 
-        Collection<Consent> consent = consentRepository.findByServiceSessionId(session.get().getParent().getId());
+        Collection<Consent> consent = consentRepository.findByServiceSessionIdOrderByModifiedAtDesc(session.get().getParent().getId());
 
         if (consent.isEmpty()) {
             return false;
