@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.InputStream;
+import java.util.Optional;
 
 @Slf4j
 @Configuration
@@ -25,13 +26,13 @@ public class HbciAdapterConfig {
 
     @Bean
     @SneakyThrows
-    OnlineBankingService onlineBankingService(HBCIProduct product) {
+    OnlineBankingService onlineBankingService(Optional<HBCIProduct> product) {
         try (InputStream is = Resources.getInputStream("blz.properties")) {
             HBCIUtils.refreshBLZList(is);
         }
 
         OnlineBankingService hbci = new HbciBanking(
-                product,
+                product.orElse(null),
                 properties.getSysIdExpirationTimeMs(),
                 properties.getUpdExpirationTimeMs()
         );
@@ -48,11 +49,12 @@ public class HbciAdapterConfig {
     }
 
     @Bean
-    HBCIProduct product() {
+    Optional<HBCIProduct> product() {
         if (Strings.isNullOrEmpty(properties.getHbciProduct())) {
             log.warn("No HBCI product defined");
+            return Optional.empty();
         }
 
-        return new HBCIProduct(properties.getHbciProduct(), properties.getHbciVersion());
+        return Optional.of(new HBCIProduct(properties.getHbciProduct(), properties.getHbciVersion()));
     }
 }
