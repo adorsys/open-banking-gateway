@@ -127,6 +127,11 @@ public class Xs2aContext extends BaseContext {
      */
     private boolean redirectConsentOk;
 
+    /**
+     * IP port of IP address between PSU and TPP.
+     */
+    private String psuIpPort;
+
     @JsonIgnore
     public String getPsuPassword() {
         TransientDataEntry entry = this.transientStorage().get();
