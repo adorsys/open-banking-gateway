@@ -15,19 +15,20 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.kapott.hbci.manager.HBCIProduct;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service("hbciInitiateSendPinAndPsuId")
 @RequiredArgsConstructor
 public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext> {
 
-    private final HBCIProduct product;
+    private final Optional<HBCIProduct> product;
     private final OnlineBankingService onlineBankingService;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
         HbciConsent consent = new HbciConsent();
-        consent.setHbciProduct(product);
+        consent.setHbciProduct(product.orElse(null));
         consent.setCredentials(Credentials.builder()
                 .userId(context.getPsuId())
                 .pin(context.getPsuPin())
