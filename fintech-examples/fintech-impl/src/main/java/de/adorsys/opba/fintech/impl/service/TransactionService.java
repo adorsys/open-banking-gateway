@@ -2,7 +2,6 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
-import de.adorsys.opba.fintech.impl.controller.LoARetrievalInformation;
 import de.adorsys.opba.fintech.impl.controller.LoTRetrievalInformation;
 import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.ConsentEntity;
@@ -47,7 +46,7 @@ public class TransactionService {
                                            String bookingStatus, Boolean deltaList, LoTRetrievalInformation loTRetrievalInformation) {
 
         log.info("LoT {}", loTRetrievalInformation);
-        if (loTRetrievalInformation.equals(LoARetrievalInformation.fromTppWithNewConsent)) {
+        if (loTRetrievalInformation.equals(LoTRetrievalInformation.fromTppWithNewConsent)) {
             consentService.deleteConsent(sessionEntity.getUserEntity(), ConsentType.AIS, bankId);
         }
 

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
 import { SettingsService } from '../services/settings.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-settings',
@@ -15,11 +16,11 @@ export class SettingsComponent implements OnInit {
   loaFromFintechCache = LoARetrievalInformation.FROM_FINTECH_CACHE;
   loaFromTppWithNewConsent = LoARetrievalInformation.FROM_TPP_WITH_NEW_CONSENT;
   loaFromTppWithAvailableConsent = LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
-  loa = LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT
+  loa;
 
   lotFromTppWithNewConsent = LoTRetrievalInformation.FROM_TPP_WITH_NEW_CONSENT;
   lotFromTppWithAvailableConsent = LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
-  lot = LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
+  lot;
 
   settingsForm: FormGroup;
 
@@ -30,6 +31,8 @@ export class SettingsComponent implements OnInit {
     private formBuilder: FormBuilder)
   {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
+    this.settingsService.getLoA().pipe(tap(el => this.loa = el)).subscribe();
+    this.settingsService.getLoT().pipe(tap(el => this.lot = el)).subscribe();
     this.settingsForm = formBuilder.group({
       loa: [this.loa, Validators.required],
       lot: [this.lot, Validators.required]

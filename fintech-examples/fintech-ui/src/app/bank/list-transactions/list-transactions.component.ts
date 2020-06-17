@@ -26,7 +26,7 @@ export class ListTransactionsComponent implements OnInit {
     private storageService: StorageService,
     private settingsService: SettingsService
   ) {
-    this.settingsService.getLoA().pipe(tap(el => this.loTRetrievalInformation = el)).subscribe();
+    this.settingsService.getLoT().pipe(tap(el => this.loTRetrievalInformation = el)).subscribe();
   }
 
   ngOnInit() {
