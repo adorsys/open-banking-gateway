@@ -27,13 +27,16 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
 
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
-        HbciConsent consent = new HbciConsent();
-        consent.setHbciProduct(product.orElse(null));
-        consent.setCredentials(Credentials.builder()
-                .userId(context.getPsuId())
-                .pin(context.getPsuPin())
-                .build()
-        );
+        HbciConsent consent = context.getHbciDialogConsent();
+        if (null == consent) {
+            consent = new HbciConsent();
+            consent.setHbciProduct(product.orElse(null));
+            consent.setCredentials(Credentials.builder()
+                    .userId(context.getPsuId())
+                    .pin(context.getPsuPin())
+                    .build()
+            );
+        }
 
         UpdatePsuAuthenticationRequest request = new UpdatePsuAuthenticationRequest();
         request.setCredentials(consent.getCredentials());

@@ -8,6 +8,12 @@ import java.util.Optional;
  * Protocol facing access object for users consent.
  */
 public interface ConsentAccess {
+
+    /**
+     * @return If consent is being accessed on behalf of FinTech.
+     */
+    boolean isFinTechScope();
+
     /**
      * Factory method for new consent,
      * @return new consent object that was not persisted and that can be modified.
