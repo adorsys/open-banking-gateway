@@ -86,8 +86,14 @@ public class RsaJwtsVerifyingServiceImpl implements RequestVerifyingService {
 
     @Override
     public boolean verify(String signature, String encodedPublicKey, PaymentInitiationDataToSign data) {
-        return createDataToSign(signature, encodedPublicKey, data.getBankId(), data.getFintechUserId(), data.getRedirectOk(), data.getRedirectNok(), data.getXRequestId(), data.getInstant(),
-                                data.getOperationType());
+        Map<String, String> values = new HashMap<>();
+        values.put(HttpHeaders.BANK_ID, data.getBankId());
+        values.put(HttpHeaders.FINTECH_USER_ID, data.getFintechUserId());
+        values.put(HttpHeaders.FINTECH_REDIRECT_URL_OK, data.getRedirectOk());
+        values.put(HttpHeaders.FINTECH_REDIRECT_URL_NOK, data.getRedirectNok());
+        DataToSign dataToSign = new DataToSign(data.getXRequestId(), data.getInstant(), data.getOperationType(), data.getBody(), values);
+
+        return verify(signature, encodedPublicKey, dataToSign);
     }
 
     @Override
