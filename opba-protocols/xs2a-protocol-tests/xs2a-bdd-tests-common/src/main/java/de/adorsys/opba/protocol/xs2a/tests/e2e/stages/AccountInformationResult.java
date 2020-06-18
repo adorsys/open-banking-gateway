@@ -52,7 +52,7 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
-public class AccountInformationResult extends Stage<AccountInformationResult>  {
+public class AccountInformationResult<SELF extends AccountInformationResult<SELF>> extends Stage<SELF> {
 
     private static final int ANTON_BRUECKNER_BOOKED_TRANSACTIONS_COUNT = 8;
     private static final int MAX_MUSTERMAN_BOOKED_TRANSACTIONS_COUNT = 5;
@@ -80,45 +80,45 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
 
     @SneakyThrows
     @Transactional
-    public AccountInformationResult open_banking_has_consent_for_anton_brueckner_account_list() {
+    public SELF open_banking_has_consent_for_anton_brueckner_account_list() {
         assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isNotEmpty();
         return self();
     }
 
     @SneakyThrows
     @Transactional
-    public AccountInformationResult open_banking_has_no_consent() {
+    public SELF open_banking_has_no_consent() {
         assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isEmpty();
         return self();
     }
 
     @Transactional
-    public AccountInformationResult open_banking_has_consent_for_max_musterman_account_list() {
+    public SELF open_banking_has_consent_for_max_musterman_account_list() {
         assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isNotEmpty();
         return self();
     }
 
     @SneakyThrows
     @Transactional
-    public AccountInformationResult open_banking_has_consent_for_anton_brueckner_transaction_list() {
+    public SELF open_banking_has_consent_for_anton_brueckner_transaction_list() {
         assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isNotEmpty();
         return self();
     }
 
     @SneakyThrows
     @Transactional
-    public AccountInformationResult open_banking_has_consent_for_max_musterman_transaction_list() {
+    public SELF open_banking_has_consent_for_max_musterman_transaction_list() {
         assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isNotEmpty();
         return self();
     }
 
     @SneakyThrows
-    public AccountInformationResult open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session() {
+    public SELF open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session() {
         return open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(true);
     }
 
     @SneakyThrows
-    public AccountInformationResult open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(
+    public SELF open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(
         boolean validateResourceId
     ) {
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
@@ -139,12 +139,12 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     }
 
     @SneakyThrows
-    public AccountInformationResult open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session() {
+    public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session() {
         return open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true);
     }
 
     @SneakyThrows
-    public AccountInformationResult open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
+    public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
         boolean validateResourceId
     ) {
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
@@ -165,7 +165,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     }
 
     @SneakyThrows
-    public AccountInformationResult open_banking_reads_anton_brueckner_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
+    public SELF open_banking_reads_anton_brueckner_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         ExtractableResponse<Response> response = getTransactionListFor(ANTON_BRUECKNER, resourceId, dateFrom, dateTo, bookingStatus);
@@ -191,7 +191,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
                 .extracting(it -> new BigDecimal((String) it))
                 .usingElementComparator(BIG_DECIMAL_COMPARATOR)
                 // Looks like returned order by Sandbox is not stable
-                .contains(
+                .containsOnly(
                         new BigDecimal("-150.00"),
                         new BigDecimal("-100.00"),
                         new BigDecimal("-2300.00"),
@@ -220,7 +220,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
             .extract();
     }
 
-    public AccountInformationResult open_banking_can_read_anton_brueckner_transactions_data_using_consent_bound_to_service_session(
+    public SELF open_banking_can_read_anton_brueckner_transactions_data_using_consent_bound_to_service_session(
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         GetTransactionsQueryParams queryParams = new GetTransactionsQueryParams(dateFrom.format(ISO_DATE), dateTo.format(ISO_DATE), null, bookingStatus, null);
@@ -250,7 +250,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     }
 
     @SneakyThrows
-    public AccountInformationResult open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
+    public SELF open_banking_can_read_max_musterman_transactions_data_using_consent_bound_to_service_session(
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         GetTransactionsQueryParams queryParams = new GetTransactionsQueryParams(dateFrom.format(ISO_DATE), dateTo.format(ISO_DATE), null, bookingStatus, null);
@@ -277,7 +277,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
     }
 
     @SneakyThrows
-    public AccountInformationResult open_banking_reads_max_musterman_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
+    public SELF open_banking_reads_max_musterman_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         ExtractableResponse<Response> response = getTransactionListFor(MAX_MUSTERMAN, resourceId, dateFrom, dateTo, bookingStatus);
@@ -311,7 +311,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
         return self();
     }
 
-    public AccountInformationResult user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_and_gets_202() {
+    public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_and_gets_202() {
         String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json");
 
         ExtractableResponse<Response> response = RestAssured
@@ -332,7 +332,7 @@ public class AccountInformationResult extends Stage<AccountInformationResult>  {
         return self();
     }
 
-    public AccountInformationResult fintech_calls_consent_activation_for_current_authorization_id() {
+    public SELF fintech_calls_consent_activation_for_current_authorization_id() {
         withSignatureHeaders(RestAssured
                 .given()
                     .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
