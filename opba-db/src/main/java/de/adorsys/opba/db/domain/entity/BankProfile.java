@@ -71,8 +71,8 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     private boolean tryToUsePreferredApproach;
 
     @OneToMany(mappedBy = "bankProfile", cascade = CascadeType.ALL, orphanRemoval = true)
-    @MapKey(name = "action")
-    private Map<ProtocolAction, BankProtocol> actions = new HashMap<>();
+    @MapKey(name = "protocolAction")
+    private Map<ProtocolAction, BankAction> actions = new HashMap<>();
 
     @Mapper(uses = ToConsentSupported.class)
     public interface ToBankProfileDescriptor {
@@ -103,7 +103,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     @Mapper
     public interface ToConsentSupported {
 
-        default Map<String, String> map(Map<ProtocolAction, BankProtocol> actions) {
+        default Map<String, String> map(Map<ProtocolAction, BankAction> actions) {
             return actions.entrySet().stream()
                     .collect(Collectors.toMap(it -> it.getKey().name(), it -> String.valueOf(it.getValue().isConsentSupported())));
         }

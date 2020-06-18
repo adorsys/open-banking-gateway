@@ -22,7 +22,7 @@ public class FieldsToIgnoreLoaderImpl implements FieldsToIgnoreLoader {
     @Override
     public <T> Map<FieldCode, IgnoreValidationRule> getIgnoreValidationRules(Class<T> invokerClass, Approach approach) {
         Map<FieldCode, List<de.adorsys.opba.db.domain.entity.IgnoreValidationRule>> ruleByCode = ignoreValidationRuleRepository
-                .findByProtocolId(protocolId).stream()
+                .findByActionId(protocolId).stream()
                 .collect(Collectors.groupingBy(de.adorsys.opba.db.domain.entity.IgnoreValidationRule::getValidationCode));
 
         return ruleByCode.entrySet().stream().collect(toMap(

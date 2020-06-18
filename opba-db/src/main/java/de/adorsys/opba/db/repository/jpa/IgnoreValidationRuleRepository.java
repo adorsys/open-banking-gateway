@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface IgnoreValidationRuleRepository extends JpaRepository<IgnoreValidationRule, Long> {
-    List<IgnoreValidationRule> findByProtocolId(Long bankProtocolId);
+    List<IgnoreValidationRule> findByActionId(Long bankActionId);
 }

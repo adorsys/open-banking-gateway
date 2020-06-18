@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -18,13 +19,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 @Entity
-@Table(name = "bank_sub_action")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BankSubProtocol {
+public class BankSubAction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_sub_action_id_generator")
@@ -32,10 +32,10 @@ public class BankSubProtocol {
     private Long id;
 
     @ManyToOne(optional = false)
-    private BankProtocol protocol;
+    private BankAction action;
 
     @Enumerated(EnumType.STRING)
-    private ProtocolAction action;
+    private ProtocolAction protocolAction;
 
     private String subProtocolBeanName;
 }
