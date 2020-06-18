@@ -44,6 +44,9 @@
             <column name="protocol_bean_name" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
+            <column name="consent_supported" type="BOOLEAN" defaultValue="true">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <createSequence sequenceName="bank_protocol_id_sequence" incrementBy="50"/>
         <addUniqueConstraint tableName="${table-prefix}bank_protocol" columnNames="bank_uuid,action"/>

@@ -7,6 +7,7 @@
       "List accounts",
       "List transactions",
       "Initiate payment"
-    ]
+    ],
+    "consentSupportByService": {"LIST_ACCOUNTS": "true"}
   }
 }

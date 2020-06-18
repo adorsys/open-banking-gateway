@@ -67,10 +67,10 @@ class TestTppBankSearchController extends BaseMockitoTest {
                         .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new BankProfileDataToSign(xRequestId, xTimestampUtc, OperationType.BANK_SEARCH)))
                         .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
 
-                        .param("bankId", "4eee696c-b2d2-45ac-86c7-b77a810a261b"))
+                        .param("bankId", "fcfe98fe-5514-4992-8f36-8239f3a74571"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.bankProfileDescriptor.bankName").value("DZ BANK D3000"))
-                .andExpect(jsonPath("$.bankProfileDescriptor.bankUuid").value("4eee696c-b2d2-45ac-86c7-b77a810a261b"))
+                .andExpect(jsonPath("$.bankProfileDescriptor.bankName").value("VR Bank Fulda eG"))
+                .andExpect(jsonPath("$.bankProfileDescriptor.bankUuid").value("fcfe98fe-5514-4992-8f36-8239f3a74571"))
                 .andExpect(jsonPath("$.bankProfileDescriptor.bic").value("GENODE51FUL"))
                 .andReturn();
     }
@@ -100,6 +100,6 @@ class TestTppBankSearchController extends BaseMockitoTest {
                         .param("keyword", keyword)
                         .param("max", "10")
                         .param("start", "0"))
-                       .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 }

@@ -163,6 +163,10 @@ components:
           items:
             # can be an enum
             type: string
+        consentSupportByService:
+          type: object
+          additionalProperties:
+            type: string
 
   securitySchemes:
     BearerAuthOAuth:

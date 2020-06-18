@@ -16,7 +16,7 @@ public class IgnoreValidationRuleImpl<T> implements IgnoreValidationRule {
     private final Approach approach;
 
     @Override
-    public boolean apply() {
+    public boolean applies() {
         return validationRules.stream()
                 .filter(it -> null == it.getEndpointClassCanonicalName()
                         || it.getEndpointClassCanonicalName().equals(invokerClass.getCanonicalName()))

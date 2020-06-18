@@ -195,7 +195,6 @@ components:
         type: string
       example: "https://example.com/myservice/sf3-3r33-3535/failure"
 
-
   responses:
     401_UNAUTHORIZED:
       description: |
@@ -299,11 +298,7 @@ components:
           $ref: "#/components/schemas/currencyCode"
         amount:
           $ref: "#/components/schemas/amountValue"
-      example:
-        {
-          "currency": "EUR",
-          "amount": "123"
-        }
+      example: { "currency": "EUR", "amount": "123" }
 
     amountValue:
       description: |
@@ -358,7 +353,7 @@ components:
           buildingnNumber: "89",
           city: "Paris",
           postalCode: "75000",
-          country: "FR"
+          country: "FR",
         }
 
     countryCode:

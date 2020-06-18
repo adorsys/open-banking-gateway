@@ -28,12 +28,12 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
         #path
-        - $ref: '#/components/parameters/PaymentProduct'
+        - $ref: "#/components/parameters/PaymentProduct"
       requestBody:
-        $ref : '#/components/requestBodies/PaymentInitiation'
+        $ref: "#/components/requestBodies/PaymentInitiation"
       responses:
         202:
-          $ref: '#/components/responses/202_PaymentInitiationResponse'
+          $ref: "#/components/responses/202_PaymentInitiationResponse"
       security:
         - {}
         - BearerAuthOAuth: []
@@ -62,8 +62,8 @@ paths:
         #path
         - $ref: "#/components/parameters/PaymentProduct"
       responses:
-        '200':
-          $ref: '#/components/responses/OK_200_PaymentInitiationInformation'
+        "200":
+          $ref: "#/components/responses/OK_200_PaymentInitiationInformation"
 
   /v1/banking/pis/payments/{payment-product}/status:
     get:
@@ -89,8 +89,8 @@ paths:
         #path
         - $ref: "#/components/parameters/PaymentProduct"
       responses:
-        '200':
-          $ref: '#/components/responses/OK_200_PaymentInitiationStatus'
+        "200":
+          $ref: "#/components/responses/OK_200_PaymentInitiationStatus"
 components:
   parameters:
     PaymentProduct:
@@ -113,48 +113,48 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/paymentInitiation'
+            $ref: "#/components/schemas/paymentInitiation"
       required: true
   responses:
     202_PaymentInitiationResponse:
       description: ACCEPTED
       headers:
         X-Request-ID:
-          $ref: './tpp_banking_api_commons.yml#/components/headers/X-Request-ID'
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
         Service-Session-ID:
-          $ref: './tpp_banking_api_commons.yml#/components/headers/Service-Session-ID'
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/Service-Session-ID"
         Authorization-Session-ID:
-          $ref: './tpp_banking_api_commons.yml#/components/headers/Authorization-Session-ID'
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/Authorization-Session-ID"
         Redirect-Code:
-          $ref: './tpp_banking_api_commons.yml#/components/headers/Redirect-Code'
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/Redirect-Code"
         Location:
-          $ref: './tpp_banking_api_commons.yml#/components/headers/Location'
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/Location"
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/paymentInitiationResponse'
+            $ref: "#/components/schemas/paymentInitiationResponse"
     OK_200_PaymentInitiationInformation:
       description: OK
       headers:
         X-Request-ID:
           $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
         Service-Session-ID:
-          $ref: './tpp_banking_api_commons.yml#/components/headers/Service-Session-ID'
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/Service-Session-ID"
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/paymentInitiationWithStatusResponse'
+            $ref: "#/components/schemas/paymentInitiationWithStatusResponse"
     OK_200_PaymentInitiationStatus:
       description: OK
       headers:
         X-Request-ID:
           $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
         Service-Session-ID:
-          $ref: './tpp_banking_api_commons.yml#/components/headers/Service-Session-ID'
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/Service-Session-ID"
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/paymentInitiationStatusResponse'
+            $ref: "#/components/schemas/paymentInitiationStatusResponse"
 
   schemas:
     paymentInitiation:
@@ -169,21 +169,21 @@ components:
           maxLength: 35
           type: string
         debtorAccount:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/accountReference'
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/accountReference"
         instructedAmount:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/amount'
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/amount"
         creditorAccount:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/accountReference'
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/accountReference"
         creditorAgent:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/bicfi'
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/bicfi"
         creditorAgentName:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/creditorAgentName'
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/creditorAgentName"
         creditorName:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/creditorName'
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/creditorName"
         creditorAddress:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/address'
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/address"
         remittanceInformationUnstructured:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/remittanceInformationUnstructured'
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/remittanceInformationUnstructured"
         requestedExecutionDate:
           type: string
           format: date
@@ -219,21 +219,21 @@ components:
           type: string
           maxLength: 35
         debtorAccount:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/accountReference'
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/accountReference"
         instructedAmount:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/amount'
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/amount"
         creditorAccount:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/accountReference'
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/accountReference"
         creditorAgent:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/bicfi'
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/bicfi"
         creditorName:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/creditorName'
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/creditorName"
         creditorAddress:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/address'
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/address"
         remittanceInformationUnstructured:
-          $ref: './tpp_banking_api_commons.yml#/components/schemas/remittanceInformationUnstructured'
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/remittanceInformationUnstructured"
         transactionStatus:
-          $ref: '#/components/schemas/transactionStatus'
+          $ref: "#/components/schemas/transactionStatus"
 
     paymentInitiationStatusResponse:
       description: Body of the response for a successful payment initiation status request in case of an JSON based endpoint.
@@ -242,11 +242,11 @@ components:
         - transactionStatus
       properties:
         transactionStatus:
-          $ref: '#/components/schemas/transactionStatus'
+          $ref: "#/components/schemas/transactionStatus"
         fundsAvailable:
-          $ref: '#/components/schemas/fundsAvailable'
+          $ref: "#/components/schemas/fundsAvailable"
         psuMessage:
-          $ref: '#/components/schemas/psuMessageText'
+          $ref: "#/components/schemas/psuMessageText"
     transactionStatus:
       description: The transaction status
       type: string
@@ -268,8 +268,8 @@ components:
       type: oauth2
       flows:
         authorizationCode:
-          authorizationUrl: 'http://example.com/oauth/auth'
-          tokenUrl: 'http://example.com/oauth/token'
+          authorizationUrl: "http://example.com/oauth/auth"
+          tokenUrl: "http://example.com/oauth/token"
           scopes:
             write: allows modifying resources
             read: allows reading resources

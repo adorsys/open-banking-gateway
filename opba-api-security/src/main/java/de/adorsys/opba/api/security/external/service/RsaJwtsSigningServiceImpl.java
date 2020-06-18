@@ -2,19 +2,23 @@ package de.adorsys.opba.api.security.external.service;
 
 import de.adorsys.opba.api.security.external.domain.DataToSign;
 import de.adorsys.opba.api.security.external.domain.HttpHeaders;
+import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.api.security.external.domain.QueryParams;
 import de.adorsys.opba.api.security.external.domain.signdata.AisListAccountsDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.AisListTransactionsDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.BankProfileDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.ConfirmConsentDataToSign;
+import de.adorsys.opba.api.security.external.domain.signdata.PaymentInitiationDataToSign;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 
 import java.security.PrivateKey;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 public class RsaJwtsSigningServiceImpl implements RequestSigningService {
@@ -42,14 +46,8 @@ public class RsaJwtsSigningServiceImpl implements RequestSigningService {
 
     @Override
     public String signature(AisListAccountsDataToSign dataToSign) {
-        Map<String, String> values = new HashMap<>();
-        values.put(HttpHeaders.BANK_ID, dataToSign.getBankId());
-        values.put(HttpHeaders.FINTECH_USER_ID, dataToSign.getFintechUserId());
-        values.put(HttpHeaders.FINTECH_REDIRECT_URL_OK, dataToSign.getRedirectOk());
-        values.put(HttpHeaders.FINTECH_REDIRECT_URL_NOK, dataToSign.getRedirectNok());
-        DataToSign data = new DataToSign(dataToSign.getXRequestId(), dataToSign.getInstant(), dataToSign.getOperationType(), values);
-
-        return signature(data);
+        return createDataToSign(dataToSign.getBankId(), dataToSign.getFintechUserId(), dataToSign.getRedirectOk(), dataToSign.getRedirectNok(), dataToSign.getXRequestId(), dataToSign.getInstant(),
+                                dataToSign.getOperationType());
     }
 
     @Override
@@ -94,6 +92,23 @@ public class RsaJwtsSigningServiceImpl implements RequestSigningService {
                 dataToSign.getInstant(),
                 dataToSign.getOperationType()
         ));
+    }
+
+    @Override
+    public String signature(PaymentInitiationDataToSign dataToSign) {
+        return createDataToSign(dataToSign.getBankId(), dataToSign.getFintechUserId(), dataToSign.getRedirectOk(), dataToSign.getRedirectNok(), dataToSign.getXRequestId(), dataToSign.getInstant(),
+                                dataToSign.getOperationType());
+    }
+
+    private String createDataToSign(String bankId, String fintechUserId, String redirectOk, String redirectNok, UUID xRequestId, Instant instant, OperationType operationType) {
+        Map<String, String> values = new HashMap<>();
+        values.put(HttpHeaders.BANK_ID, bankId);
+        values.put(HttpHeaders.FINTECH_USER_ID, fintechUserId);
+        values.put(HttpHeaders.FINTECH_REDIRECT_URL_OK, redirectOk);
+        values.put(HttpHeaders.FINTECH_REDIRECT_URL_NOK, redirectNok);
+        DataToSign data = new DataToSign(xRequestId, instant, operationType, values);
+
+        return signature(data);
     }
 
     private String signature(DataToSign dataToSign) {

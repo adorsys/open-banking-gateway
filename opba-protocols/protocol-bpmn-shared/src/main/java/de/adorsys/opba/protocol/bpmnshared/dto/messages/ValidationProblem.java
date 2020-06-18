@@ -25,11 +25,14 @@ public class ValidationProblem extends InternalProcessResult {
     @Builder.Default
     private Set<ValidationIssue> issues = new HashSet<>();
 
+    private boolean consentIncompatible;
+
     @Builder
-    public ValidationProblem(String processId, String executionId, Object result, URI provideMoreParamsDialog,
-                             Set<ValidationIssue> issues) {
+    public ValidationProblem(String processId, String executionId, Object result, boolean consentIncompatible,
+                             URI provideMoreParamsDialog, Set<ValidationIssue> issues) {
         super(processId, executionId, result);
         this.provideMoreParamsDialog = provideMoreParamsDialog;
         this.issues = issues;
+        this.consentIncompatible = consentIncompatible;
     }
 }

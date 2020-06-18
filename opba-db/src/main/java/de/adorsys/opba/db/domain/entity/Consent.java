@@ -83,11 +83,11 @@ public class Consent {
         this.encContext = encryption.encrypt(context.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String getConsent(EncryptionService encryption) {
+    public String getConsentId(EncryptionService encryption) {
         return new String(encryption.decrypt(encConsentId), StandardCharsets.UTF_8);
     }
 
-    public void setConsent(EncryptionService encryption, String consent) {
+    public void setConsentId(EncryptionService encryption, String consent) {
         this.encConsentId = encryption.encrypt(consent.getBytes(StandardCharsets.UTF_8));
     }
 }
