@@ -23,16 +23,22 @@ public class DataToSign<T> {
     private UUID xRequestId;
     private Instant instant;
     private OperationType operationType;
+    private final String body;
     private final T additionalFields;
 
     public DataToSign(UUID xRequestId, Instant instant, OperationType operationType) {
-        this(xRequestId, instant, operationType, null);
+        this(xRequestId, instant, operationType, null, null);
     }
 
     public DataToSign(UUID xRequestId, Instant instant, OperationType operationType, T additionalFields) {
+        this(xRequestId, instant, operationType, null, additionalFields);
+    }
+
+    public DataToSign(UUID xRequestId, Instant instant, OperationType operationType, String body, T additionalFields) {
         this.xRequestId = xRequestId;
         this.instant = instant;
         this.operationType = operationType;
+        this.body = body;
         this.additionalFields = additionalFields;
     }
 
@@ -40,6 +46,7 @@ public class DataToSign<T> {
         return new StringBuilder().append(xRequestId)
                        .append(instant)
                        .append(operationType)
+                       .append(body)
                        .append(mapAdditionalFieldsToString())
                        .toString();
     }
