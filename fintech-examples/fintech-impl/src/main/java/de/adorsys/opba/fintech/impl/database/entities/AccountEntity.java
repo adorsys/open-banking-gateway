@@ -36,7 +36,7 @@ public class AccountEntity {
     private String currency;
 
     // this attribute becomes true, when tpp does no more know this account
-    private Boolean unknown;
+    private Boolean becameUnknown;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity userEntity;
