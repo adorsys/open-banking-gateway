@@ -2,7 +2,7 @@ package de.adorsys.opba.db.domain;
 
 import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.BankProfile;
-import de.adorsys.opba.db.domain.entity.BankProtocol;
+import de.adorsys.opba.db.domain.entity.BankAction;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankDescriptor;
 import de.adorsys.opba.tppbankingapi.search.model.generated.BankProfileDescriptor;
@@ -42,10 +42,10 @@ class MappersTest {
     void bankProfileMapperTest() {
         BankProfile bankProfile = new BankProfile();
         bankProfile.setBank(TEST_BANK);
-        Map<ProtocolAction, BankProtocol> actionMap = new HashMap<>();
-        actionMap.put(ProtocolAction.LIST_TRANSACTIONS, new BankProtocol());
-        actionMap.put(ProtocolAction.LIST_ACCOUNTS, new BankProtocol());
-        actionMap.put(ProtocolAction.SINGLE_PAYMENT, new BankProtocol());
+        Map<ProtocolAction, BankAction> actionMap = new HashMap<>();
+        actionMap.put(ProtocolAction.LIST_TRANSACTIONS, new BankAction());
+        actionMap.put(ProtocolAction.LIST_ACCOUNTS, new BankAction());
+        actionMap.put(ProtocolAction.SINGLE_PAYMENT, new BankAction());
         bankProfile.setActions(actionMap);
 
         BankProfileDescriptor bankProfileDescriptor = BankProfile.TO_BANK_PROFILE_DESCRIPTOR.map(bankProfile);

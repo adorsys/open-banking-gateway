@@ -11,7 +11,6 @@ import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -25,13 +24,12 @@ import java.util.Collection;
 
 // TODO - do we need sequence?
 @Entity
-@Table(name = "bank_action")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BankProtocol {
+public class BankAction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_action_id_generator")
@@ -43,21 +41,21 @@ public class BankProtocol {
     private BankProfile bankProfile;
 
     @Enumerated(EnumType.STRING)
-    private ProtocolAction action;
+    private ProtocolAction protocolAction;
 
     private String protocolBeanName;
 
     private boolean consentSupported;
 
-    @OneToMany(mappedBy = "protocol", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<BankSubProtocol> subProtocols;
+    @OneToMany(mappedBy = "action", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<BankSubAction> subProtocols;
 
-    @OneToMany(mappedBy = "protocol", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "action", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<ServiceSession> currentForSessions;
 
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<ServiceSession> servicesSessions;
 
-    @OneToMany(mappedBy = "protocol", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "action", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<AuthSession> authSessions;
 }

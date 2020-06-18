@@ -28,13 +28,13 @@ public class FintechPsuAspspTuple {
     public FintechPsuAspspTuple(AuthSession session) {
         this.fintechId = session.getFintechUser().getFintech().getId();
         this.psuId = session.getPsu().getId();
-        this.aspspId = session.getProtocol().getBankProfile().getBank().getId();
+        this.aspspId = session.getAction().getBankProfile().getBank().getId();
     }
 
     public FintechPsuAspspTuple(ServiceSession session) {
         this.fintechId = session.getAuthSession().getFintechUser().getFintech().getId();
         this.psuId = session.getAuthSession().getPsu().getId();
-        this.aspspId = session.getProtocol().getBankProfile().getBank().getId();
+        this.aspspId = session.getAction().getBankProfile().getBank().getId();
     }
 
     public String toDatasafePathWithoutParent() {
