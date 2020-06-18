@@ -11,7 +11,6 @@ import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import de.adorsys.opba.fintech.impl.tppclients.ConsentType;
 import de.adorsys.opba.fintech.impl.tppclients.TppPisClient;
 import de.adorsys.opba.tpp.pis.api.model.generated.AccountReference;
-import de.adorsys.opba.tpp.pis.api.model.generated.Address;
 import de.adorsys.opba.tpp.pis.api.model.generated.Amount;
 import de.adorsys.opba.tpp.pis.api.model.generated.PaymentInitiation;
 import de.adorsys.opba.tpp.pis.api.model.generated.PaymentInitiationResponse;
@@ -55,7 +54,6 @@ public class PaymentService {
         payment.setDebtorAccount(getAccountReference(singlePaymentInitiationRequest.getDebitorIban()));
         payment.setCreditorName(singlePaymentInitiationRequest.getName());
         payment.setInstructedAmount(getAmountWithCurrency(singlePaymentInitiationRequest.getAmount()));
-        fixPayment(payment);
         payment.remittanceInformationUnstructured(singlePaymentInitiationRequest.getPurpose());
         log.info("start call for payment {} {}", fintechOkUrl, fintechNOkUrl);
         ResponseEntity<PaymentInitiationResponse> responseOfTpp = tppPisClient.initiatePayment(
@@ -76,19 +74,6 @@ public class PaymentService {
         }
         redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
         return handleAcceptedService.handleAccepted(consentRepository, ConsentType.PIS, bankId, fintechRedirectCode, sessionEntity, responseOfTpp.getHeaders());
-    }
-
-    private void fixPayment(PaymentInitiation payment) {
-        // payment.endToEndIdentification(singlePaymentInitiationRequest.getPurpose());
-        Address creditorAddress = new Address();
-        creditorAddress.setCountry("DE");
-        creditorAddress.setPostCode("50999");
-        creditorAddress.setTownName("Cologne");
-        creditorAddress.setStreetName("Klapperhof");
-        creditorAddress.setBuildingNumber("1");
-        payment.setCreditorAddress(creditorAddress);
-        payment.setCreditorAgent("AAAADEBBXXX");
-        log.warn("ADDED CREDITOR ADDRESS AND CREDITOR AGENT AS WORKAROUND TO PAYMENT");
     }
 
     private AccountReference getAccountReference(String iban) {

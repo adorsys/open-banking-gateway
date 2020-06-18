@@ -12,11 +12,13 @@ import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.AccountRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.ConsentRepository;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
+import de.adorsys.opba.fintech.impl.tppclients.Actions;
 import de.adorsys.opba.fintech.impl.tppclients.ConsentType;
 import de.adorsys.opba.fintech.impl.tppclients.TppAisClient;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountDetails;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountList;
 import de.adorsys.opba.tpp.ais.api.model.generated.AccountStatus;
+import de.adorsys.opba.tpp.banksearch.api.model.generated.BankProfileResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -51,6 +53,7 @@ public class AccountService {
     private final HandleAcceptedService handleAcceptedService;
     private final AccountRepository accountRepository;
     private final ConsentService consentService;
+    private final BankSearchService searchService;
 
     public ResponseEntity listAccounts(SessionEntity sessionEntity,
                                        String fintechOkUrl, String fintechNOKUrl,
@@ -150,24 +153,43 @@ public class AccountService {
                 bankID, ConsentType.AIS, Boolean.TRUE);
         if (optionalConsent.isPresent()) {
             log.info("LoA found valid ais consent for user {} bank {}", sessionEntity.getUserEntity().getLoginUserName(), bankID);
-            return tppAisClient.getAccounts(
-                    tppProperties.getServiceSessionPassword(),
-                    sessionEntity.getUserEntity().getFintechUserId(),
-                    RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
-                    RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
-                    xRequestId,
-                    COMPUTE_X_TIMESTAMP_UTC,
-                    OperationType.AIS.toString(),
-                    COMPUTE_X_REQUEST_SIGNATURE,
-                    COMPUTE_FINTECH_ID,
-                    bankID,
-                    null,
-                    optionalConsent.get().getTppServiceSessionId());
+            return bankDoesNotRequireConsent(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent);
         }
-        log.info("LoA no valid ais consent for user {} bank {} available", sessionEntity.getUserEntity().getLoginUserName(), bankID);
-        // FIXME: HACKETTY-HACK - force consent retrieval for transactions on ALL accounts
-        // Should be superseded and fixed with
-        // https://github.com/adorsys/open-banking-gateway/issues/303
+
+        BankProfileResponse bankProfile = searchService.getBankProfileById(bankID).getBody();
+        if (null != bankProfile.getBankProfileDescriptor().getConsentSupportByService()
+                && "true".equals(bankProfile.getBankProfileDescriptor().getConsentSupportByService().get(Actions.LIST_ACCOUNTS.name()))) {
+            log.info("LoA no valid ais consent for user {} bank {} available", sessionEntity.getUserEntity().getLoginUserName(), bankID);
+            // FIXME: HACKETTY-HACK - force consent retrieval for transactions on ALL accounts
+            // Should be superseded and fixed with
+            // https://github.com/adorsys/open-banking-gateway/issues/303
+            return bankRequiresConsent(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent);
+        }
+
+        return bankDoesNotRequireConsent(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent);
+    }
+
+    private ResponseEntity bankDoesNotRequireConsent(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId, Optional<ConsentEntity> optionalConsent) {
+        log.info("do LOA for bank {} {} consent", bankID, optionalConsent.isPresent() ? "with" : "without");
+        UUID serviceSessionID = optionalConsent.isPresent() ? optionalConsent.get().getTppServiceSessionId() : null;
+        return tppAisClient.getAccounts(
+                tppProperties.getServiceSessionPassword(),
+                sessionEntity.getUserEntity().getFintechUserId(),
+                RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
+                RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
+                xRequestId,
+                COMPUTE_X_TIMESTAMP_UTC,
+                OperationType.AIS.toString(),
+                COMPUTE_X_REQUEST_SIGNATURE,
+                COMPUTE_FINTECH_ID,
+                bankID,
+                null,
+                serviceSessionID);
+    }
+
+    private ResponseEntity bankRequiresConsent(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId, Optional<ConsentEntity> optionalConsent) {
+        log.info("do LOT (instead of loa) for bank {} {} consent", bankID, optionalConsent.isPresent() ? "with" : "without");
+        UUID serviceSessionID = optionalConsent.isPresent() ? optionalConsent.get().getTppServiceSessionId() : null;
         return tppAisClient.getTransactions(
                 UUID.randomUUID().toString(), // As consent is missing this will be ignored
                 tppProperties.getServiceSessionPassword(),
@@ -179,6 +201,7 @@ public class AccountService {
                 OperationType.AIS.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
-                bankID, null, null, null, null, null, null, null);
+                bankID, null, serviceSessionID, null, null, null, null, null);
     }
+
 }
