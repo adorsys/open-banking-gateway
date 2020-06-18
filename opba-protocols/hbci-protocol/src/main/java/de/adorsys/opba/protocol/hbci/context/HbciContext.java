@@ -8,6 +8,7 @@ import de.adorsys.multibanking.hbci.model.HbciTanSubmit;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.result.body.ScaMethod;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
+import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.HbciResultCache;
 import de.adorsys.opba.protocol.hbci.service.storage.TransientDataEntry;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -83,7 +84,13 @@ public class HbciContext extends BaseContext {
      */
     private boolean consentIncompatible;
 
+    private HbciResultCache cachedResult;
+
     public HbciConsent getHbciDialogConsent() {
+        if (null == hbciDialogConsent) {
+            return null;
+        }
+
         hbciDialogConsent.setHbciTanSubmit(hbciTanSubmit);
         return hbciDialogConsent;
     }
