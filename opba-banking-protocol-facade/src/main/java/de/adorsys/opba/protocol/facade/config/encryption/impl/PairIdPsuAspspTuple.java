@@ -34,13 +34,13 @@ public class PairIdPsuAspspTuple {
     public PairIdPsuAspspTuple(UUID pairId, AuthSession session) {
         this.pairId = pairId;
         this.psuId = session.getPsu().getId();
-        this.aspspId = session.getProtocol().getBankProfile().getBank().getId();
+        this.aspspId = session.getAction().getBankProfile().getBank().getId();
     }
 
     public PairIdPsuAspspTuple(AuthSession session) {
         this.pairId = null;
         this.psuId = session.getPsu().getId();
-        this.aspspId = session.getProtocol().getBankProfile().getBank().getId();
+        this.aspspId = session.getAction().getBankProfile().getBank().getId();
     }
 
     public String toDatasafePathWithoutPsuAndId() {

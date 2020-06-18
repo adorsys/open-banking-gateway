@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.facade.services;
 
 import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.db.domain.entity.BankProtocol;
+import de.adorsys.opba.db.domain.entity.BankAction;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.fintech.FintechUser;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
@@ -76,7 +76,7 @@ public class AuthSessionHandler {
             SecretKeyWithIv sessionKey,
             FacadeResultRedirectable<O, ?> result
     ) {
-        BankProtocol authProtocol = protocolRepository
+        BankAction authProtocol = protocolRepository
                 .findByBankProfileUuidAndAction(context.getBankId(), AUTHORIZATION)
                 .orElseThrow(
                         () -> new IllegalStateException("Missing update authorization handler for " + context.getBankId())
@@ -97,7 +97,7 @@ public class AuthSessionHandler {
         AuthSession session = authenticationSessions.save(
                 AuthSession.builder()
                         .parent(entityManager.find(ServiceSession.class, context.getServiceSessionId()))
-                        .protocol(authProtocol)
+                        .action(authProtocol)
                         .fintechUser(user)
                         .redirectCode(context.getFutureRedirectCode().toString())
                         .build()

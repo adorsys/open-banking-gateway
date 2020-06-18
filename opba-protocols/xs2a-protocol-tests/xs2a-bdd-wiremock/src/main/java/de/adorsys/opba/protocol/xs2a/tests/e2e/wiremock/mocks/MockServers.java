@@ -6,7 +6,7 @@ import com.tngtech.jgiven.annotation.AfterScenario;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.db.domain.entity.BankProfile;
-import de.adorsys.opba.db.domain.entity.BankProtocol;
+import de.adorsys.opba.db.domain.entity.BankAction;
 import de.adorsys.opba.db.domain.entity.IgnoreValidationRule;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.IgnoreValidationRuleRepository;
@@ -131,7 +131,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF ignore_validation_rules_table_contains_field_psu_id() {
         IgnoreValidationRule bankValidationRule = IgnoreValidationRule.builder()
-                .protocol(BankProtocol.builder().id(PROTOCOL_ID).build())
+                .protocol(BankAction.builder().id(PROTOCOL_ID).build())
                 .endpointClassCanonicalName(Xs2aAccountListingService.class.getCanonicalName())
                 .forEmbedded(true)
                 .forRedirect(true)
@@ -147,16 +147,16 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         ignoreValidationRuleRepository.save(bankValidationRule);
 
         bankValidationRule.setId(null);
-        bankValidationRule.setProtocol(BankProtocol.builder().id(AUTH_PROTOCOL_ID).build());
+        bankValidationRule.setProtocol(BankAction.builder().id(AUTH_PROTOCOL_ID).build());
         bankValidationRule.setEndpointClassCanonicalName(CreateAisAccountListConsentService.class.getCanonicalName());
         ignoreValidationRuleRepository.save(bankValidationRule);
         bankValidationRule.setId(null);
-        bankValidationRule.setProtocol(BankProtocol.builder().id(AUTH_PROTOCOL_ID).build());
+        bankValidationRule.setProtocol(BankAction.builder().id(AUTH_PROTOCOL_ID).build());
         bankValidationRule.setEndpointClassCanonicalName(StartConsentAuthorization.class.getCanonicalName());
         ignoreValidationRuleRepository.save(bankValidationRule);
 
         bankValidationRule.setId(null);
-        bankValidationRule.setProtocol(BankProtocol.builder().id(AUTH_PROTOCOL_ID).build());
+        bankValidationRule.setProtocol(BankAction.builder().id(AUTH_PROTOCOL_ID).build());
         bankValidationRule.setEndpointClassCanonicalName(Xs2aAisAuthenticateUserConsentWithPin.class.getCanonicalName());
         ignoreValidationRuleRepository.save(bankValidationRule);
 

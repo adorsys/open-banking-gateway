@@ -38,7 +38,7 @@
             <column name="bank_uuid" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
-            <column name="action" type="VARCHAR(32)">
+            <column name="protocol_action" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
             <column name="protocol_bean_name" type="VARCHAR(32)">
@@ -49,7 +49,7 @@
             </column>
         </createTable>
         <createSequence sequenceName="bank_action_id_sequence" incrementBy="50"/>
-        <addUniqueConstraint tableName="${table-prefix}bank_action" columnNames="bank_uuid,action"/>
+        <addUniqueConstraint tableName="${table-prefix}bank_action" columnNames="bank_uuid,protocol_action"/>
 
         <createTable tableName="${table-prefix}bank_sub_action">
             <column name="id" type="BIGINT">
@@ -58,7 +58,7 @@
             <column name="action_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="action" type="VARCHAR(32)">
+            <column name="protocol_action" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
             <column name="sub_protocol_bean_name" type="VARCHAR(32)">
@@ -66,7 +66,7 @@
             </column>
         </createTable>
         <createSequence sequenceName="bank_sub_action_id_sequence" incrementBy="50"/>
-        <addUniqueConstraint tableName="${table-prefix}bank_sub_action" columnNames="action_id,action"/>
+        <addUniqueConstraint tableName="${table-prefix}bank_sub_action" columnNames="action_id,protocol_action"/>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_bank_sub_action_bank_action"
                                  baseTableName="${table-prefix}bank_sub_action"
                                  baseColumnNames="action_id"
