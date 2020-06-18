@@ -98,8 +98,15 @@ public class RsaJwtsSigningServiceImpl implements RequestSigningService {
 
     @Override
     public String signature(PaymentInitiationDataToSign dataToSign) {
-        return createDataToSign(dataToSign.getBankId(), dataToSign.getFintechUserId(), dataToSign.getRedirectOk(), dataToSign.getRedirectNok(), dataToSign.getXRequestId(), dataToSign.getInstant(),
-                                dataToSign.getOperationType());
+        Map<String, String> values = new HashMap<>();
+        values.put(HttpHeaders.BANK_ID, dataToSign.getBankId());
+        values.put(HttpHeaders.FINTECH_USER_ID, dataToSign.getFintechUserId());
+        values.put(HttpHeaders.FINTECH_REDIRECT_URL_OK, dataToSign.getRedirectOk());
+        values.put(HttpHeaders.FINTECH_REDIRECT_URL_NOK, dataToSign.getRedirectNok());
+        DataToSign data = new DataToSign(dataToSign.getXRequestId(), dataToSign.getInstant(),
+                                         dataToSign.getOperationType(), dataToSign.getBody(), values);
+
+        return signature(data);
     }
 
     @Override
