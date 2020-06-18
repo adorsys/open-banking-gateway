@@ -29,10 +29,6 @@ public class HbciCachedResultAccessor {
     @SneakyThrows
     @Transactional
     public Optional<HbciResultCache> resultFromCache(HbciContext context) {
-        if (context.isConsentIncompatible()) {
-            return Optional.empty();
-        }
-
         List<HbciResultCache> consents = context.consentAccess().findByCurrentServiceSessionOrderByModifiedDesc()
                 .stream()
                 .map(this::readCachedEntry)

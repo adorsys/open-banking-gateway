@@ -19,6 +19,13 @@ public class HbciConsentInfo {
     private final HbciCachedResultAccessor cachedResultAccessor;
 
     /**
+     * Any kind of consent exists?
+     */
+    public boolean isUnderFintechScope(HbciContext ctx) {
+        return ctx.getRequestScoped().consentAccess().isFinTechScope();
+    }
+
+    /**
      * Is the PSU password present in the context.
      */
     public boolean isPasswordPresent(HbciContext ctx) {

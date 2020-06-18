@@ -17,7 +17,6 @@ import de.adorsys.opba.protocol.hbci.context.TransactionListHbciContext;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListTransactionsResult;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -26,7 +25,6 @@ import java.time.Instant;
 @RequiredArgsConstructor
 public class HbciTransactionListing extends ValidatedExecution<TransactionListHbciContext> {
 
-    private final ApplicationEventPublisher eventPublisher;
     private final OnlineBankingService onlineBankingService;
 
     @Override
@@ -42,6 +40,7 @@ public class HbciTransactionListing extends ValidatedExecution<TransactionListHb
             ContextUtil.getAndUpdateContext(
                     execution,
                     (TransactionListHbciContext ctx) -> {
+                        ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
                         ctx.setResponse(
                                 new AisListTransactionsResult(
                                         response.getBookings(),

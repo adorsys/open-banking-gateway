@@ -63,6 +63,11 @@ public class ConsentAccessFactory {
         private final ConsentRepository consentRepository;
 
         @Override
+        public boolean isFinTechScope() {
+            return false;
+        }
+
+        @Override
         public ProtocolFacingConsent createDoNotPersist() {
             Consent newConsent = Consent.builder()
                     .serviceSession(serviceSession)
@@ -116,6 +121,11 @@ public class ConsentAccessFactory {
         private final UUID serviceSessionId;
         private final Supplier<char[]> fintechPassword;
 
+
+        @Override
+        public boolean isFinTechScope() {
+            return true;
+        }
 
         @Override
         public ProtocolFacingConsent createDoNotPersist() {
