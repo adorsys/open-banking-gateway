@@ -46,6 +46,7 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
             ContextUtil.getAndUpdateContext(
                     execution,
                     (AccountListHbciContext ctx) -> {
+                        ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
                         ctx.setResponse(
                                 new AisListAccountsResult(
                                         response.getBankAccounts().stream()
