@@ -116,12 +116,11 @@ public class AccountService {
 
         // these ibans were known before, now they are unknown
         for (String unknownIban : becameUnknownIbans) {
-            fintechAccountMap.get(unknownIban).setUnknown(true);
+            fintechAccountMap.get(unknownIban).setBecameUnknown(true);
             accountRepository.save(fintechAccountMap.get(unknownIban));
         }
         Set<String> newIbans = new HashSet<>(tppIbans);
         newIbans.removeAll(fintechIbans);
-
         // these ibans are new and have to be persisted
         for (String newIban : newIbans) {
             AccountDetails tppAccountDetails = tppAccountMap.get(newIban);
@@ -131,9 +130,10 @@ public class AccountService {
                             .resourceId(tppAccountDetails.getResourceId())
                             .bankId(bankId).iban(newIban)
                             .currency(tppAccountDetails.getCurrency())
-                            .status(tppAccountDetails.getStatus().toString())
+                            // TODO Status is not given is listTransactions is done as long as 303 is not done
+                            .status(tppAccountDetails.getStatus() != null ? tppAccountDetails.getStatus().toString() : null)
                             .userEntity(userEntity)
-                            .unknown(false)
+                            .becameUnknown(false)
                             .build()
             );
         }
