@@ -80,7 +80,7 @@ public class FeignTemplateToDataToSignMapper {
         String redirectNokUrl = extractRequiredValue(headers, HttpHeaders.FINTECH_REDIRECT_URL_NOK);
 
         return new PaymentInitiationDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType),
-                                               bankId, fintechUserId, redirectOkUrl, redirectNokUrl, null, null);
+                                               bankId, fintechUserId, redirectOkUrl, redirectNokUrl, body);
     }
 
     public GetPaymentDataToSign mapToGetPayment(Map<String, Collection<String>> headers, Instant instant) {

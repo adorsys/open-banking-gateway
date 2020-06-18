@@ -23,7 +23,6 @@ public class PaymentInitiationDataToSign {
     String redirectOk;
     String redirectNok;
 
-    //Body values
-    String currency;
-    String amount;
+    //Http request body
+    String body;
 }
