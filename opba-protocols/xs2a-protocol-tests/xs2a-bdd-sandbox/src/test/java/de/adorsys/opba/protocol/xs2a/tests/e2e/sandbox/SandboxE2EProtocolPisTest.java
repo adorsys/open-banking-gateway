@@ -108,7 +108,7 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
                 .and()
                 .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
         then()
-                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .open_banking_has_consent_for_anton_brueckner_payment()
                 .fintech_calls_consent_activation_for_current_authorization_id();
     }
 }
