@@ -67,8 +67,7 @@ public class PaymentService {
                 UUID.fromString(restRequestContext.getRequestId()),
                 paymentProduct,
                 COMPUTE_X_TIMESTAMP_UTC,
-                // TODO has to be PIS
-                OperationType.AIS.toString(),
+                OperationType.PIS.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
                 bankId);
