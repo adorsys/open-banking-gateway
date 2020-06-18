@@ -52,7 +52,7 @@ export class ListTransactionsComponent implements OnInit {
           r.redirectCode = response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE);
           r.bankId = this.bankId;
           r.bankName = this.storageService.getBankName();
-          this.router.navigate(['redirect', JSON.stringify(r)], { relativeTo: this.route });
+          this.router.navigate(['../redirect', JSON.stringify(r)], { relativeTo: this.route });
           break;
         case 200:
           console.log('I got transactions');
