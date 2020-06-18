@@ -146,7 +146,7 @@ public class ConsentAccessFactory {
             Optional<FintechPsuAspspPrvKey> psuAspspPrivateKey = keys.findByFintechIdAndPsuIdAndAspspId(
                     fintech.getId(),
                     serviceSession.getAuthSession().getPsu().getId(),
-                    serviceSession.getAuthSession().getProtocol().getBankProfile().getBank().getId()
+                    serviceSession.getAuthSession().getAction().getBankProfile().getBank().getId()
             );
             Collection<Consent> consent = consents.findByServiceSessionId(serviceSession.getId());
             if (!psuAspspPrivateKey.isPresent() || consent.isEmpty()) {
