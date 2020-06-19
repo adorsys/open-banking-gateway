@@ -332,7 +332,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         return self();
     }
 
-    public SELF fintech_calls_consent_activation_for_current_authorization_id() {
+    public SELF fintech_calls_consent_activation_for_current_authorization_id(String serviceSessionId) {
         withSignatureHeaders(RestAssured
                 .given()
                     .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
@@ -342,5 +342,9 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                 .then()
                     .statusCode(HttpStatus.OK.value());
         return self();
+    }
+
+    public SELF fintech_calls_consent_activation_for_current_authorization_id() {
+        return fintech_calls_consent_activation_for_current_authorization_id(serviceSessionId);
     }
 }
