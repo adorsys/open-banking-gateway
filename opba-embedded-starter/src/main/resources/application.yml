@@ -91,8 +91,8 @@ facade:
       # Redirection URL for consent association
       consent-login:
         page:
-          for-ais: ${facade.urls.embedded-ui-base-url}/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
-          for-pis: ${facade.urls.embedded-ui-base-url}/pis/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
+          for-ais: ${facade.urls.embedded-ui-base-url}/auth/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
+          for-pis: ${facade.urls.embedded-ui-base-url}/auth/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
         password:
           byte-size: 8
     # Consent authorization cookie key path
@@ -171,8 +171,8 @@ protocol:
       password: password
   hbci:
     adapter:
-      # hbci-product: product - Your product ID here
-      # hbci-version: 300 - Your HBCI ID here
+    # hbci-product: product - Your product ID here
+    # hbci-version: 300 - Your HBCI ID here
     urls:
       redirect:
         to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
