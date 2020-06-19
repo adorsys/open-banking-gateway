@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
 import de.adorsys.opba.api.security.external.domain.OperationType;
+import de.adorsys.opba.api.security.external.domain.signdata.PaymentInfoDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.PaymentInitiationDataToSign;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import io.restassured.RestAssured;
@@ -67,10 +68,34 @@ public class PaymentStagesCommonUtil {
                            .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
+    public static RequestSpecification withPaymentInfoHeaders(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType) {
+        UUID xRequestId = UUID.randomUUID();
+        Instant xTimestampUtc = Instant.now();
+
+        return RestAssured
+                .given()
+                .header(BANK_ID, SANDBOX_BANK_ID)
+                .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
+                .header(FINTECH_USER_ID, fintechUserId)
+                .header(FINTECH_ID, DEFAULT_FINTECH_ID)
+                .header(X_XSRF_TOKEN, XSRF_TOKEN)
+                .header(X_REQUEST_ID, xRequestId.toString())
+                .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
+                .header(X_OPERATION_TYPE, operationType)
+                .header(X_REQUEST_SIGNATURE, calculatePaymentInfoSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId))
+                .header(PSU_IP_ADDRESS, IP_ADDRESS);
+    }
+
     private static String calculatePaymentSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
                                                     OperationType operationType, String fintechUserId) {
         PaymentInitiationDataToSign paymentInitiationDataToSign = new PaymentInitiationDataToSign(xRequestId, xTimestampUtc, operationType,
                                                                                                   SANDBOX_BANK_ID, fintechUserId, FINTECH_REDIR_OK, FINTECH_REDIR_NOK);
         return requestSigningService.signature(paymentInitiationDataToSign);
+    }
+
+    private static String calculatePaymentInfoSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
+                                                    OperationType operationType, String fintechUserId) {
+        return requestSigningService.signature(
+                new PaymentInfoDataToSign(xRequestId, xTimestampUtc, operationType, SANDBOX_BANK_ID, fintechUserId));
     }
 }

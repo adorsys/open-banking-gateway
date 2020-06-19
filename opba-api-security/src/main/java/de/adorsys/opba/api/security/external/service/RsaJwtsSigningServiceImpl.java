@@ -9,6 +9,7 @@ import de.adorsys.opba.api.security.external.domain.signdata.AisListTransactions
 import de.adorsys.opba.api.security.external.domain.signdata.BankProfileDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.ConfirmConsentDataToSign;
+import de.adorsys.opba.api.security.external.domain.signdata.PaymentInfoDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.PaymentInitiationDataToSign;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -100,12 +101,27 @@ public class RsaJwtsSigningServiceImpl implements RequestSigningService {
                                 dataToSign.getOperationType());
     }
 
+    @Override
+    public String signature(PaymentInfoDataToSign dataToSign) {
+        return createDataToSign(dataToSign.getBankId(), dataToSign.getFintechUserId(), dataToSign.getXRequestId(), dataToSign.getInstant(),
+                dataToSign.getOperationType());
+    }
+
     private String createDataToSign(String bankId, String fintechUserId, String redirectOk, String redirectNok, UUID xRequestId, Instant instant, OperationType operationType) {
         Map<String, String> values = new HashMap<>();
         values.put(HttpHeaders.BANK_ID, bankId);
         values.put(HttpHeaders.FINTECH_USER_ID, fintechUserId);
         values.put(HttpHeaders.FINTECH_REDIRECT_URL_OK, redirectOk);
         values.put(HttpHeaders.FINTECH_REDIRECT_URL_NOK, redirectNok);
+        DataToSign data = new DataToSign(xRequestId, instant, operationType, values);
+
+        return signature(data);
+    }
+
+    private String createDataToSign(String bankId, String fintechUserId, UUID xRequestId, Instant instant, OperationType operationType) {
+        Map<String, String> values = new HashMap<>();
+        values.put(HttpHeaders.BANK_ID, bankId);
+        values.put(HttpHeaders.FINTECH_USER_ID, fintechUserId);
         DataToSign data = new DataToSign(xRequestId, instant, operationType, values);
 
         return signature(data);
