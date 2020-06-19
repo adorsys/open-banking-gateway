@@ -36,6 +36,8 @@ public class AisStagesCommonUtil {
     public static final String AIS_ACCOUNTS_ENDPOINT = "/v1/banking/ais/accounts";
     public static final String AIS_TRANSACTIONS_ENDPOINT = "/v1/banking/ais/accounts/{resourceId}/transactions";
     public static final String PIS_SINGLE_PAYMENT_ENDPOINT = "/v1/banking/pis/payments/{payment-product}";
+    public static final String PIS_PAYMENT_STATUS_ENDPOINT = "/v1/banking/pis/payments/{payment_product}/status";
+    public static final String PIS_PAYMENT_INFORMATION_ENDPOINT = "/v1/banking/pis/payments/{payment_product}";
 
     public static final String REGISTER_USER_ENDPOINT = "/v1/psu/register";
     public static final String AIS_LOGIN_USER_ENDPOINT = "/v1/psu/ais/{authorizationId}/for-approval/login";

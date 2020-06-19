@@ -45,9 +45,9 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SpringBootTest(classes = {RetryableConfig.class, Xs2aRealSandboxProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
 public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
-        SandboxServers,
+        SandboxServers<? extends SandboxServers<?>>,
         WebDriverBasedPaymentInitiation<? extends WebDriverBasedPaymentInitiation<?>>,
-        PaymentResult> {
+        PaymentResult<? extends PaymentResult<?>>> {
 
     private final String OPBA_LOGIN = UUID.randomUUID().toString();
     private final String OPBA_PASSWORD = UUID.randomUUID().toString();
@@ -75,7 +75,9 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
 
         then()
                 .open_banking_has_consent_for_max_musterman_payment()
-                .fintech_calls_consent_activation_for_current_authorization_id();
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .fintech_calls_payment_status()
+                .fintech_calls_payment_information();
     }
 
     @ParameterizedTest
@@ -109,6 +111,8 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
                 .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
         then()
                 .open_banking_has_consent_for_anton_brueckner_payment()
-                .fintech_calls_consent_activation_for_current_authorization_id();
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .fintech_calls_payment_status()
+                .fintech_calls_payment_information();
     }
 }
