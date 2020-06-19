@@ -43,7 +43,10 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {RetryableConfig.class, Xs2aRealSandboxProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
-class SandboxE2EProtocolAisTest extends SandboxCommonTest<SandboxServers, WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>, AccountInformationResult> {
+class SandboxE2EProtocolAisTest extends SandboxCommonTest<
+        SandboxServers<? extends SandboxServers<?>>,
+        WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>,
+        AccountInformationResult<? extends AccountInformationResult<?>>> {
 
     @ParameterizedTest
     @EnumSource(Approach.class)
@@ -149,10 +152,10 @@ class SandboxE2EProtocolAisTest extends SandboxCommonTest<SandboxServers, WebDri
             .and()
             .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
 
-        AccountInformationResult result = then()
-            .open_banking_has_consent_for_max_musterman_account_list()
-            .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(false);
+        AccountInformationResult<? extends AccountInformationResult<?>> result = then()
+                .open_banking_has_consent_for_max_musterman_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(false);
 
         return result.getResponseContent();
     }
@@ -185,10 +188,10 @@ class SandboxE2EProtocolAisTest extends SandboxCommonTest<SandboxServers, WebDri
             .and()
             .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
 
-        AccountInformationResult result = then()
-            .open_banking_has_consent_for_anton_brueckner_account_list()
-            .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(false);
+        AccountInformationResult<? extends AccountInformationResult<?>> result = then()
+                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(false);
 
         return result.getResponseContent();
     }
