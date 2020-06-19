@@ -8,6 +8,7 @@ import de.adorsys.opba.api.security.external.domain.signdata.AisListTransactions
 import de.adorsys.opba.api.security.external.domain.signdata.BankProfileDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.ConfirmConsentDataToSign;
+import de.adorsys.opba.api.security.external.domain.signdata.PaymentInfoDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.PaymentInitiationDataToSign;
 
 import javax.servlet.http.HttpServletRequest;
@@ -89,6 +90,19 @@ public class HttpRequestToDataToSignMapper {
                 request.getHeader(HttpHeaders.FINTECH_USER_ID),
                 request.getHeader(HttpHeaders.FINTECH_REDIRECT_URL_OK),
                 request.getHeader(HttpHeaders.FINTECH_REDIRECT_URL_NOK)
+        );
+    }
+
+    public PaymentInfoDataToSign mapToPaymentInfo(HttpServletRequest request, Instant instant) {
+        String xRequestId = request.getHeader(HttpHeaders.X_REQUEST_ID);
+        String operationType = request.getHeader(HttpHeaders.X_OPERATION_TYPE);
+
+        return new PaymentInfoDataToSign(
+                UUID.fromString(xRequestId),
+                instant,
+                OperationType.valueOf(operationType),
+                request.getHeader(HttpHeaders.BANK_ID),
+                request.getHeader(HttpHeaders.FINTECH_USER_ID)
         );
     }
 }

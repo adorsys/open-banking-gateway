@@ -5,6 +5,7 @@ import de.adorsys.opba.api.security.external.domain.signdata.AisListTransactions
 import de.adorsys.opba.api.security.external.domain.signdata.BankProfileDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.ConfirmConsentDataToSign;
+import de.adorsys.opba.api.security.external.domain.signdata.PaymentInfoDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.PaymentInitiationDataToSign;
 
 public interface RequestSigningService {
@@ -56,4 +57,14 @@ public interface RequestSigningService {
      * @return String signature representation
      */
     String signature(PaymentInitiationDataToSign paymentInitiationDataToSign);
+
+    /**
+     * Signs data for opba endpoint
+     *  payment info GET '/v1/banking/pis/payments/{payment-product}' and
+     *  payment status GET '/v1/banking/pis/payments/{payment-product}/status'
+     *
+     * @param paymentInfoDataToSign Header data, required for signing
+     * @return String signature representation
+     */
+    String signature(PaymentInfoDataToSign paymentInfoDataToSign);
 }
