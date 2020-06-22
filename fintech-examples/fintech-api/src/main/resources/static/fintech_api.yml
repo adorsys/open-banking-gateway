@@ -422,9 +422,8 @@ components:
       schema:
         type: string
         enum:
-          - "fromTppWithAvailableConsent"
-          - "fromTppWithNewConsent"
-          - "fromFintechCache"
+          - "FROM_TPP_WITH_AVAILABLE_CONSENT"
+          - "FROM_TPP_WITH_NEW_CONSENT"
 
     LoTRetrievalInformation:
       name: LoTRetrievalInformation
@@ -433,8 +432,8 @@ components:
       schema:
         type: string
         enum:
-          - "fromTppWithAvailableConsent"
-          - "fromTppWithNewConsent"
+          - "FROM_TPP_WITH_AVAILABLE_CONSENT"
+          - "FROM_TPP_WITH_NEW_CONSENT"
 
     X-Request-ID:
       name: X-Request-ID
