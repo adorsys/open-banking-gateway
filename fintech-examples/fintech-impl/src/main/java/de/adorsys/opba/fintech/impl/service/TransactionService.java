@@ -46,7 +46,7 @@ public class TransactionService {
                                            String bookingStatus, Boolean deltaList, LoTRetrievalInformation loTRetrievalInformation) {
 
         log.info("LoT {}", loTRetrievalInformation);
-        if (loTRetrievalInformation.equals(LoTRetrievalInformation.fromTppWithNewConsent)) {
+        if (loTRetrievalInformation.equals(LoTRetrievalInformation.FROM_TPP_WITH_NEW_CONSENT)) {
             consentService.deleteConsent(sessionEntity.getUserEntity(), ConsentType.AIS, bankId);
         }
 
