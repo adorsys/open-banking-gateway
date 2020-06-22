@@ -48,16 +48,15 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     @Override
     @Transactional
     @SneakyThrows
-    public <T extends FacadeServiceableGetter> InternalContext<T> provide(T request) {
+    public <T extends FacadeServiceableGetter, A> InternalContext<T, A> provide(T request) {
         if (null == request.getFacadeServiceable()) {
             throw new IllegalArgumentException("No serviceable body");
         }
         AuthSession authSession = extractAndValidateAuthSession(request);
         ServiceSession session = extractOrCreateServiceSession(request, authSession);
-        return InternalContext.<T>builder()
-                .ctx(Context.<T>builder()
+        return InternalContext.<T, A>builder()
+                .serviceCtx(Context.<T>builder()
                         .serviceSessionId(session.getId())
-                        .serviceBankProtocolId(null == authSession ? null : authSession.getParent().getAction().getId())
                         .authorizationBankProtocolId(null == authSession ? null : authSession.getAction().getId())
                         .bankId(request.getFacadeServiceable().getBankId())
                         .authSessionId(null == authSession ? null : authSession.getId())
@@ -75,9 +74,9 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     @Override
-    public <T extends FacadeServiceableGetter> ServiceContext<T> provideRequestScoped(T request, InternalContext<T> ctx) {
-        RequestScoped requestScoped = getRequestScoped(request, ctx.getSession(), ctx.getAuthSession());
-        return ServiceContext.<T>builder().ctx(ctx.getCtx()).requestScoped(requestScoped).build();
+    public <T extends FacadeServiceableGetter, A> ServiceContext<T> provideRequestScoped(T request, InternalContext<T, A> ctx) {
+        RequestScoped requestScoped = getRequestScoped(request, ctx.getSession(), ctx.getAuthSession(), ctx.getServiceCtx().getServiceBankProtocolId());
+        return ServiceContext.<T>builder().ctx(ctx.getServiceCtx()).requestScoped(requestScoped).build();
     }
 
     protected <T extends FacadeServiceableGetter> void validateRedirectCode(T request, AuthSession session) {
@@ -115,18 +114,19 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         UUID serviceSessionId = facadeServiceable.getServiceSessionId();
 
         if (null == serviceSessionId) {
-            return createServiceSession(UUID.randomUUID());
+            return createServiceSession(UUID.randomUUID(), facadeServiceable);
         }
 
         return serviceSessions.findById(serviceSessionId)
-            .orElseGet(() -> createServiceSession(serviceSessionId));
+            .orElseGet(() -> createServiceSession(serviceSessionId, facadeServiceable));
     }
 
     @NotNull
     @SneakyThrows
-    private ServiceSession createServiceSession(UUID serviceSessionId) {
+    private ServiceSession createServiceSession(UUID serviceSessionId, FacadeServiceableRequest request) {
         ServiceSession serviceSession = new ServiceSession();
         serviceSession.setId(serviceSessionId);
+        serviceSession.setBankProfile(getBankProfileFromRequest(request));
         return serviceSessions.save(serviceSession);
     }
 
@@ -152,15 +152,17 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     private <T extends FacadeServiceableGetter> RequestScoped getRequestScoped(
             T request,
             ServiceSession session,
-            AuthSession authSession) {
+            AuthSession authSession,
+            long bankProtocolId) {
         return null == request.getFacadeServiceable().getAuthorizationKey()
-                ? fintechFacingSecretKeyBasedEncryption(request, session)
-                : psuCookieBasedKeyEncryption(request, authSession);
+                ? fintechFacingSecretKeyBasedEncryption(request, session, bankProtocolId)
+                : psuCookieBasedKeyEncryption(request, authSession, bankProtocolId);
     }
 
     private <T extends FacadeServiceableGetter> RequestScoped psuCookieBasedKeyEncryption(
             T request,
-            AuthSession session
+            AuthSession session,
+            long bankProtocolId
     ) {
         if (null == session) {
             throw new IllegalArgumentException("Missing authorization session");
@@ -169,6 +171,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         return provider.registerForPsuSession(
                 session,
                 consentAuthorizationEncryptionServiceProvider,
+                bankProtocolId,
                 encryptionKeySerde.fromString(request.getFacadeServiceable().getAuthorizationKey())
         );
     }
@@ -178,10 +181,10 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
      */
     private <T extends FacadeServiceableGetter> RequestScoped fintechFacingSecretKeyBasedEncryption(
             T request,
-            ServiceSession session
+            ServiceSession session,
+            long bankProtocolId
     ) {
-        BankProfile profile = profileJpaRepository.findByBankUuid(request.getFacadeServiceable().getBankId())
-                .orElseThrow(() -> new IllegalArgumentException("No bank profile for bank: " + request.getFacadeServiceable().getBankId()));
+        BankProfile profile = getBankProfileFromRequest(request.getFacadeServiceable());
 
         // FinTech requests should be signed, so creating Fintech entity if it does not exist.
         Fintech fintech = fintechRepository.findByGlobalId(request.getFacadeServiceable().getAuthorization())
@@ -192,10 +195,16 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
                 fintech,
                 profile,
                 session,
+                bankProtocolId,
                 consentAuthorizationEncryptionServiceProvider,
                 consentAuthorizationEncryptionServiceProvider.generateKey(),
                 () -> request.getFacadeServiceable().getSessionPassword().toCharArray()
         );
+    }
+
+    private BankProfile getBankProfileFromRequest(FacadeServiceableRequest request) {
+        return profileJpaRepository.findByBankUuid(request.getBankId())
+                    .orElseThrow(() -> new IllegalArgumentException("No bank profile for bank: " + request.getBankId()));
     }
 
     private <T extends FacadeServiceableGetter> Fintech registerFintech(T request, String fintechId) {

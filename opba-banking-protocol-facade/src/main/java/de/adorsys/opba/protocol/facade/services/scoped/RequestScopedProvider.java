@@ -47,19 +47,20 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
             Fintech fintech,
             BankProfile profile,
             ServiceSession session,
+            long bankProtocolId,
             ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider,
             SecretKeyWithIv futureAuthorizationSessionKey,
             Supplier<char[]> fintechPassword
     ) {
         ConsentAccess access = accessProvider.forFintech(fintech, session, fintechPassword);
         EncryptionService authorizationSessionEncService = encryptionService(encryptionServiceProvider, futureAuthorizationSessionKey);
-        Long protocolId = session.getAction().getId();
-        return doRegister(profile, access, authorizationSessionEncService, futureAuthorizationSessionKey, protocolId);
+        return doRegister(profile, access, authorizationSessionEncService, futureAuthorizationSessionKey, bankProtocolId);
     }
 
     public RequestScoped registerForPsuSession(
             AuthSession authSession,
             ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider,
+            long bankProtocolId,
             SecretKeyWithIv key
     ) {
         EncryptionService encryptionService = encryptionService(encryptionServiceProvider, key);
@@ -68,8 +69,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
                 authSession.getAction().getBankProfile().getBank(),
                 authSession.getParent()
         );
-        Long protocolId = authSession.getParent().getAction().getId();
-        return doRegister(authSession.getAction().getBankProfile(), access, encryptionService, key, protocolId);
+        return doRegister(authSession.getAction().getBankProfile(), access, encryptionService, key, bankProtocolId);
     }
 
     public InternalRequestScoped deregister(RequestScoped requestScoped) {
