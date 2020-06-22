@@ -36,7 +36,7 @@ public class HandleAcceptedService {
         }
         String authId = headers.getFirst(TPP_AUTH_ID);
 
-        ConsentEntity consent = consentRepository.findByAuthId(authId)
+        ConsentEntity consent = consentRepository.findByTppAuthId(authId)
                 .orElseGet(() -> consentRepository.save(
                         new ConsentEntity(
                                 consentType,
@@ -47,13 +47,13 @@ public class HandleAcceptedService {
                         ))
                 );
         log.debug("created consent which is not confirmend yet for bank {}, user {}, type {}, auth {}",
-                bankId, sessionEntity.getUserEntity().getLoginUserName(), consentType, consent.getAuthId());
+                bankId, sessionEntity.getUserEntity().getLoginUserName(), consentType, consent.getTppAuthId());
         consentRepository.save(consent);
 
         URI location = headers.getLocation();
-        log.info("call was accepted, but redirect has to be done for authID:{} location:{}", consent.getAuthId(), location);
+        log.info("call was accepted, but redirect has to be done for authID:{} location:{}", consent.getTppAuthId(), location);
 
-        HttpHeaders responseHeaders = sessionLogicService.startRedirect(sessionEntity.getUserEntity(), consent.getAuthId());
+        HttpHeaders responseHeaders = sessionLogicService.startRedirect(sessionEntity.getUserEntity(), consent.getTppAuthId());
         responseHeaders.add(FIN_TECH_REDIRECT_CODE, fintechRedirectCode);
         responseHeaders.setLocation(location);
 

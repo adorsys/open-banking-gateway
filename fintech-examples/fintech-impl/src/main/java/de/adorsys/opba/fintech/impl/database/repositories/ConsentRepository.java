@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface ConsentRepository extends CrudRepository<ConsentEntity, Long> {
-    Optional<ConsentEntity> findByAuthId(String authId);
+    Optional<ConsentEntity> findByTppAuthId(String authId);
     Optional<ConsentEntity> findByUserEntityAndBankIdAndConsentTypeAndConsentConfirmed(UserEntity userEntity, String bankId, ConsentType consentType, Boolean consentConfirmed);
 
 }

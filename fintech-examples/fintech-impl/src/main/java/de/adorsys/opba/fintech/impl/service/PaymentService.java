@@ -3,7 +3,7 @@ package de.adorsys.opba.fintech.impl.service;
 import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.fintech.api.model.generated.SinglePaymentInitiationRequest;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
-import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
+import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.ConsentRepository;
