@@ -48,14 +48,14 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     @Override
     @Transactional
     @SneakyThrows
-    public <T extends FacadeServiceableGetter, A> InternalContext<T, A> provide(T request) {
+    public <REQUEST extends FacadeServiceableGetter, ACTION> InternalContext<REQUEST, ACTION> provide(REQUEST request) {
         if (null == request.getFacadeServiceable()) {
             throw new IllegalArgumentException("No serviceable body");
         }
         AuthSession authSession = extractAndValidateAuthSession(request);
         ServiceSession session = extractOrCreateServiceSession(request, authSession);
-        return InternalContext.<T, A>builder()
-                .serviceCtx(Context.<T>builder()
+        return InternalContext.<REQUEST, ACTION>builder()
+                .serviceCtx(Context.<REQUEST>builder()
                         .serviceSessionId(session.getId())
                         .authorizationBankProtocolId(null == authSession ? null : authSession.getAction().getId())
                         .bankId(request.getFacadeServiceable().getBankId())
@@ -74,12 +74,12 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     @Override
-    public <T extends FacadeServiceableGetter, A> ServiceContext<T> provideRequestScoped(T request, InternalContext<T, A> ctx) {
+    public <REQUEST extends FacadeServiceableGetter, ACTION> ServiceContext<REQUEST> provideRequestScoped(REQUEST request, InternalContext<REQUEST, ACTION> ctx) {
         RequestScoped requestScoped = getRequestScoped(request, ctx.getSession(), ctx.getAuthSession(), ctx.getServiceCtx().getServiceBankProtocolId());
-        return ServiceContext.<T>builder().ctx(ctx.getServiceCtx()).requestScoped(requestScoped).build();
+        return ServiceContext.<REQUEST>builder().ctx(ctx.getServiceCtx()).requestScoped(requestScoped).build();
     }
 
-    protected <T extends FacadeServiceableGetter> void validateRedirectCode(T request, AuthSession session) {
+    protected <REQUEST extends FacadeServiceableGetter> void validateRedirectCode(REQUEST request, AuthSession session) {
         if (Strings.isNullOrEmpty(request.getFacadeServiceable().getRedirectCode())) {
             throw new IllegalArgumentException("Missing redirect code");
         }
@@ -89,7 +89,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         }
     }
 
-    private <T extends FacadeServiceableGetter> AuthSession readAndValidateAuthSession(T request) {
+    private <REQUEST extends FacadeServiceableGetter> AuthSession readAndValidateAuthSession(REQUEST request) {
         UUID sessionId = UUID.fromString(request.getFacadeServiceable().getAuthorizationSessionId());
         AuthSession session = authSessions.findById(sessionId)
             .orElseThrow(() -> new IllegalStateException("No auth session " + sessionId));
@@ -99,8 +99,8 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         return session;
     }
 
-    private <T extends FacadeServiceableGetter> ServiceSession extractOrCreateServiceSession(
-            T request,
+    private <REQUEST extends FacadeServiceableGetter> ServiceSession extractOrCreateServiceSession(
+            REQUEST request,
             AuthSession authSession
     ) {
         if (null != authSession) {
@@ -131,8 +131,8 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     @SneakyThrows
-    private <T extends FacadeServiceableGetter> AuthSession extractAndValidateAuthSession(
-            T request) {
+    private <REQUEST extends FacadeServiceableGetter> AuthSession extractAndValidateAuthSession(
+            REQUEST request) {
         if (null == request.getFacadeServiceable().getAuthorizationSessionId()) {
             return handleNoAuthSession(request);
         }
@@ -140,7 +140,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         return readAndValidateAuthSession(request);
     }
 
-    private <T extends FacadeServiceableGetter> AuthSession handleNoAuthSession(T request) {
+    private <REQUEST extends FacadeServiceableGetter> AuthSession handleNoAuthSession(REQUEST request) {
         if (!Strings.isNullOrEmpty(request.getFacadeServiceable().getRedirectCode())) {
             throw new IllegalArgumentException("Unexpected redirect code as no auth session is present");
         }
@@ -149,8 +149,8 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     }
 
     @Nullable
-    private <T extends FacadeServiceableGetter> RequestScoped getRequestScoped(
-            T request,
+    private <REQUEST extends FacadeServiceableGetter> RequestScoped getRequestScoped(
+            REQUEST request,
             ServiceSession session,
             AuthSession authSession,
             long bankProtocolId) {
@@ -159,8 +159,8 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
                 : psuCookieBasedKeyEncryption(request, authSession, bankProtocolId);
     }
 
-    private <T extends FacadeServiceableGetter> RequestScoped psuCookieBasedKeyEncryption(
-            T request,
+    private <REQUEST extends FacadeServiceableGetter> RequestScoped psuCookieBasedKeyEncryption(
+            REQUEST request,
             AuthSession session,
             long bankProtocolId
     ) {
@@ -179,8 +179,8 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     /**
      * To be consumed by {@link de.adorsys.opba.protocol.facade.services.AuthSessionHandler} if new auth session started.
      */
-    private <T extends FacadeServiceableGetter> RequestScoped fintechFacingSecretKeyBasedEncryption(
-            T request,
+    private <REQUEST extends FacadeServiceableGetter> RequestScoped fintechFacingSecretKeyBasedEncryption(
+            REQUEST request,
             ServiceSession session,
             long bankProtocolId
     ) {
@@ -207,7 +207,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
                     .orElseThrow(() -> new IllegalArgumentException("No bank profile for bank: " + request.getBankId()));
     }
 
-    private <T extends FacadeServiceableGetter> Fintech registerFintech(T request, String fintechId) {
+    private <REQUEST extends FacadeServiceableGetter> Fintech registerFintech(REQUEST request, String fintechId) {
         Fintech fintech = fintechRepository.save(Fintech.builder().globalId(fintechId).build());
         fintechSecureStorage.registerFintech(fintech, () -> request.getFacadeServiceable().getSessionPassword().toCharArray());
         return fintech;
