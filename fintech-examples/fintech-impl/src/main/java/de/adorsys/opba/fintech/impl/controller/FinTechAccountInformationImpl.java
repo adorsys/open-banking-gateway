@@ -3,6 +3,8 @@ package de.adorsys.opba.fintech.impl.controller;
 import de.adorsys.opba.fintech.api.model.generated.AccountList;
 import de.adorsys.opba.fintech.api.model.generated.TransactionsResponse;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAccountInformationApi;
+import de.adorsys.opba.fintech.impl.controller.utils.LoARetrievalInformation;
+import de.adorsys.opba.fintech.impl.controller.utils.LoTRetrievalInformation;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.service.AccountService;
 import de.adorsys.opba.fintech.impl.service.SessionLogicService;

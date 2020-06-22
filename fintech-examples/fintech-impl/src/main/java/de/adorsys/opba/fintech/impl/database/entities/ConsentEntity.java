@@ -22,12 +22,12 @@ import java.util.UUID;
 @Slf4j
 @NoArgsConstructor
 public class ConsentEntity {
-    public ConsentEntity(ConsentType consentType, UserEntity userEntity, String bankId, String authId, UUID tppServiceSessionId) {
+    public ConsentEntity(ConsentType consentType, UserEntity userEntity, String bankId, String tppAuthId, UUID tppServiceSessionId) {
         this.consentType = consentType;
         this.userEntity = userEntity;
         this.consentConfirmed = false;
         this.tppServiceSessionId = tppServiceSessionId;
-        this.authId = authId;
+        this.tppAuthId = tppAuthId;
         this.bankId = bankId;
     }
 
@@ -37,7 +37,7 @@ public class ConsentEntity {
     private Long id;
 
     private String bankId;
-    private String authId;
+    private String tppAuthId;
     private UUID tppServiceSessionId;
     private ConsentType consentType;
     @Column(nullable = false)

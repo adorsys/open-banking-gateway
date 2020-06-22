@@ -2,7 +2,7 @@ package de.adorsys.opba.fintech.impl.database.entities;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
+import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

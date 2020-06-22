@@ -1,4 +1,4 @@
-package de.adorsys.opba.fintech.impl.controller;
+package de.adorsys.opba.fintech.impl.controller.utils;
 
 
 import lombok.AllArgsConstructor;

@@ -1,7 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
 
-import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
+import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.SessionRepository;

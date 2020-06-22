@@ -1,8 +1,8 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
-import de.adorsys.opba.fintech.impl.controller.OkOrNotOk;
-import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
+import de.adorsys.opba.fintech.impl.controller.utils.OkOrNotOk;
+import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.RedirectUrlRepository;
 import lombok.extern.slf4j.Slf4j;

@@ -173,13 +173,13 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     public void loginPostUnAuthorized() {
     }
 
-    protected void createConsent(String authId, UUID serviceSessionId) {
-        if (authId == null) {
+    protected void createConsent(String tppAuthId, UUID serviceSessionId) {
+        if (tppAuthId == null) {
             return;
         }
         final String bankId = "af062b06-ee6e-45f9-9163-b97320c6881a";
         UserEntity userEntity = userRepository.findById("peter").get();
-        ConsentEntity consentEntity = new ConsentEntity(ConsentType.AIS, userEntity, bankId, authId, serviceSessionId);
+        ConsentEntity consentEntity = new ConsentEntity(ConsentType.AIS, userEntity, bankId, tppAuthId, serviceSessionId);
         consentEntity.setConsentConfirmed(true);
         consentRepository.save(consentEntity);
     }
