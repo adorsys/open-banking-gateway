@@ -10,9 +10,9 @@ import lombok.Value;
 @Getter
 @Builder(toBuilder = true)
 @Value
-public class InternalContext<T, A> {
-    Context<T> serviceCtx;
+public class InternalContext<REQUEST, ACTION> {
+    Context<REQUEST> serviceCtx;
     AuthSession authSession;
     ServiceSession session;
-    A action;
+    ACTION action;
 }

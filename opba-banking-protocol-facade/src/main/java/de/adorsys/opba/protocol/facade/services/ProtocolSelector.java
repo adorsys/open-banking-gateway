@@ -19,10 +19,10 @@ public class ProtocolSelector {
     private final BankProtocolRepository protocolRepository;
 
     @Transactional
-    public <I, A> InternalContext<I, A> selectProtocolFor(
-        InternalContext<I, A> ctx,
+    public <REQUEST, ACTION> InternalContext<REQUEST, ACTION> selectProtocolFor(
+        InternalContext<REQUEST, ACTION> ctx,
         ProtocolAction protocolAction,
-        Map<String, ? extends A> actionBeans) {
+        Map<String, ? extends ACTION> actionBeans) {
         Optional<BankAction> bankProtocol;
 
         if (null == ctx.getAuthSession()) {
@@ -37,7 +37,7 @@ public class ProtocolSelector {
 
         return bankProtocol
                 .map(protocol -> {
-                    A action = findActionBean(protocol, actionBeans, protocolAction);
+                    ACTION action = findActionBean(protocol, actionBeans, protocolAction);
                     return ctx.toBuilder()
                             .serviceCtx(ctx.getServiceCtx().toBuilder().serviceBankProtocolId(protocol.getId()).build())
                             .action(action)
