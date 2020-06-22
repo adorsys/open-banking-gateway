@@ -13,7 +13,6 @@ import { tap } from 'rxjs/operators';
 export class SettingsComponent implements OnInit {
 
   bankId = 'unknown';
-  loaFromFintechCache = LoARetrievalInformation.FROM_FINTECH_CACHE;
   loaFromTppWithNewConsent = LoARetrievalInformation.FROM_TPP_WITH_NEW_CONSENT;
   loaFromTppWithAvailableConsent = LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
   loa;
