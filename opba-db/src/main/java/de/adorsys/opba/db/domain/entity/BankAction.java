@@ -29,11 +29,11 @@ import java.util.Collection;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BankProtocol {
+public class BankAction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_protocol_id_generator")
-    @SequenceGenerator(name = "bank_protocol_id_generator", sequenceName = "bank_protocol_id_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_action_id_generator")
+    @SequenceGenerator(name = "bank_action_id_generator", sequenceName = "bank_action_id_sequence")
     private Long id;
 
     @ManyToOne
@@ -41,21 +41,21 @@ public class BankProtocol {
     private BankProfile bankProfile;
 
     @Enumerated(EnumType.STRING)
-    private ProtocolAction action;
+    private ProtocolAction protocolAction;
 
     private String protocolBeanName;
 
     private boolean consentSupported;
 
-    @OneToMany(mappedBy = "protocol", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<BankSubProtocol> subProtocols;
+    @OneToMany(mappedBy = "action", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<BankSubAction> subProtocols;
 
-    @OneToMany(mappedBy = "protocol", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "action", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<ServiceSession> currentForSessions;
 
     @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<ServiceSession> servicesSessions;
 
-    @OneToMany(mappedBy = "protocol", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "action", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<AuthSession> authSessions;
 }

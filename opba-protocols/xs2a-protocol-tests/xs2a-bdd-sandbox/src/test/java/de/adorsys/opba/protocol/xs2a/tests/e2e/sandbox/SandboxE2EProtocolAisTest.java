@@ -1,41 +1,27 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox;
 
 import com.jayway.jsonpath.JsonPath;
-import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
 import de.adorsys.opba.protocol.api.common.Approach;
-import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.JGivenConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.SandboxServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableConfig;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
-import de.adorsys.opba.protocol.xs2a.testsandbox.SandboxAppsStarter;
 import de.adorsys.psd2.sandbox.cms.starter.Xs2aCmsAutoConfiguration;
 import io.github.bonigarcia.seljup.SeleniumExtension;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.hateoas.HypermediaAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.security.Security;
-import java.time.LocalDate;
-import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_HEAVY_TESTS;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
@@ -57,48 +43,10 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {RetryableConfig.class, Xs2aRealSandboxProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
-class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>, AccountInformationResult> {
-
-    private static final LocalDate DATE_FROM = LocalDate.parse("2018-01-01");
-    private static final LocalDate DATE_TO = LocalDate.parse("2020-09-30");
-    private static final String BOTH_BOOKING = "BOTH";
-
-    private static final SandboxAppsStarter executor = new SandboxAppsStarter();
-
-    private final String OPBA_LOGIN = UUID.randomUUID().toString();
-    private final String OPBA_PASSWORD = UUID.randomUUID().toString();
-
-    @LocalServerPort
-    private int port;
-
-    @Autowired
-    private ProtocolUrlsConfiguration urlsConfiguration;
-
-    @BeforeAll
-    static void startSandbox() {
-        WebDriverManager.firefoxdriver().arch64();
-
-        if (null != System.getenv("NO_SANDBOX_START")) {
-            return;
-        }
-
-        executor.runAll();
-        executor.awaitForAllStarted();
-        Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
-    }
-
-    @AfterAll
-    static void stopSandbox() {
-        executor.shutdown();
-    }
-
-    // See https://github.com/spring-projects/spring-boot/issues/14879 for the 'why setting port'
-    @BeforeEach
-    void setBaseUrl() {
-        ProtocolUrlsConfiguration.WebHooks aisUrls = urlsConfiguration.getAis().getWebHooks();
-        aisUrls.setOk(aisUrls.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
-        aisUrls.setNok(aisUrls.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
-    }
+class SandboxE2EProtocolAisTest extends SandboxCommonTest<
+        SandboxServers<? extends SandboxServers<?>>,
+        WebDriverBasedAccountInformation<? extends WebDriverBasedAccountInformation<?>>,
+        AccountInformationResult<? extends AccountInformationResult<?>>> {
 
     @ParameterizedTest
     @EnumSource(Approach.class)
@@ -204,10 +152,10 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
             .and()
             .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
 
-        AccountInformationResult result = then()
-            .open_banking_has_consent_for_max_musterman_account_list()
-            .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(false);
+        AccountInformationResult<? extends AccountInformationResult<?>> result = then()
+                .open_banking_has_consent_for_max_musterman_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(false);
 
         return result.getResponseContent();
     }
@@ -240,10 +188,10 @@ class SandboxE2EProtocolTest extends SpringScenarioTest<SandboxServers, WebDrive
             .and()
             .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
 
-        AccountInformationResult result = then()
-            .open_banking_has_consent_for_anton_brueckner_account_list()
-            .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(false);
+        AccountInformationResult<? extends AccountInformationResult<?>> result = then()
+                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(false);
 
         return result.getResponseContent();
     }

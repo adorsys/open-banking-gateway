@@ -1,6 +1,6 @@
 package de.adorsys.opba.db.domain.entity.sessions;
 
-import de.adorsys.opba.db.domain.entity.BankProtocol;
+import de.adorsys.opba.db.domain.entity.BankAction;
 import de.adorsys.opba.db.domain.entity.Consent;
 import de.adorsys.opba.db.domain.entity.IdAssignable;
 import de.adorsys.opba.db.domain.generators.AssignedUuidGenerator;
@@ -56,13 +56,13 @@ public class ServiceSession implements IdAssignable<UUID>  {
      * Identifies which protocol is serviced - i.e. list accounts, one that was selected on the first request
      */
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private BankProtocol service;
+    private BankAction service;
 
     /**
      * Identifies current protocol i.e. some authorization protocol.
      */
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private BankProtocol protocol;
+    private BankAction action;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "serviceSession")
     private Collection<Consent> consents;

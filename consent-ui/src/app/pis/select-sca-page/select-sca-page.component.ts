@@ -12,7 +12,7 @@ import { ApiHeaders } from '../../api/api.headers';
   styleUrls: ['./select-sca-page.component.scss']
 })
 export class SelectScaPageComponent implements OnInit {
-  public static ROUTE = 'select-sca';
+  public static ROUTE = 'select-sca-method';
 
   authorizationSessionId = '';
   redirectCode = '';

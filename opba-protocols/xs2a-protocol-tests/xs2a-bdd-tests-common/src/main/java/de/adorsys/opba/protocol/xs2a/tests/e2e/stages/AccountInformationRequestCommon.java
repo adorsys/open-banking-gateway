@@ -1,28 +1,19 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import com.tngtech.jgiven.Stage;
-import com.tngtech.jgiven.annotation.ProvidedScenarioState;
-import com.tngtech.jgiven.annotation.ScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.api.security.external.domain.OperationType;
-import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.consentapi.model.generated.AuthViolation;
-import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
-import de.adorsys.opba.consentapi.model.generated.ScaUserData;
 import de.adorsys.opba.protocol.xs2a.tests.GetTransactionsQueryParams;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
 import java.util.UUID;
 
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
@@ -44,7 +35,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withAccountsHeadersMissingIpAddress;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withTransactionsHeaders;
-import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.LOCATION;
@@ -52,42 +42,7 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 @Slf4j
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
-public class AccountInformationRequestCommon<SELF extends AccountInformationRequestCommon<SELF>> extends Stage<SELF> {
-
-    public static final String REDIRECT_CODE_QUERY = "redirectCode";
-
-    @ProvidedScenarioState
-    protected String authSessionCookie;
-
-    @ProvidedScenarioState
-    protected String redirectUriToGetUserParams;
-
-    @ProvidedScenarioState
-    protected String serviceSessionId;
-
-    @ProvidedScenarioState
-    protected String redirectCode;
-
-    @ProvidedScenarioState
-    @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
-    protected String redirectOkUri;
-
-    @ProvidedScenarioState
-    @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
-    protected String redirectNotOkUri;
-
-    @ProvidedScenarioState
-    @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
-    protected String responseContent;
-
-    @Autowired
-    private RequestSigningService requestSigningService;
-
-    @ScenarioState
-    private List<ScaUserData> availableScas;
-
-    @ScenarioState
-    private List<AuthViolation> violations;
+public class AccountInformationRequestCommon<SELF extends AccountInformationRequestCommon<SELF>> extends RequestCommon<SELF> {
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner() {
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
@@ -464,106 +419,5 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         assertThat(this.violations).doesNotContain(authViolationIpPort);
 
         return self();
-    }
-
-    private void startInitialInternalConsentAuthorization(String uriPath, String resource) {
-        ExtractableResponse<Response> response =
-                startInitialInternalConsentAuthorization(uriPath, resource, HttpStatus.ACCEPTED);
-        updateServiceSessionId(response);
-        updateRedirectCode(response);
-    }
-
-    private ExtractableResponse<Response> max_musterman_provides_sca_challenge_result() {
-        return provideParametersToBankingProtocolWithBody(
-                AUTHORIZE_CONSENT_ENDPOINT,
-                readResource("restrecord/tpp-ui-input/params/max-musterman-sca-challenge-result.json"),
-                HttpStatus.ACCEPTED
-        );
-    }
-
-    private void max_musterman_provides_password() {
-        startInitialInternalConsentAuthorization(
-                AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/max-musterman-password.json"
-        );
-    }
-
-
-    private ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resource, HttpStatus status) {
-        return provideParametersToBankingProtocolWithBody(uriPath, readResource(resource), status);
-    }
-
-    private ExtractableResponse<Response> provideParametersToBankingProtocolWithBody(String uriPath, String body, HttpStatus status) {
-        ExtractableResponse<Response> response = RestAssured
-                .given()
-                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .body(body)
-                .when()
-                    .post(uriPath, serviceSessionId)
-                .then()
-                    .statusCode(status.value())
-                .extract();
-
-        this.responseContent = response.body().asString();
-        this.redirectUriToGetUserParams = response.header(LOCATION);
-        updateRedirectCode(response);
-        return response;
-    }
-
-    protected void updateNextConsentAuthorizationUrl(ExtractableResponse<Response> response) {
-        this.redirectUriToGetUserParams = response.header(LOCATION);
-    }
-
-    protected void updateServiceSessionId(ExtractableResponse<Response> response) {
-        this.serviceSessionId = response.header(SERVICE_SESSION_ID);
-    }
-
-    protected void updateRedirectCode(ExtractableResponse<Response> response) {
-        this.redirectCode = response.header(REDIRECT_CODE);
-    }
-
-    @SneakyThrows
-    private void updateAvailableScas() {
-        ExtractableResponse<Response> response = provideGetConsentAuthStateRequest();
-        InlineResponse200 parsedValue = new ObjectMapper()
-                                                .readValue(response.body().asString(), InlineResponse200.class);
-
-        this.availableScas = parsedValue.getConsentAuth().getScaMethods();
-        updateRedirectCode(response);
-    }
-
-    @SneakyThrows
-    private void readViolations() {
-        ExtractableResponse<Response> response = provideGetConsentAuthStateRequest();
-        InlineResponse200 parsedValue = new ObjectMapper()
-                                                 .readValue(response.body().asString(), InlineResponse200.class);
-
-        this.violations = parsedValue.getConsentAuth().getViolations();
-        updateRedirectCode(response);
-    }
-
-    private  ExtractableResponse<Response> provideGetConsentAuthStateRequest() {
-         return RestAssured
-                     .given()
-                            .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                            .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                            .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                            .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                     .when()
-                            .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
-                     .then()
-                            .statusCode(HttpStatus.OK.value())
-                     .extract();
-    }
-
-    private String selectedScaBody(String scaName) {
-        return String.format(
-                "{\"scaAuthenticationData\":{\"SCA_CHALLENGE_ID\":\"%s\"}}",
-                this.availableScas.stream().filter(it -> it.getMethodValue().equals(scaName)).findFirst().get().getId()
-        );
     }
 }

@@ -31,14 +31,14 @@
             </column>
         </createTable>
 
-        <createTable tableName="${table-prefix}bank_protocol">
+        <createTable tableName="${table-prefix}bank_action">
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
             <column name="bank_uuid" type="VARCHAR(36)">
                 <constraints nullable="false"/>
             </column>
-            <column name="action" type="VARCHAR(32)">
+            <column name="protocol_action" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
             <column name="protocol_bean_name" type="VARCHAR(32)">
@@ -48,29 +48,29 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createSequence sequenceName="bank_protocol_id_sequence" incrementBy="50"/>
-        <addUniqueConstraint tableName="${table-prefix}bank_protocol" columnNames="bank_uuid,action"/>
+        <createSequence sequenceName="bank_action_id_sequence" incrementBy="50"/>
+        <addUniqueConstraint tableName="${table-prefix}bank_action" columnNames="bank_uuid,protocol_action"/>
 
-        <createTable tableName="${table-prefix}bank_sub_protocol">
+        <createTable tableName="${table-prefix}bank_sub_action">
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="protocol_id" type="BIGINT">
+            <column name="action_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="action" type="VARCHAR(32)">
+            <column name="protocol_action" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
             <column name="sub_protocol_bean_name" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createSequence sequenceName="bank_sub_protocol_id_sequence" incrementBy="50"/>
-        <addUniqueConstraint tableName="${table-prefix}bank_sub_protocol" columnNames="protocol_id,action"/>
-        <addForeignKeyConstraint constraintName="${table-prefix}fk_bank_sub_protocol_bank_protocol"
-                                 baseTableName="${table-prefix}bank_sub_protocol"
-                                 baseColumnNames="protocol_id"
-                                 referencedTableName="${table-prefix}bank_protocol"
+        <createSequence sequenceName="bank_sub_action_id_sequence" incrementBy="50"/>
+        <addUniqueConstraint tableName="${table-prefix}bank_sub_action" columnNames="action_id,protocol_action"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_bank_sub_action_bank_action"
+                                 baseTableName="${table-prefix}bank_sub_action"
+                                 baseColumnNames="action_id"
+                                 referencedTableName="${table-prefix}bank_action"
                                  referencedColumnNames="id"/>
 
         <createTable tableName="${table-prefix}service_session">
@@ -78,7 +78,7 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="service_id" type="BIGINT"/>
-            <column name="protocol_id" type="BIGINT"/>
+            <column name="action_id" type="BIGINT"/>
             <column name="version" type="INT">
                 <constraints nullable="false"/>
             </column>
@@ -89,10 +89,10 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint constraintName="${table-prefix}fk_service_session_bank_protocol"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_service_session_bank_action"
                                  baseTableName="${table-prefix}service_session"
-                                 baseColumnNames="protocol_id"
-                                 referencedTableName="${table-prefix}bank_protocol"
+                                 baseColumnNames="action_id"
+                                 referencedTableName="${table-prefix}bank_action"
                                  referencedColumnNames="id"/>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_consent_service_session"
                                  baseTableName="${table-prefix}consent"
@@ -165,7 +165,7 @@
             </column>
             <column name="aspsp_redirect_code" type="VARCHAR(64)"/>
 
-            <column name="protocol_id" type="BIGINT"/>
+            <column name="action_id" type="BIGINT"/>
             <column name="psu_id" type="BIGINT"/>
             <column name="fintech_user_id" type="BIGINT">
                 <constraints nullable="false"/>
@@ -379,8 +379,8 @@
     </changeSet>
     <changeSet id="add-relation-bank-profile-protocol" author="mhr">
         <addForeignKeyConstraint baseColumnNames="bank_uuid"
-                                 baseTableName="${table-prefix}bank_protocol"
-                                 constraintName="fk_bank_protocol_bank_profile"
+                                 baseTableName="${table-prefix}bank_action"
+                                 constraintName="fk_bank_action_bank_profile"
                                  deferrable="true"
                                  initiallyDeferred="true"
                                  onUpdate="RESTRICT"
@@ -392,7 +392,7 @@
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="protocol_id" type="BIGINT">
+            <column name="action_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
             <column name="endpoint_class_canonical_name" type="VARCHAR(256)"/>
@@ -409,10 +409,10 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint constraintName="${table-prefix}fk_validation_rule_bank_protocol"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_validation_rule_bank_action"
                                  baseTableName="${table-prefix}validation_rule"
-                                 baseColumnNames="protocol_id"
-                                 referencedTableName="${table-prefix}bank_protocol"
+                                 baseColumnNames="action_id"
+                                 referencedTableName="${table-prefix}bank_action"
                                  referencedColumnNames="id"/>
         <createSequence sequenceName="validation_rule_sequence" incrementBy="50"/>
     </changeSet>

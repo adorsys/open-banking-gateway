@@ -22,18 +22,18 @@ import javax.persistence.SequenceGenerator;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BankSubProtocol {
+public class BankSubAction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_sub_protocol_id_generator")
-    @SequenceGenerator(name = "bank_sub_protocol_id_generator", sequenceName = "bank_sub_protocol_id_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bank_sub_action_id_generator")
+    @SequenceGenerator(name = "bank_sub_action_id_generator", sequenceName = "bank_sub_action_id_sequence")
     private Long id;
 
     @ManyToOne(optional = false)
-    private BankProtocol protocol;
+    private BankAction action;
 
     @Enumerated(EnumType.STRING)
-    private ProtocolAction action;
+    private ProtocolAction protocolAction;
 
     private String subProtocolBeanName;
 }
