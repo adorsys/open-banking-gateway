@@ -17,7 +17,7 @@ public class HbciStoreAccountListToCache extends ValidatedExecution<AccountListH
     @Override
     @SneakyThrows
     protected void doRealExecution(DelegateExecution execution, AccountListHbciContext context) {
-        HbciResultCache cached = hbciCachedResultAccessor.resultFromCache(context).orElseGet(HbciResultCache::new);
+        HbciResultCache cached = null != context.getCachedResult() ? context.getCachedResult() : new HbciResultCache();
         cached.setAccounts(context.getResponse());
         cached.setConsent(context.getHbciDialogConsent());
         hbciCachedResultAccessor.resultToCache(context, cached);
