@@ -39,13 +39,13 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
 
     @Transactional
     public SELF open_banking_has_consent_for_max_musterman_payment() {
-        assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isNotEmpty();
+        assertThat(consents.findByServiceSessionIdOrderByModifiedAtDesc(UUID.fromString(serviceSessionId))).isNotEmpty();
         return self();
     }
 
     @Transactional
     public SELF open_banking_has_consent_for_anton_brueckner_payment() {
-        assertThat(consents.findByServiceSessionId(UUID.fromString(serviceSessionId))).isNotEmpty();
+        assertThat(consents.findByServiceSessionIdOrderByModifiedAtDesc(UUID.fromString(serviceSessionId))).isNotEmpty();
         return self();
     }
 
