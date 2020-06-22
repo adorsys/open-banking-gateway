@@ -1,6 +1,6 @@
 package de.adorsys.opba.fintech.impl.controller;
 
 public enum LoTRetrievalInformation {
-    fromTppWithAvailableConsent,
-    fromTppWithNewConsent
+    FROM_TPP_WITH_AVAILABLE_CONSENT,
+    FROM_TPP_WITH_NEW_CONSENT
 }
