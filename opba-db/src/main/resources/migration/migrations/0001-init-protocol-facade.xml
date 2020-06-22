@@ -77,7 +77,9 @@
             <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="bank_profile_id" type="BIGINT"/>
+            <column name="bank_profile_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
             <column name="version" type="INT">
                 <constraints nullable="false"/>
             </column>
