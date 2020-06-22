@@ -16,27 +16,27 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
-public abstract class FacadeService<I extends FacadeServiceableGetter, O extends ResultBody, A extends Action<I, O>> {
+public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RESULT extends ResultBody, ACTION extends Action<REQUEST, RESULT>> {
 
     private final ProtocolAction action;
-    private final Map<String, ? extends A> actionProviders;
+    private final Map<String, ? extends ACTION> actionProviders;
     private final ProtocolSelector selector;
     private final ServiceContextProvider provider;
     private final ProtocolResultHandler handler;
     private final TransactionTemplate txTemplate;
 
-    public CompletableFuture<FacadeResult<O>> execute(I request) {
-        ProtocolWithCtx<A, I> protocolWithCtx = txTemplate.execute(callback -> {
-            InternalContext<I, A> contextWithoutProtocol = contextFor(request);
-            InternalContext<I, A> ctx = selectAndSetProtocolTo(contextWithoutProtocol);
-            ServiceContext<I> serviceContext = addRequestScopedFor(request, ctx);
+    public CompletableFuture<FacadeResult<RESULT>> execute(REQUEST request) {
+        ProtocolWithCtx<ACTION, REQUEST> protocolWithCtx = txTemplate.execute(callback -> {
+            InternalContext<REQUEST, ACTION> contextWithoutProtocol = contextFor(request);
+            InternalContext<REQUEST, ACTION> ctx = selectAndSetProtocolTo(contextWithoutProtocol);
+            ServiceContext<REQUEST> serviceContext = addRequestScopedFor(request, ctx);
             return new ProtocolWithCtx<>(ctx.getAction(), serviceContext);
         });
         if (protocolWithCtx == null) {
             throw new NullPointerException("can't create service context or determine protocol");
         }
 
-        CompletableFuture<Result<O>> result = execute(protocolWithCtx.getProtocol(), protocolWithCtx.getServiceContext());
+        CompletableFuture<Result<RESULT>> result = execute(protocolWithCtx.getProtocol(), protocolWithCtx.getServiceContext());
         // This one must exist in decoupled transaction
         return result.thenApply(
                 res -> handleResult(
@@ -47,15 +47,15 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
         );
     }
 
-    protected InternalContext<I, A> contextFor(I request) {
+    protected InternalContext<REQUEST, ACTION> contextFor(REQUEST request) {
         return provider.provide(request);
     }
 
-    protected ServiceContext<I> addRequestScopedFor(I request, InternalContext<I, A> ctx) {
+    protected ServiceContext<REQUEST> addRequestScopedFor(REQUEST request, InternalContext<REQUEST, ACTION> ctx) {
         return provider.provideRequestScoped(request, ctx);
     }
 
-    protected InternalContext<I, A> selectAndSetProtocolTo(InternalContext<I, A> ctx) {
+    protected InternalContext<REQUEST, ACTION> selectAndSetProtocolTo(InternalContext<REQUEST, ACTION> ctx) {
         return selector.selectProtocolFor(
                 ctx,
                 action,
@@ -63,11 +63,11 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
         );
     }
 
-    protected FacadeResult<O> handleResult(Result<O> result, FacadeServiceableRequest request, ServiceContext<I> ctx) {
+    protected FacadeResult<RESULT> handleResult(Result<RESULT> result, FacadeServiceableRequest request, ServiceContext<REQUEST> ctx) {
         return handler.handleResult(result, request, ctx);
     }
 
-    protected CompletableFuture<Result<O>> execute(A protocol, ServiceContext<I> ctx) {
+    protected CompletableFuture<Result<RESULT>> execute(ACTION protocol, ServiceContext<REQUEST> ctx) {
         return protocol.execute(ctx);
     }
 }
