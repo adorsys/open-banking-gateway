@@ -57,9 +57,8 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
     }
 
     private boolean handleScaChallengeRequired(DelegateExecution execution, UpdateAuthResponse response) {
-        if (ScaStatus.PSUAUTHENTICATED == response.getScaStatus()
-                && null != response.getScaMethods()
-                && response.getScaMethods().size() > 0) {
+        HbciConsent consent = (HbciConsent) response.getBankApiConsentData();
+        if (ScaStatus.PSUAUTHENTICATED == response.getScaStatus() && consent.isWithHktan()) {
             ContextUtil.getAndUpdateContext(
                     execution,
                     (HbciContext ctx) -> {
