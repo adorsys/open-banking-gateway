@@ -34,7 +34,7 @@ public class FintechPsuAspspTuple {
     public FintechPsuAspspTuple(ServiceSession session) {
         this.fintechId = session.getAuthSession().getFintechUser().getFintech().getId();
         this.psuId = session.getAuthSession().getPsu().getId();
-        this.aspspId = session.getAction().getBankProfile().getBank().getId();
+        this.aspspId = session.getBankProfile().getBank().getId();
     }
 
     public String toDatasafePathWithoutParent() {

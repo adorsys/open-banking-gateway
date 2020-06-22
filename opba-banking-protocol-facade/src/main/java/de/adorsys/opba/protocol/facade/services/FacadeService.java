@@ -27,10 +27,10 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
 
     public CompletableFuture<FacadeResult<O>> execute(I request) {
         ProtocolWithCtx<A, I> protocolWithCtx = txTemplate.execute(callback -> {
-            InternalContext<I> internalContext = contextFor(request);
-            A protocol = selectAndSetProtocolTo(internalContext);
-            ServiceContext<I> serviceContext = addRequestScopedFor(request, internalContext);
-            return new ProtocolWithCtx<>(protocol, serviceContext);
+            InternalContext<I, A> contextWithoutProtocol = contextFor(request);
+            InternalContext<I, A> ctx = selectAndSetProtocolTo(contextWithoutProtocol);
+            ServiceContext<I> serviceContext = addRequestScopedFor(request, ctx);
+            return new ProtocolWithCtx<>(ctx.getAction(), serviceContext);
         });
         if (protocolWithCtx == null) {
             throw new NullPointerException("can't create service context or determine protocol");
@@ -47,16 +47,16 @@ public abstract class FacadeService<I extends FacadeServiceableGetter, O extends
         );
     }
 
-    protected InternalContext<I> contextFor(I request) {
+    protected InternalContext<I, A> contextFor(I request) {
         return provider.provide(request);
     }
 
-    protected ServiceContext<I> addRequestScopedFor(I request, InternalContext<I> ctx) {
+    protected ServiceContext<I> addRequestScopedFor(I request, InternalContext<I, A> ctx) {
         return provider.provideRequestScoped(request, ctx);
     }
 
-    protected A selectAndSetProtocolTo(InternalContext<I> ctx) {
-        return selector.selectAndPersistProtocolFor(
+    protected InternalContext<I, A> selectAndSetProtocolTo(InternalContext<I, A> ctx) {
+        return selector.selectProtocolFor(
                 ctx,
                 action,
                 actionProviders

@@ -2,9 +2,7 @@ package de.adorsys.opba.protocol.facade.services;
 
 import de.adorsys.opba.db.domain.entity.BankAction;
 import de.adorsys.opba.db.domain.entity.BankSubAction;
-import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
-import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,44 +16,38 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProtocolSelector {
 
-    private final ServiceSessionRepository sessions;
     private final BankProtocolRepository protocolRepository;
 
     @Transactional
-    public <A> A selectAndPersistProtocolFor(
-        InternalContext<?> ctx,
+    public <I, A> InternalContext<I, A> selectProtocolFor(
+        InternalContext<I, A> ctx,
         ProtocolAction protocolAction,
-        Map<String, A> actionBeans) {
+        Map<String, ? extends A> actionBeans) {
         Optional<BankAction> bankProtocol;
 
-        if (null == ctx.getServiceBankProtocolId()) {
+        if (null == ctx.getAuthSession()) {
             bankProtocol = protocolRepository.findByBankProfileUuidAndAction(
-                    ctx.getBankId(),
+                    ctx.getServiceCtx().getBankId(),
                     protocolAction
             );
         } else {
-            Long id = isForAuthorization(protocolAction) ? ctx.getAuthorizationBankProtocolId() : ctx.getServiceBankProtocolId();
+            Long id = isForAuthorization(protocolAction) ? ctx.getServiceCtx().getAuthorizationBankProtocolId() : ctx.getServiceCtx().getServiceBankProtocolId();
             bankProtocol = protocolRepository.findById(id);
         }
 
         return bankProtocol
-                .map(protocol -> setProtocolOnSession(protocol, ctx.getSession()))
-                .map(protocol -> findActionBean(protocol, actionBeans, protocolAction))
+                .map(protocol -> {
+                    A action = findActionBean(protocol, actionBeans, protocolAction);
+                    return ctx.toBuilder()
+                            .serviceCtx(ctx.getServiceCtx().toBuilder().serviceBankProtocolId(protocol.getId()).build())
+                            .action(action)
+                            .build();
+                })
                 .orElseThrow(() ->
                         new IllegalStateException(
-                                "No action bean for " + protocolAction.name() + " of: " + ctx.loggableBankId()
+                                "No action bean for " + protocolAction.name() + " of: " + ctx.getServiceCtx().loggableBankId()
                         )
                 );
-    }
-
-    private BankAction setProtocolOnSession(BankAction action, ServiceSession session) {
-        if (null == session.getService()) {
-            session.setService(action);
-        }
-
-        session.setAction(action);
-        sessions.save(session);
-        return action;
     }
 
     private boolean isForAuthorization(ProtocolAction action) {

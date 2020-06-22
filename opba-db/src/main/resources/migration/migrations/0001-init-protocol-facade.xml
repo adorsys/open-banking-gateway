@@ -77,8 +77,7 @@
             <column name="id" type="UUID">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="service_id" type="BIGINT"/>
-            <column name="action_id" type="BIGINT"/>
+            <column name="bank_profile_id" type="BIGINT"/>
             <column name="version" type="INT">
                 <constraints nullable="false"/>
             </column>
@@ -89,10 +88,10 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint constraintName="${table-prefix}fk_service_session_bank_action"
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_service_session_bank_profile"
                                  baseTableName="${table-prefix}service_session"
-                                 baseColumnNames="action_id"
-                                 referencedTableName="${table-prefix}bank_action"
+                                 baseColumnNames="bank_profile_id"
+                                 referencedTableName="${table-prefix}bank_profile"
                                  referencedColumnNames="id"/>
         <addForeignKeyConstraint constraintName="${table-prefix}fk_consent_service_session"
                                  baseTableName="${table-prefix}consent"

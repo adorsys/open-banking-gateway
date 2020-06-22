@@ -1,7 +1,6 @@
 package de.adorsys.opba.db.domain.entity;
 
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
-import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,12 +48,6 @@ public class BankAction {
 
     @OneToMany(mappedBy = "action", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<BankSubAction> subProtocols;
-
-    @OneToMany(mappedBy = "action", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<ServiceSession> currentForSessions;
-
-    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<ServiceSession> servicesSessions;
 
     @OneToMany(mappedBy = "action", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<AuthSession> authSessions;

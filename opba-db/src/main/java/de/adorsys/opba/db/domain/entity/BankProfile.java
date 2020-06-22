@@ -1,6 +1,7 @@
 package de.adorsys.opba.db.domain.entity;
 
 import de.adorsys.opba.db.domain.converter.ScaApproachConverter;
+import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
@@ -31,6 +32,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +75,9 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     @OneToMany(mappedBy = "bankProfile", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "protocolAction")
     private Map<ProtocolAction, BankAction> actions = new HashMap<>();
+
+    @OneToMany(mappedBy = "bankProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<ServiceSession> servicesSessions;
 
     @Mapper(uses = ToConsentSupported.class)
     public interface ToBankProfileDescriptor {
