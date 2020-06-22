@@ -1,9 +1,10 @@
 package de.adorsys.opba.protocol.xs2a.config;
 
+import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.RetryOperations;
-import org.springframework.retry.policy.NeverRetryPolicy;
+import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 
 /**
@@ -13,9 +14,9 @@ import org.springframework.retry.support.RetryTemplate;
 public class RetryConfig {
 
     @Bean
-    public RetryOperations retryOperations() {
+    public RetryOperations retryOperations(FlowableProperties flowableProperties) {
         RetryTemplate retryTemplate = new RetryTemplate();
-        retryTemplate.setRetryPolicy(new NeverRetryPolicy()); // TODO: re-enable retry after proper error handling implementation
+        retryTemplate.setRetryPolicy(new SimpleRetryPolicy(flowableProperties.getNumberOfRetries()));
         return retryTemplate;
     }
 }

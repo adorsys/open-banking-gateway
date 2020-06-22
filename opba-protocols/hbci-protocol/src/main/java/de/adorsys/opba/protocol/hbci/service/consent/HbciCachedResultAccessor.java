@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class HbciCachedResultAccessor {
 
-    private final FlowableProperties properties;
+    private final FlowableProperties.Serialization properties;
     private final FlowableObjectMapper mapper;
 
     @SneakyThrows
