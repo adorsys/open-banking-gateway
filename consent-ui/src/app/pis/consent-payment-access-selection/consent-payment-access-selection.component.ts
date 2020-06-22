@@ -53,7 +53,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
   }
 
   onConfirm() {
-    this.updateConsentObject();
+    this.updatePaymentObject();
     this.moveToReviewPayment();
   }
 
@@ -71,7 +71,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
       });
   }
 
-  private updateConsentObject() {
+  private updatePaymentObject() {
     const consentObj = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
 
     if (this.state.hasGeneralViolation()) {
