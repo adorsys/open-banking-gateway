@@ -195,5 +195,7 @@ bpmnshared:
         - de.adorsys.opba.protocol.hbci.service.protocol.ais.dto
     expirable:
       expire-after-write: PT600S
+    # TODO: re-enable retry after proper error handling implementation
+    number-of-retries: 0
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
