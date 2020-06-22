@@ -195,6 +195,7 @@ paths:
         - $ref: '#/components/parameters/X-XSRF-TOKEN'
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
+        - $ref: "#/components/parameters/LoARetrievalInformation"
 
       security:
         - sessionCookie: []
@@ -231,6 +232,8 @@ paths:
         - $ref: '#/components/parameters/X-XSRF-TOKEN'
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
+        - $ref: "#/components/parameters/LoTRetrievalInformation"
+
       security:
         - sessionCookie: []
       responses:
@@ -411,6 +414,27 @@ components:
       schema:
         type: string
       example: "https://example.com/myservice?auth-id=sf3x;authResult=failure"
+
+    LoARetrievalInformation:
+      name: LoARetrievalInformation
+      required: true
+      in: header
+      schema:
+        type: string
+        enum:
+          - "fromTppWithAvailableConsent"
+          - "fromTppWithNewConsent"
+          - "fromFintechCache"
+
+    LoTRetrievalInformation:
+      name: LoTRetrievalInformation
+      required: true
+      in: header
+      schema:
+        type: string
+        enum:
+          - "fromTppWithAvailableConsent"
+          - "fromTppWithNewConsent"
 
     X-Request-ID:
       name: X-Request-ID

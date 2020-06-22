@@ -80,7 +80,8 @@ public class FinTechListTransactionsTest extends FinTechListAccountsTest {
                         .header(Consts.HEADER_X_REQUEST_ID, restRequestContext.getRequestId())
                         .header(Consts.HEADER_XSRF_TOKEN, restRequestContext.getXsrfTokenHeaderField())
                         .header("Fintech-Redirect-URL-OK", "ok")
-                        .header("Fintech-Redirect-URL-NOK", "notok"))
+                        .header("Fintech-Redirect-URL-NOK", "notok")
+                        .header("LoTRetrievalInformation", "fromTppWithAvailableConsent"))
                 .andDo(print())
                 .andReturn();
     }
