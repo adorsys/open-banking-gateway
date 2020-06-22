@@ -47,7 +47,7 @@ public class AccountService {
         log.info("List of accounts {}", loARetrievalInformation);
         final String fintechRedirectCode = UUID.randomUUID().toString();
 
-        if (loARetrievalInformation.equals(LoARetrievalInformation.fromTppWithNewConsent)) {
+        if (loARetrievalInformation.equals(LoARetrievalInformation.FROM_TPP_WITH_NEW_CONSENT)) {
             consentService.deleteConsent(sessionEntity.getUserEntity(), ConsentType.AIS, bankId);
         }
         ResponseEntity accounts = readOpbaResponse(bankId, sessionEntity, fintechRedirectCode);
