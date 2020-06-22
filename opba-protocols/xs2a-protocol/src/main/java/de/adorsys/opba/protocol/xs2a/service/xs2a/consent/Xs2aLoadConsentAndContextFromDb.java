@@ -35,7 +35,7 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
 public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aContext> {
 
     private final ContextMerger merger;
-    private final FlowableProperties properties;
+    private final FlowableProperties.Serialization properties;
     private final FlowableObjectMapper mapper;
 
     @Override

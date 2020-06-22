@@ -12,5 +12,5 @@ public class ConfigConst {
     /**
      * Flowable protocol engine {@link org.springframework.boot.context.properties.ConfigurationProperties} prefix.
      */
-    public static final String FLOWABLE_SHARED_CONFIG_PREFIX = "bpmnshared.flowable.";
+    public static final String FLOWABLE_SHARED_CONFIG_PREFIX = "bpmnshared.flowable";
 }
