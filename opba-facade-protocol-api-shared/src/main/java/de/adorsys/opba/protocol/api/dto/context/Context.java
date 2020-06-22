@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class Context<T> {
+public class Context<REQUEST> {
 
     /**
      * Bank protocol ID that is used to serve this request, corresponds to {@code de.adorsys.opba.db.domain.entity.BankProtocol}
@@ -62,7 +62,7 @@ public class Context<T> {
      * Users' (PSU or FinTech) request that is to be serviced by protocol.
      */
     @NonNull
-    private final T request;
+    private final REQUEST request;
 
     /**
      * Non-sensitive data like some database id that will be persisted along authorization session and can
