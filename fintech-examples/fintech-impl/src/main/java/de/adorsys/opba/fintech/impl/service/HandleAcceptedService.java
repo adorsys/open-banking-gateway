@@ -27,6 +27,11 @@ public class HandleAcceptedService {
 
     ResponseEntity handleAccepted(ConsentRepository consentRepository, ConsentType consentType, String bankId,
                                   String fintechRedirectCode, SessionEntity sessionEntity, HttpHeaders headers) {
+        return handleAccepted(consentRepository, consentType, bankId, fintechRedirectCode, sessionEntity, headers, null);
+    }
+
+    ResponseEntity handleAccepted(ConsentRepository consentRepository, ConsentType consentType, String bankId,
+                                  String fintechRedirectCode, SessionEntity sessionEntity, HttpHeaders headers, String iban) {
 
         if (StringUtils.isBlank(headers.getFirst(SERVICE_SESSION_ID))) {
             throw new RuntimeException("Did not expect headerfield " + SERVICE_SESSION_ID + " to be null");
@@ -43,7 +48,8 @@ public class HandleAcceptedService {
                                 sessionEntity.getUserEntity(),
                                 bankId,
                                 authId,
-                                UUID.fromString(headers.getFirst(SERVICE_SESSION_ID))
+                                UUID.fromString(headers.getFirst(SERVICE_SESSION_ID)),
+                                PaymentService.getHashOfIban(iban)
                         ))
                 );
         log.debug("created consent which is not confirmend yet for bank {}, user {}, type {}, auth {}",
