@@ -31,23 +31,25 @@ export class PaymentsConsentReviewComponent implements OnInit {
 
   public finTechName = StubUtil.FINTECH_NAME;
   public aspspName = StubUtil.ASPSP_NAME;
-  public aisConsent: AisConsentToGrant;
+  public payment: AisConsentToGrant;
 
   private authorizationId: string;
 
   ngOnInit() {
     this.activatedRoute.parent.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
-      this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
+      this.payment = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     });
   }
 
   onConfirm() {
-    const body = { extras: this.aisConsent.extras } as PsuAuthRequest;
+    const body = { extras: this.payment.extras } as PsuAuthRequest;
 
-    if (this.aisConsent) {
-      body.consentAuth = { consent: this.aisConsent.consent } as ConsentAuth;
-    }
+    // if (this.payment) {
+    //   body.consentAuth = { consent: this.payment.consent } as ConsentAuth;
+    // }
+
+    console.log(body);
 
     this.updateConsentAuthorizationService
       .embeddedUsingPOST(

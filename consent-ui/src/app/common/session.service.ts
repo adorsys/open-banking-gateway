@@ -44,6 +44,18 @@ export class SessionService {
     return Object.assign(factory(), JSON.parse(sessionStorage.getItem(authorizationId + Session.CONSENT_OBJECT)));
   }
 
+  public setPaymentObject(authorizationId: string, paymentObject: any) {
+    sessionStorage.setItem(authorizationId + Session.PAYMENT_OBJECT, JSON.stringify(paymentObject));
+  }
+
+  public getPaymentObject<T>(authorizationId: string): T {
+    if (!sessionStorage.getItem(authorizationId + Session.PAYMENT_OBJECT)) {
+      return null;
+    }
+
+    return Object.assign(JSON.parse(sessionStorage.getItem(authorizationId + Session.PAYMENT_OBJECT)));
+  }
+
   public setXsrfToken(token: string) {
     sessionStorage.setItem(Session.XSRF_TOKEN, token);
   }
@@ -56,6 +68,8 @@ enum Session {
   REDIRECT_CODE = ':REDIRECT_CODE',
   CONSENT_STATE = ':CONSENT_STATE',
   CONSENT_OBJECT = ':CONSENT_OBJECT',
+  PAYMENT_OBJECT = ':PAYMENT_OBJECT',
+  PAYMENT_STATE = ':PAYMENT_STATE',
   XSRF_TOKEN = 'XSRF_TOKEN',
   COOKIE_TTL = 'Cookie-TTL'
 }
