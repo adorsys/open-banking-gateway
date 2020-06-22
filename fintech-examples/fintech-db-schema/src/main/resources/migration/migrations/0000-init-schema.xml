@@ -1,6 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-    <changeSet author="peter (generated)" id="1592816472623-1">
+    <changeSet author="peter (generated)" id="1592825047907-1">
         <createTable tableName="opb_login_entity">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="opb_login_entity_pkey"/>
@@ -11,22 +11,22 @@
             <column name="user_entity_login_user_name" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="peter (generated)" id="1592816472623-2">
+    <changeSet author="peter (generated)" id="1592825047907-2">
         <createTable tableName="opb_consent_entity">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="opb_consent_entity_pkey"/>
             </column>
-            <column name="auth_id" type="VARCHAR(255)"/>
             <column name="bank_id" type="VARCHAR(255)"/>
             <column name="consent_confirmed" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column name="consent_type" type="INTEGER"/>
+            <column name="tpp_auth_id" type="VARCHAR(255)"/>
             <column name="tpp_service_session_id" type="UUID"/>
             <column name="user_entity_login_user_name" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="peter (generated)" id="1592816472623-3">
+    <changeSet author="peter (generated)" id="1592825047907-3">
         <createTable tableName="opb_redirect_urls_entity">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="opb_redirect_urls_entity_pkey"/>
@@ -42,7 +42,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet author="peter (generated)" id="1592816472623-4">
+    <changeSet author="peter (generated)" id="1592825047907-4">
         <createTable tableName="opb_session_entity">
             <column name="id" type="BIGINT">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="opb_session_entity_pkey"/>
@@ -55,7 +55,7 @@
             <column name="user_entity_login_user_name" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="peter (generated)" id="1592816472623-5">
+    <changeSet author="peter (generated)" id="1592825047907-5">
         <createTable tableName="opb_user_entity">
             <column name="login_user_name" type="VARCHAR(255)">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="opb_user_entity_pkey"/>
@@ -64,25 +64,25 @@
             <column name="password" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet author="peter (generated)" id="1592816472623-6">
+    <changeSet author="peter (generated)" id="1592825047907-6">
         <addForeignKeyConstraint baseColumnNames="user_entity_login_user_name" baseTableName="opb_login_entity" constraintName="fko9imhixh45717jwkwlph4h16d" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="login_user_name" referencedTableName="opb_user_entity" validate="true"/>
     </changeSet>
-    <changeSet author="peter (generated)" id="1592816472623-7">
+    <changeSet author="peter (generated)" id="1592825047907-7">
         <addForeignKeyConstraint baseColumnNames="user_entity_login_user_name" baseTableName="opb_consent_entity" constraintName="fkm3ph6cod3jnj5c348wirh5urp" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="login_user_name" referencedTableName="opb_user_entity" validate="true"/>
     </changeSet>
-    <changeSet author="peter (generated)" id="1592816472623-8">
+    <changeSet author="peter (generated)" id="1592825047907-8">
         <addForeignKeyConstraint baseColumnNames="user_entity_login_user_name" baseTableName="opb_session_entity" constraintName="fkecuug9e4v689hepptfgsbbxb6" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="login_user_name" referencedTableName="opb_user_entity" validate="true"/>
     </changeSet>
-    <changeSet author="peter (generated)" id="1592816472623-9">
+    <changeSet author="peter (generated)" id="1592825047907-9">
         <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807" minValue="1" sequenceName="consent_id_seq" startValue="1"/>
     </changeSet>
-    <changeSet author="peter (generated)" id="1592816472623-10">
+    <changeSet author="peter (generated)" id="1592825047907-10">
         <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807" minValue="1" sequenceName="login_id_seq" startValue="1"/>
     </changeSet>
-    <changeSet author="peter (generated)" id="1592816472623-11">
+    <changeSet author="peter (generated)" id="1592825047907-11">
         <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807" minValue="1" sequenceName="redirect_urls_id_seq" startValue="1"/>
     </changeSet>
-    <changeSet author="peter (generated)" id="1592816472623-12">
+    <changeSet author="peter (generated)" id="1592825047907-12">
         <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807" minValue="1" sequenceName="session_id_seq" startValue="1"/>
     </changeSet>
 </databaseChangeLog>
