@@ -15,11 +15,15 @@ import de.adorsys.opba.tpp.pis.api.model.generated.Amount;
 import de.adorsys.opba.tpp.pis.api.model.generated.PaymentInitiation;
 import de.adorsys.opba.tpp.pis.api.model.generated.PaymentInitiationResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.bouncycastle.util.encoders.Hex;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.UUID;
 
 import static de.adorsys.opba.fintech.impl.tppclients.Consts.COMPUTE_FINTECH_ID;
@@ -73,7 +77,18 @@ public class PaymentService {
             throw new RuntimeException("Did expect status 202 from tpp, but got " + responseOfTpp.getStatusCodeValue());
         }
         redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
-        return handleAcceptedService.handleAccepted(consentRepository, ConsentType.PIS, bankId, fintechRedirectCode, sessionEntity, responseOfTpp.getHeaders());
+        return handleAcceptedService.handleAccepted(consentRepository, ConsentType.PIS, bankId, fintechRedirectCode, sessionEntity,
+                responseOfTpp.getHeaders(), singlePaymentInitiationRequest.getCreditorIban());
+    }
+
+    @SneakyThrows
+    public static String getHashOfIban(String iban) {
+        if (iban == null) {
+            return null;
+        }
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] encodedhash = digest.digest(iban.getBytes(StandardCharsets.UTF_8));
+        return Hex.toHexString(encodedhash);
     }
 
     private AccountReference getAccountReference(String iban) {
@@ -88,4 +103,5 @@ public class PaymentService {
         amount.setAmount(amountWihthoutCurrency);
         return amount;
     }
+
 }
