@@ -1,7 +1,7 @@
 package de.adorsys.opba.fintech.server;
 
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
-import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
+import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
 import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import de.adorsys.opba.fintech.server.config.TestConfig;
 import de.adorsys.opba.fintech.server.feignmocks.TppBankSearchClientFeignMock;
