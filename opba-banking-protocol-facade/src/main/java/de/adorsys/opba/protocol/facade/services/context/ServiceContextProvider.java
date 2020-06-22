@@ -10,7 +10,7 @@ public interface ServiceContextProvider {
 
     @Transactional
     @SneakyThrows
-    <T extends FacadeServiceableGetter, A> InternalContext<T, A> provide(T request);
+    <REQUEST extends FacadeServiceableGetter, ACTION> InternalContext<REQUEST, ACTION> provide(REQUEST request);
 
-    <T extends FacadeServiceableGetter, A> ServiceContext<T> provideRequestScoped(T request, InternalContext<T, A> ctx);
+    <REQUEST extends FacadeServiceableGetter, ACTIONS> ServiceContext<REQUEST> provideRequestScoped(REQUEST request, InternalContext<REQUEST, ACTIONS> ctx);
 }
