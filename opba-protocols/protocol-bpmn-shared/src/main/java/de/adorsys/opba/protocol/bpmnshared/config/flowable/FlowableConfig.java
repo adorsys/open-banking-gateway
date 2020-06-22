@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.flowable.spring.boot.EngineConfigurationConfigurer;
 import org.springframework.context.annotation.Bean;
@@ -14,8 +15,11 @@ import org.springframework.context.annotation.Configuration;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Configuration
 public class FlowableConfig {
+
+    public static final int NUMBER_OF_RETRIES = 0;
 
     /**
      * Customizes flowable so that it can store custom classes (not ones that implement Serializable) as
@@ -39,6 +43,9 @@ public class FlowableConfig {
                 )
             );
             processConfiguration.setEnableEventDispatcher(true);
+
+            // TODO: re-enable retry after proper error handling implementation
+            processConfiguration.setAsyncExecutorNumberOfRetries(NUMBER_OF_RETRIES);
         };
     }
 
