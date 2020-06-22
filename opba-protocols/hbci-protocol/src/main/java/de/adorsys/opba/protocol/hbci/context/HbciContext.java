@@ -97,7 +97,7 @@ public class HbciContext extends BaseContext {
 
     public void setHbciDialogConsent(HbciConsent hbciDialogConsent) {
         this.hbciDialogConsent = hbciDialogConsent;
-        this.hbciTanSubmit = (HbciTanSubmit) hbciDialogConsent.getHbciTanSubmit();
+        this.hbciTanSubmit = null == hbciDialogConsent ? null : (HbciTanSubmit) hbciDialogConsent.getHbciTanSubmit();
     }
 
     @JsonIgnore
