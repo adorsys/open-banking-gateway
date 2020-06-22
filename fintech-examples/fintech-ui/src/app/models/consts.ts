@@ -27,11 +27,10 @@ export enum Consent {
 
 export enum LoARetrievalInformation {
   FROM_TPP_WITH_AVAILABLE_CONSENT = 'fromTppWithAvailableConsent',
-  FROM_TPP_WITH_NEW_CONSENT = 'fromTppWithNewConsent',
-  FROM_FINTECH_CACHE = 'fromFintechCache'
+  FROM_TPP_WITH_NEW_CONSENT = 'fromTppWithNewConsent'
 }
 
 export enum LoTRetrievalInformation {
   FROM_TPP_WITH_AVAILABLE_CONSENT = 'fromTppWithAvailableConsent',
-  FROM_TPP_WITH_NEW_CONSENT = 'fromTppWithNewConsent',
+  FROM_TPP_WITH_NEW_CONSENT = 'fromTppWithNewConsent'
 }
