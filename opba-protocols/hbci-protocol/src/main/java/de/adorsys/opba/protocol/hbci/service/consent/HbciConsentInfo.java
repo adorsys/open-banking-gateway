@@ -43,9 +43,9 @@ public class HbciConsentInfo {
      * Is the TAN challenge required and available.
      */
     public boolean isTanChallengeRequiredAndAvailable(HbciContext ctx) {
-        return isTanChallengeRequired(ctx)
+        return (isTanChallengeRequired(ctx)
                 && null != ctx.getHbciDialogConsent()
-                && null != ctx.getHbciDialogConsent().getHbciTanSubmit();
+                && (null != ctx.getHbciDialogConsent().getHbciTanSubmit() || ctx.getHbciDialogConsent().isWithHktan()));
     }
 
     /**
