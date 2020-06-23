@@ -1,6 +1,7 @@
 api:
   security:
     token-validity-duration: P7D
+    redirect-token-validity-duration: P15D
     jws-algo: RS256
     # Example private-public keypair for DEMO-purposes. Generated using TokenSignVerifyTest.generateNewTppKeyPair(). Production use should load private key from secure place.
     # Base-64 encoded PKCS8
@@ -14,3 +15,11 @@ api:
         PIS: "/v1/banking/pis"
         BANK_SEARCH: "/v1/banking/search"
         CONFIRM_CONSENT: "/v1/banking/consents"
+  cookie:
+    secure: false # localhost-only - TODO application-dev.yml for dev env?
+    max-age: ${api.security.token-validity-duration}
+    redirect-max-age: ${api.security.redirect-token-validity-duration}
+    http-only: true
+    path: /
+    redirect-path-template: /
+    same-site: Lax

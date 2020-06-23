@@ -1,4 +1,4 @@
-package de.adorsys.opba.tppauthapi.config;
+package de.adorsys.opba.api.security.internal.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -9,19 +9,21 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
 
-import static de.adorsys.opba.tppbankingapi.config.ConfigConst.API_CONFIG_PREFIX;
-
 @Data
 @Validated
 @Configuration
-@ConfigurationProperties(prefix = API_CONFIG_PREFIX + "cookie")
+@ConfigurationProperties(prefix = ConfigConst.API_CONFIG_PREFIX + "cookie")
 public class CookieProperties {
     private boolean secure = true;
     private boolean httpOnly = true;
     private String path = "/";
+    private String redirectPathTemplate = "/";
 
     @NotNull
     private Duration maxAge;
+
+    @NotNull
+    private Duration redirectMaxAge;
 
     @NotBlank
     private String sameSite;

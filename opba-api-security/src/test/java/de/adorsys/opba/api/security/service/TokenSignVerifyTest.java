@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.time.Duration;
 import java.util.Base64;
 
 import static de.adorsys.opba.api.security.internal.config.ConfigConst.API_CONFIG_PREFIX;
@@ -27,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @SpringBootTest(classes = TokenSignVerifyTest.TestConfig.class)
 public class TokenSignVerifyTest {
+    private static final Duration DURATION_10M = Duration.ofMinutes(10);
 
     @Autowired
     private TokenBasedAuthService psuAuthService;
@@ -39,7 +41,7 @@ public class TokenSignVerifyTest {
     void signVerifyTest() {
         String message = "some data";
 
-        String token = psuAuthService.generateToken(message);
+        String token = psuAuthService.generateToken(message, DURATION_10M);
 
         JWSObject jwsObject = JWSObject.parse(token);
         assertThat(jwsObject.verify(verifier)).isTrue();
