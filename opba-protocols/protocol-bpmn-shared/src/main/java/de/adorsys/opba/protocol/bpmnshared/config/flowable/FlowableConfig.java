@@ -28,9 +28,9 @@ public class FlowableConfig {
             FlowableObjectMapper mapper
     ) {
         int maxLength = flowableProperties.getSerialization().getMaxLength();
+        List<String> serializeOnlyPackages = flowableProperties.getSerialization().getSerializeOnlyPackages();
 
         return processConfiguration -> {
-            List<String> serializeOnlyPackages = flowableProperties.getSerialization().getSerializeOnlyPackages();
             processConfiguration.setCustomPreVariableTypes(
                 new ArrayList<>(
                     ImmutableList.of(
