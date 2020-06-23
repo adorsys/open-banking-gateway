@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
+import org.iban4j.IbanFormatException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -93,13 +94,18 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
         // K = MOD 97 (ISO 7064) Checksum
         // B = Bank Code aka BLZ ( Bankleitzahl in German )
         // C = Account number ( Kontonummer in German )
-        Iban iban = new Iban.Builder()
-                .countryCode(CountryCode.DE) // Don't expect to see HBCI outside of Germany
-                .bankCode(Strings.padStart(account.getBlz(), BLZ_LEN, '0'))
-                .accountNumber(Strings.padStart(account.getAccountNumber(), ACCOUNT_NUMBER_LEN, '0'))
-                .build();
+        try {
+            Iban iban = new Iban.Builder()
+                    .countryCode(Strings.isNullOrEmpty(account.getCountry()) ? CountryCode.DE : CountryCode.getByCode(account.getCountry()))
+                    .bankCode(Strings.padStart(account.getBlz(), BLZ_LEN, '0'))
+                    .accountNumber(Strings.padStart(account.getAccountNumber(), ACCOUNT_NUMBER_LEN, '0'))
+                    .build();
+            account.setIban(iban.toString());
+        } catch (IbanFormatException ex) {
+            // NOP
+        }
 
-        account.setIban(iban.toString());
+        account.setAccountNumber(account.getAccountNumber());
         return account;
     }
 
