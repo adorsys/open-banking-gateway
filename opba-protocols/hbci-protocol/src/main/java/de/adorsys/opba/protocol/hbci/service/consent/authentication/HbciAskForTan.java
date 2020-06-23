@@ -10,32 +10,26 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
 /**
- * Asks user to select SCA TAN challenge if multiple challenges are available.
+ * Asks PSU for his PIN/Password by redirect him to password input page. Suspends process to wait for users' input.
  */
-@Service("hbciAskToSelectTanChallenge")
+@Service("hbciAskForTan")
 @RequiredArgsConstructor
-public class HbciAskToSelectTanChallenge extends ValidatedExecution<HbciContext> {
+public class HbciAskForTan extends ValidatedExecution<HbciContext> {
 
     private final RuntimeService runtimeService;
     private final HbciRedirectExecutor redirectExecutor;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
-        if (context.getAvailableSca().size() >= 2) {
-            redirectExecutor.redirect(execution, context, redir -> redir.getParameters().getSelectScaMethod());
-        } else {
-            // Nothing to select by user, autoselect
-            ContextUtil.getAndUpdateContext(
-                    execution,
-                    (HbciContext ctx) -> ctx.setUserSelectScaId(ctx.getAvailableSca().get(0).getKey())
-            );
-
-            runtimeService.trigger(execution.getId());
-        }
+        redirectExecutor.redirect(execution, context, redir -> redir.getParameters().getReportScaResult());
     }
 
     @Override
     protected void doMockedExecution(DelegateExecution execution, HbciContext context) {
+        ContextUtil.getAndUpdateContext(
+            execution,
+            (HbciContext ctx) -> ctx.setPsuTan("mock-password")
+        );
         runtimeService.trigger(execution.getId());
     }
 }
