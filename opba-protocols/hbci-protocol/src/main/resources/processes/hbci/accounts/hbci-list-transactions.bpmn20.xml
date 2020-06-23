@@ -54,7 +54,7 @@
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
     <sequenceFlow id="sid-02abad2c-5877-4180-91a2-c9fce98d421f" sourceRef="hbciCheckTanNeededBeforeCall" targetRef="hbciSelectScaMethod">
-      <conditionExpression xsi:type="tFormalExpression">#{hbciConsentInfo.isTanChallengeRequired(CONTEXT)}</conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression">#{hbciConsentInfo.isTanChallengeRequiredAndAvailable(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <serviceTask id="hbciAuthorizeConsent" isForCompensation="false" flowable:async="true" flowable:exclusive="false" flowable:triggerable="false" name="Authorizes HBCI consent" flowable:delegateExpression="${hbciSendTanChallenge}"/>
     <sequenceFlow id="sid-928c3ebb-0e78-40a0-99b9-8f283aacb68d" sourceRef="askUserForTAN" targetRef="hbciAuthorizeConsent"/>
