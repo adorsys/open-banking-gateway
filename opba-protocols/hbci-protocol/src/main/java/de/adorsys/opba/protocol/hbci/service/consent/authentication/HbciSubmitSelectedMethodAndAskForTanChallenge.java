@@ -18,7 +18,7 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
 /**
- * Asks PSU for his SCA challenge result by redirect him to password input page. Suspends process to wait for users' input.
+ * Handles users' selection of SCA (TAN) challenge.
  */
 @Service("hbciScaMethodSelected")
 @RequiredArgsConstructor
