@@ -87,10 +87,6 @@ export class StorageService {
   }
 
   public setLoa(accountStruct : AccountStruct[]) : void {
-    console.log('set loa');
-    for (const a of accountStruct) {
-      console.log('set loa account resourceid:', a.resourceId, ' iban:', a.iban)
-    }
     localStorage.setItem(Session.LOA, JSON.stringify(accountStruct));
   }
 
@@ -99,12 +95,7 @@ export class StorageService {
     if (value === null) {
       return null;
     }
-    const loa: AccountStruct[] = JSON.parse(value);
-    console.log('set loa');
-    for (const a of loa) {
-      console.log('get loa account resourceid:', a.resourceId, ' iban:', a.iban)
-    }
-    return loa;
+    return JSON.parse(value);
   }
 
   private isAnySessionValid(): boolean {
