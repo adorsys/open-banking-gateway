@@ -18,6 +18,7 @@ import { ConfirmData } from '../confirm/confirm.data';
 export class InitiateComponent implements OnInit {
   public static ROUTE = 'initiate';
   bankId = '';
+  accountId = '';
 
   paymentForm: FormGroup;
   constructor(private formBuilder: FormBuilder,
@@ -26,6 +27,7 @@ export class InitiateComponent implements OnInit {
               private route: ActivatedRoute,
               private storageService: StorageService) {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
+    this.accountId = this.route.snapshot.paramMap.get('accountid');
     console.log('bankid:' + this.bankId);
   }
 
@@ -52,7 +54,7 @@ export class InitiateComponent implements OnInit {
     paymentRequest.debitorIban = this.paymentForm.getRawValue().debitorIban;
     paymentRequest.purpose = this.paymentForm.getRawValue().purpose;
     this.fintechSinglePaymentInitiationService.initiateSinglePayment('', '',
-      okurl, notOkUrl, this.bankId, paymentRequest, 'response')
+      okurl, notOkUrl, this.bankId, this.accountId, paymentRequest, 'response')
       .pipe(map(response => response))
       .subscribe(
         response => {

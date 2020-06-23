@@ -53,19 +53,26 @@ export class FintechSinglePaymentInitiationService {
     /**
      * Single payment initiation request
      * This method is used to initiate a payment at the Fintech Server.
+     * @param bankId 
+     * @param accountId 
      * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
      * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
      * @param fintechRedirectURLOK 
      * @param fintechRedirectURLNOK 
-     * @param bankId 
      * @param singlePaymentInitiationRequest Single payment initiation request
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public initiateSinglePayment(xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, bankId: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, observe?: 'body', reportProgress?: boolean): Observable<any>;
-    public initiateSinglePayment(xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, bankId: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
-    public initiateSinglePayment(xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, bankId: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
-    public initiateSinglePayment(xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, bankId: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public initiateSinglePayment(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, singlePaymentInitiationRequest: SinglePaymentInitiationRequest, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (bankId === null || bankId === undefined) {
+            throw new Error('Required parameter bankId was null or undefined when calling initiateSinglePayment.');
+        }
+        if (accountId === null || accountId === undefined) {
+            throw new Error('Required parameter accountId was null or undefined when calling initiateSinglePayment.');
+        }
         if (xRequestID === null || xRequestID === undefined) {
             throw new Error('Required parameter xRequestID was null or undefined when calling initiateSinglePayment.');
         }
@@ -77,9 +84,6 @@ export class FintechSinglePaymentInitiationService {
         }
         if (fintechRedirectURLNOK === null || fintechRedirectURLNOK === undefined) {
             throw new Error('Required parameter fintechRedirectURLNOK was null or undefined when calling initiateSinglePayment.');
-        }
-        if (bankId === null || bankId === undefined) {
-            throw new Error('Required parameter bankId was null or undefined when calling initiateSinglePayment.');
         }
         if (singlePaymentInitiationRequest === null || singlePaymentInitiationRequest === undefined) {
             throw new Error('Required parameter singlePaymentInitiationRequest was null or undefined when calling initiateSinglePayment.');
@@ -118,8 +122,63 @@ export class FintechSinglePaymentInitiationService {
             headers = headers.set('Content-Type', httpContentTypeSelected);
         }
 
-        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/pis/banks/${encodeURIComponent(String(bankId))}/payments/single`,
+        return this.httpClient.post<any>(`${this.configuration.basePath}/v1/pis/banks/${encodeURIComponent(String(bankId))}/accounts/${encodeURIComponent(String(accountId))}/payments/single`,
             singlePaymentInitiationRequest,
+            {
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Ask for all payments of this account
+     * This method is used to initiate a payment at the Fintech Server.
+     * @param bankId 
+     * @param accountId 
+     * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
+     * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'body', reportProgress?: boolean): Observable<any>;
+    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<any>>;
+    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<any>>;
+    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (bankId === null || bankId === undefined) {
+            throw new Error('Required parameter bankId was null or undefined when calling retrieveAllSinglePayments.');
+        }
+        if (accountId === null || accountId === undefined) {
+            throw new Error('Required parameter accountId was null or undefined when calling retrieveAllSinglePayments.');
+        }
+        if (xRequestID === null || xRequestID === undefined) {
+            throw new Error('Required parameter xRequestID was null or undefined when calling retrieveAllSinglePayments.');
+        }
+        if (X_XSRF_TOKEN === null || X_XSRF_TOKEN === undefined) {
+            throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling retrieveAllSinglePayments.');
+        }
+
+        let headers = this.defaultHeaders;
+        if (xRequestID !== undefined && xRequestID !== null) {
+            headers = headers.set('X-Request-ID', String(xRequestID));
+        }
+        if (X_XSRF_TOKEN !== undefined && X_XSRF_TOKEN !== null) {
+            headers = headers.set('X-XSRF-TOKEN', String(X_XSRF_TOKEN));
+        }
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<any>(`${this.configuration.basePath}/v1/pis/banks/${encodeURIComponent(String(bankId))}/accounts/${encodeURIComponent(String(accountId))}/payments/single`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

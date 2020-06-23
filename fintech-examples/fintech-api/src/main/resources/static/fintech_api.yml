@@ -273,7 +273,27 @@ paths:
         '404':
           $ref: '#/components/responses/404_NotFound'
 
-  /v1/pis/banks/{bank-id}/payments/single:
+  /v1/pis/banks/{bank-id}/accounts/{account-id}/payments/single:
+    get:
+      summary: Ask for all payments of this account
+      description: This method is used to initiate a payment at the Fintech Server.
+      operationId: retrieveAllSinglePayments
+      tags:
+        - FintechSinglePaymentInitiation
+      parameters:
+        #path
+        - $ref: "#/components/parameters/bank-id"
+        - $ref: "#/components/parameters/account-id"
+        #header
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+
+      responses:
+        '202':
+          $ref: '#/components/responses/202_ToConsentAuthApi'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+
     post:
       summary: Single payment initiation request
       description: This method is used to initiate a payment at the Fintech Server.
@@ -281,13 +301,15 @@ paths:
       tags:
         - FintechSinglePaymentInitiation
       parameters:
+        #path
+        - $ref: "#/components/parameters/bank-id"
+        - $ref: "#/components/parameters/account-id"
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: '#/components/parameters/X-XSRF-TOKEN'
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
-        #path
-        - $ref: "#/components/parameters/bank-id"
+
       requestBody:
         description: Single payment initiation request
         content:
@@ -300,6 +322,7 @@ paths:
           $ref: '#/components/responses/202_ToConsentAuthApi'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
+
 
 components:
 
@@ -488,7 +511,7 @@ components:
       schema:
         type: string
 
-    account-id:
+    account-id: # the account id is NOT the iban
       name: account-id
       in: path
       required: true
