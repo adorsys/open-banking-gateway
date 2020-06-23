@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./list-payments.component.scss']
 })
 export class ListPaymentsComponent implements OnInit {
+  public static ROUTE = 'accounts';
 
   constructor() { }
 
