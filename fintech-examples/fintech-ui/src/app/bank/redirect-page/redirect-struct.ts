@@ -17,3 +17,8 @@ export enum RedirectType {
   AIS,
   PIS
 }
+
+export class AccountStruct {
+  constructor(public resourceId : string, public iban : string, public name : string) {
+  }
+}

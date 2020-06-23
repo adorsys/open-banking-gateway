@@ -4,6 +4,7 @@ import { PaymentComponent } from './payment.component';
 import { InitiateComponent } from './initiate/initiate.component';
 import { ConfirmComponent } from './confirm/confirm.component';
 import { ResultComponent } from './result/result.component';
+import { ListAccountsForPaymentComponent } from './list-accounts-for-payment/list-accounts-for-payment.component';
 
 const routes: Routes = [
   {
@@ -12,8 +13,12 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: InitiateComponent.ROUTE,
+        redirectTo: ListAccountsForPaymentComponent.ROUTE,
         pathMatch: 'full'
+      },
+      {
+        path: ListAccountsForPaymentComponent.ROUTE,
+        component: ListAccountsForPaymentComponent
       },
       {
         path: InitiateComponent.ROUTE,
