@@ -19,12 +19,15 @@ public class FintechSinglePaymentInitiationImpl implements FintechSinglePaymentI
     private final PaymentService paymentService;
     private final SessionLogicService sessionLogicService;
 
+    @Override
     public ResponseEntity<Void> initiateSinglePayment(
             SinglePaymentInitiationRequest body,
             UUID xRequestID,
             String xXsrfToken,
             String fintechRedirectURLOK,
-            String fintechRedirectURLNOK, String bankId) {
+            String fintechRedirectURLNOK,
+            String bankId,
+            String accountId) {
         log.info("got payment requrest");
 
         if (!sessionLogicService.isSessionAuthorized()) {
@@ -32,6 +35,6 @@ public class FintechSinglePaymentInitiationImpl implements FintechSinglePaymentI
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        return sessionLogicService.addSessionMaxAgeToHeader(paymentService.initiateSinglePayment(bankId, body, fintechRedirectURLOK, fintechRedirectURLNOK));
+        return sessionLogicService.addSessionMaxAgeToHeader(paymentService.initiateSinglePayment(bankId, accountId, body, fintechRedirectURLOK, fintechRedirectURLNOK));
     }
 }
