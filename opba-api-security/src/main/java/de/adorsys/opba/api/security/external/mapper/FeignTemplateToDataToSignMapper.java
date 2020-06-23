@@ -28,7 +28,15 @@ public class FeignTemplateToDataToSignMapper {
         String redirectOkUrl = extractRequiredValue(headers, HttpHeaders.FINTECH_REDIRECT_URL_OK);
         String redirectNokUrl = extractRequiredValue(headers, HttpHeaders.FINTECH_REDIRECT_URL_NOK);
 
-        return new AisListAccountsDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType), bankId, fintechUserId, redirectOkUrl, redirectNokUrl);
+        return AisListAccountsDataToSign.builder()
+                       .xRequestId(UUID.fromString(xRequestId))
+                       .instant(instant)
+                       .operationType(OperationType.valueOf(operationType))
+                       .bankId(bankId)
+                       .fintechUserId(fintechUserId)
+                       .redirectOk(redirectOkUrl)
+                       .redirectNok(redirectNokUrl)
+                       .build();
     }
 
     public AisListTransactionsDataToSign mapToListTransactions(Map<String, Collection<String>> headers, Map<String, String> queries, Instant instant) {
@@ -44,9 +52,20 @@ public class FeignTemplateToDataToSignMapper {
         String bookingStatus = queries.get(QueryParams.BOOKING_STATUS);
         String deltaList = queries.get(QueryParams.DELTA_LIST);
 
-        return new AisListTransactionsDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType), bankId, fintechUserId,
-                                                 redirectOkUrl, redirectNokUrl, dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList
-        );
+        return AisListTransactionsDataToSign.builder()
+                       .xRequestId(UUID.fromString(xRequestId))
+                       .instant(instant)
+                       .operationType(OperationType.valueOf(operationType))
+                       .bankId(bankId)
+                       .fintechUserId(fintechUserId)
+                       .redirectOk(redirectOkUrl)
+                       .redirectNok(redirectNokUrl)
+                       .dateFrom(dateFrom)
+                       .dateTo(dateTo)
+                       .entryReferenceFrom(entryReferenceFrom)
+                       .bookingStatus(bookingStatus)
+                       .deltaList(deltaList)
+                       .build();
     }
 
     public BankProfileDataToSign mapToBankProfile(Map<String, Collection<String>> headers, Instant instant) {
@@ -61,7 +80,12 @@ public class FeignTemplateToDataToSignMapper {
         String xRequestId = extractRequiredValue(headers, HttpHeaders.X_REQUEST_ID);
         String keyword = queries.get(QueryParams.KEYWORD);
 
-        return new BankSearchDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType), keyword);
+        return BankSearchDataToSign.builder()
+                       .xRequestId(UUID.fromString(xRequestId))
+                       .instant(instant)
+                       .operationType(OperationType.valueOf(operationType))
+                       .keyword(keyword)
+                       .build();
     }
 
     public ConfirmConsentDataToSign mapToConfirmConsent(Map<String, Collection<String>> headers, Instant instant) {
@@ -79,8 +103,16 @@ public class FeignTemplateToDataToSignMapper {
         String redirectOkUrl = extractRequiredValue(headers, HttpHeaders.FINTECH_REDIRECT_URL_OK);
         String redirectNokUrl = extractRequiredValue(headers, HttpHeaders.FINTECH_REDIRECT_URL_NOK);
 
-        return new PaymentInitiationDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType),
-                                               bankId, fintechUserId, redirectOkUrl, redirectNokUrl, body);
+        return PaymentInitiationDataToSign.builder()
+                       .xRequestId(UUID.fromString(xRequestId))
+                       .instant(instant)
+                       .operationType(OperationType.valueOf(operationType))
+                       .bankId(bankId)
+                       .fintechUserId(fintechUserId)
+                       .redirectOk(redirectOkUrl)
+                       .redirectNok(redirectNokUrl)
+                       .body(body)
+                       .build();
     }
 
     public GetPaymentDataToSign mapToGetPayment(Map<String, Collection<String>> headers, Instant instant) {
@@ -89,7 +121,13 @@ public class FeignTemplateToDataToSignMapper {
         String bankId = extractNonRequiredValue(headers, HttpHeaders.BANK_ID);
         String fintechUserId = extractRequiredValue(headers, HttpHeaders.FINTECH_USER_ID);
 
-        return new GetPaymentDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType), bankId, fintechUserId);
+        return GetPaymentDataToSign.builder()
+                       .xRequestId(UUID.fromString(xRequestId))
+                       .instant(instant)
+                       .operationType(OperationType.valueOf(operationType))
+                       .bankId(bankId)
+                       .fintechUserId(fintechUserId)
+                       .build();
     }
 
     public GetPaymentStatusDataToSign mapToGetPaymentStatus(Map<String, Collection<String>> headers, Instant instant) {
@@ -98,7 +136,13 @@ public class FeignTemplateToDataToSignMapper {
         String bankId = extractNonRequiredValue(headers, HttpHeaders.BANK_ID);
         String fintechUserId = extractRequiredValue(headers, HttpHeaders.FINTECH_USER_ID);
 
-        return new GetPaymentStatusDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType), bankId, fintechUserId);
+        return GetPaymentStatusDataToSign.builder()
+                       .xRequestId(UUID.fromString(xRequestId))
+                       .instant(instant)
+                       .operationType(OperationType.valueOf(operationType))
+                       .bankId(bankId)
+                       .fintechUserId(fintechUserId)
+                       .build();
     }
 
     private String extractRequiredValue(Map<String, Collection<String>> values, String valueName) {
