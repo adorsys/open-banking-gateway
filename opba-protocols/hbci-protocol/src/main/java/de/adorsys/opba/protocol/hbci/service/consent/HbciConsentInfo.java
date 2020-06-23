@@ -40,6 +40,15 @@ public class HbciConsentInfo {
     }
 
     /**
+     * Is the TAN challenge required and available.
+     */
+    public boolean isTanChallengeRequiredAndAvailable(HbciContext ctx) {
+        return isTanChallengeRequired(ctx)
+                && null != ctx.getHbciDialogConsent()
+                && null != ctx.getHbciDialogConsent().getHbciTanSubmit();
+    }
+
+    /**
      * Any kind of list account consent exists?
      */
     public boolean isCachedAccountListMissing(AccountListHbciContext ctx) {
