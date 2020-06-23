@@ -7,10 +7,13 @@ import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.annotation.ScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
+import de.adorsys.opba.api.security.internal.config.CookieProperties;
 import de.adorsys.opba.consentapi.model.generated.AuthViolation;
 import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
+import de.adorsys.opba.protocol.facade.config.auth.UriExpandConst;
 import io.restassured.RestAssured;
+import io.restassured.http.Cookie;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import lombok.SneakyThrows;
@@ -33,6 +36,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.PASSWORD;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.LOCATION;
 
 @Slf4j
@@ -74,6 +78,9 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
 
     @ScenarioState
     protected List<AuthViolation> violations;
+
+    @Autowired
+    protected CookieProperties cookieProperties;
 
     public SELF user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(String username, String password, String path) {
         String fintechUserTempPassword = UriComponentsBuilder
@@ -137,6 +144,18 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
         updateRedirectCode(response);
     }
 
+    protected void startInitialInternalConsentAuthorizationWithCookieValidation(String uriPath, String resource) {
+        ExtractableResponse<Response> response =
+                startInitialInternalConsentAuthorization(uriPath, resource, HttpStatus.ACCEPTED);
+        Cookie detailedCookie = response.response().getDetailedCookie(AUTHORIZATION_SESSION_KEY);
+
+        assertThat(detailedCookie.getMaxAge()).isEqualTo(cookieProperties.getRedirectMaxAge().getSeconds());
+        assertThat(detailedCookie.getPath()).isEqualTo(getRedirectPath(serviceSessionId, redirectCode));
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+    }
+
     protected void updateNextConsentAuthorizationUrl(ExtractableResponse<Response> response) {
         this.redirectUriToGetUserParams = response.header(LOCATION);
     }
@@ -195,5 +214,12 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
                 "{\"scaAuthenticationData\":{\"SCA_CHALLENGE_ID\":\"%s\"}}",
                 this.availableScas.stream().filter(it -> it.getMethodValue().equals(scaName)).findFirst().get().getId()
         );
+    }
+
+    private String getRedirectPath(String authorizationId, String redirectState){
+        return UriComponentsBuilder.fromPath(cookieProperties.getRedirectPathTemplate())
+                       .buildAndExpand(ImmutableMap.of(UriExpandConst.AUTHORIZATION_SESSION_ID, authorizationId,
+                                                       UriExpandConst.REDIRECT_STATE, redirectState))
+                       .toUriString();
     }
 }

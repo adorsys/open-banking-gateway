@@ -145,7 +145,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent() {
-        startInitialInternalConsentAuthorization(
+        startInitialInternalConsentAuthorizationWithCookieValidation(
                 AUTHORIZE_CONSENT_ENDPOINT,
             "restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"
         );
