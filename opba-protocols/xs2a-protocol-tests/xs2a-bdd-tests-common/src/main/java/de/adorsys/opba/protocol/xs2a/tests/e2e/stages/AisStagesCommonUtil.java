@@ -111,16 +111,34 @@ public class AisStagesCommonUtil {
 
     private static String calculateAccountsSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
                                                      OperationType operationType, String fintechUserId) {
-        AisListAccountsDataToSign aisListAccountsDataToSign = new AisListAccountsDataToSign(xRequestId, xTimestampUtc, operationType,
-                                                                                            SANDBOX_BANK_ID, fintechUserId, FINTECH_REDIR_OK, FINTECH_REDIR_NOK);
+        AisListAccountsDataToSign aisListAccountsDataToSign = AisListAccountsDataToSign.builder()
+                                                                      .xRequestId(xRequestId)
+                                                                      .instant(xTimestampUtc)
+                                                                      .operationType(operationType)
+                                                                      .bankId(SANDBOX_BANK_ID)
+                                                                      .fintechUserId(fintechUserId)
+                                                                      .redirectOk(FINTECH_REDIR_OK)
+                                                                      .redirectNok(FINTECH_REDIR_NOK)
+                                                                      .build();
         return requestSigningService.signature(aisListAccountsDataToSign);
     }
 
     private static String calculateTransactionsSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
                                                          OperationType operationType, String fintechUserId, GetTransactionsQueryParams params) {
-        AisListTransactionsDataToSign aisListTransactionsDataToSign = new AisListTransactionsDataToSign(xRequestId, xTimestampUtc, operationType, SANDBOX_BANK_ID, fintechUserId,
-                                                                                                        FINTECH_REDIR_OK, FINTECH_REDIR_NOK, params.getDateFrom(), params.getDateTo(),
-                                                                                                        params.getEntryReferenceFrom(), params.getBookingStatus(), params.getDeltaList());
+        AisListTransactionsDataToSign aisListTransactionsDataToSign = AisListTransactionsDataToSign.builder()
+                                                                              .xRequestId(xRequestId)
+                                                                              .instant(xTimestampUtc)
+                                                                              .operationType(operationType)
+                                                                              .bankId(SANDBOX_BANK_ID)
+                                                                              .fintechUserId(fintechUserId)
+                                                                              .redirectOk(FINTECH_REDIR_OK)
+                                                                              .redirectNok(FINTECH_REDIR_NOK)
+                                                                              .dateFrom(params.getDateFrom())
+                                                                              .dateTo(params.getDateTo())
+                                                                              .entryReferenceFrom(params.getEntryReferenceFrom())
+                                                                              .bookingStatus(params.getBookingStatus())
+                                                                              .deltaList(params.getDeltaList())
+                                                                              .build();
         return requestSigningService.signature(aisListTransactionsDataToSign);
     }
 

@@ -1,6 +1,6 @@
 package de.adorsys.opba.api.security.external.domain;
 
-import org.apache.commons.io.IOUtils;
+import com.google.common.io.ByteStreams;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
@@ -38,7 +38,7 @@ public class MultiReadHttpServletRequest extends HttpServletRequestWrapper {
 
     private void cacheInputStream() throws IOException {
         cachedBytes = new ByteArrayOutputStream();
-        IOUtils.copy(super.getInputStream(), cachedBytes);
+        ByteStreams.copy(super.getInputStream(), cachedBytes);
     }
 
     private class CachedServletInputStream extends ServletInputStream {
@@ -55,19 +55,16 @@ public class MultiReadHttpServletRequest extends HttpServletRequestWrapper {
 
         @Override
         public boolean isFinished() {
-            // TODO Auto-generated method stub
             return false;
         }
 
         @Override
         public boolean isReady() {
-            // TODO Auto-generated method stub
             return false;
         }
 
         @Override
         public void setReadListener(ReadListener readListener) {
-            // TODO Auto-generated method stub
         }
     }
 }
