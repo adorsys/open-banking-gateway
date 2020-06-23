@@ -74,6 +74,7 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
     }
 
 
+    @SuppressWarnings("PMD.EmptyCatchBlock") // IbanFormatException is skippable exception if account IBAN can't be calculated
     BankAccount validateAndFixAccountIbans(DelegateExecution execution, BankAccount account) {
         if (!Strings.isNullOrEmpty(account.getIban())) {
             return account;
