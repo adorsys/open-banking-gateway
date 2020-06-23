@@ -16,7 +16,7 @@
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
     <sequenceFlow id="sid-9796e53b-4891-4072-b34f-8a9587bef409" sourceRef="hbciAskForPin" targetRef="hbciCheckPinPresent"/>
-    <serviceTask flowable:async="true" flowable:delegateExpression="${hbciSubmitSelectedMethodAndAskForTanChallenge}" flowable:exclusive="false" flowable:triggerable="true" id="askUserForTAN" name="Ask user to provide TAN. Suspends to wait"/>
+    <serviceTask flowable:async="true" flowable:delegateExpression="${hbciScaMethodSelected}" flowable:exclusive="false" flowable:triggerable="true" id="askUserForTAN" name="Ask user to provide TAN. Suspends to wait"/>
     <sequenceFlow id="sid-56d50940-9b81-4d42-b75d-dbe9a18fa7bd" sourceRef="hbciListTransactionsAfterTan" targetRef="hbciCheckTanNeededAfterCall"/>
     <sequenceFlow id="hbciTanNeeded" sourceRef="hbciCheckTanNeededAfterCall" targetRef="hbciSelectScaMethod">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{hbciConsentInfo.isTanChallengeRequired(CONTEXT)}]]></conditionExpression>
