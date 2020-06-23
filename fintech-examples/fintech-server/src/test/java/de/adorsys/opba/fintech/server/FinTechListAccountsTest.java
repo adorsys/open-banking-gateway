@@ -179,7 +179,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
         }
         final String bankId = "af062b06-ee6e-45f9-9163-b97320c6881a";
         UserEntity userEntity = userRepository.findById("peter").get();
-        ConsentEntity consentEntity = new ConsentEntity(ConsentType.AIS, userEntity, bankId, tppAuthId, serviceSessionId, null);
+        ConsentEntity consentEntity = new ConsentEntity(ConsentType.AIS, userEntity, bankId, null, tppAuthId, serviceSessionId);
         consentEntity.setConsentConfirmed(true);
         consentRepository.save(consentEntity);
     }
