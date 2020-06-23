@@ -1,6 +1,5 @@
 package de.adorsys.opba.fintech.impl.mapper;
 
-import de.adorsys.opba.fintech.api.model.generated.AccountList;
 import de.adorsys.opba.fintech.api.model.generated.BankDescriptor;
 import de.adorsys.opba.fintech.api.model.generated.BankProfile;
 import de.adorsys.opba.fintech.api.model.generated.TransactionsResponse;
@@ -15,10 +14,6 @@ public class ManualMapper {
 
     public static BankProfile fromTppToFintech(BankProfileDescriptor tppBankProfile) {
         return Mappers.getMapper(BankProfileDescriptorMapper.class).mapFromTppToFintech(tppBankProfile);
-    }
-
-    public static AccountList fromTppToFintech(de.adorsys.opba.tpp.ais.api.model.generated.AccountList tppAccountList) {
-        return Mappers.getMapper(AccountListMapper.class).mapFromTppToFintech(tppAccountList);
     }
 
     public static TransactionsResponse fromTppToFintech(de.adorsys.opba.tpp.ais.api.model.generated.TransactionsResponse transactionsResponse) {
