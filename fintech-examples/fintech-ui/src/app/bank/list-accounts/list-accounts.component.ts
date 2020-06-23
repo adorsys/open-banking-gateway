@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AccountDetails } from '../../api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
-import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
+import { AccountStruct, RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
 import { HeaderConfig, LoARetrievalInformation } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 import { SettingsService } from '../services/settings.service';
@@ -62,6 +62,11 @@ export class ListAccountsComponent implements OnInit {
           break;
         case 200:
           this.accounts = response.body.accounts;
+          const loa = [];
+          for (const accountDetail of this.accounts) {
+            loa.push(new AccountStruct(accountDetail.resourceId, accountDetail.iban, accountDetail.name));
+          }
+          this.storageService.setLoa(loa);
       }
     });
   }
