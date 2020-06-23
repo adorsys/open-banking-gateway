@@ -16,7 +16,7 @@
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
     <sequenceFlow id="sid-9796e53b-4891-4072-b34f-8a9587bef409" sourceRef="hbciAskForPin" targetRef="hbciCheckPinPresent"/>
-    <serviceTask flowable:async="true" flowable:delegateExpression="${hbciScaMethodSelected}" flowable:exclusive="false" flowable:triggerable="false" id="askUserForTAN" name="Ask user to provide TAN. Suspends to wait"/>
+    <serviceTask flowable:async="true" flowable:delegateExpression="${hbciScaMethodSelected}" flowable:exclusive="false" flowable:triggerable="false" id="askUserForTanMethod" name="Ask user to provide SCA method. Suspends to wait"/>
     <sequenceFlow id="sid-56d50940-9b81-4d42-b75d-dbe9a18fa7bd" sourceRef="hbciListAccountsAfterTan" targetRef="hbciCheckTanNeededAfterCall"/>
     <sequenceFlow id="hbciTanNeeded" sourceRef="hbciCheckTanNeededAfterCall" targetRef="hbciSelectScaMethod">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{hbciConsentInfo.isTanChallengeRequired(CONTEXT)}]]></conditionExpression>
@@ -67,8 +67,8 @@
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
     <serviceTask id="callHbciToReportScaMethodSelected" isForCompensation="false" flowable:async="true" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Call HBCI account list to report SCA method selected" flowable:delegateExpression="${hbciAccountListing}"/>
-    <sequenceFlow id="sid-d76de44d-02ff-419b-a1c0-bd27527ac045" sourceRef="hbciSelectScaMethod" targetRef="askUserForTAN"/>
-    <sequenceFlow id="sid-8ee6b801-4855-4e21-a8db-2da79bfdb367" sourceRef="askUserForTAN" targetRef="callHbciToReportScaMethodSelected"/>
+    <sequenceFlow id="sid-d76de44d-02ff-419b-a1c0-bd27527ac045" sourceRef="hbciSelectScaMethod" targetRef="askUserForTanMethod"/>
+    <sequenceFlow id="sid-8ee6b801-4855-4e21-a8db-2da79bfdb367" sourceRef="askUserForTanMethod" targetRef="callHbciToReportScaMethodSelected"/>
     <serviceTask id="provideTanChallengeResult" isForCompensation="false" flowable:async="true" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Ask user to provide TAN (SCA challenge)" flowable:delegateExpression="${hbciAskForTan}"/>
     <sequenceFlow id="sid-2b36f976-566e-428b-8d19-d853abf6423a" sourceRef="callHbciToReportScaMethodSelected" targetRef="provideTanChallengeResult"/>
     <sequenceFlow id="sid-b5ede731-f34c-4119-bcf1-4ab82638f317" sourceRef="provideTanChallengeResult" targetRef="hbciAuthorizeConsent"/>
@@ -106,7 +106,7 @@
         <omgdi:waypoint x="312.46802" y="178.00003"/>
         <omgdi:waypoint x="124.16135" y="178.00002"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape bpmnElement="askUserForTAN" id="sid-1fb12bae-4a23-4ce6-b9ed-d1e47f926ef1">
+      <bpmndi:BPMNShape bpmnElement="askUserForTanMethod" id="sid-1fb12bae-4a23-4ce6-b9ed-d1e47f926ef1">
         <omgdc:Bounds height="80.0" width="100.0" x="576.8522" y="-471.94162"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="sid-56d50940-9b81-4d42-b75d-dbe9a18fa7bd" id="sid-6f5c8ab7-97a1-4b29-8312-9eff40247194">
