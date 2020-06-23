@@ -18,6 +18,7 @@ public abstract class FacadeResultRedirectable<T, C extends AuthStateBody> imple
     private String authorizationSessionId;
     private URI redirectionTo;
     private C cause;
+    private String token;
 
     public Map<String, String> getHeaders() {
         return Collections.emptyMap();

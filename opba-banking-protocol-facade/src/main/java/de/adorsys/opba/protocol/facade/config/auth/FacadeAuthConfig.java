@@ -75,6 +75,9 @@ public class FacadeAuthConfig {
             @NotEmpty
             private List<@NotBlank String> pathTemplates;
 
+            @NotNull
+            private String redirectPathTemplate;
+
             private String domain; // null allowed
         }
     }
