@@ -44,11 +44,23 @@ export class SessionService {
     return Object.assign(factory(), JSON.parse(sessionStorage.getItem(authorizationId + Session.CONSENT_OBJECT)));
   }
 
+  public setPaymentState(authorizationId: string, paymentState: any) {
+    sessionStorage.setItem(authorizationId + Session.PAYMENT_STATE, JSON.stringify(paymentState));
+  }
+
+  public getPaymentState<T>(authorizationId: string, factory: () => T): T {
+    if (!sessionStorage.getItem(authorizationId + Session.PAYMENT_STATE)) {
+      return null;
+    }
+
+    return Object.assign(factory(), JSON.parse(sessionStorage.getItem(authorizationId + Session.PAYMENT_STATE)));
+  }
+
   public setPaymentObject(authorizationId: string, paymentObject: any) {
     sessionStorage.setItem(authorizationId + Session.PAYMENT_OBJECT, JSON.stringify(paymentObject));
   }
 
-  public getPaymentObject<T>(authorizationId: string): T {
+  public getPaymentObject<T>(authorizationId: string, factory: () => T): T {
     if (!sessionStorage.getItem(authorizationId + Session.PAYMENT_OBJECT)) {
       return null;
     }

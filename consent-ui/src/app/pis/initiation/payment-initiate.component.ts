@@ -53,7 +53,7 @@ export class PaymentInitiateComponent implements OnInit {
   }
 
   private navigate(authorizationId: string, res: ConsentAuth) {
-    this.sessionService.setConsentState(authorizationId, new AuthConsentState(res.violations));
+    this.sessionService.setPaymentState(authorizationId, new AuthConsentState(res.violations));
     this.router.navigate([EntryPagePaymentsComponent.ROUTE], { relativeTo: this.activatedRoute.parent });
   }
 }
