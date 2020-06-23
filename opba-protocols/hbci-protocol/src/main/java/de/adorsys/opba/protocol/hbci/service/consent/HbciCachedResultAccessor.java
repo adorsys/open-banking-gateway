@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class HbciCachedResultAccessor {
 
-    private final FlowableProperties.Serialization properties;
+    private final FlowableProperties properties;
     private final FlowableObjectMapper mapper;
 
     @SneakyThrows
@@ -87,7 +87,7 @@ public class HbciCachedResultAccessor {
     private String safeSerialize(Object result) throws JsonProcessingException {
         // Support for versioning using class name
         String className = result.getClass().getCanonicalName();
-        if (!properties.canSerialize(className)) {
+        if (!properties.getSerialization().canSerialize(className)) {
             throw new IllegalArgumentException("Class deserialization not allowed " + className);
         }
 
@@ -99,7 +99,7 @@ public class HbciCachedResultAccessor {
         // Support for versioning using class name
         JsonNode value = mapper.readTree(target.getConsentContext());
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
-        if (!properties.canSerialize(classNameAndValue.getKey())) {
+        if (!properties.getSerialization().canSerialize(classNameAndValue.getKey())) {
             throw new IllegalArgumentException("Class deserialization not allowed " + classNameAndValue.getKey());
         }
 

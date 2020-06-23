@@ -35,7 +35,7 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
 public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aContext> {
 
     private final ContextMerger merger;
-    private final FlowableProperties.Serialization properties;
+    private final FlowableProperties properties;
     private final FlowableObjectMapper mapper;
 
     @Override
@@ -61,7 +61,7 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
         JsonNode value = mapper.readTree(target.getConsentContext());
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
 
-        if (!properties.canSerialize(classNameAndValue.getKey())) {
+        if (!properties.getSerialization().canSerialize(classNameAndValue.getKey())) {
             throw new IllegalArgumentException("Class deserialization not allowed " + classNameAndValue.getKey());
         }
 
