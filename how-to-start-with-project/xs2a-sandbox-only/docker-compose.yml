@@ -18,6 +18,8 @@ x-sandbox-hosts: &sandbox-hosts
   COMMON_APPS_LOCAL_ONLINEBANKING_PORT: 8090
   COMMON_APPS_LOCAL_TPPREST_HOST: x2sa-sandbox-tpprest
   COMMON_APPS_LOCAL_TPPREST_PORT: 8093
+  COMMON_APPS_LOCAL_TPP_UI_HOST: x2sa-sandbox-tpp-ui
+  COMMON_APPS_LOCAL_TPP_UI_PORT: 4205
   COMMON_APPS_LOCAL_ONLINEBANKINGUI_HOST: x2sa-sandbox-onlinebankingui
   COMMON_APPS_LOCAL_ONLINEBANKINGUI_PORT: 4400 # this port seem to be used in lot of places, hard to change
 
@@ -68,6 +70,21 @@ services:
       - ../../opba-protocols/sandboxes/xs2a-sandbox/src/main/resources/sandbox:/configs
     networks:
       - opba-net
+
+  x2sa-sandbox-tpp-ui:
+    image: adorsys/xs2a-bank-tpp-ui:3.7.1
+    environment:
+      <<: *sandbox-hosts
+      TPP_REST_SERVER_URL: http://x2sa-sandbox-tpprest:8093
+      CERT_GEN_URL: http://x2sa-sandbox-certgenerator:8092
+      CERT_GEN_ENABLED: "true"
+    ports:
+      - 4205:4205
+    networks:
+      - opba-net
+    depends_on:
+      - x2sa-sandbox-certgenerator
+      - x2sa-sandbox-tpprest
 
   x2sa-sandbox-onlinebanking:
     image: adorsys/xs2a-online-banking:3.7.1

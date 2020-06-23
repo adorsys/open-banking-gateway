@@ -6,6 +6,8 @@ import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationRequiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectToAspspResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
 import de.adorsys.opba.protocol.bpmnshared.dto.ContextBasedValidationErrorResult;
@@ -13,6 +15,7 @@ import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ConsentAcquired;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.Redirect;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.RedirectToAspsp;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
 import de.adorsys.opba.protocol.bpmnshared.outcome.OutcomeMapper;
 import lombok.RequiredArgsConstructor;
@@ -40,11 +43,19 @@ public class Xs2aOutcomeMapper<T> implements OutcomeMapper<T> {
 
     @Override
     public void onRedirect(Redirect redirectResult) {
-        channel.complete(
-                new ContextBasedAuthorizationRequiredResult<>(
-                        redirectResult.getRedirectUri(), redirectResult.getExecutionId()
-                )
-        );
+        RedirectionResult result;
+
+        if (redirectResult instanceof RedirectToAspsp) {
+            result = new RedirectToAspspResult(
+                    redirectResult.getRedirectUri(), redirectResult.getExecutionId()
+            );
+        } else {
+            result = new ContextBasedAuthorizationRequiredResult<>(
+                    redirectResult.getRedirectUri(), redirectResult.getExecutionId()
+            );
+        }
+
+        channel.complete(result);
     }
 
     @Override
@@ -85,5 +96,4 @@ public class Xs2aOutcomeMapper<T> implements OutcomeMapper<T> {
             return executionId;
         }
     }
-
 }

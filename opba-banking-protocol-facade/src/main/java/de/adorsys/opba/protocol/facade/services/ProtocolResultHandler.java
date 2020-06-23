@@ -1,5 +1,8 @@
 package de.adorsys.opba.protocol.facade.services;
 
+import com.google.common.base.Strings;
+import de.adorsys.opba.api.security.internal.config.TppTokenProperties;
+import de.adorsys.opba.api.security.internal.service.TokenBasedAuthService;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
@@ -12,6 +15,7 @@ import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.Authorization
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationRequiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentIncompatibleResult;
+import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectToAspspResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.RedirectionResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ValidationErrorResult;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.error.ErrorResult;
@@ -37,11 +41,12 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ProtocolResultHandler {
-
     private final RequestScopedProvider provider;
     private final AuthSessionHandler authSessionHandler;
     private final ServiceSessionRepository sessions;
     private final AuthorizationSessionRepository authorizationSessions;
+    private final TokenBasedAuthService authService;
+    private final TppTokenProperties tppTokenProperties;
 
     /**
      * This class must ensure that it is separate transaction - so it won't join any other as is used with
@@ -187,7 +192,6 @@ public class ProtocolResultHandler {
         return authSession;
     }
 
-
     @NotNull
     private <RESULT, REQUEST extends FacadeServiceableGetter> FacadeResultRedirectable<RESULT, AuthStateBody> handleExistingAuthSessionForAuthContinuation(
             RedirectionResult<RESULT, ?> result,
@@ -196,6 +200,11 @@ public class ProtocolResultHandler {
             AuthSession authSession) {
         FacadeRedirectResult<RESULT, AuthStateBody> mappedResult =
                 (FacadeRedirectResult<RESULT, AuthStateBody>) FacadeRedirectResult.FROM_PROTOCOL.map(result);
+
+        if (result instanceof RedirectToAspspResult) {
+            setAspspRedirectTokenIfRequired(request.getAuthorizationKey(), mappedResult);
+        }
+
         addAuthorizationSessionData(result, authSession, request, session, mappedResult);
         mappedResult.setCause(mapCause(result));
         setAspspRedirectCodeIfRequired(result, authSession, session);
@@ -235,6 +244,14 @@ public class ProtocolResultHandler {
         return mappedResult;
     }
 
+    private void setAspspRedirectTokenIfRequired(String authKey, FacadeRedirectResult mappedResult) {
+        if (Strings.isNullOrEmpty(authKey)) {
+            return;
+        }
+
+        String toAspspRedirectToken = authService.generateToken(authKey, tppTokenProperties.getRedirectTokenValidityDuration());
+        mappedResult.setToken(toAspspRedirectToken);
+    }
 
     protected AuthStateBody mapCause(RedirectionResult result) {
         if (result instanceof ValidationErrorResult && null != result.getCause()) {
