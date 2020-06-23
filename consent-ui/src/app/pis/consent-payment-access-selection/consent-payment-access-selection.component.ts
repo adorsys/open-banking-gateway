@@ -39,7 +39,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.parent.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
-      this.state = this.sessionService.getConsentState(this.authorizationId, () => new AuthConsentState());
+      this.state = this.sessionService.getPaymentState(this.authorizationId, () => new AuthConsentState());
       if (!this.hasGeneralViolations()) {
         this.moveToReviewPayment();
       }
