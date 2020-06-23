@@ -1,6 +1,7 @@
 package de.adorsys.opba.api.security.external.domain.signdata;
 
 import de.adorsys.opba.api.security.external.domain.OperationType;
+import lombok.Builder;
 import lombok.Value;
 
 import java.time.Instant;
@@ -13,6 +14,7 @@ import java.util.UUID;
  * This values are signed on the side of fintech and are verified in a spring filter on the side of opba.
  */
 @Value
+@Builder
 public class AisListAccountsDataToSign {
     UUID xRequestId;
     Instant instant;

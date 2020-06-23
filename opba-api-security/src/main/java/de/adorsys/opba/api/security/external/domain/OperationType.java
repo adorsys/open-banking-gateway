@@ -1,5 +1,7 @@
 package de.adorsys.opba.api.security.external.domain;
 
+import org.springframework.http.HttpMethod;
+
 public enum OperationType {
     AIS,
     PIS,
@@ -19,6 +21,6 @@ public enum OperationType {
     }
 
     public static boolean isGetPayment(String method) {
-        return "GET".equals(method);
+        return HttpMethod.GET.name().equals(method);
     }
 }
