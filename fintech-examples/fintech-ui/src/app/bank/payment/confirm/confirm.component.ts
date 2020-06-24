@@ -14,6 +14,12 @@ import { RedirectStruct } from '../../redirect-page/redirect-struct';
 export class ConfirmComponent implements OnInit {
   public static ROUTE = 'confirm/:' + Consts.CONFIRM_PAYMENT;
 
+  public format = amount =>
+    amount.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
