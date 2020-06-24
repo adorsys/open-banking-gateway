@@ -1,15 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { InitiateComponent } from '../payment-initiate/initiate.component';
+import { ConfirmComponent } from '../payment-confirm/confirm.component';
+import { ResultComponent } from '../payment-result/result.component';
+import { PaymentAccountPaymentsComponent } from '../payment-account-payments/payment-account-payments.component';
 import { PaymentAccountComponent } from './payment-account.component';
-import { InitiateComponent } from '../initiate/initiate.component';
-import { ConfirmComponent } from '../confirm/confirm.component';
-import { ResultComponent } from '../result/result.component';
 
 const routes: Routes = [
   {
     path: ':accountid',
     component: PaymentAccountComponent,
     children: [
+      {
+        path: PaymentAccountPaymentsComponent.ROUTE,
+        component: PaymentAccountPaymentsComponent
+      },
       {
         path: InitiateComponent.ROUTE,
         component: InitiateComponent
