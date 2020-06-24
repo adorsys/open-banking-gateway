@@ -216,7 +216,7 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
         );
     }
 
-    private String getRedirectPath(String authorizationId, String redirectState){
+    private String getRedirectPath(String authorizationId, String redirectState) {
         return UriComponentsBuilder.fromPath(cookieProperties.getRedirectPathTemplate())
                        .buildAndExpand(ImmutableMap.of(UriExpandConst.AUTHORIZATION_SESSION_ID, authorizationId,
                                                        UriExpandConst.REDIRECT_STATE, redirectState))
