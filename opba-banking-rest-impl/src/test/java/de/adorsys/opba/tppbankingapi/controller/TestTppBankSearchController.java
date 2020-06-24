@@ -88,14 +88,20 @@ class TestTppBankSearchController extends BaseMockitoTest {
 
     @NotNull
     private ResultActions performBankSearchRequest(UUID xRequestId, Instant xTimestampUtc, String keyword) throws Exception {
+        BankSearchDataToSign bankSearchDataToSign = BankSearchDataToSign.builder()
+                                             .xRequestId(xRequestId)
+                                             .instant(xTimestampUtc)
+                                             .operationType(OperationType.BANK_SEARCH)
+                                             .keyword(keyword)
+                                             .build();
+
         return mockMvc.perform(
                 get("/v1/banking/search/bank-search")
                         .header("Compute-PSU-IP-Address", "true")
-
                         .header(X_REQUEST_ID, xRequestId)
                         .header(X_TIMESTAMP_UTC, xTimestampUtc)
                         .header(X_OPERATION_TYPE, OperationType.BANK_SEARCH)
-                        .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new BankSearchDataToSign(xRequestId, xTimestampUtc, OperationType.BANK_SEARCH, keyword)))
+                        .header(X_REQUEST_SIGNATURE, requestSigningService.signature(bankSearchDataToSign))
                         .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
                         .param("keyword", keyword)
                         .param("max", "10")
