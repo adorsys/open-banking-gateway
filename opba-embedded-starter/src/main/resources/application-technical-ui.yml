@@ -1,20 +1,20 @@
 protocol:
   pis:
     redirect:
-      to-aspsp: ${protocol.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
+      to-aspsp: ${protocol.embedded-ui-base-url}/pis/{sessionId}/to-aspsp-redirection
       payments:
-        ok:  ${protocol.embedded-ui-base-url}/v1/payment/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
-        nok: ${protocol.embedded-ui-base-url}/v1/payment/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
-        result: ${protocol.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+        ok:  ${protocol.embedded-ui-base-url}/v1/payment/{sessionId}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+        nok: ${protocol.embedded-ui-base-url}/v1/payment/{sessionId}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
+        result: ${protocol.embedded-ui-base-url}/pis/{sessionId}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
   redirect:
     to-aspsp: "#{context.getLastRedirection().getRedirectTo()}"
     consent-accounts:
       result: ${protocol.embedded-ui-base-url}/from-aspsp?dest=#{urlSafe(context.getLastRedirection().getRedirectTo())}&serviceSessionId=#{context.getServiceSessionId()}
     parameters:
-      provide-psu-password: ${protocol.embedded-ui-base-url}/parameters/provide-psu-password/#{execution.getId()}?authorizationSessionId=#{context.getAuthorizationSessionIdIfOpened()}&redirectCode=#{context.getRedirectCodeIfAuthContinued()}
-      select-sca-method: ${protocol.embedded-ui-base-url}/parameters/select-sca-method/#{execution.getId()}?q=#{urlSafe(context.getAvailableSca().toString())}&authorizationSessionId=#{context.getAuthorizationSessionIdIfOpened()}&redirectCode=#{context.getRedirectCodeIfAuthContinued()}
-      report-sca-result: ${protocol.embedded-ui-base-url}/parameters/report-sca-result/#{execution.getId()}?q=#{urlSafe(context.getScaSelected().getAuthenticationType() + ":" + context.getScaSelected().getName())}&authorizationSessionId=#{context.getAuthorizationSessionIdIfOpened()}&redirectCode=#{context.getRedirectCodeIfAuthContinued()}
-      provide-more: ${protocol.embedded-ui-base-url}/parameters/provide-more/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}&authorizationSessionId=#{context.getAuthorizationSessionIdIfOpened()}&redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+      provide-psu-password: ${protocol.embedded-ui-base-url}/parameters/provide-psu-password/#{execution.getId()}?authorizationSessionId={sessionId}&redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+      select-sca-method: ${protocol.embedded-ui-base-url}/parameters/select-sca-method/#{execution.getId()}?q=#{urlSafe(context.getAvailableSca().toString())}&authorizationSessionId={sessionId}&redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+      report-sca-result: ${protocol.embedded-ui-base-url}/parameters/report-sca-result/#{execution.getId()}?q=#{urlSafe(context.getScaSelected().getAuthenticationType() + ":" + context.getScaSelected().getName())}&authorizationSessionId={sessionId}&redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+      provide-more: ${protocol.embedded-ui-base-url}/parameters/provide-more/#{execution.getId()}?q=#{urlSafe(context.getViolations().toString())}&authorizationSessionId={sessionId}&redirectCode=#{context.getRedirectCodeIfAuthContinued()}
   embedded-ui-base-url: http://localhost:5500
 
 facade:

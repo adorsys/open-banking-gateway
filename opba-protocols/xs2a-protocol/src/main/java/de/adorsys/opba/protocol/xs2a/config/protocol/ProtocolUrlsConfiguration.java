@@ -15,7 +15,7 @@ import static de.adorsys.opba.protocol.xs2a.config.ConfigConst.XS2A_PROTOCOL_CON
 /**
  * XS2A URL protocol configuration. Note that all URLs are expanded using {@link de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil}, so
  * you can use string interpolation like this:
- * http://localhost:8080/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+ * http://localhost:8080/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
  * The aforementioned URL will get interpolated using {@link de.adorsys.opba.protocol.xs2a.context.Xs2aContext} functions to i.e.
  * http://localhost:8080/v1/consent/53659eaf-d953-48de-a644-61c3c915d2c6/fromAspsp/STUB_STATE/ok?redirectCode=0174ef07-2e33-4264-9646-3b8965d100a0
  * with data from {@link de.adorsys.opba.protocol.xs2a.context.Xs2aContext} available at the step execution.
