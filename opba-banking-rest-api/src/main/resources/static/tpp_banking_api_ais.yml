@@ -95,6 +95,46 @@ paths:
         '401':
           $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
 
+  /v1/banking/ais/transactions:
+    get:
+      operationId: getTransactions without account id
+      summary: Provides list of transactions by given account
+      tags:
+        - TPP Banking API Account information service (AIS)
+      description: >-
+        This operation shows how to override the global security defined above,
+        as we want to open it up for all users.
+      parameters:
+        #header
+        #common header parameter
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Operation-Type"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Bank-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-OK"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-Consent-Session"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        #query
+        - $ref: "#/components/parameters/dateFrom"
+        - $ref: "#/components/parameters/dateTo"
+        - $ref: "#/components/parameters/entryReferenceFrom"
+        - $ref: "#/components/parameters/bookingStatus"
+        - $ref: "#/components/parameters/deltaList"
+      security:
+        - BearerAuthOAuth: []
+      responses:
+        '200':
+          $ref: "#/components/responses/200_AccountsTransactions"
+        '202':
+          $ref: '#/components/responses/202_AUTHORIZATION_REQUIRED'
+        '401':
+          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
+
 components:
   parameters:
     account-id:

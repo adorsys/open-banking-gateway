@@ -115,6 +115,50 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
         ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
     }
 
+    @Override
+    public CompletableFuture getTransactionsWithoutAccountId(
+            String serviceSessionPassword,
+            String fintechUserId,
+            String fintechRedirectURLOK,
+            String fintechRedirectURLNOK,
+            UUID xRequestID,
+            String xTimestampUTC,
+            String xOperationType,
+            String xRequestSignature,
+            String fintechId,
+            String bankId,
+            String psUConsentSession,
+            UUID serviceSessionId,
+            LocalDate dateFrom,
+            LocalDate dateTo,
+            String entryReferenceFrom,
+            String bookingStatus,
+            Boolean deltaList
+    ) {
+        return transactions.execute(
+                ListTransactionsRequest.builder()
+                        .facadeServiceable(FacadeServiceableRequest.builder()
+                                // Get rid of CGILIB here by copying:
+                                .uaContext(userAgentContext.toBuilder().build())
+                                .authorization(fintechId)
+                                .sessionPassword(serviceSessionPassword)
+                                .fintechUserId(fintechUserId)
+                                .fintechRedirectUrlOk(fintechRedirectURLOK)
+                                .fintechRedirectUrlNok(fintechRedirectURLNOK)
+                                .serviceSessionId(serviceSessionId)
+                                .requestId(xRequestID)
+                                .bankId(bankId)
+                                .build()
+                        )
+                        .dateFrom(dateFrom)
+                        .dateTo(dateTo)
+                        .entryReferenceFrom(entryReferenceFrom)
+                        .bookingStatus(bookingStatus)
+                        .deltaList(deltaList)
+                        .build()
+        ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
+    }
+
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
     public interface AccountListFacadeResponseBodyToRestBodyMapper extends FacadeResponseBodyToRestBodyMapper<AccountList, AccountListBody> {
         AccountList map(AccountListBody facadeEntity);
