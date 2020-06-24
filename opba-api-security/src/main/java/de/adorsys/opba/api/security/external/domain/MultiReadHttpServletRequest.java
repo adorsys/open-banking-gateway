@@ -1,71 +1,21 @@
 package de.adorsys.opba.api.security.external.domain;
 
-import com.google.common.io.ByteStreams;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
- * This class decorates incoming HttpServletRequest, caches its body and is used by spring framework further
+ * This class decorates incoming HttpServletRequest and caches its body
  */
-public class MultiReadHttpServletRequest extends HttpServletRequestWrapper {
-    private ByteArrayOutputStream cachedBytes;
+public class MultiReadHttpServletRequest extends ContentCachingRequestWrapper {
 
+    /**
+     * Create a new ContentCachingRequestWrapper for the given servlet request.
+     *
+     * @param request the original servlet request
+     */
     public MultiReadHttpServletRequest(HttpServletRequest request) {
         super(request);
-    }
-
-    @Override
-    public ServletInputStream getInputStream() throws IOException {
-        if (cachedBytes == null) {
-            cacheInputStream();
-        }
-
-        return new CachedServletInputStream();
-    }
-
-    @Override
-    public BufferedReader getReader() throws IOException {
-        return new BufferedReader(new InputStreamReader(getInputStream()));
-    }
-
-    private void cacheInputStream() throws IOException {
-        cachedBytes = new ByteArrayOutputStream();
-        ByteStreams.copy(super.getInputStream(), cachedBytes);
-    }
-
-    private class CachedServletInputStream extends ServletInputStream {
-        private ByteArrayInputStream input;
-
-        CachedServletInputStream() {
-            input = new ByteArrayInputStream(cachedBytes.toByteArray());
-        }
-
-        @Override
-        public int read() {
-            return input.read();
-        }
-
-        @Override
-        public boolean isFinished() {
-            return false;
-        }
-
-        @Override
-        public boolean isReady() {
-            return false;
-        }
-
-        @Override
-        public void setReadListener(ReadListener readListener) {
-        }
     }
 }
 
