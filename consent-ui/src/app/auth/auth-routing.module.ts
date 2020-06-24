@@ -5,6 +5,14 @@ import { RegisterComponent } from './register/register.component';
 
 const routes: Routes = [
   {
+    path: 'pis/:authId',
+    redirectTo: ':authId'
+  },
+  {
+    path: 'ais/:authId',
+    redirectTo: ':authId'
+  },
+  {
     path: ':authId',
     children: [
       { path: 'login', component: LoginComponent },
