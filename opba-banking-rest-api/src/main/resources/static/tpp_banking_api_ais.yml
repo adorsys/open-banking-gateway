@@ -60,8 +60,8 @@ paths:
       tags:
         - TPP Banking API Account information service (AIS)
       description: >-
-        This operation shows how to override the global security defined above,
-        as we want to open it up for all users.
+          returns list of transactions for specified account resource ID in case Service-Session-ID is provided
+          and saved consent on tpp by it found. Otherwise initiates creation of new consent
       parameters:
         #path
         - $ref: "#/components/parameters/account-id"
@@ -98,12 +98,11 @@ paths:
   /v1/banking/ais/transactions:
     get:
       operationId: getTransactions without account id
-      summary: Provides list of transactions by given account
+      summary: Provides consent for accounts and transactions
       tags:
         - TPP Banking API Account information service (AIS)
       description: >-
-        This operation shows how to override the global security defined above,
-        as we want to open it up for all users.
+        This method initiates creation of consent which then can be used for getting either accounts or transactions
       parameters:
         #header
         #common header parameter

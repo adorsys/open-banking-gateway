@@ -9,12 +9,14 @@ import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.domain.ValidationIssueException;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ConditionProvider;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ValidationMode;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
@@ -23,6 +25,7 @@ import javax.validation.Validator;
 import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,7 +51,8 @@ public class Xs2aValidator {
      * Validates that all parameters necessary to perform ASPSP API call is present.
      * In {@link de.adorsys.opba.protocol.bpmnshared.dto.context.ContextMode#MOCK_REAL_CALLS}
      * reports all violations into {@link BaseContext#getViolations()} (merging with already existing ones)
-     * @param exec Current execution that will be updated with violations if present.
+     *
+     * @param exec           Current execution that will be updated with violations if present.
      * @param dtosToValidate ASPSP API call parameter objects to validate.
      */
     public <T> void validate(DelegateExecution exec, Xs2aContext context, Class<T> invokerClass, Object... dtosToValidate) {
@@ -61,8 +65,8 @@ public class Xs2aValidator {
         );
         for (Object value : dtosToValidate) {
             Set<ConstraintViolation<Object>> errors = validator.validate(value)
-                                                              .stream()
-                                                              .filter(f -> doNotIgnoreValidationError(f, rulesMap))
+                    .stream()
+                    .filter(f -> doNotIgnoreValidationError(f, rulesMap))
                     .collect(Collectors.toSet());
             allErrors.addAll(errors);
         }
@@ -74,7 +78,10 @@ public class Xs2aValidator {
         ContextUtil.getAndUpdateContext(
                 exec,
                 (BaseContext ctx) -> {
-                    ctx.getViolations().addAll(allErrors.stream().map(this::toIssue).collect(Collectors.toSet()));
+                    ctx.getViolations().addAll(allErrors.stream()
+                            .map(it -> applyConditionalValidation(context, it))
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toSet()));
                     // Only when doing real calls validations cause termination of flow
                     // TODO: Those validation in real call should be propagated and handled
                     if (REAL_CALLS == ctx.getMode()) {
@@ -85,8 +92,19 @@ public class Xs2aValidator {
         );
     }
 
-    private ValidationIssue toIssue(ConstraintViolation<Object> violation) {
-        ValidationInfo info = findInfoOnViolation(violation);
+    @Nullable
+    @SneakyThrows
+    private ValidationIssue applyConditionalValidation(Xs2aContext context, ConstraintViolation<Object> it) {
+        ValidationInfo info = findInfoOnViolation(it);
+        if (info.validationMode() == ValidationMode.CONDITIONAL) {
+            ConditionProvider provider = info.condition().getDeclaredConstructor().newInstance();
+            return provider.isMandatory(context) ? toIssue(it, info) : null;
+        }
+        return toIssue(it, info);
+    }
+
+
+    private ValidationIssue toIssue(ConstraintViolation<Object> violation, ValidationInfo info) {
         return ValidationIssue.builder()
                 .type(info.ui().value())
                 .scope(info.ctx().target())
