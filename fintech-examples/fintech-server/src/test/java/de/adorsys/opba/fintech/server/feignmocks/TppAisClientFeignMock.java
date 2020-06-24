@@ -15,18 +15,20 @@ import java.util.UUID;
 public class TppAisClientFeignMock implements TppAisClient {
 
     @Override
-    public ResponseEntity<AccountList> getAccounts(String serviceSessionPassword,
-                                                   String fintechUserID,
-                                                   String fintechRedirectURLOK,
-                                                   String fintechRedirectURLNOK,
-                                                   UUID xRequestID,
-                                                   String xTimestampUTC,
-                                                   String xOperationType,
-                                                   String xRequestSignature,
-                                                   String fintechId,
-                                                   String bankID,
-                                                   String psUConsentSession,
-                                                   UUID serviceSessionID) {
+    public ResponseEntity<AccountList> getAccounts(
+            String serviceSessionPassword,
+            String fintechUserID,
+            String fintechRedirectURLOK,
+            String fintechRedirectURLNOK,
+            UUID xRequestID,
+            String xTimestampUTC,
+            String xOperationType,
+            String xRequestSignature,
+            String fintechId,
+            String bankID,
+            String psUConsentSession,
+            UUID serviceSessionID
+    ) {
         return null;
     }
 
@@ -47,6 +49,29 @@ public class TppAisClientFeignMock implements TppAisClient {
             UUID serviceSessionID,
             @Valid LocalDate dateFrom, @Valid LocalDate dateTo,
             @Valid String entryReferenceFrom, @Valid String bookingStatus, @Valid Boolean deltaList
+    ) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<TransactionsResponse> getTransactionsWithoutAccountId(
+            String serviceSessionPassword,
+            String fintechUserID,
+            String fintechRedirectURLOK,
+            String fintechRedirectURLNOK,
+            UUID xRequestID,
+            String xTimestampUTC,
+            String xOperationType,
+            String xRequestSignature,
+            String fintechID,
+            String bankID,
+            String psUConsentSession,
+            UUID serviceSessionID,
+            @Valid LocalDate dateFrom,
+            @Valid LocalDate dateTo,
+            @Valid String entryReferenceFrom,
+            @Valid String bookingStatus,
+            @Valid Boolean deltaList
     ) {
         return null;
     }
