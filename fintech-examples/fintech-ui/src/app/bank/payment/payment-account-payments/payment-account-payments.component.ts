@@ -5,11 +5,11 @@ import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-list-payments',
-  templateUrl: './payment-account.component.html',
-  styleUrls: ['./payment-account.component.scss']
+  templateUrl: './payment-account-payments.component.html',
+  styleUrls: ['./payment-account-payments.component.scss']
 })
-export class PaymentAccountComponent implements OnInit {
-  public static ROUTE = 'account';
+export class PaymentAccountPaymentsComponent implements OnInit {
+  public static ROUTE = 'payments';
   bankId;
   accountId;
 
@@ -30,8 +30,17 @@ export class PaymentAccountComponent implements OnInit {
       .subscribe(
         response => {
           console.log('response status of payment call is ', response.status);
+          console.log('body is :',JSON.stringify(response.body));
         }
       );
   }
+
+
+  initiateSinglePayment( ) {
+    console.log('go to initiate');
+    this.router.navigate(['../initiate'], { relativeTo: this.route });
+  }
+
+
 
 }

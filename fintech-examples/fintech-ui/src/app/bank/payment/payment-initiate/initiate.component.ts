@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
 import { HeaderConfig } from '../../../models/consts';
 import { RedirectStruct, RedirectType } from '../../redirect-page/redirect-struct';
 import { StorageService } from '../../../services/storage.service';
-import { ConfirmData } from '../confirm/confirm.data';
+import { ConfirmData } from '../payment-confirm/confirm.data';
 
 @Component({
   selector: 'app-initiate',
