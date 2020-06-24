@@ -67,8 +67,9 @@ public class TransactionService {
                 UUID.fromString(restRequestContext.getRequestId()),
                 COMPUTE_X_TIMESTAMP_UTC, OperationType.AIS.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
-                COMPUTE_FINTECH_ID, bankId, null, optionalConsent.isPresent() ? optionalConsent.get().getTppServiceSessionId() : null, dateFrom, dateTo,
-                entryReferenceFrom, bookingStatus, deltaList);
+                COMPUTE_FINTECH_ID, bankId, null,
+                optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
+                dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList);
         switch (transactions.getStatusCode()) {
             case OK:
                 return new ResponseEntity<>(ManualMapper.fromTppToFintech(transactions.getBody()), HttpStatus.OK);
