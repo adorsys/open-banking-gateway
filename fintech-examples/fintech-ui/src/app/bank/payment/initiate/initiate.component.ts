@@ -28,7 +28,7 @@ export class InitiateComponent implements OnInit {
               private storageService: StorageService) {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
     this.accountId = this.route.snapshot.paramMap.get('accountid');
-    console.log('bankid:' + this.bankId);
+    console.log('bankid:', this.bankId, ' accountid:', this.accountId);
   }
 
   ngOnInit() {
@@ -43,9 +43,10 @@ export class InitiateComponent implements OnInit {
 
   onConfirm() {
     // TODO
-    const okurl = window.location.pathname;
+    let okurl = window.location.pathname;
+    okurl = okurl.replace('/initiate', '/loa');
     const notOkUrl = okurl;
-    console.log('WARNING set ok url to {}', okurl);
+    console.log('set ok url to ', okurl);
 
     const paymentRequest = new ClassSinglePaymentInitiationRequest();
     paymentRequest.amount = this.paymentForm.getRawValue().amount;
@@ -53,8 +54,8 @@ export class InitiateComponent implements OnInit {
     paymentRequest.creditorIban = this.paymentForm.getRawValue().creditorIban;
     paymentRequest.debitorIban = this.paymentForm.getRawValue().debitorIban;
     paymentRequest.purpose = this.paymentForm.getRawValue().purpose;
-    this.fintechSinglePaymentInitiationService.initiateSinglePayment('', '',
-      okurl, notOkUrl, this.bankId, this.accountId, paymentRequest, 'response')
+    this.fintechSinglePaymentInitiationService.initiateSinglePayment(this.bankId, this.accountId,'',
+      '',okurl, notOkUrl, paymentRequest, 'response')
       .pipe(map(response => response))
       .subscribe(
         response => {
