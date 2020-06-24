@@ -1,12 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PaymentComponent } from './payment.component';
-import { InitiateComponent } from './initiate/initiate.component';
-import { ConfirmComponent } from './confirm/confirm.component';
-import { ResultComponent } from './result/result.component';
-import { ListAccountsForPaymentComponent } from './list-accounts-for-payment/list-accounts-for-payment.component';
-import { ListPaymentsComponent } from './list-payments/list-payments.component';
-import { ListTransactionsComponent } from '../list-transactions/list-transactions.component';
+import { PaymentAccountsComponent } from './accounts/payment-accounts.component';
+import { PaymentAccountComponent } from './account/payment-account.component';
 
 const routes: Routes = [
   {
@@ -15,35 +11,17 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: ListAccountsForPaymentComponent.ROUTE,
+        redirectTo: PaymentAccountsComponent.ROUTE,
         pathMatch: 'full'
       },
       {
-        path: ListAccountsForPaymentComponent.ROUTE,
-        component: ListAccountsForPaymentComponent,
+        path: PaymentAccountsComponent.ROUTE,
+        component: PaymentAccountsComponent,
       },
       {
-        path: ListPaymentsComponent.ROUTE,
-        component: ListPaymentsComponent,
-        children: [
-          {
-            path: ':accountid',
-            component: ListPaymentsComponent
-          }
-        ],
+        path: PaymentAccountComponent.ROUTE,
+        loadChildren: () => import('./account/payment-account-module').then(m => m.PaymentAccountModule)
       },
-      {
-        path: InitiateComponent.ROUTE,
-        component: InitiateComponent
-      },
-      {
-        path: ConfirmComponent.ROUTE,
-        component: ConfirmComponent
-      },
-      {
-        path: ResultComponent.ROUTE,
-        component: ResultComponent
-      }
     ]
   }
 ];
