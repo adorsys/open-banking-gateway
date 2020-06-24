@@ -5,11 +5,11 @@ import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-list-payments',
-  templateUrl: './list-payments.component.html',
-  styleUrls: ['./list-payments.component.scss']
+  templateUrl: './payment-account.component.html',
+  styleUrls: ['./payment-account.component.scss']
 })
-export class ListPaymentsComponent implements OnInit {
-  public static ROUTE = 'accounts';
+export class PaymentAccountComponent implements OnInit {
+  public static ROUTE = 'account';
   bankId;
   accountId;
 
@@ -22,7 +22,7 @@ export class ListPaymentsComponent implements OnInit {
 
   ngOnInit() {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
-    this.accountId = this.route.snapshot.firstChild.paramMap.get('accountid');
+    this.accountId = this.route.snapshot.paramMap.get('accountid');
     console.log('lpc bankid:', this.bankId, ' accountId:', this.accountId);
 
     this.fintechSinglePaymentInitiationService.retrieveAllSinglePayments(this.bankId, this.accountId, '', '', 'response')
