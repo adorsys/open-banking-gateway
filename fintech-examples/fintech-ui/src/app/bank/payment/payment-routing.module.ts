@@ -6,6 +6,7 @@ import { ConfirmComponent } from './confirm/confirm.component';
 import { ResultComponent } from './result/result.component';
 import { ListAccountsForPaymentComponent } from './list-accounts-for-payment/list-accounts-for-payment.component';
 import { ListPaymentsComponent } from './list-payments/list-payments.component';
+import { ListTransactionsComponent } from '../list-transactions/list-transactions.component';
 
 const routes: Routes = [
   {
@@ -19,11 +20,17 @@ const routes: Routes = [
       },
       {
         path: ListAccountsForPaymentComponent.ROUTE,
-        component: ListAccountsForPaymentComponent
+        component: ListAccountsForPaymentComponent,
       },
       {
         path: ListPaymentsComponent.ROUTE,
-        component: ListPaymentsComponent
+        component: ListPaymentsComponent,
+        children: [
+          {
+            path: ':accountid',
+            component: ListPaymentsComponent
+          }
+        ],
       },
       {
         path: InitiateComponent.ROUTE,
