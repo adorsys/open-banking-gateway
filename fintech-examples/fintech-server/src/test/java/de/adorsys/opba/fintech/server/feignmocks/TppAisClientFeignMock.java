@@ -47,8 +47,8 @@ public class TppAisClientFeignMock implements TppAisClient {
             String bankID,
             String psUConsentSession,
             UUID serviceSessionID,
-            @Valid LocalDate dateFrom, @Valid LocalDate dateTo,
-            @Valid String entryReferenceFrom, @Valid String bookingStatus, @Valid Boolean deltaList
+            LocalDate dateFrom, @Valid LocalDate dateTo,
+            String entryReferenceFrom, @Valid String bookingStatus, @Valid Boolean deltaList
     ) {
         return null;
     }
@@ -67,11 +67,11 @@ public class TppAisClientFeignMock implements TppAisClient {
             String bankID,
             String psUConsentSession,
             UUID serviceSessionID,
-            @Valid LocalDate dateFrom,
-            @Valid LocalDate dateTo,
-            @Valid String entryReferenceFrom,
-            @Valid String bookingStatus,
-            @Valid Boolean deltaList
+            LocalDate dateFrom,
+            LocalDate dateTo,
+            String entryReferenceFrom,
+            String bookingStatus,
+            Boolean deltaList
     ) {
         return null;
     }

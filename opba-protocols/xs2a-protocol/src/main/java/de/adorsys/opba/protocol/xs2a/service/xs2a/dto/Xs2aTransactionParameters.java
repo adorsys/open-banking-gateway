@@ -4,6 +4,7 @@ import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ContextCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.FrontendCode;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ResourceIdConditionProvider;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
 import de.adorsys.xs2a.adapter.service.RequestParams;
 import lombok.Data;
@@ -15,9 +16,12 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.BOOKING_STATUS;
+import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.DATE_FROM;
+import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.DATE_TO;
 import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
+import static de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ValidationMode.CONDITIONAL;
 
 /**
  * XS2A transaction list describing parameters.
@@ -29,7 +33,8 @@ public class Xs2aTransactionParameters extends Xs2aWithBalanceParameters {
     /**
      * Transaction booking status - i.e. PENDING/BOOKED.
      */
-    @ValidationInfo(ui = @FrontendCode(STRING), ctx = @ContextCode(BOOKING_STATUS))
+    @ValidationInfo(ui = @FrontendCode(STRING), ctx = @ContextCode(BOOKING_STATUS), validationMode = CONDITIONAL,
+            condition = ResourceIdConditionProvider.class)
     @NotBlank(message = "{no.ctx.bookingStatus}")
     private String bookingStatus;
 
@@ -37,12 +42,16 @@ public class Xs2aTransactionParameters extends Xs2aWithBalanceParameters {
      * Transaction list date from.
      */
     @NotNull(message = "{no.ctx.dateFrom}")
+    @ValidationInfo(ui = @FrontendCode(STRING), ctx = @ContextCode(DATE_FROM), validationMode = CONDITIONAL,
+            condition = ResourceIdConditionProvider.class)
     private LocalDate dateFrom;
 
     /**
      * Transaction list date to.
      */
     @NotNull(message = "{no.ctx.dateTo}")
+    @ValidationInfo(ui = @FrontendCode(STRING), ctx = @ContextCode(DATE_TO), validationMode = CONDITIONAL,
+            condition = ResourceIdConditionProvider.class)
     private LocalDate dateTo;
 
     // TODO - MapStruct?

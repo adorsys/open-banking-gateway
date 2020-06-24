@@ -115,5 +115,15 @@ public enum FieldCode {
     /**
      * Tpp redirect Preferred
      */
-    TPP_REDIRECT_PREFERRED
+    TPP_REDIRECT_PREFERRED,
+
+    RESOURCE_ID,
+
+    DATE_FROM,
+
+    DATE_TO,
+
+    ENTRY_REFERENCE_FROM,
+
+    DELTA_LIST
 }
