@@ -80,9 +80,6 @@ public class AccountService {
         if (null != bankProfile.getBankProfileDescriptor().getConsentSupportByService()
                 && "true".equals(bankProfile.getBankProfileDescriptor().getConsentSupportByService().get(Actions.LIST_ACCOUNTS.name()))) {
             log.info("LoA no valid ais consent for user {} bank {} available", sessionEntity.getUserEntity().getLoginUserName(), bankID);
-            // FIXME: HACKETTY-HACK - force consent retrieval for transactions on ALL accounts
-            // Should be superseded and fixed with
-            // https://github.com/adorsys/open-banking-gateway/issues/303
             return bankRequiresConsent(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent);
         }
 
@@ -91,7 +88,7 @@ public class AccountService {
 
     private ResponseEntity bankDoesNotRequireConsent(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId, Optional<ConsentEntity> optionalConsent) {
         log.info("do LOA for bank {} {} consent", bankID, optionalConsent.isPresent() ? "with" : "without");
-        UUID serviceSessionID = optionalConsent.isPresent() ? optionalConsent.get().getTppServiceSessionId() : null;
+        UUID serviceSessionID = optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null);
         return tppAisClient.getAccounts(
                 tppProperties.getServiceSessionPassword(),
                 sessionEntity.getUserEntity().getFintechUserId(),
@@ -109,9 +106,8 @@ public class AccountService {
 
     private ResponseEntity bankRequiresConsent(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId, Optional<ConsentEntity> optionalConsent) {
         log.info("do LOT (instead of loa) for bank {} {} consent", bankID, optionalConsent.isPresent() ? "with" : "without");
-        UUID serviceSessionID = optionalConsent.isPresent() ? optionalConsent.get().getTppServiceSessionId() : null;
-        return tppAisClient.getTransactions(
-                UUID.randomUUID().toString(), // As consent is missing this will be ignored
+        UUID serviceSessionID = optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null);
+        return tppAisClient.getTransactionsWithoutAccountId(
                 tppProperties.getServiceSessionPassword(),
                 sessionEntity.getUserEntity().getFintechUserId(),
                 RedirectUrlsEntity.buildOkUrl(uiConfig, redirectCode),
