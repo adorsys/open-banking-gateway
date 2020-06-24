@@ -30,7 +30,6 @@ security:
   signSubject: fintech@awesome-fintech.com
   algorithm: RSA
   claim-name-key: sign-data
-  token-validity-duration: PT5M
   tpp:
     key-validity-duration: P7D
     jws-algo: RS256
