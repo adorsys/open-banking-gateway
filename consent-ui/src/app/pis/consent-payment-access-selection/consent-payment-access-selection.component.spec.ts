@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConsentPaymentAccessSelectionComponent, Access } from './consent-payment-access-selection.component';
+import { ConsentPaymentAccessSelectionComponent } from './consent-payment-access-selection.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -48,8 +48,6 @@ describe('ConsentPaymentAccessSelectionComponent', () => {
     fixture = TestBed.createComponent(ConsentPaymentAccessSelectionComponent);
     component = fixture.componentInstance;
     component.paymentReviewPage = PaymentsConsentReviewComponent.ROUTE;
-    component.dedicatedConsentPage = DedicatedAccessComponent.ROUTE;
-    component.accountAccesses = [new Access(AccountAccessLevel.ALL_ACCOUNTS, 'access to all accounts')];
     fixture.detectChanges();
   });
 
