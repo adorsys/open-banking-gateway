@@ -1,1 +1,6 @@
-<consent-app-enter-pin [wrongPassword]="wrongPassword" (enteredPin)="submit($event)"></consent-app-enter-pin>
+<consent-app-enter-pin
+  [wrongPassword]="wrongPassword"
+  [redirectCode]="redirectCode"
+  [authorizationSessionId]="authorizationSessionId"
+  (enteredPin)="submit($event)"
+></consent-app-enter-pin>

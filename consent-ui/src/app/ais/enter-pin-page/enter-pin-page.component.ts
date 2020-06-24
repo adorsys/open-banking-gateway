@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { StubUtil } from '../../common/utils/stub-util';
 import { ApiHeaders } from '../../api/api.headers';
 import { UpdateConsentAuthorizationService } from '../../api';
 import { SessionService } from '../../common/session.service';
@@ -12,8 +11,8 @@ import { SessionService } from '../../common/session.service';
 })
 export class EnterPinPageComponent implements OnInit {
   wrongPassword = false;
-  private authorizationSessionId: string;
-  private redirectCode: string;
+  authorizationSessionId: string;
+  redirectCode: string;
 
   constructor(
     private updateConsentAuthorizationService: UpdateConsentAuthorizationService,
@@ -28,21 +27,11 @@ export class EnterPinPageComponent implements OnInit {
     console.log('REDIRECT CODE: ', this.redirectCode);
   }
 
-  submit(pin: string): void {
-    this.updateConsentAuthorizationService
-      .embeddedUsingPOST(
-        this.authorizationSessionId,
-        StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
-        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
-        this.redirectCode,
-        { scaAuthenticationData: { PSU_PASSWORD: pin } },
-        'response'
-      )
-      .subscribe(res => {
-        // redirect to the provided location
-        this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-        console.log('REDIRECTING TO: ' + res.headers.get(ApiHeaders.LOCATION));
-        window.location.href = res.headers.get(ApiHeaders.LOCATION);
-      });
+  submit(res: any): void {
+    // responce from the API call is handled in parent component that gives more flexibility
+    this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+    console.log('REDIRECTING TO: ' + res.headers.get(ApiHeaders.LOCATION));
+    // redirect to the provided location
+    window.location.href = res.headers.get(ApiHeaders.LOCATION);
   }
 }
