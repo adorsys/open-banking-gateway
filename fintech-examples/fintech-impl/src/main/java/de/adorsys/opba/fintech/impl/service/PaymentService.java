@@ -86,6 +86,7 @@ public class PaymentService {
     }
 
 
+    /*
     public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankId, String accountId) {
         SessionEntity sessionEntity = sessionLogicService.getSession();
         List<ConsentEntity> list = consentRepository.findByUserEntityAndBankIdAndAccountId(sessionEntity.getUserEntity(), bankId, accountId);
@@ -107,6 +108,31 @@ public class PaymentService {
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+*/
+    public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankId, String accountId) {
+        SessionEntity sessionEntity = sessionLogicService.getSession();
+        List<ConsentEntity> list = consentRepository.findByUserEntityAndBankIdAndAccountId(sessionEntity.getUserEntity(), bankId, accountId);
+        List<PaymentInitiationWithStatusResponse> result = new ArrayList<>();
+
+        log.info("hi maksym, I want to do a call now");
+        for (ConsentEntity consent : list) {
+            de.adorsys.opba.tpp.pis.api.model.generated.PaymentInitiationWithStatusResponse body = tppPisPaymentStatusClient.getPaymentInformation(tppProperties.getServiceSessionPassword(),
+                    sessionEntity.getUserEntity().getFintechUserId(),
+                    UUID.fromString(restRequestContext.getRequestId()),
+                    paymentProduct,
+                    COMPUTE_X_TIMESTAMP_UTC,
+                    OperationType.PIS.toString(),
+                    COMPUTE_X_REQUEST_SIGNATURE,
+                    COMPUTE_FINTECH_ID,
+                    bankId,
+                    consent.getTppServiceSessionId()).getBody();
+            PaymentInitiationWithStatusResponse paymentInitiationWithStatusResponse = Mappers.getMapper(PaymentInitiationWithStatusResponseMapper.class).mapFromTppToFintech(body);
+            result.add(paymentInitiationWithStatusResponse);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
     private AccountReference getAccountReference(String iban) {
         AccountReference account = new AccountReference();
