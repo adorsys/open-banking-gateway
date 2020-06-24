@@ -279,7 +279,7 @@ paths:
       description: This method is used to initiate a payment at the Fintech Server.
       operationId: retrieveAllSinglePayments
       tags:
-        - FintechSinglePaymentInitiation
+        - FintechRetrieveAllSinglePayments
       parameters:
         #path
         - $ref: "#/components/parameters/bank-id"
