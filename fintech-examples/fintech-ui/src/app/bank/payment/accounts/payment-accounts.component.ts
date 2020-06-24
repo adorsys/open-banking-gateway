@@ -5,11 +5,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-accounts-for-payment',
-  templateUrl: './list-accounts-for-payment.component.html',
-  styleUrls: ['./list-accounts-for-payment.component.scss']
+  templateUrl: './payment-accounts.component.html',
+  styleUrls: ['./payment-accounts.component.scss']
 })
-export class ListAccountsForPaymentComponent implements OnInit {
-  public static ROUTE = 'loa';
+export class PaymentAccountsComponent implements OnInit {
+  public static ROUTE = 'accounts';
   selectedAccount;
   accounts: AccountStruct[] = [];
 
@@ -23,8 +23,9 @@ export class ListAccountsForPaymentComponent implements OnInit {
   }
 
   selectAccount(id) {
+    console.log('router navigate to ../account');
     this.selectedAccount = id;
-    this.router.navigate(['../accounts', id], { relativeTo: this.route });
+    this.router.navigate(['../account', id], { relativeTo: this.route });
   }
 
   isSelected(id) {
