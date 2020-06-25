@@ -54,6 +54,9 @@ api:
       verification:
         request-validity-window: 5m
         claim-name-key: sign-data
+        urls-to-be-skipped:
+          # templates for string matcher
+          - /v1/banking/.+
         # Known API consumers
         consumer-public-keys:
           MY-SUPER-FINTECH-ID: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0QhZVg5KKh9YzXFT8kuTdsxYHgJ2us+idNym+L4P09O5BjJaIZPbx7jBCKf8CNLNMV+HuNa6aPwETIyGsYG9reJAupA+F0ETxzDZ/70zprnte0eEfitwA2fy3lq0VOwtb2NuaRQBAcJZC+Dni3UAjR4bfWblw+OzWSrhj8wNicyRgE/ov8bFiyhqYZrBx1NW8oQcSC5EXmevu3nna3izlBbZ/63OteHHZUmbyufW7hU6Ck9lq/cP4QMKmiMDj020ptwox9g4hCcwy0iL+qIcpGe6gfuBMMtt9XQnRuxIQeOQ8rYq2uaU6iOgj3vbSekqwrOCtKf/MooEcEGSvIa+EwIDAQAB

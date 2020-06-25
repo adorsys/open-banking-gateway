@@ -1,6 +1,8 @@
 package de.adorsys.opba.api.security.internal.config;
 
+import de.adorsys.opba.api.security.internal.filter.HttpBodyCachingFilter;
 import de.adorsys.opba.api.security.internal.filter.RequestCookieFilter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +12,17 @@ import java.util.Set;
 
 @Slf4j
 @Configuration
-public class RequestCookieFilterConfig {
+@RequiredArgsConstructor
+public class RequestFilterConfig {
+
+    @Bean
+    public FilterRegistrationBean<HttpBodyCachingFilter> httpBodyCachingFilter() {
+        FilterRegistrationBean<HttpBodyCachingFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new HttpBodyCachingFilter());
+        registrationBean.setOrder(1);
+
+        return registrationBean;
+    }
 
     @Bean
     public FilterRegistrationBean<RequestCookieFilter> cookieValidatorFilter(CookieProperties cookieProperties) {
