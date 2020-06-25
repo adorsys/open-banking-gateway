@@ -828,6 +828,9 @@ components:
           $ref: "#/components/schemas/remittanceInformationUnstructured"
         transactionStatus:
           $ref: "#/components/schemas/transactionStatus"
+        initiationDate:
+          type: string
+          format: date
 
     transactionStatus:
       description: The transaction status

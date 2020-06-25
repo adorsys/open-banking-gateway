@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FintechSinglePaymentInitiationService } from '../../../api';
+import { StorageService } from '../../../services/storage.service';
+import { AccountStruct } from '../../redirect-page/redirect-struct';
 
 @Component({
   selector: 'app-list-payments',
@@ -11,19 +13,29 @@ export class PaymentAccountComponent implements OnInit {
   public static ROUTE = 'account';
   bankId;
   accountId;
+  account:AccountStruct;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private fintechSinglePaymentInitiationService: FintechSinglePaymentInitiationService
+    private storageService: StorageService
   ) {}
 
 
   ngOnInit() {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
     this.accountId = this.route.snapshot.paramMap.get('accountid');
+    this.account = this.getSelectedAccount(this.accountId);
     console.log('lpc bankid:', this.bankId, ' accountId:', this.accountId);
     this.router.navigate(['payments'], { relativeTo: this.route });
   }
 
+  private getSelectedAccount(accountId: string) : AccountStruct {
+    const list = this.storageService.getLoa();
+    for (const a of list) {
+      if (a.resourceId === accountId) {
+        return a;
+      }
+    }
+  }
 }

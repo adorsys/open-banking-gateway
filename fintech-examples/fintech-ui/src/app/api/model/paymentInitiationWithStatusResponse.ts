@@ -9,35 +9,36 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Address } from './address';
+import { Amount } from './amount';
+import { AccountReference } from './accountReference';
 
 
 /**
- * Reference to an account by either:   * IBAN, of a payment accounts, or   * BBAN, for payment accounts if there is no IBAN, or   * the Primary Account Number (PAN) of a card, can be tokenised by the ASPSP due to PCI DSS requirements, or   * the Primary Account Number (PAN) of a card in a masked form, or   * an alias to access a payment account via a registered mobile phone number (MSISDN). 
+ * response from open banking gateway
  */
-export interface AccountReference { 
+export interface PaymentInitiationWithStatusResponse { 
+    endToEndIdentification?: string;
+    debtorAccount: AccountReference;
+    instructedAmount: Amount;
+    creditorAccount: AccountReference;
     /**
-     * International bank account number ISO 31616.
+     * BICFI 
      */
-    iban?: string;
+    creditorAgent?: string;
     /**
-     * Basic Bank Account Number (BBAN) Identifier.  This data element can be used in the body of the Consent request.   Message for retrieving Account access Consent from this Account. This   data elements is used for payment Accounts which have no IBAN.   ISO20022: Basic Bank Account Number (BBAN).    Identifier used nationally by financial institutions, i.e., in individual countries,   generally as part of a National Account Numbering Scheme(s),   which uniquely identifies the account of a customer. 
+     * Creditor Name.
      */
-    bban?: string;
+    creditorName: string;
+    creditorAddress?: Address;
     /**
-     * Primary Account Number according to ISO/IEC 7812. 
+     * Unstructured remittance information. 
      */
-    pan?: string;
+    remittanceInformationUnstructured?: string;
     /**
-     * Masked Primary Account Number. 
+     * The transaction status
      */
-    maskedPan?: string;
-    /**
-     * Mobile phone number.
-     */
-    msisdn?: string;
-    /**
-     * ISO 4217 Alpha 3 currency code. 
-     */
-    currency?: string;
+    transactionStatus?: string;
+    initiationDate?: string;
 }
 

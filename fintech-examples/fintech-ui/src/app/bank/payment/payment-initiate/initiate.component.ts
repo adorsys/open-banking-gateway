@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ClassSinglePaymentInitiationRequest } from '../../../api/model-classes/ClassSinglePaymentInitiationRequest';
 import { map } from 'rxjs/operators';
 import { HeaderConfig } from '../../../models/consts';
-import { RedirectStruct, RedirectType } from '../../redirect-page/redirect-struct';
+import { AccountStruct, RedirectStruct, RedirectType } from '../../redirect-page/redirect-struct';
 import { StorageService } from '../../../services/storage.service';
 import { ConfirmData } from '../payment-confirm/confirm.data';
 
@@ -19,6 +19,7 @@ export class InitiateComponent implements OnInit {
   public static ROUTE = 'initiate';
   bankId = '';
   accountId = '';
+  debitorIban = '';
 
   paymentForm: FormGroup;
   constructor(private formBuilder: FormBuilder,
@@ -28,6 +29,7 @@ export class InitiateComponent implements OnInit {
               private storageService: StorageService) {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
     this.accountId = this.route.snapshot.paramMap.get('accountid');
+    this.debitorIban = this.getDebitorIban(this.accountId);
     console.log('bankid:', this.bankId, ' accountid:', this.accountId);
   }
 
@@ -35,7 +37,6 @@ export class InitiateComponent implements OnInit {
     this.paymentForm = this.formBuilder.group({
       name: ['peter', Validators.required],
       creditorIban: ['AL90208110080000001039531801', [ValidatorService.validateIban, Validators.required]],
-      debitorIban: ['DE80760700240271232400', [ValidatorService.validateIban, Validators.required]],
       amount: ['12.34', [Validators.pattern('^[1-9]\\d*(\\.\\d{1,2})?$'), Validators.required]],
       purpose: ['test transfer']
     });
@@ -44,7 +45,7 @@ export class InitiateComponent implements OnInit {
   onConfirm() {
     // TODO
     let okurl = window.location.pathname;
-    okurl = okurl.replace('/initiate', '/loa');
+    okurl = okurl.replace('/initiate', 'payments');
     const notOkUrl = okurl;
     console.log('set ok url to ', okurl);
 
@@ -52,7 +53,7 @@ export class InitiateComponent implements OnInit {
     paymentRequest.amount = this.paymentForm.getRawValue().amount;
     paymentRequest.name = this.paymentForm.getRawValue().name;
     paymentRequest.creditorIban = this.paymentForm.getRawValue().creditorIban;
-    paymentRequest.debitorIban = this.paymentForm.getRawValue().debitorIban;
+    paymentRequest.debitorIban = this.debitorIban;
     paymentRequest.purpose = this.paymentForm.getRawValue().purpose;
     this.fintechSinglePaymentInitiationService.initiateSinglePayment(this.bankId, this.accountId,'',
       '',okurl, notOkUrl, paymentRequest, 'response')
@@ -89,11 +90,16 @@ export class InitiateComponent implements OnInit {
     this.router.navigate(['../../'], { relativeTo: this.route });
   }
 
-  get debitorIban() {
-    return this.paymentForm.get('debitorIban');
-  }
-
   get creditorIban() {
     return this.paymentForm.get('creditorIban');
+  }
+
+  private getDebitorIban(accountId: string) : string {
+    const list = this.storageService.getLoa();
+    for (const a of list) {
+      if (a.resourceId === accountId) {
+        return a.iban;
+      }
+    }
   }
 }

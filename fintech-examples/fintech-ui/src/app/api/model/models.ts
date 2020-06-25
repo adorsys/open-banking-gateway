@@ -15,6 +15,7 @@ export * from './inlineResponse2001';
 export * from './inlineResponse2002';
 export * from './linksAccountDetails';
 export * from './loginRequest';
+export * from './paymentInitiationWithStatusResponse';
 export * from './psuMessage';
 export * from './purposeCode';
 export * from './reportExchangeRate';
