@@ -30,6 +30,6 @@ security:
   signSubject: fintech@awesome-fintech.com
   algorithm: RSA
   claim-name-key: sign-data
-  urls-to-be-skipped:
-    # templates for string matcher
-    - /v1/banking/.+
+  urls-to-be-validated:
+    # templates for web filter
+    - /v1/banking/*
