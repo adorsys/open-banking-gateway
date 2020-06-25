@@ -77,6 +77,13 @@ api:
     path: /
     redirect-path-template: ${facade.urls.authorization-session-key.cookie.redirect-path-template}
     same-site: Lax
+    urls-to-be-validated:
+      -  # templates for web filter
+      - /v1/psu/*
+      - /v1/consent/*
+      # templates for string matcher
+      - /v1/psu/.+/renewal-authorization-session-key
+      - /v1/consent/.+
 
 facade:
   urls:
