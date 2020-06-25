@@ -1,4 +1,16 @@
-<p>bank id {{bankId}} account id {{accountId}}</p>
+<div class="lacc-parent">
+  <div class="lacc-list-container lacc-list-container">
+    <div class="lacc-list-item ">
+      <h1 class="lacc-list-item__headline lacc-list-item__headline--small">{{ account.name }}</h1>
+      <p class="lacc-list-item__subheadline lacc-list-item__subheadline--large">{{ account.iban }}</p>
+    </div>
+  </div>
+</div>
 
-<router-outlet></router-outlet>
+
+<div class="card card-frame--big">
+  <div class="lacc-parent">
+    <router-outlet></router-outlet>
+  </div>
+</div>
 

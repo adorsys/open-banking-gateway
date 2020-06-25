@@ -1,7 +1,34 @@
+<div>
+  <div *ngIf="list && list.length > 0">
+    <span class="ltx-category">Payments</span>
+    <div *ngFor="let status of list">
+      <div class="ltx-parent ltx-list-container ltx-list-container--shadow">
+        <div class="ltx-description">
+          {{ status.transactionStatus }}
+        </div>
+        <div class="ltx-description">
+          {{ status.initiationDate }}
+        </div>
+        <div class="ltx-description">
+          {{ status.creditorAccount.iban }}
+        </div>
+        <div class="ltx-description">
+          {{ status.remittanceInformationUnstructured }}
+        </div>
+        <div class="ltx-amount-number">
+          {{ status.instructedAmount.amount }}
+        </div>
+        <div class="ltx-amount-currency">
+          {{ status.instructedAmount.currency }}
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 
 <div class="d-sm-flex">
   <button (click)="initiateSinglePayment()" class="btn btn-outline-secondary w-100 mr-4" id="do_iniate">Initiate Payment</button>
 </div>
 
-show all the payments here
 
