@@ -34,7 +34,11 @@ export class SidebarComponent implements OnInit {
   }
 
   getRouterLinkListAccounts(): string {
-    return this.showListAccounts ? 'account' : '';
+    return this.showListAccounts ? 'account' : '.';
+  }
+
+  getRouterLinkInitiatePayment(): string {
+    return this.showInitiatePayment && this.isLoaDone() ? 'payment' : '.';
   }
 
   isLoaDone() {

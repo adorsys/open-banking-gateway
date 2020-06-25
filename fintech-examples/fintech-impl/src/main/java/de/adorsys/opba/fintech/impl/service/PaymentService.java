@@ -87,10 +87,11 @@ public class PaymentService {
 
     public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankId, String accountId) {
         SessionEntity sessionEntity = sessionLogicService.getSession();
-        List<ConsentEntity> list = consentRepository.findByUserEntityAndBankIdAndAccountId(sessionEntity.getUserEntity(), bankId, accountId);
+        // TODO https://app.zenhub.com/workspaces/open-banking-gateway-5dd3b3daf010250001260675/issues/adorsys/open-banking-gateway/812
+        // TODO https://app.zenhub.com/workspaces/open-banking-gateway-5dd3b3daf010250001260675/issues/adorsys/open-banking-gateway/794
+        List<ConsentEntity> list = consentRepository.findByUserEntityAndBankIdAndAccountIdAndConsentConfirmed(sessionEntity.getUserEntity(), bankId, accountId, true);
         List<PaymentInitiationWithStatusResponse> result = new ArrayList<>();
 
-        log.info("hi maksym, I want to do a call now");
         for (ConsentEntity consent : list) {
             de.adorsys.opba.tpp.pis.api.model.generated.PaymentInitiationWithStatusResponse body = tppPisPaymentStatusClient.getPaymentInformation(tppProperties.getServiceSessionPassword(),
                     sessionEntity.getUserEntity().getFintechUserId(),
