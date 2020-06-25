@@ -6,8 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
+import java.util.Set;
 
 @Data
 @Validated
@@ -27,4 +29,7 @@ public class CookieProperties {
 
     @NotBlank
     private String sameSite;
+
+    @NotEmpty
+    private Set<@NotBlank String> urlsToBeValidated;
 }
