@@ -26,8 +26,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface ValidationInfo {
 
-    Class<? extends ConditionProvider> NULL = null;
-
     /**
      * Frontend facing description of the violation - i.e. input type to use.
      */
@@ -42,10 +40,4 @@ public @interface ValidationInfo {
      *  Shows the ability to control the validation mode for specific fields.
      */
     ValidationMode validationMode() default ValidationMode.MANDATORY;
-
-    /**
-     *  Binds custom validation logic for specific field when
-     *  {@link de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ValidationMode} is 'CONDITIONAL'
-     */
-    Class<? extends ConditionProvider> condition() default ConditionProvider.class;
 }

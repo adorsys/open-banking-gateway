@@ -10,7 +10,14 @@ import org.flowable.engine.delegate.BpmnError;
 @Getter
 public class ValidationIssueException extends BpmnError {
 
+    private final String message;
+
     public ValidationIssueException() {
+        this(null);
+    }
+
+    public ValidationIssueException(String message) {
         super(GlobalConst.VALIDATION_ERROR_CODE);
+        this.message = message;
     }
 }
