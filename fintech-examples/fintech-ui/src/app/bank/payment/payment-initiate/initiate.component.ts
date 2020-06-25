@@ -43,11 +43,10 @@ export class InitiateComponent implements OnInit {
   }
 
   onConfirm() {
-    // TODO
     let okurl = window.location.pathname;
-    okurl = okurl.replace('/initiate', 'payments');
-    const notOkUrl = okurl;
-    console.log('set ok url to ', okurl);
+    const notOkUrl = okurl.replace('/payment/.*', '/payment/accounts');
+    okurl = okurl.replace('/initiate', '/payments');
+    console.log('set urls to ', okurl, ' ', notOkUrl);
 
     const paymentRequest = new ClassSinglePaymentInitiationRequest();
     paymentRequest.amount = this.paymentForm.getRawValue().amount;
@@ -87,7 +86,7 @@ export class InitiateComponent implements OnInit {
   }
 
   onDeny() {
-    this.router.navigate(['../../'], { relativeTo: this.route });
+    this.router.navigate(['../../../accounts'], { relativeTo: this.route });
   }
 
   get creditorIban() {
