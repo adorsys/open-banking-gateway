@@ -53,7 +53,7 @@ api:
     redirect-path-template: /
     same-site: Lax
     urls-to-be-validated:
-      -  # templates for web filter
+      # templates for web filter
       - /v1/psu/*
       - /v1/consent/*
       # templates for string matcher
