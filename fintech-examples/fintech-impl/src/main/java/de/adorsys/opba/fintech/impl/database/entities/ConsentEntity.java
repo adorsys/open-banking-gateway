@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Getter
@@ -30,6 +31,7 @@ public class ConsentEntity {
         this.tppAuthId = tppAuthId;
         this.bankId = bankId;
         this.accountId = accountId;
+        this.creationTime = OffsetDateTime.now();
     }
 
     @Id
@@ -42,6 +44,9 @@ public class ConsentEntity {
     private String tppAuthId;
     private UUID tppServiceSessionId;
     private ConsentType consentType;
+    @Column(nullable = false)
+    private OffsetDateTime creationTime;
+
     @Column(nullable = false)
     private Boolean consentConfirmed;
     @ManyToOne(fetch = FetchType.LAZY)
