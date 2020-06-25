@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,15 +31,13 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public class RequestSignatureValidationFilter implements Filter {
-    private final Set<String> urlsToBeSkipped;
     private final RequestVerifyingService requestVerifyingService;
     private final Duration requestTimeLimit;
     private final ConcurrentHashMap<String, String> consumerKeysMap;
     private final OperationTypeProperties properties;
 
-    public RequestSignatureValidationFilter(Set<String> urlsToBeSkipped, RequestVerifyingService requestVerifyingService, Duration requestTimeLimit,
+    public RequestSignatureValidationFilter(RequestVerifyingService requestVerifyingService, Duration requestTimeLimit,
                                             ConcurrentHashMap<String, String> consumerKeysMap, OperationTypeProperties properties) {
-        this.urlsToBeSkipped = urlsToBeSkipped;
         this.requestVerifyingService = requestVerifyingService;
         this.requestTimeLimit = requestTimeLimit;
         this.consumerKeysMap = consumerKeysMap;
@@ -54,11 +51,6 @@ public class RequestSignatureValidationFilter implements Filter {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-
-        if (isAvoidFilterCheck(request.getRequestURI())) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         FilterValidationHeaderValues headerValues = buildRequestValidationData(request);
         String expectedPath = properties.getAllowedPath().get(headerValues.getOperationType());
@@ -85,11 +77,6 @@ public class RequestSignatureValidationFilter implements Filter {
         if (validateVerificationResult(verificationResult, response) && validateExpirationDate(instant, response)) {
             filterChain.doFilter(request, response);
         }
-    }
-
-    private boolean isAvoidFilterCheck(String uri) {
-        return urlsToBeSkipped.stream()
-                       .anyMatch(uri::matches);
     }
 
     private boolean isInvalidOperationType(FilterValidationHeaderValues headerValues, String expectedPath, HttpServletResponse response) throws IOException {

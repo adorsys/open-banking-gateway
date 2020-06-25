@@ -39,7 +39,7 @@ public class RequestCookieFilter implements Filter {
 
         String uri = request.getRequestURI();
 
-        if (isAvoidFilterCheck(uri)
+        if (shouldNotFilter(uri)
                     || isCookieAvailable(request.getCookies())) {
 
             filterChain.doFilter(request, response);
@@ -50,7 +50,7 @@ public class RequestCookieFilter implements Filter {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
-    private boolean isAvoidFilterCheck(String uri) {
+    private boolean shouldNotFilter(String uri) {
         return urlsToBeValidated.stream()
                        .noneMatch(uri::matches);
     }
