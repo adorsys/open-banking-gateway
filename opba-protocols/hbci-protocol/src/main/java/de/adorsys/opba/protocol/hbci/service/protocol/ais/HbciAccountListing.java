@@ -73,8 +73,6 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
         );
     }
 
-
-    @SuppressWarnings("PMD.EmptyCatchBlock") // IbanFormatException is skippable exception if account IBAN can't be calculated
     BankAccount validateAndFixAccountIbans(DelegateExecution execution, BankAccount account) {
         if (!Strings.isNullOrEmpty(account.getIban())) {
             return account;
@@ -95,6 +93,7 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
         return account;
     }
 
+    @SuppressWarnings("PMD.EmptyCatchBlock") // IbanFormatException is skippable exception if account IBAN can't be calculated
     private void tryToParseIban(BankAccount account) {
         if (Strings.isNullOrEmpty(account.getCountry())) {
             return;
@@ -114,7 +113,7 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
                     .build();
             account.setIban(iban.toString());
         } catch (IbanFormatException ex) {
-            // NOP
+            // NOP, it can be internal account without IBAN
         }
     }
 
