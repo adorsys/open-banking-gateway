@@ -89,6 +89,17 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
         if (Strings.isNullOrEmpty(account.getAccountNumber())) {
             throw new IllegalArgumentException("No account number to calculate IBAN");
         }
+
+        tryToParseIban(account);
+        account.setAccountNumber(account.getAccountNumber());
+        return account;
+    }
+
+    private void tryToParseIban(BankAccount account) {
+        if (Strings.isNullOrEmpty(account.getCountry())) {
+            return;
+        }
+
         // See https://www.iban.com/country/germany
         // IBAN is DEKK BBBB BBBB CCCC CCCC CC
         // Where:
@@ -97,7 +108,7 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
         // C = Account number ( Kontonummer in German )
         try {
             Iban iban = new Iban.Builder()
-                    .countryCode(Strings.isNullOrEmpty(account.getCountry()) ? CountryCode.DE : CountryCode.getByCode(account.getCountry()))
+                    .countryCode(CountryCode.getByCode(account.getCountry()))
                     .bankCode(Strings.padStart(account.getBlz(), BLZ_LEN, '0'))
                     .accountNumber(Strings.padStart(account.getAccountNumber(), ACCOUNT_NUMBER_LEN, '0'))
                     .build();
@@ -105,9 +116,6 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
         } catch (IbanFormatException ex) {
             // NOP
         }
-
-        account.setAccountNumber(account.getAccountNumber());
-        return account;
     }
 
     public static <T extends AbstractTransaction> TransactionRequest<T> create(T transaction,

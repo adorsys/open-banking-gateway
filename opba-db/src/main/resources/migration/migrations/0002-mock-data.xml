@@ -54,16 +54,6 @@
            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (2000, 3000, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (3000, 3000, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (4000, 3000, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
-
-           <!--  ING-HBCI  -->
-           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (10000, '4c47e75a-760f-4d99-8d88-490221b39f98', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
-           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (20000, '4c47e75a-760f-4d99-8d88-490221b39f98', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
-           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (30000, '4c47e75a-760f-4d99-8d88-490221b39f98', 'AUTHORIZATION', '', false);
-
-           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (10000, 30000, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
-           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (20000, 30000, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
-           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (30000, 30000, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
-           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (40000, 30000, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
        </sql>
     </changeSet>
 
