@@ -28,14 +28,11 @@ export class PaymentAccountPaymentsComponent implements OnInit {
   ngOnInit() {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
     this.accountId = this.route.snapshot.paramMap.get('accountid');
-    console.log('lpc bankid:', this.bankId, ' accountId:', this.accountId);
 
     this.fintechRetrieveAllSinglePaymentsService.retrieveAllSinglePayments(this.bankId, this.accountId, '', '', 'response')
       .pipe(map(response => response))
       .subscribe(
         response => {
-          console.log('response status of payment call is ', response.status);
-          console.log('body is :',JSON.stringify(response.body));
           this.list = response.body;
         }
       );
@@ -47,6 +44,9 @@ export class PaymentAccountPaymentsComponent implements OnInit {
     this.router.navigate(['../initiate'], { relativeTo: this.route });
   }
 
+  onDeny() {
+    this.router.navigate(['../../../accounts'], { relativeTo: this.route });
+  }
 
 
 }
