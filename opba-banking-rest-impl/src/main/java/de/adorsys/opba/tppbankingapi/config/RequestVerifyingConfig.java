@@ -37,7 +37,7 @@ public class RequestVerifyingConfig {
     private String claimNameKey;
 
     @NotEmpty
-    private Set<@NotBlank String> urlsToBeSkipped;
+    private Set<@NotBlank String> urlsToBeValidated;
 
     @Bean
     @Profile("!no-signature-filter")
@@ -45,7 +45,8 @@ public class RequestVerifyingConfig {
 
         RequestVerifyingService requestVerifyingService = new RsaJwtsVerifyingServiceImpl(claimNameKey);
         FilterRegistrationBean<RequestSignatureValidationFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new RequestSignatureValidationFilter(urlsToBeSkipped, requestVerifyingService, requestValidityWindow, consumerPublicKeys, properties));
+        registrationBean.setFilter(new RequestSignatureValidationFilter(requestVerifyingService, requestValidityWindow, consumerPublicKeys, properties));
+        registrationBean.setUrlPatterns(urlsToBeValidated);
 
         return registrationBean;
     }
