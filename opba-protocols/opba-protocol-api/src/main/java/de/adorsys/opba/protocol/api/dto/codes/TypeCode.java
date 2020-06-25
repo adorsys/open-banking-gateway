@@ -28,5 +28,10 @@ public enum TypeCode {
     /**
      * Date in ISO-8601 format is required from user.
      */
-    DATE
+    DATE,
+
+    /**
+     * UI can't show this field, throws runtime exception if occurred.
+     */
+    PROHIBITED
 }

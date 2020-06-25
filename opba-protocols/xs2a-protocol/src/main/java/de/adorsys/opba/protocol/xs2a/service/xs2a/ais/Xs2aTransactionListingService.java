@@ -1,12 +1,17 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.ais;
 
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
+import de.adorsys.opba.protocol.api.dto.codes.FieldCode;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.ContextMode;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathQueryHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathQueryHeadersMapperTemplate;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ExternalValidationModeDeclaration;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ValidationMode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aResourceParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aTransactionParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aWithConsentIdHeaders;
@@ -18,6 +23,9 @@ import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Calls ASPSP XS2A API to list transactions of the account using already existing consent.
@@ -66,6 +74,31 @@ public class Xs2aTransactionListingService extends ValidatedExecution<Transactio
                 DtoMapper<TransactionListXs2aContext, Xs2aResourceParameters> toPath,
                 DtoMapper<TransactionListXs2aContext, Xs2aTransactionParameters> toQuery) {
             super(toHeaders, toPath, toQuery);
+        }
+    }
+
+    /**
+     * Special override for ListTransaction resourceId validation for the case when FinTech requires global consent
+     * for transactions, acccounts, balances on all accounts. Should not be used in real ListTransactions call,
+     * only in mocked ones.
+     */
+    @Service
+    public static class ResourceIdOptionalIfListTransactionsForConsent implements ExternalValidationModeDeclaration {
+        @Override
+        public Set<FieldCode> appliesTo() {
+            return Collections.singleton(FieldCode.RESOURCE_ID);
+        }
+
+        @Override
+        public boolean appliesToContext(Xs2aContext context) {
+            return ProtocolAction.LIST_TRANSACTIONS.equals(context.getAction())
+                    && context.getServiceSessionId() != null
+                    && context.getMode() == ContextMode.MOCK_REAL_CALLS;
+        }
+
+        @Override
+        public ValidationMode computeValidationMode(Xs2aContext context) {
+            return ValidationMode.OPTIONAL;
         }
     }
 }
