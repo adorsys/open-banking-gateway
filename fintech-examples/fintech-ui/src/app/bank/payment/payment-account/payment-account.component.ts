@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FintechSinglePaymentInitiationService } from '../../../api';
 import { StorageService } from '../../../services/storage.service';
 import { AccountStruct } from '../../redirect-page/redirect-struct';
 
@@ -31,8 +30,8 @@ export class PaymentAccountComponent implements OnInit {
   }
 
   private getSelectedAccount(accountId: string) : AccountStruct {
-    const list = this.storageService.getLoa();
-    for (const a of list) {
+    const alist = this.storageService.getLoa();
+    for (const a of alist) {
       if (a.resourceId === accountId) {
         return a;
       }
