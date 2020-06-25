@@ -1,5 +1,11 @@
 @import 'src/assets/themes/variables';
 
+.lacc-parent {
+  margin: 50px;
+  display: flex;
+  flex-direction: row;
+}
+
 p {
   margin-bottom: 0;
 }

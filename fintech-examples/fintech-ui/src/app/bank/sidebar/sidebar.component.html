@@ -17,7 +17,7 @@
       </a>
     </li>
     <li class="nav-item{{ showInitiatePayment && isLoaDone() ? '' : '--disabled' }} sidebar-element">
-      <a class="nav-link" [routerLink]="['payment']">
+      <a class="nav-link" [routerLink]="getRouterLinkInitiatePayment()">
         <div class="icon__container">
           <img alt="transfer" class="text-primary" src="assets/icons/icons8-sent.svg" />
         </div>
