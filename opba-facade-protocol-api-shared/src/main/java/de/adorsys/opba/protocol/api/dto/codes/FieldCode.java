@@ -117,6 +117,9 @@ public enum FieldCode {
      */
     TPP_REDIRECT_PREFERRED,
 
+    /**
+     * I.e. account id.
+     */
     RESOURCE_ID,
 
     DATE_FROM,
