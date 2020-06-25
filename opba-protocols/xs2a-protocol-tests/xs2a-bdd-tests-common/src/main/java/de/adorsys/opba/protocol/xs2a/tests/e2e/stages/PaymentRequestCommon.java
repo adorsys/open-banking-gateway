@@ -31,6 +31,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommon
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.PIS_LOGIN_USER_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.SEPA_PAYMENT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.withPaymentHeaders;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.withPaymentInfoHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,9 +45,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> extends RequestCommon<SELF> {
 
     public SELF fintech_calls_initiate_payment_for_anton_brueckner() {
-        ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER, requestSigningService, PIS)
+        String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-single-sepa-payment.json");
+        ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER, requestSigningService, PIS, body)
                  .contentType(APPLICATION_JSON_VALUE)
-                 .body(readResource("restrecord/tpp-ui-input/params/anton-brueckner-single-sepa-payment.json"))
+                 .body(body)
              .when()
                  .post(INITIATE_PAYMENT_ENDPOINT, SEPA_PAYMENT)
              .then()
@@ -60,9 +62,10 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     }
 
     public SELF fintech_calls_initiate_payment_for_max_musterman() {
-        ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, requestSigningService, PIS)
+        String body = readResource("restrecord/tpp-ui-input/params/max-musterman-single-sepa-payment.json");
+        ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, requestSigningService, PIS, body)
                 .contentType(APPLICATION_JSON_VALUE)
-                .body(readResource("restrecord/tpp-ui-input/params/max-musterman-single-sepa-payment.json"))
+                .body(body)
             .when()
                 .post(PIS_SINGLE_PAYMENT_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
             .then()
@@ -122,7 +125,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     }
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp() {
-        ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER, requestSigningService, PIS)
+        ExtractableResponse<Response> response = withPaymentInfoHeaders(ANTON_BRUECKNER, requestSigningService, PIS)
                      .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                      .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                  .when()
