@@ -5,7 +5,6 @@ import com.google.common.collect.Sets;
 import com.google.common.io.BaseEncoding;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
-import com.google.common.primitives.Ints;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -107,13 +106,26 @@ class HbciStubGenerator {
     }
 
     private String generateObfuscatedValue(String original) {
-        if (null != Ints.tryParse(original)) {
-            return String.valueOf(RANDOM.nextInt(Integer.parseInt(original)));
+        Long val = randomNumberOfSameRadixSize(original);
+        if (null != val) {
+            return val.toString();
         }
 
         byte[] buffer = new byte[original.length()];
         RANDOM.nextBytes(buffer);
         return BaseEncoding.base64Url().omitPadding().encode(buffer).substring(0, original.length());
+    }
+
+    private Long randomNumberOfSameRadixSize(String original) {
+        try {
+            long value = Long.parseLong(original);
+            double logValue = Math.log10(value);
+            long min = (long) Math.pow(10.0, (int) logValue);
+            long max = (long) Math.pow(10.0, (int) (logValue + 0.5));
+            return min + (long)(RANDOM.nextDouble() * (max - min));
+        } catch (NumberFormatException ex) {
+            return null;
+        }
     }
 
     /**
