@@ -85,31 +85,6 @@ public class PaymentService {
                 responseOfTpp.getHeaders());
     }
 
-
-    /*
-    public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankId, String accountId) {
-        SessionEntity sessionEntity = sessionLogicService.getSession();
-        List<ConsentEntity> list = consentRepository.findByUserEntityAndBankIdAndAccountId(sessionEntity.getUserEntity(), bankId, accountId);
-        List<PaymentInitiationWithStatusResponse> result = new ArrayList<>();
-
-        for (ConsentEntity consent : list) {
-            result.add(
-                    Mappers.getMapper(PaymentInitiationWithStatusResponseMapper.class).mapFromTppToFintech(
-                            tppPisPaymentStatusClient.getPaymentInformation(tppProperties.getServiceSessionPassword(),
-                                    sessionEntity.getUserEntity().getFintechUserId(),
-                                    UUID.fromString(restRequestContext.getRequestId()),
-                                    paymentProduct,
-                                    COMPUTE_X_TIMESTAMP_UTC,
-                                    OperationType.PIS.toString(),
-                                    COMPUTE_X_REQUEST_SIGNATURE,
-                                    COMPUTE_FINTECH_ID,
-                                    bankId,
-                                    consent.getTppServiceSessionId()).getBody()));
-        }
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-*/
     public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankId, String accountId) {
         SessionEntity sessionEntity = sessionLogicService.getSession();
         List<ConsentEntity> list = consentRepository.findByUserEntityAndBankIdAndAccountId(sessionEntity.getUserEntity(), bankId, accountId);
@@ -128,6 +103,7 @@ public class PaymentService {
                     bankId,
                     consent.getTppServiceSessionId()).getBody();
             PaymentInitiationWithStatusResponse paymentInitiationWithStatusResponse = Mappers.getMapper(PaymentInitiationWithStatusResponseMapper.class).mapFromTppToFintech(body);
+            paymentInitiationWithStatusResponse.setInitiationDate(consent.getCreationTime().toLocalDate());
             result.add(paymentInitiationWithStatusResponse);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
