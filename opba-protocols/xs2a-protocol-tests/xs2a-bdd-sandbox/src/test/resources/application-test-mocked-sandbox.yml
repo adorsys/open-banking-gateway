@@ -15,7 +15,7 @@ protocol:
     urls:
       ais:
         web-hooks:
-          ok:  ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+          ok: ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
           nok: ${protocol.gateway-base-url}/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
       pis:
         web-hooks:
@@ -30,3 +30,6 @@ security:
   signSubject: fintech@awesome-fintech.com
   algorithm: RSA
   claim-name-key: sign-data
+  urls-to-be-skipped:
+    # templates for string matcher
+    - /v1/banking/.+
