@@ -1,12 +1,12 @@
 package de.adorsys.opba.api.security.internal.filter;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,15 +22,24 @@ import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZA
  * AuthorizationSessionKeyConfig
  */
 @Slf4j
-@RequiredArgsConstructor
-public class RequestCookieFilter extends OncePerRequestFilter {
+public class RequestCookieFilter implements Filter {
     private final Set<String> urlsToBeValidated;
 
+    public RequestCookieFilter(Set<String> urlsToBeValidated) {
+        this.urlsToBeValidated = urlsToBeValidated;
+    }
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    public void doFilter(ServletRequest servletRequest,
+                         ServletResponse servletResponse,
+                         FilterChain filterChain) throws IOException, ServletException {
+
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+
         String uri = request.getRequestURI();
 
-        if (skipCookieCheck(uri)
+        if (isAvoidFilterCheck(uri)
                     || isCookieAvailable(request.getCookies())) {
 
             filterChain.doFilter(request, response);
@@ -38,10 +47,10 @@ public class RequestCookieFilter extends OncePerRequestFilter {
         }
 
         log.warn("Cookie is required for the request {} - {} but it was not provided!", request.getMethod(), request.getRequestURI());
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
-    private boolean skipCookieCheck(String uri) {
+    private boolean isAvoidFilterCheck(String uri) {
         return urlsToBeValidated.stream()
                        .noneMatch(uri::matches);
     }

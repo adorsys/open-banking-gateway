@@ -7,20 +7,20 @@ import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.api.security.external.mapper.HttpRequestToDataToSignMapper;
 import de.adorsys.opba.api.security.internal.config.OperationTypeProperties;
 import de.adorsys.opba.api.security.internal.service.RequestVerifyingService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.AntPathMatcher;
-import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.UrlPathHelper;
 
+import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -31,20 +31,35 @@ import java.util.concurrent.ConcurrentHashMap;
  * The filter can be disabled by using 'no-signature-filter' spring active profile.
  */
 @Slf4j
-@RequiredArgsConstructor
-public class RequestSignatureValidationFilter extends OncePerRequestFilter {
-    public static final String OPBA_BANKING_PATH = "/v1/banking/**";
-
+public class RequestSignatureValidationFilter implements Filter {
+    private final Set<String> urlsToBeSkipped;
     private final RequestVerifyingService requestVerifyingService;
     private final Duration requestTimeLimit;
     private final ConcurrentHashMap<String, String> consumerKeysMap;
     private final OperationTypeProperties properties;
 
-    private final AntPathMatcher matcher = new AntPathMatcher();
-    private final UrlPathHelper pathHelper = new UrlPathHelper();
+    public RequestSignatureValidationFilter(Set<String> urlsToBeSkipped, RequestVerifyingService requestVerifyingService, Duration requestTimeLimit,
+                                            ConcurrentHashMap<String, String> consumerKeysMap, OperationTypeProperties properties) {
+        this.urlsToBeSkipped = urlsToBeSkipped;
+        this.requestVerifyingService = requestVerifyingService;
+        this.requestTimeLimit = requestTimeLimit;
+        this.consumerKeysMap = consumerKeysMap;
+        this.properties = properties;
+    }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    public void doFilter(ServletRequest servletRequest,
+                         ServletResponse servletResponse,
+                         FilterChain filterChain) throws IOException, ServletException {
+
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+        if (isAvoidFilterCheck(request.getRequestURI())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         FilterValidationHeaderValues headerValues = buildRequestValidationData(request);
         String expectedPath = properties.getAllowedPath().get(headerValues.getOperationType());
 
@@ -72,9 +87,9 @@ public class RequestSignatureValidationFilter extends OncePerRequestFilter {
         }
     }
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        return !matcher.match(OPBA_BANKING_PATH, pathHelper.getPathWithinApplication(request));
+    private boolean isAvoidFilterCheck(String uri) {
+        return urlsToBeSkipped.stream()
+                       .anyMatch(uri::matches);
     }
 
     private boolean isInvalidOperationType(FilterValidationHeaderValues headerValues, String expectedPath, HttpServletResponse response) throws IOException {
