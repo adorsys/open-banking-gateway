@@ -420,4 +420,33 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
         return self();
     }
+
+    public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_without_cookie_unauthorized() {
+        RestAssured
+                .given()
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"))
+                .when()
+                    .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
+                .then()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .extract();
+
+        return self();
+    }
+
+    public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_without_cookie_unauthorized() {
+        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
+                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .when()
+                    .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
+                .then()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .extract();
+
+        return self();
+    }
 }
