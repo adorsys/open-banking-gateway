@@ -51,6 +51,7 @@ UPD.KInfo_*.KTV.number
 UPD.KInfo.KTV.number
 UPD.KInfo_*.name1
 UPD.KInfo.name1
+UPD.KInfo_*.name*
 UPD.UPA.userdata
 UPD.UPA.userid
 UPD.UPA.username
