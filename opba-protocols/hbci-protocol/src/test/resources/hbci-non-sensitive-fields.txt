@@ -138,6 +138,16 @@ GVRes.SEPAInfoRes*.Acc.KIK.country
 GVRes.SEPAInfoRes*.Acc_*.sepa
 GVRes.SEPAInfoRes*.Acc.KIK.blz
 GVRes.SEPAInfoRes*.SegHead.ref
+GVRes.KUmsZeitCamtRes*.KTV.bic
+GVRes.KUmsZeitRes*.SegHead.version
+GVRes.KUmsZeitRes*.SegHead.code
+GVRes.KUmsZeitRes*.SegHead.ref
+GVRes.KUmsZeitRes*.SegHead.seq
+GVRes.KUmsZeitCamtRes*.SegHead.seq
+GVRes.KUmsZeitCamtRes*.SegHead.code
+GVRes.KUmsZeitCamtRes*.format
+GVRes.KUmsZeitCamtRes*.SegHead.version
+GVRes.KUmsZeitCamtRes*.SegHead.ref
 Idn.KIK.blz
 Idn.KIK.country
 Idn.SegHead.code
