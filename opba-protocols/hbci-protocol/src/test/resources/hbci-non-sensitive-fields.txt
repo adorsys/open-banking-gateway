@@ -216,6 +216,14 @@ GVRes.TANMediaListRes4.SegHead.ref
 GVRes.TANMediaListRes4.SegHead.seq
 GVRes.TANMediaListRes4.SegHead.version
 GVRes.TANMediaListRes4.tanoption
+GV.SEPAInfo1.SegHead.version
+GV.SEPAInfo1.SegHead.code
+GV.SEPAInfo1.SegHead.seq
+GV.TANMediaList4.mediacategory
+GV.TANMediaList4.SegHead.code
+GV.TANMediaList4.mediatype
+GV.TANMediaList4.SegHead.version
+GV.TANMediaList4.SegHead.seq
 Idn.KIK.blz
 Idn.KIK.country
 Idn.SegHead.code
@@ -317,6 +325,8 @@ TAN2StepRes6.SegHead.ref
 TAN2StepRes6.SegHead.seq
 TAN2StepRes6.SegHead.version
 TAN2StepRes6.tanmedia
+TAN2Step6.ChallengeKlassParams.param*
+TAN2Step6.tanmedia
 UPD.KInfo_*.acctype
 UPD.KInfo_*.AllowedGV_*.code
 UPD.KInfo_*.AllowedGV.code
