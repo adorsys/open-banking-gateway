@@ -3,7 +3,7 @@ import { AccountDetails } from '../../api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
 import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
-import { HeaderConfig, LoARetrievalInformation } from '../../models/consts';
+import { HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 import { SettingsService } from '../services/settings.service';
 import { tap } from 'rxjs/operators';
@@ -40,6 +40,10 @@ export class ListAccountsComponent implements OnInit {
 
   isSelected(id) {
     return id === this.selectedAccount ? 'selected' : 'unselected';
+  }
+
+  visibleAccountNumber(acc: AccountDetails) {
+    return (!acc.iban || acc.iban.length === 0) ? acc.bban : acc.iban
   }
 
   private loadAccount(): void {

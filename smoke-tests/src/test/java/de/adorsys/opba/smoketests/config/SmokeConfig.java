@@ -1,9 +1,11 @@
 package de.adorsys.opba.smoketests.config;
 
+import de.adorsys.opba.api.security.internal.config.CookieProperties;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,5 +44,11 @@ public class SmokeConfig {
     @Bean
     SandboxConsentAuthApproachState authState() {
         return new SandboxConsentAuthApproachState(aspspProfileServerUri);
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "test.api.cookie")
+    CookieProperties properties() {
+        return new CookieProperties();
     }
 }

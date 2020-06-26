@@ -46,7 +46,12 @@ public class HbciResultBodyExtractor {
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE)
     public interface HbciToAccountBodyMapper {
-        @Mapping(source = "iban", target = "resourceId")
-        AccountListDetailBody map(BankAccount accountList);
+
+        @Mapping(
+                expression = "java(com.google.common.base.Strings.isNullOrEmpty(account.getIban()) ? account.getAccountNumber() : account.getIban())",
+                target = "resourceId"
+        )
+        @Mapping(source = "accountNumber", target = "bban")
+        AccountListDetailBody map(BankAccount account);
     }
 }

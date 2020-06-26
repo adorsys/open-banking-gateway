@@ -75,11 +75,11 @@ class TestBankSearchPerformance extends BaseMockitoTest {
         statisticService.getTestResult().forEach(tr -> log.info("{}", tr));
 
         Long start = statisticService.getTestResult()
-                .stream().map(TestResult::getStart).collect(Collectors.toList())
-                .stream().min(Long::compareTo).get();
+                             .stream().map(TestResult::getStart).collect(Collectors.toList())
+                             .stream().min(Long::compareTo).get();
         Long end = statisticService.getTestResult()
-                .stream().map(TestResult::getEnd).collect(Collectors.toList())
-                .stream().max(Long::compareTo).get();
+                           .stream().map(TestResult::getEnd).collect(Collectors.toList())
+                           .stream().max(Long::compareTo).get();
         log.info("start: {}", start);
         log.info("end: {}", end);
         log.info("{} calls completed in {} milliseconds", ITERATIONS, end - start);
@@ -101,17 +101,21 @@ class TestBankSearchPerformance extends BaseMockitoTest {
                         get("/v1/banking/search/bank-search")
                                 .header("Authorization", "123")
                                 .header("Compute-PSU-IP-Address", "true")
-
                                 .header(X_REQUEST_ID, xRequestId)
                                 .header(X_TIMESTAMP_UTC, xTimestampUtc)
                                 .header(X_OPERATION_TYPE, OperationType.BANK_SEARCH)
-                                .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new BankSearchDataToSign(xRequestId, xTimestampUtc, OperationType.BANK_SEARCH, keyword)))
+                                .header(X_REQUEST_SIGNATURE, requestSigningService.signature(BankSearchDataToSign.builder()
+                                                                                                     .xRequestId(xRequestId)
+                                                                                                     .instant(xTimestampUtc)
+                                                                                                     .operationType(OperationType.BANK_SEARCH)
+                                                                                                     .keyword(keyword)
+                                                                                                     .build()))
                                 .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
                                 .param("keyword", keyword)
                                 .param("max", "10")
                                 .param("start", "0"))
-                        .andExpect(status().isOk())
-                        .andReturn();
+                                              .andExpect(status().isOk())
+                                              .andReturn();
                 long end = System.currentTimeMillis();
                 TestResult testResult = new TestResult(start, end, keyword, mvcResult.getResponse().getContentAsString());
                 statisticService.getTestResult().add(testResult);

@@ -2,8 +2,6 @@ package de.adorsys.opba.api.security.external.domain;
 
 import org.springframework.http.HttpMethod;
 
-import javax.servlet.http.HttpServletRequest;
-
 public enum OperationType {
     AIS,
     PIS,
@@ -18,7 +16,11 @@ public enum OperationType {
         return path.contains("/bank-search");
     }
 
-    public static boolean isPaymentInfo(HttpServletRequest request) {
-        return HttpMethod.GET.name().equals(request.getMethod());
+    public static boolean isGetPaymentStatus(String path) {
+        return path.contains("/status");
+    }
+
+    public static boolean isGetPayment(String method) {
+        return HttpMethod.GET.name().equals(method);
     }
 }
