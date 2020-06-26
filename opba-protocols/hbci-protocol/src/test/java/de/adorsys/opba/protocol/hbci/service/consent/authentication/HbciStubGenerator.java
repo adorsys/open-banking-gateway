@@ -195,7 +195,7 @@ class HbciStubGenerator {
     @Disabled
     @SneakyThrows
     void classifyMessage() {
-        Path target = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/dissect/10-request.txt");
+        Path target = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/dissect/7-request.txt");
         assertThat(parseMessage(readMessage(target))).isNotNull();
     }
 
@@ -216,7 +216,7 @@ class HbciStubGenerator {
                 .replaceAll("HNSHK.+?'", "");
 
         // Fix dangling HKSPA
-        return messageStr.replaceAll("HKSPA:\\d:\\d'", "$0\\+'");
+        return messageStr.replaceAll("(HKSPA:\\d:\\d)'", "$1\\+'");
     }
 
     private static Set<String> generateFromStarsRange100(String str) {
