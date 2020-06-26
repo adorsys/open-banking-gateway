@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -39,6 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 class HbciStubGenerator {
 
+    private static final int MINIMUM_LENGTH_FOR_UNIQUENESS = 3;
     private static final Random RANDOM = new Random();
 
     private static final Document SYNTAX = DocumentFactory.createDocument("300");
@@ -61,13 +64,14 @@ class HbciStubGenerator {
     @Test
     @SneakyThrows
     void generateImpersonatedStub() {
-        Path target = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/dissect/10-response.txt"); // Replace with your fixture path
-        String messageStr = new String(Files.asByteSource(target.toFile()).read(), StandardCharsets.ISO_8859_1)
-                .replaceAll("\n", "'")
+        Path target = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/dissect/12-response-raw.txt"); // Replace with your fixture path
+        String messageStr = new String(Files.asByteSource(target.toFile()).read(), StandardCharsets.UTF_8)
+                .replaceAll("\n", "\r\n")
+               // .replaceAll("\n", "'")
                 .replace("'$", "")
                 // Remove crypto-headers
                 .replaceAll("HNVSK.+?'", "")
-                .replaceAll("HNVSD.+?'", "");
+                .replaceAll("HNVSD.+?@.+?@", "");
 
         // contains all values that were replaced by if their length is more than 4 chars.
         // If value occurs in one field and then same in another - they should be obfuscated with same value.
@@ -77,7 +81,7 @@ class HbciStubGenerator {
 
         for (String sensitive : sensitiveFields) {
             String value = msg.getData().get(sensitive);
-            if (value.length() >= 4) {
+            if (value.length() >= MINIMUM_LENGTH_FOR_UNIQUENESS) {
                 handleCacheableSensitiveValue(replacedValuesCache, msg, sensitive, value);
                 continue;
             }
@@ -102,9 +106,39 @@ class HbciStubGenerator {
             return;
         }
 
+        if (sensitive.contains("KUmsZeitRes5") && sensitive.contains("booked")) {
+            handleTransactionResponseBody(replacedValuesCache, msg, sensitive, value);
+            return;
+        }
+
         String newValue = generateObfuscatedValue(sensitive, value);
         setValue(msg, sensitive, newValue);
         replacedValuesCache.put(value, newValue);
+    }
+
+    private void handleTransactionResponseBody(Map<String, String> replacedValuesCache, Message msg, String sensitive, String value) {
+        Pattern pattern = Pattern.compile("(\\d{3,})");
+        Matcher numberMatcher = pattern.matcher(value);
+        String obfuscatedValue = value;
+        while (numberMatcher.find()) {
+            String numValue = numberMatcher.group(1);
+
+            String cached = replacedValuesCache.get(numValue);
+            if (null != cached) {
+                setValue(msg, sensitive, cached);
+                return;
+            }
+
+            Long val = randomNumberOfSameRadixSize(numValue);
+            if (null == val) {
+                continue;
+            }
+
+            obfuscatedValue = obfuscatedValue.replaceAll(numValue, val.toString());
+        }
+
+        setValue(msg, sensitive, "B" + obfuscatedValue);
+        replacedValuesCache.put(value, obfuscatedValue);
     }
 
     private String generateObfuscatedValue(String keyName, String original) {
@@ -136,7 +170,7 @@ class HbciStubGenerator {
             long value = Long.parseLong(original);
             double logValue = Math.log10(value);
             long min = (long) Math.pow(10.0, (int) logValue);
-            long max = (long) Math.pow(10.0, (int) (logValue + 0.5));
+            long max = (long) Math.pow(10.0, (int) (logValue + 1.0));
             return min + (long)(RANDOM.nextDouble() * (max - min));
         } catch (NumberFormatException ex) {
             return null;
@@ -156,7 +190,7 @@ class HbciStubGenerator {
 
     @NotNull
     private String readMessage(Path target) throws IOException {
-        return new String(Files.asByteSource(target.toFile()).read(), StandardCharsets.ISO_8859_1)
+        return new String(Files.asByteSource(target.toFile()).read(), StandardCharsets.UTF_8)
                 .replaceAll("\n", "'")
                 .replace("'$", "")
                 // Remove crypto-headers
@@ -198,6 +232,7 @@ class HbciStubGenerator {
         AtomicReference<Message> result = new AtomicReference<>();
         IntStream.range(0, list.getLength()).mapToObj(list::item)
                 .map(it -> (Element) it)
+                .filter(it -> it.getAttribute("id").equals("CustomMsgRes"))
                 .forEach(node -> {
                     String msgName = node.getAttribute("id");
                     try {
@@ -215,9 +250,13 @@ class HbciStubGenerator {
                         if (failIfFieldsRemain && !keys.isEmpty()) {
                             throw new IllegalStateException("Fields were left");
                         }
-                        result.set(msg);
+
+                        // Currently, prefer 1st match
+                        if (null == result.get()) {
+                            result.set(msg);
+                        }
                     } catch (RuntimeException ex) {
-                        // NOP
+                        log.info("Fail {}", msgName, ex);
                     }
                 });
 
