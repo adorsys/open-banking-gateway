@@ -29,12 +29,12 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 class HbciStubGenerator {
@@ -208,8 +208,8 @@ class HbciStubGenerator {
     @Disabled
     @SneakyThrows
     void classifyMessage() {
-        Path target = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/dissect/2-response.txt");
-        parseMessage(readMessage(target));
+        Path target = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/dissect/7-request.txt");
+        assertThat(parseMessage(readMessage(target))).isNotNull();
     }
 
     @NotNull
@@ -253,37 +253,35 @@ class HbciStubGenerator {
     // This is the way original parser works - try - catch if message not matches - continue
     private Message parseMessage(String from, boolean failIfFieldsRemain) {
         NodeList list = SYNTAX.getElementsByTagName("MSGdef");
-        AtomicReference<Message> result = new AtomicReference<>();
-        IntStream.range(0, list.getLength()).mapToObj(list::item)
-                .map(it -> (Element) it)
-                .forEach(node -> {
-                    String msgName = node.getAttribute("id");
-                    try {
-                        Message msg = new Message(msgName, from, SYNTAX, false, true);
-                        Set<String> keys = new HashSet<>(msg.getData().keySet());
-                        int size = keys.size();
-                        keys.removeAll(NON_SENSITIVE_FIELDS);
-                        log.info("=================================== {} ===================================", msgName);
-                        log.info("Found {} insensitive fields", size - keys.size());
-                        size = keys.size();
-                        keys.removeAll(SENSITIVE_FIELDS);
-                        log.info("Found {} SENSITIVE fields", size - keys.size());
-                        keys.forEach(it -> log.info("Found UNKNOWN FIELD: {}={}", it, msg.getData().get(it)));
-                        log.info("============================================================================");
-                        if (failIfFieldsRemain && !keys.isEmpty()) {
-                            throw new IllegalStateException("Fields were left");
-                        }
+        Message result = null;
+        for (int i = 0; i < list.getLength(); i++) {
+            Element node = (Element) list.item(i);
+            String msgName = node.getAttribute("id");
+            try {
+                Message msg = new Message(msgName, from, SYNTAX, false, true);
+                Set<String> keys = new HashSet<>(msg.getData().keySet());
+                int size = keys.size();
+                keys.removeAll(NON_SENSITIVE_FIELDS);
+                log.info("=================================== {} ===================================", msgName);
+                log.info("Found {} insensitive fields", size - keys.size());
+                size = keys.size();
+                keys.removeAll(SENSITIVE_FIELDS);
+                log.info("Found {} SENSITIVE fields", size - keys.size());
+                keys.forEach(it -> log.info("Found UNKNOWN FIELD: {}={}", it, msg.getData().get(it)));
+                log.info("============================================================================");
+                if (failIfFieldsRemain && !keys.isEmpty()) {
+                    throw new IllegalStateException("Fields were left");
+                }
 
-                        // Currently, prefer 1st match
-                        if (null == result.get()) {
-                            result.set(msg);
-                        }
-                    } catch (RuntimeException ex) {
-                        // NOP, that's how kapott works
-                    }
-                });
+                // End loop on 1st element
+                result = msg;
+                break;
+            } catch (RuntimeException ex) {
+                // NOP, that's how kapott works
+            }
+        }
 
-        return result.get();
+        return result;
     }
 
     @SneakyThrows
