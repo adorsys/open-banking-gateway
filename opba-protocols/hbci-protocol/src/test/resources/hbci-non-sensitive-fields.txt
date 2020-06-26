@@ -224,6 +224,14 @@ GV.TANMediaList4.SegHead.code
 GV.TANMediaList4.mediatype
 GV.TANMediaList4.SegHead.version
 GV.TANMediaList4.SegHead.seq
+GV.KUmsZeit5.SegHead.version
+GV.KUmsZeit5.KTV.KIK.blz
+GV.KUmsZeit5.SegHead.code
+GV.KUmsZeit5.KTV.KIK.country
+GV.KUmsZeit5.SegHead.seq
+GV.KUmsZeit5.startdate
+GV.KUmsZeit5.enddate
+GV.KUmsZeit5.allaccounts
 Idn.KIK.blz
 Idn.KIK.country
 Idn.SegHead.code
