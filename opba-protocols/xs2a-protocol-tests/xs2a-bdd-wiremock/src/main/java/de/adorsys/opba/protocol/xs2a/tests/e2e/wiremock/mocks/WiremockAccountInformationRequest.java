@@ -220,4 +220,21 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         assertThat(this.responseContent).contains("error").contains("Service Unavailable");
         return self();
     }
+
+    public SELF open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test_without_cookie_unauthorized() {
+        LoggedRequest consentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
+                                                       .until(() ->
+                                                                      wireMock.findAll(postRequestedFor(urlMatching("/v1/consents.*"))), it -> !it.isEmpty()
+                                                       ).get(0);
+        this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
+
+        withSignatureHeaders(RestAssured.given(), requestSigningService, OperationType.AIS)
+                 .when()
+                    .get(redirectOkUri)
+                 .then()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                 .extract();
+
+        return self();
+    }
 }
