@@ -8,13 +8,20 @@ import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
 import de.adorsys.xs2a.adapter.service.model.TransactionStatus;
+import io.restassured.RestAssured;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.PIS_PAYMENT_INFORMATION_ENDPOINT;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.PIS_PAYMENT_STATUS_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.CONFIRM_CONSENT_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PIS_PAYMENT_INFORMATION_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PIS_PAYMENT_STATUS_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SESSION_PASSWORD;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withSignatureHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.withPaymentInfoHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,12 +37,8 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     @Autowired
     private RequestSigningService requestSigningService;
 
-    @Autowired
-    private AccountInformationResult accountInformationResult;
-
     @ExpectedScenarioState
     protected String serviceSessionId;
-
 
     @Transactional
     public SELF open_banking_has_consent_for_max_musterman_payment() {
@@ -50,7 +53,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     }
 
     public SELF fintech_calls_consent_activation_for_current_authorization_id() {
-        accountInformationResult.fintech_calls_consent_activation_for_current_authorization_id(serviceSessionId);
+        fintech_calls_consent_activation_for_current_authorization_id(serviceSessionId);
         return self();
     }
 
@@ -97,6 +100,18 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
                 .statusCode(OK.value())
                 .body("transactionStatus", equalTo(TransactionStatus.ACSP.name()))
                 .extract();
+        return self();
+    }
+
+    public SELF fintech_calls_consent_activation_for_current_authorization_id(String serviceSessionId) {
+        withSignatureHeaders(RestAssured
+                                     .given()
+                                     .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
+                                     .contentType(MediaType.APPLICATION_JSON_VALUE), requestSigningService, OperationType.CONFIRM_CONSENT)
+                .when()
+                .post(CONFIRM_CONSENT_ENDPOINT, serviceSessionId)
+                .then()
+                .statusCode(HttpStatus.OK.value());
         return self();
     }
 }
