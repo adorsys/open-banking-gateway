@@ -28,7 +28,7 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP
 
 @UtilityClass
 @SuppressWarnings({"checkstyle:HideUtilityClassConstructor", "PMD.AvoidUsingHardCodedIP"}) //Checkstyle doesn't recognise Lombok
-public class AisStagesCommonUtil {
+public class StagesCommonUtil {
 
     public static final String GET_CONSENT_AUTH_STATE = "/v1/consent/{serviceSessionId}";
     public static final String DENY_CONSENT_AUTH_ENDPOINT = "/v1/consent/{serviceSessionId}/deny";
