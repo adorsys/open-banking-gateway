@@ -1,5 +1,6 @@
 BPD.Params_*.PinTanPar2.ParPinTan.info_customerid
 BPD.Params_*.PinTanPar2.ParPinTan.info_userid
+DialogEndS.dialogid
 GVRes_*.KUmsZeitCamtRes1.booked.message
 GVRes_*.KUmsZeitCamtRes1.KTV.bic
 GVRes_*.KUmsZeitCamtRes1.KTV.iban
@@ -33,6 +34,8 @@ SigTail.seccheckref
 SigTail.UserSig.pin
 SigTail.UserSig.tan
 SyncRes.sysid
+SigHead.KeyName.userid
+SigHead.seccheckref
 TAN2Step6.orderref
 UPD.KInfo_*.accountdata
 UPD.KInfo.accountdata
