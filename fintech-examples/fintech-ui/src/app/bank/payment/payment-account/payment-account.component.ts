@@ -10,8 +10,6 @@ import { AccountStruct } from '../../redirect-page/redirect-struct';
 })
 export class PaymentAccountComponent implements OnInit {
   public static ROUTE = 'account';
-  bankId;
-  accountId;
   account:AccountStruct;
 
   constructor(
@@ -22,19 +20,22 @@ export class PaymentAccountComponent implements OnInit {
 
 
   ngOnInit() {
-    this.bankId = this.route.snapshot.paramMap.get('bankid');
-    this.accountId = this.route.snapshot.paramMap.get('accountid');
-    this.account = this.getSelectedAccount(this.accountId);
-    console.log('lpc bankid:', this.bankId, ' accountId:', this.accountId);
+    // const bankId = this.route.snapshot.paramMap.get('bankid');
+    const accountId = this.route.snapshot.paramMap.get('accountid');
+    this.account = this.getSelectedAccount(accountId);
     this.router.navigate(['payments'], { relativeTo: this.route });
   }
 
   private getSelectedAccount(accountId: string) : AccountStruct {
-    const alist = this.storageService.getLoa();
-    for (const a of alist) {
+    const list = this.storageService.getLoa();
+    if (list === null) {
+      throw new Error('no cached list of accounts available.');
+    }
+    for (const a of list) {
       if (a.resourceId === accountId) {
         return a;
       }
     }
+    throw new Error('did not find account for id:' + accountId);
   }
 }
