@@ -14,8 +14,6 @@ import { map } from 'rxjs/operators';
 })
 export class PaymentAccountPaymentsComponent implements OnInit {
   public static ROUTE = 'payments';
-  bankId;
-  accountId;
   list : PaymentInitiationWithStatusResponse[];
 
   constructor(
@@ -26,10 +24,9 @@ export class PaymentAccountPaymentsComponent implements OnInit {
 
 
   ngOnInit() {
-    this.bankId = this.route.snapshot.paramMap.get('bankid');
-    this.accountId = this.route.snapshot.paramMap.get('accountid');
-
-    this.fintechRetrieveAllSinglePaymentsService.retrieveAllSinglePayments(this.bankId, this.accountId, '', '', 'response')
+    const bankId = this.route.snapshot.paramMap.get('bankid');
+    const accountId = this.route.snapshot.paramMap.get('accountid');
+    this.fintechRetrieveAllSinglePaymentsService.retrieveAllSinglePayments(bankId, accountId, '', '', 'response')
       .pipe(map(response => response))
       .subscribe(
         response => {

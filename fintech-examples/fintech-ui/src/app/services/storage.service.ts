@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { toLocaleString } from '../models/consts';
 import { AccountStruct, RedirectTupelForMap, RedirectType } from '../bank/redirect-page/redirect-struct';
-import { AccountStatus } from '../api';
 
 @Injectable({
   providedIn: 'root'
