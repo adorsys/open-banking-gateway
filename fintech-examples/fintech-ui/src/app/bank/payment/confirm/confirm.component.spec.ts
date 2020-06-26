@@ -8,7 +8,7 @@ import { ConfirmData } from './confirm.data';
 import { RedirectStruct } from '../../redirect-page/redirect-struct';
 import { ClassSinglePaymentInitiationRequest } from '../../../api/model-classes/ClassSinglePaymentInitiationRequest';
 
-describe('ConfirmComponent', () => {
+fdescribe('ConfirmComponent', () => {
   let component: ConfirmComponent;
   let fixture: ComponentFixture<ConfirmComponent>;
 

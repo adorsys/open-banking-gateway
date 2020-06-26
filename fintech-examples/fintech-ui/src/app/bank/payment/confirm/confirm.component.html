@@ -36,7 +36,7 @@
   </div>
   <div class="form-group col-md-12 text-md-right">
     <label>Amount</label>
-    <p class="text-bold">{{ format(confirmData.paymentRequest.amount) }} EUR</p>
+    <p class="text-bold">{{ confirmData.paymentRequest.amount | number: '1.2-2' }} EUR</p>
   </div>
 </section>
 
