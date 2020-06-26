@@ -148,7 +148,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
                         .header(Consts.HEADER_XSRF_TOKEN, restRequestContext.getXsrfTokenHeaderField())
                         .header("Fintech-Redirect-URL-OK", "ok")
                         .header("Fintech-Redirect-URL-NOK", "notok")
-                        .header("LoARetrievalInformation", "fromTppWithAvailableConsent"))
+                        .header("LoARetrievalInformation", "FROM_TPP_WITH_AVAILABLE_CONSENT"))
                 .andDo(print())
                 .andReturn();
     }
