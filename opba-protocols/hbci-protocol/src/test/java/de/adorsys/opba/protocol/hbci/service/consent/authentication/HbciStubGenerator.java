@@ -136,8 +136,8 @@ class HbciStubGenerator {
 
             String cached = replacedValuesCache.get(numValue);
             if (null != cached) {
-                setValue(msg, sensitive, cached);
-                return;
+                obfuscatedValue = obfuscatedValue.replaceAll(numValue, cached);
+                continue;
             }
 
             Long val = randomNumberOfSameRadixSize(numValue);
