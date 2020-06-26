@@ -17,7 +17,6 @@ GVRes.SEPAInfoRes*.Acc.number
 GVRes.TAN2StepRes6.orderref
 Idn.customerid
 MsgHead.dialogid
-MsgHead.dialogid
 MsgHead.MsgRef.dialogid
 ProcPrep.prodName
 RetGlob.RetVal_*.text
@@ -30,13 +29,12 @@ RetSeg.RetVal_*.parm
 RetSeg_*.RetVal.text
 RetSeg.RetVal_*.text
 RetSeg.RetVal.text
-SigTail.seccheckref
+SigHead.KeyName.userid
+SigHead.seccheckref
 SigTail.seccheckref
 SigTail.UserSig.pin
 SigTail.UserSig.tan
 SyncRes.sysid
-SigHead.KeyName.userid
-SigHead.seccheckref
 TAN2Step6.orderref
 UPD.KInfo_*.accountdata
 UPD.KInfo.accountdata
@@ -50,9 +48,9 @@ UPD.KInfo_*.konto
 UPD.KInfo.konto
 UPD.KInfo_*.KTV.number
 UPD.KInfo.KTV.number
+UPD.KInfo_*.name*
 UPD.KInfo_*.name1
 UPD.KInfo.name1
-UPD.KInfo_*.name*
 UPD.UPA.userdata
 UPD.UPA.userid
 UPD.UPA.username
