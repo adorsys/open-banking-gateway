@@ -25,7 +25,7 @@ public class RequestFilterConfig {
     }
 
     @Bean
-    public FilterRegistrationBean<RequestCookieFilter> cookieValidatorFilter(CookieProperties cookieProperties) {
+    public FilterRegistrationBean<RequestCookieFilter> cookieValidationFilter(CookieProperties cookieProperties) {
         Set<String> urlsToBeValidated = cookieProperties.getUrlsToBeValidated();
 
         FilterRegistrationBean<RequestCookieFilter> registrationBean = new FilterRegistrationBean<>();
