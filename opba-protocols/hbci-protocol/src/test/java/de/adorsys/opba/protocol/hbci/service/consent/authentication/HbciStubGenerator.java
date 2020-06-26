@@ -8,7 +8,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.kapott.hbci.manager.DocumentFactory;
@@ -17,7 +16,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -86,20 +84,9 @@ class HbciStubGenerator {
 
     @SneakyThrows
     private Message obfuscateMessage(Path messageFile, Map<String, String> replacedValuesCache) {
-        String messageStr = new String(Files.readAllBytes(messageFile), StandardCharsets.UTF_8);
-
-        if (isRaw(messageFile)) {
-            messageStr = messageStr.replaceAll("\n", "\r\n");
-        } else {
-            messageStr = messageStr.replaceAll("\n", "'");
-        }
-
-        // Remove crypto-headers
-        messageStr = messageStr.replaceAll("HNVSK.+?'", "").replaceAll("HNVSD.+?@.+?@", "");
-
         // contains all values that were replaced by if their length is more than 4 chars.
         // If value occurs in one field and then same in another - they should be obfuscated with same value.
-        Message msg = parseMessage(messageStr, true);
+        Message msg = parseMessage(readMessage(messageFile), true);
         Set<String> sensitiveFields = Sets.intersection(msg.getData().keySet(), SENSITIVE_FIELDS);
 
         for (String sensitive : sensitiveFields) {
@@ -208,18 +195,28 @@ class HbciStubGenerator {
     @Disabled
     @SneakyThrows
     void classifyMessage() {
-        Path target = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/dissect/7-request.txt");
+        Path target = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/dissect/10-request.txt");
         assertThat(parseMessage(readMessage(target))).isNotNull();
     }
 
-    @NotNull
-    private String readMessage(Path target) throws IOException {
-        return new String(com.google.common.io.Files.asByteSource(target.toFile()).read(), StandardCharsets.UTF_8)
-                .replaceAll("\n", "'")
-                .replace("'$", "")
-                // Remove crypto-headers
+    @SneakyThrows
+    private String readMessage(Path messageFile) {
+        String messageStr = new String(Files.readAllBytes(messageFile), StandardCharsets.UTF_8);
+
+        if (isRaw(messageFile)) {
+            messageStr = messageStr.replaceAll("\n", "\r\n");
+        } else {
+            messageStr = messageStr.replaceAll("\n", "'");
+        }
+
+        // Remove crypto-headers
+        messageStr = messageStr
                 .replaceAll("HNVSK.+?'", "")
-                .replaceAll("HNVSD.+?'", "");
+                .replaceAll("HNVSD.+?@.+?@", "")
+                .replaceAll("HNSHK.+?'", "");
+
+        // Fix dangling HKSPA
+        return messageStr.replaceAll("HKSPA:\\d:\\d'", "$0\\+'");
     }
 
     private static Set<String> generateFromStarsRange100(String str) {
