@@ -9,6 +9,8 @@ RetGlob.SegHead.seq
 RetGlob.RetVal_*.text
 RetSeg.RetVal.text
 RetSeg.RetVal_*.parm
+RetSeg_*.RetVal_*.parm
+RetSeg_*.RetVal_*.parm_*
 RetSeg.RetVal_*.text
 RetSeg_*.RetVal.text
 RetSeg_*.RetVal.parm
@@ -41,6 +43,10 @@ UPD.KInfo_*.accountdata
 GVRes_*.KUmsZeitCamtRes1.booked.message
 GVRes_*.KUmsZeitCamtRes1.KTV.iban
 GVRes_*.KUmsZeitCamtRes1.KTV.bic
+GVRes.KUmsZeitCamtRes*.KTV.iban
+GVRes.KUmsZeitCamtRes*.booked.message
+GVRes.KUmsZeitRes*.booked
+GVRes.KUmsZeitRes*.notbooked
 GVRes.SEPAInfoRes*.Acc.number
 GVRes.SEPAInfoRes*.Acc.iban
 GVRes.SEPAInfoRes1.Acc_*.number
