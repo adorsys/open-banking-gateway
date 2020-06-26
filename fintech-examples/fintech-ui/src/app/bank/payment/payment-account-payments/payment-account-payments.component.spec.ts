@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PaymentAccountPaymentsComponent } from './payment-account-payments.component';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('PaymentAccountPaymentsComponent', () => {
   let component: PaymentAccountPaymentsComponent;
@@ -8,7 +11,16 @@ describe('PaymentAccountPaymentsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PaymentAccountPaymentsComponent ]
+      imports: [HttpClientTestingModule, RouterTestingModule],
+      declarations: [ PaymentAccountPaymentsComponent ],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: { paramMap: convertToParamMap({ accountid: '1234', bankid: '1234' }) }
+          }
+        }
+      ]
     })
     .compileComponents();
   }));
@@ -19,8 +31,7 @@ describe('PaymentAccountPaymentsComponent', () => {
     fixture.detectChanges();
   });
 
-  // TODO Peter FIXME
-//  it('should create', () => {
-//    expect(component).toBeTruthy();
-//  });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });
