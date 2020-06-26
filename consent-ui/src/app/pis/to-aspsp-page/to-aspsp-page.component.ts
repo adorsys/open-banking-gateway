@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { StubUtil } from '../../common/utils/stub-util';
 import { Action } from '../../common/utils/action';
-import {AisConsentToGrant} from "../../ais/common/dto/ais-consent";
-import {Location} from "@angular/common";
-import {ActivatedRoute} from "@angular/router";
-import {SessionService} from "../../common/session.service";
-import {AuthStateConsentAuthorizationService, DenyRequest, UpdateConsentAuthorizationService} from "../../api";
-import {ConsentUtil} from "../../ais/common/consent-util";
-import {ApiHeaders} from "../../api/api.headers";
+import { AisConsentToGrant } from '../../ais/common/dto/ais-consent';
+import { Location } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { SessionService } from '../../common/session.service';
+import { AuthStateConsentAuthorizationService, DenyRequest, UpdateConsentAuthorizationService } from '../../api';
+import { ConsentUtil } from '../../ais/common/consent-util';
+import { ApiHeaders } from '../../api/api.headers';
 
 @Component({
   selector: 'consent-app-to-aspsp-page',
