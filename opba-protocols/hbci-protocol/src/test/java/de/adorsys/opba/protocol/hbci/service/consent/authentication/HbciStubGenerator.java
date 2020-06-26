@@ -3,7 +3,6 @@ package de.adorsys.opba.protocol.hbci.service.consent.authentication;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.io.BaseEncoding;
-import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +20,9 @@ import org.w3c.dom.NodeList;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -35,8 +34,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.stream.Stream;
 
 @Slf4j
 class HbciStubGenerator {
@@ -64,18 +62,43 @@ class HbciStubGenerator {
     @Test
     @SneakyThrows
     void generateImpersonatedStub() {
-        Path target = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/dissect/12-response-raw.txt"); // Replace with your fixture path
-        String messageStr = new String(Files.asByteSource(target.toFile()).read(), StandardCharsets.UTF_8)
-                .replaceAll("\n", "\r\n")
-               // .replaceAll("\n", "'")
-                .replace("'$", "")
-                // Remove crypto-headers
-                .replaceAll("HNVSK.+?'", "")
-                .replaceAll("HNVSD.+?@.+?@", "");
+        Map<String, String> replacedValuesCache = new HashMap<>();
+        Path source = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/dissect/");
+        Path destination = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/obfuscated/");
+
+        try (Stream<Path> files = Files.walk(source)) {
+            files.filter(it -> it.toFile().isFile()).forEach(sourceFile -> createObfuscatedFile(destination, sourceFile, replacedValuesCache));
+        }
+    }
+
+    @SneakyThrows
+    private void createObfuscatedFile(Path destination, Path sourceFile, Map<String, String> replacedValuesCache) {
+        log.info("Obfuscating {}", sourceFile);
+        Message obfuscated = obfuscateMessage(sourceFile, replacedValuesCache);
+        Path targetFile = destination.resolve(sourceFile.getFileName());
+        if (isRaw(sourceFile)) {
+            Files.write(targetFile, obfuscated.toString(0).getBytes(StandardCharsets.UTF_8));
+            return;
+        }
+
+        Files.write(targetFile, obfuscated.toString(0).replaceAll("'", "\n").getBytes(StandardCharsets.UTF_8));
+    }
+
+    @SneakyThrows
+    private Message obfuscateMessage(Path messageFile, Map<String, String> replacedValuesCache) {
+        String messageStr = new String(Files.readAllBytes(messageFile), StandardCharsets.UTF_8);
+
+        if (isRaw(messageFile)) {
+            messageStr = messageStr.replaceAll("\n", "\r\n");
+        } else {
+            messageStr = messageStr.replaceAll("\n", "'");
+        }
+
+        // Remove crypto-headers
+        messageStr = messageStr.replaceAll("HNVSK.+?'", "").replaceAll("HNVSD.+?@.+?@", "");
 
         // contains all values that were replaced by if their length is more than 4 chars.
         // If value occurs in one field and then same in another - they should be obfuscated with same value.
-        Map<String, String> replacedValuesCache = new HashMap<>();
         Message msg = parseMessage(messageStr, true);
         Set<String> sensitiveFields = Sets.intersection(msg.getData().keySet(), SENSITIVE_FIELDS);
 
@@ -89,10 +112,11 @@ class HbciStubGenerator {
             String newValue = generateObfuscatedValue(sensitive, value);
             setValue(msg, sensitive, newValue);
         }
+        return msg;
+    }
 
-        log.info("========================= GENERATED ==================================");
-        Arrays.stream(msg.toString(0).split("'")).forEach(it -> log.info("{}", it));
-        assertThat(msg).isNotNull();
+    private boolean isRaw(Path messageFile) {
+        return messageFile.getFileName().toString().contains("-raw");
     }
 
     private void setValue(Message msg, String path, String newValue) {
@@ -190,7 +214,7 @@ class HbciStubGenerator {
 
     @NotNull
     private String readMessage(Path target) throws IOException {
-        return new String(Files.asByteSource(target.toFile()).read(), StandardCharsets.UTF_8)
+        return new String(com.google.common.io.Files.asByteSource(target.toFile()).read(), StandardCharsets.UTF_8)
                 .replaceAll("\n", "'")
                 .replace("'$", "")
                 // Remove crypto-headers
@@ -232,7 +256,6 @@ class HbciStubGenerator {
         AtomicReference<Message> result = new AtomicReference<>();
         IntStream.range(0, list.getLength()).mapToObj(list::item)
                 .map(it -> (Element) it)
-                .filter(it -> it.getAttribute("id").equals("CustomMsgRes"))
                 .forEach(node -> {
                     String msgName = node.getAttribute("id");
                     try {
@@ -256,7 +279,7 @@ class HbciStubGenerator {
                             result.set(msg);
                         }
                     } catch (RuntimeException ex) {
-                        log.info("Fail {}", msgName, ex);
+                        // NOP, that's how kapott works
                     }
                 });
 
