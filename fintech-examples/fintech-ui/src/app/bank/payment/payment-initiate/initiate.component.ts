@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ClassSinglePaymentInitiationRequest } from '../../../api/model-classes/ClassSinglePaymentInitiationRequest';
 import { map } from 'rxjs/operators';
 import { HeaderConfig } from '../../../models/consts';
-import { AccountStruct, RedirectStruct, RedirectType } from '../../redirect-page/redirect-struct';
+import { RedirectStruct, RedirectType } from '../../redirect-page/redirect-struct';
 import { StorageService } from '../../../services/storage.service';
 import { ConfirmData } from '../payment-confirm/confirm.data';
 
@@ -29,11 +29,11 @@ export class InitiateComponent implements OnInit {
               private storageService: StorageService) {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
     this.accountId = this.route.snapshot.paramMap.get('accountid');
-    this.debitorIban = this.getDebitorIban(this.accountId);
-    console.log('bankid:', this.bankId, ' accountid:', this.accountId);
   }
 
   ngOnInit() {
+    this.debitorIban = this.getDebitorIban(this.accountId);
+    console.log('bankid:', this.bankId, ' accountid:', this.accountId);
     this.paymentForm = this.formBuilder.group({
       name: ['peter', Validators.required],
       creditorIban: ['AL90208110080000001039531801', [ValidatorService.validateIban, Validators.required]],
@@ -95,10 +95,14 @@ export class InitiateComponent implements OnInit {
 
   private getDebitorIban(accountId: string) : string {
     const list = this.storageService.getLoa();
+    if (list === null) {
+      throw new Error('no cached list of accounts available.');
+    }
     for (const a of list) {
       if (a.resourceId === accountId) {
         return a.iban;
       }
     }
+    throw new Error('did not find account for id:' + accountId);
   }
 }
