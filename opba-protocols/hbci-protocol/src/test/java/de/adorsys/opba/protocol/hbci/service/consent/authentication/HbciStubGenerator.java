@@ -7,6 +7,8 @@ import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.iban4j.CountryCode;
+import org.iban4j.Iban;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -59,7 +61,7 @@ class HbciStubGenerator {
     @Test
     @SneakyThrows
     void generateImpersonatedStub() {
-        Path target = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/dissect/2-response.txt"); // Replace with your fixture path
+        Path target = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/dissect/10-response.txt"); // Replace with your fixture path
         String messageStr = new String(Files.asByteSource(target.toFile()).read(), StandardCharsets.ISO_8859_1)
                 .replaceAll("\n", "'")
                 .replace("'$", "")
@@ -80,7 +82,7 @@ class HbciStubGenerator {
                 continue;
             }
 
-            String newValue = generateObfuscatedValue(value);
+            String newValue = generateObfuscatedValue(sensitive, value);
             setValue(msg, sensitive, newValue);
         }
 
@@ -100,12 +102,16 @@ class HbciStubGenerator {
             return;
         }
 
-        String newValue = generateObfuscatedValue(value);
+        String newValue = generateObfuscatedValue(sensitive, value);
         setValue(msg, sensitive, newValue);
         replacedValuesCache.put(value, newValue);
     }
 
-    private String generateObfuscatedValue(String original) {
+    private String generateObfuscatedValue(String keyName, String original) {
+        if (keyName.contains("iban")) {
+            return new Iban.Builder().countryCode(CountryCode.DE).buildRandom().toString();
+        }
+
         Long val = randomNumberOfSameRadixSize(original);
         if (null != val) {
             return val.toString();
@@ -113,7 +119,16 @@ class HbciStubGenerator {
 
         byte[] buffer = new byte[original.length()];
         RANDOM.nextBytes(buffer);
-        return BaseEncoding.base64Url().omitPadding().encode(buffer).substring(0, original.length());
+        String randomString = BaseEncoding.base64Url().omitPadding().encode(buffer).substring(0, original.length());
+
+        // Keep spaces for traceability
+        int pos = 0;
+        while ((pos = original.indexOf(' ', pos)) >= 0) {
+            randomString = randomString.substring(0, pos) + ' ' + randomString.substring(pos);
+            pos += 1;
+        }
+
+        return randomString;
     }
 
     private Long randomNumberOfSameRadixSize(String original) {
