@@ -94,7 +94,7 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url_pis(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
-                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
+                .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment()
                 .and()
                 .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_pis()
                 .and()

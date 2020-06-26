@@ -705,5 +705,4 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .fintech_calls_consent_activation_for_current_authorization_id()
                 .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
     }
-
 }
