@@ -64,7 +64,7 @@ class HbciStubGenerator {
     @SneakyThrows
     void generateDesaturated() {
         Path sourceFile = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/data/multibanking-test.txt");
-        Path destinationFolder = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/obfuscated/");
+        Path destinationFile = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/obfuscated/structure.json");
 
         ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
         Map<Integer, String> messagesByPos = extractHbciMessageBlocks(new String(Files.readAllBytes(sourceFile), StandardCharsets.UTF_8));
@@ -77,11 +77,12 @@ class HbciStubGenerator {
         }
 
         log.info("{}", writer.writeValueAsString(desaturatedMessageByPos));
+        Files.write(destinationFile, writer.writeValueAsString(desaturatedMessageByPos).getBytes(StandardCharsets.UTF_8));
     }
 
     private Map<Integer, String> extractHbciMessageBlocks(String from) {
         Map<Integer, String> extractedMessages = new TreeMap<>();
-        Pattern blockPattern = Pattern.compile("(HNHBK:.+?(HNHBS:\\d+:\\d+\\+\\d+))", Pattern.DOTALL);
+        Pattern blockPattern = Pattern.compile("(HNHBK:(?>).+?(HNHBS:\\d+:\\d+\\+\\d+))", Pattern.DOTALL);
         Pattern chunkPattern = Pattern.compile("([A-Z]{5,6}:\\d+:\\d+.+?)([A-Z]{5,6}:\\d+:\\d+)", Pattern.DOTALL);
         Matcher blockMatcher = blockPattern.matcher(from);
         int pos = 0;
@@ -96,7 +97,14 @@ class HbciStubGenerator {
 
             resultMessage.append("'");
             resultMessage.append(blockMatcher.group(2));
-            extractedMessages.put(pos, resultMessage.toString());
+            String result = resultMessage.toString();
+            // sometimes messages get duplicated in logs
+            if (pos > 0 && extractedMessages.get(pos - 1).replace("'", "").equals(result.replace("'", ""))) {
+                log.warn("Possible result duplication at {}, ignoring {}", pos, result);
+                continue;
+            }
+
+            extractedMessages.put(pos, result);
             pos++;
         }
 
