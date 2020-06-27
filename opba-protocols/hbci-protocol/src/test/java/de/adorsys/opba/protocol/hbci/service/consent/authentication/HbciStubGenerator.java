@@ -314,7 +314,7 @@ class HbciStubGenerator {
         // Fix dangling values
         return messageStr
                 .replaceAll("(HKSPA:\\d:\\d)'", "$1\\+'")
-                .replaceAll("(HNSHA:\\d:\\d)'", "$1\\+'");
+                .replaceAll("(HNSHA:\\d:\\d)", "'$1");
     }
 
     private static Set<String> generateFromStarsRange100(String str) {
