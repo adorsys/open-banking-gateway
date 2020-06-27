@@ -292,7 +292,7 @@ class HbciStubGenerator {
 
     @SneakyThrows
     private String readMessage(Path messageFile) {
-        String messageStr = new String(Files.readAllBytes(messageFile), StandardCharsets.ISO_8859_1);
+        String messageStr = new String(Files.readAllBytes(messageFile), StandardCharsets.UTF_8);
 
         if (isRaw(messageFile)) {
             messageStr = messageStr.replaceAll("\n", "\r\n");
@@ -311,8 +311,10 @@ class HbciStubGenerator {
                 .replaceAll("HNVSD.+?@.+?@", "")
                 .replaceAll("HNSHK.+?'", "");
 
-        // Fix dangling HKSPA
-        return messageStr.replaceAll("(HKSPA:\\d:\\d)'", "$1\\+'");
+        // Fix dangling values
+        return messageStr
+                .replaceAll("(HKSPA:\\d:\\d)'", "$1\\+'")
+                .replaceAll("(HNSHA:\\d:\\d)'", "$1\\+'");
     }
 
     private static Set<String> generateFromStarsRange100(String str) {
