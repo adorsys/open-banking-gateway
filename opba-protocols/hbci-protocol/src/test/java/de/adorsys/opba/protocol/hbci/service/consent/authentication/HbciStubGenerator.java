@@ -82,7 +82,7 @@ class HbciStubGenerator {
 
     private Map<Integer, String> extractHbciMessageBlocks(String from) {
         Map<Integer, String> extractedMessages = new TreeMap<>();
-        Pattern blockPattern = Pattern.compile("(HNHBK:(?>).+?(HNHBS:\\d+:\\d+\\+\\d+))", Pattern.DOTALL);
+        Pattern blockPattern = Pattern.compile("(HNHBK:.+?(HNHBS:\\d+:\\d+\\+\\d+))", Pattern.DOTALL);
         Pattern chunkPattern = Pattern.compile("([A-Z]{5,6}:\\d+:\\d+.+?)([A-Z]{5,6}:\\d+:\\d+)", Pattern.DOTALL);
         Matcher blockMatcher = blockPattern.matcher(from);
         int pos = 0;
@@ -292,7 +292,7 @@ class HbciStubGenerator {
 
     @SneakyThrows
     private String readMessage(Path messageFile) {
-        String messageStr = new String(Files.readAllBytes(messageFile), StandardCharsets.UTF_8);
+        String messageStr = new String(Files.readAllBytes(messageFile), StandardCharsets.ISO_8859_1);
 
         if (isRaw(messageFile)) {
             messageStr = messageStr.replaceAll("\n", "\r\n");
