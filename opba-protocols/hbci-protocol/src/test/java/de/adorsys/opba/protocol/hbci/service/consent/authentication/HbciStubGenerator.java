@@ -1,5 +1,7 @@
 package de.adorsys.opba.protocol.hbci.service.consent.authentication;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.io.BaseEncoding;
@@ -8,6 +10,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.kapott.hbci.manager.DocumentFactory;
@@ -27,6 +30,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -53,11 +57,81 @@ class HbciStubGenerator {
             .collect(Collectors.toSet());
 
     /**
+     * This test takes HBCI log file and creates desaturated messages out of it.
+     */
+    @Test
+    @Disabled
+    @SneakyThrows
+    void generateDesaturated() {
+        Path sourceFile = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/data/multibanking-test.txt");
+        Path destinationFolder = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/obfuscated/");
+
+        ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
+        Map<Integer, String> messagesByPos = extractHbciMessageBlocks(new String(Files.readAllBytes(sourceFile), StandardCharsets.UTF_8));
+        Map<Integer, Map<String, String>> desaturatedMessageByPos = new TreeMap<>();
+        for (Map.Entry<Integer, String> message : messagesByPos.entrySet()) {
+            Message parsed = parseMessage(cleanupCryptoHeaders(message.getValue()));
+            Map<String, String> data = new TreeMap<>(parsed.getData());
+            data.put("A_TYPE", parsed.getName());
+            desaturatedMessageByPos.put(message.getKey(), data);
+        }
+
+        log.info("{}", writer.writeValueAsString(desaturatedMessageByPos));
+    }
+
+    private Map<Integer, String> extractHbciMessageBlocks(String from) {
+        Map<Integer, String> extractedMessages = new TreeMap<>();
+        Pattern blockPattern = Pattern.compile("(HNHBK:.+?(HNHBS:\\d+:\\d+\\+\\d+))", Pattern.DOTALL);
+        Pattern chunkPattern = Pattern.compile("([A-Z]{5,6}:\\d+:\\d+.+?)([A-Z]{5,6}:\\d+:\\d+)", Pattern.DOTALL);
+        Matcher blockMatcher = blockPattern.matcher(from);
+        int pos = 0;
+        while (blockMatcher.find()) {
+            String blockChunk = blockMatcher.group(1);
+            Matcher messageMatcher = chunkPattern.matcher(blockChunk);
+            StringBuilder resultMessage = new StringBuilder();
+            int chunkPos = 0;
+            while (messageMatcher.find(chunkPos)) {
+                chunkPos = parseMessage(messageMatcher, resultMessage);
+            }
+
+            resultMessage.append("'");
+            resultMessage.append(blockMatcher.group(2));
+            extractedMessages.put(pos, resultMessage.toString());
+            pos++;
+        }
+
+        return extractedMessages;
+    }
+
+    private int parseMessage(Matcher messageMatcher, StringBuilder resultMessage) {
+        Pattern binPattern = Pattern.compile("@(\\d+)@");
+        int chunkPos;
+        String message = messageMatcher.group(1);
+        Matcher binMatcher = binPattern.matcher(message);
+        // truncate non-binary messages
+        if (!binMatcher.find()) {
+            message = message.split("[\r\n]")[0];
+        } else {
+            int len = Integer.parseInt(binMatcher.group(1));
+            int binEnd = binMatcher.end(1) + len;
+            if (binEnd < message.length()) {
+                message = message.substring(0, binEnd) + message.substring(binEnd + 1).split("[\r\n]")[0];
+            }
+        }
+
+        resultMessage.append(message);
+        resultMessage.append("'");
+        chunkPos = messageMatcher.start(2);
+        return chunkPos;
+    }
+
+    /**
      * This test takes HBCI dialog (multiple request-response) that may contain sensitive data and produces
      * safe version of it. Only HBCI tags (HNBNK, HNSHA...) and their order are kept and their parameters are replaced
      * with dummy ones.
      */
     @Test
+    @Disabled
     @SneakyThrows
     void generateImpersonatedStub() {
         Map<String, String> replacedValuesCache = new HashMap<>();
@@ -87,6 +161,7 @@ class HbciStubGenerator {
         // contains all values that were replaced by if their length is more than 4 chars.
         // If value occurs in one field and then same in another - they should be obfuscated with same value.
         Message msg = parseMessage(readMessage(messageFile), true);
+        dumpMessage(msg);
         Set<String> sensitiveFields = Sets.intersection(msg.getData().keySet(), SENSITIVE_FIELDS);
 
         for (String sensitive : sensitiveFields) {
@@ -100,6 +175,14 @@ class HbciStubGenerator {
             setValue(msg, sensitive, newValue);
         }
         return msg;
+    }
+
+    @SneakyThrows
+    private void dumpMessage(Message msg) {
+        log.info("Desaturated message {}:", msg.getName());
+        Map<String, String> data = new TreeMap<>(msg.getData());
+        data.put("TYPE", msg.getName());
+        System.out.println(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(data));
     }
 
     private boolean isRaw(Path messageFile) {
@@ -209,6 +292,11 @@ class HbciStubGenerator {
             messageStr = messageStr.replaceAll("\n", "'");
         }
 
+        return cleanupCryptoHeaders(messageStr);
+    }
+
+    @NotNull
+    private String cleanupCryptoHeaders(String messageStr) {
         // Remove crypto-headers
         messageStr = messageStr
                 .replaceAll("HNVSK.+?'", "")
