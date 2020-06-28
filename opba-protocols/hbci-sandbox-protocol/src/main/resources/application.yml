@@ -8,17 +8,36 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
 
 hbci:
+  banks:
+    withAnonymousBpd:
+      anonBpd: true
+      users:
+        - anton.brueckner
+        - max.musterman
+        - adorsys
+    withoutAnonymousBpd:
+      anonBpd: false
+      users:
+        - anton.brueckner
+        - max.musterman
+        - adorsys
+
   users:
     - login: anton.brueckner
+      realname: Brueckner Anton
       pin: 12345
       tan: 123456
       sca-method-list:
         sca-0: SMS on your phone
       accounts:
-        - DE22500105175827542519
-        - DE71500105179185286653
+          - number: 5827542519
+            currency: EUR
+            balalce: 100
+          - number: 9185286653
+            currency: EUR
+            balalce: 30
       transactions:
-        DE71500105179185286653:
+        "5827542519":
           - DK9150513599717134:
              amount: 100
              currency: EUR
@@ -33,16 +52,21 @@ hbci:
               date: 2020-01-02T09:00:00
 
     - login: max.musterman
+      realname: Musterman Max
       pin: 12345
       tan: 123456
       sca-method-list:
         sca-0: SMS on your phone
         sca-1: Email with TAN
       accounts:
-        - DE16500105173466865655
-        - DE67500105172278292697
+        - number: 3466865655
+          currency: EUR
+          balalce: 200
+        - number: 2278292697
+          currency: EUR
+          balalce: 130
       transactions:
-        DE16500105173466865655:
+        "3466865655":
           - AE170262989187616965653:
               amount: 30
               currency: EUR
@@ -58,13 +82,16 @@ hbci:
 
     # To be used for payments
     - login: adorsys
+      realname: John Doe
       pin: 12345
       tan: 123456
       sca-method-list:
         sca-0: SMS on your phone
         sca-1: Email with TAN
       accounts:
-        - DE89500105175119697587
+        - number: 119697587
+          currency: EUR
+          balalce: 200
 
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
