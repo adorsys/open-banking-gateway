@@ -7,9 +7,9 @@
     </startEvent>
     <subProcess xmlns="" id="sid-36197947-f323-4391-9588-2cd604101e00" flowable:async="false" flowable:exclusive="false" name="Anonymous dialog">
       <startEvent id="sid-eb9d98fa-2592-428b-91d1-0bd81485d82a"/>
-      <serviceTask id="anonymousBpd" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Reply with anonymous BPD" flowable:delegateExpression="${anonymousBpd}"/>
+      <serviceTask id="anonymousBpd" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Reply with anonymous BPD" flowable:delegateExpression="${anonymousDialogInitBpd}"/>
       <serviceTask id="awaitForDialogEnd" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Await for anonymous dialog end" flowable:delegateExpression="${anonymousDialogEnd}"/>
-      <serviceTask id="anonymousBpdNotSupported" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Reply with anonymous dialog not supported" flowable:expression="${anonymousNotSupported}"/>
+      <serviceTask id="anonymousBpdNotSupported" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Reply with anonymous dialog not supported" flowable:expression="${anonymousDialogInitNotSupported}"/>
       <exclusiveGateway id="isAnonymousBpdSupported"/>
       <sequenceFlow id="sid-c153780d-00ba-482c-bec1-bccbd64d169b" sourceRef="sid-eb9d98fa-2592-428b-91d1-0bd81485d82a" targetRef="isAnonymousBpdSupported"/>
       <sequenceFlow id="sid-b244b018-b9f8-4168-9b3e-2eeafdfaa260" sourceRef="isAnonymousBpdSupported" targetRef="anonymousBpd">
