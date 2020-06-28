@@ -45,7 +45,7 @@ hbci:
       realname: Brueckner Anton
       pin: 12345
       tan: 123456
-      sca-method-list:
+      sca-methods-available:
         sca-0: SMS on your phone
       accounts:
         - number: 5827542519
@@ -75,7 +75,7 @@ hbci:
       realname: Musterman Max
       pin: 12345
       tan: 123456
-      sca-method-list:
+      sca-methods-available:
         sca-0: SMS on your phone
         sca-1: Email with TAN
       accounts:
