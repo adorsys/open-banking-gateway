@@ -38,6 +38,9 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Utility-helper class to work with HBCI logs.
+ */
 @Slf4j
 class HbciStubGenerator {
 
@@ -57,13 +60,13 @@ class HbciStubGenerator {
             .collect(Collectors.toSet());
 
     /**
-     * This test takes HBCI log file and creates desaturated messages out of it.
+     * This test takes HBCI log file and creates desaturated (parsed into JSON format) messages out of it.
      */
     @Test
     @Disabled
     @SneakyThrows
     void generateDesaturated() {
-        Path sourceFile = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/data/multibanking-test.txt");
+        Path sourceFile = Paths.get("/home/valb3r/Downloads/HBCI-sparkasse.txt");
         Path destinationFile = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/obfuscated/structure.json");
 
         ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
@@ -286,7 +289,7 @@ class HbciStubGenerator {
     @Disabled
     @SneakyThrows
     void classifyMessage() {
-        Path target = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/dissect/7-request.txt");
+        Path target = Paths.get("/home/valb3r/IdeaProjects/hbci-ag-mock/dissect/message.txt");
         assertThat(parseMessage(readMessage(target))).isNotNull();
     }
 
@@ -307,14 +310,14 @@ class HbciStubGenerator {
     private String cleanupCryptoHeaders(String messageStr) {
         // Remove crypto-headers
         messageStr = messageStr
-                .replaceAll("HNVSK.+?'", "")
-                .replaceAll("HNVSD.+?@.+?@", "")
-                .replaceAll("HNSHK.+?'", "");
+                .replaceAll("(?s)HNVSK.+?'", "")
+                .replaceAll("(?s)HNVSD.+?@.+?@", "")
+                .replaceAll("(?s)HNSHK.+?'", "");
 
         // Fix dangling values
         return messageStr
-                .replaceAll("(HKSPA:\\d:\\d)'", "$1\\+'")
-                .replaceAll("(HNSHA:\\d:\\d)", "'$1");
+                .replaceAll("(?s)(HKSPA:\\d:\\d)'", "$1\\+'")
+                .replaceAll("(?s)(HNSHA:\\d:\\d)", "'$1");
     }
 
     private static Set<String> generateFromStarsRange100(String str) {
