@@ -13,6 +13,8 @@ public class SandboxContext {
 
     private Operation requestOperation;
     private Map<String, String> requestData;
+    private String requestPin;
+    private String requestTan;
 
     private Bank bank;
     private User user;
