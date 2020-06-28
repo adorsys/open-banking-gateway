@@ -1,19 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { StubUtilTests } from '../common/stub-util-tests';
-import { UpdateConsentAuthorizationService } from '../../api';
-import { ScaSelectPageComponent } from './sca-select-page.component';
-import { of } from 'rxjs';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-describe('ScaSelectPageComponent', () => {
+import { StubUtilTests } from '../common/stub-util-tests';
+import { ScaSelectPageComponent } from './sca-select-page.component';
+
+describe('AIS ScaSelectPageComponent', () => {
   let component: ScaSelectPageComponent;
   let fixture: ComponentFixture<ScaSelectPageComponent>;
-  let consentAuthorizationService: UpdateConsentAuthorizationService;
-  let consentAuthorizationServiceSpy;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -40,17 +36,10 @@ describe('ScaSelectPageComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ScaSelectPageComponent);
     component = fixture.componentInstance;
-    consentAuthorizationService = fixture.debugElement.injector.get(UpdateConsentAuthorizationService);
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should call method embeddedUsingPOST', () => {
-    consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'embeddedUsingPOST').and.returnValue(of());
-    component.onSubmit(StubUtilTests.SCA_METHOD_VALUE);
-    expect(consentAuthorizationServiceSpy).toHaveBeenCalled();
   });
 });
