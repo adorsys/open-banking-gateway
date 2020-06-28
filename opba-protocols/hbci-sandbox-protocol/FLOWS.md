@@ -1,84 +1,120 @@
 # Typical request-response sequences for different HBCI banks:
 
 ## SPARDA
-DialogInitAnon-Idn
-CustomMsgRes-BPD
 
-DialogEnd
-CustomMsgRes-c0100 -> Dialog ID assigned
+1. DialogInitAnon-Idn
+1. CustomMsgRes-BPD
 
-Synch-pin-12456
-SynchRes-3920 -> Provided Bank Data
+2. DialogEnd
+2. CustomMsgRes-c0100 -> Dialog ID assigned (and kept)
 
-DialogEnd
-CustomMsgRes
+3. Synch-pin-12456
+3. SynchRes-3920 -> Provided Bank Data
 
-Synch-pin12456 & TAN2Step6
-SynchRes-3920
+4. DialogEnd
+4. CustomMsgRes
 
-DialogEnd
-CustomMsgRes
+5. Synch-pin12456 & TAN2Step6
+5. SynchRes-3920
 
-DialogInit-pin12456 & TAN2Step6
-CustomMsgRes-c0030 (security clearance) & GVRes.TAN2StepRes6.challenge
+6. DialogEnd
+6. CustomMsgRes
 
-CustomMsg-TAN2Step6 & tan12456
-CustomMsgRes-UPD(account numbers)
+7. DialogInit-pin12456 & TAN2Step6
+7. CustomMsgRes-c0030 (security clearance) & GVRes.TAN2StepRes6.challenge
 
-CustomMsg-pin-tan-KUmsZeit5 KTV-number (5578896155)
-CustomMsgRes - GVRes.KUmsZeitRes5.booked
+8. CustomMsg-TAN2Step6 & tan12456
+8. CustomMsgRes-UPD(account numbers)
 
-DialogEnd
-CustomMsgRes
+9. CustomMsg-pin-tan-KUmsZeit5 KTV-number (5578896155)
+9. CustomMsgRes - GVRes.KUmsZeitRes5.booked
+
+10. DialogEnd
+10. CustomMsgRes
 
 
 
 ## ING-ACCOUNTS-TRANSACTION
 
-DialogInitAnon
-CustomMsgRes - 9400 (Der anonyme Dialog wird nicht unterstützt)
+1. DialogInitAnon
+1. CustomMsgRes - 9400 (Der anonyme Dialog wird nicht unterstützt)
 
-DialogEnd
-CustomMsgRes
+2. DialogEnd
+2. CustomMsgRes
 
-Synch-pin12345
-SynchRes-BPD-Dialogid-First
+3. Synch-pin12345
+3. SynchRes-BPD-Dialogid-First
 
-DialogEnd
-CustomMsgRes
+4. DialogEnd
+4. CustomMsgRes
 
-Synch-pin12345
-SynchRes-3920 (Zugelassene Ein- und Zwei-Schritt-Verfahren für den Benutzer)
+5. Synch-pin12345
+5. SynchRes-3920 (Zugelassene Ein- und Zwei-Schritt-Verfahren für den Benutzer)
 
-DialogEnd
-CustomMsgRes
+6. DialogEnd
+6. CustomMsgRes
 
-DialogInit
-CustomMsgRes-Dialogid-Second-3050. UPD nicht mehr aktuell. Aktuelle Version folgt + KInfo_3 (accounts)
+7. DialogInit
+7. CustomMsgRes-Dialogid-Second-3050. UPD nicht mehr aktuell. Aktuelle Version folgt + KInfo_3 (accounts)
 
-CustomMsg-SEPAInfo1
-CustomMsgRes-SEPAInfoRes1
+8. CustomMsg-SEPAInfo1
+8. CustomMsgRes-SEPAInfoRes1
 
-DialogEnd
-CustomMsgRes
+9. DialogEnd
+9. CustomMsgRes
 
-Synch
-SynchRes-DialogId-Third
+10. Synch
+10. SynchRes-DialogId-Third
 
-DialogEnd
-CustomMsgRes
+11. DialogEnd
+11. CustomMsgRes
 
-DialogInit
-CustomMsgRes-UPD
+12. DialogInit
+12. CustomMsgRes-UPD
 
-CustomMsg - KUmsZeit5
-CustomMsgRes - KUmsZeitRes5 (transactions)
+13. CustomMsg - KUmsZeit5
+13. CustomMsgRes - KUmsZeitRes5 (transactions)
 
-DialogEnd
-CustomMsgRes
+14. DialogEnd
+14. CustomMsgRes
 
 
 ## SPARKASSE-ACCOUNTS
 
+1. DialogInitAnon
+1. CustomMsgRes - BPD + First dialog id
+
+2. DialogEnd
+2. CustomMsgRes
+
+3. Synch + pin-123456 -> Dialog id 1
+3. SynchRes - 3920 "Zugelassene Zwei-Schritt-Verfahren für den Benutzer.
+
+4. DialogEnd
+4. CustomMsgRes
+
+5. DialogInit + pin+TAN2Step6
+5. CustomMsgRes + TAN2StepRes6 (3920 Zugelassene Zwei-Schritt-Verfahren für den Benutzer.) -> Dialog id 2
+
+6. CustomMsg + TANMediaList4
+6. CustomMsgRes + TANMediaListRes4
+
+7. DialogEnd
+7. CustomMsgRes
+
+8. Synch + pin + TAN2Step6
+8. SynchRes + TAN2StepRes6 -> Dialog id 3
+
+9. DialogEnd
+9. CustomMsgRes
+
+10. DialogInit + TAN2Step6
+10. CustomMsgRes + UPD + KInfo -> Dialog-id-4
+
+11. CustomMsg + KUmsZeitCamt1 + iban
+11. CustomMsgRes + '"Bitte geben Sie die pushTAN ein.'
+
+12. CustomMsg + TAN2Step6 + pin + tan
+12. CustomMsgRes - Die eingegebene TAN ist falsch. (MBV07390100162)
 
 

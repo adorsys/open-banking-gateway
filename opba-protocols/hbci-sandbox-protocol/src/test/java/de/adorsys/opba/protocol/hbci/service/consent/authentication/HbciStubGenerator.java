@@ -66,7 +66,7 @@ class HbciStubGenerator {
     @Disabled
     @SneakyThrows
     void generateDesaturated() {
-        Path sourceFile = Paths.get("/home/valb3r/Downloads/HBCI-sparkasse.txt");
+        Path sourceFile = Paths.get("/home/valb3r/Downloads/hbci-log.txt");
         Path destinationFile = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/obfuscated/structure.json");
 
         ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
