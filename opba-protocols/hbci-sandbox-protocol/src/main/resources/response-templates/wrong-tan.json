@@ -1,11 +1,11 @@
 {
   "A_TYPE" : "CustomMsgRes",
-  "MsgHead.MsgRef.dialogid" : "${dialogId}",
+  "MsgHead.MsgRef.dialogid" : "${getDialogId()}",
   "MsgHead.MsgRef.msgnum" : "3",
   "MsgHead.SegHead.code" : "HNHBK",
   "MsgHead.SegHead.seq" : "1",
   "MsgHead.SegHead.version" : "3",
-  "MsgHead.dialogid" : "${dialogId}",
+  "MsgHead.dialogid" : "${getDialogId()}",
   "MsgHead.hbciversion" : "300",
   "MsgHead.msgnum" : "3",
   "MsgHead.msgsize" : "000000000515",
@@ -31,5 +31,5 @@
   "SigTail.SegHead.code" : "HNSHA",
   "SigTail.SegHead.seq" : "5",
   "SigTail.SegHead.version" : "2",
-  "SigTail.seccheckref" : "${seccheckref}"
+  "SigTail.seccheckref" : "${getSecCheckRef()}"
 }

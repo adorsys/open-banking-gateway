@@ -1,11 +1,11 @@
 {
   "A_TYPE" : "SynchRes",
-  "MsgHead.MsgRef.dialogid" : "${dialogId}",
+  "MsgHead.MsgRef.dialogid" : "${getDialogId()}",
   "MsgHead.MsgRef.msgnum" : "1",
   "MsgHead.SegHead.code" : "HNHBK",
   "MsgHead.SegHead.seq" : "1",
   "MsgHead.SegHead.version" : "3",
-  "MsgHead.dialogid" : "${dialogId}",
+  "MsgHead.dialogid" : "${getDialogId()}",
   "MsgHead.hbciversion" : "300",
   "MsgHead.msgnum" : "1",
   "MsgHead.msgsize" : "000000000545",
