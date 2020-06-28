@@ -9,18 +9,36 @@ spring:
 
 hbci:
   banks:
-    withAnonymousBpd:
-      anonBpd: true
+    - name: anonymous-bpd
+      bic: FOO1DEH1XXX
+      blz: 10000001
+      security:
+        bank-parameters-data: ANONYMOUS
+        accounts: AUTHENTICATED
+        transactions: AUTHORIZED
       users:
         - anton.brueckner
         - max.musterman
-        - adorsys
-    withoutAnonymousBpd:
-      anonBpd: false
+    - name: no-anonymous-bpd-txn-authenticated
+      bic: FOO2DEH1XXX
+      blz: 20000002
+      security:
+        bank-parameters-data: AUTHENTICATED
+        accounts: AUTHENTICATED
+        transactions: AUTHENTICATED
       users:
         - anton.brueckner
         - max.musterman
-        - adorsys
+    - name: no-anonymous-bpd-txn-authorized
+      bic: FOO3DEH1XXX
+      blz: 30000003
+      security:
+        bank-parameters-data: AUTHENTICATED
+        accounts: AUTHENTICATED
+        transactions: AUTHORIZED
+      users:
+        - anton.brueckner
+        - max.musterman
 
   users:
     - login: anton.brueckner
@@ -30,26 +48,28 @@ hbci:
       sca-method-list:
         sca-0: SMS on your phone
       accounts:
-          - number: 5827542519
-            currency: EUR
-            balalce: 100
-          - number: 9185286653
-            currency: EUR
-            balalce: 30
+        - number: 5827542519
+          currency: EUR
+          balalce: 100
+        - number: 9185286653
+          currency: EUR
+          balalce: 30
       transactions:
-        "5827542519":
-          - DK9150513599717134:
-             amount: 100
-             currency: EUR
-             date: 2019-01-01T01:00:00
-          - DK9150513599717134:
-              amount: 30
-              currency: EUR
-              date: 2019-06-07T08:00:00
-          - UA429912181258651749888998636:
-              amount: 90
-              currency: EUR
-              date: 2020-01-02T09:00:00
+        - from: 5827542519
+          to: DK9150513599717134
+          amount: 100
+          currency: EUR
+          date: 2019-01-01T01:00:00
+        - from: 5827542519
+          to: DK9150513599717134
+          amount: 100
+          currency: EUR
+          date: 2019-06-07T08:00:00
+        - from: 5827542519
+          to: UA429912181258651749888998636
+          amount: 90
+          currency: EUR
+          date: 2020-01-02T09:00:00
 
     - login: max.musterman
       realname: Musterman Max
@@ -66,32 +86,21 @@ hbci:
           currency: EUR
           balalce: 130
       transactions:
-        "3466865655":
-          - AE170262989187616965653:
-              amount: 30
-              currency: EUR
-              date: 2020-01-01T01:00:00
-          - UA107659944284963696317637511:
-              amount: 14.55
-              currency: EUR
-              date: 2019-06-07T08:30:00
-          - DE59500105172584189131:
-              amount: 400
-              currency: EUR
-              date: 2020-02-02T09:30:00
-
-    # To be used for payments
-    - login: adorsys
-      realname: John Doe
-      pin: 12345
-      tan: 123456
-      sca-method-list:
-        sca-0: SMS on your phone
-        sca-1: Email with TAN
-      accounts:
-        - number: 119697587
+        - from: 3466865655
+          to: AE170262989187616965653
+          amount: 100
           currency: EUR
-          balalce: 200
+          date: 2020-01-01T01:00:00
+        - from: 5827542519
+          to: UA107659944284963696317637511
+          amount: 14.55
+          currency: EUR
+          date: 2019-06-07T08:30:00
+        - from: 5827542519
+          to: DE59500105172584189131
+          amount: 400
+          currency: EUR
+          date: 2020-02-02T09:30:00
 
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
