@@ -22,8 +22,6 @@ import { EntryPageAccountsComponent } from './entry-page/initiation/accounts/ent
 import { DedicatedAccessComponent } from './entry-page/initiation/common/dedicated-access/dedicated-access.component';
 import { ToAspspRedirectionComponent } from './to-aspsp-page/to-aspsp-redirection.component';
 import { ConsentInfoComponent } from './components/consent-info/consent-info.component';
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
 import { ConsentSharingComponent } from './entry-page/initiation/consent-sharing/consent-sharing.component';
 import { SharedModule } from '../common/shared.module';
 
@@ -49,8 +47,6 @@ import { SharedModule } from '../common/shared.module';
     EntryPageAccountsComponent,
     ToAspspRedirectionComponent,
     ConsentInfoComponent,
-    LoginComponent,
-    RegisterComponent,
     ConsentSharingComponent
   ],
   imports: [SharedModule, AisRoutingModule, AngularIbanModule]

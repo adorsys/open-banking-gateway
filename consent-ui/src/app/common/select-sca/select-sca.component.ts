@@ -12,11 +12,12 @@ import { StubUtil } from '../utils/stub-util';
 })
 export class SelectScaComponent implements OnInit {
   @Input() authorizationSessionId: string;
-  @Input() redirectCode: string;
   @Output() selectedValue = new EventEmitter<any>();
+
   scaMethods: ScaUserData[] = [];
   selectedMethod = new FormControl();
   scaMethodForm: FormGroup;
+  redirectCode: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -26,6 +27,8 @@ export class SelectScaComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
+
     // init form
     this.scaMethodForm = this.formBuilder.group({
       selectedMethodValue: [this.selectedMethod, Validators.required]
@@ -43,7 +46,10 @@ export class SelectScaComponent implements OnInit {
         { scaAuthenticationData: { SCA_CHALLENGE_ID: this.selectedMethod.value } },
         'response'
       )
-      .subscribe(res => this.selectedValue.emit(res));
+      .subscribe(res => {
+        this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.selectedValue.emit(res);
+      });
   }
 
   private initSca(): void {

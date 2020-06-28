@@ -1,11 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StubUtil } from '../utils/stub-util';
-import { ApiHeaders } from '../../api/api.headers';
-import { ConsentAuthorizationService } from '../../api/api/consentAuthorization.service';
 import { UpdateConsentAuthorizationService } from '../../api';
 import { SessionService } from '../session.service';
-import { Observable } from 'rxjs';
+import { ApiHeaders } from '../../api/api.headers';
 
 @Component({
   selector: 'consent-app-enter-pin',
@@ -13,11 +11,13 @@ import { Observable } from 'rxjs';
   styleUrls: ['./enter-pin.component.scss']
 })
 export class EnterPinComponent implements OnInit {
-  pinForm: FormGroup;
+  @Input() title: string;
   @Input() wrongPassword: boolean;
-  @Input() redirectCode: string;
   @Input() authorizationSessionId: string;
   @Output() enteredPin = new EventEmitter<any>();
+
+  pinForm: FormGroup;
+  redirectCode: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -26,6 +26,7 @@ export class EnterPinComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
     this.pinForm = this.formBuilder.group({
       pin: ['', Validators.required]
     });
@@ -42,6 +43,9 @@ export class EnterPinComponent implements OnInit {
         { scaAuthenticationData: { PSU_PASSWORD: this.pinForm.get('pin').value } },
         'response'
       )
-      .subscribe(res => this.enteredPin.emit(res));
+      .subscribe(res => {
+        this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.enteredPin.emit(res);
+      });
   }
 }
