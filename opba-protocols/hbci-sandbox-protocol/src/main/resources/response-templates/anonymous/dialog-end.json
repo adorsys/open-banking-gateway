@@ -1,0 +1,18 @@
+{
+  "A_TYPE" : "DialogEnd",
+  "DialogEndS.SegHead.code" : "HKEND",
+  "DialogEndS.SegHead.seq" : "2",
+  "DialogEndS.SegHead.version" : "1",
+  "DialogEndS.dialogid" : "${dialogId}",
+  "MsgHead.SegHead.code" : "HNHBK",
+  "MsgHead.SegHead.seq" : "1",
+  "MsgHead.SegHead.version" : "3",
+  "MsgHead.dialogid" : "${dialogId}",
+  "MsgHead.hbciversion" : "300",
+  "MsgHead.msgnum" : "2",
+  "MsgHead.msgsize" : "000000000113",
+  "MsgTail.SegHead.code" : "HNHBS",
+  "MsgTail.SegHead.seq" : "3",
+  "MsgTail.SegHead.version" : "1",
+  "MsgTail.msgnum" : "2"
+}
