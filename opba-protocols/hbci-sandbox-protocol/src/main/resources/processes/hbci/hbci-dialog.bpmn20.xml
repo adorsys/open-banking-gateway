@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:flowable="http://flowable.org/bpmn" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef" typeLanguage="http://www.w3.org/2001/XMLSchema">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef">
   <process id="hbci-dialog" isExecutable="true" name="hbci-dialog">
     <documentation>HBCI Sandbox dialog</documentation>
     <startEvent flowable:formFieldValidation="true" id="start" name="start">
       <documentation>HBCI Sandbox Server</documentation>
     </startEvent>
-    <subProcess xmlns="" id="sid-36197947-f323-4391-9588-2cd604101e00" flowable:async="false" flowable:exclusive="false" name="Anonymous dialog">
+    <subProcess id="sid-36197947-f323-4391-9588-2cd604101e00" flowable:async="false" flowable:exclusive="false" name="Anonymous dialog">
       <startEvent id="sid-eb9d98fa-2592-428b-91d1-0bd81485d82a"/>
       <serviceTask id="anonymousBpd" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Reply with anonymous BPD" flowable:delegateExpression="${anonymousDialogInitBpd}"/>
       <serviceTask id="awaitForDialogEnd" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Await for anonymous dialog end" flowable:delegateExpression="${anonymousDialogEnd}"/>
@@ -23,7 +27,7 @@
       <endEvent id="sid-4f0e8b84-2f76-40e7-aa5b-3ccd23e0ba58"/>
       <sequenceFlow id="sid-bf1e5f34-8083-4ca2-a90a-d3d75308a3f5" sourceRef="awaitForDialogEnd" targetRef="sid-4f0e8b84-2f76-40e7-aa5b-3ccd23e0ba58"/>
     </subProcess>
-    <subProcess xmlns="" id="sid-525799be-3a9d-488b-95dd-7344741c1ff8" flowable:async="false" flowable:exclusive="false" name="Authenticated dialog">
+    <subProcess id="sid-525799be-3a9d-488b-95dd-7344741c1ff8" flowable:async="false" flowable:exclusive="false" name="Authenticated dialog">
       <subProcess id="sid-c616973f-74ef-4798-bc69-3dc4b7371833" flowable:async="false" flowable:exclusive="false" name="Authorized dialog (with TAN)">
         <startEvent id="sid-788a14aa-7e06-4ea4-8d0e-11d90b2023df"/>
         <endEvent id="sid-a853df77-d5f8-4e9c-984e-24264cbca8af"/>
