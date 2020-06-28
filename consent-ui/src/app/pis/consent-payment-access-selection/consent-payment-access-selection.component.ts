@@ -1,13 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { StubUtil } from '../../common/utils/stub-util';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AuthConsentState } from '../../ais/common/dto/auth-state';
-import { AccountAccessLevel, AisConsentToGrant } from '../../ais/common/dto/ais-consent';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SessionService } from '../../common/session.service';
+
 import { DenyRequest, UpdateConsentAuthorizationService } from '../../api';
-import { ConsentUtil } from '../../ais/common/consent-util';
 import { ApiHeaders } from '../../api/api.headers';
+import { SessionService } from '../../common/session.service';
+import { AuthConsentState } from '../../ais/common/dto/auth-state';
+import { AisConsentToGrant } from '../../ais/common/dto/ais-consent';
+import { StubUtil } from '../../common/utils/stub-util';
+import { ConsentUtil } from '../../ais/common/consent-util';
 
 @Component({
   selector: 'consent-app-payment-access-selection',

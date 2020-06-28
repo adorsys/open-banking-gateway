@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StubUtil } from '../utils/stub-util';
-import { ApiHeaders } from '../../api/api.headers';
 import { UpdateConsentAuthorizationService } from '../../api';
+import { ApiHeaders } from '../../api/api.headers';
+import { SessionService } from '../session.service';
 
 @Component({
   selector: 'consent-app-enter-tan',
@@ -10,18 +11,21 @@ import { UpdateConsentAuthorizationService } from '../../api';
   styleUrls: ['./enter-tan.component.scss']
 })
 export class EnterTanComponent implements OnInit {
-  reportScaResultForm: FormGroup;
   @Input() authorizationSessionId: string;
-  @Input() redirectCode: string;
   @Input() wrongSca: boolean;
   @Output() enteredSca = new EventEmitter<any>();
 
+  reportScaResultForm: FormGroup;
+  redirectCode: string;
+
   constructor(
     private formBuilder: FormBuilder,
+    private sessionService: SessionService,
     private updateConsentAuthorizationService: UpdateConsentAuthorizationService
   ) {}
 
   ngOnInit() {
+    this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
     this.reportScaResultForm = this.formBuilder.group({
       tan: ['', Validators.required]
     });
@@ -37,6 +41,9 @@ export class EnterTanComponent implements OnInit {
         { scaAuthenticationData: { SCA_CHALLENGE_DATA: this.reportScaResultForm.get('tan').value } },
         'response'
       )
-      .subscribe(res => this.enteredSca.emit(res));
+      .subscribe(res => {
+        this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.enteredSca.emit(res);
+      });
   }
 }
