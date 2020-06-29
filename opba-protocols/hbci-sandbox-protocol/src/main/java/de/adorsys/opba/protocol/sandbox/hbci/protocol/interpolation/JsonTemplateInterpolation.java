@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.sandbox.hbci.protocol.interpolation;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Account;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
@@ -18,6 +19,7 @@ import org.kapott.hbci.callback.HBCICallbackConsole;
 import org.kapott.hbci.manager.HBCIProduct;
 import org.kapott.hbci.passport.PinTanPassport;
 import org.kapott.hbci.protocol.Message;
+import org.kapott.hbci.protocol.MultipleSyntaxElements;
 import org.kapott.hbci.protocol.SyntaxElement;
 import org.kapott.hbci.security.Crypt;
 import org.kapott.hbci.security.Sig;
@@ -30,8 +32,10 @@ import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,7 +61,7 @@ public class JsonTemplateInterpolation {
         if (context.isCryptNeeded()) {
             log.info("Encryption needed for {} of {}", templateResourcePath, context.getDialogId());
             message = encryptAndSignMessage(context, message);
-            // Signing causes element duplication
+            return message.toString(0);
         }
 
         message.validate();
@@ -72,18 +76,65 @@ public class JsonTemplateInterpolation {
                 "300",
                 ImmutableMap.of(
                         "client.passport.country", "DE",
-                        "client.passport.blz", context.getRequestBankBlz(),
-                        "client.passport.customerId", context.getRequestUserLogin(),
-                        "client.passport.userId", context.getRequestUserLogin()
+                        "client.passport.blz", context.getBank().getBlz(),
+                        "client.passport.customerId", context.getUser().getLogin(),
+                        "client.passport.userId", context.getUser().getLogin()
                 ),
                 new HBCICallbackConsole(),
                 new HBCIProduct("1234", "300")
         );
         passport.setPIN("noref");
+        passport.setSysId(context.getSysId());
         sig.signIt(message, passport);
+        // Signing causes element duplication - so dropping duplicates
+        Map<String, SyntaxElement> existingPaths = new HashMap<>();
+        message.getChildContainers().stream().flatMap(it -> it.getElements().stream()).forEach(it -> recursivelyEnumeratePaths(it, existingPaths));
+        // It is ok to ignore top elements (Multi elems) from removal - they do not seem to duplicate
+        recursivelyRemoveDuplicatePathsAndDestroyDirectParentOnDuplicate(message, existingPaths);
+        message.validate();
+        message.enumerateSegs(1, SyntaxElement.ALLOW_OVERWRITE);
+
+        // Crypt the message
         Crypt crypt = new Crypt(passport);
         message = crypt.cryptIt(message);
-        return message;
+
+        // Converting from client message to institution message
+        Set<String> pathsToPrefix = ImmutableSet.of("CryptData.data", "CryptHead.CryptAlg.enckey");
+        // MsgRef also is needed - seem to get lost and is irrecoverable
+        Message result = new Message("CryptedRes", ParsingUtil.SYNTAX);
+        for (Map.Entry<String, String> target : message.getData().entrySet()) {
+            result.propagateValue(
+                    result.getPath() + "." + target.getKey(),
+                    pathsToPrefix.contains(target.getKey()) ? "B" + target.getValue(): target.getValue(),
+                    true,
+                    true
+            );
+        }
+        result.propagateValue(result.getPath() + ".MsgHead.MsgRef.dialogid", context.getDialogId(), true, true);
+        result.propagateValue(result.getPath() + ".MsgHead.MsgRef.msgnum",  message.getValueOfDE(message.getPath() + ".MsgHead.msgnum"), true, true);
+        result.validate();
+        result.enumerateSegs(1, SyntaxElement.ALLOW_OVERWRITE);
+        result.autoSetMsgSize();
+        return result;
+    }
+
+    private void recursivelyEnumeratePaths(SyntaxElement element, Map<String, SyntaxElement> existingPaths) {
+        existingPaths.putIfAbsent(element.getPath(), element);
+        element.getChildContainers().stream().flatMap(it -> it.getElements().stream()).forEach(it -> recursivelyEnumeratePaths(it, existingPaths));
+    }
+
+    private void recursivelyRemoveDuplicatePathsAndDestroyDirectParentOnDuplicate(SyntaxElement element, Map<String, SyntaxElement> existingPaths) {
+        List<MultipleSyntaxElements> children = element.getChildContainers();
+        Iterator<MultipleSyntaxElements> iterator = children.iterator();
+        while (iterator.hasNext()) {
+            MultipleSyntaxElements current = iterator.next();
+            current.getElements().removeIf(elem -> !existingPaths.get(elem.getPath()).equals(elem));
+            int totElems = current.getElements().stream().mapToInt(it -> it.getChildContainers().size()).sum();
+            if (0 == totElems) {
+                iterator.remove();
+            }
+        }
+
     }
 
     @SneakyThrows
