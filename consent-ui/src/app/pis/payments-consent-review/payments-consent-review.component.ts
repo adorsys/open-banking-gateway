@@ -3,12 +3,13 @@ import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { SessionService } from '../../common/session.service';
-import { ConsentAuth, PsuAuthRequest, UpdateConsentAuthorizationService } from '../../api';
+import { PsuAuthRequest, UpdateConsentAuthorizationService } from '../../api';
 import { SharedRoutes } from '../../ais/entry-page/initiation/common/shared-routes';
-import { AccountAccessLevel, AisConsentToGrant } from '../../ais/common/dto/ais-consent';
+import { AccountAccessLevel } from '../../ais/common/dto/ais-consent';
 import { StubUtil } from '../../common/utils/stub-util';
-import { ConsentUtil } from '../../ais/common/consent-util';
 import { ApiHeaders } from '../../api/api.headers';
+import { PaymentUtil } from '../common/payment-util';
+import { PisPayment } from '../common/models/pis-payment.model';
 
 @Component({
   selector: 'consent-app-payments-consent-review',
@@ -16,6 +17,13 @@ import { ApiHeaders } from '../../api/api.headers';
   styleUrls: ['./payments-consent-review.component.scss']
 })
 export class PaymentsConsentReviewComponent implements OnInit {
+  public static ROUTE = SharedRoutes.REVIEW;
+  accountAccessLevel = AccountAccessLevel;
+  public finTechName = StubUtil.FINTECH_NAME;
+  public aspspName = StubUtil.ASPSP_NAME;
+  public payment: PisPayment;
+  private authorizationId: string;
+
   constructor(
     private location: Location,
     private router: Router,
@@ -25,20 +33,10 @@ export class PaymentsConsentReviewComponent implements OnInit {
     private updateConsentAuthorizationService: UpdateConsentAuthorizationService
   ) {}
 
-  public static ROUTE = SharedRoutes.REVIEW;
-
-  accountAccessLevel = AccountAccessLevel;
-
-  public finTechName = StubUtil.FINTECH_NAME;
-  public aspspName = StubUtil.ASPSP_NAME;
-  public payment: AisConsentToGrant;
-
-  private authorizationId: string;
-
   ngOnInit() {
     this.activatedRoute.parent.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
-      this.payment = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
+      this.payment = PaymentUtil.getOrDefault(this.authorizationId, this.sessionService);
     });
   }
 
