@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { StubUtil } from '../../common/utils/stub-util';
 import { Action } from '../../common/utils/action';
-import { AisConsentToGrant } from '../../ais/common/dto/ais-consent';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { SessionService } from '../../common/session.service';
 import { AuthStateConsentAuthorizationService, DenyRequest, UpdateConsentAuthorizationService } from '../../api';
-import { ConsentUtil } from '../../ais/common/consent-util';
 import { ApiHeaders } from '../../api/api.headers';
+import { PaymentUtil } from '../common/payment-util';
+import { PisPayment } from '../common/models/pis-payment.model';
 
 @Component({
   selector: 'consent-app-to-aspsp-page',
@@ -24,7 +24,7 @@ export class ToAspspPageComponent implements OnInit {
   redirectTo: string;
 
   private authorizationId: string;
-  private aisConsent: AisConsentToGrant;
+  private pisPayment: PisPayment;
 
   constructor(
     private location: Location,
@@ -37,18 +37,9 @@ export class ToAspspPageComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
-      this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
+      this.pisPayment = PaymentUtil.getOrDefault(this.authorizationId, this.sessionService);
       this.loadRedirectUri();
     });
-  }
-
-  private loadRedirectUri() {
-    this.authStateConsentAuthorizationService
-      .authUsingGET(this.authorizationId, this.sessionService.getRedirectCode(this.authorizationId), 'response')
-      .subscribe(res => {
-        this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-        this.redirectTo = res.headers.get(ApiHeaders.LOCATION);
-      });
   }
 
   onDeny() {
@@ -62,6 +53,15 @@ export class ToAspspPageComponent implements OnInit {
       )
       .subscribe(res => {
         window.location.href = res.headers.get(ApiHeaders.LOCATION);
+      });
+  }
+
+  private loadRedirectUri() {
+    this.authStateConsentAuthorizationService
+      .authUsingGET(this.authorizationId, this.sessionService.getRedirectCode(this.authorizationId), 'response')
+      .subscribe(res => {
+        this.sessionService.setRedirectCode(this.authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.redirectTo = res.headers.get(ApiHeaders.LOCATION);
       });
   }
 }
