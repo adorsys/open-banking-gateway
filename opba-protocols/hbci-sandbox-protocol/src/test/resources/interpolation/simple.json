@@ -1,0 +1,4 @@
+{
+  "foo": "123",
+  "prefix${_ctx.getBank().getBlz()}": "${ctx.getBank().getBic()}"
+}
