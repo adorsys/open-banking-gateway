@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.sandbox.hbci.protocol.authenticated.nonauthorized;
+package de.adorsys.opba.protocol.sandbox.hbci.protocol.common;
 
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.Operation;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.TemplateBasedOperationHandler;
@@ -6,16 +6,16 @@ import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.interpolation.JsonTemplateInterpolation;
 import org.springframework.stereotype.Service;
 
-@Service("authenticatedLostAuth")
-public class AuthenticatedLostAuth extends TemplateBasedOperationHandler {
+@Service("wrongPinTanOrLogin")
+public class WrongPinTanOrLogin extends TemplateBasedOperationHandler {
 
-    public AuthenticatedLostAuth(JsonTemplateInterpolation interpolation) {
+    public WrongPinTanOrLogin(JsonTemplateInterpolation interpolation) {
         super(interpolation);
     }
 
     @Override
     protected String templatePath(SandboxContext context) {
-        if (!context.isPinOk()) {
+        if (!context.isPinOk() || !context.getBank().getUsers().contains(context.getUser().getLogin())) {
             return "response-templates/wrong-pin.json";
         }
 
