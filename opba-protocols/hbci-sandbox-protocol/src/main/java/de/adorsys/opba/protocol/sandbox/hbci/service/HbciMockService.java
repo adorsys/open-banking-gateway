@@ -31,7 +31,7 @@ public class HbciMockService {
         String toParse = ParsingUtil.cleanupCryptoHeaders(
                 new String(Base64.getDecoder().decode(requestEncoded), StandardCharsets.ISO_8859_1)
         );
-        Message message = ParsingUtil.parseMessage(toParse);
+        Message message = ParsingUtil.parseMessageWithoutSensitiveNonSensitiveValidation(toParse);
         String dialogId = message.getData().get(DIALOG_ID);
 
         if (null == dialogId || "".equals(dialogId) || "0".equals(dialogId)) {

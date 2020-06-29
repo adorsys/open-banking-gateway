@@ -2,8 +2,10 @@ package de.adorsys.opba.protocol.hbci.service.consent.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.io.BaseEncoding;
+import com.google.common.io.Resources;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.parsing.ParsingUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -12,20 +14,27 @@ import org.iban4j.Iban;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.kapott.hbci.protocol.Message;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static de.adorsys.opba.protocol.sandbox.hbci.protocol.parsing.ParsingUtil.SYNTAX;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -36,6 +45,17 @@ class HbciStubGenerator {
 
     private static final int MINIMUM_LENGTH_FOR_UNIQUENESS = 3;
     private static final Random RANDOM = new Random();
+
+    public static final Set<String> NON_SENSITIVE_FIELDS =
+            fieldDefinitions("hbci-non-sensitive-fields.txt")
+                    .stream()
+                    .flatMap(it -> generateFromStarsRange100(it).stream())
+                    .collect(Collectors.toSet());
+
+    public static final Set<String> SENSITIVE_FIELDS = fieldDefinitions("hbci-sensitive-fields.txt")
+            .stream()
+            .flatMap(it -> generateFromStarsRange100(it).stream())
+            .collect(Collectors.toSet());
 
     /**
      * This test takes HBCI log file and creates desaturated (parsed into JSON format) messages out of it.
@@ -51,7 +71,7 @@ class HbciStubGenerator {
         Map<Integer, String> messagesByPos = extractHbciMessageBlocks(new String(Files.readAllBytes(sourceFile), StandardCharsets.UTF_8));
         Map<Integer, Map<String, String>> desaturatedMessageByPos = new TreeMap<>();
         for (Map.Entry<Integer, String> message : messagesByPos.entrySet()) {
-            Message parsed = ParsingUtil.parseMessage(ParsingUtil.cleanupCryptoHeaders(message.getValue()));
+            Message parsed = parseMessage(ParsingUtil.cleanupCryptoHeaders(message.getValue()));
             Map<String, String> data = new TreeMap<>(parsed.getData());
             data.put("A_TYPE", parsed.getName());
             desaturatedMessageByPos.put(message.getKey(), data);
@@ -149,9 +169,9 @@ class HbciStubGenerator {
     private Message obfuscateMessage(Path messageFile, Map<String, String> replacedValuesCache) {
         // contains all values that were replaced by if their length is more than 4 chars.
         // If value occurs in one field and then same in another - they should be obfuscated with same value.
-        Message msg = ParsingUtil.parseMessage(readMessage(messageFile), true);
+        Message msg = parseMessage(readMessage(messageFile), true);
         dumpMessage(msg);
-        Set<String> sensitiveFields = Sets.intersection(msg.getData().keySet(), ParsingUtil.SENSITIVE_FIELDS);
+        Set<String> sensitiveFields = Sets.intersection(msg.getData().keySet(), SENSITIVE_FIELDS);
 
         for (String sensitive : sensitiveFields) {
             String value = msg.getData().get(sensitive);
@@ -268,7 +288,46 @@ class HbciStubGenerator {
     @SneakyThrows
     void classifyMessage() {
         Path target = Paths.get("/home/valb3r/IdeaProjects/hbci-ag-mock/dissect/message.txt");
-        assertThat(ParsingUtil.parseMessage(readMessage(target))).isNotNull();
+        assertThat(parseMessage(readMessage(target))).isNotNull();
+    }
+
+    public Message parseMessage(String from) {
+        return parseMessage(from, false);
+    }
+
+    @SuppressWarnings("PMD.EmptyCatchBlock")
+    // This is the way original parser works - try - catch if message not matches - continue
+    public Message parseMessage(String from, boolean failIfFieldsRemain) {
+        NodeList list = SYNTAX.getElementsByTagName("MSGdef");
+        Message result = null;
+        for (int i = 0; i < list.getLength(); i++) {
+            Element node = (Element) list.item(i);
+            String msgName = node.getAttribute("id");
+            try {
+                Message msg = new Message(msgName, from, SYNTAX, false, true);
+                Set<String> keys = new HashSet<>(msg.getData().keySet());
+                int size = keys.size();
+                keys.removeAll(NON_SENSITIVE_FIELDS);
+                log.info("=================================== {} ===================================", msgName);
+                log.info("Found {} insensitive fields", size - keys.size());
+                size = keys.size();
+                keys.removeAll(SENSITIVE_FIELDS);
+                log.info("Found {} SENSITIVE fields", size - keys.size());
+                keys.forEach(it -> log.info("Found UNKNOWN FIELD: {}={}", it, msg.getData().get(it)));
+                log.info("============================================================================");
+                if (failIfFieldsRemain && !keys.isEmpty()) {
+                    throw new IllegalStateException("Fields were left");
+                }
+
+                // End loop on 1st element
+                result = msg;
+                break;
+            } catch (RuntimeException ex) {
+                // NOP, that's how kapott works
+            }
+        }
+
+        return result;
     }
 
     @SneakyThrows
@@ -282,5 +341,33 @@ class HbciStubGenerator {
         }
 
         return ParsingUtil.cleanupCryptoHeaders(messageStr);
+    }
+
+    private static Set<String> generateFromStarsRange100(String str) {
+        int stars = str.split("\\*", -1).length - 1;
+        if (stars == 0) {
+            return ImmutableSet.of(str);
+        }
+
+        Set<String> result = new LinkedHashSet<>();
+        int starRange = 2;
+        int max = BigDecimal.ONE.movePointRight(starRange * stars).intValueExact();
+        for (int i = 0; i < max; i++) {
+            String res = str;
+            int value = i;
+            for (int indStar = 0; indStar < stars; indStar++) {
+                int div = BigDecimal.ONE.movePointRight(starRange * (stars - indStar - 1)).intValueExact();
+                res = res.replaceFirst("\\*", "" + (value / div + 1));
+                value -= (value / div) * div;
+            }
+            result.add(res);
+        }
+
+        return result;
+    }
+
+    @SneakyThrows
+    private static Set<String> fieldDefinitions(String resourceName) {
+        return new HashSet<>(Resources.readLines(Resources.getResource(resourceName), StandardCharsets.UTF_8));
     }
 }
