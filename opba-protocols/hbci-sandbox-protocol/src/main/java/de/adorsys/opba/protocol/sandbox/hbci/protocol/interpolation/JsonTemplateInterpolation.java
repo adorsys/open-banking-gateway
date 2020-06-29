@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.sandbox.hbci.protocol.interpolation;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.io.Resources;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Account;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
@@ -12,7 +13,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.Delegate;
+import lombok.extern.slf4j.Slf4j;
+import org.kapott.hbci.callback.HBCICallbackConsole;
+import org.kapott.hbci.manager.HBCIProduct;
+import org.kapott.hbci.passport.PinTanPassport;
 import org.kapott.hbci.protocol.Message;
+import org.kapott.hbci.protocol.SyntaxElement;
+import org.kapott.hbci.security.Crypt;
+import org.kapott.hbci.security.Sig;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.common.TemplateParserContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -27,6 +35,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JsonTemplateInterpolation {
@@ -41,10 +50,40 @@ public class JsonTemplateInterpolation {
         Map<String, String> interpolated = interpolate(templateResourcePath, context);
         String type = interpolated.remove("A_TYPE");
         Message message = new Message(type, ParsingUtil.SYNTAX);
-        interpolated.forEach((key, value) -> message.propagateValue(message.getPath() + "." + key, value, true, true));
+        for (Map.Entry<String, String> target : interpolated.entrySet()) {
+            message.propagateValue(message.getPath() + "." + target.getKey(), target.getValue(), true, true);
+        }
+        message.enumerateSegs(0, SyntaxElement.ALLOW_OVERWRITE);
         message.validate();
+        message.enumerateSegs(1, SyntaxElement.ALLOW_OVERWRITE);
         message.autoSetMsgSize();
+
+        if (context.isCryptNeeded()) {
+            log.info("Encryption needed for {} of {}", templateResourcePath, context.getDialogId());
+            message = encryptAndSignMessage(context, message);
+        }
+
         return message.toString(0);
+    }
+
+    private Message encryptAndSignMessage(SandboxContext context, Message message) {
+        Sig sig = new Sig();
+        PinTanPassport passport = new PinTanPassport(
+                "300",
+                ImmutableMap.of(
+                        "client.passport.country", "DE",
+                        "client.passport.blz", context.getRequestBankBlz(),
+                        "client.passport.customerId", context.getRequestUserLogin(),
+                        "client.passport.userId", context.getRequestUserLogin()
+                ),
+                new HBCICallbackConsole(),
+                new HBCIProduct("1234", "300")
+        );
+        passport.setPIN("noref");
+        sig.signIt(message, passport);
+        Crypt crypt = new Crypt(passport);
+        message = crypt.cryptIt(message);
+        return message;
     }
 
     @SneakyThrows
