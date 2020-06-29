@@ -50,10 +50,10 @@ hbci:
       accounts:
         - number: 5827542519
           currency: EUR
-          balalce: 100
+          balance: 100
         - number: 9185286653
           currency: EUR
-          balalce: 30
+          balance: 30
       transactions:
         - from: 5827542519
           to: DK9150513599717134
@@ -81,10 +81,10 @@ hbci:
       accounts:
         - number: 3466865655
           currency: EUR
-          balalce: 200
+          balance: 200
         - number: 2278292697
           currency: EUR
-          balalce: 130
+          balance: 130
       transactions:
         - from: 3466865655
           to: AE170262989187616965653
