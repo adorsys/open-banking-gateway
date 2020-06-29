@@ -46,8 +46,6 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
       }
 
       this.payment = PaymentUtil.getOrDefault(this.authorizationId, this.sessionService);
-
-      console.log(this.payment);
     });
   }
 
@@ -76,7 +74,6 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
 
   private updatePaymentObject() {
     const paymentObj = PaymentUtil.getOrDefault(this.authorizationId, this.sessionService);
-    console.log(paymentObj);
 
     if (this.state.hasGeneralViolation()) {
       paymentObj.extras = paymentObj.extras ? paymentObj.extras : {};
