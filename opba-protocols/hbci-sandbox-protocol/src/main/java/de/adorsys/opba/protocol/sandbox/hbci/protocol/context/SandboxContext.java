@@ -22,6 +22,7 @@ public class SandboxContext {
     private User user;
 
     private String response;
+    private boolean cryptNeeded;
 
     // commonly used:
     private String secCheckRef;
