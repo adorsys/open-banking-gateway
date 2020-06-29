@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface BankProtocolRepository extends CrudRepository<BankAction, Long> {
+public interface BankActionRepository extends CrudRepository<BankAction, Long> {
 
     @Query("FROM BankAction b WHERE b.bankProfile.bank.uuid = :uuid AND b.protocolAction = :action")
     Optional<BankAction> findByBankProfileUuidAndAction(

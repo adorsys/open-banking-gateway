@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.facade.services;
 
 import de.adorsys.opba.db.domain.entity.BankAction;
 import de.adorsys.opba.db.domain.entity.BankSubAction;
-import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
+import de.adorsys.opba.db.repository.jpa.BankActionRepository;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,31 +16,31 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProtocolSelector {
 
-    private final BankProtocolRepository protocolRepository;
+    private final BankActionRepository bankActionRepository;
 
     @Transactional
     public <REQUEST, ACTION> InternalContext<REQUEST, ACTION> selectProtocolFor(
         InternalContext<REQUEST, ACTION> ctx,
         ProtocolAction protocolAction,
         Map<String, ? extends ACTION> actionBeans) {
-        Optional<BankAction> bankProtocol;
+        Optional<BankAction> bankAction;
 
         if (null == ctx.getAuthSession()) {
-            bankProtocol = protocolRepository.findByBankProfileUuidAndAction(
+            bankAction = bankActionRepository.findByBankProfileUuidAndAction(
                     ctx.getServiceCtx().getBankId(),
                     protocolAction
             );
         } else {
             Long id = isForAuthorization(protocolAction) ? ctx.getServiceCtx().getAuthorizationBankProtocolId() : ctx.getServiceCtx().getServiceBankProtocolId();
-            bankProtocol = protocolRepository.findById(id);
+            bankAction = bankActionRepository.findById(id);
         }
 
-        return bankProtocol
-                .map(protocol -> {
-                    ACTION action = findActionBean(protocol, actionBeans, protocolAction);
+        return bankAction
+                .map(action -> {
+                    ACTION actionBean = findActionBean(action, actionBeans, protocolAction);
                     return ctx.toBuilder()
-                            .serviceCtx(ctx.getServiceCtx().toBuilder().serviceBankProtocolId(protocol.getId()).build())
-                            .action(action)
+                            .serviceCtx(ctx.getServiceCtx().toBuilder().serviceBankProtocolId(action.getId()).build())
+                            .action(actionBean)
                             .build();
                 })
                 .orElseThrow(() ->
