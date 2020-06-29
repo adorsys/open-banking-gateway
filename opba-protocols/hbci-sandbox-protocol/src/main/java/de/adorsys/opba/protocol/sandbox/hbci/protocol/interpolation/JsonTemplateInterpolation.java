@@ -53,16 +53,16 @@ public class JsonTemplateInterpolation {
         for (Map.Entry<String, String> target : interpolated.entrySet()) {
             message.propagateValue(message.getPath() + "." + target.getKey(), target.getValue(), true, true);
         }
-        message.enumerateSegs(0, SyntaxElement.ALLOW_OVERWRITE);
-        message.validate();
-        message.enumerateSegs(1, SyntaxElement.ALLOW_OVERWRITE);
-        message.autoSetMsgSize();
 
         if (context.isCryptNeeded()) {
             log.info("Encryption needed for {} of {}", templateResourcePath, context.getDialogId());
             message = encryptAndSignMessage(context, message);
+            // Signing causes element duplication
         }
 
+        message.validate();
+        message.enumerateSegs(1, SyntaxElement.ALLOW_OVERWRITE);
+        message.autoSetMsgSize();
         return message.toString(0);
     }
 
