@@ -12,6 +12,7 @@ import { AisConsentToGrant } from '../../ais/common/dto/ais-consent';
 import { AuthConsentState } from '../../ais/common/dto/auth-state';
 import { PaymentsConsentReviewComponent } from '../payments-consent-review/payments-consent-review.component';
 import { ConsentPaymentAccessSelectionComponent } from './consent-payment-access-selection.component';
+import { PisPayment } from '../common/models/pis-payment.model';
 
 describe('ConsentPaymentAccessSelectionComponent', () => {
   let component: ConsentPaymentAccessSelectionComponent;
@@ -33,7 +34,7 @@ describe('ConsentPaymentAccessSelectionComponent', () => {
         {
           provide: SessionService,
           useValue: {
-            getConsentObject: () => new AisConsentToGrant(),
+            getPaymentObject: () => new PisPayment(),
             getPaymentState: () => new AisConsentToGrant(),
             hasPisViolation: () => false,
             hasGeneralViolation: () => false,
