@@ -16,6 +16,19 @@ class JsonTemplateInterpolationTest {
     private final JsonTemplateInterpolation tested = new JsonTemplateInterpolation(new ObjectMapper());
 
     @Test
+    void testHbciCreation() {
+        SandboxContext ctx = new SandboxContext();
+        Bank bank = new Bank();
+        bank.setBic("CODE");
+        bank.setBlz("1234");
+        ctx.setBank(bank);
+
+        String result = tested.interpolateToHbci("response-templates/wrong-tan.json", ctx);
+
+        assertThat(result).isNotBlank();
+    }
+
+    @Test
     void testSimpleInterpolation() {
         SandboxContext ctx = new SandboxContext();
         Bank bank = new Bank();

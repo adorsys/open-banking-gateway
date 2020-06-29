@@ -11,11 +11,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.Delegate;
+import org.kapott.hbci.manager.DocumentFactory;
+import org.kapott.hbci.protocol.Message;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.common.TemplateParserContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -29,6 +32,8 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class JsonTemplateInterpolation {
 
+    private static final Document SYNTAX = DocumentFactory.createDocument("300");
+
     private final Pattern interpolationTarget = Pattern.compile("(\\$\\{(.+?)})");
     private final Pattern loopAccounts = Pattern.compile("(\\$\\{(.+getLoopAccount.+?)})");
 
@@ -36,7 +41,12 @@ public class JsonTemplateInterpolation {
 
     @SneakyThrows
     public String interpolateToHbci(String templateResourcePath, SandboxContext context) {
-        return "";
+        Map<String, String> interpolated = interpolate(templateResourcePath, context);
+        String type = interpolated.remove("A_TYPE");
+        Message message = new Message(type, SYNTAX);
+        interpolated.forEach((key, value) -> message.propagateValue(message.getPath() + "." + key, value, true, true));
+        message.validate();
+        return message.toString(0);
     }
 
     @SneakyThrows
