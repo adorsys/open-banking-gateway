@@ -37,7 +37,7 @@ export class PaymentInitiateComponent implements OnInit {
     if (PaymentInitiateComponent.isInvalid(authId, this.redirectCode)) {
       this.abortUnauthorized();
     } else {
-      this.initiateConsentSession(authId, this.redirectCode);
+      this.initiatePaymentSession(authId, this.redirectCode);
     }
   }
 
@@ -45,7 +45,7 @@ export class PaymentInitiateComponent implements OnInit {
     this.router.navigate(['./error'], { relativeTo: this.activatedRoute.parent });
   }
 
-  private initiateConsentSession(authorizationId: string, redirectCode: string) {
+  private initiatePaymentSession(authorizationId: string, redirectCode: string) {
     this.authStateConsentAuthorizationService.authUsingGET(authorizationId, redirectCode, 'response').subscribe(res => {
       this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
       this.navigate(authorizationId, res.body.consentAuth);
