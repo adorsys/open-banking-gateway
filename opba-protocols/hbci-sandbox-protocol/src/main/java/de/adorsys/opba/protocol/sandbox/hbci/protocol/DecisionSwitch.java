@@ -10,8 +10,7 @@ public class DecisionSwitch {
 
     public boolean isDialogAnonymous(SandboxContext context) {
         return Strings.isNullOrEmpty(context.getRequestPin())
-                || Operation.DIALOG_INIT_ANON == context.getRequestOperation()
-                || null == context.getUser();
+                || Operation.DIALOG_INIT_ANON == context.getRequestOperation();
     }
 
     public boolean isDialogPinTanOk(SandboxContext context) {
