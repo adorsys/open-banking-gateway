@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.sandbox.hbci.protocol.context;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Bank;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.User;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.Operation;
@@ -28,22 +29,27 @@ public class SandboxContext {
     private String userId;
     private String sysId;
 
+    @JsonIgnore
     public Operation getRequestOperation() {
         return request.getOperation();
     }
 
+    @JsonIgnore
     public Map<String, String> getRequestData() {
         return request.getData();
     }
 
+    @JsonIgnore
     public boolean isPinOk() {
         return getUser().getPin().equals(getRequestPin());
     }
 
+    @JsonIgnore
     public boolean isTanOk() {
         return getUser().getTan().equals(getRequestTan());
     }
 
+    @JsonIgnore
     public String getRequestPin() {
         if (null == request || null == getRequestData()) {
             return null;
@@ -56,6 +62,7 @@ public class SandboxContext {
                 .orElse(null);
     }
 
+    @JsonIgnore
     public String getRequestTan() {
         if (null == request || null == getRequestData()) {
             return null;
@@ -68,10 +75,12 @@ public class SandboxContext {
                 .orElse(null);
     }
 
+    @JsonIgnore
     public String getRequestBankBlz() {
         return getRequestData().get(BLZ);
     }
 
+    @JsonIgnore
     public String getRequestUserLogin() {
         return getRequestData().get(LOGIN);
     }

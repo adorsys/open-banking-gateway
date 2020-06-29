@@ -5,6 +5,8 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.CONTEXT;
 
 @Service("setDialogId")
@@ -13,7 +15,8 @@ public class SetDialogId implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) {
         SandboxContext context = (SandboxContext) execution.getVariable(CONTEXT);
-        context.setDialogId(execution.getRootProcessInstanceId());
+        context.setDialogId(execution.getId());
+        context.setSysId(LocalDateTime.now().toString());
         execution.setVariable(CONTEXT, context);
     }
 }
