@@ -50,13 +50,20 @@ public class HbciMockService {
     }
 
     private String triggerExistingProcess(String dialogId, Message request) {
-        SandboxContext context = (SandboxContext) runtimeService.getVariable(dialogId, CONTEXT);
+        String execId = runtimeService.createActivityInstanceQuery()
+                .processInstanceId(dialogId)
+                .activityType("serviceTask")
+                .unfinished()
+                .singleResult()
+                .getExecutionId();
+
+        SandboxContext context = (SandboxContext) runtimeService.getVariable(execId, CONTEXT);
         context.setRequest(buildRequest(request));
-        runtimeService.setVariable(dialogId, CONTEXT, context);
+        runtimeService.setVariable(execId, CONTEXT, context);
 
-        runtimeService.trigger(dialogId);
+        runtimeService.trigger(execId);
 
-        return getResponse(dialogId);
+        return getResponse(execId);
     }
 
     private SandboxContext.Request buildRequest(Message request) {
@@ -68,7 +75,7 @@ public class HbciMockService {
         return mapped;
     }
 
-    private String getResponse(String dialogId) {
-        return ((SandboxContext) runtimeService.getVariable(dialogId, CONTEXT)).getResponse();
+    private String getResponse(String executionId) {
+        return ((SandboxContext) runtimeService.getVariable(executionId, CONTEXT)).getResponse();
     }
 }

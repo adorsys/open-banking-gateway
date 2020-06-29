@@ -15,7 +15,7 @@ public class SetDialogId implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) {
         SandboxContext context = (SandboxContext) execution.getVariable(CONTEXT);
-        context.setDialogId(execution.getId());
+        context.setDialogId(execution.getRootProcessInstanceId());
         context.setSysId(LocalDateTime.now().toString());
         execution.setVariable(CONTEXT, context);
     }
