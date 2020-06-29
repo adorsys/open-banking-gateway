@@ -5,20 +5,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Account;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
+import de.adorsys.opba.protocol.sandbox.hbci.protocol.parsing.ParsingUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.Delegate;
-import org.kapott.hbci.manager.DocumentFactory;
 import org.kapott.hbci.protocol.Message;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.common.TemplateParserContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Document;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -32,8 +31,6 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class JsonTemplateInterpolation {
 
-    private static final Document SYNTAX = DocumentFactory.createDocument("300");
-
     private final Pattern interpolationTarget = Pattern.compile("(\\$\\{(.+?)})");
     private final Pattern loopAccounts = Pattern.compile("(\\$\\{(.+getLoopAccount.+?)})");
 
@@ -43,7 +40,7 @@ public class JsonTemplateInterpolation {
     public String interpolateToHbci(String templateResourcePath, SandboxContext context) {
         Map<String, String> interpolated = interpolate(templateResourcePath, context);
         String type = interpolated.remove("A_TYPE");
-        Message message = new Message(type, SYNTAX);
+        Message message = new Message(type, ParsingUtil.SYNTAX);
         interpolated.forEach((key, value) -> message.propagateValue(message.getPath() + "." + key, value, true, true));
         message.validate();
         return message.toString(0);
@@ -66,7 +63,7 @@ public class JsonTemplateInterpolation {
         }
 
         for (Entry entry : accountLoop) {
-            for (int accPos = 0; accPos < staticCtx.getAccounts().size(); ++accPos) {
+            for (int accPos = 0; accPos < staticCtx.getUser().getAccounts().size(); ++accPos) {
                 String key = interpolate(entry.getKey(), new CtxWrapper(accPos, staticCtx));
                 String value = interpolate(entry.getValue(), new CtxWrapper(accPos, staticCtx));
                 result.put(key, value);
@@ -138,7 +135,7 @@ public class JsonTemplateInterpolation {
         private final SandboxContext context;
 
         public AccountWithPosition getLoopAccount() {
-            return new AccountWithPosition(getAccounts().get(loopPos), loopPos + 1);
+            return new AccountWithPosition(getUser().getAccounts().get(loopPos), loopPos + 1);
         }
 
         @Getter

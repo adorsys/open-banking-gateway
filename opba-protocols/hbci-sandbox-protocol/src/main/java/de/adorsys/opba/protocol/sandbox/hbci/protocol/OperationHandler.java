@@ -4,9 +4,10 @@ import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 
-public abstract class OperationHandler implements JavaDelegate {
+import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.CONTEXT;
 
-    private static final String CONTEXT = "CONTEXT";
+
+public abstract class OperationHandler implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) {

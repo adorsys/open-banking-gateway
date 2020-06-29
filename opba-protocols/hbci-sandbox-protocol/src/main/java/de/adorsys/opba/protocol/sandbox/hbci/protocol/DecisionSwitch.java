@@ -15,12 +15,11 @@ public class DecisionSwitch {
     }
 
     public boolean isDialogPinTanOk(SandboxContext context) {
-        return context.getUser().getPin().equals(context.getRequestPin())
-                && context.getUser().getTan().equals(context.getRequestTan());
+        return context.isPinOk() && context.isTanOk();
     }
 
     public boolean isDialogPinOk(SandboxContext context) {
-        return context.getUser().getPin().equals(context.getRequestPin());
+        return context.isPinOk();
     }
 
     public boolean isDialogInit(SandboxContext context) {

@@ -15,7 +15,7 @@ public class AuthenticatedAuthLost extends TemplateBasedOperationHandler {
 
     @Override
     protected String templatePath(SandboxContext context) {
-        if (context.isMissingOrWrongPin()) {
+        if (!context.isPinOk()) {
             return "response-templates/wrong-pin.json";
         }
 
