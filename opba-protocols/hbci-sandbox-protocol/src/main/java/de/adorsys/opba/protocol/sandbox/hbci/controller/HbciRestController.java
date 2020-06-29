@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.charset.StandardCharsets;
+
 @Slf4j
 @AllArgsConstructor
 @RestController
@@ -32,11 +34,15 @@ public class HbciRestController {
     private String doHandle(@RequestBody String requestEncoded) {
         log.info("request: \nRQ-->:\n{}\n",  decode(requestEncoded));
         String result = hbciMockService.handleRequest(requestEncoded);
-        log.info("response: \nRS-->:\n{}\n",  decode(result));
-        return result;
+        log.info("response: \nRS-->:\n{}\n", result);
+        return encode(result);
     }
 
     private String decode(String encoded) {
         return Joiner.on("\n").join(new String(Base64.decodeBase64(encoded)).split("'"));
+    }
+
+    private String encode(String rawWithoutReturns) {
+        return Base64.encodeBase64String(rawWithoutReturns.getBytes(StandardCharsets.UTF_8));
     }
 }

@@ -43,6 +43,7 @@ public class JsonTemplateInterpolation {
         Message message = new Message(type, ParsingUtil.SYNTAX);
         interpolated.forEach((key, value) -> message.propagateValue(message.getPath() + "." + key, value, true, true));
         message.validate();
+        message.autoSetMsgSize();
         return message.toString(0);
     }
 
