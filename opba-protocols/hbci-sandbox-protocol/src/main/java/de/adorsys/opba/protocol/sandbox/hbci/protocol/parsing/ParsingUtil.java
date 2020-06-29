@@ -39,6 +39,10 @@ public class ParsingUtil {
         return result;
     }
 
+    public boolean isCrypted(String messageStr) {
+        return messageStr.contains("HNVSK") || messageStr.contains("HNVSD") || messageStr.contains("HNSHK");
+    }
+
     @NotNull
     public String cleanupCryptoHeaders(String messageStr) {
         // Remove crypto-headers

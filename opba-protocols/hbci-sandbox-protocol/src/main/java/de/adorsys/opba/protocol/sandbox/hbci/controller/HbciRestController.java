@@ -43,6 +43,6 @@ public class HbciRestController {
     }
 
     private String encode(String rawWithoutReturns) {
-        return Base64.encodeBase64String(rawWithoutReturns.getBytes(StandardCharsets.UTF_8));
+        return Base64.encodeBase64String(rawWithoutReturns.getBytes(StandardCharsets.ISO_8859_1));
     }
 }

@@ -28,28 +28,29 @@ public class HbciMockService {
     private final RuntimeService runtimeService;
 
     public String handleRequest(String requestEncoded) {
-        String toParse = ParsingUtil.cleanupCryptoHeaders(
-                new String(Base64.getDecoder().decode(requestEncoded), StandardCharsets.ISO_8859_1)
-        );
+        String decoded = new String(Base64.getDecoder().decode(requestEncoded), StandardCharsets.ISO_8859_1);
+        boolean isCrypted = ParsingUtil.isCrypted(decoded);
+        String toParse = ParsingUtil.cleanupCryptoHeaders(decoded);
         Message message = ParsingUtil.parseMessageWithoutSensitiveNonSensitiveValidation(toParse);
         String dialogId = message.getData().get(DIALOG_ID);
 
         if (null == dialogId || "".equals(dialogId) || "0".equals(dialogId)) {
-            return triggerNewProcess(message);
+            return triggerNewProcess(message, isCrypted);
         }
 
-        return triggerExistingProcess(dialogId, message);
+        return triggerExistingProcess(dialogId, message, isCrypted);
     }
 
-    private String triggerNewProcess(Message request) {
+    private String triggerNewProcess(Message request, boolean isCrypted) {
         SandboxContext context = new SandboxContext();
+        context.setCryptNeeded(isCrypted);
         context.setRequest(buildRequest(request));
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(PROCESS_KEY, ImmutableMap.of(CONTEXT, context));
 
         return getResponse(instance.getId());
     }
 
-    private String triggerExistingProcess(String dialogId, Message request) {
+    private String triggerExistingProcess(String dialogId, Message request, boolean isCrypted) {
         String execId = runtimeService.createActivityInstanceQuery()
                 .processInstanceId(dialogId)
                 .activityType("serviceTask")
@@ -58,6 +59,7 @@ public class HbciMockService {
                 .getExecutionId();
 
         SandboxContext context = (SandboxContext) runtimeService.getVariable(execId, CONTEXT);
+        context.setCryptNeeded(isCrypted);
         context.setRequest(buildRequest(request));
         runtimeService.setVariable(execId, CONTEXT, context);
 
