@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.sandbox.hbci.config.dto.User;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.Operation;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -18,7 +19,7 @@ public class SandboxContext {
 
     private Bank bank;
     private User user;
-    private Account account;
+    private List<Account> accounts;
 
     private boolean missingOrWrongTan;
     private boolean missingOrWrongPin;
