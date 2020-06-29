@@ -5,8 +5,9 @@ import { AisConsentToGrant } from '../../ais/common/dto/ais-consent';
 import { Location } from '@angular/common';
 import { SessionService } from '../../common/session.service';
 import { AuthStateConsentAuthorizationService, DenyRequest, UpdateConsentAuthorizationService } from '../../api';
-import { ConsentUtil } from '../../ais/common/consent-util';
 import { ApiHeaders } from '../../api/api.headers';
+import { PaymentUtil } from '../common/payment-util';
+import { PisPayment } from '../common/models/pis-payment.model';
 
 @Component({
   selector: 'consent-app-result-page',
@@ -22,7 +23,7 @@ export class ResultPageComponent implements OnInit {
   redirectTo: string;
 
   private route: ActivatedRouteSnapshot;
-  private aisConsent: AisConsentToGrant;
+  private payment: PisPayment;
 
   private authorizationId: string;
 
@@ -38,7 +39,7 @@ export class ResultPageComponent implements OnInit {
     this.route = this.activatedRoute.snapshot;
     this.authorizationId = this.route.parent.params.authId;
     const redirectCode = this.route.queryParams.redirectCode;
-    this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
+    this.payment = PaymentUtil.getOrDefault(this.authorizationId, this.sessionService);
     this.loadRedirectUri(this.authorizationId, redirectCode);
   }
 
