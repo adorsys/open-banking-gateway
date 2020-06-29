@@ -1,6 +1,6 @@
 {
   "A_TYPE" : "SynchRes",
-  "BPD.BPA.KIK.blz" : "${ctx.${getBank().getBlz()}}",
+  "BPD.BPA.KIK.blz" : "${ctx.getBank().getBlz()}",
   "BPD.BPA.KIK.country" : "DE",
   "BPD.BPA.SegHead.code" : "HIBPA",
   "BPD.BPA.SegHead.ref" : "4",
@@ -15,7 +15,7 @@
   "BPD.BPA.version" : "7",
   "BPD.CommListRes.CommParam.addr" : "https://fints.ing-diba.de/fints/",
   "BPD.CommListRes.CommParam.dienst" : "3",
-  "BPD.CommListRes.KIK.blz" : "${ctx.${getBank().getBlz()}}",
+  "BPD.CommListRes.KIK.blz" : "${ctx.getBank().getBlz()}",
   "BPD.CommListRes.KIK.country" : "DE",
   "BPD.CommListRes.SegHead.code" : "HIKOM",
   "BPD.CommListRes.SegHead.ref" : "4",

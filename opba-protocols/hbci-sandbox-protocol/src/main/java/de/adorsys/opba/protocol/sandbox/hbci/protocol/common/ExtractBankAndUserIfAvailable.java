@@ -57,8 +57,9 @@ public class ExtractBankAndUserIfAvailable implements JavaDelegate {
             throw new IllegalStateException(String.format("User redefinition: current: %s target %s", context.getUser().getLogin(), userLogin));
         }
 
+        // Not throwing for anonymous user
         context.setUser(config.getUsers().stream().filter(it -> it.getLogin().equals(userLogin)).findFirst()
-                .orElseThrow(() -> new IllegalStateException("Unknown user: " + userLogin))
+                .orElse(null)
         );
     }
 }

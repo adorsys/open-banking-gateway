@@ -7,9 +7,9 @@
     </startEvent>
     <subProcess id="sid-36197947-f323-4391-9588-2cd604101e00" flowable:async="false" flowable:exclusive="false" name="Anonymous dialog">
       <startEvent id="sid-eb9d98fa-2592-428b-91d1-0bd81485d82a"/>
-      <serviceTask id="anonymousBpd" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Reply with anonymous BPD" flowable:delegateExpression="${anonymousDialogInitBpd}"/>
-      <serviceTask id="awaitForDialogEnd" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Await for anonymous dialog end" flowable:delegateExpression="${anonymousDialogEnd}"/>
-      <serviceTask id="anonymousBpdNotSupported" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Reply with anonymous dialog not supported" flowable:expression="${anonymousDialogInitNotSupported}"/>
+      <serviceTask id="anonymousBpd" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Reply with anonymous BPD" flowable:delegateExpression="${anonymousDialogInitBpd}"/>
+      <serviceTask id="awaitForDialogEnd" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Await for anonymous dialog end" flowable:delegateExpression="${anonymousDialogEnd}"/>
+      <serviceTask id="anonymousBpdNotSupported" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Reply with anonymous dialog not supported" flowable:expression="${anonymousDialogInitNotSupported}"/>
       <exclusiveGateway id="isAnonymousBpdSupported" default="anonymousBpdUnsupported"/>
       <sequenceFlow id="sid-c153780d-00ba-482c-bec1-bccbd64d169b" sourceRef="sid-eb9d98fa-2592-428b-91d1-0bd81485d82a" targetRef="isAnonymousBpdSupported"/>
       <sequenceFlow id="anonymousBpdSupported" sourceRef="isAnonymousBpdSupported" targetRef="anonymousBpd">
@@ -129,7 +129,6 @@
     <sequenceFlow id="authenticatedDialog" sourceRef="isAnonymousDialog" targetRef="setUserInContext">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
-    <sequenceFlow id="sid-95b8e0f3-ce9c-42d0-a8df-3b07a1c7a1a3" sourceRef="sid-36197947-f323-4391-9588-2cd604101e00" targetRef="sid-9fc9d1f1-e2c8-4abf-a042-c9a2ec253905"/>
     <sequenceFlow id="sid-10fb31b2-d58f-4703-a6bd-12c84943f403" sourceRef="sid-525799be-3a9d-488b-95dd-7344741c1ff8" targetRef="sid-9fc9d1f1-e2c8-4abf-a042-c9a2ec253905"/>
     <serviceTask id="setBankInContext" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Set bank in the context" flowable:delegateExpression="${extractBankAndUser}"/>
     <sequenceFlow id="sid-5b9c0cf7-217c-4f1f-8953-5258d4f3bd98" sourceRef="setBankInContext" targetRef="sid-36197947-f323-4391-9588-2cd604101e00"/>
@@ -137,6 +136,7 @@
     <sequenceFlow id="sid-1b734353-7ad8-4756-97c9-611cdb7d4bc6" sourceRef="setUserInContext" targetRef="sid-525799be-3a9d-488b-95dd-7344741c1ff8"/>
     <serviceTask id="setDialogId" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Set dialog ID in context" flowable:delegateExpression="${setDialogId}"/>
     <sequenceFlow id="sid-f7f718c1-ac0e-44a2-bc0b-eb403ff76198" sourceRef="setDialogId" targetRef="isAnonymousDialog"/>
+    <sequenceFlow id="sid-5a379c32-1a7f-44c9-b896-ab6d6b3812ea" sourceRef="sid-36197947-f323-4391-9588-2cd604101e00" targetRef="isAnonymousDialog"/>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_hbci-dialog">
     <bpmndi:BPMNPlane bpmnElement="hbci-dialog" id="BPMNPlane_hbci-dialog">
@@ -413,10 +413,6 @@
         <omgdi:waypoint x="-103.99707" y="919.70026"/>
         <omgdi:waypoint x="-50.79823" y="919.70026"/>
       </bpmdi:BPMNEdge>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-75ec14f6-f927-4c76-aea4-1159d1d90a0a" bpmnElement="sid-95b8e0f3-ce9c-42d0-a8df-3b07a1c7a1a3">
-        <omgdi:waypoint x="-7.0856934" y="908.68494"/>
-        <omgdi:waypoint x="142.196" y="908.68494"/>
-      </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-63194e0b-d468-4d64-8bcc-4c14f845d84c" bpmnElement="sid-10fb31b2-d58f-4703-a6bd-12c84943f403">
         <omgdi:waypoint x="156.5105" y="693.94556"/>
         <omgdi:waypoint x="157.196" y="893.6849"/>
@@ -496,6 +492,12 @@
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-d23610e5-b119-4299-9415-0341ee456199" bpmnElement="sid-f7f718c1-ac0e-44a2-bc0b-eb403ff76198">
         <omgdi:waypoint x="-928.7256" y="706.2428"/>
         <omgdi:waypoint x="-838.01447" y="706.24286"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-35828286-4c84-46fc-9dd3-1fcd658bb249" bpmnElement="sid-5a379c32-1a7f-44c9-b896-ab6d6b3812ea">
+        <omgdi:waypoint x="-606.7058" y="814.96387"/>
+        <omgdi:waypoint x="-698.5466" y="814.9639"/>
+        <omgdi:waypoint x="-699.85333" y="706.24286"/>
+        <omgdi:waypoint x="-798.01447" y="706.24286"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
