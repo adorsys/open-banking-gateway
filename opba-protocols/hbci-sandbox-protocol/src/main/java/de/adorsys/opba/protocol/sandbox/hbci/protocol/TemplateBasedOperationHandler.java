@@ -12,7 +12,7 @@ public abstract class TemplateBasedOperationHandler extends OperationHandler {
 
     @Override
     protected SandboxContext doExecute(DelegateExecution execution, SandboxContext context) {
-        String result = interpolation.interpolate(templatePath(context), context);
+        String result = interpolation.interpolateToHbci(templatePath(context), context);
         context.setResponse(result);
         return context;
     }
