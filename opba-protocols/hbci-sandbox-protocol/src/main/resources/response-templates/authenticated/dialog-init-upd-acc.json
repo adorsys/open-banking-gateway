@@ -72,7 +72,7 @@
   "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.SegHead.version" : "6",
   "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.cur" : "${ctx.acc.currency}",
   "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.customerid" : "${ctx.getUserId()}",
-  "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.iban" : "${ctx.ctx.getLoopAccount().getIban()}",
+  "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.iban" : "${ctx.getLoopAccount().getIban()}",
   "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.konto" : "Extra-Konto",
   "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.name1" : "${ctx.getUser().getRealName()}",
   "UPD.UPA.SegHead.code" : "HIUPA",
