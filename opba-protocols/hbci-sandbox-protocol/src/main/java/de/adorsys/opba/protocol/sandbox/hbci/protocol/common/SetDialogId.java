@@ -6,6 +6,7 @@ import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.CONTEXT;
 
@@ -16,7 +17,7 @@ public class SetDialogId implements JavaDelegate {
     public void execute(DelegateExecution execution) {
         SandboxContext context = (SandboxContext) execution.getVariable(CONTEXT);
         context.setDialogId(execution.getRootProcessInstanceId());
-        context.setSysId(LocalDateTime.now().toString());
+        context.setSysId(String.valueOf(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)));
         execution.setVariable(CONTEXT, context);
     }
 }
