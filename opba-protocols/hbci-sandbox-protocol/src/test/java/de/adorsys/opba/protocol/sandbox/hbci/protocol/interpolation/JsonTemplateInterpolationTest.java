@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Account;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Bank;
+import de.adorsys.opba.protocol.sandbox.hbci.config.dto.User;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
 import org.junit.jupiter.api.Test;
 
@@ -47,7 +48,9 @@ class JsonTemplateInterpolationTest {
         SandboxContext ctx = new SandboxContext();
         Account account = new Account();
         account.setNumber("1999");
-        ctx.setAccounts(ImmutableList.of(account));
+        User user = new User();
+        user.setAccounts(ImmutableList.of(account));
+        ctx.setUser(user);
 
         Map<String, String> result = tested.interpolate("interpolation/loop.json", ctx);
 
@@ -63,7 +66,9 @@ class JsonTemplateInterpolationTest {
         accountOne.setNumber("account_1");
         Account accountTwo = new Account();
         accountTwo.setNumber("account_2");
-        ctx.setAccounts(ImmutableList.of(accountOne, accountTwo));
+        User user = new User();
+        user.setAccounts(ImmutableList.of(accountOne, accountTwo));
+        ctx.setUser(user);
 
         Map<String, String> result = tested.interpolate("interpolation/loop.json", ctx);
 
