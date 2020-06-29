@@ -5,7 +5,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.util.Currency;
 
 @Data
@@ -25,5 +24,5 @@ public class Transaction {
     private Currency currency;
 
     @NotNull
-    private LocalDateTime date;
+    private String date;
 }
