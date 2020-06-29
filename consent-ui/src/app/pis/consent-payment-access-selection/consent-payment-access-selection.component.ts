@@ -6,9 +6,9 @@ import { DenyRequest, UpdateConsentAuthorizationService } from '../../api';
 import { ApiHeaders } from '../../api/api.headers';
 import { SessionService } from '../../common/session.service';
 import { AuthConsentState } from '../../ais/common/dto/auth-state';
-import { AisConsentToGrant } from '../../ais/common/dto/ais-consent';
 import { StubUtil } from '../../common/utils/stub-util';
-import { ConsentUtil } from '../../ais/common/consent-util';
+import { PaymentUtil } from '../common/payment-util';
+import { PisPayment } from '../common/models/pis-payment.model';
 
 @Component({
   selector: 'consent-app-payment-access-selection',
@@ -23,7 +23,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
 
   public paymentAccessForm: FormGroup;
   public state: AuthConsentState;
-  public consent: AisConsentToGrant;
+  public payment: PisPayment;
 
   private authorizationId: string;
 
@@ -45,7 +45,9 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
         this.moveToReviewPayment();
       }
 
-      this.consent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
+      this.payment = PaymentUtil.getOrDefault(this.authorizationId, this.sessionService);
+
+      console.log(this.payment);
     });
   }
 
@@ -73,16 +75,17 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
   }
 
   private updatePaymentObject() {
-    const consentObj = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
+    const paymentObj = PaymentUtil.getOrDefault(this.authorizationId, this.sessionService);
+    console.log(paymentObj);
 
     if (this.state.hasGeneralViolation()) {
-      consentObj.extras = consentObj.extras ? consentObj.extras : {};
+      paymentObj.extras = paymentObj.extras ? paymentObj.extras : {};
       this.state
         .getGeneralViolations()
-        .forEach(it => (consentObj.extras[it.code] = this.paymentAccessForm.get(it.code).value));
+        .forEach(it => (paymentObj.extras[it.code] = this.paymentAccessForm.get(it.code).value));
     }
 
-    this.sessionService.setConsentObject(this.authorizationId, consentObj);
+    this.sessionService.setPaymentObject(this.authorizationId, paymentObj);
   }
 
   private moveToReviewPayment() {
