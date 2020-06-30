@@ -90,7 +90,7 @@ public class JsonTemplateInterpolation {
         Map<String, SyntaxElement> existingPaths = new HashMap<>();
         message.getChildContainers().stream().flatMap(it -> it.getElements().stream()).forEach(it -> recursivelyEnumeratePaths(it, existingPaths));
         // It is ok to ignore top elements (Multi elems) from removal - they do not seem to duplicate
-        recursivelyRemoveDuplicatePathsAndDestroyDirectParentOnDuplicate(message, existingPaths);
+        nonRecursivelyRemoveDuplicatePathsAndDestroyDirectParentOnDuplicate(message, existingPaths);
         message.validate();
         message.enumerateSegs(1, SyntaxElement.ALLOW_OVERWRITE);
 
@@ -123,14 +123,14 @@ public class JsonTemplateInterpolation {
         element.getChildContainers().stream().flatMap(it -> it.getElements().stream()).forEach(it -> recursivelyEnumeratePaths(it, existingPaths));
     }
 
-    private void recursivelyRemoveDuplicatePathsAndDestroyDirectParentOnDuplicate(SyntaxElement element, Map<String, SyntaxElement> existingPaths) {
+    private void nonRecursivelyRemoveDuplicatePathsAndDestroyDirectParentOnDuplicate(SyntaxElement element, Map<String, SyntaxElement> existingPaths) {
         List<MultipleSyntaxElements> children = element.getChildContainers();
         Iterator<MultipleSyntaxElements> iterator = children.iterator();
         while (iterator.hasNext()) {
             MultipleSyntaxElements current = iterator.next();
-            current.getElements().removeIf(elem -> !existingPaths.get(elem.getPath()).equals(elem));
+            current.getElements().removeIf(elem -> !existingPaths.get(elem.getPath()).equals(elem) || elem.toString(0).matches("HITAN:\\d+:\\d+'"));
             int totElems = current.getElements().stream().mapToInt(it -> it.getChildContainers().size()).sum();
-            if (0 == totElems) {
+            if (0 == totElems || current.toString(0).matches("HITAN:\\d+:\\d+'")) {
                 iterator.remove();
             }
         }

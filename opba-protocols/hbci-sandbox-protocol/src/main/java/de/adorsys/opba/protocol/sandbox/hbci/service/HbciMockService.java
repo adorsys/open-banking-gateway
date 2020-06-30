@@ -6,7 +6,10 @@ import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.parsing.ParsingUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.flowable.common.engine.api.FlowableObjectNotFoundException;
+import org.flowable.engine.HistoryService;
 import org.flowable.engine.RuntimeService;
+import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.kapott.hbci.protocol.Message;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,7 @@ public class HbciMockService {
 
     private static final String PROCESS_KEY = "hbci-dialog";
 
+    private final HistoryService historyService;
     private final RuntimeService runtimeService;
 
     public String handleRequest(String requestEncoded) {
@@ -78,6 +82,25 @@ public class HbciMockService {
     }
 
     private String getResponse(String executionId) {
-        return ((SandboxContext) runtimeService.getVariable(executionId, CONTEXT)).getResponse();
+        try {
+            return ((SandboxContext) runtimeService.getVariable(executionId, CONTEXT)).getResponse();
+        } catch (FlowableObjectNotFoundException ex) {
+            log.info("Can't find runtime instance of execution {} - looking in history tables", executionId);
+            return readHistoricalContext(executionId).getResponse();
+        }
+    }
+
+    private SandboxContext readHistoricalContext(String executionId) {
+        HistoricActivityInstance finished = historyService.createHistoricActivityInstanceQuery()
+                .executionId(executionId)
+                .finished()
+                .listPage(0, 1)
+                .get(0);
+
+        return (SandboxContext) historyService.createHistoricVariableInstanceQuery()
+                .processInstanceId(finished.getProcessInstanceId())
+                .variableName(CONTEXT)
+                .singleResult()
+                .getValue();
     }
 }
