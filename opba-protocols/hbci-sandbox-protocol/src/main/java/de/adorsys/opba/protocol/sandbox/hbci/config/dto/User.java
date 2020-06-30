@@ -17,7 +17,7 @@ public class User {
     private String login;
 
     @NotBlank
-    private String realname;
+    private String realName;
 
     @NotBlank
     private String pin;
