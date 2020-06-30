@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.sandbox.hbci.protocol;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Lombok generates private ctor.
 public class Const {
 
     public static final String CONTEXT = "CONTEXT";

@@ -35,10 +35,12 @@ public class Transaction {
 
     @NotBlank
     @Length(max = 32)
+    @SuppressWarnings("checkstyle:MagicNumber") // 32 is just maximum length
     private String toFirstLine;
 
     @NotBlank
     @Length(max = 32)
+    @SuppressWarnings("checkstyle:MagicNumber") // 32 is just maximum length
     private String toSecondLine;
 
     @NotNull
