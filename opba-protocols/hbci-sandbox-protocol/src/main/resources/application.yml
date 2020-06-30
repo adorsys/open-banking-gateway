@@ -64,19 +64,34 @@ hbci:
       transactions:
         - from: 5827542519
           to: DK9150513599717134
+          statement-number: 0001
           amount: 100
           currency: EUR
           date: 2019-01-01T01:00:00
+          balance-before: 2000
+          balance-after: 1900
+          to-first-line: Swiss bank
+          to-second-line: Payment for account ownership
         - from: 5827542519
           to: DK9150513599717134
+          statement-number: 0002
           amount: 100
           currency: EUR
           date: 2019-06-07T08:00:00
+          balance-before: 1900
+          balance-after: 1800
+          to-first-line: Ukrainian bank
+          to-second-line: Payment for account ownership
         - from: 5827542519
           to: UA429912181258651749888998636
+          statement-number: 0003
           amount: 90
           currency: EUR
           date: 2020-01-02T09:00:00
+          balance-before: 1900
+          balance-after: 1810
+          to-first-line: Ukranian bank
+          to-second-line: Payment for TV
 
     - login: max.musterman
       real-name: Musterman Max
@@ -95,19 +110,34 @@ hbci:
       transactions:
         - from: 3466865655
           to: AE170262989187616965653
+          statement-number: 0001
           amount: 100
           currency: EUR
           date: 2020-01-01T01:00:00
+          balance-before: 1000
+          balance-after: 900
+          to-first-line: Ukrainian bank
+          to-second-line: Payment for account ownership
         - from: 5827542519
           to: UA107659944284963696317637511
+          statement-number: 0002
           amount: 14.55
           currency: EUR
           date: 2019-06-07T08:30:00
+          balance-before: 900
+          balance-after: 885.45
+          to-first-line: Ukrainian bank
+          to-second-line: Payment for mobile banking
         - from: 5827542519
           to: DE59500105172584189131
+          statement-number: 0003
           amount: 400
           currency: EUR
           date: 2020-02-02T09:30:00
+          balance-before: 885.45
+          balance-after: 485.45
+          to-first-line: German bank
+          to-second-line: Opening new account
 
 flowable:
   process-definition-location-prefix: classpath*:/processes/**/
