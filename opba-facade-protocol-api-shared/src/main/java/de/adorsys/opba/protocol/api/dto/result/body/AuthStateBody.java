@@ -32,4 +32,13 @@ public class AuthStateBody implements ResultBody {
      * Where to redirect user to. (For delayed redirection)
      */
     private String redirectTo;
+
+    /**
+     * Result body
+     */
+    private Object resultBody;
+
+    public AuthStateBody(Set<ValidationError> violations) {
+        this.violations = violations;
+    }
 }
