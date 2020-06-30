@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.sandbox.hbci.protocol;
 
 import com.google.common.base.Strings;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.AuthLevel;
+import de.adorsys.opba.protocol.sandbox.hbci.protocol.authenticated.nonauthorized.AuthenticatedDialogInitSca;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,11 @@ public class DecisionSwitch {
     }
 
     public boolean isDialogInit(SandboxContext context) {
-        return Operation.DIALOG_INIT == context.getRequestOperation();
+        return Operation.DIALOG_INIT == context.getRequestOperation() && !isDialogInitScaTan2Step(context);
+    }
+
+    public boolean isDialogInitScaTan2Step(SandboxContext context) {
+        return AuthenticatedDialogInitSca.canHandle(context) && (Operation.DIALOG_INIT == context.getRequestOperation());
     }
 
     public boolean isCustomMessage(SandboxContext context) {
