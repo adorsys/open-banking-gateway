@@ -69,11 +69,10 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
 
         // Whatever is non-null - that takes precedence
         return buildBody(
-                ctx.getAction(),
+                ctx,
                 null == ctx.getViolations() || ctx.getViolations().isEmpty()
                         ? (LastViolations) runtimeService.getVariable(executionId, LAST_VALIDATION_ISSUES)
                         : new LastViolations(ctx.getViolations()),
-                ctx.getAvailableSca(),
                 null == ctx.getLastRedirection()
                         ? (LastRedirectionTarget) runtimeService.getVariable(executionId, LAST_REDIRECTION_TARGET)
                         : ctx.getLastRedirection()
@@ -94,20 +93,20 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
                 .singleResult()
                 .getValue();
 
-        return buildBody(ctx.getAction(), new LastViolations(ctx.getViolations()), ctx.getAvailableSca(), ctx.getLastRedirection());
+        return buildBody(ctx, new LastViolations(ctx.getViolations()), ctx.getLastRedirection());
     }
 
-    private AuthStateBody buildBody(ProtocolAction action,
-                                    LastViolations issues,
-                                    List<ScaMethod> scaMethods,
-                                    LastRedirectionTarget redirectionTarget) {
+    private AuthStateBody buildBody(HbciContext ctx,  LastViolations issues, LastRedirectionTarget redirectionTarget) {
+        ProtocolAction action = ctx.getAction();
+        List<ScaMethod> scaMethods = ctx.getAvailableSca();
         String redirectTo = null == redirectionTarget ? null : redirectionTarget.getRedirectTo();
 
         return new AuthStateBody(
                 action.name(),
                 violationsMapper.map(issues.getViolations()),
                 scaMethodsMapper.map(scaMethods),
-                redirectTo
+                redirectTo,
+                null
         );
     }
 
