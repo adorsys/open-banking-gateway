@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication
 @EnableConfigurationProperties
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor") // Springboot starter class is not an utility class
 public class HbciServerApplication {
 
     public static void main(String[] args) {
