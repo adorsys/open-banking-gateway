@@ -33,4 +33,8 @@ public class User {
 
     @NotEmpty
     private List<@NotNull Transaction> transactions;
+
+    public Account getDefaultAccount() {
+        return accounts.get(0);
+    }
 }

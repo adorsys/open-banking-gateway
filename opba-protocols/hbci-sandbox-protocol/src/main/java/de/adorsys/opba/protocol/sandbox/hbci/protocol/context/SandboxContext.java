@@ -42,11 +42,19 @@ public class SandboxContext {
 
     @JsonIgnore
     public boolean isPinOk() {
+        if (null == getUser()) {
+            return false;
+        }
+
         return getUser().getPin().equals(getRequestPin());
     }
 
     @JsonIgnore
     public boolean isTanOk() {
+        if (null == getUser()) {
+            return false;
+        }
+
         return getUser().getTan().equals(getRequestTan());
     }
 

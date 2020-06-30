@@ -16,6 +16,7 @@ hbci:
     - name: anonymous-bpd
       bic: FOO1DEH1XXX
       blz: 10000001
+      country-code: DE
       security:
         bank-parameters-data: ANONYMOUS
         accounts: AUTHENTICATED
@@ -26,6 +27,7 @@ hbci:
     - name: no-anonymous-bpd-txn-authenticated
       bic: FOO2DEH1XXX
       blz: 20000002
+      country-code: DE
       security:
         bank-parameters-data: AUTHENTICATED
         accounts: AUTHENTICATED
@@ -36,6 +38,7 @@ hbci:
     - name: no-anonymous-bpd-txn-authorized
       bic: FOO3DEH1XXX
       blz: 30000003
+      country-code: DE
       security:
         bank-parameters-data: AUTHENTICATED
         accounts: AUTHENTICATED
