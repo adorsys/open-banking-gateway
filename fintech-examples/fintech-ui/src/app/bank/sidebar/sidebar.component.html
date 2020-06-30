@@ -16,8 +16,8 @@
         <span class="nav__title">Accounts</span>
       </a>
     </li>
-    <li class="nav-item{{ showInitiatePayment ? '' : '--disabled' }} sidebar-element">
-      <a class="nav-link" [routerLink]="['payment']">
+    <li class="nav-item{{ showInitiatePayment && isLoaDone() ? '' : '--disabled' }} sidebar-element">
+      <a class="nav-link" [routerLink]="getRouterLinkInitiatePayment()">
         <div class="icon__container">
           <img alt="transfer" class="text-primary" src="assets/icons/icons8-sent.svg" />
         </div>
@@ -25,7 +25,7 @@
       </a>
     </li>
     <li class="nav-item{{ showSettings ? '' : '--disabled' }} sidebar-element">
-      <a class="nav-link" [routerLink]>
+      <a class="nav-link" [routerLink]="['settings']">
         <div class="icon__container">
           <img alt="settings" class="text-primary" src="assets/icons/icons8-maintenance.svg" />
         </div>

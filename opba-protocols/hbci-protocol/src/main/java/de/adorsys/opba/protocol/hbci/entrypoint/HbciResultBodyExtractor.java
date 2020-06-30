@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.api.dto.result.body.AccountListDetailBody;
 import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListAccountsResult;
+import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListTransactionsResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
@@ -24,7 +25,8 @@ import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.HBCI_MAPPERS_PA
 @RequiredArgsConstructor
 public class HbciResultBodyExtractor {
 
-    private final HbciToFacadeMapper mapper;
+    private final HbciAccountsToFacadeMapper mapper;
+    private final HbciTransactionsToFacadeMapper transactionsToFacadeMapper;
 
     public AccountListBody extractAccountList(ProcessResponse result) {
         AisListAccountsResult accountsResult = (AisListAccountsResult) result.getResult();
@@ -32,18 +34,24 @@ public class HbciResultBodyExtractor {
     }
 
     public TransactionsResponseBody extractTransactionsReport(ProcessResponse result) {
-        return null;
+        AisListTransactionsResult transactionsResult = (AisListTransactionsResult) result.getResult();
+        return transactionsToFacadeMapper.map(transactionsResult);
     }
 
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE, uses = HbciToAccountBodyMapper.class)
-    public interface HbciToFacadeMapper {
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE, uses = {HbciToAccountBodyMapper.class})
+    public interface HbciAccountsToFacadeMapper {
 
         AccountListBody map(AisListAccountsResult accountList);
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE)
     public interface HbciToAccountBodyMapper {
-        @Mapping(source = "iban", target = "resourceId")
-        AccountListDetailBody map(BankAccount accountList);
+
+        @Mapping(
+                expression = "java(com.google.common.base.Strings.isNullOrEmpty(account.getIban()) ? account.getAccountNumber() : account.getIban())",
+                target = "resourceId"
+        )
+        @Mapping(source = "accountNumber", target = "bban")
+        AccountListDetailBody map(BankAccount account);
     }
 }

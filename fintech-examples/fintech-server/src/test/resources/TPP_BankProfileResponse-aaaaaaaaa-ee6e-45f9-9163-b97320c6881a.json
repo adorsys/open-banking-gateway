@@ -1,0 +1,13 @@
+{
+  "bankProfileDescriptor": {
+    "bankName": "Raiffeisenbank Geiselh?ring-Pfaffenberg",
+    "bic": "GENODEF1GPF",
+    "bankUuid": "af062b06-ee6e-45f9-9163-b97320c6881a",
+    "serviceList": [
+      "List accounts",
+      "List transactions",
+      "Initiate payment"
+    ],
+    "consentSupportByService": {"LIST_ACCOUNTS": "false"}
+  }
+}

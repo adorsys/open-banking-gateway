@@ -50,7 +50,7 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
 
     @SneakyThrows
     private void loadContext(DelegateExecution execution, Xs2aContext context) {
-        Optional<ProtocolFacingConsent> consent = context.consentAccess().findByCurrentServiceSession();
+        Optional<ProtocolFacingConsent> consent = context.consentAccess().findSingleByCurrentServiceSession();
 
         if (!consent.isPresent() || null == consent.get().getConsentContext()) {
             return;
@@ -61,7 +61,7 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
         JsonNode value = mapper.readTree(target.getConsentContext());
         Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
 
-        if (!properties.canSerialize(classNameAndValue.getKey())) {
+        if (!properties.getSerialization().canSerialize(classNameAndValue.getKey())) {
             throw new IllegalArgumentException("Class deserialization not allowed " + classNameAndValue.getKey());
         }
 

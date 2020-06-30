@@ -1,6 +1,6 @@
 package de.adorsys.opba.fintech.impl.config;
 
-import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
+import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
 import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

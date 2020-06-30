@@ -6,14 +6,13 @@ import de.adorsys.opba.protocol.api.dto.context.Context;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Value;
-import lombok.experimental.Delegate;
 
 @Getter
 @Builder(toBuilder = true)
 @Value
-public class InternalContext<T> {
-    @Delegate
-    Context<T> ctx;
+public class InternalContext<REQUEST, ACTION> {
+    Context<REQUEST> serviceCtx;
     AuthSession authSession;
     ServiceSession session;
+    ACTION action;
 }

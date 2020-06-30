@@ -32,7 +32,7 @@ public class ValidationRule {
     private Long id;
 
     @ManyToOne(optional = false)
-    private BankProtocol protocol;
+    private BankAction action;
 
     private String endpointClassCanonicalName;
 

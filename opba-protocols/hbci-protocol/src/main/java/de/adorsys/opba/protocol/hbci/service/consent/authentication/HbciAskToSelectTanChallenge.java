@@ -24,7 +24,7 @@ public class HbciAskToSelectTanChallenge extends ValidatedExecution<HbciContext>
         if (context.getAvailableSca().size() >= 2) {
             redirectExecutor.redirect(execution, context, redir -> redir.getParameters().getSelectScaMethod());
         } else {
-            // Nothing to select by user
+            // Nothing to select by user, autoselect
             ContextUtil.getAndUpdateContext(
                     execution,
                     (HbciContext ctx) -> ctx.setUserSelectScaId(ctx.getAvailableSca().get(0).getKey())

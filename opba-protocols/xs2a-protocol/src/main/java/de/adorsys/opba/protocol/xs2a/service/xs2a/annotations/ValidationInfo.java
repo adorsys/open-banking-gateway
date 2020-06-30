@@ -1,5 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.annotations;
 
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ValidationMode;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -33,4 +35,9 @@ public @interface ValidationInfo {
      * Violating parameter code and its logical location in the form.
      */
     ContextCode ctx();
+
+    /**
+     *  Shows the ability to control the validation mode for specific fields.
+     */
+    ValidationMode validationMode() default ValidationMode.MANDATORY;
 }

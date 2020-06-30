@@ -45,7 +45,7 @@ public class Xs2aGetPaymentInfoEntrypoint implements GetPaymentInfoState {
     @Override
     @Transactional
     public CompletableFuture<Result<PaymentInfoBody>> execute(ServiceContext<PaymentInfoRequest> context) {
-        ProtocolFacingConsent consent = context.getRequestScoped().consentAccess().getByCurrentSession();
+        ProtocolFacingConsent consent = context.getRequestScoped().consentAccess().getFirstByCurrentSession();
 
         ValidatedPathHeaders<PaymentInfoParameters, PaymentInfoHeaders> params = extractor.forExecution(prepareContext(context));
 

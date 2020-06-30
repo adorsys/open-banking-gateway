@@ -1,6 +1,6 @@
 package de.adorsys.opba.db.domain.entity.sessions;
 
-import de.adorsys.opba.db.domain.entity.BankProtocol;
+import de.adorsys.opba.db.domain.entity.BankAction;
 import de.adorsys.opba.db.domain.entity.fintech.FintechConsentSpec;
 import de.adorsys.opba.db.domain.entity.fintech.FintechUser;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
@@ -51,7 +51,7 @@ public class AuthSession {
     private ServiceSession parent;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private BankProtocol protocol;
+    private BankAction action;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Psu psu;

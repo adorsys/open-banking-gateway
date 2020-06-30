@@ -27,18 +27,20 @@ public class FlowableConfig {
             FlowableProperties flowableProperties,
             FlowableObjectMapper mapper
     ) {
-        int maxLength = flowableProperties.getMaxLength();
+        int maxLength = flowableProperties.getSerialization().getMaxLength();
+        List<String> serializeOnlyPackages = flowableProperties.getSerialization().getSerializeOnlyPackages();
 
         return processConfiguration -> {
             processConfiguration.setCustomPreVariableTypes(
                 new ArrayList<>(
                     ImmutableList.of(
-                        new JsonCustomSerializer(scopedServicesProvider, mapper.getMapper(), flowableProperties.getSerializeOnlyPackages(), maxLength),
-                        new LargeJsonCustomSerializer(scopedServicesProvider, mapper.getMapper(), flowableProperties.getSerializeOnlyPackages(), maxLength)
+                        new JsonCustomSerializer(scopedServicesProvider, mapper.getMapper(), serializeOnlyPackages, maxLength),
+                        new LargeJsonCustomSerializer(scopedServicesProvider, mapper.getMapper(), serializeOnlyPackages, maxLength)
                     )
                 )
             );
             processConfiguration.setEnableEventDispatcher(true);
+            processConfiguration.setAsyncExecutorNumberOfRetries(flowableProperties.getNumberOfRetries());
         };
     }
 

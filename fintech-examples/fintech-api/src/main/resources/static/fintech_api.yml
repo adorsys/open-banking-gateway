@@ -7,7 +7,7 @@ info:
     This is a sample API that shows how to develop FinTech use cases that invoke banking APIs.
 
     #### User Agent and Cookies
-    This Api assumes 
+    This Api assumes
     * that the PsuUserAgent (hosting the FinTechUI) is a modern web browser that stores httpOnly cookies sent with the redirect under the given domain and path as defined by [RFC 6265](https://tools.ietf.org/html/rfc6265).
     * that any other PsuUserAgent like a native mobile or a desktop application can simulate this same behavior of a modern browser with respect to Cookies.
 
@@ -195,6 +195,7 @@ paths:
         - $ref: '#/components/parameters/X-XSRF-TOKEN'
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
+        - $ref: "#/components/parameters/LoARetrievalInformation"
 
       security:
         - sessionCookie: []
@@ -231,6 +232,8 @@ paths:
         - $ref: '#/components/parameters/X-XSRF-TOKEN'
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
+        - $ref: "#/components/parameters/LoTRetrievalInformation"
+
       security:
         - sessionCookie: []
       responses:
@@ -270,7 +273,27 @@ paths:
         '404':
           $ref: '#/components/responses/404_NotFound'
 
-  /v1/pis/banks/{bank-id}/payments/single:
+  /v1/pis/banks/{bank-id}/accounts/{account-id}/payments/single:
+    get:
+      summary: Ask for all payments of this account
+      description: This method is used to initiate a payment at the Fintech Server.
+      operationId: retrieveAllSinglePayments
+      tags:
+        - FintechRetrieveAllSinglePayments
+      parameters:
+        #path
+        - $ref: "#/components/parameters/bank-id"
+        - $ref: "#/components/parameters/account-id"
+        #header
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+
+      responses:
+        '200':
+          $ref: '#/components/responses/200_PaymentInitiationStatusResponseList'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+
     post:
       summary: Single payment initiation request
       description: This method is used to initiate a payment at the Fintech Server.
@@ -278,13 +301,15 @@ paths:
       tags:
         - FintechSinglePaymentInitiation
       parameters:
+        #path
+        - $ref: "#/components/parameters/bank-id"
+        - $ref: "#/components/parameters/account-id"
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: '#/components/parameters/X-XSRF-TOKEN'
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
-        #path
-        - $ref: "#/components/parameters/bank-id"
+
       requestBody:
         description: Single payment initiation request
         content:
@@ -297,6 +322,7 @@ paths:
           $ref: '#/components/responses/202_ToConsentAuthApi'
         '401':
           $ref: '#/components/responses/401_Unauthorized'
+
 
 components:
 
@@ -412,6 +438,26 @@ components:
         type: string
       example: "https://example.com/myservice?auth-id=sf3x;authResult=failure"
 
+    LoARetrievalInformation:
+      name: LoARetrievalInformation
+      required: true
+      in: header
+      schema:
+        type: string
+        enum:
+          - "FROM_TPP_WITH_AVAILABLE_CONSENT"
+          - "FROM_TPP_WITH_NEW_CONSENT"
+
+    LoTRetrievalInformation:
+      name: LoTRetrievalInformation
+      required: true
+      in: header
+      schema:
+        type: string
+        enum:
+          - "FROM_TPP_WITH_AVAILABLE_CONSENT"
+          - "FROM_TPP_WITH_NEW_CONSENT"
+
     X-Request-ID:
       name: X-Request-ID
       in: header
@@ -465,7 +511,7 @@ components:
       schema:
         type: string
 
-    account-id:
+    account-id: # the account id is NOT the iban
       name: account-id
       in: path
       required: true
@@ -556,6 +602,15 @@ components:
 
 
   responses:
+
+    200_PaymentInitiationStatusResponseList:
+      description: List of all payments done from fintech
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/paymentInitiationWithStatusResponse"
 
     200_UserProfile:
       description: |
@@ -669,7 +724,7 @@ components:
               commes from the ConsentAuthorisationApi
             * Also note that the callback link hast the structure
               /v1/fromConsent?authId=auth-id; where the
-              auth-id is a simple random string (XYZ). The corresponding xsrfToken 
+              auth-id is a simple random string (XYZ). The corresponding xsrfToken
               can be stored in the local storage under the path /v1/XYZ/fromConsent.
             * The callback link is not part of the location link. It is passed to
             the ConsentAuthorisationApi through the ConsentSession shared in the
@@ -679,7 +734,7 @@ components:
 
     202_ReloadUI:
       description: |
-        Request reload of a designated page of the FinTechUI. Reloaded UI will use 
+        Request reload of a designated page of the FinTechUI. Reloaded UI will use
         stored xsrfToken/SessionCookie.
 
       headers:
@@ -744,6 +799,42 @@ components:
               $ref: '#/components/schemas/psuMessage'
 
   schemas:
+
+    paymentInitiationWithStatusResponse:
+      description: response from open banking gateway
+      type: object
+      required:
+        - debtorAccount
+        - instructedAmount
+        - creditorAccount
+        - creditorName
+      properties:
+        endToEndIdentification:
+          type: string
+          maxLength: 35
+        debtorAccount:
+          $ref: "#/components/schemas/accountReference"
+        instructedAmount:
+          $ref: "#/components/schemas/amount"
+        creditorAccount:
+          $ref: "#/components/schemas/accountReference"
+        creditorAgent:
+          $ref: "#/components/schemas/bicfi"
+        creditorName:
+          $ref: "#/components/schemas/creditorName"
+        creditorAddress:
+          $ref: "#/components/schemas/address"
+        remittanceInformationUnstructured:
+          $ref: "#/components/schemas/remittanceInformationUnstructured"
+        transactionStatus:
+          $ref: "#/components/schemas/transactionStatus"
+        initiationDate:
+          type: string
+          format: date
+
+    transactionStatus:
+      description: The transaction status
+      type: string
 
 
     # Technical data for sessionState and errorResponse
@@ -1635,4 +1726,5 @@ components:
       type: string
       maxLength: 70
       example: "Ultimate Debtor"
+
 

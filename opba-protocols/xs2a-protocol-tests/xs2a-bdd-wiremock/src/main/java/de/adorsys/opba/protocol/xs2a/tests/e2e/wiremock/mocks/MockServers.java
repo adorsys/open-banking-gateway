@@ -6,7 +6,7 @@ import com.tngtech.jgiven.annotation.AfterScenario;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.db.domain.entity.BankProfile;
-import de.adorsys.opba.db.domain.entity.BankProtocol;
+import de.adorsys.opba.db.domain.entity.BankAction;
 import de.adorsys.opba.db.domain.entity.IgnoreValidationRule;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.IgnoreValidationRuleRepository;
@@ -35,12 +35,13 @@ import java.nio.file.Path;
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStages<SELF> {
 
-    public static final long AUTH_PROTOCOL_ID = 3L;
-    public static final long PROTOCOL_ID = 1L;
+    public static final long AUTH_ACTION_ID = 3L;
+    public static final long ACTION_ID = 1L;
     @Autowired
     private BankProfileJpaRepository bankProfileJpaRepository;
 
     @Autowired
+    @ProvidedScenarioState
     private IgnoreValidationRuleRepository ignoreValidationRuleRepository;
 
     @ProvidedScenarioState
@@ -52,6 +53,10 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         if (null != sandbox) {
             sandbox.stop();
             sandbox = null;
+        }
+
+        if (null != ignoreValidationRuleRepository) {
+            ignoreValidationRuleRepository.deleteAll();
         }
     }
 
@@ -88,6 +93,14 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    public SELF redirect_mock_of_sandbox_for_anton_brueckner_payments_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                                               .usingFilesUnderClasspath("mockedsandbox/restrecord/redirect/payments/sandbox/");
+        startWireMock(config);
+
+        return self();
+    }
+
     public SELF embedded_mock_of_sandbox_for_max_musterman_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/accounts/sandbox/");
@@ -118,7 +131,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF ignore_validation_rules_table_contains_field_psu_id() {
         IgnoreValidationRule bankValidationRule = IgnoreValidationRule.builder()
-                .protocol(BankProtocol.builder().id(PROTOCOL_ID).build())
+                .action(BankAction.builder().id(ACTION_ID).build())
                 .endpointClassCanonicalName(Xs2aAccountListingService.class.getCanonicalName())
                 .forEmbedded(true)
                 .forRedirect(true)
@@ -134,18 +147,83 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         ignoreValidationRuleRepository.save(bankValidationRule);
 
         bankValidationRule.setId(null);
-        bankValidationRule.setProtocol(BankProtocol.builder().id(AUTH_PROTOCOL_ID).build());
+        bankValidationRule.setAction(BankAction.builder().id(AUTH_ACTION_ID).build());
         bankValidationRule.setEndpointClassCanonicalName(CreateAisAccountListConsentService.class.getCanonicalName());
         ignoreValidationRuleRepository.save(bankValidationRule);
         bankValidationRule.setId(null);
-        bankValidationRule.setProtocol(BankProtocol.builder().id(AUTH_PROTOCOL_ID).build());
+        bankValidationRule.setAction(BankAction.builder().id(AUTH_ACTION_ID).build());
         bankValidationRule.setEndpointClassCanonicalName(StartConsentAuthorization.class.getCanonicalName());
         ignoreValidationRuleRepository.save(bankValidationRule);
 
         bankValidationRule.setId(null);
-        bankValidationRule.setProtocol(BankProtocol.builder().id(AUTH_PROTOCOL_ID).build());
+        bankValidationRule.setAction(BankAction.builder().id(AUTH_ACTION_ID).build());
         bankValidationRule.setEndpointClassCanonicalName(Xs2aAisAuthenticateUserConsentWithPin.class.getCanonicalName());
         ignoreValidationRuleRepository.save(bankValidationRule);
+
+        return self();
+    }
+
+    public SELF ignore_validation_rules_table_ignore_missing_ip_address() {
+        IgnoreValidationRule bankValidationRuleForInit = IgnoreValidationRule.builder()
+                                                          .action(BankAction.builder().id(ACTION_ID).build())
+                                                          .forEmbedded(true)
+                                                          .forRedirect(true)
+                                                          .validationCode(FieldCode.PSU_IP_ADDRESS)
+                                                          .build();
+
+        IgnoreValidationRule bankValidationRuleForAuth = IgnoreValidationRule.builder()
+                                                                 .action(BankAction.builder().id(AUTH_ACTION_ID).build())
+                                                                 .forEmbedded(true)
+                                                                 .forRedirect(true)
+                                                                 .validationCode(FieldCode.PSU_IP_ADDRESS)
+                                                                 .build();
+
+        ignoreValidationRuleRepository.deleteAll();
+        ignoreValidationRuleRepository.save(bankValidationRuleForInit);
+        ignoreValidationRuleRepository.save(bankValidationRuleForAuth);
+
+        return self();
+    }
+
+    public SELF ignore_validation_rules_table_do_not_ignore_missing_psu_ip_port() {
+        IgnoreValidationRule bankValidationRuleForInit = IgnoreValidationRule.builder()
+                                                          .action(BankAction.builder().id(ACTION_ID).build())
+                                                          .forEmbedded(false)
+                                                          .forRedirect(false)
+                                                          .validationCode(FieldCode.PSU_IP_PORT)
+                                                          .build();
+
+        IgnoreValidationRule bankValidationRuleForAuth = IgnoreValidationRule.builder()
+                                                                 .action(BankAction.builder().id(AUTH_ACTION_ID).build())
+                                                                 .forEmbedded(false)
+                                                                 .forRedirect(false)
+                                                                 .validationCode(FieldCode.PSU_IP_PORT)
+                                                                 .build();
+        ignoreValidationRuleRepository.deleteAll();
+        ignoreValidationRuleRepository.save(bankValidationRuleForInit);
+        ignoreValidationRuleRepository.save(bankValidationRuleForAuth);
+
+        return self();
+    }
+
+    public SELF ignore_validation_rules_table_ignore_missing_psu_ip_port() {
+        IgnoreValidationRule bankValidationRuleForInit = IgnoreValidationRule.builder()
+                                                          .action(BankAction.builder().id(ACTION_ID).build())
+                                                          .forEmbedded(true)
+                                                          .forRedirect(true)
+                                                          .validationCode(FieldCode.PSU_IP_PORT)
+                                                          .build();
+
+        IgnoreValidationRule bankValidationRuleForAuth = IgnoreValidationRule.builder()
+                                                                 .action(BankAction.builder().id(AUTH_ACTION_ID).build())
+                                                                 .forEmbedded(true)
+                                                                 .forRedirect(true)
+                                                                 .validationCode(FieldCode.PSU_IP_PORT)
+                                                                 .build();
+
+        ignoreValidationRuleRepository.deleteAll();
+        ignoreValidationRuleRepository.save(bankValidationRuleForInit);
+        ignoreValidationRuleRepository.save(bankValidationRuleForAuth);
 
         return self();
     }

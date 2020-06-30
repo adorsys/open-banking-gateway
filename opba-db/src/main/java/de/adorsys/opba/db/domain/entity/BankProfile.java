@@ -1,6 +1,7 @@
 package de.adorsys.opba.db.domain.entity;
 
 import de.adorsys.opba.db.domain.converter.ScaApproachConverter;
+import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
@@ -31,9 +32,11 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -70,10 +73,13 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     private boolean tryToUsePreferredApproach;
 
     @OneToMany(mappedBy = "bankProfile", cascade = CascadeType.ALL, orphanRemoval = true)
-    @MapKey(name = "action")
-    private Map<ProtocolAction, BankProtocol> actions = new HashMap<>();
+    @MapKey(name = "protocolAction")
+    private Map<ProtocolAction, BankAction> actions = new HashMap<>();
 
-    @Mapper
+    @OneToMany(mappedBy = "bankProfile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<ServiceSession> servicesSessions;
+
+    @Mapper(uses = ToConsentSupported.class)
     public interface ToBankProfileDescriptor {
         @Mapping(source = "bank.name", target = "bankName")
         @Mapping(source = "bank.bic", target = "bic")
@@ -82,6 +88,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
                 + ".map(Enum::name)"
                 + ".collect(java.util.stream.Collectors.toList()))",
                 target = "serviceList")
+        @Mapping(source = "actions", target = "consentSupportByService")
         BankProfileDescriptor map(BankProfile bankProfile);
     }
 
@@ -96,6 +103,15 @@ public class BankProfile implements Serializable, CurrentBankProfile {
                 + ".collect(java.util.stream.Collectors.toList()))",
                 target = "scaApproaches")
         Aspsp map(BankProfile bankProfile);
+    }
+
+    @Mapper
+    public interface ToConsentSupported {
+
+        default Map<String, String> map(Map<ProtocolAction, BankAction> actions) {
+            return actions.entrySet().stream()
+                    .collect(Collectors.toMap(it -> it.getKey().name(), it -> String.valueOf(it.getValue().isConsentSupported())));
+        }
     }
 
     @Override

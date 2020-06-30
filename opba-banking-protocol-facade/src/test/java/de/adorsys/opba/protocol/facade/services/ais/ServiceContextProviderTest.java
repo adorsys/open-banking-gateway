@@ -1,11 +1,14 @@
 package de.adorsys.opba.protocol.facade.services.ais;
 
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
+import de.adorsys.opba.protocol.api.Action;
+import de.adorsys.opba.protocol.api.ais.ListAccounts;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.request.accounts.ListAccountsRequest;
+import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.ConsentAcquiredResult;
@@ -21,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,8 +59,8 @@ public class ServiceContextProviderTest extends DbDropper {
     @Autowired
     private ServiceSessionRepository serviceSessionRepository;
 
-    @Autowired
-    private ListAccountsService listAccountsService;
+    @MockBean
+    private ListAccounts listAccounts;
 
     @Autowired
     private TransactionTemplate txTemplate;
@@ -83,10 +87,11 @@ public class ServiceContextProviderTest extends DbDropper {
                                 .build()
                 ).build();
 
-        InternalContext<FacadeServiceableGetter> internalContext = serviceContextProvider.provide(request);
-        Map<String, ListAccountsService> actionBeans = Collections.singletonMap("xs2aListAccounts", listAccountsService);
-        protocolSelector.selectAndPersistProtocolFor(internalContext, ProtocolAction.LIST_ACCOUNTS, actionBeans);
-        ServiceContext<FacadeServiceableGetter> providedContext = serviceContextProvider.provideRequestScoped(request, internalContext);
+        InternalContext<FacadeServiceableGetter, Action<ListAccountsRequest, AccountListBody>> ctxWithoutProtocol = serviceContextProvider.provide(request);
+        Map<String, ListAccounts> actionBeans = Collections.singletonMap("xs2aListAccounts", listAccounts);
+        InternalContext<FacadeServiceableGetter, Action<ListAccountsRequest, AccountListBody>> context =
+                protocolSelector.selectProtocolFor(ctxWithoutProtocol, ProtocolAction.LIST_ACCOUNTS, actionBeans);
+        ServiceContext<FacadeServiceableGetter> providedContext = serviceContextProvider.provideRequestScoped(request, context);
         URI redirectionTo = new URI("/");
         Result<URI> result = new ConsentAcquiredResult<>(redirectionTo, null);
         FacadeRedirectResult<URI, AuthStateBody> uriFacadeResult = (FacadeRedirectResult)
@@ -115,7 +120,7 @@ public class ServiceContextProviderTest extends DbDropper {
                                 .redirectCode(uriFacadeResult.getRedirectCode())
                                 .build()
                 ).build();
-        InternalContext<FacadeServiceableGetter> providedContext2 = serviceContextProvider.provide(request2);
+        serviceContextProvider.provide(request2);
 
         txTemplate.execute(callback -> {
             secondRequestCheck(sessionId);
