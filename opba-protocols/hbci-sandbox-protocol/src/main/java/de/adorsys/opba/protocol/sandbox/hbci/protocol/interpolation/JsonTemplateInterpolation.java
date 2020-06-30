@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
+import com.google.common.primitives.Longs;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Account;
+import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Bank;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.parsing.ParsingUtil;
 import lombok.AllArgsConstructor;
@@ -15,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
+import org.iban4j.CountryCode;
+import org.iban4j.Iban;
 import org.kapott.hbci.callback.HBCICallbackConsole;
 import org.kapott.hbci.manager.HBCIProduct;
 import org.kapott.hbci.passport.PinTanPassport;
@@ -28,10 +32,17 @@ import org.springframework.expression.common.TemplateParserContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -53,9 +64,12 @@ public class JsonTemplateInterpolation {
     public String interpolateToHbci(String templateResourcePath, SandboxContext context) {
         Map<String, String> interpolated = interpolate(templateResourcePath, context);
         String type = interpolated.remove("A_TYPE");
+        log.info("Using (unwrapped) message type: {}", type);
         Message message = new Message(type, ParsingUtil.SYNTAX);
+        Set<String> kontos6Injected = new HashSet<>();
         Set<String> pathsToPrefix = ImmutableSet.of("GVRes\\.KUmsZeitRes.*\\.booked");
         for (Map.Entry<String, String> target : interpolated.entrySet()) {
+            injectKonto6IfNeeded(message, target.getKey(), interpolated, kontos6Injected);
             message.propagateValue(
                     message.getPath() + "." + target.getKey(),
                     pathsToPrefix.stream().anyMatch(it -> target.getKey().matches(it)) ? "B" + target.getValue(): target.getValue(),
@@ -74,6 +88,48 @@ public class JsonTemplateInterpolation {
         message.enumerateSegs(1, SyntaxElement.ALLOW_OVERWRITE);
         message.autoSetMsgSize();
         return message.toString(0);
+    }
+
+    // kapott creates does not handle which element to create properly
+    @SneakyThrows
+    private void injectKonto6IfNeeded(Message message, String key, Map<String, String> values, Set<String> kontos6Injected) {
+        Pattern konto6Pattern = Pattern.compile("UPD\\.KInfo.*\\.iban");
+        Pattern targetPattern = Pattern.compile("(UPD\\.KInfo.*?\\.)");
+        Pattern kontoPattern = Pattern.compile("UPD\\.KInfo.*");
+
+        if (!kontoPattern.matcher(key).find()) {
+            return;
+        }
+
+        Matcher matcher = targetPattern.matcher(key);
+        matcher.find();
+        String root = matcher.group(1);
+        boolean hasKonto6 = values.entrySet().stream()
+                .filter(it -> it.getKey().startsWith(root))
+                .anyMatch(it -> konto6Pattern.matcher(it.getKey()).matches());
+
+        if (!hasKonto6 || kontos6Injected.contains(root)) {
+            return;
+        }
+
+        log.info("Injecting Konto6 for {}", key);
+        kontos6Injected.add(root);
+        SyntaxElement updElem = message.getElement(message.getPath() + ".UPD");
+        XPath xPath = XPathFactory.newInstance().newXPath();
+        Node konto6 = (Node) xPath.compile("/hbci/SFs/SFdef[@id='UPD']/SEG[@type='KInfo6']").evaluate(ParsingUtil.SYNTAX, XPathConstants.NODE);
+        int konto6Idx = ((Double) xPath
+                .compile("count(/hbci/SFs/SFdef[@id='UPD']/SEG[@type='KInfo6']/preceding-sibling::*)+1")
+                .evaluate(ParsingUtil.SYNTAX, XPathConstants.NUMBER)).intValue();
+
+        Method createNewChildContainer = SyntaxElement.class.getDeclaredMethod("createNewChildContainer", Node.class, Document.class);
+        createNewChildContainer.setAccessible(true);
+        MultipleSyntaxElements newKonto6Elem = (MultipleSyntaxElements) createNewChildContainer.invoke(updElem, konto6, ParsingUtil.SYNTAX);
+        // Ensure correct element position
+        Method setIdx = MultipleSyntaxElements.class.getDeclaredMethod("setSyntaxIdx", int.class);
+        setIdx.setAccessible(true);
+        setIdx.invoke(newKonto6Elem, konto6Idx);
+
+        updElem.getChildContainers().add(newKonto6Elem);
     }
 
     private Message encryptAndSignMessage(SandboxContext context, Message message) {
@@ -208,7 +264,17 @@ public class JsonTemplateInterpolation {
             expression = expression.substring(1);
         }
 
-        return prefix + doParse("#{" + expression + "}", context);
+        String result = doParse("#{" + expression + "}", context);
+
+        // swallow the result if we need prefix and if returned value equals to numeric '1' -> _1 == ""
+        if (null != result) {
+            Long asInt = Longs.tryParse(result);
+            if (!"".equals(prefix) && null != asInt && 1 == asInt) {
+                return "";
+            }
+        }
+
+        return prefix + result;
     }
 
     private String doParse(String expression, CtxWrapper context) {
@@ -232,7 +298,7 @@ public class JsonTemplateInterpolation {
         private final SandboxContext context;
 
         public AccountWithPosition getLoopAccount() {
-            return new AccountWithPosition(getUser().getAccounts().get(loopPos), loopPos + 1);
+            return new AccountWithPosition(getUser().getAccounts().get(loopPos), context.getBank(), loopPos + 1);
         }
 
         public AccountWithPosition getTransactionsAccount() {
@@ -244,7 +310,7 @@ public class JsonTemplateInterpolation {
             Account acc = getUser().getAccounts().stream().filter(it -> it.getNumber().equals(accId))
                     .findFirst()
                     .orElseThrow(() -> new IllegalStateException(String.format("No account %s available for current user %s", accId, getUser().getLogin())));
-            return new AccountWithPosition(acc, 1);
+            return new AccountWithPosition(acc, context.getBank(), 1);
         }
 
         @Getter
@@ -253,7 +319,16 @@ public class JsonTemplateInterpolation {
 
             @Delegate
             private final Account account;
+            private final Bank bank;
             private final int position;
+
+            public String getIban() {
+                return new Iban.Builder()
+                        .countryCode(CountryCode.valueOf(bank.getCountryCode()))
+                        .bankCode(bank.getBlz())
+                        .accountNumber(account.getNumber()).build()
+                        .toString();
+            }
         }
     }
 

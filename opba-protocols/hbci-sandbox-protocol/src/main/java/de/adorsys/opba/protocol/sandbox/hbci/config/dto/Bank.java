@@ -15,6 +15,9 @@ public class Bank {
     private String name;
 
     @NotBlank
+    private String countryCode;
+
+    @NotBlank
     private String bic;
 
     @NotBlank
