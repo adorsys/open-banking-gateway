@@ -54,8 +54,14 @@ public class JsonTemplateInterpolation {
         Map<String, String> interpolated = interpolate(templateResourcePath, context);
         String type = interpolated.remove("A_TYPE");
         Message message = new Message(type, ParsingUtil.SYNTAX);
+        Set<String> pathsToPrefix = ImmutableSet.of("GVRes\\.KUmsZeitRes.*\\.booked");
         for (Map.Entry<String, String> target : interpolated.entrySet()) {
-            message.propagateValue(message.getPath() + "." + target.getKey(), target.getValue(), true, true);
+            message.propagateValue(
+                    message.getPath() + "." + target.getKey(),
+                    pathsToPrefix.stream().anyMatch(it -> target.getKey().matches(it)) ? "B" + target.getValue(): target.getValue(),
+                    true,
+                    true
+            );
         }
 
         if (context.isCryptNeeded()) {
@@ -227,6 +233,18 @@ public class JsonTemplateInterpolation {
 
         public AccountWithPosition getLoopAccount() {
             return new AccountWithPosition(getUser().getAccounts().get(loopPos), loopPos + 1);
+        }
+
+        public AccountWithPosition getTransactionsAccount() {
+            String accKey = getRequest().getData().keySet().stream()
+                    .filter(it -> it.matches("GV\\.KUmsZeit\\d+\\.KTV\\.number"))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("No account number for transaction list provided in request"));
+            String accId = getRequest().getData().get(accKey);
+            Account acc = getUser().getAccounts().stream().filter(it -> it.getNumber().equals(accId))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException(String.format("No account %s available for current user %s", accId, getUser().getLogin())));
+            return new AccountWithPosition(acc, 1);
         }
 
         @Getter
