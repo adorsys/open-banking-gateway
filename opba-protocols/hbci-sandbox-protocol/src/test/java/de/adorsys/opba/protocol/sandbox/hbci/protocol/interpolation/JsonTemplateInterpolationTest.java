@@ -55,7 +55,7 @@ class JsonTemplateInterpolationTest {
         Map<String, String> result = tested.interpolate("interpolation/loop.json", ctx);
 
         assertThat(result).containsEntry("foo", "123");
-        assertThat(result).containsEntry("prefix_1", "1999");
+        assertThat(result).containsEntry("prefix", "1999");
         assertThat(result).containsEntry("bar", "99");
     }
 
@@ -73,7 +73,7 @@ class JsonTemplateInterpolationTest {
         Map<String, String> result = tested.interpolate("interpolation/loop.json", ctx);
 
         assertThat(result).containsEntry("foo", "123");
-        assertThat(result).containsEntry("prefix_1", "account_1");
+        assertThat(result).containsEntry("prefix", "account_1");
         assertThat(result).containsEntry("prefix_2", "account_2");
         assertThat(result).containsEntry("bar", "99");
     }
