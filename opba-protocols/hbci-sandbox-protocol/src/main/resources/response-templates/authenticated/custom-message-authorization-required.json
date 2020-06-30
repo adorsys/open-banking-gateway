@@ -5,7 +5,7 @@
   "GVRes.TAN2StepRes6.SegHead.seq" : "5",
   "GVRes.TAN2StepRes6.SegHead.version" : "6",
   "GVRes.TAN2StepRes6.challenge" : "Bitte geben Sie die pushTAN ein.",
-  "GVRes.TAN2StepRes6.orderref" : "${ctx.orderRef}",
+  "GVRes.TAN2StepRes6.orderref" : "${ctx.getDialogId()}",
   "GVRes.TAN2StepRes6.process" : "4",
   "GVRes.TAN2StepRes6.tanmedia" : "Iphone",
   "MsgHead.MsgRef.dialogid" : "${ctx.getDialogId()}",
