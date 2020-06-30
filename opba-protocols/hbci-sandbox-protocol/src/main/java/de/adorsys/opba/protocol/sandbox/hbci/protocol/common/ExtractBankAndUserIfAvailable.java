@@ -24,7 +24,7 @@ public class ExtractBankAndUserIfAvailable implements JavaDelegate {
 
         updateBankIfNeeded(context, context.getRequestBankBlz());
         updateUserIfNeeded(context, context.getRequestUserLogin());
-        
+
         execution.setVariable(CONTEXT, context);
     }
 
