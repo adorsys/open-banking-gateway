@@ -46,7 +46,7 @@ hbci:
 
   users:
     - login: anton.brueckner
-      realname: Brueckner Anton
+      real-name: Brueckner Anton
       pin: 12345
       tan: 123456
       sca-methods-available:
@@ -76,7 +76,7 @@ hbci:
           date: 2020-01-02T09:00:00
 
     - login: max.musterman
-      realname: Musterman Max
+      real-name: Musterman Max
       pin: 12345
       tan: 123456
       sca-methods-available:
