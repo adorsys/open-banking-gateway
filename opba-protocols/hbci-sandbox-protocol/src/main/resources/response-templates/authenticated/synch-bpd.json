@@ -133,7 +133,7 @@
   "BPD.Params_19.PinTanPar1.ParPinTan.PinTanGV_3.segcode" : "HKCCS",
   "BPD.Params_19.PinTanPar1.ParPinTan.PinTanGV_4.needtan" : "N",
   "BPD.Params_19.PinTanPar1.ParPinTan.PinTanGV_4.segcode" : "HKTAN",
-  "BPD.Params_19.PinTanPar1.ParPinTan.PinTanGV_5.needtan" : "N",
+  "BPD.Params_19.PinTanPar1.ParPinTan.PinTanGV_5.needtan" : "J",
   "BPD.Params_19.PinTanPar1.ParPinTan.PinTanGV_5.segcode" : "HKKAZ",
   "BPD.Params_19.PinTanPar1.ParPinTan.PinTanGV_6.needtan" : "J",
   "BPD.Params_19.PinTanPar1.ParPinTan.PinTanGV_6.segcode" : "HKCDN",

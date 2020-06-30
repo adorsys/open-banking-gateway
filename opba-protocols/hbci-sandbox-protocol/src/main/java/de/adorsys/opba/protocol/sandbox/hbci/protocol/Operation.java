@@ -9,6 +9,7 @@ public enum Operation {
 
     ANY("*"),
     DIALOG_INIT("DialogInit"),
+    DIALOG_INIT_SCA_TAN_2_STEP("DialogInitScaTAN"),
     DIALOG_INIT_ANON("DialogInitAnon"),
     CUSTOM_MSG("CustomMsg"),
     SYNCH("Synch"),
