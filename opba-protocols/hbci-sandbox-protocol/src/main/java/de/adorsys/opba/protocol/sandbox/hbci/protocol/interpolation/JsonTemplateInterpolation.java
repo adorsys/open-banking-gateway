@@ -8,6 +8,8 @@ import com.google.common.io.Resources;
 import com.google.common.primitives.Longs;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Account;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Bank;
+import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Transaction;
+import de.adorsys.opba.protocol.sandbox.hbci.config.dto.User;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.parsing.ParsingUtil;
 import lombok.AllArgsConstructor;
@@ -49,6 +51,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -57,6 +60,7 @@ public class JsonTemplateInterpolation {
 
     private final Pattern interpolationTarget = Pattern.compile("(\\$\\{(.+?)})");
     private final Pattern loopAccounts = Pattern.compile("(\\$\\{(.+getLoopAccount.+?)})");
+    private final Pattern mt940LoopTransactions = Pattern.compile("(\\$\\{mt940Begin}.+?\\$\\{mt940End})", Pattern.DOTALL);
 
     private final ObjectMapper mapper;
 
@@ -203,30 +207,62 @@ public class JsonTemplateInterpolation {
     public Map<String, String> interpolate(String templateResourcePath, SandboxContext context) {
         String templateToParse = Resources.asByteSource(Resources.getResource(templateResourcePath)).asCharSource(StandardCharsets.UTF_8).read();
         Map<String, String> template = mapper.readValue(templateToParse,  new TypeReference<Map<String, String>>() {});
+        List<Entry> mt940TransactionLoop = extractAndRemoveFromTemplateTransactionLoopMt940Entries(template);
         List<Entry> accountLoop = extractAndRemoveFromTemplateAccountLoopEntries(template);
         Map<String, String> result = new HashMap<>();
 
-        CtxWrapper staticCtx = new CtxWrapper(0, context);
+        AccountsContext staticCtx = new AccountsContext(0, context);
         for (Map.Entry<String, String> entry : template.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            key = interpolate(key, new CtxWrapper(0, staticCtx));
-            value = interpolate(value, new CtxWrapper(0, staticCtx));
+            key = interpolate(key, new AccountsContext(0, staticCtx));
+            value = interpolate(value, new AccountsContext(0, staticCtx));
             result.put(key, value);
         }
 
         for (Entry entry : accountLoop) {
             for (int accPos = 0; accPos < staticCtx.getUser().getAccounts().size(); ++accPos) {
-                String key = interpolate(entry.getKey(), new CtxWrapper(accPos, staticCtx));
-                String value = interpolate(entry.getValue(), new CtxWrapper(accPos, staticCtx));
+                AccountsContext accs = new AccountsContext(accPos, staticCtx);
+                String key = interpolate(entry.getKey(), accs);
+                String value = interpolate(entry.getValue(), accs);
                 result.put(key, value);
             }
         }
 
+        interpolateMT940TransactionsIfNeeded(mt940TransactionLoop, result, staticCtx);
         return result;
     }
 
-    private String interpolate(String template, CtxWrapper context) {
+    private void interpolateMT940TransactionsIfNeeded(List<Entry> mt940TransactionLoop, Map<String, String> result, AccountsContext staticCtx) {
+        for (Entry entry : mt940TransactionLoop) {
+            int accPos = getAccountPosForTransactions(staticCtx.getUser(), staticCtx.getRequest());
+            Account acc = staticCtx.getUser().getAccounts().get(accPos);
+            List<Transaction> transactions = staticCtx.getUser().getTransactions().stream()
+                    .filter(it -> it.getFrom().contains(acc.getNumber()))
+                    .collect(Collectors.toList());
+
+            // Empty transaction list special handling
+            if (transactions.isEmpty()) {
+                TransactionsContext txns = new TransactionsContext(0, staticCtx, accPos, 0, transactions);
+                result.put(entry.getKey(), interpolateTransactions(":20:STARTUMS\n:21:NONREF\n:25:${ctx.getBank().getBlz()}/${ctx.getTransactionsAccount().getNumber()}", txns));
+                continue;
+            }
+
+            String initialValue = entry.getValue();
+            StringBuilder value = new StringBuilder();
+            for (int txnPos = 0; txnPos < transactions.size(); ++txnPos) {
+                TransactionsContext txns = new TransactionsContext(0, staticCtx, accPos, txnPos, transactions);
+                value.append(interpolateTransactions(initialValue, txns));
+            }
+            result.put(entry.getKey(), value.toString());
+        }
+    }
+
+    private String interpolateTransactions(String template, AccountsContext context) {
+        return interpolate(template.replaceAll("\\$\\{mt940Begin}", "").replaceAll("\\$\\{mt940End}", ""), context);
+    }
+
+    private String interpolate(String template, AccountsContext context) {
         Matcher target = interpolationTarget.matcher(template);
         StringBuffer result = new StringBuffer();
         while (target.find()) {
@@ -257,7 +293,25 @@ public class JsonTemplateInterpolation {
         return loopAccounts.matcher(expression).find();
     }
 
-    private String parseExpression(String expression, CtxWrapper context) {
+    private List<Entry> extractAndRemoveFromTemplateTransactionLoopMt940Entries(Map<String, String> template) {
+        List<Entry> transactionLoop = new ArrayList<>();
+        for (Map.Entry<String, String> entry : template.entrySet()) {
+            if (!isLoopTransactionsMT940Expression(entry.getValue())) {
+                continue;
+            }
+
+            transactionLoop.add(new Entry(entry.getKey(), entry.getValue()));
+        }
+
+        transactionLoop.forEach(it -> template.remove(it.getKey()));
+        return transactionLoop;
+    }
+
+    private boolean isLoopTransactionsMT940Expression(String expression) {
+        return mt940LoopTransactions.matcher(expression).find();
+    }
+
+    private String parseExpression(String expression, AccountsContext context) {
         String prefix = "";
         if (expression.startsWith("_")) {
             prefix = "_";
@@ -277,58 +331,84 @@ public class JsonTemplateInterpolation {
         return prefix + result;
     }
 
-    private String doParse(String expression, CtxWrapper context) {
+    private String doParse(String expression, AccountsContext context) {
         ExpressionParser parser = new SpelExpressionParser();
         StandardEvaluationContext parseContext = new StandardEvaluationContext(new SpelCtx(context));
         return parser.parseExpression(expression, new TemplateParserContext()).getValue(parseContext, String.class);
     }
 
+    private static int getAccountPosForTransactions(User user, SandboxContext.Request request) {
+        String accKey = request.getData().keySet().stream()
+                .filter(it -> it.matches("GV\\.KUmsZeit\\d+\\.KTV\\.number"))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No account number for transaction list provided in request"));
+        String accNumber = request.getData().get(accKey);
+
+        for (int pos = 0; pos < user.getAccounts().size(); ++pos) {
+            if (user.getAccounts().get(pos).getNumber().equals(accNumber)) {
+                return pos;
+            }
+        }
+
+        throw new IllegalStateException(String.format("No account %s available for current user %s", accNumber, user.getLogin()));
+    }
+
     @Getter
     @RequiredArgsConstructor
     private static class SpelCtx {
-        private final CtxWrapper ctx;
+        private final AccountsContext ctx;
     }
 
     @RequiredArgsConstructor
-    private static class CtxWrapper extends SandboxContext {
+    private static class AccountsContext extends SandboxContext {
 
-        private final int loopPos;
+        private final int accountLoopPos;
 
         @Delegate
-        private final SandboxContext context;
+        protected final SandboxContext context;
 
         public AccountWithPosition getLoopAccount() {
-            return new AccountWithPosition(getUser().getAccounts().get(loopPos), context.getBank(), loopPos + 1);
+            return new AccountWithPosition(getUser().getAccounts().get(accountLoopPos), context.getBank(), accountLoopPos + 1);
+        }
+    }
+
+    private static class TransactionsContext extends AccountsContext {
+
+        private final int transactionAccPos;
+        private final int transactionLoopPos;
+        private final List<Transaction> transactions;
+
+        public TransactionsContext(int accountLoopPos, SandboxContext context, int transactionAccPos, int transactionLoopPos, List<Transaction> transactions) {
+            super(accountLoopPos, context);
+            this.transactionAccPos = transactionAccPos;
+            this.transactionLoopPos = transactionLoopPos;
+            this.transactions = transactions;
         }
 
         public AccountWithPosition getTransactionsAccount() {
-            String accKey = getRequest().getData().keySet().stream()
-                    .filter(it -> it.matches("GV\\.KUmsZeit\\d+\\.KTV\\.number"))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("No account number for transaction list provided in request"));
-            String accId = getRequest().getData().get(accKey);
-            Account acc = getUser().getAccounts().stream().filter(it -> it.getNumber().equals(accId))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalStateException(String.format("No account %s available for current user %s", accId, getUser().getLogin())));
-            return new AccountWithPosition(acc, context.getBank(), 1);
+            return new AccountWithPosition(getUser().getAccounts().get(transactionAccPos), context.getBank(), transactionAccPos);
         }
 
-        @Getter
-        @RequiredArgsConstructor
-        private static class AccountWithPosition extends Account {
+        public Transaction getCurrentTransaction() {
+            return transactions.get(transactionLoopPos);
+        }
+    }
 
-            @Delegate
-            private final Account account;
-            private final Bank bank;
-            private final int position;
+    @Getter
+    @RequiredArgsConstructor
+    private static class AccountWithPosition extends Account {
 
-            public String getIban() {
-                return new Iban.Builder()
-                        .countryCode(CountryCode.valueOf(bank.getCountryCode()))
-                        .bankCode(bank.getBlz())
-                        .accountNumber(account.getNumber()).build()
-                        .toString();
-            }
+        @Delegate
+        private final Account account;
+        private final Bank bank;
+        private final int position;
+
+        public String getIban() {
+            return new Iban.Builder()
+                    .countryCode(CountryCode.valueOf(bank.getCountryCode()))
+                    .bankCode(bank.getBlz())
+                    .accountNumber(account.getNumber()).build()
+                    .toString();
         }
     }
 
