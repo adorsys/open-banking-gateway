@@ -21,6 +21,7 @@ import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
+import org.jetbrains.annotations.NotNull;
 import org.kapott.hbci.callback.HBCICallbackConsole;
 import org.kapott.hbci.manager.HBCIProduct;
 import org.kapott.hbci.passport.PinTanPassport;
@@ -76,7 +77,7 @@ public class JsonTemplateInterpolation {
             injectKonto6IfNeeded(message, target.getKey(), interpolated, kontos6Injected);
             message.propagateValue(
                     message.getPath() + "." + target.getKey(),
-                    pathsToPrefix.stream().anyMatch(it -> target.getKey().matches(it)) ? "B" + target.getValue(): target.getValue(),
+                    pathsToPrefix.stream().anyMatch(it -> target.getKey().matches(it)) ? "B" + target.getValue() : target.getValue(),
                     true,
                     true
             );
@@ -137,7 +138,6 @@ public class JsonTemplateInterpolation {
     }
 
     private Message encryptAndSignMessage(SandboxContext context, Message message) {
-        Sig sig = new Sig();
         PinTanPassport passport = new PinTanPassport(
                 "300",
                 ImmutableMap.of(
@@ -151,15 +151,12 @@ public class JsonTemplateInterpolation {
         );
         passport.setPIN("noref");
         passport.setSysId(context.getSysId());
-        sig.signIt(message, passport);
-        // Signing causes element duplication - so dropping duplicates
-        Map<String, SyntaxElement> existingPaths = new HashMap<>();
-        message.getChildContainers().stream().flatMap(it -> it.getElements().stream()).forEach(it -> recursivelyEnumeratePaths(it, existingPaths));
-        // It is ok to ignore top elements (Multi elems) from removal - they do not seem to duplicate
-        nonRecursivelyRemoveDuplicatePathsAndDestroyDirectParentOnDuplicate(message, existingPaths);
-        message.validate();
-        message.enumerateSegs(1, SyntaxElement.ALLOW_OVERWRITE);
+        signMessage(message, passport);
+        return encryptMessage(context, message, passport);
+    }
 
+    @NotNull
+    private Message encryptMessage(SandboxContext context, Message message, PinTanPassport passport) {
         // Crypt the message
         Crypt crypt = new Crypt(passport);
         message = crypt.cryptIt(message);
@@ -171,7 +168,7 @@ public class JsonTemplateInterpolation {
         for (Map.Entry<String, String> target : message.getData().entrySet()) {
             result.propagateValue(
                     result.getPath() + "." + target.getKey(),
-                    pathsToPrefix.contains(target.getKey()) ? "B" + target.getValue(): target.getValue(),
+                    pathsToPrefix.contains(target.getKey()) ? "B" + target.getValue() : target.getValue(),
                     true,
                     true
             );
@@ -182,6 +179,18 @@ public class JsonTemplateInterpolation {
         result.enumerateSegs(1, SyntaxElement.ALLOW_OVERWRITE);
         result.autoSetMsgSize();
         return result;
+    }
+
+    private void signMessage(Message message, PinTanPassport passport) {
+        Sig sig = new Sig();
+        sig.signIt(message, passport);
+        // Signing causes element duplication - so dropping duplicates
+        Map<String, SyntaxElement> existingPaths = new HashMap<>();
+        message.getChildContainers().stream().flatMap(it -> it.getElements().stream()).forEach(it -> recursivelyEnumeratePaths(it, existingPaths));
+        // It is ok to ignore top elements (Multi elems) from removal - they do not seem to duplicate
+        nonRecursivelyRemoveDuplicatePathsAndDestroyDirectParentOnDuplicate(message, existingPaths);
+        message.validate();
+        message.enumerateSegs(1, SyntaxElement.ALLOW_OVERWRITE);
     }
 
     private void recursivelyEnumeratePaths(SyntaxElement element, Map<String, SyntaxElement> existingPaths) {
@@ -200,13 +209,12 @@ public class JsonTemplateInterpolation {
                 iterator.remove();
             }
         }
-
     }
 
     @SneakyThrows
     public Map<String, String> interpolate(String templateResourcePath, SandboxContext context) {
         String templateToParse = Resources.asByteSource(Resources.getResource(templateResourcePath)).asCharSource(StandardCharsets.UTF_8).read();
-        Map<String, String> template = mapper.readValue(templateToParse,  new TypeReference<Map<String, String>>() {});
+        Map<String, String> template = mapper.readValue(templateToParse,  new TypeReference<Map<String, String>>() { });
         List<Entry> mt940TransactionLoop = extractAndRemoveFromTemplateTransactionLoopMt940Entries(template);
         List<Entry> accountLoop = extractAndRemoveFromTemplateAccountLoopEntries(template);
         Map<String, String> result = new HashMap<>();
@@ -378,7 +386,7 @@ public class JsonTemplateInterpolation {
         private final int transactionLoopPos;
         private final List<Transaction> transactions;
 
-        public TransactionsContext(int accountLoopPos, SandboxContext context, int transactionAccPos, int transactionLoopPos, List<Transaction> transactions) {
+        TransactionsContext(int accountLoopPos, SandboxContext context, int transactionAccPos, int transactionLoopPos, List<Transaction> transactions) {
             super(accountLoopPos, context);
             this.transactionAccPos = transactionAccPos;
             this.transactionLoopPos = transactionLoopPos;
