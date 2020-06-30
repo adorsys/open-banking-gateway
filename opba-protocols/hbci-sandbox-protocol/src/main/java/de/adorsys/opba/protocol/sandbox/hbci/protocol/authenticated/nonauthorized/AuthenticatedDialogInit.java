@@ -15,7 +15,7 @@ public class AuthenticatedDialogInit extends TemplateBasedOperationHandler {
 
     @Override
     protected String templatePath(SandboxContext context) {
-        return "response-templates/authenticated/dialog-end.json";
+        return "response-templates/authenticated/dialog-init-upd-acc.json";
     }
 
     @Override

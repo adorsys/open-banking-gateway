@@ -1,5 +1,5 @@
 {
-  "A_TYPE" : "CustomMsgRes",
+  "A_TYPE" : "DialogInitSCARes",
   "MsgHead.MsgRef.dialogid" : "${ctx.getDialogId()}",
   "MsgHead.MsgRef.msgnum" : "1",
   "MsgHead.SegHead.code" : "HNHBK",
@@ -65,13 +65,13 @@
   "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.AllowedGV_9.reqSigs" : "1",
   "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.KTV.KIK.blz" : "${ctx.getBank().getBlz()}",
   "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.KTV.KIK.country" : "DE",
-  "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.KTV.number" : "${ctx.getUserId()}",
+  "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.KTV.number" : "${ctx.getLoopAccount().getNumber()}",
   "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.SegHead.code" : "HIUPD",
   "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.SegHead.ref" : "4",
   "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.SegHead.seq" : "6",
   "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.SegHead.version" : "6",
-  "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.cur" : "${ctx.acc.currency}",
-  "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.customerid" : "${ctx.getUserId()}",
+  "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.cur" : "${ctx.getLoopAccount().getCurrency()}",
+  "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.customerid" : "${ctx.getUser().getLogin()}",
   "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.iban" : "${ctx.getLoopAccount().getIban()}",
   "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.konto" : "Extra-Konto",
   "UPD.KInfo${_ctx.getLoopAccount().getPosition()}.name1" : "${ctx.getUser().getRealName()}",
@@ -80,7 +80,7 @@
   "UPD.UPA.SegHead.seq" : "5",
   "UPD.UPA.SegHead.version" : "4",
   "UPD.UPA.usage" : "0",
-  "UPD.UPA.userid" : "${ctx.getUserId()}",
-  "UPD.UPA.username" : "${ctx.getUser().getUsername()}",
+  "UPD.UPA.userid" : "${ctx.getUser().getLogin()}",
+  "UPD.UPA.username" : "${ctx.getUser().getRealName()}",
   "UPD.UPA.version" : "0"
 }

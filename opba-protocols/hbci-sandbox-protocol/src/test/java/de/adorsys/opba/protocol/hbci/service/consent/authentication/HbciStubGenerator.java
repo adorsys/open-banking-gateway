@@ -287,8 +287,9 @@ class HbciStubGenerator {
     @Disabled
     @SneakyThrows
     void classifyMessage() {
-        Path target = Paths.get("/home/valb3r/IdeaProjects/hbci-ag-mock/dissect/message.txt");
+        Path target = Paths.get("/home/valb3r/Downloads/msg.txt");
         assertThat(parseMessage(readMessage(target))).isNotNull();
+        dumpMessage(parseMessage(readMessage(target)));
     }
 
     public Message parseMessage(String from) {
@@ -321,9 +322,9 @@ class HbciStubGenerator {
 
                 // End loop on 1st element
                 result = msg;
-                break;
+               // break;
             } catch (RuntimeException ex) {
-                // NOP, that's how kapott works
+                log.info("Fail at {} due to {}", msgName, ex.getMessage().substring(0, Math.min(50, ex.getMessage().length())));
             }
         }
 
