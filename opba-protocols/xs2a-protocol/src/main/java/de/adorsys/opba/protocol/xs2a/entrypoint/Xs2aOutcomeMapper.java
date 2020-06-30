@@ -64,7 +64,7 @@ public class Xs2aOutcomeMapper<T> implements OutcomeMapper<T> {
                 new ContextBasedValidationErrorResult(
                     problem.getProvideMoreParamsDialog(),
                     problem.getExecutionId(),
-                    new AuthStateBody(null, errorMapper.map(problem.getIssues()), null, null)
+                    new AuthStateBody(errorMapper.map(problem.getIssues()))
                 )
         );
     }

@@ -2,14 +2,21 @@ package de.adorsys.opba.consentapi.controller;
 
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.consentapi.Const;
+import de.adorsys.opba.consentapi.model.generated.AisAccountAccessInfo;
+import de.adorsys.opba.consentapi.model.generated.AisConsentRequest;
 import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
+import de.adorsys.opba.consentapi.model.generated.PaymentProduct;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
+import de.adorsys.opba.consentapi.model.generated.SinglePayment;
 import de.adorsys.opba.consentapi.resource.generated.AuthStateConsentAuthorizationApi;
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
+import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
+import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
+import de.adorsys.opba.protocol.api.dto.result.body.PaymentProductDetails;
 import de.adorsys.opba.protocol.api.dto.result.body.ScaMethod;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.authorization.GetAuthorizationStateService;
@@ -18,6 +25,7 @@ import de.adorsys.opba.restapi.shared.service.RedirectionOnlyToOkMapper;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -61,12 +69,49 @@ public class AuthStateConsentServiceController implements AuthStateConsentAuthor
         @Mapping(source = "facade", target = "consentAuth")
         InlineResponse200 map(AuthStateBody facade);
 
+        @Mapping(source = "resultBody", target = "singlePayment", qualifiedByName = "mapToSinglePayment")
+        @Mapping(source = "resultBody", target = "consent", qualifiedByName = "mapToAisConsentRequest")
+        ConsentAuth authStateBodyToConsentAuth(AuthStateBody authStateBody);
+
         @Mapping(source = "key", target = "id")
         @Mapping(source = "value", target = "methodValue")
         ScaUserData fromScaMethod(ScaMethod method);
 
         default ConsentAuth.ActionEnum fromString(String value) {
             return ConsentAuth.ActionEnum.fromValue(TRANSLATE_ACTIONS.getOrDefault(value, value));
+        }
+
+        @Named("mapToSinglePayment")
+        default SinglePayment mapToSinglePayment(Object resultBody) {
+            if (resultBody instanceof SinglePaymentBody) {
+                return mapToSinglePayment((SinglePaymentBody) resultBody);
+            }
+            return null;
+        }
+
+        @Named("mapToAisConsentRequest")
+        default AisConsentRequest mapToAisConsentRequest(Object resultBody) {
+            if (resultBody instanceof AisConsent) {
+                return mapToAisConsentRequest((AisConsent) resultBody);
+            }
+            return null;
+        }
+
+        SinglePayment mapToSinglePayment(SinglePaymentBody singlePaymentBody);
+        AisConsentRequest mapToAisConsentRequest(AisConsent aisConsent);
+
+        default PaymentProduct mapToProduct(PaymentProductDetails value) {
+            if (null == value) {
+                return null;
+            }
+            return PaymentProduct.fromValue(value.name());
+        }
+
+        default AisAccountAccessInfo.AllPsd2Enum mapToAllPsd2Enum(String value) {
+            if (null == value) {
+                return null;
+            }
+            return AisAccountAccessInfo.AllPsd2Enum.fromValue(value);
         }
     }
 }
