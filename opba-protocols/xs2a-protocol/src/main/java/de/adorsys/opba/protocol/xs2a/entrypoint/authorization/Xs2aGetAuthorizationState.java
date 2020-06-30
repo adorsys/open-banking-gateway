@@ -4,7 +4,9 @@ import de.adorsys.opba.protocol.api.authorization.GetAuthorizationState;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
+import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
+import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
@@ -13,7 +15,12 @@ import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.xs2a.context.LastViolations;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
+import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
+import de.adorsys.opba.protocol.xs2a.entrypoint.helpers.Xs2aUuidMapper;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.AisConsentInitiateBody;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateBody;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RuntimeService;
@@ -25,6 +32,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.LAST_REDIRECTION_TARGET;
@@ -39,6 +47,8 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
 @RequiredArgsConstructor
 public class Xs2aGetAuthorizationState implements GetAuthorizationState {
 
+    private final PaymentBodyMapper pisBodyMapper;
+    private final AisConsentBodyMapper aisBodyMapper;
     private final RuntimeService runtimeService;
     private final HistoryService historyService;
     private final ViolationsMapper violationsMapper;
@@ -69,14 +79,13 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
 
         // Whatever is non-null - that takes precedence
         return buildBody(
-            ctx.getAction(),
-            null == ctx.getViolations() || ctx.getViolations().isEmpty()
-                ? (LastViolations) runtimeService.getVariable(executionId, LAST_VALIDATION_ISSUES)
-                : new LastViolations(ctx.getViolations()),
-            ctx.getAvailableSca(),
-            null == ctx.getLastRedirection()
-                ? (LastRedirectionTarget) runtimeService.getVariable(executionId, LAST_REDIRECTION_TARGET)
-                : ctx.getLastRedirection()
+                ctx,
+                null == ctx.getViolations() || ctx.getViolations().isEmpty()
+                        ? (LastViolations) runtimeService.getVariable(executionId, LAST_VALIDATION_ISSUES)
+                        : new LastViolations(ctx.getViolations()),
+                null == ctx.getLastRedirection()
+                        ? (LastRedirectionTarget) runtimeService.getVariable(executionId, LAST_REDIRECTION_TARGET)
+                        : ctx.getLastRedirection()
         );
     }
 
@@ -89,25 +98,34 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
             .get(0);
 
         Xs2aContext ctx = (Xs2aContext) historyService.createHistoricVariableInstanceQuery()
-            .processInstanceId(finished.getProcessInstanceId())
-            .variableName(CONTEXT)
-            .singleResult()
-            .getValue();
+                                                .processInstanceId(finished.getProcessInstanceId())
+                                                .variableName(CONTEXT)
+                                                .singleResult()
+                                                .getValue();
 
-        return buildBody(ctx.getAction(), new LastViolations(ctx.getViolations()), ctx.getAvailableSca(), ctx.getLastRedirection());
+        return buildBody(ctx, new LastViolations(ctx.getViolations()), ctx.getLastRedirection());
     }
 
-    private AuthStateBody buildBody(ProtocolAction action,
-                                    LastViolations issues,
-                                    List<ScaMethod> scaMethods,
-                                    LastRedirectionTarget redirectionTarget) {
+    private AuthStateBody buildBody(Xs2aContext ctx, LastViolations issues, LastRedirectionTarget redirectionTarget) {
+
+        ProtocolAction action = ctx.getAction();
+        List<ScaMethod> scaMethods = ctx.getAvailableSca();
         String redirectTo = null == redirectionTarget ? null : redirectionTarget.getRedirectTo();
 
+        Object resultBody = null;
+
+        if (ctx instanceof Xs2aPisContext) {
+            resultBody = pisBodyMapper.map(((Xs2aPisContext) ctx).getPayment());
+        } else if (ctx instanceof Xs2aAisContext) {
+            resultBody = aisBodyMapper.map(((Xs2aAisContext) ctx).getAisConsent());
+        }
+
         return new AuthStateBody(
-            action.name(),
-            violationsMapper.map(issues.getViolations()),
-            scaMethodsMapper.map(scaMethods),
-            redirectTo
+                action.name(),
+                violationsMapper.map(issues.getViolations()),
+                scaMethodsMapper.map(scaMethods),
+                redirectTo,
+                resultBody
         );
     }
 
@@ -117,5 +135,24 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface ScaMethodsMapper extends DtoMapper<List<ScaMethod>, Set<de.adorsys.opba.protocol.api.dto.result.body.ScaMethod>> {
+    }
+
+    @Mapper(componentModel = SPRING_KEYWORD, uses = Xs2aUuidMapper.class, implementationPackage = XS2A_MAPPERS_PACKAGE)
+    public interface PaymentBodyMapper extends DtoMapper<PaymentInitiateBody, SinglePaymentBody> {
+        SinglePaymentBody map(PaymentInitiateBody paymentInitiateBody);
+    }
+
+    @Mapper(componentModel = SPRING_KEYWORD, uses = Xs2aUuidMapper.class, implementationPackage = XS2A_MAPPERS_PACKAGE)
+    public interface AisConsentBodyMapper extends DtoMapper<AisConsentInitiateBody, AisConsent> {
+        AisConsent map(AisConsentInitiateBody aisConsentInitiateBody);
+
+        default List<String> map(List<AisConsentInitiateBody.AccountReferenceBody> accounts) {
+            if (accounts == null || accounts.isEmpty()) {
+                return null;
+            }
+            return accounts.stream()
+                           .map(AisConsentInitiateBody.AccountReferenceBody::getIban)
+                           .collect(Collectors.toList());
+        }
     }
 }
