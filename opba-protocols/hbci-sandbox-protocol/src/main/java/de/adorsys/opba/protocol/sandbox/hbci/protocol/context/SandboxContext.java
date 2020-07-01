@@ -23,6 +23,7 @@ public class SandboxContext {
     private Bank bank;
     private User user;
     private String accountNumberRequestedBeforeSca;
+    private String referencedScaMethodId;
 
     private String response;
     private boolean cryptNeeded;
