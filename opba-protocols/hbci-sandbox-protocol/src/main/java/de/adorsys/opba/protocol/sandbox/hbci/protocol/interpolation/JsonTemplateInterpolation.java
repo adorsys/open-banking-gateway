@@ -139,13 +139,14 @@ public class JsonTemplateInterpolation {
     }
 
     private Message encryptAndSignMessage(SandboxContext context, Message message) {
+        String userLogin = null == context.getUser() ? "noref" : context.getUser().getLogin();
         PinTanPassport passport = new PinTanPassport(
                 "300",
                 ImmutableMap.of(
                         "client.passport.country", "DE",
                         "client.passport.blz", context.getBank().getBlz(),
-                        "client.passport.customerId", context.getUser().getLogin(),
-                        "client.passport.userId", context.getUser().getLogin()
+                        "client.passport.customerId", userLogin,
+                        "client.passport.userId", userLogin
                 ),
                 new HBCICallbackConsole(),
                 new HBCIProduct("1234", "300")
