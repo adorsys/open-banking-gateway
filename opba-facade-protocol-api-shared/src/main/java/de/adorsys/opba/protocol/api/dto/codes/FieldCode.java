@@ -120,13 +120,5 @@ public enum FieldCode {
     /**
      * I.e. account id.
      */
-    RESOURCE_ID,
-
-    DATE_FROM,
-
-    DATE_TO,
-
-    ENTRY_REFERENCE_FROM,
-
-    DELTA_LIST
+    RESOURCE_ID
 }
