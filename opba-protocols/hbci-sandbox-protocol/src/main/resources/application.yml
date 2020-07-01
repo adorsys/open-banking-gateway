@@ -53,7 +53,10 @@ hbci:
       pin: 12345
       tan: 123456
       sca-methods-available:
-        sca-0: SMS on your phone
+        # Please use ids from set 910,911,912,913,920,921,900 as defiled in
+        # synch-bpd.json under path BPD.Params_4.TAN2StepPar6.ParTAN2Step.TAN2StepParams*
+        # You can see their descriptions there too.
+        - 921
       accounts:
         - number: 5827542519
           currency: EUR
@@ -98,8 +101,11 @@ hbci:
       pin: 12345
       tan: 123456
       sca-methods-available:
-        sca-0: SMS on your phone
-        sca-1: Email with TAN
+        # Please use ids from set 910,911,912,913,920,921,900 as defiled in
+        # synch-bpd.json under path BPD.Params_4.TAN2StepPar6.ParTAN2Step.TAN2StepParams*
+        # You can see their descriptions there too.
+        - 920
+        - 921
       accounts:
         - number: 3466865655
           currency: EUR

@@ -29,7 +29,7 @@
   "RetSeg_2.RetVal_2.code" : "3050",
   "RetSeg_2.RetVal_2.text" : "UPD nicht mehr aktuell. Aktuelle Version folgt.",
   "RetSeg_2.RetVal_3.code" : "3920",
-  "RetSeg_2.RetVal_3.parm" : "900",
+  "RetSeg_2.RetVal_3.parm${_ctx.getLoopScaMethod().getPosition()}" : "${ctx.getLoopScaMethod().getId()}",
   "RetSeg_2.RetVal_3.text" : "Zugelassene Ein- und Zwei-Schritt-Verfahren für den Benutzer",
   "RetSeg_2.SegHead.code" : "HIRMS",
   "RetSeg_2.SegHead.ref" : "4",
