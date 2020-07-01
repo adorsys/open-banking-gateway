@@ -24,13 +24,13 @@ public class AuthenticatedDialogInitSca extends TemplateBasedOperationHandler {
     }
 
     @Override
-    protected boolean customHandling(SandboxContext context) {
+    protected boolean usesCustomHandlingAndHandles(SandboxContext context) {
         return canHandle(context);
     }
 
     public static boolean canHandle(SandboxContext context) {
-        return "HKTAN".equals(context.getRequest().getData().get("TAN2Step6.SegHead.code"))
-                && "HKIDN".equals(context.getRequest().getData().get("TAN2Step6.ordersegcode"))
-                && "4".equals(context.getRequest().getData().get("TAN2Step6.process"));
+        return "HKTAN".equals(context.getRequestDataRegex("TAN2Step\\d*\\.SegHead.code"))
+                && "HKIDN".equals(context.getRequestDataRegex("TAN2Step\\d*\\.ordersegcode"))
+                && "4".equals(context.getRequestDataRegex("TAN2Step\\d*\\.process"));
     }
 }
