@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AuthViolation } from '../../api';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AisConsentToGrant } from '../../ais/common/dto/ais-consent';
+import { PisPayment } from '../common/models/pis-payment.model';
 
 @Component({
   selector: 'consent-app-dynamic-inputs',
@@ -11,17 +11,17 @@ import { AisConsentToGrant } from '../../ais/common/dto/ais-consent';
 export class DynamicInputsComponent implements OnInit {
   @Input() violations: AuthViolation[];
   @Input() targetForm: FormGroup;
-  @Input() currentConsent: AisConsentToGrant;
+  @Input() payment: PisPayment;
 
   constructor() {}
 
   ngOnInit() {
     this.violations.forEach(it => this.targetForm.addControl(it.code, new FormControl('', Validators.required)));
 
-    if (this.currentConsent && this.currentConsent.extras) {
+    if (this.payment && this.payment.extras) {
       this.violations
-        .filter(it => this.targetForm.get(it.code) && this.currentConsent.extras[it.code])
-        .forEach(it => this.targetForm.get(it.code).setValue(this.currentConsent.extras[it.code]));
+        .filter(it => this.targetForm.get(it.code) && this.payment.extras[it.code])
+        .forEach(it => this.targetForm.get(it.code).setValue(this.payment.extras[it.code]));
     }
   }
 }
