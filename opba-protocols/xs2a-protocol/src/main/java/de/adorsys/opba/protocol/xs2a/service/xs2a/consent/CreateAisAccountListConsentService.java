@@ -1,7 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import com.google.common.collect.ImmutableMap;
-import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.ais.AccountListXs2aContext;
