@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.sandbox.hbci.protocol.context;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Strings;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Bank;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.User;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.MapRegexUtil;
@@ -58,6 +59,15 @@ public class SandboxContext {
         }
 
         return getUser().getTan().equals(getRequestTan());
+    }
+
+    @JsonIgnore
+    public boolean isTanEmpty() {
+        if (null == getUser()) {
+            return true;
+        }
+
+        return Strings.isNullOrEmpty(getRequestTan());
     }
 
     @JsonIgnore
