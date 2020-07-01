@@ -85,6 +85,15 @@ public class SandboxContext {
     }
 
     @JsonIgnore
+    public String getRequestDataRegex(String regex) {
+        Pattern pattern = Pattern.compile(regex);
+        return getRequest().getData().entrySet().stream()
+                .filter(it -> pattern.matcher(it.getKey()).find()).findFirst()
+                .map(Map.Entry::getValue)
+                .orElse(null);
+    }
+
+    @JsonIgnore
     public String getRequestBankBlz() {
         return getRequestData().get(BLZ);
     }

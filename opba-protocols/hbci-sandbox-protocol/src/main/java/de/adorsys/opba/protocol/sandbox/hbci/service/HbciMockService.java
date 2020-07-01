@@ -15,7 +15,6 @@ import org.kapott.hbci.protocol.Message;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Base64;
 
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.CONTEXT;
@@ -48,7 +47,7 @@ public class HbciMockService {
     private String triggerNewProcess(Message request, boolean isCrypted) {
         SandboxContext context = new SandboxContext();
         context.setCryptNeeded(isCrypted);
-        context.setRequest(buildRequest(request));
+        updateContextWithRequest(context, request);
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(PROCESS_KEY, ImmutableMap.of(CONTEXT, context));
 
         return getResponse(instance.getId());
@@ -64,7 +63,7 @@ public class HbciMockService {
 
         SandboxContext context = (SandboxContext) runtimeService.getVariable(execId, CONTEXT);
         context.setCryptNeeded(isCrypted);
-        context.setRequest(buildRequest(request));
+        updateContextWithRequest(context, request);
         runtimeService.setVariable(execId, CONTEXT, context);
 
         runtimeService.trigger(execId);
@@ -72,13 +71,11 @@ public class HbciMockService {
         return getResponse(execId);
     }
 
-    private SandboxContext.Request buildRequest(Message request) {
+    private void updateContextWithRequest(SandboxContext context, Message request) {
         SandboxContext.Request mapped = new SandboxContext.Request();
         mapped.setData(request.getData());
-        mapped.setOperation(Arrays.stream(Operation.values()).filter(it -> it.getValue().equals(request.getType()))
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("Unknown operation type: " + request.getType())));
-
-        return mapped;
+        context.setRequest(mapped);
+        mapped.setOperation(Operation.find(context, request.getType()));
     }
 
     private String getResponse(String executionId) {
