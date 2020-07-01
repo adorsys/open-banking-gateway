@@ -147,9 +147,10 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
         AisConsent map(AisConsentInitiateBody aisConsentInitiateBody);
 
         default List<String> map(List<AisConsentInitiateBody.AccountReferenceBody> accounts) {
-            if (accounts == null || accounts.isEmpty()) {
+            if (accounts == null) {
                 return null;
             }
+
             return accounts.stream()
                            .map(AisConsentInitiateBody.AccountReferenceBody::getIban)
                            .collect(Collectors.toList());
