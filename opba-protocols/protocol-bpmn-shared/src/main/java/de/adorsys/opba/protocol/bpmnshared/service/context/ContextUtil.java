@@ -47,9 +47,11 @@ public class ContextUtil {
 
     /**
      * Allows to perform string interpolation like '/ais/#{ctx.getName}' using the process context of defined class.
+     * @return
      */
     public <R, T> R evaluateSpelForCtx(
             String expression, DelegateExecution execution, T context, Class<R> resultClass) {
+
         ExpressionParser parser = new SpelExpressionParser();
         StandardEvaluationContext parseContext = new StandardEvaluationContext(new SpelCtx<>(execution, context));
         return parser.parseExpression(expression, new TemplateParserContext()).getValue(parseContext, resultClass);
