@@ -14,7 +14,7 @@ public class AnonymousDialogInitNotSupported extends TemplateBasedOperationHandl
     }
 
     @Override
-    protected String templatePath(SandboxContext context) {
+    protected String getTemplatePathAndUpdateCtxIfNeeded(SandboxContext context) {
         return "response-templates/anonymous/dialog-init-anon-not-supported.json";
     }
 

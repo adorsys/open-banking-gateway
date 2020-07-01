@@ -9,28 +9,26 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @UtilityClass
 public class ParsingUtil {
 
     public static final Document SYNTAX = DocumentFactory.createDocument("300");
 
-    public Message parseMessageWithoutSensitiveNonSensitiveValidation(String from) {
-        return parseMessageWithoutSensitiveNonSensitiveValidation(from, false);
-    }
-
     @SuppressWarnings("PMD.EmptyCatchBlock")
     // This is the way original parser works - try - catch if message not matches - continue
-    public Message parseMessageWithoutSensitiveNonSensitiveValidation(String from, boolean failIfFieldsRemain) {
+    public List<Message> parseMessageWithoutSensitiveNonSensitiveValidation(String from) {
         NodeList list = SYNTAX.getElementsByTagName("MSGdef");
-        Message result = null;
+        List<Message> result = new ArrayList<>();
         for (int i = 0; i < list.getLength(); i++) {
             Element node = (Element) list.item(i);
             String msgName = node.getAttribute("id");
             try {
                 // End loop on 1st element
-                result = new Message(msgName, from, SYNTAX, false, true);
-                break;
+                result.add(new Message(msgName, from, SYNTAX, false, true));
             } catch (RuntimeException ex) {
                 // NOP, that's how kapott works
             }

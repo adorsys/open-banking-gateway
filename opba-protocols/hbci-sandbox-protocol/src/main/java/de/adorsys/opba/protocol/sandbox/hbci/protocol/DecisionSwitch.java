@@ -17,12 +17,16 @@ public class DecisionSwitch {
         return context.isPinOk() && context.isTanOk();
     }
 
-    public boolean isDialogPinOk(SandboxContext context) {
-        return context.isPinOk();
+    public boolean isDialogOnlyPinOk(SandboxContext context) {
+        return context.isPinOk() && !context.isTanOk();
     }
 
     public boolean isDialogInit(SandboxContext context) {
         return Operation.DIALOG_INIT == context.getRequestOperation() && !isDialogInitScaTan2Step(context);
+    }
+
+    public boolean isDialogInitSca(SandboxContext context) {
+        return Operation.DIALOG_INIT_SCA == context.getRequestOperation() && !isDialogInitScaTan2Step(context);
     }
 
     public boolean isDialogInitScaTan2Step(SandboxContext context) {
