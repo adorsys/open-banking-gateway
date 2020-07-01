@@ -14,7 +14,15 @@ public class AuthenticatedSynchronization extends TemplateBasedOperationHandler 
     }
 
     @Override
-    protected String templatePath(SandboxContext context) {
+    protected String getTemplatePathAndUpdateCtxIfNeeded(SandboxContext context) {
+        // SCA-synch
+        if ("HKTAN".equals(context.getRequestDataRegex("TAN2Step6\\.SegHead\\.code"))
+                && "HKIDN".equals(context.getRequestDataRegex("TAN2Step6\\.ordersegcode"))
+                && "4".equals(context.getRequestDataRegex("TAN2Step6\\.process"))
+        ) {
+            return "response-templates/authenticated/synch-bpd-sca.json";
+        }
+
         return "response-templates/authenticated/synch-bpd.json";
     }
 
