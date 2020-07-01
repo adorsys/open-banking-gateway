@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 public class BankSecurity {
 
     @NotNull
-    private AuthLevel bankParametersData;
+    private BpdAuthLevel bankParametersData;
 
     @NotNull
     private SensitiveAuthLevel accounts;
