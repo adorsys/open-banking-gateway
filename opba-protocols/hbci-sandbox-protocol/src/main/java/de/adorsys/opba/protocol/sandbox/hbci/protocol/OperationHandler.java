@@ -19,7 +19,7 @@ public abstract class OperationHandler implements JavaDelegate {
 
         Operation handled = handledRequestType();
         log.info("Handling request of type {} with expected type {}", context.getRequestOperation(), handled);
-        if (!customHandling(context) && Operation.ANY != handled && context.getRequestOperation() != handledRequestType()) {
+        if (!usesCustomHandlingAndHandles(context) && Operation.ANY != handled && context.getRequestOperation() != handledRequestType()) {
             throw new IllegalStateException(String.format("Can't handle request: %s, expected is %s", context.getRequestOperation(), handledRequestType()));
         }
 
@@ -30,7 +30,7 @@ public abstract class OperationHandler implements JavaDelegate {
     protected abstract SandboxContext doExecute(DelegateExecution execution, SandboxContext context);
     protected abstract Operation handledRequestType();
 
-    protected boolean customHandling(SandboxContext context) {
+    protected boolean usesCustomHandlingAndHandles(SandboxContext context) {
         return false;
     }
 }
