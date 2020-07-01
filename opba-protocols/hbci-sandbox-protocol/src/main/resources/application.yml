@@ -20,7 +20,7 @@ hbci:
       security:
         bank-parameters-data: ANONYMOUS
         accounts: AUTHENTICATED
-        transactions: AUTHORIZED
+        transactions: AUTHENTICATED
       users:
         - anton.brueckner
         - max.musterman
