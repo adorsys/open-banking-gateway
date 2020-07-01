@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.sandbox.hbci.protocol.context;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Bank;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.User;
+import de.adorsys.opba.protocol.sandbox.hbci.protocol.MapRegexUtil;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.Operation;
 import lombok.Data;
 
@@ -20,6 +21,7 @@ public class SandboxContext {
     private Request request;
     private Bank bank;
     private User user;
+    private String accountNumberRequestedBeforeSca;
 
     private String response;
     private boolean cryptNeeded;
@@ -86,11 +88,7 @@ public class SandboxContext {
 
     @JsonIgnore
     public String getRequestDataRegex(String regex) {
-        Pattern pattern = Pattern.compile(regex);
-        return getRequest().getData().entrySet().stream()
-                .filter(it -> pattern.matcher(it.getKey()).find()).findFirst()
-                .map(Map.Entry::getValue)
-                .orElse(null);
+        return getRequest().getDataRegex(regex);
     }
 
     @JsonIgnore
@@ -108,5 +106,10 @@ public class SandboxContext {
 
         private Operation operation;
         private Map<String, String> data;
+
+        @JsonIgnore
+        public String getDataRegex(String regex) {
+            return MapRegexUtil.getDataRegex(data, regex);
+        }
     }
 }

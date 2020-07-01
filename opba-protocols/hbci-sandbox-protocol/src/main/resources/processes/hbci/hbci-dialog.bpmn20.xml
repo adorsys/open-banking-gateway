@@ -27,15 +27,15 @@
       <subProcess id="sid-c616973f-74ef-4798-bc69-3dc4b7371833" flowable:async="false" flowable:exclusive="false" name="Authorized dialog (with TAN)">
         <startEvent id="sid-788a14aa-7e06-4ea4-8d0e-11d90b2023df"/>
         <endEvent id="sid-a853df77-d5f8-4e9c-984e-24264cbca8af"/>
-        <serviceTask id="withAuthorizationDialogInit" isForCompensation="false" flowable:async="true" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Dialog init" flowable:delegateExpression="${authorizedDialogInit}"/>
+        <serviceTask id="withAuthorizationDialogInit" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Dialog init" flowable:delegateExpression="${authorizedDialogInit}"/>
         <serviceTask id="withAuthorizationCustomMessage" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Custom message" flowable:delegateExpression="${authorizedCustomMsg}"/>
         <serviceTask id="withAuthorizationDialogEnd" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Dialog end" flowable:delegateExpression="${authorizedDialogEnd}"/>
         <serviceTask id="withAuthorizationSynch" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Synchronization" flowable:delegateExpression="${authorizedSynchronization}"/>
         <exclusiveGateway id="handleRequestWithAuthorization"/>
-        <serviceTask id="authorizedUpdateUserAndBankInContext" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Update user and bank in context" flowable:delegateExpression="${extractBankAndUser}"/>
+        <serviceTask id="authorizedUpdateUserAndBankInContext" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Update user and bank in context" flowable:delegateExpression="${extractBankAndUser}"/>
         <sequenceFlow id="sid-71bcc07c-1d1d-4d04-bd67-059d559d8d9a" sourceRef="sid-788a14aa-7e06-4ea4-8d0e-11d90b2023df" targetRef="handleRequestWithAuthorization"/>
         <sequenceFlow id="sid-1dfd6f81-8030-4572-8cc0-84543816efcf" sourceRef="handleRequestWithAuthorization" targetRef="withAuthorizationDialogInit">
-          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogInit(CONTEXT)}</conditionExpression>
+          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogInitSca(CONTEXT)}</conditionExpression>
         </sequenceFlow>
         <sequenceFlow id="sid-44e72bba-3022-468c-99d8-27d79c569a26" sourceRef="handleRequestWithAuthorization" targetRef="withAuthorizationCustomMessage">
           <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isCustomMessage(CONTEXT)}</conditionExpression>
@@ -88,7 +88,7 @@
         <sequenceFlow id="sid-a30851a1-ccfc-4097-8813-9e5dd1d711bf" sourceRef="noAuthorizationDialogInit" targetRef="authenticatedUpdateUserAndBankInContext"/>
         <sequenceFlow id="sid-083f0679-8a0f-4e6a-a114-c4129948fd6c" sourceRef="noAuthorizationSynch" targetRef="authenticatedUpdateUserAndBankInContext"/>
         <sequenceFlow id="pinIsOk" sourceRef="checkIfDialogIsStillAuthenticated" targetRef="handleRequestWithoutAuthorization">
-          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogPinOk(CONTEXT)}</conditionExpression>
+          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogOnlyPinOk(CONTEXT)}</conditionExpression>
         </sequenceFlow>
         <sequenceFlow id="sid-d2c93495-6de7-4ec9-b61a-f80d96e58d56" sourceRef="noAuthorizationDialogEnd" targetRef="sid-e0b56cf1-5c28-4edd-93b0-0b3f768f7d88"/>
         <serviceTask id="authenticationLost" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Wrong or no authentication" flowable:delegateExpression="${authenticatedAuthLost}"/>
@@ -104,6 +104,9 @@
         <sequenceFlow id="sid-8b14ea45-50fd-4d38-95d5-33d57501462d" sourceRef="handleRequestWithoutAuthorization" targetRef="noAuthorizationDialogInitScaTan2Step">
           <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogInitScaTan2Step(CONTEXT)}</conditionExpression>
         </sequenceFlow>
+        <sequenceFlow id="noAuthorizationTanWasProvided" sourceRef="checkIfDialogIsStillAuthenticated" targetRef="sid-e0b56cf1-5c28-4edd-93b0-0b3f768f7d88" name="Tan was provided">
+          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogPinTanOk(CONTEXT)}</conditionExpression>
+        </sequenceFlow>
       </subProcess>
       <endEvent id="sid-69dda285-07b3-4433-9d39-a074f97f60ab"/>
       <exclusiveGateway id="isDialogAuthorized" default="dialogHasWrongPinOrTan"/>
@@ -114,7 +117,7 @@
         <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogPinTanOk(CONTEXT)}</conditionExpression>
       </sequenceFlow>
       <sequenceFlow id="dialogHasValidPin" sourceRef="isDialogAuthorized" targetRef="sid-5510acbc-343c-421b-9c75-c005db1d39ae">
-        <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogPinOk(CONTEXT)}</conditionExpression>
+        <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogOnlyPinOk(CONTEXT)}</conditionExpression>
       </sequenceFlow>
       <sequenceFlow id="sid-79c6fef5-0003-4f74-a325-00584d121232" sourceRef="sid-a44b1524-6994-4834-820c-5c9ecf81dc8f" targetRef="isDialogAuthorized"/>
       <serviceTask id="wrongPinOrTanOrLogin" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Wrong Login or PIN or TAN" flowable:delegateExpression="${wrongPinTanOrLogin}"/>
@@ -360,8 +363,8 @@
         <omgdi:waypoint x="48.96315" y="459.17993"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-1b99c97b-ca57-43c8-9d9e-c495b90cf3d3" bpmnElement="sid-083f0679-8a0f-4e6a-a114-c4129948fd6c">
-        <omgdi:waypoint x="-85.92895" y="698.2455"/>
-        <omgdi:waypoint x="-31.482891" y="698.2455"/>
+        <omgdi:waypoint x="-85.928955" y="678.24554"/>
+        <omgdi:waypoint x="-31.482891" y="678.24554"/>
         <omgdi:waypoint x="-31.482895" y="519.17993"/>
         <omgdi:waypoint x="-1.0368519" y="519.17993"/>
       </bpmdi:BPMNEdge>
@@ -508,6 +511,11 @@
         <omgdi:waypoint x="-223.52345" y="602.7431"/>
         <omgdi:waypoint x="-223.52754" y="498.86743"/>
         <omgdi:waypoint x="-185.92896" y="499.17993"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-d5f40f10-9f61-4882-8623-29e2754116ce" bpmnElement="noAuthorizationTanWasProvided">
+        <omgdi:waypoint x="28.96315" y="705.4235"/>
+        <omgdi:waypoint x="-55.80412" y="705.4235"/>
+        <omgdi:waypoint x="-54.836853" y="785.8519"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

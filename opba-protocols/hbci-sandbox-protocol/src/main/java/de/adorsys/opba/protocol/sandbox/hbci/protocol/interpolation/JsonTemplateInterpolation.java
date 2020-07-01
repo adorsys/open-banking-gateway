@@ -205,7 +205,7 @@ public class JsonTemplateInterpolation {
             MultipleSyntaxElements current = iterator.next();
             current.getElements().removeIf(elem -> !existingPaths.get(elem.getPath()).equals(elem) || elem.toString(0).matches("HITAN:\\d+:\\d+'"));
             int totElems = current.getElements().stream().mapToInt(it -> it.getChildContainers().size()).sum();
-            if (0 == totElems || current.toString(0).matches("HITAN:\\d+:\\d+'")) {
+            if (0 == totElems || current.toString(0).matches("HITAN:\\d+:\\d+'") || current.toString(0).matches("HISYN:\\d+:\\d+'")) {
                 iterator.remove();
             }
         }
@@ -243,7 +243,7 @@ public class JsonTemplateInterpolation {
 
     private void interpolateMT940TransactionsIfNeeded(List<Entry> mt940TransactionLoop, Map<String, String> result, AccountsContext staticCtx) {
         for (Entry entry : mt940TransactionLoop) {
-            int accPos = getAccountPosForTransactions(staticCtx.getUser(), staticCtx.getRequest());
+            int accPos = getAccountPosForTransactions(staticCtx.getUser(), staticCtx);
             Account acc = staticCtx.getUser().getAccounts().get(accPos);
             List<Transaction> transactions = staticCtx.getUser().getTransactions().stream()
                     .filter(it -> it.getFrom().contains(acc.getNumber()))
@@ -345,12 +345,15 @@ public class JsonTemplateInterpolation {
         return parser.parseExpression(expression, new TemplateParserContext()).getValue(parseContext, String.class);
     }
 
-    private static int getAccountPosForTransactions(User user, SandboxContext.Request request) {
-        String accKey = request.getData().keySet().stream()
-                .filter(it -> it.matches("GV\\.KUmsZeit\\d+\\.KTV\\.number"))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No account number for transaction list provided in request"));
-        String accNumber = request.getData().get(accKey);
+    private static int getAccountPosForTransactions(User user, SandboxContext context) {
+        String accNumber = context.getAccountNumberRequestedBeforeSca();
+        if (null == accNumber) {
+            String accKey = context.getRequest().getData().keySet().stream()
+                    .filter(it -> it.matches("GV\\.KUmsZeit\\d+\\.KTV\\.number"))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("No account number for transaction list provided in request"));
+            accNumber =  context.getRequest().getData().get(accKey);
+        }
 
         for (int pos = 0; pos < user.getAccounts().size(); ++pos) {
             if (user.getAccounts().get(pos).getNumber().equals(accNumber)) {

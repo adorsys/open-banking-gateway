@@ -16,12 +16,12 @@ public abstract class TemplateBasedOperationHandler extends OperationHandler {
 
     @Override
     protected SandboxContext doExecute(DelegateExecution execution, SandboxContext context) {
-        String templatePathValue = templatePath(context);
+        String templatePathValue = getTemplatePathAndUpdateCtxIfNeeded(context);
         log.info("Applying response template {}", templatePathValue);
         String result = interpolation.interpolateToHbci(templatePathValue, context);
         context.setResponse(result);
         return context;
     }
 
-    protected abstract String templatePath(SandboxContext context);
+    protected abstract String getTemplatePathAndUpdateCtxIfNeeded(SandboxContext context);
 }

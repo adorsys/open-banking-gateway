@@ -14,7 +14,7 @@ public class AnonymousDialogInitBpd extends TemplateBasedOperationHandler {
     }
 
     @Override
-    protected String templatePath(SandboxContext context) {
+    protected String getTemplatePathAndUpdateCtxIfNeeded(SandboxContext context) {
         return "response-templates/anonymous/dialog-init-bpd.json";
     }
 
