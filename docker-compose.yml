@@ -27,7 +27,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=docker
       - PROTOCOL_XS2A_PKCS12_KEYSTORE=/pkcs12/sample-qwac.keystore
       - FACADE_ENCRYPTION_KEYSETPATH=/keysetpath/example-keyset.json
-      - PROTOCOL_EMBEDDED-UI-BASE-URL=http://localhost:14200
+      - FACADE_URLS_EMBEDDED-UI-BASE-URL=http://localhost:14200
       - PROTOCOL_GATEWAY-BASE-URL=http://localhost:18085
     build: opba-embedded-starter
     ports:

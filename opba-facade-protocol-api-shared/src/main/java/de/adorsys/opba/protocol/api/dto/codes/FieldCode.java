@@ -115,5 +115,10 @@ public enum FieldCode {
     /**
      * Tpp redirect Preferred
      */
-    TPP_REDIRECT_PREFERRED
+    TPP_REDIRECT_PREFERRED,
+
+    /**
+     * I.e. account id.
+     */
+    RESOURCE_ID
 }

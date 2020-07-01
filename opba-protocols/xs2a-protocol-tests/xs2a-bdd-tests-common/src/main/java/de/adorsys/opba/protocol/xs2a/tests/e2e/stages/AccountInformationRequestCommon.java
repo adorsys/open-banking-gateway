@@ -23,6 +23,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_LOGIN_USER_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.ANTON_BRUECKNER;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.DENY_CONSENT_AUTH_ENDPOINT;
@@ -88,6 +89,21 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF fintech_calls_list_transactions_for_anton_brueckner() {
+        ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
+                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                .when()
+                    .get(AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT)
+                .then()
+                    .statusCode(HttpStatus.ACCEPTED.value())
+                    .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
+        return self();
+    }
+
     public SELF fintech_calls_list_transactions_for_anton_brueckner(String resourceId) {
         ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
@@ -95,7 +111,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                     .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
                     .statusCode(HttpStatus.ACCEPTED.value())
-                .extract();
+                    .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -104,7 +120,18 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman() {
-        return fintech_calls_list_transactions_for_max_musterman("oN7KTVuJSVotMvPPPavhVo");
+        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
+                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                .when()
+                    .get(AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT)
+                .then()
+                    .statusCode(HttpStatus.ACCEPTED.value())
+                    .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
+        return self();
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId) {
