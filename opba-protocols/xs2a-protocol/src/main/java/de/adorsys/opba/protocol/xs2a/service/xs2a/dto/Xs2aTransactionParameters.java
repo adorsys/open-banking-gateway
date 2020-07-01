@@ -15,8 +15,6 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.BOOKING_STATUS;
-import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.DATE_FROM;
-import static de.adorsys.opba.protocol.api.dto.codes.FieldCode.DATE_TO;
 import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
@@ -39,14 +37,12 @@ public class Xs2aTransactionParameters extends Xs2aWithBalanceParameters {
      * Transaction list date from.
      */
     @NotNull(message = "{no.ctx.dateFrom}")
-    @ValidationInfo(ui = @FrontendCode(STRING), ctx = @ContextCode(DATE_FROM))
     private LocalDate dateFrom;
 
     /**
      * Transaction list date to.
      */
     @NotNull(message = "{no.ctx.dateTo}")
-    @ValidationInfo(ui = @FrontendCode(STRING), ctx = @ContextCode(DATE_TO))
     private LocalDate dateTo;
 
     // TODO - MapStruct?
