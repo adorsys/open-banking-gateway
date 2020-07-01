@@ -18,7 +18,7 @@ public class DecisionSwitch {
     }
 
     public boolean isDialogOnlyPinOk(SandboxContext context) {
-        return context.isPinOk() && !context.isTanOk();
+        return context.isPinOk() && context.isTanEmpty();
     }
 
     public boolean isDialogInit(SandboxContext context) {
