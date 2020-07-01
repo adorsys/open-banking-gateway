@@ -1,6 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.ImmutableMap;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
@@ -43,6 +45,9 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF> {
+    public static final ObjectMapper JSON_MAPPER = new ObjectMapper()
+               .registerModule(new JavaTimeModule())
+               .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
     public static final String REDIRECT_CODE_QUERY = "redirectCode";
 
@@ -178,7 +183,7 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
     @SneakyThrows
     protected void updateAvailableScas() {
         ExtractableResponse<Response> response = provideGetConsentAuthStateRequest();
-        InlineResponse200 parsedValue = new ObjectMapper()
+        InlineResponse200 parsedValue = JSON_MAPPER
                 .readValue(response.body().asString(), InlineResponse200.class);
 
         this.availableScas = parsedValue.getConsentAuth().getScaMethods();
@@ -188,7 +193,7 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
     @SneakyThrows
     protected void readViolations() {
         ExtractableResponse<Response> response = provideGetConsentAuthStateRequest();
-        InlineResponse200 parsedValue = new ObjectMapper()
+        InlineResponse200 parsedValue = JSON_MAPPER
                 .readValue(response.body().asString(), InlineResponse200.class);
 
         this.violations = parsedValue.getConsentAuth().getViolations();
