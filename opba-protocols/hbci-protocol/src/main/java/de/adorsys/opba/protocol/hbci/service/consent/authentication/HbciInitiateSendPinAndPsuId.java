@@ -15,24 +15,28 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.kapott.hbci.manager.HBCIProduct;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service("hbciInitiateSendPinAndPsuId")
 @RequiredArgsConstructor
 public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext> {
 
-    private final HBCIProduct product;
+    private final Optional<HBCIProduct> product;
     private final OnlineBankingService onlineBankingService;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
-        HbciConsent consent = new HbciConsent();
-        consent.setHbciProduct(product);
-        consent.setCredentials(Credentials.builder()
-                .userId(context.getPsuId())
-                .pin(context.getPsuPin())
-                .build()
-        );
+        HbciConsent consent = context.getHbciDialogConsent();
+        if (null == consent) {
+            consent = new HbciConsent();
+            consent.setHbciProduct(product.orElse(null));
+            consent.setCredentials(Credentials.builder()
+                    .userId(context.getPsuId())
+                    .pin(context.getPsuPin())
+                    .build()
+            );
+        }
 
         UpdatePsuAuthenticationRequest request = new UpdatePsuAuthenticationRequest();
         request.setCredentials(consent.getCredentials());
@@ -53,9 +57,8 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
     }
 
     private boolean handleScaChallengeRequired(DelegateExecution execution, UpdateAuthResponse response) {
-        if (ScaStatus.PSUAUTHENTICATED == response.getScaStatus()
-                && null != response.getScaMethods()
-                && response.getScaMethods().size() > 0) {
+        HbciConsent consent = (HbciConsent) response.getBankApiConsentData();
+        if (ScaStatus.PSUAUTHENTICATED == response.getScaStatus() && consent.isWithHktan()) {
             ContextUtil.getAndUpdateContext(
                     execution,
                     (HbciContext ctx) -> {

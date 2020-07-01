@@ -5,6 +5,8 @@ import { AccountReport } from '../../api';
 import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
 import { HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
+import { tap } from 'rxjs/operators';
+import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-list-transactions',
@@ -16,12 +18,16 @@ export class ListTransactionsComponent implements OnInit {
   bankId = '';
   makeVisible = false;
   transactions: AccountReport;
+  loTRetrievalInformation;
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private aisService: AisService,
-    private storageService: StorageService
-  ) {}
+    private storageService: StorageService,
+    private settingsService: SettingsService
+  ) {
+    this.settingsService.getLoT().pipe(tap(el => this.loTRetrievalInformation = el)).subscribe();
+  }
 
   ngOnInit() {
     this.bankId = this.route.parent.snapshot.paramMap.get('bankid');
@@ -30,7 +36,7 @@ export class ListTransactionsComponent implements OnInit {
   }
 
   private loadTransactions(): void {
-    this.aisService.getTransactions(this.bankId, this.accountId).subscribe(response => {
+    this.aisService.getTransactions(this.bankId, this.accountId, this.loTRetrievalInformation).subscribe(response => {
       switch (response.status) {
         case 202:
           console.log('list tx got REDIRECT');
@@ -46,7 +52,7 @@ export class ListTransactionsComponent implements OnInit {
           r.redirectCode = response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE);
           r.bankId = this.bankId;
           r.bankName = this.storageService.getBankName();
-          this.router.navigate(['redirect', JSON.stringify(r)], { relativeTo: this.route });
+          this.router.navigate(['../redirect', JSON.stringify(r)], { relativeTo: this.route });
           break;
         case 200:
           console.log('I got transactions');

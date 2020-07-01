@@ -21,6 +21,9 @@ public class TppTokenProperties {
     @NotNull
     private Duration tokenValidityDuration;
 
+    @NotNull
+    private Duration redirectTokenValidityDuration;
+
     @NotBlank
     private String jwsAlgo;
 }

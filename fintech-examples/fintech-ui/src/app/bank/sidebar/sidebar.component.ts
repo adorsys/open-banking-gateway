@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BankProfileService } from '../../bank-search/services/bank-profile.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,11 +12,12 @@ export class SidebarComponent implements OnInit {
   showListAccounts = false;
   showListTransactions = false;
   showInitiatePayment = false;
-  showSettings = false;
+  showSettings = true;
   bankId: string;
   bankName: string;
 
-  constructor(private bankProfileService: BankProfileService, private route: ActivatedRoute) {}
+  constructor(private bankProfileService: BankProfileService, private route: ActivatedRoute, private storageService: StorageService) {
+  }
 
   ngOnInit() {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
@@ -32,6 +34,14 @@ export class SidebarComponent implements OnInit {
   }
 
   getRouterLinkListAccounts(): string {
-    return this.showListAccounts ? 'account' : '';
+    return this.showListAccounts ? 'account' : '.';
+  }
+
+  getRouterLinkInitiatePayment(): string {
+    return this.showInitiatePayment && this.isLoaDone() ? 'payment' : '.';
+  }
+
+  isLoaDone() {
+    return this.storageService.getLoa() !== null;
   }
 }

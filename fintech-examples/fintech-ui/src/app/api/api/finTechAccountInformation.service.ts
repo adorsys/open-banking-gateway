@@ -1,6 +1,6 @@
 /**
  * Open Banking Gateway FinTech Example API
- * This is a sample API that shows how to develop FinTech use cases that invoke banking APIs.  #### User Agent and Cookies This Api assumes  * that the PsuUserAgent (hosting the FinTechUI) is a modern web browser that stores httpOnly cookies sent with the redirect under the given domain and path as defined by [RFC 6265](https://tools.ietf.org/html/rfc6265). * that any other PsuUserAgent like a native mobile or a desktop application can simulate this same behavior of a modern browser with respect to Cookies.  #### SessionCookies and XSRF After a PSU is authenticated with the FinTech environment (either through the simple login interface defined here, or through an identity provider), the FinTechApi will establish a session with the FinTechUI. This is done by the mean of using a cookie called SessionCookie. This SessionCookie is protected by a corresponding xsrfToken. The response that sets a SessionCookie also carries a corresponding xsrfToken in the response header named \"X-XSRF-TOKEN\".  It is the responsibility of the FinTechUI to : * parse and store this xsrfToken so that a refresh of a browser window can work. This shall be done using user agent capabilities. A web browser application might decide to store the xsrfToken in the browser localStorage, as the cookie we set are all considered persistent. * make sure that each subsequent request that is carrying the SessionCookie also carries the corresponding xsrfToken as header field (see the request path). * remove this xsrfToken from the localStorage when the corresponding SessionCookie is deleted by a server response (setting cookie value to null).  The main difference between an xsrfToken and a SessionCookie is that the sessionCookie is automatically sent with each matching request. The xsrfToken must be explicitely read and sent by application.  #### API- vs. UI-Redirection For simplicity, this Framework is designed to redirect to FinTechUI not to FinTechApi.  #### Explicite vs. Implicite Redirection We define an \"Implicite redirection\" a case where a web browser react to 30X reponse and automatically redirects to the attached endpoint. We define an \"Explicite Redirection\" as a case where the UI-Application reacts to a 20X response, explicitely parses the attached __Location__ header an uses it to reload the new page in the browser window (or start the new UI-Application in case of native apps).  This framework advocates for explicite redirection passing a __20X__ response to the FinTechUI toghether with the __Location__ parameter.  Processing a response that initiates a redirect, the FinTechUI makes sure following happens, * that the exisitng __SessionCookie__ is deleted, as the user will not have a chance for an explicite logout, * that the corresponding xsrfToken is deleted from the local storage, * that a RedirectCookie set is stored (in case UI is not a web browser), so the user can be authenticated against it when sent back to the FinTechUI. The expiration of the RedirectCookie shall be set to the expected duration of the redirect, * that the corresponding xsrfToken is stored in the local storage (under the same cookie path as the RedirectCookie)  #### Redirecting to the ConsentAuthorisationApi For a redirection to the ConsentAuthorisationApi, a generated AUTH-ID is added to the cookie path and used to distinguish authorization processes from each order. This information (AUTH-ID) must be contained in the back redirect url sent to the ConsentAuthorisationApi in the back channel, so that the FinTechUI can invoke the correct code2Token endpoint when activated. 
+ * This is a sample API that shows how to develop FinTech use cases that invoke banking APIs.  #### User Agent and Cookies This Api assumes * that the PsuUserAgent (hosting the FinTechUI) is a modern web browser that stores httpOnly cookies sent with the redirect under the given domain and path as defined by [RFC 6265](https://tools.ietf.org/html/rfc6265). * that any other PsuUserAgent like a native mobile or a desktop application can simulate this same behavior of a modern browser with respect to Cookies.  #### SessionCookies and XSRF After a PSU is authenticated with the FinTech environment (either through the simple login interface defined here, or through an identity provider), the FinTechApi will establish a session with the FinTechUI. This is done by the mean of using a cookie called SessionCookie. This SessionCookie is protected by a corresponding xsrfToken. The response that sets a SessionCookie also carries a corresponding xsrfToken in the response header named \"X-XSRF-TOKEN\".  It is the responsibility of the FinTechUI to : * parse and store this xsrfToken so that a refresh of a browser window can work. This shall be done using user agent capabilities. A web browser application might decide to store the xsrfToken in the browser localStorage, as the cookie we set are all considered persistent. * make sure that each subsequent request that is carrying the SessionCookie also carries the corresponding xsrfToken as header field (see the request path). * remove this xsrfToken from the localStorage when the corresponding SessionCookie is deleted by a server response (setting cookie value to null).  The main difference between an xsrfToken and a SessionCookie is that the sessionCookie is automatically sent with each matching request. The xsrfToken must be explicitely read and sent by application.  #### API- vs. UI-Redirection For simplicity, this Framework is designed to redirect to FinTechUI not to FinTechApi.  #### Explicite vs. Implicite Redirection We define an \"Implicite redirection\" a case where a web browser react to 30X reponse and automatically redirects to the attached endpoint. We define an \"Explicite Redirection\" as a case where the UI-Application reacts to a 20X response, explicitely parses the attached __Location__ header an uses it to reload the new page in the browser window (or start the new UI-Application in case of native apps).  This framework advocates for explicite redirection passing a __20X__ response to the FinTechUI toghether with the __Location__ parameter.  Processing a response that initiates a redirect, the FinTechUI makes sure following happens, * that the exisitng __SessionCookie__ is deleted, as the user will not have a chance for an explicite logout, * that the corresponding xsrfToken is deleted from the local storage, * that a RedirectCookie set is stored (in case UI is not a web browser), so the user can be authenticated against it when sent back to the FinTechUI. The expiration of the RedirectCookie shall be set to the expected duration of the redirect, * that the corresponding xsrfToken is stored in the local storage (under the same cookie path as the RedirectCookie)  #### Redirecting to the ConsentAuthorisationApi For a redirection to the ConsentAuthorisationApi, a generated AUTH-ID is added to the cookie path and used to distinguish authorization processes from each order. This information (AUTH-ID) must be contained in the back redirect url sent to the ConsentAuthorisationApi in the back channel, so that the FinTechUI can invoke the correct code2Token endpoint when activated. 
  *
  * The version of the OpenAPI document: 1.0.0
  * 
@@ -60,13 +60,14 @@ export class FinTechAccountInformationService {
      * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
      * @param fintechRedirectURLOK 
      * @param fintechRedirectURLNOK 
+     * @param loARetrievalInformation 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, observe?: 'body', reportProgress?: boolean): Observable<AccountList>;
-    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<AccountList>>;
-    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<AccountList>>;
-    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', observe?: 'body', reportProgress?: boolean): Observable<AccountList>;
+    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<AccountList>>;
+    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<AccountList>>;
+    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (bankId === null || bankId === undefined) {
             throw new Error('Required parameter bankId was null or undefined when calling aisAccountsGET.');
         }
@@ -82,6 +83,9 @@ export class FinTechAccountInformationService {
         if (fintechRedirectURLNOK === null || fintechRedirectURLNOK === undefined) {
             throw new Error('Required parameter fintechRedirectURLNOK was null or undefined when calling aisAccountsGET.');
         }
+        if (loARetrievalInformation === null || loARetrievalInformation === undefined) {
+            throw new Error('Required parameter loARetrievalInformation was null or undefined when calling aisAccountsGET.');
+        }
 
         let headers = this.defaultHeaders;
         if (xRequestID !== undefined && xRequestID !== null) {
@@ -95,6 +99,9 @@ export class FinTechAccountInformationService {
         }
         if (fintechRedirectURLNOK !== undefined && fintechRedirectURLNOK !== null) {
             headers = headers.set('Fintech-Redirect-URL-NOK', String(fintechRedirectURLNOK));
+        }
+        if (loARetrievalInformation !== undefined && loARetrievalInformation !== null) {
+            headers = headers.set('LoARetrievalInformation', String(loARetrievalInformation));
         }
 
         // authentication (sessionCookie) required
@@ -127,6 +134,7 @@ export class FinTechAccountInformationService {
      * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
      * @param fintechRedirectURLOK 
      * @param fintechRedirectURLNOK 
+     * @param loTRetrievalInformation 
      * @param dateFrom Conditional: Starting date (inclusive the date dateFrom) of the transaction list, mandated if no delta access is required.  For booked transactions, the relevant date is the booking date.  For pending transactions, the relevant date is the entry date, which may not be transparent neither in this API nor other channels of the ASPSP. 
      * @param dateTo End date (inclusive the data dateTo) of the transaction list, default is \&quot;now\&quot; if not given.  Might be ignored if a delta function is used.  For booked transactions, the relevant date is the booking date.  For pending transactions, the relevant date is the entry date, which may not be transparent neither in this API nor other channels of the ASPSP. 
      * @param entryReferenceFrom This data attribute is indicating that the AISP is in favour to get all transactions after the transaction with identification entryReferenceFrom alternatively to the above defined period. This is a implementation of a delta access. If this data element is contained, the entries \&quot;dateFrom\&quot; and \&quot;dateTo\&quot; might be ignored by the ASPSP if a delta report is supported.  Optional if supported by API provider. 
@@ -135,10 +143,10 @@ export class FinTechAccountInformationService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, observe?: 'body', reportProgress?: boolean): Observable<TransactionsResponse>;
-    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TransactionsResponse>>;
-    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TransactionsResponse>>;
-    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loTRetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, observe?: 'body', reportProgress?: boolean): Observable<TransactionsResponse>;
+    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loTRetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<TransactionsResponse>>;
+    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loTRetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<TransactionsResponse>>;
+    public aisTransactionsGET(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loTRetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', dateFrom?: string, dateTo?: string, entryReferenceFrom?: string, bookingStatus?: 'booked' | 'pending' | 'both', deltaList?: boolean, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (bankId === null || bankId === undefined) {
             throw new Error('Required parameter bankId was null or undefined when calling aisTransactionsGET.');
         }
@@ -156,6 +164,9 @@ export class FinTechAccountInformationService {
         }
         if (fintechRedirectURLNOK === null || fintechRedirectURLNOK === undefined) {
             throw new Error('Required parameter fintechRedirectURLNOK was null or undefined when calling aisTransactionsGET.');
+        }
+        if (loTRetrievalInformation === null || loTRetrievalInformation === undefined) {
+            throw new Error('Required parameter loTRetrievalInformation was null or undefined when calling aisTransactionsGET.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -187,6 +198,9 @@ export class FinTechAccountInformationService {
         }
         if (fintechRedirectURLNOK !== undefined && fintechRedirectURLNOK !== null) {
             headers = headers.set('Fintech-Redirect-URL-NOK', String(fintechRedirectURLNOK));
+        }
+        if (loTRetrievalInformation !== undefined && loTRetrievalInformation !== null) {
+            headers = headers.set('LoTRetrievalInformation', String(loTRetrievalInformation));
         }
 
         // authentication (sessionCookie) required

@@ -19,11 +19,12 @@ public class HbciStoreTransactionListToCache extends ValidatedExecution<Transact
     @Override
     @SneakyThrows
     protected void doRealExecution(DelegateExecution execution, TransactionListHbciContext context) {
-        HbciResultCache cached = hbciCachedResultAccessor.resultFromCache(context).orElseGet(HbciResultCache::new);
+        HbciResultCache cached = null != context.getCachedResult() ? context.getCachedResult() : new HbciResultCache();
         if (null == cached.getTransactionsByIban()) {
             cached.setTransactionsByIban(new HashMap<>());
         }
 
+        cached.setConsent(context.getHbciDialogConsent());
         cached.getTransactionsByIban().put(context.getAccountIban(), context.getResponse());
         hbciCachedResultAccessor.resultToCache(context, cached);
     }

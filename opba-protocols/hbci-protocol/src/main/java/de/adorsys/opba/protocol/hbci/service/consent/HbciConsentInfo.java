@@ -1,22 +1,28 @@
 package de.adorsys.opba.protocol.hbci.service.consent;
 
-import com.google.common.base.Strings;
 import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.TransactionListHbciContext;
+import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.HbciResultCache;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /**
  * Generic information service about the consent based on current context.
  */
 @Service("hbciConsentInfo")
+@RequiredArgsConstructor
 public class HbciConsentInfo {
 
+    private final HbciCachedResultAccessor cachedResultAccessor;
+
     /**
-     * Is the PSU ID present in the context.
+     * Any kind of consent exists?
      */
-    public boolean isPsuIdPresent(HbciContext ctx) {
-        return !Strings.isNullOrEmpty(ctx.getPsuId());
+    public boolean isUnderFintechScope(HbciContext ctx) {
+        return ctx.getRequestScoped().consentAccess().isFinTechScope();
     }
 
     /**
@@ -34,16 +40,43 @@ public class HbciConsentInfo {
     }
 
     /**
-     * Any kind of consent exists?
+     * Any kind of list account consent exists?
      */
     public boolean isCachedAccountListMissing(AccountListHbciContext ctx) {
         return null == ctx.getResponse();
     }
 
     /**
-     * Any kind of consent exists?
+     * Any kind of list transaction consent exists?
      */
     public boolean isCachedTransactionListMissing(TransactionListHbciContext ctx) {
         return null == ctx.getResponse();
+    }
+
+    /**
+     * Any kind of consent exists?
+     */
+    public boolean noAccountsConsentPresent(AccountListHbciContext ctx) {
+        if (ctx.isConsentIncompatible()) {
+            return true;
+        }
+
+        Optional<HbciResultCache> cached = cachedResultAccessor.resultFromCache(ctx);
+        return cached.map(hbciResultCache -> null == hbciResultCache.getAccounts()).orElse(true);
+    }
+
+    /**
+     * Any kind of consent exists?
+     */
+    public boolean noTransactionConsentPresent(TransactionListHbciContext ctx) {
+        if (ctx.isConsentIncompatible()) {
+            return true;
+        }
+
+        Optional<HbciResultCache> cached = cachedResultAccessor.resultFromCache(ctx);
+        return cached.map(
+                hbciResultCache -> null == hbciResultCache.getTransactionsByIban()
+                        || null == hbciResultCache.getTransactionsByIban().get(ctx.getAccountIban())
+        ).orElse(true);
     }
 }

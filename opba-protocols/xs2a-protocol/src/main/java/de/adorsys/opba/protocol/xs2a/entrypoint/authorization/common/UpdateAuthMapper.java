@@ -78,6 +78,7 @@ public class UpdateAuthMapper {
 
         @Mapping(source = "facadeServiceable.requestId", target = "requestId")
         @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress")
+        @Mapping(source = "facadeServiceable.uaContext.psuIpPort", target = "psuIpPort")
         @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType")
         void mapTo(AuthorizationRequest request, @MappingTarget AccountListXs2aContext context);
 
@@ -96,6 +97,7 @@ public class UpdateAuthMapper {
 
         @Mapping(source = "facadeServiceable.requestId", target = "requestId")
         @Mapping(source = "facadeServiceable.uaContext.psuIpAddress", target = "psuIpAddress")
+        @Mapping(source = "facadeServiceable.uaContext.psuIpPort", target = "psuIpPort")
         @Mapping(source = "facadeServiceable.uaContext.psuAccept", target = "contentType")
         void mapTo(AuthorizationRequest request, @MappingTarget TransactionListXs2aContext context);
 

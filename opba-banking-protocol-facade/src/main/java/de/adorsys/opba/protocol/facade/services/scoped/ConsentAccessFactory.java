@@ -17,12 +17,14 @@ import de.adorsys.opba.protocol.facade.config.encryption.PsuConsentEncryptionSer
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import java.security.PrivateKey;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -61,6 +63,11 @@ public class ConsentAccessFactory {
         private final ConsentRepository consentRepository;
 
         @Override
+        public boolean isFinTechScope() {
+            return false;
+        }
+
+        @Override
         public ProtocolFacingConsent createDoNotPersist() {
             Consent newConsent = Consent.builder()
                     .serviceSession(serviceSession)
@@ -82,9 +89,16 @@ public class ConsentAccessFactory {
         }
 
         @Override
-        public Optional<ProtocolFacingConsent> findByCurrentServiceSession() {
-            return consentRepository.findByServiceSessionId(serviceSession.getId())
-                    .map(it -> new ProtocolFacingConsentImpl(it, encryptionService));
+        public Optional<ProtocolFacingConsent> findSingleByCurrentServiceSession() {
+            return getProtocolFacingConsent(findByCurrentServiceSessionOrderByModifiedDesc());
+        }
+
+        @Override
+        public List<ProtocolFacingConsent> findByCurrentServiceSessionOrderByModifiedDesc() {
+            return consentRepository.findByServiceSessionIdOrderByModifiedAtDesc(serviceSession.getId())
+                    .stream()
+                    .map(it -> new ProtocolFacingConsentImpl(it, encryptionService))
+                    .collect(Collectors.toList());
         }
 
         @Override
@@ -109,6 +123,11 @@ public class ConsentAccessFactory {
 
 
         @Override
+        public boolean isFinTechScope() {
+            return true;
+        }
+
+        @Override
         public ProtocolFacingConsent createDoNotPersist() {
             throw new IllegalStateException("No PSU present - can't create consent");
         }
@@ -124,33 +143,49 @@ public class ConsentAccessFactory {
         }
 
         @Override
-        public Optional<ProtocolFacingConsent> findByCurrentServiceSession() {
+        public Optional<ProtocolFacingConsent> findSingleByCurrentServiceSession() {
+            return getProtocolFacingConsent(findByCurrentServiceSessionOrderByModifiedDesc());
+        }
+
+        @Override
+        public List<ProtocolFacingConsent> findByCurrentServiceSessionOrderByModifiedDesc() {
             ServiceSession serviceSession = entityManager.find(ServiceSession.class, serviceSessionId);
             if (null == serviceSession || null == serviceSession.getAuthSession()) {
-                return Optional.empty();
+                return Collections.emptyList();
             }
 
             Optional<FintechPsuAspspPrvKey> psuAspspPrivateKey = keys.findByFintechIdAndPsuIdAndAspspId(
                     fintech.getId(),
                     serviceSession.getAuthSession().getPsu().getId(),
-                    serviceSession.getAuthSession().getProtocol().getBankProfile().getBank().getId()
+                    serviceSession.getAuthSession().getAction().getBankProfile().getBank().getId()
             );
-            Optional<Consent> consent = consents.findByServiceSessionId(serviceSession.getId());
-            if (!psuAspspPrivateKey.isPresent() || !consent.isPresent()) {
-                return Optional.empty();
+            List<Consent> consent = consents.findByServiceSessionIdOrderByModifiedAtDesc(serviceSession.getId());
+            if (!psuAspspPrivateKey.isPresent() || consent.isEmpty()) {
+                return Collections.emptyList();
             }
 
             PrivateKey psuAspspKey = fintechVault.psuAspspKeyFromPrivate(serviceSession, fintech, fintechPassword);
-            return Optional.of(new ProtocolFacingConsentImpl(
-                    consent.get(),
-                    encryptionService.forPrivateKey(psuAspspPrivateKey.get().getId(), psuAspspKey))
-            );
+            EncryptionService enc = encryptionService.forPrivateKey(psuAspspPrivateKey.get().getId(), psuAspspKey);
+            return consent.stream().map(it -> new ProtocolFacingConsentImpl(it, enc)).collect(Collectors.toList());
         }
 
         @Override
         public Collection<ProtocolFacingConsent> getAvailableConsentsForCurrentPsu() {
             return Collections.emptyList();
         }
+    }
+
+    @NotNull
+    private static Optional<ProtocolFacingConsent> getProtocolFacingConsent(Collection<ProtocolFacingConsent> consents) {
+        if (consents.isEmpty()) {
+            return Optional.empty();
+        }
+
+        if (consents.size() > 1) {
+            throw new IllegalStateException("Too many consents");
+        }
+
+        return Optional.of(consents.iterator().next());
     }
 
     @Getter
@@ -162,7 +197,7 @@ public class ConsentAccessFactory {
 
         @Override
         public String getConsentId() {
-            return consent.getConsent(encryptionService);
+            return consent.getConsentId(encryptionService);
         }
 
         @Override
@@ -172,7 +207,7 @@ public class ConsentAccessFactory {
 
         @Override
         public void setConsentId(String id) {
-            consent.setConsent(encryptionService, id);
+            consent.setConsentId(encryptionService, id);
         }
 
         @Override

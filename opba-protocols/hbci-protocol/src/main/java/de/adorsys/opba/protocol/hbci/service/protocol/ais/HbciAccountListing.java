@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
+import org.iban4j.IbanFormatException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -46,6 +47,7 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
             ContextUtil.getAndUpdateContext(
                     execution,
                     (AccountListHbciContext ctx) -> {
+                        ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
                         ctx.setResponse(
                                 new AisListAccountsResult(
                                         response.getBankAccounts().stream()
@@ -71,7 +73,6 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
         );
     }
 
-
     BankAccount validateAndFixAccountIbans(DelegateExecution execution, BankAccount account) {
         if (!Strings.isNullOrEmpty(account.getIban())) {
             return account;
@@ -86,20 +87,34 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
         if (Strings.isNullOrEmpty(account.getAccountNumber())) {
             throw new IllegalArgumentException("No account number to calculate IBAN");
         }
+
+        tryToParseIban(account);
+        account.setAccountNumber(account.getAccountNumber());
+        return account;
+    }
+
+    @SuppressWarnings("PMD.EmptyCatchBlock") // IbanFormatException is skippable exception if account IBAN can't be calculated
+    private void tryToParseIban(BankAccount account) {
+        if (Strings.isNullOrEmpty(account.getCountry())) {
+            return;
+        }
+
         // See https://www.iban.com/country/germany
         // IBAN is DEKK BBBB BBBB CCCC CCCC CC
         // Where:
         // K = MOD 97 (ISO 7064) Checksum
         // B = Bank Code aka BLZ ( Bankleitzahl in German )
         // C = Account number ( Kontonummer in German )
-        Iban iban = new Iban.Builder()
-                .countryCode(CountryCode.DE) // Don't expect to see HBCI outside of Germany
-                .bankCode(Strings.padStart(account.getBlz(), BLZ_LEN, '0'))
-                .accountNumber(Strings.padStart(account.getAccountNumber(), ACCOUNT_NUMBER_LEN, '0'))
-                .build();
-
-        account.setIban(iban.toString());
-        return account;
+        try {
+            Iban iban = new Iban.Builder()
+                    .countryCode(CountryCode.getByCode(account.getCountry()))
+                    .bankCode(Strings.padStart(account.getBlz(), BLZ_LEN, '0'))
+                    .accountNumber(Strings.padStart(account.getAccountNumber(), ACCOUNT_NUMBER_LEN, '0'))
+                    .build();
+            account.setIban(iban.toString());
+        } catch (IbanFormatException ex) {
+            // NOP, it can be internal account without IBAN
+        }
     }
 
     public static <T extends AbstractTransaction> TransactionRequest<T> create(T transaction,

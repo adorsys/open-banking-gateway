@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.hbci.service.validation;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
+import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.LastViolations;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -25,16 +26,19 @@ public class HbciRestorePreValidationContext implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) {
-        BaseContext current = ContextUtil.getContext(execution, BaseContext.class);
+        HbciContext current = ContextUtil.getContext(execution, HbciContext.class);
         execution.setVariable(
             LAST_VALIDATION_ISSUES,
-            new LastViolations(current.getViolations(), current.getRequestScoped())
+            new LastViolations(current.getViolations(), current.isConsentIncompatible(), current.getRequestScoped())
         );
         execution.setVariable(
             LAST_REDIRECTION_TARGET,
             lastRedirectionTarget(current)
         );
-        execution.setVariable(CONTEXT, execution.getVariable(BEFORE_VALIDATION_CONTEXT));
+        HbciContext restored = (HbciContext) execution.getVariable(BEFORE_VALIDATION_CONTEXT);
+        restored.setConsentIncompatible(current.isConsentIncompatible());
+
+        execution.setVariable(CONTEXT, restored);
         execution.removeVariable(BEFORE_VALIDATION_CONTEXT);
     }
 

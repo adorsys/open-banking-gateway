@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { PaymentComponent } from './payment.component';
-import { InitiateComponent } from './initiate/initiate.component';
-import { ConfirmComponent } from './confirm/confirm.component';
+import { PaymentAccountsComponent } from './payment-accounts/payment-accounts.component';
+import { PaymentAccountComponent } from './payment-account/payment-account.component';
 
 const routes: Routes = [
   {
@@ -11,17 +11,17 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: InitiateComponent.ROUTE,
+        redirectTo: PaymentAccountsComponent.ROUTE,
         pathMatch: 'full'
       },
       {
-        path: InitiateComponent.ROUTE,
-        component: InitiateComponent
+        path: PaymentAccountsComponent.ROUTE,
+        component: PaymentAccountsComponent,
       },
       {
-        path: ConfirmComponent.ROUTE,
-        component: ConfirmComponent
-      }
+        path: PaymentAccountComponent.ROUTE,
+        loadChildren: () => import('./payment-account/payment-account.module').then(m => m.PaymentAccountModule)
+      },
     ]
   }
 ];

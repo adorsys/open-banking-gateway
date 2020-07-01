@@ -1,10 +1,8 @@
 package de.adorsys.opba.protocol.facade.services;
 
-import de.adorsys.opba.db.domain.entity.BankProtocol;
-import de.adorsys.opba.db.domain.entity.BankSubProtocol;
-import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
-import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
-import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
+import de.adorsys.opba.db.domain.entity.BankAction;
+import de.adorsys.opba.db.domain.entity.BankSubAction;
+import de.adorsys.opba.db.repository.jpa.BankActionRepository;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,59 +16,53 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProtocolSelector {
 
-    private final ServiceSessionRepository sessions;
-    private final BankProtocolRepository protocolRepository;
+    private final BankActionRepository bankActionRepository;
 
     @Transactional
-    public <A> A selectAndPersistProtocolFor(
-        InternalContext<?> ctx,
+    public <REQUEST, ACTION> InternalContext<REQUEST, ACTION> selectProtocolFor(
+        InternalContext<REQUEST, ACTION> ctx,
         ProtocolAction protocolAction,
-        Map<String, A> actionBeans) {
-        Optional<BankProtocol> bankProtocol;
+        Map<String, ? extends ACTION> actionBeans) {
+        Optional<BankAction> bankAction;
 
-        if (null == ctx.getServiceBankProtocolId()) {
-            bankProtocol = protocolRepository.findByBankProfileUuidAndAction(
-                    ctx.getBankId(),
+        if (null == ctx.getAuthSession()) {
+            bankAction = bankActionRepository.findByBankProfileUuidAndAction(
+                    ctx.getServiceCtx().getBankId(),
                     protocolAction
             );
         } else {
-            Long id = isForAuthorization(protocolAction) ? ctx.getAuthorizationBankProtocolId() : ctx.getServiceBankProtocolId();
-            bankProtocol = protocolRepository.findById(id);
+            Long id = isForAuthorization(protocolAction) ? ctx.getServiceCtx().getAuthorizationBankProtocolId() : ctx.getServiceCtx().getServiceBankProtocolId();
+            bankAction = bankActionRepository.findById(id);
         }
 
-        return bankProtocol
-                .map(protocol -> setProtocolOnSession(protocol, ctx.getSession()))
-                .map(protocol -> findActionBean(protocol, actionBeans, protocolAction))
+        return bankAction
+                .map(action -> {
+                    ACTION actionBean = findActionBean(action, actionBeans, protocolAction);
+                    return ctx.toBuilder()
+                            .serviceCtx(ctx.getServiceCtx().toBuilder().serviceBankProtocolId(action.getId()).build())
+                            .action(actionBean)
+                            .build();
+                })
                 .orElseThrow(() ->
                         new IllegalStateException(
-                                "No action bean for " + protocolAction.name() + " of: " + ctx.loggableBankId()
+                                "No action bean for " + protocolAction.name() + " of: " + ctx.getServiceCtx().loggableBankId()
                         )
                 );
-    }
-
-    private BankProtocol setProtocolOnSession(BankProtocol protocol, ServiceSession session) {
-        if (null == session.getService()) {
-            session.setService(protocol);
-        }
-
-        session.setProtocol(protocol);
-        sessions.save(session);
-        return protocol;
     }
 
     private boolean isForAuthorization(ProtocolAction action) {
         return action == ProtocolAction.AUTHORIZATION || ProtocolAction.AUTHORIZATION == action.getParent();
     }
 
-    private <A> A findActionBean(BankProtocol forProtocol, Map<String, A> actionBeans, ProtocolAction action) {
+    private <A> A findActionBean(BankAction forProtocol, Map<String, A> actionBeans, ProtocolAction action) {
 
         return actionBeans.getOrDefault(forProtocol.getProtocolBeanName(),
                                         findActionBeanFromSubProtocols(forProtocol.getSubProtocols(), actionBeans, action));
     }
 
-    private <A> A findActionBeanFromSubProtocols(Collection<BankSubProtocol> subProtocols, Map<String, A> actionBeans, ProtocolAction action) {
-        Optional<BankSubProtocol> subProtocol = subProtocols.stream()
-                                                        .filter(it -> it.getAction() == action)
+    private <A> A findActionBeanFromSubProtocols(Collection<BankSubAction> subProtocols, Map<String, A> actionBeans, ProtocolAction action) {
+        Optional<BankSubAction> subProtocol = subProtocols.stream()
+                                                        .filter(it -> it.getProtocolAction() == action)
                                                         .findFirst();
 
         return subProtocol

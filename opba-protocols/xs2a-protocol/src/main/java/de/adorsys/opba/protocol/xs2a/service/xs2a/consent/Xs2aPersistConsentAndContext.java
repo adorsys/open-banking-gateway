@@ -23,7 +23,7 @@ public class Xs2aPersistConsentAndContext extends ValidatedExecution<Xs2aContext
     @Override
     @SneakyThrows
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        ProtocolFacingConsent consent = context.consentAccess().findByCurrentServiceSession()
+        ProtocolFacingConsent consent = context.consentAccess().findSingleByCurrentServiceSession()
                 .orElseGet(() -> context.consentAccess().createDoNotPersist());
 
         consent.setConsentId(context.getConsentId());

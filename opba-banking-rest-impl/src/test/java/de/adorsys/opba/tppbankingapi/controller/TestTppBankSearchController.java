@@ -67,10 +67,10 @@ class TestTppBankSearchController extends BaseMockitoTest {
                         .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new BankProfileDataToSign(xRequestId, xTimestampUtc, OperationType.BANK_SEARCH)))
                         .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
 
-                        .param("bankId", "4eee696c-b2d2-45ac-86c7-b77a810a261b"))
+                        .param("bankId", "fcfe98fe-5514-4992-8f36-8239f3a74571"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.bankProfileDescriptor.bankName").value("DZ BANK D3000"))
-                .andExpect(jsonPath("$.bankProfileDescriptor.bankUuid").value("4eee696c-b2d2-45ac-86c7-b77a810a261b"))
+                .andExpect(jsonPath("$.bankProfileDescriptor.bankName").value("VR Bank Fulda eG"))
+                .andExpect(jsonPath("$.bankProfileDescriptor.bankUuid").value("fcfe98fe-5514-4992-8f36-8239f3a74571"))
                 .andExpect(jsonPath("$.bankProfileDescriptor.bic").value("GENODE51FUL"))
                 .andReturn();
     }
@@ -88,18 +88,24 @@ class TestTppBankSearchController extends BaseMockitoTest {
 
     @NotNull
     private ResultActions performBankSearchRequest(UUID xRequestId, Instant xTimestampUtc, String keyword) throws Exception {
+        BankSearchDataToSign bankSearchDataToSign = BankSearchDataToSign.builder()
+                                             .xRequestId(xRequestId)
+                                             .instant(xTimestampUtc)
+                                             .operationType(OperationType.BANK_SEARCH)
+                                             .keyword(keyword)
+                                             .build();
+
         return mockMvc.perform(
                 get("/v1/banking/search/bank-search")
                         .header("Compute-PSU-IP-Address", "true")
-
                         .header(X_REQUEST_ID, xRequestId)
                         .header(X_TIMESTAMP_UTC, xTimestampUtc)
                         .header(X_OPERATION_TYPE, OperationType.BANK_SEARCH)
-                        .header(X_REQUEST_SIGNATURE, requestSigningService.signature(new BankSearchDataToSign(xRequestId, xTimestampUtc, OperationType.BANK_SEARCH, keyword)))
+                        .header(X_REQUEST_SIGNATURE, requestSigningService.signature(bankSearchDataToSign))
                         .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
                         .param("keyword", keyword)
                         .param("max", "10")
                         .param("start", "0"))
-                       .andExpect(status().isOk());
+                .andExpect(status().isOk());
     }
 }

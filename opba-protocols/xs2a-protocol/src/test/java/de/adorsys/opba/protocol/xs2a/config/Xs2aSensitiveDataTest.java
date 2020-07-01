@@ -64,7 +64,10 @@ public class Xs2aSensitiveDataTest {
         @Bean
         @ConditionalOnMissingBean(FlowableProperties.class)
         FlowableProperties flowableProperties() {
-            return new FlowableProperties();
+            FlowableProperties flowableProperties = new FlowableProperties();
+            flowableProperties.setSerialization(new FlowableProperties.Serialization());
+            flowableProperties.setExpirable(new FlowableProperties.Expirable());
+            return flowableProperties;
         }
     }
 }

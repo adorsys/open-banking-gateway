@@ -4,6 +4,8 @@ import de.adorsys.opba.fintech.api.model.generated.InlineResponse200;
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.api.model.generated.UserProfile;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAuthorizationApi;
+import de.adorsys.opba.fintech.impl.controller.utils.OkOrNotOk;
+import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.ConsentEntity;
 import de.adorsys.opba.fintech.impl.database.entities.LoginEntity;
 import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
@@ -75,7 +77,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
         if (okOrNotOk.equals(OkOrNotOk.OK) && consentService.confirmConsent(authId, xRequestID)) {
 
-            Optional<ConsentEntity> consent = consentRepository.findByAuthId(authId);
+            Optional<ConsentEntity> consent = consentRepository.findByTppAuthId(authId);
 
             if (!consent.isPresent()) {
                 throw new RuntimeException("consent for authid " + authId + " can not be found");

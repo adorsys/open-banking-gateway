@@ -10,6 +10,7 @@ import feign.RequestTemplate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -38,17 +39,36 @@ public class FeignConfig {
     private final TppProperties tppProperties;
 
     @Bean
-    public RequestInterceptor requestInterceptor() {
+    @Profile("!no-signature-filter")
+    public RequestInterceptor requestInterceptorWithSigning() {
         // This allows OPBA Consent API to compute PSU IP address itself.
         return requestTemplate -> {
             requestTemplate.header(COMPUTE_PSU_IP_ADDRESS, "true");
-            fillSecurityHeaders(requestTemplate);
+            fillSecurityHeadersWithSigning(requestTemplate);
         };
     }
 
-    private void fillSecurityHeaders(RequestTemplate requestTemplate) {
+    @Bean
+    @Profile("no-signature-filter")
+    public RequestInterceptor requestInterceptorWithoutSigning() {
+        // This allows OPBA Consent API to compute PSU IP address itself.
+        return requestTemplate -> {
+            requestTemplate.header(COMPUTE_PSU_IP_ADDRESS, "true");
+            fillSecurityHeadersWithoutSigning(requestTemplate);
+        };
+    }
+
+    private void fillSecurityHeadersWithSigning(RequestTemplate requestTemplate) {
         Instant instant = Instant.now();
+
         requestTemplate.header(X_REQUEST_SIGNATURE, calculateSignature(requestTemplate, instant));
+        requestTemplate.header(FINTECH_ID, tppProperties.getFintechID());
+        requestTemplate.header(X_TIMESTAMP_UTC, instant.toString());
+    }
+
+    private void fillSecurityHeadersWithoutSigning(RequestTemplate requestTemplate) {
+        Instant instant = Instant.now();
+
         requestTemplate.header(FINTECH_ID, tppProperties.getFintechID());
         requestTemplate.header(X_TIMESTAMP_UTC, instant.toString());
     }
@@ -75,6 +95,14 @@ public class FeignConfig {
                 return requestSigningService.signature(mapper.mapToBankProfile(headers, instant));
             case CONFIRM_CONSENT:
                 return requestSigningService.signature(mapper.mapToConfirmConsent(headers, instant));
+            case PIS:
+                if (OperationType.isGetPaymentStatus(requestTemplate.path())) {
+                    return requestSigningService.signature(mapper.mapToGetPaymentStatus(headers, instant));
+                }
+                if (OperationType.isGetPayment(requestTemplate.method())) {
+                    return requestSigningService.signature(mapper.mapToGetPayment(headers, instant));
+                }
+                return requestSigningService.signature(mapper.mapToPaymentInitiation(headers, instant, requestTemplate.requestBody().asString()));
             default:
                 throw new IllegalArgumentException(String.format("Unsupported operation type %s", operationType));
         }
