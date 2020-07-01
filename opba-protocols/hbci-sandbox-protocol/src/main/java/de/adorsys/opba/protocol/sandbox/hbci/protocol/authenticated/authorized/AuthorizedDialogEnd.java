@@ -14,7 +14,7 @@ public class AuthorizedDialogEnd extends TemplateBasedOperationHandler {
     }
 
     @Override
-    protected String templatePath(SandboxContext context) {
+    protected String getTemplatePathAndUpdateCtxIfNeeded(SandboxContext context) {
         return "response-templates/authorized/dialog-end.json";
     }
 
