@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.sandbox.hbci.protocol;
 
 import com.google.common.base.Strings;
-import de.adorsys.opba.protocol.sandbox.hbci.config.dto.AuthLevel;
+import de.adorsys.opba.protocol.sandbox.hbci.config.dto.BpdAuthLevel;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +46,6 @@ public class DecisionSwitch {
     }
 
     public boolean anonymousBpdSupported(SandboxContext context) {
-        return AuthLevel.ANONYMOUS == context.getBank().getSecurity().getBankParametersData();
+        return BpdAuthLevel.ANONYMOUS == context.getBank().getSecurity().getBankParametersData();
     }
 }
