@@ -22,8 +22,8 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
     @Override
     protected String getTemplatePathAndUpdateCtxIfNeeded(SandboxContext context) {
         if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(SEPA_INFO))) {
-            return context.getBank().getSecurity().getAccounts() == SensitiveAuthLevel.AUTHENTICATED ?
-                    "response-templates/authenticated/custom-message-sepa-info.json"
+            return context.getBank().getSecurity().getAccounts() == SensitiveAuthLevel.AUTHENTICATED
+                    ? "response-templates/authenticated/custom-message-sepa-info.json"
                     : "response-templates/authenticated/custom-message-authorization-required.json";
         }
 
