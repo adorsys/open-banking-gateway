@@ -120,7 +120,7 @@
         <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogOnlyPinOk(CONTEXT)}</conditionExpression>
       </sequenceFlow>
       <sequenceFlow id="sid-79c6fef5-0003-4f74-a325-00584d121232" sourceRef="sid-a44b1524-6994-4834-820c-5c9ecf81dc8f" targetRef="isDialogAuthorized"/>
-      <serviceTask id="wrongPinOrTanOrLogin" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Wrong Login or PIN or TAN" flowable:delegateExpression="${wrongPinTanOrLogin}"/>
+      <serviceTask id="wrongPinOrTanOrLogin" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Wrong Login or PIN or TAN" flowable:delegateExpression="${wrongPinTanOrLogin}"/>
       <sequenceFlow id="sid-410cc5d0-4acd-4f8e-8287-3ed6fdb0a7d3" sourceRef="wrongPinOrTanOrLogin" targetRef="sid-69dda285-07b3-4433-9d39-a074f97f60ab"/>
       <sequenceFlow id="dialogHasWrongPinOrTan" sourceRef="isDialogAuthorized" targetRef="wrongPinOrTanOrLogin">
         <conditionExpression xsi:type="tFormalExpression"/>
