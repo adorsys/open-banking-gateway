@@ -113,5 +113,12 @@ public class AuthStateConsentServiceController implements AuthStateConsentAuthor
             }
             return AisAccountAccessInfo.AllPsd2Enum.fromValue(value);
         }
+
+        default AisAccountAccessInfo.AvailableAccountsEnum mapToAvailableAccountsEnum(String value) {
+            if (null == value) {
+                return null;
+            }
+            return AisAccountAccessInfo.AvailableAccountsEnum.fromValue(value);
+        }
     }
 }
