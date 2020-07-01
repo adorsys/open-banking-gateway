@@ -25,7 +25,7 @@
   "RetSeg.SegHead.seq" : "4",
   "RetSeg.SegHead.version" : "2",
   "RetSeg_2.RetVal.code" : "3920",
-  "RetSeg_2.RetVal.parm" : "921",
+  "RetSeg_2.RetVal.parm${_ctx.getLoopScaMethod().getPosition()}" : "${ctx.getLoopScaMethod().getId()}",
   "RetSeg_2.RetVal.text" : "Zugelassene Zwei-Schritt-Verfahren für den Benutzer.",
   "RetSeg_2.RetVal_2.code" : "0020",
   "RetSeg_2.RetVal_2.text" : "Der Auftrag wurde ausgeführt.",

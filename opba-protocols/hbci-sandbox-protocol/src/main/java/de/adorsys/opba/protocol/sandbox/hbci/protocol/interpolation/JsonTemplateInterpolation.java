@@ -61,6 +61,7 @@ public class JsonTemplateInterpolation {
 
     private final Pattern interpolationTarget = Pattern.compile("(\\$\\{(.+?)})");
     private final Pattern loopAccounts = Pattern.compile("(\\$\\{(.+getLoopAccount.+?)})");
+    private final Pattern loopSca = Pattern.compile("(\\$\\{(.+getLoopScaMethod.+?)})");
     private final Pattern mt940LoopTransactions = Pattern.compile("(\\$\\{mt940Begin}.+?\\$\\{mt940End})", Pattern.DOTALL);
 
     private final ObjectMapper mapper;
@@ -217,22 +218,32 @@ public class JsonTemplateInterpolation {
         Map<String, String> template = mapper.readValue(templateToParse,  new TypeReference<Map<String, String>>() { });
         List<Entry> mt940TransactionLoop = extractAndRemoveFromTemplateTransactionLoopMt940Entries(template);
         List<Entry> accountLoop = extractAndRemoveFromTemplateAccountLoopEntries(template);
+        List<Entry> scaLoop = extractAndRemoveFromTemplateScaLoopEntries(template);
         Map<String, String> result = new HashMap<>();
 
         AccountsContext staticCtx = new AccountsContext(0, context);
         for (Map.Entry<String, String> entry : template.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            key = interpolate(key, new AccountsContext(0, staticCtx));
-            value = interpolate(value, new AccountsContext(0, staticCtx));
+            key = doInterpolate(key, new AccountsContext(0, staticCtx));
+            value = doInterpolate(value, new AccountsContext(0, staticCtx));
             result.put(key, value);
+        }
+
+        for (Entry entry : scaLoop) {
+            for (int scaPos = 0; scaPos < staticCtx.getUser().getScaMethodsAvailable().size(); ++scaPos) {
+                ScaContext accs = new ScaContext(scaPos, staticCtx);
+                String key = doInterpolate(entry.getKey(), accs);
+                String value = doInterpolate(entry.getValue(), accs);
+                result.put(key, value);
+            }
         }
 
         for (Entry entry : accountLoop) {
             for (int accPos = 0; accPos < staticCtx.getUser().getAccounts().size(); ++accPos) {
                 AccountsContext accs = new AccountsContext(accPos, staticCtx);
-                String key = interpolate(entry.getKey(), accs);
-                String value = interpolate(entry.getValue(), accs);
+                String key = doInterpolate(entry.getKey(), accs);
+                String value = doInterpolate(entry.getValue(), accs);
                 result.put(key, value);
             }
         }
@@ -267,10 +278,10 @@ public class JsonTemplateInterpolation {
     }
 
     private String interpolateTransactions(String template, AccountsContext context) {
-        return interpolate(template.replaceAll("\\$\\{mt940Begin}", "").replaceAll("\\$\\{mt940End}", ""), context);
+        return doInterpolate(template.replaceAll("\\$\\{mt940Begin}", "").replaceAll("\\$\\{mt940End}", ""), context);
     }
 
-    private String interpolate(String template, AccountsContext context) {
+    private String doInterpolate(String template, SandboxContext context) {
         Matcher target = interpolationTarget.matcher(template);
         StringBuffer result = new StringBuffer();
         while (target.find()) {
@@ -297,8 +308,26 @@ public class JsonTemplateInterpolation {
         return accountLoop;
     }
 
+    private List<Entry> extractAndRemoveFromTemplateScaLoopEntries(Map<String, String> template) {
+        List<Entry> scaLoop = new ArrayList<>();
+        for (Map.Entry<String, String> entry : template.entrySet()) {
+            if (!isLoopScaExpression(entry.getKey())) {
+                continue;
+            }
+
+            scaLoop.add(new Entry(entry.getKey(), entry.getValue()));
+        }
+
+        scaLoop.forEach(it -> template.remove(it.getKey()));
+        return scaLoop;
+    }
+
     private boolean isLoopAccountsExpression(String expression) {
         return loopAccounts.matcher(expression).find();
+    }
+
+    private boolean isLoopScaExpression(String expression) {
+        return loopSca.matcher(expression).find();
     }
 
     private List<Entry> extractAndRemoveFromTemplateTransactionLoopMt940Entries(Map<String, String> template) {
@@ -319,7 +348,7 @@ public class JsonTemplateInterpolation {
         return mt940LoopTransactions.matcher(expression).find();
     }
 
-    private String parseExpression(String expression, AccountsContext context) {
+    private String parseExpression(String expression, SandboxContext context) {
         String prefix = "";
         if (expression.startsWith("_")) {
             prefix = "_";
@@ -339,7 +368,7 @@ public class JsonTemplateInterpolation {
         return prefix + result;
     }
 
-    private String doParse(String expression, AccountsContext context) {
+    private String doParse(String expression, SandboxContext context) {
         ExpressionParser parser = new SpelExpressionParser();
         StandardEvaluationContext parseContext = new StandardEvaluationContext(new SpelCtx(context));
         return parser.parseExpression(expression, new TemplateParserContext()).getValue(parseContext, String.class);
@@ -367,7 +396,7 @@ public class JsonTemplateInterpolation {
     @Getter
     @RequiredArgsConstructor
     private static class SpelCtx {
-        private final AccountsContext ctx;
+        private final SandboxContext ctx;
     }
 
     @RequiredArgsConstructor
@@ -380,6 +409,19 @@ public class JsonTemplateInterpolation {
 
         public AccountWithPosition getLoopAccount() {
             return new AccountWithPosition(getUser().getAccounts().get(accountLoopPos), context.getBank(), accountLoopPos + 1);
+        }
+    }
+
+    @RequiredArgsConstructor
+    private static class ScaContext extends SandboxContext {
+
+        private final int scaLoopPos;
+
+        @Delegate
+        protected final SandboxContext context;
+
+        public ScaWithPosition getLoopScaMethod() {
+            return new ScaWithPosition(scaLoopPos + 1, context.getUser().getScaMethodsAvailable().get(scaLoopPos));
         }
     }
 
@@ -421,6 +463,14 @@ public class JsonTemplateInterpolation {
                     .accountNumber(account.getNumber()).build()
                     .toString();
         }
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    private static class ScaWithPosition {
+
+        private final int position;
+        private final String id;
     }
 
     @Data
