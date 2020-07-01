@@ -19,7 +19,8 @@ public class AuthorizedCustomMsg extends TemplateBasedOperationHandler {
 
     @Override
     protected String getTemplatePathAndUpdateCtxIfNeeded(SandboxContext context) {
-        if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(SEPA_INFO))) {
+        if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(SEPA_INFO))
+                || RequestStatusUtil.isForAccountListing(context.getRequestData())) {
             return "response-templates/authorized/custom-message-sepa-info.json";
         }
 
