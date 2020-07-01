@@ -14,7 +14,7 @@ public class WrongPinTanOrLogin extends TemplateBasedOperationHandler {
     }
 
     @Override
-    protected String templatePath(SandboxContext context) {
+    protected String getTemplatePathAndUpdateCtxIfNeeded(SandboxContext context) {
         if (!context.isPinOk() || !context.getBank().getUsers().contains(context.getUser().getLogin())) {
             return "response-templates/wrong-pin.json";
         }

@@ -14,12 +14,12 @@ public class AuthorizedDialogInit extends TemplateBasedOperationHandler {
     }
 
     @Override
-    protected String templatePath(SandboxContext context) {
-        return "response-templates/authorized/dialog-init.json";
+    protected String getTemplatePathAndUpdateCtxIfNeeded(SandboxContext context) {
+        return "response-templates/authorized/dialog-init-upd-acc.json";
     }
 
     @Override
     protected Operation handledRequestType() {
-        return Operation.DIALOG_INIT;
+        return Operation.DIALOG_INIT_SCA;
     }
 }
