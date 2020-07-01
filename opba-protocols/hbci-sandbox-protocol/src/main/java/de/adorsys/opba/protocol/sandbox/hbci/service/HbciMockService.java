@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.CONTEXT;
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.DIALOG_ID;
@@ -26,6 +28,7 @@ import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.DIALOG_ID;
 @RequiredArgsConstructor
 public class HbciMockService {
 
+    private static final Pattern SCA_METHOD_ID = Pattern.compile("HNSHK:\\d+?:\\d+?\\+PIN:\\d+?\\+(\\d+?)\\+");
     private static final String PROCESS_KEY = "hbci-dialog";
 
     private final HistoryService historyService;
@@ -39,18 +42,29 @@ public class HbciMockService {
         Operation.Match match = Operation.find(messages);
         Message message = match.getMessage();
         String dialogId = message.getData().get(DIALOG_ID);
+        String scaMethodId = extractScaMethodId(decoded);
 
         if (null == dialogId || "".equals(dialogId) || "0".equals(dialogId)) {
-            return triggerNewProcess(match.getOperation(), message, isCrypted);
+            return triggerNewProcess(match.getOperation(), message, scaMethodId, isCrypted);
         }
 
-        return triggerExistingProcess(dialogId, match.getOperation(), message, isCrypted);
+        return triggerExistingProcess(dialogId, match.getOperation(), message, scaMethodId, isCrypted);
     }
 
-    private String triggerNewProcess(Operation operation, Message request, boolean isCrypted) {
+    private String extractScaMethodId(String decoded) {
+        Matcher matcher = SCA_METHOD_ID.matcher(decoded);
+        if (!matcher.find()) {
+            return null;
+        }
+
+        return matcher.group(1);
+    }
+
+    private String triggerNewProcess(Operation operation, Message request, String scaMethodId, boolean isCrypted) {
         SandboxContext context = new SandboxContext();
         context.setCryptNeeded(isCrypted);
         setRequest(operation, request, context);
+        context.setReferencedScaMethodId(scaMethodId);
         ProcessInstance instance = runtimeService.startProcessInstanceByKey(PROCESS_KEY, ImmutableMap.of(CONTEXT, context));
 
         return getResponse(instance.getId());
@@ -63,7 +77,7 @@ public class HbciMockService {
         context.setRequest(update);
     }
 
-    private String triggerExistingProcess(String dialogId, Operation operation, Message request, boolean isCrypted) {
+    private String triggerExistingProcess(String dialogId, Operation operation, Message request, String scaMethodId, boolean isCrypted) {
         String execId = runtimeService.createActivityInstanceQuery()
                 .processInstanceId(dialogId)
                 .activityType("serviceTask")
@@ -74,6 +88,7 @@ public class HbciMockService {
         SandboxContext context = (SandboxContext) runtimeService.getVariable(execId, CONTEXT);
         context.setCryptNeeded(isCrypted);
         setRequest(operation, request, context);
+        context.setReferencedScaMethodId(scaMethodId);
         runtimeService.setVariable(execId, CONTEXT, context);
 
         runtimeService.trigger(execId);
