@@ -7,11 +7,14 @@ import de.adorsys.opba.protocol.sandbox.hbci.protocol.RequestStatusUtil;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.TemplateBasedOperationHandler;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.interpolation.JsonTemplateInterpolation;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.SEPA_INFO;
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.TRANSACTIONS;
 
+@Slf4j
 @Service("authenticatedCustomMsg")
 public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
 
@@ -24,7 +27,7 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
         if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(SEPA_INFO))) {
             return context.getBank().getSecurity().getAccounts() == SensitiveAuthLevel.AUTHENTICATED
                     ? "response-templates/authenticated/custom-message-sepa-info.json"
-                    : "response-templates/authenticated/custom-message-authorization-required.json";
+                    : getAuthorizationRequiredTemplateOrWrongTanMethod(context);
         }
 
         if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(TRANSACTIONS))) {
@@ -36,7 +39,7 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
                 context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "TAN2Step6\\.OrderAccount\\.number"));
             }
 
-            return "response-templates/authenticated/custom-message-authorization-required.json";
+            return getAuthorizationRequiredTemplateOrWrongTanMethod(context);
         }
 
         throw new IllegalStateException("Cant't handle message: " + context.getRequestData());
@@ -45,5 +48,14 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
     @Override
     protected Operation handledRequestType() {
         return Operation.CUSTOM_MSG;
+    }
+
+    private String getAuthorizationRequiredTemplateOrWrongTanMethod(SandboxContext context) {
+        if (Strings.isBlank(context.getReferencedScaMethodId()) || !context.getUser().getScaMethodsAvailable().contains(context.getReferencedScaMethodId())) {
+            log.warn("Wrong or missing TAN method ID: {} / allowed: {}", context.getReferencedScaMethodId(), context.getUser().getScaMethodsAvailable());
+            return "response-templates/wrong-sca-id.json";
+        }
+
+        return "response-templates/authenticated/custom-message-authorization-required.json";
     }
 }
