@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.validation;
 
+import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.LastRedirectionTarget;
@@ -12,6 +13,7 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
@@ -47,9 +49,10 @@ public class Xs2aReportValidationError implements JavaDelegate {
                         .processId(current.getSagaId())
                         .executionId(execution.getId())
                         .provideMoreParamsDialog(
-                                ContextUtil.evaluateSpelForCtx(
-                                        urlSet.getParameters().getProvideMore(), execution, current, URI.class
-                                )
+                                UriComponentsBuilder.fromHttpUrl(urlSet.getParameters().getProvideMore())
+                                        .queryParam("redirectCode", current.getRedirectCodeIfAuthContinued())
+                                        .buildAndExpand(ImmutableMap.of("sessionId", current.getAuthorizationSessionIdIfOpened()))
+                                        .toUri()
                         )
                         .issues(current.getViolations())
                         .build()
