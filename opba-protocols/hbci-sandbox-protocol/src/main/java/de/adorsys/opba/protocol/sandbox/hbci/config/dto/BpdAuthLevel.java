@@ -1,8 +1,7 @@
 package de.adorsys.opba.protocol.sandbox.hbci.config.dto;
 
-public enum AuthLevel {
+public enum BpdAuthLevel {
 
     ANONYMOUS,
-    AUTHENTICATED,
-    AUTHORIZED
+    AUTHENTICATED
 }
