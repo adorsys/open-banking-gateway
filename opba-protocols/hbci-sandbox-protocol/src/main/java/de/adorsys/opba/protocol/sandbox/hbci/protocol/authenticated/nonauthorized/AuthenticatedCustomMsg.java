@@ -8,7 +8,6 @@ import de.adorsys.opba.protocol.sandbox.hbci.protocol.TemplateBasedOperationHand
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.interpolation.JsonTemplateInterpolation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.SEPA_INFO;
@@ -51,11 +50,6 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
     }
 
     private String getAuthorizationRequiredTemplateOrWrongTanMethod(SandboxContext context) {
-        if (Strings.isBlank(context.getReferencedScaMethodId()) || !context.getUser().getScaMethodsAvailable().contains(context.getReferencedScaMethodId())) {
-            log.warn("Wrong or missing TAN method ID: {} / allowed: {}", context.getReferencedScaMethodId(), context.getUser().getScaMethodsAvailable());
-            return "response-templates/wrong-sca-id.json";
-        }
-
         return "response-templates/authenticated/custom-message-authorization-required.json";
     }
 }
