@@ -22,6 +22,9 @@ test:
       http-only: true
       path: /
       same-site: Lax
+      urls-to-be-validated:
+        # templates for web filter
+        - /v1/banking/*
 
 security:
   # This is the example private key value used only for DEMO purposes
@@ -30,9 +33,6 @@ security:
   signSubject: fintech@awesome-fintech.com
   algorithm: RSA
   claim-name-key: sign-data
-  urls-to-be-validated:
-    # templates for web filter
-    - /v1/banking/*
 
   tpp:
     key-validity-duration: P7D
