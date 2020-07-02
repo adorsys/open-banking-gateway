@@ -3,8 +3,10 @@ package de.adorsys.opba.protocol.sandbox.hbci.protocol;
 import com.google.common.base.Strings;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.BpdAuthLevel;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service("decisionSwitch")
 public class DecisionSwitch {
 
@@ -15,6 +17,15 @@ public class DecisionSwitch {
 
     public boolean isDialogPinTanOk(SandboxContext context) {
         return context.isPinOk() && context.isTanOk();
+    }
+
+    public boolean isWrongScaMethod(SandboxContext context) {
+        if (Strings.isNullOrEmpty(context.getReferencedScaMethodId()) || !context.getUser().getScaMethodsAvailable().contains(context.getReferencedScaMethodId())) {
+            log.warn("Wrong or missing TAN method ID: {} / allowed: {}", context.getReferencedScaMethodId(), context.getUser().getScaMethodsAvailable());
+            return true;
+        }
+
+        return false;
     }
 
     public boolean isDialogPinOkAndNoTan(SandboxContext context) {
