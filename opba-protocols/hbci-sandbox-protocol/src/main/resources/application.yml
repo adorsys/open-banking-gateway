@@ -13,18 +13,18 @@ spring:
 
 hbci:
   banks:
-    - name: anonymous-bpd
+    - name: anonymous-bpd-no-sca
       bic: FOO1DEH1XXX
       blz: 10000001
       country-code: DE
       security:
         bank-parameters-data: ANONYMOUS
         accounts: AUTHENTICATED
-        transactions: AUTHORIZED
+        transactions: AUTHENTICATED
       users:
         - anton.brueckner
         - max.musterman
-    - name: no-anonymous-bpd-txn-authenticated
+    - name: authenticated-bpd-no-sca
       bic: FOO2DEH1XXX
       blz: 20000002
       country-code: DE
@@ -35,7 +35,7 @@ hbci:
       users:
         - anton.brueckner
         - max.musterman
-    - name: no-anonymous-bpd-txn-authorized
+    - name: authenticated-bpd-txn-sca
       bic: FOO3DEH1XXX
       blz: 30000003
       country-code: DE
