@@ -78,10 +78,8 @@ public class Xs2aRedirectExecutor {
     ) {
         setDestinationUriInContext(execution, destinationUri);
 
-        URI screenUri = URI.create(
-                UriComponentsBuilder.fromHttpUrl(uiScreenUriSpel)   // TODO for Vero: changed to buildAndExpandQueryParameters()
-                .toUriString()
-        );
+        URI screenUri = ContextUtil.buildAndExpandQueryParameters(uiScreenUriSpel, null, null);
+
 
         Redirect.RedirectBuilder redirect = Redirect.builder();
         redirect.processId(execution.getRootProcessInstanceId());
