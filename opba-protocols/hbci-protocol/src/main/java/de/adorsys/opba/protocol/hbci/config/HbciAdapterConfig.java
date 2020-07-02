@@ -3,7 +3,6 @@ package de.adorsys.opba.protocol.hbci.config;
 import com.google.common.base.Strings;
 import de.adorsys.multibanking.domain.spi.OnlineBankingService;
 import de.adorsys.multibanking.hbci.HbciBanking;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.Resources;
@@ -11,6 +10,7 @@ import org.kapott.hbci.manager.BankInfo;
 import org.kapott.hbci.manager.HBCIProduct;
 import org.kapott.hbci.manager.HBCIUtils;
 import org.kapott.hbci.manager.HBCIVersion;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -19,10 +19,16 @@ import java.util.Optional;
 
 @Slf4j
 @Configuration
-@RequiredArgsConstructor
 public class HbciAdapterConfig {
 
     private final HbciAdapterProperties properties;
+    private final String adorsysMockBankUrl;
+
+    public HbciAdapterConfig(HbciAdapterProperties properties,
+                             @Value("${spring.liquibase.parameters.adorsys-hbci-sandbox-url}") String adorsysMockBankUrl) {
+        this.properties = properties;
+        this.adorsysMockBankUrl = adorsysMockBankUrl;
+    }
 
     @Bean
     @SneakyThrows
@@ -37,13 +43,15 @@ public class HbciAdapterConfig {
                 properties.getUpdExpirationTimeMs()
         );
 
-        // Initiate MOCK bank, should come after HbciBanking is created
-        BankInfo bankInfo = new BankInfo();
-        bankInfo.setBlz("10000001");
-        bankInfo.setPinTanAddress("http://localhost:8090/hbci-mock/");
-        bankInfo.setPinTanVersion(HBCIVersion.HBCI_300);
-        bankInfo.setBic("ADORSYS");
-        HBCIUtils.addBankInfo(bankInfo);
+        properties.getAdorsysMockBanksBlz().forEach(it -> {
+            // Initiate MOCK bank, should come after HbciBanking is created
+            BankInfo bankInfo = new BankInfo();
+            bankInfo.setBlz(it.toString());
+            bankInfo.setPinTanAddress(adorsysMockBankUrl);
+            bankInfo.setPinTanVersion(HBCIVersion.HBCI_300);
+            bankInfo.setBic("ADORSYS HB");
+            HBCIUtils.addBankInfo(bankInfo);
+        });
 
         return hbci;
     }
