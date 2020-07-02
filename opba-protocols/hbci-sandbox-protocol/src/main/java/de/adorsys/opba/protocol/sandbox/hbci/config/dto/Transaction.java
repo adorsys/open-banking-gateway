@@ -34,14 +34,14 @@ public class Transaction {
     private String balanceAfter;
 
     @NotBlank
-    @Length(max = 32)
-    @SuppressWarnings("checkstyle:MagicNumber") // 32 is just maximum length
-    private String toFirstLine;
+    @Length(max = 70)
+    @SuppressWarnings("checkstyle:MagicNumber") // 70 is just maximum length
+    private String toName;
 
     @NotBlank
-    @Length(max = 32)
-    @SuppressWarnings("checkstyle:MagicNumber") // 32 is just maximum length
-    private String toSecondLine;
+    @Length(max = 400)
+    @SuppressWarnings("checkstyle:MagicNumber") // 400 is just maximum length
+    private String purpose;
 
     @NotNull
     private Currency currency;
