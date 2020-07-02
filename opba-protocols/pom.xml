@@ -29,6 +29,7 @@
         <!-- HBCI -->
         <module>hbci-protocol</module>
         <module>hbci-sandbox-protocol</module>
+        <module>hbci-protocol-tests</module>
         <!-- Support -->
         <module>sandboxes</module>
     </modules>
