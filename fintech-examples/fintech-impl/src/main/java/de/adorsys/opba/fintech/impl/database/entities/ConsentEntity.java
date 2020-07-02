@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Getter
@@ -22,13 +23,15 @@ import java.util.UUID;
 @Slf4j
 @NoArgsConstructor
 public class ConsentEntity {
-    public ConsentEntity(ConsentType consentType, UserEntity userEntity, String bankId, String authId, UUID tppServiceSessionId) {
+    public ConsentEntity(ConsentType consentType, UserEntity userEntity, String bankId, String accountId, String tppAuthId, UUID tppServiceSessionId) {
         this.consentType = consentType;
         this.userEntity = userEntity;
         this.consentConfirmed = false;
         this.tppServiceSessionId = tppServiceSessionId;
-        this.authId = authId;
+        this.tppAuthId = tppAuthId;
         this.bankId = bankId;
+        this.accountId = accountId;
+        this.creationTime = OffsetDateTime.now();
     }
 
     @Id
@@ -37,9 +40,13 @@ public class ConsentEntity {
     private Long id;
 
     private String bankId;
-    private String authId;
+    private String accountId;
+    private String tppAuthId;
     private UUID tppServiceSessionId;
     private ConsentType consentType;
+    @Column(nullable = false)
+    private OffsetDateTime creationTime;
+
     @Column(nullable = false)
     private Boolean consentConfirmed;
     @ManyToOne(fetch = FetchType.LAZY)

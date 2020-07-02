@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AccountDetails } from '../../api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
-import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
+import { AccountStruct, RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
 import { HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 import { SettingsService } from '../services/settings.service';
@@ -26,7 +26,10 @@ export class ListAccountsComponent implements OnInit {
     private storageService: StorageService,
     private settingsService: SettingsService
   ) {
-    this.settingsService.getLoA().pipe(tap(el => this.loARetrievalInformation = el)).subscribe();
+    this.settingsService
+      .getLoA()
+      .pipe(tap(el => (this.loARetrievalInformation = el)))
+      .subscribe();
   }
 
   ngOnInit() {
@@ -43,7 +46,7 @@ export class ListAccountsComponent implements OnInit {
   }
 
   visibleAccountNumber(acc: AccountDetails) {
-    return (!acc.iban || acc.iban.length === 0) ? acc.bban : acc.iban
+    return !acc.iban || acc.iban.length === 0 ? acc.bban : acc.iban;
   }
 
   private loadAccount(): void {
@@ -66,6 +69,11 @@ export class ListAccountsComponent implements OnInit {
           break;
         case 200:
           this.accounts = response.body.accounts;
+          const loa = [];
+          for (const accountDetail of this.accounts) {
+            loa.push(new AccountStruct(accountDetail.resourceId, accountDetail.iban, accountDetail.name));
+          }
+          this.storageService.setLoa(loa);
       }
     });
   }

@@ -46,8 +46,8 @@ public class ConsentService {
         Optional<ConsentEntity> optionalConsent = consentRepository.findByUserEntityAndBankIdAndConsentTypeAndConsentConfirmed(userEntity,
                 bankID, consentType, Boolean.TRUE);
         if (optionalConsent.isPresent()) {
-            log.info("consent {} for user {} is deleted", consentType, userEntity.getLoginUserName());
             consentRepository.delete(optionalConsent.get());
+            log.info("consent {} for user {} is deleted", consentType, userEntity.getLoginUserName());
         }
     }
 

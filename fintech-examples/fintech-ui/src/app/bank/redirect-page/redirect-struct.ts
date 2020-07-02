@@ -10,10 +10,13 @@ export class RedirectTupelForMap {
   xsrfToken: string;
   validUntil: Date;
   redirectType: RedirectType;
-
 }
 
 export enum RedirectType {
   AIS,
   PIS
+}
+
+export class AccountStruct {
+  constructor(public resourceId: string, public iban: string, public name: string) {}
 }

@@ -19,19 +19,26 @@ public class FintechSinglePaymentInitiationImpl implements FintechSinglePaymentI
     private final PaymentService paymentService;
     private final SessionLogicService sessionLogicService;
 
+    @Override
     public ResponseEntity<Void> initiateSinglePayment(
             SinglePaymentInitiationRequest body,
             UUID xRequestID,
             String xXsrfToken,
             String fintechRedirectURLOK,
-            String fintechRedirectURLNOK, String bankId) {
-        log.info("got payment requrest");
+            String fintechRedirectURLNOK,
+            String bankId,
+            String accountId) {
+        log.debug("got initiate payment requrest");
 
         if (!sessionLogicService.isSessionAuthorized()) {
             log.warn("singlePaymentPost failed: user is not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        return sessionLogicService.addSessionMaxAgeToHeader(paymentService.initiateSinglePayment(bankId, body, fintechRedirectURLOK, fintechRedirectURLNOK));
+        return sessionLogicService.addSessionMaxAgeToHeader(paymentService.initiateSinglePayment(bankId, accountId, body, fintechRedirectURLOK, fintechRedirectURLNOK));
     }
+
+
+
+
 }

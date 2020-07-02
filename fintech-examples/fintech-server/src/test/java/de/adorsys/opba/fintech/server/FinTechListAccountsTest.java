@@ -104,12 +104,12 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
                 .build();
         BankProfileTestResult result = getBankProfileTestResult();
         createConsent(null, null);
-        when(tppAisClientFeignMock.getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+        when(tppAisClientFeignMock.getTransactionsWithoutAccountId(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(), any())).thenReturn(accepted);
 
         MvcResult mvcResult = plainListAccounts(result.getBankUUID());
         assertEquals(ACCEPTED.value(), mvcResult.getResponse().getStatus());
-        verify(tppAisClientFeignMock).getTransactions(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
+        verify(tppAisClientFeignMock).getTransactionsWithoutAccountId(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(),
                 any(), any(), any(), any(), any(), any(), any());
         verify(tppAisClientFeignMock, never()).getAccounts(any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any());
     }
@@ -148,7 +148,7 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
                         .header(Consts.HEADER_XSRF_TOKEN, restRequestContext.getXsrfTokenHeaderField())
                         .header("Fintech-Redirect-URL-OK", "ok")
                         .header("Fintech-Redirect-URL-NOK", "notok")
-                        .header("LoARetrievalInformation", "fromTppWithAvailableConsent"))
+                        .header("LoARetrievalInformation", "FROM_TPP_WITH_AVAILABLE_CONSENT"))
                 .andDo(print())
                 .andReturn();
     }
@@ -173,13 +173,13 @@ public class FinTechListAccountsTest extends FinTechBankSearchApiTest {
     public void loginPostUnAuthorized() {
     }
 
-    protected void createConsent(String authId, UUID serviceSessionId) {
-        if (authId == null) {
+    protected void createConsent(String tppAuthId, UUID serviceSessionId) {
+        if (tppAuthId == null) {
             return;
         }
         final String bankId = "af062b06-ee6e-45f9-9163-b97320c6881a";
         UserEntity userEntity = userRepository.findById("peter").get();
-        ConsentEntity consentEntity = new ConsentEntity(ConsentType.AIS, userEntity, bankId, authId, serviceSessionId);
+        ConsentEntity consentEntity = new ConsentEntity(ConsentType.AIS, userEntity, bankId, null, tppAuthId, serviceSessionId);
         consentEntity.setConsentConfirmed(true);
         consentRepository.save(consentEntity);
     }

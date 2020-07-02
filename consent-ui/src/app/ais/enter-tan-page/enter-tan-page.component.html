@@ -1,1 +1,5 @@
-<consent-app-enter-tan [wrongSca]="wrongSca" (enteredSca)="onSubmit($event)"></consent-app-enter-tan>
+<consent-app-enter-tan
+  [authorizationSessionId]="authorizationSessionId"
+  [wrongSca]="wrongSca"
+  (enteredSca)="onSubmit($event)"
+></consent-app-enter-tan>

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
 import { AccountReport } from '../../api';
 import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
-import { HeaderConfig, LoTRetrievalInformation } from '../../models/consts';
+import { HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 import { tap } from 'rxjs/operators';
 import { SettingsService } from '../services/settings.service';
@@ -26,7 +26,10 @@ export class ListTransactionsComponent implements OnInit {
     private storageService: StorageService,
     private settingsService: SettingsService
   ) {
-    this.settingsService.getLoT().pipe(tap(el => this.loTRetrievalInformation = el)).subscribe();
+    this.settingsService
+      .getLoT()
+      .pipe(tap(el => (this.loTRetrievalInformation = el)))
+      .subscribe();
   }
 
   ngOnInit() {

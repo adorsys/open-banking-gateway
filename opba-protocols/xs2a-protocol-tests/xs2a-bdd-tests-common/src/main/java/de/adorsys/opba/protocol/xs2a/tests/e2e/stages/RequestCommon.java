@@ -1,6 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.ImmutableMap;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
@@ -30,10 +32,10 @@ import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZA
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.GET_CONSENT_AUTH_STATE;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.LOGIN;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.PASSWORD;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.GET_CONSENT_AUTH_STATE;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.LOGIN;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PASSWORD;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.REDIRECT_CODE;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,6 +45,9 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF> {
+    public static final ObjectMapper JSON_MAPPER = new ObjectMapper()
+               .registerModule(new JavaTimeModule())
+               .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
     public static final String REDIRECT_CODE_QUERY = "redirectCode";
 
@@ -178,7 +183,7 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
     @SneakyThrows
     protected void updateAvailableScas() {
         ExtractableResponse<Response> response = provideGetConsentAuthStateRequest();
-        InlineResponse200 parsedValue = new ObjectMapper()
+        InlineResponse200 parsedValue = JSON_MAPPER
                 .readValue(response.body().asString(), InlineResponse200.class);
 
         this.availableScas = parsedValue.getConsentAuth().getScaMethods();
@@ -188,7 +193,7 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
     @SneakyThrows
     protected void readViolations() {
         ExtractableResponse<Response> response = provideGetConsentAuthStateRequest();
-        InlineResponse200 parsedValue = new ObjectMapper()
+        InlineResponse200 parsedValue = JSON_MAPPER
                 .readValue(response.body().asString(), InlineResponse200.class);
 
         this.violations = parsedValue.getConsentAuth().getViolations();

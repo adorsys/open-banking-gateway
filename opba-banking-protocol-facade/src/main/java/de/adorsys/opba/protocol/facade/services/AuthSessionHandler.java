@@ -7,7 +7,7 @@ import de.adorsys.opba.db.domain.entity.fintech.FintechUser;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
-import de.adorsys.opba.db.repository.jpa.BankProtocolRepository;
+import de.adorsys.opba.db.repository.jpa.BankActionRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechUserRepository;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
@@ -37,7 +37,7 @@ import static de.adorsys.opba.protocol.facade.config.auth.UriExpandConst.FINTECH
 public class AuthSessionHandler {
 
     private final FacadeAuthConfig facadeAuthConfig;
-    private final BankProtocolRepository protocolRepository;
+    private final BankActionRepository bankActionRepository;
     private final FintechUserPasswordGenerator passwordGenerator;
     private final FintechRepository fintechs;
     private final FintechUserRepository fintechUsers;
@@ -76,7 +76,7 @@ public class AuthSessionHandler {
             SecretKeyWithIv sessionKey,
             FacadeResultRedirectable<O, ?> result
     ) {
-        BankAction authProtocol = protocolRepository
+        BankAction authAction = bankActionRepository
                 .findByBankProfileUuidAndAction(context.getBankId(), AUTHORIZATION)
                 .orElseThrow(
                         () -> new IllegalStateException("Missing update authorization handler for " + context.getBankId())
@@ -97,7 +97,7 @@ public class AuthSessionHandler {
         AuthSession session = authenticationSessions.save(
                 AuthSession.builder()
                         .parent(entityManager.find(ServiceSession.class, context.getServiceSessionId()))
-                        .action(authProtocol)
+                        .action(authAction)
                         .fintechUser(user)
                         .redirectCode(context.getFutureRedirectCode().toString())
                         .build()

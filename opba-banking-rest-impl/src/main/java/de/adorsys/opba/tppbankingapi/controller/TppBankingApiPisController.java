@@ -14,6 +14,7 @@ import de.adorsys.opba.tppbankingapi.pis.model.generated.PaymentInitiationRespon
 import de.adorsys.opba.tppbankingapi.pis.resource.generated.TppBankingApiSinglePaymentPisApi;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -66,6 +67,7 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = API_MAPPERS_PACKAGE)
     public interface PaymentRestRequestBodyToSinglePaymentMapper {
+        @Mapping(source = "body.creditorAddress.townName", target = "creditorAddress.city")
         SinglePaymentBody map(PaymentInitiation body, PaymentProductDetails paymentProduct);
     }
 

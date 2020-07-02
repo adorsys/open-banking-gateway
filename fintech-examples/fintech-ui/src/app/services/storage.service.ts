@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { toLocaleString } from '../models/consts';
-import { RedirectTupelForMap, RedirectType } from '../bank/redirect-page/redirect-struct';
+import { AccountStruct, RedirectTupelForMap, RedirectType } from '../bank/redirect-page/redirect-struct';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,13 @@ export class StorageService {
     localStorage.setItem(Session.MAX_VALID_UNTIL, JSON.stringify(this.getMaxAgeDate(maxAge)));
   }
 
-  public setRedirect(redirectCode: string, authId: string, xsrfToken: string, maxAge: number, redirectType: RedirectType): void {
+  public setRedirect(
+    redirectCode: string,
+    authId: string,
+    xsrfToken: string,
+    maxAge: number,
+    redirectType: RedirectType
+  ): void {
     console.log('REDIRECT STARTED ', redirectCode);
     const tupel: RedirectTupelForMap = new RedirectTupelForMap();
     tupel.authId = authId;
@@ -85,6 +91,18 @@ export class StorageService {
     return this.isAnySessionValid();
   }
 
+  public setLoa(accountStruct: AccountStruct[]): void {
+    localStorage.setItem(Session.LOA, JSON.stringify(accountStruct));
+  }
+
+  public getLoa(): AccountStruct[] {
+    const value = localStorage.getItem(Session.LOA);
+    if (value === null) {
+      return null;
+    }
+    return JSON.parse(value);
+  }
+
   private isAnySessionValid(): boolean {
     const date: Date = this.getValidUntilDate();
     if (this.isDateValid(date)) {
@@ -126,5 +144,6 @@ enum Session {
   BANK_NAME = 'BANK_NAME',
   XSRF_TOKEN = 'XSRF_TOKEN',
   MAX_VALID_UNTIL = 'MAX_VALID_UNTIL_TIMESTAMP',
-  REDIRECT_MAP = 'REDIRECT_MAP'
+  REDIRECT_MAP = 'REDIRECT_MAP',
+  LOA = 'LOA'
 }

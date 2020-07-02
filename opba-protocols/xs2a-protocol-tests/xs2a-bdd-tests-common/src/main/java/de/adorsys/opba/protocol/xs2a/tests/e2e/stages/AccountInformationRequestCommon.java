@@ -20,21 +20,22 @@ import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZA
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_LOGIN_USER_ENDPOINT;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.ANTON_BRUECKNER;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.DENY_CONSENT_AUTH_ENDPOINT;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.FINTECH_REDIR_NOK;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.GET_CONSENT_AUTH_STATE;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.LOGIN;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.MAX_MUSTERMAN;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.PASSWORD;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withAccountsHeaders;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withAccountsHeadersMissingIpAddress;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withDefaultHeaders;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AisStagesCommonUtil.withTransactionsHeaders;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_LOGIN_USER_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.ANTON_BRUECKNER;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.DENY_CONSENT_AUTH_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.FINTECH_REDIR_NOK;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.GET_CONSENT_AUTH_STATE;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.LOGIN;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PASSWORD;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeaders;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeadersMissingIpAddress;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withDefaultHeaders;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withTransactionsHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.LOCATION;
@@ -88,6 +89,21 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF fintech_calls_list_transactions_for_anton_brueckner() {
+        ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
+                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                .when()
+                    .get(AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT)
+                .then()
+                    .statusCode(HttpStatus.ACCEPTED.value())
+                    .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
+        return self();
+    }
+
     public SELF fintech_calls_list_transactions_for_anton_brueckner(String resourceId) {
         ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
@@ -95,7 +111,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                     .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
                     .statusCode(HttpStatus.ACCEPTED.value())
-                .extract();
+                    .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -104,7 +120,18 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman() {
-        return fintech_calls_list_transactions_for_max_musterman("oN7KTVuJSVotMvPPPavhVo");
+        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
+                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                .when()
+                    .get(AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT)
+                .then()
+                    .statusCode(HttpStatus.ACCEPTED.value())
+                    .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
+        return self();
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId) {
@@ -417,6 +444,35 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                                                     .code("PSU_IP_PORT")
                                                     .captionMessage("{no.ctx.psuIpPort}");
         assertThat(this.violations).doesNotContain(authViolationIpPort);
+
+        return self();
+    }
+
+    public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_without_cookie_unauthorized() {
+        RestAssured
+                .given()
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"))
+                .when()
+                    .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
+                .then()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .extract();
+
+        return self();
+    }
+
+    public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_without_cookie_unauthorized() {
+                withDefaultHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
+                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .when()
+                    .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
+                .then()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .extract();
 
         return self();
     }

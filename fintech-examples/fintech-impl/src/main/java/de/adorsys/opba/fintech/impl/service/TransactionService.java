@@ -2,8 +2,8 @@ package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
-import de.adorsys.opba.fintech.impl.controller.LoTRetrievalInformation;
-import de.adorsys.opba.fintech.impl.controller.RestRequestContext;
+import de.adorsys.opba.fintech.impl.controller.utils.LoTRetrievalInformation;
+import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.ConsentEntity;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
@@ -46,7 +46,7 @@ public class TransactionService {
                                            String bookingStatus, Boolean deltaList, LoTRetrievalInformation loTRetrievalInformation) {
 
         log.info("LoT {}", loTRetrievalInformation);
-        if (loTRetrievalInformation.equals(LoTRetrievalInformation.fromTppWithNewConsent)) {
+        if (loTRetrievalInformation.equals(LoTRetrievalInformation.FROM_TPP_WITH_NEW_CONSENT)) {
             consentService.deleteConsent(sessionEntity.getUserEntity(), ConsentType.AIS, bankId);
         }
 
@@ -67,8 +67,9 @@ public class TransactionService {
                 UUID.fromString(restRequestContext.getRequestId()),
                 COMPUTE_X_TIMESTAMP_UTC, OperationType.AIS.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
-                COMPUTE_FINTECH_ID, bankId, null, optionalConsent.isPresent() ? optionalConsent.get().getTppServiceSessionId() : null, dateFrom, dateTo,
-                entryReferenceFrom, bookingStatus, deltaList);
+                COMPUTE_FINTECH_ID, bankId, null,
+                optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
+                dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList);
         switch (transactions.getStatusCode()) {
             case OK:
                 return new ResponseEntity<>(ManualMapper.fromTppToFintech(transactions.getBody()), HttpStatus.OK);

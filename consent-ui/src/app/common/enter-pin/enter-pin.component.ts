@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { StubUtil } from '../utils/stub-util';
+import { UpdateConsentAuthorizationService } from '../../api';
+import { SessionService } from '../session.service';
+import { ApiHeaders } from '../../api/api.headers';
 
 @Component({
   selector: 'consent-app-enter-pin',
@@ -7,19 +11,41 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./enter-pin.component.scss']
 })
 export class EnterPinComponent implements OnInit {
-  pinForm: FormGroup;
-  @Input() wrongPassword;
-  @Output() enteredPin = new EventEmitter<string>();
+  @Input() title: string;
+  @Input() wrongPassword: boolean;
+  @Input() authorizationSessionId: string;
+  @Output() enteredPin = new EventEmitter<any>();
 
-  constructor(private formBuilder: FormBuilder) {}
+  pinForm: FormGroup;
+  redirectCode: string;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: UpdateConsentAuthorizationService,
+    private sessionService: SessionService
+  ) {}
 
   ngOnInit() {
+    this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
     this.pinForm = this.formBuilder.group({
       pin: ['', Validators.required]
     });
   }
 
   onSubmit() {
-    this.enteredPin.emit(this.pinForm.get('pin').value);
+    // since API call is the same for AIS and PIS, it is handled here instead of the parent
+    this.authService
+      .embeddedUsingPOST(
+        this.authorizationSessionId,
+        StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
+        StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
+        this.redirectCode,
+        { scaAuthenticationData: { PSU_PASSWORD: this.pinForm.get('pin').value } },
+        'response'
+      )
+      .subscribe(res => {
+        this.sessionService.setRedirectCode(this.authorizationSessionId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+        this.enteredPin.emit(res);
+      });
   }
 }
