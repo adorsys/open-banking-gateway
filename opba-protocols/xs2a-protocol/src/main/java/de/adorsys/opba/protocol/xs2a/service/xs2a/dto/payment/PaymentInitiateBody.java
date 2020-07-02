@@ -10,6 +10,7 @@ import de.adorsys.xs2a.adapter.service.model.SinglePaymentInitiationBody;
 import lombok.Getter;
 import lombok.Setter;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -114,6 +115,7 @@ public class PaymentInitiateBody {
             return map(cons.getPayment());
         }
 
+        @Mapping(source = "cons.creditorAddress.city", target = "creditorAddress.townName")
         SinglePaymentInitiationBody map(PaymentInitiateBody cons);
     }
 
