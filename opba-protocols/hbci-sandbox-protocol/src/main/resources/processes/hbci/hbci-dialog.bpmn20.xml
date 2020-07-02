@@ -88,7 +88,7 @@
         <sequenceFlow id="sid-a30851a1-ccfc-4097-8813-9e5dd1d711bf" sourceRef="noAuthorizationDialogInit" targetRef="authenticatedUpdateUserAndBankInContext"/>
         <sequenceFlow id="sid-083f0679-8a0f-4e6a-a114-c4129948fd6c" sourceRef="noAuthorizationSynch" targetRef="authenticatedUpdateUserAndBankInContext"/>
         <sequenceFlow id="pinIsOk" sourceRef="checkIfDialogIsStillAuthenticated" targetRef="handleRequestWithoutAuthorization">
-          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogOnlyPinOk(CONTEXT)}</conditionExpression>
+          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogPinOkAndNoTan(CONTEXT)}</conditionExpression>
         </sequenceFlow>
         <sequenceFlow id="sid-d2c93495-6de7-4ec9-b61a-f80d96e58d56" sourceRef="noAuthorizationDialogEnd" targetRef="sid-e0b56cf1-5c28-4edd-93b0-0b3f768f7d88"/>
         <serviceTask id="authenticationLost" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Wrong or no authentication" flowable:delegateExpression="${authenticatedAuthLost}"/>
@@ -117,7 +117,7 @@
         <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogPinTanOk(CONTEXT)}</conditionExpression>
       </sequenceFlow>
       <sequenceFlow id="dialogHasValidPin" sourceRef="isDialogAuthorized" targetRef="sid-5510acbc-343c-421b-9c75-c005db1d39ae">
-        <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogOnlyPinOk(CONTEXT)}</conditionExpression>
+        <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogPinOkAndNoTan(CONTEXT)}</conditionExpression>
       </sequenceFlow>
       <sequenceFlow id="sid-79c6fef5-0003-4f74-a325-00584d121232" sourceRef="sid-a44b1524-6994-4834-820c-5c9ecf81dc8f" targetRef="isDialogAuthorized"/>
       <serviceTask id="wrongPinOrTanOrLogin" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Wrong Login or PIN or TAN" flowable:delegateExpression="${wrongPinTanOrLogin}"/>
