@@ -44,7 +44,6 @@ public class HbciReportValidationError implements JavaDelegate {
                         .consentIncompatible(violations.isConsentIncompatible())
                         .provideMoreParamsDialog(
                                 UriComponentsBuilder.fromHttpUrl(configuration.getRedirect().getParameters().getProvideMore())
-                                        .queryParam("redirectCode", current.getRedirectCodeIfAuthContinued())
                                         .buildAndExpand(ImmutableMap.of("sessionId", current.getAuthorizationSessionIdIfOpened()))
                                         .toUri()
                         )

@@ -48,7 +48,6 @@ public class Xs2aReportValidationError implements JavaDelegate {
                         .executionId(execution.getId())
                         .provideMoreParamsDialog(
                                 UriComponentsBuilder.fromHttpUrl(urlSet.getParameters().getProvideMore())
-                                        .queryParam("redirectCode", current.getRedirectCodeIfAuthContinued())
                                         .buildAndExpand(ImmutableMap.of("sessionId", current.getAuthorizationSessionIdIfOpened()))
                                         .toUri()
                         )

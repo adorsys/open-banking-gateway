@@ -58,9 +58,9 @@ protocol:
       common:
         to-aspsp: /{sessionId}/to-aspsp-redirection
         web-hooks:
-          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()
+          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
           nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
-          result: /{sessionId}/consent-result
+          result: /{sessionId}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
         parameters:
           provide-more: /{sessionId}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
           provide-psu-password: /{sessionId}/authenticate?wrong=#{context.getWrongAuthCredentials()}
