@@ -11,6 +11,8 @@
     <logger name="de.adorsys.opba.api.security.internal.filter" level="debug"/>
     -->
 
+    <logger name="org.kapott.hbci.comm.CommPinTan" level="TRACE"/>
+
     <root level="info">
         <appender-ref ref="STDOUT" />
     </root>

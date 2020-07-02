@@ -56,6 +56,17 @@
            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (2000, 3000, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (3000, 3000, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (4000, 3000, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
+
+           <!--  Sparkasse Nuremberg-HBCI  -->
+           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (10001, 'adf61347-e14e-48c0-bf6e-5cd450d6e64b', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
+           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (20001, 'adf61347-e14e-48c0-bf6e-5cd450d6e64b', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
+           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (30001, 'adf61347-e14e-48c0-bf6e-5cd450d6e64b', 'AUTHORIZATION', '', false);
+
+           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (10001, 30001, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
+           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (20001, 30001, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
+           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (30001, 30001, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
+           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (40001, 30001, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
+
        </sql>
     </changeSet>
 
