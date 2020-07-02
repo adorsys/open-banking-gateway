@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.payment;
 
-import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
@@ -23,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.UUID;
 
@@ -48,14 +46,10 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
     @Override
     protected void doPrepareContext(DelegateExecution execution, Xs2aPisContext context) {
         context.setRedirectUriOk(
-                UriComponentsBuilder.fromHttpUrl(urlsConfiguration.getPis().getWebHooks().getOk())
-                        .buildAndExpand(ImmutableMap.of("sessionId", context.getAuthorizationSessionIdIfOpened()))
-                        .toUriString()
+                ContextUtil.buildAndExpandQueryParameters(urlsConfiguration.getPis().getWebHooks().getOk(), context, context.getAspspRedirectCode()).toString()
         );
         context.setRedirectUriNok(
-                UriComponentsBuilder.fromHttpUrl(urlsConfiguration.getPis().getWebHooks().getNok())
-                        .buildAndExpand(ImmutableMap.of("sessionId", context.getAuthorizationSessionIdIfOpened()))
-                        .toUriString()
+                ContextUtil.buildAndExpandQueryParameters(urlsConfiguration.getPis().getWebHooks().getNok(), context, context.getAspspRedirectCode()).toString()
         );
     }
 

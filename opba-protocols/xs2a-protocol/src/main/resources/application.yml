@@ -34,11 +34,11 @@ protocol:
       ais:
         to-aspsp: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.to-aspsp}
         web-hooks:
-          ok: ${protocol.xs2a.urls.common.web-hooks.ok}
-          nok: ${protocol.xs2a.urls.common.web-hooks.nok}
+     #     ok: ${protocol.xs2a.urls.common.web-hooks.ok}
+     #     nok: ${protocol.xs2a.urls.common.web-hooks.nok}
           result: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.web-hooks.result}
         parameters:
-          provide-more: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-more}
+      ##    provide-more: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-more}
           provide-psu-password: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-psu-password}
           select-sca-method: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.select-sca-method}
           report-sca-result: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.report-sca-result}
@@ -46,11 +46,11 @@ protocol:
       pis:
         to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}
         web-hooks:
-          ok: ${protocol.xs2a.urls.common.web-hooks.ok}
-          nok: ${protocol.xs2a.urls.common.web-hooks.nok}
+     #     ok: ${protocol.xs2a.urls.common.web-hooks.ok}
+      #    nok: ${protocol.xs2a.urls.common.web-hooks.nok}
           result: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.web-hooks.result}
         parameters:
-          provide-more: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-more}
+     ##     provide-more: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-more}
           provide-psu-password: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.provide-psu-password}
           select-sca-method: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.select-sca-method}
           report-sca-result: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.parameters.report-sca-result}
@@ -58,11 +58,11 @@ protocol:
       common:
         to-aspsp: /{sessionId}/to-aspsp-redirection
         web-hooks:
-          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
-          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
+      #    ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+      #    nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
           result: /{sessionId}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
         parameters:
-          provide-more: /{sessionId}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+   ##       provide-more: /{sessionId}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
           provide-psu-password: /{sessionId}/authenticate?wrong=#{context.getWrongAuthCredentials()}
           select-sca-method: /{sessionId}/select-sca-method
           report-sca-result: /{sessionId}/sca-result?wrong=#{context.getWrongAuthCredentials()}

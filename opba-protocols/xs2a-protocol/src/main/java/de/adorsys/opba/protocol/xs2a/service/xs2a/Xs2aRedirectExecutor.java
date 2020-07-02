@@ -79,7 +79,7 @@ public class Xs2aRedirectExecutor {
         setDestinationUriInContext(execution, destinationUri);
 
         URI screenUri = URI.create(
-                UriComponentsBuilder.fromHttpUrl(uiScreenUriSpel)
+                UriComponentsBuilder.fromHttpUrl(uiScreenUriSpel)   // TODO for Vero: changed to buildAndExpandQueryParameters()
                 .toUriString()
         );
 
