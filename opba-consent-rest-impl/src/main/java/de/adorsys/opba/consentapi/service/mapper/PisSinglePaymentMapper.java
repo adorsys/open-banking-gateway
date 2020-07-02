@@ -5,6 +5,7 @@ import de.adorsys.opba.consentapi.model.generated.SinglePayment;
 import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.result.body.PaymentProductDetails;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import static de.adorsys.opba.restapi.shared.GlobalConst.CONSENT_MAPPERS_PACKAGE;
 import static de.adorsys.opba.restapi.shared.GlobalConst.SPRING_KEYWORD;
@@ -12,6 +13,8 @@ import static de.adorsys.opba.restapi.shared.GlobalConst.SPRING_KEYWORD;
 @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = CONSENT_MAPPERS_PACKAGE)
 public interface PisSinglePaymentMapper {
 
+    @Mapping(source = "request.creditorAddress.street", target = "creditorAddress.streetName")
+    @Mapping(source = "request.creditorAddress.postalCode", target = "creditorAddress.postCode")
     SinglePaymentBody map(SinglePayment request);
 
     default PaymentProductDetails map(PaymentProduct from) {

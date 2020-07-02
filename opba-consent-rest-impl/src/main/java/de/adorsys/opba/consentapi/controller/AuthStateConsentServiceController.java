@@ -97,7 +97,10 @@ public class AuthStateConsentServiceController implements AuthStateConsentAuthor
             return null;
         }
 
+        @Mapping(source = "singlePaymentBody.creditorAddress.postCode", target = "creditorAddress.postalCode")
+        @Mapping(source = "singlePaymentBody.creditorAddress.streetName", target = "creditorAddress.street")
         SinglePayment mapToSinglePayment(SinglePaymentBody singlePaymentBody);
+
         AisConsentRequest mapToAisConsentRequest(AisConsent aisConsent);
 
         default PaymentProduct mapToProduct(PaymentProductDetails value) {
