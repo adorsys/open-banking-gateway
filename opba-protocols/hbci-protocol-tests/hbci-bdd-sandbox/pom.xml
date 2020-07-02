@@ -28,13 +28,22 @@
 
         <dependency>
             <groupId>de.adorsys.opba</groupId>
-            <artifactId>xs2a-protocol</artifactId>
+            <artifactId>xs2a-bdd-tests-common</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>de.adorsys.opba</groupId>
-            <artifactId>xs2a-bdd-tests-common</artifactId>
+            <artifactId>xs2a-bdd-wiremock</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>hbci-sandbox-protocol</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>hbci-protocol</artifactId>
             <version>${project.version}</version>
         </dependency>
 

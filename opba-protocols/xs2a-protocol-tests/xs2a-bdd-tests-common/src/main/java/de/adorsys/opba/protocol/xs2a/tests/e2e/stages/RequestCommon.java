@@ -200,7 +200,7 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
         updateRedirectCode(response);
     }
 
-    private  ExtractableResponse<Response> provideGetConsentAuthStateRequest() {
+    private ExtractableResponse<Response> provideGetConsentAuthStateRequest() {
         return RestAssured
                 .given()
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
