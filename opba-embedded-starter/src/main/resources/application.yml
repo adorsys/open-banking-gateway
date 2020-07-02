@@ -22,6 +22,7 @@ spring:
     parameters:
       table-prefix: opb_
       adorsys-sandbox-url: http://localhost:20014
+      adorsys-hbci-sandbox-url: http://localhost:8090/hbci-mock/
       fill-with-mock-data: true
 
 # Actuator:
@@ -187,6 +188,10 @@ protocol:
     adapter:
     # hbci-product: product - Your product ID here
     # hbci-version: 300 - Your HBCI ID here
+      adorsys-mock-banks-blz:
+        - 10000001
+        - 30000002
+        - 30000003
     urls:
       redirect:
         to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
