@@ -80,6 +80,7 @@ public class Xs2aGetPaymentInfoEntrypoint implements GetPaymentInfoState {
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface PaymentInformationToBodyMapper {
+        @Mapping(source = "paymentInformation.creditorAddress.townName", target = "creditorAddress.city")
         PaymentInfoBody map(SinglePaymentInitiationInformationWithStatusResponse paymentInformation);
     }
 

@@ -2,10 +2,13 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
 import com.google.common.collect.ImmutableMap;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
+import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
+import de.adorsys.opba.consentapi.model.generated.SinglePayment;
 import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -134,6 +137,8 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
                     .statusCode(HttpStatus.OK.value())
                     .extract();
 
+        assertThatResponseContainsAntonBruecknersSinglePayment(response);
+
         updateNextPaymentAuthorizationUrl(response);
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -248,5 +253,16 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
 
     protected void updateNextPaymentAuthorizationUrl(ExtractableResponse<Response> response) {
         this.redirectUriToGetUserParams = response.header(LOCATION);
+    }
+
+    @SneakyThrows
+    private void assertThatResponseContainsAntonBruecknersSinglePayment(ExtractableResponse<Response> response) {
+        InlineResponse200 response200 = JSON_MAPPER
+                                                .readValue(response.body().asString(), InlineResponse200.class);
+
+        assertThat(response200.getConsentAuth()).isNotNull();
+        assertThat(response200.getConsentAuth().getSinglePayment())
+                .isEqualTo(JSON_MAPPER.readValue(readResource("restrecord/tpp-ui-input/params/anton-brueckner-single-payment-response.json"),
+                                                 SinglePayment.class));
     }
 }

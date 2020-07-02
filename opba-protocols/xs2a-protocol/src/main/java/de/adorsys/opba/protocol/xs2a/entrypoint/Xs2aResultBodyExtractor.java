@@ -11,6 +11,7 @@ import de.adorsys.xs2a.adapter.service.model.SinglePaymentInitiationBody;
 import de.adorsys.xs2a.adapter.service.model.TransactionsReport;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
@@ -42,6 +43,8 @@ public class Xs2aResultBodyExtractor {
     public interface Xs2aToFacadeMapper {
         AccountListBody map(AccountListHolder accountList);
         TransactionsResponseBody map(TransactionsReport transactions);
+
+        @Mapping(source = "singlePaymentInitiationBody.creditorAddress.townName", target = "creditorAddress.city")
         SinglePaymentBody map(SinglePaymentInitiationBody singlePaymentInitiationBody);
 
         default String map(RemittanceInformationStructured value) {
