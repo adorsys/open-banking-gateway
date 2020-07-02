@@ -174,8 +174,8 @@ protocol:
       common:
         to-aspsp: /{sessionId}/to-aspsp-redirection
         web-hooks:
-          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
-          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
+          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok
+          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok
           result: /{sessionId}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
         parameters:
           provide-more: /{sessionId}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}

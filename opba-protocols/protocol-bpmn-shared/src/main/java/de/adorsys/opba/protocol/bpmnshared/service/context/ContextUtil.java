@@ -1,7 +1,9 @@
 package de.adorsys.opba.protocol.bpmnshared.service.context;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.net.UrlEscapers;
 import de.adorsys.opba.protocol.bpmnshared.GlobalConst;
+import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
@@ -10,7 +12,9 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.common.TemplateParserContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.function.Consumer;
 
 /**
@@ -53,6 +57,16 @@ public class ContextUtil {
         ExpressionParser parser = new SpelExpressionParser();
         StandardEvaluationContext parseContext = new StandardEvaluationContext(new SpelCtx<>(execution, context));
         return parser.parseExpression(expression, new TemplateParserContext()).getValue(parseContext, resultClass);
+    }
+
+    public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context, String redirectCode) {
+        return UriComponentsBuilder.fromHttpUrl(urlTemplate)
+                .buildAndExpand(
+                        ImmutableMap.of(
+                                "sessionId", context.getAuthorizationSessionIdIfOpened(),
+                                "redirectCode", redirectCode
+                        )
+                ).toUri();
     }
 
     /**

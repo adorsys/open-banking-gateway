@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
-import com.google.common.collect.ImmutableMap;
+import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.UUID;
 
@@ -38,14 +37,10 @@ public class CreateAisTransactionListConsentService extends ValidatedExecution<T
     @Override
     protected void doPrepareContext(DelegateExecution execution, TransactionListXs2aContext context) {
         context.setRedirectUriOk(
-                UriComponentsBuilder.fromHttpUrl(urlsConfiguration.getAis().getWebHooks().getOk())
-                        .buildAndExpand(ImmutableMap.of("sessionId", context.getAuthorizationSessionIdIfOpened()))
-                        .toUriString()
+                ContextUtil.buildAndExpandQueryParameters(urlsConfiguration.getAis().getWebHooks().getOk(), context, context.getAspspRedirectCode()).toString()
         );
         context.setRedirectUriNok(
-                UriComponentsBuilder.fromHttpUrl(urlsConfiguration.getAis().getWebHooks().getNok())
-                        .buildAndExpand(ImmutableMap.of("sessionId", context.getAuthorizationSessionIdIfOpened()))
-                        .toUriString()
+                ContextUtil.buildAndExpandQueryParameters(urlsConfiguration.getAis().getWebHooks().getNok(), context, context.getAspspRedirectCode()).toString()
         );
     }
 
