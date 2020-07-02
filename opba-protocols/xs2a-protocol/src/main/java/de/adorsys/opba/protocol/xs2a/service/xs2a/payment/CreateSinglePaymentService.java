@@ -49,13 +49,11 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
     protected void doPrepareContext(DelegateExecution execution, Xs2aPisContext context) {
         context.setRedirectUriOk(
                 UriComponentsBuilder.fromHttpUrl(urlsConfiguration.getPis().getWebHooks().getOk())
-                        .queryParam("redirectCode", context.getAspspRedirectCode())
                         .buildAndExpand(ImmutableMap.of("sessionId", context.getAuthorizationSessionIdIfOpened()))
                         .toUriString()
         );
         context.setRedirectUriNok(
                 UriComponentsBuilder.fromHttpUrl(urlsConfiguration.getPis().getWebHooks().getNok())
-                        .queryParam("redirectCode", context.getAspspRedirectCode())
                         .buildAndExpand(ImmutableMap.of("sessionId", context.getAuthorizationSessionIdIfOpened()))
                         .toUriString()
         );
