@@ -96,7 +96,8 @@ public class JsonTemplateInterpolation {
         return message.toString(0);
     }
 
-    // kapott creates does not handle which element to create properly
+    // kapott creates does not handle which element to create properly if 2 entries have same name like KInfo5 and KInfo6
+    // It simply creates 1st one (KInfo5) that does not have IBAN
     @SneakyThrows
     private void injectKonto6IfNeeded(Message message, String key, Map<String, String> values, Set<String> kontos6Injected) {
         Pattern konto6Pattern = Pattern.compile("UPD\\.KInfo.*\\.iban");
