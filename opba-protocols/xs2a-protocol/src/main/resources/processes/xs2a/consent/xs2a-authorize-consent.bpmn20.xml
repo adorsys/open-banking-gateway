@@ -16,7 +16,7 @@
             <documentation>Determines which SCA method was selected by bank</documentation>
         </exclusiveGateway>
         <sequenceFlow id="sid-D15341DB-F89B-491F-9F3D-FFA8D98F770F" sourceRef="startAuthorization" targetRef="scaChallengeSelector"></sequenceFlow>
-        <serviceTask id="notifyUserWithRedirect" name="Notify user with redirect url for challenge. Suspends to wait" flowable:async="true" flowable:delegateExpression="${xs2aDoRedirectForScaChallenge}" flowable:triggerable="true"></serviceTask>
+        <serviceTask id="notifyUserWithRedirect" name="Notify user with redirect url for challenge. Suspends to wait" flowable:async="true" flowable:delegateExpression="${xs2aDoRedirectToAspspForScaChallenge}" flowable:triggerable="true"></serviceTask>
         <sequenceFlow id="redirect" name="redirect" sourceRef="scaChallengeSelector" targetRef="notifyUserWithRedirect">
             <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isRedirect(CONTEXT)}]]></conditionExpression>
         </sequenceFlow>
