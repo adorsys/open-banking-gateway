@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
 import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
@@ -44,7 +43,7 @@ public class FlowableTestConfig {
             processConfiguration.setCustomPreVariableTypes(
                     new ArrayList<>(
                             ImmutableList.of(
-                                    new HbciJsonCustomSerializer(new ObjectMapper()), // HBCI sandbox context is more specific.
+                                    new HbciJsonCustomSerializer(mapper.getMapper()), // HBCI sandbox context is more specific.
                                     new JsonCustomSerializer(scopedServicesProvider, mapper.getMapper(), serializeOnlyPackages, maxLength),
                                     new LargeJsonCustomSerializer(scopedServicesProvider, mapper.getMapper(), serializeOnlyPackages, maxLength)
                             )

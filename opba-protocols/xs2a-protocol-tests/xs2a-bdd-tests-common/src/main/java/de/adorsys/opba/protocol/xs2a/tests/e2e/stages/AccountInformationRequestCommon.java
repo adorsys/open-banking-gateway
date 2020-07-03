@@ -40,18 +40,16 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.wi
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.LOCATION;
+import static org.springframework.http.HttpStatus.ACCEPTED;
 
 @Slf4j
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class AccountInformationRequestCommon<SELF extends AccountInformationRequestCommon<SELF>> extends RequestCommon<SELF> {
 
+    // Note that anton.brueckner is typically used for REDIRECT (real REDIRECT that is returned by bank, and not REDIRECT approach in table)
     public SELF fintech_calls_list_accounts_for_anton_brueckner() {
-        return fintech_calls_list_accounts_for_anton_brueckner(SANDBOX_BANK_ID);
-    }
-
-    public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankId) {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankId, requestSigningService, OperationType.AIS)
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -64,8 +62,14 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    // Note that max.musterman is typically used for EMBEDDED (real EMBEDDED that is returned by bank, and not EMBEDDED approach in table)
     public SELF fintech_calls_list_accounts_for_max_musterman() {
-        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, requestSigningService, OperationType.AIS)
+        return fintech_calls_list_accounts_for_max_musterman(SANDBOX_BANK_ID);
+    }
+
+    // Note that max.musterman is typically used for EMBEDDED (real EMBEDDED that is returned by bank, and not EMBEDDED approach in table)
+    public SELF fintech_calls_list_accounts_for_max_musterman(String bankId) {
+        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, bankId, requestSigningService, OperationType.AIS)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -369,6 +373,21 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             selectedScaBody("EMAIL:max.musterman2@mail.de"),
             HttpStatus.ACCEPTED
         );
+        return self();
+    }
+
+    public SELF user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization() {
+        provideParametersToBankingProtocolWithBody(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                selectedScaBody("pushTAN"),
+                ACCEPTED
+        );
+        return self();
+    }
+
+    public SELF user_max_musterman_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
+        ExtractableResponse<Response> response = max_musterman_provides_password();
+        assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
         return self();
     }
 
