@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 @Data
-public class SandboxContext {
+public class HbciSandboxContext {
 
     private static final Pattern PIN = Pattern.compile("SigTail(_\\d+)*\\.UserSig(_\\d+)*\\.pin");
     private static final Pattern TAN = Pattern.compile("SigTail(_\\d+)*\\.UserSig(_\\d+)*\\.tan");

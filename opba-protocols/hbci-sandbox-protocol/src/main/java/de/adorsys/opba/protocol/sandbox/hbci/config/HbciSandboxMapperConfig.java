@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class HbciSandboxMapperConfig {
 
     @Bean
-    ObjectMapper mapper() {
+    ObjectMapper hbciSandboxMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.findAndRegisterModules();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);

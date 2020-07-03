@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.sandbox.hbci.protocol;
 
-import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
+import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.HbciSandboxContext;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.interpolation.JsonTemplateInterpolation;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -15,7 +15,7 @@ public abstract class TemplateBasedOperationHandler extends OperationHandler {
     private final JsonTemplateInterpolation interpolation;
 
     @Override
-    protected SandboxContext doExecute(DelegateExecution execution, SandboxContext context) {
+    protected HbciSandboxContext doExecute(DelegateExecution execution, HbciSandboxContext context) {
         String templatePathValue = getTemplatePathAndUpdateCtxIfNeeded(context);
         log.info("Applying response template {}", templatePathValue);
         String result = interpolation.interpolateToHbci(templatePathValue, context);
@@ -23,5 +23,5 @@ public abstract class TemplateBasedOperationHandler extends OperationHandler {
         return context;
     }
 
-    protected abstract String getTemplatePathAndUpdateCtxIfNeeded(SandboxContext context);
+    protected abstract String getTemplatePathAndUpdateCtxIfNeeded(HbciSandboxContext context);
 }

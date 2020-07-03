@@ -4,7 +4,7 @@ import de.adorsys.opba.protocol.sandbox.hbci.protocol.MapRegexUtil;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.Operation;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.RequestStatusUtil;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.TemplateBasedOperationHandler;
-import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
+import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.HbciSandboxContext;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.interpolation.JsonTemplateInterpolation;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,7 @@ public class AuthenticatedDialogInitSca extends TemplateBasedOperationHandler {
     }
 
     @Override
-    protected String getTemplatePathAndUpdateCtxIfNeeded(SandboxContext context) {
+    protected String getTemplatePathAndUpdateCtxIfNeeded(HbciSandboxContext context) {
         return "response-templates/authenticated/dialog-init-sca.json";
     }
 
@@ -28,7 +28,7 @@ public class AuthenticatedDialogInitSca extends TemplateBasedOperationHandler {
     }
 
     @Override
-    protected boolean usesCustomHandlingAndHandles(SandboxContext context) {
+    protected boolean usesCustomHandlingAndHandles(HbciSandboxContext context) {
         return canHandle(context.getRequest().getData());
     }
 
