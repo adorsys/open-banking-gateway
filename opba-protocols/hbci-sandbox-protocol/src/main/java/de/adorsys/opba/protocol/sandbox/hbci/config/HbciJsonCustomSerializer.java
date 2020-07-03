@@ -18,7 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class HbciJsonCustomSerializer implements VariableType {
 
-    static final String JSON = "as_json";
+    static final String JSON = "as_hbci_sandbox_json";
     private final ObjectMapper mapper;
 
     @Override
