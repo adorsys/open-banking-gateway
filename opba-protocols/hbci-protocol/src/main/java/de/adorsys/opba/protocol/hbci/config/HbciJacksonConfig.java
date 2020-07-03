@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableSharedFlowableBpmn
-public class HbciFlowableConfig {
+public class HbciJacksonConfig {
 
     @Bean
     JacksonMixin<Credentials, CredentialsMixin> credentialsMixin() {
