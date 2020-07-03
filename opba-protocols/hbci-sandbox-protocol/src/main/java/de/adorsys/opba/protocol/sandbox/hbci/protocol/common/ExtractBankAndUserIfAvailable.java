@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.sandbox.hbci.protocol.common;
 
 import de.adorsys.opba.protocol.sandbox.hbci.config.HbciConfig;
-import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
+import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.HbciSandboxContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
@@ -20,7 +20,7 @@ public class ExtractBankAndUserIfAvailable implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) {
-        SandboxContext context = (SandboxContext) execution.getVariable(CONTEXT);
+        HbciSandboxContext context = (HbciSandboxContext) execution.getVariable(CONTEXT);
 
         updateBankIfNeeded(context, context.getRequestBankBlz());
         updateUserIfNeeded(context, context.getRequestUserLogin());
@@ -28,7 +28,7 @@ public class ExtractBankAndUserIfAvailable implements JavaDelegate {
         execution.setVariable(CONTEXT, context);
     }
 
-    private void updateBankIfNeeded(SandboxContext context, String bankBlz) {
+    private void updateBankIfNeeded(HbciSandboxContext context, String bankBlz) {
         if (Strings.isBlank(bankBlz)) {
             return;
         }
@@ -47,7 +47,7 @@ public class ExtractBankAndUserIfAvailable implements JavaDelegate {
         );
     }
 
-    private void updateUserIfNeeded(SandboxContext context, String userLogin) {
+    private void updateUserIfNeeded(HbciSandboxContext context, String userLogin) {
         if (Strings.isBlank(userLogin)) {
             return;
         }

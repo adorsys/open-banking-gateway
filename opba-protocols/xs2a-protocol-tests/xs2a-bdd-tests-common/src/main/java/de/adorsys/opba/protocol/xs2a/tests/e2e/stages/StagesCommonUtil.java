@@ -63,18 +63,28 @@ public class StagesCommonUtil {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
-        return withSignedHeadersWithoutIpAddress(fintechUserId, operationType, xRequestId, xTimestampUtc)
-                       .header(X_REQUEST_SIGNATURE, calculateAccountsSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId))
+        return headersWithoutIpAddress(fintechUserId, operationType, xRequestId, xTimestampUtc)
+                       .header(X_REQUEST_SIGNATURE, calculateAccountsSignature(requestSigningService, SANDBOX_BANK_ID, xRequestId, xTimestampUtc, operationType, fintechUserId))
                        .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
+    }
+
+    public static RequestSpecification withAccountsHeaders(String fintechUserId, String bankId, RequestSigningService requestSigningService, OperationType operationType) {
+        UUID xRequestId = UUID.randomUUID();
+        Instant xTimestampUtc = Instant.now();
+
+        return headersWithoutIpAddress(fintechUserId, bankId, operationType, xRequestId, xTimestampUtc)
+                .header(X_REQUEST_SIGNATURE, calculateAccountsSignature(requestSigningService, bankId, xRequestId, xTimestampUtc, operationType, fintechUserId))
+                .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
+                .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
     public static RequestSpecification withAccountsHeadersMissingIpAddress(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
-        return withSignedHeadersWithoutIpAddress(fintechUserId, operationType, xRequestId, xTimestampUtc)
-                       .header(X_REQUEST_SIGNATURE, calculateAccountsSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId))
+        return headersWithoutIpAddress(fintechUserId, operationType, xRequestId, xTimestampUtc)
+                       .header(X_REQUEST_SIGNATURE, calculateAccountsSignature(requestSigningService, SANDBOX_BANK_ID, xRequestId, xTimestampUtc, operationType, fintechUserId))
                        .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS);
     }
 
@@ -82,7 +92,7 @@ public class StagesCommonUtil {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
-        return withSignedHeadersWithoutIpAddress(fintechUserId, operationType, xRequestId, xTimestampUtc)
+        return headersWithoutIpAddress(fintechUserId, operationType, xRequestId, xTimestampUtc)
                        .header(X_REQUEST_SIGNATURE, calculateTransactionsSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId, params))
                        .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
@@ -92,7 +102,7 @@ public class StagesCommonUtil {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
-        return withSignedHeadersWithoutIpAddress(fintechUserId, operationType, xRequestId, xTimestampUtc)
+        return headersWithoutIpAddress(fintechUserId, operationType, xRequestId, xTimestampUtc)
                        .header(X_REQUEST_SIGNATURE, calculateConfirmConsentSignature(requestSigningService, xRequestId, xTimestampUtc, operationType))
                        .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
@@ -110,13 +120,13 @@ public class StagesCommonUtil {
                        .header(X_REQUEST_SIGNATURE, calculateConfirmConsentSignature(requestSigningService, xRequestId, xTimestampUtc, operationType));
     }
 
-    private static String calculateAccountsSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
+    private static String calculateAccountsSignature(RequestSigningService requestSigningService, String bankId, UUID xRequestId, Instant xTimestampUtc,
                                                      OperationType operationType, String fintechUserId) {
         AisListAccountsDataToSign aisListAccountsDataToSign = AisListAccountsDataToSign.builder()
                                                                       .xRequestId(xRequestId)
                                                                       .instant(xTimestampUtc)
                                                                       .operationType(operationType)
-                                                                      .bankId(SANDBOX_BANK_ID)
+                                                                      .bankId(bankId)
                                                                       .fintechUserId(fintechUserId)
                                                                       .redirectOk(FINTECH_REDIR_OK)
                                                                       .redirectNok(FINTECH_REDIR_NOK)
@@ -148,10 +158,14 @@ public class StagesCommonUtil {
         return requestSigningService.signature(aisListAccountsDataToSign);
     }
 
-    private static RequestSpecification withSignedHeadersWithoutIpAddress(String fintechUserId, OperationType operationType, UUID xRequestId, Instant xTimestampUtc) {
+    private static RequestSpecification headersWithoutIpAddress(String fintechUserId, OperationType operationType, UUID xRequestId, Instant xTimestampUtc) {
+        return headersWithoutIpAddress(fintechUserId, SANDBOX_BANK_ID, operationType, xRequestId, xTimestampUtc);
+    }
+
+    private static RequestSpecification headersWithoutIpAddress(String fintechUserId, String bankId, OperationType operationType, UUID xRequestId, Instant xTimestampUtc) {
         return RestAssured
                        .given()
-                       .header(BANK_ID, SANDBOX_BANK_ID)
+                       .header(BANK_ID, bankId)
                        .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
                        .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
                        .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)

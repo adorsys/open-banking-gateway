@@ -12,15 +12,15 @@ import java.util.ArrayList;
 
 @Configuration
 @RequiredArgsConstructor
-public class FlowableConfig {
+public class HbciSandboxFlowableConfig {
 
     private final ObjectMapper mapper;
 
     @Bean
-    EngineConfigurationConfigurer<SpringProcessEngineConfiguration> customizeListenerAndJsonSerializer() {
+    EngineConfigurationConfigurer<SpringProcessEngineConfiguration> hbciSandboxCustomizeListenerAndJsonSerializer() {
         return processConfiguration -> processConfiguration.setCustomPreVariableTypes(
                 new ArrayList<>(
-                        ImmutableList.of(new JsonCustomSerializer(mapper))
+                        ImmutableList.of(new HbciJsonCustomSerializer(mapper))
                 )
         );
     }
