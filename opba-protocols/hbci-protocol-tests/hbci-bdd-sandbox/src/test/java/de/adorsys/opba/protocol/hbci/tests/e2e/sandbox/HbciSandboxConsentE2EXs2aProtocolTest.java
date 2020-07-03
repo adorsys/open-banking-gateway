@@ -82,7 +82,7 @@ class HbciSandboxConsentE2EXs2aProtocolTest extends SpringScenarioTest<HbciServe
         then()
                 .open_banking_has_consent_for_max_musterman_account_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
-                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
+                .open_banking_can_read_max_musterman_hbci_account_data_using_consent_bound_to_service_session(bankId);
     }
 
     private void makeHbciAdapterToPointToHbciMockEndpoints() {
