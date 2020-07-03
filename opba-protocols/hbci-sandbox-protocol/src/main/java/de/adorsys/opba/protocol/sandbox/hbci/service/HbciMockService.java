@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.sandbox.hbci.service;
 
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.Operation;
-import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
+import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.HbciSandboxContext;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.parsing.ParsingUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,7 +61,7 @@ public class HbciMockService {
     }
 
     private String triggerNewProcess(Operation operation, Message request, String scaMethodId, boolean isCrypted) {
-        SandboxContext context = new SandboxContext();
+        HbciSandboxContext context = new HbciSandboxContext();
         context.setCryptNeeded(isCrypted);
         setRequest(operation, request, context);
         context.setReferencedScaMethodId(scaMethodId);
@@ -70,8 +70,8 @@ public class HbciMockService {
         return getResponse(instance.getId());
     }
 
-    private void setRequest(Operation operation, Message request, SandboxContext context) {
-        SandboxContext.Request update = new SandboxContext.Request();
+    private void setRequest(Operation operation, Message request, HbciSandboxContext context) {
+        HbciSandboxContext.Request update = new HbciSandboxContext.Request();
         update.setData(request.getData());
         update.setOperation(operation);
         context.setRequest(update);
@@ -85,7 +85,7 @@ public class HbciMockService {
                 .singleResult()
                 .getExecutionId();
 
-        SandboxContext context = (SandboxContext) runtimeService.getVariable(execId, CONTEXT);
+        HbciSandboxContext context = (HbciSandboxContext) runtimeService.getVariable(execId, CONTEXT);
         context.setCryptNeeded(isCrypted);
         setRequest(operation, request, context);
         context.setReferencedScaMethodId(scaMethodId);
@@ -98,21 +98,21 @@ public class HbciMockService {
 
     private String getResponse(String executionId) {
         try {
-            return ((SandboxContext) runtimeService.getVariable(executionId, CONTEXT)).getResponse();
+            return ((HbciSandboxContext) runtimeService.getVariable(executionId, CONTEXT)).getResponse();
         } catch (FlowableObjectNotFoundException ex) {
             log.info("Can't find runtime instance of execution {} - looking in history tables", executionId);
             return readHistoricalContext(executionId).getResponse();
         }
     }
 
-    private SandboxContext readHistoricalContext(String executionId) {
+    private HbciSandboxContext readHistoricalContext(String executionId) {
         HistoricActivityInstance finished = historyService.createHistoricActivityInstanceQuery()
                 .executionId(executionId)
                 .finished()
                 .listPage(0, 1)
                 .get(0);
 
-        return (SandboxContext) historyService.createHistoricVariableInstanceQuery()
+        return (HbciSandboxContext) historyService.createHistoricVariableInstanceQuery()
                 .processInstanceId(finished.getProcessInstanceId())
                 .variableName(CONTEXT)
                 .singleResult()

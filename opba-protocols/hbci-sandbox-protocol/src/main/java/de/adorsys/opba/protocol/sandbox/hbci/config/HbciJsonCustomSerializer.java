@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.sandbox.hbci.config;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.HbciSandboxContext;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.variable.api.types.ValueFields;
@@ -15,7 +16,7 @@ import java.util.Map;
  * returns the class that was used to serialize data.
  */
 @RequiredArgsConstructor
-class JsonCustomSerializer implements VariableType {
+public class HbciJsonCustomSerializer implements VariableType {
 
     static final String JSON = "as_json";
     private final ObjectMapper mapper;
@@ -33,7 +34,7 @@ class JsonCustomSerializer implements VariableType {
     @Override
     @SneakyThrows
     public boolean isAbleToStore(Object o) {
-        return true;
+        return o instanceof HbciSandboxContext;
     }
 
     @Override

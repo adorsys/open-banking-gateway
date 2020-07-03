@@ -15,7 +15,7 @@ import java.util.List;
  * Data is encrypted using {@link RequestScopedServicesProvider}.
  */
 @RequiredArgsConstructor
-class LargeJsonCustomSerializer extends SerializableType {
+public class LargeJsonCustomSerializer extends SerializableType {
 
     static final String JSON = "as_large_json";
 

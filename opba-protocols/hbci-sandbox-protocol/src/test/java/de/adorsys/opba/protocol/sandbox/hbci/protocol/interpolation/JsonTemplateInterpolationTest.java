@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Account;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Bank;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.User;
-import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
+import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.HbciSandboxContext;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -18,7 +18,7 @@ class JsonTemplateInterpolationTest {
 
     @Test
     void testHbciCreation() {
-        SandboxContext ctx = new SandboxContext();
+        HbciSandboxContext ctx = new HbciSandboxContext();
         Bank bank = new Bank();
         bank.setBic("CODE");
         bank.setBlz("1234");
@@ -31,7 +31,7 @@ class JsonTemplateInterpolationTest {
 
     @Test
     void testSimpleInterpolation() {
-        SandboxContext ctx = new SandboxContext();
+        HbciSandboxContext ctx = new HbciSandboxContext();
         Bank bank = new Bank();
         bank.setBic("CODE");
         bank.setBlz("1234");
@@ -45,7 +45,7 @@ class JsonTemplateInterpolationTest {
 
     @Test
     void testLoopInterpolationSingleAccount() {
-        SandboxContext ctx = new SandboxContext();
+        HbciSandboxContext ctx = new HbciSandboxContext();
         Account account = new Account();
         account.setNumber("1999");
         User user = new User();
@@ -61,7 +61,7 @@ class JsonTemplateInterpolationTest {
 
     @Test
     void testLoopInterpolationTwoAccounts() {
-        SandboxContext ctx = new SandboxContext();
+        HbciSandboxContext ctx = new HbciSandboxContext();
         Account accountOne = new Account();
         accountOne.setNumber("account_1");
         Account accountTwo = new Account();

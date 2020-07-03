@@ -10,7 +10,7 @@ import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Account;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Bank;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Transaction;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.User;
-import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
+import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.HbciSandboxContext;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.parsing.ParsingUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -67,7 +67,7 @@ public class JsonTemplateInterpolation {
     private final ObjectMapper mapper;
 
     @SneakyThrows
-    public String interpolateToHbci(String templateResourcePath, SandboxContext context) {
+    public String interpolateToHbci(String templateResourcePath, HbciSandboxContext context) {
         Map<String, String> interpolated = interpolate(templateResourcePath, context);
         String type = interpolated.remove("A_TYPE");
         log.info("Using (unwrapped) message type: {}", type);
@@ -139,7 +139,7 @@ public class JsonTemplateInterpolation {
         updElem.getChildContainers().add(newKonto6Elem);
     }
 
-    private Message encryptAndSignMessage(SandboxContext context, Message message) {
+    private Message encryptAndSignMessage(HbciSandboxContext context, Message message) {
         String userLogin = null == context.getUser() ? "noref" : context.getUser().getLogin();
         PinTanPassport passport = new PinTanPassport(
                 "300",
@@ -159,7 +159,7 @@ public class JsonTemplateInterpolation {
     }
 
     @NotNull
-    private Message encryptMessage(SandboxContext context, Message message, PinTanPassport passport) {
+    private Message encryptMessage(HbciSandboxContext context, Message message, PinTanPassport passport) {
         // Crypt the message
         Crypt crypt = new Crypt(passport);
         message = crypt.cryptIt(message);
@@ -215,7 +215,7 @@ public class JsonTemplateInterpolation {
     }
 
     @SneakyThrows
-    public Map<String, String> interpolate(String templateResourcePath, SandboxContext context) {
+    public Map<String, String> interpolate(String templateResourcePath, HbciSandboxContext context) {
         String templateToParse = Resources.asByteSource(Resources.getResource(templateResourcePath)).asCharSource(StandardCharsets.UTF_8).read();
         Map<String, String> template = mapper.readValue(templateToParse,  new TypeReference<Map<String, String>>() { });
         List<Entry> mt940TransactionLoop = extractAndRemoveFromTemplateTransactionLoopMt940Entries(template);
@@ -283,7 +283,7 @@ public class JsonTemplateInterpolation {
         return doInterpolate(template.replaceAll("\\$\\{mt940Begin}", "").replaceAll("\\$\\{mt940End}", ""), context);
     }
 
-    private String doInterpolate(String template, SandboxContext context) {
+    private String doInterpolate(String template, HbciSandboxContext context) {
         Matcher target = interpolationTarget.matcher(template);
         StringBuffer result = new StringBuffer();
         while (target.find()) {
@@ -350,7 +350,7 @@ public class JsonTemplateInterpolation {
         return mt940LoopTransactions.matcher(expression).find();
     }
 
-    private String parseExpression(String expression, SandboxContext context) {
+    private String parseExpression(String expression, HbciSandboxContext context) {
         String prefix = "";
         if (expression.startsWith("_")) {
             prefix = "_";
@@ -370,13 +370,13 @@ public class JsonTemplateInterpolation {
         return prefix + result;
     }
 
-    private String doParse(String expression, SandboxContext context) {
+    private String doParse(String expression, HbciSandboxContext context) {
         ExpressionParser parser = new SpelExpressionParser();
         StandardEvaluationContext parseContext = new StandardEvaluationContext(new SpelCtx(context));
         return parser.parseExpression(expression, new TemplateParserContext()).getValue(parseContext, String.class);
     }
 
-    private static int getAccountPosForTransactions(User user, SandboxContext context) {
+    private static int getAccountPosForTransactions(User user, HbciSandboxContext context) {
         String accNumber = context.getAccountNumberRequestedBeforeSca();
         if (null == accNumber) {
             String accKey = context.getRequest().getData().keySet().stream()
@@ -398,16 +398,16 @@ public class JsonTemplateInterpolation {
     @Getter
     @RequiredArgsConstructor
     private static class SpelCtx {
-        private final SandboxContext ctx;
+        private final HbciSandboxContext ctx;
     }
 
     @RequiredArgsConstructor
-    private static class AccountsContext extends SandboxContext {
+    private static class AccountsContext extends HbciSandboxContext {
 
         private final int accountLoopPos;
 
         @Delegate
-        protected final SandboxContext context;
+        protected final HbciSandboxContext context;
 
         public AccountWithPosition getLoopAccount() {
             return new AccountWithPosition(getUser().getAccounts().get(accountLoopPos), context.getBank(), accountLoopPos + 1);
@@ -415,12 +415,12 @@ public class JsonTemplateInterpolation {
     }
 
     @RequiredArgsConstructor
-    private static class ScaContext extends SandboxContext {
+    private static class ScaContext extends HbciSandboxContext {
 
         private final int scaLoopPos;
 
         @Delegate
-        protected final SandboxContext context;
+        protected final HbciSandboxContext context;
 
         public ScaWithPosition getLoopScaMethod() {
             return new ScaWithPosition(scaLoopPos + 1, context.getUser().getScaMethodsAvailable().get(scaLoopPos));
@@ -433,7 +433,7 @@ public class JsonTemplateInterpolation {
         private final int transactionLoopPos;
         private final List<Transaction> transactions;
 
-        TransactionsContext(int accountLoopPos, SandboxContext context, int transactionAccPos, int transactionLoopPos, List<Transaction> transactions) {
+        TransactionsContext(int accountLoopPos, HbciSandboxContext context, int transactionAccPos, int transactionLoopPos, List<Transaction> transactions) {
             super(accountLoopPos, context);
             this.transactionAccPos = transactionAccPos;
             this.transactionLoopPos = transactionLoopPos;

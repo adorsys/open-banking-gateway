@@ -126,7 +126,7 @@
         <conditionExpression xsi:type="tFormalExpression"/>
       </sequenceFlow>
       <serviceTask id="onWrongScaMethod" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Handle wrong SCA method ID" flowable:delegateExpression="${wrongScaMethodId}"/>
-      <exclusiveGateway id="sid-a04150db-257d-4f5d-be14-2a5f1bbd4b55"/>
+      <exclusiveGateway id="sid-a04150db-257d-4f5d-be14-2a5f1bbd4b55" default="okScaMethodIdProvided"/>
       <sequenceFlow id="wrongScaMethodIdProvided" sourceRef="sid-a04150db-257d-4f5d-be14-2a5f1bbd4b55" targetRef="onWrongScaMethod">
         <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isWrongScaMethod(CONTEXT)}</conditionExpression>
       </sequenceFlow>
