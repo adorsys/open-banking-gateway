@@ -65,26 +65,24 @@ class HbciSandboxConsentE2EXs2aProtocolTest extends SpringScenarioTest<HbciServe
     }
 
     @Test
-    void testAccountsListWithConsentUsingRedirect() {
-        String bankId = "918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76";
+    void testAccountsListWithConsentNoSca() {
+        String bankId = "125ef2c6-f414-4a10-a865-e3cdddf9753d";
         given()
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-                .fintech_calls_list_accounts_for_anton_brueckner(bankId)
+                .fintech_calls_list_accounts_for_max_musterman(bankId)
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
-                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
+                .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
                 .and()
-                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
-                .and()
-                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
+                .user_max_musterman_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
         then()
-                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .open_banking_has_consent_for_max_musterman_account_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
-                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
+                .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session();
     }
 
     private void makeHbciAdapterToPointToHbciMockEndpoints() {

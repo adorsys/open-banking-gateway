@@ -211,6 +211,7 @@ bpmnshared:
         - de.adorsys.opba.protocol.bpmnshared.dto.context
         - de.adorsys.opba.protocol.xs2a.context
         - de.adorsys.opba.protocol.hbci.context
+        - de.adorsys.opba.protocol.hbci.service.protocol.ais.dto
     expirable:
       expire-after-write: PT600S
     # TODO: re-enable retry after proper error handling implementation
