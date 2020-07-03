@@ -22,7 +22,7 @@ public class FlowableConfig {
      * JSON as variables in database.
      */
     @Bean
-    EngineConfigurationConfigurer<SpringProcessEngineConfiguration> customizeListenerAndJsonSerializer(
+    EngineConfigurationConfigurer<SpringProcessEngineConfiguration> productionCustomizeListenerAndJsonSerializer(
             RequestScopedServicesProvider scopedServicesProvider,
             FlowableProperties flowableProperties,
             FlowableObjectMapper mapper

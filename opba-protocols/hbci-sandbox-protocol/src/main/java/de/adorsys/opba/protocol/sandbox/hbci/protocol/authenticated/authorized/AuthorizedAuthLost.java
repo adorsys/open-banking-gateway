@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.sandbox.hbci.protocol.authenticated.authorized;
 
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.Operation;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.TemplateBasedOperationHandler;
-import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.SandboxContext;
+import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.HbciSandboxContext;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.interpolation.JsonTemplateInterpolation;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class AuthorizedAuthLost extends TemplateBasedOperationHandler {
     }
 
     @Override
-    protected String getTemplatePathAndUpdateCtxIfNeeded(SandboxContext context) {
+    protected String getTemplatePathAndUpdateCtxIfNeeded(HbciSandboxContext context) {
         if (!context.isPinOk()) {
             return "response-templates/wrong-pin.json";
         }
