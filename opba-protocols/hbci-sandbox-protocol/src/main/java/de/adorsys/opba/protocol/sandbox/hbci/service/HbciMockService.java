@@ -29,7 +29,7 @@ import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.DIALOG_ID;
 public class HbciMockService {
 
     private static final Pattern SCA_METHOD_ID = Pattern.compile("HNSHK:\\d+?:\\d+?\\+PIN:\\d+?\\+(\\d+?)\\+");
-    private static final String PROCESS_KEY = "hbci-dialog";
+    private static final String PROCESS_KEY = "hbci-sandbox-mock-dialog";
 
     private final HistoryService historyService;
     private final RuntimeService runtimeService;
