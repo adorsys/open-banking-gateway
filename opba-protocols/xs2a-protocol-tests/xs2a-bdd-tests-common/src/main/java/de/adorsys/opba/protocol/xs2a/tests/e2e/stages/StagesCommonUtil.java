@@ -89,11 +89,15 @@ public class StagesCommonUtil {
     }
 
     public static RequestSpecification withTransactionsHeaders(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType, GetTransactionsQueryParams params) {
+        return withTransactionsHeaders(fintechUserId, SANDBOX_BANK_ID, requestSigningService, operationType, params);
+    }
+
+    public static RequestSpecification withTransactionsHeaders(String fintechUserId, String bankId, RequestSigningService requestSigningService, OperationType operationType, GetTransactionsQueryParams params) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
-        return headersWithoutIpAddress(fintechUserId, operationType, xRequestId, xTimestampUtc)
-                       .header(X_REQUEST_SIGNATURE, calculateTransactionsSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId, params))
+        return headersWithoutIpAddress(fintechUserId, bankId, operationType, xRequestId, xTimestampUtc)
+                       .header(X_REQUEST_SIGNATURE, calculateTransactionsSignature(requestSigningService, bankId, xRequestId, xTimestampUtc, operationType, fintechUserId, params))
                        .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
@@ -134,13 +138,13 @@ public class StagesCommonUtil {
         return requestSigningService.signature(aisListAccountsDataToSign);
     }
 
-    private static String calculateTransactionsSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
+    private static String calculateTransactionsSignature(RequestSigningService requestSigningService, String bankId, UUID xRequestId, Instant xTimestampUtc,
                                                          OperationType operationType, String fintechUserId, GetTransactionsQueryParams params) {
         AisListTransactionsDataToSign aisListTransactionsDataToSign = AisListTransactionsDataToSign.builder()
                                                                               .xRequestId(xRequestId)
                                                                               .instant(xTimestampUtc)
                                                                               .operationType(operationType)
-                                                                              .bankId(SANDBOX_BANK_ID)
+                                                                              .bankId(bankId)
                                                                               .fintechUserId(fintechUserId)
                                                                               .redirectOk(FINTECH_REDIR_OK)
                                                                               .redirectNok(FINTECH_REDIR_NOK)
