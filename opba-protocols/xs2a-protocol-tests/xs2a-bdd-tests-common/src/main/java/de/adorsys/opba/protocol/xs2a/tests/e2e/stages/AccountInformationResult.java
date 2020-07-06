@@ -70,6 +70,12 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     @ExpectedScenarioState
     protected String authSessionCookie;
 
+    @ExpectedScenarioState
+    protected String iban;
+
+    @ExpectedScenarioState
+    protected String accountResourceId;
+
     @Autowired
     protected ConsentRepository consents;
 
@@ -140,6 +146,27 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     }
 
     @SneakyThrows
+    public SELF open_banking_can_read_user_account_data_using_consent_bound_to_service_session(
+            String user, boolean validateResourceId
+    ) {
+        ExtractableResponse<Response> response = withAccountsHeaders(user, requestSigningService, OperationType.AIS)
+                                                         .header(SERVICE_SESSION_ID, serviceSessionId)
+                                                         .when()
+                                                         .get(AIS_ACCOUNTS_ENDPOINT)
+                                                         .then()
+                                                         .statusCode(HttpStatus.OK.value())
+                                                         .body("accounts[0].iban", equalTo(iban))
+                                                         .body("accounts[0].resourceId", validateResourceId ? equalTo("cmD4EYZeTkkhxRuIV1diKA") : instanceOf(String.class))
+                                                         .body("accounts[0].currency", equalTo("EUR"))
+                                                         .body("accounts[0].name", equalTo(user))
+                                                         .body("accounts", hasSize(1))
+                                                         .extract();
+
+        this.responseContent = response.body().asString();
+        return self();
+    }
+
+    @SneakyThrows
     public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session() {
         return open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true);
     }
@@ -201,6 +228,33 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                         new BigDecimal("-900.00"),
                         new BigDecimal("-700.00"),
                         new BigDecimal("30000.00")
+                );
+        return self();
+    }
+
+    @SneakyThrows
+    public SELF open_banking_reads_user_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
+            String user, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+    ) {
+        ExtractableResponse<Response> response = getTransactionListFor(user, accountResourceId, dateFrom, dateTo, bookingStatus);
+
+        this.responseContent = response.body().asString();
+        DocumentContext body = JsonPath.parse(responseContent);
+
+        assertThat(body).extracting(it -> it.read("$.transactions.booked[*].creditorAccount.iban")).asList()
+                .containsOnly(iban);
+
+        assertThat(body).extracting(it -> it.read("$.transactions.booked[*].debtorAccount.iban")).asList()
+                .containsOnly(iban);
+
+        assertThat(body)
+                .extracting(it -> it.read("$.transactions.booked[*].transactionAmount.amount"))
+                .asList()
+                .extracting(it -> new BigDecimal((String) it))
+                .usingElementComparator(BIG_DECIMAL_COMPARATOR)
+                // Looks like returned order by Sandbox is not stable
+                .containsOnly(
+                        new BigDecimal("1000.00")
                 );
         return self();
     }

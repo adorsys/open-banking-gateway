@@ -39,13 +39,13 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     @Value("${test.webdriver.timeout}")
     private Duration timeout;
 
-    public SELF user_anton_brueckner_opens_opba_consent_login_page(WebDriver driver) {
+    public SELF user_max_musterman_opens_opba_consent_login_page(WebDriver driver) {
         driver.get(redirectUriToGetUserParams);
         waitForPageLoadAndUrlContains(driver, "/login");
         return self();
     }
 
-    public SELF user_max_musterman_opens_opba_consent_login_page(WebDriver driver) {
+    public SELF user_opens_opba_consent_login_page(WebDriver driver) {
         driver.get(redirectUriToGetUserParams);
         waitForPageLoadAndUrlContains(driver, "/login");
         return self();
@@ -69,9 +69,9 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    public SELF user_anton_brueckner_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_consent(WebDriver driver) {
+    public SELF user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_consent(WebDriver driver, String user) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts");
-        sendText(driver, By.id("PSU_ID"), ANTON_BRUECKNER);
+        sendText(driver, By.id("PSU_ID"), user);
         clickOnButton(driver, By.id("ALL_ACCOUNTS"));
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
@@ -80,6 +80,14 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     public SELF user_anton_brueckner_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent(WebDriver driver) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
         sendText(driver, By.id("PSU_ID"), ANTON_BRUECKNER);
+        clickOnButton(driver, By.id("ALL_PSD2"));
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent(WebDriver driver, String user) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
+        sendText(driver, By.id("PSU_ID"), user);
         clickOnButton(driver, By.id("ALL_PSD2"));
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
@@ -132,19 +140,24 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    public SELF user_anton_brueckner_in_consent_ui_reviews_accounts_concent_and_accepts(WebDriver driver) {
+    public SELF user_in_consent_ui_reviews_accounts_concent_and_accepts(WebDriver driver) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts/review-consent");
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
-    public SELF user_anton_brueckner_in_consent_ui_sees_redirection_info_to_aspsp_and_accepts(WebDriver driver) {
+    public SELF user_in_consent_ui_sees_redirection_info_to_aspsp_and_accepts(WebDriver driver) {
         waitForPageLoadAndUrlEndsWithPath(driver, "/to-aspsp-redirection");
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
     public SELF sandbox_anton_brueckner_from_consent_ui_navigates_to_bank_auth_page(WebDriver driver) {
+        waitForPageLoadAndUrlContains(driver, "account-information/login");
+        return self();
+    }
+
+    public SELF sandbox_user_from_consent_ui_navigates_to_bank_auth_page(WebDriver driver) {
         waitForPageLoadAndUrlContains(driver, "account-information/login");
         return self();
     }
@@ -161,7 +174,19 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
+    public SELF user_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(WebDriver driver) {
+        waitForPageLoadAndUrlContains(driver, "/consent-result");
+        clickOnButton(driver, By.id(SUBMIT_ID), true);
+        return self();
+    }
+
     public SELF user_anton_brueckner_in_consent_ui_reviews_transaction_consent_and_accepts(WebDriver driver) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions/review-consent");
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_in_consent_ui_reviews_transaction_consent_and_accepts(WebDriver driver) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions/review-consent");
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
@@ -215,7 +240,22 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
+    public SELF sandbox_new_user_inputs_username_and_password(WebDriver driver, String user, String password) {
+        waitForPageLoad(driver);
+        clickOnButton(driver, By.name("login"));
+        sendText(driver, By.name("login"), user);
+        sendText(driver, By.name("pin"), password);
+        clickOnButton(driver, By.xpath("//button[@type='submit']"));
+        return self();
+    }
+
     public SELF sandbox_anton_brueckner_confirms_consent_information(WebDriver driver) {
+        waitForPageLoad(driver);
+        clickOnButton(driver, By.xpath("//button[@type='submit']"));
+        return self();
+    }
+
+    public SELF sandbox_user_confirms_consent_information(WebDriver driver) {
         waitForPageLoad(driver);
         clickOnButton(driver, By.xpath("//button[@type='submit']"));
         return self();
@@ -227,7 +267,20 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
+    public SELF sandbox_user_selects_sca_method(WebDriver driver) {
+        waitForPageLoad(driver);
+        clickOnButton(driver, By.xpath("//button[@type='submit']"));
+        return self();
+    }
+
     public SELF sandbox_anton_brueckner_provides_sca_challenge_result(WebDriver driver) {
+        waitForPageLoad(driver);
+        sendText(driver, By.name("authCode"), "123456");
+        clickOnButton(driver, By.xpath("//button[@type='submit']"));
+        return self();
+    }
+
+    public SELF sandbox_user_provides_sca_challenge_result(WebDriver driver) {
         waitForPageLoad(driver);
         sendText(driver, By.name("authCode"), "123456");
         clickOnButton(driver, By.xpath("//button[@type='submit']"));
@@ -261,6 +314,12 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     public SELF sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button(WebDriver driver) {
+        waitForPageLoad(driver);
+        clickOnButton(driver, By.className("btn-primary"), true);
+        return self();
+    }
+
+    public SELF sandbox_user_clicks_redirect_back_to_tpp_button(WebDriver driver) {
         waitForPageLoad(driver);
         clickOnButton(driver, By.className("btn-primary"), true);
         return self();

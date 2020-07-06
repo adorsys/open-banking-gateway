@@ -1,0 +1,14 @@
+{
+  "scaUserData": [
+    {
+      "scaMethod": "EMAIL",
+      "methodValue": "test@example.com",
+      "staticTan": "123456",
+      "usesStaticTan": true
+    }
+  ],
+  "email": "%email%",
+  "login": "%login%",
+  "pin": "%password%",
+  "userRoles": ["CUSTOMER"]
+}
