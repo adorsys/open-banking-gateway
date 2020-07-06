@@ -46,9 +46,13 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class AccountInformationRequestCommon<SELF extends AccountInformationRequestCommon<SELF>> extends RequestCommon<SELF> {
 
-    // Note that anton.brueckner is typically used for REDIRECT (real REDIRECT that is returned by bank, and not REDIRECT approach in table)
     public SELF fintech_calls_list_accounts_for_anton_brueckner() {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
+        return fintech_calls_list_accounts_for_anton_brueckner(SANDBOX_BANK_ID);
+    }
+
+    // Note that anton.brueckner is typically used for REDIRECT (real REDIRECT that is returned by bank, and not REDIRECT approach in table)
+    public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankId) {
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankId, requestSigningService, OperationType.AIS)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
