@@ -186,7 +186,7 @@ protocol:
       # hbci-version: 300 - Your HBCI ID here
       adorsys-mock-banks-blz:
         - 10000001
-        - 30000002
+        - 20000002
         - 30000003
     urls:
       redirect:

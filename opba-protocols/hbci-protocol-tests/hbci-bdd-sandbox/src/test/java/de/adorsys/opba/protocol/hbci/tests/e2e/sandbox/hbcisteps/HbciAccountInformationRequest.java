@@ -5,8 +5,10 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestC
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 
-import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.BANK_BLZ_30000003_ACCOUNT_ID;
+import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.BANK_BLZ_20000002_ID;
 import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.BANK_BLZ_30000003_ID;
+import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.MAX_MUSTERMAN_BANK_BLZ_20000002_ACCOUNT_ID;
+import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.LOCATION;
@@ -20,7 +22,11 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman_for_blz_30000003() {
-        return fintech_calls_list_transactions_for_max_musterman(BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID);
+        return fintech_calls_list_transactions_for_max_musterman(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID);
+    }
+
+    public SELF fintech_calls_list_transactions_for_max_musterman_for_blz_20000002() {
+        return fintech_calls_list_transactions_for_max_musterman(MAX_MUSTERMAN_BANK_BLZ_20000002_ACCOUNT_ID, BANK_BLZ_20000002_ID);
     }
 
     public SELF user_max_musterman_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
