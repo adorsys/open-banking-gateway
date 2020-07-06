@@ -40,7 +40,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.wi
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.LOCATION;
-import static org.springframework.http.HttpStatus.ACCEPTED;
 
 @Slf4j
 @JGivenStage
@@ -362,21 +361,6 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
             selectedScaBody("EMAIL:max.musterman2@mail.de"),
             HttpStatus.ACCEPTED
         );
-        return self();
-    }
-
-    public SELF user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization() {
-        provideParametersToBankingProtocolWithBody(
-                AUTHORIZE_CONSENT_ENDPOINT,
-                selectedScaBody("pushTAN"),
-                ACCEPTED
-        );
-        return self();
-    }
-
-    public SELF user_max_musterman_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
-        ExtractableResponse<Response> response = max_musterman_provides_password();
-        assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
         return self();
     }
 
