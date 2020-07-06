@@ -134,34 +134,4 @@ public class HbciAccountInformationResult<SELF extends HbciAccountInformationRes
                 );
         return self();
     }
-
-    @SneakyThrows
-    public SELF open_banking_can_read_anton_brueckner_hbci_transaction_data_using_consent_bound_to_service_session_bank_blz_20000002(
-            String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
-    ) {
-        return open_banking_can_read_anton_brueckner_hbci_transaction_data_using_consent_bound_to_service_session(resourceId, BANK_BLZ_20000002_ID, dateFrom, dateTo, bookingStatus);
-    }
-
-    @SneakyThrows
-    public SELF open_banking_can_read_anton_brueckner_hbci_transaction_data_using_consent_bound_to_service_session(
-            String resourceId, String bankId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
-    ) {
-        ExtractableResponse<Response> response = getTransactionListFor(ANTON_BRUECKNER, bankId, resourceId, dateFrom, dateTo, bookingStatus);
-
-        this.responseContent = response.body().asString();
-        DocumentContext body = JsonPath.parse(responseContent);
-
-        // TODO: Currently no IBANs as mapping is not yet completed
-
-        assertThat(body)
-                .extracting(it -> it.read("$.transactions.booked[*].transactionAmount.amount"))
-                .asList()
-                .extracting(it -> new BigDecimal((String) it))
-                .usingElementComparator(BIG_DECIMAL_COMPARATOR)
-                // Looks like returned order by Sandbox is not stable
-                .containsOnly(
-                        new BigDecimal("-100.00")
-                );
-        return self();
-    }
 }

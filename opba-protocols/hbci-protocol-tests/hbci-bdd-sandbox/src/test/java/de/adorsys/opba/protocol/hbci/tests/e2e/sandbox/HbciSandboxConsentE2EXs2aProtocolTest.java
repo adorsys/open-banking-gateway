@@ -152,7 +152,7 @@ class HbciSandboxConsentE2EXs2aProtocolTest extends SpringScenarioTest<
                 .user_max_musterman_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
 
         then()
-                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .open_banking_has_consent_for_max_musterman_transaction_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
                 .open_banking_can_read_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session_bank_blz_20000002(
                         MAX_MUSTERMAN_BANK_BLZ_20000002_ACCOUNT_ID, DATE_FROM, DATE_TO, BOTH_BOOKING
