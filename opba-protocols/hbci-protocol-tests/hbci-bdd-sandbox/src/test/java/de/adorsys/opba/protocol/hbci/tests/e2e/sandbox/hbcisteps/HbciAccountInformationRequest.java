@@ -21,12 +21,31 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
         return fintech_calls_list_accounts_for_max_musterman(BANK_BLZ_30000003_ID);
     }
 
+    public SELF fintech_calls_list_accounts_for_anton_brueckner_for_blz_30000003() {
+        return fintech_calls_list_accounts_for_anton_brueckner(BANK_BLZ_30000003_ID);
+    }
+
     public SELF fintech_calls_list_transactions_for_max_musterman_for_blz_30000003() {
         return fintech_calls_list_transactions_for_max_musterman(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID);
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman_for_blz_20000002() {
         return fintech_calls_list_transactions_for_max_musterman(MAX_MUSTERMAN_BANK_BLZ_20000002_ACCOUNT_ID, BANK_BLZ_20000002_ID);
+    }
+
+    public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent() {
+        startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                "restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"
+        );
+
+        return self();
+    }
+
+    public SELF user_anton_brueckner_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
+        ExtractableResponse<Response> response = anton_brueckner_provides_password();
+        assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
+        return self();
     }
 
     public SELF user_max_musterman_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
@@ -42,5 +61,12 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
                 ACCEPTED
         );
         return self();
+    }
+
+    protected ExtractableResponse<Response> anton_brueckner_provides_password() {
+        return startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                "restrecord/tpp-ui-input/params/anton-brueckner-password.json"
+        );
     }
 }
