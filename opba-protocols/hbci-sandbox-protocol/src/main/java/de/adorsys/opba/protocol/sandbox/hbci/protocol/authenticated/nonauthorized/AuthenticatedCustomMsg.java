@@ -26,7 +26,7 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
         if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(SEPA_INFO))) {
             return context.getBank().getSecurity().getAccounts() == SensitiveAuthLevel.AUTHENTICATED
                     ? "response-templates/authenticated/custom-message-sepa-info.json"
-                    : getAuthorizationRequiredTemplateOrWrongTanMethod(context);
+                    : getAuthorizationRequiredTemplateOrWrongTanMethod();
         }
 
         if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(TRANSACTIONS))) {
@@ -38,7 +38,7 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
                 context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "TAN2Step6\\.OrderAccount\\.number"));
             }
 
-            return getAuthorizationRequiredTemplateOrWrongTanMethod(context);
+            return getAuthorizationRequiredTemplateOrWrongTanMethod();
         }
 
         throw new IllegalStateException("Cant't handle message: " + context.getRequestData());
@@ -49,7 +49,7 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
         return Operation.CUSTOM_MSG;
     }
 
-    private String getAuthorizationRequiredTemplateOrWrongTanMethod(HbciSandboxContext context) {
+    private String getAuthorizationRequiredTemplateOrWrongTanMethod() {
         return "response-templates/authenticated/custom-message-authorization-required.json";
     }
 }
