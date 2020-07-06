@@ -129,28 +129,17 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman() {
-        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
-                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                .when()
-                    .get(AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT)
-                .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract();
-
-        updateServiceSessionId(response);
-        updateRedirectCode(response);
-        updateNextConsentAuthorizationUrl(response);
-        return self();
+        return fintech_calls_list_transactions_for_max_musterman("oN7KTVuJSVotMvPPPavhVo", SANDBOX_BANK_ID);
     }
 
-    public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId) {
-        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
-                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+    public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId, String bankId) {
+        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, bankId, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
+                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
-                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract();
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
