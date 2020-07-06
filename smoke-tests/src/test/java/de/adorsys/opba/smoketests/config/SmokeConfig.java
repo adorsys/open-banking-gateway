@@ -32,6 +32,18 @@ public class SmokeConfig {
     @Value("${test.smoke.aspsp-profile.server-uri}")
     private String aspspProfileServerUri;
 
+    @Getter
+    @Value("${test.smoke.tpp.server-uri}")
+    private String sandboxTppManagementServerUrl;
+
+    @Getter
+    @Value("${test.smoke.tpp.management.username}")
+    private String sandboxTppManagementUserName;
+
+    @Getter
+    @Value("${test.smoke.tpp.management.password}")
+    private String sandboxTppManagementPassword;
+
     @MockBean
     // Stubbing out as they are not available, but currently breaking hierarchy has no sense as we can replace this with REST in future
     @SuppressWarnings("PMD.UnusedPrivateField") // Injecting into Spring context

@@ -65,6 +65,20 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF fintech_calls_list_accounts_for_new_user(String user) {
+        ExtractableResponse<Response> response = withAccountsHeaders(user, requestSigningService, OperationType.AIS)
+                                                         .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                                                         .when()
+                                                         .get(AIS_ACCOUNTS_ENDPOINT)
+                                                         .then()
+                                                         .statusCode(HttpStatus.ACCEPTED.value())
+                                                         .extract();
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
+        return self();
+    }
+
     // Note that max.musterman is typically used for EMBEDDED (real EMBEDDED that is returned by bank, and not EMBEDDED approach in table)
     public SELF fintech_calls_list_accounts_for_max_musterman() {
         return fintech_calls_list_accounts_for_max_musterman(SANDBOX_BANK_ID);
@@ -124,6 +138,21 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .then()
                     .statusCode(HttpStatus.ACCEPTED.value())
                     .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
+        return self();
+    }
+
+    public SELF fintech_calls_list_transactions_for_user(String user, String resourceId) {
+        ExtractableResponse<Response> response = withTransactionsHeaders(user, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
+                                                         .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                                                         .when()
+                                                         .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+                                                         .then()
+                                                         .statusCode(HttpStatus.ACCEPTED.value())
+                                                         .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
