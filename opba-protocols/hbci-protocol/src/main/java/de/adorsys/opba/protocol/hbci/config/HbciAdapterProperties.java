@@ -27,6 +27,7 @@ public class HbciAdapterProperties {
     private String hbciVersion;
 
     @NotNull
+    @SuppressWarnings("checkstyle:MagicNumber") // Yes min BLZ 10000 is a magic number
     private List<@NotNull @Min(10000) Long> adorsysMockBanksBlz;
 
     @Min(0)

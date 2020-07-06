@@ -92,7 +92,13 @@ public class StagesCommonUtil {
         return withTransactionsHeaders(fintechUserId, SANDBOX_BANK_ID, requestSigningService, operationType, params);
     }
 
-    public static RequestSpecification withTransactionsHeaders(String fintechUserId, String bankId, RequestSigningService requestSigningService, OperationType operationType, GetTransactionsQueryParams params) {
+    public static RequestSpecification withTransactionsHeaders(
+            String fintechUserId,
+            String bankId,
+            RequestSigningService requestSigningService,
+            OperationType operationType,
+            GetTransactionsQueryParams params
+    ) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
