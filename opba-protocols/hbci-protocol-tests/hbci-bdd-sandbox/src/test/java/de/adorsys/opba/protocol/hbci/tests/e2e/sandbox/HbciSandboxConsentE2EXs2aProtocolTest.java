@@ -66,6 +66,7 @@ class HbciSandboxConsentE2EXs2aProtocolTest extends SpringScenarioTest<
     // TODO: Those dependencies do not need to be mocked, but should be optional
     // Stubbing out xs2a protocol declared dependencies:
     @MockBean
+    @SuppressWarnings("PMD.UnusedPrivateField") // Used to make Spring happy
     private DtoMapper<Set<ValidationIssue>, Set<ValidationError>> dtoMapper;
 
     // See https://github.com/spring-projects/spring-boot/issues/14879 for the 'why setting port'
