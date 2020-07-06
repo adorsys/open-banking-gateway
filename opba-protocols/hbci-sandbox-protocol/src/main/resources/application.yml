@@ -24,6 +24,7 @@ hbci:
       users:
         - anton.brueckner
         - max.musterman
+    # ING-alike
     - name: authenticated-bpd-no-sca
       bic: FOO2DEH1XXX
       blz: 20000002
@@ -35,12 +36,13 @@ hbci:
       users:
         - anton.brueckner
         - max.musterman
-    - name: authenticated-bpd-txn-sca
+    # Sparkasse-alike
+    - name: anonymous-bpd-txn-sca
       bic: FOO3DEH1XXX
       blz: 30000003
       country-code: DE
       security:
-        bank-parameters-data: AUTHENTICATED
+        bank-parameters-data: ANONYMOUS
         accounts: AUTHENTICATED
         transactions: AUTHORIZED
       users:

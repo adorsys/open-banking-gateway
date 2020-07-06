@@ -36,6 +36,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AN
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.CONFIRM_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SESSION_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withSignatureHeaders;
@@ -204,11 +205,15 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         return self();
     }
 
-    private ExtractableResponse<Response> getTransactionListFor(
-        String psuId, String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
+    protected ExtractableResponse<Response> getTransactionListFor(String psuId, String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus) {
+        return getTransactionListFor(psuId, SANDBOX_BANK_ID, resourceId, dateFrom, dateTo, bookingStatus);
+    }
+
+    protected ExtractableResponse<Response> getTransactionListFor(
+        String psuId, String bankId, String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         GetTransactionsQueryParams queryParams = new GetTransactionsQueryParams(dateFrom.format(ISO_DATE), dateTo.format(ISO_DATE), null, bookingStatus, null);
-        return withTransactionsHeaders(psuId, requestSigningService, OperationType.AIS, queryParams)
+        return withTransactionsHeaders(psuId, bankId, requestSigningService, OperationType.AIS, queryParams)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam("dateFrom", dateFrom.format(ISO_DATE))
                 .queryParam("dateTo", dateTo.format(ISO_DATE))
