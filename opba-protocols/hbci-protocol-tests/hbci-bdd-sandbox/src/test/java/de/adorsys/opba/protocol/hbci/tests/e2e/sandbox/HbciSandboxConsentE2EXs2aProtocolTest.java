@@ -74,7 +74,27 @@ class HbciSandboxConsentE2EXs2aProtocolTest extends SpringScenarioTest<
     }
 
     @Test
-    void testAccountsListWithConsentNoSca() {
+    void testAccountsListWithConsentNoScaButUserHasOneSca() {
+        given()
+                .rest_assured_points_to_opba_server()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_list_accounts_for_anton_brueckner_for_blz_30000003()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
+                .and()
+                .user_anton_brueckner_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_anton_brueckner_hbci_account_data_using_consent_bound_to_service_session_bank_blz_30000003();
+    }
+
+    @Test
+    void testAccountsListWithConsentNoScaButUserHasMultiSca() {
         given()
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -86,7 +106,10 @@ class HbciSandboxConsentE2EXs2aProtocolTest extends SpringScenarioTest<
                 .and()
                 .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
                 .and()
-                .user_max_musterman_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization(); // FIXME: Is a glitch for this user, tan will not be used
+
         then()
                 .open_banking_has_consent_for_max_musterman_account_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
@@ -106,9 +129,12 @@ class HbciSandboxConsentE2EXs2aProtocolTest extends SpringScenarioTest<
                 .and()
                 .user_max_musterman_provided_initial_parameters_to_list_transactions_with_all_accounts_psd2_consent()
                 .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
                 .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
                 .and()
-                .user_max_musterman_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+
         then()
                 .open_banking_has_consent_for_max_musterman_account_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
