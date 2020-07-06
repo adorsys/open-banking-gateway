@@ -6,10 +6,10 @@ import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.hbci.config.HbciAdapterProperties;
+import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciAccountInformationRequest;
+import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciAccountInformationResult;
 import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciServers;
 import de.adorsys.opba.protocol.sandbox.hbci.HbciServerApplication;
-import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
-import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockAccountInformationRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,11 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         HbciJGivenConfig.class
 }, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX, HBCI_SANDBOX_CONFIG})
-class HbciSandboxConsentE2EXs2aProtocolTest extends SpringScenarioTest<HbciServers, WiremockAccountInformationRequest<? extends WiremockAccountInformationRequest<?>>, AccountInformationResult> {
+class HbciSandboxConsentE2EXs2aProtocolTest extends SpringScenarioTest<
+        HbciServers,
+        HbciAccountInformationRequest<? extends HbciAccountInformationRequest<?>>,
+        HbciAccountInformationResult<? extends HbciAccountInformationResult<?>>
+    > {
 
     private final String OPBA_LOGIN = UUID.randomUUID().toString();
     private final String OPBA_PASSWORD = UUID.randomUUID().toString();
@@ -66,13 +70,12 @@ class HbciSandboxConsentE2EXs2aProtocolTest extends SpringScenarioTest<HbciServe
 
     @Test
     void testAccountsListWithConsentNoSca() {
-        String bankId = "125ef2c6-f414-4a10-a865-e3cdddf9753d";
         given()
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-                .fintech_calls_list_accounts_for_max_musterman(bankId)
+                .fintech_calls_list_accounts_for_max_musterman_for_blz_30000003()
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
@@ -82,8 +85,29 @@ class HbciSandboxConsentE2EXs2aProtocolTest extends SpringScenarioTest<HbciServe
         then()
                 .open_banking_has_consent_for_max_musterman_account_list()
                 .fintech_calls_consent_activation_for_current_authorization_id()
-                .open_banking_can_read_max_musterman_hbci_account_data_using_consent_bound_to_service_session(bankId);
+                .open_banking_can_read_max_musterman_hbci_account_data_using_consent_bound_to_service_session_bank_blz_30000003();
     }
+
+    @Test
+    void testDirectTransactionListSca() {
+        given()
+                .rest_assured_points_to_opba_server()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_list_transactions_for_max_musterman_for_blz_30000003()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent()
+                .and()
+                .user_max_musterman_provided_correct_pin_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+                .open_banking_has_consent_for_max_musterman_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_max_musterman_hbci_account_data_using_consent_bound_to_service_session_bank_blz_30000003();
+    }
+
 
     private void makeHbciAdapterToPointToHbciMockEndpoints() {
         adapterProperties.getAdorsysMockBanksBlz().stream()
