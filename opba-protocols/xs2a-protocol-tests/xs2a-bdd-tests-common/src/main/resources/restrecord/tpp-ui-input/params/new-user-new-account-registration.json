@@ -1,0 +1,7 @@
+{
+  "accountType": "CASH",
+  "usageType": "PRIV",
+  "currency": "EUR",
+  "iban": "%iban%",
+  "accountStatus": "ENABLED"
+}
