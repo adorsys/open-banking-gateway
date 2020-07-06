@@ -45,6 +45,18 @@ public class StagesCommonUtil {
     public static final String CONFIRM_CONSENT_ENDPOINT = "/v1/banking/consents/{authorizationId}/confirm";
     public static final String PIS_LOGIN_USER_ENDPOINT = "/v1/psu/pis/{authorizationId}/for-approval/login";
 
+    public static final String TPP_MANAGEMENT_LOGIN_ENDPOINT = "/tpp/login";
+    public static final String TPP_MANAGEMENT_CREATE_USER_ENDPOINT = "/tpp/users";
+    public static final String TPP_MANAGEMENT_CREATE_ACCOUNT_ENDPOINT = "/tpp/accounts";
+    public static final String TPP_MANAGEMENT_GET_ACCOUNT_DETAILS_ENDPOINT = "/tpp/accounts/details";
+    public static final String TPP_MANAGEMENT_DEPOSIT_CASH_ENDPOINT = "/tpp/accounts/{accountId}/deposit-cash";
+    public static final String TPP_MANAGEMENT_USER_ID_QUERY = "userId";
+    public static final String TPP_MANAGEMENT_IBAN_QUERY = "iban";
+    public static final String TPP_MANAGEMENT_LOGIN_HEADER = "login";
+    public static final String TPP_MANAGEMENT_PASSWORD_HEADER = "pin";
+    public static final String TPP_MANAGEMENT_AUTH_TOKEN = "access_token";
+    public static final String TPP_MANAGEMENT_AUTH_HEADER = "authorization";
+
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
 
