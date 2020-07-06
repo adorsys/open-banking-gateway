@@ -128,7 +128,11 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman() {
-        return fintech_calls_list_transactions_for_max_musterman("oN7KTVuJSVotMvPPPavhVo", SANDBOX_BANK_ID);
+        return fintech_calls_list_transactions_for_max_musterman("oN7KTVuJSVotMvPPPavhVo");
+    }
+
+    public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId) {
+        return fintech_calls_list_transactions_for_max_musterman(resourceId, SANDBOX_BANK_ID);
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId, String bankId) {
