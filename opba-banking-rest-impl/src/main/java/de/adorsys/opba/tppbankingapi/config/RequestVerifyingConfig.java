@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class RequestVerifyingConfig {
     private Duration requestValidityWindow;
 
     @NotNull
-    private ConcurrentMap<@NotBlank String, @NotNull ApiConsumer> consumers;
+    private ConcurrentHashMap<@NotBlank String, @NotNull ApiConsumer> consumers;
 
     @NotBlank
     private String claimNameKey;

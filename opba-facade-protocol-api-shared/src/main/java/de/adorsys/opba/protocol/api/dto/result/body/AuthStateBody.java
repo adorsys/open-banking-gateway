@@ -38,6 +38,18 @@ public class AuthStateBody implements ResultBody {
      */
     private Object resultBody;
 
+    /**
+     * Bank name
+     * @param
+     */
+    private String bankName;
+
+    /**
+     * Fintech name
+     * @param
+     */
+    private String fintechName;
+
     public AuthStateBody(Set<ValidationError> violations) {
         this.violations = violations;
     }

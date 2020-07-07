@@ -67,7 +67,7 @@ public class AuthStateConsentServiceController implements AuthStateConsentAuthor
 
         @Mapping(source = "resultBody", target = "singlePayment", qualifiedByName = "mapToSinglePayment")
         @Mapping(source = "resultBody", target = "consent", qualifiedByName = "mapToAisConsentRequest")
-        ConsentAuth authStateBodyToConsentAuth(AuthStateBody authStateBody);
+        ConsentAuth map(AuthStateBody authStateBody);
 
         @Mapping(source = "key", target = "id")
         @Mapping(source = "value", target = "methodValue")

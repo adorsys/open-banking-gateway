@@ -113,11 +113,14 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
         String redirectTo = null == redirectionTarget ? null : redirectionTarget.getRedirectTo();
 
         Object resultBody = null;
+        String bankName = "";
+        String fintechName = "";
 
         if (ctx instanceof Xs2aPisContext) {
             resultBody = pisBodyMapper.map(((Xs2aPisContext) ctx).getPayment());
         } else if (ctx instanceof Xs2aAisContext) {
             resultBody = aisBodyMapper.map(((Xs2aAisContext) ctx).getAisConsent());
+            bankName = ctx.getRequestScoped().aspspProfile().getBankName();
         }
 
         return new AuthStateBody(
@@ -125,7 +128,9 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
                 violationsMapper.map(issues.getViolations()),
                 scaMethodsMapper.map(scaMethods),
                 redirectTo,
-                resultBody
+                resultBody,
+                bankName,
+                fintechName
         );
     }
 
