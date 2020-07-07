@@ -1,14 +1,28 @@
 package de.adorsys.fintech.tests.e2e;
 
 import com.tngtech.jgiven.integration.spring.junit5.SpringScenarioTest;
+import de.adorsys.fintech.tests.e2e.config.ConsentAuthApproachState;
 import de.adorsys.fintech.tests.e2e.config.SmokeConfig;
 import de.adorsys.fintech.tests.e2e.steps.FintechServer;
 import de.adorsys.fintech.tests.e2e.steps.UserInformationResult;
 import de.adorsys.fintech.tests.e2e.steps.WebDriverBasedUserInfoFintech;
+import de.adorsys.opba.api.security.external.service.RequestSigningService;
+import de.adorsys.opba.api.security.internal.config.CookieProperties;
+import de.adorsys.opba.api.security.internal.config.TppTokenProperties;
 import io.github.bonigarcia.seljup.SeleniumExtension;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import lombok.SneakyThrows;
+import net.bytebuddy.utility.RandomString;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_SMOKE_TESTS;
@@ -20,4 +34,66 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @ExtendWith({SeleniumExtension.class})
 @SpringBootTest(classes = {JGivenConfig.class, SmokeConfig.class}, webEnvironment = NONE)
 public class FintechPaymentSmokeE2ETest extends SpringScenarioTest<FintechServer, WebDriverBasedUserInfoFintech<? extends WebDriverBasedUserInfoFintech<?>>, UserInformationResult> {
+
+    public final String username = "tom" + RandomString.make().toLowerCase();
+    public final String fintech_login = "fintech" + RandomString.make().toLowerCase();
+
+    @Autowired
+    private SmokeConfig smokeConfig;
+
+    @Autowired
+    private ConsentAuthApproachState state;
+
+    @MockBean
+    private RequestSigningService requestSigningService;
+
+    @MockBean
+    private TppTokenProperties tppTokenProperties;
+
+    @MockBean
+    private CookieProperties cookieProperties;
+
+    @BeforeEach
+    void memoizeConsentAuthorizationPreference() {
+        state.memoize();
+    }
+
+    @AfterEach
+    void restoreConsentAuthorizationPreference() {
+        state.restore();
+    }
+
+    @BeforeAll
+    static void setupDriverArch() {
+        WebDriverManager.firefoxdriver().arch64();
+    }
+
+    @SneakyThrows
+    @Test
+    void testUserAfterInitiatingAPaymentWantsToSeeItsTransactionsOnFintechEmbeddedMode(FirefoxDriver firefoxDriver) {
+        given().enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri())
+                .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
+        when().user_already_login_in_bank_profile(firefoxDriver, username, fintech_login, "adorsys embedded")
+                .and()
+                .user_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_reviews_transactions_consent_and_accepts(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_provides_pin(firefoxDriver)
+                .and()
+                .user_in_consent_ui_provides_sca_result_to_embedded_authorization_for_redirect(firefoxDriver)
+                .and()
+                .user_navigates_to_page(firefoxDriver)
+                .and()
+                .user_max_musterman_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver)
+                .and()
+                .user_navigates_to_page(firefoxDriver)
+                .and()
+                .user_anton_brueckner_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver)
+                .and()
+                .user_select_transfert_button(firefoxDriver)
+                .and()
+                .user_click_on_confirm_button(firefoxDriver);
+
+    }
 }
