@@ -120,7 +120,8 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
             resultBody = pisBodyMapper.map(((Xs2aPisContext) ctx).getPayment());
         } else if (ctx instanceof Xs2aAisContext) {
             resultBody = aisBodyMapper.map(((Xs2aAisContext) ctx).getAisConsent());
-            bankName = ctx.getRequestScoped().aspspProfile().getBankName();
+            bankName = ctx.getRequestScoped().aspspProfile().getName();
+            fintechName = ctx.getRequestScoped().fintechProfile().getName();
         }
 
         return new AuthStateBody(

@@ -135,7 +135,7 @@ public class BankProfile implements Serializable, CurrentBankProfile {
     }
 
     @Override
-    public String getBankName() {
+    public String getName() {
         Bank bank = getBank();
         if (null == bank) {
             return null;
