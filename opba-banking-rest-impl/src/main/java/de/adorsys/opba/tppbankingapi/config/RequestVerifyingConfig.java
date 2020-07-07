@@ -5,6 +5,7 @@ import de.adorsys.opba.api.security.internal.config.OperationTypeProperties;
 import de.adorsys.opba.api.security.internal.filter.RequestSignatureValidationFilter;
 import de.adorsys.opba.api.security.internal.service.RequestVerifyingService;
 import de.adorsys.opba.api.security.internal.service.RsaJwtsVerifyingServiceImpl;
+import de.adorsys.opba.protocol.api.fintechspec.ApiConsumerConfig;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -18,7 +19,6 @@ import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
@@ -33,9 +33,6 @@ public class RequestVerifyingConfig {
     @NotNull
     private Duration requestValidityWindow;
 
-    @NotNull
-    private ConcurrentHashMap<@NotBlank String, @NotNull ApiConsumer> consumers;
-
     @NotBlank
     private String claimNameKey;
 
@@ -44,12 +41,14 @@ public class RequestVerifyingConfig {
 
     @Bean
     @Profile("!no-signature-filter")
-    public FilterRegistrationBean<RequestSignatureValidationFilter> requestSignatureValidationFilter(OperationTypeProperties properties) {
+    public FilterRegistrationBean<RequestSignatureValidationFilter> requestSignatureValidationFilter(
+            OperationTypeProperties properties,
+            ApiConsumerConfig consumers) {
 
         RequestVerifyingService requestVerifyingService = new RsaJwtsVerifyingServiceImpl(claimNameKey);
         FilterRegistrationBean<RequestSignatureValidationFilter> registrationBean = new FilterRegistrationBean<>();
 
-        ConcurrentMap<String, String> consumerKeysMap = consumers.entrySet()
+        ConcurrentMap<String, String> consumerKeysMap = consumers.getConsumers().entrySet()
                 .stream()
                 .collect(Collectors.toConcurrentMap(Map.Entry::getKey, e -> e.getValue().getPublicKey()));
 
@@ -58,14 +57,5 @@ public class RequestVerifyingConfig {
         registrationBean.setUrlPatterns(urlsToBeValidated);
 
         return registrationBean;
-    }
-
-    @Data
-    public static class ApiConsumer {
-        @NotBlank
-        private String name;
-
-        @NotBlank
-        private String publicKey;
     }
 }

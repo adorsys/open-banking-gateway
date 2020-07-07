@@ -6,6 +6,8 @@ import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
+import de.adorsys.opba.protocol.api.common.CurrentFintechProfile;
+import de.adorsys.opba.protocol.api.fintechspec.ApiConsumerConfig;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
@@ -33,14 +35,17 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
     private final Map<String, InternalRequestScoped> memoizedProviders;
     private final ConsentAccessFactory accessProvider;
     private final IgnoreFieldsLoaderFactory ignoreFieldsLoaderFactory;
+    private final ApiConsumerConfig fintechConfig;
 
     public RequestScopedProvider(
             @Qualifier(FACADE_CACHE_BUILDER) CacheBuilder cacheBuilder,
             ConsentAccessFactory accessProvider,
-            IgnoreFieldsLoaderFactory ignoreFieldsLoaderFactory) {
+            IgnoreFieldsLoaderFactory ignoreFieldsLoaderFactory,
+            ApiConsumerConfig fintechConfig) {
         this.memoizedProviders = cacheBuilder.build().asMap();
         this.accessProvider = accessProvider;
         this.ignoreFieldsLoaderFactory = ignoreFieldsLoaderFactory;
+        this.fintechConfig = fintechConfig;
     }
 
     public RequestScoped registerForFintechSession(
@@ -54,7 +59,13 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
     ) {
         ConsentAccess access = accessProvider.forFintech(fintech, session, fintechPassword);
         EncryptionService authorizationSessionEncService = encryptionService(encryptionServiceProvider, futureAuthorizationSessionKey);
-        return doRegister(profile, access, authorizationSessionEncService, futureAuthorizationSessionKey, bankProtocolId);
+        return doRegister(
+                profile,
+                fintechConfig.getConsumers().get(fintech.getGlobalId()),
+                access,
+                authorizationSessionEncService,
+                futureAuthorizationSessionKey,
+                bankProtocolId);
     }
 
     public RequestScoped registerForPsuSession(
@@ -69,7 +80,13 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
                 authSession.getAction().getBankProfile().getBank(),
                 authSession.getParent()
         );
-        return doRegister(authSession.getAction().getBankProfile(), access, encryptionService, key, bankProtocolId);
+        return doRegister(
+                authSession.getAction().getBankProfile(),
+                fintechConfig.getConsumers().get(authSession.getFintechUser().getFintech().getGlobalId()),
+                access,
+                encryptionService,
+                key,
+                bankProtocolId);
     }
 
     public InternalRequestScoped deregister(RequestScoped requestScoped) {
@@ -88,6 +105,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
     @NotNull
     private RequestScoped doRegister(
             BankProfile bankProfile,
+            CurrentFintechProfile fintechProfile,
             ConsentAccess access,
             EncryptionService encryptionService,
             SecretKeyWithIv key,
@@ -97,6 +115,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
                 encryptionService.getEncryptionKeyId(),
                 key,
                 bankProfile,
+                fintechProfile,
                 access,
                 encryptionService,
                 ignoreFieldsLoaderFactory.createIgnoreFieldsLoader(protocolId)
@@ -115,6 +134,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         private final String encryptionKeyId;
         private final SecretKeyWithIv key;
         private final CurrentBankProfile bankProfile;
+        private final CurrentFintechProfile fintechProfile;
         private final ConsentAccess access;
         private final EncryptionService encryptionService;
         private final FieldsToIgnoreLoader fieldsToIgnoreLoader;
@@ -122,6 +142,11 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         @Override
         public CurrentBankProfile aspspProfile() {
             return bankProfile;
+        }
+
+        @Override
+        public CurrentFintechProfile fintechProfile() {
+            return fintechProfile;
         }
 
         @Override
