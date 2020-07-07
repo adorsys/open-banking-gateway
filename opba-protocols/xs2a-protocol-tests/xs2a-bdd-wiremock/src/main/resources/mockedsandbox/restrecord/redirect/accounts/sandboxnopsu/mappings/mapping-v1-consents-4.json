@@ -1,44 +1,49 @@
 {
-  "id" : "49c02872-029b-3c8b-a29c-e8290789dcb1",
-  "request" : {
-    "url" : "/v1/consents",
-    "method" : "POST",
-    "headers" : {
-      "X-Request-ID" : {
-        "matches" : "[0-9a-zA-z\\-]+"
+  "id": "49c02872-029b-3c8b-a29c-e8290789dcb1",
+  "scenarioName": "Initiate consent",
+  "requiredScenarioState": "Started",
+  "newScenarioState": "Initiated",
+  "request": {
+    "url": "/v1/consents",
+    "method": "POST",
+    "headers": {
+      "X-Request-ID": {
+        "matches": "[0-9a-zA-z\\-]+"
       },
-      "PSU-ID" : {
-        "matches" : "[a-z\\.]*"
+      "PSU-ID": {
+        "matches": "[a-z\\.]*"
       },
-      "PSU-IP-Address" : {
-        "matches" : "^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$"
+      "PSU-IP-Address": {
+        "matches": "^((25[0-5]|(2[0-4]|1[0-9]|[1-9]|)[0-9])(\\.(?!$)|$)){4}$"
       },
-      "Content-Type" : {
-        "equalTo" : "application/json; charset=UTF-8"
+      "Content-Type": {
+        "equalTo": "application/json; charset=UTF-8"
       },
       "TPP-Redirect-URI": {
-        "matches" : "http://localhost:\\d+/v1/consent/.+/fromAspsp/.+/ok\\?.+"
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/.+/ok\\?.+"
       },
       "TPP-Nok-Redirect-URI": {
-        "matches" : "http://localhost:\\d+/v1/consent/.+/fromAspsp/.+/nok\\?.+"
+        "matches": "http://localhost:\\d+/v1/consent/.+/fromAspsp/.+/nok\\?.+"
       }
     },
-    "bodyPatterns" : [ {
-      "equalToJson" : "{\"access\":{\"accounts\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}],\"balances\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}],\"transactions\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}]},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":12}",
-      "ignoreArrayOrder" : true,
-      "ignoreExtraElements" : true
-    } ]
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"access\":{\"accounts\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}],\"balances\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}],\"transactions\":[{\"iban\":\"DE80760700240271232400\",\"currency\":\"EUR\"}]},\"recurringIndicator\":true,\"validUntil\":\"2030-01-31\",\"frequencyPerDay\":12}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
   },
-  "response" : {
-    "status" : 201,
-    "bodyFileName" : "body-v1-consents-24281.json",
-    "headers" : {
-      "Aspsp-Sca-Approach" : "REDIRECT",
-      "Location" : "http://127.0.0.1:20014/v1/consents/FnQrERp1CutlTlhTke5EScQUikVhZuNU40Nfru7GjyesxBtjhvuH5WGDIejOpAQ82Kg_O5MgvEsAcowGNyi7d8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q",
-      "X-Request-Id" : "b575eefc-3232-11ea-b535-e2b5b1f1970b",
-      "Content-Type" : "application/json;charset=UTF-8",
-      "Date" : "Wed, 08 Jan 2020 16:20:14 GMT"
+  "response": {
+    "status": 201,
+    "bodyFileName": "body-v1-consents-24281.json",
+    "headers": {
+      "Aspsp-Sca-Approach": "REDIRECT",
+      "Location": "http://127.0.0.1:20014/v1/consents/FnQrERp1CutlTlhTke5EScQUikVhZuNU40Nfru7GjyesxBtjhvuH5WGDIejOpAQ82Kg_O5MgvEsAcowGNyi7d8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q",
+      "X-Request-Id": "b575eefc-3232-11ea-b535-e2b5b1f1970b",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Date": "Wed, 08 Jan 2020 16:20:14 GMT"
     }
   },
-  "uuid" : "49c02872-029b-3c8b-a29c-e8290789dcb1"
+  "uuid": "49c02872-029b-3c8b-a29c-e8290789dcb1"
 }
