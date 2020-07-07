@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
+import de.adorsys.opba.protocol.api.common.CurrentFintechProfile;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
@@ -40,6 +41,11 @@ public class RequestScopedStub implements RequestScoped {
 
     @Override
     public FieldsToIgnoreLoader fieldsToIgnoreLoader() {
+        return null;
+    }
+
+    @Override
+    public CurrentFintechProfile fintechProfile() {
         return null;
     }
 
