@@ -11,7 +11,7 @@ import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.internal.config.CookieProperties;
 import de.adorsys.opba.consentapi.model.generated.AuthViolation;
-import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
+import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
 import de.adorsys.opba.protocol.facade.config.auth.UriExpandConst;
 import io.restassured.RestAssured;
@@ -183,20 +183,20 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
     @SneakyThrows
     protected void updateAvailableScas() {
         ExtractableResponse<Response> response = provideGetConsentAuthStateRequest();
-        InlineResponse200 parsedValue = JSON_MAPPER
-                .readValue(response.body().asString(), InlineResponse200.class);
+        ConsentAuth parsedValue = JSON_MAPPER
+                .readValue(response.body().asString(), ConsentAuth.class);
 
-        this.availableScas = parsedValue.getConsentAuth().getScaMethods();
+        this.availableScas = parsedValue.getScaMethods();
         updateRedirectCode(response);
     }
 
     @SneakyThrows
     protected void readViolations() {
         ExtractableResponse<Response> response = provideGetConsentAuthStateRequest();
-        InlineResponse200 parsedValue = JSON_MAPPER
-                .readValue(response.body().asString(), InlineResponse200.class);
+        ConsentAuth parsedValue = JSON_MAPPER
+                .readValue(response.body().asString(), ConsentAuth.class);
 
-        this.violations = parsedValue.getConsentAuth().getViolations();
+        this.violations = parsedValue.getViolations();
         updateRedirectCode(response);
     }
 

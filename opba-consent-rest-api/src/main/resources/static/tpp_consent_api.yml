@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Open Banking Gateway - Consent Authorization API.  
+  title: Open Banking Gateway - Consent Authorization API.
   termsOfService: urn:tos
   contact: {}
   license:
@@ -13,25 +13,25 @@ info:
     over the [FinTechApi](https://adorsys.github.io/open-banking-gateway/doc/latest/architecture/dictionary#FinTechApi) (2<sub>b</sub>)
     to the /consent/{auth-id} entry point of this [ConsentAuthorisationApi](https://adorsys.github.io/open-banking-gateway/doc/latest/architecture/dictionary#ConsentAuthorisationApi) (2<sub>c</sub>).
     The decision on whether the authorization process is embedded or redirected is taken by this ConsentAuthorisationApi.
-    
+
     The following picture displays the overall architecture of this open banking consent authorisation api: 
-    
+
     ![High level architecture](/img/open-banking-consent-authorisation-api.png)
-    
-    
+
+
     #### User Agent
     This Api assumes that the PsuUserAgent is a modern browsers that :
     * automatically detects the "302 Found" response code and proceeds with the associated location url,
     * stores httpOnly cookies sent with the redirect under the given domain and path as defined by [RFC 6265](https://tools.ietf.org/html/rfc6265).
-    
+
     This Api also assumes any other PsuUserAgent like a native mobile or a desktop application can simulate this same behavior of amodern browser with respect to 30X and Cookies. 
-    
-    
+
+
     #### Redirecting to the ConsentAuthorisationApi (2<sub>a</sub>)
     Any service request of the FinTechUI to the FinTechApi (1<sub>a</sub>) will be forwarded to the TppBankingApi (1<sub>b</sub>).
     This forward might contain a [PsuConsentSession](https://adorsys.github.io/open-banking-gateway/doc/latest/architecture/dictionary#PsuConsentSession)
     that is used to identify the PSU in the world of the TPP.
-    
+
     The TppBankingApi uses the provided PsuConsentSession to retrieve an eventualy suitable consent that will be used to forward the corresponding service request to the OpenBankingApi (1<sub>c</sub>) of the ASPSP.
     If there is no suitable consent, the TPP might still send a consent initiation request to the OpenBankingApi (1<sub>c</sub>). Whether this request is sent or not
     depends on the design of the target OpenBankingApi. Finally, the TppBankingApi will if necessary instruct the FinTechApi (2<sub>a</sub>) to redirect the PsuUgerAgent (2<sub>b</sub>) to the /consent/{auth-id} entry point of 
@@ -45,7 +45,7 @@ info:
     * The request that sets a session cookie (E<sub>1</sub>) also add the X-XSRF-TOKEN to the response header.
     * The cookie path is always extended with the corresponding auth-id, so two Authorization processes can not share state. 
     * Each authenticated request sent to the ConsentAuthorisationApi will provide the X-XSRF-TOKEN matching the sent SessionCookie.
-    
+
     #### RedirectCookie and XSRF (R<sub>1</sub>)
     In a redirect approach (Redirecting PSU to the ASPSP), the The retruned AuthorizeResponse object contains information needed
     to present a suitable redirect info page to the PSU. Redirection can either be actively performed by the UIApplication
@@ -55,12 +55,12 @@ info:
     #### Final Result of the Authorization Process
     The final result of the authorization process is a PsuCosentSession that is returned by the token endpoint of the TppBankingAPi to
     the FinTechApi (4<sub>c</sub>). This handle will (PsuCosentSession) will be stored by the FinTechApi and added a PSU identifying information to
-    each service request associated with this PSU. 
+    each service request associated with this PSU.
 tags:
-- name: Consent Authorization
-  description: |
-    Entry point for processing a consent request redirected by the TppBankingApi
-    over the FinTechApi to this ConsentAuthorisationApi.
+  - name: Consent Authorization
+    description: |
+      Entry point for processing a consent request redirected by the TppBankingApi
+      over the FinTechApi to this ConsentAuthorisationApi.
 paths:
   /v1/consent/{auth-id}:
     get:
@@ -68,30 +68,30 @@ paths:
       summary: |
         Redirect entry point for initiating a consent authorization process.
       tags:
-      - Auth State Consent Authorization
+        - Auth State Consent Authorization
       description: |
         This is the <b>entry point</b> for processing a consent redirected
         by the TppBankingApi to this ConsentAuthorisationApi.
-        
+
         At this entry point, the ConsentAuthorisationApi will use the redirectCode to retrieve the RedirectSession from the TppServer.
         An analysis of the RedirectSession will help decide if the ConsentAuthorisationApi will proceed with an embedded approach (E<sub>1</sub>) or a redirect approach (R<sub>1</sub>).
-        
+
       parameters:
         #path
-        - $ref: '#/components/parameters/auth-id'
+        - $ref: "#/components/parameters/auth-id"
         #query
-        - $ref: '#/components/parameters/redirectCode'
+        - $ref: "#/components/parameters/redirectCode"
       responses:
-        '200':
-          $ref: '#/components/responses/200_AuthorizeResponse'
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
+        "200":
+          $ref: "#/components/responses/200_AuthorizeResponse"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
 
   /v1/consent/{auth-id}/embedded:
     post:
       operationId: embeddedUsingPOST
       tags:
-      - Update Consent Authorization
+        - Update Consent Authorization
       summary: |
         Generic challenge response end point for updating consent session with
         PSU authentication data while requesting remaining challenges for the ongoing
@@ -102,62 +102,62 @@ paths:
         Returns 202 if one should proceed to some other link. Link to follow is in 'Location' header.
       parameters:
         #path
-        - $ref: '#/components/parameters/auth-id'
+        - $ref: "#/components/parameters/auth-id"
         #query
-        - $ref: '#/components/parameters/redirectCode'
+        - $ref: "#/components/parameters/redirectCode"
         #headers
-        - $ref: '#/components/parameters/X-Request-ID'
-        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
       requestBody:
         content:
           application/json:
-           schema:
-              $ref: '#/components/schemas/PsuAuthRequest'
-              
+            schema:
+              $ref: "#/components/schemas/PsuAuthRequest"
+
       responses:
-        '200':
-          $ref: '#/components/responses/200_AuthorizeResponse'
-        '202':
-          $ref: '#/components/responses/200_AuthorizeResponse'
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
+        "200":
+          $ref: "#/components/responses/200_AuthorizeResponse"
+        "202":
+          $ref: "#/components/responses/200_AuthorizeResponse"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
       security:
-      - sessionCookie: []
+        - sessionCookie: []
 
   /v1/consent/{auth-id}/toAspsp/grant:
     post:
       operationId: toAspspGrantUsingPOST
       tags:
-      - Update Consent Authorization
+        - Update Consent Authorization
       summary: |
         Provides the ConsentAuthorisationApi with the opportunity to redirect the PSU to the ASPSP.
       description: |
         Provides the ConsentAuthorisationApi with the opportunity to redirect the PSU to the ASPSP.
       parameters:
         #path
-        - $ref: '#/components/parameters/auth-id'
+        - $ref: "#/components/parameters/auth-id"
         #headers
-        - $ref: '#/components/parameters/X-Request-ID'
-        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AuthorizeRequest'
+              $ref: "#/components/schemas/AuthorizeRequest"
         required: true
       responses:
-        '302':
-          $ref: '#/components/responses/302_Redirect_to_ASPSP'
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
+        "302":
+          $ref: "#/components/responses/302_Redirect_to_ASPSP"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
       security:
-      - sessionCookie: []
+        - sessionCookie: []
 
   /v1/consent/{auth-id}/deny:
     post:
       operationId: denyUsingPOST
       tags:
-      - Update Consent Authorization
+        - Update Consent Authorization
       summary: |
         Consent authorization is denied - consent is blocked.
         Closes this session and redirects the PSU back to the FinTechApi or close the application window.
@@ -175,22 +175,23 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DenyRequest'
+              $ref: "#/components/schemas/DenyRequest"
         required: true
       responses:
-        '302':
-          $ref: '#/components/responses/302_Redirect_to_FinTechApi'
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
+        "302":
+          $ref: "#/components/responses/302_Redirect_to_FinTechApi"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
       security:
-      - sessionCookie: []
+        - sessionCookie: []
 
   /v1/consent/{auth-id}/fromAspsp/{redirectState}/ok:
     get:
       operationId: fromAspspOkUsingGET
       tags:
-      - From ASPSP Consent Authorization
-      summary: Redirecting back from ASPSP to ConsentAuthorisationApi after a successful
+        - From ASPSP Consent Authorization
+      summary:
+        Redirecting back from ASPSP to ConsentAuthorisationApi after a successful
         consent authorization.
       description: |
         Redirecting back from ASPSP to ConsentAuthorisationApi after a successful consent authorization.
@@ -212,45 +213,43 @@ paths:
 
       parameters:
         #path
-        - $ref: '#/components/parameters/auth-id'
-        - $ref: '#/components/parameters/redirectState'
+        - $ref: "#/components/parameters/auth-id"
+        - $ref: "#/components/parameters/redirectState"
         #query
-        - $ref: '#/components/parameters/redirectCode'
+        - $ref: "#/components/parameters/redirectCode"
       responses:
-        '200':
-          $ref: '#/components/responses/200_AuthorizeResponse'
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
+        "200":
+          $ref: "#/components/responses/200_AuthorizeResponse"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
       security:
-      - redirectCookie: []
+        - redirectCookie: []
 
   /v1/consent/{auth-id}/fromAspsp/{redirectState}/nok:
     get:
       operationId: fromAspspNokUsingGET
       tags:
-      - From ASPSP Consent Authorization
+        - From ASPSP Consent Authorization
       summary: Redirecting back from ASPSP to TPP after a failed consent authorization.
       description: |
         Redirecting back from ASPSP to TPP after a failed consent authorization.
         In any case, the corresponding redirect session of the user will be closed and cookies will be deleted with the response to this request.
       parameters:
         #path
-        - $ref: '#/components/parameters/auth-id'
-        - $ref: '#/components/parameters/redirectState'
+        - $ref: "#/components/parameters/auth-id"
+        - $ref: "#/components/parameters/redirectState"
         #query
-        - $ref: '#/components/parameters/redirectCode'
+        - $ref: "#/components/parameters/redirectCode"
       responses:
-        '200':
-          $ref: '#/components/responses/200_AuthorizeResponse'
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
+        "200":
+          $ref: "#/components/responses/200_AuthorizeResponse"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
       security:
-      - redirectCookie: []
+        - redirectCookie: []
 
 components:
-
   securitySchemes:
-
     sessionCookie:
       type: apiKey
       in: cookie
@@ -262,7 +261,6 @@ components:
       name: redirectCookie
 
   headers:
-
     X-Request-ID:
       required: true
       description: |
@@ -295,7 +293,7 @@ components:
         type: string
         example: |
           Assuming auth-id=abc123
-          "Set-Cookie: Session_abc123=ejxs.wersdzxxc23r.asdf; Path=/consent/abc123/; Max-Age=300" 
+          "Set-Cookie: Session_abc123=ejxs.wersdzxxc23r.asdf; Path=/consent/abc123/; Max-Age=300"
 
     Set-RedirectCookie:
       name: Set-Cookie
@@ -311,7 +309,7 @@ components:
         type: string
         example: |
           Assuming auth-id=abc123
-          "Redirect_abc123=ejxs.wersdzxxc23r.asdf; Path=/consent/abc123/fromAspsp/; Max-Age=1800, Session_abc123=ejxs.wersdzxxc23r.asdf; Path=/consent/abc123/; Max-Age=0" 
+          "Redirect_abc123=ejxs.wersdzxxc23r.asdf; Path=/consent/abc123/fromAspsp/; Max-Age=1800, Session_abc123=ejxs.wersdzxxc23r.asdf; Path=/consent/abc123/; Max-Age=0"
 
     Reset-Cookies:
       name: Set-Cookie
@@ -321,7 +319,7 @@ components:
         type: string
         example: |
           Assuming auth-id=abc123
-          "Redirect_abc123=null; Path=/consent/abc123/; Max-Age=0, Session_abc123=null; Path=/consent/abc123/; Max-Age=0" 
+          "Redirect_abc123=null; Path=/consent/abc123/; Max-Age=0, Session_abc123=null; Path=/consent/abc123/; Max-Age=0"
 
     Location-ASPSP:
       name: Location
@@ -405,7 +403,6 @@ components:
         type: string
 
   responses:
-
     200_AuthorizeResponse:
       description: |
         All responses sent by the ConsentAuthorisationApi to the UI are derived from the AuthorizeResponse object. 
@@ -418,18 +415,15 @@ components:
         * The ConsentAuthSessionCookie is secure and httpOnly.
       headers:
         X-Request-ID:
-          $ref: '#/components/headers/X-Request-ID'
+          $ref: "#/components/headers/X-Request-ID"
         Set-Cookie:
-          $ref: '#/components/headers/Set-SessionCookie'
+          $ref: "#/components/headers/Set-SessionCookie"
         X-XSRF-TOKEN:
-          $ref: '#/components/headers/X-XSRF-TOKEN'
+          $ref: "#/components/headers/X-XSRF-TOKEN"
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              consentAuth:
-                $ref: '#/components/schemas/ConsentAuth'
+            $ref: "#/components/schemas/ConsentAuth"
 
     302_Redirect_to_ASPSP:
       description: |
@@ -441,41 +435,41 @@ components:
         * The XSRF Token used to validate this the RedirectCookie is path parameter redirectState
         * This RedirectCookie must have a life time equal to the expected duration of the corresponding redirect session at the target ASPSP OnlineBankingApi.
         * Prior to redirecting any associated SessionCookie (sharing the same auth-id) will be deleted.
-        
+
       headers:
         Location:
-          $ref: '#/components/headers/Location-ASPSP'
+          $ref: "#/components/headers/Location-ASPSP"
         X-Request-ID:
-          $ref: '#/components/headers/X-Request-ID'
+          $ref: "#/components/headers/X-Request-ID"
         Set-Cookie:
-          $ref: '#/components/headers/Set-RedirectCookie'
+          $ref: "#/components/headers/Set-RedirectCookie"
 
     302_Redirect_to_FinTechApi:
       description: |
         Redirects UserAgent back to the FinTechAPI.
       headers:
         Location:
-          $ref: '#/components/headers/Location-FinTechApi'
+          $ref: "#/components/headers/Location-FinTechApi"
         X-Request-ID:
-          $ref: '#/components/headers/X-Request-ID'
+          $ref: "#/components/headers/X-Request-ID"
         Set-Cookie:
-          $ref: '#/components/headers/Reset-Cookies'
+          $ref: "#/components/headers/Reset-Cookies"
 
     400_BadRequest:
       description: Bad request
       headers:
         X-Request-ID:
-          $ref: '#/components/headers/X-Request-ID'
+          $ref: "#/components/headers/X-Request-ID"
         X-XSRF-TOKEN:
-          $ref: '#/components/headers/X-XSRF-TOKEN'
+          $ref: "#/components/headers/X-XSRF-TOKEN"
         Set-Cookie:
-          $ref: '#/components/headers/Set-SessionCookie'
+          $ref: "#/components/headers/Set-SessionCookie"
       content:
         application/json:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/psuMessage'
+              $ref: "#/components/schemas/psuMessage"
 
     401_Unauthorized:
       description: |
@@ -483,39 +477,38 @@ components:
         * Provided credential for login not matching.
         * Endpoin expect a session cookie but none is present.
         * Session cookie is present but associated stateString does not match.
-        
+
         As a consequence, we reset existing FinTechLoginSessionState if any. 
         Nevertheless we do not reset RedirectSessionCookie.
       headers:
         X-Request-ID:
           $ref: "#/components/headers/X-Request-ID"
         Set-Cookie:
-          $ref: '#/components/headers/Reset-Cookies'
+          $ref: "#/components/headers/Reset-Cookies"
       content:
         application/json:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/psuMessage'
+              $ref: "#/components/schemas/psuMessage"
 
     404_NotFound:
       description: The specified resource was not found
       headers:
         X-Request-ID:
-          $ref: '#/components/headers/X-Request-ID'
+          $ref: "#/components/headers/X-Request-ID"
         X-XSRF-TOKEN:
-          $ref: '#/components/headers/X-XSRF-TOKEN'
+          $ref: "#/components/headers/X-XSRF-TOKEN"
         Set-Cookie:
-          $ref: '#/components/headers/Set-SessionCookie'
+          $ref: "#/components/headers/Set-SessionCookie"
       content:
         application/json:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/psuMessage'
+              $ref: "#/components/schemas/psuMessage"
 
   schemas:
-
     psuMessage:
       title: PsuMessage
       type: object
@@ -618,9 +611,9 @@ components:
       type: object
       properties:
         amount:
-          $ref: '#/components/schemas/Amount'
+          $ref: "#/components/schemas/Amount"
         balanceType:
-          $ref: '#/components/schemas/BalanceType'
+          $ref: "#/components/schemas/BalanceType"
         iban:
           type: string
         lastChangeDateTime:
@@ -637,13 +630,13 @@ components:
       type: object
       properties:
         accountStatus:
-          $ref: '#/components/schemas/AccountStatus'
+          $ref: "#/components/schemas/AccountStatus"
         accountType:
-          $ref: '#/components/schemas/AccountType'
+          $ref: "#/components/schemas/AccountType"
         balances:
           type: array
           items:
-            $ref: '#/components/schemas/AccountBalance'
+            $ref: "#/components/schemas/AccountBalance"
         bban:
           type: string
         bic:
@@ -671,8 +664,8 @@ components:
         usageType:
           type: string
           enum:
-          - PRIV
-          - ORGA
+            - PRIV
+            - ORGA
 
     AccountReference:
       title: AccountReference
@@ -720,15 +713,15 @@ components:
           description: Consent on all accounts, balances and transactions of psu
           example: ALL_ACCOUNTS
           enum:
-          - ALL_ACCOUNTS
-          - ALL_ACCOUNTS_WITH_BALANCES
+            - ALL_ACCOUNTS
+            - ALL_ACCOUNTS_WITH_BALANCES
         availableAccounts:
           type: string
           description: Consent on all available accounts of psu
           example: ALL_ACCOUNTS
           enum:
-          - ALL_ACCOUNTS
-          - ALL_ACCOUNTS_WITH_BALANCES
+            - ALL_ACCOUNTS
+            - ALL_ACCOUNTS_WITH_BALANCES
         balances:
           type: array
           description: Access to balances
@@ -744,35 +737,39 @@ components:
     AisConsentRequest:
       title: AisConsentRequest
       required:
-      - access
-      - frequencyPerDay
-      - recurringIndicator
-      - validUntil
+        - access
+        - frequencyPerDay
+        - recurringIndicator
+        - validUntil
       type: object
       properties:
         access:
-          $ref: '#/components/schemas/AisAccountAccessInfo'
+          $ref: "#/components/schemas/AisAccountAccessInfo"
         frequencyPerDay:
           type: integer
-          description: Maximum frequency for an access per day. For a once-off access,
+          description:
+            Maximum frequency for an access per day. For a once-off access,
             this attribute is set to 1
           format: int32
           example: 4
         recurringIndicator:
           type: boolean
-          description: '''true'', if the consent is for recurring access to the account
-            data , ''false'', if the consent is for one access to the account data'
+          description:
+            "'true', if the consent is for recurring access to the account
+            data , 'false', if the consent is for one access to the account data"
           example: false
         validUntil:
           type: string
-          description: Consent`s expiration date. The content is the local ASPSP date
+          description:
+            Consent`s expiration date. The content is the local ASPSP date
             in ISODate Format
           format: date
           example: 2020-10-10
         combinedServiceIndicator:
           type: boolean
-          description: '''true'', if the consent is i.e. account list and then payment
-                     ''false'', if the consent is for one access to the account data'
+          description:
+            "'true', if the consent is i.e. account list and then payment
+            'false', if the consent is for one access to the account data"
           default: false
       description: Ais consent request
 
@@ -802,7 +799,7 @@ components:
     ConsentAuth:
       title: ConsentAuth
       type: object
-      description: Transport object for consent API request response 
+      description: Transport object for consent API request response
       properties:
         action:
           type: string
@@ -810,29 +807,37 @@ components:
         violations:
           type: array
           items:
-            $ref: '#/components/schemas/AuthViolation'
+            $ref: "#/components/schemas/AuthViolation"
         accounts:
           type: array
           items:
-            $ref: '#/components/schemas/AccountDetails'
+            $ref: "#/components/schemas/AccountDetails"
         authMessageTemplate:
           type: string
         authenticationMethodId:
           type: string
-          description: An identification provided by the ASPSP for the later identification
+          description:
+            An identification provided by the ASPSP for the later identification
             of the authentication method selection.
           example: myAuthenticationID
         bulkPayment:
-          $ref: '#/components/schemas/BulkPayment'
+          $ref: "#/components/schemas/BulkPayment"
         consent:
-          $ref: '#/components/schemas/AisConsentRequest'
+          $ref: "#/components/schemas/AisConsentRequest"
+        bankName:
+          type: string
+          description: Name of current bank
+        fintechName:
+          type: string
+          description: Name of current fintech
         consentAuthState:
           type: string
-          description: This is the CSRF-State String of the ConsentAuthorisationApi.
+          description:
+            This is the CSRF-State String of the ConsentAuthorisationApi.
             It is a transient reference of the consent request. It encodes a key that
             is used to encrypt information stored in the corresponding ConsentAuthSessionCookie.
         periodicPayment:
-          $ref: '#/components/schemas/PeriodicPayment'
+          $ref: "#/components/schemas/PeriodicPayment"
         psuCorporateId:
           type: string
         psuId:
@@ -841,11 +846,11 @@ components:
           type: array
           description: List of sca methods for selection if necessary.
           items:
-            $ref: '#/components/schemas/ScaUserData'
+            $ref: "#/components/schemas/ScaUserData"
         scaStatus:
-          $ref: '#/components/schemas/ScaStatus'
+          $ref: "#/components/schemas/ScaStatus"
         singlePayment:
-          $ref: '#/components/schemas/SinglePayment'
+          $ref: "#/components/schemas/SinglePayment"
 
     ConsentAuthRequirement:
       title: ConsentAuth
@@ -855,7 +860,7 @@ components:
         fields:
           type: array
           items:
-            $ref: '#/components/schemas/ConsentAuthRequiredField'
+            $ref: "#/components/schemas/ConsentAuthRequiredField"
 
     ConsentAuthRequiredField:
       title: ConsentAuthRequiredField
@@ -881,7 +886,7 @@ components:
       description: Contains information used to legitimate a request.
       properties:
         consentAuth:
-          $ref: '#/components/schemas/ConsentAuthRequirement'
+          $ref: "#/components/schemas/ConsentAuthRequirement"
 
     DenyRequest:
       title: DenyRequest
@@ -889,13 +894,14 @@ components:
       description: Consent authorization denied descriptor
       properties:
         consentAuth:
-          $ref: '#/components/schemas/ConsentAuth'
+          $ref: "#/components/schemas/ConsentAuth"
         backToFinTech:
           type: boolean
           description: Will indicate if PSU wants to be sent back to FinTechApi.
         exitPage:
           type: string
-          description: In case there is no redirect back to TPP desired, exit page
+          description:
+            In case there is no redirect back to TPP desired, exit page
             can be specified by ConsentAuthorisationApi
         forgetConsent:
           type: boolean
@@ -904,17 +910,18 @@ components:
     PsuAuthRequest:
       title: PsuAuthRequest
       required:
-      - scaAuthenticationData
+        - scaAuthenticationData
       type: object
       description: Contains information used to legitimate a request.
       properties:
         consentAuth:
-          $ref: '#/components/schemas/ConsentAuth'
+          $ref: "#/components/schemas/ConsentAuth"
         scaAuthenticationData:
           type: object
           additionalProperties:
             type: string
-          description: SCA authentication data, depending on the chosen authentication
+          description:
+            SCA authentication data, depending on the chosen authentication
             method. If the data is binary, then it is base64 encoded.
         extras:
           type: object
@@ -929,17 +936,17 @@ components:
         batchBookingPreferred:
           type: boolean
         debtorAccount:
-          $ref: '#/components/schemas/AccountReference'
+          $ref: "#/components/schemas/AccountReference"
         paymentId:
           type: string
         paymentProduct:
-          $ref: '#/components/schemas/PaymentProduct'
+          $ref: "#/components/schemas/PaymentProduct"
         paymentStatus:
-          $ref: '#/components/schemas/PaymentStatus'
+          $ref: "#/components/schemas/PaymentStatus"
         payments:
           type: array
           items:
-            $ref: '#/components/schemas/SinglePayment'
+            $ref: "#/components/schemas/SinglePayment"
         requestedExecutionDate:
           type: string
           format: date
@@ -949,7 +956,7 @@ components:
       type: object
       properties:
         paymentData:
-          $ref: '#/components/schemas/SinglePayment'
+          $ref: "#/components/schemas/SinglePayment"
         dayOfExecution:
           type: integer
           format: int32
@@ -961,14 +968,14 @@ components:
         frequency:
           type: string
           enum:
-          - Daily
-          - Weekly
-          - EveryTwoWeeks
-          - Monthly
-          - EveryTwoMonths
-          - Quarterly
-          - SemiAnnual
-          - Annual
+            - Daily
+            - Weekly
+            - EveryTwoWeeks
+            - Monthly
+            - EveryTwoMonths
+            - Quarterly
+            - SemiAnnual
+            - Annual
         startDate:
           type: string
           format: date
@@ -986,13 +993,13 @@ components:
         scaMethod:
           type: string
           enum:
-          - EMAIL
-          - MOBILE
-          - CHIP_OTP
-          - PHOTO_OTP
-          - PUSH_OTP
-          - SMS_OTP
-          - APP_OTP
+            - EMAIL
+            - MOBILE
+            - CHIP_OTP
+            - PHOTO_OTP
+            - PUSH_OTP
+            - SMS_OTP
+            - APP_OTP
         staticTan:
           type: string
         usesStaticTan:
@@ -1003,25 +1010,25 @@ components:
       type: object
       properties:
         creditorAccount:
-          $ref: '#/components/schemas/AccountReference'
+          $ref: "#/components/schemas/AccountReference"
         creditorAddress:
-          $ref: '#/components/schemas/Address'
+          $ref: "#/components/schemas/Address"
         creditorAgent:
           type: string
         creditorName:
           type: string
         debtorAccount:
-          $ref: '#/components/schemas/AccountReference'
+          $ref: "#/components/schemas/AccountReference"
         endToEndIdentification:
           type: string
         instructedAmount:
-          $ref: '#/components/schemas/Amount'
+          $ref: "#/components/schemas/Amount"
         paymentId:
           type: string
         paymentProduct:
-          $ref: '#/components/schemas/PaymentProduct'
+          $ref: "#/components/schemas/PaymentProduct"
         paymentStatus:
-          $ref: '#/components/schemas/PaymentStatus'
+          $ref: "#/components/schemas/PaymentStatus"
         remittanceInformationUnstructured:
           type: string
         requestedExecutionDate:
