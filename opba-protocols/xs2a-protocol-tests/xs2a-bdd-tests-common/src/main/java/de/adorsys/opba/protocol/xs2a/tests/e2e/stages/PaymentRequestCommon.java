@@ -2,7 +2,7 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
 import com.google.common.collect.ImmutableMap;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
+import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.SinglePayment;
 import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
 import io.restassured.RestAssured;
@@ -257,11 +257,11 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
 
     @SneakyThrows
     private void assertThatResponseContainsAntonBruecknersSinglePayment(ExtractableResponse<Response> response) {
-        InlineResponse200 response200 = JSON_MAPPER
-                                                .readValue(response.body().asString(), InlineResponse200.class);
+        ConsentAuth authResponse = JSON_MAPPER
+                                                .readValue(response.body().asString(), ConsentAuth.class);
 
-        assertThat(response200.getConsentAuth()).isNotNull();
-        assertThat(response200.getConsentAuth().getSinglePayment())
+        assertThat(authResponse).isNotNull();
+        assertThat(authResponse.getSinglePayment())
                 .isEqualTo(JSON_MAPPER.readValue(readResource("restrecord/tpp-ui-input/params/anton-brueckner-single-payment-response.json"),
                                                  SinglePayment.class));
     }
