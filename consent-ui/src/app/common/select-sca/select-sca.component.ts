@@ -61,7 +61,7 @@ export class SelectScaComponent implements OnInit {
           consentAuth.headers.get(ApiHeaders.REDIRECT_CODE)
         );
         this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
-        this.scaMethods = consentAuth.body.consentAuth.scaMethods;
+        this.scaMethods = consentAuth.body.scaMethods;
         this.selectedMethod.setValue(this.scaMethods[0].id);
       });
   }
