@@ -55,5 +55,5 @@ public interface CurrentBankProfile {
     /**
      * Bank name
      */
-    String getBankName();
+    String getName();
 }
