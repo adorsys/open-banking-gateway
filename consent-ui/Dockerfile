@@ -1,3 +1,23 @@
+#############
+### build ###
+#############
+
+# base image
+FROM node:12.14.0 as build-stage
+LABEL maintainer="https://github.com/adorsys/open-banking-gateway"
+
+# set working directory
+WORKDIR /app
+
+# install and cache app dependencies
+COPY package*.json /app/
+RUN HUSKY_SKIP_INSTALL=1 npm ci --silent
+
+# add app
+COPY . /app/
+
+RUN npm run build -- --output-path=dist && chown -R 1001:0 dist
+
 FROM nginx:1.17.7-alpine
 LABEL maintainer="https://github.com/adorsys/open-banking-gateway"
 COPY nginx.conf /etc/nginx/nginx.conf.template
@@ -8,6 +28,6 @@ RUN chgrp -R root /var/cache/nginx && \
     chmod 775 /var/run && \
     chmod -R 777 /etc/nginx && \
     chmod 775 /opt/entry.sh
-COPY dist/consent-ui /app/dist
+COPY dist /app/dist
 EXPOSE 4200
 ENTRYPOINT /opt/entry.sh
