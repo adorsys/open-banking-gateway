@@ -21,7 +21,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * This class validates 'X-Request-Signature' header of the incoming request from fintech.
@@ -33,11 +33,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RequestSignatureValidationFilter implements Filter {
     private final RequestVerifyingService requestVerifyingService;
     private final Duration requestTimeLimit;
-    private final ConcurrentHashMap<String, String> consumerKeysMap;
+    private final ConcurrentMap<String, String> consumerKeysMap;
     private final OperationTypeProperties properties;
 
     public RequestSignatureValidationFilter(RequestVerifyingService requestVerifyingService, Duration requestTimeLimit,
-                                            ConcurrentHashMap<String, String> consumerKeysMap, OperationTypeProperties properties) {
+                                            ConcurrentMap<String, String> consumerKeysMap, OperationTypeProperties properties) {
         this.requestVerifyingService = requestVerifyingService;
         this.requestTimeLimit = requestTimeLimit;
         this.consumerKeysMap = consumerKeysMap;

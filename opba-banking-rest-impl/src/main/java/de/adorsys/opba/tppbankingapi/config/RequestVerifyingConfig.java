@@ -16,8 +16,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
+import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 import static de.adorsys.opba.tppbankingapi.config.ConfigConst.BANKING_API_CONFIG_PREFIX;
 
@@ -31,7 +33,7 @@ public class RequestVerifyingConfig {
     private Duration requestValidityWindow;
 
     @NotNull
-    private ConcurrentHashMap<@NotBlank String, @NotBlank String> consumerPublicKeys;
+    private ConcurrentMap<@NotBlank String, @NotNull ApiConsumer> consumers;
 
     @NotBlank
     private String claimNameKey;
@@ -45,9 +47,24 @@ public class RequestVerifyingConfig {
 
         RequestVerifyingService requestVerifyingService = new RsaJwtsVerifyingServiceImpl(claimNameKey);
         FilterRegistrationBean<RequestSignatureValidationFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new RequestSignatureValidationFilter(requestVerifyingService, requestValidityWindow, consumerPublicKeys, properties));
+
+        ConcurrentMap<String, String> consumerKeysMap = consumers.entrySet()
+                .stream()
+                .collect(Collectors.toConcurrentMap(Map.Entry::getKey, e -> e.getValue().getPublicKey()));
+
+        registrationBean.setFilter(new RequestSignatureValidationFilter(
+                requestVerifyingService, requestValidityWindow, consumerKeysMap, properties));
         registrationBean.setUrlPatterns(urlsToBeValidated);
 
         return registrationBean;
+    }
+
+    @Data
+    public static class ApiConsumer {
+        @NotBlank
+        private String name;
+
+        @NotBlank
+        private String publicKey;
     }
 }
