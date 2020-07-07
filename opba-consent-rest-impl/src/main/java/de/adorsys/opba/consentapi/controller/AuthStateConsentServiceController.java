@@ -5,7 +5,6 @@ import de.adorsys.opba.consentapi.Const;
 import de.adorsys.opba.consentapi.model.generated.AisAccountAccessInfo;
 import de.adorsys.opba.consentapi.model.generated.AisConsentRequest;
 import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
-import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
 import de.adorsys.opba.consentapi.model.generated.PaymentProduct;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
 import de.adorsys.opba.consentapi.model.generated.SinglePayment;
@@ -64,10 +63,7 @@ public class AuthStateConsentServiceController implements AuthStateConsentAuthor
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
-    public interface AuthStateBodyToApiMapper extends FacadeResponseBodyToRestBodyMapper<InlineResponse200, AuthStateBody> {
-
-        @Mapping(source = "facade", target = "consentAuth")
-        InlineResponse200 map(AuthStateBody facade);
+    public interface AuthStateBodyToApiMapper extends FacadeResponseBodyToRestBodyMapper<ConsentAuth, AuthStateBody> {
 
         @Mapping(source = "resultBody", target = "singlePayment", qualifiedByName = "mapToSinglePayment")
         @Mapping(source = "resultBody", target = "consent", qualifiedByName = "mapToAisConsentRequest")
