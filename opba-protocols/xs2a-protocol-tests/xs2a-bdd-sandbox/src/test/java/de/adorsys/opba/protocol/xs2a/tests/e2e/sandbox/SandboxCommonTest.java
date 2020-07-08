@@ -10,7 +10,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.testcontainers.containers.DockerComposeContainer;
 
+import java.io.File;
 import java.security.Security;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -40,8 +42,10 @@ public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIV
             return;
         }
 
-        executor.runAll();
-        executor.awaitForAllStarted();
+        DockerComposeContainer environment = new DockerComposeContainer(new File("./../../../how-to-start-with-project/xs2a-sandbox-only/docker-compose.yml"))
+                .withLocalCompose(true)
+                .withTailChildContainers(true);
+        environment.start();
         Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
     }
 
