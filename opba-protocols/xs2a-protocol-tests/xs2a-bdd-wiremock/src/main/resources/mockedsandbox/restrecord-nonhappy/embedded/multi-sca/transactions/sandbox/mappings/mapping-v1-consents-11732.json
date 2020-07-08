@@ -1,0 +1,36 @@
+{
+  "id": "baaa58c2-0447-3718-ae8c-e24e8b7bc681",
+  "request": {
+    "url": "/v1/consents/3-1GbYBPiC1TycC2-o2fRruCzqWyd_Ad9CHUQDrVAek386zdYL7VQ8mnLjUId1f8WmQLDVsea8QVWKkLALAJ-cz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/977e3b4e-e0f3-4c8b-98bd-0503fe4f833f",
+    "method": "PUT",
+    "headers": {
+      "X-Request-ID": {
+        "matches": "[0-9a-zA-z\\-]+"
+      },
+      "PSU-ID": {
+        "equalTo": "max.musterman"
+      },
+      "Content-Type": {
+        "equalTo": "application/json; charset=UTF-8"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"authenticationMethodId\":\"k1Hq9SJgSdkl71CjEnMaoY\"}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "body-v1-consents-11732.json",
+    "headers": {
+      "Aspsp-Sca-Approach": "EMBEDDED",
+      "X-Request-Id": "b75eb6bd-3233-11ea-b535-e2b5b1f1970b",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Date": "Wed, 08 Jan 2020 16:27:36 GMT"
+    }
+  },
+  "uuid": "baaa58c2-0447-3718-ae8c-e24e8b7bc681"
+}
