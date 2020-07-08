@@ -96,7 +96,8 @@
             <artifactId>xs2a-sandbox-protocol</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!-- Excluding sandbox-test as it is testing framework setup -->
+        <!-- Excluding sandboxes/xs2a-sandbox as it is testing framework setup -->
+        <!-- Excluding sandboxes/hbci-sandbox as it is testing sandbox for HBCI -->
         <!-- XS2A-PROTOCOL-TESTS DIR -->
         <dependency>
             <groupId>de.adorsys.opba</groupId>
@@ -118,6 +119,14 @@
             <scope>test</scope>
         </dependency>
         <!-- END XS2A-PROTOCOL-TESTS DIR -->
+        <!-- HBCI-PROTOCOL-TESTS DIR -->
+        <dependency>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>hbci-bdd-sandbox</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- END HBCI-PROTOCOL-TESTS DIR -->
         <!-- END OPBA-PROTOCOLS DIR -->
     </dependencies>
 
