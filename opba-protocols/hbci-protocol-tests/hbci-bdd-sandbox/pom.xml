@@ -38,7 +38,7 @@
         </dependency>
         <dependency>
             <groupId>de.adorsys.opba</groupId>
-            <artifactId>hbci-sandbox-protocol</artifactId>
+            <artifactId>hbci-sandbox</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
