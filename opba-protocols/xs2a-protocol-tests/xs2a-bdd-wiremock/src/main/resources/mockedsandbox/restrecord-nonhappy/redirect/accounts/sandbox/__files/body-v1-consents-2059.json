@@ -1,0 +1,12 @@
+{
+  "scaStatus": "psuIdentified",
+  "authorisationId": "dd0a7fbf-a492-46d7-9345-0664d9a989c8",
+  "_links": {
+    "scaRedirect": {
+      "href": "http://localhost:4400/account-information/login?encryptedConsentId=FnQrERp1CutlTlhTke5EScQUikVhZuNU40Nfru7GjyesxBtjhvuH5WGDIejOpAQ82Kg_O5MgvEsAcowGNyi7d8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q&redirectId=dd0a7fbf-a492-46d7-9345-0664d9a989c8"
+    },
+    "scaStatus": {
+      "href": "http://127.0.0.1:20014/v1/consents/FnQrERp1CutlTlhTke5EScQUikVhZuNU40Nfru7GjyesxBtjhvuH5WGDIejOpAQ82Kg_O5MgvEsAcowGNyi7d8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/dd0a7fbf-a492-46d7-9345-0664d9a989c8"
+    }
+  }
+}

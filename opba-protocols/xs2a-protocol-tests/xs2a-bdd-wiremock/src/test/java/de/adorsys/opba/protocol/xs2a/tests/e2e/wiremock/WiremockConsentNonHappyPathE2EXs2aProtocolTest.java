@@ -68,7 +68,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
     @EnumSource(Approach.class)
     void testAccountsListWithOnceWrongPasswordThenOkWithConsentUsingEmbedded(Approach expectedApproach) {
         given()
-                .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
+                .embedded_mock_of_sandbox_for_max_musterman_accounts_running_for_non_happy_path()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -97,7 +97,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
     @EnumSource(Approach.class)
     void testTransactionsListWithOnceWrongPasswordThenOkWithConsentUsingEmbedded(Approach expectedApproach) {
         given()
-                .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
+                .embedded_mock_of_sandbox_for_max_musterman_transactions_running_for_non_happy_path()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -127,7 +127,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
     @Test
     void testAccountsListWithConsentUsingRedirectWithoutIpAddress() {
         given()
-                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running_for_non_happy_path()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -143,7 +143,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
     @EnumSource(Approach.class)
     void testTransactionsListWithOnceWrongScaChallengeThenOkWithConsentUsingEmbedded(Approach expectedApproach) {
         given()
-                .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
+                .embedded_mock_of_sandbox_for_max_musterman_transactions_running_for_non_happy_path()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -174,7 +174,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
     @EnumSource(Approach.class)
     void testAccountsListWithConsentWithMissingPsuId(Approach expectedApproach, @TempDir Path tempDir) {
         given()
-                .redirect_mock_of_sandbox_nopsu_for_anton_brueckner_accounts_running(tempDir)
+                .redirect_mock_of_sandbox_nopsu_for_anton_brueckner_accounts_running_for_non_happy_path(tempDir)
                 .ignore_validation_rules_table_contains_field_psu_id()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
@@ -199,7 +199,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
     @EnumSource(Approach.class)
     void testTransactionsListWithOnceWrongIbanThenOkWithConsentUsingEmbedded(Approach approach) {
         given()
-                .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
+                .embedded_mock_of_sandbox_for_max_musterman_transactions_running_for_non_happy_path()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -230,7 +230,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
     @EnumSource(Approach.class)
     void testAccountsListWithOnceWrongScaChallengeThenOkWithConsentUsingEmbedded(Approach expectedApproach) {
         given()
-                .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
+                .embedded_mock_of_sandbox_for_max_musterman_accounts_running_for_non_happy_path()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -258,7 +258,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
     @Test
     void testAccountsListWithConsentUsingRedirectWithWrongIbans() {
         given()
-                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running_for_non_happy_path()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);

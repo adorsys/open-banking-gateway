@@ -1,0 +1,15 @@
+{
+  "accounts": [
+    {
+      "resourceId": "cmD4EYZeTkkhxRuIV1diKA",
+      "iban": "DE80760700240271232400",
+      "currency": "EUR",
+      "name": "anton.brueckner",
+      "product": "Cash24",
+      "cashAccountType": "CASH",
+      "status": "enabled",
+      "usage": "PRIV",
+      "_links": {}
+    }
+  ]
+}
