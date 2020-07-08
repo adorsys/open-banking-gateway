@@ -7,6 +7,7 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
 import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
+import de.adorsys.opba.protocol.api.dto.result.body.AuthResultBody;
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
@@ -112,26 +113,19 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
         List<ScaMethod> scaMethods = ctx.getAvailableSca();
         String redirectTo = null == redirectionTarget ? null : redirectionTarget.getRedirectTo();
 
-        Object resultBody = null;
-        String bankName = "";
-        String fintechName = "";
-
-        if (ctx instanceof Xs2aPisContext) {
-            resultBody = pisBodyMapper.map(((Xs2aPisContext) ctx).getPayment());
-        } else if (ctx instanceof Xs2aAisContext) {
-            resultBody = aisBodyMapper.map(((Xs2aAisContext) ctx).getAisConsent());
-            bankName = ctx.getRequestScoped().aspspProfile().getName();
-            fintechName = ctx.getRequestScoped().fintechProfile().getName();
-        }
+        AuthResultBody authResultBody = AuthResultBody.builder()
+                .aisConsent(ctx instanceof Xs2aAisContext ? aisBodyMapper.map(((Xs2aAisContext) ctx).getAisConsent()) : null)
+                .singlePaymentBody(ctx instanceof Xs2aPisContext ? pisBodyMapper.map(((Xs2aPisContext) ctx).getPayment()) : null)
+                .bankName(ctx.getRequestScoped().aspspProfile().getName())
+                .fintechName(ctx.getRequestScoped().fintechProfile().getName())
+                .build();
 
         return new AuthStateBody(
                 action.name(),
                 violationsMapper.map(issues.getViolations()),
                 scaMethodsMapper.map(scaMethods),
                 redirectTo,
-                resultBody,
-                bankName,
-                fintechName
+                authResultBody
         );
     }
 
