@@ -24,7 +24,6 @@ import de.adorsys.opba.restapi.shared.service.RedirectionOnlyToOkMapper;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
@@ -65,8 +64,10 @@ public class AuthStateConsentServiceController implements AuthStateConsentAuthor
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
     public interface AuthStateBodyToApiMapper extends FacadeResponseBodyToRestBodyMapper<ConsentAuth, AuthStateBody> {
 
-        @Mapping(source = "resultBody", target = "singlePayment", qualifiedByName = "mapToSinglePayment")
-        @Mapping(source = "resultBody", target = "consent", qualifiedByName = "mapToAisConsentRequest")
+        @Mapping(source = "resultBody.singlePaymentBody", target = "singlePayment")
+        @Mapping(source = "resultBody.aisConsent", target = "consent")
+        @Mapping(source = "resultBody.bankName", target = "bankName")
+        @Mapping(source = "resultBody.fintechName", target = "fintechName")
         ConsentAuth map(AuthStateBody authStateBody);
 
         @Mapping(source = "key", target = "id")
@@ -75,22 +76,6 @@ public class AuthStateConsentServiceController implements AuthStateConsentAuthor
 
         default ConsentAuth.ActionEnum fromString(String value) {
             return ConsentAuth.ActionEnum.fromValue(TRANSLATE_ACTIONS.getOrDefault(value, value));
-        }
-
-        @Named("mapToSinglePayment")
-        default SinglePayment mapToSinglePayment(Object resultBody) {
-            if (resultBody instanceof SinglePaymentBody) {
-                return mapToSinglePayment((SinglePaymentBody) resultBody);
-            }
-            return null;
-        }
-
-        @Named("mapToAisConsentRequest")
-        default AisConsentRequest mapToAisConsentRequest(Object resultBody) {
-            if (resultBody instanceof AisConsent) {
-                return mapToAisConsentRequest((AisConsent) resultBody);
-            }
-            return null;
         }
 
         @Mapping(source = "singlePaymentBody.creditorAddress.postCode", target = "creditorAddress.postalCode")
