@@ -1,5 +1,0 @@
-{
-  "foo": "123",
-  "prefix${_ctx.getLoopAccount().getPosition()}": "${ctx.getLoopAccount().getNumber()}",
-  "bar": "99"
-}
