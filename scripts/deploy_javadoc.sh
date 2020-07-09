@@ -14,11 +14,11 @@ mvn clean javadoc:aggregate -P javadoc
 echo -e "Publishing javadoc...\n"
 
 git clone --quiet --branch=gh-pages https://"$GITHUB_TOKEN"@github.com/"$TRAVIS_REPO_SLUG" gh-pages > /dev/null
-cd gh-pages || exit
+cd gh-pages || exit 1
 
 (
   mkdir -p ./javadoc/"$TRAVIS_TAG" && cp -Rf ../target/site/apidocs/* ./javadoc/"$TRAVIS_TAG"
-  cd javadoc || exit
+  cd javadoc || exit 1
   rm latest
   ln -s "$TRAVIS_TAG" latest
 )

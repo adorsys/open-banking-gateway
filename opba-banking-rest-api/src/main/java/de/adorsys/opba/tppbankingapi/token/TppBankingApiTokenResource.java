@@ -1,8 +1,8 @@
 package de.adorsys.opba.tppbankingapi.token;
 
 
-import de.adorsys.opba.tppbankingapi.token.model.PsuConsentSessionResponse;
-import de.adorsys.opba.tppbankingapi.token.resource.TppTokenApi;
+import de.adorsys.opba.tppbankingapi.token.model.generated.PsuConsentSessionResponse;
+import de.adorsys.opba.tppbankingapi.token.resource.generated.TppTokenApi;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;

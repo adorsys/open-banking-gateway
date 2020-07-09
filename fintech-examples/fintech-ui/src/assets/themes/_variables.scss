@@ -1,0 +1,15 @@
+// Overwrite bootstrap variables
+@import './bootstrap-overrides';
+
+$primary: #687aa8;
+$primary-10: #f7f8fb;
+$primary-30: #e5ecfe;
+
+$dark-80: #21242c;
+$grey: #4d4d4d;
+
+:root {
+  /*Main*/
+  --main-BG: #{$primary-10};
+  --fontFamily: #{$font-family-base};
+}

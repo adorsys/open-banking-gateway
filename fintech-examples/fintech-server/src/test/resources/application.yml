@@ -2,3 +2,15 @@ server:
   port: 8086
 tpp:
   url: http://localhost:8086
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:test
+    username: SA
+    password:
+    driver-class-name: org.h2.Driver
+
+mock:
+  tppais:
+    listtransactions: true
+    listaccounts: true
