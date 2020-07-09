@@ -1,8 +1,8 @@
 {
   "id": "c8a82a58-d183-3402-9b4f-f1995cb6d524",
-  "scenarioName": "Initiate consent",
+  "scenarioName": "Embedded max.musterman initiate consent",
   "requiredScenarioState": "Started",
-  "newScenarioState": "Initiated",
+  "newScenarioState": "Received",
   "request": {
     "url": "/v1/consents",
     "method": "POST",

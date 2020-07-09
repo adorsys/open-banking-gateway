@@ -1,7 +1,5 @@
 {
   "id": "13e84835-8e5e-3f65-8732-65852ea3dbb9",
-  "scenarioName": "Initiate consent",
-  "requiredScenarioState": "Authorized",
   "request": {
     "url": "/v1/consents/FnQrERp1CutlTlhTke5EScQUikVhZuNU40Nfru7GjyesxBtjhvuH5WGDIejOpAQ82Kg_O5MgvEsAcowGNyi7d8z9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q",
     "method": "DELETE",
