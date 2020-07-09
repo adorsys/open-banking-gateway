@@ -41,3 +41,12 @@ docker build -t "$IMAGE_NAME_APP" ./consent-ui
 docker tag "$IMAGE_NAME_APP" "$LATEST_IMAGE_NAME_APP"
 docker push "$IMAGE_NAME_APP"
 docker push "$LATEST_IMAGE_NAME_APP"
+
+SERVICE_NAME="hbci-sandbox"
+IMAGE_NAME=$REGISTRY_DOMAIN/$PROJECT_NAME/$SERVICE_NAME:$IMAGE_TAG
+LATEST_IMAGE_NAME=$REGISTRY_DOMAIN/$PROJECT_NAME/$SERVICE_NAME:latest
+JAR_NAME=$SERVICE_NAME-$PROJECT_VERSION.jar
+docker build -t "$IMAGE_NAME" ./opba-protocols/hbci-protocol
+docker tag "$IMAGE_NAME" "$LATEST_IMAGE_NAME"
+docker push "$IMAGE_NAME"
+docker push "$LATEST_IMAGE_NAME"
