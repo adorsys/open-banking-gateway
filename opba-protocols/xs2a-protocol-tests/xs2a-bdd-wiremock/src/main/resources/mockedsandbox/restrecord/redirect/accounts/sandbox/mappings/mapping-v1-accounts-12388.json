@@ -1,7 +1,7 @@
 {
   "id": "616a8d65-cf94-393a-9445-0c2cc0d84445",
-  "scenarioName": "Initiate consent",
-  "requiredScenarioState": "Authorized",
+  "scenarioName": "Redirect anton.brueckner initiate consent",
+  "requiredScenarioState": "Finalised",
   "request": {
     "url": "/v1/accounts",
     "method": "GET",
