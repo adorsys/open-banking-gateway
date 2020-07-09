@@ -1,8 +1,8 @@
 {
   "id": "233b50f7-147f-3114-bbc6-ebabd072111c",
-  "scenarioName": "Initiate payment",
+  "scenarioName": "Redirect anton.brueckner initiate payment",
   "requiredScenarioState": "Started",
-  "newScenarioState": "Initiated",
+  "newScenarioState": "Received",
   "request": {
     "url": "/v1/payments/sepa-credit-transfers",
     "method": "POST",
