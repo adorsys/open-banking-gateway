@@ -1,8 +1,5 @@
 {
   "id": "c8a82a58-d183-3402-9b4f-f1995cb6d524",
-  "scenarioName": "Initiate consent",
-  "requiredScenarioState": "Started",
-  "newScenarioState": "Initiated",
   "request": {
     "url": "/v1/consents",
     "method": "POST",
