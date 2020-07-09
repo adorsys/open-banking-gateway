@@ -46,7 +46,7 @@ SERVICE_NAME="hbci-sandbox-server"
 IMAGE_NAME=$REGISTRY_DOMAIN/$PROJECT_NAME/$SERVICE_NAME:$IMAGE_TAG
 LATEST_IMAGE_NAME=$REGISTRY_DOMAIN/$PROJECT_NAME/$SERVICE_NAME:latest
 JAR_NAME=$SERVICE_NAME-$PROJECT_VERSION.jar
-docker build -t "$IMAGE_NAME" ./opba-protocols/hbci-protocol
+docker build -t "$IMAGE_NAME" ./opba-protocols/sandboxes/hbci-sandbox
 docker tag "$IMAGE_NAME" "$LATEST_IMAGE_NAME"
 docker push "$IMAGE_NAME"
 docker push "$LATEST_IMAGE_NAME"
