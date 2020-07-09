@@ -1,7 +1,8 @@
 {
   "id": "f7e37a8d-ed24-3216-9eeb-571a33d397bf",
   "scenarioName": "Embedded max.musterman initiate consent",
-  "requiredScenarioState": "Received",
+  "requiredScenarioState": "PsuIdentified",
+  "newScenarioState": "PsuAuthenticated",
   "request": {
     "url": "/v1/consents/Xv1G4Il2O5NFS7_tvYzqmHiFJVj1cjG68kxY3ySMxtwysZRh6LIlip9ygXuqonMNW-wY5B9_ytaUuw4OzBvN2cz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/c9bf0a90-30da-4d83-84f6-1fc1a4dad57d",
     "method": "PUT",
