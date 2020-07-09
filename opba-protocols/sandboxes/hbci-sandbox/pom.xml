@@ -129,6 +129,24 @@
         <finalName>${project.artifactId}-${project.version}</finalName>
         <plugins>
             <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <configuration>
+                    <mainClass>de.adorsys.opba.protocol.sandbox.hbci.HbciServerApplication</mainClass>
+                    <executable>true</executable>
+                    <skip>false</skip>
+                    <classifier>exec</classifier>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-remote-resources-plugin</artifactId>
                 <version>${maven-remote-resources-plugin.version}</version>
                 <executions>
