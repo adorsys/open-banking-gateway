@@ -84,7 +84,7 @@ services:
     networks:
       - opba-net
 
-  hbci-sandbox:
+  hbci-sandbox-server:
     restart: on-failure
     build:
       context: opba-protocols/sandboxes/hbci-sandbox
