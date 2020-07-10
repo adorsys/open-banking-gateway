@@ -1,25 +1,23 @@
-package de.adorsys.opba.protocol.facade.services.scoped.consentaccess;
+package de.adorsys.opba.protocol.facade.services.scoped.paymentaccess;
 
 import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.Consent;
-import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
-import de.adorsys.opba.protocol.facade.services.scoped.ConsentAccessUtil;
+import de.adorsys.opba.protocol.facade.services.scoped.consentaccess.ProtocolFacingConsentImpl;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class PsuConsentAccess implements ConsentAccess {
+public class PsuPaymentAccess implements ConsentAccess {
 
-    private final Psu psu;
     private final Bank aspsp;
     private final EncryptionService encryptionService;
     private final ServiceSession serviceSession;
@@ -34,7 +32,6 @@ public class PsuConsentAccess implements ConsentAccess {
     public ProtocolFacingConsent createDoNotPersist() {
         Consent newConsent = Consent.builder()
                 .serviceSession(serviceSession)
-                .psu(psu)
                 .aspsp(aspsp)
                 .build();
 
@@ -48,26 +45,21 @@ public class PsuConsentAccess implements ConsentAccess {
 
     @Override
     public void delete(ProtocolFacingConsent consent) {
-        consentRepository.delete(((ProtocolFacingConsentImpl) consent).getConsent());
+        throw new IllegalStateException("Not implemented");
     }
 
     @Override
     public Optional<ProtocolFacingConsent> findSingleByCurrentServiceSession() {
-        return ConsentAccessUtil.getProtocolFacingConsent(findByCurrentServiceSessionOrderByModifiedDesc());
+        return Optional.empty();
     }
 
     @Override
     public List<ProtocolFacingConsent> findByCurrentServiceSessionOrderByModifiedDesc() {
-        return consentRepository.findByServiceSessionIdOrderByModifiedAtDesc(serviceSession.getId())
-                .stream()
-                .map(it -> new ProtocolFacingConsentImpl(it, encryptionService))
-                .collect(Collectors.toList());
+        return Collections.emptyList();
     }
 
     @Override
     public Collection<ProtocolFacingConsent> getAvailableConsentsForCurrentPsu() {
-        return consentRepository.findByPsu(psu).stream()
-                .map(it -> new ProtocolFacingConsentImpl(it, encryptionService))
-                .collect(Collectors.toList());
+        return Collections.emptyList();
     }
 }

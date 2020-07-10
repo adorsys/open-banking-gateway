@@ -12,9 +12,9 @@ import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
 import de.adorsys.opba.protocol.facade.config.encryption.PsuConsentEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
-import de.adorsys.opba.protocol.facade.services.scoped.consentaccess.AnonymousPusConsentAccess;
 import de.adorsys.opba.protocol.facade.services.scoped.consentaccess.FintechConsentAccess;
 import de.adorsys.opba.protocol.facade.services.scoped.consentaccess.PsuConsentAccess;
+import de.adorsys.opba.protocol.facade.services.scoped.paymentaccess.AnonymousPsuPaymentAccess;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +39,7 @@ public class ConsentAccessFactory {
     }
 
     public ConsentAccess forAnonymousPsuAndAspsp(Bank aspsp, EncryptionService encryptionService, ServiceSession session) {
-        return new AnonymousPusConsentAccess(aspsp, encryptionService, session, consentRepository);
+        return new AnonymousPsuPaymentAccess(aspsp, encryptionService, session, consentRepository);
     }
 
     public ConsentAccess forFintech(Fintech fintech, ServiceSession session, Supplier<char[]> fintechPassword) {
