@@ -4,7 +4,6 @@ import de.adorsys.opba.db.domain.entity.BankAction;
 import de.adorsys.opba.db.domain.entity.fintech.FintechConsentSpec;
 import de.adorsys.opba.db.domain.entity.fintech.FintechUser;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
-import de.adorsys.opba.protocol.api.services.EncryptionService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +13,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,13 +20,11 @@ import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.UUID;
@@ -66,11 +62,6 @@ public class AuthSession {
     private String redirectCode;
     private String aspspRedirectCode;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    @Column(nullable = false)
-    private byte[] encConsentSpec;
-
     private String context;
 
     private boolean psuAnonymous;
@@ -83,12 +74,4 @@ public class AuthSession {
 
     @LastModifiedDate
     private Instant modifiedAt;
-
-    public String getConsentSpec(EncryptionService encryption) {
-        return new String(encryption.decrypt(encConsentSpec), StandardCharsets.UTF_8);
-    }
-
-    public void setConsentSpec(EncryptionService encryption, String context) {
-        this.encConsentSpec = encryption.encrypt(context.getBytes(StandardCharsets.UTF_8));
-    }
 }
