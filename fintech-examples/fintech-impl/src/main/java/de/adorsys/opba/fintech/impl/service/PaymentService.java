@@ -76,7 +76,8 @@ public class PaymentService {
                 OperationType.PIS.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
-                bankId);
+                bankId,
+                false);
         if (responseOfTpp.getStatusCode() != HttpStatus.ACCEPTED) {
             throw new RuntimeException("Did expect status 202 from tpp, but got " + responseOfTpp.getStatusCodeValue());
         }
