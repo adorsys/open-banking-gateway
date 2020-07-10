@@ -31,6 +31,36 @@
             </column>
         </createTable>
 
+        <createTable tableName="${table-prefix}payment">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="service_session_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- Key is selected either by psu_id or directly by key_id -->
+            <!-- PSU can be nullable for the payment case -->
+            <column name="psu_id" type="BIGINT"/>
+            <!-- Is null if PSU id is set -->
+            <column name="key_id" type="UUID"/>
+
+            <column name="aspsp_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enc_payment_id" type="BLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enc_context" type="BLOB"/>
+            <column name="confirmed" type="boolean" defaultValue="false"/>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
         <createTable tableName="${table-prefix}bank_action">
             <column name="id" type="BIGINT">
                 <constraints primaryKey="true"/>
@@ -171,7 +201,6 @@
             <column name="fintech_user_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="enc_consent_spec" type="BLOB"/>
             <column name="context" type="VARCHAR(64)"/>
             <column name="psu_anonymous" type="BOOLEAN" defaultValueBoolean="false">
                 <constraints nullable="false"/>
