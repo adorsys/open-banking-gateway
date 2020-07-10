@@ -15,7 +15,7 @@ import { StubUtilTests } from '../../../../common/stub-util-tests';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UpdateConsentAuthorizationService } from '../../../../../api';
 
-fdescribe('ConsentAccountAccessSelectionComponent', () => {
+describe('ConsentAccountAccessSelectionComponent', () => {
   let component: ConsentAccountAccessSelectionComponent;
   let fixture: ComponentFixture<ConsentAccountAccessSelectionComponent>;
   let updateConsentAuthorizationService: UpdateConsentAuthorizationService;
