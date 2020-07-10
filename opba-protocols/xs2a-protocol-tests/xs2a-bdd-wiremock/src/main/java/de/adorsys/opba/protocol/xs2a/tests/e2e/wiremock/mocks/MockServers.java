@@ -68,9 +68,17 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
-    public SELF redirect_mock_of_sandbox_nopsu_for_anton_brueckner_accounts_running(Path tempDir) {
-        URL resource = getClass().getClassLoader().getResource("mockedsandbox/restrecord/redirect/accounts/sandbox/");
-        URL resource2 = getClass().getClassLoader().getResource("mockedsandbox/restrecord/redirect/accounts/sandboxnopsu/");
+    public SELF redirect_mock_of_sandbox_for_anton_brueckner_accounts_running_for_non_happy_path() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                                               .usingFilesUnderClasspath("mockedsandbox/restrecord-nonhappy/redirect/accounts/sandbox/");
+        startWireMock(config);
+
+        return self();
+    }
+
+    public SELF redirect_mock_of_sandbox_nopsu_for_anton_brueckner_accounts_running_for_non_happy_path(Path tempDir) {
+        URL resource = getClass().getClassLoader().getResource("mockedsandbox/restrecord-nonhappy/redirect/accounts/sandbox/");
+        URL resource2 = getClass().getClassLoader().getResource("mockedsandbox/restrecord-nonhappy/redirect/accounts/sandboxnopsu/");
         try {
             FileSystemUtils.copyRecursively(new File(resource.getFile()), tempDir.toFile());
             FileSystemUtils.copyRecursively(new File(resource2.getFile()), tempDir.toFile());
@@ -79,7 +87,7 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         }
 
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                .usingFilesUnderDirectory(tempDir.toString());
+                                               .usingFilesUnderDirectory(tempDir.toString());
         startWireMock(config);
 
         return self();
@@ -109,6 +117,14 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    public SELF embedded_mock_of_sandbox_for_max_musterman_accounts_running_for_non_happy_path() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                                               .usingFilesUnderClasspath("mockedsandbox/restrecord-nonhappy/embedded/multi-sca/accounts/sandbox/");
+        startWireMock(config);
+
+        return self();
+    }
+
     public SELF embedded_mock_of_sandbox_for_max_musterman_transactions_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/transactions/sandbox/");
@@ -116,6 +132,15 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
         return self();
     }
+
+    public SELF embedded_mock_of_sandbox_for_max_musterman_transactions_running_for_non_happy_path() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                                               .usingFilesUnderClasspath("mockedsandbox/restrecord-nonhappy/embedded/multi-sca/transactions/sandbox/");
+        startWireMock(config);
+
+        return self();
+    }
+
 
     @SneakyThrows
     private void startWireMock(WireMockConfiguration config) {

@@ -11,7 +11,7 @@ import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.internal.config.CookieProperties;
 import de.adorsys.opba.consentapi.model.generated.AuthViolation;
-import de.adorsys.opba.consentapi.model.generated.InlineResponse200;
+import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
 import de.adorsys.opba.protocol.facade.config.auth.UriExpandConst;
 import io.restassured.RestAssured;
@@ -120,16 +120,16 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
     protected ExtractableResponse<Response> provideParametersToBankingProtocolWithBody(String uriPath, String body, HttpStatus status) {
         ExtractableResponse<Response> response = RestAssured
                 .given()
-                .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
-                .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(body)
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body(body)
                 .when()
-                .post(uriPath, serviceSessionId)
+                    .post(uriPath, serviceSessionId)
                 .then()
-                .statusCode(status.value())
+                    .statusCode(status.value())
                 .extract();
 
         this.responseContent = response.body().asString();
@@ -142,11 +142,13 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
         return provideParametersToBankingProtocolWithBody(uriPath, readResource(resource), status);
     }
 
-    protected void startInitialInternalConsentAuthorization(String uriPath, String resource) {
+    protected ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resource) {
         ExtractableResponse<Response> response =
                 startInitialInternalConsentAuthorization(uriPath, resource, HttpStatus.ACCEPTED);
         updateServiceSessionId(response);
         updateRedirectCode(response);
+
+        return response;
     }
 
     protected void startInitialInternalConsentAuthorizationWithCookieValidation(String uriPath, String resource) {
@@ -173,8 +175,8 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
         this.redirectCode = response.header(REDIRECT_CODE);
     }
 
-    protected void max_musterman_provides_password() {
-        startInitialInternalConsentAuthorization(
+    protected ExtractableResponse<Response> max_musterman_provides_password() {
+        return startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 "restrecord/tpp-ui-input/params/max-musterman-password.json"
         );
@@ -183,24 +185,24 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
     @SneakyThrows
     protected void updateAvailableScas() {
         ExtractableResponse<Response> response = provideGetConsentAuthStateRequest();
-        InlineResponse200 parsedValue = JSON_MAPPER
-                .readValue(response.body().asString(), InlineResponse200.class);
+        ConsentAuth parsedValue = JSON_MAPPER
+                .readValue(response.body().asString(), ConsentAuth.class);
 
-        this.availableScas = parsedValue.getConsentAuth().getScaMethods();
+        this.availableScas = parsedValue.getScaMethods();
         updateRedirectCode(response);
     }
 
     @SneakyThrows
     protected void readViolations() {
         ExtractableResponse<Response> response = provideGetConsentAuthStateRequest();
-        InlineResponse200 parsedValue = JSON_MAPPER
-                .readValue(response.body().asString(), InlineResponse200.class);
+        ConsentAuth parsedValue = JSON_MAPPER
+                .readValue(response.body().asString(), ConsentAuth.class);
 
-        this.violations = parsedValue.getConsentAuth().getViolations();
+        this.violations = parsedValue.getViolations();
         updateRedirectCode(response);
     }
 
-    private  ExtractableResponse<Response> provideGetConsentAuthStateRequest() {
+    private ExtractableResponse<Response> provideGetConsentAuthStateRequest() {
         return RestAssured
                 .given()
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())

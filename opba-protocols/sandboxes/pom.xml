@@ -21,6 +21,7 @@
 
     <modules>
         <module>xs2a-sandbox</module>
+        <module>hbci-sandbox</module>
     </modules>
 </project>
 

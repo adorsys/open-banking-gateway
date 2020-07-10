@@ -1,6 +1,46 @@
 <databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="vbeex@adorsys.com.ua" id="2020-02-17-18">
+        <comment>Updates Xs2a Adorsys Sandbox adapter URL to match defined in application.yml</comment>
+        <update tableName="${table-prefix}bank_profile">
+            <column name="url" value="${adorsys-sandbox-url}"/>
+            <where>bank_uuid IN (
+                '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46',
+                'aa750320-2958-455e-9926-e9fca5ddfa92',
+                '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc')
+            </where>
+        </update>
+    </changeSet>
+
+    <changeSet author="vbeex@adorsys.com.ua" id="2020-07-02-16">
+        <comment>Updates HBCI Adorsys Sandbox adapter URL to match defined in application.yml</comment>
+        <update tableName="${table-prefix}bank_profile">
+            <column name="url" value="${adorsys-hbci-sandbox-url}"/>
+            <where>bank_uuid IN (
+                '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76',
+                '0a1a6417-4913-4238-ab56-058025c3b2b8',
+                '125ef2c6-f414-4a10-a865-e3cdddf9753d')
+            </where>
+        </update>
+    </changeSet>
+
+    <changeSet id="load_csv_banks_random" author="mhr">
+        <comment>Loads randomized bank set to understand full-text search performance</comment>
+        <loadData
+                encoding="utf8"
+                relativeToChangelogFile="true"
+                file="banks_random_data.csv"
+                catalogName=""
+                tableName="${table-prefix}bank">
+            <column header="name"       name="name"         type="STRING"/>
+            <column header="bic"        name="bic"          type="STRING"/>
+            <column header="bank_code"  name="bank_code"    type="STRING"/>
+        </loadData>
+        <rollback />
+    </changeSet>
+
     <changeSet author="vbeex@adorsys.com.ua" id="2019-12-04-18">
         <preConditions onFail="WARN">
             <changeLogPropertyDefined property="fill-with-mock-data" value="true"/>
@@ -48,14 +88,35 @@
            insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (12, 15, 'DENY_AUTHORIZATION', 'xs2aDenyAuthorization');
 
            <!-- MOCK-HBCI  -->
-           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (1000, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
-           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (2000, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
-           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (3000, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'AUTHORIZATION', '', false);
+           <!-- BLZ 10000001 -->
+           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (110000000, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
+           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (210000000, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
+           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (310000000, '918d80fa-f7fd-4c9f-a6bd-7a9e12aeee76', 'AUTHORIZATION', '', false);
 
-           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (1000, 3000, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
-           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (2000, 3000, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
-           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (3000, 3000, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
-           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (4000, 3000, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
+           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (110000000, 310000000, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
+           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (210000000, 310000000, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
+           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (310000000, 310000000, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
+           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (410000000, 310000000, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
+
+           <!-- BLZ 20000002 -->
+           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (120000000, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
+           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (220000000, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
+           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (320000000, '0a1a6417-4913-4238-ab56-058025c3b2b8', 'AUTHORIZATION', '', false);
+
+           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (120000000, 320000000, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
+           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (220000000, 320000000, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
+           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (320000000, 320000000, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
+           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (420000000, 320000000, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
+
+           <!-- BLZ 30000003 -->
+           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (130000000, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'LIST_ACCOUNTS', 'hbciListAccounts', false);
+           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (230000000, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'LIST_TRANSACTIONS', 'hbciListTransactions', false);
+           insert into ${table-prefix}bank_action (id, bank_uuid, protocol_action, protocol_bean_name, consent_supported) values (330000000, '125ef2c6-f414-4a10-a865-e3cdddf9753d', 'AUTHORIZATION', '', false);
+
+           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (130000000, 330000000, 'GET_AUTHORIZATION_STATE', 'hbciGetAuthorizationState');
+           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (230000000, 330000000, 'UPDATE_AUTHORIZATION', 'hbciUpdateAuthorization');
+           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (330000000, 330000000, 'FROM_ASPSP_REDIRECT', 'hbciFromAspspRedirect');
+           insert into ${table-prefix}bank_sub_action (id, action_id, protocol_action, sub_protocol_bean_name) values (430000000, 330000000, 'DENY_AUTHORIZATION', 'hbciDenyAuthorization');
        </sql>
     </changeSet>
 

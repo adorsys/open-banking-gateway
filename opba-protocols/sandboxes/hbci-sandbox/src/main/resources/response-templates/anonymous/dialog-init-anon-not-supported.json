@@ -1,0 +1,23 @@
+{
+  "A_TYPE" : "CustomMsgRes",
+  "MsgHead.MsgRef.dialogid" : "${ctx.getDialogId()}",
+  "MsgHead.MsgRef.msgnum" : "1",
+  "MsgHead.SegHead.code" : "HNHBK",
+  "MsgHead.SegHead.seq" : "1",
+  "MsgHead.SegHead.version" : "3",
+  "MsgHead.dialogid" : "${ctx.getDialogId()}",
+  "MsgHead.hbciversion" : "300",
+  "MsgHead.msgnum" : "1",
+  "MsgHead.msgsize" : "000000000201",
+  "MsgTail.SegHead.code" : "HNHBS",
+  "MsgTail.SegHead.seq" : "3",
+  "MsgTail.SegHead.version" : "1",
+  "MsgTail.msgnum" : "1",
+  "RetGlob.RetVal.code" : "9800",
+  "RetGlob.RetVal.text" : "Der Dialog wurde abgebrochen.",
+  "RetGlob.RetVal_2.code" : "9400",
+  "RetGlob.RetVal_2.text" : "Der anonyme Dialog wird nicht unterstützt.",
+  "RetGlob.SegHead.code" : "HIRMG",
+  "RetGlob.SegHead.seq" : "2",
+  "RetGlob.SegHead.version" : "2"
+}

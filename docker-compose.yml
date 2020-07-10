@@ -22,6 +22,7 @@ services:
   open-banking-gateway:
     environment:
       - SPRING_LIQUIBASE_PARAMETERS_ADORSYS-SANDBOX-URL=https://obg-bank-dev-xs2a.cloud.adorsys.de
+      - SPRING_LIQUIBASE_PARAMETERS_ADORSYS-HBCI-SANDBOX-URL=http://hbci-sandbox:8090/hbci-mock/
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/open_banking?currentSchema=banking_protocol
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=docker
@@ -80,5 +81,15 @@ services:
       - "14200:4200"
     depends_on:
       - open-banking-gateway
+    networks:
+      - opba-net
+
+  hbci-sandbox-server:
+    restart: on-failure
+    build:
+      context: opba-protocols/sandboxes/hbci-sandbox
+      dockerfile: Dockerfile
+    ports:
+      - "18090:8090"
     networks:
       - opba-net

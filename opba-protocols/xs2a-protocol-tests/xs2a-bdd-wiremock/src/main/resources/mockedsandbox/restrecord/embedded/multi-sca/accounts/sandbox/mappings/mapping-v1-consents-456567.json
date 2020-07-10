@@ -1,36 +1,41 @@
 {
-  "id" : "f7e37a8d-ed24-3216-9eeb-571a33d397bf",
-  "request" : {
-    "url" : "/v1/consents/Xv1G4Il2O5NFS7_tvYzqmHiFJVj1cjG68kxY3ySMxtwysZRh6LIlip9ygXuqonMNW-wY5B9_ytaUuw4OzBvN2cz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/c9bf0a90-30da-4d83-84f6-1fc1a4dad57d",
-    "method" : "PUT",
-    "headers" : {
-      "Accept" : {
-        "equalTo" : "application/json"
+  "id": "f7e37a8d-ed24-3216-9eeb-571a33d397bf",
+  "scenarioName": "Embedded max.musterman initiate consent",
+  "requiredScenarioState": "PsuIdentified",
+  "newScenarioState": "PsuAuthenticated",
+  "request": {
+    "url": "/v1/consents/Xv1G4Il2O5NFS7_tvYzqmHiFJVj1cjG68kxY3ySMxtwysZRh6LIlip9ygXuqonMNW-wY5B9_ytaUuw4OzBvN2cz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q/authorisations/c9bf0a90-30da-4d83-84f6-1fc1a4dad57d",
+    "method": "PUT",
+    "headers": {
+      "Accept": {
+        "equalTo": "application/json"
       },
-      "X-Request-ID" : {
-        "matches" : "[0-9a-zA-z\\-]+"
+      "X-Request-ID": {
+        "matches": "[0-9a-zA-z\\-]+"
       },
-      "PSU-ID" : {
-        "equalTo" : "max.musterman"
+      "PSU-ID": {
+        "equalTo": "max.musterman"
       },
-      "Content-Type" : {
-        "equalTo" : "application/json; charset=UTF-8"
+      "Content-Type": {
+        "equalTo": "application/json; charset=UTF-8"
       }
     },
-    "bodyPatterns" : [ {
-      "equalToJson" : "{\"psuData\":{\"password\":\"22222\"}}",
-      "ignoreArrayOrder" : true,
-      "ignoreExtraElements" : true
-    } ]
+    "bodyPatterns": [
+      {
+        "equalToJson": "{\"psuData\":{\"password\":\"22222\"}}",
+        "ignoreArrayOrder": true,
+        "ignoreExtraElements": true
+      }
+    ]
   },
-  "response" : {
-    "status" : 401,
-    "bodyFileName" : "body-v1-consents-456567.json",
-    "headers" : {
-      "X-Request-Id" : "6a5334bd-3233-11ea-b535-e2b5b1f1970b",
-      "Content-Type" : "application/json;charset=UTF-8",
-      "Date" : "Tue, 31 Mar 2020 14:44:52 GMT"
+  "response": {
+    "status": 401,
+    "bodyFileName": "body-v1-consents-456567.json",
+    "headers": {
+      "X-Request-Id": "6a5334bd-3233-11ea-b535-e2b5b1f1970b",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Date": "Tue, 31 Mar 2020 14:44:52 GMT"
     }
   },
-  "uuid" : "f7e37a8d-ed24-3216-9eeb-571a33d397bf"
+  "uuid": "f7e37a8d-ed24-3216-9eeb-571a33d397bf"
 }

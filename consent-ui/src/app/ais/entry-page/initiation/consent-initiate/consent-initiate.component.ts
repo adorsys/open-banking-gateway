@@ -50,7 +50,7 @@ export class ConsentInitiateComponent implements OnInit {
   private initiateConsentSession(authorizationId: string, redirectCode: string) {
     this.authStateConsentAuthorizationService.authUsingGET(authorizationId, redirectCode, 'response').subscribe(res => {
       this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-      this.navigate(authorizationId, res.body.consentAuth);
+      this.navigate(authorizationId, res.body);
     });
   }
 

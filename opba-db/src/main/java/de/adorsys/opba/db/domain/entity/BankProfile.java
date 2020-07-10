@@ -133,4 +133,14 @@ public class BankProfile implements Serializable, CurrentBankProfile {
 
         return bank.getBankCode();
     }
+
+    @Override
+    public String getName() {
+        Bank bank = getBank();
+        if (null == bank) {
+            return null;
+        }
+
+        return bank.getName();
+    }
 }

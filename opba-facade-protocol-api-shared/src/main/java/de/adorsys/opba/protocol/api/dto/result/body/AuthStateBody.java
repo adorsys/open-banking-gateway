@@ -36,7 +36,7 @@ public class AuthStateBody implements ResultBody {
     /**
      * Result body
      */
-    private Object resultBody;
+    private AuthResultBody resultBody;
 
     public AuthStateBody(Set<ValidationError> violations) {
         this.violations = violations;

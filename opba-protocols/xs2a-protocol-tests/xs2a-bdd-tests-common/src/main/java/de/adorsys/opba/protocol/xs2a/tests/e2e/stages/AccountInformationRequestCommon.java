@@ -32,6 +32,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.GE
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.LOGIN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PASSWORD;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeadersMissingIpAddress;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withDefaultHeaders;
@@ -46,7 +47,12 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 public class AccountInformationRequestCommon<SELF extends AccountInformationRequestCommon<SELF>> extends RequestCommon<SELF> {
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner() {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
+        return fintech_calls_list_accounts_for_anton_brueckner(SANDBOX_BANK_ID);
+    }
+
+    // Note that anton.brueckner is typically used for REDIRECT (real REDIRECT that is returned by bank, and not REDIRECT approach in table)
+    public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankId) {
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankId, requestSigningService, OperationType.AIS)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -59,8 +65,14 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    // Note that max.musterman is typically used for EMBEDDED (real EMBEDDED that is returned by bank, and not EMBEDDED approach in table)
     public SELF fintech_calls_list_accounts_for_max_musterman() {
-        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, requestSigningService, OperationType.AIS)
+        return fintech_calls_list_accounts_for_max_musterman(SANDBOX_BANK_ID);
+    }
+
+    // Note that max.musterman is typically used for EMBEDDED (real EMBEDDED that is returned by bank, and not EMBEDDED approach in table)
+    public SELF fintech_calls_list_accounts_for_max_musterman(String bankId) {
+        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, bankId, requestSigningService, OperationType.AIS)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -120,28 +132,21 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman() {
-        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
-                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                .when()
-                    .get(AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT)
-                .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract();
-
-        updateServiceSessionId(response);
-        updateRedirectCode(response);
-        updateNextConsentAuthorizationUrl(response);
-        return self();
+        return fintech_calls_list_transactions_for_max_musterman("oN7KTVuJSVotMvPPPavhVo");
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId) {
-        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
-                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+        return fintech_calls_list_transactions_for_max_musterman(resourceId, SANDBOX_BANK_ID);
+    }
+
+    public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId, String bankId) {
+        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, bankId, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
+                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
-                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract();
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
