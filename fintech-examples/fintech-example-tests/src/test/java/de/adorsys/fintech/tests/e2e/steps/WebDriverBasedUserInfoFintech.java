@@ -261,10 +261,10 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_select_transfert_button(WebDriver webDriver) {
+        waitForPageLoadAndUrlContains(webDriver, "/bank");
         performClick(webDriver, By.linkText("Transfer"));
         return self();
     }
-
 
     public SELF user_click_on_register_button(WebDriver webDriver) {
         performClick(webDriver, By.id("register"));
@@ -281,6 +281,28 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         sendText(driver, By.id("username"), fintech);
         sendText(driver, By.id("password"), "12345");
         clickOnButton(driver, By.xpath("//button[@type='submit']"));
+        return self();
+    }
+
+    public SELF user_fills_transfer_formular(WebDriver driver) {
+        waitPlusTimer(driver, timeout.getSeconds());
+        driver.findElement( By.name("creditorIban")).clear();
+        sendText(driver, By.name("creditorIban"), "DE80760700240271232400");
+        driver.findElement( By.name("name")).clear();
+        sendText(driver, By.name("name"), "anton.brueckner");
+        driver.findElement( By.name("purpose")).clear();
+        sendText(driver, By.name("purpose"), "test");
+        driver.findElement( By.name("amount")).clear();
+        sendText(driver, By.name("amount"), "50,00");
+        waitPlusTimer(driver, timeout.getSeconds());
+        performClick(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_select_account_to_proceed_payment_with(WebDriver driver) {
+        waitPlusTimer(driver, timeout.getSeconds());
+        performClick(driver, By.className("lacc-list-container"));
+        waitPlusTimer(driver, 20);
         return self();
     }
 
