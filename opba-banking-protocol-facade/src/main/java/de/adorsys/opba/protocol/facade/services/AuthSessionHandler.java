@@ -156,8 +156,8 @@ public class AuthSessionHandler {
         if (context.getRequest() instanceof InitiateSinglePaymentRequest) {
             InitiateSinglePaymentRequest request = (InitiateSinglePaymentRequest) context.getRequest();
             url = request.getFacadeServiceable().isAnonymousPsuAllowed()
-                    ? facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPis()
-                    : facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPisAnonymous();
+                    ? facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPisAnonymous()
+                    : facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPis();
         }
 
         result.setRedirectionTo(

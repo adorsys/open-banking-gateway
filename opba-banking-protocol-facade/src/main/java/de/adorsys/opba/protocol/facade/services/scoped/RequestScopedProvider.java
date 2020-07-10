@@ -75,11 +75,10 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
             SecretKeyWithIv key
     ) {
         EncryptionService encryptionService = encryptionService(encryptionServiceProvider, key);
-        ConsentAccess access = accessProvider.forPsuAndAspsp(
-                authSession.getPsu(),
-                authSession.getAction().getBankProfile().getBank(),
-                authSession.getParent()
-        );
+
+        ConsentAccess access;
+        access = getPsuConsentAccess(authSession, encryptionService);
+
         return doRegister(
                 authSession.getAction().getBankProfile(),
                 fintechConfig.getConsumers().get(authSession.getFintechUser().getFintech().getGlobalId()),
@@ -87,6 +86,20 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
                 encryptionService,
                 key,
                 bankProtocolId);
+    }
+
+    private ConsentAccess getPsuConsentAccess(AuthSession authSession, EncryptionService encryptionService) {
+        if (authSession.isPsuAnonymous()) {
+            return accessProvider.forAnonymousPsuAndAspsp(
+                    authSession.getAction().getBankProfile().getBank(),
+                    encryptionService,
+                    authSession.getParent());
+        }
+
+        return accessProvider.forPsuAndAspsp(
+                authSession.getPsu(),
+                authSession.getAction().getBankProfile().getBank(),
+                authSession.getParent());
     }
 
     public InternalRequestScoped deregister(RequestScoped requestScoped) {
