@@ -19,6 +19,7 @@ import de.adorsys.opba.tppauthapi.resource.generated.PsuAuthenticationApi;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -80,23 +81,19 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
 
     @Override
     public ResponseEntity<LoginResponse> loginForApproval(PsuAuthBody body, UUID xRequestId, String redirectCode, UUID authorizationId) {
-        PsuLoginForAisService.Outcome outcome = aisService.loginAndAssociateAuthSession(body.getLogin(), body.getPassword(), authorizationId, redirectCode);
-        String ttl = Long.toString(cookieProperties.getMaxAge().getSeconds());
-        log.debug("created new session cookie for authid {}", authorizationId);
-        return ResponseEntity
-                .status(HttpStatus.ACCEPTED)
-                .header(LOCATION, outcome.getRedirectLocation().toASCIIString())
-                .header(X_REQUEST_ID, xRequestId.toString())
-                .header(COOKIE_TTL, ttl)
-                .header(SET_COOKIE, buildAuthorizationCookiesOnAllPaths(authorizationId,
-                                                                        outcome.getKey(),
-                                                                        tppTokenProperties.getTokenValidityDuration()))
-                .build();
+        PsuLoginForAisService.Outcome outcome = aisService.loginInPsuScopeAndAssociateAuthSession(body.getLogin(), body.getPassword(), authorizationId, redirectCode);
+        return createResponseWithSecretKeyInCookieOnAllPaths(xRequestId, authorizationId, outcome);
     }
 
     @Override
     public ResponseEntity<LoginResponse> loginForPaymentApproval(PsuAuthBody body, UUID xRequestId, String redirectCode, UUID authorizationId) {
         return loginForApproval(body, xRequestId, redirectCode, authorizationId);
+    }
+
+    @Override
+    public ResponseEntity<LoginResponse> loginForAnonymousPaymentApproval(UUID xRequestId, UUID authorizationId, String redirectCode) {
+        PsuLoginForAisService.Outcome outcome = aisService.anonymousPsuAssociateAuthSession(authorizationId, redirectCode);
+        return createResponseWithSecretKeyInCookieOnAllPaths(xRequestId, authorizationId, outcome);
     }
 
     @Override
@@ -133,6 +130,21 @@ public class PsuAuthController implements PsuAuthenticationApi, PsuAuthenticatio
                 .header(X_REQUEST_ID, xRequestId.toString())
                 .header(COOKIE_TTL, ttl)
                 .header(SET_COOKIE, cookies)
+                .build();
+    }
+
+    @NotNull
+    private ResponseEntity<LoginResponse> createResponseWithSecretKeyInCookieOnAllPaths(UUID xRequestId, UUID authorizationId, PsuLoginForAisService.Outcome outcome) {
+        String ttl = Long.toString(cookieProperties.getMaxAge().getSeconds());
+        log.debug("created new session cookie for authid {}", authorizationId);
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .header(LOCATION, outcome.getRedirectLocation().toASCIIString())
+                .header(X_REQUEST_ID, xRequestId.toString())
+                .header(COOKIE_TTL, ttl)
+                .header(SET_COOKIE, buildAuthorizationCookiesOnAllPaths(authorizationId,
+                        outcome.getKey(),
+                        tppTokenProperties.getTokenValidityDuration()))
                 .build();
     }
 

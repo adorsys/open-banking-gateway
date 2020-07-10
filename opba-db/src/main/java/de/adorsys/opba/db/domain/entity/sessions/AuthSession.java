@@ -73,6 +73,8 @@ public class AuthSession {
 
     private String context;
 
+    private boolean psuAnonymous;
+
     @Version
     private int version;
 

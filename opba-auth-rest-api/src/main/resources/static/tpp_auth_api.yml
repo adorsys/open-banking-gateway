@@ -61,7 +61,7 @@ paths:
       tags:
         - Psu Authentication and consent approval
       operationId: loginForPaymentApproval
-      summary: Login user to open-banking
+      summary: Login user to open-banking to perform payment
       description: TBD
       requestBody:
         description: User credentials object
@@ -82,7 +82,25 @@ paths:
           $ref: "#/components/responses/202_UserAccepted"
         "401":
           $ref: "#/components/responses/401_Unauthorised"
-
+  /v1/psu/pis/{authorization-id}/anonymous:
+    post:
+      tags:
+        - Psu Authentication and consent approval
+      operationId: loginForAnonymousPaymentApproval
+      summary: Login user to open-banking to perform payment (anonymous to OPBA)
+      description: TBD
+      parameters:
+        #common header parameter
+        - $ref: "#/components/parameters/X-Request-ID"
+        #path
+        - $ref: "#/components/parameters/authorization-id"
+        #query
+        - $ref: "#/components/parameters/redirectCode"
+      responses:
+        "202":
+          $ref: "#/components/responses/202_UserAccepted"
+        "401":
+          $ref: "#/components/responses/401_Unauthorised"
   /v1/psu/ais/{authorization-id}/renewal-authorization-session-key:
     get:
       tags:
