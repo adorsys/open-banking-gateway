@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.facade.services.scoped.consentaccess;
+package de.adorsys.opba.protocol.facade.services.scoped.paymentaccess;
 
 import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.Consent;
@@ -7,6 +7,7 @@ import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
+import de.adorsys.opba.protocol.facade.services.scoped.consentaccess.ProtocolFacingConsentImpl;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Collection;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class AnonymousPusConsentAccess implements ConsentAccess {
+public class AnonymousPsuPaymentAccess implements ConsentAccess {
 
     private final Bank aspsp;
     private final EncryptionService encryptionService;

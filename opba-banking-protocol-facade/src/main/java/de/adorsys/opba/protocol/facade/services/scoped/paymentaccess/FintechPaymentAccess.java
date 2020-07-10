@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.facade.services.scoped.consentaccess;
+package de.adorsys.opba.protocol.facade.services.scoped.paymentaccess;
 
 import de.adorsys.opba.db.domain.entity.Consent;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
@@ -12,6 +12,7 @@ import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsen
 import de.adorsys.opba.protocol.facade.config.encryption.PsuConsentEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import de.adorsys.opba.protocol.facade.services.scoped.ConsentAccessUtil;
+import de.adorsys.opba.protocol.facade.services.scoped.consentaccess.ProtocolFacingConsentImpl;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.EntityManager;
@@ -25,7 +26,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class FintechConsentAccess implements ConsentAccess {
+public class FintechPaymentAccess implements ConsentAccess {
 
     private final Fintech fintech;
     private final PsuConsentEncryptionServiceProvider encryptionService;
