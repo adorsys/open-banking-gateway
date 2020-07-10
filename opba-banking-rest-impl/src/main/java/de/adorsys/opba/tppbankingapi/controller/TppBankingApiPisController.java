@@ -2,8 +2,8 @@ package de.adorsys.opba.tppbankingapi.controller;
 
 import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
-import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
+import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.result.body.PaymentProductDetails;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.services.pis.SinglePaymentService;
@@ -44,7 +44,8 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                              String xOperationType,
                                              String xRequestSignature,
                                              String fintechID,
-                                             String bankID
+                                             String bankID,
+                                             Boolean xPisPsuAuthenticationRequired
     ) {
         return payments.execute(
                 InitiateSinglePaymentRequest.builder()
@@ -58,6 +59,7 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                                    .fintechRedirectUrlNok(fintechRedirectURLNOK)
                                                    .requestId(xRequestID)
                                                    .bankId(bankID)
+                                                   .anonymousPsuAllowed(null != xPisPsuAuthenticationRequired && !xPisPsuAuthenticationRequired)
                                                    .build()
                         )
                         .singlePayment(pisSinglePaymentMapper.map(body, PaymentProductDetails.fromValue(paymentProduct)))

@@ -173,6 +173,9 @@
             </column>
             <column name="enc_consent_spec" type="BLOB"/>
             <column name="context" type="VARCHAR(64)"/>
+            <column name="psu_anonymous" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
             <column name="version" type="INT">
                 <constraints nullable="false"/>
             </column>
