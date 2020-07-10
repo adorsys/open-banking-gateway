@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.facade.services.scoped.consentaccess;
+package de.adorsys.opba.protocol.facade.services.scoped;
 
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
 import lombok.experimental.UtilityClass;
@@ -8,10 +8,10 @@ import java.util.Collection;
 import java.util.Optional;
 
 @UtilityClass
-class ConsentAccessUtil {
+public class ConsentAccessUtil {
 
     @NotNull
-    Optional<ProtocolFacingConsent> getProtocolFacingConsent(Collection<ProtocolFacingConsent> consents) {
+    public Optional<ProtocolFacingConsent> getProtocolFacingConsent(Collection<ProtocolFacingConsent> consents) {
         if (consents.isEmpty()) {
             return Optional.empty();
         }
