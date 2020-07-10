@@ -82,4 +82,9 @@ public class FacadeServiceableRequest {
      * Users' consent id encryption key to protect from unauthorized access.
      */
     private final String psuAspspKeyId;
+
+    /**
+     * Allows to skip user login form to OpenBanking to perform payment.
+     */
+    private final boolean anonymousPsuAllowed;
 }

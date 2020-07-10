@@ -56,6 +56,11 @@ public class PsuSecureStorage {
     }
 
     @SneakyThrows
+    public PrivateKey createOneTimePrivateKey(Supplier<char[]> password, AuthSession session, BiConsumer<UUID, PublicKey> storePublicKeyIfNeeded) {
+        return generateAndSaveAspspSecretKey(password, session, storePublicKeyIfNeeded);
+    }
+
+    @SneakyThrows
     private PrivateKey generateAndSaveAspspSecretKey(Supplier<char[]> password, AuthSession session, BiConsumer<UUID, PublicKey> storePublicKeyIfNeeded) {
         UUID keyId = UUID.randomUUID();
         KeyPair key = encryptionServiceProvider.generateKeyPair();
