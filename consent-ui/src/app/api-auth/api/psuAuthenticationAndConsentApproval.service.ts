@@ -11,19 +11,15 @@
  */
 /* tslint:disable:no-unused-variable member-ordering */
 
-import { Inject, Injectable, Optional }                      from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams,
-         HttpResponse, HttpEvent, HttpParameterCodec }       from '@angular/common/http';
-import { CustomHttpParameterCodec }                          from '../encoder';
-import { Observable }                                        from 'rxjs';
-
-import { GeneralError } from '../model/generalError';
+import { Inject, Injectable, Optional } from '@angular/core';
+import { HttpClient, HttpEvent, HttpHeaders, HttpParameterCodec, HttpParams, HttpResponse } from '@angular/common/http';
+import { CustomHttpParameterCodec } from '../encoder';
+import { Observable } from 'rxjs';
 import { LoginResponse } from '../model/loginResponse';
 import { PsuAuthBody } from '../model/psuAuthBody';
 
-import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
-import { Configuration }                                     from '../configuration';
-
+import { BASE_PATH } from '../variables';
+import { Configuration } from '../configuration';
 
 
 @Injectable({
@@ -50,6 +46,61 @@ export class PsuAuthenticationAndConsentApprovalService {
     }
 
 
+
+    /**
+     * Login user to open-banking to perform payment (anonymous to OPBA)
+     * TBD
+     * @param xRequestID Unique ID that identifies this request through common workflow. Shall be contained in HTTP Response as well.
+     * @param authorizationId Authorization session ID to approve
+     * @param redirectCode Redirect code that acts as a password protecting FinTech requested consent specification
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public loginForAnonymousPaymentApproval(xRequestID: string, authorizationId: string, redirectCode: string, observe?: 'body', reportProgress?: boolean): Observable<LoginResponse>;
+    public loginForAnonymousPaymentApproval(xRequestID: string, authorizationId: string, redirectCode: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<LoginResponse>>;
+    public loginForAnonymousPaymentApproval(xRequestID: string, authorizationId: string, redirectCode: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<LoginResponse>>;
+    public loginForAnonymousPaymentApproval(xRequestID: string, authorizationId: string, redirectCode: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (xRequestID === null || xRequestID === undefined) {
+            throw new Error('Required parameter xRequestID was null or undefined when calling loginForAnonymousPaymentApproval.');
+        }
+        if (authorizationId === null || authorizationId === undefined) {
+            throw new Error('Required parameter authorizationId was null or undefined when calling loginForAnonymousPaymentApproval.');
+        }
+        if (redirectCode === null || redirectCode === undefined) {
+            throw new Error('Required parameter redirectCode was null or undefined when calling loginForAnonymousPaymentApproval.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (redirectCode !== undefined && redirectCode !== null) {
+            queryParameters = queryParameters.set('redirectCode', <any>redirectCode);
+        }
+
+        let headers = this.defaultHeaders;
+        if (xRequestID !== undefined && xRequestID !== null) {
+            headers = headers.set('X-Request-ID', String(xRequestID));
+        }
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.post<LoginResponse>(`${this.configuration.basePath}/v1/psu/pis/${encodeURIComponent(String(authorizationId))}/anonymous`,
+            null,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
 
     /**
      * Login user to open-banking
@@ -120,7 +171,7 @@ export class PsuAuthenticationAndConsentApprovalService {
     }
 
     /**
-     * Login user to open-banking
+     * Login user to open-banking to perform payment
      * TBD
      * @param xRequestID Unique ID that identifies this request through common workflow. Shall be contained in HTTP Response as well.
      * @param authorizationId Authorization session ID to approve
