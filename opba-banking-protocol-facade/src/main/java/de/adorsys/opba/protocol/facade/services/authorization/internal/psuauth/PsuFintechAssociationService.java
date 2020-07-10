@@ -38,7 +38,18 @@ public class PsuFintechAssociationService {
     }
 
     @Transactional
-    public FintechConsentSpecSecureStorage.FinTechUserInboxData associatePsuAspspWithFintechUser(AuthSession session, String fintechUserPassword) {
+    public void shareAnonymousUserSecretKeyWithFintech(String psuPassword, AuthSession session) {
+        PrivateKey psuAspspKey = psuVault.getOrCreateKeyFromPrivateForAspsp(
+                psuPassword::toCharArray,
+                session,
+                this::storePublicKey
+        );
+
+        fintechVault.psuAspspKeyToInbox(session, psuAspspKey);
+    }
+
+    @Transactional
+    public FintechConsentSpecSecureStorage.FinTechUserInboxData readInboxFromFinTech(AuthSession session, String fintechUserPassword) {
         return vault.fromInboxForAuth(
                 session,
                 fintechUserPassword::toCharArray
