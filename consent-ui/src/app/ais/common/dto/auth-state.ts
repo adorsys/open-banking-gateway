@@ -1,7 +1,7 @@
-import { AuthViolation } from '../../../api';
+import { AuthViolation, SinglePayment } from '../../../api';
 
 export class AuthConsentState {
-  constructor(public violations?: AuthViolation[]) {}
+  constructor(public violations?: AuthViolation[], public singlePayment?: SinglePayment) {}
 
   public hasAisViolation(): boolean {
     return this.violations && this.violations.filter(it => it.scope && it.scope.startsWith('AIS')).length > 0;

@@ -1,0 +1,4 @@
+<p *ngIf="singlePayment" class="text-secondary mb-0">
+  Transfer of {{ singlePayment?.instructedAmount?.amount }} {{ singlePayment?.instructedAmount?.currency }} from
+  {{ singlePayment?.debtorAccount?.iban }} to {{ singlePayment?.creditorAccount?.iban }}
+</p>
