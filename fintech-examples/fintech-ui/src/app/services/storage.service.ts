@@ -19,7 +19,13 @@ export class StorageService {
     localStorage.setItem(Session.MAX_VALID_UNTIL, JSON.stringify(this.getMaxAgeDate(maxAge)));
   }
 
-  public setRedirect(redirectCode: string, authId: string, xsrfToken: string, maxAge: number, redirectType: RedirectType): void {
+  public setRedirect(
+    redirectCode: string,
+    authId: string,
+    xsrfToken: string,
+    maxAge: number,
+    redirectType: RedirectType
+  ): void {
     console.log('REDIRECT STARTED ', redirectCode);
     const tupel: RedirectTupelForMap = new RedirectTupelForMap();
     tupel.authId = authId;
@@ -85,16 +91,40 @@ export class StorageService {
     return this.isAnySessionValid();
   }
 
-  public setLoa(accountStruct : AccountStruct[]) : void {
+  public setLoa(accountStruct: AccountStruct[]): void {
     localStorage.setItem(Session.LOA, JSON.stringify(accountStruct));
   }
 
-  public getLoa() : AccountStruct[] {
+  public getLoa(): AccountStruct[] {
     const value = localStorage.getItem(Session.LOA);
     if (value === null) {
       return null;
     }
     return JSON.parse(value);
+  }
+
+  public get isUserRedirected(): boolean {
+    const value = localStorage.getItem(Session.USER_REDIRECTED);
+    if (value === null) {
+      return false;
+    }
+    return JSON.parse(value);
+  }
+
+  public set isUserRedirected(redirected: boolean) {
+    localStorage.setItem(Session.USER_REDIRECTED, JSON.stringify(redirected));
+  }
+
+  public get redirectCancelUrl(): string {
+    const value = localStorage.getItem(Session.REDIRECT_CANCEL_URL);
+    if (value === null) {
+      return null;
+    }
+    return value;
+  }
+
+  public set redirectCancelUrl(redirectCancelUrl: string) {
+    localStorage.setItem(Session.REDIRECT_CANCEL_URL, redirectCancelUrl);
   }
 
   private isAnySessionValid(): boolean {
@@ -139,5 +169,7 @@ enum Session {
   XSRF_TOKEN = 'XSRF_TOKEN',
   MAX_VALID_UNTIL = 'MAX_VALID_UNTIL_TIMESTAMP',
   REDIRECT_MAP = 'REDIRECT_MAP',
-  LOA = 'LOA'
+  LOA = 'LOA',
+  USER_REDIRECTED = 'USER_REDIRECTED',
+  REDIRECT_CANCEL_URL = 'REDIRECT_CANCEL_URL'
 }
