@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RedirectStruct } from './redirect-struct';
 import { Consent, HeaderConfig } from '../../models/consts';
+import { Location } from '@angular/common';
 import { ConsentAuthorizationService } from '../services/consent-authorization.service';
 
 @Component({
@@ -15,7 +16,8 @@ export class RedirectPageComponent implements OnInit {
   constructor(
     private authService: ConsentAuthorizationService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -27,7 +29,8 @@ export class RedirectPageComponent implements OnInit {
 
   cancel(): void {
     console.log('call from consent NOT ok for redirect ' + this.redirectStruct.redirectCode);
-    this.authService.fromConsentOk(Consent.NOT_OK, this.redirectStruct.redirectCode);
+    this.location.back();
+    // this.authService.fromConsentOk(Consent.NOT_OK, this.redirectStruct.redirectCode);
   }
 
   proceed(): void {
