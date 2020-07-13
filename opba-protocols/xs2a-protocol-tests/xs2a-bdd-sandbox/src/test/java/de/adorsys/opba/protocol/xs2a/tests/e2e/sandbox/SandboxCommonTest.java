@@ -19,6 +19,9 @@ import java.util.UUID;
 
 public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIVEN, WHEN, THEN> {
 
+    private static Object sandboxEnvironmentSync = new Object();
+    private static DockerComposeContainer sandboxEnvironment;
+
     protected static final LocalDate DATE_FROM = LocalDate.parse("2018-01-01");
     protected static final LocalDate DATE_TO = LocalDate.parse("2020-09-30");
     protected static final String BOTH_BOOKING = "BOTH";
@@ -42,15 +45,23 @@ public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIV
             return;
         }
 
-        DockerComposeContainer environment = new DockerComposeContainer(new File("./../../../how-to-start-with-project/xs2a-sandbox-only/docker-compose.yml"))
-                .withLocalCompose(true)
-                .withTailChildContainers(true);
-        environment.start();
+        synchronized (sandboxEnvironmentSync) {
+            sandboxEnvironment = new DockerComposeContainer(new File("./../../../how-to-start-with-project/xs2a-sandbox-only/docker-compose.yml"))
+                    .withLocalCompose(true)
+                    .withTailChildContainers(true);
+            sandboxEnvironment.start();
+        }
+
         Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
     }
 
     @AfterAll
     static void stopSandbox() {
+        synchronized (sandboxEnvironmentSync) {
+            sandboxEnvironment.stop();
+            sandboxEnvironment = null;
+        }
+
         executor.shutdown();
     }
 
