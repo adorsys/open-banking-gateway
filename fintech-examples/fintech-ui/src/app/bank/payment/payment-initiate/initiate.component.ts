@@ -22,11 +22,13 @@ export class InitiateComponent implements OnInit {
   debitorIban = '';
 
   paymentForm: FormGroup;
-  constructor(private formBuilder: FormBuilder,
-              private fintechSinglePaymentInitiationService: FintechSinglePaymentInitiationService,
-              private router: Router,
-              private route: ActivatedRoute,
-              private storageService: StorageService) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private fintechSinglePaymentInitiationService: FintechSinglePaymentInitiationService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private storageService: StorageService
+  ) {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
     this.accountId = this.route.snapshot.paramMap.get('accountid');
   }
@@ -40,6 +42,12 @@ export class InitiateComponent implements OnInit {
       amount: ['12.34', [Validators.pattern('^[1-9]\\d*(\\.\\d{1,2})?$'), Validators.required]],
       purpose: ['test transfer']
     });
+
+    // this is added to register url where to forward
+    // if payment is cancelled after redirect page is displayed
+    // to be removed when issue https://github.com/adorsys/open-banking-gateway/issues/848 is resolved
+    // or Fintech UI refactored
+    this.storageService.redirectCancelUrl = this.router.url;
   }
 
   onConfirm() {
@@ -54,35 +62,34 @@ export class InitiateComponent implements OnInit {
     paymentRequest.creditorIban = this.paymentForm.getRawValue().creditorIban;
     paymentRequest.debitorIban = this.debitorIban;
     paymentRequest.purpose = this.paymentForm.getRawValue().purpose;
-    this.fintechSinglePaymentInitiationService.initiateSinglePayment(this.bankId, this.accountId,'',
-      '',okurl, notOkUrl, paymentRequest, 'response')
+    this.fintechSinglePaymentInitiationService
+      .initiateSinglePayment(this.bankId, this.accountId, '', '', okurl, notOkUrl, paymentRequest, 'response')
       .pipe(map(response => response))
-      .subscribe(
-        response => {
-          console.log('response status of payment call is ', response.status)
-          switch (response.status) {
-            case 202:
-              const location = response.headers.get(HeaderConfig.HEADER_FIELD_LOCATION);
-              this.storageService.setRedirect(
-                response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE),
-                response.headers.get(HeaderConfig.HEADER_FIELD_AUTH_ID),
-                response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN),
-                parseInt(response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_X_MAX_AGE), 0),
-                RedirectType.PIS
-              );
+      .subscribe(response => {
+        console.log('response status of payment call is ', response.status);
+        switch (response.status) {
+          case 202:
+            const location = response.headers.get(HeaderConfig.HEADER_FIELD_LOCATION);
+            this.storageService.setRedirect(
+              response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE),
+              response.headers.get(HeaderConfig.HEADER_FIELD_AUTH_ID),
+              response.headers.get(HeaderConfig.HEADER_FIELD_X_XSRF_TOKEN),
+              parseInt(response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_X_MAX_AGE), 0),
+              RedirectType.PIS
+            );
 
-              const confirmData = new ConfirmData();
-              confirmData.paymentRequest = paymentRequest;
-              confirmData.redirectStruct = new RedirectStruct();
-              confirmData.redirectStruct.redirectUrl = encodeURIComponent(location);
-              confirmData.redirectStruct.redirectCode = response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE);
-              confirmData.redirectStruct.bankId = this.bankId;
-              confirmData.redirectStruct.bankName = this.storageService.getBankName();
+            const confirmData = new ConfirmData();
+            confirmData.paymentRequest = paymentRequest;
+            confirmData.redirectStruct = new RedirectStruct();
+            confirmData.redirectStruct.redirectUrl = encodeURIComponent(location);
+            confirmData.redirectStruct.redirectCode = response.headers.get(HeaderConfig.HEADER_FIELD_REDIRECT_CODE);
+            confirmData.redirectStruct.bankId = this.bankId;
+            confirmData.redirectStruct.bankName = this.storageService.getBankName();
 
-              this.router.navigate(['../confirm', JSON.stringify(confirmData)], { relativeTo: this.route });
-              break;
-          }
-        });
+            this.router.navigate(['../confirm', JSON.stringify(confirmData)], { relativeTo: this.route });
+            break;
+        }
+      });
   }
 
   onDeny() {
@@ -93,7 +100,7 @@ export class InitiateComponent implements OnInit {
     return this.paymentForm.get('creditorIban');
   }
 
-  private getDebitorIban(accountId: string) : string {
+  private getDebitorIban(accountId: string): string {
     const list = this.storageService.getLoa();
     if (list === null) {
       throw new Error('no cached list of accounts available.');
