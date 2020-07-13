@@ -19,7 +19,7 @@ import java.util.UUID;
 
 public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIVEN, WHEN, THEN> {
 
-    private static Object sandboxEnvironmentSync = new Object();
+    private static final Object SANDBOX_ENVIRONMENT_SYNC = new Object();
     private static DockerComposeContainer sandboxEnvironment;
 
     protected static final LocalDate DATE_FROM = LocalDate.parse("2018-01-01");
@@ -45,7 +45,7 @@ public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIV
             return;
         }
 
-        synchronized (sandboxEnvironmentSync) {
+        synchronized (SANDBOX_ENVIRONMENT_SYNC) {
             sandboxEnvironment = new DockerComposeContainer(new File("./../../../how-to-start-with-project/xs2a-sandbox-only/docker-compose.yml"))
                     .withLocalCompose(true)
                     .withTailChildContainers(true);
@@ -57,7 +57,7 @@ public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIV
 
     @AfterAll
     static void stopSandbox() {
-        synchronized (sandboxEnvironmentSync) {
+        synchronized (SANDBOX_ENVIRONMENT_SYNC) {
             sandboxEnvironment.stop();
             sandboxEnvironment = null;
         }
