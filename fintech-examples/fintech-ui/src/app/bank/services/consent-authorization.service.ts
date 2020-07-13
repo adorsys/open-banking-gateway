@@ -1,5 +1,5 @@
 import { FinTechAuthorizationService } from '../../api';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Consent, HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
@@ -23,14 +23,17 @@ export class ConsentAuthorizationService {
       this.storageService.resetRedirectCode(redirectCode);
       let location = resp.headers.get('Location');
 
-      // FIXME: https://github.com/adorsys/open-banking-gateway/issues/848
-      // ATTENTION: this is a hotfix and it has to be remove as soon as the ticket #848 is resolved
-      if (location.indexOf('account/') > 0 && location.indexOf('payment/') < 0) {
-        location = location.substring(0, location.indexOf('account/') + 'account/'.length);
+      // this is added to handle url where to forward after redirection
+      // to be removed when issue https://github.com/adorsys/open-banking-gateway/issues/848 is resolved
+      // or Fintech UI refactored
+      if (this.storageService.isUserRedirected) {
+        // we use the redirect url from the Fintech server when we are redirected back
+        this.storageService.isUserRedirected = false;
+        this.router.navigate([location]);
+      } else {
+        // otherwise we use url saved before redirection occurred
+        this.router.navigate([this.storageService.redirectCancelUrl]);
       }
-      // ATTENTION: this is a hotfix and it has to be remove as soon as the ticket #848 is resolved
-
-      this.router.navigate([location]);
     });
   }
 }
