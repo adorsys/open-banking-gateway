@@ -21,7 +21,16 @@ export class ConsentAuthorizationService {
     this.authService.fromConsentGET(authId, okOrNotOk, redirectCode, '', xsrfToken, 'response').subscribe(resp => {
       console.log('fromConsent has returned. now delete redirect cookie for redirect code', redirectCode);
       this.storageService.resetRedirectCode(redirectCode);
-      this.router.navigate([resp.headers.get('Location')]);
+      let location = resp.headers.get('Location');
+
+      // FIXME: https://github.com/adorsys/open-banking-gateway/issues/848
+      // ATTENTION: this is a hotfix and it has to be remove as soon as the ticket #848 is resolved
+      if (location.indexOf('account/') > 0 && location.indexOf('payment/') < 0) {
+        location = location.substring(0, location.indexOf('account/') + 'account/'.length);
+      }
+      // ATTENTION: this is a hotfix and it has to be remove as soon as the ticket #848 is resolved
+
+      this.router.navigate([location]);
     });
   }
 }
