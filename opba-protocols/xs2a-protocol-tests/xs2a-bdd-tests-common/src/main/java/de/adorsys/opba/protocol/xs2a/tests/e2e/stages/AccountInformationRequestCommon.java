@@ -1,6 +1,8 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
 import com.google.common.collect.ImmutableMap;
+import com.tngtech.jgiven.annotation.ExpectedScenarioState;
+import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.consentapi.model.generated.AuthViolation;
@@ -45,6 +47,11 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class AccountInformationRequestCommon<SELF extends AccountInformationRequestCommon<SELF>> extends RequestCommon<SELF> {
+    private static final String TPP_SERVER_USERNAME_PLACEHOLDER = "%user%";
+    private static final String TPP_SERVER_IBAN_PLACEHOLDER = "%iban%";
+
+    @ExpectedScenarioState
+    protected String iban;
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner() {
         return fintech_calls_list_accounts_for_anton_brueckner(SANDBOX_BANK_ID);
@@ -208,15 +215,25 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent() {
         startInitialInternalConsentAuthorizationWithCookieValidation(
                 AUTHORIZE_CONSENT_ENDPOINT,
-            "restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"
+                readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json")
         );
 
         return self();
     }
 
+    public SELF user_provided_initial_parameters_to_list_accounts_with_all_accounts_consent(String user) {
+        startInitialInternalConsentAuthorizationWithCookieValidation(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/new-user-account-all-accounts-consent.json").replace(TPP_SERVER_USERNAME_PLACEHOLDER, user)
+        );
+
+        return self();
+    }
+
+
     public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_without_psu_id() {
         startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent-without-psu-id.json"
+                                                 readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent-without-psu-id.json")
         );
         return self();
     }
@@ -256,10 +273,37 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(String user) {
+        ExtractableResponse<Response> response = withDefaultHeaders(user, requestSigningService, OperationType.AIS)
+                                                         .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                                                         .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                                                         .when()
+                                                         .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
+                                                         .then()
+                                                         .statusCode(HttpStatus.OK.value())
+                                                         .extract();
+
+        this.redirectUriToGetUserParams = response.header(LOCATION);
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        return self();
+    }
+
     public SELF user_anton_brueckner_provided_initial_parameters_to_list_transactions_with_single_account_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-            "restrecord/tpp-ui-input/params/anton-brueckner-transactions-single-account-consent.json"
+                readResource("restrecord/tpp-ui-input/params/anton-brueckner-transactions-single-account-consent.json")
+        );
+
+        return self();
+    }
+
+    public SELF user_provided_initial_parameters_to_list_transactions_with_single_account_consent(String user) {
+        startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/new-user-transactions-single-account-consent.json")
+                        .replace(TPP_SERVER_USERNAME_PLACEHOLDER, user)
+                        .replace(TPP_SERVER_IBAN_PLACEHOLDER, iban)
         );
 
         return self();
@@ -268,7 +312,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_anton_brueckner_provided_initial_parameters_to_list_transactions_with_all_accounts_psd2_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/anton-brueckner-transactions-all-accounts-psd2-consent.json"
+                readResource("restrecord/tpp-ui-input/params/anton-brueckner-transactions-all-accounts-psd2-consent.json")
         );
 
         return self();
@@ -277,7 +321,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent.json"
+                readResource("restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent.json")
         );
         return self();
     }
@@ -285,7 +329,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_initial_parameters_with_ip_address_to_list_accounts_all_accounts_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent_with_ip_address.json"
+                readResource("restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent_with_ip_address.json")
         );
         return self();
     }
@@ -293,7 +337,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_initial_parameters_with_psu_ip_port_to_list_accounts_all_accounts_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent_with_psu_ip_port.json"
+                readResource("restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent_with_psu_ip_port.json")
         );
         return self();
     }
@@ -301,7 +345,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-            "restrecord/tpp-ui-input/params/max-musterman-transactions-single-account-consent.json"
+                readResource("restrecord/tpp-ui-input/params/max-musterman-transactions-single-account-consent.json")
         );
         return self();
     }
@@ -311,7 +355,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         String resource = "restrecord/tpp-ui-input/params/max-musterman-dedicated-account-consent-wrong-iban.json";
 
         ExtractableResponse<Response> response =
-                startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT, resource, HttpStatus.ACCEPTED);
+                startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT, readResource(resource), HttpStatus.ACCEPTED);
 
         assertThat(this.redirectUriToGetUserParams).contains("ais").contains("entry-consent-transactions/dedicated-account-access").contains("wrong=true");
 
@@ -325,7 +369,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         String resource = "restrecord/tpp-ui-input/params/max-musterman-transactions-single-account-consent.json";
 
         ExtractableResponse<Response> response =
-                startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT, resource, HttpStatus.ACCEPTED);
+                startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT, readResource(resource), HttpStatus.ACCEPTED);
 
         assertThat(this.redirectUriToGetUserParams).contains("authenticate").contains("wrong=false");
 
@@ -337,7 +381,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_initial_parameters_to_list_transactions_with_all_accounts_psd2_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/max-musterman-transactions-all-accounts-psd2-consent.json"
+                readResource("restrecord/tpp-ui-input/params/max-musterman-transactions-all-accounts-psd2-consent.json")
         );
         return self();
     }
@@ -345,7 +389,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_initial_parameters_to_list_transactions_but_without_psu_id_with_single_accounts_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/unknown-user-transactions-single-account-consent.json"
+                readResource("restrecord/tpp-ui-input/params/unknown-user-transactions-single-account-consent.json")
         );
         return self();
     }
@@ -353,7 +397,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_psu_id_parameter_to_list_transactions_with_single_account_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/max-musterman-in-extras.json"
+                readResource("restrecord/tpp-ui-input/params/max-musterman-in-extras.json")
         );
         return self();
     }
