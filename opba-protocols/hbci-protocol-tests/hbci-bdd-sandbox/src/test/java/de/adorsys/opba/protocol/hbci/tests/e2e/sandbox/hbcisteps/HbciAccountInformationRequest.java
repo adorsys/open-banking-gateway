@@ -12,6 +12,7 @@ import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureC
 import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.BANK_BLZ_30000003_ID;
 import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.MAX_MUSTERMAN_BANK_BLZ_20000002_ACCOUNT_ID;
 import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
@@ -63,7 +64,7 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
     public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"
+                readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json")
         );
 
         return self();
@@ -93,7 +94,7 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
     protected ExtractableResponse<Response> anton_brueckner_provides_password() {
         return startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/anton-brueckner-password.json"
+                readResource("restrecord/tpp-ui-input/params/anton-brueckner-password.json")
         );
     }
 }
