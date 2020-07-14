@@ -193,7 +193,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     public SELF user_max_musterman_provided_initial_parameters_to_make_payment() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent.json"
+                readResource("restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent.json")
         );
         return self();
     }
