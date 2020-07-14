@@ -46,7 +46,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         HbciJGivenConfig.class
 }, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX, HBCI_SANDBOX_CONFIG})
-class HbciSandboxConsentE2EXs2aProtocolTest extends SpringScenarioTest<
+class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
         HbciServers,
         HbciAccountInformationRequest<? extends HbciAccountInformationRequest<?>>,
         HbciAccountInformationResult<? extends HbciAccountInformationResult<?>>

@@ -53,6 +53,10 @@ public class PaymentStagesCommonUtil {
         return withPaymentHeaders(fintechUserId, requestSigningService, operationType, body, true);
     }
 
+    public static RequestSpecification withPaymentHeaders(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType, String body) {
+        return withPaymentHeaders(fintechUserId, SANDBOX_BANK_ID, requestSigningService, operationType, body);
+    }
+
     public static RequestSpecification withPaymentHeaders(
             String fintechUserId,
             RequestSigningService requestSigningService,
@@ -65,7 +69,7 @@ public class PaymentStagesCommonUtil {
 
         return RestAssured
                        .given()
-                       .header(BANK_ID, SANDBOX_BANK_ID)
+                       .header(BANK_ID, bankId)
                        .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
                        .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
                        .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
@@ -99,12 +103,12 @@ public class PaymentStagesCommonUtil {
     }
 
     private static String calculatePaymentSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
-                                                    OperationType operationType, String fintechUserId, boolean psuAuthenticationRequired, String body) {
+                                                    OperationType operationType, String fintechUserId, boolean psuAuthenticationRequired, String body, String bankId) {
         PaymentInitiationDataToSign paymentInitiationDataToSign = PaymentInitiationDataToSign.builder()
                                                                           .xRequestId(xRequestId)
                                                                           .instant(xTimestampUtc)
                                                                           .operationType(operationType)
-                                                                          .bankId(SANDBOX_BANK_ID)
+                                                                          .bankId(bankId)
                                                                           .fintechUserId(fintechUserId)
                                                                           .redirectOk(FINTECH_REDIR_OK)
                                                                           .redirectNok(FINTECH_REDIR_NOK)
