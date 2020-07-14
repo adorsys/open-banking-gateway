@@ -52,6 +52,7 @@ public class SandboxCommonTest<GIVEN, WHEN, THEN> extends SpringScenarioTest<GIV
         if (null != SANDBOX) {
             throw new IllegalStateException("Sandbox should be null (stopped)");
         }
+        SANDBOX = new SandboxOper();
         SANDBOX.startSandbox();
 
         Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
