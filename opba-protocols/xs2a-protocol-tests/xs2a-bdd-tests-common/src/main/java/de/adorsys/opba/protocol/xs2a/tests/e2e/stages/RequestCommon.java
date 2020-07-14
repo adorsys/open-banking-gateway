@@ -138,22 +138,22 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
         return response;
     }
 
-    protected ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resource, HttpStatus status) {
-        return provideParametersToBankingProtocolWithBody(uriPath, readResource(resource), status);
+    protected ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resourceData, HttpStatus status) {
+        return provideParametersToBankingProtocolWithBody(uriPath, resourceData, status);
     }
 
-    protected ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resource) {
+    protected ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resourceData) {
         ExtractableResponse<Response> response =
-                startInitialInternalConsentAuthorization(uriPath, resource, HttpStatus.ACCEPTED);
+                startInitialInternalConsentAuthorization(uriPath, resourceData, HttpStatus.ACCEPTED);
         updateServiceSessionId(response);
         updateRedirectCode(response);
 
         return response;
     }
 
-    protected void startInitialInternalConsentAuthorizationWithCookieValidation(String uriPath, String resource) {
+    protected void startInitialInternalConsentAuthorizationWithCookieValidation(String uriPath, String resourceData) {
         ExtractableResponse<Response> response =
-                startInitialInternalConsentAuthorization(uriPath, resource, HttpStatus.ACCEPTED);
+                startInitialInternalConsentAuthorization(uriPath, resourceData, HttpStatus.ACCEPTED);
         Cookie detailedCookie = response.response().getDetailedCookie(AUTHORIZATION_SESSION_KEY);
 
         assertThat(detailedCookie.getMaxAge()).isEqualTo(cookieProperties.getRedirectMaxAge().getSeconds());
@@ -178,7 +178,7 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
     protected ExtractableResponse<Response> max_musterman_provides_password() {
         return startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/max-musterman-password.json"
+                readResource("restrecord/tpp-ui-input/params/max-musterman-password.json")
         );
     }
 

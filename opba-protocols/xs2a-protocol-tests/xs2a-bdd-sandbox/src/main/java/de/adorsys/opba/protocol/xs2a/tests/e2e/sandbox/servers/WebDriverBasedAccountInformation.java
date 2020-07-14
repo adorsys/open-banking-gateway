@@ -231,6 +231,11 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
+    public SELF sandbox_user_navigates_to_bank_auth_page(WebDriver driver) {
+        driver.get(redirectUriToGetUserParams);
+        return self();
+    }
+
     public SELF sandbox_anton_brueckner_inputs_username_and_password(WebDriver driver) {
         waitForPageLoad(driver);
         clickOnButton(driver, By.name("login"));
@@ -240,7 +245,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    public SELF sandbox_new_user_inputs_username_and_password(WebDriver driver, String user, String password) {
+    public SELF sandbox_user_inputs_username_and_password(WebDriver driver, String user, String password) {
         waitForPageLoad(driver);
         clickOnButton(driver, By.name("login"));
         sendText(driver, By.name("login"), user);
@@ -310,6 +315,10 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     public SELF sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(WebDriver driver) {
+        return sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(driver, authSessionCookie);
+    }
+
+    public SELF sandbox_user_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(WebDriver driver) {
         return sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(driver, authSessionCookie);
     }
 
