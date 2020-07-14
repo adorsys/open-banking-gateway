@@ -34,7 +34,7 @@ import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.HBCI_MAPPERS_PA
 import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.HBCI_REQUEST_SAGA;
 import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 
-@Service("hbciPayments")
+@Service("hbciInitiateSinglePayment")
 @RequiredArgsConstructor
 public class HbciPaymentsEntrypoint implements SinglePayment {
 
@@ -88,7 +88,7 @@ public class HbciPaymentsEntrypoint implements SinglePayment {
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")
         @Mapping(source = "singlePayment", target = "payment", nullValuePropertyMappingStrategy = IGNORE)
-        @Mapping(source = "singlePayment.creditorAddress", target = "payment.creditorAddress")
+//        @Mapping(source = "singlePayment.creditorAddress", target = "payment.creditorAddress")
         PaymentHbciContext map(InitiateSinglePaymentRequest ctx);
     }
 }
