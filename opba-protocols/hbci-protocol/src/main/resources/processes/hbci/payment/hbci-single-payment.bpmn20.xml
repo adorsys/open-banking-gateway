@@ -29,7 +29,7 @@
     </sequenceFlow>
     <exclusiveGateway default="hbciTanNotNeededAfter" id="hbciCheckTanNeededAfterCall" name="Check if TAN challenge is needed"/>
     <sequenceFlow id="sid-48d18d7a-caad-4c63-bf4a-c6298716dafc" sourceRef="start" targetRef="accountListInitiateConsent"/>
-    <serviceTask flowable:async="true" flowable:delegateExpression="${hbciReportToFintechPaymentAuthorized}" flowable:exclusive="false" flowable:triggerable="false" id="reportPaymentAuthorized" name="Report to FinTech that consent was authorized"/>
+    <serviceTask flowable:async="true" flowable:delegateExpression="${hbciReportToFintechConsentAuthorized}" flowable:exclusive="false" flowable:triggerable="false" id="reportPaymentAuthorized" name="Report to FinTech that consent was authorized"/>
     <sequenceFlow id="sid-4d4aae34-b457-44f9-82bf-f401a374fdb6" sourceRef="hbciAuthorizeConsent" targetRef="hbciPaymentsAfterTan"/>
     <serviceTask flowable:async="true" flowable:delegateExpression="${hbciInitiateSendPinAndPsuId}" flowable:exclusive="false" flowable:triggerable="false" id="initiateHbciDialogSendPin" name="Initiate HBCI dialog. Send PIN/customer id">
       <documentation>Initiates HBCI dialog by sending psu id and PIN</documentation>
@@ -77,7 +77,7 @@
       <bpmndi:BPMNEdge bpmnElement="hbciPinNotNeeded" id="sid-7e979253-8867-4066-b3d9-8db89512a771">
         <omgdi:waypoint x="104.16135" y="157.79167"/>
         <omgdi:waypoint x="104.16135" y="70.586685"/>
-        <omgdi:waypoint x="149.508" y="70.586685"/>
+        <omgdi:waypoint x="150.34134" y="70.58667"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape bpmnElement="hbciAskForPin" id="d34ec335-69d5-4ebb-b946-4247e46343f4">
         <omgdc:Bounds height="80.0" width="100.0" x="172.94131" y="224.36671"/>
@@ -130,7 +130,7 @@
         <omgdi:waypoint x="626.85205" y="30.586662"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape bpmnElement="initiateHbciDialogSendPin" id="shape-f3a8d52f-5bf2-4884-906f-d1ebb754770e">
-        <omgdc:Bounds height="80.0" width="100.0" x="149.508" y="30.586685"/>
+        <omgdc:Bounds height="80.0" width="100.0" x="150.34134" y="30.58667"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="sid-38dddf5d-ed9e-45d5-9e10-ac0f648ff046" id="edge-4770ed9f-bf5d-4747-b9e9-9dec21ba268f">
         <omgdi:waypoint x="51.0" y="178.0"/>
@@ -155,7 +155,7 @@
         <omgdc:Bounds x="576.8521" y="-65.34833" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-7ba5d4cc-2d2b-4acd-a6dd-513eda67b0cd" bpmnElement="sid-eef085b6-22df-4217-a1fc-994e8d2a5a90">
-        <omgdi:waypoint x="249.508" y="70.586685"/>
+        <omgdi:waypoint x="250.34134" y="70.58667"/>
         <omgdi:waypoint x="308.15454" y="70.586685"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-464e5d7c-1d81-418d-b4f2-89e9ec6935f2" bpmnElement="callHbciToReportScaMethodSelected">
