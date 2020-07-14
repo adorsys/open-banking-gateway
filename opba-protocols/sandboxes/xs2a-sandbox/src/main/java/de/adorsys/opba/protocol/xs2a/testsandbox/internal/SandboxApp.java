@@ -146,7 +146,11 @@ public enum SandboxApp {
     }
 
     public static boolean allReadyToUse(StarterContext ctx) {
-        return values().length == Arrays.stream(values()).map(it -> it.isReadyToUse(ctx)).filter(it -> it).count();
+        return values().length == countReadyToUse(ctx);
+    }
+
+    public static long countReadyToUse(StarterContext ctx) {
+        return Arrays.stream(values()).map(it -> it.isReadyToUse(ctx)).filter(it -> it).count();
     }
 
     @SneakyThrows
