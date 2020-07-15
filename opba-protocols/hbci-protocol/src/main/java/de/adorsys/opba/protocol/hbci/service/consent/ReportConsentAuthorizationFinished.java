@@ -26,7 +26,7 @@ public class ReportConsentAuthorizationFinished extends ValidatedExecution<HbciC
         redirectExecutor.redirect(
             execution,
             context,
-            configuration.getRedirect().getConsentAccounts().getResult(),
+            configuration.getAis().getRedirect().getConsentAccounts().getResult(),
             context.getFintechRedirectUriOk(),
             redirect -> new ConsentAcquired(redirect.build()));
     }
