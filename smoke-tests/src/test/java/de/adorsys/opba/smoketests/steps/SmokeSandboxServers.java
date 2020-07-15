@@ -5,8 +5,6 @@ import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.SandboxServers;
 import de.adorsys.opba.smoketests.config.SmokeConfig;
 import io.restassured.RestAssured;
-import io.restassured.filter.log.RequestLoggingFilter;
-import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import lombok.SneakyThrows;
@@ -52,7 +50,6 @@ public class SmokeSandboxServers<SELF extends SmokeSandboxServers<SELF>> extends
     @SneakyThrows
     public SELF create_new_user_in_sandbox_tpp_management(String login, String password) {
         String auth = login_into_tpp_management();
-        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
         String userId = do_create_new_user_in_sandbox_tpp_management(login, password, auth);
         create_account_for_user_in_sandbox_tpp_management(auth, userId);
         String accountId = get_account_id_by_iban_in_sandbox_tpp_management(auth, iban);
