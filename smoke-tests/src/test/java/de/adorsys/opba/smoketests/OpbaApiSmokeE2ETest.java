@@ -128,21 +128,21 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDri
             .rest_assured_points_to_opba_server(config.getOpbaServerUri());
 
         when()
-            .fintech_calls_list_transactions_for_max_musterman(accountResourceId)
+            .fintech_calls_list_transactions_for_user(sandboxUserLogin, accountResourceId)
             .and()
             .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
             .and()
-            .user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent()
+            .user_provided_initial_parameters_to_list_transactions_with_single_account_consent(sandboxUserLogin)
             .and()
-            .user_max_musterman_provided_password_to_embedded_authorization()
+            .user_provided_password_to_embedded_authorization(sandboxUserPassword)
             .and()
-            .user_max_musterman_selected_sca_challenge_type_email1_to_embedded_authorization()
+            .user_selected_sca_challenge_type_email1_to_embedded_authorization()
             .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+            .user_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
         then()
             .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_reads_max_musterman_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
-                accountResourceId, DATE_FROM, DATE_TO, BOTH_BOOKING
+            .open_banking_reads_user_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
+                sandboxUserLogin, DATE_FROM, DATE_TO, BOTH_BOOKING
             );
     }
 
