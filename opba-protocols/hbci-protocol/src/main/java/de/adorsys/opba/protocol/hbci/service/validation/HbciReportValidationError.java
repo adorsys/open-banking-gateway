@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.hbci.service.validation;
 
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.LastRedirectionTarget;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
@@ -37,6 +38,9 @@ public class HbciReportValidationError implements JavaDelegate {
         current.setLastRedirection(redirectionTarget);
         current.setViolations(violations.getViolations());
 
+        HbciProtocolConfiguration.UrlSet urlSet = ProtocolAction.SINGLE_PAYMENT.equals(current.getAction())
+                ? configuration.getPis() : configuration.getAis();
+
         eventPublisher.publishEvent(
                 ValidationProblem.builder()
                         .processId(current.getSagaId())
@@ -44,7 +48,7 @@ public class HbciReportValidationError implements JavaDelegate {
                         .consentIncompatible(violations.isConsentIncompatible())
                         .provideMoreParamsDialog(
                                 ContextUtil.evaluateSpelForCtx(
-                                        configuration.getRedirect().getParameters().getProvideMore(),
+                                        urlSet.getRedirect().getParameters().getProvideMore(),
                                         execution,
                                         current,
                                         URI.class)

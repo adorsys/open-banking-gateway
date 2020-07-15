@@ -29,6 +29,11 @@ public class AuthorizedCustomMsg extends TemplateBasedOperationHandler {
             return "response-templates/authorized/custom-message-konto-mt940.json";
         }
 
+        if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(TRANSACTIONS))
+                || RequestStatusUtil.isForPaymentListing(context.getRequestData())) {
+            return "response-templates/authorized/custom-message-konto-mt940.json";
+        }
+
         throw new IllegalStateException("Cant't handle message: " + context.getRequestData());
     }
 

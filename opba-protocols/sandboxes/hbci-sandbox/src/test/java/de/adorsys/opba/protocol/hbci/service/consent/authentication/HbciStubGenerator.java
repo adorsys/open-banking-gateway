@@ -64,8 +64,8 @@ class HbciStubGenerator {
     @Disabled
     @SneakyThrows
     void generateDesaturated() {
-        Path sourceFile = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/data/multibanking-test.txt");
-        Path destinationFile = Paths.get("/home/valb3r/IdeaProjects/mock-hbci-mhr/obfuscated/structure.json");
+        Path sourceFile = Paths.get("/Users/max/Desktop/hbci_payments/payment/instant-payment-status.txt");
+        Path destinationFile = Paths.get("/Users/max/Desktop/hbci_payments/payment/instant-payment-status.json");
 
         ObjectWriter writer = new ObjectMapper().writerWithDefaultPrettyPrinter();
         Map<Integer, String> messagesByPos = extractHbciMessageBlocks(new String(Files.readAllBytes(sourceFile), StandardCharsets.UTF_8));

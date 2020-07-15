@@ -6,7 +6,6 @@ import de.adorsys.multibanking.domain.BankAccount;
 import de.adorsys.multibanking.domain.BankApiUser;
 import de.adorsys.multibanking.domain.request.TransactionRequest;
 import de.adorsys.multibanking.domain.response.PaymentResponse;
-import de.adorsys.multibanking.domain.spi.OnlineBankingService;
 import de.adorsys.multibanking.domain.transaction.AbstractPayment;
 import de.adorsys.multibanking.domain.transaction.SinglePayment;
 import de.adorsys.multibanking.hbci.model.HbciConsent;
@@ -14,6 +13,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
+import de.adorsys.opba.protocol.hbci.service.protocol.CustomizedOnlineBankingService;
 import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PaymentInitiateBody;
 import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PisSinglePaymentResult;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +22,15 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 import static de.adorsys.opba.protocol.bpmnshared.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.HBCI_MAPPERS_PACKAGE;
 
 @Service("hbciPaymentExecutor")
 @RequiredArgsConstructor
 public class HbciPayment extends ValidatedExecution<PaymentHbciContext> {
-    private final OnlineBankingService onlineBankingService;
+    private final CustomizedOnlineBankingService onlineBankingService;
     private final PaymentMapper paymentMapper;
 
     @Override
@@ -41,8 +43,7 @@ public class HbciPayment extends ValidatedExecution<PaymentHbciContext> {
 
         TransactionRequest<SinglePayment> request = create(singlePayment, new BankApiUser(), new BankAccess(),
                 context.getBank(), consent);
-
-        PaymentResponse response = onlineBankingService.executePayment(request);
+        PaymentResponse response = onlineBankingService.executePayment(request, UUID.randomUUID().toString());
 
         if (null == response.getAuthorisationCodeResponse()) {
             ContextUtil.getAndUpdateContext(
