@@ -131,9 +131,9 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    public SELF user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(WebDriver driver) {
+    public SELF user_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(WebDriver driver, String user) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
-        sendText(driver, By.id("PSU_ID"), MAX_MUSTERMAN);
+        sendText(driver, By.id("PSU_ID"), user);
         clickOnButton(driver, By.id("ALL_PSD2"));
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();

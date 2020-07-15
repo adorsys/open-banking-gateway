@@ -114,13 +114,13 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDri
 
     @Test
     void testAccountsListWithConsentUsingEmbedded() {
-        embeddedListMaxMustermanAccounts();
+        embeddedListAccounts();
     }
 
     @Test
     void testTransactionsListWithConsentUsingEmbedded() {
         String accountResourceId = JsonPath
-            .parse(embeddedListMaxMustermanAccounts())
+            .parse(embeddedListAccounts())
             .read("$.accounts[0].resourceId");
 
         given()
@@ -146,7 +146,7 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDri
             );
     }
 
-    private String embeddedListMaxMustermanAccounts() {
+    private String embeddedListAccounts() {
         given()
             .create_new_user_in_sandbox_tpp_management(sandboxUserLogin, sandboxUserPassword)
             .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
