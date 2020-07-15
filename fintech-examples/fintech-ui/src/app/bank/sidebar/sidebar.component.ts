@@ -16,8 +16,11 @@ export class SidebarComponent implements OnInit {
   bankId: string;
   bankName: string;
 
-  constructor(private bankProfileService: BankProfileService, private route: ActivatedRoute, private storageService: StorageService) {
-  }
+  constructor(
+    private bankProfileService: BankProfileService,
+    private route: ActivatedRoute,
+    private storageService: StorageService
+  ) {}
 
   ngOnInit() {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
@@ -41,7 +44,11 @@ export class SidebarComponent implements OnInit {
     return this.showInitiatePayment && this.isLoaDone() ? 'payment' : '.';
   }
 
-  isLoaDone() {
+  isLoaDone(): boolean {
     return this.storageService.getLoa() !== null;
+  }
+
+  get showPaymentNav(): boolean {
+    return this.showInitiatePayment && this.isLoaDone();
   }
 }
