@@ -148,26 +148,27 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDri
 
     private String embeddedListMaxMustermanAccounts() {
         given()
+            .create_new_user_in_sandbox_tpp_management(sandboxUserLogin, sandboxUserPassword)
             .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
             .rest_assured_points_to_opba_server(config.getOpbaServerUri())
             .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-            .fintech_calls_list_accounts_for_max_musterman()
+            .fintech_calls_list_accounts_for_new_user(sandboxUserLogin)
             .and()
             .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
             .and()
-            .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
+            .user_provided_initial_parameters_to_list_accounts_all_accounts_consent(sandboxUserLogin)
             .and()
-            .user_max_musterman_provided_password_to_embedded_authorization()
+            .user_provided_password_to_embedded_authorization(sandboxUserPassword)
             .and()
-            .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
+            .user_selected_sca_challenge_type_email1_to_embedded_authorization()
             .and()
-            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+            .user_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
 
         AccountInformationResult result = then()
             .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(false);
+            .open_banking_can_read_user_account_data_using_consent_bound_to_service_session(sandboxUserLogin, false);
 
         return result.getResponseContent();
     }
@@ -184,7 +185,7 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDri
             .and()
             .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
             .and()
-            .user_provided_initial_parameters_to_list_accounts_with_all_accounts_consent(sandboxUserLogin)
+            .user_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_cookie_validation(sandboxUserLogin)
             .and()
             .user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(sandboxUserLogin)
             .and()
