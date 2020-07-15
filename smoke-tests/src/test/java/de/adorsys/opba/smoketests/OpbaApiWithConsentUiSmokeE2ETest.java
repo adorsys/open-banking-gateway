@@ -173,29 +173,29 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxSe
                 .rest_assured_points_to_opba_server(config.getOpbaServerUri());
 
         when()
-                .fintech_calls_list_transactions_for_max_musterman(accountResourceId)
+                .fintech_calls_list_transactions_for_user(sandboxUserLogin, accountResourceId)
                 .and()
-                .user_max_musterman_opens_opba_consent_login_page(firefoxDriver)
+                .user_opens_opba_consent_login_page(firefoxDriver)
                 .and()
                 .user_logs_in_to_opba(firefoxDriver, opbaLogin, opbaPassword)
                 .and()
-                .user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_accounts_with_dedicated_transactions_consent(firefoxDriver)
+                .user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_dedicated_transactions_consent(firefoxDriver, sandboxUserLogin)
                 .and()
-                .user_max_musterman_provided_to_consent_ui_account_iban_for_dedicated_transactions_consent(firefoxDriver)
+                .user_provided_to_consent_ui_account_iban_for_dedicated_transactions_consent(firefoxDriver)
                 .and()
-                .user_max_musterman_in_consent_ui_reviews_transactions_consent_and_accepts(firefoxDriver)
+                .user_in_consent_ui_reviews_transactions_consent_and_accepts(firefoxDriver)
                 .and()
-                .user_max_musterman_in_consent_ui_provides_pin(firefoxDriver)
+                .user_in_consent_ui_provides_pin(firefoxDriver, sandboxUserPassword)
                 .and()
-                .user_max_musterman_in_consent_ui_sees_sca_select_and_selected_type_email2_to_embedded_authorization(firefoxDriver)
+                .user_in_consent_ui_sees_sca_select_and_selected_type_email1_to_embedded_authorization(firefoxDriver)
                 .and()
-                .user_max_musterman_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver)
+                .user_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver)
                 .and()
-                .user_max_musterman_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
+                .user_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
         then()
                 .fintech_calls_consent_activation_for_current_authorization_id()
-                .open_banking_reads_max_musterman_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
-                        accountResourceId, DATE_FROM, DATE_TO, BOTH_BOOKING
+                .open_banking_reads_user_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
+                        sandboxUserLogin, DATE_FROM, DATE_TO, BOTH_BOOKING
                 );
     }
 
@@ -234,35 +234,36 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxSe
 
     private String embeddedListMaxMustermanAccountsDedicatedOneAccountConsent(FirefoxDriver firefoxDriver) {
         given()
+                .create_new_user_in_sandbox_tpp_management(sandboxUserLogin, sandboxUserPassword)
                 .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
                 .rest_assured_points_to_opba_server(config.getOpbaServerUri());
 
         when()
-                .fintech_calls_list_accounts_for_max_musterman()
+                .fintech_calls_list_accounts_for_user(sandboxUserLogin)
                 .and()
-                .user_max_musterman_opens_opba_consent_login_page(firefoxDriver)
+                .user_opens_opba_consent_login_page(firefoxDriver)
                 .and()
                 .user_sees_register_button_clicks_it_navigate_to_register_fills_form_and_registers(firefoxDriver, opbaLogin, opbaPassword)
                 .and()
                 .user_logs_in_to_opba(firefoxDriver, opbaLogin, opbaPassword)
                 .and()
-                .user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_accounts_with_dedicated_accounts_consent(firefoxDriver)
+                .user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_dedicated_accounts_consent(firefoxDriver, sandboxUserLogin)
                 .and()
-                .user_max_musterman_provided_to_consent_ui_account_iban_for_dedicated_accounts_consent(firefoxDriver)
+                .user_provided_to_consent_ui_account_iban_for_dedicated_accounts_consent(firefoxDriver)
                 .and()
-                .user_max_musterman_in_consent_ui_reviews_account_consent_and_accepts(firefoxDriver)
+                .user_in_consent_ui_reviews_account_consent_and_accepts(firefoxDriver)
                 .and()
-                .user_max_musterman_in_consent_ui_provides_pin(firefoxDriver)
+                .user_in_consent_ui_provides_pin(firefoxDriver, sandboxUserPassword)
                 .and()
-                .user_max_musterman_in_consent_ui_sees_sca_select_and_selected_type_email2_to_embedded_authorization(firefoxDriver)
+                .user_in_consent_ui_sees_sca_select_and_selected_type_email1_to_embedded_authorization(firefoxDriver)
                 .and()
-                .user_max_musterman_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver)
+                .user_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver)
                 .and()
-                .user_max_musterman_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
+                .user_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver);
 
         AccountInformationResult result = then()
                                                   .fintech_calls_consent_activation_for_current_authorization_id()
-                                                  .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(false);
+                                                  .open_banking_can_read_user_account_data_using_consent_bound_to_service_session(sandboxUserLogin, false);
 
         return result.getResponseContent();
     }
@@ -274,7 +275,7 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxSe
                 .rest_assured_points_to_opba_server(config.getOpbaServerUri());
 
         when()
-                .fintech_calls_list_accounts_for_new_user(sandboxUserLogin)
+                .fintech_calls_list_accounts_for_user(sandboxUserLogin)
                 .and()
                 .user_opens_opba_consent_login_page(firefoxDriver)
                 .and()
@@ -284,7 +285,7 @@ class OpbaApiWithConsentUiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxSe
                 .and()
                 .user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_consent(firefoxDriver, sandboxUserLogin)
                 .and()
-                .user_in_consent_ui_reviews_accounts_concent_and_accepts(firefoxDriver)
+                .user_in_consent_ui_reviews_account_consent_and_accepts(firefoxDriver)
                 .and()
                 .user_in_consent_ui_sees_redirection_info_to_aspsp_and_accepts(firefoxDriver)
                 .and()

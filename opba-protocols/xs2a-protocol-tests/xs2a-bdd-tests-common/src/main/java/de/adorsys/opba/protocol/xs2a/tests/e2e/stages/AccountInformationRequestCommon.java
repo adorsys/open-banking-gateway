@@ -72,7 +72,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF fintech_calls_list_accounts_for_new_user(String user) {
+    public SELF fintech_calls_list_accounts_for_user(String user) {
         ExtractableResponse<Response> response = withAccountsHeaders(user, requestSigningService, OperationType.AIS)
                                                          .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                                                          .when()
@@ -463,7 +463,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_selected_sca_challenge_type_email1_to_embedded_authorization() {
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                selectedScaBody("EMAIL:test_nonstatic@example.com"),
+                selectedScaBody("EMAIL:test_static@example.com"),
                 HttpStatus.ACCEPTED
         );
         return self();
