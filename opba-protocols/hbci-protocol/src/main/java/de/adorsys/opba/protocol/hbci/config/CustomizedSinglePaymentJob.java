@@ -24,7 +24,7 @@ public class CustomizedSinglePaymentJob extends SinglePaymentJob {
     public AbstractHBCIJob createJobMessage(PinTanPassport passport) {
         AbstractHBCIJob jobMessage = super.createJobMessage(passport);
 
-        jobMessage.setLowlevelParam("endtoendid", endToEndId);
+        jobMessage.setParam("endtoendid", endToEndId);
 
         return jobMessage;
     }
