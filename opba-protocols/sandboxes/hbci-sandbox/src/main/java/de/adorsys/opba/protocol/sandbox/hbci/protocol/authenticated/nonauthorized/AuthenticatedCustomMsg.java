@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.sandbox.hbci.protocol.interpolation.JsonTemplate
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.PAYMENT;
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.SEPA_INFO;
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.TRANSACTIONS;
 
@@ -35,6 +36,18 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
             }
 
             if (RequestStatusUtil.isForTransactionListing(context.getRequestData())) {
+                context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "TAN2Step6\\.OrderAccount\\.number"));
+            }
+
+            return getAuthorizationRequiredTemplateOrWrongTanMethod();
+        }
+
+        if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(PAYMENT))) {
+            if (context.getBank().getSecurity().getPayment() == SensitiveAuthLevel.AUTHENTICATED) {
+                return "response-templates/authenticated/custom-message-konto-mt940.json";
+            }
+
+            if (RequestStatusUtil.isForPaymentListing(context.getRequestData())) {
                 context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "TAN2Step6\\.OrderAccount\\.number"));
             }
 

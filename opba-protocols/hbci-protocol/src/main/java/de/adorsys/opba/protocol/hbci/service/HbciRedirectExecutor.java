@@ -35,8 +35,8 @@ public class HbciRedirectExecutor {
     public void redirect(
             DelegateExecution execution,
             HbciContext context,
-            Function<HbciProtocolConfiguration.Redirect, String> redirectSelector) {
-        String uiScreenUri = redirectSelector.apply(configuration.getRedirect());
+            Function<HbciProtocolConfiguration, String> redirectSelector) {
+        String uiScreenUri = redirectSelector.apply(configuration);
         redirect(execution, context, uiScreenUri, null);
     }
 
