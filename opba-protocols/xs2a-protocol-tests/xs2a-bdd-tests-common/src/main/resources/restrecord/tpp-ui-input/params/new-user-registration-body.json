@@ -2,13 +2,13 @@
   "scaUserData": [
     {
       "scaMethod": "EMAIL",
-      "methodValue": "test_nonstatic@example.com",
+      "methodValue": "test_static@example.com",
       "staticTan": "123456",
       "usesStaticTan": true
     },
     {
       "scaMethod": "EMAIL",
-      "methodValue": "test_static@example.com",
+      "methodValue": "test_nonstatic@example.com",
       "usesStaticTan": false
     }
   ],
