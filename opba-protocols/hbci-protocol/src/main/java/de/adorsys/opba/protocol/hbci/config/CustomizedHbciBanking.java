@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.hbci.config;
 
+import de.adorsys.multibanking.domain.request.AbstractRequest;
 import de.adorsys.multibanking.domain.request.TransactionRequest;
 import de.adorsys.multibanking.domain.response.AbstractResponse;
 import de.adorsys.multibanking.domain.response.PaymentResponse;
@@ -40,7 +41,7 @@ public class CustomizedHbciBanking extends HbciBanking implements CustomizedOnli
         try {
             if (hbciConsent.getHbciTanSubmit() == null || hbciConsent.getStatus() == FINALISED) {
 
-                Method createCallback = HbciCacheHandler.class.getMethod("createCallback", TransactionRequest.class);
+                Method createCallback = HbciCacheHandler.class.getDeclaredMethod("createCallback", AbstractRequest.class);
                 createCallback.setAccessible(true);
                 HbciBpdUpdCallback hbciCallback = (HbciBpdUpdCallback) createCallback.invoke(null, request);
 
@@ -57,17 +58,17 @@ public class CustomizedHbciBanking extends HbciBanking implements CustomizedOnli
 
                 return response;
             } else {
-                Method transactionAuthorisation = HbciBanking.class.getDeclaredMethod("transactionAuthorisation", TransactionRequest.class);
+                Method transactionAuthorisation = HbciBanking.class.getDeclaredMethod("transactionAuthorisation", TransactionAuthorisation.class);
                 transactionAuthorisation.setAccessible(true);
                 TransactionAuthorisationResponse<? extends AbstractResponse> transactionAuthorisationResponse =
-                        (TransactionAuthorisationResponse<? extends AbstractResponse>) transactionAuthorisation.invoke(new TransactionAuthorisation<>(this, request));
+                        (TransactionAuthorisationResponse<? extends AbstractResponse>) transactionAuthorisation.invoke(this, new TransactionAuthorisation<>(request));
 
                 hbciConsent.afterTransactionAuthorisation(transactionAuthorisationResponse.getScaStatus());
 
                 return (PaymentResponse) transactionAuthorisationResponse.getJobResponse();
             }
         } catch (HBCI_Exception e) {
-            Method handleHbciException = HbciExceptionHandler.class.getMethod("handleHbciException", HBCI_Exception.class);
+            Method handleHbciException = HbciExceptionHandler.class.getDeclaredMethod("handleHbciException", HBCI_Exception.class);
             handleHbciException.setAccessible(true);
             throw (HBCI_Exception) handleHbciException.invoke(null, e);
         }
