@@ -5,8 +5,8 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.tngtech.jgiven.annotation.AfterScenario;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.db.domain.entity.BankProfile;
 import de.adorsys.opba.db.domain.entity.BankAction;
+import de.adorsys.opba.db.domain.entity.BankProfile;
 import de.adorsys.opba.db.domain.entity.IgnoreValidationRule;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.IgnoreValidationRuleRepository;
@@ -117,9 +117,27 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    // Stress tests can't use WireMock state without making them complicated
+    public SELF embedded_mock_of_sandbox_for_max_musterman_accounts_running_stateless() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/stateless/accounts/sandbox/");
+        startWireMock(config);
+
+        return self();
+    }
+
     public SELF embedded_mock_of_sandbox_for_max_musterman_accounts_running_for_non_happy_path() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                                                .usingFilesUnderClasspath("mockedsandbox/restrecord-nonhappy/embedded/multi-sca/accounts/sandbox/");
+        startWireMock(config);
+
+        return self();
+    }
+
+    // Stress tests can't use WireMock state without making them complicated
+    public SELF embedded_mock_of_sandbox_for_max_musterman_transactions_running_stateless() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/stateless/transactions/sandbox/");
         startWireMock(config);
 
         return self();
