@@ -154,7 +154,7 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDri
             .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-            .fintech_calls_list_accounts_for_new_user(sandboxUserLogin)
+            .fintech_calls_list_accounts_for_user(sandboxUserLogin)
             .and()
             .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
             .and()
@@ -181,7 +181,7 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDri
             .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-            .fintech_calls_list_accounts_for_new_user(sandboxUserLogin)
+            .fintech_calls_list_accounts_for_user(sandboxUserLogin)
             .and()
             .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
             .and()
