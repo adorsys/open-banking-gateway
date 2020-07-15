@@ -14,12 +14,14 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.awaitility.Durations;
+import org.springframework.http.HttpStatus;
 import org.testcontainers.containers.FixedHostPortGenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URI;
@@ -176,7 +178,11 @@ public enum SandboxApp {
 
     private boolean portIsListening(int port) {
         try (Socket ignored = new Socket("localhost", port)) {
-            return true;
+            // Deeper check for docker-compose runtime as docker opens port always, Java-based stuff can simply return true
+            URL url = new URL("http://localhost:" + port);
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+            int statusCode = http.getResponseCode();
+            return statusCode >= HttpStatus.OK.value(); // Assuming that if we got such status code app should be more or less ready
         } catch (IOException ignored) {
             return false;
         }
