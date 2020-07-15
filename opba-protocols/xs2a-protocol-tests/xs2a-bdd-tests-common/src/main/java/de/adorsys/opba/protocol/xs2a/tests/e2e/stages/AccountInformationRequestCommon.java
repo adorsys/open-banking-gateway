@@ -221,7 +221,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
-    public SELF user_provided_initial_parameters_to_list_accounts_with_all_accounts_consent(String user) {
+    public SELF user_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_cookie_validation(String user) {
         startInitialInternalConsentAuthorizationWithCookieValidation(
                 AUTHORIZE_CONSENT_ENDPOINT,
                 readResource("restrecord/tpp-ui-input/params/new-user-account-all-accounts-consent.json").replace(TPP_SERVER_USERNAME_PLACEHOLDER, user)
@@ -326,6 +326,14 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_provided_initial_parameters_to_list_accounts_all_accounts_consent(String user) {
+        startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/new-user-account-all-accounts-consent.json").replace(TPP_SERVER_USERNAME_PLACEHOLDER, user)
+        );
+        return self();
+    }
+
     public SELF user_max_musterman_provided_initial_parameters_with_ip_address_to_list_accounts_all_accounts_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
@@ -416,6 +424,13 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_provided_password_to_embedded_authorization(String password) {
+        assertThat(this.redirectUriToGetUserParams).contains("authenticate").doesNotContain("wrong=true");
+        user_provides_password(password);
+        updateAvailableScas();
+        return self();
+    }
+
     public SELF user_max_musterman_provided_wrong_password_to_embedded_authorization_and_stays_on_password_page() {
         ExtractableResponse<Response> response = provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
@@ -445,6 +460,15 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_selected_sca_challenge_type_email1_to_embedded_authorization() {
+        provideParametersToBankingProtocolWithBody(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                selectedScaBody("EMAIL:test_nonstatic@example.com"),
+                HttpStatus.ACCEPTED
+        );
+        return self();
+    }
+
     public SELF user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
@@ -455,6 +479,13 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").doesNotContain("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
+        assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
+        return self();
+    }
+
+    public SELF user_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
+        assertThat(this.redirectUriToGetUserParams).contains("sca-result").doesNotContain("wrong=true");
+        ExtractableResponse<Response> response = user_provides_sca_challenge_result();
         assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
         return self();
     }
