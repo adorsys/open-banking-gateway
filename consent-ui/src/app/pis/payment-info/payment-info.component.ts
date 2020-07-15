@@ -11,8 +11,8 @@ import { SinglePayment } from '../../api';
   styleUrls: ['./payment-info.component.scss']
 })
 export class PaymentInfoComponent implements OnInit {
-  private authorizationId: string;
   public singlePayment?: SinglePayment;
+  private authorizationId: string;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, private sessionService: SessionService) {}
 
@@ -21,13 +21,16 @@ export class PaymentInfoComponent implements OnInit {
       this.authorizationId = res.authId;
       this.loadPaymentState();
     });
+
+    this.router.events.subscribe(() => {
+      this.loadPaymentState();
+    });
   }
 
   private loadPaymentState(): void {
-    setTimeout(() => {
-      const tmp = this.sessionService.getPaymentState(this.authorizationId, () => new AuthConsentState());
-      console.log(tmp);
-      this.singlePayment = tmp.singlePayment;
-    }, 500);
+    const paymentState = this.sessionService.getPaymentState(this.authorizationId, () => new AuthConsentState());
+    if (paymentState) {
+      this.singlePayment = paymentState.singlePayment;
+    }
   }
 }
