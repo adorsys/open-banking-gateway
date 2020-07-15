@@ -28,7 +28,6 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     public static final String SUBMIT_ID = "do_submit";
     public static final String ANTON_BRUECKNER = "anton.brueckner";
     public static final String MAX_MUSTERMAN = "max.musterman";
-    public static final String MAX_MUSTERMAN_IBAN = "DE38760700240320465700";
     public static final String PIN_VALUE = "12345";
     public static final String TAN_VALUE = "123456";
 
@@ -38,12 +37,6 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
 
     @Value("${test.webdriver.timeout}")
     private Duration timeout;
-
-    public SELF user_max_musterman_opens_opba_consent_login_page(WebDriver driver) {
-        driver.get(redirectUriToGetUserParams);
-        waitForPageLoadAndUrlContains(driver, "/login");
-        return self();
-    }
 
     public SELF user_opens_opba_consent_login_page(WebDriver driver) {
         driver.get(redirectUriToGetUserParams);
@@ -81,22 +74,6 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
         sendText(driver, By.id("PSU_ID"), ANTON_BRUECKNER);
         clickOnButton(driver, By.id("ALL_PSD2"));
-        clickOnButton(driver, By.id(SUBMIT_ID));
-        return self();
-    }
-
-    public SELF user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent(WebDriver driver, String user) {
-        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
-        sendText(driver, By.id("PSU_ID"), user);
-        clickOnButton(driver, By.id("ALL_PSD2"));
-        clickOnButton(driver, By.id(SUBMIT_ID));
-        return self();
-    }
-
-    public SELF user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_consent(WebDriver driver) {
-        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts");
-        sendText(driver, By.id("PSU_ID"), MAX_MUSTERMAN);
-        clickOnButton(driver, By.id("ALL_ACCOUNTS"));
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
@@ -185,25 +162,41 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    public SELF user_max_musterman_in_consent_ui_reviews_account_consent_and_accepts(WebDriver driver) {
-        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts/review-consent");
-        clickOnButton(driver, By.id(SUBMIT_ID));
-        return self();
-    }
-
     public SELF user_in_consent_ui_reviews_account_consent_and_accepts(WebDriver driver) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-accounts/review-consent");
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
-    public SELF user_max_musterman_in_consent_ui_reviews_transactions_consent_and_accepts(WebDriver driver) {
+    public SELF user_in_consent_ui_reviews_transactions_consent_and_accepts(WebDriver driver) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions/review-consent");
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
-    public SELF user_in_consent_ui_reviews_transactions_consent_and_accepts(WebDriver driver) {
+    public SELF user_in_consent_ui_provides_pin(WebDriver driver, String pin) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "authenticate");
+        sendText(driver, By.id("pin"), pin);
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_in_consent_ui_provides_sca_result_to_embedded_authorization(WebDriver driver) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "sca-result");
+        sendText(driver, By.id("tan"), TAN_VALUE);
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_max_musterman_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(WebDriver driver) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
+        sendText(driver, By.id("PSU_ID"), MAX_MUSTERMAN);
+        clickOnButton(driver, By.id("ALL_PSD2"));
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_max_musterman_in_consent_ui_reviews_transactions_consent_and_accepts(WebDriver driver) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions/review-consent");
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
@@ -216,9 +209,9 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
         return self();
     }
 
-    public SELF user_in_consent_ui_provides_pin(WebDriver driver, String pin) {
-        waitForPageLoadAndUrlEndsWithPath(driver, "authenticate");
-        sendText(driver, By.id("pin"), pin);
+    public SELF user_max_musterman_in_consent_ui_sees_sca_select_and_selected_type_email2_to_embedded_authorization(WebDriver driver) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "select-sca-method");
+        selectByVisibleInDropdown(driver, By.id("scaMethod"), "EMAIL:max.musterman2@mail.de");
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
@@ -226,20 +219,6 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     public SELF user_max_musterman_in_consent_ui_provides_sca_result_to_embedded_authorization(WebDriver driver) {
         waitForPageLoadAndUrlEndsWithPath(driver, "sca-result");
         sendText(driver, By.id("tan"), TAN_VALUE);
-        clickOnButton(driver, By.id(SUBMIT_ID));
-        return self();
-    }
-
-    public SELF user_in_consent_ui_provides_sca_result_to_embedded_authorization(WebDriver driver) {
-        waitForPageLoadAndUrlEndsWithPath(driver, "sca-result");
-        sendText(driver, By.id("tan"), TAN_VALUE);
-        clickOnButton(driver, By.id(SUBMIT_ID));
-        return self();
-    }
-
-    public SELF user_max_musterman_in_consent_ui_sees_sca_select_and_selected_type_email2_to_embedded_authorization(WebDriver driver) {
-        waitForPageLoadAndUrlEndsWithPath(driver, "select-sca-method");
-        selectByVisibleInDropdown(driver, By.id("scaMethod"), "EMAIL:max.musterman2@mail.de");
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
