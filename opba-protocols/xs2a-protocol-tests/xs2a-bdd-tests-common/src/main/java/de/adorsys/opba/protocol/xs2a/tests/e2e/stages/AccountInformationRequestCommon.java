@@ -73,12 +73,13 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF fintech_calls_list_accounts_for_user(String user) {
         ExtractableResponse<Response> response = withAccountsHeaders(user, requestSigningService, OperationType.AIS)
-                                                         .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                                                         .when()
-                                                         .get(AIS_ACCOUNTS_ENDPOINT)
-                                                         .then()
-                                                         .statusCode(HttpStatus.ACCEPTED.value())
-                                                         .extract();
+                        .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                     .when()
+                        .get(AIS_ACCOUNTS_ENDPOINT)
+                     .then()
+                        .statusCode(HttpStatus.ACCEPTED.value())
+                        .extract();
+
         updateServiceSessionId(response);
         updateRedirectCode(response);
         updateNextConsentAuthorizationUrl(response);
@@ -153,12 +154,12 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF fintech_calls_list_transactions_for_user(String user, String resourceId) {
         ExtractableResponse<Response> response = withTransactionsHeaders(user, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
-                                                         .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                                                         .when()
-                                                         .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
-                                                         .then()
-                                                         .statusCode(HttpStatus.ACCEPTED.value())
-                                                         .extract();
+                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                 .when()
+                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+                 .then()
+                    .statusCode(HttpStatus.ACCEPTED.value())
+                    .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -274,13 +275,13 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     public SELF user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(String user) {
         ExtractableResponse<Response> response = withDefaultHeaders(user, requestSigningService, OperationType.AIS)
-                                                         .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                                                         .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                                                         .when()
-                                                         .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
-                                                         .then()
-                                                         .statusCode(HttpStatus.OK.value())
-                                                         .extract();
+                        .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                        .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                     .when()
+                        .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
+                     .then()
+                        .statusCode(HttpStatus.OK.value())
+                        .extract();
 
         this.redirectUriToGetUserParams = response.header(LOCATION);
         updateServiceSessionId(response);
