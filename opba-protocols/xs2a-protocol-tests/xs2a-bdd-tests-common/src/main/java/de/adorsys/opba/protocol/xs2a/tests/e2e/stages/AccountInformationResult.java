@@ -150,17 +150,17 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
             String user, boolean validateResourceId
     ) {
         ExtractableResponse<Response> response = withAccountsHeaders(user, requestSigningService, OperationType.AIS)
-                                                         .header(SERVICE_SESSION_ID, serviceSessionId)
-                                                         .when()
-                                                         .get(AIS_ACCOUNTS_ENDPOINT)
-                                                         .then()
-                                                         .statusCode(HttpStatus.OK.value())
-                                                         .body("accounts[0].iban", equalTo(iban))
-                                                         .body("accounts[0].resourceId", validateResourceId ? equalTo(accountResourceId) : instanceOf(String.class))
-                                                         .body("accounts[0].currency", equalTo("EUR"))
-                                                         .body("accounts[0].name", equalTo(user))
-                                                         .body("accounts", hasSize(1))
-                                                         .extract();
+                        .header(SERVICE_SESSION_ID, serviceSessionId)
+                     .when()
+                        .get(AIS_ACCOUNTS_ENDPOINT)
+                     .then()
+                         .statusCode(HttpStatus.OK.value())
+                         .body("accounts[0].iban", equalTo(iban))
+                         .body("accounts[0].resourceId", validateResourceId ? equalTo(accountResourceId) : instanceOf(String.class))
+                         .body("accounts[0].currency", equalTo("EUR"))
+                         .body("accounts[0].name", equalTo(user))
+                         .body("accounts", hasSize(1))
+                         .extract();
 
         this.responseContent = response.body().asString();
         return self();
