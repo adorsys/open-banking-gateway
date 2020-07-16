@@ -5,10 +5,10 @@ import de.adorsys.opba.fintech.api.model.generated.PaymentInitiationWithStatusRe
 import de.adorsys.opba.fintech.api.model.generated.SinglePaymentInitiationRequest;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
-import de.adorsys.opba.fintech.impl.database.entities.ConsentEntity;
+import de.adorsys.opba.fintech.impl.database.entities.PaymentEntity;
 import de.adorsys.opba.fintech.impl.database.entities.RedirectUrlsEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
-import de.adorsys.opba.fintech.impl.database.repositories.ConsentRepository;
+import de.adorsys.opba.fintech.impl.database.repositories.PaymentRepository;
 import de.adorsys.opba.fintech.impl.mapper.PaymentInitiationWithStatusResponseMapper;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import de.adorsys.opba.fintech.impl.tppclients.ConsentType;
@@ -49,7 +49,7 @@ public class PaymentService {
     private final FintechUiConfig uiConfig;
     private final RedirectHandlerService redirectHandlerService;
     private final HandleAcceptedService handleAcceptedService;
-    private final ConsentRepository consentRepository;
+    private final PaymentRepository paymentRepository;
 
     public ResponseEntity<Void> initiateSinglePayment(String bankId, String accountId, SinglePaymentInitiationRequest singlePaymentInitiationRequest,
                                                       String fintechOkUrl, String fintechNOkUrl) {
@@ -68,8 +68,8 @@ public class PaymentService {
                 payment,
                 tppProperties.getServiceSessionPassword(),
                 sessionEntity.getUserEntity().getFintechUserId(),
-                RedirectUrlsEntity.buildOkUrl(uiConfig, fintechRedirectCode),
-                RedirectUrlsEntity.buildNokUrl(uiConfig, fintechRedirectCode),
+                RedirectUrlsEntity.buildPaymentOkUrl(uiConfig, fintechRedirectCode),
+                RedirectUrlsEntity.buildPaymentNokUrl(uiConfig, fintechRedirectCode),
                 UUID.fromString(restRequestContext.getRequestId()),
                 paymentProduct,
                 COMPUTE_X_TIMESTAMP_UTC,
@@ -82,7 +82,7 @@ public class PaymentService {
             throw new RuntimeException("Did expect status 202 from tpp, but got " + responseOfTpp.getStatusCodeValue());
         }
         redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
-        return handleAcceptedService.handleAccepted(consentRepository, ConsentType.PIS, bankId, accountId, fintechRedirectCode, sessionEntity,
+        return handleAcceptedService.handleAccepted(paymentRepository, ConsentType.PIS, bankId, accountId, fintechRedirectCode, sessionEntity,
                 responseOfTpp.getHeaders());
     }
 
@@ -90,10 +90,10 @@ public class PaymentService {
         SessionEntity sessionEntity = sessionLogicService.getSession();
         // TODO https://app.zenhub.com/workspaces/open-banking-gateway-5dd3b3daf010250001260675/issues/adorsys/open-banking-gateway/812
         // TODO https://app.zenhub.com/workspaces/open-banking-gateway-5dd3b3daf010250001260675/issues/adorsys/open-banking-gateway/794
-        List<ConsentEntity> list = consentRepository.findByUserEntityAndBankIdAndAccountIdAndConsentConfirmed(sessionEntity.getUserEntity(), bankId, accountId, true);
+        List<PaymentEntity> payments = paymentRepository.findByUserEntityAndBankIdAndAccountIdAndPaymentConfirmed(sessionEntity.getUserEntity(), bankId, accountId, true);
         List<PaymentInitiationWithStatusResponse> result = new ArrayList<>();
 
-        for (ConsentEntity consent : list) {
+        for (PaymentEntity payment : payments) {
             de.adorsys.opba.tpp.pis.api.model.generated.PaymentInitiationWithStatusResponse body = tppPisPaymentStatusClient.getPaymentInformation(tppProperties.getServiceSessionPassword(),
                     sessionEntity.getUserEntity().getFintechUserId(),
                     UUID.fromString(restRequestContext.getRequestId()),
@@ -103,9 +103,9 @@ public class PaymentService {
                     COMPUTE_X_REQUEST_SIGNATURE,
                     COMPUTE_FINTECH_ID,
                     bankId,
-                    consent.getTppServiceSessionId()).getBody();
+                    payment.getTppServiceSessionId()).getBody();
             PaymentInitiationWithStatusResponse paymentInitiationWithStatusResponse = Mappers.getMapper(PaymentInitiationWithStatusResponseMapper.class).mapFromTppToFintech(body);
-            paymentInitiationWithStatusResponse.setInitiationDate(consent.getCreationTime().toLocalDate());
+            paymentInitiationWithStatusResponse.setInitiationDate(payment.getCreationTime().toLocalDate());
             result.add(paymentInitiationWithStatusResponse);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);

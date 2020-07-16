@@ -1,7 +1,7 @@
 import { FinTechAuthorizationService } from '../../api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { Consent, HeaderConfig } from '../../models/consts';
+import { Consent, Payment } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 
 @Injectable({
@@ -34,6 +34,17 @@ export class ConsentAuthorizationService {
         // otherwise we use url saved before redirection occurred
         this.router.navigate([this.storageService.redirectCancelUrl]);
       }
+    });
+  }
+
+  fromPaymentOk(okOrNotOk: Payment, redirectCode: string) {
+    const authId = this.storageService.getRedirectMap().get(redirectCode).authId;
+    const xsrfToken = this.storageService.getRedirectMap().get(redirectCode).xsrfToken;
+    console.log('pass auth id:' + authId + ' okOrNotOk ' + okOrNotOk + ' redirect code ' + redirectCode);
+    this.authService.fromPaymentGET(authId, okOrNotOk, redirectCode, '', xsrfToken, 'response').subscribe(resp => {
+      console.log('fromPayment has returned. now delete redirect cookie for redirect code', redirectCode);
+      this.storageService.resetRedirectCode(redirectCode);
+      this.router.navigate([resp.headers.get('Location')]);
     });
   }
 }
