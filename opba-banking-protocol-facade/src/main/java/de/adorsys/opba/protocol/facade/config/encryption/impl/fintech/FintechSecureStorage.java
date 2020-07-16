@@ -6,6 +6,7 @@ import de.adorsys.datasafe.directory.api.config.DFSConfig;
 import de.adorsys.datasafe.types.api.actions.ReadRequest;
 import de.adorsys.datasafe.types.api.actions.WriteRequest;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
+import de.adorsys.opba.db.domain.entity.fintech.FintechPrvKey;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.FintechPsuAspspTuple;
@@ -78,6 +79,17 @@ public class FintechSecureStorage {
 
     @SneakyThrows
     public PrivateKey psuAspspKeyFromPrivate(ServiceSession session, Fintech fintech, Supplier<char[]> password) {
+        try (InputStream is = datasafeServices.privateService().read(
+                ReadRequest.forDefaultPrivate(
+                        fintech.getUserIdAuth(password),
+                        new FintechPsuAspspTuple(session).toDatasafePathWithoutParent()))
+        ) {
+            return serde.readPrivateKey(is);
+        }
+    }
+
+    @SneakyThrows
+    public PrivateKey fintechPrvKeyFromPrivate(FintechPrvKey prvKey, Fintech fintech, Supplier<char[]> password) {
         try (InputStream is = datasafeServices.privateService().read(
                 ReadRequest.forDefaultPrivate(
                         fintech.getUserIdAuth(password),

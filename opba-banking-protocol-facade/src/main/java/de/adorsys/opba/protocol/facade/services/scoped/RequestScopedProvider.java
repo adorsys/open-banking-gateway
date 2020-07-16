@@ -17,6 +17,8 @@ import de.adorsys.opba.protocol.api.services.scoped.transientdata.TransientStora
 import de.adorsys.opba.protocol.api.services.scoped.validation.FieldsToIgnoreLoader;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.SecretKeyWithIv;
+import de.adorsys.opba.protocol.facade.services.scoped.consentaccess.ConsentAccessFactory;
+import de.adorsys.opba.protocol.facade.services.scoped.paymentaccess.PaymentAccessFactory;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
@@ -34,17 +36,20 @@ import static de.adorsys.opba.protocol.facade.config.FacadeTransientDataConfig.F
 public class RequestScopedProvider implements RequestScopedServicesProvider {
 
     private final Map<String, InternalRequestScoped> memoizedProviders;
-    private final ConsentAccessFactory accessProvider;
+    private final ConsentAccessFactory consentAccessProvider;
+    private final PaymentAccessFactory paymentAccessProvider;
     private final IgnoreFieldsLoaderFactory ignoreFieldsLoaderFactory;
     private final ApiConsumerConfig fintechConfig;
 
     public RequestScopedProvider(
             @Qualifier(FACADE_CACHE_BUILDER) CacheBuilder cacheBuilder,
-            ConsentAccessFactory accessProvider,
+            ConsentAccessFactory consentAccessProvider,
+            PaymentAccessFactory paymentAccessProvider,
             IgnoreFieldsLoaderFactory ignoreFieldsLoaderFactory,
             ApiConsumerConfig fintechConfig) {
         this.memoizedProviders = cacheBuilder.build().asMap();
-        this.accessProvider = accessProvider;
+        this.consentAccessProvider = consentAccessProvider;
+        this.paymentAccessProvider = paymentAccessProvider;
         this.ignoreFieldsLoaderFactory = ignoreFieldsLoaderFactory;
         this.fintechConfig = fintechConfig;
     }
@@ -58,8 +63,8 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
             SecretKeyWithIv futureAuthorizationSessionKey,
             Supplier<char[]> fintechPassword
     ) {
-        ConsentAccess consentAccess = accessProvider.consentForFintech(fintech, session, fintechPassword);
-        PaymentAccess paymentAccess = accessProvider.paymentForFintech(fintech, session, fintechPassword);
+        ConsentAccess consentAccess = consentAccessProvider.consentForFintech(fintech, session, fintechPassword);
+        PaymentAccess paymentAccess = paymentAccessProvider.paymentForFintech(fintech, session, fintechPassword);
 
         EncryptionService authorizationSessionEncService = encryptionService(encryptionServiceProvider, futureAuthorizationSessionKey);
         return doRegister(
@@ -98,7 +103,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
             return null;
         }
 
-        return accessProvider.consentForPsuAndAspsp(
+        return consentAccessProvider.consentForPsuAndAspsp(
                 authSession.getPsu(),
                 authSession.getAction().getBankProfile().getBank(),
                 authSession.getParent());
@@ -106,14 +111,14 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
 
     private PaymentAccess getPsuPaymentAccess(AuthSession authSession, EncryptionService encryptionService) {
         if (authSession.isPsuAnonymous()) {
-            return accessProvider.paymentAnonymousPsuAndAspsp(
+            return paymentAccessProvider.paymentAnonymousPsuAndAspsp(
                     authSession.getAction().getBankProfile().getBank(),
                     encryptionService,
                     authSession.getParent()
             );
         }
 
-        return accessProvider.paymentForPsuAndAspsp(
+        return paymentAccessProvider.paymentForPsuAndAspsp(
                 authSession.getPsu(),
                 authSession.getAction().getBankProfile().getBank(),
                 authSession.getParent());

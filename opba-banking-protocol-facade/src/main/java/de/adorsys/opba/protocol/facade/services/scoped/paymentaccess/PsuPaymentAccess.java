@@ -1,27 +1,26 @@
 package de.adorsys.opba.protocol.facade.services.scoped.paymentaccess;
 
 import de.adorsys.opba.db.domain.entity.Bank;
-import de.adorsys.opba.db.domain.entity.Consent;
+import de.adorsys.opba.db.domain.entity.Payment;
+import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
-import de.adorsys.opba.db.repository.jpa.ConsentRepository;
+import de.adorsys.opba.db.repository.jpa.PaymentRepository;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
-import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
-import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
-import de.adorsys.opba.protocol.facade.services.scoped.consentaccess.ProtocolFacingConsentImpl;
+import de.adorsys.opba.protocol.api.services.scoped.consent.PaymentAccess;
+import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingPayment;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class PsuPaymentAccess implements ConsentAccess {
+public class PsuPaymentAccess implements PaymentAccess {
 
+    private final Psu psu;
     private final Bank aspsp;
     private final EncryptionService encryptionService;
     private final ServiceSession serviceSession;
-    private final ConsentRepository consentRepository;
+    private final PaymentRepository paymentRepository;
 
     @Override
     public boolean isFinTechScope() {
@@ -29,37 +28,31 @@ public class PsuPaymentAccess implements ConsentAccess {
     }
 
     @Override
-    public ProtocolFacingConsent createDoNotPersist() {
-        Consent newConsent = Consent.builder()
+    public ProtocolFacingPayment createDoNotPersist() {
+        Payment newPayment = Payment.builder()
                 .serviceSession(serviceSession)
+                .psu(psu)
                 .aspsp(aspsp)
                 .build();
 
-        return new ProtocolFacingConsentImpl(newConsent, encryptionService);
+        return new ProtocolFacingPaymentImpl(newPayment, encryptionService);
     }
 
     @Override
-    public void save(ProtocolFacingConsent consent) {
-        consentRepository.save(((ProtocolFacingConsentImpl) consent).getConsent());
+    public void save(ProtocolFacingPayment payment) {
+        paymentRepository.save(((ProtocolFacingPaymentImpl) payment).getPayment());
     }
 
     @Override
-    public void delete(ProtocolFacingConsent consent) {
-        throw new IllegalStateException("Not implemented");
+    public void delete(ProtocolFacingPayment payment) {
+        paymentRepository.delete(((ProtocolFacingPaymentImpl) payment).getPayment());
     }
 
     @Override
-    public Optional<ProtocolFacingConsent> findSingleByCurrentServiceSession() {
-        return Optional.empty();
-    }
-
-    @Override
-    public List<ProtocolFacingConsent> findByCurrentServiceSessionOrderByModifiedDesc() {
-        return Collections.emptyList();
-    }
-
-    @Override
-    public Collection<ProtocolFacingConsent> getAvailableConsentsForCurrentPsu() {
-        return Collections.emptyList();
+    public List<ProtocolFacingPayment> findByCurrentServiceSessionOrderByModifiedDesc() {
+        return paymentRepository.findByServiceSessionIdOrderByModifiedAtDesc(serviceSession.getId())
+                .stream()
+                .map(it -> new ProtocolFacingPaymentImpl(it, encryptionService))
+                .collect(Collectors.toList());
     }
 }
