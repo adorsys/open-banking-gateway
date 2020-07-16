@@ -273,6 +273,33 @@ paths:
         '404':
           $ref: '#/components/responses/404_NotFound'
 
+  /v1/{auth-id}/fromPayment/{ok-or-notok}:
+    get:
+      tags:
+        - FinTechAuthorization
+      operationId: fromPaymentGET
+      summary: Entry point when PSU is redirected back from ConsentAuthorisationApi to the FinTechUI.
+      description: |
+        Entry point when PSU is redirected back from ConsentAuthorisationApi to the FinTechUI.
+      parameters:
+        #path
+        - $ref: "#/components/parameters/auth-id"
+        - $ref: "#/components/parameters/ok-or-notok"
+        #query
+        - $ref: "#/components/parameters/redirectCode"
+        #header
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+      security:
+        - redirectCookie: []
+      responses:
+        '202':
+          $ref: '#/components/responses/202_ReloadUI'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+        '404':
+          $ref: '#/components/responses/404_NotFound'
+
   /v1/pis/banks/{bank-id}/accounts/{account-id}/payments/single:
     get:
       summary: Ask for all payments of this account

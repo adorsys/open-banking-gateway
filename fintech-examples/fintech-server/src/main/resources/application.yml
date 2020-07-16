@@ -53,8 +53,10 @@ spring:
 fintech-ui:
   host: http://localhost:4444
   redirect-url: ${fintech-ui.host}/redirect-after-consent?redirectCode={redirectCode}
-  unauthorized-url: ${fintech-ui.host}/
   exception-url: ${fintech-ui.host}/redirect-after-consent-denied?redirectCode={redirectCode}
+  payment-ok-redirect-url: ${fintech-ui.host}/redirect-after-payment?redirectCode={redirectCode}
+  payment-exception-redirect-url: ${fintech-ui.host}/redirect-after-payment-denied?redirectCode={redirectCode}
+  unauthorized-url: ${fintech-ui.host}/
 
 security:
   # This is the example private key value used only for DEMO purposes

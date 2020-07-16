@@ -8,9 +8,11 @@ import de.adorsys.opba.fintech.impl.controller.utils.OkOrNotOk;
 import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.ConsentEntity;
 import de.adorsys.opba.fintech.impl.database.entities.LoginEntity;
+import de.adorsys.opba.fintech.impl.database.entities.PaymentEntity;
 import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.ConsentRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.LoginRepository;
+import de.adorsys.opba.fintech.impl.database.repositories.PaymentRepository;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.ConsentService;
 import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
@@ -39,6 +41,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
     private final ConsentService consentService;
     private final LoginRepository loginRepository;
     private final ConsentRepository consentRepository;
+    private final PaymentRepository paymentRepository;
     private final SessionLogicService sessionLogicService;
 
     @Override
@@ -86,6 +89,29 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
             log.debug("consent with authId {} is now valid", authId);
             consent.get().setConsentConfirmed(true);
             consentRepository.save(consent.get());
+        }
+        return sessionLogicService.addSessionMaxAgeToHeader(
+                redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk));
+    }
+
+    @Override
+    public ResponseEntity<Void> fromPaymentGET(String authId, String okOrNotokString, String finTechRedirectCode, UUID xRequestID, String xsrfToken) {
+        OkOrNotOk okOrNotOk = OkOrNotOk.valueOf(okOrNotokString);
+        if (!sessionLogicService.isRedirectAuthorized()) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        if (okOrNotOk.equals(OkOrNotOk.OK) && consentService.confirmPayment(authId, xRequestID)) {
+
+            Optional<PaymentEntity> payment = paymentRepository.findByTppAuthId(authId);
+
+            if (!payment.isPresent()) {
+                throw new RuntimeException("consent for authid " + authId + " can not be found");
+            }
+
+            log.debug("consent with authId {} is now valid", authId);
+            payment.get().setPaymentConfirmed(true);
+            paymentRepository.save(payment.get());
         }
         return sessionLogicService.addSessionMaxAgeToHeader(
                 redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk));
