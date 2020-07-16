@@ -3,11 +3,10 @@ package de.adorsys.opba.protocol.facade.services.scoped.paymentaccess;
 import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.Payment;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
-import de.adorsys.opba.db.repository.jpa.ConsentRepository;
+import de.adorsys.opba.db.repository.jpa.PaymentRepository;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.consent.PaymentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingPayment;
-import de.adorsys.opba.protocol.facade.services.scoped.consentaccess.ProtocolFacingConsentImpl;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class AnonymousPsuPaymentAccess implements PaymentAccess {
     private final Bank aspsp;
     private final EncryptionService encryptionService;
     private final ServiceSession serviceSession;
-    private final ConsentRepository consentRepository;
+    private final PaymentRepository paymentRepository;
 
     @Override
     public boolean isFinTechScope() {
@@ -36,8 +35,8 @@ public class AnonymousPsuPaymentAccess implements PaymentAccess {
     }
 
     @Override
-    public void save(ProtocolFacingPayment consent) {
-        consentRepository.save(((ProtocolFacingConsentImpl) consent).getConsent());
+    public void save(ProtocolFacingPayment payment) {
+        paymentRepository.save(((ProtocolFacingPaymentImpl) payment).getPayment());
     }
 
     @Override
