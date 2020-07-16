@@ -5,15 +5,30 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.NotBlank;
 
 @Data
+@Validated
 @Configuration
 @NoArgsConstructor
 @AllArgsConstructor
 @ConfigurationProperties("fintech-ui")
 public class FintechUiConfig {
 
+    @NotBlank
     private String redirectUrl;
+
+    @NotBlank
     private String exceptionUrl;
+
+    @NotBlank
+    private String paymentOkRedirectUrl;
+
+    @NotBlank
+    private String paymentExceptionRedirectUrl;
+
+    @NotBlank
     private String unauthorizedUrl;
 }

@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConsentAuthorizationService } from '../bank/services/consent-authorization.service';
 import { StorageService } from '../services/storage.service';
-import { Payment } from '../models/consts';
+import { Consent } from '../models/consts';
 
 @Component({
-  selector: 'app-redirect-after-consent-denied',
-  templateUrl: './redirect-after-consent-denied.component.html',
-  styleUrls: ['./redirect-after-consent-denied.component.scss']
+  selector: 'app-redirect-after-payment-denied',
+  templateUrl: './redirect-after-payment-denied.component.html',
+  styleUrls: ['./redirect-after-payment-denied.component.scss']
 })
-export class RedirectAfterConsentDeniedComponent implements OnInit {
+export class RedirectAfterPaymentDeniedComponent implements OnInit {
   private redirectCode;
 
   constructor(
@@ -24,6 +24,6 @@ export class RedirectAfterConsentDeniedComponent implements OnInit {
 
   submit() {
     this.redirectCode = this.route.snapshot.queryParams.redirectCode;
-    this.authService.fromPaymentOk(Payment.NOT_OK, this.redirectCode);
+    this.authService.fromConsentOk(Consent.NOT_OK, this.redirectCode);
   }
 }

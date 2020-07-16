@@ -25,6 +25,11 @@ export enum Consent {
   NOT_OK = 'NOT_OK'
 }
 
+export enum Payment {
+  OK = 'OK',
+  NOT_OK = 'NOT_OK'
+}
+
 export enum LoARetrievalInformation {
   FROM_TPP_WITH_AVAILABLE_CONSENT = 'FROM_TPP_WITH_AVAILABLE_CONSENT',
   FROM_TPP_WITH_NEW_CONSENT = 'FROM_TPP_WITH_NEW_CONSENT'
