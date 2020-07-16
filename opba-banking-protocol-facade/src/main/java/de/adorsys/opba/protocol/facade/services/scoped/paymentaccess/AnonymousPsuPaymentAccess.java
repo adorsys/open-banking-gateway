@@ -35,12 +35,17 @@ public class AnonymousPsuPaymentAccess implements PaymentAccess {
 
     @Override
     public ProtocolFacingPayment createDoNotPersist() {
+        Collection<FintechPubKey> keys = pubKeys.findByFintech(fintech);
+        // Expecting key amount to be small
+        FintechPubKey fintechPubKey = Iterables.get(keys, ThreadLocalRandom.current().nextInt(0, keys.size() - 1));
+
         Payment newPayment = Payment.builder()
                 .serviceSession(serviceSession)
                 .aspsp(aspsp)
+                .fintechPubKey(fintechPubKey)
                 .build();
 
-        return new ProtocolFacingPaymentImpl(newPayment, anonymousEncryptionServiceBasedOnRandomKeyFromFintech());
+        return new ProtocolFacingPaymentImpl(newPayment, anonymousEncryptionServiceBasedOnRandomKeyFromFintech(fintechPubKey));
     }
 
     @Override
@@ -58,10 +63,7 @@ public class AnonymousPsuPaymentAccess implements PaymentAccess {
         throw new IllegalStateException("Not implemented");
     }
 
-    private EncryptionService anonymousEncryptionServiceBasedOnRandomKeyFromFintech() {
-        Collection<FintechPubKey> keys = pubKeys.findByFintech(fintech);
-        // Expecting key amount to be small
-        FintechPubKey psuAspspKey = Iterables.get(keys, ThreadLocalRandom.current().nextInt(0, keys.size() - 1));
-        return psuEncryption.forPublicKey(psuAspspKey.getId(), psuAspspKey.getKey());
+    private EncryptionService anonymousEncryptionServiceBasedOnRandomKeyFromFintech(FintechPubKey fintechPubKey) {
+        return psuEncryption.forPublicKey(fintechPubKey.getId(), fintechPubKey.getKey());
     }
 }
