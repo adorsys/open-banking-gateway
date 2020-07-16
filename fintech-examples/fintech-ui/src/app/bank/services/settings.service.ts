@@ -9,6 +9,7 @@ export class SettingsService {
 
   private loa = new BehaviorSubject<LoARetrievalInformation>(LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT);
   private lot = new BehaviorSubject<LoTRetrievalInformation>(LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT);
+  private paymentRequiresAuthentication = new BehaviorSubject<boolean>(false);
 
   constructor() { }
 
@@ -28,4 +29,11 @@ export class SettingsService {
     return this.lot.asObservable();
   }
 
+  public setPaymentRequiresAuthentication(authentication: boolean) {
+    this.paymentRequiresAuthentication.next(authentication);
+  }
+
+  public getPaymentRequiresAuthentication(): Observable<boolean> {
+    return this.paymentRequiresAuthentication.asObservable();
+  }
 }

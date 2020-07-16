@@ -52,7 +52,7 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
 
     public ResponseEntity<Void> initiateSinglePayment(String bankId, String accountId, SinglePaymentInitiationRequest singlePaymentInitiationRequest,
-                                                      String fintechOkUrl, String fintechNOkUrl) {
+                                                      String fintechOkUrl, String fintechNOkUrl, Boolean xPisPsuAuthenticationRequired) {
         log.info("fill paramemeters for payment");
         final String fintechRedirectCode = UUID.randomUUID().toString();
 
@@ -77,7 +77,7 @@ public class PaymentService {
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
                 bankId,
-                false);
+                xPisPsuAuthenticationRequired);
         if (responseOfTpp.getStatusCode() != HttpStatus.ACCEPTED) {
             throw new RuntimeException("Did expect status 202 from tpp, but got " + responseOfTpp.getStatusCodeValue());
         }
