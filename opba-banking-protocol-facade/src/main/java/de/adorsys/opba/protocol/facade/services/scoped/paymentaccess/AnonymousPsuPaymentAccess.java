@@ -4,9 +4,10 @@ import com.google.common.collect.Iterables;
 import de.adorsys.opba.db.domain.entity.Bank;
 import de.adorsys.opba.db.domain.entity.Payment;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
-import de.adorsys.opba.db.domain.entity.fintech.FintechPrvKey;
+import de.adorsys.opba.db.domain.entity.fintech.FintechPubKey;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.PaymentRepository;
+import de.adorsys.opba.db.repository.jpa.fintech.FintechOnlyPubKeyRepository;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.consent.PaymentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingPayment;
@@ -22,6 +23,7 @@ public class AnonymousPsuPaymentAccess implements PaymentAccess {
 
     private final Bank aspsp;
     private final Fintech fintech;
+    private final FintechOnlyPubKeyRepository pubKeys;
     private final PsuEncryptionServiceProvider psuEncryption;
     private final ServiceSession serviceSession;
     private final PaymentRepository paymentRepository;
@@ -57,9 +59,9 @@ public class AnonymousPsuPaymentAccess implements PaymentAccess {
     }
 
     private EncryptionService anonymousEncryptionServiceBasedOnRandomKeyFromFintech() {
-        Collection<FintechPrvKey> keys = fintech.getFintechOnlyPrvKeys();
+        Collection<FintechPubKey> keys = pubKeys.findByFintech(fintech);
         // Expecting key amount to be small
-        FintechPrvKey psuAspspKey = Iterables.get(keys, ThreadLocalRandom.current().nextInt(0, keys.size() - 1));
-        return psuEncryption.forPublicKey(psuAspspKey.getId(), psuAspspKey.getPubKey().getKey());
+        FintechPubKey psuAspspKey = Iterables.get(keys, ThreadLocalRandom.current().nextInt(0, keys.size() - 1));
+        return psuEncryption.forPublicKey(psuAspspKey.getId(), psuAspspKey.getKey());
     }
 }
