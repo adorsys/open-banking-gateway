@@ -1,8 +1,6 @@
 package de.adorsys.opba.protocol.api.services.scoped.consent;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Protocol facing access object for users payment(s).
@@ -34,16 +32,6 @@ public interface PaymentAccess {
      * Available payments for current session execution.
      */
     List<ProtocolFacingPayment> findByCurrentServiceSessionOrderByModifiedDesc();
-
-    /**
-     * Available payment for current session execution.
-     */
-    Optional<ProtocolFacingPayment> findSingleByCurrentServiceSession();
-
-    /**
-     * Lists all payments that are available for current PSU.
-     */
-    Collection<ProtocolFacingPayment> getAvailableConsentsForCurrentPsu();
 
     /**
      * Available consent for current session execution with throwing exception
