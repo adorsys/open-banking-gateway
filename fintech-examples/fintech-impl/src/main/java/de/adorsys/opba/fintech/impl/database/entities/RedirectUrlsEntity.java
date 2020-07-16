@@ -42,6 +42,18 @@ public class RedirectUrlsEntity {
         return notokurl;
     }
 
+    public static String buildPaymentOkUrl(FintechUiConfig config, final String redirectCode) {
+        String okUrl = getModifiedUrlWithRedirectCode(config.getPaymentOkRedirectUrl(), redirectCode);
+        log.debug("okurl is {}", okUrl);
+        return okUrl;
+    }
+
+    public static String buildPaymentNokUrl(FintechUiConfig config, final String redirectCode) {
+        String notokurl = getModifiedUrlWithRedirectCode(config.getPaymentExceptionRedirectUrl(), redirectCode);
+        log.debug("notokurl is {}", notokurl);
+        return notokurl;
+    }
+
     private static String getModifiedUrlWithRedirectCode(String redirectUrl, final String redirectCode) {
         return UriComponentsBuilder.fromHttpUrl(redirectUrl)
                 .buildAndExpand(redirectCode)

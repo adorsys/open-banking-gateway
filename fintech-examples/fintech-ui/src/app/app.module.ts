@@ -20,6 +20,8 @@ import { RedirectAfterConsentDeniedComponent } from './redirect-after-consent-de
 import { SessionExpiredComponent } from './session-expired/session-expired.component';
 import { SimpleTimer } from 'ng2-simple-timer';
 import { NgHttpLoaderModule } from 'ng-http-loader';
+import { RedirectAfterPaymentComponent } from "./redirect-after-payment/redirect-after-payment.component";
+import { RedirectAfterPaymentDeniedComponent } from "./redirect-after-payment-denied/redirect-after-payment-denied.component";
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -35,8 +37,10 @@ export function apiConfigFactory(): Configuration {
     AppComponent,
     LoginComponent,
     RedirectAfterConsentComponent,
+    RedirectAfterPaymentComponent,
     NavbarComponent,
     RedirectAfterConsentDeniedComponent,
+    RedirectAfterPaymentDeniedComponent,
     SessionExpiredComponent
   ],
   imports: [
