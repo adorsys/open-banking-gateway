@@ -21,6 +21,8 @@ export class SettingsComponent implements OnInit {
   lotFromTppWithAvailableConsent = LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
   lot;
 
+  paymentRequiresAuthentication: boolean
+
   settingsForm: FormGroup;
 
   constructor(
@@ -34,7 +36,8 @@ export class SettingsComponent implements OnInit {
     this.settingsService.getLoT().pipe(tap(el => this.lot = el)).subscribe();
     this.settingsForm = formBuilder.group({
       loa: [this.loa, Validators.required],
-      lot: [this.lot, Validators.required]
+      lot: [this.lot, Validators.required],
+      paymentRequiresAuthentication: [this.paymentRequiresAuthentication]
     });
   }
 
@@ -51,6 +54,7 @@ export class SettingsComponent implements OnInit {
     this.lot = this.settingsForm.getRawValue().lot;
     this.settingsService.setLoA(this.loa);
     this.settingsService.setLoT(this.lot);
+    this.settingsService.setPaymentRequiresAuthentication(this.paymentRequiresAuthentication);
     this.router.navigate(['..'], { relativeTo: this.route });
   }
 
