@@ -9,7 +9,7 @@ import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechPsuAspspPrvKeyRepository;
 import de.adorsys.opba.db.repository.jpa.psu.PsuAspspPrvKeyRepository;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
-import de.adorsys.opba.protocol.facade.config.encryption.PsuConsentEncryptionServiceProvider;
+import de.adorsys.opba.protocol.facade.config.encryption.AuthenticatedPsuEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class ConsentAccessFactory {
     private final EntityManager entityManager;
     private final PsuAspspPrvKeyRepository prvKeyRepository;
     private final FintechSecureStorage fintechVault;
-    private final PsuConsentEncryptionServiceProvider psuEncryption;
+    private final AuthenticatedPsuEncryptionServiceProvider psuEncryption;
     private final FintechPsuAspspPrvKeyRepository fintechPsuAspspPrvKeyRepository;
     private final ConsentRepository consentRepository;
 

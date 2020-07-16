@@ -10,7 +10,7 @@ import de.adorsys.opba.db.repository.jpa.fintech.FintechPsuAspspPrvKeyRepository
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.consent.PaymentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingPayment;
-import de.adorsys.opba.protocol.facade.config.encryption.PsuConsentEncryptionServiceProvider;
+import de.adorsys.opba.protocol.facade.config.encryption.AuthenticatedPsuEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import lombok.RequiredArgsConstructor;
 
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class FintechPaymentAccess implements PaymentAccess {
 
     private final Fintech fintech;
-    private final PsuConsentEncryptionServiceProvider encryptionService;
+    private final AuthenticatedPsuEncryptionServiceProvider encryptionService;
     private final FintechPsuAspspPrvKeyRepository keys;
     private final FintechSecureStorage fintechVault;
     private final PaymentRepository payments;

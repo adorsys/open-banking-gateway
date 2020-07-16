@@ -66,7 +66,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         ConsentAccess consentAccess = consentAccessProvider.consentForFintech(fintech, session, fintechPassword);
         PaymentAccess paymentAccess = paymentAccessProvider.paymentForFintech(fintech, session, fintechPassword);
 
-        EncryptionService authorizationSessionEncService = encryptionService(encryptionServiceProvider, futureAuthorizationSessionKey);
+        EncryptionService authorizationSessionEncService = sessionEncryption(encryptionServiceProvider, futureAuthorizationSessionKey);
         return doRegister(
                 profile,
                 fintechConfig.getConsumers().get(fintech.getGlobalId()),
@@ -83,17 +83,17 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
             long bankProtocolId,
             SecretKeyWithIv key
     ) {
-        EncryptionService encryptionService = encryptionService(encryptionServiceProvider, key);
+        EncryptionService sessionEncryption = sessionEncryption(encryptionServiceProvider, key);
 
         ConsentAccess consentAccess = getPsuConsentAccess(authSession);
-        PaymentAccess paymentAccess = getPsuPaymentAccess(authSession, encryptionService);
+        PaymentAccess paymentAccess = getPsuPaymentAccess(authSession);
 
         return doRegister(
                 authSession.getAction().getBankProfile(),
                 fintechConfig.getConsumers().get(authSession.getFintechUser().getFintech().getGlobalId()),
                 consentAccess,
                 paymentAccess,
-                encryptionService,
+                sessionEncryption,
                 key,
                 bankProtocolId);
     }
@@ -109,11 +109,15 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
                 authSession.getParent());
     }
 
-    private PaymentAccess getPsuPaymentAccess(AuthSession authSession, EncryptionService encryptionService) {
+    private PaymentAccess getPsuPaymentAccess(AuthSession authSession) {
         if (authSession.isPsuAnonymous()) {
-            return paymentAccessProvider.paymentAnonymousPsuAndAspsp(
+            if (null != authSession.getPsu()) {
+                throw new IllegalStateException("Expected anonymous session");
+            }
+
+            return paymentAccessProvider.paymentForAnonymousPsu(
+                    authSession.getFintechUser().getFintech(),
                     authSession.getAction().getBankProfile().getBank(),
-                    encryptionService,
                     authSession.getParent()
             );
         }
@@ -133,7 +137,7 @@ public class RequestScopedProvider implements RequestScopedServicesProvider {
         return memoizedProviders.get(keyId);
     }
 
-    private EncryptionService encryptionService(ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider, SecretKeyWithIv key) {
+    private EncryptionService sessionEncryption(ConsentAuthorizationEncryptionServiceProvider encryptionServiceProvider, SecretKeyWithIv key) {
         return encryptionServiceProvider.forSecretKey(key);
     }
 
