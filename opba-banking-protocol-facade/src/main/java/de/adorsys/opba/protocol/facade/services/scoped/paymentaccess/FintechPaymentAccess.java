@@ -67,8 +67,7 @@ public class FintechPaymentAccess implements PaymentAccess {
             return Collections.emptyList();
         }
 
-        EncryptionService psuEncryptionService = psuKeyBasedEncryptionService(serviceSession);
-
+        EncryptionService psuEncryptionService = !serviceSession.getAuthSession().isPsuAnonymous() ? psuKeyBasedEncryptionService(serviceSession) : null;
         return payments.stream()
                 .map(it -> toProtocolFacingPayment(it, serviceSession, psuEncryptionService))
                 .collect(Collectors.toList());
