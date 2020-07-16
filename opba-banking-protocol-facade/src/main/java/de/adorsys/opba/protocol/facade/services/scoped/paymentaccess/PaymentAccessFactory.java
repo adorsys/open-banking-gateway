@@ -9,7 +9,7 @@ import de.adorsys.opba.db.repository.jpa.PaymentRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechPsuAspspPrvKeyRepository;
 import de.adorsys.opba.db.repository.jpa.psu.PsuAspspPrvKeyRepository;
 import de.adorsys.opba.protocol.api.services.scoped.consent.PaymentAccess;
-import de.adorsys.opba.protocol.facade.config.encryption.AuthenticatedPsuEncryptionServiceProvider;
+import de.adorsys.opba.protocol.facade.config.encryption.PsuEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class PaymentAccessFactory {
     private final EntityManager entityManager;
     private final PsuAspspPrvKeyRepository prvKeyRepository;
     private final FintechSecureStorage fintechVault;
-    private final AuthenticatedPsuEncryptionServiceProvider psuEncryption;
+    private final PsuEncryptionServiceProvider psuEncryption;
     private final FintechPsuAspspPrvKeyRepository fintechPsuAspspPrvKeyRepository;
     private final PaymentRepository paymentRepository;
 
@@ -35,7 +35,7 @@ public class PaymentAccessFactory {
     }
 
     public PaymentAccess paymentForAnonymousPsu(Fintech fintech, Bank aspsp, ServiceSession session) {
-        return new AnonymousPsuPaymentAccess(aspsp, encryptionService, session, paymentRepository);
+        return new AnonymousPsuPaymentAccess(aspsp, fintech, psuEncryption, session, paymentRepository);
     }
 
     public PaymentAccess paymentForFintech(Fintech fintech, ServiceSession session, Supplier<char[]> fintechPassword) {

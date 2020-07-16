@@ -14,8 +14,8 @@ public class EncryptionProviderConfig {
     }
 
     @Bean
-    AuthenticatedPsuEncryptionServiceProvider psuConsentEncryptionProvider(PsuKeyPairConfig psuKeyPairConfig) {
-        return new AuthenticatedPsuEncryptionServiceProvider(new CmsEncryptionOper(psuKeyPairConfig));
+    PsuEncryptionServiceProvider psuConsentEncryptionProvider(PsuKeyPairConfig psuKeyPairConfig) {
+        return new PsuEncryptionServiceProvider(new CmsEncryptionOper(psuKeyPairConfig));
     }
 
 }
