@@ -36,10 +36,11 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public abstract class BaseDatasafeDbStorageService implements StorageService {
 
-    public static final String PRIVATE_STORAGE = "db://storage/";
-    public static final String INBOX_STORAGE = "db://inbox/";
-    public static final String KEYSTORE = "db://keystore/";
-    public static final String PUB_KEYS = "db://pubkeys/";
+    public static final String DB_PROTOCOL = "db://";
+    public static final String PRIVATE_STORAGE = DB_PROTOCOL + "storage/";
+    public static final String INBOX_STORAGE = DB_PROTOCOL + "inbox/";
+    public static final String KEYSTORE = DB_PROTOCOL + "keystore/";
+    public static final String PUB_KEYS = DB_PROTOCOL + "pubkeys/";
 
     private final Map<String, StorageActions> handlers;
 

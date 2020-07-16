@@ -8,9 +8,8 @@ import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.PaymentRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechPsuAspspPrvKeyRepository;
 import de.adorsys.opba.db.repository.jpa.psu.PsuAspspPrvKeyRepository;
-import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.consent.PaymentAccess;
-import de.adorsys.opba.protocol.facade.config.encryption.PsuConsentEncryptionServiceProvider;
+import de.adorsys.opba.protocol.facade.config.encryption.AuthenticatedPsuEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,7 @@ public class PaymentAccessFactory {
     private final EntityManager entityManager;
     private final PsuAspspPrvKeyRepository prvKeyRepository;
     private final FintechSecureStorage fintechVault;
-    private final PsuConsentEncryptionServiceProvider psuEncryption;
+    private final AuthenticatedPsuEncryptionServiceProvider psuEncryption;
     private final FintechPsuAspspPrvKeyRepository fintechPsuAspspPrvKeyRepository;
     private final PaymentRepository paymentRepository;
 
@@ -35,11 +34,11 @@ public class PaymentAccessFactory {
         return new PsuPaymentAccess(psu, aspsp, psuEncryption.forPublicKey(prvKey.getId(), prvKey.getPubKey().getKey()), session, paymentRepository);
     }
 
-    public PaymentAccess paymentAnonymousPsuAndAspsp(Bank aspsp, EncryptionService encryptionService, ServiceSession session) {
-        return null;
+    public PaymentAccess paymentForAnonymousPsu(Fintech fintech, Bank aspsp, ServiceSession session) {
+        return new AnonymousPsuPaymentAccess(aspsp, encryptionService, session, paymentRepository);
     }
 
     public PaymentAccess paymentForFintech(Fintech fintech, ServiceSession session, Supplier<char[]> fintechPassword) {
-        return null;
+        return new FintechPaymentAccess(fintech, psuEncryption, fintechPsuAspspPrvKeyRepository, fintechVault, paymentRepository, entityManager, session.getId(), fintechPassword);
     }
 }

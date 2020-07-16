@@ -9,7 +9,7 @@ import java.security.PublicKey;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class PsuConsentEncryptionServiceProvider {
+public class AuthenticatedPsuEncryptionServiceProvider {
 
     private final CmsEncryptionOper oper;
 

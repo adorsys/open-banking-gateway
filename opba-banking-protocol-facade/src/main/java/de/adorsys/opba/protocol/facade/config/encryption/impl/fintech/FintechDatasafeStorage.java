@@ -2,8 +2,10 @@ package de.adorsys.opba.protocol.facade.config.encryption.impl.fintech;
 
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
+import de.adorsys.opba.db.domain.entity.fintech.FintechPrvKey;
 import de.adorsys.opba.db.domain.entity.fintech.FintechPsuAspspPrvKey;
 import de.adorsys.opba.db.domain.entity.fintech.FintechPsuAspspPrvKeyInbox;
+import de.adorsys.opba.db.repository.jpa.fintech.FintechOnlyPrvKeyRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechPsuAspspPrvKeyInboxRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechPsuAspspPrvKeyRepository;
 import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
@@ -21,13 +23,17 @@ import java.util.Optional;
 @Component
 public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
 
+    public static final String FINTECH_ONLY_PRV_KEYS = DB_PROTOCOL + "private-keys/";
+
     public FintechDatasafeStorage(
+            DatasafeDataStorage<FintechPrvKey> fintechOnlyPrvKeys,
             DatasafeDataStorage<FintechPsuAspspPrvKey> datasafePrivate,
             DatasafeDataStorage<FintechPsuAspspPrvKeyInbox> datasafeInbox,
             FintechKeystoreStorage datasafeKeystore,
             FintechPubKeysStorage datasafePub
     ) {
         super(ImmutableMap.<String, StorageActions>builder()
+                .put(tableId(FINTECH_ONLY_PRV_KEYS), fintechOnlyPrvKeys)
                 .put(tableId(PRIVATE_STORAGE), datasafePrivate)
                 .put(tableId(INBOX_STORAGE), datasafeInbox)
                 .put(tableId(KEYSTORE), datasafeKeystore)
@@ -41,13 +47,36 @@ public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
     }
 
     @Component
+    public static class FintechOnlyPrvKeyStorage extends DatasafeDataStorage<FintechPrvKey> {
+
+        public FintechOnlyPrvKeyStorage(FintechOnlyPrvKeyRepository keys, TransactionOperations txOper, EntityManager em) {
+            super(
+                    keys,
+                    path -> FintechOnlyPrvKeyTuple.buildFintechPrvKey(path, em),
+                    path -> find(keys, path),
+                    FintechPrvKey::getEncData,
+                    FintechPrvKey::setEncData,
+                    txOper
+            );
+        }
+
+        private static Optional<FintechPrvKey> find(FintechOnlyPrvKeyRepository keys, String path) {
+            FintechOnlyPrvKeyTuple psuAspspTuple = new FintechOnlyPrvKeyTuple(path);
+            return keys.findByIdAndFintechId(
+                    psuAspspTuple.getKeyId(),
+                    psuAspspTuple.getFintechId()
+            );
+        }
+    }
+
+    @Component
     public static class FintechPsuAspspPrvKeyStorage extends DatasafeDataStorage<FintechPsuAspspPrvKey> {
 
-        public FintechPsuAspspPrvKeyStorage(FintechPsuAspspPrvKeyRepository consents, TransactionOperations txOper, EntityManager em) {
+        public FintechPsuAspspPrvKeyStorage(FintechPsuAspspPrvKeyRepository psuAspspKeysForConsentOrPayment, TransactionOperations txOper, EntityManager em) {
             super(
-                    consents,
+                    psuAspspKeysForConsentOrPayment,
                     path -> FintechPsuAspspTuple.buildFintechPrvKey(path, em),
-                    path -> find(consents, path),
+                    path -> find(psuAspspKeysForConsentOrPayment, path),
                     FintechPsuAspspPrvKey::getEncData,
                     FintechPsuAspspPrvKey::setEncData,
                     txOper
@@ -67,11 +96,11 @@ public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
     @Component
     public static class FintechPsuAspspPrvKeyInboxStorage extends DatasafeDataStorage<FintechPsuAspspPrvKeyInbox> {
 
-        public FintechPsuAspspPrvKeyInboxStorage(FintechPsuAspspPrvKeyInboxRepository inboxConsents, TransactionOperations txOper, EntityManager em) {
+        public FintechPsuAspspPrvKeyInboxStorage(FintechPsuAspspPrvKeyInboxRepository inboxPsuAspspKeysForConsentOrPayment, TransactionOperations txOper, EntityManager em) {
             super(
-                    inboxConsents,
+                    inboxPsuAspspKeysForConsentOrPayment,
                     path -> FintechPsuAspspTuple.buildFintechInboxPrvKey(path, em),
-                    path -> find(inboxConsents, path),
+                    path -> find(inboxPsuAspspKeysForConsentOrPayment, path),
                     FintechPsuAspspPrvKeyInbox::getEncData,
                     FintechPsuAspspPrvKeyInbox::setEncData,
                     txOper
