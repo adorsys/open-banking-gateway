@@ -415,6 +415,12 @@
                                  baseColumnNames="fintech_id"
                                  referencedTableName="${table-prefix}fintech"
                                  referencedColumnNames="id"/>
+        <addForeignKeyConstraint constraintName="${table-prefix}fk_fintech_pub_key_fk_fintech_prv_fintech"
+                                 baseTableName="${table-prefix}fintech_pub_key"
+                                 baseColumnNames="id"
+                                 referencedTableName="${table-prefix}fintech_prv_key"
+                                 referencedColumnNames="id"
+                                 deferrable="true"/>
 
         <createTable tableName="${table-prefix}fintech_consent_spec">
             <column name="id" type="UUID">
