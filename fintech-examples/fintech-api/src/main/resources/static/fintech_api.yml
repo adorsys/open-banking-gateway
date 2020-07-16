@@ -334,6 +334,7 @@ paths:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: '#/components/parameters/X-Pis-Psu-Authentication-Required'
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
 
@@ -496,6 +497,17 @@ components:
       schema:
         type: string
         format: uuid
+
+    X-Pis-Psu-Authentication-Required:
+      name: X-Pis-Psu-Authentication-Required
+      in: header
+      description: |
+        If false, login form to OPBA will not be displayed as there might be nothing to share for payments, so
+        that authentication is not necessary. If absent or true - login form for payments will be displayed.
+      example: "true"
+      schema:
+        type: boolean
+        default: "false"
 
     X-XSRF-TOKEN:
       name: X-XSRF-TOKEN
