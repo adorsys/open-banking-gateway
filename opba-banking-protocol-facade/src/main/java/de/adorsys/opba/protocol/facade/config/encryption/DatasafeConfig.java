@@ -48,7 +48,7 @@ public class DatasafeConfig {
     ) {
         DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig(fintechReadStorePass);
         OverridesRegistry overridesRegistry = new BaseOverridesRegistry();
-        ProfileRetrievalServiceImplRuntimeDelegatable.overrideWith(overridesRegistry, BaseDatasafeDbStorageService.DbTableUserRetrieval::new);
+        ProfileRetrievalServiceImplRuntimeDelegatable.overrideWith(overridesRegistry, BaseDatasafeDbStorageService.DbTableFintechRetrieval::new);
         PathEncryptionImplRuntimeDelegatable.overrideWith(overridesRegistry, NoOpPathEncryptionImplOverridden::new);
         return new FintechSecureStorage(
                 DaggerDefaultDatasafeServices.builder()
