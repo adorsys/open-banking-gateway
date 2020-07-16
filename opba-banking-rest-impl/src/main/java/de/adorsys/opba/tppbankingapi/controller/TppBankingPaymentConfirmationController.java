@@ -1,8 +1,8 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
-import de.adorsys.opba.tppbankingapi.service.ConsentConfirmationService;
-import de.adorsys.opba.tppbankingapi.token.model.generated.PsuConsentSessionResponse;
-import de.adorsys.opba.tppbankingapi.token.resource.generated.ConsentConfirmationApi;
+import de.adorsys.opba.tppbankingapi.service.PaymentConfirmationService;
+import de.adorsys.opba.tppbankingapi.token.model.generated.PsuPaymentSessionResponse;
+import de.adorsys.opba.tppbankingapi.token.resource.generated.PaymentConfirmationApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +14,12 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 
 @RestController
 @RequiredArgsConstructor
-public class TppBankingApiTokenController implements ConsentConfirmationApi {
+public class TppBankingPaymentConfirmationController implements PaymentConfirmationApi {
 
-    private final ConsentConfirmationService consentConfirmationService;
+    private final PaymentConfirmationService consentConfirmationService;
 
     @Override
-    public ResponseEntity<PsuConsentSessionResponse> confirmConsent(String authId,
+    public ResponseEntity<PsuPaymentSessionResponse> confirmPayment(String authId,
                                                                     UUID xRequestID,
                                                                     String serviceSessionPassword,
                                                                     String xTimestampUTC,
@@ -28,11 +28,11 @@ public class TppBankingApiTokenController implements ConsentConfirmationApi {
                                                                     String fintechID) {
         UUID authorizationSessionId = UUID.fromString(authId);
 
-        if (!consentConfirmationService.confirmConsent(authorizationSessionId, serviceSessionPassword)) {
+        if (!consentConfirmationService.confirmPayment(authorizationSessionId)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        PsuConsentSessionResponse response = new PsuConsentSessionResponse();
+        PsuPaymentSessionResponse response = new PsuPaymentSessionResponse();
         response.setAuthorizationSessionId(authorizationSessionId);
 
         return ResponseEntity.ok()
