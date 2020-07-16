@@ -93,7 +93,7 @@ public class FintechSecureStorage {
         try (InputStream is = datasafeServices.privateService().read(
                 ReadRequest.forDefaultPrivate(
                         fintech.getUserIdAuth(password),
-                        new FintechPsuAspspTuple(session).toDatasafePathWithoutParent()))
+                        new FintechOnlyPrvKeyTuple(fintech.getId(), prvKey.getId()).toDatasafePathWithoutParent()))
         ) {
             return serde.readPrivateKey(is);
         }
