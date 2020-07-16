@@ -64,7 +64,7 @@ public class DatasafeConfig {
     @Bean
     public PsuSecureStorage psuDatasafeServices(
             @Value(ENCRYPTION_DATASAFE_READ_KEYSTORE_PREFIX + ".psu}") String psuReadStorePass,
-            AuthenticatedPsuEncryptionServiceProvider encryptionServiceProvider,
+            PsuEncryptionServiceProvider encryptionServiceProvider,
             EncryptionKeySerde serde
     ) {
         DFSConfig config = new BaseDatasafeDbStorageService.DbTableDFSConfig(psuReadStorePass);
