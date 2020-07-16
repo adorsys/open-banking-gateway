@@ -51,6 +51,9 @@ public class Fintech {
     private Collection<FintechPsuAspspPrvKey> consentKeys;
 
     @OneToMany(mappedBy = "fintech", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<FintechPrvKey> fintechOnlyPrvKeys;
+
+    @OneToMany(mappedBy = "fintech", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<FintechUser> requestedConsentSpecs;
 
     public UserID getUserId() {
