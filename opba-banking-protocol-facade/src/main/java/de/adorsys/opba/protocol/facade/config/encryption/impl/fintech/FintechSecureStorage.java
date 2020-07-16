@@ -18,7 +18,10 @@ import lombok.experimental.Delegate;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.PrivateKey;
+import java.util.UUID;
 import java.util.function.Supplier;
+
+import static de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechDatasafeStorage.FINTECH_ONLY_KEYS_ID;
 
 @RequiredArgsConstructor
 public class FintechSecureStorage {
@@ -89,10 +92,23 @@ public class FintechSecureStorage {
     }
 
     @SneakyThrows
-    public PrivateKey fintechPrvKeyFromPrivate(FintechPrvKey prvKey, Fintech fintech, Supplier<char[]> password) {
-        try (InputStream is = datasafeServices.privateService().read(
-                ReadRequest.forDefaultPrivate(
+    public void fintechOnlyPrvKeyToPrivate(UUID id, PrivateKey prvKey, Fintech fintech, Supplier<char[]> password) {
+        try (OutputStream os = datasafeServices.privateService().write(
+                WriteRequest.forPrivate(
                         fintech.getUserIdAuth(password),
+                        FINTECH_ONLY_KEYS_ID,
+                        new FintechOnlyPrvKeyTuple(fintech.getId(), id).toDatasafePathWithoutParent()))
+        ) {
+            serde.writePrivateKey(prvKey, os);
+        }
+    }
+
+    @SneakyThrows
+    public PrivateKey fintechOnlyPrvKeyFromPrivate(FintechPrvKey prvKey, Fintech fintech, Supplier<char[]> password) {
+        try (InputStream is = datasafeServices.privateService().read(
+                ReadRequest.forPrivate(
+                        fintech.getUserIdAuth(password),
+                        FINTECH_ONLY_KEYS_ID,
                         new FintechOnlyPrvKeyTuple(fintech.getId(), prvKey.getId()).toDatasafePathWithoutParent()))
         ) {
             return serde.readPrivateKey(is);

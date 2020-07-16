@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.facade.config.encryption.impl.fintech;
 
 import com.google.common.collect.ImmutableMap;
+import de.adorsys.datasafe.types.api.resource.StorageIdentifier;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.fintech.FintechPrvKey;
 import de.adorsys.opba.db.domain.entity.fintech.FintechPsuAspspPrvKey;
@@ -23,7 +24,9 @@ import java.util.Optional;
 @Component
 public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
 
-    public static final String FINTECH_ONLY_PRV_KEYS = DB_PROTOCOL + "private-keys/";
+    public static final String FINTECH_ONLY_PRV_KEYS_TABLE = "private-keys";
+    public static final StorageIdentifier FINTECH_ONLY_KEYS_ID = new StorageIdentifier(FINTECH_ONLY_PRV_KEYS_TABLE);
+    public static final String FINTECH_ONLY_PRV_KEYS = "db://" + FINTECH_ONLY_PRV_KEYS_TABLE + "/";
 
     public FintechDatasafeStorage(
             DatasafeDataStorage<FintechPrvKey> fintechOnlyPrvKeys,
@@ -33,7 +36,7 @@ public class FintechDatasafeStorage extends BaseDatasafeDbStorageService {
             FintechPubKeysStorage datasafePub
     ) {
         super(ImmutableMap.<String, StorageActions>builder()
-                .put(tableId(FINTECH_ONLY_PRV_KEYS), fintechOnlyPrvKeys)
+                .put(FINTECH_ONLY_PRV_KEYS_TABLE, fintechOnlyPrvKeys)
                 .put(tableId(PRIVATE_STORAGE), datasafePrivate)
                 .put(tableId(INBOX_STORAGE), datasafeInbox)
                 .put(tableId(KEYSTORE), datasafeKeystore)

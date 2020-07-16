@@ -15,8 +15,11 @@ import static de.adorsys.opba.protocol.facade.config.ConfigConst.FACADE_CONFIG_P
 @Data
 @Validated
 @Configuration
-@ConfigurationProperties(FACADE_CONFIG_PREFIX + "encryption.psu.key-pair")
-public class PsuKeyPairConfig implements CmsEncSpec {
+@ConfigurationProperties(FACADE_CONFIG_PREFIX + "encryption.fintech-only.key-pair")
+public class FintechOnlyKeyPairConfig implements CmsEncSpec {
+
+    @Min(1)
+    private int pairCount;
 
     @NotBlank
     private String keyAlgo;
