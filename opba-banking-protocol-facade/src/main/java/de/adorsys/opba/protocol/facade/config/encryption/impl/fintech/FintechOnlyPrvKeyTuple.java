@@ -2,12 +2,14 @@ package de.adorsys.opba.protocol.facade.config.encryption.impl.fintech;
 
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
 import de.adorsys.opba.db.domain.entity.fintech.FintechPrvKey;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.EntityManager;
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
 public class FintechOnlyPrvKeyTuple {
 
     private final long fintechId;
