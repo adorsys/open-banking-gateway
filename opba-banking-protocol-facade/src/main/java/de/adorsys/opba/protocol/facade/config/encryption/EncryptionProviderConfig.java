@@ -18,4 +18,8 @@ public class EncryptionProviderConfig {
         return new PsuEncryptionServiceProvider(new CmsEncryptionOper(psuKeyPairConfig));
     }
 
+    @Bean
+    FintechOnlyEncryptionServiceProvider fintechOnlyEncryptionProvider(FintechOnlyKeyPairConfig fintechOnlyKeyPairConfig) {
+        return new FintechOnlyEncryptionServiceProvider(new CmsEncryptionOper(fintechOnlyKeyPairConfig));
+    }
 }

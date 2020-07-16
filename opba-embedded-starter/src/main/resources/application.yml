@@ -140,6 +140,13 @@ facade:
         cipher-algo: AES/GCM/NoPadding
         iv-size: 12
         len: 128
+    # Internal FinTech data
+    fintech-only:
+      key-pair:
+        pair-count: 3
+        cipher-algo: AES256_CBC
+        key-algo: RSA
+        len: 2048
 
 protocol:
   xs2a:

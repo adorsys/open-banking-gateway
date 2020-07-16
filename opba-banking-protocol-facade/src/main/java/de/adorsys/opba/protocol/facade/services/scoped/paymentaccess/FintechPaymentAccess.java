@@ -116,7 +116,7 @@ public class FintechPaymentAccess implements PaymentAccess {
     }
 
     private EncryptionService anonymousEncryptionService(FintechPrvKey prvKey) {
-        PrivateKey psuAspspKey = fintechVault.fintechPrvKeyFromPrivate(prvKey, fintech, fintechPassword);
+        PrivateKey psuAspspKey = fintechVault.fintechOnlyPrvKeyFromPrivate(prvKey, fintech, fintechPassword);
         return encryptionService.forPrivateKey(prvKey.getId(), psuAspspKey);
     }
 }
