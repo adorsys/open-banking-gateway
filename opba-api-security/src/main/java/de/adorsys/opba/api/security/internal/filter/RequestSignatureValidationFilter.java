@@ -168,43 +168,35 @@ public class RequestSignatureValidationFilter implements Filter {
     private boolean verifyRequestSignature(HttpServletRequest request, FilterValidationHeaderValues headerValues, Instant instant, String fintechApiKey) {
         HttpRequestToDataToSignMapper mapper = new HttpRequestToDataToSignMapper();
         OperationType operationType = OperationType.valueOf(headerValues.getOperationType());
-        boolean verificationResult;
 
         switch (operationType) {
             case AIS:
                 if (OperationType.isTransactionsPath(request.getRequestURI())) {
-                    verificationResult = requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToListTransactions(request, instant));
+                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToListTransactions(request, instant));
                 } else {
-                    verificationResult = requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToListAccounts(request, instant));
+                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToListAccounts(request, instant));
                 }
-                break;
             case BANK_SEARCH:
                 if (OperationType.isBankSearchPath(request.getRequestURI())) {
-                    verificationResult = requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToBankSearch(request, instant));
+                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToBankSearch(request, instant));
                 } else {
-                    verificationResult = requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToBankProfile(request, instant));
+                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToBankProfile(request, instant));
                 }
-                break;
             case CONFIRM_CONSENT:
-                verificationResult = requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToConfirmConsent(request, instant));
-                break;
+                return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToConfirmConsent(request, instant));
             case CONFIRM_PAYMENT:
-                verificationResult = requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToConfirmPayment(request, instant));
-                break;
+                return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToConfirmPayment(request, instant));
             case PIS:
                 if (OperationType.isGetPaymentStatus(request.getRequestURI())) {
-                    verificationResult = requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToGetPaymentStatus(request, instant));
+                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToGetPaymentStatus(request, instant));
                 } else if (OperationType.isGetPayment(request.getMethod())) {
-                    verificationResult = requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToGetPayment(request, instant));
+                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToGetPayment(request, instant));
                 } else {
-                    verificationResult = requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToPaymentInititation(request, instant));
+                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToPaymentInititation(request, instant));
                 }
-                break;
             default:
                 throw new IllegalArgumentException(String.format("Unsupported operation type %s", operationType));
         }
-
-        return verificationResult;
     }
 
     private boolean isRequestExpired(Instant operationTime) {
