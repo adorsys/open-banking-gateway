@@ -9,11 +9,8 @@ import de.adorsys.opba.db.repository.jpa.PaymentRepository;
 import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
 import de.adorsys.xs2a.adapter.service.model.TransactionStatus;
 import io.restassured.RestAssured;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -70,7 +67,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
                 .getQueryParams()
                 .getFirst(REDIRECT_CODE_QUERY);
 
-        ExtractableResponse<Response> response = RestAssured
+        RestAssured
                 .given()
                     .header(X_REQUEST_ID, UUID.randomUUID().toString())
                     .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
@@ -78,8 +75,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
                 .when()
                     .post(PIS_ANONYMOUS_LOGIN_USER_ENDPOINT, serviceSessionId)
                 .then()
-                    .statusCode(BAD_REQUEST.value())
-                .extract();
+                    .statusCode(BAD_REQUEST.value());
         return self();
     }
 
@@ -138,7 +134,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         withSignatureHeaders(RestAssured
                                      .given()
                                      .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
-                                     .contentType(MediaType.APPLICATION_JSON_VALUE), requestSigningService, OperationType.CONFIRM_PAYMENT)
+                                     .contentType(APPLICATION_JSON_VALUE), requestSigningService, OperationType.CONFIRM_PAYMENT)
                 .when()
                     .post(CONFIRM_PAYMENT_ENDPOINT, serviceSessionId)
                 .then()
