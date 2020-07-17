@@ -26,6 +26,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommon
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.INITIATE_PAYMENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.LOGIN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.PASSWORD;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.PIS_ANONYMOUS_LOGIN_USER_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.PIS_LOGIN_USER_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.SEPA_PAYMENT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.withPaymentHeaders;
@@ -65,6 +66,23 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         return self();
     }
 
+    public SELF fintech_calls_initiate_payment_for_anton_brueckner_with_anonymous_allowed() {
+        String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-single-sepa-payment.json");
+        ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER, requestSigningService, PIS, body, false)
+                    .contentType(APPLICATION_JSON_VALUE)
+                    .body(body)
+                .when()
+                    .post(INITIATE_PAYMENT_ENDPOINT, SEPA_PAYMENT)
+                .then()
+                    .statusCode(ACCEPTED.value())
+                .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextPaymentAuthorizationUrl(response);
+        return self();
+    }
+
     public SELF fintech_calls_initiate_payment_for_max_musterman() {
         String body = readResource("restrecord/tpp-ui-input/params/max-musterman-single-sepa-payment.json");
         ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, requestSigningService, PIS, body)
@@ -79,6 +97,27 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         updateServiceSessionId(response);
         updateRedirectCode(response);
         updateNextPaymentAuthorizationUrl(response);
+        return self();
+    }
+
+    public SELF user_logged_in_into_opba_as_anonymous_user_with_credentials_using_fintech_supplied_url() {
+        String fintechUserTempPassword = UriComponentsBuilder
+                .fromHttpUrl(redirectUriToGetUserParams).build()
+                .getQueryParams()
+                .getFirst(REDIRECT_CODE_QUERY);
+
+        ExtractableResponse<Response> response = RestAssured
+                .given()
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
+                    .contentType(APPLICATION_JSON_VALUE)
+                .when()
+                    .post(PIS_ANONYMOUS_LOGIN_USER_ENDPOINT, serviceSessionId)
+                .then()
+                    .statusCode(ACCEPTED.value())
+                .extract();
+
+        this.authSessionCookie = response.cookie(AUTHORIZATION_SESSION_KEY);
         return self();
     }
 

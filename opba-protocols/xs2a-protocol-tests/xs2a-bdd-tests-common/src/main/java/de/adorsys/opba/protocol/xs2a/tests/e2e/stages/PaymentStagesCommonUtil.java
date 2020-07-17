@@ -18,6 +18,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_U
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_USER_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_OPERATION_TYPE;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_PIS_PSU_AUTHENTICATION_REQUIRED;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_TIMESTAMP_UTC;
@@ -29,7 +30,8 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP
 public class PaymentStagesCommonUtil {
 
     public static final String INITIATE_PAYMENT_ENDPOINT = "/v1/banking/pis/payments/{payment-product}";
-    public static final String PIS_LOGIN_USER_ENDPOINT = "/v1/psu/ais/{authorizationId}/for-approval/login";
+    public static final String PIS_LOGIN_USER_ENDPOINT = "/v1/psu/pis/{authorizationId}/for-approval/login";
+    public static final String PIS_ANONYMOUS_LOGIN_USER_ENDPOINT = "/v1/psu/pis/{authorizationId}/anonymous";
     public static final String GET_PAYMENT_AUTH_STATE = "/v1/consent/{serviceSessionId}";
     public static final String AUTHORIZE_PAYMENT_ENDPOINT = "/v1/consent/{serviceSessionId}/embedded";
 
@@ -48,6 +50,10 @@ public class PaymentStagesCommonUtil {
     public static final String IP_ADDRESS = "1.1.1.1";
 
     public static RequestSpecification withPaymentHeaders(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType, String body) {
+        return withPaymentHeaders(fintechUserId, requestSigningService, operationType, body, true);
+    }
+
+    public static RequestSpecification withPaymentHeaders(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType, String body, boolean psuAuthenticationRequired) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
@@ -63,11 +69,10 @@ public class PaymentStagesCommonUtil {
                        .header(X_REQUEST_ID, xRequestId.toString())
                        .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
                        .header(X_OPERATION_TYPE, operationType)
-                       .header(X_REQUEST_SIGNATURE, calculatePaymentSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId, body))
+                       .header(X_PIS_PSU_AUTHENTICATION_REQUIRED, psuAuthenticationRequired)
+                       .header(X_REQUEST_SIGNATURE, calculatePaymentSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId, psuAuthenticationRequired, body))
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
-
-
 
     public static RequestSpecification withPaymentInfoHeaders(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType) {
         UUID xRequestId = UUID.randomUUID();
@@ -88,7 +93,7 @@ public class PaymentStagesCommonUtil {
     }
 
     private static String calculatePaymentSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
-                                                    OperationType operationType, String fintechUserId, String body) {
+                                                    OperationType operationType, String fintechUserId, boolean psuAuthenticationRequired, String body) {
         PaymentInitiationDataToSign paymentInitiationDataToSign = PaymentInitiationDataToSign.builder()
                                                                           .xRequestId(xRequestId)
                                                                           .instant(xTimestampUtc)
@@ -97,6 +102,7 @@ public class PaymentStagesCommonUtil {
                                                                           .fintechUserId(fintechUserId)
                                                                           .redirectOk(FINTECH_REDIR_OK)
                                                                           .redirectNok(FINTECH_REDIR_NOK)
+                                                                          .psuAuthenticationRequired(String.valueOf(psuAuthenticationRequired))
                                                                           .body(body)
                                                                           .build();
 
