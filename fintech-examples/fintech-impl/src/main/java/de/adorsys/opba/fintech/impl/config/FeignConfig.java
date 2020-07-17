@@ -95,6 +95,8 @@ public class FeignConfig {
                 return requestSigningService.signature(mapper.mapToBankProfile(headers, instant));
             case CONFIRM_CONSENT:
                 return requestSigningService.signature(mapper.mapToConfirmConsent(headers, instant));
+            case CONFIRM_PAYMENT:
+                return requestSigningService.signature(mapper.mapToConfirmPayment(headers, instant));
             case PIS:
                 if (OperationType.isGetPaymentStatus(requestTemplate.path())) {
                     return requestSigningService.signature(mapper.mapToGetPaymentStatus(headers, instant));

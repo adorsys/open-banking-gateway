@@ -8,6 +8,7 @@ import de.adorsys.opba.api.security.external.domain.signdata.AisListTransactions
 import de.adorsys.opba.api.security.external.domain.signdata.BankProfileDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.ConfirmConsentDataToSign;
+import de.adorsys.opba.api.security.external.domain.signdata.ConfirmPaymentDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.GetPaymentDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.GetPaymentStatusDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.PaymentInitiationDataToSign;
@@ -81,6 +82,13 @@ public class FeignTemplateToDataToSignMapper {
         return new ConfirmConsentDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType));
     }
 
+    public ConfirmPaymentDataToSign mapToConfirmPayment(Map<String, Collection<String>> headers, Instant instant) {
+        String operationType = extractRequiredValue(headers, HttpHeaders.X_OPERATION_TYPE);
+        String xRequestId = extractRequiredValue(headers, HttpHeaders.X_REQUEST_ID);
+
+        return new ConfirmPaymentDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType));
+    }
+
     public PaymentInitiationDataToSign mapToPaymentInitiation(Map<String, Collection<String>> headers, Instant instant, String body) {
         String operationType = extractRequiredValue(headers, HttpHeaders.X_OPERATION_TYPE);
         String xRequestId = extractRequiredValue(headers, HttpHeaders.X_REQUEST_ID);
@@ -93,6 +101,7 @@ public class FeignTemplateToDataToSignMapper {
                        .fintechUserId(extractRequiredValue(headers, HttpHeaders.FINTECH_USER_ID))
                        .redirectOk(extractRequiredValue(headers, HttpHeaders.FINTECH_REDIRECT_URL_OK))
                        .redirectNok(extractRequiredValue(headers, HttpHeaders.FINTECH_REDIRECT_URL_NOK))
+                       .psuAuthenticationRequired(extractRequiredValue(headers, HttpHeaders.X_PIS_PSU_AUTHENTICATION_REQUIRED))
                        .body(body)
                        .build();
     }
