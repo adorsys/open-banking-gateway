@@ -9,6 +9,7 @@ import de.adorsys.opba.api.security.external.domain.signdata.AisListTransactions
 import de.adorsys.opba.api.security.external.domain.signdata.BankProfileDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.ConfirmConsentDataToSign;
+import de.adorsys.opba.api.security.external.domain.signdata.ConfirmPaymentDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.GetPaymentDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.GetPaymentStatusDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.PaymentInitiationDataToSign;
@@ -88,6 +89,15 @@ public class RsaJwtsSigningServiceImpl implements RequestSigningService {
     }
 
     @Override
+    public String signature(ConfirmPaymentDataToSign dataToSign) {
+        return signature(new DataToSign(
+                dataToSign.getXRequestId(),
+                dataToSign.getInstant(),
+                dataToSign.getOperationType()
+        ));
+    }
+
+    @Override
     public String signature(ConfirmConsentDataToSign dataToSign) {
         return signature(new DataToSign(
                 dataToSign.getXRequestId(),
@@ -103,6 +113,7 @@ public class RsaJwtsSigningServiceImpl implements RequestSigningService {
         values.put(HttpHeaders.FINTECH_USER_ID, dataToSign.getFintechUserId());
         values.put(HttpHeaders.FINTECH_REDIRECT_URL_OK, dataToSign.getRedirectOk());
         values.put(HttpHeaders.FINTECH_REDIRECT_URL_NOK, dataToSign.getRedirectNok());
+        values.put(HttpHeaders.X_PIS_PSU_AUTHENTICATION_REQUIRED, dataToSign.getPsuAuthenticationRequired());
         DataToSign data = new DataToSign(dataToSign.getXRequestId(), dataToSign.getInstant(),
                                          dataToSign.getOperationType(), dataToSign.getBody(), values);
 

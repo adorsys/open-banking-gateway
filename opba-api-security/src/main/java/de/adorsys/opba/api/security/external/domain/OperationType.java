@@ -6,7 +6,8 @@ public enum OperationType {
     AIS,
     PIS,
     BANK_SEARCH,
-    CONFIRM_CONSENT;
+    CONFIRM_CONSENT,
+    CONFIRM_PAYMENT;
 
     public static boolean isTransactionsPath(String path) {
         return path.contains("/transactions");

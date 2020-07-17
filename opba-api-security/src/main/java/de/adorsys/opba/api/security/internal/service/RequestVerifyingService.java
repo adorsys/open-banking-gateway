@@ -5,6 +5,7 @@ import de.adorsys.opba.api.security.external.domain.signdata.AisListTransactions
 import de.adorsys.opba.api.security.external.domain.signdata.BankProfileDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.ConfirmConsentDataToSign;
+import de.adorsys.opba.api.security.external.domain.signdata.ConfirmPaymentDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.GetPaymentDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.GetPaymentStatusDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.PaymentInitiationDataToSign;
@@ -60,6 +61,16 @@ public interface RequestVerifyingService {
      * @return 'true' if the signature is valid, 'false' otherwise
      */
     boolean verify(String signature, String encodedPublicKey, ConfirmConsentDataToSign confirmConsentDataToSign);
+
+    /**
+     * Verifies signature data for '/v1/banking/consents/{auth-id}/confirm' opba endpoint
+     *
+     * @param signature                 Encoded string to be verified
+     * @param encodedPublicKey          Public key, used for the verification
+     * @param confirmPaymentDataToSign  Request given data, to verify with given signature
+     * @return 'true' if the signature is valid, 'false' otherwise
+     */
+    boolean verify(String signature, String encodedPublicKey, ConfirmPaymentDataToSign confirmPaymentDataToSign);
 
     /**
      * Verifies signature data for POST '/v1/banking/pis/payments/{payment-product}' opba endpoint

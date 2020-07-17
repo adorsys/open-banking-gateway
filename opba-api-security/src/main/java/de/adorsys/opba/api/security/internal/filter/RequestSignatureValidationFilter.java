@@ -188,6 +188,9 @@ public class RequestSignatureValidationFilter implements Filter {
             case CONFIRM_CONSENT:
                 verificationResult = requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToConfirmConsent(request, instant));
                 break;
+            case CONFIRM_PAYMENT:
+                verificationResult = requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToConfirmPayment(request, instant));
+                break;
             case PIS:
                 if (OperationType.isGetPaymentStatus(request.getRequestURI())) {
                     verificationResult = requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToGetPaymentStatus(request, instant));

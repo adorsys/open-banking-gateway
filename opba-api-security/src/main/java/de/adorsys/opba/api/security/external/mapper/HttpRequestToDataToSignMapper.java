@@ -9,6 +9,7 @@ import de.adorsys.opba.api.security.external.domain.signdata.AisListTransactions
 import de.adorsys.opba.api.security.external.domain.signdata.BankProfileDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.ConfirmConsentDataToSign;
+import de.adorsys.opba.api.security.external.domain.signdata.ConfirmPaymentDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.GetPaymentDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.GetPaymentStatusDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.PaymentInitiationDataToSign;
@@ -81,6 +82,13 @@ public class HttpRequestToDataToSignMapper {
         return new ConfirmConsentDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType));
     }
 
+    public ConfirmPaymentDataToSign mapToConfirmPayment(HttpServletRequest request, Instant instant) {
+        String xRequestId = request.getHeader(HttpHeaders.X_REQUEST_ID);
+        String operationType = request.getHeader(HttpHeaders.X_OPERATION_TYPE);
+
+        return new ConfirmPaymentDataToSign(UUID.fromString(xRequestId), instant, OperationType.valueOf(operationType));
+    }
+
     @SneakyThrows
     public PaymentInitiationDataToSign mapToPaymentInititation(HttpServletRequest request, Instant instant) {
         String xRequestId = request.getHeader(HttpHeaders.X_REQUEST_ID);
@@ -94,6 +102,7 @@ public class HttpRequestToDataToSignMapper {
                        .fintechUserId(request.getHeader(HttpHeaders.FINTECH_USER_ID))
                        .redirectOk(request.getHeader(HttpHeaders.FINTECH_REDIRECT_URL_OK))
                        .redirectNok(request.getHeader(HttpHeaders.FINTECH_REDIRECT_URL_NOK))
+                       .psuAuthenticationRequired(request.getHeader(HttpHeaders.X_PIS_PSU_AUTHENTICATION_REQUIRED))
                        .body(CharStreams.toString(request.getReader()))
                        .build();
     }
