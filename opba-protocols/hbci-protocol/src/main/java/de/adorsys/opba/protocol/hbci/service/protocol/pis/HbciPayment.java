@@ -22,8 +22,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 import static de.adorsys.opba.protocol.bpmnshared.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.HBCI_MAPPERS_PACKAGE;
 
@@ -43,7 +41,7 @@ public class HbciPayment extends ValidatedExecution<PaymentHbciContext> {
 
         TransactionRequest<SinglePayment> request = create(singlePayment, new BankApiUser(), new BankAccess(),
                 context.getBank(), consent);
-        PaymentResponse response = onlineBankingService.executePayment(request, UUID.randomUUID().toString());
+        PaymentResponse response = onlineBankingService.executePayment(request, String.valueOf(System.currentTimeMillis()));
 
         if (null == response.getAuthorisationCodeResponse()) {
             ContextUtil.getAndUpdateContext(
