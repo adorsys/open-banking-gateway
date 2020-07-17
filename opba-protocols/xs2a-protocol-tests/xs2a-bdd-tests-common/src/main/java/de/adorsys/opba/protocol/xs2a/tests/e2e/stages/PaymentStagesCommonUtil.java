@@ -53,7 +53,13 @@ public class PaymentStagesCommonUtil {
         return withPaymentHeaders(fintechUserId, requestSigningService, operationType, body, true);
     }
 
-    public static RequestSpecification withPaymentHeaders(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType, String body, boolean psuAuthenticationRequired) {
+    public static RequestSpecification withPaymentHeaders(
+            String fintechUserId,
+            RequestSigningService requestSigningService,
+            OperationType operationType,
+            String body,
+            boolean psuAuthenticationRequired
+    ) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
