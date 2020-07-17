@@ -61,7 +61,9 @@ facade:
       consent-login:
         page:
           for-ais: http://localhost:1010/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
-          for-pis: http://localhost:1010/pis/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
+          for-pis: http://localhost:1010/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
+          # PIS allows anonymous users in OPBA
+          for-pis-anonymous: http://localhost:1010/pis/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
         password:
           byte-size: 8
     # Consent authorization cookie key path
@@ -91,3 +93,10 @@ facade:
         cipher-algo: AES/GCM/NoPadding
         iv-size: 12
         len: 128
+    # Internal FinTech data
+    fintech-only:
+      key-pair:
+        pair-count: 3
+        cipher-algo: AES256_CBC
+        key-algo: RSA
+        len: 2048
