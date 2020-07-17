@@ -76,6 +76,7 @@ api:
         PIS: "/v1/banking/pis"
         BANK_SEARCH: "/v1/banking/search"
         CONFIRM_CONSENT: "/v1/banking/consents"
+        CONFIRM_PAYMENT: "/v1/banking/payments"
 
   # Common cookie template
   cookie:
@@ -101,8 +102,10 @@ facade:
       # Redirection URL for consent association
       consent-login:
         page:
-          for-ais: ${facade.urls.embedded-ui-base-url}/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
-          for-pis: ${facade.urls.embedded-ui-base-url}/pis/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
+          for-ais: ${facade.urls.embedded-ui-base-url}/auth/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
+          for-pis: ${facade.urls.embedded-ui-base-url}/auth/pis/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
+          # PIS allows anonymous users in OPBA
+          for-pis-anonymous: ${facade.urls.embedded-ui-base-url}/auth/pis/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
         password:
           byte-size: 8
     # Consent authorization cookie key path
@@ -132,6 +135,13 @@ facade:
         cipher-algo: AES/GCM/NoPadding
         iv-size: 12
         len: 128
+    # Internal FinTech data
+    fintech-only:
+      key-pair:
+        pair-count: 3
+        cipher-algo: AES256_CBC
+        key-algo: RSA
+        len: 2048
 
 protocol:
   xs2a:
@@ -172,8 +182,6 @@ protocol:
           select-sca-method: /#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
           report-sca-result: /#{context.getAuthorizationSessionIdIfOpened()}/sca-result?wrong=#{context.getWrongAuthCredentials()}
           provide-psu-iban: /#{context.getAuthorizationSessionIdIfOpened()}/entry-consent-transactions/dedicated-account-access?wrong=#{context.getWrongAuthCredentials()}
-    expirable:
-      expire-after-write: PT600S
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
       invalid-consent: FORMAT_ERROR

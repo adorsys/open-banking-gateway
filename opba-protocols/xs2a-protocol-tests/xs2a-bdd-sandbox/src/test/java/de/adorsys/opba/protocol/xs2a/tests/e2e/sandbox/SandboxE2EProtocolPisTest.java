@@ -75,7 +75,7 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
 
         then()
                 .open_banking_has_consent_for_max_musterman_payment()
-                .fintech_calls_consent_activation_for_current_authorization_id()
+                .fintech_calls_payment_activation_for_current_authorization_id()
                 .fintech_calls_payment_status()
                 .fintech_calls_payment_information_iban_700();
     }
@@ -111,7 +111,7 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
                 .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
         then()
                 .open_banking_has_consent_for_anton_brueckner_payment()
-                .fintech_calls_consent_activation_for_current_authorization_id()
+                .fintech_calls_payment_activation_for_current_authorization_id()
                 .fintech_calls_payment_status()
                 .fintech_calls_payment_information_iban_400();
     }
