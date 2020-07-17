@@ -36,12 +36,12 @@ import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
 
 @Service("hbciInitiateSinglePayment")
 @RequiredArgsConstructor
-public class HbciPaymentsEntrypoint implements SinglePayment {
+public class HbciInitiateSinglePaymentEntrypoint implements SinglePayment {
 
     private final RuntimeService runtimeService;
     private final HbciResultBodyExtractor extractor;
     private final ProcessEventHandlerRegistrar registrar;
-    private final HbciPaymentsEntrypoint.FromRequest mapper;
+    private final HbciInitiateSinglePaymentEntrypoint.FromRequest mapper;
     private final HbciExtendWithServiceContext extender;
     private final DtoMapper<Set<ValidationIssue>, Set<ValidationError>> errorMapper;
 
