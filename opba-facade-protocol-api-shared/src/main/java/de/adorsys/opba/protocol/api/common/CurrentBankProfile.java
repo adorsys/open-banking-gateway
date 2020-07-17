@@ -43,6 +43,11 @@ public interface CurrentBankProfile {
     boolean isTryToUsePreferredApproach();
 
     /**
+     * Current date will be added in the end of payment purpose if this field is true .
+     */
+    boolean isUniquePaymentPurpose();
+
+    /**
      * Bank identification code.
      */
     String getBic();
