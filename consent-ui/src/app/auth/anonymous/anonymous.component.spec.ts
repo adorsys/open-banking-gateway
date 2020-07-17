@@ -5,7 +5,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, ActivatedRouteSnapshot, Params } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Observable } from 'rxjs';
-import { HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../common/auth.service';
 
 export class MockActivatedRoute {
@@ -19,9 +18,6 @@ describe('AnonymousComponent', () => {
   let route;
   let authServiceSpy;
   let authService: AuthService;
-  const headersOpt = new HttpHeaders({ Location: 'httpw://localhost:9876/?id=77168991' });
-  const usernameInput = 'alex';
-  const passwordInput = '1234';
 
   beforeEach(async(() => {
     route = new MockActivatedRoute();
@@ -53,7 +49,7 @@ describe('AnonymousComponent', () => {
 
     const authID = route.snapshot.parent.params.authId;
     const redirectCode = 'redirectCode654';
-    component.onSubmit();
+    component.ngOnInit();
     fixture.detectChanges();
 
     expect(authServiceSpy).toHaveBeenCalledWith(authID, redirectCode);
