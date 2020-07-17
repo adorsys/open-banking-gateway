@@ -50,7 +50,7 @@ public class ConsentService {
                 xRequestId,
                 tppProperties.getServiceSessionPassword(),
                 COMPUTE_X_TIMESTAMP_UTC,
-                OperationType.CONFIRM_CONSENT.toString(),
+                OperationType.CONFIRM_PAYMENT.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID
         ).getStatusCode();

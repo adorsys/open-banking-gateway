@@ -9,6 +9,7 @@ import de.adorsys.opba.api.security.external.domain.signdata.AisListTransactions
 import de.adorsys.opba.api.security.external.domain.signdata.BankProfileDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.ConfirmConsentDataToSign;
+import de.adorsys.opba.api.security.external.domain.signdata.ConfirmPaymentDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.GetPaymentDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.GetPaymentStatusDataToSign;
 import de.adorsys.opba.api.security.external.domain.signdata.PaymentInitiationDataToSign;
@@ -85,12 +86,22 @@ public class RsaJwtsVerifyingServiceImpl implements RequestVerifyingService {
     }
 
     @Override
+    public boolean verify(String signature, String encodedPublicKey, ConfirmPaymentDataToSign data) {
+        return verify(signature, encodedPublicKey, new DataToSign(
+                data.getXRequestId(),
+                data.getInstant(),
+                data.getOperationType()
+        ));
+    }
+
+    @Override
     public boolean verify(String signature, String encodedPublicKey, PaymentInitiationDataToSign data) {
         Map<String, String> values = new HashMap<>();
         values.put(HttpHeaders.BANK_ID, data.getBankId());
         values.put(HttpHeaders.FINTECH_USER_ID, data.getFintechUserId());
         values.put(HttpHeaders.FINTECH_REDIRECT_URL_OK, data.getRedirectOk());
         values.put(HttpHeaders.FINTECH_REDIRECT_URL_NOK, data.getRedirectNok());
+        values.put(HttpHeaders.X_PIS_PSU_AUTHENTICATION_REQUIRED, data.getPsuAuthenticationRequired());
         DataToSign dataToSign = new DataToSign(data.getXRequestId(), data.getInstant(), data.getOperationType(), data.getBody(), values);
 
         return verify(signature, encodedPublicKey, dataToSign);
