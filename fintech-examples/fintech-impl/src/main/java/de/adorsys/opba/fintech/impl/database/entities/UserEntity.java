@@ -29,4 +29,6 @@ public class UserEntity {
     private String password;
     private String fintechUserId;
 
+    private boolean serviceAccount;
+    private boolean active;
 }
