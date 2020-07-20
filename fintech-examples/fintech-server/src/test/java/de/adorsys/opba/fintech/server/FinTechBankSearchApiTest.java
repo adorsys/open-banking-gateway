@@ -38,7 +38,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -54,7 +57,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 class FinTechBankSearchApiTest extends FinTechApiBaseTest {
-    private static final String FIN_TECH_AUTH_URL = "/v1/login";
+    public static final String FIN_TECH_AUTH_URL = "/v1/login";
     private static final String FIN_TECH_AUTH_LOGOUT_URL = "/v1/logout";
     private static final String FIN_TECH_BANK_SEARCH_URL = "/v1/search/bankSearch";
     private static final String FIN_TECH_BANK_PROFILE_URL = "/v1/search/bankProfile";

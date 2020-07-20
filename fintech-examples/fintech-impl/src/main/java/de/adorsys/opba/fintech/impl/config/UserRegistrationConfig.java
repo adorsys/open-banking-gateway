@@ -11,13 +11,13 @@ import javax.validation.constraints.NotNull;
 @Validated
 @Configuration
 @ConfigurationProperties("security.user.registration")
-public class UserRegistrationConfiguration {
+public class UserRegistrationConfig {
 
     /**
      * Indicates if FinTech has open user registration (just type not yet present credentials to get registered)
      */
     @NotNull
-    private UserRegistrationConfiguration.SecurityState simple;
+    private UserRegistrationConfig.SecurityState simple;
 
     public enum SecurityState {
         ALLOW,
