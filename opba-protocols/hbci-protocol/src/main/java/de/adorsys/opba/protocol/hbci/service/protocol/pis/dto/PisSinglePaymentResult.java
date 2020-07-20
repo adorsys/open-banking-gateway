@@ -1,5 +1,8 @@
 package de.adorsys.opba.protocol.hbci.service.protocol.pis.dto;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class PisSinglePaymentResult {
-    //TODO add result fields from hbci response
+    private final String transactionId;
 }

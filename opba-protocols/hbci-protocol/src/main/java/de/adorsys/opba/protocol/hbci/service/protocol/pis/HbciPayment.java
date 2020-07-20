@@ -48,13 +48,7 @@ public class HbciPayment extends ValidatedExecution<PaymentHbciContext> {
                     execution,
                     (PaymentHbciContext ctx) -> {
                         ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
-                        ctx.setResponse(
-                                new PisSinglePaymentResult(
-//                                        response.getBookings(),
-//                                        response.getBalancesReport(),
-//                                        Instant.now()
-                                )
-                        );
+                        ctx.setResponse(new PisSinglePaymentResult(response.getTransactionId()));
                         ctx.setTanChallengeRequired(false);
                     }
             );
