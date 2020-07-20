@@ -19,8 +19,8 @@ import { UpdateConsentAuthorizationService, DenyRequest } from '../../api';
 export class ToAspspRedirectionComponent implements OnInit {
   public static ROUTE = 'to-aspsp-redirection';
 
-  public finTechName = StubUtil.FINTECH_NAME;
-  public aspspName = StubUtil.ASPSP_NAME;
+  public finTechName: string;
+  public aspspName: string;
   public account = Action.ACCOUNT;
 
   redirectTo: string;
@@ -39,6 +39,8 @@ export class ToAspspRedirectionComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
+      this.aspspName = this.sessionService.getBankName(res.authId);
+      this.finTechName = this.sessionService.getFintechName(res.authId);
       this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
       this.loadRedirectUri();
     });

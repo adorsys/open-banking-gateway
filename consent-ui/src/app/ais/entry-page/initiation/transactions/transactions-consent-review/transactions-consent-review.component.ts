@@ -28,8 +28,8 @@ export class TransactionsConsentReviewComponent implements OnInit {
   public static ROUTE = SharedRoutes.REVIEW;
   accountAccessLevel = AccountAccessLevel;
 
-  public finTechName = StubUtil.FINTECH_NAME;
-  public aspspName = StubUtil.ASPSP_NAME;
+  public finTechName: string;
+  public aspspName: string;
 
   public aisConsent: AisConsentToGrant;
 
@@ -38,6 +38,8 @@ export class TransactionsConsentReviewComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.parent.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
+      this.aspspName = this.sessionService.getBankName(res.authId);
+      this.finTechName = this.sessionService.getFintechName(res.authId);
       this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     });
   }

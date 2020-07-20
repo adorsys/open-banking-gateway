@@ -13,8 +13,8 @@ import { ConsentUtil } from '../../common/consent-util';
 export class ConsentInfoComponent implements OnInit {
   accountAccessLevel = AccountAccessLevel;
 
-  public finTechName = StubUtil.FINTECH_NAME;
-  public aspspName = StubUtil.ASPSP_NAME;
+  public finTechName: string;
+  public aspspName: string;
 
   public aisConsent: AisConsentToGrant;
 
@@ -25,6 +25,8 @@ export class ConsentInfoComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.params.subscribe(res => {
       this.authorizationId = res.authId;
+      this.aspspName = this.sessionService.getBankName(res.authId);
+      this.finTechName = this.sessionService.getFintechName(res.authId);
       this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     });
 
