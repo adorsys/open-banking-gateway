@@ -6,6 +6,7 @@ import de.adorsys.multibanking.domain.BankAccount;
 import de.adorsys.multibanking.domain.BankApiUser;
 import de.adorsys.multibanking.domain.request.TransactionRequest;
 import de.adorsys.multibanking.domain.response.PaymentResponse;
+import de.adorsys.multibanking.domain.spi.OnlineBankingService;
 import de.adorsys.multibanking.domain.transaction.AbstractPayment;
 import de.adorsys.multibanking.domain.transaction.SinglePayment;
 import de.adorsys.multibanking.hbci.model.HbciConsent;
@@ -13,7 +14,6 @@ import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
-import de.adorsys.opba.protocol.hbci.service.protocol.CustomizedOnlineBankingService;
 import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PaymentInitiateBody;
 import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PisSinglePaymentResult;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.HBCI_MAPPERS_PA
 @Service("hbciPaymentExecutor")
 @RequiredArgsConstructor
 public class HbciPayment extends ValidatedExecution<PaymentHbciContext> {
-    private final CustomizedOnlineBankingService onlineBankingService;
+    private final OnlineBankingService onlineBankingService;
     private final PaymentMapper paymentMapper;
 
     @Override
@@ -41,7 +41,7 @@ public class HbciPayment extends ValidatedExecution<PaymentHbciContext> {
 
         TransactionRequest<SinglePayment> request = create(singlePayment, new BankApiUser(), new BankAccess(),
                 context.getBank(), consent);
-        PaymentResponse response = onlineBankingService.executePayment(request, String.valueOf(System.currentTimeMillis()));
+        PaymentResponse response = onlineBankingService.executePayment(request);
 
         if (null == response.getAuthorisationCodeResponse()) {
             ContextUtil.getAndUpdateContext(
@@ -89,7 +89,6 @@ public class HbciPayment extends ValidatedExecution<PaymentHbciContext> {
         @Mapping(source = "creditorAccount.iban", target = "receiverIban")
         @Mapping(source = "remittanceInformationUnstructured", target = "purpose")
         @Mapping(expression = "java(new java.math.BigDecimal(contextPayment.getInstructedAmount().getAmount()))", target = "amount")
-//        @Mapping(source = "debtorAccount.iban", target = "psuAccount.id")
         @Mapping(expression = "java(org.iban4j.Iban.valueOf(accountReference.getIban()).getBankCode())", target = "psuAccount.blz")
         @Mapping(expression = "java(org.iban4j.Iban.valueOf(accountReference.getIban()).getBranchCode())", target = "psuAccount.bic")
         @Mapping(source = "debtorAccount.currency", target = "psuAccount.currency")
