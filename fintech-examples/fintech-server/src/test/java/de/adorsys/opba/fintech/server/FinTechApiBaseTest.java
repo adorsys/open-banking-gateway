@@ -8,13 +8,22 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import de.adorsys.opba.fintech.impl.tppclients.Consts;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+
+import static de.adorsys.opba.fintech.server.FinTechBankSearchApiTest.FIN_TECH_AUTH_URL;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 class FinTechApiBaseTest {
     private static final String BANK_SEARCH_RESPONSE_PREFIX = "TPP_BankSearchResponse";
@@ -40,6 +49,19 @@ class FinTechApiBaseTest {
                 + POSTFIX;
     }
 
+    @SneakyThrows
+    protected MvcResult plainAuth(MockMvc mvc, String username, String password) {
+        LoginBody loginBody = new LoginBody(username, password);
+        return mvc.perform(
+                        post(FIN_TECH_AUTH_URL)
+                                .header(Consts.HEADER_X_REQUEST_ID, UUID.randomUUID().toString())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(GSON.toJson(loginBody))
+                )
+                .andDo(print())
+                .andReturn();
+    }
+
     protected final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
@@ -56,5 +78,4 @@ class FinTechApiBaseTest {
             return LocalDate.parse(jsonElement.getAsString());
         }
     }
-
 }

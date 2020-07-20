@@ -1,7 +1,7 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
-import de.adorsys.opba.fintech.impl.config.UserRegistrationConfiguration;
+import de.adorsys.opba.fintech.impl.config.UserRegistrationConfig;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.SessionRepository;
@@ -23,7 +23,7 @@ public class AuthorizeService {
     private final UserRepository userRepository;
     private final SessionRepository sessionRepository;
     private final SessionLogicService sessionLogicService;
-    private final UserRegistrationConfiguration registrationConfig;
+    private final UserRegistrationConfig registrationConfig;
 
     /**
      * @param loginRequest
@@ -73,7 +73,7 @@ public class AuthorizeService {
     }
 
     private void generateUserIfUserDoesNotExistYet(LoginRequest loginRequest) {
-        if (UserRegistrationConfiguration.SecurityState.ALLOW != registrationConfig.getSimple()) {
+        if (UserRegistrationConfig.SecurityState.ALLOW != registrationConfig.getSimple()) {
             log.debug("Simple user registration disabled");
             return;
         }
