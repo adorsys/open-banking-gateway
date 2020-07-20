@@ -80,5 +80,5 @@ security:
 # is disabled. It is guaranteed that only listed here service accounts (or ones from env. variables) will be active.
 service-accounts:
   accounts:
-    - login: test-service-account
+    - login: testServiceAccount
       password: changeme-test-service-password
