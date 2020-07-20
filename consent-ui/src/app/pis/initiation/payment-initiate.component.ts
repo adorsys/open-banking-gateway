@@ -48,6 +48,11 @@ export class PaymentInitiateComponent implements OnInit {
   private initiatePaymentSession(authorizationId: string, redirectCode: string) {
     this.authStateConsentAuthorizationService.authUsingGET(authorizationId, redirectCode, 'response').subscribe(res => {
       this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+
+      // setting bank and fintech names
+      this.sessionService.setBankName(authorizationId, (res.body as ConsentAuth).bankName);
+      this.sessionService.setFintechName(authorizationId, (res.body as ConsentAuth).fintechName);
+
       this.navigate(authorizationId, res.body);
     });
   }
