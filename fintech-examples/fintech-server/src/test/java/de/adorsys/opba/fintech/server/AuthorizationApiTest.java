@@ -1,6 +1,7 @@
 package de.adorsys.opba.fintech.server;
 
 import de.adorsys.opba.fintech.impl.config.EnableFinTechImplConfig;
+import de.adorsys.opba.fintech.impl.config.UserRegistrationConfig;
 import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import de.adorsys.opba.fintech.server.config.TestConfig;
@@ -31,11 +32,24 @@ public class AuthorizationApiTest extends FinTechApiBaseTest {
     @Autowired
     private UserRepository users;
 
+    @Autowired
+    private UserRegistrationConfig userRegistrationConfig;
+
     @Test
     @SneakyThrows
     public void loginPostForActiveServiceAccountIsOk() {
         MvcResult result = plainAuth(mvc, LOGIN, PASSWORD);
         assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @SneakyThrows
+    public void autoUserRegistrationFailsIfDisabled() {
+        userRegistrationConfig.setSimple(UserRegistrationConfig.SecurityState.DENY);
+
+        MvcResult result = plainAuth(mvc, LOGIN, PASSWORD);
+
+        assertThat(result.getResponse().getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     @Test
