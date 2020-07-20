@@ -9,18 +9,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Hex;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-/**
- * This is just a dummy authorization.
- * All users are accepted. Password allways has to be 1234, otherwise login fails
- */
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class AuthorizeService {
+    private final PasswordEncoder encoder;
     private final UserRepository userRepository;
     private final SessionRepository sessionRepository;
     private final SessionLogicService sessionLogicService;
@@ -40,7 +38,7 @@ public class AuthorizeService {
             return Optional.empty();
         }
 
-        if (!optionalUserEntity.get().getPassword().equals(loginRequest.getPassword())) {
+        if (!encoder.matches(loginRequest.getPassword(), optionalUserEntity.get().getPassword())) {
             // wrong password
             return Optional.empty();
         }
@@ -67,7 +65,7 @@ public class AuthorizeService {
                 UserEntity.builder()
                         .loginUserName(loginRequest.getUsername())
                         .fintechUserId(createID(loginRequest.getUsername()))
-                        .password(loginRequest.getPassword())
+                        .password(encoder.encode(loginRequest.getPassword()))
                         .build());
     }
 
