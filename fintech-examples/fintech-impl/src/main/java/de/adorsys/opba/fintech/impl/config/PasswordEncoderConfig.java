@@ -25,7 +25,7 @@ public class PasswordEncoderConfig {
     @Data
     @Validated
     @Configuration
-    @ConfigurationProperties("user.password.encryption")
+    @ConfigurationProperties("security.user.password.encryption")
     public static class BCryptProperties {
 
         @NotNull
