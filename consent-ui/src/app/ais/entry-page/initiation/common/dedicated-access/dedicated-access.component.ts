@@ -26,8 +26,8 @@ export class DedicatedAccessComponent implements OnInit {
 
   public static ROUTE = 'dedicated-account-access';
 
-  public finTechName = StubUtil.FINTECH_NAME;
-  public aspspName = StubUtil.ASPSP_NAME;
+  public finTechName: string;
+  public aspspName: string;
 
   accounts = [new AccountReference()];
   limitedAccountAccessForm: FormGroup;
@@ -39,6 +39,8 @@ export class DedicatedAccessComponent implements OnInit {
     this.wrongIban = this.activatedRoute.snapshot.queryParamMap.get('wrong') === 'true';
     this.activatedRoute.parent.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
+      this.aspspName = this.sessionService.getBankName(res.authId);
+      this.finTechName = this.sessionService.getFintechName(res.authId);
       this.loadDataFromExistingConsent();
     });
   }

@@ -15,8 +15,8 @@ import { ApiHeaders } from '../../../../../api/api.headers';
   styleUrls: ['./consent-account-access-selection.component.scss']
 })
 export class ConsentAccountAccessSelectionComponent implements OnInit {
-  public finTechName = StubUtil.FINTECH_NAME;
-  public aspspName = StubUtil.ASPSP_NAME;
+  public finTechName: string;
+  public aspspName: string;
 
   @Input() accountAccesses: Access[];
   @Input() consentReviewPage: string;
@@ -42,6 +42,8 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.parent.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
+      this.aspspName = this.sessionService.getBankName(res.authId);
+      this.finTechName = this.sessionService.getFintechName(res.authId);
       this.state = this.sessionService.getConsentState(this.authorizationId, () => new AuthConsentState());
       if (!this.hasInputs()) {
         this.moveToReviewConsent();
