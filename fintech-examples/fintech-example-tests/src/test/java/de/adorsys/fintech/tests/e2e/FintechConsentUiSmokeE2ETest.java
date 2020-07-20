@@ -71,7 +71,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
     }
 
     @Test
-    void testRedirectAntonBruecknerWantsToSeeItsAccountsAndTransanctionsFromFintech(FirefoxDriver firefoxDriver) {
+    void testRedirectUserWantsToSeeItsAccountsAndTransanctionsFromFintech(FirefoxDriver firefoxDriver) {
         given()
                 .create_new_user_in_sandbox_tpp_management(sandboxUserLogin, sandboxUserPassword)
                 .enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri())
@@ -116,7 +116,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
     }
 
     @Test
-    public void testEmbeddedMaxMustermanWantsItsAccountsAndTransactionsFromFintech(FirefoxDriver firefoxDriver) {
+    public void testEmbeddedUserWantsItsAccountsAndTransactionsFromFintech(FirefoxDriver firefoxDriver) {
         given()
                 .create_new_user_in_sandbox_tpp_management(sandboxUserLogin, sandboxUserPassword)
                 .enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri())
@@ -143,7 +143,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
     }
 
     @Test
-    void testEmbeddedAntonBruecknerWantsToSeeItsAccountsAndTransanctionsFromFintech(FirefoxDriver firefoxDriver) {
+    void testEmbeddedUserWantsToSeeItsAccountsAndTransanctionsFromFintech(FirefoxDriver firefoxDriver) {
         given()
                 .create_new_user_in_sandbox_tpp_management(sandboxUserLogin, sandboxUserPassword)
                 .enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri())
@@ -198,7 +198,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
 
     @SneakyThrows
     @Test
-    public void testRedirectMaxMustermanToSeeItsAccountsAndTransanctionsFromFintech(FirefoxDriver firefoxDriver) {
+    public void testRedirectUserToSeeItsAccountsAndTransanctionsFromFintech(FirefoxDriver firefoxDriver) {
         given()
                 .create_new_user_in_sandbox_tpp_management(sandboxUserLogin, sandboxUserPassword)
                 .enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri())
