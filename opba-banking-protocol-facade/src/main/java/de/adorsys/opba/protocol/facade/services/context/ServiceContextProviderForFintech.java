@@ -58,7 +58,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         ServiceSession session = extractOrCreateServiceSession(request, authSession);
 
         if (ProtocolAction.SINGLE_PAYMENT.equals(authSession.getAction().getProtocolAction())
-                && session.getBankProfile().isUniquePaymentPurpose() ) {
+                && session.getBankProfile().isUniquePaymentPurpose()) {
             SinglePaymentBody singlePaymentBody = ((InitiateSinglePaymentRequest) request).getSinglePayment();
             singlePaymentBody.setRemittanceInformationUnstructured(
                     singlePaymentBody.getRemittanceInformationUnstructured() + LocalDateTime.now()
