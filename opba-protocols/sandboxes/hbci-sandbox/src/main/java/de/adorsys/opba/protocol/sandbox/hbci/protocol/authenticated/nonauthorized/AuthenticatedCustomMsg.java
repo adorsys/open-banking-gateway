@@ -47,7 +47,7 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
                 return "response-templates/authenticated/custom-message-konto-mt940.json";
             }
 
-            if (RequestStatusUtil.isForPaymentListing(context.getRequestData())) {
+            if (RequestStatusUtil.isForPayment(context.getRequestData())) {
                 context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "TAN2Step6\\.OrderAccount\\.number"));
             }
 
