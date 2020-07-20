@@ -35,7 +35,7 @@ public class AuthorizeService {
 
         // find user by id
         Optional<UserEntity> optionalUserEntity = userRepository.findById(loginRequest.getUsername());
-        if (!optionalUserEntity.isPresent()) {
+        if (!optionalUserEntity.isPresent() || !optionalUserEntity.get().isActive()) {
             // user not found
             return Optional.empty();
         }
@@ -45,6 +45,7 @@ public class AuthorizeService {
             return Optional.empty();
         }
 
+        log.debug("User {} is going to be logged in", loginRequest.getUsername());
         return optionalUserEntity;
     }
 
@@ -56,9 +57,24 @@ public class AuthorizeService {
         sessionRepository.delete(sessionEntity);
     }
 
+    public UserEntity createUserEntityButDontSave(String username, String password) {
+        return UserEntity.builder()
+                .loginUserName(username)
+                .fintechUserId(createID(username))
+                .password(encoder.encode(password))
+                .active(true)
+                .serviceAccount(false)
+                .build();
+    }
+
+    public UserEntity updatePasswordButDontSave(UserEntity user, String password) {
+        user.setPassword(encoder.encode(password));
+        return user;
+    }
+
     private void generateUserIfUserDoesNotExistYet(LoginRequest loginRequest) {
         if (UserRegistrationConfiguration.SecurityState.ALLOW != registrationConfig.getSimple()) {
-            log.debug("User registration disabled");
+            log.debug("Simple user registration disabled");
             return;
         }
 
@@ -68,16 +84,10 @@ public class AuthorizeService {
         }
         log.info("create on the fly user {}", loginRequest.getUsername());
 
-        userRepository.save(
-                UserEntity.builder()
-                        .loginUserName(loginRequest.getUsername())
-                        .fintechUserId(createID(loginRequest.getUsername()))
-                        .password(encoder.encode(loginRequest.getPassword()))
-                        .build());
+        userRepository.save(createUserEntityButDontSave(loginRequest.getUsername(), loginRequest.getPassword()));
     }
 
     private String createID(String username) {
         return new String(Hex.encode(username.getBytes()));
     }
-
 }
