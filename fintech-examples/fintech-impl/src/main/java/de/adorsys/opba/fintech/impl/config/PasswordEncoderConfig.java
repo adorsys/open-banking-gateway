@@ -32,6 +32,7 @@ public class PasswordEncoderConfig {
         private BCryptPasswordEncoder.BCryptVersion version;
 
         @Min(12)
+        @SuppressWarnings("checkstyle:MagicNumber") // Magic minimal strength
         private int strength;
     }
 }

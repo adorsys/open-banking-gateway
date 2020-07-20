@@ -26,6 +26,7 @@ public class ServiceAccountsConfig {
 
         @NotBlank
         @Length(min = 12)
+        @SuppressWarnings("checkstyle:MagicNumber") // Magic minimal password size, we want long service account passwords
         private String password;
     }
 }
