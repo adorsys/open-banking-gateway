@@ -13,6 +13,7 @@ import { AuthConsentState } from '../../ais/common/dto/auth-state';
 import { PaymentsConsentReviewComponent } from '../payments-consent-review/payments-consent-review.component';
 import { ConsentPaymentAccessSelectionComponent } from './consent-payment-access-selection.component';
 import { PisPayment } from '../common/models/pis-payment.model';
+import { StubUtil } from '../../common/utils/stub-util';
 
 describe('ConsentPaymentAccessSelectionComponent', () => {
   let component: ConsentPaymentAccessSelectionComponent;
@@ -36,9 +37,10 @@ describe('ConsentPaymentAccessSelectionComponent', () => {
           useValue: {
             getPaymentObject: () => new PisPayment(),
             getPaymentState: () => new AisConsentToGrant(),
-            hasPisViolation: () => false,
             hasGeneralViolation: () => false,
-            getConsentState: () => new AuthConsentState([])
+            getConsentState: () => new AuthConsentState([]),
+            getFintechName: (): string => StubUtil.FINTECH_NAME,
+            getBankName: (): string => StubUtil.ASPSP_NAME
           }
         }
       ],
