@@ -15,7 +15,7 @@ public class RequestStatusUtil {
         return "HKSPA".equals(MapRegexUtil.getDataRegex(requestData, "TAN2Step\\d*\\.ordersegcode"));
     }
 
-    public boolean isForPaymentListing(Map<String, String> requestData) {
+    public boolean isForPayment(Map<String, String> requestData) {
         return "HKKAZ".equals(MapRegexUtil.getDataRegex(requestData, "TAN2Step\\d*\\.ordersegcode"));
     }
 }

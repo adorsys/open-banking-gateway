@@ -24,6 +24,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,6 +52,13 @@ public class HbciInitiateSinglePaymentEntrypoint implements SinglePayment {
                 HBCI_REQUEST_SAGA,
                 new ConcurrentHashMap<>(ImmutableMap.of(CONTEXT, prepareContext(serviceContext)))
         );
+
+        if (serviceContext.getRequestScoped().aspspProfile().isUniquePaymentPurpose()) {
+            SinglePaymentBody singlePaymentBody = serviceContext.getRequest().getSinglePayment();
+            singlePaymentBody.setRemittanceInformationUnstructured(
+                    singlePaymentBody.getRemittanceInformationUnstructured() + " " + LocalDateTime.now()
+            );
+        }
 
         CompletableFuture<Result<SinglePaymentBody>> result = new CompletableFuture<>();
 
@@ -88,7 +96,6 @@ public class HbciInitiateSinglePaymentEntrypoint implements SinglePayment {
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")
         @Mapping(source = "singlePayment", target = "payment", nullValuePropertyMappingStrategy = IGNORE)
-//        @Mapping(source = "singlePayment.creditorAddress", target = "payment.creditorAddress")
         PaymentHbciContext map(InitiateSinglePaymentRequest ctx);
     }
 }

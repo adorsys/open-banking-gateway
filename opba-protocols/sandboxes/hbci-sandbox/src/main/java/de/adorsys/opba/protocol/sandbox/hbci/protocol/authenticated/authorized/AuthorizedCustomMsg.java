@@ -30,7 +30,7 @@ public class AuthorizedCustomMsg extends TemplateBasedOperationHandler {
         }
 
         if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(TRANSACTIONS))
-                || RequestStatusUtil.isForPaymentListing(context.getRequestData())) {
+                || RequestStatusUtil.isForPayment(context.getRequestData())) {
             return "response-templates/authorized/custom-message-konto-mt940.json";
         }
 
