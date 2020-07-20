@@ -12,12 +12,28 @@ export class SessionService {
   public getTTL(authorizationId: string): string {
     return sessionStorage.getItem(authorizationId + Session.COOKIE_TTL);
   }
+
+  public getRedirectCode(authorizationId: string): string {
+    return sessionStorage.getItem(authorizationId + Session.REDIRECT_CODE);
+  }
   public setRedirectCode(authorizationId: string, redirectCode: string) {
     sessionStorage.setItem(authorizationId + Session.REDIRECT_CODE, redirectCode);
   }
 
-  public getRedirectCode(authorizationId: string): string {
-    return sessionStorage.getItem(authorizationId + Session.REDIRECT_CODE);
+  public getFintechName(authorizationId: string): string {
+    return sessionStorage.getItem(authorizationId + Session.FINTECH_NAME);
+  }
+
+  public setFintechName(authorizationId: string, fintechName: string) {
+    sessionStorage.setItem(authorizationId + Session.FINTECH_NAME, fintechName);
+  }
+
+  public getBankName(authorizationId: string): string {
+    return sessionStorage.getItem(authorizationId + Session.BANK_NAME);
+  }
+
+  public setBankName(authorizationId: string, bankName: string) {
+    sessionStorage.setItem(authorizationId + Session.BANK_NAME, bankName);
   }
 
   public setConsentState(authorizationId: string, consentState: any) {
@@ -82,6 +98,8 @@ enum Session {
   CONSENT_OBJECT = ':CONSENT_OBJECT',
   PAYMENT_OBJECT = ':PAYMENT_OBJECT',
   PAYMENT_STATE = ':PAYMENT_STATE',
+  FINTECH_NAME = ':FINTECH_NAME',
+  BANK_NAME = ':BANK_NAME',
   XSRF_TOKEN = 'XSRF_TOKEN',
   COOKIE_TTL = 'Cookie-TTL'
 }
