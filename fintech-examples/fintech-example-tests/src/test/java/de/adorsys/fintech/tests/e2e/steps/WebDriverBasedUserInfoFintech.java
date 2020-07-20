@@ -82,6 +82,12 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
+    public SELF user_in_consent_ui_sees_sca_select_and_confirm_type_email1_to_redirect_authorization(WebDriver driver) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "select-sca");
+        clickOnButton(driver, By.xpath("//button[@type='submit']"));
+        return self();
+    }
+
     public SELF user_max_musterman_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(WebDriver driver) {
         wait(driver);
         clickOnButton(driver, By.className("btn-primary"), true);
