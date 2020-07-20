@@ -20,8 +20,8 @@ export class ConsentSharingComponent implements OnInit {
   redirectTo: string;
   isAccount = true;
 
-  public finTechName = StubUtil.FINTECH_NAME;
-  public aspspName = StubUtil.ASPSP_NAME;
+  public finTechName: string;
+  public aspspName: string;
   public aisConsent: AisConsentToGrant;
 
   private authorizationId: string;
@@ -38,6 +38,9 @@ export class ConsentSharingComponent implements OnInit {
     this.authorizationId = this.activatedRoute.parent.snapshot.params.authId;
     const redirectCode = this.sessionService.getRedirectCode(this.authorizationId);
     this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
+
+    this.aspspName = this.sessionService.getBankName(this.authorizationId);
+    this.finTechName = this.sessionService.getFintechName(this.authorizationId);
 
     this.authStateConsentAuthorizationService
       .authUsingGET(this.authorizationId, redirectCode, 'response')
