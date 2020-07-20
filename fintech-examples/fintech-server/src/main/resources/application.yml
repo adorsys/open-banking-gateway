@@ -65,3 +65,9 @@ security:
   signSubject: fintech@awesome-fintech.com
   algorithm: RSA
   claim-name-key: sign-data
+
+user:
+  password:
+    encryption:
+      version: $2A
+      strength: 12
