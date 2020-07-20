@@ -15,5 +15,21 @@ test:
     server-uri: https://obg-bank-dev-aspspprofile.cloud.adorsys.de
   opba:
     server-uri: https://obg-dev-openbankinggateway.cloud.adorsys.de
+  api:
+    cookie:
+      redirect-path-template: /embedded-server/v1/consent/{authorizationSessionId}/fromAspsp/{redirectState}/*
+      max-age: PT5M
+      redirect-max-age: PT60M
+      http-only: true
+      path: /
+      same-site: Lax
+      urls-to-be-validated:
+        # templates for web filter
+        - /v1/banking/*
+  tpp:
+    server-uri: https://obg-bank-dev-tpprestserver.cloud.adorsys.de
+    management:
+      username: obg
+      password: 12345
 
 debug: true
