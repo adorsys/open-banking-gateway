@@ -65,7 +65,7 @@ public class HbciResultBodyExtractor {
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE)
     public interface HbciPaymentToFacadeMapper {
 
-//        @Mapping(source = "creditorAddress.townName", target = "creditorAddress.city")
+        @Mapping(source = "transactionId", target = "paymentId")
         SinglePaymentBody map(PisSinglePaymentResult paymentResult);
     }
 }

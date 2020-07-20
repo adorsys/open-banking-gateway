@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.hbci.config;
 
 import com.google.common.base.Strings;
 import de.adorsys.multibanking.domain.spi.OnlineBankingService;
+import de.adorsys.multibanking.hbci.HbciBanking;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.Resources;
@@ -29,8 +30,6 @@ public class HbciAdapterConfig {
         this.adorsysMockBankUrl = adorsysMockBankUrl;
     }
 
-
-
     @Bean
     @SneakyThrows
     OnlineBankingService onlineBankingService(Optional<HBCIProduct> product) {
@@ -38,7 +37,7 @@ public class HbciAdapterConfig {
             HBCIUtils.refreshBLZList(is);
         }
 
-        OnlineBankingService hbci = new CustomizedHbciBanking(
+        OnlineBankingService hbci = new HbciBanking(
                 product.orElse(null),
                 properties.getSysIdExpirationTimeMs(),
                 properties.getUpdExpirationTimeMs()

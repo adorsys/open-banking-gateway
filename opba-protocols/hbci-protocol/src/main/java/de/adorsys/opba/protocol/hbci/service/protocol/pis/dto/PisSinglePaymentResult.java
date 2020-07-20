@@ -1,8 +1,8 @@
 package de.adorsys.opba.protocol.hbci.service.protocol.pis.dto;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
 
-@RequiredArgsConstructor
+@Data
 public class PisSinglePaymentResult {
     private final String transactionId;
 }

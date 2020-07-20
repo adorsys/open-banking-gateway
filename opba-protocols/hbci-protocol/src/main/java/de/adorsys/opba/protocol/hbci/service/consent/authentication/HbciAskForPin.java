@@ -1,9 +1,7 @@
 package de.adorsys.opba.protocol.hbci.service.consent.authentication;
 
-import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
-import de.adorsys.opba.protocol.hbci.config.HbciProtocolConfiguration;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.service.HbciRedirectExecutor;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +21,8 @@ public class HbciAskForPin extends ValidatedExecution<HbciContext> {
 
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
-        redirectExecutor.redirect(execution, context, redir -> {
-            HbciProtocolConfiguration.UrlSet urlSet = ProtocolAction.SINGLE_PAYMENT.equals(context.getAction())
-                    ? redir.getPis() : redir.getAis();
-            return urlSet.getRedirect().getParameters().getProvidePsuPassword();
-        });
+        redirectExecutor.redirect(execution, context,
+                redir -> context.getActiveUrlSet(redir).getRedirect().getParameters().getProvidePsuPassword());
     }
 
     @Override
