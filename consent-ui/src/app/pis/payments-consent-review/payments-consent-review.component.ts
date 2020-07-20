@@ -19,8 +19,8 @@ import { PisPayment } from '../common/models/pis-payment.model';
 export class PaymentsConsentReviewComponent implements OnInit {
   public static ROUTE = SharedRoutes.REVIEW;
   accountAccessLevel = AccountAccessLevel;
-  public finTechName = StubUtil.FINTECH_NAME;
-  public aspspName = StubUtil.ASPSP_NAME;
+  public finTechName: string;
+  public aspspName: string;
   public payment: PisPayment;
   private authorizationId: string;
 
@@ -36,6 +36,8 @@ export class PaymentsConsentReviewComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.parent.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
+      this.aspspName = this.sessionService.getBankName(res.authId);
+      this.finTechName = this.sessionService.getFintechName(res.authId);
       this.payment = PaymentUtil.getOrDefault(this.authorizationId, this.sessionService);
     });
   }

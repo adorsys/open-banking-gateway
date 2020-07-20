@@ -17,8 +17,8 @@ import { PisPayment } from '../common/models/pis-payment.model';
 export class ToAspspPageComponent implements OnInit {
   public static ROUTE = 'to-aspsp-redirection';
 
-  public finTechName = StubUtil.FINTECH_NAME;
-  public aspspName = StubUtil.ASPSP_NAME;
+  public finTechName: string;
+  public aspspName: string;
   public payment = Action.PAYMENT;
 
   redirectTo: string;
@@ -36,6 +36,8 @@ export class ToAspspPageComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.parent.params.subscribe(res => {
+      this.aspspName = this.sessionService.getBankName(res.authId);
+      this.finTechName = this.sessionService.getFintechName(res.authId);
       this.authorizationId = res.authId;
       this.pisPayment = PaymentUtil.getOrDefault(this.authorizationId, this.sessionService);
       this.loadRedirectUri();

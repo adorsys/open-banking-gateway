@@ -17,7 +17,7 @@ import { PisPayment } from '../common/models/pis-payment.model';
 export class ResultPageComponent implements OnInit {
   public static ROUTE = 'consent-result';
 
-  public finTechName = StubUtil.FINTECH_NAME;
+  public finTechName: string;
   public title = 'Payment was successful';
   public subtitle = 'Paid 100EUR to IBAN12345';
   redirectTo: string;
@@ -38,6 +38,7 @@ export class ResultPageComponent implements OnInit {
   ngOnInit() {
     this.route = this.activatedRoute.snapshot;
     this.authorizationId = this.route.parent.params.authId;
+    this.finTechName = this.sessionService.getFintechName(this.authorizationId);
     const redirectCode = this.route.queryParams.redirectCode;
     this.payment = PaymentUtil.getOrDefault(this.authorizationId, this.sessionService);
     this.loadRedirectUri(this.authorizationId, redirectCode);
