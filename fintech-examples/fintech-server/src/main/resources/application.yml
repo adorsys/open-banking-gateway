@@ -65,9 +65,19 @@ security:
   signSubject: fintech@awesome-fintech.com
   algorithm: RSA
   claim-name-key: sign-data
+  user:
+    registration:
+      # Indicates if FinTech has open user registration (just type not yet present credentials), you want to disable this
+      # on environments other than DEV - set DENY
+      simple: ALLOW
+    password:
+      encryption:
+        version: $2A
+        strength: 12
 
-user:
-  password:
-    encryption:
-      version: $2A
-      strength: 12
+# Hardcoded users that always exist, will get created in database on application start, clear or replace with
+# secure values for staging and higher deployments. Used to share access for 3rd parties if simple registration
+# is disabled. It is guaranteed that only listed here service accounts (or ones from env. variables) will be active.
+service-accounts:
+  - login: test-service-account
+    password: test-service-password
