@@ -23,14 +23,14 @@ public class Xs2aPisPersistPaymentAndContext extends ValidatedExecution<Xs2aPisC
     @Override
     @SneakyThrows
     protected void doRealExecution(DelegateExecution execution, Xs2aPisContext context) {
-        ProtocolFacingPayment consent = context.paymentAccess().createDoNotPersist();
+        ProtocolFacingPayment payment = context.paymentAccess().createDoNotPersist();
 
-        consent.setPaymentId(context.getPaymentId());
-        consent.setPaymentContext(
+        payment.setPaymentId(context.getPaymentId());
+        payment.setPaymentContext(
                 mapper.getMapper().writeValueAsString(
                         ImmutableMap.of(context.getClass().getCanonicalName(), context)
                 )
         );
-        context.paymentAccess().save(consent);
+        context.paymentAccess().save(payment);
     }
 }
