@@ -28,7 +28,7 @@ public class TppBankingPaymentConfirmationController implements PaymentConfirmat
                                                                     String fintechID) {
         UUID authorizationSessionId = UUID.fromString(authId);
 
-        if (!consentConfirmationService.confirmPayment(authorizationSessionId)) {
+        if (!consentConfirmationService.confirmPayment(authorizationSessionId, serviceSessionPassword)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
