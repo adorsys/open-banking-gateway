@@ -74,7 +74,7 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
                 .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok_pis();
 
         then()
-                .open_banking_has_consent_for_max_musterman_payment()
+                .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
                 .fintech_calls_payment_status()
                 .fintech_calls_payment_information_iban_700();
@@ -110,7 +110,7 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
                 .and()
                 .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
         then()
-                .open_banking_has_consent_for_anton_brueckner_payment()
+                .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
                 .fintech_calls_payment_status()
                 .fintech_calls_payment_information_iban_400();
