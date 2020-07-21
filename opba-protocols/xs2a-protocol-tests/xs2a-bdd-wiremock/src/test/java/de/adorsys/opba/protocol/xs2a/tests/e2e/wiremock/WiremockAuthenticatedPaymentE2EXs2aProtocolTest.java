@@ -87,7 +87,8 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
         then()
                 .open_banking_has_consent_for_anton_brueckner_payment()
-                .fintech_calls_payment_activation_for_current_authorization_id();
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status();
     }
 
     @ParameterizedTest
@@ -117,7 +118,8 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
         then()
                 .open_banking_has_consent_for_anton_brueckner_payment()
-                .fintech_calls_payment_activation_for_current_authorization_id();
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status();
     }
 }
 
