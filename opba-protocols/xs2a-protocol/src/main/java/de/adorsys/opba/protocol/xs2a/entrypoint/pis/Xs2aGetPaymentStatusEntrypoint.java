@@ -7,7 +7,7 @@ import de.adorsys.opba.protocol.api.dto.request.payments.PaymentStatusRequest;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
 import de.adorsys.opba.protocol.api.pis.GetPaymentStatusState;
-import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
+import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingPayment;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ExtendWithServiceContext;
@@ -45,13 +45,13 @@ public class Xs2aGetPaymentStatusEntrypoint implements GetPaymentStatusState {
     @Override
     @Transactional
     public CompletableFuture<Result<PaymentStatusBody>> execute(ServiceContext<PaymentStatusRequest> context) {
-        ProtocolFacingConsent consent = context.getRequestScoped().consentAccess().getFirstByCurrentSession();
+        ProtocolFacingPayment payment = context.getRequestScoped().paymentAccess().getFirstByCurrentSession();
 
         ValidatedPathHeaders<PaymentStateParameters, PaymentStateHeaders> params = extractor.forExecution(prepareContext(context));
 
         Response<PaymentInitiationStatus> paymentStatus = pis.getSinglePaymentInitiationStatus(
                 context.getRequest().getPaymentProduct().toString(),
-                consent.getConsentId(),
+                payment.getPaymentId(),
                 params.getHeaders().toHeaders(),
                 params.getPath().toParameters()
         );
