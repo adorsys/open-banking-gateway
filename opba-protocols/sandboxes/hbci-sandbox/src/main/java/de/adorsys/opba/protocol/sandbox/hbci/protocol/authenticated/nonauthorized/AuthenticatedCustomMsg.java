@@ -51,7 +51,7 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
                 context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "TAN2Step6\\.OrderAccount\\.number"));
             }
 
-            return getAuthorizationRequiredTemplateOrWrongTanMethod();
+            return "response-templates/authenticated/custom-message-authorization-required-payment.json";
         }
 
         throw new IllegalStateException("Cant't handle message: " + context.getRequestData());
