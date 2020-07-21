@@ -21,6 +21,7 @@ hbci:
         bank-parameters-data: ANONYMOUS
         accounts: AUTHENTICATED
         transactions: AUTHENTICATED
+        payment: AUTHENTICATED
       users:
         - anton.brueckner
         - max.musterman
@@ -33,6 +34,7 @@ hbci:
         bank-parameters-data: AUTHENTICATED
         accounts: AUTHENTICATED
         transactions: AUTHENTICATED
+        payment: AUTHORIZED
       users:
         - anton.brueckner
         - max.musterman
@@ -45,6 +47,7 @@ hbci:
         bank-parameters-data: ANONYMOUS
         accounts: AUTHENTICATED
         transactions: AUTHORIZED
+        payment: AUTHORIZED
       users:
         - anton.brueckner
         - max.musterman
