@@ -37,11 +37,11 @@ public interface PaymentAccess {
      * Available consent for current session execution with throwing exception
      */
     default ProtocolFacingPayment getFirstByCurrentSession() {
-        List<ProtocolFacingPayment> consents = findByCurrentServiceSessionOrderByModifiedDesc();
-        if (consents.isEmpty()) {
+        List<ProtocolFacingPayment> payments = findByCurrentServiceSessionOrderByModifiedDesc();
+        if (payments.isEmpty()) {
             throw new IllegalStateException("Context not found");
         }
 
-        return consents.get(0);
+        return payments.get(0);
     }
 }
