@@ -90,6 +90,35 @@ paths:
         '401':
           $ref: '#/components/responses/401_Unauthorized'
 
+  /v1/oauth2/gmail/login:
+    post:
+      tags:
+        - FinTechGmailAuthentication
+      operationId: loginPOST
+      summary: Identifies the PSU in the Realm of the FinTechApi using his Gmail account.
+      description: |
+        Use Oauth2 for Gmail users' account to identify him
+      parameters:
+        #header
+        - $ref: "#/components/parameters/X-Request-ID"
+      responses:
+        '202':
+          $ref: '#/components/responses/202_ToImplicitOauth2'
+
+  /v1/oauth2/gmail/callback:
+    get:
+      tags:
+        - FinTechGmailAuthentication
+      operationId: callbackGet
+      summary: Oauth2 callback to identify user.
+      description: |
+        Oauth2 callback to authenticate user using his Gmail account.
+      responses:
+        '200':
+          $ref: "#/components/responses/200_UserProfile"
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+
   /v1/logout:
     post:
       tags:
@@ -434,6 +463,14 @@ components:
         type: string
         example: http://localhost:8083/consent/auth?redirectCode=ejxs.wersdzxxc23r.asdf
 
+    Location-Oauth2-Auth:
+      name: Location
+      description: |
+        This is the 202 Location Header. It contains a redirect link for Oauth2
+      schema:
+        type: string
+        example: http://localhost:8083/consent/auth?redirectCode=ejxs.wersdzxxc23r.asdf
+
     Location-FinTechUI:
       name: Location
       description: |
@@ -770,6 +807,13 @@ components:
             backend (BankingProtocol).
             * RedirectCookie has an expiration date after which no callback
             will be accepted from the ConsentAuthorisationApi anyway.
+
+    202_ToImplicitOauth2:
+      description: |
+        Request to perform implicit Oauth2 authentication
+      headers:
+        Location:
+          $ref: '#/components/headers/Location-Oauth2-Auth'
 
     202_ReloadUI:
       description: |
