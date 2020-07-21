@@ -57,6 +57,7 @@ fintech-ui:
   payment-ok-redirect-url: ${fintech-ui.host}/redirect-after-payment?redirectCode={redirectCode}
   payment-exception-redirect-url: ${fintech-ui.host}/redirect-after-payment-denied?redirectCode={redirectCode}
   unauthorized-url: ${fintech-ui.host}/
+  oauth2-login-callback-url: ${fintech-ui.host}/login/oauth2
 
 security:
   # This is the example private key value used only for DEMO purposes
