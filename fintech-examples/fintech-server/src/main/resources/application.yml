@@ -89,4 +89,7 @@ oauth2:
     gmail:
       client-id: replace-me
       authentication-endpoint: https://accounts.google.com/o/oauth2/v2/auth
-      scope: openid email
+      code-to-token-endpoint: https://oauth2.googleapis.com/token
+      scope:
+        - openid
+        - email

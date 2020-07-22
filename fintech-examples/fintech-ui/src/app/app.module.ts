@@ -22,6 +22,7 @@ import { SimpleTimer } from 'ng2-simple-timer';
 import { NgHttpLoaderModule } from 'ng-http-loader';
 import { RedirectAfterPaymentComponent } from "./redirect-after-payment/redirect-after-payment.component";
 import { RedirectAfterPaymentDeniedComponent } from "./redirect-after-payment-denied/redirect-after-payment-denied.component";
+import { Oauth2LoginComponent } from "./oauth2-login/oauth2-login.component";
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -36,6 +37,7 @@ export function apiConfigFactory(): Configuration {
   declarations: [
     AppComponent,
     LoginComponent,
+    Oauth2LoginComponent,
     RedirectAfterConsentComponent,
     RedirectAfterPaymentComponent,
     NavbarComponent,
