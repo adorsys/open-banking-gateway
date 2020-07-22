@@ -15,6 +15,9 @@ import java.net.URI;
 @ConfigurationProperties("oauth2.login.gmail")
 public class GmailOauth2Config {
 
+    @NotBlank
+    private String clientId;
+
     @NotNull
     private URI authenticationEndpoint;
 

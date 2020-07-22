@@ -1,20 +1,24 @@
 package de.adorsys.opba.fintech.impl.controller;
 
+import com.google.common.base.Strings;
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse200;
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
 import de.adorsys.opba.fintech.api.model.generated.UserProfile;
 import de.adorsys.opba.fintech.api.resource.generated.FinTechAuthorizationApi;
 import de.adorsys.opba.fintech.impl.controller.utils.OkOrNotOk;
+import de.adorsys.opba.fintech.impl.config.Oauth2Provider;
 import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
 import de.adorsys.opba.fintech.impl.database.entities.ConsentEntity;
 import de.adorsys.opba.fintech.impl.database.entities.LoginEntity;
 import de.adorsys.opba.fintech.impl.database.entities.PaymentEntity;
+import de.adorsys.opba.fintech.impl.database.entities.OauthSessionEnti
 import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.ConsentRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.LoginRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.PaymentRepository;
 import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.ConsentService;
+import de.adorsys.opba.fintech.impl.service.Oauth2Authenticator;
 import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
 import de.adorsys.opba.fintech.impl.service.SessionLogicService;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +26,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_ID;
@@ -34,6 +41,9 @@ import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_REQUEST_ID;
 @RestController
 @RequiredArgsConstructor
 public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
+
+    private final OauthSessionEntityRepository oauthSessions;
+    private final Set<Oauth2Authenticator> authenticators;
 
     private final AuthorizeService authorizeService;
     private final RedirectHandlerService redirectHandlerService;
@@ -53,22 +63,43 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
         }
 
         UserEntity userEntity = optionalUserEntity.get();
-        InlineResponse200 response = new InlineResponse200();
-        UserProfile userProfile = new UserProfile();
-        userProfile.setName(userEntity.getLoginUserName());
+        return performUserLogin(userEntity);
+    }
 
-        Iterator<LoginEntity> loginEntitiesIterator = loginRepository.findByUserEntityOrderByLoginTimeDesc(userEntity).iterator();
-        if (loginEntitiesIterator.hasNext()) {
-            userProfile.setLastLogin(loginEntitiesIterator.next().getLoginTime());
-            log.info("last login for user {} was {}", userEntity.getLoginUserName(), userProfile.getLastLogin());
-        } else {
-            log.info("this was very first login for user {}", userEntity.getLoginUserName());
+    @Override
+    @Transactional
+    public ResponseEntity<InlineResponse200> callbackGetLogin(String code, String state, String scope, String error) {
+        if (!Strings.isNullOrEmpty(error)) {
+            throw new IllegalStateException(String.format("Resource server returned error: %s for %s", error, state));
         }
-        response.setUserProfile(userProfile);
-        loginRepository.save(new LoginEntity(userEntity));
 
-        HttpHeaders responseHeaders = sessionLogicService.login(userEntity);
-        return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
+        Oauth2Provider provider = Arrays.stream(Oauth2Provider.values())
+                .filter(it -> it.matches(state)).findFirst()
+                .orElseThrow(() -> new IllegalStateException("Unknown state provider: " + state));
+
+        Optional<OauthSessionEntity> session = oauthSessions.findById(provider.decode(state));
+        if (!session.isPresent()) {
+            throw new IllegalStateException("Unauthorized state value: " + state);
+        }
+
+        oauthSessions.delete(session.get());
+
+        Oauth2Authenticator authenticator = authenticators.stream()
+                .filter(it -> provider == it.getProvider())
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No authenticator for: " + state));
+
+        Optional<String> oauth2UserName = authenticator.authenticatedUserName(code);
+
+        if (!oauth2UserName.isPresent()) {
+            throw new IllegalStateException("Unable to authenticate in Oauth2 resource server: " + state);
+        }
+
+        String username = provider.encode(oauth2UserName.get());
+        UserEntity user = authorizeService.findUser(username)
+                .orElseGet(() -> authorizeService.createUser(username, UUID.randomUUID().toString()));
+
+        return performUserLogin(user);
     }
 
     @Override
@@ -132,4 +163,22 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
         return new ResponseEntity<>(null, responseHeaders, HttpStatus.OK);
     }
 
+    private ResponseEntity<InlineResponse200> performUserLogin(UserEntity userEntity) {
+        InlineResponse200 response = new InlineResponse200();
+        UserProfile userProfile = new UserProfile();
+        userProfile.setName(userEntity.getLoginUserName());
+
+        Iterator<LoginEntity> loginEntitiesIterator = loginRepository.findByUserEntityOrderByLoginTimeDesc(userEntity).iterator();
+        if (loginEntitiesIterator.hasNext()) {
+            userProfile.setLastLogin(loginEntitiesIterator.next().getLoginTime());
+            log.info("last login for user {} was {}", userEntity.getLoginUserName(), userProfile.getLastLogin());
+        } else {
+            log.info("this was very first login for user {}", userEntity.getLoginUserName());
+        }
+        response.setUserProfile(userProfile);
+        loginRepository.save(new LoginEntity(userEntity));
+
+        HttpHeaders responseHeaders = sessionLogicService.login(userEntity);
+        return new ResponseEntity<>(response, responseHeaders, HttpStatus.OK);
+    }
 }
