@@ -1,13 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { StubUtil } from '../../common/utils/stub-util';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
-import { AisConsentToGrant } from '../../ais/common/dto/ais-consent';
 import { Location } from '@angular/common';
 import { SessionService } from '../../common/session.service';
-import { AuthStateConsentAuthorizationService, DenyRequest, UpdateConsentAuthorizationService } from '../../api';
+import {
+  AuthStateConsentAuthorizationService,
+  DenyRequest,
+  SinglePayment,
+  UpdateConsentAuthorizationService
+} from '../../api';
 import { ApiHeaders } from '../../api/api.headers';
 import { PaymentUtil } from '../common/payment-util';
 import { PisPayment } from '../common/models/pis-payment.model';
+import { AuthConsentState } from '../../ais/common/dto/auth-state';
 
 @Component({
   selector: 'consent-app-result-page',
@@ -19,11 +24,12 @@ export class ResultPageComponent implements OnInit {
 
   public finTechName: string;
   public title = 'Payment was successful';
-  public subtitle = 'Paid 100EUR to IBAN12345';
+  public subtitle = '';
   redirectTo: string;
 
   private route: ActivatedRouteSnapshot;
   private payment: PisPayment;
+  private singlePayment: SinglePayment;
 
   private authorizationId: string;
 
@@ -40,7 +46,22 @@ export class ResultPageComponent implements OnInit {
     this.authorizationId = this.route.parent.params.authId;
     this.finTechName = this.sessionService.getFintechName(this.authorizationId);
     const redirectCode = this.route.queryParams.redirectCode;
+
     this.payment = PaymentUtil.getOrDefault(this.authorizationId, this.sessionService);
+
+    const paymentState = this.sessionService.getPaymentState(this.authorizationId, () => new AuthConsentState());
+
+    if (paymentState != null) {
+      this.singlePayment = paymentState.singlePayment;
+      this.subtitle =
+        'Paid ' +
+        this.singlePayment.instructedAmount.amount +
+        ' ' +
+        this.singlePayment.instructedAmount.currency +
+        ' to ' +
+        this.singlePayment.creditorAccount.iban;
+    }
+
     this.loadRedirectUri(this.authorizationId, redirectCode);
   }
 
@@ -62,19 +83,19 @@ export class ResultPageComponent implements OnInit {
       });
   }
 
-  private loadRedirectUri(authId: string, redirectCode: string) {
-    this.authStateConsentAuthorizationService.authUsingGET(authId, redirectCode, 'response').subscribe(res => {
-      console.log(res);
-      this.sessionService.setRedirectCode(authId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-      this.redirectTo = res.headers.get(ApiHeaders.LOCATION);
-    });
-  }
-
   public confirm(value: boolean): void {
     if (value) {
       this.onConfirm();
     } else {
       this.onDeny();
     }
+  }
+
+  private loadRedirectUri(authId: string, redirectCode: string) {
+    this.authStateConsentAuthorizationService.authUsingGET(authId, redirectCode, 'response').subscribe(res => {
+      console.log(res);
+      this.sessionService.setRedirectCode(authId, res.headers.get(ApiHeaders.REDIRECT_CODE));
+      this.redirectTo = res.headers.get(ApiHeaders.LOCATION);
+    });
   }
 }
