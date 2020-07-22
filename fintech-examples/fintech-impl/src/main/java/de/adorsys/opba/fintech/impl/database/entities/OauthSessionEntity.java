@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -22,8 +21,5 @@ import javax.persistence.Id;
 public class OauthSessionEntity {
 
     @Id
-    private String clientId;
-
-    @Column(nullable = false)
     private String state;
 }

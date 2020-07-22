@@ -90,6 +90,46 @@ paths:
         '401':
           $ref: '#/components/responses/401_Unauthorized'
 
+  /v1/login/oauth2:
+    get:
+      tags:
+        - FinTechAuthorization
+      operationId: callbackGetLogin
+      summary: Oauth2 callback to identify user.
+      description: |
+        Oauth2 callback to authenticate user using some Oauth2 identity provider account. Provider id is set inside state.
+      parameters:
+        #query
+        - name: code
+          in: query
+          required: true
+          description: OAuth2 redirect code
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: true
+          description: OAuth2 redirect state
+          schema:
+            type: string
+        - name: scope
+          in: query
+          required: true
+          description: OAuth2 requested scope
+          schema:
+            type: string
+        - name: error
+          in: query
+          required: false
+          description: OAuth2 error
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: "#/components/responses/200_UserProfile"
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+
   /v1/oauth2/gmail/login:
     post:
       tags:
@@ -104,20 +144,6 @@ paths:
       responses:
         '202':
           $ref: '#/components/responses/202_ToImplicitOauth2'
-
-  /v1/oauth2/gmail/callback:
-    get:
-      tags:
-        - FinTechGmailAuthentication
-      operationId: callbackGet
-      summary: Oauth2 callback to identify user.
-      description: |
-        Oauth2 callback to authenticate user using his Gmail account.
-      responses:
-        '200':
-          $ref: "#/components/responses/200_UserProfile"
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
 
   /v1/logout:
     post:
