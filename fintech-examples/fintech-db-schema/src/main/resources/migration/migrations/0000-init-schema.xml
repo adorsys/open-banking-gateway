@@ -97,11 +97,8 @@
     </changeSet>
     <changeSet author="valb3r (generated)" id="1593076820090-6">
         <createTable tableName="opb_oauth_session_entity">
-            <column name="client_id" type="VARCHAR(255)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="opb_user_entity_pkey"/>
-            </column>
             <column name="state" type="VARCHAR(255)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="opb_user_entity_pkey"/>
             </column>
         </createTable>
     </changeSet>

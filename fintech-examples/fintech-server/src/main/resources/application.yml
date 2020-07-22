@@ -83,3 +83,10 @@ service-accounts:
   accounts:
     - login: testServiceAccount
       password: changeme-test-service-password
+
+oauth2:
+  login:
+    gmail:
+      client-id: replace-me
+      authentication-endpoint: https://accounts.google.com/o/oauth2/v2/auth
+      scope: openid email

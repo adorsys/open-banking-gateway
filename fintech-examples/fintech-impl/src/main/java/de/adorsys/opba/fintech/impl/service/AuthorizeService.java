@@ -34,7 +34,7 @@ public class AuthorizeService {
         generateUserIfUserDoesNotExistYet(loginRequest);
 
         // find user by id
-        Optional<UserEntity> optionalUserEntity = userRepository.findById(loginRequest.getUsername());
+        Optional<UserEntity> optionalUserEntity = findUser(loginRequest.getUsername());
         if (!optionalUserEntity.isPresent() || !optionalUserEntity.get().isActive()) {
             // user not found
             return Optional.empty();
@@ -55,6 +55,16 @@ public class AuthorizeService {
         SessionEntity sessionEntity = sessionLogicService.getSession();
         log.info("logout for user {}", sessionEntity.getUserEntity().getLoginUserName());
         sessionRepository.delete(sessionEntity);
+    }
+
+    @Transactional
+    public Optional<UserEntity> findUser(String login) {
+        return userRepository.findById(login);
+    }
+
+    @Transactional
+    public UserEntity createUser(String login, String password) {
+        return userRepository.save(createUserEntityButDontSave(login, password));
     }
 
     public UserEntity createUserEntityButDontSave(String username, String password) {
@@ -84,7 +94,7 @@ public class AuthorizeService {
         }
         log.info("create on the fly user {}", loginRequest.getUsername());
 
-        userRepository.save(createUserEntityButDontSave(loginRequest.getUsername(), loginRequest.getPassword()));
+        createUser(loginRequest.getUsername(), loginRequest.getPassword());
     }
 
     private String createID(String username) {
