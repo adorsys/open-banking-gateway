@@ -8,6 +8,7 @@ import { RedirectAfterConsentDeniedComponent } from './redirect-after-consent-de
 import { SessionExpiredComponent } from './session-expired/session-expired.component';
 import { RedirectAfterPaymentDeniedComponent } from './redirect-after-payment-denied/redirect-after-payment-denied.component';
 import { RedirectAfterPaymentComponent } from './redirect-after-payment/redirect-after-payment.component';
+import { Oauth2LoginComponent } from './oauth2-login/oauth2-login.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,11 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+    canActivate: [GuestGuard]
+  },
+  {
+    path: 'login/oauth2',
+    component: Oauth2LoginComponent,
     canActivate: [GuestGuard]
   },
   {

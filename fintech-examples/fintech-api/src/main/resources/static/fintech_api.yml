@@ -134,7 +134,7 @@ paths:
     post:
       tags:
         - FinTechGmailAuthentication
-      operationId: loginPOST
+      operationId: oauthLoginPOST
       summary: Identifies the PSU in the Realm of the FinTechApi using his Gmail account.
       description: |
         Use Oauth2 for Gmail users' account to identify him
