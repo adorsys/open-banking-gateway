@@ -143,32 +143,6 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
     }
 
     @Test
-    void testEmbeddedUserWantsToSeeItsAccountsAndTransanctionsFromFintech(FirefoxDriver firefoxDriver) {
-        given()
-                .create_new_user_in_sandbox_tpp_management(sandboxUserLogin, sandboxUserPassword)
-                .enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri())
-                .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
-        when()
-                .user_already_login_in_bank_profile(firefoxDriver, username, fintech_login)
-                .and()
-                .user_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(firefoxDriver, sandboxUserLogin)
-                .and()
-                .user_click_on_confirm_button(firefoxDriver)
-                .and()
-                .user_in_consent_ui_provides_pin(firefoxDriver, sandboxUserPassword)
-                .and()
-                .user_in_consent_ui_provides_sca_result_to_embedded_authorization(firefoxDriver)
-                .and()
-                .user_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver)
-                .and()
-                .user_navigates_to_page(firefoxDriver)
-                .and()
-                .user_sees_account_and_list_transactions(firefoxDriver);
-        then()
-                .fintech_can_read_user_accounts_and_transactions();
-    }
-
-    @Test
     public void testUserAfterLoginWantsToLogout(FirefoxDriver firefoxDriver) {
         given()
                 .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
@@ -194,48 +168,5 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .user_click_on_logout_button(firefoxDriver);
         then()
                 .fintech_navigates_back_to_login_after_user_logs_out();
-    }
-
-    @SneakyThrows
-    @Test
-    public void testRedirectUserToSeeItsAccountsAndTransanctionsFromFintech(FirefoxDriver firefoxDriver) {
-        given()
-                .create_new_user_in_sandbox_tpp_management(sandboxUserLogin, sandboxUserPassword)
-                .enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri())
-                .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
-        when()
-                .user_already_login_in_bank_profile(firefoxDriver, username, fintech_login)
-                .and()
-                .user_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(firefoxDriver, sandboxUserLogin)
-                .and()
-                .user_in_consent_ui_reviews_transaction_consent_and_accepts(firefoxDriver)
-                .and()
-                .user_in_consent_ui_sees_redirection_info_to_aspsp_and_accepts(firefoxDriver)
-                .and()
-                .sandbox_user_from_consent_ui_navigates_to_bank_auth_page(firefoxDriver)
-                .and()
-                .sandbox_user_inputs_username_and_password(firefoxDriver, sandboxUserLogin, sandboxUserPassword)
-                .and()
-                .user_navigates_to_page(firefoxDriver)
-                .and()
-                .user_confirm_login(firefoxDriver)
-                .and()
-                .user_navigates_to_page(firefoxDriver)
-                .and()
-                .user_in_consent_ui_sees_sca_select_and_confirm_type_email1_to_redirect_authorization(firefoxDriver)
-                .and()
-                .sandbox_user_provides_sca_challenge_result(firefoxDriver)
-                .and()
-                .user_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver)
-                .and()
-                .user_navigates_to_page(firefoxDriver)
-                .and()
-                .user_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver)
-                .and()
-                .user_navigates_to_page(firefoxDriver)
-                .and()
-                .user_sees_account_and_list_transactions(firefoxDriver);
-        then()
-                .fintech_can_read_user_accounts_and_transactions();
     }
 }
