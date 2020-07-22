@@ -77,7 +77,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
                 .filter(it -> it.matches(state)).findFirst()
                 .orElseThrow(() -> new IllegalStateException("Unknown state provider: " + state));
 
-        Optional<OauthSessionEntity> session = oauthSessions.findById(provider.decode(state));
+        Optional<OauthSessionEntity> session = oauthSessions.findById(state);
         if (!session.isPresent()) {
             throw new IllegalStateException("Unauthorized state value: " + state);
         }

@@ -16,7 +16,7 @@ public enum Oauth2Provider {
 
     public String decode(String encodedState) {
         String[] segments = encodedState.split(SEPARATOR);
-        if (this.name().equals(segments[0])) {
+        if (!this.name().equals(segments[0])) {
             throw new IllegalStateException("Undecodeable state: " + encodedState);
         }
 
