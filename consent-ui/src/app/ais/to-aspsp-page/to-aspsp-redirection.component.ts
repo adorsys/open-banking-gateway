@@ -8,8 +8,7 @@ import { SessionService } from '../../common/session.service';
 import { ConsentUtil } from '../common/consent-util';
 import { ApiHeaders } from '../../api/api.headers';
 import { Action } from '../../common/utils/action';
-import { AuthStateConsentAuthorizationService } from '../../api';
-import { UpdateConsentAuthorizationService, DenyRequest } from '../../api';
+import { AuthStateConsentAuthorizationService, DenyRequest, UpdateConsentAuthorizationService } from '../../api';
 
 @Component({
   selector: 'consent-app-to-aspsp-redirection',
@@ -47,6 +46,7 @@ export class ToAspspRedirectionComponent implements OnInit {
   }
 
   private loadRedirectUri() {
+    localStorage.setItem(this.authorizationId, "false")
     this.authStateConsentAuthorizationService
       .authUsingGET(this.authorizationId, this.sessionService.getRedirectCode(this.authorizationId), 'response')
       .subscribe(res => {
