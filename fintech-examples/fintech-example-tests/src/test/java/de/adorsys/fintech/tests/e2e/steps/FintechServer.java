@@ -85,12 +85,12 @@ public class FintechServer<SELF extends FintechServer<SELF>> extends SandboxServ
     public SELF enabled_embedded_sandbox_mode(String aspspProfileUri) {
         RestAssured
                 .given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body("[\"EMBEDDED\",\"REDIRECT\",\"DECOUPLED\"]")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body("[\"EMBEDDED\",\"REDIRECT\",\"DECOUPLED\"]")
                 .when()
-                .put(aspspProfileUri + "/api/v1/aspsp-profile/for-debug/sca-approaches")
+                    .put(aspspProfileUri + "/api/v1/aspsp-profile/for-debug/sca-approaches")
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                    .statusCode(HttpStatus.OK.value());
 
         return self();
     }
@@ -98,12 +98,12 @@ public class FintechServer<SELF extends FintechServer<SELF>> extends SandboxServ
     public SELF enabled_redirect_sandbox_mode(String aspspProfileUri) {
         RestAssured
                 .given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body("[\"REDIRECT\",\"EMBEDDED\",\"DECOUPLED\"]")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .body("[\"REDIRECT\",\"EMBEDDED\",\"DECOUPLED\"]")
                 .when()
-                .put(aspspProfileUri + "/api/v1/aspsp-profile/for-debug/sca-approaches")
+                    .put(aspspProfileUri + "/api/v1/aspsp-profile/for-debug/sca-approaches")
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                    .statusCode(HttpStatus.OK.value());
 
         return self();
     }
