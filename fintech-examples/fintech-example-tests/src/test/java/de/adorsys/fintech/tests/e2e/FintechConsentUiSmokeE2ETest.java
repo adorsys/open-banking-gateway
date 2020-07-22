@@ -10,7 +10,6 @@ import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.internal.config.TppTokenProperties;
 import io.github.bonigarcia.seljup.SeleniumExtension;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import lombok.SneakyThrows;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
