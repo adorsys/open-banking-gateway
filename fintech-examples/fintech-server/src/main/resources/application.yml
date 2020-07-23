@@ -87,7 +87,8 @@ service-accounts:
 oauth2:
   login:
     gmail:
-      client-id: replace-me
+      client-id: replace-me # Here should be GMAIL client ID
+      client-secret: replace-me # Here should be GMAIL client secret
       authentication-endpoint: https://accounts.google.com/o/oauth2/v2/auth
       code-to-token-endpoint: https://oauth2.googleapis.com/token
       scope:
