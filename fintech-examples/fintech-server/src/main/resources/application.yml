@@ -94,3 +94,5 @@ oauth2:
       scope:
         - openid
         - email
+      allowed-emails-regex:
+        - .*
