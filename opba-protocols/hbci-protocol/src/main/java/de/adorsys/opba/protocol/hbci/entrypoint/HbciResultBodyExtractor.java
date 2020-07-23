@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.hbci.entrypoint;
 
 import de.adorsys.multibanking.domain.BankAccount;
+import de.adorsys.opba.protocol.api.dto.request.payments.PaymentStatusBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListDetailBody;
@@ -8,6 +9,7 @@ import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListAccountsResult;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListTransactionsResult;
+import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PaymentStatusResult;
 import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PisSinglePaymentResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,7 @@ public class HbciResultBodyExtractor {
     private final HbciAccountsToFacadeMapper accountsToFacadeMapper;
     private final HbciTransactionsToFacadeMapper transactionsToFacadeMapper;
     private final HbciPaymentToFacadeMapper paymentToFacadeMapper;
+    private final HbciPaymentStatusToFacadeMapper paymentStatusToFacadeMapper;
 
     public AccountListBody extractAccountList(ProcessResponse result) {
         AisListAccountsResult accountsResult = (AisListAccountsResult) result.getResult();
@@ -43,6 +46,10 @@ public class HbciResultBodyExtractor {
 
     public SinglePaymentBody extractSinglePaymentBody(ProcessResponse result) {
         return paymentToFacadeMapper.map((PisSinglePaymentResult) result.getResult());
+    }
+
+    public PaymentStatusBody extractPaymentStatusBody(ProcessResponse result) {
+        return paymentStatusToFacadeMapper.map((PaymentStatusResult) result.getResult());
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE, uses = {HbciToAccountBodyMapper.class})
@@ -67,5 +74,11 @@ public class HbciResultBodyExtractor {
 
         @Mapping(source = "transactionId", target = "paymentId")
         SinglePaymentBody map(PisSinglePaymentResult paymentResult);
+    }
+
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE)
+    public interface HbciPaymentStatusToFacadeMapper {
+        @Mapping(source = "paymentStatus", target = "transactionStatus")
+        PaymentStatusBody map(PaymentStatusResult paymentResult);
     }
 }
