@@ -130,20 +130,28 @@ paths:
         '401':
           $ref: '#/components/responses/401_Unauthorized'
 
-  /v1/oauth2/gmail/login:
+  /v1/oauth2/{idpProvider}/login:
     post:
       tags:
-        - FinTechGmailAuthentication
+        - FinTechOauth2Authentication
       operationId: oauthLoginPOST
-      summary: Identifies the PSU in the Realm of the FinTechApi using his Gmail account.
+      summary: Identifies the PSU in the Realm of the FinTechApi using his Gmail or other IDP provider account.
       description: |
         Use Oauth2 for Gmail users' account to identify him
       parameters:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
+        # path
+        - in: path
+          name: idpProvider
+          schema:
+            type: string
+            enum: [gmail]
+          required: true
+          description: IDP provider id for Oauth2 authentication (i.e. `gmail`)
       responses:
         '202':
-          $ref: '#/components/responses/202_ToImplicitOauth2'
+          $ref: '#/components/responses/202_ToOauth2'
 
   /v1/logout:
     post:
@@ -834,9 +842,9 @@ components:
             * RedirectCookie has an expiration date after which no callback
             will be accepted from the ConsentAuthorisationApi anyway.
 
-    202_ToImplicitOauth2:
+    202_ToOauth2:
       description: |
-        Request to perform implicit Oauth2 authentication
+        Request to perform Oauth2 authentication
       headers:
         Location:
           $ref: '#/components/headers/Location-Oauth2-Auth'
