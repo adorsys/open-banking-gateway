@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
+import java.util.List;
 
 @Data
 @Validated
@@ -29,5 +30,8 @@ public class GmailOauth2Config {
     private URI codeToTokenEndpoint;
 
     @NotEmpty
-    private String[] scope;
+    private List<@NotBlank String> scope;
+
+    @NotEmpty
+    private List<@NotBlank String> allowedEmailsRegex;
 }
