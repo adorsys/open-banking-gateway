@@ -43,7 +43,7 @@ public class GmailOauth2AuthenticateService implements Oauth2Authenticator {
 
     @SneakyThrows
     @Transactional
-    public URI authenticateByRedirectingTo() {
+    public URI authenticateByRedirectingUserToIdp() {
         ClientID clientID = getClientID();
         State state = new State(GMAIL.encode(new State().getValue()));
         Nonce nonce = new Nonce();

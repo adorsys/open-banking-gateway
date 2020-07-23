@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  oauth2Login() {
+  gmailOauth2Login() {
     this.authService.gmailOauth2Login().subscribe(res => {
       window.location.href= res
     })

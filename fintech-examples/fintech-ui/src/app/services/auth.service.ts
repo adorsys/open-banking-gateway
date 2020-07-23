@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FinTechAuthorizationService, FinTechGmailAuthenticationService } from '../api';
+import { FinTechAuthorizationService, FinTechOauth2AuthenticationService } from '../api';
 import { Credentials } from '../models/credentials.model';
 import { HeaderConfig } from '../models/consts';
 import { DocumentCookieService } from './document-cookie.service';
@@ -16,7 +16,7 @@ export class AuthService {
   constructor(
     private router: Router,
     private finTechAuthorizationService: FinTechAuthorizationService,
-    private finTechGmailAuthenticationService: FinTechGmailAuthenticationService,
+    private finTechOauthAuthenticationService: FinTechOauth2AuthenticationService,
     private cookieService: DocumentCookieService,
     private storageService: StorageService
   ) {}
@@ -32,7 +32,7 @@ export class AuthService {
   }
 
   gmailOauth2Login(): Observable<string> {
-    return this.finTechGmailAuthenticationService.oauthLoginPOST('', 'response').pipe(
+    return this.finTechOauthAuthenticationService.oauthLoginPOST('', 'gmail', 'response').pipe(
       map(response => {
         return response.headers.get('Location');
       })

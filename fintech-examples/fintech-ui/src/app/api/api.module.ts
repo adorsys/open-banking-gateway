@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { FinTechAccountInformationService } from './api/finTechAccountInformation.service';
 import { FinTechAuthorizationService } from './api/finTechAuthorization.service';
 import { FinTechBankSearchService } from './api/finTechBankSearch.service';
-import { FinTechGmailAuthenticationService } from './api/finTechGmailAuthentication.service';
+import { FinTechOauth2AuthenticationService } from './api/finTechOauth2Authentication.service';
 import { FintechRetrieveAllSinglePaymentsService } from './api/fintechRetrieveAllSinglePayments.service';
 import { FintechSinglePaymentInitiationService } from './api/fintechSinglePaymentInitiation.service';
 
@@ -18,7 +18,7 @@ import { FintechSinglePaymentInitiationService } from './api/fintechSinglePaymen
     FinTechAccountInformationService,
     FinTechAuthorizationService,
     FinTechBankSearchService,
-    FinTechGmailAuthenticationService,
+    FinTechOauth2AuthenticationService,
     FintechRetrieveAllSinglePaymentsService,
     FintechSinglePaymentInitiationService ]
 })

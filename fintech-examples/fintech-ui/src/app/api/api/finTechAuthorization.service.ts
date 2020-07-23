@@ -48,6 +48,67 @@ export class FinTechAuthorizationService {
 
 
     /**
+     * Oauth2 callback to identify user.
+     * Oauth2 callback to authenticate user using some Oauth2 identity provider account. Provider id is set inside state.
+     * @param code OAuth2 redirect code
+     * @param state OAuth2 redirect state
+     * @param scope OAuth2 requested scope
+     * @param error OAuth2 error
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public callbackGetLogin(code: string, state: string, scope: string, error?: string, observe?: 'body', reportProgress?: boolean): Observable<InlineResponse200>;
+    public callbackGetLogin(code: string, state: string, scope: string, error?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<InlineResponse200>>;
+    public callbackGetLogin(code: string, state: string, scope: string, error?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<InlineResponse200>>;
+    public callbackGetLogin(code: string, state: string, scope: string, error?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+        if (code === null || code === undefined) {
+            throw new Error('Required parameter code was null or undefined when calling callbackGetLogin.');
+        }
+        if (state === null || state === undefined) {
+            throw new Error('Required parameter state was null or undefined when calling callbackGetLogin.');
+        }
+        if (scope === null || scope === undefined) {
+            throw new Error('Required parameter scope was null or undefined when calling callbackGetLogin.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (code !== undefined && code !== null) {
+            queryParameters = queryParameters.set('code', <any>code);
+        }
+        if (state !== undefined && state !== null) {
+            queryParameters = queryParameters.set('state', <any>state);
+        }
+        if (scope !== undefined && scope !== null) {
+            queryParameters = queryParameters.set('scope', <any>scope);
+        }
+        if (error !== undefined && error !== null) {
+            queryParameters = queryParameters.set('error', <any>error);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        const httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        return this.httpClient.get<InlineResponse200>(`${this.configuration.basePath}/v1/login/oauth2`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Entry point when PSU is redirected back from ConsentAuthorisationApi to the FinTechUI.
      * Entry point when PSU is redirected back from ConsentAuthorisationApi to the FinTechUI.
      * @param authId
