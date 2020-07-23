@@ -106,13 +106,25 @@ public class PaymentStagesCommonUtil {
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
-    public static RequestSpecification withPaymentInfoHeaders(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType) {
+    public static RequestSpecification withPaymentInfoHeaders(
+            String fintechUserId,
+            RequestSigningService requestSigningService,
+            OperationType operationType) {
+        return withPaymentInfoHeaders(fintechUserId, requestSigningService, operationType, SANDBOX_BANK_ID);
+    }
+
+    public static RequestSpecification withPaymentInfoHeaders(
+            String fintechUserId,
+            RequestSigningService requestSigningService,
+            OperationType operationType,
+            String bankId) {
+
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
         return RestAssured
                        .given()
-                       .header(BANK_ID, SANDBOX_BANK_ID)
+                       .header(BANK_ID, bankId)
                        .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
                        .header(FINTECH_USER_ID, fintechUserId)
                        .header(FINTECH_ID, DEFAULT_FINTECH_ID)
@@ -120,7 +132,7 @@ public class PaymentStagesCommonUtil {
                        .header(X_REQUEST_ID, xRequestId.toString())
                        .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
                        .header(X_OPERATION_TYPE, operationType)
-                       .header(X_REQUEST_SIGNATURE, calculatePaymentInfoSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId))
+                       .header(X_REQUEST_SIGNATURE, calculatePaymentInfoSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId, bankId))
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
@@ -142,12 +154,12 @@ public class PaymentStagesCommonUtil {
     }
 
     private static String calculatePaymentInfoSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
-                                                        OperationType operationType, String fintechUserId) {
+                                                        OperationType operationType, String fintechUserId, String bankId) {
         GetPaymentDataToSign getPaymentDataToSign = GetPaymentDataToSign.builder()
                                              .xRequestId(xRequestId)
                                              .instant(xTimestampUtc)
                                              .operationType(operationType)
-                                             .bankId(SANDBOX_BANK_ID)
+                                             .bankId(bankId)
                                              .fintechUserId(fintechUserId)
                                              .build();
 

@@ -32,7 +32,7 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
             ServiceContext<REQUEST> serviceContext = addRequestScopedFor(request, ctx);
             return new ProtocolWithCtx<>(ctx.getAction(), serviceContext);
         });
-        if (protocolWithCtx == null) {
+        if (protocolWithCtx == null || protocolWithCtx.getProtocol() == null) {
             throw new NullPointerException("can't create service context or determine protocol");
         }
 
