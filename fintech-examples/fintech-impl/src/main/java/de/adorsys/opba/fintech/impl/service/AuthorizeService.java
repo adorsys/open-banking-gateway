@@ -44,7 +44,7 @@ public class AuthorizeService {
 
         // find user by id
         Optional<UserEntity> optionalUserEntity = findUser(loginRequest.getUsername());
-        if (!optionalUserEntity.isPresent() || !optionalUserEntity.get().isActive()) {
+        if (!optionalUserEntity.isPresent() || !optionalUserEntity.get().isActive() || !optionalUserEntity.get().isEnablePasswordLogin()) {
             // user not found
             return Optional.empty();
         }
@@ -83,7 +83,13 @@ public class AuthorizeService {
         }
 
         String username = provider.encode(oauth2UserName.get());
-        return findUser(username).orElseGet(() -> createUser(username, UUID.randomUUID().toString()));
+
+        return findUser(username).orElseGet(() -> {
+            UserEntity user = createUserWithPasswordEnabled(username, UUID.randomUUID().toString()); // Setting random password as extra precaution
+            user.setEnablePasswordLogin(false); // Disable password login for new OAuth2 users
+            userRepository.save(user);
+            return user;
+        });
     }
 
     @Transactional
@@ -99,17 +105,18 @@ public class AuthorizeService {
     }
 
     @Transactional
-    public UserEntity createUser(String login, String password) {
-        return userRepository.save(createUserEntityButDontSave(login, password));
+    public UserEntity createUserWithPasswordEnabled(String login, String password) {
+        return userRepository.save(createUserEntityWithPasswordEnabledButDontSave(login, password));
     }
 
-    public UserEntity createUserEntityButDontSave(String username, String password) {
+    public UserEntity createUserEntityWithPasswordEnabledButDontSave(String username, String password) {
         return UserEntity.builder()
                 .loginUserName(username)
                 .fintechUserId(createID(username))
                 .password(encoder.encode(password))
                 .active(true)
                 .serviceAccount(false)
+                .enablePasswordLogin(true)
                 .build();
     }
 
@@ -130,7 +137,7 @@ public class AuthorizeService {
         }
         log.info("create on the fly user {}", loginRequest.getUsername());
 
-        createUser(loginRequest.getUsername(), loginRequest.getPassword());
+        createUserWithPasswordEnabled(loginRequest.getUsername(), loginRequest.getPassword());
     }
 
     private String createID(String username) {
