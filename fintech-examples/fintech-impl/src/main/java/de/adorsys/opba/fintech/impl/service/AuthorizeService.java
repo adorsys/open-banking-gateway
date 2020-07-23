@@ -1,9 +1,12 @@
 package de.adorsys.opba.fintech.impl.service;
 
 import de.adorsys.opba.fintech.api.model.generated.LoginRequest;
+import de.adorsys.opba.fintech.impl.config.Oauth2Provider;
 import de.adorsys.opba.fintech.impl.config.UserRegistrationConfig;
+import de.adorsys.opba.fintech.impl.database.entities.OauthSessionEntity;
 import de.adorsys.opba.fintech.impl.database.entities.SessionEntity;
 import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
+import de.adorsys.opba.fintech.impl.database.repositories.OauthSessionEntityRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.SessionRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +16,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class AuthorizeService {
+    private final OauthSessionEntityRepository oauthSessions;
+    private final Set<Oauth2Authenticator> authenticators;
+
     private final PasswordEncoder encoder;
     private final UserRepository userRepository;
     private final SessionRepository sessionRepository;
@@ -30,7 +39,7 @@ public class AuthorizeService {
      * @return empty, if user not found or password not valid. otherwise optional of userprofile
      */
     @Transactional
-    public Optional<UserEntity> login(LoginRequest loginRequest) {
+    public Optional<UserEntity> loginWithPassword(LoginRequest loginRequest) {
         generateUserIfUserDoesNotExistYet(loginRequest);
 
         // find user by id
@@ -49,6 +58,33 @@ public class AuthorizeService {
         return optionalUserEntity;
     }
 
+    @Transactional
+    public UserEntity loginWithOAuth2(String code, String state) {
+        Oauth2Provider provider = Arrays.stream(Oauth2Provider.values())
+                .filter(it -> it.matches(state)).findFirst()
+                .orElseThrow(() -> new IllegalStateException("Unknown state provider: " + state));
+
+        Optional<OauthSessionEntity> session = oauthSessions.findById(state);
+        if (!session.isPresent()) {
+            throw new IllegalStateException("Unauthorized state value: " + state);
+        }
+
+        oauthSessions.delete(session.get());
+
+        Oauth2Authenticator authenticator = authenticators.stream()
+                .filter(it -> provider == it.getProvider())
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("No authenticator for: " + state));
+
+        Optional<String> oauth2UserName = authenticator.authenticatedUserName(code);
+
+        if (!oauth2UserName.isPresent()) {
+            throw new IllegalStateException("Unable to authenticate in Oauth2 resource server: " + state);
+        }
+
+        String username = provider.encode(oauth2UserName.get());
+        return findUser(username).orElseGet(() -> createUser(username, UUID.randomUUID().toString()));
+    }
 
     @Transactional
     public void logout() {
