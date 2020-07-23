@@ -22,6 +22,9 @@ import de.adorsys.opba.fintech.impl.config.GmailOauth2Config;
 import de.adorsys.opba.fintech.impl.config.Oauth2Provider;
 import de.adorsys.opba.fintech.impl.database.entities.OauthSessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.OauthSessionEntityRepository;
+import de.adorsys.opba.fintech.impl.exceptions.EmailNotAllowed;
+import de.adorsys.opba.fintech.impl.exceptions.EmailNotVerified;
+import de.adorsys.opba.fintech.impl.exceptions.Oauth2Exception;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.minidev.json.JSONObject;
@@ -90,21 +93,20 @@ public class GmailOauth2AuthenticateService implements Oauth2Authenticator {
 
         TokenResponse tokenResponse = OIDCTokenResponseParser.parse(request.toHTTPRequest().send());
         if (!tokenResponse.indicatesSuccess()) {
-            throw new IllegalStateException("Unable to exchange code to token: " + tokenResponse.toErrorResponse().getErrorObject().getDescription());
+            throw new Oauth2Exception("Unable to exchange code to token: " + tokenResponse.toErrorResponse().getErrorObject().getDescription());
         }
 
         OIDCTokenResponse successResponse = (OIDCTokenResponse) tokenResponse.toSuccessResponse();
         JWT idToken = successResponse.getOIDCTokens().getIDToken();
         JSONObject idJson = ((SignedJWT) idToken).getPayload().toJSONObject();
         boolean isEmailVerified = "true".equals(idJson.getAsString("email_verified"));
+        String email = idJson.getAsString("email");
         if (!isEmailVerified) {
-            throw new IllegalStateException("Email not verified");
+            throw new EmailNotVerified("Email not verified: " + email);
         }
 
-        String email = idJson.getAsString("email");
-
         if (!checkIfEmailIsAllowed(email)) {
-            throw new IllegalStateException("Email domain is not allowed");
+            throw new EmailNotAllowed("Email is not allowed: " + email);
         }
 
         return email;
