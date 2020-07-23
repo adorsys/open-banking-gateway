@@ -50,7 +50,7 @@ public class GmailOauth2AuthenticateService implements Oauth2Authenticator {
 
         AuthenticationRequest request = new AuthenticationRequest.Builder(
                 new ResponseType(ResponseType.Value.CODE),
-                new Scope(gmailOauth2Config.getScope()),
+                new Scope(gmailOauth2Config.getScope().toArray(new String[0])),
                 clientID,
                 fintechUiConfig.getOauth2LoginCallbackUrl()
         )
@@ -101,6 +101,18 @@ public class GmailOauth2AuthenticateService implements Oauth2Authenticator {
             throw new IllegalStateException("Email not verified");
         }
 
-        return idJson.getAsString("email");
+        String email = idJson.getAsString("email");
+
+        if (!checkIfEmailIsAllowed(email)) {
+            throw new IllegalStateException("Email domain is not allowed");
+        }
+
+        return email;
+    }
+
+    private boolean checkIfEmailIsAllowed(String email) {
+        return gmailOauth2Config.getAllowedEmailsRegex()
+                .stream()
+                .anyMatch(email::matches);
     }
 }
