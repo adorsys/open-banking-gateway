@@ -30,7 +30,7 @@ public class ServiceAccountsOper {
             for (ServiceAccountsConfig.ServiceAccount account : serviceAccounts.getAccounts()) {
                 UserEntity user = users.findById(account.getLogin())
                         .map(it -> authorizeService.updatePasswordButDontSave(it, account.getPassword()))
-                        .orElseGet(() -> authorizeService.createUserEntityButDontSave(account.getLogin(), account.getPassword()));
+                        .orElseGet(() -> authorizeService.createUserEntityWithPasswordEnabledButDontSave(account.getLogin(), account.getPassword()));
 
                 user.setActive(true);
                 user.setServiceAccount(true);
