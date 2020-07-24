@@ -95,7 +95,7 @@ oauth2:
         - openid
         - email
       allowed-emails-regex:
-        - .+@adorsys\.de
-        - .+@adorsys\.com\.ua
-        - .+@golden-dimension\.com
-        - .+@golden-dimension\.com\.ua
+        - ^.+@adorsys\.de$
+        - ^.+@adorsys\.com\.ua$
+        - ^.+@golden-dimension\.com$
+        - ^.+@golden-dimension\.com\.ua$
