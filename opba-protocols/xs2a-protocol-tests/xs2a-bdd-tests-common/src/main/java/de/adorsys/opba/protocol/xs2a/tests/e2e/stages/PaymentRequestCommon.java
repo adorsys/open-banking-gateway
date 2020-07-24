@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.api.security.external.domain.OperationType.PIS;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.TPP_REDIRECT_PREFERRED;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
@@ -66,6 +67,42 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         return self();
     }
 
+    public SELF fintech_calls_initiate_payment_for_anton_brueckner_tpp_redirect_preferred() {
+        String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-single-sepa-payment.json");
+        ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER, requestSigningService, PIS, body)
+                .header(TPP_REDIRECT_PREFERRED, "true")
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(body)
+             .when()
+                .post(INITIATE_PAYMENT_ENDPOINT, SEPA_PAYMENT)
+             .then()
+                .statusCode(ACCEPTED.value())
+                .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextPaymentAuthorizationUrl(response);
+        return self();
+    }
+
+    public SELF fintech_calls_initiate_payment_for_anton_brueckner_tpp_redirect_not_preferred() {
+        String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-single-sepa-payment.json");
+        ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER, requestSigningService, PIS, body)
+                .header(TPP_REDIRECT_PREFERRED, "false")
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(body)
+             .when()
+                 .post(INITIATE_PAYMENT_ENDPOINT, SEPA_PAYMENT)
+             .then()
+                 .statusCode(ACCEPTED.value())
+                 .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextPaymentAuthorizationUrl(response);
+        return self();
+    }
+
     public SELF fintech_calls_initiate_payment_for_anton_brueckner_with_anonymous_allowed() {
         String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-single-sepa-payment.json");
         ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER, requestSigningService, PIS, body, false)
@@ -76,6 +113,42 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
                 .then()
                     .statusCode(ACCEPTED.value())
                 .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextPaymentAuthorizationUrl(response);
+        return self();
+    }
+
+    public SELF fintech_calls_initiate_payment_for_anton_brueckner_tpp_redirect_preferred_with_anonymous_allowed() {
+        String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-single-sepa-payment.json");
+        ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER, requestSigningService, PIS, body, false)
+                .header(TPP_REDIRECT_PREFERRED, "true")
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(body)
+             .when()
+                .post(INITIATE_PAYMENT_ENDPOINT, SEPA_PAYMENT)
+             .then()
+                 .statusCode(ACCEPTED.value())
+                 .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextPaymentAuthorizationUrl(response);
+        return self();
+    }
+
+    public SELF fintech_calls_initiate_payment_for_anton_brueckner_tpp_redirect_not_preferred_with_anonymous_allowed() {
+        String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-single-sepa-payment.json");
+        ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER, requestSigningService, PIS, body, false)
+                 .header(TPP_REDIRECT_PREFERRED, "false")
+                 .contentType(APPLICATION_JSON_VALUE)
+                 .body(body)
+             .when()
+                 .post(INITIATE_PAYMENT_ENDPOINT, SEPA_PAYMENT)
+             .then()
+                 .statusCode(ACCEPTED.value())
+                 .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
