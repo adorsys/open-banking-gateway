@@ -9,6 +9,14 @@ export class SessionService {
   public setTTL(authorizationId: string, ttl: string) {
     sessionStorage.setItem(authorizationId + Session.COOKIE_TTL, ttl);
   }
+
+  public isLongTimeCookie() {
+    return sessionStorage.getItem(Session.LONG_LIFE_COOKIE);
+  }
+
+  public setLongTimeCookie(value: boolean) {
+    sessionStorage.setItem(Session.LONG_LIFE_COOKIE, value.toString());
+  }
   public getTTL(authorizationId: string): string {
     return sessionStorage.getItem(authorizationId + Session.COOKIE_TTL);
   }
@@ -90,6 +98,10 @@ export class SessionService {
   public getXsrfToken() {
     sessionStorage.getItem(Session.XSRF_TOKEN);
   }
+
+  public clearStorage(): void {
+    sessionStorage.clear();
+  }
 }
 
 enum Session {
@@ -101,5 +113,6 @@ enum Session {
   FINTECH_NAME = ':FINTECH_NAME',
   BANK_NAME = ':BANK_NAME',
   XSRF_TOKEN = 'XSRF_TOKEN',
-  COOKIE_TTL = 'Cookie-TTL'
+  COOKIE_TTL = 'Cookie-TTL',
+  LONG_LIFE_COOKIE = 'LONG-LIFE-COOKIE'
 }
