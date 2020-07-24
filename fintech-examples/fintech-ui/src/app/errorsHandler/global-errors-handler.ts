@@ -18,6 +18,9 @@ export class GlobalErrorHandler implements ErrorHandler {
       if (error.status === 401) {
         console.log('status was 401');
         this.router.navigate(['/session-expired']);
+      } else if (error.status === 403) {
+        console.log('status was 403');
+        this.router.navigate(['/forbidden-oauth2']);
       } else {
         message = errorService.getServerMessage(error);
       }

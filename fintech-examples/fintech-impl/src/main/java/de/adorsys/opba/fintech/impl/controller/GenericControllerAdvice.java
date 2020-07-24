@@ -2,7 +2,6 @@ package de.adorsys.opba.fintech.impl.controller;
 
 import de.adorsys.opba.fintech.impl.exceptions.EmailNotAllowed;
 import de.adorsys.opba.fintech.impl.exceptions.EmailNotVerified;
-import de.adorsys.opba.fintech.impl.exceptions.Oauth2Exception;
 import de.adorsys.opba.fintech.impl.exceptions.Oauth2UnauthorizedException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,10 +15,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GenericControllerAdvice {
 
-    @ExceptionHandler({EmailNotVerified.class, EmailNotAllowed.class, Oauth2Exception.class})
+    @ExceptionHandler({EmailNotVerified.class, EmailNotAllowed.class})
     public ResponseEntity<OAuth2Error> handleOauth2Errors(Exception ex) {
         log.error("OAuth2 error occurred", ex);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new OAuth2Error(ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new OAuth2Error(ex.getMessage()));
     }
 
     @ExceptionHandler({Oauth2UnauthorizedException.class})
