@@ -16,6 +16,7 @@ public class HeaderNames {
     public static final String FINTECH_USER_ID = "Fintech-User-ID";
     public static final String SERVICE_SESSION_PASSWORD = "Service-Session-Password";
     public static final String X_XSRF_TOKEN = "X-XSRF-TOKEN";
+    public static final String TPP_REDIRECT_PREFERRED = "TPP-Redirect-Preferred";
 
     public static final String X_PIS_PSU_AUTHENTICATION_REQUIRED = "X-Pis-Psu-Authentication-Required";
     public static final String X_TIMESTAMP_UTC = "X-Timestamp-UTC";

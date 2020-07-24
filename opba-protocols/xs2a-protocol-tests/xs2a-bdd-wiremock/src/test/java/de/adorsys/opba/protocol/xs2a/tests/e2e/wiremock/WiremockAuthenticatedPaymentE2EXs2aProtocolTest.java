@@ -93,6 +93,31 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
 
     @ParameterizedTest
     @EnumSource(Approach.class)
+    void testPaymentInitializationUsingRedirectWithTppRedirectPreferredTrue(Approach expectedApproach) {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_payments_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .rest_assured_points_to_opba_server()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_initiate_payment_for_anton_brueckner_tpp_redirect_preferred()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment()
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .and()
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
+        then()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status();
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
     void testPaymentInitializationUsingRedirectWithCookieValidation(Approach expectedApproach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_payments_running()
@@ -102,6 +127,37 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
 
         when()
                 .fintech_calls_initiate_payment_for_anton_brueckner()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment_without_cookie_unauthorized()
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment()
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_without_cookie_unauthorized()
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .and()
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test_without_cookie_unauthorized()
+                .and()
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
+        then()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status();
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testPaymentInitializationUsingRedirectWithCookieValidationWithTppRedirectPreferredTrue(Approach expectedApproach) {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_payments_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .rest_assured_points_to_opba_server()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_initiate_payment_for_anton_brueckner_tpp_redirect_preferred()
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()

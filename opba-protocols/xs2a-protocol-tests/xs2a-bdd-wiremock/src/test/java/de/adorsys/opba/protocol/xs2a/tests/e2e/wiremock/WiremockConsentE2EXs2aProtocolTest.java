@@ -89,6 +89,31 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
 
     @ParameterizedTest
     @EnumSource(Approach.class)
+    void testAccountsListWithConsentUsingRedirectWithTppRedirectPreferredTrue(Approach expectedApproach) {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .rest_assured_points_to_opba_server()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_list_accounts_for_anton_brueckner_tpp_redirect_preferred()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .and()
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
+        then()
+                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
     void testTransactionsListWithConsentUsingRedirect(Approach expectedApproach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running()
@@ -98,6 +123,33 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
 
         when()
                 .fintech_calls_list_transactions_for_anton_brueckner()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_list_transactions_with_single_account_consent()
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .and()
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
+        then()
+                .open_banking_has_consent_for_anton_brueckner_transaction_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_anton_brueckner_transactions_data_using_consent_bound_to_service_session(
+                        ANTON_BRUECKNER_RESOURCE_ID, DATE_FROM, DATE_TO, BOTH_BOOKING
+                );
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testTransactionsListWithConsentUsingRedirectWithTppRedirectPreferredTrue(Approach expectedApproach) {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .rest_assured_points_to_opba_server()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_list_transactions_for_anton_brueckner_tpp_redirect_preferred()
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
