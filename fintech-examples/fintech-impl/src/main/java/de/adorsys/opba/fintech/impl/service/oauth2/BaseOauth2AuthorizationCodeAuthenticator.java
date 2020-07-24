@@ -1,4 +1,4 @@
-package de.adorsys.opba.fintech.impl.service;
+package de.adorsys.opba.fintech.impl.service.oauth2;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.SignedJWT;
@@ -18,48 +18,44 @@ import com.nimbusds.openid.connect.sdk.Nonce;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponse;
 import com.nimbusds.openid.connect.sdk.OIDCTokenResponseParser;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
-import de.adorsys.opba.fintech.impl.config.GmailOauth2Config;
-import de.adorsys.opba.fintech.impl.config.Oauth2Provider;
+import de.adorsys.opba.fintech.impl.config.Oauth2Config;
 import de.adorsys.opba.fintech.impl.database.entities.OauthSessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.OauthSessionEntityRepository;
 import de.adorsys.opba.fintech.impl.exceptions.EmailNotAllowed;
 import de.adorsys.opba.fintech.impl.exceptions.EmailNotVerified;
 import de.adorsys.opba.fintech.impl.exceptions.Oauth2Exception;
+import de.adorsys.opba.fintech.impl.service.Oauth2Authenticator;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.minidev.json.JSONObject;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.util.Optional;
 
-import static de.adorsys.opba.fintech.impl.config.Oauth2Provider.GMAIL;
-
-@Service
 @RequiredArgsConstructor
-public class GmailOauth2AuthenticateService implements Oauth2Authenticator {
+public abstract class BaseOauth2AuthorizationCodeAuthenticator implements Oauth2Authenticator {
 
     private final FintechUiConfig fintechUiConfig;
-    private final GmailOauth2Config gmailOauth2Config;
+    private final Oauth2Config oauth2Config;
     private final OauthSessionEntityRepository sessions;
 
     @SneakyThrows
     @Transactional
     public URI authenticateByRedirectingUserToIdp() {
         ClientID clientID = getClientID();
-        State state = new State(GMAIL.encode(new State().getValue()));
+        State state = new State(getProvider().encode(new State().getValue()));
         Nonce nonce = new Nonce();
 
         AuthenticationRequest request = new AuthenticationRequest.Builder(
                 new ResponseType(ResponseType.Value.CODE),
-                new Scope(gmailOauth2Config.getScope().toArray(new String[0])),
+                new Scope(oauth2Config.getScope().toArray(new String[0])),
                 clientID,
                 fintechUiConfig.getOauth2LoginCallbackUrl()
         )
                 .nonce(new Nonce())
                 .state(state)
-                .endpointURI(gmailOauth2Config.getAuthenticationEndpoint())
+                .endpointURI(oauth2Config.getAuthenticationEndpoint())
                 .nonce(nonce)
                 .build();
 
@@ -67,27 +63,18 @@ public class GmailOauth2AuthenticateService implements Oauth2Authenticator {
         return request.toURI();
     }
 
-    private ClientID getClientID() {
-        return new ClientID(gmailOauth2Config.getClientId());
-    }
-
     @Override
     public Optional<String> authenticatedUserName(String code) {
         return Optional.ofNullable(exchangeCodeToTokenAndYieldEmail(code));
     }
 
-    @Override
-    public Oauth2Provider getProvider() {
-        return GMAIL;
-    }
-
     @SneakyThrows
-    private String exchangeCodeToTokenAndYieldEmail(String authCode) {
+    protected String exchangeCodeToTokenAndYieldEmail(String authCode) {
         AuthorizationCode code = new AuthorizationCode(authCode);
         AuthorizationGrant codeGrant = new AuthorizationCodeGrant(code, fintechUiConfig.getOauth2LoginCallbackUrl());
         TokenRequest request = new TokenRequest(
-                gmailOauth2Config.getCodeToTokenEndpoint(),
-                new ClientSecretBasic(getClientID(), new Secret(gmailOauth2Config.getClientSecret())),
+                oauth2Config.getCodeToTokenEndpoint(),
+                new ClientSecretBasic(getClientID(), new Secret(oauth2Config.getClientSecret())),
                 codeGrant
         );
 
@@ -112,9 +99,13 @@ public class GmailOauth2AuthenticateService implements Oauth2Authenticator {
         return email;
     }
 
-    private boolean checkIfEmailIsAllowed(String email) {
-        return gmailOauth2Config.getAllowedEmailsRegex()
+    protected boolean checkIfEmailIsAllowed(String email) {
+        return oauth2Config.getAllowedEmailsRegex()
                 .stream()
                 .anyMatch(email::matches);
+    }
+
+    protected ClientID getClientID() {
+        return new ClientID(oauth2Config.getClientId());
     }
 }

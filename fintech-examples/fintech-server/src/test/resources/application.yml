@@ -40,6 +40,7 @@ fintech-ui:
   payment-ok-redirect-url: ${fintech-ui.host}/redirect-after-payment?redirectCode={redirectCode}
   payment-exception-redirect-url: ${fintech-ui.host}/redirect-after-payment-denied?redirectCode={redirectCode}
   unauthorized-url: ${fintech-ui.host}/
+  oauth2-login-callback-url: ${fintech-ui.host}/login/oauth2
 
 security:
   # This is the example private key value used only for DEMO purposes
@@ -73,10 +74,12 @@ security:
 oauth2:
   login:
     gmail:
-      client-id: replace-me # Here should be GMAIL client ID
-      client-secret: replace-me # Here should be GMAIL client secret
+      client-id: test-client-id
+      client-secret: test-client-secret
       authentication-endpoint: https://example.com/o/oauth2/v2/auth
       code-to-token-endpoint: https://example.com/token
       scope:
         - openid
         - email
+      allowed-emails-regex:
+        - .*

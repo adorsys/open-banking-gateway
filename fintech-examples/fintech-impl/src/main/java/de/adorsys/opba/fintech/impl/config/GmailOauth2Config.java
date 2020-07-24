@@ -15,7 +15,7 @@ import java.util.List;
 @Validated
 @Configuration
 @ConfigurationProperties("oauth2.login.gmail")
-public class GmailOauth2Config {
+public class GmailOauth2Config implements Oauth2Config {
 
     @NotBlank
     private String clientId;
