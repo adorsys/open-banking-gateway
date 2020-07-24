@@ -23,6 +23,7 @@ import { NgHttpLoaderModule } from 'ng-http-loader';
 import { RedirectAfterPaymentComponent } from "./redirect-after-payment/redirect-after-payment.component";
 import { RedirectAfterPaymentDeniedComponent } from "./redirect-after-payment-denied/redirect-after-payment-denied.component";
 import { Oauth2LoginComponent } from "./oauth2-login/oauth2-login.component";
+import { ForbiddenOauth2Component } from "./invalid-oauth2/forbidden-oauth2.component";
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -38,6 +39,7 @@ export function apiConfigFactory(): Configuration {
     AppComponent,
     LoginComponent,
     Oauth2LoginComponent,
+    ForbiddenOauth2Component,
     RedirectAfterConsentComponent,
     RedirectAfterPaymentComponent,
     NavbarComponent,

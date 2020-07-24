@@ -23,7 +23,7 @@ import de.adorsys.opba.fintech.impl.database.entities.OauthSessionEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.OauthSessionEntityRepository;
 import de.adorsys.opba.fintech.impl.exceptions.EmailNotAllowed;
 import de.adorsys.opba.fintech.impl.exceptions.EmailNotVerified;
-import de.adorsys.opba.fintech.impl.exceptions.Oauth2Exception;
+import de.adorsys.opba.fintech.impl.exceptions.Oauth2UnauthorizedException;
 import de.adorsys.opba.fintech.impl.service.Oauth2Authenticator;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -80,7 +80,7 @@ public abstract class BaseOauth2AuthorizationCodeAuthenticator implements Oauth2
 
         TokenResponse tokenResponse = OIDCTokenResponseParser.parse(request.toHTTPRequest().send());
         if (!tokenResponse.indicatesSuccess()) {
-            throw new Oauth2Exception("Unable to exchange code to token: " + tokenResponse.toErrorResponse().getErrorObject().getDescription());
+            throw new Oauth2UnauthorizedException("Unable to exchange code to token: " + tokenResponse.toErrorResponse().getErrorObject().getDescription());
         }
 
         OIDCTokenResponse successResponse = (OIDCTokenResponse) tokenResponse.toSuccessResponse();
