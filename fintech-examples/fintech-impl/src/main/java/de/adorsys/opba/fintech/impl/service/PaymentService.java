@@ -86,7 +86,7 @@ public class PaymentService {
                 responseOfTpp.getHeaders());
     }
 
-    public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankId, String accountId) {
+    public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankId, String accountId, Boolean xPisPsuAuthenticationRequired) {
         SessionEntity sessionEntity = sessionLogicService.getSession();
         // TODO https://app.zenhub.com/workspaces/open-banking-gateway-5dd3b3daf010250001260675/issues/adorsys/open-banking-gateway/812
         // TODO https://app.zenhub.com/workspaces/open-banking-gateway-5dd3b3daf010250001260675/issues/adorsys/open-banking-gateway/794
@@ -103,7 +103,9 @@ public class PaymentService {
                     COMPUTE_X_REQUEST_SIGNATURE,
                     COMPUTE_FINTECH_ID,
                     bankId,
-                    payment.getTppServiceSessionId()).getBody();
+                    xPisPsuAuthenticationRequired,
+                    payment.getTppServiceSessionId()
+            ).getBody();
             PaymentInitiationWithStatusResponse paymentInitiationWithStatusResponse = Mappers.getMapper(PaymentInitiationWithStatusResponseMapper.class).mapFromTppToFintech(body);
             paymentInitiationWithStatusResponse.setInitiationDate(payment.getCreationTime().toLocalDate());
             result.add(paymentInitiationWithStatusResponse);
