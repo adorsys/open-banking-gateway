@@ -11,9 +11,12 @@ import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureC
 import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.withPaymentHeaders;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.withPaymentInfoHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PIS_PAYMENT_STATUS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PIS_SINGLE_PAYMENT_ENDPOINT;
+import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -30,9 +33,28 @@ public class HbciPaymentInitiationRequest<SELF extends HbciPaymentInitiationRequ
         ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, bankId, requestSigningService, PIS, body)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(body)
-                .when()
+            .when()
                 .post(PIS_SINGLE_PAYMENT_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
-                .then()
+            .then()
+                .statusCode(ACCEPTED.value())
+                .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextPaymentAuthorizationUrl(response);
+        return self();
+    }
+
+    public SELF fintech_calls_payment_status_for_max_musterman_for_blz_30000003() {
+        return fintech_calls_payment_status_for_max_musterman(BANK_BLZ_30000003_ID);
+    }
+
+    public SELF fintech_calls_payment_status_for_max_musterman(String bankId) {
+        ExtractableResponse<Response> response = withPaymentInfoHeaders("", requestSigningService, PIS, bankId)
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+            .when()
+                .get(PIS_PAYMENT_STATUS_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+            .then()
                 .statusCode(ACCEPTED.value())
                 .extract();
 

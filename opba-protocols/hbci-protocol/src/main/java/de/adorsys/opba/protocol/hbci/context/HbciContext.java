@@ -32,7 +32,10 @@ public class HbciContext extends BaseContext {
     private Map<ProtocolAction, String> flowByAction = ImmutableMap.of(
             ProtocolAction.LIST_ACCOUNTS, "hbci-list-accounts",
             ProtocolAction.LIST_TRANSACTIONS, "hbci-list-transactions",
-            ProtocolAction.SINGLE_PAYMENT, "hbci-single-payment"
+            ProtocolAction.SINGLE_PAYMENT, "hbci-single-payment",
+            ProtocolAction.GET_PAYMENT_STATUS, "hbci-payment-status",
+            ProtocolAction.GET_PAYMENT_INFORMATION, "hbci-payment-status"
+
     );
 
     /**

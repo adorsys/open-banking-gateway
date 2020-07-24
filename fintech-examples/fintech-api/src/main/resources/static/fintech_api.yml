@@ -366,7 +366,7 @@ paths:
   /v1/pis/banks/{bank-id}/accounts/{account-id}/payments/single:
     get:
       summary: Ask for all payments of this account
-      description: This method is used to initiate a payment at the Fintech Server.
+      description: This method is used to get payment status.
       operationId: retrieveAllSinglePayments
       tags:
         - FintechRetrieveAllSinglePayments
@@ -377,6 +377,7 @@ paths:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: '#/components/parameters/X-Pis-Psu-Authentication-Required'
 
       responses:
         '200':

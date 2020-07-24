@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.hbci.entrypoint;
 
 import de.adorsys.multibanking.domain.BankAccount;
+import de.adorsys.opba.protocol.api.dto.request.payments.PaymentInfoBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.PaymentStatusBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
 import de.adorsys.opba.protocol.api.dto.result.body.AccountListBody;
@@ -32,7 +33,6 @@ public class HbciResultBodyExtractor {
     private final HbciAccountsToFacadeMapper accountsToFacadeMapper;
     private final HbciTransactionsToFacadeMapper transactionsToFacadeMapper;
     private final HbciPaymentToFacadeMapper paymentToFacadeMapper;
-    private final HbciPaymentStatusToFacadeMapper paymentStatusToFacadeMapper;
 
     public AccountListBody extractAccountList(ProcessResponse result) {
         AisListAccountsResult accountsResult = (AisListAccountsResult) result.getResult();
@@ -49,7 +49,11 @@ public class HbciResultBodyExtractor {
     }
 
     public PaymentStatusBody extractPaymentStatusBody(ProcessResponse result) {
-        return paymentStatusToFacadeMapper.map((PaymentStatusResult) result.getResult());
+        return paymentToFacadeMapper.mapStatus((PaymentStatusResult) result.getResult());
+    }
+
+    public PaymentInfoBody extractPaymentInfoBody(ProcessResponse result) {
+        return paymentToFacadeMapper.mapInfo((PaymentStatusResult) result.getResult());
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE, uses = {HbciToAccountBodyMapper.class})
@@ -74,11 +78,11 @@ public class HbciResultBodyExtractor {
 
         @Mapping(source = "transactionId", target = "paymentId")
         SinglePaymentBody map(PisSinglePaymentResult paymentResult);
-    }
 
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE)
-    public interface HbciPaymentStatusToFacadeMapper {
         @Mapping(source = "paymentStatus", target = "transactionStatus")
-        PaymentStatusBody map(PaymentStatusResult paymentResult);
+        PaymentStatusBody mapStatus(PaymentStatusResult paymentResult);
+
+        @Mapping(source = "paymentStatus", target = "transactionStatus")
+        PaymentInfoBody mapInfo(PaymentStatusResult paymentResult);
     }
 }
