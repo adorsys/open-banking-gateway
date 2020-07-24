@@ -9,6 +9,7 @@ import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.OauthSessionEntityRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.SessionRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
+import de.adorsys.opba.fintech.impl.exceptions.Oauth2UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Hex;
@@ -62,11 +63,11 @@ public class AuthorizeService {
     public UserEntity loginWithOAuth2(String code, String state) {
         Oauth2Provider provider = Arrays.stream(Oauth2Provider.values())
                 .filter(it -> it.matches(state)).findFirst()
-                .orElseThrow(() -> new IllegalStateException("Unknown state provider: " + state));
+                .orElseThrow(() -> new Oauth2UnauthorizedException("Unknown state provider: " + state));
 
         Optional<OauthSessionEntity> session = oauthSessions.findById(state);
         if (!session.isPresent()) {
-            throw new IllegalStateException("Unauthorized state value: " + state);
+            throw new Oauth2UnauthorizedException("Unauthorized state value: " + state);
         }
 
         oauthSessions.delete(session.get());
@@ -74,12 +75,12 @@ public class AuthorizeService {
         Oauth2Authenticator authenticator = authenticators.stream()
                 .filter(it -> provider == it.getProvider())
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("No authenticator for: " + state));
+                .orElseThrow(() -> new Oauth2UnauthorizedException("No authenticator for: " + state));
 
         Optional<String> oauth2UserName = authenticator.authenticatedUserName(code);
 
         if (!oauth2UserName.isPresent()) {
-            throw new IllegalStateException("Unable to authenticate in Oauth2 resource server: " + state);
+            throw new Oauth2UnauthorizedException("Unable to authenticate in Oauth2 resource server: " + state);
         }
 
         String username = provider.encode(oauth2UserName.get());
