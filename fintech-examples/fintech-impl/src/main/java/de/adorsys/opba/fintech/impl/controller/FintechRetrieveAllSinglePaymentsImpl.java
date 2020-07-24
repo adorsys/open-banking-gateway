@@ -21,7 +21,12 @@ public class FintechRetrieveAllSinglePaymentsImpl implements FintechRetrieveAllS
     private final SessionLogicService sessionLogicService;
 
     @Override
-    public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankId, String accountId, UUID xRequestID, String xsrfToken) {
+    public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(
+            String bankId,
+            String accountId,
+            UUID xRequestID,
+            String xsrfToken,
+            Boolean xPisPsuAuthenticationRequired) {
         log.debug("got list all payment requrest");
 
         if (!sessionLogicService.isSessionAuthorized()) {
@@ -29,7 +34,8 @@ public class FintechRetrieveAllSinglePaymentsImpl implements FintechRetrieveAllS
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        return sessionLogicService.addSessionMaxAgeToHeader(paymentService.retrieveAllSinglePayments(bankId, accountId));
+        return sessionLogicService.addSessionMaxAgeToHeader(paymentService.retrieveAllSinglePayments(
+                bankId, accountId, xPisPsuAuthenticationRequired));
 
 
     }
