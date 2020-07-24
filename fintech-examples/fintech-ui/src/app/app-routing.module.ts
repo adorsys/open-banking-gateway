@@ -9,6 +9,7 @@ import { SessionExpiredComponent } from './session-expired/session-expired.compo
 import { RedirectAfterPaymentDeniedComponent } from './redirect-after-payment-denied/redirect-after-payment-denied.component';
 import { RedirectAfterPaymentComponent } from './redirect-after-payment/redirect-after-payment.component';
 import { Oauth2LoginComponent } from './oauth2-login/oauth2-login.component';
+import { ForbiddenOauth2Component } from "./invalid-oauth2/forbidden-oauth2.component";
 
 const routes: Routes = [
   {
@@ -59,6 +60,10 @@ const routes: Routes = [
   {
     path: 'session-expired',
     component: SessionExpiredComponent
+  },
+  {
+    path: 'forbidden-oauth2',
+    component: ForbiddenOauth2Component
   },
   {
     path: '**',
