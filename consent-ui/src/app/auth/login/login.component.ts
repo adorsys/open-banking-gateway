@@ -47,6 +47,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     localStorage.setItem(ApiHeaders.COOKIE_TTL, '0');
+    this.sessionService.clearStorage();
     this.authService.userLoginForConsent(this.authId, this.redirectCode, this.loginForm.value).subscribe(res => {
       this.sessionService.setTTL(this.authId, res.headers.get(ApiHeaders.COOKIE_TTL));
       window.location.href = res.headers.get(ApiHeaders.LOCATION);
