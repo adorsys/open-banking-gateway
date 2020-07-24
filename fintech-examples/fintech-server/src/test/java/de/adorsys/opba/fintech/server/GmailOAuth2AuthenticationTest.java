@@ -92,7 +92,7 @@ class GmailOAuth2AuthenticationTest {
         assertThat(stateValue).isNotBlank();
 
         this.mvc.perform(get(FIN_TECH_BANK_OAUTH2_LOGIN, CODE_TO_BE_EXCHANGED, stateValue, SCOPE))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.message", is("Email is not allowed: vbe@example.com")));
     }
 
