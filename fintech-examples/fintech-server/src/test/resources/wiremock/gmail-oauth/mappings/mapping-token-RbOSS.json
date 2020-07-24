@@ -1,0 +1,38 @@
+{
+  "id" : "d6e040d2-b044-3320-9251-a2c89923189f",
+  "request" : {
+    "url" : "/token",
+    "method" : "POST",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/x-www-form-urlencoded; charset=UTF-8"
+      },
+      "Authorization": {
+        "equalTo": "Basic dGVzdC1jbGllbnQtaWQ6dGVzdC1jbGllbnQtc2VjcmV0"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalTo" : "code=code-to-be-exchanged&redirect_uri=http%3A%2F%2Flocalhost%3A4444%2Flogin%2Foauth2&grant_type=authorization_code"
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-token-RbOSS.json",
+    "headers" : {
+      "Content-Type" : "application/json; charset=utf-8",
+      "Vary" : [ "X-Origin", "Referer", "Origin,Accept-Encoding" ],
+      "Date" : "Thu, 23 Jul 2020 16:37:24 GMT",
+      "Server" : "scaffolding on HTTPServer2",
+      "Cache-Control" : "private",
+      "X-XSS-Protection" : "0",
+      "X-Frame-Options" : "SAMEORIGIN",
+      "X-Content-Type-Options" : "nosniff",
+      "Alt-Svc" : "h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-25=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"",
+      "Accept-Ranges" : "none"
+    }
+  },
+  "uuid" : "d6e040d2-b044-3320-9251-a2c89923189f"
+}

@@ -106,6 +106,11 @@
             <version>${mockito-core.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>${wiremock.version}</version>
+        </dependency>
 
     </dependencies>
 
