@@ -52,18 +52,19 @@ export class FintechRetrieveAllSinglePaymentsService {
 
     /**
      * Ask for all payments of this account
-     * This method is used to initiate a payment at the Fintech Server.
+     * This method is used to get payment status.
      * @param bankId 
      * @param accountId 
      * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well. 
      * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie. 
+     * @param xPisPsuAuthenticationRequired If false, login form to OPBA will not be displayed as there might be nothing to share for payments, so that authentication is not necessary. If absent or true - login form for payments will be displayed. 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'body', reportProgress?: boolean): Observable<Array<PaymentInitiationWithStatusResponse>>;
-    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<PaymentInitiationWithStatusResponse>>>;
-    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<PaymentInitiationWithStatusResponse>>>;
-    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, xPisPsuAuthenticationRequired?: boolean, observe?: 'body', reportProgress?: boolean): Observable<Array<PaymentInitiationWithStatusResponse>>;
+    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, xPisPsuAuthenticationRequired?: boolean, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<PaymentInitiationWithStatusResponse>>>;
+    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, xPisPsuAuthenticationRequired?: boolean, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<PaymentInitiationWithStatusResponse>>>;
+    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, xPisPsuAuthenticationRequired?: boolean, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (bankId === null || bankId === undefined) {
             throw new Error('Required parameter bankId was null or undefined when calling retrieveAllSinglePayments.');
         }
@@ -83,6 +84,9 @@ export class FintechRetrieveAllSinglePaymentsService {
         }
         if (X_XSRF_TOKEN !== undefined && X_XSRF_TOKEN !== null) {
             headers = headers.set('X-XSRF-TOKEN', String(X_XSRF_TOKEN));
+        }
+        if (xPisPsuAuthenticationRequired !== undefined && xPisPsuAuthenticationRequired !== null) {
+            headers = headers.set('X-Pis-Psu-Authentication-Required', String(xPisPsuAuthenticationRequired));
         }
 
         // to determine the Accept header

@@ -29,7 +29,7 @@ export class InitiateComponent implements OnInit {
     private fintechSinglePaymentInitiationService: FintechSinglePaymentInitiationService,
     private router: Router,
     private route: ActivatedRoute,
-              private settingsService: SettingsService,
+    private settingsService: SettingsService,
     private storageService: StorageService
   ) {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
