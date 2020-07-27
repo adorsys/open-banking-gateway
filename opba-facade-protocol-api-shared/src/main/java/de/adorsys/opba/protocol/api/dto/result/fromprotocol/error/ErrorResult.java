@@ -18,4 +18,6 @@ public class ErrorResult<T> implements Result<T> {
      * Machine parseable error code.
      */
     private String code;
+
+    private boolean canRedirectBackToFintech;
 }
