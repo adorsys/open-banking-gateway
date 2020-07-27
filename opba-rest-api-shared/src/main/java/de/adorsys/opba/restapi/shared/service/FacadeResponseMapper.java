@@ -8,6 +8,7 @@ import de.adorsys.opba.protocol.facade.config.auth.UriExpandConst;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
+import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRuntimeErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeSuccessResult;
 import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
@@ -27,6 +28,7 @@ import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.X_REQUEST_ID;
 import static org.springframework.http.HttpHeaders.SET_COOKIE;
 import static org.springframework.http.HttpStatus.ACCEPTED;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -38,6 +40,10 @@ public class FacadeResponseMapper {
     public <T, F> ResponseEntity<?> translate(FacadeResult<F> result, FacadeResponseBodyToRestBodyMapper<T, F> mapper) {
         if (result instanceof FacadeRedirectErrorResult) {
             return handleError((FacadeRedirectErrorResult) result);
+        }
+
+        if (result instanceof FacadeRuntimeErrorResult) {
+            return handleError((FacadeRuntimeErrorResult) result);
         }
 
         if (result instanceof FacadeResultRedirectable) {
@@ -61,14 +67,14 @@ public class FacadeResponseMapper {
 
     protected ResponseEntity<?> handleInitialAuthorizationRedirect(FacadeStartAuthorizationResult<?, ?> result) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(ACCEPTED));
-        putExtraRedirectHeaders(result, response);
+        putHeadersFromResponse(result, response);
         response.body(result.getCause());
         return responseForRedirection(result, response);
     }
 
     protected ResponseEntity<?> doHandleRedirect(FacadeResultRedirectable<?, ?> result) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(ACCEPTED));
-        putExtraRedirectHeaders(result, response);
+        putHeadersFromResponse(result, response);
         response.body(result.getCause());
         return responseForRedirection(result, response);
     }
@@ -84,8 +90,14 @@ public class FacadeResponseMapper {
 
     protected <E> ResponseEntity<E> handleError(FacadeRedirectErrorResult<?, ?> result) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(ACCEPTED));
-        return putExtraRedirectHeaders(result, response).build();
+        return putHeadersFromResponse(result, response).build();
     }
+
+    protected <E> ResponseEntity<E> handleError(FacadeRuntimeErrorResult<?> result) {
+        ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(INTERNAL_SERVER_ERROR));
+        return putHeadersFromResponse(result, response).build();
+    }
+
 
     protected <T, F> ResponseEntity<T> handleSuccess(FacadeSuccessResult<F> result, FacadeResponseBodyToRestBodyMapper<T, F> mapper) {
         ResponseEntity.BodyBuilder response = putDefaultHeaders(result, ResponseEntity.status(OK));
@@ -99,7 +111,12 @@ public class FacadeResponseMapper {
         return builder;
     }
 
-    protected ResponseEntity.BodyBuilder putExtraRedirectHeaders(FacadeResultRedirectable<?, ?> result, ResponseEntity.BodyBuilder builder) {
+    protected ResponseEntity.BodyBuilder putHeadersFromResponse(FacadeRuntimeErrorResult<?> result, ResponseEntity.BodyBuilder builder) {
+        result.getHeaders().forEach(builder::header);
+        return builder;
+    }
+
+    protected ResponseEntity.BodyBuilder putHeadersFromResponse(FacadeResultRedirectable<?, ?> result, ResponseEntity.BodyBuilder builder) {
         result.getHeaders().forEach(builder::header);
         return builder;
     }
