@@ -25,7 +25,8 @@ public class FlowableConfig {
     EngineConfigurationConfigurer<SpringProcessEngineConfiguration> productionCustomizeListenerAndJsonSerializer(
             RequestScopedServicesProvider scopedServicesProvider,
             FlowableProperties flowableProperties,
-            FlowableObjectMapper mapper
+            FlowableObjectMapper mapper,
+            FlowableJobEventListener eventListener
     ) {
         int maxLength = flowableProperties.getSerialization().getMaxLength();
         List<String> serializeOnlyPackages = flowableProperties.getSerialization().getSerializeOnlyPackages();
@@ -39,7 +40,9 @@ public class FlowableConfig {
                     )
                 )
             );
+
             processConfiguration.setEnableEventDispatcher(true);
+            processConfiguration.setEventListeners(ImmutableList.of(eventListener));
             processConfiguration.setAsyncExecutorNumberOfRetries(flowableProperties.getNumberOfRetries());
         };
     }
