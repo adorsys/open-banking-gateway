@@ -271,6 +271,6 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
                 .and()
                 .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_wrong_ibans()
                 .and()
-                .got_503_http_error();
+                .got_500_http_error_body();
     }
 }

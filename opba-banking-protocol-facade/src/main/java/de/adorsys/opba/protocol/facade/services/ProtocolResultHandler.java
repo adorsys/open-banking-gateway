@@ -25,6 +25,7 @@ import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRedirectResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeResultRedirectable;
+import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeRuntimeErrorResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.redirectable.FacadeStartAuthorizationResult;
 import de.adorsys.opba.protocol.facade.dto.result.torest.staticres.FacadeSuccessResult;
 import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
@@ -34,7 +35,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -97,10 +97,26 @@ public class ProtocolResultHandler {
     protected <RESULT, REQUEST extends FacadeServiceableGetter> FacadeResult<RESULT> handleError(
             ErrorResult<RESULT> result, UUID xRequestId, ServiceContext<REQUEST> session, FacadeServiceableRequest request
     ) {
-        FacadeRedirectErrorResult<RESULT, AuthStateBody> mappedResult =
-            (FacadeRedirectErrorResult<RESULT, AuthStateBody>) FacadeRedirectErrorResult.ERROR_FROM_PROTOCOL.map(result);
+        if (Strings.isNullOrEmpty(request.getFintechRedirectUrlNok()) || result.isCanRedirectBackToFintech()) {
+            return handleNonRedirectableError(result, xRequestId, session, request);
+        }
+
+        return handleRedirectableError(result, xRequestId, session, request);
+    }
+
+    protected <RESULT, REQUEST extends FacadeServiceableGetter> FacadeResult<RESULT>  handleNonRedirectableError(ErrorResult<RESULT> result, UUID xRequestId, ServiceContext<REQUEST> session, FacadeServiceableRequest request) {
+        FacadeRuntimeErrorResult<RESULT> mappedResult = (FacadeRuntimeErrorResult<RESULT>) FacadeRuntimeErrorResult.ERROR_FROM_PROTOCOL.map(result);
         mappedResult.setServiceSessionId(session.getServiceSessionId().toString());
-        mappedResult.setRedirectionTo(URI.create(request.getFintechRedirectUrlNok()));
+
+        mappedResult.setXRequestId(xRequestId);
+        return mappedResult;
+    }
+
+    protected <RESULT, REQUEST extends FacadeServiceableGetter> FacadeResult<RESULT>  handleRedirectableError(ErrorResult<RESULT> result, UUID xRequestId, ServiceContext<REQUEST> session, FacadeServiceableRequest request) {
+        FacadeRedirectErrorResult<RESULT, AuthStateBody> mappedResult =
+                (FacadeRedirectErrorResult<RESULT, AuthStateBody>) FacadeRedirectErrorResult.ERROR_FROM_PROTOCOL.map(result);
+        mappedResult.setServiceSessionId(session.getServiceSessionId().toString());
+
         mappedResult.setXRequestId(xRequestId);
         addAuthorizationSessionDataIfAvailable(result, request, session, mappedResult);
         return mappedResult;

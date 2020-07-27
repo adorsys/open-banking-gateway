@@ -16,10 +16,10 @@ import lombok.Setter;
 public abstract class InternalProcessResult {
 
     @NonNull
-    private String processId;
+    protected String processId;
 
     @NonNull
-    private String executionId;
+    protected String executionId;
 
-    private Object result;
+    protected Object result;
 }
