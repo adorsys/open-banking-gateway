@@ -3,7 +3,6 @@ package de.adorsys.opba.protocol.xs2a.context.pis;
 import de.adorsys.opba.protocol.api.dto.payment.PaymentType;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateBody;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -35,4 +34,9 @@ public class Xs2aPisContext extends Xs2aContext {
      * Body for a payment initiation request message.
      */
     private PaymentInitiateBody payment = new PaymentInitiateBody();
+
+    /**
+     * Indicates that payment was authorized.
+     */
+    private boolean isAuthorized;
 }

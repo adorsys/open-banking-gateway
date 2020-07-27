@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.payment;
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingPayment;
 import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
+import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,10 @@ public class Xs2aPisPersistPaymentAndContext extends ValidatedExecution<Xs2aPisC
                 )
         );
         context.paymentAccess().save(payment);
+
+        ContextUtil.getAndUpdateContext(
+                execution,
+                (Xs2aPisContext ctx) -> ctx.setAuthorized(true)
+        );
     }
 }

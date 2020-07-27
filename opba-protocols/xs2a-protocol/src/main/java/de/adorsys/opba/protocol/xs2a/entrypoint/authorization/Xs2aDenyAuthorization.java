@@ -6,7 +6,7 @@ import de.adorsys.opba.protocol.api.dto.request.authorization.DenyAuthorizationR
 import de.adorsys.opba.protocol.api.dto.result.body.DenyAuthBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.dialog.AuthorizationDeniedResult;
-import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
+import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.AbortConsent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ public class Xs2aDenyAuthorization implements DenyAuthorization {
     public CompletableFuture<Result<DenyAuthBody>> execute(ServiceContext<DenyAuthorizationRequest> serviceContext) {
         String executionId = serviceContext.getAuthContext();
 
-        Xs2aAisContext ctx = txOper.execute(callback -> readContext(executionId));
+        Xs2aContext ctx = txOper.execute(callback -> readContext(executionId));
         if (null == ctx) {
             throw new IllegalStateException("Context not found");
         }
@@ -55,23 +55,23 @@ public class Xs2aDenyAuthorization implements DenyAuthorization {
         );
     }
 
-    private Xs2aAisContext readContext(String executionId) {
+    private Xs2aContext readContext(String executionId) {
        try {
-           return (Xs2aAisContext) runtimeService.getVariable(executionId, CONTEXT);
+           return (Xs2aContext) runtimeService.getVariable(executionId, CONTEXT);
        } catch (FlowableObjectNotFoundException ex) {
            log.info("Can't find runtime instance of execution {} - looking in history tables", executionId);
            return readHistoricalContext(executionId);
        }
     }
 
-    private Xs2aAisContext readHistoricalContext(String executionId) {
+    private Xs2aContext readHistoricalContext(String executionId) {
         HistoricActivityInstance finished = historyService.createHistoricActivityInstanceQuery()
                 .executionId(executionId)
                 .finished()
                 .listPage(0, 1)
                 .get(0);
 
-        return (Xs2aAisContext) historyService.createHistoricVariableInstanceQuery()
+        return (Xs2aContext) historyService.createHistoricVariableInstanceQuery()
                 .processInstanceId(finished.getProcessInstanceId())
                 .variableName(CONTEXT)
                 .singleResult()
