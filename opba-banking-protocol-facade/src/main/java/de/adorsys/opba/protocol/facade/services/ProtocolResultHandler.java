@@ -98,13 +98,15 @@ public class ProtocolResultHandler {
             ErrorResult<RESULT> result, UUID xRequestId, ServiceContext<REQUEST> session, FacadeServiceableRequest request
     ) {
         if (Strings.isNullOrEmpty(request.getFintechRedirectUrlNok()) || result.isCanRedirectBackToFintech()) {
-            return handleNonRedirectableError(result, xRequestId, session, request);
+            return handleNonRedirectableError(result, xRequestId, session);
         }
 
         return handleRedirectableError(result, xRequestId, session, request);
     }
 
-    protected <RESULT, REQUEST extends FacadeServiceableGetter> FacadeResult<RESULT>  handleNonRedirectableError(ErrorResult<RESULT> result, UUID xRequestId, ServiceContext<REQUEST> session, FacadeServiceableRequest request) {
+    protected <RESULT, REQUEST extends FacadeServiceableGetter> FacadeResult<RESULT> handleNonRedirectableError(
+            ErrorResult<RESULT> result, UUID xRequestId, ServiceContext<REQUEST> session
+    ) {
         FacadeRuntimeErrorResult<RESULT> mappedResult = (FacadeRuntimeErrorResult<RESULT>) FacadeRuntimeErrorResult.ERROR_FROM_PROTOCOL.map(result);
         mappedResult.setServiceSessionId(session.getServiceSessionId().toString());
 
@@ -112,7 +114,9 @@ public class ProtocolResultHandler {
         return mappedResult;
     }
 
-    protected <RESULT, REQUEST extends FacadeServiceableGetter> FacadeResult<RESULT>  handleRedirectableError(ErrorResult<RESULT> result, UUID xRequestId, ServiceContext<REQUEST> session, FacadeServiceableRequest request) {
+    protected <RESULT, REQUEST extends FacadeServiceableGetter> FacadeResult<RESULT> handleRedirectableError(
+            ErrorResult<RESULT> result, UUID xRequestId, ServiceContext<REQUEST> session, FacadeServiceableRequest request
+    ) {
         FacadeRedirectErrorResult<RESULT, AuthStateBody> mappedResult =
                 (FacadeRedirectErrorResult<RESULT, AuthStateBody>) FacadeRedirectErrorResult.ERROR_FROM_PROTOCOL.map(result);
         mappedResult.setServiceSessionId(session.getServiceSessionId().toString());

@@ -18,6 +18,6 @@ public class ProcessError extends InternalProcessResult {
     public ProcessError(String processId, String executionId, String message, boolean canRedirectBackToFintech) {
         super(processId, executionId, null);
         this.message = message;
-        this.canRedirectBackToFintech = false;
+        this.canRedirectBackToFintech = canRedirectBackToFintech;
     }
 }
