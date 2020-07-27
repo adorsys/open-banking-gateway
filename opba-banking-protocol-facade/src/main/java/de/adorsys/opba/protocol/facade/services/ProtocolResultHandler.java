@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -97,7 +98,7 @@ public class ProtocolResultHandler {
     protected <RESULT, REQUEST extends FacadeServiceableGetter> FacadeResult<RESULT> handleError(
             ErrorResult<RESULT> result, UUID xRequestId, ServiceContext<REQUEST> session, FacadeServiceableRequest request
     ) {
-        if (Strings.isNullOrEmpty(request.getFintechRedirectUrlNok()) || result.isCanRedirectBackToFintech()) {
+        if (Strings.isNullOrEmpty(request.getFintechRedirectUrlNok()) || !result.isCanRedirectBackToFintech()) {
             return handleNonRedirectableError(result, xRequestId, session);
         }
 
@@ -120,7 +121,7 @@ public class ProtocolResultHandler {
         FacadeRedirectErrorResult<RESULT, AuthStateBody> mappedResult =
                 (FacadeRedirectErrorResult<RESULT, AuthStateBody>) FacadeRedirectErrorResult.ERROR_FROM_PROTOCOL.map(result);
         mappedResult.setServiceSessionId(session.getServiceSessionId().toString());
-
+        mappedResult.setRedirectionTo(URI.create(request.getFintechRedirectUrlNok()));
         mappedResult.setXRequestId(xRequestId);
         addAuthorizationSessionDataIfAvailable(result, request, session, mappedResult);
         return mappedResult;
