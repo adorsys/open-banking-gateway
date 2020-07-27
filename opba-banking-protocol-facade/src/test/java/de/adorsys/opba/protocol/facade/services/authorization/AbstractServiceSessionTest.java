@@ -236,6 +236,7 @@ abstract class AbstractServiceSessionTest extends DbDropper {
         ErrorResult<AuthorizationRequiredResult> errorResult = new ErrorResult<>();
         errorResult.setCode(ERROR_CODE_400);
         errorResult.setMessage(ERROR_RESULT_MESSAGE);
+        errorResult.setCanRedirectBackToFintech(true);
 
         return errorResult;
     }
