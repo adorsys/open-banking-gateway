@@ -20,4 +20,7 @@ public class BankSecurity {
 
     @NotNull
     private SensitiveAuthLevel payment;
+
+    @NotNull
+    private SensitiveAuthLevel paymentStatus;
 }
