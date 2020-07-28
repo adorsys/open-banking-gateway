@@ -35,11 +35,9 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
             if (context.getBank().getSecurity().getTransactions() == SensitiveAuthLevel.AUTHENTICATED) {
                 return "response-templates/authenticated/custom-message-konto-mt940.json";
             }
-
             if (RequestStatusUtil.isForTransactionListing(context.getRequestData())) {
                 context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "TAN2Step6\\.OrderAccount\\.number"));
             }
-
             return getAuthorizationRequiredTemplateOrWrongTanMethod();
         }
 
@@ -47,11 +45,9 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
             if (context.getBank().getSecurity().getPayment() == SensitiveAuthLevel.AUTHENTICATED) {
                 return "response-templates/authenticated/custom-message-konto-mt940.json";
             }
-
             if (RequestStatusUtil.isForPayment(context.getRequestData())) {
                 context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "TAN2Step6\\.OrderAccount\\.number"));
             }
-
             return "response-templates/authenticated/custom-message-authorization-required-payment.json";
         }
 
@@ -59,11 +55,9 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
             if (context.getBank().getSecurity().getPaymentStatus() == SensitiveAuthLevel.AUTHENTICATED) {
                 return "response-templates/authenticated/custom-message-payment-status.json";
             }
-
             if (RequestStatusUtil.isForPaymentStatus(context.getRequestData())) {
                 context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "TAN2Step6\\.OrderAccount\\.number"));
             }
-
             return "response-templates/authenticated/custom-message-authorization-required-payment-status.json";
         }
 
