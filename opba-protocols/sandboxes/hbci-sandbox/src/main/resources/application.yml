@@ -22,6 +22,7 @@ hbci:
         accounts: AUTHENTICATED
         transactions: AUTHENTICATED
         payment: AUTHENTICATED
+        payment-status: AUTHENTICATED
       users:
         - anton.brueckner
         - max.musterman
@@ -35,6 +36,7 @@ hbci:
         accounts: AUTHENTICATED
         transactions: AUTHENTICATED
         payment: AUTHORIZED
+        payment-status: AUTHENTICATED
       users:
         - anton.brueckner
         - max.musterman
@@ -48,6 +50,7 @@ hbci:
         accounts: AUTHENTICATED
         transactions: AUTHORIZED
         payment: AUTHORIZED
+        payment-status: AUTHENTICATED
       users:
         - anton.brueckner
         - max.musterman

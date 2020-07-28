@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.hbci.entrypoint.pis;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import de.adorsys.multibanking.domain.Bank;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
@@ -7,6 +8,7 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingPayment;
 import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
+import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableProperties;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.hbci.HbciUuidMapper;
 import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
@@ -15,7 +17,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 import static de.adorsys.opba.protocol.bpmnshared.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.HBCI_MAPPERS_PACKAGE;
@@ -26,6 +32,8 @@ public class HbciPrepareContext {
     private final HbciPrepareContext.FromRequest fromRequest;
     private final HbciExtendWithServiceContext extender;
     private final FlowableObjectMapper mapper;
+    private final HbciPaymentContextMergeMapper mergeContextMapper;
+    private final FlowableProperties properties;
 
     @SneakyThrows
     protected PaymentHbciContext prepareContext(ServiceContext<? extends FacadeServiceableGetter> serviceContext, ProtocolAction action) {
@@ -39,11 +47,11 @@ public class HbciPrepareContext {
         context.setBank(bank);
 
         ProtocolFacingPayment payment = serviceContext.getRequestScoped().paymentAccess().getFirstByCurrentSession();
-        PaymentHbciContext savedPaymentContext = mapper.getMapper().readValue(payment.getPaymentContext(), PaymentHbciContext.class);
-        context.setPayment(savedPaymentContext.getPayment());
-        context.setAccountIban(savedPaymentContext.getAccountIban());
-
-        return context;
+        PaymentHbciContext savedPaymentContext = deserializePaymentHbciContext(payment);
+        mergeContextMapper.merge(context, savedPaymentContext);
+        savedPaymentContext.getPayment().setPaymentId(payment.getPaymentId());
+        savedPaymentContext.getHbciDialogConsent().setWithHktan(false);
+        return savedPaymentContext;
     }
 
     /**
@@ -57,5 +65,26 @@ public class HbciPrepareContext {
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")
         PaymentHbciContext map2Context(FacadeServiceableGetter ctx);
+    }
+
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE,
+            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    public interface HbciPaymentContextMergeMapper {
+        PaymentHbciContext merge(PaymentHbciContext source, @MappingTarget PaymentHbciContext target);
+    }
+
+    @SneakyThrows
+    private PaymentHbciContext deserializePaymentHbciContext(ProtocolFacingPayment target) {
+        // Support for versioning using class name
+        JsonNode value = mapper.readTree(target.getPaymentContext());
+        Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
+        if (!properties.getSerialization().canSerialize(classNameAndValue.getKey())) {
+            throw new IllegalArgumentException("Class deserialization not allowed " + classNameAndValue.getKey());
+        }
+
+        return (PaymentHbciContext) mapper.getMapper().readValue(
+                classNameAndValue.getValue().traverse(),
+                Class.forName(classNameAndValue.getKey())
+        );
     }
 }
