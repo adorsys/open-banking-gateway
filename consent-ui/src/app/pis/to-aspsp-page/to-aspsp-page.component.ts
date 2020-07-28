@@ -20,10 +20,9 @@ export class ToAspspPageComponent implements OnInit {
   public finTechName: string;
   public aspspName: string;
   public payment = Action.PAYMENT;
+  public authorizationId: string;
 
   redirectTo: string;
-
-  private authorizationId: string;
   private pisPayment: PisPayment;
 
   constructor(
