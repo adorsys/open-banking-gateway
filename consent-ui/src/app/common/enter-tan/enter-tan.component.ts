@@ -18,6 +18,14 @@ export class EnterTanComponent implements OnInit {
   reportScaResultForm: FormGroup;
   redirectCode: string;
 
+  public tanConfig: TanConfig = {
+    type: TanType.PIN,
+    data: '17850120452019980412345678041234567804123456789E',
+    description: 'We have sent you the confirmation number. Please check your email and fill in the field below.'
+  };
+
+  public tanType = TanType;
+
   constructor(
     private formBuilder: FormBuilder,
     private sessionService: SessionService,
@@ -46,4 +54,17 @@ export class EnterTanComponent implements OnInit {
         this.enteredSca.emit(res);
       });
   }
+}
+
+export class TanConfig {
+  type: TanType;
+  data?: string;
+  description: string;
+}
+
+export enum TanType {
+  PIN,
+  PHOTO_TAN,
+  QR_CODE,
+  FLICKER_CODE
 }
