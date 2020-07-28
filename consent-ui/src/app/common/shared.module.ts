@@ -8,15 +8,19 @@ import { EnterPinComponent } from './enter-pin/enter-pin.component';
 import { SelectScaComponent } from './select-sca/select-sca.component';
 import { ResultComponent } from './result/result.component';
 import { ToAspspComponent } from './to-aspsp/to-aspsp.component';
+import { QRCodeModule } from 'angularx-qrcode';
+import { NgxChiptanModule } from 'ngx-chiptan';
 
 @NgModule({
   declarations: [EnterTanComponent, EnterPinComponent, SelectScaComponent, ToAspspComponent, ResultComponent],
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, InfoModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule, InfoModule, QRCodeModule, NgxChiptanModule],
   exports: [
     CommonModule,
     ReactiveFormsModule,
     HttpClientModule,
     InfoModule,
+    QRCodeModule,
+    NgxChiptanModule,
     EnterTanComponent,
     EnterPinComponent,
     SelectScaComponent,
