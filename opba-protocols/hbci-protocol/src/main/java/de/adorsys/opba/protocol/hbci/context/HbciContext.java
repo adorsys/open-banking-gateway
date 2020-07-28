@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.hbci.context;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.ImmutableMap;
 import de.adorsys.multibanking.domain.Bank;
+import de.adorsys.multibanking.domain.Credentials;
 import de.adorsys.multibanking.hbci.model.HbciConsent;
 import de.adorsys.multibanking.hbci.model.HbciTanSubmit;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
@@ -108,7 +109,17 @@ public class HbciContext extends BaseContext {
     @JsonIgnore
     public String getPsuPin() {
         TransientDataEntry entry = this.transientStorage().get();
-        return null != entry ? entry.getPsuPin() : null;
+        if (null != entry && entry.getPsuPin() != null) {
+            return entry.getPsuPin();
+        }
+
+        HbciConsent hbciDialogConsent = getHbciDialogConsent();
+        if (hbciDialogConsent == null) return null;
+
+        Credentials credentials = hbciDialogConsent.getCredentials();
+        if (credentials == null) return null;
+
+        return credentials.getPin();
     }
 
     @JsonIgnore
@@ -129,7 +140,9 @@ public class HbciContext extends BaseContext {
 
     @JsonIgnore
     public HbciProtocolConfiguration.UrlSet getActiveUrlSet(HbciProtocolConfiguration config) {
-        return ProtocolAction.SINGLE_PAYMENT.equals(this.getAction())
+        return (ProtocolAction.SINGLE_PAYMENT.equals(this.getAction()) ||
+                ProtocolAction.GET_PAYMENT_INFORMATION.equals(this.getAction()) ||
+                ProtocolAction.GET_PAYMENT_STATUS.equals(this.getAction()))
                 ? config.getPis() : config.getAis();
     }
 }

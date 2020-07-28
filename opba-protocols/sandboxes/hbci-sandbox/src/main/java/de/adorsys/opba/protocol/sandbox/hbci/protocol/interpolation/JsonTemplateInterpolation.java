@@ -73,7 +73,7 @@ public class JsonTemplateInterpolation {
         log.info("Using (unwrapped) message type: {}", type);
         Message message = new Message(type, ParsingUtil.SYNTAX);
         Set<String> kontos6Injected = new HashSet<>();
-        Set<String> pathsToPrefix = ImmutableSet.of("GVRes\\.KUmsZeitRes.*\\.booked");
+        Set<String> pathsToPrefix = ImmutableSet.of("GVRes\\.KUmsZeitRes.*\\.booked", "GVRes\\.InstantUebSEPAStatusRes.*\\.sepapain");
         for (Map.Entry<String, String> target : interpolated.entrySet()) {
             injectKonto6IfNeeded(message, target.getKey(), interpolated, kontos6Injected);
             message.propagateValue(
