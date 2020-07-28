@@ -21,10 +21,9 @@ export class ToAspspRedirectionComponent implements OnInit {
   public finTechName: string;
   public aspspName: string;
   public account = Action.ACCOUNT;
+  public authorizationId: string;
 
   redirectTo: string;
-
-  private authorizationId: string;
   private aisConsent: AisConsentToGrant;
 
   constructor(

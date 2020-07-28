@@ -32,7 +32,7 @@ export class CookieRenewalService {
     this.simpleTimer.unsubscribe(this.getTimerName(authid));
     this.simpleTimer.delTimer(this.getTimerName(authid));
 
-    if (!this.sessionService.isLongTimeCookie()) {
+    if (!this.sessionService.isLongTimeCookie(authid)) {
       // timer is deleted. If following call fails due to whatever reason, session cookie is not valid but
       // timer does not retry to renew it, which is fine, so error handling of call is not needed
       this.psuAuthService.renewalAuthorizationSessionKey('' + uuid.v4(), authid, 'response').subscribe(res => {

@@ -10,13 +10,14 @@ export class SessionService {
     sessionStorage.setItem(authorizationId + Session.COOKIE_TTL, ttl);
   }
 
-  public isLongTimeCookie() {
-    return sessionStorage.getItem(Session.LONG_LIFE_COOKIE);
+  public isLongTimeCookie(authorizationId: string) {
+    return sessionStorage.getItem(authorizationId + Session.IS_LONG_LIFE_COOKIE);
   }
 
-  public setLongTimeCookie(value: boolean) {
-    sessionStorage.setItem(Session.LONG_LIFE_COOKIE, value.toString());
+  public setIsLongTimeCookie(authorizationId: string, value: boolean) {
+    sessionStorage.setItem(authorizationId + Session.IS_LONG_LIFE_COOKIE, value.toString());
   }
+
   public getTTL(authorizationId: string): string {
     return sessionStorage.getItem(authorizationId + Session.COOKIE_TTL);
   }
@@ -114,5 +115,5 @@ enum Session {
   BANK_NAME = ':BANK_NAME',
   XSRF_TOKEN = 'XSRF_TOKEN',
   COOKIE_TTL = 'Cookie-TTL',
-  LONG_LIFE_COOKIE = 'LONG-LIFE-COOKIE'
+  IS_LONG_LIFE_COOKIE = ':IS-LONG-LIFE-COOKIE'
 }
