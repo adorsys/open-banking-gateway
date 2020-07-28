@@ -11,6 +11,7 @@ export class ToAspspComponent implements OnInit {
   @Input() aspspName: string;
   @Input() actionName: string;
   @Input() finTechName: string;
+  @Input() authorizationSessionId: string;
   @Output() deny = new EventEmitter<boolean>();
 
   constructor(private sessionService: SessionService) {}
@@ -18,7 +19,7 @@ export class ToAspspComponent implements OnInit {
   ngOnInit() {}
 
   onConfirm() {
-    this.sessionService.setLongTimeCookie(true);
+    this.sessionService.setIsLongTimeCookie(this.authorizationSessionId, true);
     window.location.href = this.redirectTo;
   }
 
