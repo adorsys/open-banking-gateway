@@ -114,10 +114,14 @@ public class HbciContext extends BaseContext {
         }
 
         HbciConsent hbciDialogConsent = getHbciDialogConsent();
-        if (hbciDialogConsent == null) return null;
+        if (hbciDialogConsent == null) {
+            return null;
+        }
 
         Credentials credentials = hbciDialogConsent.getCredentials();
-        if (credentials == null) return null;
+        if (credentials == null) {
+            return null;
+        }
 
         return credentials.getPin();
     }
@@ -140,9 +144,9 @@ public class HbciContext extends BaseContext {
 
     @JsonIgnore
     public HbciProtocolConfiguration.UrlSet getActiveUrlSet(HbciProtocolConfiguration config) {
-        return (ProtocolAction.SINGLE_PAYMENT.equals(this.getAction()) ||
-                ProtocolAction.GET_PAYMENT_INFORMATION.equals(this.getAction()) ||
-                ProtocolAction.GET_PAYMENT_STATUS.equals(this.getAction()))
+        return ProtocolAction.SINGLE_PAYMENT.equals(this.getAction())
+                || ProtocolAction.GET_PAYMENT_INFORMATION.equals(this.getAction())
+                || ProtocolAction.GET_PAYMENT_STATUS.equals(this.getAction())
                 ? config.getPis() : config.getAis();
     }
 }

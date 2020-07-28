@@ -114,17 +114,17 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     }
 
     public SELF fintech_calls_payment_status() {
-        return fintech_calls_payment_status(SANDBOX_BANK_ID);
+        return fintech_calls_payment_status(SANDBOX_BANK_ID, TransactionStatus.ACSP.name());
     }
 
-    public SELF fintech_calls_payment_status(String bankId) {
+    public SELF fintech_calls_payment_status(String bankId, String expectedStatus) {
         withPaymentInfoHeaders("", requestSigningService, OperationType.PIS, bankId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
             .when()
                 .get(PIS_PAYMENT_STATUS_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
             .then()
                 .statusCode(OK.value())
-                .body("transactionStatus", equalTo(TransactionStatus.ACSP.name()))
+                .body("transactionStatus", equalTo(expectedStatus))
                 .extract();
         return self();
     }

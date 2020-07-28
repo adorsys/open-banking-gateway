@@ -15,7 +15,6 @@ import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
 import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PaymentInitiateBody;
-import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PisSinglePaymentResult;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.mapstruct.Mapper;
