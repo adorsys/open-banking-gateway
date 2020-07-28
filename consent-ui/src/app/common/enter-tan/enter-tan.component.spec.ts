@@ -1,12 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 
 import { EnterTanComponent } from './enter-tan.component';
 import { StubUtilTests } from '../../ais/common/stub-util-tests';
 import { SessionService } from '../session.service';
 import { UpdateConsentAuthorizationService } from '../../api';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('EnterTanComponent', () => {
   let component: EnterTanComponent;
@@ -20,6 +21,7 @@ describe('EnterTanComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [EnterTanComponent],
+      schemas: [NO_ERRORS_SCHEMA],
       imports: [ReactiveFormsModule, HttpClientTestingModule]
     }).compileComponents();
   }));
