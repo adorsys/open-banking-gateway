@@ -18,7 +18,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.UUID;
 
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.TPP_REDIRECT_PREFERRED;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
@@ -64,21 +63,6 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract();
-        updateServiceSessionId(response);
-        updateRedirectCode(response);
-        updateNextConsentAuthorizationUrl(response);
-        return self();
-    }
-
-    public SELF fintech_calls_list_accounts_for_anton_brueckner_tpp_redirect_preferred() {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, SANDBOX_BANK_ID , requestSigningService, OperationType.AIS)
-                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                    .header(TPP_REDIRECT_PREFERRED,"true")
-                    .when()
-                 .get(AIS_ACCOUNTS_ENDPOINT)
-                    .then()
                     .statusCode(HttpStatus.ACCEPTED.value())
                     .extract();
         updateServiceSessionId(response);
@@ -146,22 +130,6 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                 .then()
                     .statusCode(HttpStatus.ACCEPTED.value())
                     .extract();
-
-        updateServiceSessionId(response);
-        updateRedirectCode(response);
-        updateNextConsentAuthorizationUrl(response);
-        return self();
-    }
-
-    public SELF fintech_calls_list_transactions_for_anton_brueckner_tpp_redirect_preferred() {
-        ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
-                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                .header(TPP_REDIRECT_PREFERRED, "true")
-             .when()
-                 .get(AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT)
-             .then()
-                 .statusCode(HttpStatus.ACCEPTED.value())
-                .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);

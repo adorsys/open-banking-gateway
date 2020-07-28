@@ -39,6 +39,7 @@ As we redefine list accounts for adorsys-sandbox bank to sandbox customary one
 (and it doesn't make sense to import sandbox module here as it is XS2A test) moving it back to plain xs2a bean:
  */
 @Sql(statements = "UPDATE opb_bank_action SET protocol_bean_name = 'xs2aListTransactions' WHERE protocol_bean_name = 'xs2aSandboxListTransactions'")
+@Sql(statements = "UPDATE opb_bank_profile SET try_to_use_preferred_approach = false, preferred_approach = 'REDIRECT' WHERE bank_uuid = '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46'")
 
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {Xs2aProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
@@ -87,6 +88,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
     }
 
+    @Sql(statements = "UPDATE opb_bank_profile SET try_to_use_preferred_approach = true WHERE bank_uuid = '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46'")
     @ParameterizedTest
     @EnumSource(Approach.class)
     void testAccountsListWithConsentUsingRedirectWithTppRedirectPreferredTrue(Approach expectedApproach) {
@@ -97,7 +99,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-                .fintech_calls_list_accounts_for_anton_brueckner_tpp_redirect_preferred()
+                .fintech_calls_list_accounts_for_anton_brueckner()
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
@@ -139,6 +141,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 );
     }
 
+    @Sql(statements = "UPDATE opb_bank_profile SET try_to_use_preferred_approach = true WHERE bank_uuid = '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46'")
     @ParameterizedTest
     @EnumSource(Approach.class)
     void testTransactionsListWithConsentUsingRedirectWithTppRedirectPreferredTrue(Approach expectedApproach) {
@@ -149,7 +152,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-                .fintech_calls_list_transactions_for_anton_brueckner_tpp_redirect_preferred()
+                .fintech_calls_list_transactions_for_anton_brueckner()
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
