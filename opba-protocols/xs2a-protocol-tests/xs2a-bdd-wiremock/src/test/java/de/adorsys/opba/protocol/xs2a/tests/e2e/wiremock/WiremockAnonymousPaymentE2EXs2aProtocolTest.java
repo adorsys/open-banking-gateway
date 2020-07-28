@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * Happy-path test that uses wiremock-stubbed request-responses to drive banking-protocol.
  */
 @SuppressWarnings("CPD-START") // Makes no sense to be too abstract
+@Sql(statements = "UPDATE opb_bank_profile SET try_to_use_preferred_approach = false, preferred_approach = 'REDIRECT' WHERE bank_uuid = '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46'")
+
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {Xs2aProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
@@ -75,6 +78,7 @@ public class WiremockAnonymousPaymentE2EXs2aProtocolTest extends SpringScenarioT
                 .fintech_calls_payment_status();
     }
 
+    @Sql(statements = "UPDATE opb_bank_profile SET try_to_use_preferred_approach = true WHERE bank_uuid = '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46'")
     @ParameterizedTest
     @EnumSource(Approach.class)
     void testPaymentInitializationUsingRedirectWithTppRedirectPreferredTrue(Approach expectedApproach) {
@@ -85,7 +89,7 @@ public class WiremockAnonymousPaymentE2EXs2aProtocolTest extends SpringScenarioT
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-                .fintech_calls_initiate_payment_for_anton_brueckner_tpp_redirect_preferred_with_anonymous_allowed()
+                .fintech_calls_initiate_payment_for_anton_brueckner_with_anonymous_allowed()
                 .and()
                 .user_logged_in_into_opba_as_anonymous_user_with_credentials_using_fintech_supplied_url()
                 .and()
@@ -131,6 +135,7 @@ public class WiremockAnonymousPaymentE2EXs2aProtocolTest extends SpringScenarioT
                 .fintech_calls_payment_status();
     }
 
+    @Sql(statements = "UPDATE opb_bank_profile SET try_to_use_preferred_approach = true WHERE bank_uuid = '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46'")
     @ParameterizedTest
     @EnumSource(Approach.class)
     void testPaymentInitializationUsingRedirectWithTppRedirectTruePreferredWithCookieValidation(Approach expectedApproach) {
@@ -141,7 +146,7 @@ public class WiremockAnonymousPaymentE2EXs2aProtocolTest extends SpringScenarioT
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-                .fintech_calls_initiate_payment_for_anton_brueckner_tpp_redirect_preferred_with_anonymous_allowed()
+                .fintech_calls_initiate_payment_for_anton_brueckner_with_anonymous_allowed()
                 .and()
                 .user_logged_in_into_opba_as_anonymous_user_with_credentials_using_fintech_supplied_url()
                 .and()
