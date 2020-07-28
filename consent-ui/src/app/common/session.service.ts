@@ -99,10 +99,6 @@ export class SessionService {
   public getXsrfToken() {
     sessionStorage.getItem(Session.XSRF_TOKEN);
   }
-
-  public clearStorage(): void {
-    sessionStorage.clear();
-  }
 }
 
 enum Session {
