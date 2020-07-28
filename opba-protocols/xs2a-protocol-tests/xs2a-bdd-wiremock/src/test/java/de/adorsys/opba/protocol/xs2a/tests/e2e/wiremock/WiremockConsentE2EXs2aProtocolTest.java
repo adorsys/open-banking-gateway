@@ -88,7 +88,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
     }
 
-    @Sql(statements = "UPDATE opb_bank_profile SET try_to_use_preferred_approach = true WHERE bank_uuid = '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46'")
+    @Sql(statements = "UPDATE opb_bank_profile SET try_to_use_preferred_approach = true, preferred_approach = 'REDIRECT' WHERE bank_uuid = '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46'")
     @ParameterizedTest
     @EnumSource(Approach.class)
     void testAccountsListWithConsentUsingRedirectWithTppRedirectPreferredTrue(Approach expectedApproach) {
