@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,8 +28,6 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * Happy-path test that uses wiremock-stubbed request-responses to drive banking-protocol.
  */
 @SuppressWarnings("CPD-START") // Makes no sense to be too abstract
-@Sql(statements = "UPDATE opb_bank_profile SET try_to_use_preferred_approach = false, preferred_approach = 'REDIRECT' WHERE bank_uuid = '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46'")
-
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {Xs2aProtocolApplication.class, JGivenConfig.class}, webEnvironment = RANDOM_PORT)
 @ActiveProfiles(profiles = {ONE_TIME_POSTGRES_RAMFS, MOCKED_SANDBOX})
@@ -58,6 +55,7 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
     void testAnonymousPaymentInitializationImpossibleUsingRedirect(Approach expectedApproach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_payments_running()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -74,6 +72,7 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
     void testPaymentInitializationUsingRedirect(Approach expectedApproach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_payments_running()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -94,12 +93,12 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .fintech_calls_payment_status();
     }
 
-    @Sql(statements = "UPDATE opb_bank_profile SET try_to_use_preferred_approach = true, preferred_approach = 'REDIRECT' WHERE bank_uuid = '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46'")
     @ParameterizedTest
     @EnumSource(Approach.class)
     void testPaymentInitializationUsingRedirectWithTppRedirectPreferredTrue(Approach expectedApproach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_payments_running()
+                .set_tpp_redirect_preferred_true()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -120,12 +119,12 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .fintech_calls_payment_status();
     }
 
-    @Sql(statements = "UPDATE opb_bank_profile SET try_to_use_preferred_approach = true, preferred_approach = 'EMBEDDED' WHERE bank_uuid = '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46'")
     @ParameterizedTest
     @EnumSource(Approach.class)
     void testPaymentInitializationUsingRedirectWithTppRedirectPreferredFalse(Approach expectedApproach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_payments_running()
+                .set_tpp_redirect_preferred_false()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -151,6 +150,7 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
     void testPaymentInitializationUsingRedirectWithCookieValidation(Approach expectedApproach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_payments_running()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -177,12 +177,12 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .fintech_calls_payment_status();
     }
 
-    @Sql(statements = "UPDATE opb_bank_profile SET try_to_use_preferred_approach = true, preferred_approach = 'REDIRECT' WHERE bank_uuid = '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46'")
     @ParameterizedTest
     @EnumSource(Approach.class)
     void testPaymentInitializationUsingRedirectWithCookieValidationWithTppRedirectPreferredTrue(Approach expectedApproach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_payments_running()
+                .set_tpp_redirect_preferred_true()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -209,12 +209,12 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
                 .fintech_calls_payment_status();
     }
 
-    @Sql(statements = "UPDATE opb_bank_profile SET try_to_use_preferred_approach = true, preferred_approach = 'EMBEDDED' WHERE bank_uuid = '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46'")
     @ParameterizedTest
     @EnumSource(Approach.class)
     void testPaymentInitializationUsingRedirectWithCookieValidationWithTppRedirectPreferredFalse(Approach expectedApproach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_payments_running()
+                .set_tpp_redirect_preferred_false()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);

@@ -18,12 +18,15 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.LOGIN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.REGISTER_USER_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_ID;
 import static io.restassured.RestAssured.config;
 import static io.restassured.config.RedirectConfig.redirectConfig;
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Stage<SELF> {
+
+    private static final String BANK_UUID_ID = SANDBOX_BANK_ID; //Define whether ais or pis
 
     @LocalServerPort
     private int serverPort;
@@ -39,6 +42,45 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
                 return it;
             })
             .forEach(profiles::save);
+
+        return self();
+    }
+
+    @Transactional
+    public SELF set_tpp_redirect_preferred_true() {
+        profiles.findByBankUuid(BANK_UUID_ID)
+                .map(it -> {
+                    it.setPreferredApproach(Approach.REDIRECT);
+                    it.setTryToUsePreferredApproach(true);
+                    return it;
+                })
+                .ifPresent(profiles::save);
+
+        return self();
+    }
+
+    @Transactional
+    public SELF set_tpp_redirect_preferred_false() {
+        profiles.findByBankUuid(BANK_UUID_ID)
+                .map(it -> {
+                    it.setPreferredApproach(Approach.EMBEDDED);
+                    it.setTryToUsePreferredApproach(true);
+                    return it;
+                })
+                .ifPresent(profiles::save);
+
+        return self();
+    }
+
+    @Transactional
+    public SELF set_default_preferred_approach() {
+        profiles.findByBankUuid(BANK_UUID_ID)
+                .map(it -> {
+                    it.setPreferredApproach(Approach.REDIRECT);
+                    it.setTryToUsePreferredApproach(false);
+                    return it;
+                })
+                .ifPresent(profiles::save);
 
         return self();
     }
