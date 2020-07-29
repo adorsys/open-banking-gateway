@@ -9,7 +9,7 @@
     <serviceTask flowable:async="true" flowable:delegateExpression="${hbciPaymentStatusExecutor}" flowable:exclusive="false" flowable:triggerable="false" id="hbciPaymentStatusAfterTan" name="Call HBCI payment status with TAN"/>
     <exclusiveGateway default="hbciPinNeeded" id="hbciCheckPinPresent" name="Check pin is present"/>
     <sequenceFlow id="hbciPinNotNeeded" sourceRef="hbciCheckPinPresent" targetRef="initiateHbciDialogSendPin">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{hbciConsentInfo.isPasswordPresent(CONTEXT)}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression">#{hbciConsentInfo.isPasswordPresent(CONTEXT) || hbciConsentInfo.isPasswordPresentInConsent(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <serviceTask flowable:async="true" flowable:delegateExpression="${hbciAskForPin}" flowable:exclusive="true" flowable:triggerable="true" id="hbciAskForPin" name="Ask user to provide PIN. Suspends to wait"/>
     <sequenceFlow id="hbciPinNeeded" sourceRef="hbciCheckPinPresent" targetRef="hbciAskForPin">

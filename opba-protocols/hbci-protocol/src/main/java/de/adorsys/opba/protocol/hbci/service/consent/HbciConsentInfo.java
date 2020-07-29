@@ -1,5 +1,7 @@
 package de.adorsys.opba.protocol.hbci.service.consent;
 
+import de.adorsys.multibanking.domain.Credentials;
+import de.adorsys.multibanking.hbci.model.HbciConsent;
 import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.TransactionListHbciContext;
@@ -30,6 +32,23 @@ public class HbciConsentInfo {
      */
     public boolean isPasswordPresent(HbciContext ctx) {
         return null != ctx.getPsuPin();
+    }
+
+    /**
+     * Check that password present in consent (needed for getting payment status without new interactive authorization).
+     */
+    public boolean isPasswordPresentInConsent(HbciContext ctx) {
+        HbciConsent hbciDialogConsent = ctx.getHbciDialogConsent();
+        if (hbciDialogConsent == null) {
+            return false;
+        }
+
+        Credentials credentials = hbciDialogConsent.getCredentials();
+        if (credentials == null) {
+            return false;
+        }
+
+        return null != credentials.getPin();
     }
 
     /**
