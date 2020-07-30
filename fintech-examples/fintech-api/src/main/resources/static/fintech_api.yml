@@ -377,7 +377,6 @@ paths:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: '#/components/parameters/X-XSRF-TOKEN'
-        - $ref: '#/components/parameters/X-Pis-Psu-Authentication-Required'
 
       responses:
         '200':

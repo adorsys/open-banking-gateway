@@ -44,7 +44,6 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
                                                    String xRequestSignature,
                                                    String fintechID,
                                                    String bankID,
-                                                   Boolean xPisPsuAuthenticationRequired,
                                                    UUID serviceSessionID) {
         return paymentInfoService.execute(
                 PaymentInfoRequest.builder()
@@ -55,7 +54,7 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
                                 .fintechUserId(fintechUserID)
                                 .authorization(fintechID)
                                 .serviceSessionId(serviceSessionID)
-                                .anonymousPsuAllowed(null != xPisPsuAuthenticationRequired && !xPisPsuAuthenticationRequired)
+                                .anonymousPsuAllowed(true)
                                 .build()
                         )
                         .paymentProduct(PaymentProductDetails.fromValue(paymentProduct))
@@ -73,7 +72,6 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
                                                         String xRequestSignature,
                                                         String fintechID,
                                                         String bankID,
-                                                        Boolean xPisPsuAuthenticationRequired,
                                                         UUID serviceSessionID) {
         return paymentStatusService.execute(
                 PaymentStatusRequest.builder()
@@ -84,7 +82,7 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
                                 .fintechUserId(fintechUserID)
                                 .authorization(fintechID)
                                 .serviceSessionId(serviceSessionID)
-                                .anonymousPsuAllowed(null != xPisPsuAuthenticationRequired && !xPisPsuAuthenticationRequired)
+                                .anonymousPsuAllowed(true)
                                 .build()
                         )
                         .paymentProduct(PaymentProductDetails.fromValue(paymentProduct))
