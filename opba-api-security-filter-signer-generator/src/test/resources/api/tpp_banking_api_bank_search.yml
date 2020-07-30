@@ -1,0 +1,185 @@
+openapi: 3.0.1
+info:
+  version: "1.0.0"
+  title: Open Banking Gateway Tpp Bank Search API
+  description: >-
+    This API provides FinTech possibilities to perform search calls to the PSU.
+externalDocs:
+  url: "https://adorsys.github.com/open-banking-gateway"
+
+
+paths:
+
+  /v1/banking/search/bank-search:
+    get:
+      tags:
+      - TppBankSearch
+      operationId: bankSearchGET
+      summary: Issues an incremental bank search request to the TppBankSearchApi.
+      description: Issues an incremental bank search request to the TppBankSearchApi.
+      parameters:
+      #header
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Operation-Type"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+      #query
+        - name: keyword
+          in: query
+          description: The bank search input string
+          required: true
+          schema:
+            type: string
+        - name: start
+          in: query
+          description: The index of the first result
+          required: false
+          schema:
+            type: integer
+        - name: max
+          in: query
+          description: The max number of entries to return with the response.
+          required: false
+          schema:
+            type: integer
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          $ref: "#/components/responses/200_BankSearchResult"
+        '401':
+          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
+
+  /v1/banking/search/bank-profile:
+    get:
+      tags:
+      - TppBankSearch
+      summary: Request the profile of the bank identified with id (bankId).
+      description: Request the profile of the bank identified with id (bankId).
+      operationId: bankProfileGET
+      parameters:
+      #header
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Operation-Type"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        - name: bankId
+          in: query
+          description: Identifier of the bank to be loaded.
+          required: true
+          schema:
+            type: string
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          $ref: "#/components/responses/200_BankProfile"
+        '401':
+          $ref: './tpp_banking_api_commons.yml#/components/responses/401_UNAUTHORIZED'
+
+components:
+  headers: {}
+
+  parameters: {}
+
+  responses:
+
+    200_BankSearchResult:
+      description: The result of a bank search.
+      headers:
+        X-Request-ID:
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/bankSearchResponse"
+
+    200_BankProfile:
+      description: Response containing the service profile of a bank.
+      headers:
+        X-Request-ID:
+          $ref: "./tpp_banking_api_commons.yml#/components/headers/X-Request-ID"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/bankProfileResponse"
+
+  schemas:
+    # response DTOs
+    bankSearchResponse:
+      title: Bank Search Response
+      type: object
+      properties:
+        bankDescriptor:
+          type: array
+          items:
+            $ref: '#/components/schemas/bankDescriptor'
+        keyword:
+          type: String
+          description: The bank search input string
+        start:
+          type: integer
+          description: The index of the first result
+        max:
+          type: integer
+          description: The max number of entries to return with the response.
+        total:
+          type: integer
+          description: The total count of entities found for the given search input.
+
+    bankProfileResponse:
+      type: object
+      properties:
+        bankProfileDescriptor:
+          $ref: '#/components/schemas/bankProfileDescriptor'
+
+    # Search and bank profile
+    bankDescriptor:
+      title: Bank Descriptor
+      type: object
+      properties:
+        bankName:
+          type: string
+        bic:
+          type: string
+        bankCode:
+          type: string
+        uuid:
+          type: string
+    bankProfileDescriptor:
+      title: Bank Profile
+      type: object
+      properties:
+        bankName:
+          type: string
+        bic:
+          type: string
+        bankUuid:
+          type: string
+        serviceList:
+          type: array
+          items:
+            # can be an enum
+            type: string
+        consentSupportByService:
+          type: object
+          additionalProperties:
+            type: string
+
+  securitySchemes:
+    BearerAuthOAuth:
+      description: |
+        Bearer Token.
+      type: http
+      scheme: bearer
+    accessCode:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: 'http://example.com/oauth/auth'
+          tokenUrl: 'http://example.com/oauth/token'
+          scopes:
+            write: allows modifying resources
+            read: allows reading resources
