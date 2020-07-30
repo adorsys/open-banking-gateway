@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.hbci.service.consent;
 
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
-import de.adorsys.opba.protocol.hbci.SafeCacheSerDeUtil;
+import de.adorsys.opba.protocol.hbci.service.SafeCacheSerDeUtil;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.HbciResultCache;
 import lombok.RequiredArgsConstructor;

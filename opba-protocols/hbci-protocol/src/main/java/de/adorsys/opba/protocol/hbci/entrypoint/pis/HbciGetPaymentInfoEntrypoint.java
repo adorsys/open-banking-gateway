@@ -24,8 +24,8 @@ public class HbciGetPaymentInfoEntrypoint extends HbciGetPaymentEntrypoint<Payme
     public HbciGetPaymentInfoEntrypoint(RuntimeService runtimeService,
                                         ProcessEventHandlerRegistrar registrar,
                                         DtoMapper<Set<ValidationIssue>, Set<ValidationError>> errorMapper,
-                                        HbciPrepareContext hbciPrepareContext,
+                                        HbciPreparePaymentContext hbciPreparePaymentContext,
                                         HbciResultBodyExtractor extractor) {
-        super(GET_PAYMENT_INFORMATION, extractor::extractPaymentInfoBody, runtimeService, registrar, errorMapper, hbciPrepareContext);
+        super(GET_PAYMENT_INFORMATION, extractor::extractPaymentInfoBody, runtimeService, registrar, errorMapper, hbciPreparePaymentContext);
     }
 }

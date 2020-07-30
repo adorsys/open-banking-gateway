@@ -1,4 +1,4 @@
-package de.adorsys.opba.protocol.hbci;
+package de.adorsys.opba.protocol.hbci.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -18,14 +18,14 @@ public class SafeCacheSerDeUtil {
     private final FlowableProperties properties;
     private final FlowableObjectMapper mapper;
 
-    public String safeSerialize(Object result) throws JsonProcessingException {
+    public String safeSerialize(Object context) throws JsonProcessingException {
         // Support for versioning using class name
-        String className = result.getClass().getCanonicalName();
+        String className = context.getClass().getCanonicalName();
         if (!properties.getSerialization().canSerialize(className)) {
             throw new IllegalArgumentException("Class deserialization not allowed " + className);
         }
 
-        return mapper.writeValueAsString(ImmutableMap.of(className, result));
+        return mapper.writeValueAsString(ImmutableMap.of(className, context));
     }
 
     @SneakyThrows

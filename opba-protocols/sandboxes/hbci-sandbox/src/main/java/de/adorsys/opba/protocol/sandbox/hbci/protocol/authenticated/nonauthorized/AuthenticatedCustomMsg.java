@@ -56,7 +56,7 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
                 return "response-templates/authenticated/custom-message-payment-status.json";
             }
             if (RequestStatusUtil.isForPaymentStatus(context.getRequestData())) {
-                context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "TAN2Step6\\.OrderAccount\\.number"));
+                context.setPaymentId(MapRegexUtil.getDataRegex(context.getRequestData(), "SigTail_2\\.seccheckref"));
             }
             return "response-templates/authenticated/custom-message-authorization-required-payment-status.json";
         }

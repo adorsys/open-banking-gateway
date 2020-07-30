@@ -20,6 +20,6 @@ public class RequestStatusUtil {
     }
 
     public boolean isForPaymentStatus(Map<String, String> requestData) {
-        return "HKIPS".equals(MapRegexUtil.getDataRegex(requestData, "TAN2Step\\d*\\.ordersegcode"));
+        return "HKIPS".equals(MapRegexUtil.getDataRegex(requestData, "GV\\.InstantUebSEPAStatus1.SegHead\\.code"));
     }
 }
