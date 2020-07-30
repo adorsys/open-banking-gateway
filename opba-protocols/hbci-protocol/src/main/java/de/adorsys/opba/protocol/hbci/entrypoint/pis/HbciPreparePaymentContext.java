@@ -8,7 +8,7 @@ import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRe
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingPayment;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.hbci.HbciUuidMapper;
-import de.adorsys.opba.protocol.hbci.SafeCacheSerDeUtil;
+import de.adorsys.opba.protocol.hbci.service.SafeCacheSerDeUtil;
 import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
 import de.adorsys.opba.protocol.hbci.entrypoint.HbciExtendWithServiceContext;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +24,8 @@ import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.HBCI_MAPPERS_PA
 
 @Component
 @RequiredArgsConstructor
-public class HbciPrepareContext {
-    private final HbciPrepareContext.FromRequest fromRequest;
+public class HbciPreparePaymentContext {
+    private final HbciPreparePaymentContext.FromRequest fromRequest;
     private final HbciExtendWithServiceContext extender;
     private final HbciPaymentContextMergeMapper mergeContextMapper;
     private final SafeCacheSerDeUtil safeSerDe;
