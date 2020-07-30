@@ -75,7 +75,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
                     .post(INITIATE_PAYMENT_ENDPOINT, SEPA_PAYMENT)
                 .then()
                     .statusCode(ACCEPTED.value())
-                .extract();
+                    .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -115,7 +115,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
                     .post(PIS_ANONYMOUS_LOGIN_USER_ENDPOINT, serviceSessionId)
                 .then()
                     .statusCode(ACCEPTED.value())
-                .extract();
+                    .extract();
 
         this.authSessionCookie = response.cookie(AUTHORIZATION_SESSION_KEY);
         return self();
@@ -184,48 +184,10 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         return self();
     }
 
-    public SELF user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url_pis(String username, String password) {
-        String fintechUserTempPassword = UriComponentsBuilder
-                .fromHttpUrl(redirectUriToGetUserParams).build()
-                .getQueryParams()
-                .getFirst(REDIRECT_CODE_QUERY);
-
-        ExtractableResponse<Response> response =  RestAssured
-                .given()
-                        .header(X_REQUEST_ID, UUID.randomUUID().toString())
-                        .contentType(APPLICATION_JSON_VALUE)
-                        .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
-                        .body(ImmutableMap.of(StagesCommonUtil.LOGIN, username, StagesCommonUtil.PASSWORD, password))
-                .when()
-                        .post(StagesCommonUtil.PIS_LOGIN_USER_ENDPOINT, serviceSessionId)
-                .then()
-                        .statusCode(ACCEPTED.value())
-                        .extract();
-
-        this.authSessionCookie = response.cookie(AUTHORIZATION_SESSION_KEY);
-        return self();
-    }
-
-    public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok_pis() {
+    public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").doesNotContain("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
         assertThat(response.header(LOCATION)).contains("pis").contains("consent-result");
-        return self();
-    }
-
-    public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_pis() {
-        ExtractableResponse<Response> response = withDefaultHeaders(StagesCommonUtil.ANTON_BRUECKNER, requestSigningService, PIS)
-                                                        .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                                                        .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                                                    .when()
-                                                        .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
-                                                    .then()
-                                                        .statusCode(HttpStatus.OK.value())
-                                                        .extract();
-
-        updateNextPaymentAuthorizationUrl(response);
-        updateServiceSessionId(response);
-        updateRedirectCode(response);
         return self();
     }
 
