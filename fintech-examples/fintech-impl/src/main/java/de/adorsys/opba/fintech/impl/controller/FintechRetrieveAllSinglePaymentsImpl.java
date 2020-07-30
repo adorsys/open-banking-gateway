@@ -30,7 +30,5 @@ public class FintechRetrieveAllSinglePaymentsImpl implements FintechRetrieveAllS
         }
 
         return sessionLogicService.addSessionMaxAgeToHeader(paymentService.retrieveAllSinglePayments(bankId, accountId));
-
-
     }
 }

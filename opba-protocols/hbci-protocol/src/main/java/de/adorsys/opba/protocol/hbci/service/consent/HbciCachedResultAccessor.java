@@ -1,11 +1,7 @@
 package de.adorsys.opba.protocol.hbci.service.consent;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.collect.ImmutableMap;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsent;
-import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
-import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableProperties;
+import de.adorsys.opba.protocol.hbci.SafeCacheSerDeUtil;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.HbciResultCache;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -23,15 +18,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class HbciCachedResultAccessor {
 
-    private final FlowableProperties properties;
-    private final FlowableObjectMapper mapper;
+    private final SafeCacheSerDeUtil safeCacheSerDe;
 
     @SneakyThrows
     @Transactional
     public Optional<HbciResultCache> resultFromCache(HbciContext context) {
         List<HbciResultCache> consents = context.consentAccess().findByCurrentServiceSessionOrderByModifiedDesc()
                 .stream()
-                .map(this::readCachedEntry)
+                .map(target -> (HbciResultCache) safeCacheSerDe.safeDeserialize(target.getConsentContext()))
                 .collect(Collectors.toList());
 
         if (consents.isEmpty()) {
@@ -80,34 +74,7 @@ public class HbciCachedResultAccessor {
     public void resultToCache(HbciContext context, HbciResultCache result) {
         ProtocolFacingConsent newConsent = context.getRequestScoped().consentAccess().createDoNotPersist();
         newConsent.setConsentId(context.getSagaId());
-        newConsent.setConsentContext(safeSerialize(result));
+        newConsent.setConsentContext(safeCacheSerDe.safeSerialize(result));
         context.getRequestScoped().consentAccess().save(newConsent);
-    }
-
-    private String safeSerialize(Object result) throws JsonProcessingException {
-        // Support for versioning using class name
-        String className = result.getClass().getCanonicalName();
-        if (!properties.getSerialization().canSerialize(className)) {
-            throw new IllegalArgumentException("Class deserialization not allowed " + className);
-        }
-
-        return mapper.writeValueAsString(ImmutableMap.of(className, result));
-    }
-
-    @SneakyThrows
-    private HbciResultCache readCachedEntry(ProtocolFacingConsent target) {
-        // Support for versioning using class name
-        JsonNode value = mapper.readTree(target.getConsentContext());
-        Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
-        if (!properties.getSerialization().canSerialize(classNameAndValue.getKey())) {
-            throw new IllegalArgumentException("Class deserialization not allowed " + classNameAndValue.getKey());
-        }
-
-        HbciResultCache cachedResult = (HbciResultCache) mapper.getMapper().readValue(
-                classNameAndValue.getValue().traverse(),
-                Class.forName(classNameAndValue.getKey())
-        );
-
-        return cachedResult;
     }
 }
