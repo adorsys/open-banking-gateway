@@ -18,6 +18,14 @@ public class RequestSignatureImpl implements RequestSignature {
     private final Map<String, String> queryParams;
     private final String body;
 
+    public RequestSignatureImpl(String path, SignatureConfig config) {
+        this.path = path;
+        this.config = config;
+        this.headers = new HashMap<>();
+        this.queryParams = new HashMap<>();
+        this.body = null;
+    }
+
     @Override
     public RequestSignature headers(Map<String, String> headers) {
         Map<String, String> updatedHeaders = new HashMap<>(this.headers);
@@ -40,7 +48,7 @@ public class RequestSignatureImpl implements RequestSignature {
     }
 
     @Override
-    public String sign() {
+    public String canonicalStringToSign() {
         StringBuilder signature = new StringBuilder();
 
         signature.append(path).append("&");
