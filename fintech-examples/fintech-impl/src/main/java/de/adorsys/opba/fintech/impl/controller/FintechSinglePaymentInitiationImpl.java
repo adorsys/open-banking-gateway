@@ -36,8 +36,6 @@ public class FintechSinglePaymentInitiationImpl implements FintechSinglePaymentI
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        return sessionLogicService.addSessionMaxAgeToHeader(paymentService.initiateSinglePayment(
-                bankId, accountId, body, fintechRedirectURLOK, fintechRedirectURLNOK, xPisPsuAuthenticationRequired
-        ));
+        return sessionLogicService.addSessionMaxAgeToHeader(paymentService.initiateSinglePayment(bankId, accountId, body, fintechRedirectURLOK, fintechRedirectURLNOK, xPisPsuAuthenticationRequired));
     }
 }
