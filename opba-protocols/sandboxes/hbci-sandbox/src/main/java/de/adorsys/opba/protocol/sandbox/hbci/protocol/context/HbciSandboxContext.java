@@ -24,6 +24,7 @@ public class HbciSandboxContext {
     private User user;
     private String accountNumberRequestedBeforeSca;
     private String referencedScaMethodId;
+    private String paymentId;
 
     private String response;
     private boolean cryptNeeded;

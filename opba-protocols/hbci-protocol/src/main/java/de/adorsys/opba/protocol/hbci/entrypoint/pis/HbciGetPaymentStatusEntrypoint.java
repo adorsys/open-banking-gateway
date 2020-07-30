@@ -22,10 +22,10 @@ import static de.adorsys.opba.protocol.api.common.ProtocolAction.GET_PAYMENT_STA
 public class HbciGetPaymentStatusEntrypoint extends HbciGetPaymentEntrypoint<PaymentStatusRequest, PaymentStatusBody> implements GetPaymentStatusState {
 
     public HbciGetPaymentStatusEntrypoint(RuntimeService runtimeService,
-                                        ProcessEventHandlerRegistrar registrar,
-                                        DtoMapper<Set<ValidationIssue>, Set<ValidationError>> errorMapper,
-                                        HbciPrepareContext hbciPrepareContext,
-                                        HbciResultBodyExtractor extractor) {
-        super(GET_PAYMENT_STATUS, extractor::extractPaymentStatusBody, runtimeService, registrar, errorMapper, hbciPrepareContext);
+                                          ProcessEventHandlerRegistrar registrar,
+                                          DtoMapper<Set<ValidationIssue>, Set<ValidationError>> errorMapper,
+                                          HbciPreparePaymentContext hbciPreparePaymentContext,
+                                          HbciResultBodyExtractor extractor) {
+        super(GET_PAYMENT_STATUS, extractor::extractPaymentStatusBody, runtimeService, registrar, errorMapper, hbciPreparePaymentContext);
     }
 }
