@@ -223,5 +223,33 @@ public class WiremockAnonymousPaymentE2EXs2aProtocolTest extends SpringScenarioT
                 .fintech_calls_payment_activation_for_current_authorization_id()
                 .fintech_calls_payment_status();
     }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testPaymentInitializationUsingEmbedded(Approach expectedApproach) {
+        given()
+                .embedded_mock_of_sandbox_for_max_musterman_payments_running()
+                .set_default_preferred_approach()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .rest_assured_points_to_opba_server()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_initiate_payment_for_max_musterman_with_anonymous_allowed()
+                .and()
+                .user_logged_in_into_opba_as_anonymous_user_with_credentials_using_fintech_supplied_url()
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_make_payment()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status();
+    }
 }
 
