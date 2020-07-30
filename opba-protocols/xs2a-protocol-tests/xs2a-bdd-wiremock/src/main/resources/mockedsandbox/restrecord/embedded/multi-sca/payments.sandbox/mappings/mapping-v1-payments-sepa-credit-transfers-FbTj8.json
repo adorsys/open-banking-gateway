@@ -3,8 +3,19 @@
   "request" : {
     "url" : "/v1/payments/sepa-credit-transfers",
     "method" : "POST",
+    "headers": {
+      "X-Request-ID": {
+        "matches": "[0-9a-zA-z\\-]+"
+      },
+      "PSU-ID": {
+        "equalTo": "max.musterman"
+      },
+      "Content-Type": {
+        "equalTo": "application/json; charset=UTF-8"
+      }
+    },
     "bodyPatterns" : [ {
-      "equalToJson" : "{\"debtorAccount\":{\"iban\":\"DE38760700240320465700\"},\"instructedAmount\":{\"currency\":\"EUR\",\"amount\":\"12.34\"},\"creditorAccount\":{\"iban\":\"AL90208110080000001039531801\"},\"creditorName\":\"peter\",\"remittanceInformationUnstructured\":\"test transfer\"}",
+      "equalToJson" : "{\"debtorAccount\":{\"iban\":\"DE38760700240320465700\",\"currency\":\"EUR\"},\"instructedAmount\":{\"currency\":\"EUR\",\"amount\":\"1.03\"},\"creditorAccount\":{\"iban\":\"DE38760700240320465700\",\"currency\":\"EUR\"},\"creditorName\":\"WBG\",\"creditorAgent\":\"AAAADEBBXXX\",\"creditorAddress\":{\"streetName\":\"WBG Straße\",\"buildingNumber\":\"56\",\"townName\":\"Nürnberg\",\"postCode\":\"90543\",\"country\":\"DE\"},\"remittanceInformationUnstructured\":\"Ref. Number WBG-1222\",\"endToEndIdentification\":\"WBG-123456789\"}",
       "ignoreArrayOrder" : true,
       "ignoreExtraElements" : true
     } ]
