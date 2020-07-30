@@ -8,5 +8,5 @@ public interface RequestSignature {
     RequestSignature query(Map<String, String> queryParams);
     RequestSignature body(String body);
 
-    String sign();
+    String canonicalStringToSign();
 }
