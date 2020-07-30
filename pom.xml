@@ -27,6 +27,7 @@
     <description>Provides Access to Banking API</description>
 
     <modules>
+        <module>opba-api-security-filter-signer-generator</module>
         <module>opba-api-security</module>
         <module>opba-rest-api-shared</module>
         <module>opba-consent-rest-api</module>
