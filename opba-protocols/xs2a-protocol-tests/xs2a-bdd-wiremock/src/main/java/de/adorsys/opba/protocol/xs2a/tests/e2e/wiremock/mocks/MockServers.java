@@ -117,6 +117,14 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    public SELF embedded_mock_of_sandbox_for_max_musterman_payments_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                                               .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/payments/sandbox/");
+        startWireMock(config);
+
+        return self();
+    }
+
     // Stress tests can't use WireMock state without making them complicated
     public SELF embedded_mock_of_sandbox_for_max_musterman_accounts_running_stateless() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
