@@ -1,5 +1,6 @@
 package de.adorsys.opba.tppauthapi.controller;
 
+import de.adorsys.opba.protocol.facade.exceptions.NoProtocolRegisteredException;
 import de.adorsys.opba.protocol.facade.exceptions.PsuAuthenticationException;
 import de.adorsys.opba.protocol.facade.exceptions.PsuAuthorizationException;
 import de.adorsys.opba.protocol.facade.exceptions.PsuRegisterException;
@@ -39,6 +40,14 @@ public class GenericControllerAdvice {
         log.error("Unauthorized exception: {}", ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
+                .body(Collections.singletonList(ex.getMessage()));
+    }
+
+    @ExceptionHandler({NoProtocolRegisteredException.class})
+    public ResponseEntity<List<String>> handleNoProtocolException(Exception ex) {
+        log.error("No protocol registered exception: {}", ex.getMessage(), ex);
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Collections.singletonList(ex.getMessage()));
     }
 
