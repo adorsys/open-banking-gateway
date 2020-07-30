@@ -34,7 +34,7 @@ public abstract class HbciGetPaymentEntrypoint<REQUEST extends FacadeServiceable
     private final RuntimeService runtimeService;
     private final ProcessEventHandlerRegistrar registrar;
     private final DtoMapper<Set<ValidationIssue>, Set<ValidationError>> errorMapper;
-    private final HbciPrepareContext hbciPrepareContext;
+    private final HbciPreparePaymentContext hbciPreparePaymentContext;
 
     @Transactional
     public CompletableFuture<Result<RESULT_BODY>> execute(ServiceContext<REQUEST> serviceContext) {
@@ -42,7 +42,7 @@ public abstract class HbciGetPaymentEntrypoint<REQUEST extends FacadeServiceable
                 HBCI_REQUEST_SAGA,
                 new ConcurrentHashMap<>(ImmutableMap.of(
                         CONTEXT,
-                        hbciPrepareContext.prepareContext(serviceContext, action)
+                        hbciPreparePaymentContext.prepareContext(serviceContext, action)
                 ))
         );
 
