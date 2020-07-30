@@ -23,6 +23,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_TIMESTAMP_UTC;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP_ADDRESS;
 
 @UtilityClass
@@ -40,7 +41,6 @@ public class PaymentStagesCommonUtil {
     public static final String PASSWORD = "password";
 
     public static final String DEFAULT_FINTECH_ID = "MY-SUPER-FINTECH-ID";
-    public static final String SANDBOX_BANK_ID = "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46";
     public static final String FINTECH_REDIR_OK = "http://localhost:4444/redirect-after-consent";
     public static final String FINTECH_REDIR_NOK = "http://localhost:4444/redirect-after-consent-denied";
     public static final String XSRF_TOKEN = "abc123.faadsf93nlas32wx";
