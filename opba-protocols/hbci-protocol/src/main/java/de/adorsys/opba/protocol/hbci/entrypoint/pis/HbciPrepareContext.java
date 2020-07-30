@@ -1,16 +1,14 @@
 package de.adorsys.opba.protocol.hbci.entrypoint.pis;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import de.adorsys.multibanking.domain.Bank;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.payments.InitiateSinglePaymentRequest;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingPayment;
-import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
-import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableProperties;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.hbci.HbciUuidMapper;
+import de.adorsys.opba.protocol.hbci.SafeCacheSerDeUtil;
 import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
 import de.adorsys.opba.protocol.hbci.entrypoint.HbciExtendWithServiceContext;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +19,6 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-
 import static de.adorsys.opba.protocol.bpmnshared.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.HBCI_MAPPERS_PACKAGE;
 
@@ -31,9 +27,8 @@ import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.HBCI_MAPPERS_PA
 public class HbciPrepareContext {
     private final HbciPrepareContext.FromRequest fromRequest;
     private final HbciExtendWithServiceContext extender;
-    private final FlowableObjectMapper mapper;
     private final HbciPaymentContextMergeMapper mergeContextMapper;
-    private final FlowableProperties properties;
+    private final SafeCacheSerDeUtil safeSerDe;
 
     @SneakyThrows
     protected PaymentHbciContext prepareContext(ServiceContext<? extends FacadeServiceableGetter> serviceContext, ProtocolAction action) {
@@ -47,11 +42,11 @@ public class HbciPrepareContext {
         context.setBank(bank);
 
         ProtocolFacingPayment payment = serviceContext.getRequestScoped().paymentAccess().getFirstByCurrentSession();
-        PaymentHbciContext savedPaymentContext = deserializePaymentHbciContext(payment);
-        mergeContextMapper.merge(context, savedPaymentContext);
-        savedPaymentContext.getPayment().setPaymentId(payment.getPaymentId());
-        savedPaymentContext.getHbciDialogConsent().setWithHktan(false);
-        return savedPaymentContext;
+        PaymentHbciContext savedPaymentContext = (PaymentHbciContext) safeSerDe.safeDeserialize(payment.getPaymentContext());
+        PaymentHbciContext mergedContext = mergeContextMapper.merge(context, savedPaymentContext);
+        mergedContext.getPayment().setPaymentId(payment.getPaymentId());
+        mergedContext.getHbciDialogConsent().setWithHktan(false);
+        return mergedContext;
     }
 
     /**
@@ -71,20 +66,5 @@ public class HbciPrepareContext {
             nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public interface HbciPaymentContextMergeMapper {
         PaymentHbciContext merge(PaymentHbciContext source, @MappingTarget PaymentHbciContext target);
-    }
-
-    @SneakyThrows
-    private PaymentHbciContext deserializePaymentHbciContext(ProtocolFacingPayment target) {
-        // Support for versioning using class name
-        JsonNode value = mapper.readTree(target.getPaymentContext());
-        Map.Entry<String, JsonNode> classNameAndValue = value.fields().next();
-        if (!properties.getSerialization().canSerialize(classNameAndValue.getKey())) {
-            throw new IllegalArgumentException("Class deserialization not allowed " + classNameAndValue.getKey());
-        }
-
-        return (PaymentHbciContext) mapper.getMapper().readValue(
-                classNameAndValue.getValue().traverse(),
-                Class.forName(classNameAndValue.getKey())
-        );
     }
 }

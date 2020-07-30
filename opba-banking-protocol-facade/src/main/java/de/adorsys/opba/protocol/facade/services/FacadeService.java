@@ -8,6 +8,7 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.dto.result.body.ResultBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
+import de.adorsys.opba.protocol.facade.exceptions.NoProtocolRegisteredException;
 import de.adorsys.opba.protocol.facade.services.context.ServiceContextProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -33,7 +34,7 @@ public abstract class FacadeService<REQUEST extends FacadeServiceableGetter, RES
             return new ProtocolWithCtx<>(ctx.getAction(), serviceContext);
         });
         if (protocolWithCtx == null || protocolWithCtx.getProtocol() == null) {
-            throw new NullPointerException("can't create service context or determine protocol");
+            throw new NoProtocolRegisteredException("can't create service context or determine protocol");
         }
 
         CompletableFuture<Result<RESULT>> result = execute(protocolWithCtx.getProtocol(), protocolWithCtx.getServiceContext());
