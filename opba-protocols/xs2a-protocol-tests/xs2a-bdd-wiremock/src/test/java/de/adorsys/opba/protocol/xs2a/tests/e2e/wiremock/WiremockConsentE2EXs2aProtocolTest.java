@@ -114,6 +114,12 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
     }
 
+    /**
+     * Tests the case, when we ask the bank to use EMBEDDED flow, but it decides to use REDIRECT
+     * Flow work fine even for this hard to tackle situation
+     *
+     * @param expectedApproach expected SCA approach to be set in bank profile
+     */
     @ParameterizedTest
     @EnumSource(Approach.class)
     void testAccountsListWithConsentUsingRedirectWithTppRedirectPreferredFalse(Approach expectedApproach) {
@@ -196,6 +202,12 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 );
     }
 
+    /**
+     * Tests the case, when we ask the bank to use EMBEDDED flow, but it decides to use REDIRECT
+     * Flow work fine even for this hard to tackle situation
+     *
+     * @param expectedApproach expected SCA approach to be set in bank profile
+     */
     @ParameterizedTest
     @EnumSource(Approach.class)
     void testTransactionsListWithConsentUsingRedirectWithTppRedirectPreferredFalse(Approach expectedApproach) {
