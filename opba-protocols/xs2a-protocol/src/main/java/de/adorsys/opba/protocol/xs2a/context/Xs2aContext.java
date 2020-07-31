@@ -87,6 +87,11 @@ public class Xs2aContext extends BaseContext {
     private String userSelectScaId;
 
     /**
+     * saves selected SCA method and returns it back in sca-result url
+     */
+    private String userSelectScaType;
+
+    /**
      * SCA method that was selected if only one SCA method is available (automatically by ASPSP)
      */
     private AuthenticationObject scaSelected;
