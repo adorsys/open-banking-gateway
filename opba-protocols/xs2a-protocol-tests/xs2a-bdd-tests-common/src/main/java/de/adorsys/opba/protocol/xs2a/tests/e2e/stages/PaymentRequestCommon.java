@@ -101,13 +101,13 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     public SELF fintech_calls_initiate_payment_for_max_musterman_with_anonymous_allowed() {
         String body = readResource("restrecord/tpp-ui-input/params/max-musterman-single-sepa-payment.json");
         ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, requestSigningService, PIS, body, false)
-                                                         .contentType(APPLICATION_JSON_VALUE)
-                                                         .body(body)
-                                                         .when()
-                                                         .post(PIS_SINGLE_PAYMENT_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
-                                                         .then()
-                                                         .statusCode(ACCEPTED.value())
-                                                         .extract();
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(body)
+             .when()
+                .post(PIS_SINGLE_PAYMENT_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+             .then()
+                .statusCode(ACCEPTED.value())
+                .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
