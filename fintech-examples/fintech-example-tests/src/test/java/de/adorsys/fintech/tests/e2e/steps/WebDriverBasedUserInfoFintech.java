@@ -19,7 +19,8 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.Ret
 
 
 @JGivenStage
-@SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
+@SuppressWarnings("checkstyle:MethodName")
+// Jgiven prettifies snake-case names not camelCase
 public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFintech<SELF>> extends WebDriverBasedAccountInformation<SELF> {
 
     @Autowired
@@ -73,6 +74,13 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
         sendText(driver, By.id("PSU_ID"), OBA_USERNAME);
         clickOnButton(driver, By.id("ALL_PSD2"));
+        clickOnButton(driver, By.id(SUBMIT_ID));
+        return self();
+    }
+
+    public SELF user_for_embeeded_provided_to_consent_ui_initial_parameters_to_list_transactions_consent(WebDriver driver) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-payments");
+        sendText(driver, By.id("PSU_ID"), OBA_USERNAME);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
@@ -225,7 +233,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
 
     public SELF user_looks_for_a_bank_in_the_bank_search_input_place(WebDriver driver, String profile) {
         waitPlusTimer(driver, timeout.getSeconds());
-        driver.findElement( By.name("searchValue")).clear();
+        driver.findElement(By.name("searchValue")).clear();
         waitPlusTimer(driver, timeout.getSeconds());
         sendTestInSearchInput(driver, By.name("searchValue"), profile);
         return self();
@@ -234,7 +242,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     public SELF user_after_login_wants_to_logout(WebDriver webDriver) {
         wait(webDriver);
         clickOnButton(webDriver, By.id("dropdownMenuButton"));
-        return  self();
+        return self();
     }
 
     public SELF user_click_on_logout_button(WebDriver webDriver) {
@@ -261,7 +269,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_select_transfert_button(WebDriver webDriver) {
-        waitForPageLoadAndUrlContains(webDriver, "/bank");
+        wait(webDriver).until(ExpectedConditions.elementToBeClickable(By.linkText("Transfer")));
         performClick(webDriver, By.linkText("Transfer"));
         return self();
     }
@@ -286,16 +294,14 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
 
     public SELF user_fills_transfer_formular(WebDriver driver) {
         waitPlusTimer(driver, timeout.getSeconds());
-        driver.findElement( By.name("creditorIban")).clear();
+        driver.findElement(By.name("creditorIban")).clear();
         sendText(driver, By.name("creditorIban"), "DE80760700240271232400");
-        driver.findElement( By.name("name")).clear();
+        driver.findElement(By.name("name")).clear();
         sendText(driver, By.name("name"), "anton.brueckner");
-        driver.findElement( By.name("purpose")).clear();
+        driver.findElement(By.name("purpose")).clear();
         sendText(driver, By.name("purpose"), "test");
-        driver.findElement( By.name("amount")).clear();
+        driver.findElement(By.name("amount")).clear();
         sendText(driver, By.name("amount"), "50,00");
-        waitPlusTimer(driver, timeout.getSeconds());
-        performClick(driver, By.id(SUBMIT_ID));
         return self();
     }
 
@@ -335,6 +341,11 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     private void performClick(WebDriver driver, By identifier) {
         wait(driver).until(ExpectedConditions.elementToBeClickable(identifier));
         driver.findElement(identifier).click();
+        withRetry.execute(context -> {
+            wait(driver).until(ExpectedConditions.elementToBeClickable(identifier));
+            driver.findElement(identifier).click();
+            return null;
+        });
     }
 
     private void sendText(WebDriver driver, By identifier, String text) {
