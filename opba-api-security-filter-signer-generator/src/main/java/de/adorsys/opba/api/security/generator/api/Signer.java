@@ -3,7 +3,7 @@ package de.adorsys.opba.api.security.generator.api;
 public interface Signer {
 
     Signer withBasePath(String basePath);
-    RequestSignature signFor(HttpMethod method, String path);
+    RequestDataToSignGenerator signerFor(RequestToSign toSign);
 
     enum HttpMethod {
         POST,
