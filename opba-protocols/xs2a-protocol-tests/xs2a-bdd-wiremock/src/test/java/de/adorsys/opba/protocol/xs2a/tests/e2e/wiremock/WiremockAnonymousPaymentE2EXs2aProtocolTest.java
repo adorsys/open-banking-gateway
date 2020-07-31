@@ -102,6 +102,12 @@ public class WiremockAnonymousPaymentE2EXs2aProtocolTest extends SpringScenarioT
                 .fintech_calls_payment_status();
     }
 
+    /**
+     * Tests the case, when we ask the bank to use EMBEDDED flow, but it decides to use REDIRECT
+     * Flow work fine even for this hard to tackle situation
+     *
+     * @param expectedApproach expected SCA approach to be set in bank profile
+     */
     @ParameterizedTest
     @EnumSource(Approach.class)
     void testPaymentInitializationUsingRedirectWithTppRedirectPreferredFalse(Approach expectedApproach) {
@@ -192,6 +198,13 @@ public class WiremockAnonymousPaymentE2EXs2aProtocolTest extends SpringScenarioT
                 .fintech_calls_payment_status();
     }
 
+
+    /**
+     * Tests the case, when we ask the bank to use EMBEDDED flow, but it decides to use REDIRECT
+     * Flow work fine even for this hard to tackle situation
+     *
+     * @param expectedApproach expected SCA approach to be set in bank profile
+     */
     @ParameterizedTest
     @EnumSource(Approach.class)
     void testPaymentInitializationUsingRedirectWithTppRedirectPreferredFalseWithCookieValidation(Approach expectedApproach) {
