@@ -1,9 +1,9 @@
 package de.adorsys.opba.api.security.generator.signer;
 
-import de.adorsys.opba.api.security.generator.api.RequestSignature;
+import de.adorsys.opba.api.security.generator.api.RequestDataToSignGenerator;
 import de.adorsys.opba.api.security.generator.api.SignatureConfig;
 import de.adorsys.opba.api.security.generator.api.Signer;
-import de.adorsys.opba.api.security.generator.impl.RequestSignatureImpl;
+import de.adorsys.opba.api.security.generator.impl.RequestDataToSignGeneratorImpl;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -26,7 +26,7 @@ public class SignatureConfigGenerator {
     public void generate(TypeElement forClass, String[] yamlSpec, Filer filer) {
         OpenAPI api = new OpenAPIV3Parser().read(yamlSpec[0]);
 
-        Map<String, Map<Signer.HttpMethod, RequestSignature>> result = new HashMap<>();
+        Map<String, Map<Signer.HttpMethod, RequestDataToSignGenerator>> result = new HashMap<>();
 
         for (Map.Entry<String, PathItem> pathEntry : api.getPaths().entrySet()) {
             String path = pathEntry.getKey();
@@ -43,7 +43,7 @@ public class SignatureConfigGenerator {
             String path,
             Supplier<Operation> oper,
             Signer.HttpMethod method,
-            Map<String, Map<Signer.HttpMethod, RequestSignature>> result
+            Map<String, Map<Signer.HttpMethod, RequestDataToSignGenerator>> result
     ) {
         Operation operation = oper.get();
         if (null != operation) {
@@ -52,7 +52,7 @@ public class SignatureConfigGenerator {
                     id -> new EnumMap<>(Signer.HttpMethod.class)
             ).put(
                     method,
-                    new RequestSignatureImpl(path, configForOper(operation))
+                    new RequestDataToSignGeneratorImpl(path, configForOper(operation))
             );
         }
     }
