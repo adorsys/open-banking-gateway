@@ -10,6 +10,11 @@ test:
       ui-uri: https://obg-dev-consentui.cloud.adorsys.de
     aspsp-profile:
       server-uri: https://obg-bank-dev-aspspprofile.cloud.adorsys.de
+    tpp:
+      server-uri: https://obg-bank-dev-tpprestserver.cloud.adorsys.de
+      management:
+        username: obg
+        password: 12345
   retry:
     max: 10
   webdriver:

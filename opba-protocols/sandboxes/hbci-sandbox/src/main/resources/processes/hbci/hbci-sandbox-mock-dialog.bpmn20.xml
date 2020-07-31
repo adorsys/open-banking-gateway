@@ -165,7 +165,7 @@
         <omgdc:Bounds x="-391.83932" y="-353.271" width="547.3078" height="465.0193"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-f0902a98-3914-4bd0-9f94-1b7ab2309353" bpmnElement="sid-5510acbc-343c-421b-9c75-c005db1d39ae">
-        <omgdc:Bounds x="-385.9596" y="261.59277" width="542.87726" height="624.1288"/>
+        <omgdc:Bounds x="-385.95953" y="261.3404" width="542.87726" height="624.1288"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-9605a457-3d79-4f90-816b-83d133baea79" bpmnElement="sid-36197947-f323-4391-9588-2cd604101e00">
         <omgdc:Bounds x="-550.0503" y="935.2383" width="599.6201" height="374.88428"/>
@@ -285,28 +285,28 @@
         <omgdi:waypoint x="-93.78208" y="60.65655"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-52322057-3e24-488a-a510-679e93bf1766" bpmnElement="sid-6694b0e9-a95d-4a5c-ae77-845cb309fc74">
-        <omgdc:Bounds x="-363.00555" y="587.7431" width="30.0" height="30.0"/>
+        <omgdc:Bounds x="-363.0055" y="587.4907" width="30.0" height="30.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-283b8f39-b8b3-4b88-bebd-b9fa4d42b4cb" bpmnElement="sid-e0b56cf1-5c28-4edd-93b0-0b3f768f7d88">
-        <omgdc:Bounds x="-69.83685" y="785.8519" width="30.0" height="30.0"/>
+        <omgdc:Bounds x="-69.83679" y="785.59955" width="30.0" height="30.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-46f03d31-01bc-4093-a6ba-4a0f15b231d2" bpmnElement="noAuthorizationDialogInit">
-        <omgdc:Bounds x="-185.92896" y="368.7077" width="100.0" height="80.0"/>
+        <omgdc:Bounds x="-185.9289" y="368.45532" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-fce607f3-965b-49c0-9352-0354e9c3c596" bpmnElement="noAuthorizationCustomMsg">
-        <omgdc:Bounds x="-185.92894" y="562.74316" width="100.0" height="80.0"/>
+        <omgdc:Bounds x="-185.92888" y="562.4908" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-31a03f5c-c35f-410e-bee1-0f87f3aed3d9" bpmnElement="noAuthorizationSynch">
-        <omgdc:Bounds x="-185.92896" y="658.24554" width="100.0" height="80.0"/>
+        <omgdc:Bounds x="-185.9289" y="657.99316" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-0256a3d7-38e9-427b-8d1e-8fd4967f3813" bpmnElement="noAuthorizationDialogEnd">
-        <omgdc:Bounds x="-214.92894" y="760.8519" width="100.0" height="80.0"/>
+        <omgdc:Bounds x="-214.92888" y="760.59955" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-9c36ba85-7bfe-41e4-965e-51031ac61772" bpmnElement="authenticatedUpdateUserAndBankInContext">
-        <omgdc:Bounds x="-1.0368519" y="459.17993" width="100.0" height="80.0"/>
+        <omgdc:Bounds x="-1.0367908" y="458.92755" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-bb493b0d-3566-41ec-afce-082a0a61c072" bpmnElement="checkIfDialogIsStillAuthenticated">
-        <omgdc:Bounds x="28.96315" y="685.4235" width="40.0" height="40.0"/>
+        <omgdc:Bounds x="28.963211" y="685.17114" width="40.0" height="40.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-1f8a1a25-230b-4e74-9e62-e9de2075100d" bpmnElement="sid-1979a1fe-11ae-4887-8b2c-03032fbd1ed5">
         <omgdi:waypoint x="155.46848" y="-4.506531"/>
@@ -314,7 +314,7 @@
         <omgdi:waypoint x="346.60153" y="166.8603"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-64ff3792-5c45-4e82-8522-eee1864c9487" bpmnElement="sid-ede9cace-3ba2-4504-bc58-74f8ce61674e">
-        <omgdi:waypoint x="156.91768" y="417.625"/>
+        <omgdi:waypoint x="156.91774" y="417.37262"/>
         <omgdi:waypoint x="344.72653" y="417.625"/>
         <omgdi:waypoint x="346.6015" y="196.86029"/>
       </bpmdi:BPMNEdge>
@@ -326,63 +326,64 @@
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-fdd67521-d527-452b-8638-661cf8b7ebaa" bpmnElement="dialogHasValidPin">
         <omgdi:waypoint x="-492.57504" y="261.3404"/>
         <omgdi:waypoint x="-490.71503" y="417.62503"/>
-        <omgdi:waypoint x="-385.9596" y="417.625"/>
+        <omgdi:waypoint x="-385.95953" y="417.37262"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-0dcb0b96-c928-47a7-8875-81c670a29328" bpmnElement="sid-79c6fef5-0003-4f74-a325-00584d121232">
         <omgdi:waypoint x="-555.789" y="241.34038"/>
         <omgdi:waypoint x="-512.575" y="241.3404"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-f336b92f-4534-4cef-9310-0f4aa2375b70" bpmnElement="handleRequestWithoutAuthorization">
-        <omgdc:Bounds x="-284.055" y="582.74316" width="40.0" height="40.0"/>
+        <omgdc:Bounds x="-284.05493" y="582.4908" width="40.0" height="40.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-bcb4b6f5-f04c-41fb-a012-693b58b96464" bpmnElement="sid-0666c55d-6876-42f0-8432-baa8029a8328">
-        <omgdi:waypoint x="-264.055" y="622.74316"/>
-        <omgdi:waypoint x="-264.055" y="799.8518"/>
-        <omgdi:waypoint x="-214.92894" y="800.8519"/>
+        <omgdi:waypoint x="-264.05493" y="622.4908"/>
+        <omgdi:waypoint x="-264.05493" y="799.5994"/>
+        <omgdi:waypoint x="-214.92888" y="800.59955"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-2d4c0ba8-2603-4735-b8f6-56b57e1981f3" bpmnElement="sid-1ea2964e-df6f-46b4-a40f-2bcf5ab04009">
-        <omgdi:waypoint x="-244.055" y="602.74316"/>
-        <omgdi:waypoint x="-223.52344" y="602.74316"/>
-        <omgdi:waypoint x="-223.52344" y="698.2455"/>
-        <omgdi:waypoint x="-185.92897" y="698.2456"/>
+        <omgdi:waypoint x="-244.05493" y="602.4908"/>
+        <omgdi:waypoint x="-223.52338" y="602.4908"/>
+        <omgdi:waypoint x="-223.52338" y="649.24194"/>
+        <omgdi:waypoint x="-223.52338" y="697.9931"/>
+        <omgdi:waypoint x="-185.92891" y="697.9932"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-5c07637a-3bce-4bcd-8fc9-f07dccc4c5c6" bpmnElement="sid-a4ac985e-ef4d-477a-b6c1-ac723f4c15e1">
-        <omgdi:waypoint x="-244.05502" y="602.7431"/>
-        <omgdi:waypoint x="-185.92892" y="602.7432"/>
+        <omgdi:waypoint x="-244.05496" y="602.4907"/>
+        <omgdi:waypoint x="-185.92886" y="602.49084"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-f1ead242-07a1-4f1d-bd79-249e7bdc7d14" bpmnElement="sid-d07f235c-5ab7-48c5-ab7c-66e7822199ee">
-        <omgdi:waypoint x="-244.05502" y="602.74316"/>
-        <omgdi:waypoint x="-223.52345" y="602.7431"/>
-        <omgdi:waypoint x="-223.5316" y="409.14172"/>
-        <omgdi:waypoint x="-185.92896" y="408.7077"/>
+        <omgdi:waypoint x="-244.05496" y="602.4908"/>
+        <omgdi:waypoint x="-223.52339" y="602.4907"/>
+        <omgdi:waypoint x="-223.53154" y="408.88934"/>
+        <omgdi:waypoint x="-185.9289" y="408.45532"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-8e820e2e-f4f5-46c4-8da3-4075533439c0" bpmnElement="sid-2ab91f13-0051-4d77-8a4e-8d94eae7333d">
-        <omgdi:waypoint x="-333.00555" y="602.7431"/>
-        <omgdi:waypoint x="-284.055" y="602.74316"/>
+        <omgdi:waypoint x="-333.0055" y="602.4907"/>
+        <omgdi:waypoint x="-284.05493" y="602.4908"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-33cdb174-d212-4b04-82e4-a42f2f52f534" bpmnElement="sid-e1ab1d95-3fad-4d45-acdf-ca7ca63d0d8e">
-        <omgdi:waypoint x="-85.92894" y="602.74316"/>
-        <omgdi:waypoint x="-46.70591" y="602.74316"/>
-        <omgdi:waypoint x="-46.70591" y="499.17993"/>
-        <omgdi:waypoint x="-1.0368519" y="499.17993"/>
+        <omgdi:waypoint x="-85.92888" y="602.4908"/>
+        <omgdi:waypoint x="-46.70585" y="602.4908"/>
+        <omgdi:waypoint x="-46.70585" y="498.92755"/>
+        <omgdi:waypoint x="-1.0367908" y="498.92755"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-8079db3d-488d-47c8-91ce-4446daf5c010" bpmnElement="sid-a30851a1-ccfc-4097-8813-9e5dd1d711bf">
-        <omgdi:waypoint x="-85.92896" y="388.7077"/>
-        <omgdi:waypoint x="48.963154" y="389.14172"/>
-        <omgdi:waypoint x="48.96315" y="459.17993"/>
+        <omgdi:waypoint x="-85.9289" y="388.45532"/>
+        <omgdi:waypoint x="48.963215" y="388.88934"/>
+        <omgdi:waypoint x="48.96321" y="458.92755"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-1b99c97b-ca57-43c8-9d9e-c495b90cf3d3" bpmnElement="sid-083f0679-8a0f-4e6a-a114-c4129948fd6c">
-        <omgdi:waypoint x="-85.928955" y="678.24554"/>
-        <omgdi:waypoint x="-31.482891" y="678.24554"/>
-        <omgdi:waypoint x="-31.482895" y="519.17993"/>
-        <omgdi:waypoint x="-1.0368519" y="519.17993"/>
+        <omgdi:waypoint x="-85.928894" y="677.99316"/>
+        <omgdi:waypoint x="-31.48283" y="677.99316"/>
+        <omgdi:waypoint x="-31.482834" y="518.92755"/>
+        <omgdi:waypoint x="-1.0367908" y="518.92755"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-49e71d66-a1cd-4beb-aa47-a3f8059c2ca6" bpmnElement="pinIsOk">
-        <omgdi:waypoint x="68.96315" y="705.4235"/>
-        <omgdi:waypoint x="145.36023" y="705.4236"/>
-        <omgdi:waypoint x="145.36024" y="361.05405"/>
-        <omgdi:waypoint x="-266.64697" y="360.6005"/>
-        <omgdi:waypoint x="-264.055" y="587.74316"/>
+        <omgdi:waypoint x="68.96321" y="705.17114"/>
+        <omgdi:waypoint x="145.36029" y="705.1712"/>
+        <omgdi:waypoint x="145.3603" y="360.80167"/>
+        <omgdi:waypoint x="-266.6469" y="360.3481"/>
+        <omgdi:waypoint x="-264.05493" y="587.4908"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-fe57e146-a573-4710-874b-c1f22656ecc5" bpmnElement="authenticatedDialog">
         <omgdi:waypoint x="-818.01434" y="900.23834"/>
@@ -430,19 +431,19 @@
         <omgdi:waypoint x="5.857258" y="1133.6958"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-6b27dc65-dad0-44d4-b42f-e1d98e7d51a6" bpmnElement="sid-d2c93495-6de7-4ec9-b61a-f80d96e58d56">
-        <omgdi:waypoint x="-114.92894" y="800.8519"/>
-        <omgdi:waypoint x="-69.83685" y="800.8519"/>
+        <omgdi:waypoint x="-114.92888" y="800.59955"/>
+        <omgdi:waypoint x="-69.83679" y="800.59955"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-1a35e965-66be-4ae4-b258-4806d489af72" bpmnElement="authenticationLost">
-        <omgdc:Bounds x="-1.03685" y="760.8519" width="100.0" height="80.0"/>
+        <omgdc:Bounds x="-1.036789" y="760.59955" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-c91de1d3-f463-4058-8186-86c8e6339865" bpmnElement="pinIsWrong">
-        <omgdi:waypoint x="48.96315" y="725.4235"/>
-        <omgdi:waypoint x="48.96315" y="760.8519"/>
+        <omgdi:waypoint x="48.96321" y="725.17114"/>
+        <omgdi:waypoint x="48.96321" y="760.59955"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-b22be783-29ab-4529-9fc7-30d252e044ec" bpmnElement="sid-80397a31-736b-4ff7-98a8-9c0c24c37061">
-        <omgdi:waypoint x="-1.03685" y="800.8519"/>
-        <omgdi:waypoint x="-39.836853" y="800.8519"/>
+        <omgdi:waypoint x="-1.036789" y="800.59955"/>
+        <omgdi:waypoint x="-39.836792" y="800.59955"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-fbda9585-7910-437c-8b7c-2e6cc1ef7242" bpmnElement="authorizationLost">
         <omgdc:Bounds x="-15.779587" y="20.656548" width="100.0" height="80.0"/>
@@ -484,8 +485,8 @@
         <omgdi:waypoint x="34.220413" y="-46.517273"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-7f89b72b-1bbd-4af0-9a5f-58844defcf43" bpmnElement="sid-50835ca4-6fb1-4b17-a677-0cb324b3a82b">
-        <omgdi:waypoint x="48.96315" y="539.17993"/>
-        <omgdi:waypoint x="48.963154" y="685.4236"/>
+        <omgdi:waypoint x="48.96321" y="538.92755"/>
+        <omgdi:waypoint x="48.963215" y="685.1712"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-6c782f87-439e-4d9a-bbdd-66872353195c" bpmnElement="setDialogId">
         <omgdc:Bounds x="-1028.7255" y="880.2383" width="100.0" height="80.0"/>
@@ -512,22 +513,22 @@
         <omgdi:waypoint x="-798.01434" y="920.23834"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-c73544c5-4b7b-4d80-b4e7-f5f58acd73ca" bpmnElement="noAuthorizationDialogInitScaTan2Step">
-        <omgdc:Bounds x="-185.92896" y="459.17993" width="100.0" height="80.0"/>
+        <omgdc:Bounds x="-185.9289" y="458.92755" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-9516309e-e1c9-4ed5-8101-24e1051aad6e" bpmnElement="sid-2a8854a7-397e-4dba-862e-9a8a1c437fe3">
-        <omgdi:waypoint x="-85.928955" y="479.17993"/>
-        <omgdi:waypoint x="-1.03685" y="479.17993"/>
+        <omgdi:waypoint x="-85.928894" y="478.92755"/>
+        <omgdi:waypoint x="-1.036789" y="478.92755"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-c71d385e-94dc-4a5a-a405-dbc91d2f513c" bpmnElement="sid-8b14ea45-50fd-4d38-95d5-33d57501462d">
-        <omgdi:waypoint x="-244.05502" y="602.74304"/>
-        <omgdi:waypoint x="-223.52345" y="602.7431"/>
-        <omgdi:waypoint x="-223.52754" y="498.86743"/>
-        <omgdi:waypoint x="-185.92896" y="499.17993"/>
+        <omgdi:waypoint x="-244.05496" y="602.49066"/>
+        <omgdi:waypoint x="-223.52339" y="602.4907"/>
+        <omgdi:waypoint x="-223.52748" y="498.61505"/>
+        <omgdi:waypoint x="-185.9289" y="498.92755"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-d5f40f10-9f61-4882-8623-29e2754116ce" bpmnElement="noAuthorizationTanWasProvided">
-        <omgdi:waypoint x="28.96315" y="705.4235"/>
-        <omgdi:waypoint x="-55.80412" y="705.4235"/>
-        <omgdi:waypoint x="-54.836853" y="785.8519"/>
+        <omgdi:waypoint x="28.963211" y="705.17114"/>
+        <omgdi:waypoint x="-55.804058" y="705.17114"/>
+        <omgdi:waypoint x="-54.836792" y="785.59955"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-6e9f39d6-4ba6-49a9-a2e7-d23254b16468" bpmnElement="onWrongScaMethod">
         <omgdc:Bounds x="173.95566" y="95.22596" width="100.0" height="80.0"/>

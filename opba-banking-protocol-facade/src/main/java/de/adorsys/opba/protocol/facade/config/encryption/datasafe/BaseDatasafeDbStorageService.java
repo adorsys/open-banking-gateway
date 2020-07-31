@@ -33,13 +33,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechDatasafeStorage.FINTECH_ONLY_KEYS_ID;
+import static de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechDatasafeStorage.FINTECH_ONLY_PRV_KEYS;
+
 @RequiredArgsConstructor
 public abstract class BaseDatasafeDbStorageService implements StorageService {
 
-    public static final String PRIVATE_STORAGE = "db://storage/";
-    public static final String INBOX_STORAGE = "db://inbox/";
-    public static final String KEYSTORE = "db://keystore/";
-    public static final String PUB_KEYS = "db://pubkeys/";
+    public static final String DB_PROTOCOL = "db://";
+    public static final String PRIVATE_STORAGE = DB_PROTOCOL + "storage/";
+    public static final String INBOX_STORAGE = DB_PROTOCOL + "inbox/";
+    public static final String KEYSTORE = DB_PROTOCOL + "keystore/";
+    public static final String PUB_KEYS = DB_PROTOCOL + "pubkeys/";
 
     private final Map<String, StorageActions> handlers;
 
@@ -211,6 +215,34 @@ public abstract class BaseDatasafeDbStorageService implements StorageService {
         @Override
         public UserPrivateProfile privateProfile(UserIDAuth ofUser) {
             return dfsConfig.defaultPrivateTemplate(ofUser).buildPrivateProfile();
+        }
+
+        @Override
+        public boolean userExists(UserID ofUser) {
+            return false;
+        }
+    }
+
+    public static class DbTableFintechRetrieval extends ProfileRetrievalServiceImpl {
+
+        private final DFSConfig dfsConfig;
+
+        public DbTableFintechRetrieval(ProfileRetrievalServiceImplRuntimeDelegatable.ArgumentsCaptor captor) {
+            super(null, null, null, null, null, null);
+            this.dfsConfig = captor.getDfsConfig();
+        }
+
+        @Override
+        public UserPublicProfile publicProfile(UserID ofUser) {
+            return dfsConfig.defaultPublicTemplate(ofUser).buildPublicProfile();
+        }
+
+        @Override
+        public UserPrivateProfile privateProfile(UserIDAuth ofUser) {
+            UserPrivateProfile privateProfile = dfsConfig.defaultPrivateTemplate(ofUser).buildPrivateProfile();
+            privateProfile.getPrivateStorage()
+                    .put(FINTECH_ONLY_KEYS_ID, BasePrivateResource.forAbsolutePrivate(FINTECH_ONLY_PRV_KEYS));
+            return privateProfile;
         }
 
         @Override

@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.xs2a.config;
 
 import de.adorsys.opba.protocol.api.services.scoped.RequestScopedServicesProvider;
 import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableConfig;
+import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableJobEventListener;
 import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
 import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableProperties;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Propagation;
@@ -55,6 +57,10 @@ public class Xs2aSensitiveDataTest {
 
     @Configuration
     public static class TestConfig {
+
+        @MockBean
+        @SuppressWarnings("PMD.UnusedPrivateField") // Injecting into Spring context as bean comes from real protocol
+        private FlowableJobEventListener flowableJobEventListener;
 
         @Bean
         RequestScopedServicesProvider requestScopedServicesProvider() {

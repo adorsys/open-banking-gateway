@@ -45,6 +45,8 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF> {
+    private static final String TPP_SERVER_PASSWORD_PLACEHOLDER = "%password%";
+
     public static final ObjectMapper JSON_MAPPER = new ObjectMapper()
                .registerModule(new JavaTimeModule())
                .enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
@@ -117,6 +119,14 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
         );
     }
 
+    protected ExtractableResponse<Response> user_provides_sca_challenge_result() {
+        return provideParametersToBankingProtocolWithBody(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/new-user-sca-challenge-result.json"),
+                HttpStatus.ACCEPTED
+        );
+    }
+
     protected ExtractableResponse<Response> provideParametersToBankingProtocolWithBody(String uriPath, String body, HttpStatus status) {
         ExtractableResponse<Response> response = RestAssured
                 .given()
@@ -138,22 +148,22 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
         return response;
     }
 
-    protected ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resource, HttpStatus status) {
-        return provideParametersToBankingProtocolWithBody(uriPath, readResource(resource), status);
+    protected ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resourceData, HttpStatus status) {
+        return provideParametersToBankingProtocolWithBody(uriPath, resourceData, status);
     }
 
-    protected ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resource) {
+    protected ExtractableResponse<Response> startInitialInternalConsentAuthorization(String uriPath, String resourceData) {
         ExtractableResponse<Response> response =
-                startInitialInternalConsentAuthorization(uriPath, resource, HttpStatus.ACCEPTED);
+                startInitialInternalConsentAuthorization(uriPath, resourceData, HttpStatus.ACCEPTED);
         updateServiceSessionId(response);
         updateRedirectCode(response);
 
         return response;
     }
 
-    protected void startInitialInternalConsentAuthorizationWithCookieValidation(String uriPath, String resource) {
+    protected void startInitialInternalConsentAuthorizationWithCookieValidation(String uriPath, String resourceData) {
         ExtractableResponse<Response> response =
-                startInitialInternalConsentAuthorization(uriPath, resource, HttpStatus.ACCEPTED);
+                startInitialInternalConsentAuthorization(uriPath, resourceData, HttpStatus.ACCEPTED);
         Cookie detailedCookie = response.response().getDetailedCookie(AUTHORIZATION_SESSION_KEY);
 
         assertThat(detailedCookie.getMaxAge()).isEqualTo(cookieProperties.getRedirectMaxAge().getSeconds());
@@ -178,7 +188,14 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
     protected ExtractableResponse<Response> max_musterman_provides_password() {
         return startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/max-musterman-password.json"
+                readResource("restrecord/tpp-ui-input/params/max-musterman-password.json")
+        );
+    }
+
+    protected ExtractableResponse<Response> user_provides_password(String password) {
+        return startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/new-user-password.json").replace(TPP_SERVER_PASSWORD_PLACEHOLDER, password)
         );
     }
 

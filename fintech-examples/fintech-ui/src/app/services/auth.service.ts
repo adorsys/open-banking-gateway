@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FinTechAuthorizationService } from '../api';
+import { FinTechAuthorizationService, FinTechOauth2AuthenticationService } from '../api';
 import { Credentials } from '../models/credentials.model';
 import { HeaderConfig } from '../models/consts';
 import { DocumentCookieService } from './document-cookie.service';
@@ -16,6 +16,7 @@ export class AuthService {
   constructor(
     private router: Router,
     private finTechAuthorizationService: FinTechAuthorizationService,
+    private finTechOauthAuthenticationService: FinTechOauth2AuthenticationService,
     private cookieService: DocumentCookieService,
     private storageService: StorageService
   ) {}
@@ -25,6 +26,25 @@ export class AuthService {
     return this.finTechAuthorizationService.loginPOST('', credentials, 'response').pipe(
       map(response => {
         this.setSessionData(response, credentials);
+        return response.ok;
+      })
+    );
+  }
+
+  gmailOauth2Login(): Observable<string> {
+    return this.finTechOauthAuthenticationService.oauthLoginPOST('', 'gmail', 'response').pipe(
+      map(response => {
+        return response.headers.get('Location');
+      })
+    );
+  }
+
+  oauth2Login(code: string, state: string, scope: string, error: string): Observable<boolean> {
+    return this.finTechAuthorizationService.callbackGetLogin(code, state, scope, error, 'response').pipe(
+      map(response => {
+        const creds = new Credentials()
+        creds.username = response.body.userProfile.name
+        this.setSessionData(response, creds);
         return response.ok;
       })
     );

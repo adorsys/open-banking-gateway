@@ -32,24 +32,26 @@ export class CookieRenewalService {
     this.simpleTimer.unsubscribe(this.getTimerName(authid));
     this.simpleTimer.delTimer(this.getTimerName(authid));
 
-    // timer is deleted. If following call fails due to whatever reason, session cookie is not valid but
-    // timer does not retry to renew it, which is fine, so error handling of call is not needed
-    this.psuAuthService.renewalAuthorizationSessionKey('' + uuid.v4(), authid, 'response').subscribe(res => {
-      this.sessionService.setTTL(authid, res.headers.get(ApiHeaders.COOKIE_TTL));
-      const timer = this.getTimer(authid);
-      console.log(
-        new Date().toLocaleString(),
-        ' got new cookie from server ',
-        res.status,
-        ' and activate next timer ',
-        this.getTimerName(authid),
-        ' in ',
-        timer,
-        ' secs'
-      );
-      this.simpleTimer.newTimerCD(this.getTimerName(authid), timer, timer);
-      this.simpleTimer.subscribe(this.getTimerName(authid), () => this.cookieRenewal(authid));
-    });
+    if (!this.sessionService.isLongTimeCookie(authid)) {
+      // timer is deleted. If following call fails due to whatever reason, session cookie is not valid but
+      // timer does not retry to renew it, which is fine, so error handling of call is not needed
+      this.psuAuthService.renewalAuthorizationSessionKey('' + uuid.v4(), authid, 'response').subscribe(res => {
+        this.sessionService.setTTL(authid, res.headers.get(ApiHeaders.COOKIE_TTL));
+        const timer = this.getTimer(authid);
+        console.log(
+          new Date().toLocaleString(),
+          ' got new cookie from server ',
+          res.status,
+          ' and activate next timer ',
+          this.getTimerName(authid),
+          ' in ',
+          timer,
+          ' secs'
+        );
+        this.simpleTimer.newTimerCD(this.getTimerName(authid), timer, timer);
+        this.simpleTimer.subscribe(this.getTimerName(authid), () => this.cookieRenewal(authid));
+      });
+    }
   }
 
   getTimer(authid): number {

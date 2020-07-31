@@ -6,7 +6,7 @@ import de.adorsys.datasafe.types.api.actions.ReadRequest;
 import de.adorsys.datasafe.types.api.actions.WriteRequest;
 import de.adorsys.opba.db.domain.entity.psu.Psu;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
-import de.adorsys.opba.protocol.facade.config.encryption.PsuConsentEncryptionServiceProvider;
+import de.adorsys.opba.protocol.facade.config.encryption.PsuEncryptionServiceProvider;
 import de.adorsys.opba.protocol.facade.config.encryption.datasafe.BaseDatasafeDbStorageService;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.PairIdPsuAspspTuple;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
@@ -30,7 +30,7 @@ public class PsuSecureStorage {
     private final DefaultDatasafeServices datasafeServices;
 
     private final DFSConfig config;
-    private final PsuConsentEncryptionServiceProvider encryptionServiceProvider;
+    private final PsuEncryptionServiceProvider encryptionServiceProvider;
     private final EncryptionKeySerde serde;
 
     public void registerPsu(Psu psu, Supplier<char[]> password) {
@@ -53,6 +53,11 @@ public class PsuSecureStorage {
         } catch (BaseDatasafeDbStorageService.DbStorageEntityNotFoundException ex) {
             return generateAndSaveAspspSecretKey(password, session, storePublicKeyIfNeeded);
         }
+    }
+
+    @SneakyThrows
+    public PrivateKey createOneTimePrivateKey(Supplier<char[]> password, AuthSession session, BiConsumer<UUID, PublicKey> storePublicKeyIfNeeded) {
+        return generateAndSaveAspspSecretKey(password, session, storePublicKeyIfNeeded);
     }
 
     @SneakyThrows

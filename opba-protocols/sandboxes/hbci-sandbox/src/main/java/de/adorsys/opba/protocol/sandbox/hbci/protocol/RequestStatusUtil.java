@@ -14,4 +14,8 @@ public class RequestStatusUtil {
     public boolean isForAccountListing(Map<String, String> requestData) {
         return "HKSPA".equals(MapRegexUtil.getDataRegex(requestData, "TAN2Step\\d*\\.ordersegcode"));
     }
+
+    public boolean isForPayment(Map<String, String> requestData) {
+        return "HKCCS".equals(MapRegexUtil.getDataRegex(requestData, "TAN2Step\\d*\\.ordersegcode"));
+    }
 }

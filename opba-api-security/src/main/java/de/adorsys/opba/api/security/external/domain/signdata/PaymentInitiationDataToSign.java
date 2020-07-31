@@ -27,4 +27,6 @@ public class PaymentInitiationDataToSign {
 
     //Http request body
     String body;
+
+    String psuAuthenticationRequired;
 }

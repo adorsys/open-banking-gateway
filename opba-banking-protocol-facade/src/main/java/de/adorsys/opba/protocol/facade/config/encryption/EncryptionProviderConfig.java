@@ -14,8 +14,12 @@ public class EncryptionProviderConfig {
     }
 
     @Bean
-    PsuConsentEncryptionServiceProvider psuConsentEncryptionProvider(PsuKeyPairConfig psuKeyPairConfig) {
-        return new PsuConsentEncryptionServiceProvider(new CmsEncryptionOper(psuKeyPairConfig));
+    PsuEncryptionServiceProvider psuConsentEncryptionProvider(PsuKeyPairConfig psuKeyPairConfig) {
+        return new PsuEncryptionServiceProvider(new CmsEncryptionOper(psuKeyPairConfig));
     }
 
+    @Bean
+    FintechOnlyEncryptionServiceProvider fintechOnlyEncryptionProvider(FintechOnlyKeyPairConfig fintechOnlyKeyPairConfig) {
+        return new FintechOnlyEncryptionServiceProvider(new CmsEncryptionOper(fintechOnlyKeyPairConfig));
+    }
 }

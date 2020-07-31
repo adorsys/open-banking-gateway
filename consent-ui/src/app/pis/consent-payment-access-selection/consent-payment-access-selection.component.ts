@@ -16,8 +16,8 @@ import { PisPayment } from '../common/models/pis-payment.model';
   styleUrls: ['./consent-payment-access-selection.component.scss']
 })
 export class ConsentPaymentAccessSelectionComponent implements OnInit {
-  public finTechName = StubUtil.FINTECH_NAME;
-  public aspspName = StubUtil.ASPSP_NAME;
+  public finTechName: string;
+  public aspspName: string;
 
   @Input() paymentReviewPage: string;
 
@@ -40,6 +40,8 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.parent.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
+      this.aspspName = this.sessionService.getBankName(res.authId);
+      this.finTechName = this.sessionService.getFintechName(res.authId);
       this.state = this.sessionService.getPaymentState(this.authorizationId, () => new AuthConsentState());
       if (!this.hasGeneralViolations()) {
         this.moveToReviewPayment();

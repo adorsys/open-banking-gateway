@@ -14,8 +14,9 @@ import { DedicatedAccessComponent } from '../dedicated-access/dedicated-access.c
 import { StubUtilTests } from '../../../../common/stub-util-tests';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UpdateConsentAuthorizationService } from '../../../../../api';
+import { StubUtil } from '../../../../../common/utils/stub-util';
 
-fdescribe('ConsentAccountAccessSelectionComponent', () => {
+describe('ConsentAccountAccessSelectionComponent', () => {
   let component: ConsentAccountAccessSelectionComponent;
   let fixture: ComponentFixture<ConsentAccountAccessSelectionComponent>;
   let updateConsentAuthorizationService: UpdateConsentAuthorizationService;
@@ -36,9 +37,9 @@ fdescribe('ConsentAccountAccessSelectionComponent', () => {
           provide: SessionService,
           useValue: {
             getConsentObject: () => new AisConsentToGrant(),
-            hasAisViolation: () => false,
-            hasGeneralViolation: () => false,
-            getConsentState: () => new AuthConsentState([])
+            getConsentState: () => new AuthConsentState([]),
+            getFintechName: (): string => StubUtil.FINTECH_NAME,
+            getBankName: (): string => StubUtil.ASPSP_NAME
           }
         }
       ],

@@ -21,7 +21,8 @@ public class HbciAskForTan extends ValidatedExecution<HbciContext> {
 
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
-        redirectExecutor.redirect(execution, context, redir -> redir.getParameters().getReportScaResult());
+        redirectExecutor.redirect(execution, context,
+                redir -> context.getActiveUrlSet(redir).getRedirect().getParameters().getReportScaResult());
     }
 
     @Override

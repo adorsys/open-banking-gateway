@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { SessionService } from '../session.service';
 
 @Component({
   selector: 'consent-app-to-aspsp',
@@ -10,13 +11,15 @@ export class ToAspspComponent implements OnInit {
   @Input() aspspName: string;
   @Input() actionName: string;
   @Input() finTechName: string;
+  @Input() authorizationSessionId: string;
   @Output() deny = new EventEmitter<boolean>();
 
-  constructor() {}
+  constructor(private sessionService: SessionService) {}
 
   ngOnInit() {}
 
   onConfirm() {
+    this.sessionService.setIsLongTimeCookie(this.authorizationSessionId, true);
     window.location.href = this.redirectTo;
   }
 

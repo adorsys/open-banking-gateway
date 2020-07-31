@@ -8,6 +8,7 @@ import de.adorsys.multibanking.hbci.model.HbciTanSubmit;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.result.body.ScaMethod;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
+import de.adorsys.opba.protocol.hbci.config.HbciProtocolConfiguration;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.HbciResultCache;
 import de.adorsys.opba.protocol.hbci.service.storage.TransientDataEntry;
 import lombok.Data;
@@ -30,7 +31,8 @@ public class HbciContext extends BaseContext {
      */
     private Map<ProtocolAction, String> flowByAction = ImmutableMap.of(
             ProtocolAction.LIST_ACCOUNTS, "hbci-list-accounts",
-            ProtocolAction.LIST_TRANSACTIONS, "hbci-list-transactions"
+            ProtocolAction.LIST_TRANSACTIONS, "hbci-list-transactions",
+            ProtocolAction.SINGLE_PAYMENT, "hbci-single-payment"
     );
 
     /**
@@ -120,5 +122,11 @@ public class HbciContext extends BaseContext {
     @JsonIgnore
     public void setPsuTan(String scaChallengeResult) {
         this.transientStorage().set(new TransientDataEntry(null, scaChallengeResult));
+    }
+
+    @JsonIgnore
+    public HbciProtocolConfiguration.UrlSet getActiveUrlSet(HbciProtocolConfiguration config) {
+        return ProtocolAction.SINGLE_PAYMENT.equals(this.getAction())
+                ? config.getPis() : config.getAis();
     }
 }

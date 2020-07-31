@@ -3,13 +3,14 @@ import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { SessionService } from '../../common/session.service';
-import { PsuAuthRequest, UpdateConsentAuthorizationService } from '../../api';
+import { PsuAuthRequest, SinglePayment, UpdateConsentAuthorizationService } from '../../api';
 import { SharedRoutes } from '../../ais/entry-page/initiation/common/shared-routes';
 import { AccountAccessLevel } from '../../ais/common/dto/ais-consent';
 import { StubUtil } from '../../common/utils/stub-util';
 import { ApiHeaders } from '../../api/api.headers';
 import { PaymentUtil } from '../common/payment-util';
 import { PisPayment } from '../common/models/pis-payment.model';
+import { AuthConsentState } from '../../ais/common/dto/auth-state';
 
 @Component({
   selector: 'consent-app-payments-consent-review',
@@ -19,9 +20,10 @@ import { PisPayment } from '../common/models/pis-payment.model';
 export class PaymentsConsentReviewComponent implements OnInit {
   public static ROUTE = SharedRoutes.REVIEW;
   accountAccessLevel = AccountAccessLevel;
-  public finTechName = StubUtil.FINTECH_NAME;
-  public aspspName = StubUtil.ASPSP_NAME;
+  public finTechName: string;
+  public aspspName: string;
   public payment: PisPayment;
+  public singlePayment: SinglePayment;
   private authorizationId: string;
 
   constructor(
@@ -36,16 +38,18 @@ export class PaymentsConsentReviewComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.parent.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
+      this.aspspName = this.sessionService.getBankName(res.authId);
+      this.finTechName = this.sessionService.getFintechName(res.authId);
       this.payment = PaymentUtil.getOrDefault(this.authorizationId, this.sessionService);
+      const paymentState = this.sessionService.getPaymentState(this.authorizationId, () => new AuthConsentState());
+      if (paymentState != null) {
+        this.singlePayment = paymentState.singlePayment;
+      }
     });
   }
 
   onConfirm() {
     const body = { extras: this.payment.extras } as PsuAuthRequest;
-
-    // if (this.payment) {
-    //   body.consentAuth = { consent: this.payment.consent } as ConsentAuth;
-    // }
 
     console.log(body);
 

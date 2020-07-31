@@ -29,4 +29,11 @@ public class UserEntity {
     private String password;
     private String fintechUserId;
 
+    private boolean serviceAccount;
+    private boolean active;
+
+    /**
+     * For Oauth2-created users we disable password login (because these users can't set password when created).
+     */
+    private boolean enablePasswordLogin;
 }

@@ -67,6 +67,59 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     void testAccountsListWithConsentUsingRedirect(Approach expectedApproach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .set_default_preferred_approach()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .rest_assured_points_to_opba_server()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_list_accounts_for_anton_brueckner()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .and()
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
+        then()
+                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testAccountsListWithConsentUsingRedirectWithTppRedirectPreferredTrue(Approach expectedApproach) {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .set_tpp_redirect_preferred_true()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .rest_assured_points_to_opba_server()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_list_accounts_for_anton_brueckner()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent()
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .and()
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
+        then()
+                .open_banking_has_consent_for_anton_brueckner_account_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session();
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testAccountsListWithConsentUsingRedirectWithTppRedirectPreferredFalse(Approach expectedApproach) {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .set_tpp_redirect_preferred_false()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -92,6 +145,63 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     void testTransactionsListWithConsentUsingRedirect(Approach expectedApproach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running()
+                .set_default_preferred_approach()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .rest_assured_points_to_opba_server()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_list_transactions_for_anton_brueckner()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_list_transactions_with_single_account_consent()
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .and()
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
+        then()
+                .open_banking_has_consent_for_anton_brueckner_transaction_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_anton_brueckner_transactions_data_using_consent_bound_to_service_session(
+                        ANTON_BRUECKNER_RESOURCE_ID, DATE_FROM, DATE_TO, BOTH_BOOKING
+                );
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testTransactionsListWithConsentUsingRedirectWithTppRedirectPreferredTrue(Approach expectedApproach) {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running()
+                .set_tpp_redirect_preferred_true()
+                .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+                .rest_assured_points_to_opba_server()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_list_transactions_for_anton_brueckner()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_anton_brueckner_provided_initial_parameters_to_list_transactions_with_single_account_consent()
+                .and()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
+                .and()
+                .open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test();
+        then()
+                .open_banking_has_consent_for_anton_brueckner_transaction_list()
+                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_can_read_anton_brueckner_transactions_data_using_consent_bound_to_service_session(
+                        ANTON_BRUECKNER_RESOURCE_ID, DATE_FROM, DATE_TO, BOTH_BOOKING
+                );
+    }
+
+    @ParameterizedTest
+    @EnumSource(Approach.class)
+    void testTransactionsListWithConsentUsingRedirectWithTppRedirectPreferredFalse(Approach expectedApproach) {
+        given()
+                .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running()
+                .set_tpp_redirect_preferred_false()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -119,6 +229,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     void testAccountAndTransactionsListWithConsentForAllServicesUsingRedirect(Approach expectedApproach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_transactions_running()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -147,6 +258,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     void testAccountsListWithConsentUsingEmbedded(Approach expectedApproach) {
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -174,6 +286,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     void testTransactionsListWithConsentUsingEmbedded(Approach expectedApproach) {
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -203,6 +316,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     void testAccountAndTransactionsListWithConsentForAllServicesUsingEmbedded(Approach expectedApproach) {
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -232,6 +346,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     void testAccountsListWithConsentUsingRedirectWithIpAddress() {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -254,6 +369,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     void testAccountsListWithConsentUsingRedirectWithComputedIpAddress() {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -276,6 +392,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     void testAccountsListWithDedicatedConsentUsingRedirectWithComputedIpAddress() {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -298,6 +415,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     void testAccountsListWithConsentUsingRedirectWithComputedIpAddressForUnknownUser() {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -323,6 +441,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     void testTransactionsListWithConsentUsingEmbeddedForUnknownUser(Approach expectedApproach) {
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -355,6 +474,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
                 .ignore_validation_rules_table_ignore_missing_ip_address()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -385,6 +505,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
                 .ignore_validation_rules_table_do_not_ignore_missing_psu_ip_port()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -414,6 +535,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     void testAccountsListWithConsentUsingRedirectWithCookieValidation(Approach expectedApproach) {
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -445,6 +567,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     void testAccountsListWithConsentUsingEmbeddedWithMissingIpAddressWhenItIsMandatoryByDefault(Approach expectedApproach) {
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -475,6 +598,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
                 .ignore_validation_rules_table_ignore_missing_psu_ip_port()
+                .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);

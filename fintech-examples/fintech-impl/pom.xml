@@ -97,6 +97,14 @@
             <version>${mapstruct.version}</version>
         </dependency>
 
+        <!-- Email based Oauth2 -->
+        <dependency>
+            <groupId>com.nimbusds</groupId>
+            <artifactId>oauth2-oidc-sdk</artifactId>
+            <version>${nimbus.version}</version>
+        </dependency>
+
+
         <dependency>
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations</artifactId>

@@ -8,8 +8,7 @@ import { SessionService } from '../../common/session.service';
 import { ConsentUtil } from '../common/consent-util';
 import { ApiHeaders } from '../../api/api.headers';
 import { Action } from '../../common/utils/action';
-import { AuthStateConsentAuthorizationService } from '../../api';
-import { UpdateConsentAuthorizationService, DenyRequest } from '../../api';
+import { AuthStateConsentAuthorizationService, DenyRequest, UpdateConsentAuthorizationService } from '../../api';
 
 @Component({
   selector: 'consent-app-to-aspsp-redirection',
@@ -19,13 +18,12 @@ import { UpdateConsentAuthorizationService, DenyRequest } from '../../api';
 export class ToAspspRedirectionComponent implements OnInit {
   public static ROUTE = 'to-aspsp-redirection';
 
-  public finTechName = StubUtil.FINTECH_NAME;
-  public aspspName = StubUtil.ASPSP_NAME;
+  public finTechName: string;
+  public aspspName: string;
   public account = Action.ACCOUNT;
+  public authorizationId: string;
 
   redirectTo: string;
-
-  private authorizationId: string;
   private aisConsent: AisConsentToGrant;
 
   constructor(
@@ -39,12 +37,15 @@ export class ToAspspRedirectionComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.parent.params.subscribe(res => {
       this.authorizationId = res.authId;
+      this.aspspName = this.sessionService.getBankName(res.authId);
+      this.finTechName = this.sessionService.getFintechName(res.authId);
       this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
       this.loadRedirectUri();
     });
   }
 
   private loadRedirectUri() {
+    localStorage.setItem(this.authorizationId, "false")
     this.authStateConsentAuthorizationService
       .authUsingGET(this.authorizationId, this.sessionService.getRedirectCode(this.authorizationId), 'response')
       .subscribe(res => {

@@ -61,6 +61,11 @@ The following picture displays the overall technical architecture concept of thi
 
 ## Information for developers:
  
+ - Working with BPMN: As most protocols use BPMN, we have developed 
+ the [plugin 'Flowable BPMN visualizer'](https://plugins.jetbrains.com/plugin/14318-flowable-bpmn-visualizer) that directly integrates into IntelliJ
+ with code navigation, refactoring and other stuff for **Flowable BPMN engine**. It will make your work a lot easier
+ as you don't need to leave IntelliJ to change diagram or to see what class is used at which step.
+ 
  - Starting with project: [How to start with project](https://github.com/adorsys/open-banking-gateway/tree/develop/how-to-start-with-project) 
 
 ## Documentation

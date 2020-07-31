@@ -49,6 +49,10 @@ export class ConsentInitiateComponent implements OnInit {
 
   private initiateConsentSession(authorizationId: string, redirectCode: string) {
     this.authStateConsentAuthorizationService.authUsingGET(authorizationId, redirectCode, 'response').subscribe(res => {
+      // setting bank and fintech names
+      this.sessionService.setBankName(authorizationId, (res.body as ConsentAuth).bankName);
+      this.sessionService.setFintechName(authorizationId, (res.body as ConsentAuth).fintechName);
+
       this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
       this.navigate(authorizationId, res.body);
     });

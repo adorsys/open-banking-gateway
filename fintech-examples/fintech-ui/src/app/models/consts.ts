@@ -1,5 +1,6 @@
 export class Consts {
   public static LOCAL_STORAGE_XSRF_TOKEN = 'XSRF_TOKEN';
+  public static LOCAL_STORAGE_SETTINGS = 'FINTECH_SETTINGS';
   public static CONFIRM_PAYMENT = 'confirmationData';
 }
 
@@ -21,6 +22,11 @@ export function toLocaleString(date: Date): string {
 }
 
 export enum Consent {
+  OK = 'OK',
+  NOT_OK = 'NOT_OK'
+}
+
+export enum Payment {
   OK = 'OK',
   NOT_OK = 'NOT_OK'
 }

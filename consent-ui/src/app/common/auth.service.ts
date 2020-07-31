@@ -26,6 +26,16 @@ export class AuthService {
     );
   }
 
+  public userLoginForAnonymousPayment(authorizationId: string, redirectCode: string) {
+    const xRequestID = uuid.v4();
+    return this.psuAuthForConsentApproval.loginForAnonymousPaymentApproval(
+      xRequestID,
+      authorizationId,
+      redirectCode,
+      'response'
+    );
+  }
+
   public userLoginForPayment(authorizationId: string, redirectCode: string, credentials: PsuAuthBody) {
     const xRequestID = uuid.v4();
     return this.psuAuthForConsentApproval.loginForPaymentApproval(
