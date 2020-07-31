@@ -1,5 +1,8 @@
 {
   "id" : "befd2d60-a204-3f27-89d2-a5d06d8690d2",
+  "scenarioName": "Embedded max.musterman initiate payment",
+  "requiredScenarioState": "Started",
+  "newScenarioState": "Received",
   "request" : {
     "url" : "/v1/payments/sepa-credit-transfers",
     "method" : "POST",
