@@ -27,10 +27,16 @@ public class ScaMethod {
      */
     private String value;
 
+    /**
+     * SCA method type (email, sms etc.)
+     */
+    private String type;
+
     @Mapper(componentModel = SPRING_KEYWORD)
     public interface FromAuthObject {
         @Mapping(source = "authenticationMethodId", target = "key")
         @Mapping(target = "value", expression = "java(auth.getAuthenticationType() + ':' + auth.getName())")
+        @Mapping(source = "authenticationType", target = "type")
         ScaMethod map(AuthenticationObject auth);
     }
 
@@ -42,6 +48,7 @@ public class ScaMethod {
         return "{"
                        + "\"key\":\"" + key + "\""
                        + ", \"value\":\"" + value + "\""
+                       + ", \"type\":\"" + type + "\""
                        + "}";
     }
 }
