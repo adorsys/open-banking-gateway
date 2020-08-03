@@ -1,8 +1,6 @@
 package de.adorsys.opba.api.security.generator.impl;
 
-import de.adorsys.opba.api.security.generator.api.RequestDataToSignGenerator;
-import de.adorsys.opba.api.security.generator.api.RequestToSign;
-
+/*
 public class AisAccountDataToSignGenerator implements RequestDataToSignGenerator {
 
     @Override
@@ -39,3 +37,4 @@ public class AisAccountDataToSignGenerator implements RequestDataToSignGenerator
         return result.toString();
     }
 }
+*/
