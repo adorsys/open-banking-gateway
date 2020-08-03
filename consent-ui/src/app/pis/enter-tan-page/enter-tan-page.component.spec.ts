@@ -19,7 +19,7 @@ describe('PIS EnterTanPageComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { queryParamMap: convertToParamMap({}) },
+            snapshot: { paramMap: convertToParamMap({ scaType: 'scaType' }), queryParamMap: convertToParamMap({}) },
             parent: { snapshot: { paramMap: convertToParamMap({ authId: StubUtilTests.AUTH_ID }) } }
           }
         }
