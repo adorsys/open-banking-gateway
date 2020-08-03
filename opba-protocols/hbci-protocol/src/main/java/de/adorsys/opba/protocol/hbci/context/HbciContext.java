@@ -21,6 +21,8 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 public class HbciContext extends BaseContext {
 
+    public static final String DEFAULT_SCA_METHOD = "EMAIL";
+
     /**
      * PSU user ID (login) in ASPSP API
      */
@@ -87,7 +89,7 @@ public class HbciContext extends BaseContext {
     /**
      * saves selected SCA method and returns it back in sca-result url
      */
-    private String userSelectScaType;
+    private String userSelectScaType = DEFAULT_SCA_METHOD;
 
     /**
      * Indicates that while consent exists, it is incompatible.
