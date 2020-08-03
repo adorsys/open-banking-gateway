@@ -65,7 +65,7 @@ protocol:
           provide-more: /#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
           provide-psu-password: /#{context.getAuthorizationSessionIdIfOpened()}/authenticate?wrong=#{context.getWrongAuthCredentials()}
           select-sca-method: /#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
-          report-sca-result: /#{context.getAuthorizationSessionIdIfOpened()}/sca-result?wrong=#{context.getWrongAuthCredentials()}
+          report-sca-result: /#{context.getAuthorizationSessionIdIfOpened()}/sca-result/#{context.getUserSelectScaType()}?wrong=#{context.getWrongAuthCredentials()}
           provide-psu-iban: /#{context.getAuthorizationSessionIdIfOpened()}/entry-consent-transactions/dedicated-account-access?wrong=#{context.getWrongAuthCredentials()}
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID

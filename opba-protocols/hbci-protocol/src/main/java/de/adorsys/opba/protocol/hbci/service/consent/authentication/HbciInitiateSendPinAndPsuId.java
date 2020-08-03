@@ -65,7 +65,7 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
                         ctx.setTanChallengeRequired(true);
                         ctx.setAvailableSca(
                                 response.getScaMethods().stream()
-                                        .map(it -> new ScaMethod(it.getId(), it.getName()))
+                                        .map(it -> new ScaMethod(it.getId(), it.getName(), it.getName()))
                                         .collect(Collectors.toList())
                         );
                         ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());

@@ -8,8 +8,9 @@ import { ApiHeaders } from '../../api/api.headers';
   styleUrls: ['./enter-tan-page.component.scss']
 })
 export class EnterTanPageComponent implements OnInit {
-  public static ROUTE = 'sca-result';
+  public static ROUTE = 'sca-result/:scaType';
   authorizationSessionId: string;
+  scaType: string;
   wrongSca: boolean;
 
   constructor(private activatedRoute: ActivatedRoute) {}
@@ -17,6 +18,7 @@ export class EnterTanPageComponent implements OnInit {
   ngOnInit() {
     this.authorizationSessionId = this.activatedRoute.parent.snapshot.paramMap.get('authId');
     this.wrongSca = this.activatedRoute.snapshot.queryParamMap.get('wrong') === 'true';
+    this.scaType = this.activatedRoute.snapshot.paramMap.get('scaType');
   }
 
   onSubmit(res: any): void {
