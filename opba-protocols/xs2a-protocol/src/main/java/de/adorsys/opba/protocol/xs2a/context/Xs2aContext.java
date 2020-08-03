@@ -23,6 +23,8 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 public class Xs2aContext extends BaseContext {
 
+    public static final String DEFAULT_SCA_METHOD = "EMAIL";
+
     ///////////////////////////////////////// Mandatory static
     /**
      * PSU user ID (login) in ASPSP API
@@ -89,7 +91,7 @@ public class Xs2aContext extends BaseContext {
     /**
      * saves selected SCA method and returns it back in sca-result url
      */
-    private String userSelectScaType;
+    private String userSelectScaType = DEFAULT_SCA_METHOD;
 
     /**
      * SCA method that was selected if only one SCA method is available (automatically by ASPSP)
