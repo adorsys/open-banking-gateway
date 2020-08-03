@@ -12,6 +12,7 @@ import { SessionService } from '../session.service';
 })
 export class EnterTanComponent implements OnInit {
   @Input() authorizationSessionId: string;
+  @Input() scaType: string;
   @Input() wrongSca: boolean;
   @Output() enteredSca = new EventEmitter<any>();
 
