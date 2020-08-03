@@ -85,6 +85,11 @@ public class HbciContext extends BaseContext {
     private String userSelectScaId;
 
     /**
+     * saves selected SCA method and returns it back in sca-result url
+     */
+    private String userSelectScaType;
+
+    /**
      * Indicates that while consent exists, it is incompatible.
      */
     private boolean consentIncompatible;

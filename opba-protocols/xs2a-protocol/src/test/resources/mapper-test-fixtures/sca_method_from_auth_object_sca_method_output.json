@@ -1,4 +1,5 @@
 {
   "key": "SCA_SMS",
-  "value": "sms:mobile"
+  "value": "sms:mobile",
+  "type": "sms"
 }
