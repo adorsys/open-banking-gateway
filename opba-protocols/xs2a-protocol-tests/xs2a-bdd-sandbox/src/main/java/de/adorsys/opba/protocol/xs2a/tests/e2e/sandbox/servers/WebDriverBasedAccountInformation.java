@@ -182,7 +182,7 @@ public class WebDriverBasedAccountInformation<SELF extends WebDriverBasedAccount
     }
 
     public SELF user_in_consent_ui_provides_sca_result_to_embedded_authorization(WebDriver driver) {
-        waitForPageLoadAndUrlEndsWithPath(driver, "sca-result");
+        waitForPageLoadAndUrlEndsWithPath(driver, "sca-result/EMAIL");
         sendText(driver, By.id("tan"), TAN_VALUE);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
