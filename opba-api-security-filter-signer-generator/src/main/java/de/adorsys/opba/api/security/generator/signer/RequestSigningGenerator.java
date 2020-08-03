@@ -9,6 +9,7 @@ import io.swagger.v3.parser.OpenAPIV3Parser;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.TypeElement;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,11 +17,22 @@ import java.util.function.Supplier;
 
 public class RequestSigningGenerator {
 
-    public void generate(TypeElement forClass, String[] yamlSpec, Filer filer) {
-        OpenAPI api = new OpenAPIV3Parser().read(yamlSpec[0]);
+    private final SignerGenerator signerGenerator;
 
+    public RequestSigningGenerator(SignerGenerator signerGenerator) {
+        this.signerGenerator = signerGenerator;
+    }
+
+    public void generate(TypeElement forClass, String[] yamlSpec, Filer filer) {
         Map<String, Map<Signer.HttpMethod, Operation>> requestSpecConfig = new HashMap<>();
 
+        Arrays.stream(yamlSpec).forEach(it -> readAllRequestsDefinitions(it, requestSpecConfig));
+
+        signerGenerator.generate(ClassName.get(forClass).packageName(), filer, requestSpecConfig);
+    }
+
+    private void readAllRequestsDefinitions(String location, Map<String, Map<Signer.HttpMethod, Operation>> requestSpecConfig) {
+        OpenAPI api = new OpenAPIV3Parser().read(location);
         for (Map.Entry<String, PathItem> pathEntry : api.getPaths().entrySet()) {
             String path = pathEntry.getKey();
 
@@ -30,8 +42,6 @@ public class RequestSigningGenerator {
             registerMethod(path, () -> pathEntry.getValue().getPatch(), Signer.HttpMethod.PATCH, requestSpecConfig);
             registerMethod(path, () -> pathEntry.getValue().getDelete(), Signer.HttpMethod.DELETE, requestSpecConfig);
         }
-
-        new SignerGenerator(new DataToSignGenerator()).generate(ClassName.get(forClass).packageName(), filer, requestSpecConfig);
     }
 
     private void registerMethod(
