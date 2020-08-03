@@ -2,7 +2,9 @@ package de.adorsys.opba.api.security.generator;
 
 import com.google.auto.service.AutoService;
 import de.adorsys.opba.api.security.generator.api.GeneratedSigner;
+import de.adorsys.opba.api.security.generator.signer.DataToSignGenerator;
 import de.adorsys.opba.api.security.generator.signer.RequestSigningGenerator;
+import de.adorsys.opba.api.security.generator.signer.SignerGenerator;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
@@ -25,7 +27,7 @@ public class SignerGeneratingProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        RequestSigningGenerator signerGenerator = new RequestSigningGenerator();
+        RequestSigningGenerator signerGenerator = new RequestSigningGenerator(new SignerGenerator(new DataToSignGenerator()));
         for (TypeElement annotation : annotations) {
             // limit to elements annotated with {@link RuntimeDelegate}
             Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(annotation);

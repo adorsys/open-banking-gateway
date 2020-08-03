@@ -93,7 +93,7 @@ public class DataToSignGenerator {
                 .filter(it -> it instanceof HeaderParameter)
                 .sorted(Comparator.comparing(Parameter::getName))
                 .forEach(header -> {
-                    if (header.getRequired()) {
+                    if (Boolean.TRUE.equals(header.getRequired())) {
                         addMandatoryHeader(block, toSign, header);
                     } else {
                         addOptionalHeader(block, toSign, header);
@@ -108,7 +108,7 @@ public class DataToSignGenerator {
                 .filter(it -> it instanceof QueryParameter)
                 .sorted(Comparator.comparing(Parameter::getName))
                 .forEach(queryParam -> {
-                    if (queryParam.getRequired()) {
+                    if (Boolean.TRUE.equals(queryParam.getRequired())) {
                         addMandatoryParameter(block, toSign, queryParam);
                     } else {
                         addOptionalParameter(block, toSign, queryParam);
@@ -123,7 +123,7 @@ public class DataToSignGenerator {
         }
 
         block.addStatement("// Add body");
-        if (operation.getRequestBody().getRequired()) {
+        if (Boolean.TRUE.equals(operation.getRequestBody().getRequired())) {
             block.addStatement("// Mandatory body");
             block.addStatement("String body = $N.getBody()", toSign);
             block.beginControlFlow("if (null == body || \"\".equals(body))");
