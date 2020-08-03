@@ -1,12 +1,6 @@
 package de.adorsys.opba.api.security.generator.impl;
 
-import de.adorsys.opba.api.security.generator.api.RequestDataToSignGenerator;
-import de.adorsys.opba.api.security.generator.api.RequestToSign;
-import de.adorsys.opba.api.security.generator.api.Signer;
-import lombok.RequiredArgsConstructor;
-
-import java.util.Map;
-
+/*
 @RequiredArgsConstructor
 public class SignerImpl implements Signer {
 
@@ -31,20 +25,20 @@ public class SignerImpl implements Signer {
     }
 
     private boolean matches(String definedPath, String path) {
-        String[] yamlSegments = definedPath.split("/", -1);
+        String[] definedSegments = definedPath.split("/", -1);
         String[] pathSegments = path.split("/", -1);
 
         if (definedPath.length() != pathSegments.length) {
             return false;
         }
 
-        for (int segment = 0; segment < yamlSegments.length; ++segment) {
-            if (yamlSegments[segment].startsWith("{")) {
+        for (int segment = 0; segment < definedSegments.length; ++segment) {
+            if (definedSegments[segment].startsWith("{")) {
                 // Any match here
                 continue;
             }
 
-            if (!yamlSegments[segment].equals(pathSegments[segment])) {
+            if (!definedSegments[segment].equals(pathSegments[segment])) {
                 return false;
             }
         }
@@ -52,3 +46,4 @@ public class SignerImpl implements Signer {
         return true;
     }
 }
+*/
