@@ -55,7 +55,7 @@ public class WiremockAuthenticatedPaymentNonHappyPathE2EXs2aProtocolTest extends
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_payments_running()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
@@ -73,7 +73,7 @@ public class WiremockAuthenticatedPaymentNonHappyPathE2EXs2aProtocolTest extends
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_payments_running()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()

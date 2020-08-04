@@ -132,7 +132,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         withSignatureHeaders(RestAssured
                                      .given()
                                      .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
-                                     .contentType(APPLICATION_JSON_VALUE), requestSigningService)
+                                     .contentType(APPLICATION_JSON_VALUE))
                 .when()
                     .post(CONFIRM_PAYMENT_ENDPOINT, serviceSessionId)
                 .then()
