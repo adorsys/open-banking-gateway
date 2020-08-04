@@ -22,14 +22,6 @@ public class RsaJwtsSigningServiceImpl implements RequestSigningService {
         this.algorithm = SignatureAlgorithm.forSigningKey(privateKey);
     }
 
-    public RsaJwtsSigningServiceImpl(PrivateKey privateKey, String signIssuer, String signSubject, SignatureAlgorithm signatureAlgorithm, String claimNameKey) {
-        this.privateKey = privateKey;
-        this.signIssuer = signIssuer;
-        this.signSubject = signSubject;
-        this.algorithm = signatureAlgorithm;
-        this.claimNameKey = claimNameKey;
-    }
-
     @Override
     public String signature(String dataToSign) {
         return Jwts.builder()

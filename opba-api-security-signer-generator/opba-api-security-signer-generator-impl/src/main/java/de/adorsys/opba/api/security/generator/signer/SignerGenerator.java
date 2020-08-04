@@ -1,5 +1,6 @@
 package de.adorsys.opba.api.security.generator.signer;
 
+import com.google.common.base.Strings;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -8,6 +9,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
+import de.adorsys.opba.api.security.generator.api.GeneratedSigner;
 import de.adorsys.opba.api.security.generator.api.MatcherUtil;
 import de.adorsys.opba.api.security.generator.api.RequestDataToSignGenerator;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
@@ -30,8 +32,12 @@ public class SignerGenerator {
         this.dataToSignGenerator = dataToSignGenerator;
     }
 
-    public void generate(String packageName, Filer filer, Map<String, Map<Signer.HttpMethod, Operation>> requestSpecConfig) {
-        ClassName targetClass = ClassName.get(packageName, "RequestSignerImpl");
+    public void generate(String packageName, GeneratedSigner signerConfig, Filer filer, Map<String, Map<Signer.HttpMethod, Operation>> requestSpecConfig) {
+        ClassName targetClass = ClassName.get(
+                packageName,
+                Strings.isNullOrEmpty(signerConfig.signerClassName()) ? "RequestSignerImpl" : signerConfig.signerClassName()
+        );
+
         TypeSpec.Builder signer = TypeSpec
                 .classBuilder(targetClass)
                 .addModifiers(Modifier.PUBLIC);
@@ -42,7 +48,7 @@ public class SignerGenerator {
         addConstructor(signer, basePath);
         implementSignerInterface(signer);
         addWithBasePathMethod(signer, targetClass);
-        addSignerForMethod(signer, targetClass, filer, requestSpecConfig);
+        addSignerForMethod(signer, targetClass, signerConfig, filer, requestSpecConfig);
 
         JavaFile javaFile = JavaFile
                 .builder(packageName, signer.build())
@@ -121,7 +127,7 @@ public class SignerGenerator {
         signer.addMethod(method.build());
     }
 
-    private void addSignerForMethod(TypeSpec.Builder signer, ClassName targetClass, Filer filer, Map<String, Map<Signer.HttpMethod, Operation>> requestSpecConfig) {
+    private void addSignerForMethod(TypeSpec.Builder signer, ClassName targetClass, GeneratedSigner signerConfig, Filer filer, Map<String, Map<Signer.HttpMethod, Operation>> requestSpecConfig) {
         MethodSpec.Builder method = MethodSpec
                 .methodBuilder("signerFor")
                 .addAnnotation(ClassName.get(Override.class))
@@ -137,7 +143,7 @@ public class SignerGenerator {
 
         requestSpecConfig.forEach((path, opSpec) ->
                 opSpec.forEach((requestMethod, operation) -> {
-                    ClassName className = dataToSignGenerator.generate(targetClass.packageName(), generateOperationIdClassName(operation), operation, filer);
+                    ClassName className = dataToSignGenerator.generate(targetClass.packageName(), signerConfig, generateOperationIdClassName(operation), operation, filer);
                     returnSignerIfBlock(toSign, block, path, requestMethod, className);
                 })
         );

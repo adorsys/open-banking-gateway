@@ -6,6 +6,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
+import de.adorsys.opba.api.security.generator.api.GeneratedSigner;
 import de.adorsys.opba.api.security.generator.api.RequestDataToSignGenerator;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
 import io.swagger.v3.oas.models.Operation;
@@ -21,14 +22,14 @@ import java.util.Comparator;
 
 public class DataToSignGenerator {
 
-    public ClassName generate(String packageName, String name, Operation operation, Filer filer) {
+    public ClassName generate(String packageName, GeneratedSigner signerConfig, String name, Operation operation, Filer filer) {
         ClassName targetClass = ClassName.get(packageName, name);
         TypeSpec.Builder signer = TypeSpec
                 .classBuilder(targetClass)
                 .addModifiers(Modifier.PUBLIC);
 
         implementRequestDataToSignInterface(signer);
-        addCanonicalStringToSign(signer, operation);
+        addCanonicalStringToSign(signer, signerConfig, operation);
 
         JavaFile javaFile = JavaFile
                 .builder(packageName, signer.build())
@@ -48,7 +49,7 @@ public class DataToSignGenerator {
         signer.addSuperinterface(ClassName.get(RequestDataToSignGenerator.class));
     }
 
-    private void addCanonicalStringToSign(TypeSpec.Builder signer, Operation operation) {
+    private void addCanonicalStringToSign(TypeSpec.Builder signer, GeneratedSigner signerConfig, Operation operation) {
         MethodSpec.Builder method = MethodSpec
                 .methodBuilder("canonicalStringToSign")
                 .addAnnotation(ClassName.get(Override.class))
@@ -60,7 +61,7 @@ public class DataToSignGenerator {
 
         CodeBlock.Builder block = CodeBlock.builder();
         block.addStatement("StringBuilder result = new StringBuilder()");
-        block.add(createSignature(toSign, operation));
+        block.add(createSignature(toSign, signerConfig, operation));
         block.addStatement("return result.toString()");
 
         method.addCode(block.build());
@@ -69,10 +70,10 @@ public class DataToSignGenerator {
         signer.addMethod(method.build());
     }
 
-    private CodeBlock createSignature(ParameterSpec toSign, Operation operation) {
+    private CodeBlock createSignature(ParameterSpec toSign, GeneratedSigner signerConfig, Operation operation) {
         CodeBlock.Builder block = CodeBlock.builder();
         appendPath(block, toSign);
-        appendHeaders(block, operation, toSign);
+        appendHeaders(block, signerConfig, operation, toSign);
         appendQueryParameters(block, operation, toSign);
         appendBody(block, operation, toSign);
         return block.build();
@@ -87,11 +88,13 @@ public class DataToSignGenerator {
         block.addStatement("// Done adding path");
     }
 
-    private void appendHeaders(CodeBlock.Builder block, Operation operation, ParameterSpec toSign) {
+    private void appendHeaders(CodeBlock.Builder block, GeneratedSigner signerConfig, Operation operation, ParameterSpec toSign) {
         block.addStatement("// Add headers");
         operation.getParameters().stream()
                 .filter(it -> it instanceof HeaderParameter)
                 .sorted(Comparator.comparing(Parameter::getName))
+                // Filter out signature header itself
+                .filter(it -> !it.getName().toLowerCase().equals(signerConfig.signatureHeaderName()))
                 .forEach(header -> {
                     if (Boolean.TRUE.equals(header.getRequired())) {
                         addMandatoryHeader(block, toSign, header);

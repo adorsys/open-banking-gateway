@@ -41,7 +41,6 @@ public class TppBankingApiPisController implements TppBankingApiSinglePaymentPis
                                              UUID xRequestID,
                                              String paymentProduct,
                                              String xTimestampUTC,
-                                             String xOperationType,
                                              String xRequestSignature,
                                              String fintechID,
                                              String bankID,

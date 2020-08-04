@@ -45,7 +45,7 @@ public class SignerGeneratingProcessor extends AbstractProcessor {
 
                 signerGenerator.generate(
                         clazz,
-                        annotated.getAnnotation(GeneratedSigner.class).openApiYamlPath(),
+                        annotated.getAnnotation(GeneratedSigner.class),
                         super.processingEnv.getFiler()
                 );
             }
