@@ -48,7 +48,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
 
     public SELF fintech_calls_initiate_payment_for_anton_brueckner() {
         String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-single-sepa-payment.json");
-        ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER, requestSigningService, body)
+        ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER)
                  .contentType(APPLICATION_JSON_VALUE)
                  .body(body)
              .when()
@@ -65,7 +65,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
 
     public SELF fintech_calls_initiate_payment_for_anton_brueckner_with_anonymous_allowed() {
         String body = readResource("restrecord/tpp-ui-input/params/anton-brueckner-single-sepa-payment.json");
-        ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER, requestSigningService, body, false)
+        ExtractableResponse<Response> response = withPaymentHeaders(ANTON_BRUECKNER, false)
                     .contentType(APPLICATION_JSON_VALUE)
                     .body(body)
                 .when()
@@ -82,7 +82,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
 
     public SELF fintech_calls_initiate_payment_for_max_musterman() {
         String body = readResource("restrecord/tpp-ui-input/params/max-musterman-single-sepa-payment.json");
-        ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, requestSigningService, body)
+        ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(body)
             .when()
@@ -181,7 +181,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     }
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp() {
-        ExtractableResponse<Response> response = withPaymentInfoHeaders(ANTON_BRUECKNER, requestSigningService)
+        ExtractableResponse<Response> response = withPaymentInfoHeaders(ANTON_BRUECKNER)
                      .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                      .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                  .when()
@@ -206,7 +206,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     }
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_pis() {
-        ExtractableResponse<Response> response = withDefaultHeaders(StagesCommonUtil.ANTON_BRUECKNER, requestSigningService)
+        ExtractableResponse<Response> response = withDefaultHeaders(StagesCommonUtil.ANTON_BRUECKNER)
                                                         .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                                                         .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                                                     .when()
@@ -263,13 +263,13 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     }
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_without_cookie_unauthorized() {
-        withPaymentInfoHeaders(ANTON_BRUECKNER, requestSigningService)
-                                                         .queryParam(REDIRECT_CODE_QUERY, redirectCode)
-                                                    .when()
-                                                         .get(GET_PAYMENT_AUTH_STATE, serviceSessionId)
-                                                    .then()
-                                                         .statusCode(UNAUTHORIZED.value())
-                                                         .extract();
+        withPaymentInfoHeaders(ANTON_BRUECKNER)
+                    .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                .when()
+                    .get(GET_PAYMENT_AUTH_STATE, serviceSessionId)
+                .then()
+                    .statusCode(UNAUTHORIZED.value())
+                .extract();
 
         return self();
     }

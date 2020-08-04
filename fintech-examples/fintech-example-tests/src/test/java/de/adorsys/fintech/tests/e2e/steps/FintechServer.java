@@ -108,7 +108,7 @@ public class FintechServer<SELF extends FintechServer<SELF>> extends SandboxServ
         return self();
     }
 
-    public SELF rest_assured_points_to_opba_server(String opbaServerUri) {
+    public SELF rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api(String opbaServerUri) {
         RestAssured.baseURI = opbaServerUri;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 

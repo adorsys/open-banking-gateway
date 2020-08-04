@@ -45,37 +45,27 @@ public class PaymentStagesCommonUtil {
     public static final String SESSION_PASSWORD = "qwerty";
     public static final String IP_ADDRESS = "1.1.1.1";
 
-    public static RequestSpecification withPaymentHeaders(
-            String fintechUserId,
-            RequestSigningService requestSigningService,
-            String body
-    ) {
-        return withPaymentHeaders(fintechUserId, SANDBOX_BANK_ID, requestSigningService, body, true);
+    public static RequestSpecification withPaymentHeaders(String fintechUserId) {
+        return withPaymentHeaders(fintechUserId, SANDBOX_BANK_ID, true);
     }
 
     public static RequestSpecification withPaymentHeaders(
             String fintechUserId,
-            RequestSigningService requestSigningService,
-            String body,
             boolean psuAuthenticationRequired
     ) {
-        return withPaymentHeaders(fintechUserId, SANDBOX_BANK_ID, requestSigningService, body, psuAuthenticationRequired);
+        return withPaymentHeaders(fintechUserId, SANDBOX_BANK_ID, psuAuthenticationRequired);
     }
 
     public static RequestSpecification withPaymentHeaders(
             String fintechUserId,
-            String bankId,
-            RequestSigningService requestSigningService,
-            String body
+            String bankId
     ) {
-        return withPaymentHeaders(fintechUserId, bankId, requestSigningService, body, true);
+        return withPaymentHeaders(fintechUserId, bankId, true);
     }
 
     public static RequestSpecification withPaymentHeaders(
             String fintechUserId,
             String bankId,
-            RequestSigningService requestSigningService,
-            String body,
             boolean psuAuthenticationRequired
     ) {
         UUID xRequestId = UUID.randomUUID();
@@ -93,11 +83,10 @@ public class PaymentStagesCommonUtil {
                        .header(X_REQUEST_ID, xRequestId.toString())
                        .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
                        .header(X_PIS_PSU_AUTHENTICATION_REQUIRED, psuAuthenticationRequired)
-                       .header(X_REQUEST_SIGNATURE, calculatePaymentSignature(requestSigningService, xRequestId, xTimestampUtc, fintechUserId, psuAuthenticationRequired, body, bankId))
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
-    public static RequestSpecification withPaymentInfoHeaders(String fintechUserId, RequestSigningService requestSigningService) {
+    public static RequestSpecification withPaymentInfoHeaders(String fintechUserId) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
@@ -110,16 +99,6 @@ public class PaymentStagesCommonUtil {
                             .header(X_XSRF_TOKEN, XSRF_TOKEN)
                             .header(X_REQUEST_ID, xRequestId.toString())
                             .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
-                            .header(X_REQUEST_SIGNATURE, calculatePaymentInfoSignature(requestSigningService, xRequestId, xTimestampUtc, fintechUserId))
                             .header(PSU_IP_ADDRESS, IP_ADDRESS);
-    }
-
-    private static String calculatePaymentSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
-                                                    String fintechUserId, boolean psuAuthenticationRequired, String body, String bankId) {
-        return requestSigningService.signature("");
-    }
-
-    private static String calculatePaymentInfoSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc, String fintechUserId) {
-        return requestSigningService.signature("");
     }
 }

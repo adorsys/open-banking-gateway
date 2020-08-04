@@ -63,7 +63,7 @@ class SandboxE2EProtocolAisTest extends SandboxCommonTest<
         given()
             .enabled_redirect_sandbox_mode()
             .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-            .rest_assured_points_to_opba_server();
+            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api();
 
         when()
             .fintech_calls_list_transactions_for_anton_brueckner(accountResourceId)
@@ -101,7 +101,7 @@ class SandboxE2EProtocolAisTest extends SandboxCommonTest<
         given()
                 .enabled_redirect_sandbox_mode()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
@@ -152,7 +152,7 @@ class SandboxE2EProtocolAisTest extends SandboxCommonTest<
         given()
             .enabled_embedded_sandbox_mode()
             .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-            .rest_assured_points_to_opba_server();
+            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api();
 
         when()
             .fintech_calls_list_transactions_for_max_musterman(accountResourceId)
@@ -181,7 +181,7 @@ class SandboxE2EProtocolAisTest extends SandboxCommonTest<
         given()
                 .enabled_embedded_sandbox_mode()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
@@ -212,7 +212,7 @@ class SandboxE2EProtocolAisTest extends SandboxCommonTest<
         given()
             .enabled_embedded_sandbox_mode()
             .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-            .rest_assured_points_to_opba_server()
+            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
             .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
@@ -240,7 +240,7 @@ class SandboxE2EProtocolAisTest extends SandboxCommonTest<
         given()
             .enabled_redirect_sandbox_mode()
             .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-            .rest_assured_points_to_opba_server()
+            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
             .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()

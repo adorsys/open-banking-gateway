@@ -80,7 +80,7 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
     @Test
     void testAccountsListWithConsentNoScaButUserHasOneSca() {
         given()
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
@@ -101,7 +101,7 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
     @Disabled // FIXME - fix issue with concurrent BPD retrieval - only one test works
     void testAccountsListWithConsentNoScaForAll() {
         given()
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
@@ -121,7 +121,7 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
     @Test
     void testAccountsListWithConsentNoScaButUserHasMultiSca() {
         given()
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
@@ -190,7 +190,7 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
     @Test
     void testDirectTransactionListWithSca() {
         given()
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
@@ -217,7 +217,7 @@ class HbciSandboxConsentE2EHbciProtocolTest extends SpringScenarioTest<
     @Disabled // FIXME - fix issue with concurrent BPD retrieval - only one test works
     void testDirectTransactionListWithoutSca() {
         given()
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()

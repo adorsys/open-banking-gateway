@@ -58,7 +58,7 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
         given()
                 .enabled_embedded_sandbox_mode()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
         when()
                 .fintech_calls_initiate_payment_for_max_musterman()
@@ -86,7 +86,7 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
         given()
                 .enabled_redirect_sandbox_mode()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()

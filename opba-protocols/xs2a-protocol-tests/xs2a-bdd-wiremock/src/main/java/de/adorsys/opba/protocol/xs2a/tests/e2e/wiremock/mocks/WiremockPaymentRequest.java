@@ -36,7 +36,7 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
         this.redirectOkUri = paymentInitiateRequest.getHeader(TPP_REDIRECT_URI);
         ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
                         .given()
-                              .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie), requestSigningService)
+                              .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
                         .when()
                             .get(redirectOkUri)
                         .then()
@@ -56,7 +56,7 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
 
         this.redirectOkUri = paymentInitiateRequest.getHeader(TPP_REDIRECT_URI);
         withSignatureHeaders(RestAssured
-                                        .given(), requestSigningService)
+                                        .given())
                                         .when()
                                                 .get(redirectOkUri)
                                         .then()
