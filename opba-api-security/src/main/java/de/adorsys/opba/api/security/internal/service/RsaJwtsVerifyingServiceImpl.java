@@ -149,6 +149,25 @@ public class RsaJwtsVerifyingServiceImpl implements RequestVerifyingService {
         return verify(signature, encodedPublicKey, dataToSign);
     }
 
+    public boolean verify(String providedSignature, String encodedPublicKey, String computedSignature) {
+        PublicKey publicKey = getRsaPublicKey(encodedPublicKey);
+
+        if (publicKey == null) {
+            return false;
+        }
+
+        try {
+            JwtParser parser = Jwts.parserBuilder().setSigningKey(publicKey).build();
+            Claims claims = parser.parseClaimsJws(providedSignature).getBody();
+
+            return computedSignature.equals(claims.get(claimNameKey));
+
+        } catch (Exception e) {
+            log.error("Signature verification error:  {} for signature {}", e.getMessage(), providedSignature);
+            return false;
+        }
+    }
+
     private boolean verify(String signature, String encodedPublicKey, DataToSign dataToSign) {
         PublicKey publicKey = getRsaPublicKey(encodedPublicKey);
 

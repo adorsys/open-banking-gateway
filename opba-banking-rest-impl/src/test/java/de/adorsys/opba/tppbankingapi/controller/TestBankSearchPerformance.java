@@ -1,7 +1,6 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
 import de.adorsys.opba.api.security.external.domain.OperationType;
-import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.tppbankingapi.BaseMockitoTest;
 import de.adorsys.opba.tppbankingapi.dto.TestResult;
@@ -104,12 +103,7 @@ class TestBankSearchPerformance extends BaseMockitoTest {
                                 .header(X_REQUEST_ID, xRequestId)
                                 .header(X_TIMESTAMP_UTC, xTimestampUtc)
                                 .header(X_OPERATION_TYPE, OperationType.BANK_SEARCH)
-                                .header(X_REQUEST_SIGNATURE, requestSigningService.signature(BankSearchDataToSign.builder()
-                                                                                                     .xRequestId(xRequestId)
-                                                                                                     .instant(xTimestampUtc)
-                                                                                                     .operationType(OperationType.BANK_SEARCH)
-                                                                                                     .keyword(keyword)
-                                                                                                     .build()))
+                                .header(X_REQUEST_SIGNATURE, requestSigningService.signature(""))
                                 .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
                                 .param("keyword", keyword)
                                 .param("max", "10")

@@ -3,51 +3,31 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>open-banking-gateway</artifactId>
+        <artifactId>opba-api-security-signer-generator</artifactId>
         <groupId>de.adorsys.opba</groupId>
         <version>0.0.7-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>opba-api-security-filter-signer-generator</artifactId>
+    <artifactId>opba-api-security-signer-generator-impl</artifactId>
 
     <properties>
         <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
-        Change this if depth changes. Current: /opba-api-security -->
-        <main.basedir>${project.parent.basedir}</main.basedir>
-        <nimbus.version>8.14.1</nimbus.version>
+        Change this if depth changes. Current: /opba-api-security-signer-generator/opba-api-security-signer-generator-impl -->
+        <main.basedir>${project.parent.parent.basedir}</main.basedir>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-core</artifactId>
-            <version>${feign-http-client.version}</version>
+            <groupId>de.adorsys.opba</groupId>
+            <artifactId>opba-api-security-signer-generator-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-api</artifactId>
-            <version>${jjwt.version}</version>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-            <version>${jjwt.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId>
-            <version>${jjwt.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-            <version>${nimbus.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>com.squareup</groupId>
             <artifactId>javapoet</artifactId>
@@ -57,27 +37,16 @@
             <groupId>io.swagger.parser.v3</groupId>
             <artifactId>swagger-parser</artifactId>
             <version>2.0.21</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
             <version>2.11.1</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.auto.service</groupId>
             <artifactId>auto-service</artifactId>
             <version>1.0-rc7</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
         </dependency>
 
         <!-- Test dependencies -->
