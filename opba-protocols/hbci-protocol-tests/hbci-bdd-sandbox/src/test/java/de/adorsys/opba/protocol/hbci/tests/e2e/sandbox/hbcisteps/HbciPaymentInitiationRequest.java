@@ -26,7 +26,7 @@ public class HbciPaymentInitiationRequest<SELF extends HbciPaymentInitiationRequ
     public SELF fintech_calls_single_payment_for_max_musterman(String resourceId, String bankId) {
         String body = readResource("restrecord-input-params/hbci-max-musterman-single-sepa-payment.json");
         body = body.replaceAll("%debtorIban%", resourceId);
-        ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, bankId, requestSigningService, body)
+        ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, bankId)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(body)
             .when()

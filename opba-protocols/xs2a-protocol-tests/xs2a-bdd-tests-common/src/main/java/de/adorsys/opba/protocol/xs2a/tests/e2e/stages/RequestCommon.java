@@ -8,7 +8,6 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.annotation.ScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.internal.config.CookieProperties;
 import de.adorsys.opba.consentapi.model.generated.AuthViolation;
 import de.adorsys.opba.consentapi.model.generated.ConsentAuth;

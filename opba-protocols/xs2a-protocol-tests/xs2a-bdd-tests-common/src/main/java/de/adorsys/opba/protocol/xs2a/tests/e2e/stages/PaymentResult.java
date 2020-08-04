@@ -3,7 +3,6 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.db.repository.jpa.PaymentRepository;
 import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
 import de.adorsys.xs2a.adapter.service.model.TransactionStatus;
@@ -39,9 +38,6 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
 
     @Autowired
     private PaymentRepository payments;
-
-    @Autowired
-    private RequestSigningService requestSigningService;
 
     @ExpectedScenarioState
     protected String serviceSessionId;
