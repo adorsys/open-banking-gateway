@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.consentapi.model.generated.AuthViolation;
-import de.adorsys.opba.protocol.xs2a.tests.GetTransactionsQueryParams;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -57,7 +56,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     // Note that anton.brueckner is typically used for REDIRECT (real REDIRECT that is returned by bank, and not REDIRECT approach in table)
     public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankId) {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankId, requestSigningService)
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankId)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -71,7 +70,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_accounts_for_user(String user) {
-        ExtractableResponse<Response> response = withAccountsHeaders(user, requestSigningService)
+        ExtractableResponse<Response> response = withAccountsHeaders(user)
                         .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                      .when()
                         .get(AIS_ACCOUNTS_ENDPOINT)
@@ -92,7 +91,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
 
     // Note that max.musterman is typically used for EMBEDDED (real EMBEDDED that is returned by bank, and not EMBEDDED approach in table)
     public SELF fintech_calls_list_accounts_for_max_musterman(String bankId) {
-        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, bankId, requestSigningService)
+        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, bankId)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -107,7 +106,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_accounts_for_max_musterman_missing_ip_address() {
-        ExtractableResponse<Response> response = withAccountsHeadersMissingIpAddress(MAX_MUSTERMAN, requestSigningService)
+        ExtractableResponse<Response> response = withAccountsHeadersMissingIpAddress(MAX_MUSTERMAN)
                       .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                  .when()
                       .get(AIS_ACCOUNTS_ENDPOINT)
@@ -122,7 +121,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_anton_brueckner() {
-        ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER, requestSigningService, GetTransactionsQueryParams.newEmptyInstance())
+        ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT)
@@ -137,7 +136,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_anton_brueckner(String resourceId) {
-        ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER, requestSigningService, GetTransactionsQueryParams.newEmptyInstance())
+        ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
@@ -152,7 +151,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_user(String user, String resourceId) {
-        ExtractableResponse<Response> response = withTransactionsHeaders(user, requestSigningService, GetTransactionsQueryParams.newEmptyInstance())
+        ExtractableResponse<Response> response = withTransactionsHeaders(user)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                  .when()
                     .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
@@ -175,7 +174,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId, String bankId) {
-        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, bankId, requestSigningService, GetTransactionsQueryParams.newEmptyInstance())
+        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, bankId)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
@@ -257,7 +256,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp() {
-        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER, requestSigningService)
+        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
             .when()
@@ -273,7 +272,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(String user) {
-        ExtractableResponse<Response> response = withDefaultHeaders(user, requestSigningService)
+        ExtractableResponse<Response> response = withDefaultHeaders(user)
                         .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                         .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                      .when()
@@ -574,7 +573,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_without_cookie_unauthorized() {
-                withDefaultHeaders(ANTON_BRUECKNER, requestSigningService)
+                withDefaultHeaders(ANTON_BRUECKNER)
                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                 .when()
                     .get(GET_CONSENT_AUTH_STATE, serviceSessionId)

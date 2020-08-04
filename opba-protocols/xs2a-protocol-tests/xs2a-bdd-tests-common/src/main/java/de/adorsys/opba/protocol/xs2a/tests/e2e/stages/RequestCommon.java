@@ -72,9 +72,6 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
     @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
     protected String responseContent;
 
-    @Autowired
-    protected RequestSigningService requestSigningService;
-
     @ProvidedScenarioState
     @SuppressWarnings("PMD.UnusedPrivateField") // used by AccountListResult!
     protected String redirectOkUri;

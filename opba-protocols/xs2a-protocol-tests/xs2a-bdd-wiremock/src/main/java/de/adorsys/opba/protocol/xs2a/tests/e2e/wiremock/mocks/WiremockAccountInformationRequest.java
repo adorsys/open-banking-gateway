@@ -54,7 +54,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
         ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
                 .given()
-                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie), requestSigningService)
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
                 .when()
                     .get(redirectOkUri)
                 .then()
@@ -74,7 +74,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         this.redirectNotOkUri = consentInitiateRequest.getHeader(TPP_NOK_REDIRECT_URI);
         ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
                     .given()
-                        .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie), requestSigningService)
+                        .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
                     .when()
                         .get(redirectNotOkUri)
                     .then()
@@ -87,7 +87,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     }
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner_ip_address_compute() {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService) // FIX HEADERS
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER) // FIX HEADERS
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                     .header(COMPUTE_PSU_IP_ADDRESS, true)
                 .when()
@@ -102,7 +102,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     }
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner_no_ip_address() {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService)// FIX HEADERS
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER)// FIX HEADERS
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                     .header(COMPUTE_PSU_IP_ADDRESS, false)
                 .when()
@@ -227,7 +227,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                                                        ).get(0);
         this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
 
-        withSignatureHeaders(RestAssured.given(), requestSigningService)
+        withSignatureHeaders(RestAssured.given())
                  .when()
                     .get(redirectOkUri)
                  .then()

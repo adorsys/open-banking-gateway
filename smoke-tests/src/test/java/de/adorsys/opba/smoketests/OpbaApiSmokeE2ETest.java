@@ -80,7 +80,7 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDri
 
         given()
             .enabled_redirect_sandbox_mode(config.getAspspProfileServerUri())
-            .rest_assured_points_to_opba_server(config.getOpbaServerUri());
+            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api(config.getOpbaServerUri());
 
         when()
             .fintech_calls_list_transactions_for_user(sandboxUserLogin, accountResourceId)
@@ -125,7 +125,7 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDri
 
         given()
             .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
-            .rest_assured_points_to_opba_server(config.getOpbaServerUri());
+            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api(config.getOpbaServerUri());
 
         when()
             .fintech_calls_list_transactions_for_user(sandboxUserLogin, accountResourceId)
@@ -150,7 +150,7 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDri
         given()
             .create_new_user_in_sandbox_tpp_management(sandboxUserLogin, sandboxUserPassword)
             .enabled_embedded_sandbox_mode(config.getAspspProfileServerUri())
-            .rest_assured_points_to_opba_server(config.getOpbaServerUri())
+            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api(config.getOpbaServerUri())
             .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
@@ -177,7 +177,7 @@ class OpbaApiSmokeE2ETest extends SpringScenarioTest<SmokeSandboxServers, WebDri
         given()
             .create_new_user_in_sandbox_tpp_management(sandboxUserLogin, sandboxUserPassword)
             .enabled_redirect_sandbox_mode(config.getAspspProfileServerUri())
-            .rest_assured_points_to_opba_server(config.getOpbaServerUri())
+            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api(config.getOpbaServerUri())
             .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()

@@ -1,7 +1,5 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
-import de.adorsys.opba.api.security.external.service.RequestSigningService;
-import de.adorsys.opba.protocol.xs2a.tests.GetTransactionsQueryParams;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import lombok.experimental.UtilityClass;
@@ -67,87 +65,65 @@ public class StagesCommonUtil {
     public static final String COMPUTE_IP_ADDRESS = "false";
     public static final String IP_ADDRESS = "1.1.1.1";
 
-    public static RequestSpecification withAccountsHeaders(String fintechUserId, RequestSigningService requestSigningService) {
+    public static RequestSpecification withAccountsHeaders(String fintechUserId) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
         return headersWithoutIpAddress(fintechUserId, xRequestId, xTimestampUtc)
-                       .header(X_REQUEST_SIGNATURE, calculateAccountsSignature(requestSigningService, SANDBOX_BANK_ID, xRequestId, xTimestampUtc, fintechUserId))
                        .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
-    public static RequestSpecification withAccountsHeaders(String fintechUserId, String bankId, RequestSigningService requestSigningService) {
+    public static RequestSpecification withAccountsHeaders(String fintechUserId, String bankId) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
         return headersWithoutIpAddress(fintechUserId, bankId, xRequestId, xTimestampUtc)
-                .header(X_REQUEST_SIGNATURE, calculateAccountsSignature(requestSigningService, bankId, xRequestId, xTimestampUtc, fintechUserId))
                 .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
                 .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
-    public static RequestSpecification withAccountsHeadersMissingIpAddress(String fintechUserId, RequestSigningService requestSigningService) {
+    public static RequestSpecification withAccountsHeadersMissingIpAddress(String fintechUserId) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
         return headersWithoutIpAddress(fintechUserId, xRequestId, xTimestampUtc)
-                       .header(X_REQUEST_SIGNATURE, calculateAccountsSignature(requestSigningService, SANDBOX_BANK_ID, xRequestId, xTimestampUtc, fintechUserId))
                        .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS);
     }
 
-    public static RequestSpecification withTransactionsHeaders(String fintechUserId, RequestSigningService requestSigningService, GetTransactionsQueryParams params) {
-        return withTransactionsHeaders(fintechUserId, SANDBOX_BANK_ID, requestSigningService, params);
+    public static RequestSpecification withTransactionsHeaders(String fintechUserId) {
+        return withTransactionsHeaders(fintechUserId, SANDBOX_BANK_ID);
     }
 
     public static RequestSpecification withTransactionsHeaders(
             String fintechUserId,
-            String bankId,
-            RequestSigningService requestSigningService,
-            GetTransactionsQueryParams params
+            String bankId
     ) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
         return headersWithoutIpAddress(fintechUserId, bankId, xRequestId, xTimestampUtc)
-                       .header(X_REQUEST_SIGNATURE, calculateTransactionsSignature(requestSigningService, bankId, xRequestId, xTimestampUtc, fintechUserId, params))
                        .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
-    public static RequestSpecification withDefaultHeaders(String fintechUserId, RequestSigningService requestSigningService) {
+    public static RequestSpecification withDefaultHeaders(String fintechUserId) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
         return headersWithoutIpAddress(fintechUserId, xRequestId, xTimestampUtc)
-                       .header(X_REQUEST_SIGNATURE, calculateConfirmConsentSignature(requestSigningService, xRequestId, xTimestampUtc))
                        .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
-    public static RequestSpecification withSignatureHeaders(RequestSpecification specification, RequestSigningService requestSigningService) {
+    public static RequestSpecification withSignatureHeaders(RequestSpecification specification) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
         return specification
                        .header(FINTECH_ID, DEFAULT_FINTECH_ID)
                        .header(X_REQUEST_ID, xRequestId.toString())
-                       .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
-                       .header(X_REQUEST_SIGNATURE, calculateConfirmConsentSignature(requestSigningService, xRequestId, xTimestampUtc));
-    }
-
-    private static String calculateAccountsSignature(RequestSigningService requestSigningService, String bankId, UUID xRequestId, Instant xTimestampUtc,
-                                                     String fintechUserId) {
-        return requestSigningService.signature("");
-    }
-
-    private static String calculateTransactionsSignature(RequestSigningService requestSigningService, String bankId, UUID xRequestId, Instant xTimestampUtc,
-                                                         String fintechUserId, GetTransactionsQueryParams params) {
-        return requestSigningService.signature("");
-    }
-
-    private static String calculateConfirmConsentSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc) {
-        return requestSigningService.signature("");
+                       .header(X_TIMESTAMP_UTC, xTimestampUtc.toString());
     }
 
     private static RequestSpecification headersWithoutIpAddress(String fintechUserId, UUID xRequestId, Instant xTimestampUtc) {
