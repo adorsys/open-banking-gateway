@@ -31,7 +31,7 @@ public class SignerGenerator {
     }
 
     public void generate(String packageName, Filer filer, Map<String, Map<Signer.HttpMethod, Operation>> requestSpecConfig) {
-        ClassName targetClass = ClassName.get(packageName , "RequestSignerImpl");
+        ClassName targetClass = ClassName.get(packageName, "RequestSignerImpl");
         TypeSpec.Builder signer = TypeSpec
                 .classBuilder(targetClass)
                 .addModifiers(Modifier.PUBLIC);

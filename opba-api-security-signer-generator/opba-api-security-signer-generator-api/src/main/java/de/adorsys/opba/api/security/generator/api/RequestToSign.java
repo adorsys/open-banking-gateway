@@ -2,9 +2,10 @@ package de.adorsys.opba.api.security.generator.api;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 // Can't safely use Lombok in self-generated classes
-public class RequestToSign {
+public final class RequestToSign {
 
     private final Signer.HttpMethod method;
     private final String path;
@@ -20,7 +21,7 @@ public class RequestToSign {
         this.body = body;
     }
 
-    public RequestToSignBuilder builder() {
+    public static RequestToSignBuilder builder() {
         return new RequestToSignBuilder();
     }
 
@@ -62,7 +63,8 @@ public class RequestToSign {
         }
 
         public RequestToSignBuilder headers(Map<String, String> headers) {
-            this.headers = headers;
+            // Headers are case-insensitive
+            this.headers = headers.entrySet().stream().collect(Collectors.toMap(it -> it.getKey().toLowerCase(), Map.Entry::getValue));
             return this;
         }
 

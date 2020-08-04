@@ -150,7 +150,7 @@ public class PaymentStagesCommonUtil {
                                                                           .body(body)
                                                                           .build();
 
-        return requestSigningService.signature(paymentInitiationDataToSign);
+        return requestSigningService.signature("");
     }
 
     private static String calculatePaymentInfoSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
@@ -163,6 +163,6 @@ public class PaymentStagesCommonUtil {
                                              .fintechUserId(fintechUserId)
                                              .build();
 
-        return requestSigningService.signature(getPaymentDataToSign);
+        return requestSigningService.signature("");
     }
 }

@@ -1,9 +1,15 @@
 package de.adorsys.opba.fintech.impl.config;
 
+import com.google.common.collect.Iterables;
+import com.google.common.io.CharStreams;
+import de.adorsys.opba.api.security.RequestSignerImpl;
 import de.adorsys.opba.api.security.external.domain.HttpHeaders;
 import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.api.security.external.mapper.FeignTemplateToDataToSignMapper;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
+import de.adorsys.opba.api.security.generator.api.RequestDataToSignGenerator;
+import de.adorsys.opba.api.security.generator.api.RequestToSign;
+import de.adorsys.opba.api.security.generator.api.Signer;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -74,40 +80,23 @@ public class FeignConfig {
     }
 
     private String calculateSignature(RequestTemplate requestTemplate, Instant instant) {
-        Map<String, Collection<String>> headers = requestTemplate.headers();
-        String requestOperationType = headers.get(HttpHeaders.X_OPERATION_TYPE).stream().findFirst()
-                                              .orElseThrow(() -> new IllegalStateException(HttpHeaders.X_OPERATION_TYPE + MISSING_HEADER_ERROR_MESSAGE));
-        OperationType operationType = OperationType.valueOf(requestOperationType);
-        FeignTemplateToDataToSignMapper mapper = new FeignTemplateToDataToSignMapper();
+        Map<String, String> headers = requestTemplate.headers().entrySet().stream().collect(
+                Collectors.toMap(Map.Entry::getKey, it -> Iterables.getFirst(it.getValue(), ""))
+        );
         Map<String, String> queries = requestTemplate.queries().entrySet().stream()
                                               .collect(Collectors.toMap(Map.Entry::getKey, e -> decodeQueryValue(e.getValue())));
 
-        switch (operationType) {
-            case AIS:
-                if (OperationType.isTransactionsPath(requestTemplate.path())) {
-                    return requestSigningService.signature(mapper.mapToListTransactions(headers, queries, instant));
-                }
-                return requestSigningService.signature(mapper.mapToListAccounts(headers, instant));
-            case BANK_SEARCH:
-                if (OperationType.isBankSearchPath(requestTemplate.path())) {
-                    return requestSigningService.signature(mapper.mapToBankSearch(headers, queries, instant));
-                }
-                return requestSigningService.signature(mapper.mapToBankProfile(headers, instant));
-            case CONFIRM_CONSENT:
-                return requestSigningService.signature(mapper.mapToConfirmConsent(headers, instant));
-            case CONFIRM_PAYMENT:
-                return requestSigningService.signature(mapper.mapToConfirmPayment(headers, instant));
-            case PIS:
-                if (OperationType.isGetPaymentStatus(requestTemplate.path())) {
-                    return requestSigningService.signature(mapper.mapToGetPaymentStatus(headers, instant));
-                }
-                if (OperationType.isGetPayment(requestTemplate.method())) {
-                    return requestSigningService.signature(mapper.mapToGetPayment(headers, instant));
-                }
-                return requestSigningService.signature(mapper.mapToPaymentInitiation(headers, instant, requestTemplate.requestBody().asString()));
-            default:
-                throw new IllegalArgumentException(String.format("Unsupported operation type %s", operationType));
-        }
+        // RequestSignerImpl - This is generated class by opba-api-security-signer-generator-impl annotation processor
+        Signer signer = new RequestSignerImpl();
+        RequestToSign toSign = RequestToSign.builder()
+                .method(Signer.HttpMethod.valueOf(requestTemplate.method()))
+                .path(requestTemplate.path())
+                .headers(headers)
+                .queryParams(queries)
+                .body(requestTemplate.requestBody().asString())
+                .build();
+        RequestDataToSignGenerator signatureGen = signer.signerFor(toSign);
+        return requestSigningService.signature(signatureGen.canonicalStringToSign(toSign));
     }
 
     private String decodeQueryValue(Collection<String> value) {
