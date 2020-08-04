@@ -109,7 +109,7 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
         RestAssured.baseURI = opbaServerUri;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         config = config().redirect(redirectConfig().followRedirects(false));
-        RestAssured.filters(new RequestSigner(signingService, new OpenBankingSigner()));
+        RestAssured.replaceFiltersWith(new RequestSigner(signingService, new OpenBankingSigner()));
 
         return self();
     }
@@ -140,6 +140,7 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
             if (!requestSpec.getDerivedPath().startsWith("/v1/banking/ais")
                     && !requestSpec.getDerivedPath().startsWith("/v1/banking/pis")
                     && !requestSpec.getDerivedPath().startsWith("/v1/banking/search/bank-search")
+                    && !requestSpec.getDerivedPath().startsWith("/v1/banking/consents/")
             ) {
                 return ctx.next(requestSpec, responseSpec);
             }
