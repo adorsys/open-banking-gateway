@@ -34,7 +34,6 @@ public class TppBankSearchController implements TppBankSearchApi {
             UUID xRequestID,
             String keyword,
             String xTimestampUTC,
-            String xOperationType,
             String xRequestSignature,
             String fintechId,
             Integer start,
@@ -63,7 +62,6 @@ public class TppBankSearchController implements TppBankSearchApi {
             UUID xRequestID,
             String bankId,
             String xTimestampUTC,
-            String xOperationType,
             String xRequestSignature,
             String fintechId) {
 
