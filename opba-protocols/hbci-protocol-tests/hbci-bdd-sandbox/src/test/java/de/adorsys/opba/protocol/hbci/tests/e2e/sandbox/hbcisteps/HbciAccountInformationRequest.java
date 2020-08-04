@@ -1,7 +1,6 @@
 package de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.protocol.xs2a.tests.GetTransactionsQueryParams;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
 import io.restassured.response.ExtractableResponse;
@@ -46,7 +45,7 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman_using_already_granted_service_session(String resourceId, String bankId) {
-        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, bankId, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
+        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, bankId, requestSigningService, GetTransactionsQueryParams.newEmptyInstance())
                     .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
                     .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
