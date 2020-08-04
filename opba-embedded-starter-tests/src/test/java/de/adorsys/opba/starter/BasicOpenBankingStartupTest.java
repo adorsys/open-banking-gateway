@@ -1,15 +1,12 @@
 package de.adorsys.opba.starter;
 
-import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aListAccountsEntrypoint;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aSandboxListTransactionsEntrypoint;
-import de.adorsys.opba.protocol.xs2a.tests.GetTransactionsQueryParams;
 import de.adorsys.opba.starter.config.FintechRequestSigningTestConfig;
 import io.restassured.RestAssured;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -50,9 +47,6 @@ class BasicOpenBankingStartupTest {
     @LocalServerPort
     private int serverPort;
 
-    @Autowired
-    private RequestSigningService requestSigningService;
-
     @BeforeEach
     void setupRestAssured() {
         RestAssured.baseURI = "http://localhost:" + serverPort;
@@ -68,7 +62,7 @@ class BasicOpenBankingStartupTest {
     @Test
     @SneakyThrows
     void testXs2aProtocolIsWiredForSandboxAccountList() {
-        withAccountsHeaders(ANTON_BRUECKNER, requestSigningService)
+        withAccountsHeaders(ANTON_BRUECKNER)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
             .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
@@ -81,7 +75,7 @@ class BasicOpenBankingStartupTest {
     @Test
     @SneakyThrows
     void testXs2aProtocolIsWiredForSandboxTransactionList() {
-        withTransactionsHeaders(ANTON_BRUECKNER, requestSigningService, GetTransactionsQueryParams.newEmptyInstance())
+        withTransactionsHeaders(ANTON_BRUECKNER)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
             .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, "ACCOUNT-1")
