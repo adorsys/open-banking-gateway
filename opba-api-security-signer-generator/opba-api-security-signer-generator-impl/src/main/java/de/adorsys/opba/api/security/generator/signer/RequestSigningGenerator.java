@@ -1,6 +1,7 @@
 package de.adorsys.opba.api.security.generator.signer;
 
 import com.squareup.javapoet.ClassName;
+import de.adorsys.opba.api.security.generator.api.GeneratedSigner;
 import de.adorsys.opba.api.security.generator.api.Signer;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
@@ -26,13 +27,12 @@ public class RequestSigningGenerator {
         this.signerGenerator = signerGenerator;
     }
 
-    public void generate(TypeElement forClass, String[] yamlSpec, Filer filer) {
+    public void generate(TypeElement forClass, GeneratedSigner yamlSpec, Filer filer) {
         Map<String, Map<Signer.HttpMethod, Operation>> requestSpecConfig = new HashMap<>();
 
-        Arrays.stream(yamlSpec).forEach(yamlLocation -> readAllRequestsDefinitions(getYamlLocation(filer, yamlLocation), requestSpecConfig));
+        Arrays.stream(yamlSpec.openApiYamlPath()).forEach(yamlLocation -> readAllRequestsDefinitions(getYamlLocation(filer, yamlLocation), requestSpecConfig));
 
-
-        signerGenerator.generate(ClassName.get(forClass).packageName(), filer, requestSpecConfig);
+        signerGenerator.generate(ClassName.get(forClass).packageName(), yamlSpec, filer, requestSpecConfig);
     }
 
     private void readAllRequestsDefinitions(URI yamlLocation, Map<String, Map<Signer.HttpMethod, Operation>> requestSpecConfig) {

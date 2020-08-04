@@ -1,15 +1,11 @@
 package de.adorsys.opba.fintech.impl.config;
 
 import com.google.common.collect.Iterables;
-import com.google.common.io.CharStreams;
-import de.adorsys.opba.api.security.RequestSignerImpl;
-import de.adorsys.opba.api.security.external.domain.HttpHeaders;
-import de.adorsys.opba.api.security.external.domain.OperationType;
-import de.adorsys.opba.api.security.external.mapper.FeignTemplateToDataToSignMapper;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.generator.api.RequestDataToSignGenerator;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
 import de.adorsys.opba.api.security.generator.api.Signer;
+import de.adorsys.opba.api.security.requestsigner.OpenBankingSigner;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -39,7 +35,6 @@ import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_TIMESTAMP_U
 @Configuration
 @RequiredArgsConstructor
 public class FeignConfig {
-    private static final String MISSING_HEADER_ERROR_MESSAGE = " header is missing";
 
     private final RequestSigningService requestSigningService;
     private final TppProperties tppProperties;
@@ -67,9 +62,9 @@ public class FeignConfig {
     private void fillSecurityHeadersWithSigning(RequestTemplate requestTemplate) {
         Instant instant = Instant.now();
 
-        requestTemplate.header(X_REQUEST_SIGNATURE, calculateSignature(requestTemplate, instant));
         requestTemplate.header(FINTECH_ID, tppProperties.getFintechID());
         requestTemplate.header(X_TIMESTAMP_UTC, instant.toString());
+        requestTemplate.header(X_REQUEST_SIGNATURE, calculateSignature(requestTemplate));
     }
 
     private void fillSecurityHeadersWithoutSigning(RequestTemplate requestTemplate) {
@@ -79,15 +74,15 @@ public class FeignConfig {
         requestTemplate.header(X_TIMESTAMP_UTC, instant.toString());
     }
 
-    private String calculateSignature(RequestTemplate requestTemplate, Instant instant) {
+    private String calculateSignature(RequestTemplate requestTemplate) {
         Map<String, String> headers = requestTemplate.headers().entrySet().stream().collect(
                 Collectors.toMap(Map.Entry::getKey, it -> Iterables.getFirst(it.getValue(), ""))
         );
         Map<String, String> queries = requestTemplate.queries().entrySet().stream()
                                               .collect(Collectors.toMap(Map.Entry::getKey, e -> decodeQueryValue(e.getValue())));
 
-        // RequestSignerImpl - This is generated class by opba-api-security-signer-generator-impl annotation processor
-        Signer signer = new RequestSignerImpl();
+        // OpenBankingSigner - This is generated class by opba-api-security-signer-generator-impl annotation processor
+        Signer signer = new OpenBankingSigner();
         RequestToSign toSign = RequestToSign.builder()
                 .method(Signer.HttpMethod.valueOf(requestTemplate.method()))
                 .path(requestTemplate.path())

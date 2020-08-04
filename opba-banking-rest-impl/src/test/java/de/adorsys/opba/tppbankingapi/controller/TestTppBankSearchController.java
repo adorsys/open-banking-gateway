@@ -1,7 +1,5 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
-import de.adorsys.opba.api.security.external.domain.OperationType;
-import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.tppbankingapi.BaseMockitoTest;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +15,6 @@ import java.time.Instant;
 import java.util.UUID;
 
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.FINTECH_ID;
-import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_OPERATION_TYPE;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_REQUEST_ID;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_TIMESTAMP_UTC;
@@ -62,7 +59,6 @@ class TestTppBankSearchController extends BaseMockitoTest {
 
                         .header(X_REQUEST_ID, xRequestId)
                         .header(X_TIMESTAMP_UTC, xTimestampUtc)
-                        .header(X_OPERATION_TYPE, OperationType.BANK_SEARCH)
                         .header(X_REQUEST_SIGNATURE, requestSigningService.signature(""))
                         .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
 
@@ -87,19 +83,12 @@ class TestTppBankSearchController extends BaseMockitoTest {
 
     @NotNull
     private ResultActions performBankSearchRequest(UUID xRequestId, Instant xTimestampUtc, String keyword) throws Exception {
-        BankSearchDataToSign bankSearchDataToSign = BankSearchDataToSign.builder()
-                                             .xRequestId(xRequestId)
-                                             .instant(xTimestampUtc)
-                                             .operationType(OperationType.BANK_SEARCH)
-                                             .keyword(keyword)
-                                             .build();
 
         return mockMvc.perform(
                 get("/v1/banking/search/bank-search")
                         .header("Compute-PSU-IP-Address", "true")
                         .header(X_REQUEST_ID, xRequestId)
                         .header(X_TIMESTAMP_UTC, xTimestampUtc)
-                        .header(X_OPERATION_TYPE, OperationType.BANK_SEARCH)
                         .header(X_REQUEST_SIGNATURE, requestSigningService.signature(""))
                         .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
                         .param("keyword", keyword)

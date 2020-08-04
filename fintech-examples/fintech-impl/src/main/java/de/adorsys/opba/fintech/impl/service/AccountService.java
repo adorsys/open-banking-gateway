@@ -1,6 +1,5 @@
 package de.adorsys.opba.fintech.impl.service;
 
-import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.utils.LoARetrievalInformation;
 import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
@@ -96,7 +95,6 @@ public class AccountService {
                 RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
                 xRequestId,
                 COMPUTE_X_TIMESTAMP_UTC,
-                OperationType.AIS.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
                 bankID,
@@ -114,7 +112,6 @@ public class AccountService {
                 RedirectUrlsEntity.buildNokUrl(uiConfig, redirectCode),
                 xRequestId,
                 COMPUTE_X_TIMESTAMP_UTC,
-                OperationType.AIS.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
                 bankID, null, serviceSessionID, null, null, null, null, null);

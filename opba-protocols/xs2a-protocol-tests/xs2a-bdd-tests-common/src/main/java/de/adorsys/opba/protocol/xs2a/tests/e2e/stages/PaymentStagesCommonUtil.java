@@ -1,12 +1,10 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
-import de.adorsys.opba.api.security.external.domain.OperationType;
-import de.adorsys.opba.api.security.external.domain.signdata.GetPaymentDataToSign;
-import de.adorsys.opba.api.security.external.domain.signdata.PaymentInitiationDataToSign;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import lombok.experimental.UtilityClass;
+import org.springframework.boot.actuate.endpoint.OperationType;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -17,7 +15,6 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_U
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_OK;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_USER_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_OPERATION_TYPE;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_PIS_PSU_AUTHENTICATION_REQUIRED;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_SIGNATURE;
@@ -100,69 +97,35 @@ public class PaymentStagesCommonUtil {
                        .header(X_XSRF_TOKEN, XSRF_TOKEN)
                        .header(X_REQUEST_ID, xRequestId.toString())
                        .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
-                       .header(X_OPERATION_TYPE, operationType)
                        .header(X_PIS_PSU_AUTHENTICATION_REQUIRED, psuAuthenticationRequired)
                        .header(X_REQUEST_SIGNATURE, calculatePaymentSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId, psuAuthenticationRequired, body, bankId))
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
-    public static RequestSpecification withPaymentInfoHeaders(
-            String fintechUserId,
-            RequestSigningService requestSigningService,
-            OperationType operationType) {
-        return withPaymentInfoHeaders(fintechUserId, requestSigningService, operationType, SANDBOX_BANK_ID);
-    }
-
-    public static RequestSpecification withPaymentInfoHeaders(
-            String fintechUserId,
-            RequestSigningService requestSigningService,
-            OperationType operationType,
-            String bankId) {
-
+    public static RequestSpecification withPaymentInfoHeaders(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
         return RestAssured
                        .given()
-                       .header(BANK_ID, bankId)
-                       .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
-                       .header(FINTECH_USER_ID, fintechUserId)
-                       .header(FINTECH_ID, DEFAULT_FINTECH_ID)
-                       .header(X_XSRF_TOKEN, XSRF_TOKEN)
-                       .header(X_REQUEST_ID, xRequestId.toString())
-                       .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
-                       .header(X_OPERATION_TYPE, operationType)
-                       .header(X_REQUEST_SIGNATURE, calculatePaymentInfoSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId, bankId))
-                       .header(PSU_IP_ADDRESS, IP_ADDRESS);
+                            .header(BANK_ID, SANDBOX_BANK_ID)
+                            .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
+                            .header(FINTECH_USER_ID, fintechUserId)
+                            .header(FINTECH_ID, DEFAULT_FINTECH_ID)
+                            .header(X_XSRF_TOKEN, XSRF_TOKEN)
+                            .header(X_REQUEST_ID, xRequestId.toString())
+                            .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
+                            .header(X_REQUEST_SIGNATURE, calculatePaymentInfoSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId))
+                            .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
     private static String calculatePaymentSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
                                                     OperationType operationType, String fintechUserId, boolean psuAuthenticationRequired, String body, String bankId) {
-        PaymentInitiationDataToSign paymentInitiationDataToSign = PaymentInitiationDataToSign.builder()
-                                                                          .xRequestId(xRequestId)
-                                                                          .instant(xTimestampUtc)
-                                                                          .operationType(operationType)
-                                                                          .bankId(bankId)
-                                                                          .fintechUserId(fintechUserId)
-                                                                          .redirectOk(FINTECH_REDIR_OK)
-                                                                          .redirectNok(FINTECH_REDIR_NOK)
-                                                                          .psuAuthenticationRequired(String.valueOf(psuAuthenticationRequired))
-                                                                          .body(body)
-                                                                          .build();
-
         return requestSigningService.signature("");
     }
 
     private static String calculatePaymentInfoSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
-                                                        OperationType operationType, String fintechUserId, String bankId) {
-        GetPaymentDataToSign getPaymentDataToSign = GetPaymentDataToSign.builder()
-                                             .xRequestId(xRequestId)
-                                             .instant(xTimestampUtc)
-                                             .operationType(operationType)
-                                             .bankId(bankId)
-                                             .fintechUserId(fintechUserId)
-                                             .build();
-
+                                                        OperationType operationType, String fintechUserId) {
         return requestSigningService.signature("");
     }
 }

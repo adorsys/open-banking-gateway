@@ -1,6 +1,5 @@
 package de.adorsys.opba.fintech.impl.service;
 
-import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.fintech.impl.database.entities.ConsentEntity;
 import de.adorsys.opba.fintech.impl.database.entities.UserEntity;
 import de.adorsys.opba.fintech.impl.database.repositories.ConsentRepository;
@@ -36,7 +35,6 @@ public class ConsentService {
                 xRequestId,
                 tppProperties.getServiceSessionPassword(),
                 COMPUTE_X_TIMESTAMP_UTC,
-                OperationType.CONFIRM_CONSENT.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID
         ).getStatusCode();
@@ -50,7 +48,6 @@ public class ConsentService {
                 xRequestId,
                 tppProperties.getServiceSessionPassword(),
                 COMPUTE_X_TIMESTAMP_UTC,
-                OperationType.CONFIRM_PAYMENT.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID
         ).getStatusCode();
