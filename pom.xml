@@ -114,6 +114,10 @@
         <hibernate.version>5.4.9.Final</hibernate.version> <!-- Currently only for bytecode enhancer plugin, can't inherit Spring BOM -->
         <jjwt.version>0.11.1</jjwt.version>
         <nimbus.version>8.18</nimbus.version>
+        <javapoet.version>1.13.0</javapoet.version>
+        <swagger-parser.version>2.0.21</swagger-parser.version>
+        <jackson-yaml.version>2.11.1</jackson-yaml.version>
+        <auto-service.version>1.0-rc7</auto-service.version>
 
         <!-- Flowable BPMN -->
         <flowable.version>6.4.2</flowable.version>
