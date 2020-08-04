@@ -101,4 +101,6 @@ public interface RequestVerifyingService {
      * @return 'true' if the signature is valid, 'false' otherwise
      */
     boolean verify(String signature, String encodedPublicKey, GetPaymentStatusDataToSign paymentInitiationDataToSign);
+
+    boolean verify(String providedSignature, String encodedPublicKey, String computedSignature);
 }
