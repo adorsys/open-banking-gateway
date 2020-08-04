@@ -124,7 +124,7 @@ class HbciStubGenerator {
             int len = Integer.parseInt(binMatcher.group(1));
             int binEnd = binMatcher.end(1) + len;
             if (binEnd < message.length()) {
-                message = message.substring(0, binEnd) + message.substring(binEnd + 1).split("[\r\n]")[0];
+                message = message.substring(0, binEnd + 1) + message.substring(binEnd + 1).split("[\r\n]")[0];
             }
         }
 

@@ -30,9 +30,9 @@ public class HbciPaymentInitiationRequest<SELF extends HbciPaymentInitiationRequ
         ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, bankId, requestSigningService, PIS, body)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(body)
-                .when()
+            .when()
                 .post(PIS_SINGLE_PAYMENT_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
-                .then()
+            .then()
                 .statusCode(ACCEPTED.value())
                 .extract();
 

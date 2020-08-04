@@ -35,7 +35,6 @@ export class PaymentAccountPaymentsComponent implements OnInit {
       );
   }
 
-
   initiateSinglePayment( ) {
     console.log('go to initiate');
     this.router.navigate(['../initiate'], { relativeTo: this.route });
@@ -44,6 +43,4 @@ export class PaymentAccountPaymentsComponent implements OnInit {
   onDeny() {
     this.router.navigate(['../../../accounts'], { relativeTo: this.route });
   }
-
-
 }

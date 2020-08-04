@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.PAYMENT;
+import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.PAYMENT_STATUS;
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.SEPA_INFO;
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.TRANSACTIONS;
 
@@ -34,11 +35,9 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
             if (context.getBank().getSecurity().getTransactions() == SensitiveAuthLevel.AUTHENTICATED) {
                 return "response-templates/authenticated/custom-message-konto-mt940.json";
             }
-
             if (RequestStatusUtil.isForTransactionListing(context.getRequestData())) {
                 context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "TAN2Step6\\.OrderAccount\\.number"));
             }
-
             return getAuthorizationRequiredTemplateOrWrongTanMethod();
         }
 
@@ -46,12 +45,20 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
             if (context.getBank().getSecurity().getPayment() == SensitiveAuthLevel.AUTHENTICATED) {
                 return "response-templates/authenticated/custom-message-konto-mt940.json";
             }
-
             if (RequestStatusUtil.isForPayment(context.getRequestData())) {
                 context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "TAN2Step6\\.OrderAccount\\.number"));
             }
-
             return "response-templates/authenticated/custom-message-authorization-required-payment.json";
+        }
+
+        if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(PAYMENT_STATUS))) {
+            if (context.getBank().getSecurity().getPaymentStatus() == SensitiveAuthLevel.AUTHENTICATED) {
+                return "response-templates/authenticated/custom-message-payment-status.json";
+            }
+            if (RequestStatusUtil.isForPaymentStatus(context.getRequestData())) {
+                context.setPaymentId(MapRegexUtil.getDataRegex(context.getRequestData(), "SigTail_2\\.seccheckref"));
+            }
+            return "response-templates/authenticated/custom-message-authorization-required-payment-status.json";
         }
 
         throw new IllegalStateException("Cant't handle message: " + context.getRequestData());

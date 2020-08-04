@@ -4,6 +4,7 @@ import de.adorsys.opba.protocol.api.authorization.UpdateAuthorization;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.parameters.ExtraAuthRequestParam;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
+import de.adorsys.opba.protocol.api.dto.result.body.ScaMethod;
 import de.adorsys.opba.protocol.api.dto.result.body.UpdateAuthBody;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
@@ -71,6 +72,10 @@ public class HbciUpdateAuthorization implements UpdateAuthorization {
 
         if (null != scaChallenges.get(SCA_CHALLENGE_ID)) {
             context.setUserSelectScaId(scaChallenges.get(SCA_CHALLENGE_ID));
+            context.setUserSelectScaType(context.getAvailableSca().stream()
+                    .filter(it -> context.getUserSelectScaId().equals(it.getKey()))
+                    .map(ScaMethod::getType)
+                    .findFirst().orElse(null));
         }
     }
 }

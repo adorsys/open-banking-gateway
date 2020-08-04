@@ -10,6 +10,7 @@ import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciPaymentInit
 import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciPaymentInitiationResult;
 import de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.HbciServers;
 import de.adorsys.opba.protocol.sandbox.hbci.HbciServerApplication;
+import de.adorsys.xs2a.adapter.service.model.TransactionStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.Const.HBCI_SANDBOX_CONFIG;
+import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.BANK_BLZ_30000003_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -70,7 +72,7 @@ class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
     }
 
     @Test
-    void testSinglePaymentWithSca() {
+    void testPaymentStatusWithSca() {
         given()
                 .rest_assured_points_to_opba_server()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -86,11 +88,11 @@ class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
                 .and()
                 .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
                 .and()
-                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok_pis();
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
         then()
                 .open_banking_has_stored_payment()
-                .fintech_calls_payment_activation_for_current_authorization_id();
-        // TODO check payment status
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.ACSC.name());
     }
 
     private void makeHbciAdapterToPointToHbciMockEndpoints() {

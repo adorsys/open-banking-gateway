@@ -21,6 +21,8 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 public class HbciContext extends BaseContext {
 
+    public static final String DEFAULT_SCA_METHOD = "EMAIL";
+
     /**
      * PSU user ID (login) in ASPSP API
      */
@@ -32,7 +34,10 @@ public class HbciContext extends BaseContext {
     private Map<ProtocolAction, String> flowByAction = ImmutableMap.of(
             ProtocolAction.LIST_ACCOUNTS, "hbci-list-accounts",
             ProtocolAction.LIST_TRANSACTIONS, "hbci-list-transactions",
-            ProtocolAction.SINGLE_PAYMENT, "hbci-single-payment"
+            ProtocolAction.SINGLE_PAYMENT, "hbci-single-payment",
+            ProtocolAction.GET_PAYMENT_STATUS, "hbci-payment-status",
+            ProtocolAction.GET_PAYMENT_INFORMATION, "hbci-payment-status"
+
     );
 
     /**
@@ -82,6 +87,11 @@ public class HbciContext extends BaseContext {
     private String userSelectScaId;
 
     /**
+     * saves selected SCA method and returns it back in sca-result url
+     */
+    private String userSelectScaType = DEFAULT_SCA_METHOD;
+
+    /**
      * Indicates that while consent exists, it is incompatible.
      */
     private boolean consentIncompatible;
@@ -127,6 +137,8 @@ public class HbciContext extends BaseContext {
     @JsonIgnore
     public HbciProtocolConfiguration.UrlSet getActiveUrlSet(HbciProtocolConfiguration config) {
         return ProtocolAction.SINGLE_PAYMENT.equals(this.getAction())
+                || ProtocolAction.GET_PAYMENT_INFORMATION.equals(this.getAction())
+                || ProtocolAction.GET_PAYMENT_STATUS.equals(this.getAction())
                 ? config.getPis() : config.getAis();
     }
 }

@@ -1,0 +1,32 @@
+{
+  "id" : "3f4ca944-cee5-331a-9798-82996b90bd4d",
+  "scenarioName": "Embedded max.musterman initiate payment",
+  "requiredScenarioState": "Finalised",
+  "request" : {
+    "url" : "/v1/payments/sepa-credit-transfers/XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q",
+    "method" : "GET",
+    "headers": {
+      "X-Request-ID": {
+        "matches": "[0-9a-zA-z\\-]+"
+      },
+      "PSU-ID": {
+        "equalTo": "max.musterman"
+      },
+      "Content-Type": {
+        "equalTo": "application/json; charset=UTF-8"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-v1-payments-sepa-credit-transfers-j08oa.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "X-Request-Id" : "817856b1-aac1-41d0-98a6-a2fdf9910fe0",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Date" : "Wed, 29 Jul 2020 08:49:27 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "3f4ca944-cee5-331a-9798-82996b90bd4d"
+}
