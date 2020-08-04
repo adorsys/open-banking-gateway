@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.FINTECH_ID;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_REQUEST_ID;
-import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_TIMESTAMP_UTC;
 import static de.adorsys.opba.tppbankingapi.TestProfiles.ONE_TIME_POSTGRES_ON_DISK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
