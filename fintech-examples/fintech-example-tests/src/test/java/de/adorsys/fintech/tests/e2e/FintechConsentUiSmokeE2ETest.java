@@ -43,17 +43,17 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
     @Autowired
     private SmokeConfig smokeConfig;
 
-    @Autowired
-    private ConsentAuthApproachState state;
-
-    @MockBean
-    private RequestSigningService requestSigningService;
-
     @MockBean
     private TppTokenProperties tppTokenProperties;
 
     @MockBean
     private CookieProperties cookieProperties;
+
+    @Autowired
+    private ConsentAuthApproachState state;
+
+    @MockBean
+    private RequestSigningService requestSigningService;
 
     @BeforeEach
     void memoizeConsentAuthorizationPreference() {

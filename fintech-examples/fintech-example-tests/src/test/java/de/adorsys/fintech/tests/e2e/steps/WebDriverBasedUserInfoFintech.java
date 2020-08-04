@@ -141,6 +141,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     public SELF user_login_with_its_credentials(WebDriver driver, String username) {
         sendText(driver, By.id("username"), username);
         sendText(driver, By.id("password"), PIN);
+        clickOnButton(driver, By.xpath("//button[@type='submit']"));
         return self();
     }
 
@@ -182,8 +183,6 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         user_opens_fintechui_login_page(firefoxDriver)
                 .and()
                 .user_login_with_its_credentials(firefoxDriver, username)
-                .and()
-                .user_confirm_login(firefoxDriver)
                 .and()
                 .user_looks_for_a_bank_in_the_bank_search_input_place(firefoxDriver, profile)
                 .and()
