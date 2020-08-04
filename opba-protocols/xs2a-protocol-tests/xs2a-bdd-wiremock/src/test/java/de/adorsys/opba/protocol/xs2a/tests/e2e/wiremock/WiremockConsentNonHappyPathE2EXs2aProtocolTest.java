@@ -71,7 +71,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_accounts_running_for_non_happy_path()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
@@ -100,7 +100,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_transactions_running_for_non_happy_path()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
@@ -130,7 +130,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running_for_non_happy_path()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
         when()
                 .fintech_calls_list_accounts_for_anton_brueckner_no_ip_address()
@@ -146,7 +146,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_transactions_running_for_non_happy_path()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
@@ -178,7 +178,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
                 .redirect_mock_of_sandbox_nopsu_for_anton_brueckner_accounts_running_for_non_happy_path(tempDir)
                 .ignore_validation_rules_table_contains_field_psu_id()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
         when()
                 .fintech_calls_list_accounts_for_anton_brueckner()
@@ -202,7 +202,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_transactions_running_for_non_happy_path()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(approach)
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
@@ -233,7 +233,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
         given()
                 .embedded_mock_of_sandbox_for_max_musterman_accounts_running_for_non_happy_path()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
@@ -261,7 +261,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
         given()
                 .redirect_mock_of_sandbox_for_anton_brueckner_accounts_running_for_non_happy_path()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(Approach.REDIRECT)
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
