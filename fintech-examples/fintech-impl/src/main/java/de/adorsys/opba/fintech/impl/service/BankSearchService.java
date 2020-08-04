@@ -1,6 +1,5 @@
 package de.adorsys.opba.fintech.impl.service;
 
-import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse2001;
 import de.adorsys.opba.fintech.api.model.generated.InlineResponse2002;
 import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
@@ -37,7 +36,6 @@ public class BankSearchService {
                 xRequestId,
                 keyword,
                 COMPUTE_X_TIMESTAMP_UTC,
-                OperationType.BANK_SEARCH.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
                 start,
@@ -64,7 +62,6 @@ public class BankSearchService {
                 xRequestId,
                 bankId,
                 COMPUTE_X_TIMESTAMP_UTC,
-                OperationType.BANK_SEARCH.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID);
     }

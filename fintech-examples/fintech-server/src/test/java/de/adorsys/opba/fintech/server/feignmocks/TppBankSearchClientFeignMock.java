@@ -18,7 +18,6 @@ public class TppBankSearchClientFeignMock implements TppBankSearchClient {
     public ResponseEntity<BankProfileResponse> bankProfileGET(UUID xRequestID,
                                                               @NotNull @Valid String bankId,
                                                               String xTimestampUTC,
-                                                              String xOperationType,
                                                               String xRequestSignature,
                                                               String fintechId) {
         return null;
@@ -29,7 +28,6 @@ public class TppBankSearchClientFeignMock implements TppBankSearchClient {
             UUID xRequestID,
             @NotNull @Valid String keyword,
             String xTimestampUTC,
-            String xOperationType,
             String xRequestSignature,
             String fintechId,
             @Valid Integer start,

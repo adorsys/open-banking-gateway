@@ -19,7 +19,6 @@ public class HeaderNames {
 
     public static final String X_PIS_PSU_AUTHENTICATION_REQUIRED = "X-Pis-Psu-Authentication-Required";
     public static final String X_TIMESTAMP_UTC = "X-Timestamp-UTC";
-    public static final String X_OPERATION_TYPE = "X-Operation-Type";
     public static final String X_REQUEST_SIGNATURE = "X-Request-Signature";
     public static final String X_REQUEST_ID = "X-Request-ID";
 }

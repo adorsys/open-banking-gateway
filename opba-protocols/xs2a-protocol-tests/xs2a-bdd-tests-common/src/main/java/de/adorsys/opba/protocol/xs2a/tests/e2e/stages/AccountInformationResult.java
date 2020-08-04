@@ -6,7 +6,6 @@ import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import de.adorsys.opba.protocol.xs2a.tests.GetTransactionsQueryParams;
@@ -16,6 +15,7 @@ import io.restassured.response.Response;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.endpoint.OperationType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -313,7 +313,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         GetTransactionsQueryParams queryParams = new GetTransactionsQueryParams(dateFrom.format(ISO_DATE), dateTo.format(ISO_DATE), null, bookingStatus, null);
-        withTransactionsHeaders(MAX_MUSTERMAN, requestSigningService, OperationType.AIS, queryParams)
+        withTransactionsHeaders(MAX_MUSTERMAN, requestSigningService, queryParams)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam("dateFrom", dateFrom.format(ISO_DATE))
                 .queryParam("dateTo", dateTo.format(ISO_DATE))
@@ -395,7 +395,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         withSignatureHeaders(RestAssured
                 .given()
                     .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE), requestSigningService, OperationType.CONFIRM_CONSENT)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE), requestSigningService)
                 .when()
                     .post(CONFIRM_CONSENT_ENDPOINT, serviceSessionId)
                 .then()

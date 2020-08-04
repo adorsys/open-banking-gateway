@@ -137,16 +137,6 @@ components:
       schema:
         type: string
 
-    X-Operation-Type:
-      name: X-Operation-Type
-      in: header
-      required: false
-      description: |
-        The type of the fintech request.
-      example: "AIS"
-      schema:
-        type: string
-
     X-Pis-Psu-Authentication-Required:
       name: X-Pis-Psu-Authentication-Required
       in: header

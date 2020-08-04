@@ -1,6 +1,5 @@
 package de.adorsys.opba.fintech.impl.service;
 
-import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
 import de.adorsys.opba.fintech.impl.controller.utils.LoTRetrievalInformation;
 import de.adorsys.opba.fintech.impl.controller.utils.RestRequestContext;
@@ -65,7 +64,7 @@ public class TransactionService {
                 RedirectUrlsEntity.buildOkUrl(uiConfig, fintechRedirectCode),
                 RedirectUrlsEntity.buildNokUrl(uiConfig, fintechRedirectCode),
                 UUID.fromString(restRequestContext.getRequestId()),
-                COMPUTE_X_TIMESTAMP_UTC, OperationType.AIS.toString(),
+                COMPUTE_X_TIMESTAMP_UTC,
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID, bankId, null,
                 optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
