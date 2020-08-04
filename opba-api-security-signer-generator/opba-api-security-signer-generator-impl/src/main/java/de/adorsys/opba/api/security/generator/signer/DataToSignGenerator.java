@@ -22,7 +22,7 @@ import java.util.Comparator;
 public class DataToSignGenerator {
 
     public ClassName generate(String packageName, String name, Operation operation, Filer filer) {
-        ClassName targetClass = ClassName.get(packageName , name);
+        ClassName targetClass = ClassName.get(packageName, name);
         TypeSpec.Builder signer = TypeSpec
                 .classBuilder(targetClass)
                 .addModifiers(Modifier.PUBLIC);
@@ -143,7 +143,7 @@ public class DataToSignGenerator {
     private void addMandatoryHeader(CodeBlock.Builder block, ParameterSpec toSign, Parameter header) {
         block.addStatement("// Mandatory header $L", header.getName());
         String headerVar = header.getName().replaceAll("-", "_");
-        block.addStatement("String $L = $N.getHeaders().get($S)", headerVar, toSign, header.getName());
+        block.addStatement("String $L = $N.getHeaders().get($S)", headerVar, toSign, header.getName().toLowerCase());
         block.beginControlFlow("if (null == $L || \"\".equals($L))", headerVar, headerVar);
         block.addStatement("throw new IllegalStateException(\"Missing $L mandatory header\")", header.getName());
         block.endControlFlow();
@@ -153,7 +153,7 @@ public class DataToSignGenerator {
     private void addOptionalHeader(CodeBlock.Builder block, ParameterSpec toSign, Parameter header) {
         block.addStatement("// Optional header $L", header.getName());
         String headerVar = header.getName().replaceAll("-", "_");
-        block.addStatement("String $L = $N.getHeaders().get($S)", headerVar, toSign, header.getName());
+        block.addStatement("String $L = $N.getHeaders().get($S)", headerVar, toSign, header.getName().toLowerCase());
         block.beginControlFlow("if (null != $L && !\"\".equals($L))", headerVar, headerVar);
         block.addStatement("result.append($S).append(\"=\").append($L).append(\"&\")", header.getName(), headerVar);
         block.endControlFlow();

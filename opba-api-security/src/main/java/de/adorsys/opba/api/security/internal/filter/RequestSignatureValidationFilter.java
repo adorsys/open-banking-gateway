@@ -1,12 +1,17 @@
 package de.adorsys.opba.api.security.internal.filter;
 
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.io.CharStreams;
+import de.adorsys.opba.api.security.RequestSignerImpl;
 import de.adorsys.opba.api.security.external.domain.FilterValidationHeaderValues;
 import de.adorsys.opba.api.security.external.domain.HttpHeaders;
-import de.adorsys.opba.api.security.external.domain.OperationType;
-import de.adorsys.opba.api.security.external.mapper.HttpRequestToDataToSignMapper;
+import de.adorsys.opba.api.security.generator.api.RequestDataToSignGenerator;
+import de.adorsys.opba.api.security.generator.api.RequestToSign;
+import de.adorsys.opba.api.security.generator.api.Signer;
 import de.adorsys.opba.api.security.internal.config.OperationTypeProperties;
 import de.adorsys.opba.api.security.internal.service.RequestVerifyingService;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.Filter;
@@ -20,6 +25,10 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
@@ -72,7 +81,8 @@ public class RequestSignatureValidationFilter implements Filter {
             return;
         }
 
-        boolean verificationResult = verifyRequestSignature(request, headerValues, instant, fintechApiKey);
+
+        boolean verificationResult = verifyRequestSignature(request, fintechApiKey);
 
         if (validateVerificationResult(verificationResult, response) && validateExpirationDate(instant, response)) {
             filterChain.doFilter(request, response);
@@ -165,38 +175,52 @@ public class RequestSignatureValidationFilter implements Filter {
         return true;
     }
 
-    private boolean verifyRequestSignature(HttpServletRequest request, FilterValidationHeaderValues headerValues, Instant instant, String fintechApiKey) {
-        HttpRequestToDataToSignMapper mapper = new HttpRequestToDataToSignMapper();
-        OperationType operationType = OperationType.valueOf(headerValues.getOperationType());
+    @SneakyThrows
+    private boolean verifyRequestSignature(HttpServletRequest request, String fintechApiKey) {
+        // RequestSignerImpl - This is generated class by opba-api-security-signer-generator-impl annotation processor
+        Signer signer = new RequestSignerImpl();
+        String body = request.getReader().ready() ? CharStreams.toString(request.getReader()) : null;
+        RequestToSign toSign = RequestToSign.builder()
+                .method(Signer.HttpMethod.valueOf(request.getMethod()))
+                .path(request.getServletPath())
+                .headers(extractHeaders(request))
+                .queryParams(extractQueryParams(request))
+                .body(body)
+                .build();
+        RequestDataToSignGenerator signatureGen = signer.signerFor(toSign);
+        String expectedSignature = signatureGen.canonicalStringToSign(toSign);
 
-        switch (operationType) {
-            case AIS:
-                if (OperationType.isTransactionsPath(request.getRequestURI())) {
-                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToListTransactions(request, instant));
-                } else {
-                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToListAccounts(request, instant));
-                }
-            case BANK_SEARCH:
-                if (OperationType.isBankSearchPath(request.getRequestURI())) {
-                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToBankSearch(request, instant));
-                } else {
-                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToBankProfile(request, instant));
-                }
-            case CONFIRM_CONSENT:
-                return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToConfirmConsent(request, instant));
-            case CONFIRM_PAYMENT:
-                return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToConfirmPayment(request, instant));
-            case PIS:
-                if (OperationType.isGetPaymentStatus(request.getRequestURI())) {
-                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToGetPaymentStatus(request, instant));
-                } else if (OperationType.isGetPayment(request.getMethod())) {
-                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToGetPayment(request, instant));
-                } else {
-                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToPaymentInititation(request, instant));
-                }
-            default:
-                throw new IllegalArgumentException(String.format("Unsupported operation type %s", operationType));
+        return requestVerifyingService.verify(request.getHeader(HttpHeaders.X_REQUEST_SIGNATURE), fintechApiKey, expectedSignature);
+    }
+
+    private Map<String, String> extractHeaders(HttpServletRequest request) {
+        Set<String> excludeHeadersFromSignature = ImmutableSet.of(
+                HttpHeaders.X_REQUEST_SIGNATURE.toLowerCase(),
+                HttpHeaders.FINTECH_ID.toLowerCase(),
+                HttpHeaders.X_TIMESTAMP_UTC.toLowerCase()
+        );
+
+        Map<String, String> result = new HashMap<>();
+        Enumeration<String> names = request.getHeaderNames();
+        while (names.hasMoreElements()) {
+            String headerName = names.nextElement();
+            // Skip signature itself and other headers not relevant to signature
+            if (excludeHeadersFromSignature.contains(headerName.toLowerCase())) {
+                continue;
+            }
+            result.put(headerName, request.getHeader(headerName));
         }
+        return result;
+    }
+
+    private Map<String, String> extractQueryParams(HttpServletRequest request) {
+        Map<String, String> result = new HashMap<>();
+        Enumeration<String> names = request.getParameterNames();
+        while (names.hasMoreElements()) {
+            String parameterName = names.nextElement();
+            result.put(parameterName, request.getParameter(parameterName));
+        }
+        return result;
     }
 
     private boolean isRequestExpired(Instant operationTime) {

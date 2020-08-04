@@ -9,6 +9,9 @@ import io.swagger.v3.parser.OpenAPIV3Parser;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.TypeElement;
+import javax.tools.StandardLocation;
+import java.io.IOException;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -26,13 +29,14 @@ public class RequestSigningGenerator {
     public void generate(TypeElement forClass, String[] yamlSpec, Filer filer) {
         Map<String, Map<Signer.HttpMethod, Operation>> requestSpecConfig = new HashMap<>();
 
-        Arrays.stream(yamlSpec).forEach(it -> readAllRequestsDefinitions(it, requestSpecConfig));
+        Arrays.stream(yamlSpec).forEach(yamlLocation -> readAllRequestsDefinitions(getYamlLocation(filer, yamlLocation), requestSpecConfig));
+
 
         signerGenerator.generate(ClassName.get(forClass).packageName(), filer, requestSpecConfig);
     }
 
-    private void readAllRequestsDefinitions(String location, Map<String, Map<Signer.HttpMethod, Operation>> requestSpecConfig) {
-        OpenAPI api = new OpenAPIV3Parser().read(location);
+    private void readAllRequestsDefinitions(URI yamlLocation, Map<String, Map<Signer.HttpMethod, Operation>> requestSpecConfig) {
+        OpenAPI api = new OpenAPIV3Parser().read(yamlLocation.toASCIIString());
         for (Map.Entry<String, PathItem> pathEntry : api.getPaths().entrySet()) {
             String path = pathEntry.getKey();
 
@@ -41,6 +45,14 @@ public class RequestSigningGenerator {
             registerMethod(path, () -> pathEntry.getValue().getPost(), Signer.HttpMethod.POST, requestSpecConfig);
             registerMethod(path, () -> pathEntry.getValue().getPatch(), Signer.HttpMethod.PATCH, requestSpecConfig);
             registerMethod(path, () -> pathEntry.getValue().getDelete(), Signer.HttpMethod.DELETE, requestSpecConfig);
+        }
+    }
+
+    private URI getYamlLocation(Filer filer, String location) {
+        try {
+            return filer.getResource(StandardLocation.CLASS_PATH, "", location).toUri();
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
         }
     }
 

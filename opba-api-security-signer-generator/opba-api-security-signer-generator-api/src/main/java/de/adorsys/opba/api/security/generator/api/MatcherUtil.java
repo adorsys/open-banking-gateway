@@ -1,7 +1,7 @@
 package de.adorsys.opba.api.security.generator.api;
 
 // Can't safely use Lombok in self-generated classes
-public class MatcherUtil {
+public final class MatcherUtil {
 
     private MatcherUtil() {
     }
@@ -10,7 +10,7 @@ public class MatcherUtil {
         String[] definedSegments = definedPath.split("/", -1);
         String[] pathSegments = path.split("/", -1);
 
-        if (definedPath.length() != pathSegments.length) {
+        if (definedSegments.length != pathSegments.length) {
             return false;
         }
 

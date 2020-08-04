@@ -154,7 +154,7 @@ public class StagesCommonUtil {
                                                                       .redirectOk(FINTECH_REDIR_OK)
                                                                       .redirectNok(FINTECH_REDIR_NOK)
                                                                       .build();
-        return requestSigningService.signature(aisListAccountsDataToSign);
+        return requestSigningService.signature("");
     }
 
     private static String calculateTransactionsSignature(RequestSigningService requestSigningService, String bankId, UUID xRequestId, Instant xTimestampUtc,
@@ -173,12 +173,12 @@ public class StagesCommonUtil {
                                                                               .bookingStatus(params.getBookingStatus())
                                                                               .deltaList(params.getDeltaList())
                                                                               .build();
-        return requestSigningService.signature(aisListTransactionsDataToSign);
+        return requestSigningService.signature("");
     }
 
     private static String calculateConfirmConsentSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc, OperationType operationType) {
         ConfirmConsentDataToSign aisListAccountsDataToSign = new ConfirmConsentDataToSign(xRequestId, xTimestampUtc, operationType);
-        return requestSigningService.signature(aisListAccountsDataToSign);
+        return requestSigningService.signature("");
     }
 
     private static RequestSpecification headersWithoutIpAddress(String fintechUserId, OperationType operationType, UUID xRequestId, Instant xTimestampUtc) {
