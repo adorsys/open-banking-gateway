@@ -14,15 +14,11 @@ import static com.google.testing.compile.Compiler.javac;
 class SignerGenerationTest {
 
     @Test
-    void testBasicCases() throws IOException {
+    void testBasicCases() {
         Compilation compilation = javac()
                 .withProcessors(new SignerGeneratingProcessor())
                 .compile(JavaFileObjects.forResource("SignerConfigurer.java"));
 
         assertThat(compilation).succeededWithoutWarnings();
-
-        for (JavaFileObject generated : compilation.generatedSourceFiles()) {
-            System.out.println(generated.getCharContent(true));
-        }
     }
 }
