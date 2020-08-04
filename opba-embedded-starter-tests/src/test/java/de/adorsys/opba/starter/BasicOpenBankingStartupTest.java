@@ -1,7 +1,6 @@
 package de.adorsys.opba.starter;
 
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
-import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aListAccountsEntrypoint;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aSandboxListTransactionsEntrypoint;
 import de.adorsys.opba.protocol.xs2a.tests.GetTransactionsQueryParams;
@@ -69,7 +68,7 @@ class BasicOpenBankingStartupTest {
     @Test
     @SneakyThrows
     void testXs2aProtocolIsWiredForSandboxAccountList() {
-        withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
+        withAccountsHeaders(ANTON_BRUECKNER, requestSigningService)
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
             .when()
                 .get(AIS_ACCOUNTS_ENDPOINT)
@@ -82,7 +81,7 @@ class BasicOpenBankingStartupTest {
     @Test
     @SneakyThrows
     void testXs2aProtocolIsWiredForSandboxTransactionList() {
-        withTransactionsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
+        withTransactionsHeaders(ANTON_BRUECKNER, requestSigningService, GetTransactionsQueryParams.newEmptyInstance())
                 .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
             .when()
                 .get(AIS_TRANSACTIONS_ENDPOINT, "ACCOUNT-1")

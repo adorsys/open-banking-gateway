@@ -15,7 +15,6 @@ import io.restassured.response.Response;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.endpoint.OperationType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -128,7 +127,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     public SELF open_banking_can_read_anton_brueckner_account_data_using_consent_bound_to_service_session(
         boolean validateResourceId
     ) {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService)
                     .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -149,7 +148,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     public SELF open_banking_can_read_user_account_data_using_consent_bound_to_service_session(
             String user, boolean validateResourceId
     ) {
-        ExtractableResponse<Response> response = withAccountsHeaders(user, requestSigningService, OperationType.AIS)
+        ExtractableResponse<Response> response = withAccountsHeaders(user, requestSigningService)
                         .header(SERVICE_SESSION_ID, serviceSessionId)
                      .when()
                         .get(AIS_ACCOUNTS_ENDPOINT)
@@ -175,7 +174,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(
         boolean validateResourceId
     ) {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService)
                     .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -267,7 +266,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         String psuId, String bankId, String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         GetTransactionsQueryParams queryParams = new GetTransactionsQueryParams(dateFrom.format(ISO_DATE), dateTo.format(ISO_DATE), null, bookingStatus, null);
-        return withTransactionsHeaders(psuId, bankId, requestSigningService, OperationType.AIS, queryParams)
+        return withTransactionsHeaders(psuId, bankId, requestSigningService, queryParams)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam("dateFrom", dateFrom.format(ISO_DATE))
                 .queryParam("dateTo", dateTo.format(ISO_DATE))
@@ -283,7 +282,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
     ) {
         GetTransactionsQueryParams queryParams = new GetTransactionsQueryParams(dateFrom.format(ISO_DATE), dateTo.format(ISO_DATE), null, bookingStatus, null);
-        withTransactionsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS, queryParams)
+        withTransactionsHeaders(ANTON_BRUECKNER, requestSigningService, queryParams)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .queryParam("dateFrom", dateFrom.format(ISO_DATE))
                 .queryParam("dateTo", dateTo.format(ISO_DATE))

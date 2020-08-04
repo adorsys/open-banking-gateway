@@ -4,7 +4,6 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentRequestCommon;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -37,7 +36,7 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
         this.redirectOkUri = paymentInitiateRequest.getHeader(TPP_REDIRECT_URI);
         ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
                         .given()
-                              .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie), requestSigningService, OperationType.PIS)
+                              .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie), requestSigningService)
                         .when()
                             .get(redirectOkUri)
                         .then()
@@ -57,7 +56,7 @@ public class WiremockPaymentRequest<SELF extends WiremockPaymentRequest<SELF>> e
 
         this.redirectOkUri = paymentInitiateRequest.getHeader(TPP_REDIRECT_URI);
         withSignatureHeaders(RestAssured
-                                        .given(), requestSigningService, OperationType.PIS)
+                                        .given(), requestSigningService)
                                         .when()
                                                 .get(redirectOkUri)
                                         .then()

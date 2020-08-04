@@ -5,7 +5,6 @@ import de.adorsys.opba.protocol.xs2a.tests.GetTransactionsQueryParams;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import lombok.experimental.UtilityClass;
-import org.springframework.boot.actuate.endpoint.OperationType;
 
 import java.time.Instant;
 import java.util.UUID;
