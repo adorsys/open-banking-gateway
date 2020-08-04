@@ -30,7 +30,7 @@ public class HbciAccountInformationResult<SELF extends HbciAccountInformationRes
 
     @SneakyThrows
     public SELF open_banking_can_read_max_musterman_hbci_account_data_using_consent_bound_to_service_session_bank_blz_30000003() {
-        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, BANK_BLZ_30000003_ID, requestSigningService)
+        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, BANK_BLZ_30000003_ID)
                     .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -53,7 +53,7 @@ public class HbciAccountInformationResult<SELF extends HbciAccountInformationRes
 
     @SneakyThrows
     public SELF open_banking_can_read_max_musterman_hbci_account_data_using_consent_bound_to_service_session_bank_blz_20000002() {
-        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, BANK_BLZ_20000002_ID, requestSigningService)
+        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, BANK_BLZ_20000002_ID)
                     .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -76,7 +76,7 @@ public class HbciAccountInformationResult<SELF extends HbciAccountInformationRes
 
     @SneakyThrows
     public SELF open_banking_can_read_anton_brueckner_hbci_account_data_using_consent_bound_to_service_session_bank_blz_30000003() {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, BANK_BLZ_30000003_ID, requestSigningService)
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, BANK_BLZ_30000003_ID)
                     .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
