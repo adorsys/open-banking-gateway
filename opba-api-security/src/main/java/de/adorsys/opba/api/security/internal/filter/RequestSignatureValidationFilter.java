@@ -160,7 +160,7 @@ public class RequestSignatureValidationFilter implements Filter {
         String body = request.getReader().ready() ? CharStreams.toString(request.getReader()) : null;
         RequestToSign toSign = RequestToSign.builder()
                 .method(Signer.HttpMethod.valueOf(request.getMethod()))
-                .path(request.getServletPath())
+                .path(request.getRequestURI())
                 .headers(extractHeaders(request))
                 .queryParams(extractQueryParams(request))
                 .body(body)

@@ -1,6 +1,7 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
+import de.adorsys.opba.api.security.requestsigner.OpenBankingSigner;
 import de.adorsys.opba.tppbankingapi.BaseMockitoTest;
 import de.adorsys.opba.tppbankingapi.dto.TestResult;
 import de.adorsys.opba.tppbankingapi.services.StatisticService;
@@ -97,14 +98,13 @@ class TestBankSearchPerformance extends BaseMockitoTest {
                 MvcResult mvcResult = mockMvc.perform(
                         get("/v1/banking/search/bank-search")
                                 .header("Authorization", "123")
-                                .header("Compute-PSU-IP-Address", "true")
                                 .header(X_REQUEST_ID, xRequestId)
                                 .header(X_TIMESTAMP_UTC, xTimestampUtc)
-                                .header(X_REQUEST_SIGNATURE, requestSigningService.signature(""))
                                 .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
                                 .param("keyword", keyword)
                                 .param("max", "10")
-                                .param("start", "0"))
+                                .param("start", "0")
+                                .with(new SignaturePostProcessor(requestSigningService, new OpenBankingSigner())))
                                               .andExpect(status().isOk())
                                               .andReturn();
                 long end = System.currentTimeMillis();
