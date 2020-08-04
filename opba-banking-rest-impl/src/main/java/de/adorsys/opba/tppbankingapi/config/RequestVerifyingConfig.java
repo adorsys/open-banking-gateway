@@ -1,7 +1,6 @@
 package de.adorsys.opba.tppbankingapi.config;
 
 import de.adorsys.opba.api.security.internal.EnableSignatureBasedApiSecurity;
-import de.adorsys.opba.api.security.internal.config.OperationTypeProperties;
 import de.adorsys.opba.api.security.internal.filter.RequestSignatureValidationFilter;
 import de.adorsys.opba.api.security.internal.service.RequestVerifyingService;
 import de.adorsys.opba.api.security.internal.service.RsaJwtsVerifyingServiceImpl;
@@ -42,7 +41,6 @@ public class RequestVerifyingConfig {
     @Bean
     @Profile("!no-signature-filter")
     public FilterRegistrationBean<RequestSignatureValidationFilter> requestSignatureValidationFilter(
-            OperationTypeProperties properties,
             ApiConsumerConfig consumers) {
 
         RequestVerifyingService requestVerifyingService = new RsaJwtsVerifyingServiceImpl(claimNameKey);
@@ -52,8 +50,7 @@ public class RequestVerifyingConfig {
                 .stream()
                 .collect(Collectors.toConcurrentMap(Map.Entry::getKey, e -> e.getValue().getPublicKey()));
 
-        registrationBean.setFilter(new RequestSignatureValidationFilter(
-                requestVerifyingService, requestValidityWindow, consumerKeysMap, properties));
+        registrationBean.setFilter(new RequestSignatureValidationFilter(requestVerifyingService, requestValidityWindow, consumerKeysMap));
         registrationBean.setUrlPatterns(urlsToBeValidated);
 
         return registrationBean;
