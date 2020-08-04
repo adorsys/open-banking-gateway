@@ -6,7 +6,6 @@ import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 
-import static de.adorsys.opba.api.security.external.domain.OperationType.PIS;
 import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.BANK_BLZ_30000003_ID;
 import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
@@ -27,7 +26,7 @@ public class HbciPaymentInitiationRequest<SELF extends HbciPaymentInitiationRequ
     public SELF fintech_calls_single_payment_for_max_musterman(String resourceId, String bankId) {
         String body = readResource("restrecord-input-params/hbci-max-musterman-single-sepa-payment.json");
         body = body.replaceAll("%debtorIban%", resourceId);
-        ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, bankId, requestSigningService, PIS, body)
+        ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, bankId, requestSigningService, body)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(body)
             .when()

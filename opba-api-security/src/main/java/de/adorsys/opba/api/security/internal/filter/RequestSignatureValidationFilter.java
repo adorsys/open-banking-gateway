@@ -6,7 +6,6 @@ import de.adorsys.opba.api.security.external.domain.HttpHeaders;
 import de.adorsys.opba.api.security.generator.api.RequestDataToSignGenerator;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
 import de.adorsys.opba.api.security.generator.api.Signer;
-import de.adorsys.opba.api.security.internal.config.OperationTypeProperties;
 import de.adorsys.opba.api.security.internal.service.RequestVerifyingService;
 import de.adorsys.opba.api.security.requestsigner.OpenBankingSigner;
 import lombok.SneakyThrows;
@@ -42,7 +41,7 @@ public class RequestSignatureValidationFilter implements Filter {
     private final ConcurrentMap<String, String> consumerKeysMap;
 
     public RequestSignatureValidationFilter(RequestVerifyingService requestVerifyingService, Duration requestTimeLimit,
-                                            ConcurrentMap<String, String> consumerKeysMap, OperationTypeProperties properties) {
+                                            ConcurrentMap<String, String> consumerKeysMap) {
         this.requestVerifyingService = requestVerifyingService;
         this.requestTimeLimit = requestTimeLimit;
         this.consumerKeysMap = consumerKeysMap;

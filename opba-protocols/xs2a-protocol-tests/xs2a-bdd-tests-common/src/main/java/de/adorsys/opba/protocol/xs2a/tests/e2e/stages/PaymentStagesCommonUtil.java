@@ -4,7 +4,6 @@ import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import lombok.experimental.UtilityClass;
-import org.springframework.boot.actuate.endpoint.OperationType;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -49,37 +48,33 @@ public class PaymentStagesCommonUtil {
     public static RequestSpecification withPaymentHeaders(
             String fintechUserId,
             RequestSigningService requestSigningService,
-            OperationType operationType,
             String body
     ) {
-        return withPaymentHeaders(fintechUserId, SANDBOX_BANK_ID, requestSigningService, operationType, body, true);
+        return withPaymentHeaders(fintechUserId, SANDBOX_BANK_ID, requestSigningService, body, true);
     }
 
     public static RequestSpecification withPaymentHeaders(
             String fintechUserId,
             RequestSigningService requestSigningService,
-            OperationType operationType,
             String body,
             boolean psuAuthenticationRequired
     ) {
-        return withPaymentHeaders(fintechUserId, SANDBOX_BANK_ID, requestSigningService, operationType, body, psuAuthenticationRequired);
+        return withPaymentHeaders(fintechUserId, SANDBOX_BANK_ID, requestSigningService, body, psuAuthenticationRequired);
     }
 
     public static RequestSpecification withPaymentHeaders(
             String fintechUserId,
             String bankId,
             RequestSigningService requestSigningService,
-            OperationType operationType,
             String body
     ) {
-        return withPaymentHeaders(fintechUserId, bankId, requestSigningService, operationType, body, true);
+        return withPaymentHeaders(fintechUserId, bankId, requestSigningService, body, true);
     }
 
     public static RequestSpecification withPaymentHeaders(
             String fintechUserId,
             String bankId,
             RequestSigningService requestSigningService,
-            OperationType operationType,
             String body,
             boolean psuAuthenticationRequired
     ) {
@@ -98,11 +93,11 @@ public class PaymentStagesCommonUtil {
                        .header(X_REQUEST_ID, xRequestId.toString())
                        .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
                        .header(X_PIS_PSU_AUTHENTICATION_REQUIRED, psuAuthenticationRequired)
-                       .header(X_REQUEST_SIGNATURE, calculatePaymentSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId, psuAuthenticationRequired, body, bankId))
+                       .header(X_REQUEST_SIGNATURE, calculatePaymentSignature(requestSigningService, xRequestId, xTimestampUtc, fintechUserId, psuAuthenticationRequired, body, bankId))
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
-    public static RequestSpecification withPaymentInfoHeaders(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType) {
+    public static RequestSpecification withPaymentInfoHeaders(String fintechUserId, RequestSigningService requestSigningService) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
@@ -115,17 +110,16 @@ public class PaymentStagesCommonUtil {
                             .header(X_XSRF_TOKEN, XSRF_TOKEN)
                             .header(X_REQUEST_ID, xRequestId.toString())
                             .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
-                            .header(X_REQUEST_SIGNATURE, calculatePaymentInfoSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId))
+                            .header(X_REQUEST_SIGNATURE, calculatePaymentInfoSignature(requestSigningService, xRequestId, xTimestampUtc, fintechUserId))
                             .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
     private static String calculatePaymentSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
-                                                    OperationType operationType, String fintechUserId, boolean psuAuthenticationRequired, String body, String bankId) {
+                                                    String fintechUserId, boolean psuAuthenticationRequired, String body, String bankId) {
         return requestSigningService.signature("");
     }
 
-    private static String calculatePaymentInfoSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
-                                                        OperationType operationType, String fintechUserId) {
+    private static String calculatePaymentInfoSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc, String fintechUserId) {
         return requestSigningService.signature("");
     }
 }
