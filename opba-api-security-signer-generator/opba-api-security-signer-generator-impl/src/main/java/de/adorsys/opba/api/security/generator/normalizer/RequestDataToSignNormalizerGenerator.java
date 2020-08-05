@@ -10,7 +10,6 @@ import com.squareup.javapoet.TypeSpec;
 import de.adorsys.opba.api.security.generator.api.GeneratedDataToSignNormalizer;
 import de.adorsys.opba.api.security.generator.api.RequestDataToSignNormalizer;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
-import de.adorsys.opba.api.security.generator.signer.DataToSignProviderGenerator;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.parameters.HeaderParameter;
 import io.swagger.v3.oas.models.parameters.Parameter;

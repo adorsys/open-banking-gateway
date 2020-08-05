@@ -7,7 +7,7 @@ import java.lang.String;
 import javax.annotation.Generated;
 
 @Generated(
-        value = "de.adorsys.opba.api.security.generator.signer.DataToSignProviderGenerator",
+        value = "de.adorsys.opba.api.security.generator.normalizer.DataToSignProviderGenerator",
         comments = "This class provides request signature canonicalization functionality for a concrete request (convert Request to String to sign)"
 )
 public class GetTransactions implements RequestDataToSignNormalizer {
