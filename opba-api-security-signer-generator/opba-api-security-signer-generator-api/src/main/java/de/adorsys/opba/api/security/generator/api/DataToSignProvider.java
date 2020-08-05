@@ -39,7 +39,8 @@ package de.adorsys.opba.api.security.generator.api;
  * </ul>
  *
  * Short canonical form of the request data is:
- * SHA-256(bytes(String canonical form of the request data, in UTF-8 encoding))
+ * Note: Technically hash strength other than collision resistance is not of much importance here as the value
+ * is going to be signed with JWS
  */
 public interface DataToSignProvider {
 
