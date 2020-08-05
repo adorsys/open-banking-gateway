@@ -10,18 +10,24 @@
             <column name="owner_login" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="from" type="VARCHAR(64)">
+            <column name="order_reference" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="deduce_from" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
-            <column name="to" type="VARCHAR(64)">
+            <column name="send_to" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
             <column name="amount" type="NUMERIC">
                 <constraints nullable="false"/>
             </column>
-            <column name="status" type="VARCHAR(64)">
+            <column name="currency" type="VARCHAR(8)">
                 <constraints nullable="false"/>
             </column>
+            <!-- Nullable as null is for not yet authorized payments -->
+            <column name="status" type="VARCHAR(64)"/>
+
             <column name="created_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
