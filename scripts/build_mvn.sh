@@ -7,4 +7,4 @@ if [[ "$TRAVIS_EVENT_TYPE" == "cron"* || "$TRAVIS_BRANCH" == *"heavy-tests-enabl
     export ENABLE_HEAVY_TESTS="true";
 fi
 
-mvn verify
+mvn verify --no-transfer-progress
