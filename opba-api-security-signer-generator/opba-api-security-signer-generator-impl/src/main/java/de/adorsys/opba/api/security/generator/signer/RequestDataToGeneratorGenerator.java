@@ -2,7 +2,7 @@ package de.adorsys.opba.api.security.generator.signer;
 
 import com.squareup.javapoet.ClassName;
 import de.adorsys.opba.api.security.generator.api.DataToSignProvider;
-import de.adorsys.opba.api.security.generator.api.GeneratedSigner;
+import de.adorsys.opba.api.security.generator.api.GeneratedDataToSignNormalizer;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -19,20 +19,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class RequestSigningGenerator {
+public class RequestDataToGeneratorGenerator {
 
-    private final SignerGenerator signerGenerator;
+    private final DataToSignProviderGenerator datatoSignProviderGenerator;
 
-    public RequestSigningGenerator(SignerGenerator signerGenerator) {
-        this.signerGenerator = signerGenerator;
+    public RequestDataToGeneratorGenerator(DataToSignProviderGenerator datatoSignProviderGenerator) {
+        this.datatoSignProviderGenerator = datatoSignProviderGenerator;
     }
 
-    public void generate(TypeElement forClass, GeneratedSigner yamlSpec, Filer filer) {
+    public void generate(TypeElement forClass, GeneratedDataToSignNormalizer yamlSpec, Filer filer) {
         Map<String, Map<DataToSignProvider.HttpMethod, Operation>> requestSpecConfig = new HashMap<>();
 
         Arrays.stream(yamlSpec.openApiYamlPath()).forEach(yamlLocation -> readAllRequestsDefinitions(getYamlLocation(filer, yamlLocation), requestSpecConfig));
 
-        signerGenerator.generate(ClassName.get(forClass).packageName(), yamlSpec, filer, requestSpecConfig);
+        datatoSignProviderGenerator.generate(ClassName.get(forClass).packageName(), yamlSpec, filer, requestSpecConfig);
     }
 
     private void readAllRequestsDefinitions(URI yamlLocation, Map<String, Map<DataToSignProvider.HttpMethod, Operation>> requestSpecConfig) {

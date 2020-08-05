@@ -4,7 +4,7 @@ import com.google.common.hash.Hashing;
 
 import java.nio.charset.StandardCharsets;
 
-public interface RequestDataToSignGenerator {
+public interface RequestDataToSignNormalizer {
 
     /**
      * Computes canonical (normalized) string representation of the request

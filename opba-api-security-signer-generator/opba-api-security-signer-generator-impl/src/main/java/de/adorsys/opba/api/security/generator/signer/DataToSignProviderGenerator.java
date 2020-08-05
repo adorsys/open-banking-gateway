@@ -9,11 +9,11 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
-import de.adorsys.opba.api.security.generator.api.DataToSignProvider;
-import de.adorsys.opba.api.security.generator.api.GeneratedSigner;
+import de.adorsys.opba.api.security.generator.api.GeneratedDataToSignNormalizer;
 import de.adorsys.opba.api.security.generator.api.MatcherUtil;
-import de.adorsys.opba.api.security.generator.api.RequestDataToSignGenerator;
+import de.adorsys.opba.api.security.generator.api.RequestDataToSignNormalizer;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
+import de.adorsys.opba.api.security.generator.normalizer.RequestDataToSignNormalizerGenerator;
 import io.swagger.v3.oas.models.Operation;
 
 import javax.annotation.Generated;
@@ -23,16 +23,16 @@ import java.io.IOError;
 import java.io.IOException;
 import java.util.Map;
 
-public class SignerGenerator {
-    private static final String CLASS_PURPOSE_COMMENT = "This class performs request signing";
+public class DataToSignProviderGenerator {
+    private static final String CLASS_PURPOSE_COMMENT = "This class provides request signature canonicalization classes (convert Request to String to sign)";
 
-    private final DataToSignGenerator dataToSignGenerator;
+    private final RequestDataToSignNormalizerGenerator requestDataToSignNormalizerGenerator;
 
-    public SignerGenerator(DataToSignGenerator dataToSignGenerator) {
-        this.dataToSignGenerator = dataToSignGenerator;
+    public DataToSignProviderGenerator(RequestDataToSignNormalizerGenerator dataToSignProvider) {
+        this.requestDataToSignNormalizerGenerator = dataToSignProvider;
     }
 
-    public void generate(String packageName, GeneratedSigner signerConfig, Filer filer, Map<String, Map<DataToSignProvider.HttpMethod, Operation>> requestSpecConfig) {
+    public void generate(String packageName, GeneratedDataToSignNormalizer signerConfig, Filer filer, Map<String, Map<de.adorsys.opba.api.security.generator.api.DataToSignProvider.HttpMethod, Operation>> requestSpecConfig) {
         ClassName targetClass = ClassName.get(
                 packageName,
                 Strings.isNullOrEmpty(signerConfig.signerClassName()) ? "RequestSignerImpl" : signerConfig.signerClassName()
@@ -65,7 +65,7 @@ public class SignerGenerator {
     private void annotateAsGenerated(TypeSpec.Builder signer) {
         signer.addAnnotation(AnnotationSpec
                 .builder(Generated.class)
-                .addMember("value", CodeBlock.of("$S", SignerGenerator.class.getCanonicalName()))
+                .addMember("value", CodeBlock.of("$S", DataToSignProviderGenerator.class.getCanonicalName()))
                 .addMember("comments", CodeBlock.of("$S", CLASS_PURPOSE_COMMENT))
                 .build()
         );
@@ -104,14 +104,14 @@ public class SignerGenerator {
     }
 
     private void implementSignerInterface(TypeSpec.Builder signer) {
-        signer.addSuperinterface(ClassName.get(DataToSignProvider.class));
+        signer.addSuperinterface(ClassName.get(de.adorsys.opba.api.security.generator.api.DataToSignProvider.class));
     }
 
     private void addWithBasePathMethod(TypeSpec.Builder signer, ClassName targetClass) {
         MethodSpec.Builder method = MethodSpec
                 .methodBuilder("withBasePath")
                 .addAnnotation(ClassName.get(Override.class))
-                .returns(ClassName.get(DataToSignProvider.class))
+                .returns(ClassName.get(de.adorsys.opba.api.security.generator.api.DataToSignProvider.class))
                 .addModifiers(Modifier.PUBLIC);
 
         ParameterSpec basePath = ParameterSpec.builder(ClassName.get(String.class), "basePath").build();
@@ -130,14 +130,14 @@ public class SignerGenerator {
     private void addNormalizerForMethod(
             TypeSpec.Builder signer,
             ClassName targetClass,
-            GeneratedSigner signerConfig,
+            GeneratedDataToSignNormalizer signerConfig,
             Filer filer,
-            Map<String, Map<DataToSignProvider.HttpMethod, Operation>> requestSpecConfig
+            Map<String, Map<de.adorsys.opba.api.security.generator.api.DataToSignProvider.HttpMethod, Operation>> requestSpecConfig
     ) {
         MethodSpec.Builder method = MethodSpec
                 .methodBuilder("normalizerFor")
                 .addAnnotation(ClassName.get(Override.class))
-                .returns(ClassName.get(RequestDataToSignGenerator.class))
+                .returns(ClassName.get(RequestDataToSignNormalizer.class))
                 .addModifiers(Modifier.PUBLIC);
 
         ParameterSpec toSign = ParameterSpec.builder(ClassName.get(RequestToSign.class), "toSign").build();
@@ -149,7 +149,7 @@ public class SignerGenerator {
 
         requestSpecConfig.forEach((path, opSpec) ->
                 opSpec.forEach((requestMethod, operation) -> {
-                    ClassName className = dataToSignGenerator.generate(targetClass.packageName(), signerConfig, generateOperationIdClassName(operation), operation, filer);
+                    ClassName className = requestDataToSignNormalizerGenerator.generate(targetClass.packageName(), signerConfig, generateOperationIdClassName(operation), operation, filer);
                     returnSignerIfBlock(toSign, block, path, requestMethod, className);
                 })
         );
@@ -166,11 +166,11 @@ public class SignerGenerator {
         signer.addMethod(method.build());
     }
 
-    private void returnSignerIfBlock(ParameterSpec toSign, CodeBlock.Builder block, String path, DataToSignProvider.HttpMethod requestMethod, ClassName className) {
+    private void returnSignerIfBlock(ParameterSpec toSign, CodeBlock.Builder block, String path, de.adorsys.opba.api.security.generator.api.DataToSignProvider.HttpMethod requestMethod, ClassName className) {
         CodeBlock ifBlock = CodeBlock.builder()
                 .beginControlFlow(
                         "if ($T.$L == $N.getMethod() && $T.matches($S, computedPath))",
-                        DataToSignProvider.HttpMethod.class,
+                        de.adorsys.opba.api.security.generator.api.DataToSignProvider.HttpMethod.class,
                         requestMethod,
                         toSign,
                         ClassName.get(MatcherUtil.class),

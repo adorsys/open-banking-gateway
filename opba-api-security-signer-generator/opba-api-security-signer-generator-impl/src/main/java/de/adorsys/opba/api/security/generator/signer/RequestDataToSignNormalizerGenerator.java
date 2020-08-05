@@ -1,38 +1,44 @@
-package de.adorsys.opba.api.security.generator.signer;
+package de.adorsys.opba.api.security.generator.normalizer;
 
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
-import de.adorsys.opba.api.security.generator.api.GeneratedSigner;
-import de.adorsys.opba.api.security.generator.api.RequestDataToSignGenerator;
+import de.adorsys.opba.api.security.generator.api.GeneratedDataToSignNormalizer;
+import de.adorsys.opba.api.security.generator.api.RequestDataToSignNormalizer;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
+import de.adorsys.opba.api.security.generator.signer.DataToSignProviderGenerator;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.parameters.HeaderParameter;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.parameters.QueryParameter;
 
+import javax.annotation.Generated;
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
 import java.io.IOError;
 import java.io.IOException;
 import java.util.Comparator;
 
-public class DataToSignGenerator {
+public class RequestDataToSignNormalizerGenerator {
 
-    public ClassName generate(String packageName, GeneratedSigner signerConfig, String name, Operation operation, Filer filer) {
+    private static final String CLASS_PURPOSE_COMMENT = "This class provides request signature canonicalization functionality for a concrete request (convert Request to String to sign)";
+
+    public ClassName generate(String packageName, GeneratedDataToSignNormalizer normalizerConfig, String name, Operation operation, Filer filer) {
         ClassName targetClass = ClassName.get(packageName, name);
-        TypeSpec.Builder signer = TypeSpec
+        TypeSpec.Builder normalizer = TypeSpec
                 .classBuilder(targetClass)
                 .addModifiers(Modifier.PUBLIC);
+        annotateAsGenerated(normalizer);
 
-        implementRequestDataToSignInterface(signer);
-        addCanonicalString(signer, signerConfig, operation);
+        implementRequestDataToSignInterface(normalizer);
+        addCanonicalString(normalizer, normalizerConfig, operation);
 
         JavaFile javaFile = JavaFile
-                .builder(packageName, signer.build())
+                .builder(packageName, normalizer.build())
                 .indent("    ")
                 .build();
 
@@ -45,11 +51,20 @@ public class DataToSignGenerator {
         return targetClass;
     }
 
-    private void implementRequestDataToSignInterface(TypeSpec.Builder signer) {
-        signer.addSuperinterface(ClassName.get(RequestDataToSignGenerator.class));
+    private void annotateAsGenerated(TypeSpec.Builder normalizer) {
+        normalizer.addAnnotation(AnnotationSpec
+                .builder(Generated.class)
+                .addMember("value", CodeBlock.of("$S", DataToSignProviderGenerator.class.getCanonicalName()))
+                .addMember("comments", CodeBlock.of("$S", CLASS_PURPOSE_COMMENT))
+                .build()
+        );
     }
 
-    private void addCanonicalString(TypeSpec.Builder signer, GeneratedSigner signerConfig, Operation operation) {
+    private void implementRequestDataToSignInterface(TypeSpec.Builder normalizer) {
+        normalizer.addSuperinterface(ClassName.get(RequestDataToSignNormalizer.class));
+    }
+
+    private void addCanonicalString(TypeSpec.Builder normalizer, GeneratedDataToSignNormalizer normalizerConfig, Operation operation) {
         MethodSpec.Builder method = MethodSpec
                 .methodBuilder("canonicalString")
                 .addAnnotation(ClassName.get(Override.class))
@@ -61,19 +76,19 @@ public class DataToSignGenerator {
 
         CodeBlock.Builder block = CodeBlock.builder();
         block.addStatement("StringBuilder result = new StringBuilder()");
-        block.add(createSignature(toSign, signerConfig, operation));
+        block.add(createSignature(toSign, normalizerConfig, operation));
         block.addStatement("return result.toString()");
 
         method.addCode(block.build());
         method.addJavadoc("@param toSign Request data to sign\n");
 
-        signer.addMethod(method.build());
+        normalizer.addMethod(method.build());
     }
 
-    private CodeBlock createSignature(ParameterSpec toSign, GeneratedSigner signerConfig, Operation operation) {
+    private CodeBlock createSignature(ParameterSpec toSign, GeneratedDataToSignNormalizer normalizerConfig, Operation operation) {
         CodeBlock.Builder block = CodeBlock.builder();
         appendPath(block, toSign);
-        appendHeaders(block, signerConfig, operation, toSign);
+        appendHeaders(block, normalizerConfig, operation, toSign);
         appendQueryParameters(block, operation, toSign);
         appendBody(block, operation, toSign);
         return block.build();
@@ -88,13 +103,13 @@ public class DataToSignGenerator {
         block.addStatement("// Done adding path");
     }
 
-    private void appendHeaders(CodeBlock.Builder block, GeneratedSigner signerConfig, Operation operation, ParameterSpec toSign) {
+    private void appendHeaders(CodeBlock.Builder block, GeneratedDataToSignNormalizer normalizerConfig, Operation operation, ParameterSpec toSign) {
         block.addStatement("// Add headers");
         operation.getParameters().stream()
                 .filter(it -> it instanceof HeaderParameter)
                 .sorted(Comparator.comparing(Parameter::getName))
                 // Filter out signature header itself
-                .filter(it -> !it.getName().toLowerCase().equals(signerConfig.signatureHeaderName()))
+                .filter(it -> !it.getName().toLowerCase().equals(normalizerConfig.signatureHeaderName()))
                 .forEach(header -> {
                     if (Boolean.TRUE.equals(header.getRequired())) {
                         addMandatoryHeader(block, toSign, header);

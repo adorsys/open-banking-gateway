@@ -1,10 +1,10 @@
 package de.adorsys.opba.api.security.generator;
 
 import com.google.auto.service.AutoService;
-import de.adorsys.opba.api.security.generator.api.GeneratedSigner;
-import de.adorsys.opba.api.security.generator.signer.DataToSignGenerator;
-import de.adorsys.opba.api.security.generator.signer.RequestSigningGenerator;
-import de.adorsys.opba.api.security.generator.signer.SignerGenerator;
+import de.adorsys.opba.api.security.generator.api.GeneratedDataToSignNormalizer;
+import de.adorsys.opba.api.security.generator.normalizer.RequestDataToSignNormalizerGenerator;
+import de.adorsys.opba.api.security.generator.signer.DataToSignProviderGenerator;
+import de.adorsys.opba.api.security.generator.signer.RequestDataToGeneratorGenerator;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
@@ -18,16 +18,16 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 import java.util.Set;
 
-@SupportedAnnotationTypes(SignerGeneratingProcessor.ANNOTATION_CLASS)
+@SupportedAnnotationTypes(DataToSignGeneratingProcessor.ANNOTATION_CLASS)
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 @AutoService(Processor.class)
-public class SignerGeneratingProcessor extends AbstractProcessor {
+public class DataToSignGeneratingProcessor extends AbstractProcessor {
 
-    static final String ANNOTATION_CLASS = "de.adorsys.opba.api.security.generator.api.GeneratedSigner";
+    static final String ANNOTATION_CLASS = "de.adorsys.opba.api.security.generator.api.GeneratedDataToSignNormalizer";
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        RequestSigningGenerator signerGenerator = new RequestSigningGenerator(new SignerGenerator(new DataToSignGenerator()));
+        RequestDataToGeneratorGenerator signerGenerator = new RequestDataToGeneratorGenerator(new DataToSignProviderGenerator(new RequestDataToSignNormalizerGenerator()));
         for (TypeElement annotation : annotations) {
             // limit to elements annotated with {@link RuntimeDelegate}
             Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(annotation);
@@ -45,7 +45,7 @@ public class SignerGeneratingProcessor extends AbstractProcessor {
 
                 signerGenerator.generate(
                         clazz,
-                        annotated.getAnnotation(GeneratedSigner.class),
+                        annotated.getAnnotation(GeneratedDataToSignNormalizer.class),
                         super.processingEnv.getFiler()
                 );
             }

@@ -1,6 +1,6 @@
 package de.adorsys.opba.api.security.generator.api;
 
-public @interface GeneratedSigner {
+public @interface GeneratedDataToSignNormalizer {
 
     String signerClassName() default "";
     String[] openApiYamlPath();
