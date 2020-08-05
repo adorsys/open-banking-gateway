@@ -9,11 +9,11 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
+import de.adorsys.opba.api.security.generator.api.DataToSignProvider;
 import de.adorsys.opba.api.security.generator.api.GeneratedSigner;
 import de.adorsys.opba.api.security.generator.api.MatcherUtil;
 import de.adorsys.opba.api.security.generator.api.RequestDataToSignGenerator;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
-import de.adorsys.opba.api.security.generator.api.Signer;
 import io.swagger.v3.oas.models.Operation;
 
 import javax.annotation.Generated;
@@ -32,7 +32,7 @@ public class SignerGenerator {
         this.dataToSignGenerator = dataToSignGenerator;
     }
 
-    public void generate(String packageName, GeneratedSigner signerConfig, Filer filer, Map<String, Map<Signer.HttpMethod, Operation>> requestSpecConfig) {
+    public void generate(String packageName, GeneratedSigner signerConfig, Filer filer, Map<String, Map<DataToSignProvider.HttpMethod, Operation>> requestSpecConfig) {
         ClassName targetClass = ClassName.get(
                 packageName,
                 Strings.isNullOrEmpty(signerConfig.signerClassName()) ? "RequestSignerImpl" : signerConfig.signerClassName()
@@ -48,7 +48,7 @@ public class SignerGenerator {
         addConstructor(signer, basePath);
         implementSignerInterface(signer);
         addWithBasePathMethod(signer, targetClass);
-        addSignerForMethod(signer, targetClass, signerConfig, filer, requestSpecConfig);
+        addNormalizerForMethod(signer, targetClass, signerConfig, filer, requestSpecConfig);
 
         JavaFile javaFile = JavaFile
                 .builder(packageName, signer.build())
@@ -104,14 +104,14 @@ public class SignerGenerator {
     }
 
     private void implementSignerInterface(TypeSpec.Builder signer) {
-        signer.addSuperinterface(ClassName.get(Signer.class));
+        signer.addSuperinterface(ClassName.get(DataToSignProvider.class));
     }
 
     private void addWithBasePathMethod(TypeSpec.Builder signer, ClassName targetClass) {
         MethodSpec.Builder method = MethodSpec
                 .methodBuilder("withBasePath")
                 .addAnnotation(ClassName.get(Override.class))
-                .returns(ClassName.get(Signer.class))
+                .returns(ClassName.get(DataToSignProvider.class))
                 .addModifiers(Modifier.PUBLIC);
 
         ParameterSpec basePath = ParameterSpec.builder(ClassName.get(String.class), "basePath").build();
@@ -127,9 +127,15 @@ public class SignerGenerator {
         signer.addMethod(method.build());
     }
 
-    private void addSignerForMethod(TypeSpec.Builder signer, ClassName targetClass, GeneratedSigner signerConfig, Filer filer, Map<String, Map<Signer.HttpMethod, Operation>> requestSpecConfig) {
+    private void addNormalizerForMethod(
+            TypeSpec.Builder signer,
+            ClassName targetClass,
+            GeneratedSigner signerConfig,
+            Filer filer,
+            Map<String, Map<DataToSignProvider.HttpMethod, Operation>> requestSpecConfig
+    ) {
         MethodSpec.Builder method = MethodSpec
-                .methodBuilder("signerFor")
+                .methodBuilder("normalizerFor")
                 .addAnnotation(ClassName.get(Override.class))
                 .returns(ClassName.get(RequestDataToSignGenerator.class))
                 .addModifiers(Modifier.PUBLIC);
@@ -160,11 +166,11 @@ public class SignerGenerator {
         signer.addMethod(method.build());
     }
 
-    private void returnSignerIfBlock(ParameterSpec toSign, CodeBlock.Builder block, String path, Signer.HttpMethod requestMethod, ClassName className) {
+    private void returnSignerIfBlock(ParameterSpec toSign, CodeBlock.Builder block, String path, DataToSignProvider.HttpMethod requestMethod, ClassName className) {
         CodeBlock ifBlock = CodeBlock.builder()
                 .beginControlFlow(
                         "if ($T.$L == $N.getMethod() && $T.matches($S, computedPath))",
-                        Signer.HttpMethod.class,
+                        DataToSignProvider.HttpMethod.class,
                         requestMethod,
                         toSign,
                         ClassName.get(MatcherUtil.class),

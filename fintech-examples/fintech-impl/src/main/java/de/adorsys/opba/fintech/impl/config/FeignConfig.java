@@ -2,10 +2,10 @@ package de.adorsys.opba.fintech.impl.config;
 
 import com.google.common.collect.Iterables;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
+import de.adorsys.opba.api.security.generator.api.DataToSignProvider;
 import de.adorsys.opba.api.security.generator.api.RequestDataToSignGenerator;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
-import de.adorsys.opba.api.security.generator.api.Signer;
-import de.adorsys.opba.api.security.requestsigner.OpenBankingSigner;
+import de.adorsys.opba.api.security.requestsigner.OpenBankingDataToSignProvider;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -82,15 +82,15 @@ public class FeignConfig {
                                               .collect(Collectors.toMap(Map.Entry::getKey, e -> decodeQueryValue(e.getValue())));
 
         // OpenBankingSigner - This is generated class by opba-api-security-signer-generator-impl annotation processor
-        Signer signer = new OpenBankingSigner();
+        DataToSignProvider dataToSignProvider = new OpenBankingDataToSignProvider();
         RequestToSign toSign = RequestToSign.builder()
-                .method(Signer.HttpMethod.valueOf(requestTemplate.method()))
+                .method(DataToSignProvider.HttpMethod.valueOf(requestTemplate.method()))
                 .path(requestTemplate.path())
                 .headers(headers)
                 .queryParams(queries)
                 .body(requestTemplate.requestBody().asString())
                 .build();
-        RequestDataToSignGenerator signatureGen = signer.signerFor(toSign);
+        RequestDataToSignGenerator signatureGen = dataToSignProvider.normalizerFor(toSign);
         return requestSigningService.signature(signatureGen.canonicalStringToSign(toSign));
     }
 

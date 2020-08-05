@@ -83,7 +83,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     }
 
     public SELF fintech_calls_payment_information(String iban) {
-        withPaymentInfoHeaders("")
+        withPaymentInfoHeaders(UUID.randomUUID().toString())
                 .header(SERVICE_SESSION_ID, serviceSessionId)
             .when()
                 .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
@@ -113,7 +113,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     }
 
     public SELF fintech_calls_payment_status(String bankId, String expectedStatus) {
-        withPaymentInfoHeaders("")
+        withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
                 .get(PIS_PAYMENT_STATUS_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())

@@ -1,7 +1,7 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
-import de.adorsys.opba.api.security.requestsigner.OpenBankingSigner;
+import de.adorsys.opba.api.security.requestsigner.OpenBankingDataToSignProvider;
 import de.adorsys.opba.tppbankingapi.BaseMockitoTest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -59,7 +59,7 @@ class TestTppBankSearchController extends BaseMockitoTest {
                         .header(X_TIMESTAMP_UTC, xTimestampUtc)
                         .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
                         .param("bankId", "fcfe98fe-5514-4992-8f36-8239f3a74571")
-                        .with(new SignaturePostProcessor(requestSigningService, new OpenBankingSigner())))
+                        .with(new SignaturePostProcessor(requestSigningService, new OpenBankingDataToSignProvider())))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.bankProfileDescriptor.bankName").value("VR Bank Fulda eG"))
                 .andExpect(jsonPath("$.bankProfileDescriptor.bankUuid").value("fcfe98fe-5514-4992-8f36-8239f3a74571"))
@@ -89,7 +89,7 @@ class TestTppBankSearchController extends BaseMockitoTest {
                         .param("keyword", keyword)
                         .param("max", "10")
                         .param("start", "0")
-                        .with(new SignaturePostProcessor(requestSigningService, new OpenBankingSigner()))
+                        .with(new SignaturePostProcessor(requestSigningService, new OpenBankingDataToSignProvider()))
         ).andExpect(status().isOk());
     }
 }

@@ -29,7 +29,7 @@ public class DataToSignGenerator {
                 .addModifiers(Modifier.PUBLIC);
 
         implementRequestDataToSignInterface(signer);
-        addCanonicalStringToSign(signer, signerConfig, operation);
+        addCanonicalString(signer, signerConfig, operation);
 
         JavaFile javaFile = JavaFile
                 .builder(packageName, signer.build())
@@ -49,9 +49,9 @@ public class DataToSignGenerator {
         signer.addSuperinterface(ClassName.get(RequestDataToSignGenerator.class));
     }
 
-    private void addCanonicalStringToSign(TypeSpec.Builder signer, GeneratedSigner signerConfig, Operation operation) {
+    private void addCanonicalString(TypeSpec.Builder signer, GeneratedSigner signerConfig, Operation operation) {
         MethodSpec.Builder method = MethodSpec
-                .methodBuilder("canonicalStringToSign")
+                .methodBuilder("canonicalString")
                 .addAnnotation(ClassName.get(Override.class))
                 .returns(ClassName.get(String.class))
                 .addModifiers(Modifier.PUBLIC);

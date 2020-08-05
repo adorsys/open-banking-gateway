@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 // Can't safely use Lombok in self-generated classes
 public final class RequestToSign {
 
-    private final Signer.HttpMethod method;
+    private final DataToSignProvider.HttpMethod method;
     private final String path;
     private final Map<String, String> headers;
     private final Map<String, String> queryParams;
     private final String body;
 
-    private RequestToSign(Signer.HttpMethod method, String path, Map<String, String> headers, Map<String, String> queryParams, String body) {
+    private RequestToSign(DataToSignProvider.HttpMethod method, String path, Map<String, String> headers, Map<String, String> queryParams, String body) {
         this.method = method;
         this.path = path;
         this.headers = headers;
@@ -25,7 +25,7 @@ public final class RequestToSign {
         return new RequestToSignBuilder();
     }
 
-    public Signer.HttpMethod getMethod() {
+    public DataToSignProvider.HttpMethod getMethod() {
         return method;
     }
 
@@ -46,13 +46,13 @@ public final class RequestToSign {
     }
 
     public static class RequestToSignBuilder {
-        private Signer.HttpMethod method;
+        private DataToSignProvider.HttpMethod method;
         private String path;
         private Map<String, String> headers = new HashMap<>();
         private Map<String, String> queryParams = new HashMap<>();
         private String body;
 
-        public RequestToSignBuilder method(Signer.HttpMethod method) {
+        public RequestToSignBuilder method(DataToSignProvider.HttpMethod method) {
             this.method = method;
             return this;
         }
