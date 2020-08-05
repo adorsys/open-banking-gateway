@@ -1,9 +1,10 @@
 # What is this
  
-This is request normalizer for request signer code generator for external clients (FinTech) and WebFilter generator 
-for OpenBanking to validate request signature.
+This is the code generator of the request normalizer (request object serializer to string) for request signer. 
+This generator is for external clients (FinTech) to create string to be signed from request and for WebFilter 
+in OpenBanking to validate request signature.
 
-It adds annotation processor that uses API definition YAML files to generate request normalizers that convert 3rd
+It adds annotation processor that uses API definition in YAML files to generate request normalizers that convert 3rd
 party request to OpenBanking to String.
 
 # Request conversion rules
