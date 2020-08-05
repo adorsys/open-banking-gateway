@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.sandbox.hbci.protocol.authenticated.nonauthorized;
 
+import com.google.common.hash.Hashing;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.SensitiveAuthLevel;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.MapRegexUtil;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.Operation;
@@ -10,6 +11,8 @@ import de.adorsys.opba.protocol.sandbox.hbci.protocol.interpolation.JsonTemplate
 import de.adorsys.opba.protocol.sandbox.hbci.service.HbciSandboxPaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.PAYMENT;
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.PAYMENT_STATUS;
@@ -47,21 +50,27 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
 
         if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(PAYMENT))) {
             if (context.getBank().getSecurity().getPayment() == SensitiveAuthLevel.AUTHENTICATED) {
-                paymentService.createPayment(context);
+                paymentService.createPaymentIfNeededAndPossibleFromContext(context);
                 return "response-templates/authenticated/custom-message-konto-mt940.json";
             }
             if (RequestStatusUtil.isForPayment(context.getRequestData())) {
                 context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "TAN2Step6\\.OrderAccount\\.number"));
+                setOrderReference(context);
+                paymentService.createPayment(context);
             }
             return "response-templates/authenticated/custom-message-authorization-required-payment.json";
         }
 
         if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(PAYMENT_STATUS))) {
+            String paymentId = MapRegexUtil.getDataRegex(context.getRequestData(), "GV\\.InstantUebSEPAStatus\\d\\.orderid");
+
             if (context.getBank().getSecurity().getPaymentStatus() == SensitiveAuthLevel.AUTHENTICATED) {
+                paymentService.paymentFromDatabaseToContext(context, paymentId);
                 return "response-templates/authenticated/custom-message-payment-status.json";
             }
+
             if (RequestStatusUtil.isForPaymentStatus(context.getRequestData())) {
-                context.setPaymentId(MapRegexUtil.getDataRegex(context.getRequestData(), "SigTail_2\\.seccheckref"));
+                context.setPaymentId(paymentId);
             }
             return "response-templates/authenticated/custom-message-authorization-required-payment-status.json";
         }
@@ -76,5 +85,14 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
 
     private String getAuthorizationRequiredTemplateOrWrongTanMethod() {
         return "response-templates/authenticated/custom-message-authorization-required.json";
+    }
+
+    private void setOrderReference(HbciSandboxContext context) {
+        // something different from uuid to distinguish in logs
+        UUID orderRef = UUID.randomUUID();
+        context.setOrderReference(
+                Hashing.goodFastHash(16).hashLong(orderRef.getLeastSignificantBits()).toString()
+                        + "." + Hashing.goodFastHash(16).hashLong(orderRef.getMostSignificantBits()).toString()
+        );
     }
 }
