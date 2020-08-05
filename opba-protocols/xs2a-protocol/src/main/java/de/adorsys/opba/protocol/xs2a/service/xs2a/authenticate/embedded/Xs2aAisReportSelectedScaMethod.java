@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.embedded;
 
+import de.adorsys.opba.db.repository.jpa.ConsentRepository;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
@@ -29,6 +30,7 @@ public class Xs2aAisReportSelectedScaMethod extends ValidatedExecution<Xs2aConte
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
+    private final ConsentRepository consentRepository;
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
@@ -45,6 +47,9 @@ public class Xs2aAisReportSelectedScaMethod extends ValidatedExecution<Xs2aConte
                 params.getHeaders().toHeaders(),
                 params.getBody()
         );
+
+        byte[] imageData = consentRepository.findByPsuId(context.getPsuId()).getImageData();
+        authResponse.getBody().getChallengeData().setImage(imageData);
 
         ContextUtil.getAndUpdateContext(
                 execution,
