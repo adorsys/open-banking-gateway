@@ -50,7 +50,7 @@ class WiremockE2EStressXs2aProtocolTest extends SpringScenarioTest<MockServers, 
     private ProtocolUrlsConfiguration urlsConfiguration;
 
     @Autowired
-    private AutowireCapableBeanFactory signingService;
+    private AutowireCapableBeanFactory autowireCapableBeanFactory;
 
     // See https://github.com/spring-projects/spring-boot/issues/14879 for the 'why setting port'
     void beforeEach() {
@@ -58,8 +58,8 @@ class WiremockE2EStressXs2aProtocolTest extends SpringScenarioTest<MockServers, 
         aisUrls.setOk(aisUrls.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
         aisUrls.setNok(aisUrls.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
 
-        // Forcefully injecting signer
-        E2EStress.PARENT_SPRING_CTX_AUTOWIRER.set(signingService);
+        // Forcefully injecting bean factory
+        E2EStress.PARENT_SPRING_CTX_AUTOWIRER.set(autowireCapableBeanFactory);
     }
 
     // JGivenConfig doesn't seem to be applied
