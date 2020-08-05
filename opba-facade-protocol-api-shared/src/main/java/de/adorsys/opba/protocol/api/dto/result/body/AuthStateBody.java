@@ -34,9 +34,10 @@ public class AuthStateBody implements ResultBody {
     private String redirectTo;
 
     /**
-     * Result body
+     * Authorization request data - describes what data was requested or is being requested (by FinTech or is current):
+     * Consent object, Payment, which ASPSP or FinTech.
      */
-    private AuthResultBody resultBody;
+    private AuthRequestData requestData;
 
     public AuthStateBody(Set<ValidationError> violations) {
         this.violations = violations;

@@ -1,12 +1,16 @@
 package de.adorsys.opba.starter;
 
+import de.adorsys.opba.api.security.external.service.RequestSigningService;
+import de.adorsys.opba.api.security.requestsigner.OpenBankingDataToSignProvider;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aListAccountsEntrypoint;
 import de.adorsys.opba.protocol.xs2a.entrypoint.ais.Xs2aSandboxListTransactionsEntrypoint;
+import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.CommonGivenStages;
 import de.adorsys.opba.starter.config.FintechRequestSigningTestConfig;
 import io.restassured.RestAssured;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -17,9 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.withPaymentHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.ANTON_BRUECKNER;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PIS_SINGLE_PAYMENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withTransactionsHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
@@ -44,6 +50,9 @@ class BasicOpenBankingStartupTest {
     @SpyBean
     private Xs2aSandboxListTransactionsEntrypoint xs2aListTransactionsEntrypoint;
 
+    @Autowired
+    private RequestSigningService signingService;
+
     @LocalServerPort
     private int serverPort;
 
@@ -52,6 +61,7 @@ class BasicOpenBankingStartupTest {
         RestAssured.baseURI = "http://localhost:" + serverPort;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         config = config().redirect(redirectConfig().followRedirects(false));
+        RestAssured.replaceFiltersWith(new CommonGivenStages.RequestSigner(signingService, new OpenBankingDataToSignProvider()));
     }
 
     @Test
@@ -81,6 +91,19 @@ class BasicOpenBankingStartupTest {
                 .get(AIS_TRANSACTIONS_ENDPOINT, "ACCOUNT-1")
             .then()
                 .statusCode(HttpStatus.ACCEPTED.value());
+
+        verify(xs2aListTransactionsEntrypoint).execute(any());
+    }
+
+    @Test
+    @SneakyThrows
+    void testXs2aProtocolIsWiredForPayments() {
+        withPaymentHeaders(ANTON_BRUECKNER)
+                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                .when()
+                    .get(PIS_SINGLE_PAYMENT_ENDPOINT, "PRODUCT-123")
+                .then()
+                    .statusCode(HttpStatus.ACCEPTED.value());
 
         verify(xs2aListTransactionsEntrypoint).execute(any());
     }

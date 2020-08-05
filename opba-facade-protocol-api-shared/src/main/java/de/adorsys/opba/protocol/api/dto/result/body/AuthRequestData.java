@@ -7,7 +7,7 @@ import lombok.Value;
 
 @Value
 @Builder
-public class AuthResultBody {
+public class AuthRequestData {
 
     private AisConsent aisConsent;
 

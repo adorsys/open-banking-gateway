@@ -64,10 +64,10 @@ public class AuthStateConsentServiceController implements AuthStateConsentAuthor
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
     public interface AuthStateBodyToApiMapper extends FacadeResponseBodyToRestBodyMapper<ConsentAuth, AuthStateBody> {
 
-        @Mapping(source = "resultBody.singlePaymentBody", target = "singlePayment")
-        @Mapping(source = "resultBody.aisConsent", target = "consent")
-        @Mapping(source = "resultBody.bankName", target = "bankName")
-        @Mapping(source = "resultBody.fintechName", target = "fintechName")
+        @Mapping(source = "requestData.singlePaymentBody", target = "singlePayment")
+        @Mapping(source = "requestData.aisConsent", target = "consent")
+        @Mapping(source = "requestData.bankName", target = "bankName")
+        @Mapping(source = "requestData.fintechName", target = "fintechName")
         ConsentAuth map(AuthStateBody authStateBody);
 
         @Mapping(source = "key", target = "id")

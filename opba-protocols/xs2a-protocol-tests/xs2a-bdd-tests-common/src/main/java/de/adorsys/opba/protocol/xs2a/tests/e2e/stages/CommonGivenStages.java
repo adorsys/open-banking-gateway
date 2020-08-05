@@ -131,7 +131,7 @@ public class CommonGivenStages<SELF extends CommonGivenStages<SELF>> extends Sta
     }
 
     @RequiredArgsConstructor
-    private static class RequestSigner implements Filter {
+    public static class RequestSigner implements Filter {
 
         private final RequestSigningService signingService;
         private final DataToSignProvider dataToSignProvider;

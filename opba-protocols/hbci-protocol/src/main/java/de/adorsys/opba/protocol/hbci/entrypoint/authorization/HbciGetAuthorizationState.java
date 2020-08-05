@@ -8,7 +8,7 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
 import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
-import de.adorsys.opba.protocol.api.dto.result.body.AuthResultBody;
+import de.adorsys.opba.protocol.api.dto.result.body.AuthRequestData;
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.body.ScaMethod;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
@@ -112,7 +112,7 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
         List<ScaMethod> scaMethods = ctx.getAvailableSca();
         String redirectTo = null == redirectionTarget ? null : redirectionTarget.getRedirectTo();
 
-        AuthResultBody authResultBody = AuthResultBody.builder()
+        AuthRequestData authRequestData = AuthRequestData.builder()
                 .aisConsent(ctx instanceof AccountListHbciContext || ctx instanceof TransactionListHbciContext ? aisBodyMapper.map(ctx.getHbciDialogConsent()) : null)
                 .singlePaymentBody(ctx instanceof PaymentHbciContext ? pisBodyMapper.map(((PaymentHbciContext) ctx).getPayment()) : null)
                 .bankName(ctx.getRequestScoped().aspspProfile().getName())
@@ -124,7 +124,7 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
                 violationsMapper.map(issues.getViolations()),
                 scaMethodsMapper.map(scaMethods),
                 redirectTo,
-                authResultBody
+                authRequestData
         );
     }
 
