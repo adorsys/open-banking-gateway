@@ -14,7 +14,7 @@ class RequestNormalizerGenerationTest {
     void testBasicCases() {
         Compilation compilation = javac()
                 .withProcessors(new DataToSignGeneratingProcessor())
-                .compile(JavaFileObjects.forResource("SignerConfigurer.java"));
+                .compile(JavaFileObjects.forResource("DataToSignConfigurer.java"));
 
         assertThat(compilation).succeededWithoutWarnings();
         assertThat(compilation)
