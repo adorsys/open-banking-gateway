@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file contains merged migrations from OpenBanking and HBCI Sandbox -->
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <!-- HBCI Sandbox migrations, note that they come from sandboxes/hbci-sandbox module -->
+    <include file="classpath:hbci-sandbox-migration/master.xml"/>
+    <!-- OpenBanking migration, note that they come from opba-db module-->
+    <include file="classpath:migration/master.xml"/>
+</databaseChangeLog>
