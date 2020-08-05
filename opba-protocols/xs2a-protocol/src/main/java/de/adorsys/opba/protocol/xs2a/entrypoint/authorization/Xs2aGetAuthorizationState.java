@@ -7,7 +7,7 @@ import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
 import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
-import de.adorsys.opba.protocol.api.dto.result.body.AuthResultBody;
+import de.adorsys.opba.protocol.api.dto.result.body.AuthRequestData;
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
@@ -113,7 +113,7 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
         List<ScaMethod> scaMethods = ctx.getAvailableSca();
         String redirectTo = null == redirectionTarget ? null : redirectionTarget.getRedirectTo();
 
-        AuthResultBody authResultBody = AuthResultBody.builder()
+        AuthRequestData authRequestData = AuthRequestData.builder()
                 .aisConsent(ctx instanceof Xs2aAisContext ? aisBodyMapper.map(((Xs2aAisContext) ctx).getAisConsent()) : null)
                 .singlePaymentBody(ctx instanceof Xs2aPisContext ? pisBodyMapper.map(((Xs2aPisContext) ctx).getPayment()) : null)
                 .bankName(ctx.getRequestScoped().aspspProfile().getName())
@@ -125,7 +125,7 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
                 violationsMapper.map(issues.getViolations()),
                 scaMethodsMapper.map(scaMethods),
                 redirectTo,
-                authResultBody
+                authRequestData
         );
     }
 
