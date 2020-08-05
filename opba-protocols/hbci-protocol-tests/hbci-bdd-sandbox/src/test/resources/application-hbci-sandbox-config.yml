@@ -1,3 +1,9 @@
+spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:bdd-migration/migration.xml
+    parameters:
+      table-prefix: opb_
 hbci:
   banks:
     - name: anonymous-bpd-no-sca

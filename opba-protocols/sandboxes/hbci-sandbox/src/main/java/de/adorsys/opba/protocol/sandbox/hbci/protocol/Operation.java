@@ -56,7 +56,11 @@ public enum Operation {
             return null;
         }
 
-        if (RequestStatusUtil.isForTransactionListing(message.getData()) || RequestStatusUtil.isForAccountListing(message.getData())) {
+        if (RequestStatusUtil.isForTransactionListing(message.getData())
+                || RequestStatusUtil.isForAccountListing(message.getData())
+                || RequestStatusUtil.isForPayment(message.getData())
+                || RequestStatusUtil.isForPaymentStatus(message.getData())
+        ) {
             return null;
         }
 
