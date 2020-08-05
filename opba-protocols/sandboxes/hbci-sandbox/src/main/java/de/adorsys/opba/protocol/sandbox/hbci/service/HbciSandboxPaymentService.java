@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.sandbox.hbci.protocol.MapRegexUtil;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.HbciSandboxContext;
 import de.adorsys.opba.protocol.sandbox.hbci.repository.HbciSandboxPaymentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,8 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 public class HbciSandboxPaymentService {
+
+    public static final String MAGIC_FLAG_TO_ACCEPT_PAYMENT_IMMEDIATELY = "!accept_immediately!";
 
     private final HbciSandboxPaymentRepository paymentRepository;
 
@@ -28,6 +31,7 @@ public class HbciSandboxPaymentService {
         payment.setSendTo(findCreditorAccount(paymentBody));
         payment.setAmount(new BigDecimal(findAmount(paymentBody)));
         payment.setCurrency(findCurrency(paymentBody));
+        payment.setRemittanceUnstructured(findRemittanceUnstructuredWithEmptyDefault(paymentBody));
         payment.setOwnerLogin(context.getUser().getLogin());
         if (!payment.getDeduceFrom().endsWith(context.getAccountNumberRequestedBeforeSca())) {
             throw new IllegalStateException("Wrong account number referenced, not matches debitor account number");
@@ -47,7 +51,12 @@ public class HbciSandboxPaymentService {
         String orderReference = MapRegexUtil.getDataRegex(context.getRequestData(), "GV\\.TAN2Step\\d+\\.orderref");
         HbciSandboxPayment payment = paymentRepository.findByOwnerLoginAndOrderReference(context.getUser().getLogin(), orderReference)
                 .orElseThrow(() -> new IllegalStateException(String.format("Order with reference %s of user %s not found", orderReference, context.getUser().getLogin())));
-        payment.setStatus(PaymentStatus.PDNG); // save not needed as is managed entity
+        // Some magic flag to accept payment immediately
+        if (null != payment.getRemittanceUnstructured() && payment.getRemittanceUnstructured().contains(MAGIC_FLAG_TO_ACCEPT_PAYMENT_IMMEDIATELY)) {
+            payment.setStatus(PaymentStatus.ACSC); // save not needed as is managed entity
+        } else {
+            payment.setStatus(PaymentStatus.PDNG); // save not needed as is managed entity
+        }
     }
 
     @Transactional
@@ -55,6 +64,14 @@ public class HbciSandboxPaymentService {
         HbciSandboxPayment payment = paymentRepository.findByOwnerLoginAndOrderReference(context.getUser().getLogin(), paymentId)
                 .orElseThrow(() -> new IllegalStateException(String.format("Order (payment) with reference %s of user %s not found", paymentId, context.getUser().getLogin())));
         context.setPayment(payment);
+    }
+
+    @Transactional
+    @Scheduled(fixedDelayString = "${hbci.payment-schedule}")
+    public void acceptPayments() {
+        paymentRepository.findByStatus(PaymentStatus.PDNG).forEach(it -> {
+            it.setStatus(PaymentStatus.ACSC); // save not needed as is managed entity
+        });
     }
 
 
@@ -90,6 +107,15 @@ public class HbciSandboxPaymentService {
         Matcher matcher = pattern.matcher(paymentBody);
         if (!matcher.find()) {
             throw new IllegalStateException("No currency");
+        }
+        return matcher.group(1);
+    }
+
+    private String findRemittanceUnstructuredWithEmptyDefault(String paymentBody) {
+        Pattern pattern = Pattern.compile("<RmtInf><Ustrd>(.+)</Ustrd></RmtInf>");
+        Matcher matcher = pattern.matcher(paymentBody);
+        if (!matcher.find()) {
+            return "";
         }
         return matcher.group(1);
     }

@@ -19,6 +19,7 @@
             <column name="send_to" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
+            <column name="remittance_unstructured" type="VARCHAR(1024)"/>
             <column name="amount" type="NUMERIC">
                 <constraints nullable="false"/>
             </column>

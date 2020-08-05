@@ -24,8 +24,12 @@ public class HbciPaymentInitiationRequest<SELF extends HbciPaymentInitiationRequ
     }
 
     public SELF fintech_calls_single_payment_for_max_musterman(String resourceId, String bankId) {
+        return fintech_calls_single_payment_for_max_musterman(resourceId, bankId, "Ref. Number WBG-1222");
+    }
+
+    public SELF fintech_calls_single_payment_for_max_musterman(String resourceId, String bankId, String remittance) {
         String body = readResource("restrecord-input-params/hbci-max-musterman-single-sepa-payment.json");
-        body = body.replaceAll("%debtorIban%", resourceId);
+        body = body.replaceAll("%debtorIban%", resourceId).replaceAll("%remittance%", remittance);
         ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, bankId)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(body)
