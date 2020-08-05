@@ -3,8 +3,8 @@ package de.adorsys.opba.api.security.generator;
 import com.google.auto.service.AutoService;
 import de.adorsys.opba.api.security.generator.api.GeneratedDataToSignNormalizer;
 import de.adorsys.opba.api.security.generator.normalizer.RequestDataToSignNormalizerGenerator;
-import de.adorsys.opba.api.security.generator.signer.DataToSignProviderGenerator;
-import de.adorsys.opba.api.security.generator.signer.RequestDataToGeneratorGenerator;
+import de.adorsys.opba.api.security.generator.normalizer.DataToSignProviderGenerator;
+import de.adorsys.opba.api.security.generator.normalizer.RequestDataToGeneratorGenerator;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
