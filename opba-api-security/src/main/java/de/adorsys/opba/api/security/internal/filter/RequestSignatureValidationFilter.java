@@ -4,7 +4,7 @@ import com.google.common.io.CharStreams;
 import de.adorsys.opba.api.security.external.domain.FilterValidationHeaderValues;
 import de.adorsys.opba.api.security.external.domain.HttpHeaders;
 import de.adorsys.opba.api.security.generator.api.DataToSignProvider;
-import de.adorsys.opba.api.security.generator.api.RequestDataToSignGenerator;
+import de.adorsys.opba.api.security.generator.api.RequestDataToSignNormalizer;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
 import de.adorsys.opba.api.security.internal.service.RequestVerifyingService;
 import de.adorsys.opba.api.security.requestsigner.OpenBankingDataToSignProvider;
@@ -165,7 +165,7 @@ public class RequestSignatureValidationFilter implements Filter {
                 .queryParams(extractQueryParams(request))
                 .body(body)
                 .build();
-        RequestDataToSignGenerator signatureGen = dataToSignProvider.normalizerFor(toSign);
+        RequestDataToSignNormalizer signatureGen = dataToSignProvider.normalizerFor(toSign);
         String expectedSignature = signatureGen.canonicalStringToSign(toSign);
 
         return requestVerifyingService.verify(request.getHeader(HttpHeaders.X_REQUEST_SIGNATURE), fintechApiKey, expectedSignature);

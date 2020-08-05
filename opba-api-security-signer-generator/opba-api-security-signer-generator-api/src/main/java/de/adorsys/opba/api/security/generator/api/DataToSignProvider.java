@@ -2,7 +2,7 @@ package de.adorsys.opba.api.security.generator.api;
 
 /**
  * Provides converter to map request to its string canonical form.
- * String canonical form of the request data is (in order):
+ * String canonical form of the request data is concatenated (in order):
  * <ol>
  * <li>request path + '&' delimiter</li>
  * <li>request headers in alphabetical order each with '&' delimiter</li>
@@ -22,7 +22,7 @@ package de.adorsys.opba.api.security.generator.api;
  *
  * Has canonical string:
  * <ul>
- * <li>/payment&Amount=13.00&SourceIban=1231242314&auth=8799879798&from=anton.brueckner&body=&lt;payment&gt;&lt;id&gt;1234&lt;/id&gt;&lt;/payment&gt</li>
+ * <li>/payment&Amount=13.00&SourceIban=1231242314&auth=8799879798&from=anton.brueckner&body=&lt;payment&gt;&lt;id&gt;1234&lt;/id&gt;&lt;/payment&gt;</li>
  * </ul>
  *
  * Another example:
@@ -59,7 +59,7 @@ public interface DataToSignProvider {
      * @param toSign Request to sign
      * @return Signer for the request
      */
-    RequestDataToSignGenerator normalizerFor(RequestToSign toSign);
+    RequestDataToSignNormalizer normalizerFor(RequestToSign toSign);
 
     enum HttpMethod {
         POST,
