@@ -1,8 +1,8 @@
 package de.adorsys.opba.api.security.generator.signer;
 
 import com.squareup.javapoet.ClassName;
+import de.adorsys.opba.api.security.generator.api.DataToSignProvider;
 import de.adorsys.opba.api.security.generator.api.GeneratedSigner;
-import de.adorsys.opba.api.security.generator.api.Signer;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
@@ -28,23 +28,23 @@ public class RequestSigningGenerator {
     }
 
     public void generate(TypeElement forClass, GeneratedSigner yamlSpec, Filer filer) {
-        Map<String, Map<Signer.HttpMethod, Operation>> requestSpecConfig = new HashMap<>();
+        Map<String, Map<DataToSignProvider.HttpMethod, Operation>> requestSpecConfig = new HashMap<>();
 
         Arrays.stream(yamlSpec.openApiYamlPath()).forEach(yamlLocation -> readAllRequestsDefinitions(getYamlLocation(filer, yamlLocation), requestSpecConfig));
 
         signerGenerator.generate(ClassName.get(forClass).packageName(), yamlSpec, filer, requestSpecConfig);
     }
 
-    private void readAllRequestsDefinitions(URI yamlLocation, Map<String, Map<Signer.HttpMethod, Operation>> requestSpecConfig) {
+    private void readAllRequestsDefinitions(URI yamlLocation, Map<String, Map<DataToSignProvider.HttpMethod, Operation>> requestSpecConfig) {
         OpenAPI api = new OpenAPIV3Parser().read(yamlLocation.toASCIIString());
         for (Map.Entry<String, PathItem> pathEntry : api.getPaths().entrySet()) {
             String path = pathEntry.getKey();
 
-            registerMethod(path, () -> pathEntry.getValue().getGet(), Signer.HttpMethod.GET, requestSpecConfig);
-            registerMethod(path, () -> pathEntry.getValue().getPut(), Signer.HttpMethod.PUT, requestSpecConfig);
-            registerMethod(path, () -> pathEntry.getValue().getPost(), Signer.HttpMethod.POST, requestSpecConfig);
-            registerMethod(path, () -> pathEntry.getValue().getPatch(), Signer.HttpMethod.PATCH, requestSpecConfig);
-            registerMethod(path, () -> pathEntry.getValue().getDelete(), Signer.HttpMethod.DELETE, requestSpecConfig);
+            registerMethod(path, () -> pathEntry.getValue().getGet(), DataToSignProvider.HttpMethod.GET, requestSpecConfig);
+            registerMethod(path, () -> pathEntry.getValue().getPut(), DataToSignProvider.HttpMethod.PUT, requestSpecConfig);
+            registerMethod(path, () -> pathEntry.getValue().getPost(), DataToSignProvider.HttpMethod.POST, requestSpecConfig);
+            registerMethod(path, () -> pathEntry.getValue().getPatch(), DataToSignProvider.HttpMethod.PATCH, requestSpecConfig);
+            registerMethod(path, () -> pathEntry.getValue().getDelete(), DataToSignProvider.HttpMethod.DELETE, requestSpecConfig);
         }
     }
 
@@ -59,14 +59,14 @@ public class RequestSigningGenerator {
     private void registerMethod(
             String path,
             Supplier<Operation> oper,
-            Signer.HttpMethod method,
-            Map<String, Map<Signer.HttpMethod, Operation>> result
+            DataToSignProvider.HttpMethod method,
+            Map<String, Map<DataToSignProvider.HttpMethod, Operation>> result
     ) {
         Operation operation = oper.get();
         if (null != operation) {
             result.computeIfAbsent(
                     path,
-                    id -> new EnumMap<>(Signer.HttpMethod.class)
+                    id -> new EnumMap<>(DataToSignProvider.HttpMethod.class)
             ).put(
                     method,
                     operation

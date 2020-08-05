@@ -85,12 +85,16 @@ public class PaymentStagesCommonUtil {
     }
 
     public static RequestSpecification withPaymentInfoHeaders(String fintechUserId) {
+        return withPaymentHeaders(fintechUserId, SANDBOX_BANK_ID);
+    }
+
+    public static RequestSpecification withPaymentInfoHeaders(String fintechUserId, String bankId) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
         return RestAssured
                        .given()
-                            .header(BANK_ID, SANDBOX_BANK_ID)
+                            .header(BANK_ID, bankId)
                             .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
                             .header(FINTECH_USER_ID, fintechUserId)
                             .header(FINTECH_ID, DEFAULT_FINTECH_ID)
