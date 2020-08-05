@@ -10,7 +10,8 @@ jdk:
   - openjdk8
 
 # Avoid installing maven dependencies as it will be done in 'script' step
-install: skip
+install:
+  - ./scripts/install_mvn.sh
 
 script:
   # tests are not done with mvn test - dont know why
