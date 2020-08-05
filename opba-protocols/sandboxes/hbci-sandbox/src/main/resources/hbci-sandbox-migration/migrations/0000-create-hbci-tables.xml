@@ -1,0 +1,35 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="2020-08-05-18" author="valb3r" >
+        <createTable tableName="${table-prefix}hbci_sandbox_payment">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="owner_login" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="from" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="to" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="NUMERIC">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createSequence sequenceName="hbci_sandbox_payment_id_seq" incrementBy="50"/>
+    </changeSet>
+
+</databaseChangeLog>
