@@ -3,7 +3,7 @@ package de.adorsys.opba.fintech.impl.config;
 import com.google.common.collect.Iterables;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.api.security.generator.api.DataToSignProvider;
-import de.adorsys.opba.api.security.generator.api.RequestDataToSignGenerator;
+import de.adorsys.opba.api.security.generator.api.RequestDataToSignNormalizer;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
 import de.adorsys.opba.api.security.requestsigner.OpenBankingDataToSignProvider;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
@@ -90,7 +90,7 @@ public class FeignConfig {
                 .queryParams(queries)
                 .body(requestTemplate.requestBody().asString())
                 .build();
-        RequestDataToSignGenerator signatureGen = dataToSignProvider.normalizerFor(toSign);
+        RequestDataToSignNormalizer signatureGen = dataToSignProvider.normalizerFor(toSign);
         return requestSigningService.signature(signatureGen.canonicalStringToSign(toSign));
     }
 
