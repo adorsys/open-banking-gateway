@@ -58,7 +58,7 @@
         <dependency>
             <groupId>com.google.testing.compile</groupId>
             <artifactId>compile-testing</artifactId>
-            <version>0.18</version>
+            <version>${compile-testing.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
