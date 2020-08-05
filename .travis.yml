@@ -9,7 +9,7 @@ addons:
 jdk:
   - openjdk8
 
-# Avoid installing maven dependencies as it will be done in 'script' step
+# Override Travis install step with our own for control
 install:
   - ./scripts/install_mvn.sh
 
