@@ -7,6 +7,7 @@ import de.adorsys.opba.protocol.sandbox.hbci.protocol.RequestStatusUtil;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.TemplateBasedOperationHandler;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.HbciSandboxContext;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.interpolation.JsonTemplateInterpolation;
+import de.adorsys.opba.protocol.sandbox.hbci.service.HbciSandboxPaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,11 @@ import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.TRANSACTIONS;
 @Service("authenticatedCustomMsg")
 public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
 
-    public AuthenticatedCustomMsg(JsonTemplateInterpolation interpolation) {
+    private final HbciSandboxPaymentService paymentService;
+
+    public AuthenticatedCustomMsg(JsonTemplateInterpolation interpolation, HbciSandboxPaymentService paymentService) {
         super(interpolation);
+        this.paymentService = paymentService;
     }
 
     @Override
@@ -43,6 +47,7 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
 
         if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(PAYMENT))) {
             if (context.getBank().getSecurity().getPayment() == SensitiveAuthLevel.AUTHENTICATED) {
+                paymentService.createPayment(context);
                 return "response-templates/authenticated/custom-message-konto-mt940.json";
             }
             if (RequestStatusUtil.isForPayment(context.getRequestData())) {

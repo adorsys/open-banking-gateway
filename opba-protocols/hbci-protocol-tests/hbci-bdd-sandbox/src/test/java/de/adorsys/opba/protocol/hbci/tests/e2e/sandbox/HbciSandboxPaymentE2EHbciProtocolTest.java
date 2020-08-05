@@ -72,7 +72,7 @@ class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
     }
 
     @Test
-    void testPaymentStatusWithSca() {
+    void testPaymentAndStatusWithSca() {
         given()
                 .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
