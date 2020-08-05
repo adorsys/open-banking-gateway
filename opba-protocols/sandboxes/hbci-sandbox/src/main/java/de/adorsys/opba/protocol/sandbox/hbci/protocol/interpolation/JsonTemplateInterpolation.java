@@ -6,12 +6,15 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
 import com.google.common.primitives.Longs;
+import de.adorsys.multibanking.domain.PaymentStatus;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Account;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Bank;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Transaction;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.User;
+import de.adorsys.opba.protocol.sandbox.hbci.domain.HbciSandboxPayment;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.HbciSandboxContext;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.parsing.ParsingUtil;
+import de.adorsys.opba.protocol.sandbox.hbci.repository.HbciSandboxPaymentRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -65,6 +68,7 @@ public class JsonTemplateInterpolation {
     private final Pattern mt940LoopTransactions = Pattern.compile("(\\$\\{mt940Begin}.+?\\$\\{mt940End})", Pattern.DOTALL);
 
     private final ObjectMapper mapper;
+    private final HbciSandboxPaymentRepository paymentRepository;
 
     @SneakyThrows
     public String interpolateToHbci(String templateResourcePath, HbciSandboxContext context) {
@@ -261,6 +265,11 @@ public class JsonTemplateInterpolation {
             List<Transaction> transactions = staticCtx.getUser().getTransactions().stream()
                     .filter(it -> it.getFrom().contains(acc.getNumber()))
                     .collect(Collectors.toList());
+            List<HbciSandboxPayment> payments = paymentRepository.findByOwnerLoginAndStatusInOrderByCreatedAtDesc(
+                    staticCtx.getUser().getLogin(),
+                    ImmutableSet.of(PaymentStatus.ACSC)
+            );
+            transactions.addAll(payments.stream().map(HbciSandboxPayment::toTransaction).collect(Collectors.toList()));
 
             // Empty transaction list special handling
             if (transactions.isEmpty()) {

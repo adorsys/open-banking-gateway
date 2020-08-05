@@ -1,6 +1,7 @@
 package de.adorsys.opba.protocol.sandbox.hbci.domain;
 
 import de.adorsys.multibanking.domain.PaymentStatus;
+import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Transaction;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -19,6 +20,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.Currency;
 
 @Data
 @Entity
@@ -48,6 +50,8 @@ public class HbciSandboxPayment {
     @Column(nullable = false)
     private String currency;
 
+    private String remittanceUnstructured;
+
     // Nullable if payment is not yet authorized
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
@@ -57,17 +61,9 @@ public class HbciSandboxPayment {
 
     @LastModifiedDate
     private Instant modifiedAt;
-    
+
+    @SuppressWarnings("checkstyle:MagicNumber") // It is magic number mapped to enum
     public int getHbciStatus() {
-        //        1: in Terminierung
-//        2: abgelehnt von erster Inkassostelle
-//        3: in Bearbeitung
-//        4: Creditoren-seitig verarbeitet, Buchung veranlasst
-//        5: R-Transaktion wurde veranlasst
-//        6: Auftrag fehlgeschagen
-//        7: Auftrag ausgeführt; Geld für den Zahlungsempfänger verfügbar
-//        8: Abgelehnt durch Zahlungsdienstleister des Zahlers
-//        9: Abgelehnt durch Zahlungsdienstleister des Zahlungsempfängers
         switch (getStatus()) {
             case CANC:
                 return 1;
@@ -85,10 +81,23 @@ public class HbciSandboxPayment {
     }
 
     public String getModifiedAtString() {
-        return DateTimeFormatter.ISO_DATE_TIME.format(getModifiedAt().atOffset(ZoneOffset.UTC));
+        return DateTimeFormatter.ISO_DATE_TIME.format(getModifiedAt().atOffset(ZoneOffset.UTC).toLocalDateTime());
     }
 
     public String getModifiedAtDateString() {
-        return DateTimeFormatter.ISO_DATE.format(getModifiedAt().atOffset(ZoneOffset.UTC));
+        return DateTimeFormatter.ISO_DATE.format(getModifiedAt().atOffset(ZoneOffset.UTC).toLocalDate());
+    }
+
+    public Transaction toTransaction() {
+        Transaction transaction = new Transaction();
+        transaction.setAmount(getAmount().toString());
+        transaction.setBalanceAfter("999.0"); // hardcoding values to avoid real ledgers
+        transaction.setBalanceBefore("1999.0"); // hardcoding values to avoid real ledgers
+        transaction.setCurrency(Currency.getInstance(getCurrency()));
+        transaction.setDate(getModifiedAtString());
+        transaction.setPurpose(getRemittanceUnstructured());
+        transaction.setTo(getSendTo());
+        transaction.setFrom(getDeduceFrom());
+        return transaction;
     }
 }

@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class JsonTemplateInterpolationTest {
 
-    private final JsonTemplateInterpolation tested = new JsonTemplateInterpolation(new ObjectMapper());
+    private final JsonTemplateInterpolation tested = new JsonTemplateInterpolation(new ObjectMapper(), null);
 
     @Test
     void testHbciCreation() {
