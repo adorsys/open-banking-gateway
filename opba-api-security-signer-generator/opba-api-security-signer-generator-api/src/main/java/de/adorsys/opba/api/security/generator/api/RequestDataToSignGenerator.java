@@ -18,6 +18,9 @@ public interface RequestDataToSignGenerator {
      * (i.e. XML payment bodies can be huge, so we can hash request string)
      * @param toSign Request that is going to be signed
      * @return Short hash value of the {@code toSign} ready to be used as the request signature
+     *
+     * Note: Technically hash strength other than collision resistance is not of much importance here as the value
+     * is going to be signed with JWS
      */
     default String canonicalStringToSign(RequestToSign toSign) {
         return Hashing.sha256().hashBytes(canonicalString(toSign).getBytes(StandardCharsets.UTF_8)).toString();
