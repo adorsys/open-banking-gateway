@@ -99,7 +99,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
 
     public SELF fintech_calls_initiate_payment_for_max_musterman_with_anonymous_allowed() {
         String body = readResource("restrecord/tpp-ui-input/params/max-musterman-single-sepa-payment.json");
-        ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, body, false)
+        ExtractableResponse<Response> response = withPaymentHeaders(MAX_MUSTERMAN, false)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(body)
              .when()
