@@ -3,11 +3,11 @@ package de.adorsys.opba.api.security.internal.filter;
 import com.google.common.io.CharStreams;
 import de.adorsys.opba.api.security.external.domain.FilterValidationHeaderValues;
 import de.adorsys.opba.api.security.external.domain.HttpHeaders;
+import de.adorsys.opba.api.security.generator.api.DataToSignProvider;
 import de.adorsys.opba.api.security.generator.api.RequestDataToSignGenerator;
 import de.adorsys.opba.api.security.generator.api.RequestToSign;
-import de.adorsys.opba.api.security.generator.api.Signer;
 import de.adorsys.opba.api.security.internal.service.RequestVerifyingService;
-import de.adorsys.opba.api.security.requestsigner.OpenBankingSigner;
+import de.adorsys.opba.api.security.requestsigner.OpenBankingDataToSignProvider;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -156,16 +156,16 @@ public class RequestSignatureValidationFilter implements Filter {
     @SneakyThrows
     private boolean verifyRequestSignature(HttpServletRequest request, String fintechApiKey) {
         // OpenBankingSigner - This is generated class by opba-api-security-signer-generator-impl annotation processor
-        Signer signer = new OpenBankingSigner();
-        String body = request.getReader().ready() ? CharStreams.toString(request.getReader()) : null;
+        DataToSignProvider dataToSignProvider = new OpenBankingDataToSignProvider();
+        String body = request.getContentLengthLong() >= 0 ? CharStreams.toString(request.getReader()) : null;
         RequestToSign toSign = RequestToSign.builder()
-                .method(Signer.HttpMethod.valueOf(request.getMethod()))
+                .method(DataToSignProvider.HttpMethod.valueOf(request.getMethod()))
                 .path(request.getRequestURI())
                 .headers(extractHeaders(request))
                 .queryParams(extractQueryParams(request))
                 .body(body)
                 .build();
-        RequestDataToSignGenerator signatureGen = signer.signerFor(toSign);
+        RequestDataToSignGenerator signatureGen = dataToSignProvider.normalizerFor(toSign);
         String expectedSignature = signatureGen.canonicalStringToSign(toSign);
 
         return requestVerifyingService.verify(request.getHeader(HttpHeaders.X_REQUEST_SIGNATURE), fintechApiKey, expectedSignature);
