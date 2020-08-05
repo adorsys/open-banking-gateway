@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps;
 
+import com.google.common.collect.ImmutableList;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
@@ -130,6 +131,29 @@ public class HbciAccountInformationResult<SELF extends HbciAccountInformationRes
                 // Looks like returned order by Sandbox is not stable
                 .containsOnly(
                         new BigDecimal("-100.00")
+                );
+        return self();
+    }
+
+    @SneakyThrows
+    public SELF open_banking_can_read_max_musterman_hbci_transaction_data_using_consent_bound_to_service_session_with_extra_transactions(
+            String resourceId, String bankId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus, BigDecimal[] extraTransactions
+    ) {
+        ExtractableResponse<Response> response = getTransactionListFor(MAX_MUSTERMAN, bankId, resourceId, dateFrom, dateTo, bookingStatus);
+
+        this.responseContent = response.body().asString();
+        DocumentContext body = JsonPath.parse(responseContent);
+
+        // TODO: Currently no IBANs as mapping is not yet completed
+
+        assertThat(body)
+                .extracting(it -> it.read("$.transactions.booked[*].transactionAmount.amount"))
+                .asList()
+                .extracting(it -> new BigDecimal((String) it))
+                .usingElementComparator(BIG_DECIMAL_COMPARATOR)
+                // Looks like returned order by Sandbox is not stable
+                .containsExactlyInAnyOrderElementsOf(
+                        ImmutableList.<BigDecimal>builder().add(new BigDecimal("-100.00")).add(extraTransactions).build()
                 );
         return self();
     }
