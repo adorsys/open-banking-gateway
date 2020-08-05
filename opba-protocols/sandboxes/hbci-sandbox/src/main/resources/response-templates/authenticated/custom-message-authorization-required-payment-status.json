@@ -33,7 +33,7 @@
    "TAN2StepRes6.SegHead.seq" : "5",
    "TAN2StepRes6.SegHead.version" : "6",
    "TAN2StepRes6.challenge" : "Bitte geben Sie die pushTAN ein.",
-   "TAN2StepRes6.orderref" : "${ctx.getDialogId()}",
+   "TAN2StepRes6.orderref" : "${ctx.getOrderReference()}",
    "TAN2StepRes6.process" : "4",
    "TAN2StepRes6.tanmedia" : "Iphone"
   }
