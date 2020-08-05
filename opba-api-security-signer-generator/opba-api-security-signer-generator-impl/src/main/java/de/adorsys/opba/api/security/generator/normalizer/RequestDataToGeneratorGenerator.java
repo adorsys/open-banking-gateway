@@ -1,4 +1,4 @@
-package de.adorsys.opba.api.security.generator.signer;
+package de.adorsys.opba.api.security.generator.normalizer;
 
 import com.squareup.javapoet.ClassName;
 import de.adorsys.opba.api.security.generator.api.DataToSignProvider;
