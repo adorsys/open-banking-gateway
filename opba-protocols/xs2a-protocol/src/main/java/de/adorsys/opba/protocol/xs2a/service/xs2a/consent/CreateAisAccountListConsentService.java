@@ -38,10 +38,12 @@ public class CreateAisAccountListConsentService extends ValidatedExecution<Accou
     @Override
     protected void doPrepareContext(DelegateExecution execution, AccountListXs2aContext context) {
         context.setRedirectUriOk(
-                ContextUtil.buildAndExpandQueryParameters(urlsConfiguration.getAis().getWebHooks().getOk(), context, context.getAspspRedirectCode()).toString()
+                ContextUtil.buildAndExpandQueryParameters(urlsConfiguration.getAis()
+                        .getWebHooks().getOk(), context, context.getAspspRedirectCode()).toString()
         );
         context.setRedirectUriNok(
-                ContextUtil.buildAndExpandQueryParameters(urlsConfiguration.getAis().getWebHooks().getNok(), context, context.getAspspRedirectCode()).toString()
+                ContextUtil.buildAndExpandQueryParameters(urlsConfiguration.getAis()
+                        .getWebHooks().getNok(), context, context.getAspspRedirectCode()).toString()
         );
     }
 

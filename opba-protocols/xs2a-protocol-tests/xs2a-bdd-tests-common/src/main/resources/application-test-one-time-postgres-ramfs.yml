@@ -168,11 +168,11 @@ protocol:
       common:
         to-aspsp: /{sessionId}/to-aspsp-redirection
         web-hooks:
-          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
-          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
+          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok?redirectCode={redirectCode}
+          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok?redirectCode={redirectCode}
           result: /{sessionId}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
         parameters:
-          provide-more: /{sessionId}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+          provide-more: /{sessionId}?redirectCode={redirectCode}
           provide-psu-password: /{sessionId}/authenticate?wrong=#{context.getWrongAuthCredentials()}
           select-sca-method: /{sessionId}/select-sca-method
           report-sca-result: /{sessionId}/sca-result/#{context.getUserSelectScaType()}?wrong=#{context.getWrongAuthCredentials()}
@@ -202,7 +202,7 @@ protocol:
             result: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
           parameters:
             max-array-size: 32
-            provide-more: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+            provide-more: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}?redirectCode={redirectCode}
             provide-psu-password: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/authenticate?wrong=#{context.getWrongAuthCredentials()}
             select-sca-method: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/select-sca-method
             report-sca-result: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/sca-result/#{context.getUserSelectScaType()}?wrong=#{context.getWrongAuthCredentials()}
