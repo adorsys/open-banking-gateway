@@ -241,7 +241,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     }
 
     public SELF ui_can_read_image_data_from_obg(String user) {
-        ExtractableResponse<Response> response = withDefaultHeaders(user, requestSigningService, PIS)
+        ExtractableResponse<Response> response = withDefaultHeaders(user)
                                                             .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                                                             .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                                                          .when()
