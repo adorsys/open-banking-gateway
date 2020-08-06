@@ -75,6 +75,7 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                     ctx.setPsuPassword(null); // eagerly destroy password, albeit it is not persisted
                     setScaAvailableMethodsIfCanBeChosen(authResponse, ctx);
                     ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
+                    ctx.setChallengeData(authResponse.getBody().getChallengeData());
                 }
         );
     }
