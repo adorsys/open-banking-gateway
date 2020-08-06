@@ -2,7 +2,6 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
 import com.google.common.collect.ImmutableMap;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.consentapi.model.generated.ChallengeData;
 import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.SinglePayment;
 import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
@@ -243,15 +242,15 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
 
     public SELF ui_can_read_image_data_from_obg(String user) {
         ExtractableResponse<Response> response = withDefaultHeaders(user, requestSigningService, PIS)
-                                                         .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
-                                                         .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                                                            .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                                                            .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                                                          .when()
-                                                         .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
+                                                            .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
                                                          .then()
-                                                         .statusCode(HttpStatus.OK.value())
-                                                         .extract();
+                                                            .statusCode(HttpStatus.OK.value())
+                                                            .extract();
 
-        assertThatResponseContainsCorrectChallengeData(response);
+        assertThatResponseContainsCorrectChallengeData(response, "restrecord/tpp-ui-input/params/unknown-user-embedded-payment-challenge-data.json");
         updateServiceSessionId(response);
         updateRedirectCode(response);
         return self();
@@ -307,16 +306,5 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         assertThat(authResponse.getSinglePayment())
                 .isEqualTo(JSON_MAPPER.readValue(readResource("restrecord/tpp-ui-input/params/anton-brueckner-single-payment-response.json"),
                                                  SinglePayment.class));
-    }
-
-    @SneakyThrows
-    private void assertThatResponseContainsCorrectChallengeData(ExtractableResponse<Response> response) {
-        ConsentAuth authResponse = JSON_MAPPER
-                                           .readValue(response.body().asString(), ConsentAuth.class);
-
-        assertThat(authResponse).isNotNull();
-        assertThat(authResponse.getChallengeData())
-                .isEqualTo(JSON_MAPPER.readValue(readResource("restrecord/tpp-ui-input/params/unknown-user-embedded-payment-challenge-data.json"),
-                                                 ChallengeData.class));
     }
 }
