@@ -1,6 +1,6 @@
 package de.adorsys.opba.protocol.api.dto.result.body;
 
-import de.adorsys.multibanking.domain.ChallengeData;
+import de.adorsys.opba.protocol.api.dto.request.ChallengeData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -41,7 +41,7 @@ public class AuthStateBody implements ResultBody {
     private AuthRequestData requestData;
 
     /**
-     * Challange data, needed for embedded sca
+     * Challenge data, needed for embedded SCA for OpticTAN, PhotoTAN and other challenges that require some data to be shown to user
      */
     private ChallengeData challengeData;
 
