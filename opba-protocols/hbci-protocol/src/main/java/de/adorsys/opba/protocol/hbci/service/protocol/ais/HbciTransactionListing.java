@@ -14,6 +14,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.TransactionListHbciContext;
+import de.adorsys.opba.protocol.hbci.service.consent.HbciScaRequiredUtil;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListTransactionsResult;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -35,8 +36,9 @@ public class HbciTransactionListing extends ValidatedExecution<TransactionListHb
         account.setIban(context.getAccountIban());
         request.getTransaction().setPsuAccount(account);
         TransactionsResponse response = onlineBankingService.loadTransactions(request);
+        boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
 
-        if (null == response.getAuthorisationCodeResponse()) {
+        if (null == response.getAuthorisationCodeResponse() && !postScaRequired) {
             ContextUtil.getAndUpdateContext(
                     execution,
                     (TransactionListHbciContext ctx) -> {
@@ -55,7 +57,9 @@ public class HbciTransactionListing extends ValidatedExecution<TransactionListHb
             return;
         }
 
-        onlineBankingService.getStrongCustomerAuthorisation().afterExecute(consent, response.getAuthorisationCodeResponse());
+        if (null != response.getAuthorisationCodeResponse()) {
+            onlineBankingService.getStrongCustomerAuthorisation().afterExecute(consent, response.getAuthorisationCodeResponse());
+        }
         ContextUtil.getAndUpdateContext(
                 execution,
                 (HbciContext ctx) -> {

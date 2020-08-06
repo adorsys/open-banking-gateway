@@ -14,6 +14,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
+import de.adorsys.opba.protocol.hbci.service.consent.HbciScaRequiredUtil;
 import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PaymentInitiateBody;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -42,8 +43,9 @@ public class HbciPaymentStatus extends ValidatedExecution<PaymentHbciContext> {
         TransactionRequest<PaymentStatusReqest> request = create(paymentStatusReqest, new BankApiUser(),
                 bankAccess, context.getBank(), consent);
         PaymentStatusResponse response = onlineBankingService.getStrongCustomerAuthorisation().getPaymentStatus(request);
+        boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
 
-        if (null == response.getAuthorisationCodeResponse()) {
+        if (null == response.getAuthorisationCodeResponse() && !postScaRequired) {
             ContextUtil.getAndUpdateContext(
                     execution,
                     (PaymentHbciContext ctx) -> {
@@ -56,7 +58,9 @@ public class HbciPaymentStatus extends ValidatedExecution<PaymentHbciContext> {
             return;
         }
 
-        onlineBankingService.getStrongCustomerAuthorisation().afterExecute(consent, response.getAuthorisationCodeResponse());
+        if (null != response.getAuthorisationCodeResponse()) {
+            onlineBankingService.getStrongCustomerAuthorisation().afterExecute(consent, response.getAuthorisationCodeResponse());
+        }
         ContextUtil.getAndUpdateContext(
                 execution,
                 (HbciContext ctx) -> {
