@@ -250,7 +250,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
                                                             .statusCode(HttpStatus.OK.value())
                                                             .extract();
 
-        assertThatResponseContainsCorrectChallengeData(response, "restrecord/tpp-ui-input/params/unknown-user-embedded-payment-challenge-data.json");
+        assertThatResponseContainsCorrectChallengeData(response, "restrecord/tpp-ui-input/params/max-musterman-embedded-payment-challenge-data.json");
         updateServiceSessionId(response);
         updateRedirectCode(response);
         return self();
