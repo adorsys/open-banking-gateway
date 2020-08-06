@@ -1040,8 +1040,9 @@ components:
           type: string
 
     ChallengeData:
-      title: SinglePayment
+      title: ChallengeData
       type: object
+      description: Challege data for SCA like OpticTAN image
       properties:
         image:
           type: string
