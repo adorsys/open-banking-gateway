@@ -1,10 +1,10 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint.authorization;
 
-import de.adorsys.multibanking.domain.ChallengeData;
 import de.adorsys.opba.protocol.api.authorization.GetAuthorizationState;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
+import de.adorsys.opba.protocol.api.dto.request.ChallengeData;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
 import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
@@ -31,7 +31,6 @@ import org.mapstruct.Mapper;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -143,11 +142,6 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface ChallengeDataMapper extends DtoMapper<de.adorsys.xs2a.adapter.service.model.ChallengeData, ChallengeData> {
-        ChallengeData map(de.adorsys.xs2a.adapter.service.model.ChallengeData data);
-
-        default String map(byte[] value) {
-            return new String(value, StandardCharsets.UTF_8);
-        }
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, uses = Xs2aUuidMapper.class, implementationPackage = XS2A_MAPPERS_PACKAGE)
