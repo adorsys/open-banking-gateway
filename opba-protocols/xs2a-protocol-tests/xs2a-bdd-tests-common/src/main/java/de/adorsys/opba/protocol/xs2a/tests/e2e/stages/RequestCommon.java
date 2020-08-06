@@ -10,6 +10,7 @@ import com.tngtech.jgiven.annotation.ScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.api.security.internal.config.CookieProperties;
 import de.adorsys.opba.consentapi.model.generated.AuthViolation;
+import de.adorsys.opba.consentapi.model.generated.ChallengeData;
 import de.adorsys.opba.consentapi.model.generated.ConsentAuth;
 import de.adorsys.opba.consentapi.model.generated.ScaUserData;
 import de.adorsys.opba.protocol.facade.config.auth.UriExpandConst;
@@ -241,5 +242,22 @@ public class RequestCommon<SELF extends RequestCommon<SELF>> extends Stage<SELF>
                        .buildAndExpand(ImmutableMap.of(UriExpandConst.AUTHORIZATION_SESSION_ID, authorizationId,
                                                        UriExpandConst.REDIRECT_STATE, redirectState))
                        .toUriString();
+    }
+
+    @SneakyThrows
+    protected void assertThatResponseContainsCorrectChallengeData(ExtractableResponse<Response> response, String fileName) {
+        ChallengeData expected = JSON_MAPPER.readValue(readResource(fileName), ChallengeData.class);
+
+        ConsentAuth actualResponse = JSON_MAPPER.readValue(response.body().asString(), ConsentAuth.class);
+        ChallengeData actual = actualResponse.getChallengeData();
+
+        assertThat(actualResponse).isNotNull();
+        assertThat(actual).isNotNull();
+        assertThat(actual.getImage()).isEqualTo(expected.getImage());
+        assertThat(actual.getData()).isEqualTo(expected.getData());
+        assertThat(actual.getImageLink()).isEqualTo(expected.getImageLink());
+        assertThat(actual.getOtpMaxLength()).isEqualTo(expected.getOtpMaxLength());
+        assertThat(actual.getOtpFormat()).isEqualTo(expected.getOtpFormat());
+        assertThat(actual.getAdditionalInformation()).isEqualTo(expected.getAdditionalInformation());
     }
 }
