@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.api.dto.result.body;
 
+import de.adorsys.multibanking.domain.ChallengeData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -38,6 +39,11 @@ public class AuthStateBody implements ResultBody {
      * Consent object, Payment, which ASPSP or FinTech.
      */
     private AuthRequestData requestData;
+
+    /**
+     * Challange data, needed for embedded sca
+     */
+    private ChallengeData challengeData;
 
     public AuthStateBody(Set<ValidationError> violations) {
         this.violations = violations;
