@@ -45,6 +45,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -265,11 +266,8 @@ public class JsonTemplateInterpolation {
             List<Transaction> transactions = staticCtx.getUser().getTransactions().stream()
                     .filter(it -> it.getFrom().contains(acc.getNumber()))
                     .collect(Collectors.toList());
-            List<HbciSandboxPayment> payments = paymentRepository.findByOwnerLoginAndStatusInOrderByCreatedAtDesc(
-                    staticCtx.getUser().getLogin(),
-                    ImmutableSet.of(PaymentStatus.ACSC)
-            );
-            transactions.addAll(payments.stream().map(HbciSandboxPayment::toTransaction).collect(Collectors.toList()));
+
+            processPaymentsThatAreTransactionsNow(staticCtx, acc, transactions);
 
             // Empty transaction list special handling
             if (transactions.isEmpty()) {
@@ -285,6 +283,21 @@ public class JsonTemplateInterpolation {
                 value.append(interpolateTransactions(initialValue, txns));
             }
             result.put(entry.getKey(), value.toString());
+        }
+    }
+
+    private void processPaymentsThatAreTransactionsNow(AccountsContext staticCtx, Account acc, List<Transaction> transactions) {
+        BigDecimal balance = acc.getBalance();
+        List<HbciSandboxPayment> payments = paymentRepository.findByOwnerLoginAndStatusInOrderByCreatedAtDesc(
+                staticCtx.getUser().getLogin(),
+                ImmutableSet.of(PaymentStatus.ACSC) // only 'done' payments into transactions
+        ).stream() // As it is sandbox we don't expect many transactions present, so filtering in code
+                .filter(it -> it.getDeduceFrom().endsWith(acc.getNumber()) || it.getSendTo().endsWith(acc.getNumber()))
+                .collect(Collectors.toList());
+        for (HbciSandboxPayment payment : payments) {
+            Transaction transaction = payment.toTransaction(acc.getNumber(), balance);
+            balance = new BigDecimal(transaction.getBalanceAfter());
+            transactions.add(transaction);
         }
     }
 
