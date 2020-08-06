@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.consentapi.model.generated.AuthViolation;
-import de.adorsys.opba.protocol.xs2a.tests.GetTransactionsQueryParams;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -469,7 +468,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF ui_can_read_image_data_from_obg(String user) {
-        ExtractableResponse<Response> response = withDefaultHeaders(user, requestSigningService, OperationType.AIS)
+        ExtractableResponse<Response> response = withDefaultHeaders(user)
                                                             .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                                                             .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                                                          .when()
