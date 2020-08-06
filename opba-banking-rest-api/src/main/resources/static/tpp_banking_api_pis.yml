@@ -58,17 +58,21 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-OK"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
         #path
         - $ref: "#/components/parameters/PaymentProduct"
       responses:
-        "200":
-          $ref: "#/components/responses/OK_200_PaymentInitiationInformation"
+        200:
+          $ref: "#/components/responses/200_PaymentInformationResponse"
+        202:
+          $ref: "#/components/responses/202_PaymentInitiationResponse:"
 
   /v1/banking/pis/payments/{payment-product}/status:
     get:
       summary: Payment initiation status request
       description: Check the transaction status of a payment initiation.
-      operationId: getPaymentInitiationStatus
+      operationId: getPaymentStatus
       tags:
         - TPP Banking API Payment Status (PIS)
       security:
@@ -84,11 +88,15 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-User-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-OK"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-Redirect-URL-NOK"
         #path
         - $ref: "#/components/parameters/PaymentProduct"
       responses:
-        "200":
-          $ref: "#/components/responses/OK_200_PaymentInitiationStatus"
+        200:
+          $ref: "#/components/responses/200_PaymentStatusResponse"
+        202:
+          $ref: "#/components/responses/202_PaymentInitiationResponse:"
 components:
   parameters:
     PaymentProduct:
@@ -131,7 +139,7 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/paymentInitiationResponse"
-    OK_200_PaymentInitiationInformation:
+    200_PaymentInformationResponse:
       description: OK
       headers:
         X-Request-ID:
@@ -141,8 +149,8 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/paymentInitiationWithStatusResponse"
-    OK_200_PaymentInitiationStatus:
+            $ref: "#/components/schemas/paymentInformationResponse"
+    200_PaymentStatusResponse:
       description: OK
       headers:
         X-Request-ID:
@@ -152,7 +160,7 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/paymentInitiationStatusResponse"
+            $ref: "#/components/schemas/paymentStatusResponse"
 
   schemas:
     paymentInitiation:
@@ -203,7 +211,7 @@ components:
           type: string
           description: use redirect link message
 
-    paymentInitiationWithStatusResponse:
+    paymentInformationResponse:
       description: |
         Generic JSON response body consistion of the corresponding payment initation JSON body together with an optional transaction status field.
       type: object
@@ -235,7 +243,7 @@ components:
         createdAt:
           $ref: "./tpp_banking_api_commons.yml#/components/schemas/createdAt"
 
-    paymentInitiationStatusResponse:
+    paymentStatusResponse:
       description: Body of the response for a successful payment initiation status request in case of an JSON based endpoint.
       type: object
       required:
