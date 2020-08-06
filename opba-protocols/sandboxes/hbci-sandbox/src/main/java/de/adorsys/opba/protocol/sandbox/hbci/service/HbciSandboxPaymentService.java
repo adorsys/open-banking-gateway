@@ -79,7 +79,7 @@ public class HbciSandboxPaymentService {
         Pattern pattern = Pattern.compile("<CdtrAcct><Id><IBAN>([0-9A-Z]+)</IBAN></Id></CdtrAcct>");
         Matcher matcher = pattern.matcher(paymentBody);
         if (!matcher.find()) {
-            throw new IllegalStateException("No debitor account");
+            throw new IllegalStateException("No creditor account");
         }
         return matcher.group(1);
     }
