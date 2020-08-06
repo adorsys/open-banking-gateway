@@ -29,7 +29,6 @@
             <column name="modified_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="image_data" type="BLOB"/>
         </createTable>
 
         <createTable tableName="${table-prefix}payment">
@@ -60,7 +59,6 @@
             <column name="modified_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
-            <column name="image_data" type="BLOB"/>
         </createTable>
 
         <createTable tableName="${table-prefix}bank_action">
