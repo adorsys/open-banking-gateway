@@ -124,7 +124,8 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
                 violationsMapper.map(issues.getViolations()),
                 scaMethodsMapper.map(scaMethods),
                 redirectTo,
-                authRequestData
+                authRequestData,
+                null
         );
     }
 
