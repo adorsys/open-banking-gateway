@@ -26,11 +26,5 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-        <dependency>
-            <groupId>de.adorsys.multibanking</groupId>
-            <artifactId>onlinebanking-facade</artifactId>
-            <version>5.5.14</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 </project>
