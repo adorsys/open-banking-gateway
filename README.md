@@ -40,6 +40,13 @@ The following picture displays the overall architecture of this banking gateway:
 The following picture displays the overall security concept of this banking gateway:
 ![Security concept](docs/img/security-concept.png)
 
+Security concept has 2 kinds of flows:
+  - authenticated (for consent sharing)
+  - anonymous (for payments, but can be authenticated too). 
+
+Here are detailed diagrams of each flow:
+ - [Authenticated security concept detailed flow](docs/img/security-details/authenticated-security-concept-details.png)
+ - [Anonymous security concept detailed flow](docs/img/security-details/anonymous-security-concept-details.png)
 
 ## Technical architecture
 
