@@ -8,6 +8,7 @@ import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataEntry;
 import de.adorsys.xs2a.adapter.service.model.AuthenticationObject;
+import de.adorsys.xs2a.adapter.service.model.ChallengeData;
 import de.adorsys.xs2a.adapter.service.model.StartScaProcessResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -138,6 +139,11 @@ public class Xs2aContext extends BaseContext {
      * IP port of IP address between PSU and TPP.
      */
     private String psuIpPort;
+
+    /**
+     * Is used for embedded SCA with some data to send back to PSU (for example in case of photo tan)
+     */
+    private ChallengeData challengeData;
 
     @JsonIgnore
     public String getPsuPassword() {

@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.embedded;
 
-import de.adorsys.opba.db.repository.jpa.PaymentRepository;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
@@ -32,7 +31,6 @@ public class Xs2aPisReportSelectedScaMethod extends ValidatedExecution<Xs2aPisCo
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final PaymentInitiationService pis;
-    private final PaymentRepository paymentRepository;
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aPisContext context) {
@@ -53,12 +51,12 @@ public class Xs2aPisReportSelectedScaMethod extends ValidatedExecution<Xs2aPisCo
                 params.getBody()
         );
 
-        byte[] imageData = paymentRepository.findByPsuId(context.getPsuId()).getImageData();
-        authResponse.getBody().getChallengeData().setImage(imageData);
-
         ContextUtil.getAndUpdateContext(
                 execution,
-                (Xs2aContext ctx) -> ctx.setScaSelected(authResponse.getBody().getChosenScaMethod())
+                (Xs2aContext ctx) -> {
+                    ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
+                    ctx.setChallengeData(authResponse.getBody().getChallengeData());
+                }
         );
     }
 
