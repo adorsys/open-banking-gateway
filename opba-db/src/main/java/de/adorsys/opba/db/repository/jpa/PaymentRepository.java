@@ -18,7 +18,6 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     List<Payment> findByServiceSessionIdOrderByModifiedAtDesc(UUID serviceSessionId);
     Collection<Payment> findByPsu(Psu owner);
-    Payment findByPsuId(String psuId);
 
     @Modifying
     @Transactional
