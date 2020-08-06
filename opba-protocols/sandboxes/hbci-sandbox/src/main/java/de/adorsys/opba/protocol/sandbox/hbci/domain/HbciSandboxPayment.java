@@ -88,11 +88,15 @@ public class HbciSandboxPayment {
         return DateTimeFormatter.ISO_DATE.format(getModifiedAt().atOffset(ZoneOffset.UTC).toLocalDate());
     }
 
-    public Transaction toTransaction() {
+    public Transaction toTransaction(String accountNumber, BigDecimal balance) {
         Transaction transaction = new Transaction();
         transaction.setAmount(getAmount().toString());
-        transaction.setBalanceAfter("999.0"); // hardcoding values to avoid real ledgers
-        transaction.setBalanceBefore("1999.0"); // hardcoding values to avoid real ledgers
+        if (getDeduceFrom().endsWith(accountNumber)) {
+            transaction.setBalanceAfter(balance.subtract(getAmount()).toString());
+        } else {
+            transaction.setBalanceAfter(balance.add(getAmount()).toString());
+        }
+        transaction.setBalanceBefore(balance.toString());
         transaction.setCurrency(Currency.getInstance(getCurrency()));
         transaction.setDate(getModifiedAtString());
         transaction.setPurpose(getRemittanceUnstructured());
