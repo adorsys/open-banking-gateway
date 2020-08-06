@@ -15,6 +15,7 @@ import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
+import de.adorsys.opba.protocol.hbci.service.consent.HbciScaRequiredUtil;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListAccountsResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,8 +43,9 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
         HbciConsent consent = context.getHbciDialogConsent();
         TransactionRequest<LoadAccounts> request = create(new LoadAccounts(), new BankApiUser(), new BankAccess(), context.getBank(), consent);
         AccountInformationResponse response = onlineBankingService.loadBankAccounts(request);
+        boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
 
-        if (null == response.getAuthorisationCodeResponse()) {
+        if (null == response.getAuthorisationCodeResponse() && !postScaRequired) {
             ContextUtil.getAndUpdateContext(
                     execution,
                     (AccountListHbciContext ctx) -> {
@@ -63,7 +65,9 @@ public class HbciAccountListing extends ValidatedExecution<AccountListHbciContex
             return;
         }
 
-        onlineBankingService.getStrongCustomerAuthorisation().afterExecute(consent, response.getAuthorisationCodeResponse());
+        if (null != response.getAuthorisationCodeResponse()) {
+            onlineBankingService.getStrongCustomerAuthorisation().afterExecute(consent, response.getAuthorisationCodeResponse());
+        }
         ContextUtil.getAndUpdateContext(
                 execution,
                 (HbciContext ctx) -> {
