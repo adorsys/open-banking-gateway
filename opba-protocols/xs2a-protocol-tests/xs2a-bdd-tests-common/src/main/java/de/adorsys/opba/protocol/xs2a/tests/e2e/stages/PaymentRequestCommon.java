@@ -229,6 +229,15 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
         return self();
     }
 
+    public SELF user_max_musterman_selected_sca_challenge_type_photo_otp_to_embedded_authorization() {
+        provideParametersToBankingProtocolWithBody(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                selectedScaBody("PHOTO_OTP"),
+                ACCEPTED
+        );
+        return self();
+    }
+
     public SELF user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment_without_cookie_unauthorized() {
         RestAssured
                 .given()
