@@ -477,7 +477,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
                                                             .statusCode(HttpStatus.OK.value())
                                                             .extract();
 
-        assertThatResponseContainsCorrectChallengeData(response, "restrecord/tpp-ui-input/params/unknown-user-embedded-consent-challenge-data.json");
+        assertThatResponseContainsCorrectChallengeData(response, "restrecord/tpp-ui-input/params/max-musterman-embedded-consent-challenge-data.json");
         updateServiceSessionId(response);
         updateRedirectCode(response);
         return self();
