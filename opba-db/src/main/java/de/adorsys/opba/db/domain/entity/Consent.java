@@ -75,9 +75,6 @@ public class Consent {
     @LastModifiedDate
     private Instant modifiedAt;
 
-    @Column(name = "image_data")
-    private byte[] imageData;
-
     public String getContext(EncryptionService encryption) {
         return new String(encryption.decrypt(encContext), StandardCharsets.UTF_8);
     }
