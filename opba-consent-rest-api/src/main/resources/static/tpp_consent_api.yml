@@ -851,6 +851,8 @@ components:
           $ref: "#/components/schemas/ScaStatus"
         singlePayment:
           $ref: "#/components/schemas/SinglePayment"
+        challengeData:
+          $ref: "#/components/schemas/ChallengeData"
 
     ConsentAuthRequirement:
       title: ConsentAuth
@@ -1035,4 +1037,28 @@ components:
           type: string
           format: date
         requestedExecutionTime:
+          type: string
+
+    ChallengeData:
+      title: SinglePayment
+      type: object
+      properties:
+        image:
+          type: string
+          format: byte
+        data:
+          type: array
+          items:
+            type: string
+        imageLink:
+          type: string
+        otpMaxLength:
+          type: integer
+          format: int32
+        otpFormat:
+          type: string
+          enum:
+            - CHARACTERS
+            - INTEGER
+        additionalInformation:
           type: string
