@@ -18,7 +18,6 @@ public interface ConsentRepository extends JpaRepository<Consent, Long> {
 
     List<Consent> findByServiceSessionIdOrderByModifiedAtDesc(UUID serviceSessionId);
     Collection<Consent> findByPsu(Psu owner);
-    Consent findByPsuId(String psuId);
 
     @Modifying
     @Transactional

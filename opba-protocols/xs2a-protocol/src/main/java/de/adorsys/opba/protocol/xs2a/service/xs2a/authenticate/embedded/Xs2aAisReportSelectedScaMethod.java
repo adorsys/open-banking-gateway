@@ -48,6 +48,9 @@ public class Xs2aAisReportSelectedScaMethod extends ValidatedExecution<Xs2aConte
                 params.getBody()
         );
 
+        authResponse.getBody().getChallengeData();
+
+
         byte[] imageData = consentRepository.findByPsuId(context.getPsuId()).getImageData();
         authResponse.getBody().getChallengeData().setImage(imageData);
 
