@@ -59,16 +59,28 @@ public class ContextUtil {
         return parser.parseExpression(expression, new TemplateParserContext()).getValue(parseContext, resultClass);
     }
 
-    public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context, String redirectCode) {
+    public URI buildAndExpandQueryParametersWithWrongCredentials(String urlTemplate, BaseContext context, String redirectCode) {
         return UriComponentsBuilder.fromHttpUrl(urlTemplate)
                 .buildAndExpand(
                         ImmutableMap.of(
                                 "sessionId", context.getAuthorizationSessionIdIfOpened(),
                                 "redirectCode", redirectCode,
                                 "wrong", context.getWrongAuthCredentials()
-
                         )
                 ).toUri();
+    }
+    public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context,
+                                             String redirectCode) {
+        return UriComponentsBuilder.fromHttpUrl(urlTemplate)
+                .buildAndExpand(
+                        ImmutableMap.of(
+                                "sessionId", context.getAuthorizationSessionIdIfOpened(),
+                                "redirectCode", redirectCode
+                        )
+                ).toUri();
+    }
+    public URI buildURI(String urlTemplate) {
+        return URI.create(urlTemplate);
     }
 
     /**
