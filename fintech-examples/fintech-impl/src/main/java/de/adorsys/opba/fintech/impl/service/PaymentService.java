@@ -15,6 +15,8 @@ import de.adorsys.opba.fintech.impl.tppclients.TppPisPaymentStatusClient;
 import de.adorsys.opba.fintech.impl.tppclients.TppPisSinglePaymentClient;
 import de.adorsys.opba.tpp.pis.api.model.generated.AccountReference;
 import de.adorsys.opba.tpp.pis.api.model.generated.Amount;
+import de.adorsys.opba.tpp.pis.api.model.generated.PaymentInformationResponse;
+import de.adorsys.opba.tpp.pis.api.model.generated.PaymentInformationResponse;
 import de.adorsys.opba.tpp.pis.api.model.generated.PaymentInitiation;
 import de.adorsys.opba.tpp.pis.api.model.generated.PaymentInitiationResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -84,29 +87,65 @@ public class PaymentService {
                 responseOfTpp.getHeaders());
     }
 
-    public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankId, String accountId) {
+    public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankId, String accountId, String fintechOkUrl, String fintechNOkUrl) {
         SessionEntity sessionEntity = sessionLogicService.getSession();
         // TODO https://app.zenhub.com/workspaces/open-banking-gateway-5dd3b3daf010250001260675/issues/adorsys/open-banking-gateway/812
         // TODO https://app.zenhub.com/workspaces/open-banking-gateway-5dd3b3daf010250001260675/issues/adorsys/open-banking-gateway/794
         List<PaymentEntity> payments = paymentRepository.findByUserEntityAndBankIdAndAccountIdAndPaymentConfirmed(sessionEntity.getUserEntity(), bankId, accountId, true);
-        List<PaymentInitiationWithStatusResponse> result = new ArrayList<>();
-
-        for (PaymentEntity payment : payments) {
-            de.adorsys.opba.tpp.pis.api.model.generated.PaymentInitiationWithStatusResponse body = tppPisPaymentStatusClient.getPaymentInformation(tppProperties.getServiceSessionPassword(),
-                    sessionEntity.getUserEntity().getFintechUserId(),
-                    UUID.fromString(restRequestContext.getRequestId()),
-                    paymentProduct,
-                    COMPUTE_X_TIMESTAMP_UTC,
-                    COMPUTE_X_REQUEST_SIGNATURE,
-                    COMPUTE_FINTECH_ID,
-                    bankId,
-                    payment.getTppServiceSessionId()).getBody();
-            PaymentInitiationWithStatusResponse paymentInitiationWithStatusResponse = Mappers.getMapper(PaymentInitiationWithStatusResponseMapper.class).mapFromTppToFintech(body);
-            result.add(paymentInitiationWithStatusResponse);
+        if (payments.isEmpty()) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        PaymentEntity payment = payments.get(0);
+
+        final String fintechRedirectCode = UUID.randomUUID().toString();
+
+        ResponseEntity<PaymentInformationResponse> response = tppPisPaymentStatusClient.getPaymentInformation(
+                tppProperties.getServiceSessionPassword(),
+                sessionEntity.getUserEntity().getFintechUserId(),
+                UUID.fromString(restRequestContext.getRequestId()),
+                RedirectUrlsEntity.buildPaymentOkUrl(uiConfig, fintechRedirectCode),
+                RedirectUrlsEntity.buildPaymentNokUrl(uiConfig, fintechRedirectCode),
+                paymentProduct,
+                COMPUTE_X_TIMESTAMP_UTC,
+                COMPUTE_X_REQUEST_SIGNATURE,
+                COMPUTE_FINTECH_ID,
+                bankId,
+                payment.getTppServiceSessionId()
+        );
+
+        switch (response.getStatusCode()) {
+            case OK:
+                return paymentInfoResponse(payment, response);
+            case ACCEPTED:
+                return redirectResponse(bankId, accountId, fintechOkUrl, fintechNOkUrl, sessionEntity, fintechRedirectCode, response);
+            case UNAUTHORIZED:
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            default:
+                throw new RuntimeException("DID NOT EXPECT RETURNCODE:" + response.getStatusCode());
+        }
     }
 
+    private ResponseEntity<List<PaymentInitiationWithStatusResponse>> paymentInfoResponse(PaymentEntity payment, ResponseEntity<PaymentInformationResponse> response) {
+        PaymentInformationResponse paymentInfoTpp = response.getBody();
+        PaymentInitiationWithStatusResponse paymentInfo = Mappers
+                .getMapper(PaymentInitiationWithStatusResponseMapper.class)
+                .mapFromTppToFintech(paymentInfoTpp);
+        return new ResponseEntity<>(Collections.singletonList(paymentInfo), HttpStatus.OK);
+    }
+
+    private ResponseEntity redirectResponse(String bankId, String accountId, String fintechOkUrl, String fintechNOkUrl, SessionEntity sessionEntity, String fintechRedirectCode, ResponseEntity<PaymentInformationResponse> response) {
+        log.debug("create redirect entity for redirect code {}", fintechRedirectCode);
+        redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
+        return handleAcceptedService.handleAccepted(
+                paymentRepository,
+                ConsentType.PIS,
+                bankId,
+                accountId,
+                fintechRedirectCode,
+                sessionEntity,
+                response.getHeaders()
+        );
+    }
 
     private AccountReference getAccountReference(String iban) {
         AccountReference account = new AccountReference();

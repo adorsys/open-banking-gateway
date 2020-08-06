@@ -377,6 +377,8 @@ paths:
         #header
         - $ref: "#/components/parameters/X-Request-ID"
         - $ref: "#/components/parameters/X-XSRF-TOKEN"
+        - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
+        - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
 
       responses:
         "200":

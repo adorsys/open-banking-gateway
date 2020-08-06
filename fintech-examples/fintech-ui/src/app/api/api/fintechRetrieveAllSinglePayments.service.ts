@@ -57,13 +57,15 @@ export class FintechRetrieveAllSinglePaymentsService {
      * @param accountId
      * @param xRequestID Unique ID that identifies this request through common workflow. Must be contained in HTTP Response as well.
      * @param X_XSRF_TOKEN XSRF parameter used to validate a SessionCookie or RedirectCookie.
+     * @param fintechRedirectURLOK
+     * @param fintechRedirectURLNOK
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'body', reportProgress?: boolean): Observable<Array<PaymentInitiationWithStatusResponse>>;
-    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<PaymentInitiationWithStatusResponse>>>;
-    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<PaymentInitiationWithStatusResponse>>>;
-    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, observe?: 'body', reportProgress?: boolean): Observable<Array<PaymentInitiationWithStatusResponse>>;
+    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<PaymentInitiationWithStatusResponse>>>;
+    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<PaymentInitiationWithStatusResponse>>>;
+    public retrieveAllSinglePayments(bankId: string, accountId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (bankId === null || bankId === undefined) {
             throw new Error('Required parameter bankId was null or undefined when calling retrieveAllSinglePayments.');
         }
@@ -76,6 +78,12 @@ export class FintechRetrieveAllSinglePaymentsService {
         if (X_XSRF_TOKEN === null || X_XSRF_TOKEN === undefined) {
             throw new Error('Required parameter X_XSRF_TOKEN was null or undefined when calling retrieveAllSinglePayments.');
         }
+        if (fintechRedirectURLOK === null || fintechRedirectURLOK === undefined) {
+            throw new Error('Required parameter fintechRedirectURLOK was null or undefined when calling retrieveAllSinglePayments.');
+        }
+        if (fintechRedirectURLNOK === null || fintechRedirectURLNOK === undefined) {
+            throw new Error('Required parameter fintechRedirectURLNOK was null or undefined when calling retrieveAllSinglePayments.');
+        }
 
         let headers = this.defaultHeaders;
         if (xRequestID !== undefined && xRequestID !== null) {
@@ -83,6 +91,12 @@ export class FintechRetrieveAllSinglePaymentsService {
         }
         if (X_XSRF_TOKEN !== undefined && X_XSRF_TOKEN !== null) {
             headers = headers.set('X-XSRF-TOKEN', String(X_XSRF_TOKEN));
+        }
+        if (fintechRedirectURLOK !== undefined && fintechRedirectURLOK !== null) {
+            headers = headers.set('Fintech-Redirect-URL-OK', String(fintechRedirectURLOK));
+        }
+        if (fintechRedirectURLNOK !== undefined && fintechRedirectURLNOK !== null) {
+            headers = headers.set('Fintech-Redirect-URL-NOK', String(fintechRedirectURLNOK));
         }
 
         // to determine the Accept header
