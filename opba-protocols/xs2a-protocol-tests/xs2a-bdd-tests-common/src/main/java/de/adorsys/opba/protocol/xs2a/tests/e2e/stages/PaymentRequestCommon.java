@@ -232,7 +232,7 @@ public class PaymentRequestCommon<SELF extends PaymentRequestCommon<SELF>> exten
     public SELF user_max_musterman_selected_sca_challenge_type_photo_otp_to_embedded_authorization() {
         provideParametersToBankingProtocolWithBody(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                selectedScaBody("PHOTO_OTP"),
+                selectedScaBody("PHOTO_OTP:photo_otp"),
                 ACCEPTED
         );
         return self();

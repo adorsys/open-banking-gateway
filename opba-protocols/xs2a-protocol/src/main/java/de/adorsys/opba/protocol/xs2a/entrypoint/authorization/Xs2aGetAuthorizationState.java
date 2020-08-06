@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.entrypoint.authorization;
 
+import de.adorsys.multibanking.domain.ChallengeData;
 import de.adorsys.opba.protocol.api.authorization.GetAuthorizationState;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
@@ -54,6 +55,7 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
     private final HistoryService historyService;
     private final ViolationsMapper violationsMapper;
     private final ScaMethodsMapper scaMethodsMapper;
+    private final ChallengeDataMapper challengeDataMapper;
 
     @Override
     public CompletableFuture<Result<AuthStateBody>> execute(ServiceContext<AuthorizationRequest> serviceContext) {
@@ -125,7 +127,8 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
                 violationsMapper.map(issues.getViolations()),
                 scaMethodsMapper.map(scaMethods),
                 redirectTo,
-                authRequestData
+                authRequestData,
+                challengeDataMapper.map(ctx.getChallengeData())
         );
     }
 
@@ -135,6 +138,10 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface ScaMethodsMapper extends DtoMapper<List<ScaMethod>, Set<de.adorsys.opba.protocol.api.dto.result.body.ScaMethod>> {
+    }
+
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
+    public interface ChallengeDataMapper extends DtoMapper<de.adorsys.xs2a.adapter.service.model.ChallengeData, ChallengeData> {
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, uses = Xs2aUuidMapper.class, implementationPackage = XS2A_MAPPERS_PACKAGE)
