@@ -69,13 +69,21 @@ public class ContextUtil {
                         )
                 ).toUri();
     }
-    public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context,
-                                             String redirectCode) {
+    public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context) {
         return UriComponentsBuilder.fromHttpUrl(urlTemplate)
                 .buildAndExpand(
                         ImmutableMap.of(
                                 "sessionId", context.getAuthorizationSessionIdIfOpened(),
-                                "redirectCode", redirectCode
+                                "redirectCode", context.getAspspRedirectCode()
+                        )
+                ).toUri();
+    }
+    public URI buildAndExpandQueryParametersIfAuthContinued(String urlTemplate, BaseContext context) {
+        return UriComponentsBuilder.fromHttpUrl(urlTemplate)
+                .buildAndExpand(
+                        ImmutableMap.of(
+                                "sessionId", context.getAuthorizationSessionIdIfOpened(),
+                                "redirectCode", context.getRedirectCodeIfAuthContinued()
                         )
                 ).toUri();
     }
