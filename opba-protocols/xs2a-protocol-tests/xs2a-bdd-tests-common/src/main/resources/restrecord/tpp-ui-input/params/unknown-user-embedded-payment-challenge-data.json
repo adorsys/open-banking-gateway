@@ -1,0 +1,10 @@
+{
+  "image": "U3dhZ2dlciByb2Nrcw==",
+  "data": [
+    "asdfghjklzxcvbnm"
+  ],
+  "imageLink": "http://test.com",
+  "otpMaxLength": 6,
+  "otpFormat": "INTEGER",
+  "additionalInformation": "SCA method PHOTO_OTP: scan the qr code with your mobile device."
+}
