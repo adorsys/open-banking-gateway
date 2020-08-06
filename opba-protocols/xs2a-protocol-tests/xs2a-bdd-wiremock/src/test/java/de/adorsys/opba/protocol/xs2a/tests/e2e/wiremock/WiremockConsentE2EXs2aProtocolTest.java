@@ -656,6 +656,8 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .and()
                 .user_max_musterman_selected_sca_challenge_type_photo_otp_to_embedded_authorization()
                 .and()
+                .ui_can_read_image_data_from_obg(OPBA_LOGIN)
+                .and()
                 .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
         then()
                 .open_banking_has_consent_for_max_musterman_account_list()
@@ -683,6 +685,8 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .user_max_musterman_provided_password_to_embedded_authorization()
                 .and()
                 .user_max_musterman_selected_sca_challenge_type_photo_otp_to_embedded_authorization()
+                .and()
+                .ui_can_read_image_data_from_obg(OPBA_LOGIN)
                 .and()
                 .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
         then()
