@@ -7,6 +7,7 @@ import de.adorsys.multibanking.domain.request.TransactionAuthorisationRequest;
 import de.adorsys.multibanking.domain.response.UpdateAuthResponse;
 import de.adorsys.multibanking.domain.spi.OnlineBankingService;
 import de.adorsys.multibanking.hbci.model.HbciConsent;
+import de.adorsys.multibanking.hbci.model.HbciTanSubmit;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
@@ -32,9 +33,16 @@ public class HbciSendTanChallenge extends ValidatedExecution<HbciContext> {
         request.setScaAuthenticationData(context.getPsuTan());
 
         UpdateAuthResponse response = onlineBankingService.getStrongCustomerAuthorisation().authorizeConsent(request);
+
+        HbciConsent hbciConsent = (HbciConsent)response.getBankApiConsentData();
+        HbciTanSubmit hbciTanSubmit = (HbciTanSubmit)hbciConsent.getHbciTanSubmit();
+
         ContextUtil.getAndUpdateContext(
                 execution,
-                (HbciContext ctx) -> ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData())
+                (HbciContext ctx) -> {
+                    ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
+                    ctx.setHbciPassportState(hbciTanSubmit.getPassportState());
+                }
         );
     }
 

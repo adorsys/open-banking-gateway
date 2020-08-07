@@ -101,6 +101,8 @@ public class HbciContext extends BaseContext {
      */
     private String psuTan;
 
+    private String hbciPassportState;
+
     private HbciResultCache cachedResult;
 
     public HbciConsent getHbciDialogConsent() {

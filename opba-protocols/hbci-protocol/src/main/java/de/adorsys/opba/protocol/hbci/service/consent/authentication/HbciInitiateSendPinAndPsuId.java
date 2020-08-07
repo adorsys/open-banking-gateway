@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.hbci.service.consent.authentication;
 
+import de.adorsys.multibanking.domain.BankAccess;
 import de.adorsys.multibanking.domain.Credentials;
 import de.adorsys.multibanking.domain.ScaStatus;
 import de.adorsys.multibanking.domain.request.UpdatePsuAuthenticationRequest;
@@ -42,6 +43,9 @@ public class HbciInitiateSendPinAndPsuId extends ValidatedExecution<HbciContext>
         request.setCredentials(consent.getCredentials());
         request.setBankApiConsentData(consent);
         request.setBank(context.getBank());
+        BankAccess bankAccess = new BankAccess();
+        bankAccess.setHbciPassportState(context.getHbciPassportState());
+        request.setBankAccess(bankAccess);
 
         UpdateAuthResponse response =
                 onlineBankingService.getStrongCustomerAuthorisation().updatePsuAuthentication(request);

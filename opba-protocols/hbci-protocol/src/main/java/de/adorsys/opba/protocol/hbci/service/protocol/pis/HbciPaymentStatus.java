@@ -37,8 +37,10 @@ public class HbciPaymentStatus extends ValidatedExecution<PaymentHbciContext> {
         account.setIban(context.getAccountIban());
         paymentStatusReqest.setPsuAccount(account);
 
-        TransactionRequest<PaymentStatusReqest> request = create(paymentStatusReqest, new BankApiUser(), new BankAccess(),
-                context.getBank(), consent);
+        BankAccess bankAccess = new BankAccess();
+        bankAccess.setHbciPassportState(context.getHbciPassportState());
+        TransactionRequest<PaymentStatusReqest> request = create(paymentStatusReqest, new BankApiUser(),
+                bankAccess, context.getBank(), consent);
         PaymentStatusResponse response = onlineBankingService.getStrongCustomerAuthorisation().getPaymentStatus(request);
 
         if (null == response.getAuthorisationCodeResponse()) {
