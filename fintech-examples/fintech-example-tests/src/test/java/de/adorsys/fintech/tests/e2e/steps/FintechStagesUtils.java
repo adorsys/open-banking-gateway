@@ -13,7 +13,7 @@ public class FintechStagesUtils {
     public static String OBA_USERNAME_IBAN = "DE59737352520000000108";
     public static final String X_XSRF_TOKEN = "xsrfToken";
     public static final String SESSION_COOKIE = "sessionCookie";
-    public static final String ACCOUNT = "/account/";
+    public static final String ACCOUNT = "/account";
     public static final String PAYMENT = "/payments";
     public static final String BANKSEARCH_LOGIN = "/login";
     public static final String KEYWORD = "adorsys xs2a";

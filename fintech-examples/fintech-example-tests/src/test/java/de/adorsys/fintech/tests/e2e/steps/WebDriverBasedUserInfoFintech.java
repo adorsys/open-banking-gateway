@@ -159,7 +159,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_in_consent_ui_provides_sca_result_to_embedded_authorization_for_redirect(WebDriver driver) {
-        waitForPageLoadAndUrlEndsWithPath(driver, "sca-result");
+        waitForPageLoadAndUrlEndsWithPath(driver, "sca-result/EMAIL");
         sendText(driver, By.id("tan"), TAN_VALUE);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
@@ -231,8 +231,6 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_looks_for_a_bank_in_the_bank_search_input_place(WebDriver driver, String profile) {
-        waitPlusTimer(driver, timeout.getSeconds());
-        driver.findElement(By.name("searchValue")).clear();
         waitPlusTimer(driver, timeout.getSeconds());
         sendTestInSearchInput(driver, By.name("searchValue"), profile);
         return self();
@@ -338,8 +336,6 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     private void performClick(WebDriver driver, By identifier) {
-        wait(driver).until(ExpectedConditions.elementToBeClickable(identifier));
-        driver.findElement(identifier).click();
         withRetry.execute(context -> {
             wait(driver).until(ExpectedConditions.elementToBeClickable(identifier));
             driver.findElement(identifier).click();
@@ -368,6 +364,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
             wait(driver).until(ExpectedConditions.elementToBeClickable(id));
             WebElement input = driver.findElement(id);
             input.click();
+            input.clear();
             input.sendKeys(visibleText);
             return null;
         });
