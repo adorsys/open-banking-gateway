@@ -17,7 +17,7 @@ import { Location } from '@angular/common';
 export class ResultPageComponent implements OnInit {
   public static ROUTE = 'consent-result';
 
-  public finTechName = StubUtil.FINTECH_NAME;
+  public finTechName: string;
   public title = 'Consent has been granted';
   redirectTo: string;
 
@@ -37,6 +37,7 @@ export class ResultPageComponent implements OnInit {
   ngOnInit() {
     this.route = this.activatedRoute.snapshot;
     this.authorizationId = this.route.parent.params.authId;
+    this.finTechName = this.sessionService.getFintechName(this.authorizationId);
     const redirectCode = this.route.queryParams.redirectCode;
     this.aisConsent = ConsentUtil.getOrDefault(this.authorizationId, this.sessionService);
     this.loadRedirectUri(this.authorizationId, redirectCode);

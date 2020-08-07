@@ -28,6 +28,7 @@
         <module>xs2a-protocol-tests</module>
         <!-- HBCI -->
         <module>hbci-protocol</module>
+        <module>hbci-protocol-tests</module>
         <!-- Support -->
         <module>sandboxes</module>
     </modules>

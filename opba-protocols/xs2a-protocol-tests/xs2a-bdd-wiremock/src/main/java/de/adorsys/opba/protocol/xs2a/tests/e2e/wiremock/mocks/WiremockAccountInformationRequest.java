@@ -4,14 +4,11 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.api.security.external.service.RequestSigningService;
-import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.awaitility.Durations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -19,15 +16,15 @@ import java.util.UUID;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.ANTON_BRUECKNER;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withSignatureHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeaders;
-import static de.adorsys.opba.api.security.external.domain.HttpHeaders.AUTHORIZATION_SESSION_KEY;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withSignatureHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.COMPUTE_PSU_IP_ADDRESS;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP_ADDRESS;
@@ -44,9 +41,6 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     @ExpectedScenarioState
     private WireMockServer wireMock;
 
-    @Autowired
-    private RequestSigningService requestSigningService;
-
     public SELF open_banking_redirect_from_aspsp_ok_webhook_called_for_api_test() {
         LoggedRequest consentInitiateRequest = await().atMost(Durations.TEN_SECONDS)
                 .until(() ->
@@ -55,7 +49,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
         ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
                 .given()
-                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie), requestSigningService, OperationType.AIS)
+                    .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
                 .when()
                     .get(redirectOkUri)
                 .then()
@@ -75,7 +69,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         this.redirectNotOkUri = consentInitiateRequest.getHeader(TPP_NOK_REDIRECT_URI);
         ExtractableResponse<Response> response = withSignatureHeaders(RestAssured
                     .given()
-                        .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie), requestSigningService, OperationType.AIS)
+                        .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie))
                     .when()
                         .get(redirectNotOkUri)
                     .then()
@@ -88,7 +82,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     }
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner_ip_address_compute() {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS) // FIX HEADERS
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER) // FIX HEADERS
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                     .header(COMPUTE_PSU_IP_ADDRESS, true)
                 .when()
@@ -103,7 +97,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
     }
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner_no_ip_address() {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)// FIX HEADERS
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER)// FIX HEADERS
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                     .header(COMPUTE_PSU_IP_ADDRESS, false)
                 .when()
@@ -208,7 +202,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                      .body(body)
                  .when()
                     .post(AUTHORIZE_CONSENT_ENDPOINT, serviceSessionId)
-                 .then().statusCode(HttpStatus.SERVICE_UNAVAILABLE.value())
+                 .then().statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                  .extract();
 
         this.responseContent = response.body().asString();
@@ -216,8 +210,8 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
         return self();
     }
 
-    public SELF got_503_http_error() {
-        assertThat(this.responseContent).contains("error").contains("Service Unavailable");
+    public SELF got_500_http_error_body() {
+        assertThat(this.responseContent).contains("");
         return self();
     }
 
@@ -228,7 +222,7 @@ public class WiremockAccountInformationRequest<SELF extends WiremockAccountInfor
                                                        ).get(0);
         this.redirectOkUri = consentInitiateRequest.getHeader(TPP_REDIRECT_URI);
 
-        withSignatureHeaders(RestAssured.given(), requestSigningService, OperationType.AIS)
+        withSignatureHeaders(RestAssured.given())
                  .when()
                     .get(redirectOkUri)
                  .then()

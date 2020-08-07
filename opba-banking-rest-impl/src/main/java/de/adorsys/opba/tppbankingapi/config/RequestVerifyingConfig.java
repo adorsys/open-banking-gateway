@@ -1,10 +1,10 @@
 package de.adorsys.opba.tppbankingapi.config;
 
 import de.adorsys.opba.api.security.internal.EnableSignatureBasedApiSecurity;
-import de.adorsys.opba.api.security.internal.config.OperationTypeProperties;
 import de.adorsys.opba.api.security.internal.filter.RequestSignatureValidationFilter;
 import de.adorsys.opba.api.security.internal.service.RequestVerifyingService;
 import de.adorsys.opba.api.security.internal.service.RsaJwtsVerifyingServiceImpl;
+import de.adorsys.opba.protocol.api.fintechspec.ApiConsumerConfig;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -16,8 +16,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
+import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 import static de.adorsys.opba.tppbankingapi.config.ConfigConst.BANKING_API_CONFIG_PREFIX;
 
@@ -30,9 +32,6 @@ public class RequestVerifyingConfig {
     @NotNull
     private Duration requestValidityWindow;
 
-    @NotNull
-    private ConcurrentHashMap<@NotBlank String, @NotBlank String> consumerPublicKeys;
-
     @NotBlank
     private String claimNameKey;
 
@@ -41,11 +40,17 @@ public class RequestVerifyingConfig {
 
     @Bean
     @Profile("!no-signature-filter")
-    public FilterRegistrationBean<RequestSignatureValidationFilter> requestSignatureValidationFilter(OperationTypeProperties properties) {
+    public FilterRegistrationBean<RequestSignatureValidationFilter> requestSignatureValidationFilter(
+            ApiConsumerConfig consumers) {
 
         RequestVerifyingService requestVerifyingService = new RsaJwtsVerifyingServiceImpl(claimNameKey);
         FilterRegistrationBean<RequestSignatureValidationFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new RequestSignatureValidationFilter(requestVerifyingService, requestValidityWindow, consumerPublicKeys, properties));
+
+        ConcurrentMap<String, String> consumerKeysMap = consumers.getConsumers().entrySet()
+                .stream()
+                .collect(Collectors.toConcurrentMap(Map.Entry::getKey, e -> e.getValue().getPublicKey()));
+
+        registrationBean.setFilter(new RequestSignatureValidationFilter(requestVerifyingService, requestValidityWindow, consumerKeysMap));
         registrationBean.setUrlPatterns(urlsToBeValidated);
 
         return registrationBean;

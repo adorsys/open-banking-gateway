@@ -99,6 +99,7 @@ public class AuthSessionHandler {
                         .parent(entityManager.find(ServiceSession.class, context.getServiceSessionId()))
                         .action(authAction)
                         .fintechUser(user)
+                        .psuAnonymous(request.isAnonymousPsuAllowed())
                         .redirectCode(context.getFutureRedirectCode().toString())
                         .build()
         );
@@ -149,9 +150,16 @@ public class AuthSessionHandler {
                         null
                 )
         );
-        String url = context.getRequest() instanceof InitiateSinglePaymentRequest
-                ? facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPis()
-                : facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForAis();
+
+        String url = facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForAis();
+
+        if (context.getRequest() instanceof InitiateSinglePaymentRequest) {
+            InitiateSinglePaymentRequest request = (InitiateSinglePaymentRequest) context.getRequest();
+            url = request.getFacadeServiceable().isAnonymousPsuAllowed()
+                    ? facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPisAnonymous()
+                    : facadeAuthConfig.getRedirect().getConsentLogin().getPage().getForPis();
+        }
+
         result.setRedirectionTo(
                 UriComponentsBuilder
                         .fromHttpUrl(url)

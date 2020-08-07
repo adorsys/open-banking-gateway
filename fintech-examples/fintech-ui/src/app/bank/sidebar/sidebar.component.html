@@ -9,15 +9,23 @@
       </a>
     </li>
     <li class="nav-item{{ showListAccounts ? '' : '--disabled' }}">
-      <a class="nav-link" [routerLink]="getRouterLinkListAccounts()">
+      <a
+        class="nav-link"
+        [ngClass]="{ disabled: showListAccounts === false }"
+        [routerLink]="getRouterLinkListAccounts()"
+      >
         <div class="icon__container">
           <img alt="bank_cards" class="text-primary" src="assets/icons/icons8-bank_cards.svg" />
         </div>
         <span class="nav__title">Accounts</span>
       </a>
     </li>
-    <li class="nav-item{{ showInitiatePayment && isLoaDone() ? '' : '--disabled' }} sidebar-element">
-      <a class="nav-link" [routerLink]="getRouterLinkInitiatePayment()">
+    <li class="nav-item{{ showPaymentNav ? '' : '--disabled' }} sidebar-element">
+      <a
+        class="nav-link"
+        [ngClass]="{ disabled: showPaymentNav === false }"
+        [routerLink]="getRouterLinkInitiatePayment()"
+      >
         <div class="icon__container">
           <img alt="transfer" class="text-primary" src="assets/icons/icons8-sent.svg" />
         </div>

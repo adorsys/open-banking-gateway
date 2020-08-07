@@ -1,5 +1,7 @@
 <?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
     <changeSet author="peter (generated)" id="1593076820090-1">
         <createTable tableName="opb_login_entity">
             <column name="id" type="BIGINT">
@@ -22,6 +24,24 @@
                 <constraints nullable="false"/>
             </column>
             <column name="consent_type" type="INTEGER"/>
+            <column name="creation_time" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tpp_auth_id" type="VARCHAR(255)"/>
+            <column name="tpp_service_session_id" type="UUID"/>
+            <column name="user_entity_login_user_name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="valb3r (generated)" id="1593076820090-2">
+        <createTable tableName="opb_payment_entity">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="opb_payment_entity_pkey"/>
+            </column>
+            <column name="account_id" type="VARCHAR(255)"/>
+            <column name="bank_id" type="VARCHAR(255)"/>
+            <column name="payment_confirmed" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
             <column name="creation_time" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
@@ -66,6 +86,23 @@
             </column>
             <column name="fintech_user_id" type="VARCHAR(255)"/>
             <column name="password" type="VARCHAR(255)"/>
+
+            <column name="service_account" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enable_password_login" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="valb3r (generated)" id="1593076820090-6">
+        <createTable tableName="opb_oauth_session_entity">
+            <column name="state" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
         </createTable>
     </changeSet>
     <changeSet author="peter (generated)" id="1593076820090-6">
@@ -79,6 +116,9 @@
     </changeSet>
     <changeSet author="peter (generated)" id="1593076820090-9">
         <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807" minValue="1" sequenceName="consent_id_seq" startValue="1"/>
+    </changeSet>
+    <changeSet author="valb3r (generated)" id="1593076820090-9">
+        <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807" minValue="1" sequenceName="payment_id_seq" startValue="1"/>
     </changeSet>
     <changeSet author="peter (generated)" id="1593076820090-10">
         <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="50" maxValue="9223372036854775807" minValue="1" sequenceName="login_id_seq" startValue="1"/>

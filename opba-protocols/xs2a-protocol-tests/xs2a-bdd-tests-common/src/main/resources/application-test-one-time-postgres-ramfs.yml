@@ -22,7 +22,9 @@ spring:
     change-log: classpath:migration/master.xml
     parameters:
       table-prefix: opb_
+      # TODO: Consider changing to adorsys-xs2a-sandbox-url
       adorsys-sandbox-url: http://localhost:20014
+      adorsys-hbci-sandbox-url: http://localhost:8090/hbci-mock/
       fill-with-mock-data: true
 
 # Application configuration
@@ -52,10 +54,14 @@ api:
         urls-to-be-validated:
           # templates for web filter
           - /v1/banking/*
-        # Known API consumers
-        consumer-public-keys:
-          MY-SUPER-FINTECH-ID: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0QhZVg5KKh9YzXFT8kuTdsxYHgJ2us+idNym+L4P09O5BjJaIZPbx7jBCKf8CNLNMV+HuNa6aPwETIyGsYG9reJAupA+F0ETxzDZ/70zprnte0eEfitwA2fy3lq0VOwtb2NuaRQBAcJZC+Dni3UAjR4bfWblw+OzWSrhj8wNicyRgE/ov8bFiyhqYZrBx1NW8oQcSC5EXmevu3nna3izlBbZ/63OteHHZUmbyufW7hU6Ck9lq/cP4QMKmiMDj020ptwox9g4hCcwy0iL+qIcpGe6gfuBMMtt9XQnRuxIQeOQ8rYq2uaU6iOgj3vbSekqwrOCtKf/MooEcEGSvIa+EwIDAQAB
-          ANOTHER-FINTECH-ID: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJ6ETZBHHSFNUAvpKuRhzzOi2HuupfTnttJdZhYsPHTE1XPlo4D2RDhjDLECMXMmJNwKS1p1xZ/p836RhhVJ/lWTNXqAxRF3nfvvQXirROP91LPjyOQIF7IoS+Wm7VquJlKRR7/+tmJMSOwyf5727M0Wttfrsj/w/UVOhYlsUtKwIDAQAB
+      # Known API consumers
+      consumers:
+        MY-SUPER-FINTECH-ID:
+          name: Adorsys Fintech
+          public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0QhZVg5KKh9YzXFT8kuTdsxYHgJ2us+idNym+L4P09O5BjJaIZPbx7jBCKf8CNLNMV+HuNa6aPwETIyGsYG9reJAupA+F0ETxzDZ/70zprnte0eEfitwA2fy3lq0VOwtb2NuaRQBAcJZC+Dni3UAjR4bfWblw+OzWSrhj8wNicyRgE/ov8bFiyhqYZrBx1NW8oQcSC5EXmevu3nna3izlBbZ/63OteHHZUmbyufW7hU6Ck9lq/cP4QMKmiMDj020ptwox9g4hCcwy0iL+qIcpGe6gfuBMMtt9XQnRuxIQeOQ8rYq2uaU6iOgj3vbSekqwrOCtKf/MooEcEGSvIa+EwIDAQAB
+        ANOTHER-FINTECH-ID:
+          name: Another Fintech
+          public-key: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJ6ETZBHHSFNUAvpKuRhzzOi2HuupfTnttJdZhYsPHTE1XPlo4D2RDhjDLECMXMmJNwKS1p1xZ/p836RhhVJ/lWTNXqAxRF3nfvvQXirROP91LPjyOQIF7IoS+Wm7VquJlKRR7/+tmJMSOwyf5727M0Wttfrsj/w/UVOhYlsUtKwIDAQAB
   # General (non-banking) API security
   security:
     token-validity-duration: PT5M
@@ -65,12 +71,6 @@ api:
     private-key: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC7wtbVBBDWlZSV7JsDgEHBTHBT0FH0YZh96WwFPyg88Iqsif1Xv38ZoGqcHhYLswyzFiNyEuZWblza1v05LX+pW4oU0Pi/ITX4biUQr5pFquSVV0qOBYOf0JCzxIDsKK1TiFxhz3CRFZ+1DXc0x5ZJASqKxOwVf+rCSKI3yB0Z76+AJUfRb0yiLvMW38iWkC79WJcyXXHkD8OGEvyJadbsipQxxDOGjzM0fa/vBzd8EeRcpC8fsxfH/d8WJ4oB7f26eW2dTY2wKahlgaKyjmmc7DITrPF8nRW39hH54DDbtaTyWCX6v3jg9iwcgYkB9AWLYYxzyR4n2VubGBXpizhrAgMBAAECggEAeR6Cvv7Ubdgn9V6f0G5X/H12qFplw6OBXxfIWsoXBtiUXCDXkFczgjB9FSBDUGC7/Hp3ewq+E1s2AuVUjCHRjEpElJEJJSIjUpKazly4w+AtfDjHGz5rXhiIf65vC+hhhtUb4uyRzMWKNJzvHNjzFTzvWH0XXfcaVSHNovYv754VjGzwtdhgj0w8QYRsCq4evBsRCl+POuJdKYv9BDYj3ADffVgDU0Txs8Q2lYvm16V0Ihgbcd6Dq4WblZY3Bkh0s9WpZVZdIy/R6bLWx1BSJwHiT267Oiq0U+REW4J584FryIrsqMTNJPjEbybEskniCujHxkGnRixO1BJZPvdIwQKBgQD1Zd4oNhO7SVX8H2+bYTEjKxZYSA2B6E+7pWGn1d4cOX2jjNhj1SQkLfWXQg4JFljTh9pL3K0moL8MkrLoYq+TTqEngMh7OJtEYySbec5ZSA6MM36VDYbHyNvjKHPrzwtzzbbYOqFXF8OZT5Eq9X+jQTmqcmGnYipmcWPRdK1J4wKBgQDD34Au37qsEM6f7VVm7zY/hXb+bZ1px6nkS+QuW2hp270brENq3LNtcA3oUX8yr/X8H9OEyO7+oevFcEkHRyDMce80VrO1UytXVQDo7nF6vepbPYy8u/rF/FLicrkLPoqQCDnL+NYVtnZo/oaXfw506VMBbU20+Yt3eUoxN2m92QKBgHyO3UmJ0VAh9DwJ9MtodNmF+EyNHhYPRdFYK45WNuwanlQSnI9n03VtwpepFpi0OBf+f+Y7t8PAmdiW6aqc1MOviIsVii1JWT5IGH+2PvAAbCnrxVeAyyXDJSFTGivaJtT72NA+SkB7tnOt+GBWxhemds+2SSz93cmryl+5mm/DAoGBAKafS+WUALI6oeq99DZaK6WhnXYWPSAs70L7pCIjNBFJEfemdLtE/4WLGumT2kZ+FRzi3gZI/7WwfGY6fIUqZqZEDZ5SWxFWrLnf36RGolYtlF0FYOF0b4FYghGMUglUrH6V4MS46zURQG1Uh538QYoGqcu+9amL1q5NiWWQo+0RAoGBAO+gk6lD3U1gUqAzSo3ri8gszk2Jopky+lIUy9y3ebsFsc3EetT7A/OgiSj4KZAgHKJiCesbq1OL7VeTGpsl0dqXPNW2Mh+xVVMJHGJ7ydZ8lvlNGQTNSvBwZwjJBsZMHCSgjdOGDF88NJKo2/Bjlhdg7tWp2qTkTVm7hTdYUY4+
     public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu8LW1QQQ1pWUleybA4BBwUxwU9BR9GGYfelsBT8oPPCKrIn9V79/GaBqnB4WC7MMsxYjchLmVm5c2tb9OS1/qVuKFND4vyE1+G4lEK+aRarklVdKjgWDn9CQs8SA7CitU4hcYc9wkRWftQ13NMeWSQEqisTsFX/qwkiiN8gdGe+vgCVH0W9Moi7zFt/IlpAu/ViXMl1x5A/DhhL8iWnW7IqUMcQzho8zNH2v7wc3fBHkXKQvH7MXx/3fFieKAe39unltnU2NsCmoZYGiso5pnOwyE6zxfJ0Vt/YR+eAw27Wk8lgl+r944PYsHIGJAfQFi2GMc8keJ9lbmxgV6Ys4awIDAQAB
     sign-algo: RSA
-    endpoint:
-      allowed-path:
-        AIS: "/v1/banking/ais"
-        PIS: "/v1/banking/pis"
-        BANK_SEARCH: "/v1/banking/search"
-        CONFIRM_CONSENT: "/v1/banking/consents"
 
   # Common cookie template
   cookie:
@@ -96,8 +96,10 @@ facade:
       # Redirection URL for consent association
       consent-login:
         page:
-          for-ais: ${facade.urls.embedded-ui-base-url}/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
-          for-pis: ${facade.urls.embedded-ui-base-url}/pis/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
+          for-ais: ${facade.urls.embedded-ui-base-url}/auth/ais/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
+          for-pis: ${facade.urls.embedded-ui-base-url}/auth/pis/{authorizationSessionId}/login?redirectCode={fintechUserTempPassword}
+          # PIS allows anonymous users in OPBA
+          for-pis-anonymous: ${facade.urls.embedded-ui-base-url}/auth/pis/{authorizationSessionId}/anonymous?redirectCode={fintechUserTempPassword}
         password:
           byte-size: 8
     # Consent authorization cookie key path
@@ -127,6 +129,13 @@ facade:
         cipher-algo: AES/GCM/NoPadding
         iv-size: 12
         len: 128
+    # Internal FinTech data
+    fintech-only:
+      key-pair:
+        pair-count: 3
+        cipher-algo: AES256_CBC
+        key-algo: RSA
+        len: 2048
 
 protocol:
   xs2a:
@@ -165,16 +174,51 @@ protocol:
           provide-more: /#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
           provide-psu-password: /#{context.getAuthorizationSessionIdIfOpened()}/authenticate?wrong=#{context.getWrongAuthCredentials()}
           select-sca-method: /#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
-          report-sca-result: /#{context.getAuthorizationSessionIdIfOpened()}/sca-result?wrong=#{context.getWrongAuthCredentials()}
+          report-sca-result: /#{context.getAuthorizationSessionIdIfOpened()}/sca-result/#{context.getUserSelectScaType()}?wrong=#{context.getWrongAuthCredentials()}
           provide-psu-iban: /#{context.getAuthorizationSessionIdIfOpened()}/entry-consent-transactions/dedicated-account-access?wrong=#{context.getWrongAuthCredentials()}
-    expirable:
-      expire-after-write: PT600S
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
       invalid-consent: FORMAT_ERROR
     pkcs12:
       keystore: sample-qwac.keystore
       password: password
+  hbci:
+    adapter:
+      # hbci-product: product - Your product ID here
+      # hbci-version: 300 - Your HBCI ID here
+      adorsys-mock-banks-blz:
+        - 10000001
+        - 20000002
+        - 30000003
+    urls:
+      ais:
+        redirect:
+          to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
+          consent-accounts:
+            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
+            result: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+          parameters:
+            max-array-size: 32
+            provide-more: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+            provide-psu-password: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/authenticate?wrong=#{context.getWrongAuthCredentials()}
+            select-sca-method: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
+            report-sca-result: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/sca-result/#{context.getUserSelectScaType()}?wrong=#{context.getWrongAuthCredentials()}
+            provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/entry-consent-transactions/dedicated-account-access?wrong=#{context.getWrongAuthCredentials()}
+      pis:
+        redirect:
+          to-aspsp: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
+          consent-accounts:
+            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
+            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
+            result: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+          parameters:
+            max-array-size: 32
+            provide-more: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+            provide-psu-password: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/authenticate?wrong=#{context.getWrongAuthCredentials()}
+            select-sca-method: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/select-sca-method
+            report-sca-result: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/sca-result/#{context.getUserSelectScaType()}?wrong=#{context.getWrongAuthCredentials()}
+            provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/entry-consent-transactions/dedicated-account-access?wrong=#{context.getWrongAuthCredentials()}
 
 # Flowable comes for all protocols shared
 bpmnshared:
@@ -184,6 +228,7 @@ bpmnshared:
         - de.adorsys.opba.protocol.bpmnshared.dto.context
         - de.adorsys.opba.protocol.xs2a.context
         - de.adorsys.opba.protocol.hbci.context
+        - de.adorsys.opba.protocol.hbci.service.protocol.ais.dto
     expirable:
       expire-after-write: PT600S
     # TODO: re-enable retry after proper error handling implementation

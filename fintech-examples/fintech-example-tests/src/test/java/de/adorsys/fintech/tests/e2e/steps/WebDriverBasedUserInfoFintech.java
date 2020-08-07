@@ -2,7 +2,11 @@ package de.adorsys.fintech.tests.e2e.steps;
 
 import com.tngtech.jgiven.integration.spring.JGivenStage;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.WebDriverBasedAccountInformation;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +17,8 @@ import org.springframework.retry.RetryOperations;
 import java.net.URI;
 import java.time.Duration;
 
-import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.PIN;
 import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.FINTECH_UI_URI;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.PIN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.sandbox.servers.config.RetryableConfig.TEST_RETRY_OPS;
 
 
@@ -77,6 +81,12 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_max_musterman_in_consent_ui_sees_sca_select_and_confirm_type_email2_to_redirect_authorization(WebDriver driver) {
+        waitForPageLoadAndUrlEndsWithPath(driver, "select-sca");
+        clickOnButton(driver, By.xpath("//button[@type='submit']"));
+        return self();
+    }
+
+    public SELF user_in_consent_ui_sees_sca_select_and_confirm_type_email1_to_redirect_authorization(WebDriver driver) {
         waitForPageLoadAndUrlEndsWithPath(driver, "select-sca");
         clickOnButton(driver, By.xpath("//button[@type='submit']"));
         return self();
@@ -246,8 +256,11 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     private void performClick(WebDriver driver, By identifier) {
-        wait(driver).until(ExpectedConditions.elementToBeClickable(identifier));
-        driver.findElement(identifier).click();
+        withRetry.execute(context -> {
+            wait(driver).until(ExpectedConditions.elementToBeClickable(identifier));
+            driver.findElement(identifier).click();
+            return null;
+        });
     }
 
     private void sendText(WebDriver driver, By identifier, String text) {

@@ -21,4 +21,9 @@ public class ScaMethod {
      * SCA method name (caption).
      */
     private String value;
+
+    /**
+     * SCA method type (email, sms etc.)
+     */
+    private String type;
 }

@@ -103,6 +103,30 @@ export class StorageService {
     return JSON.parse(value);
   }
 
+  public get isUserRedirected(): boolean {
+    const value = localStorage.getItem(Session.USER_REDIRECTED);
+    if (value === null) {
+      return false;
+    }
+    return JSON.parse(value);
+  }
+
+  public set isUserRedirected(redirected: boolean) {
+    localStorage.setItem(Session.USER_REDIRECTED, JSON.stringify(redirected));
+  }
+
+  public get redirectCancelUrl(): string {
+    const value = localStorage.getItem(Session.REDIRECT_CANCEL_URL);
+    if (value === null) {
+      return null;
+    }
+    return value;
+  }
+
+  public set redirectCancelUrl(redirectCancelUrl: string) {
+    localStorage.setItem(Session.REDIRECT_CANCEL_URL, redirectCancelUrl);
+  }
+
   private isAnySessionValid(): boolean {
     const date: Date = this.getValidUntilDate();
     if (this.isDateValid(date)) {
@@ -145,5 +169,7 @@ enum Session {
   XSRF_TOKEN = 'XSRF_TOKEN',
   MAX_VALID_UNTIL = 'MAX_VALID_UNTIL_TIMESTAMP',
   REDIRECT_MAP = 'REDIRECT_MAP',
-  LOA = 'LOA'
+  LOA = 'LOA',
+  USER_REDIRECTED = 'USER_REDIRECTED',
+  REDIRECT_CANCEL_URL = 'REDIRECT_CANCEL_URL'
 }

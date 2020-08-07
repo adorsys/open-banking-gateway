@@ -1,15 +1,14 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
-import de.adorsys.opba.protocol.api.dto.context.UserAgentContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
-import de.adorsys.opba.protocol.api.dto.result.body.PaymentProductDetails;
-import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
-import de.adorsys.opba.protocol.facade.services.pis.GetPaymentInformationService;
-import de.adorsys.opba.protocol.facade.services.pis.GetPaymentStatusService;
 import de.adorsys.opba.protocol.api.dto.request.payments.PaymentInfoBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.PaymentInfoRequest;
 import de.adorsys.opba.protocol.api.dto.request.payments.PaymentStatusBody;
 import de.adorsys.opba.protocol.api.dto.request.payments.PaymentStatusRequest;
+import de.adorsys.opba.protocol.api.dto.result.body.PaymentProductDetails;
+import de.adorsys.opba.protocol.facade.dto.result.torest.FacadeResult;
+import de.adorsys.opba.protocol.facade.services.pis.GetPaymentInformationService;
+import de.adorsys.opba.protocol.facade.services.pis.GetPaymentStatusService;
 import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
 import de.adorsys.opba.tppbankingapi.Const;
@@ -30,7 +29,6 @@ import static de.adorsys.opba.restapi.shared.GlobalConst.SPRING_KEYWORD;
 public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatusPisApi {
     private final GetPaymentStatusService paymentStatusService;
     private final GetPaymentInformationService paymentInfoService;
-    private final UserAgentContext userAgentContext;
     private final FacadeResponseMapper mapper;
     private final PaymentInfoBodyToApiMapper paymentInfoResponseMapper;
     private final PaymentStatusBodyToApiMapper paymentStatusResponseMapper;
@@ -42,7 +40,6 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
                                                    UUID xRequestID,
                                                    String paymentProduct,
                                                    String xTimestampUTC,
-                                                   String xOperationType,
                                                    String xRequestSignature,
                                                    String fintechID,
                                                    String bankID,
@@ -56,6 +53,7 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
                                 .fintechUserId(fintechUserID)
                                 .authorization(fintechID)
                                 .serviceSessionId(serviceSessionID)
+                                .anonymousPsuAllowed(true)
                                 .build()
                         )
                         .paymentProduct(PaymentProductDetails.fromValue(paymentProduct))
@@ -69,7 +67,6 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
                                                         UUID xRequestID,
                                                         String paymentProduct,
                                                         String xTimestampUTC,
-                                                        String xOperationType,
                                                         String xRequestSignature,
                                                         String fintechID,
                                                         String bankID,
@@ -83,6 +80,7 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
                                 .fintechUserId(fintechUserID)
                                 .authorization(fintechID)
                                 .serviceSessionId(serviceSessionID)
+                                .anonymousPsuAllowed(true)
                                 .build()
                         )
                         .paymentProduct(PaymentProductDetails.fromValue(paymentProduct))

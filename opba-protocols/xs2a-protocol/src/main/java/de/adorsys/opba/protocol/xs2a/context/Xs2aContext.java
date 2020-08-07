@@ -8,6 +8,7 @@ import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.xs2a.domain.dto.forms.ScaMethod;
 import de.adorsys.opba.protocol.xs2a.service.storage.TransientDataEntry;
 import de.adorsys.xs2a.adapter.service.model.AuthenticationObject;
+import de.adorsys.xs2a.adapter.service.model.ChallengeData;
 import de.adorsys.xs2a.adapter.service.model.StartScaProcessResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,6 +23,8 @@ import java.util.Map;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Xs2aContext extends BaseContext {
+
+    public static final String DEFAULT_SCA_METHOD = "EMAIL";
 
     ///////////////////////////////////////// Mandatory static
     /**
@@ -87,6 +90,11 @@ public class Xs2aContext extends BaseContext {
     private String userSelectScaId;
 
     /**
+     * saves selected SCA method and returns it back in sca-result url
+     */
+    private String userSelectScaType = DEFAULT_SCA_METHOD;
+
+    /**
      * SCA method that was selected if only one SCA method is available (automatically by ASPSP)
      */
     private AuthenticationObject scaSelected;
@@ -131,6 +139,11 @@ public class Xs2aContext extends BaseContext {
      * IP port of IP address between PSU and TPP.
      */
     private String psuIpPort;
+
+    /**
+     * Is used for embedded SCA with some data to send back to PSU (for example in case of photo tan)
+     */
+    private ChallengeData challengeData;
 
     @JsonIgnore
     public String getPsuPassword() {

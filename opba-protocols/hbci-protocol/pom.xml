@@ -131,6 +131,11 @@
             <artifactId>spring-web-test-client</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -149,6 +154,7 @@
                 <configuration>
                     <excludeScope>test</excludeScope>
                     <includes>
+                        <include>processes/hbci/**/*.xml</include>
                         <include>*.yml</include>
                         <include>*.sql</include>
                         <include>*.properties</include>

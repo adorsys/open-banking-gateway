@@ -137,15 +137,16 @@ components:
       schema:
         type: string
 
-    X-Operation-Type:
-      name: X-Operation-Type
+    X-Pis-Psu-Authentication-Required:
+      name: X-Pis-Psu-Authentication-Required
       in: header
-      required: false
       description: |
-        The type of the fintech request.
-      example: "AIS"
+        If false, login form to OPBA will not be displayed as there might be nothing to share for payments, so
+        that authentication is not necessary. If absent or true - login form for payments will be displayed.
+      example: "true"
       schema:
-        type: string
+        type: boolean
+        default: "true"
 
     X-Request-Signature:
       name: X-Request-Signature

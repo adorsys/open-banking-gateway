@@ -12,6 +12,7 @@ import { EntryPagePaymentsComponent } from './entry-page-payments/entry-page-pay
 import { PaymentsConsentReviewComponent } from './payments-consent-review/payments-consent-review.component';
 import { ConsentPaymentAccessSelectionComponent } from './consent-payment-access-selection/consent-payment-access-selection.component';
 import { DynamicInputsComponent } from './dynamic-inputs/dynamic-inputs.component';
+import { PaymentInfoComponent } from './payment-info/payment-info.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { DynamicInputsComponent } from './dynamic-inputs/dynamic-inputs.componen
     EntryPagePaymentsComponent,
     PaymentsConsentReviewComponent,
     ConsentPaymentAccessSelectionComponent,
-    DynamicInputsComponent
+    DynamicInputsComponent,
+    PaymentInfoComponent
   ],
   imports: [SharedModule, PisRoutingModule]
 })

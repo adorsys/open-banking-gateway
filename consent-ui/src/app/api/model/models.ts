@@ -15,7 +15,6 @@ export * from './consentAuth';
 export * from './consentAuthRequiredField';
 export * from './consentAuthRequirement';
 export * from './denyRequest';
-export * from './inlineResponse200';
 export * from './paymentProduct';
 export * from './paymentStatus';
 export * from './periodicPayment';

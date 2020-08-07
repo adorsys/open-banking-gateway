@@ -35,8 +35,12 @@ spring:
 
 fintech-ui:
   host: http://localhost:4444
-  redirect-url: ${fintech-ui.host}?redirectCode={redirectCode}
-  exception-url: ${fintech-ui.host}/redirect-after-consent-denied
+  redirect-url: ${fintech-ui.host}/redirect-after-consent?redirectCode={redirectCode}
+  exception-url: ${fintech-ui.host}/redirect-after-consent-denied?redirectCode={redirectCode}
+  payment-ok-redirect-url: ${fintech-ui.host}/redirect-after-payment?redirectCode={redirectCode}
+  payment-exception-redirect-url: ${fintech-ui.host}/redirect-after-payment-denied?redirectCode={redirectCode}
+  unauthorized-url: ${fintech-ui.host}/
+  oauth2-login-callback-url: ${fintech-ui.host}/login/oauth2
 
 security:
   # This is the example private key value used only for DEMO purposes
@@ -57,3 +61,25 @@ security:
     # Base-64 encoded X509
     public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu8LW1QQQ1pWUleybA4BBwUxwU9BR9GGYfelsBT8oPPCKrIn9V79/GaBqnB4WC7MMsxYjchLmVm5c2tb9OS1/qVuKFND4vyE1+G4lEK+aRarklVdKjgWDn9CQs8SA7CitU4hcYc9wkRWftQ13NMeWSQEqisTsFX/qwkiiN8gdGe+vgCVH0W9Moi7zFt/IlpAu/ViXMl1x5A/DhhL8iWnW7IqUMcQzho8zNH2v7wc3fBHkXKQvH7MXx/3fFieKAe39unltnU2NsCmoZYGiso5pnOwyE6zxfJ0Vt/YR+eAw27Wk8lgl+r944PYsHIGJAfQFi2GMc8keJ9lbmxgV6Ys4awIDAQAB
     sign-algo: RSA
+  user:
+    registration:
+      # Indicates if FinTech has open user registration (just type not yet present credentials), you want to disable this
+      # on environments other than DEV - set DENY
+      simple: ALLOW
+    password:
+      encryption:
+        version: $2A
+        strength: 12
+
+oauth2:
+  login:
+    gmail:
+      client-id: test-client-id
+      client-secret: test-client-secret
+      authentication-endpoint: https://example.com/o/oauth2/v2/auth
+      code-to-token-endpoint: https://example.com/token
+      scope:
+        - openid
+        - email
+      allowed-emails-regex:
+        - .*

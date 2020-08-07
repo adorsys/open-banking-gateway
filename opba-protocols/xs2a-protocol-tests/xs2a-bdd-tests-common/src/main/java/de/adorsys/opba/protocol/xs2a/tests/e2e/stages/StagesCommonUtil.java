@@ -1,11 +1,5 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
-import de.adorsys.opba.api.security.external.domain.OperationType;
-import de.adorsys.opba.api.security.external.domain.signdata.AisListAccountsDataToSign;
-import de.adorsys.opba.api.security.external.domain.signdata.AisListTransactionsDataToSign;
-import de.adorsys.opba.api.security.external.domain.signdata.ConfirmConsentDataToSign;
-import de.adorsys.opba.api.security.external.service.RequestSigningService;
-import de.adorsys.opba.protocol.xs2a.tests.GetTransactionsQueryParams;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import lombok.experimental.UtilityClass;
@@ -19,9 +13,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_U
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_REDIRECT_URL_OK;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.FINTECH_USER_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_OPERATION_TYPE;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
-import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_TIMESTAMP_UTC;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.COMPUTE_PSU_IP_ADDRESS;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.UserAgentContext.PSU_IP_ADDRESS;
@@ -43,7 +35,20 @@ public class StagesCommonUtil {
     public static final String REGISTER_USER_ENDPOINT = "/v1/psu/register";
     public static final String AIS_LOGIN_USER_ENDPOINT = "/v1/psu/ais/{authorizationId}/for-approval/login";
     public static final String CONFIRM_CONSENT_ENDPOINT = "/v1/banking/consents/{authorizationId}/confirm";
+    public static final String CONFIRM_PAYMENT_ENDPOINT = "/v1/banking/payments/{authorizationId}/confirm";
     public static final String PIS_LOGIN_USER_ENDPOINT = "/v1/psu/pis/{authorizationId}/for-approval/login";
+
+    public static final String TPP_MANAGEMENT_LOGIN_ENDPOINT = "/tpp/login";
+    public static final String TPP_MANAGEMENT_CREATE_USER_ENDPOINT = "/tpp/users";
+    public static final String TPP_MANAGEMENT_CREATE_ACCOUNT_ENDPOINT = "/tpp/accounts";
+    public static final String TPP_MANAGEMENT_GET_ACCOUNT_DETAILS_ENDPOINT = "/tpp/accounts/details";
+    public static final String TPP_MANAGEMENT_DEPOSIT_CASH_ENDPOINT = "/tpp/accounts/{accountId}/deposit-cash";
+    public static final String TPP_MANAGEMENT_USER_ID_QUERY = "userId";
+    public static final String TPP_MANAGEMENT_IBAN_QUERY = "iban";
+    public static final String TPP_MANAGEMENT_LOGIN_HEADER = "login";
+    public static final String TPP_MANAGEMENT_PASSWORD_HEADER = "pin";
+    public static final String TPP_MANAGEMENT_AUTH_TOKEN = "access_token";
+    public static final String TPP_MANAGEMENT_AUTH_HEADER = "authorization";
 
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
@@ -59,106 +64,81 @@ public class StagesCommonUtil {
     public static final String COMPUTE_IP_ADDRESS = "false";
     public static final String IP_ADDRESS = "1.1.1.1";
 
-    public static RequestSpecification withAccountsHeaders(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType) {
+    public static RequestSpecification withAccountsHeaders(String fintechUserId) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
-        return withSignedHeadersWithoutIpAddress(fintechUserId, operationType, xRequestId, xTimestampUtc)
-                       .header(X_REQUEST_SIGNATURE, calculateAccountsSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId))
+        return headersWithoutIpAddress(fintechUserId, xRequestId, xTimestampUtc)
                        .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
-    public static RequestSpecification withAccountsHeadersMissingIpAddress(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType) {
+    public static RequestSpecification withAccountsHeaders(String fintechUserId, String bankId) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
-        return withSignedHeadersWithoutIpAddress(fintechUserId, operationType, xRequestId, xTimestampUtc)
-                       .header(X_REQUEST_SIGNATURE, calculateAccountsSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId))
+        return headersWithoutIpAddress(fintechUserId, bankId, xRequestId, xTimestampUtc)
+                .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
+                .header(PSU_IP_ADDRESS, IP_ADDRESS);
+    }
+
+    public static RequestSpecification withAccountsHeadersMissingIpAddress(String fintechUserId) {
+        UUID xRequestId = UUID.randomUUID();
+        Instant xTimestampUtc = Instant.now();
+
+        return headersWithoutIpAddress(fintechUserId, xRequestId, xTimestampUtc)
                        .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS);
     }
 
-    public static RequestSpecification withTransactionsHeaders(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType, GetTransactionsQueryParams params) {
+    public static RequestSpecification withTransactionsHeaders(String fintechUserId) {
+        return withTransactionsHeaders(fintechUserId, SANDBOX_BANK_ID);
+    }
+
+    public static RequestSpecification withTransactionsHeaders(
+            String fintechUserId,
+            String bankId
+    ) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
-        return withSignedHeadersWithoutIpAddress(fintechUserId, operationType, xRequestId, xTimestampUtc)
-                       .header(X_REQUEST_SIGNATURE, calculateTransactionsSignature(requestSigningService, xRequestId, xTimestampUtc, operationType, fintechUserId, params))
+        return headersWithoutIpAddress(fintechUserId, bankId, xRequestId, xTimestampUtc)
                        .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
-    public static RequestSpecification withDefaultHeaders(String fintechUserId, RequestSigningService requestSigningService, OperationType operationType) {
+    public static RequestSpecification withDefaultHeaders(String fintechUserId) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
-        return withSignedHeadersWithoutIpAddress(fintechUserId, operationType, xRequestId, xTimestampUtc)
-                       .header(X_REQUEST_SIGNATURE, calculateConfirmConsentSignature(requestSigningService, xRequestId, xTimestampUtc, operationType))
+        return headersWithoutIpAddress(fintechUserId, xRequestId, xTimestampUtc)
                        .header(COMPUTE_PSU_IP_ADDRESS, COMPUTE_IP_ADDRESS)
                        .header(PSU_IP_ADDRESS, IP_ADDRESS);
     }
 
-    public static RequestSpecification withSignatureHeaders(RequestSpecification specification, RequestSigningService requestSigningService, OperationType operationType) {
+    public static RequestSpecification withSignatureHeaders(RequestSpecification specification) {
         UUID xRequestId = UUID.randomUUID();
         Instant xTimestampUtc = Instant.now();
 
         return specification
                        .header(FINTECH_ID, DEFAULT_FINTECH_ID)
                        .header(X_REQUEST_ID, xRequestId.toString())
-                       .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
-                       .header(X_OPERATION_TYPE, operationType)
-                       .header(X_REQUEST_SIGNATURE, calculateConfirmConsentSignature(requestSigningService, xRequestId, xTimestampUtc, operationType));
+                       .header(X_TIMESTAMP_UTC, xTimestampUtc.toString());
     }
 
-    private static String calculateAccountsSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
-                                                     OperationType operationType, String fintechUserId) {
-        AisListAccountsDataToSign aisListAccountsDataToSign = AisListAccountsDataToSign.builder()
-                                                                      .xRequestId(xRequestId)
-                                                                      .instant(xTimestampUtc)
-                                                                      .operationType(operationType)
-                                                                      .bankId(SANDBOX_BANK_ID)
-                                                                      .fintechUserId(fintechUserId)
-                                                                      .redirectOk(FINTECH_REDIR_OK)
-                                                                      .redirectNok(FINTECH_REDIR_NOK)
-                                                                      .build();
-        return requestSigningService.signature(aisListAccountsDataToSign);
+    private static RequestSpecification headersWithoutIpAddress(String fintechUserId, UUID xRequestId, Instant xTimestampUtc) {
+        return headersWithoutIpAddress(fintechUserId, SANDBOX_BANK_ID, xRequestId, xTimestampUtc);
     }
 
-    private static String calculateTransactionsSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc,
-                                                         OperationType operationType, String fintechUserId, GetTransactionsQueryParams params) {
-        AisListTransactionsDataToSign aisListTransactionsDataToSign = AisListTransactionsDataToSign.builder()
-                                                                              .xRequestId(xRequestId)
-                                                                              .instant(xTimestampUtc)
-                                                                              .operationType(operationType)
-                                                                              .bankId(SANDBOX_BANK_ID)
-                                                                              .fintechUserId(fintechUserId)
-                                                                              .redirectOk(FINTECH_REDIR_OK)
-                                                                              .redirectNok(FINTECH_REDIR_NOK)
-                                                                              .dateFrom(params.getDateFrom())
-                                                                              .dateTo(params.getDateTo())
-                                                                              .entryReferenceFrom(params.getEntryReferenceFrom())
-                                                                              .bookingStatus(params.getBookingStatus())
-                                                                              .deltaList(params.getDeltaList())
-                                                                              .build();
-        return requestSigningService.signature(aisListTransactionsDataToSign);
-    }
-
-    private static String calculateConfirmConsentSignature(RequestSigningService requestSigningService, UUID xRequestId, Instant xTimestampUtc, OperationType operationType) {
-        ConfirmConsentDataToSign aisListAccountsDataToSign = new ConfirmConsentDataToSign(xRequestId, xTimestampUtc, operationType);
-        return requestSigningService.signature(aisListAccountsDataToSign);
-    }
-
-    private static RequestSpecification withSignedHeadersWithoutIpAddress(String fintechUserId, OperationType operationType, UUID xRequestId, Instant xTimestampUtc) {
+    private static RequestSpecification headersWithoutIpAddress(String fintechUserId, String bankId, UUID xRequestId, Instant xTimestampUtc) {
         return RestAssured
                        .given()
-                       .header(BANK_ID, SANDBOX_BANK_ID)
+                       .header(BANK_ID, bankId)
                        .header(FINTECH_REDIRECT_URL_OK, FINTECH_REDIR_OK)
                        .header(FINTECH_REDIRECT_URL_NOK, FINTECH_REDIR_NOK)
                        .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
                        .header(FINTECH_USER_ID, fintechUserId)
                        .header(FINTECH_ID, DEFAULT_FINTECH_ID)
                        .header(X_REQUEST_ID, xRequestId.toString())
-                       .header(X_TIMESTAMP_UTC, xTimestampUtc.toString())
-                       .header(X_OPERATION_TYPE, operationType);
+                       .header(X_TIMESTAMP_UTC, xTimestampUtc.toString());
     }
 }

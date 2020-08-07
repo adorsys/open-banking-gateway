@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RedirectStruct } from './redirect-struct';
 import { Consent, HeaderConfig } from '../../models/consts';
 import { ConsentAuthorizationService } from '../services/consent-authorization.service';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-redirect-page',
@@ -14,6 +15,7 @@ export class RedirectPageComponent implements OnInit {
 
   constructor(
     private authService: ConsentAuthorizationService,
+    private storageService: StorageService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -32,6 +34,8 @@ export class RedirectPageComponent implements OnInit {
 
   proceed(): void {
     console.log('NOW GO TO:', decodeURIComponent(this.redirectStruct.redirectUrl));
+    // save user redirected state
+    this.storageService.isUserRedirected = true;
     window.location.href = decodeURIComponent(this.redirectStruct.redirectUrl);
   }
 }

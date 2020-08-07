@@ -423,10 +423,7 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              consentAuth:
-                $ref: "#/components/schemas/ConsentAuth"
+            $ref: "#/components/schemas/ConsentAuth"
 
     302_Redirect_to_ASPSP:
       description: |
@@ -827,6 +824,12 @@ components:
           $ref: "#/components/schemas/BulkPayment"
         consent:
           $ref: "#/components/schemas/AisConsentRequest"
+        bankName:
+          type: string
+          description: Name of current bank
+        fintechName:
+          type: string
+          description: Name of current fintech
         consentAuthState:
           type: string
           description:
@@ -848,6 +851,8 @@ components:
           $ref: "#/components/schemas/ScaStatus"
         singlePayment:
           $ref: "#/components/schemas/SinglePayment"
+        challengeData:
+          $ref: "#/components/schemas/ChallengeData"
 
     ConsentAuthRequirement:
       title: ConsentAuth
@@ -1032,4 +1037,29 @@ components:
           type: string
           format: date
         requestedExecutionTime:
+          type: string
+
+    ChallengeData:
+      title: ChallengeData
+      type: object
+      description: Challege data for SCA like OpticTAN image
+      properties:
+        image:
+          type: string
+          format: byte
+        data:
+          type: array
+          items:
+            type: string
+        imageLink:
+          type: string
+        otpMaxLength:
+          type: integer
+          format: int32
+        otpFormat:
+          type: string
+          enum:
+            - CHARACTERS
+            - INTEGER
+        additionalInformation:
           type: string

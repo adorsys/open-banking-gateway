@@ -24,18 +24,43 @@ public class PsuLoginForAisService {
     private final PsuFintechAssociationService associationService;
     private final AuthorizationSessionRepository authRepository;
 
+    /**
+     * Used for the cases when PSU should be identified i.e. for consent sharing, so that PSU can manage associated entities.
+     */
     @Transactional
-    public Outcome loginAndAssociateAuthSession(String login, String password, UUID authorizationId, String authorizationPassword) {
+    public Outcome loginInPsuScopeAndAssociateAuthSession(String psuLogin, String psuPassword, UUID authorizationId, String authorizationPassword) {
         AuthSession session = authRepository.findById(authorizationId)
                 .orElseThrow(() -> new IllegalStateException("Missing authorization session: " + authorizationId));
-        session.setPsu(psus.findByLogin(login).orElseThrow(() -> new IllegalStateException("No PSU found: " + login)));
-        associationService.sharePsuAspspSecretKeyWithFintech(password, session);
-        FintechConsentSpecSecureStorage.FinTechUserInboxData association = associationService.associatePsuAspspWithFintechUser(session, authorizationPassword);
+        session.setPsu(psus.findByLogin(psuLogin).orElseThrow(() -> new IllegalStateException("No PSU found: " + psuLogin)));
+        associationService.sharePsuAspspSecretKeyWithFintech(psuPassword, session);
+        FintechConsentSpecSecureStorage.FinTechUserInboxData association = associationService.readInboxFromFinTech(session, authorizationPassword);
         authRepository.save(session);
 
         return new Outcome(
                 serde.asString(association.getProtocolKey().asKey()),
                 association.getAfterPsuIdentifiedRedirectTo()
+        );
+    }
+
+    /**
+     * Used for the cases when there is no need to identify PSU - i.e. single time payment, so that requesting FinTech can
+     * manage associated entities.
+     */
+    @Transactional
+    public Outcome anonymousPsuAssociateAuthSession(UUID authorizationId, String authorizationPassword) {
+        AuthSession session = authRepository.findById(authorizationId)
+                .orElseThrow(() -> new IllegalStateException("Missing authorization session: " + authorizationId));
+
+        if (!session.isPsuAnonymous()) {
+            throw new IllegalStateException("Session does not support anonymous PSU: " + authorizationId);
+        }
+
+        FintechConsentSpecSecureStorage.FinTechUserInboxData inbox = associationService.readInboxFromFinTech(session, authorizationPassword);
+        authRepository.save(session);
+
+        return new Outcome(
+                serde.asString(inbox.getProtocolKey().asKey()),
+                inbox.getAfterPsuIdentifiedRedirectTo()
         );
     }
 

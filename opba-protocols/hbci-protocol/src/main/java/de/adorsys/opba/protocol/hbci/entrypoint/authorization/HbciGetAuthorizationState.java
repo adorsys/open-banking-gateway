@@ -1,18 +1,27 @@
 package de.adorsys.opba.protocol.hbci.entrypoint.authorization;
 
+import de.adorsys.multibanking.hbci.model.HbciConsent;
 import de.adorsys.opba.protocol.api.authorization.GetAuthorizationState;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
+import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
+import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
+import de.adorsys.opba.protocol.api.dto.result.body.AuthRequestData;
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.body.ScaMethod;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.bpmnshared.dto.ContextBasedValidationErrorResult;
+import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.LastRedirectionTarget;
+import de.adorsys.opba.protocol.hbci.context.AccountListHbciContext;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.LastViolations;
+import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
+import de.adorsys.opba.protocol.hbci.context.TransactionListHbciContext;
+import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PaymentInitiateBody;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RuntimeService;
@@ -43,6 +52,8 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
     private final HistoryService historyService;
     private final HbciViolationsMapper violationsMapper;
     private final HbciScaMethodsMapper scaMethodsMapper;
+    private final PaymentBodyMapper pisBodyMapper;
+    private final AisConsentBodyMapper aisBodyMapper;
 
     @Override
     public CompletableFuture<Result<AuthStateBody>> execute(ServiceContext<AuthorizationRequest> serviceContext) {
@@ -101,11 +112,19 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
         List<ScaMethod> scaMethods = ctx.getAvailableSca();
         String redirectTo = null == redirectionTarget ? null : redirectionTarget.getRedirectTo();
 
+        AuthRequestData authRequestData = AuthRequestData.builder()
+                .aisConsent(ctx instanceof AccountListHbciContext || ctx instanceof TransactionListHbciContext ? aisBodyMapper.map(ctx.getHbciDialogConsent()) : null)
+                .singlePaymentBody(ctx instanceof PaymentHbciContext ? pisBodyMapper.map(((PaymentHbciContext) ctx).getPayment()) : null)
+                .bankName(ctx.getRequestScoped().aspspProfile().getName())
+                .fintechName(ctx.getRequestScoped().fintechProfile().getName())
+                .build();
+
         return new AuthStateBody(
                 action.name(),
                 violationsMapper.map(issues.getViolations()),
                 scaMethodsMapper.map(scaMethods),
                 redirectTo,
+                authRequestData,
                 null
         );
     }
@@ -118,5 +137,15 @@ public class HbciGetAuthorizationState implements GetAuthorizationState {
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE)
     public interface HbciScaMethodsMapper {
         Set<ScaMethod> map(List<ScaMethod> from);
+    }
+
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE)
+    public interface PaymentBodyMapper extends DtoMapper<PaymentInitiateBody, SinglePaymentBody> {
+        SinglePaymentBody map(PaymentInitiateBody paymentInitiateBody);
+    }
+
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE)
+    public interface AisConsentBodyMapper extends DtoMapper<HbciConsent, AisConsent> {
+        AisConsent map(HbciConsent hbciConsent);
     }
 }

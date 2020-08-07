@@ -1,10 +1,9 @@
 package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 
 import com.google.common.collect.ImmutableMap;
+import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.consentapi.model.generated.AuthViolation;
-import de.adorsys.opba.protocol.xs2a.tests.GetTransactionsQueryParams;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -32,6 +31,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.GE
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.LOGIN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.MAX_MUSTERMAN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PASSWORD;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeaders;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withAccountsHeadersMissingIpAddress;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withDefaultHeaders;
@@ -44,9 +44,19 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class AccountInformationRequestCommon<SELF extends AccountInformationRequestCommon<SELF>> extends RequestCommon<SELF> {
+    private static final String TPP_SERVER_USERNAME_PLACEHOLDER = "%user%";
+    private static final String TPP_SERVER_IBAN_PLACEHOLDER = "%iban%";
+
+    @ExpectedScenarioState
+    protected String iban;
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner() {
-        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
+        return fintech_calls_list_accounts_for_anton_brueckner(SANDBOX_BANK_ID);
+    }
+
+    // Note that anton.brueckner is typically used for REDIRECT (real REDIRECT that is returned by bank, and not REDIRECT approach in table)
+    public SELF fintech_calls_list_accounts_for_anton_brueckner(String bankId) {
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER, bankId)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -59,8 +69,29 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF fintech_calls_list_accounts_for_user(String user) {
+        ExtractableResponse<Response> response = withAccountsHeaders(user)
+                        .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                     .when()
+                        .get(AIS_ACCOUNTS_ENDPOINT)
+                     .then()
+                        .statusCode(HttpStatus.ACCEPTED.value())
+                        .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
+        return self();
+    }
+
+    // Note that max.musterman is typically used for EMBEDDED (real EMBEDDED that is returned by bank, and not EMBEDDED approach in table)
     public SELF fintech_calls_list_accounts_for_max_musterman() {
-        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, requestSigningService, OperationType.AIS)
+        return fintech_calls_list_accounts_for_max_musterman(SANDBOX_BANK_ID);
+    }
+
+    // Note that max.musterman is typically used for EMBEDDED (real EMBEDDED that is returned by bank, and not EMBEDDED approach in table)
+    public SELF fintech_calls_list_accounts_for_max_musterman(String bankId) {
+        ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, bankId)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
@@ -75,7 +106,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_accounts_for_max_musterman_missing_ip_address() {
-        ExtractableResponse<Response> response = withAccountsHeadersMissingIpAddress(MAX_MUSTERMAN, requestSigningService, OperationType.AIS)
+        ExtractableResponse<Response> response = withAccountsHeadersMissingIpAddress(MAX_MUSTERMAN)
                       .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                  .when()
                       .get(AIS_ACCOUNTS_ENDPOINT)
@@ -90,7 +121,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_anton_brueckner() {
-        ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
+        ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT)
@@ -105,11 +136,26 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_anton_brueckner(String resourceId) {
-        ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
+        ExtractableResponse<Response> response = withTransactionsHeaders(ANTON_BRUECKNER)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
                     .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
+                    .statusCode(HttpStatus.ACCEPTED.value())
+                    .extract();
+
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        updateNextConsentAuthorizationUrl(response);
+        return self();
+    }
+
+    public SELF fintech_calls_list_transactions_for_user(String user, String resourceId) {
+        ExtractableResponse<Response> response = withTransactionsHeaders(user)
+                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                 .when()
+                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+                 .then()
                     .statusCode(HttpStatus.ACCEPTED.value())
                     .extract();
 
@@ -120,28 +166,21 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman() {
-        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
-                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
-                .when()
-                    .get(AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT)
-                .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract();
-
-        updateServiceSessionId(response);
-        updateRedirectCode(response);
-        updateNextConsentAuthorizationUrl(response);
-        return self();
+        return fintech_calls_list_transactions_for_max_musterman("oN7KTVuJSVotMvPPPavhVo");
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId) {
-        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, requestSigningService, OperationType.AIS, GetTransactionsQueryParams.newEmptyInstance())
-                    .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+        return fintech_calls_list_transactions_for_max_musterman(resourceId, SANDBOX_BANK_ID);
+    }
+
+    public SELF fintech_calls_list_transactions_for_max_musterman(String resourceId, String bankId) {
+        ExtractableResponse<Response> response = withTransactionsHeaders(MAX_MUSTERMAN, bankId)
+                .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
                 .when()
-                    .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
+                .get(AIS_TRANSACTIONS_ENDPOINT, resourceId)
                 .then()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                    .extract();
+                .statusCode(HttpStatus.ACCEPTED.value())
+                .extract();
 
         updateServiceSessionId(response);
         updateRedirectCode(response);
@@ -174,15 +213,25 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent() {
         startInitialInternalConsentAuthorizationWithCookieValidation(
                 AUTHORIZE_CONSENT_ENDPOINT,
-            "restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json"
+                readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent.json")
         );
 
         return self();
     }
 
+    public SELF user_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_with_cookie_validation(String user) {
+        startInitialInternalConsentAuthorizationWithCookieValidation(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/new-user-account-all-accounts-consent.json").replace(TPP_SERVER_USERNAME_PLACEHOLDER, user)
+        );
+
+        return self();
+    }
+
+
     public SELF user_anton_brueckner_provided_initial_parameters_to_list_accounts_with_all_accounts_consent_without_psu_id() {
         startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent-without-psu-id.json"
+                                                 readResource("restrecord/tpp-ui-input/params/anton-brueckner-account-all-accounts-consent-without-psu-id.json")
         );
         return self();
     }
@@ -207,7 +256,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp() {
-        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
+        ExtractableResponse<Response> response = withDefaultHeaders(ANTON_BRUECKNER)
                 .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
                 .queryParam(REDIRECT_CODE_QUERY, redirectCode)
             .when()
@@ -222,10 +271,37 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp(String user) {
+        ExtractableResponse<Response> response = withDefaultHeaders(user)
+                        .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                        .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                     .when()
+                        .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
+                     .then()
+                        .statusCode(HttpStatus.OK.value())
+                        .extract();
+
+        this.redirectUriToGetUserParams = response.header(LOCATION);
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        return self();
+    }
+
     public SELF user_anton_brueckner_provided_initial_parameters_to_list_transactions_with_single_account_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-            "restrecord/tpp-ui-input/params/anton-brueckner-transactions-single-account-consent.json"
+                readResource("restrecord/tpp-ui-input/params/anton-brueckner-transactions-single-account-consent.json")
+        );
+
+        return self();
+    }
+
+    public SELF user_provided_initial_parameters_to_list_transactions_with_single_account_consent(String user) {
+        startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/new-user-transactions-single-account-consent.json")
+                        .replace(TPP_SERVER_USERNAME_PLACEHOLDER, user)
+                        .replace(TPP_SERVER_IBAN_PLACEHOLDER, iban)
         );
 
         return self();
@@ -234,7 +310,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_anton_brueckner_provided_initial_parameters_to_list_transactions_with_all_accounts_psd2_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/anton-brueckner-transactions-all-accounts-psd2-consent.json"
+                readResource("restrecord/tpp-ui-input/params/anton-brueckner-transactions-all-accounts-psd2-consent.json")
         );
 
         return self();
@@ -243,7 +319,15 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent.json"
+                readResource("restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent.json")
+        );
+        return self();
+    }
+
+    public SELF user_provided_initial_parameters_to_list_accounts_all_accounts_consent(String user) {
+        startInitialInternalConsentAuthorization(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                readResource("restrecord/tpp-ui-input/params/new-user-account-all-accounts-consent.json").replace(TPP_SERVER_USERNAME_PLACEHOLDER, user)
         );
         return self();
     }
@@ -251,7 +335,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_initial_parameters_with_ip_address_to_list_accounts_all_accounts_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent_with_ip_address.json"
+                readResource("restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent_with_ip_address.json")
         );
         return self();
     }
@@ -259,7 +343,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_initial_parameters_with_psu_ip_port_to_list_accounts_all_accounts_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent_with_psu_ip_port.json"
+                readResource("restrecord/tpp-ui-input/params/max-musterman-account-all-accounts-consent_with_psu_ip_port.json")
         );
         return self();
     }
@@ -267,7 +351,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_initial_parameters_to_list_transactions_with_single_account_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-            "restrecord/tpp-ui-input/params/max-musterman-transactions-single-account-consent.json"
+                readResource("restrecord/tpp-ui-input/params/max-musterman-transactions-single-account-consent.json")
         );
         return self();
     }
@@ -277,7 +361,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         String resource = "restrecord/tpp-ui-input/params/max-musterman-dedicated-account-consent-wrong-iban.json";
 
         ExtractableResponse<Response> response =
-                startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT, resource, HttpStatus.ACCEPTED);
+                startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT, readResource(resource), HttpStatus.ACCEPTED);
 
         assertThat(this.redirectUriToGetUserParams).contains("ais").contains("entry-consent-transactions/dedicated-account-access").contains("wrong=true");
 
@@ -291,7 +375,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         String resource = "restrecord/tpp-ui-input/params/max-musterman-transactions-single-account-consent.json";
 
         ExtractableResponse<Response> response =
-                startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT, resource, HttpStatus.ACCEPTED);
+                startInitialInternalConsentAuthorization(AUTHORIZE_CONSENT_ENDPOINT, readResource(resource), HttpStatus.ACCEPTED);
 
         assertThat(this.redirectUriToGetUserParams).contains("authenticate").contains("wrong=false");
 
@@ -303,7 +387,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_initial_parameters_to_list_transactions_with_all_accounts_psd2_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/max-musterman-transactions-all-accounts-psd2-consent.json"
+                readResource("restrecord/tpp-ui-input/params/max-musterman-transactions-all-accounts-psd2-consent.json")
         );
         return self();
     }
@@ -311,7 +395,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_initial_parameters_to_list_transactions_but_without_psu_id_with_single_accounts_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/unknown-user-transactions-single-account-consent.json"
+                readResource("restrecord/tpp-ui-input/params/unknown-user-transactions-single-account-consent.json")
         );
         return self();
     }
@@ -319,7 +403,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_psu_id_parameter_to_list_transactions_with_single_account_consent() {
         startInitialInternalConsentAuthorization(
                 AUTHORIZE_CONSENT_ENDPOINT,
-                "restrecord/tpp-ui-input/params/max-musterman-in-extras.json"
+                readResource("restrecord/tpp-ui-input/params/max-musterman-in-extras.json")
         );
         return self();
     }
@@ -334,6 +418,13 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_password_to_embedded_authorization() {
         assertThat(this.redirectUriToGetUserParams).contains("authenticate").doesNotContain("wrong=true");
         max_musterman_provides_password();
+        updateAvailableScas();
+        return self();
+    }
+
+    public SELF user_provided_password_to_embedded_authorization(String password) {
+        assertThat(this.redirectUriToGetUserParams).contains("authenticate").doesNotContain("wrong=true");
+        user_provides_password(password);
         updateAvailableScas();
         return self();
     }
@@ -367,6 +458,40 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
         return self();
     }
 
+    public SELF user_max_musterman_selected_sca_challenge_type_photo_otp_to_embedded_authorization() {
+        provideParametersToBankingProtocolWithBody(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                selectedScaBody("PHOTO_OTP:photo_otp"),
+                HttpStatus.ACCEPTED
+        );
+        return self();
+    }
+
+    public SELF ui_can_read_image_data_from_obg(String user) {
+        ExtractableResponse<Response> response = withDefaultHeaders(user)
+                                                            .cookie(AUTHORIZATION_SESSION_KEY, authSessionCookie)
+                                                            .queryParam(REDIRECT_CODE_QUERY, redirectCode)
+                                                         .when()
+                                                            .get(GET_CONSENT_AUTH_STATE, serviceSessionId)
+                                                         .then()
+                                                            .statusCode(HttpStatus.OK.value())
+                                                            .extract();
+
+        assertThatResponseContainsCorrectChallengeData(response, "restrecord/tpp-ui-input/params/max-musterman-embedded-consent-challenge-data.json");
+        updateServiceSessionId(response);
+        updateRedirectCode(response);
+        return self();
+    }
+
+    public SELF user_selected_sca_challenge_type_email1_to_embedded_authorization() {
+        provideParametersToBankingProtocolWithBody(
+                AUTHORIZE_CONSENT_ENDPOINT,
+                selectedScaBody("EMAIL:test_static@example.com"),
+                HttpStatus.ACCEPTED
+        );
+        return self();
+    }
+
     public SELF user_max_musterman_provided_correct_sca_challenge_result_after_wrong_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").contains("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
@@ -377,6 +502,13 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     public SELF user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
         assertThat(this.redirectUriToGetUserParams).contains("sca-result").doesNotContain("wrong=true");
         ExtractableResponse<Response> response = max_musterman_provides_sca_challenge_result();
+        assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
+        return self();
+    }
+
+    public SELF user_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok() {
+        assertThat(this.redirectUriToGetUserParams).contains("sca-result").doesNotContain("wrong=true");
+        ExtractableResponse<Response> response = user_provides_sca_challenge_result();
         assertThat(response.header(LOCATION)).contains("ais").contains("consent-result");
         return self();
     }
@@ -466,7 +598,7 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     public SELF user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_without_cookie_unauthorized() {
-                withDefaultHeaders(ANTON_BRUECKNER, requestSigningService, OperationType.AIS)
+                withDefaultHeaders(ANTON_BRUECKNER)
                     .queryParam(REDIRECT_CODE_QUERY, redirectCode)
                 .when()
                     .get(GET_CONSENT_AUTH_STATE, serviceSessionId)

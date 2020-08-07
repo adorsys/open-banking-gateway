@@ -3,57 +3,74 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.api.security.external.domain.OperationType;
-import de.adorsys.opba.api.security.external.service.RequestSigningService;
-import de.adorsys.opba.db.repository.jpa.ConsentRepository;
+import de.adorsys.opba.db.repository.jpa.PaymentRepository;
 import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
 import de.adorsys.xs2a.adapter.service.model.TransactionStatus;
 import io.restassured.RestAssured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.CONFIRM_CONSENT_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.PIS_ANONYMOUS_LOGIN_USER_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.withPaymentInfoHeaders;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.RequestCommon.REDIRECT_CODE_QUERY;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.CONFIRM_PAYMENT_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PIS_PAYMENT_INFORMATION_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.PIS_PAYMENT_STATUS_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SANDBOX_BANK_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SESSION_PASSWORD;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withSignatureHeaders;
-import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.PaymentStagesCommonUtil.withPaymentInfoHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @JGivenStage
 @SuppressWarnings("checkstyle:MethodName") // Jgiven prettifies snake-case names not camelCase
 public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF> {
-    @Autowired
-    private ConsentRepository consents;
 
     @Autowired
-    private RequestSigningService requestSigningService;
+    private PaymentRepository payments;
 
     @ExpectedScenarioState
     protected String serviceSessionId;
 
+    @ExpectedScenarioState
+    protected String redirectUriToGetUserParams;
+
     @Transactional
-    public SELF open_banking_has_consent_for_max_musterman_payment() {
-        assertThat(consents.findByServiceSessionIdOrderByModifiedAtDesc(UUID.fromString(serviceSessionId))).isNotEmpty();
+    public SELF open_banking_has_stored_payment() {
+        assertThat(payments.findByServiceSessionIdOrderByModifiedAtDesc(UUID.fromString(serviceSessionId))).isNotEmpty();
         return self();
     }
 
-    @Transactional
-    public SELF open_banking_has_consent_for_anton_brueckner_payment() {
-        assertThat(consents.findByServiceSessionIdOrderByModifiedAtDesc(UUID.fromString(serviceSessionId))).isNotEmpty();
+    public SELF user_logged_in_into_opba_as_anonymous_user_with_credentials_using_fintech_supplied_url_is_forbidden() {
+        String fintechUserTempPassword = UriComponentsBuilder
+                .fromHttpUrl(redirectUriToGetUserParams).build()
+                .getQueryParams()
+                .getFirst(REDIRECT_CODE_QUERY);
+
+        RestAssured
+                .given()
+                    .header(X_REQUEST_ID, UUID.randomUUID().toString())
+                    .queryParam(REDIRECT_CODE_QUERY, fintechUserTempPassword)
+                    .contentType(APPLICATION_JSON_VALUE)
+                .when()
+                    .post(PIS_ANONYMOUS_LOGIN_USER_ENDPOINT, serviceSessionId)
+                .then()
+                    .statusCode(BAD_REQUEST.value());
         return self();
     }
 
-    public SELF fintech_calls_consent_activation_for_current_authorization_id() {
-        fintech_calls_consent_activation_for_current_authorization_id(serviceSessionId);
+    public SELF fintech_calls_payment_activation_for_current_authorization_id() {
+        fintech_calls_payment_activation_for_current_authorization_id(serviceSessionId);
         return self();
     }
 
@@ -66,7 +83,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     }
 
     public SELF fintech_calls_payment_information(String iban) {
-        withPaymentInfoHeaders("", requestSigningService, OperationType.PIS)
+        withPaymentInfoHeaders(UUID.randomUUID().toString())
                 .header(SERVICE_SESSION_ID, serviceSessionId)
             .when()
                 .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
@@ -92,26 +109,30 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     }
 
     public SELF fintech_calls_payment_status() {
-        withPaymentInfoHeaders("", requestSigningService, OperationType.PIS)
+        return fintech_calls_payment_status(SANDBOX_BANK_ID, TransactionStatus.ACSP.name());
+    }
+
+    public SELF fintech_calls_payment_status(String bankId, String expectedStatus) {
+        withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
-            .when()
+                .when()
                 .get(PIS_PAYMENT_STATUS_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
-            .then()
+                .then()
                 .statusCode(OK.value())
-                .body("transactionStatus", equalTo(TransactionStatus.ACSP.name()))
+                .body("transactionStatus", equalTo(expectedStatus))
                 .extract();
         return self();
     }
 
-    public SELF fintech_calls_consent_activation_for_current_authorization_id(String serviceSessionId) {
+    public SELF fintech_calls_payment_activation_for_current_authorization_id(String serviceSessionId) {
         withSignatureHeaders(RestAssured
                                      .given()
                                      .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
-                                     .contentType(MediaType.APPLICATION_JSON_VALUE), requestSigningService, OperationType.CONFIRM_CONSENT)
+                                     .contentType(APPLICATION_JSON_VALUE))
                 .when()
-                .post(CONFIRM_CONSENT_ENDPOINT, serviceSessionId)
+                    .post(CONFIRM_PAYMENT_ENDPOINT, serviceSessionId)
                 .then()
-                .statusCode(HttpStatus.OK.value());
+                    .statusCode(HttpStatus.OK.value());
         return self();
     }
 }

@@ -8,16 +8,15 @@ import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
-import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.protocol.api.dto.context.Context;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableRequest;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
-import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
 import de.adorsys.opba.protocol.facade.services.InternalContext;
+import de.adorsys.opba.protocol.facade.services.fintech.FintechAuthenticator;
 import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -37,8 +36,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
 
     protected final AuthorizationSessionRepository authSessions;
 
-    private final FintechSecureStorage fintechSecureStorage;
-    private final FintechRepository fintechRepository;
+    private final FintechAuthenticator authenticator;
     private final BankProfileJpaRepository profileJpaRepository;
     private final ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider;
     private final RequestScopedProvider provider;
@@ -187,9 +185,7 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
         BankProfile profile = getBankProfileFromRequest(request.getFacadeServiceable());
 
         // FinTech requests should be signed, so creating Fintech entity if it does not exist.
-        Fintech fintech = fintechRepository.findByGlobalId(request.getFacadeServiceable().getAuthorization())
-                .orElseGet(() -> registerFintech(request, request.getFacadeServiceable().getAuthorization()));
-        fintechSecureStorage.validatePassword(fintech, () -> request.getFacadeServiceable().getSessionPassword().toCharArray());
+        Fintech fintech = authenticator.authenticateOrCreateFintech(request.getFacadeServiceable());
 
         return provider.registerForFintechSession(
                 fintech,
@@ -205,11 +201,5 @@ public class ServiceContextProviderForFintech implements ServiceContextProvider 
     private BankProfile getBankProfileFromRequest(FacadeServiceableRequest request) {
         return profileJpaRepository.findByBankUuid(request.getBankId())
                     .orElseThrow(() -> new IllegalArgumentException("No bank profile for bank: " + request.getBankId()));
-    }
-
-    private <REQUEST extends FacadeServiceableGetter> Fintech registerFintech(REQUEST request, String fintechId) {
-        Fintech fintech = fintechRepository.save(Fintech.builder().globalId(fintechId).build());
-        fintechSecureStorage.registerFintech(fintech, () -> request.getFacadeServiceable().getSessionPassword().toCharArray());
-        return fintech;
     }
 }

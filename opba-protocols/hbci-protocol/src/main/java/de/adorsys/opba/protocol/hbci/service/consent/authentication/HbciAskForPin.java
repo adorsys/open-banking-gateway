@@ -21,7 +21,8 @@ public class HbciAskForPin extends ValidatedExecution<HbciContext> {
 
     @Override
     protected void doRealExecution(DelegateExecution execution, HbciContext context) {
-        redirectExecutor.redirect(execution, context, redir -> redir.getParameters().getProvidePsuPassword());
+        redirectExecutor.redirect(execution, context,
+                redir -> context.getActiveUrlSet(redir).getRedirect().getParameters().getProvidePsuPassword());
     }
 
     @Override

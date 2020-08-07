@@ -4,11 +4,12 @@ import { ValidatorService } from 'angular-iban';
 import { FintechSinglePaymentInitiationService } from '../../../api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClassSinglePaymentInitiationRequest } from '../../../api/model-classes/ClassSinglePaymentInitiationRequest';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { HeaderConfig } from '../../../models/consts';
 import { RedirectStruct, RedirectType } from '../../redirect-page/redirect-struct';
 import { StorageService } from '../../../services/storage.service';
 import { ConfirmData } from '../payment-confirm/confirm.data';
+import { SettingsService } from '../../services/settings.service';
 
 @Component({
   selector: 'app-initiate',
@@ -20,17 +21,20 @@ export class InitiateComponent implements OnInit {
   bankId = '';
   accountId = '';
   debitorIban = '';
-
+  paymentRequiresAuthentication = false
   paymentForm: FormGroup;
+
   constructor(
     private formBuilder: FormBuilder,
     private fintechSinglePaymentInitiationService: FintechSinglePaymentInitiationService,
     private router: Router,
     private route: ActivatedRoute,
+    private settingsService: SettingsService,
     private storageService: StorageService
   ) {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
     this.accountId = this.route.snapshot.paramMap.get('accountid');
+    this.settingsService.getPaymentRequiresAuthentication().pipe(tap(el => this.paymentRequiresAuthentication = el)).subscribe();
   }
 
   ngOnInit() {
@@ -42,6 +46,12 @@ export class InitiateComponent implements OnInit {
       amount: ['12.34', [Validators.pattern('^[1-9]\\d*(\\.\\d{1,2})?$'), Validators.required]],
       purpose: ['test transfer']
     });
+
+    // this is added to register url where to forward
+    // if payment is cancelled after redirect page is displayed
+    // to be removed when issue https://github.com/adorsys/open-banking-gateway/issues/848 is resolved
+    // or Fintech UI refactored
+    this.storageService.redirectCancelUrl = this.router.url;
   }
 
   onConfirm() {
@@ -57,7 +67,8 @@ export class InitiateComponent implements OnInit {
     paymentRequest.debitorIban = this.debitorIban;
     paymentRequest.purpose = this.paymentForm.getRawValue().purpose;
     this.fintechSinglePaymentInitiationService
-      .initiateSinglePayment(this.bankId, this.accountId, '', '', okurl, notOkUrl, paymentRequest, 'response')
+      .initiateSinglePayment(this.bankId, this.accountId, '', '', okurl, notOkUrl, paymentRequest,
+        this.paymentRequiresAuthentication, 'response')
       .pipe(map(response => response))
       .subscribe(response => {
         console.log('response status of payment call is ', response.status);

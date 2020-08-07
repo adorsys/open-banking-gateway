@@ -1,0 +1,9 @@
+{
+  "tppMessages": [
+    {
+      "category": "ERROR",
+      "code": "PSU_CREDENTIALS_INVALID",
+      "text": "The PSU-ID cannot be matched by the addressed ASPSP or is blocked, or a password resp. OTP was not correct"
+    }
+  ]
+}

@@ -44,7 +44,11 @@ export class SidebarComponent implements OnInit {
     return this.showInitiatePayment && this.isLoaDone() ? 'payment' : '.';
   }
 
-  isLoaDone() {
+  isLoaDone(): boolean {
     return this.storageService.getLoa() !== null;
+  }
+
+  get showPaymentNav(): boolean {
+    return this.showInitiatePayment && this.isLoaDone();
   }
 }

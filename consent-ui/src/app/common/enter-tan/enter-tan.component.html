@@ -1,10 +1,21 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="reportScaResultForm">
   <div class="card">
     <div class="card-body">
+      <ng-container [ngSwitch]="tanConfig.type">
+        <section *ngSwitchCase="tanType.FLICKER_CODE" class="text-center">
+          <ngx-chiptan code="{{ tanConfig?.data }}" width="300" height="150" bgColor="#000" barColor="#fff">
+          </ngx-chiptan>
+        </section>
+        <section *ngSwitchCase="tanType.PHOTO_TAN" class="text-center"></section>
+        <section *ngSwitchCase="tanType?.QR_CODE" class="text-center">
+          <qrcode [qrdata]="tanConfig.data" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
+        </section>
+      </ng-container>
+
       <section>
         <h2>Input confirmation number</h2>
         <p class="text-secondary">
-          We have sent you the confirmation number. Please check your email and fill in the field below.
+          {{ tanConfig?.description }}
         </p>
         <div class="form-group">
           <label class="text-secondary" for="tan">SCA confirmation number:</label><br />

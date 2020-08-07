@@ -68,6 +68,11 @@ export class ListAccountsComponent implements OnInit {
           this.router.navigate(['redirect', JSON.stringify(r)], { relativeTo: this.route });
           break;
         case 200:
+          // this is added to register url where to forward
+          // if LoT is cancelled after redirect page is displayed
+          // to be removed when issue https://github.com/adorsys/open-banking-gateway/issues/848 is resolved
+          // or Fintech UI refactored
+          this.storageService.redirectCancelUrl = this.router.url;
           this.accounts = response.body.accounts;
           const loa = [];
           for (const accountDetail of this.accounts) {

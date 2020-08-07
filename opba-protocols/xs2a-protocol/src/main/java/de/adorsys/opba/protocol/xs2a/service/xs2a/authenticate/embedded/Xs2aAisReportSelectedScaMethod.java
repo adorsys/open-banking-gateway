@@ -48,17 +48,20 @@ public class Xs2aAisReportSelectedScaMethod extends ValidatedExecution<Xs2aConte
 
         ContextUtil.getAndUpdateContext(
                 execution,
-                (Xs2aContext ctx) -> ctx.setScaSelected(authResponse.getBody().getChosenScaMethod())
+                (Xs2aContext ctx) -> {
+                    ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
+                    ctx.setChallengeData(authResponse.getBody().getChallengeData());
+                }
         );
     }
 
     @Service
     public static class Extractor extends PathHeadersBodyMapperTemplate<
-                            Xs2aContext,
-                            Xs2aAuthorizedConsentParameters,
-                            Xs2aStandardHeaders,
-            SelectScaChallengeBody,
-                            SelectPsuAuthenticationMethod> {
+                                                                               Xs2aContext,
+                                                                               Xs2aAuthorizedConsentParameters,
+                                                                               Xs2aStandardHeaders,
+                                                                               SelectScaChallengeBody,
+                                                                               SelectPsuAuthenticationMethod> {
 
         public Extractor(
                 DtoMapper<Xs2aContext, SelectScaChallengeBody> toValidatableBody,

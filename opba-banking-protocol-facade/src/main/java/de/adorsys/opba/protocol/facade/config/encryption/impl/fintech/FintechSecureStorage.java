@@ -6,6 +6,7 @@ import de.adorsys.datasafe.directory.api.config.DFSConfig;
 import de.adorsys.datasafe.types.api.actions.ReadRequest;
 import de.adorsys.datasafe.types.api.actions.WriteRequest;
 import de.adorsys.opba.db.domain.entity.fintech.Fintech;
+import de.adorsys.opba.db.domain.entity.fintech.FintechPrvKey;
 import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.domain.entity.sessions.ServiceSession;
 import de.adorsys.opba.protocol.facade.config.encryption.impl.FintechPsuAspspTuple;
@@ -17,7 +18,10 @@ import lombok.experimental.Delegate;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.PrivateKey;
+import java.util.UUID;
 import java.util.function.Supplier;
+
+import static de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechDatasafeStorage.FINTECH_ONLY_KEYS_ID;
 
 @RequiredArgsConstructor
 public class FintechSecureStorage {
@@ -82,6 +86,30 @@ public class FintechSecureStorage {
                 ReadRequest.forDefaultPrivate(
                         fintech.getUserIdAuth(password),
                         new FintechPsuAspspTuple(session).toDatasafePathWithoutParent()))
+        ) {
+            return serde.readPrivateKey(is);
+        }
+    }
+
+    @SneakyThrows
+    public void fintechOnlyPrvKeyToPrivate(UUID id, PrivateKey prvKey, Fintech fintech, Supplier<char[]> password) {
+        try (OutputStream os = datasafeServices.privateService().write(
+                WriteRequest.forPrivate(
+                        fintech.getUserIdAuth(password),
+                        FINTECH_ONLY_KEYS_ID,
+                        new FintechOnlyPrvKeyTuple(fintech.getId(), id).toDatasafePathWithoutParent()))
+        ) {
+            serde.writePrivateKey(prvKey, os);
+        }
+    }
+
+    @SneakyThrows
+    public PrivateKey fintechOnlyPrvKeyFromPrivate(FintechPrvKey prvKey, Fintech fintech, Supplier<char[]> password) {
+        try (InputStream is = datasafeServices.privateService().read(
+                ReadRequest.forPrivate(
+                        fintech.getUserIdAuth(password),
+                        FINTECH_ONLY_KEYS_ID,
+                        new FintechOnlyPrvKeyTuple(fintech.getId(), prvKey.getId()).toDatasafePathWithoutParent()))
         ) {
             return serde.readPrivateKey(is);
         }

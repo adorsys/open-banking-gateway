@@ -25,87 +25,102 @@ import static de.adorsys.opba.protocol.hbci.config.ConfigConst.HBCI_PROTOCOL_CON
 public class HbciProtocolConfiguration {
 
     /**
-     * Redirect links for UI screens - i.e. which screen to use for password input.
+     * Account related urls .
      */
     @NotNull
-    private Redirect redirect;
+    private UrlSet ais;
+
+    /**
+     * Payment related urls .
+     */
+    @NotNull
+    private UrlSet pis;
 
     @Data
-    public static class Redirect {
-
+    public static class UrlSet {
         /**
-         * Consent related urls - Consent with IBANs input form, etc.
+         * Redirect links for UI screens - i.e. which screen to use for password input.
          */
         @NotNull
-        private Consent consentAccounts;
-
-        /**
-         * Generic parameters input urls - i.e. password page.
-         */
-        @NotNull
-        private Parameters parameters;
-
-        /**
-         * To ASPSP redirection page (for Redirect SCA).
-         */
-        @NotBlank
-        private String toAspsp;
+        private Redirect redirect;
 
         @Data
-        public static class Consent {
+        public static class Redirect {
 
             /**
-             * URL that represents page saying that consent creation was OK (comes before consent result page).
+             * Consent related urls - Consent with IBANs input form, etc.
              */
-            @NotBlank
-            private String ok;
+            @NotNull
+            private Consent consentAccounts;
 
             /**
-             * URL that represents page saying that consent creation was not OK (comes before consent result page).
+             * Generic parameters input urls - i.e. password page.
              */
-            @NotBlank
-            private String nok;
+            @NotNull
+            private Parameters parameters;
 
             /**
-             * URL that represents consent acquisition result.
+             * To ASPSP redirection page (for Redirect SCA).
              */
             @NotBlank
-            private String result;
-        }
+            private String toAspsp;
 
-        @Data
-        public static class Parameters {
+            @Data
+            public static class Consent {
 
-            /**
-             * Page with generic consent input form and other parameters like PSU ID, can be thought as landing page
-             * for consent data input.
-             */
-            @NotBlank
-            private String provideMore;
+                /**
+                 * URL that represents page saying that consent creation was OK (comes before consent result page).
+                 */
+                @NotBlank
+                private String ok;
 
-            /**
-             * Page where the user provides his PIN or ASPSP password.
-             */
-            @NotBlank
-            private String providePsuPassword;
+                /**
+                 * URL that represents page saying that consent creation was not OK (comes before consent result page).
+                 */
+                @NotBlank
+                private String nok;
 
-            /**
-             * Page where the user can select multiple SCA methods (SMS, email) for 2FA or multifactor authorization.
-             */
-            @NotBlank
-            private String selectScaMethod;
+                /**
+                 * URL that represents consent acquisition result.
+                 */
+                @NotBlank
+                private String result;
+            }
 
-            /**
-             * Page where user reports SCA challenge result (i.e. SMS secret code from ASPSP)
-             */
-            @NotBlank
-            private String reportScaResult;
+            @Data
+            public static class Parameters {
 
-            /**
-             * Page where the user can provide IBAN list for dedicated consent.
-             */
-            @NotBlank
-            private String providePsuIban;
+                /**
+                 * Page with generic consent input form and other parameters like PSU ID, can be thought as landing page
+                 * for consent data input.
+                 */
+                @NotBlank
+                private String provideMore;
+
+                /**
+                 * Page where the user provides his PIN or ASPSP password.
+                 */
+                @NotBlank
+                private String providePsuPassword;
+
+                /**
+                 * Page where the user can select multiple SCA methods (SMS, email) for 2FA or multifactor authorization.
+                 */
+                @NotBlank
+                private String selectScaMethod;
+
+                /**
+                 * Page where user reports SCA challenge result (i.e. SMS secret code from ASPSP)
+                 */
+                @NotBlank
+                private String reportScaResult;
+
+                /**
+                 * Page where the user can provide IBAN list for dedicated consent.
+                 */
+                @NotBlank
+                private String providePsuIban;
+            }
         }
     }
 }

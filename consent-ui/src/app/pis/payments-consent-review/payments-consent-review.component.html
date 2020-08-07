@@ -2,13 +2,40 @@
   <div class="card-body">
     <section>
       <h2>Review your payment in {{ aspspName }}</h2>
-      <p class="text-secondary">
+      <p class="text-secondary mb-0">
         Please review payment initiated by <strong>{{ finTechName }}</strong>
       </p>
     </section>
-    <div class="form-group d-flex flex-row justify-content-lg-between">
-      <button id="do_back" class="btn md-6 w-100 mr-sm-2 mr-md-3 btn-outline-back" (click)="onBack()">Back</button>
-      <button id="do_submit" type="button" class="btn md-6 w-100 btn-primary" (click)="onConfirm()">Confirm</button>
+    <section>
+      <div class="flex-container">
+        <img alt="accounts" class="icons" src="assets/icons/card_payment.png" />
+        <div class="">
+          <p class="title">Creditor IBAN</p>
+          <p class="description">{{ singlePayment?.creditorAccount?.iban }}</p>
+        </div>
+      </div>
+
+      <div class="flex-container">
+        <img alt="accounts" class="icons" src="assets/icons/receive_dollar.png" />
+        <div class="">
+          <p class="title">Debtor IBAN</p>
+          <p class="description">{{ singlePayment?.debtorAccount?.iban }}</p>
+        </div>
+      </div>
+
+      <div class="flex-container">
+        <img alt="accounts" class="icons" src="assets/icons/icons8-bank_cards.svg" />
+        <div class="">
+          <p class="title">Amount</p>
+          <p class="description">
+            {{ singlePayment?.instructedAmount?.amount }} {{ singlePayment?.instructedAmount?.currency }}
+          </p>
+        </div>
+      </div>
+    </section>
+    <div class="d-sm-flex">
+      <button id="do_back" class="btn btn-outline-back w-100 mr-4" (click)="onBack()">Back</button>
+      <button id="do_submit" type="button" class="btn btn-primary w-100" (click)="onConfirm()">Confirm</button>
     </div>
   </div>
 </div>

@@ -1,9 +1,11 @@
 package de.adorsys.opba.fintech.impl.config;
 
-import de.adorsys.opba.api.security.external.domain.HttpHeaders;
-import de.adorsys.opba.api.security.external.domain.OperationType;
-import de.adorsys.opba.api.security.external.mapper.FeignTemplateToDataToSignMapper;
+import com.google.common.collect.Iterables;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
+import de.adorsys.opba.api.security.generator.api.DataToSignProvider;
+import de.adorsys.opba.api.security.generator.api.RequestDataToSignNormalizer;
+import de.adorsys.opba.api.security.generator.api.RequestToSign;
+import de.adorsys.opba.api.security.requestsigner.OpenBankingDataToSignProvider;
 import de.adorsys.opba.fintech.impl.properties.TppProperties;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -33,7 +35,6 @@ import static de.adorsys.opba.fintech.impl.tppclients.HeaderFields.X_TIMESTAMP_U
 @Configuration
 @RequiredArgsConstructor
 public class FeignConfig {
-    private static final String MISSING_HEADER_ERROR_MESSAGE = " header is missing";
 
     private final RequestSigningService requestSigningService;
     private final TppProperties tppProperties;
@@ -61,9 +62,9 @@ public class FeignConfig {
     private void fillSecurityHeadersWithSigning(RequestTemplate requestTemplate) {
         Instant instant = Instant.now();
 
-        requestTemplate.header(X_REQUEST_SIGNATURE, calculateSignature(requestTemplate, instant));
         requestTemplate.header(FINTECH_ID, tppProperties.getFintechID());
         requestTemplate.header(X_TIMESTAMP_UTC, instant.toString());
+        requestTemplate.header(X_REQUEST_SIGNATURE, calculateSignature(requestTemplate));
     }
 
     private void fillSecurityHeadersWithoutSigning(RequestTemplate requestTemplate) {
@@ -73,39 +74,24 @@ public class FeignConfig {
         requestTemplate.header(X_TIMESTAMP_UTC, instant.toString());
     }
 
-    private String calculateSignature(RequestTemplate requestTemplate, Instant instant) {
-        Map<String, Collection<String>> headers = requestTemplate.headers();
-        String requestOperationType = headers.get(HttpHeaders.X_OPERATION_TYPE).stream().findFirst()
-                                              .orElseThrow(() -> new IllegalStateException(HttpHeaders.X_OPERATION_TYPE + MISSING_HEADER_ERROR_MESSAGE));
-        OperationType operationType = OperationType.valueOf(requestOperationType);
-        FeignTemplateToDataToSignMapper mapper = new FeignTemplateToDataToSignMapper();
+    private String calculateSignature(RequestTemplate requestTemplate) {
+        Map<String, String> headers = requestTemplate.headers().entrySet().stream().collect(
+                Collectors.toMap(Map.Entry::getKey, it -> Iterables.getFirst(it.getValue(), ""))
+        );
         Map<String, String> queries = requestTemplate.queries().entrySet().stream()
                                               .collect(Collectors.toMap(Map.Entry::getKey, e -> decodeQueryValue(e.getValue())));
 
-        switch (operationType) {
-            case AIS:
-                if (OperationType.isTransactionsPath(requestTemplate.path())) {
-                    return requestSigningService.signature(mapper.mapToListTransactions(headers, queries, instant));
-                }
-                return requestSigningService.signature(mapper.mapToListAccounts(headers, instant));
-            case BANK_SEARCH:
-                if (OperationType.isBankSearchPath(requestTemplate.path())) {
-                    return requestSigningService.signature(mapper.mapToBankSearch(headers, queries, instant));
-                }
-                return requestSigningService.signature(mapper.mapToBankProfile(headers, instant));
-            case CONFIRM_CONSENT:
-                return requestSigningService.signature(mapper.mapToConfirmConsent(headers, instant));
-            case PIS:
-                if (OperationType.isGetPaymentStatus(requestTemplate.path())) {
-                    return requestSigningService.signature(mapper.mapToGetPaymentStatus(headers, instant));
-                }
-                if (OperationType.isGetPayment(requestTemplate.method())) {
-                    return requestSigningService.signature(mapper.mapToGetPayment(headers, instant));
-                }
-                return requestSigningService.signature(mapper.mapToPaymentInitiation(headers, instant, requestTemplate.requestBody().asString()));
-            default:
-                throw new IllegalArgumentException(String.format("Unsupported operation type %s", operationType));
-        }
+        // OpenBankingSigner - This is generated class by opba-api-security-signer-generator-impl annotation processor
+        DataToSignProvider dataToSignProvider = new OpenBankingDataToSignProvider();
+        RequestToSign toSign = RequestToSign.builder()
+                .method(DataToSignProvider.HttpMethod.valueOf(requestTemplate.method()))
+                .path(requestTemplate.path())
+                .headers(headers)
+                .queryParams(queries)
+                .body(requestTemplate.requestBody().asString())
+                .build();
+        RequestDataToSignNormalizer signatureGen = dataToSignProvider.normalizerFor(toSign);
+        return requestSigningService.signature(signatureGen.canonicalStringToSign(toSign));
     }
 
     private String decodeQueryValue(Collection<String> value) {

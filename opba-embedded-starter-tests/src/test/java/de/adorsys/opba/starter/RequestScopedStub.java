@@ -1,9 +1,11 @@
 package de.adorsys.opba.starter;
 
 import de.adorsys.opba.protocol.api.common.CurrentBankProfile;
+import de.adorsys.opba.protocol.api.common.CurrentFintechProfile;
 import de.adorsys.opba.protocol.api.services.EncryptionService;
 import de.adorsys.opba.protocol.api.services.scoped.RequestScoped;
 import de.adorsys.opba.protocol.api.services.scoped.consent.ConsentAccess;
+import de.adorsys.opba.protocol.api.services.scoped.consent.PaymentAccess;
 import de.adorsys.opba.protocol.api.services.scoped.transientdata.TransientStorage;
 import de.adorsys.opba.protocol.api.services.scoped.validation.FieldsToIgnoreLoader;
 
@@ -25,6 +27,11 @@ public class RequestScopedStub implements RequestScoped {
 
     @Override
     public ConsentAccess consentAccess() {
+        return null;
+    }
+
+    @Override
+    public PaymentAccess paymentAccess() {
         return null;
     }
 
@@ -56,5 +63,10 @@ public class RequestScopedStub implements RequestScoped {
         public void set(Object entry) {
             this.data.set(entry);
         }
+    }
+
+    @Override
+    public CurrentFintechProfile fintechProfile() {
+        return null;
     }
 }

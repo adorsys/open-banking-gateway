@@ -90,6 +90,69 @@ paths:
         "401":
           $ref: "#/components/responses/401_Unauthorized"
 
+  /v1/login/oauth2:
+    get:
+      tags:
+        - FinTechAuthorization
+      operationId: callbackGetLogin
+      summary: Oauth2 callback to identify user.
+      description: |
+        Oauth2 callback to authenticate user using some Oauth2 identity provider account. Provider id is set inside state.
+      parameters:
+        #query
+        - name: code
+          in: query
+          required: true
+          description: OAuth2 redirect code
+          schema:
+            type: string
+        - name: state
+          in: query
+          required: true
+          description: OAuth2 redirect state
+          schema:
+            type: string
+        - name: scope
+          in: query
+          required: true
+          description: OAuth2 requested scope
+          schema:
+            type: string
+        - name: error
+          in: query
+          required: false
+          description: OAuth2 error
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: "#/components/responses/200_UserProfile"
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+
+  /v1/oauth2/{idpProvider}/login:
+    post:
+      tags:
+        - FinTechOauth2Authentication
+      operationId: oauthLoginPOST
+      summary: Identifies the PSU in the Realm of the FinTechApi using his Gmail or other IDP provider account.
+      description: |
+        Use Oauth2 for Gmail users' account to identify him
+      parameters:
+        #header
+        - $ref: "#/components/parameters/X-Request-ID"
+        # path
+        - in: path
+          name: idpProvider
+          schema:
+            type: string
+            enum: [gmail]
+          required: true
+          description: IDP provider id for Oauth2 authentication (i.e. `gmail`)
+      responses:
+        '202':
+          $ref: '#/components/responses/202_ToOauth2'
+
   /v1/logout:
     post:
       tags:
@@ -273,10 +336,37 @@ paths:
         "404":
           $ref: "#/components/responses/404_NotFound"
 
+  /v1/{auth-id}/fromPayment/{ok-or-notok}:
+    get:
+      tags:
+        - FinTechAuthorization
+      operationId: fromPaymentGET
+      summary: Entry point when PSU is redirected back from ConsentAuthorisationApi to the FinTechUI.
+      description: |
+        Entry point when PSU is redirected back from ConsentAuthorisationApi to the FinTechUI.
+      parameters:
+        #path
+        - $ref: "#/components/parameters/auth-id"
+        - $ref: "#/components/parameters/ok-or-notok"
+        #query
+        - $ref: "#/components/parameters/redirectCode"
+        #header
+        - $ref: '#/components/parameters/X-Request-ID'
+        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+      security:
+        - redirectCookie: []
+      responses:
+        '202':
+          $ref: '#/components/responses/202_ReloadUI'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized'
+        '404':
+          $ref: '#/components/responses/404_NotFound'
+
   /v1/pis/banks/{bank-id}/accounts/{account-id}/payments/single:
     get:
       summary: Ask for all payments of this account
-      description: This method is used to initiate a payment at the Fintech Server.
+      description: This method is used to get payment status.
       operationId: retrieveAllSinglePayments
       tags:
         - FintechRetrieveAllSinglePayments
@@ -294,34 +384,35 @@ paths:
         "401":
           $ref: "#/components/responses/401_Unauthorized"
 
-    post:
-      summary: Single payment initiation request
-      description: This method is used to initiate a payment at the Fintech Server.
-      operationId: initiateSinglePayment
-      tags:
-        - FintechSinglePaymentInitiation
-      parameters:
-        #path
-        - $ref: "#/components/parameters/bank-id"
-        - $ref: "#/components/parameters/account-id"
-        #header
-        - $ref: "#/components/parameters/X-Request-ID"
-        - $ref: "#/components/parameters/X-XSRF-TOKEN"
-        - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
-        - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
+post:
+  summary: Single payment initiation request
+  description: This method is used to initiate a payment at the Fintech Server.
+  operationId: initiateSinglePayment
+  tags:
+    - FintechSinglePaymentInitiation
+  parameters:
+    #path
+    - $ref: "#/components/parameters/bank-id"
+    - $ref: "#/components/parameters/account-id"
+    #header
+    - $ref: "#/components/parameters/X-Request-ID"
+    - $ref: '#/components/parameters/X-XSRF-TOKEN'
+    - $ref: '#/components/parameters/X-Pis-Psu-Authentication-Required'
+    - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
+    - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
 
-      requestBody:
-        description: Single payment initiation request
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/singlePaymentInitiationRequest"
-        required: true
-      responses:
-        "202":
-          $ref: "#/components/responses/202_ToConsentAuthApi"
-        "401":
-          $ref: "#/components/responses/401_Unauthorized"
+  requestBody:
+    description: Single payment initiation request
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/singlePaymentInitiationRequest'
+    required: true
+  responses:
+    '202':
+      $ref: '#/components/responses/202_ToConsentAuthApi'
+    '401':
+      $ref: '#/components/responses/401_Unauthorized'
 
 components:
   securitySchemes:
@@ -403,6 +494,14 @@ components:
         type: string
         example: http://localhost:8083/consent/auth?redirectCode=ejxs.wersdzxxc23r.asdf
 
+    Location-Oauth2-Auth:
+      name: Location
+      description: |
+        This is the 202 Location Header. It contains a redirect link for Oauth2
+      schema:
+        type: string
+        example: http://localhost:8083/consent/auth?redirectCode=ejxs.wersdzxxc23r.asdf
+
     Location-FinTechUI:
       name: Location
       description: |
@@ -465,6 +564,17 @@ components:
       schema:
         type: string
         format: uuid
+
+    X-Pis-Psu-Authentication-Required:
+      name: X-Pis-Psu-Authentication-Required
+      in: header
+      description: |
+        If false, login form to OPBA will not be displayed as there might be nothing to share for payments, so
+        that authentication is not necessary. If absent or true - login form for payments will be displayed.
+      example: "true"
+      schema:
+        type: boolean
+        default: "false"
 
     X-XSRF-TOKEN:
       name: X-XSRF-TOKEN
@@ -724,6 +834,13 @@ components:
             backend (BankingProtocol).
             * RedirectCookie has an expiration date after which no callback
             will be accepted from the ConsentAuthorisationApi anyway.
+
+    202_ToOauth2:
+      description: |
+        Request to perform Oauth2 authentication
+      headers:
+        Location:
+          $ref: '#/components/headers/Location-Oauth2-Auth'
 
     202_ReloadUI:
       description: |

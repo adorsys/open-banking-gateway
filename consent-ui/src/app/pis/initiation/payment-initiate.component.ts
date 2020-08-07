@@ -48,12 +48,17 @@ export class PaymentInitiateComponent implements OnInit {
   private initiatePaymentSession(authorizationId: string, redirectCode: string) {
     this.authStateConsentAuthorizationService.authUsingGET(authorizationId, redirectCode, 'response').subscribe(res => {
       this.sessionService.setRedirectCode(authorizationId, res.headers.get(ApiHeaders.REDIRECT_CODE));
-      this.navigate(authorizationId, res.body.consentAuth);
+
+      // setting bank and fintech names
+      this.sessionService.setBankName(authorizationId, (res.body as ConsentAuth).bankName);
+      this.sessionService.setFintechName(authorizationId, (res.body as ConsentAuth).fintechName);
+
+      this.navigate(authorizationId, res.body);
     });
   }
 
   private navigate(authorizationId: string, res: ConsentAuth) {
-    this.sessionService.setPaymentState(authorizationId, new AuthConsentState(res.violations));
+    this.sessionService.setPaymentState(authorizationId, new AuthConsentState(res.violations, res.singlePayment));
     this.router.navigate([EntryPagePaymentsComponent.ROUTE], { relativeTo: this.activatedRoute.parent });
   }
 }

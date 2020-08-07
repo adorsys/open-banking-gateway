@@ -4,9 +4,11 @@ import de.adorsys.opba.protocol.api.authorization.GetAuthorizationState;
 import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.api.dto.ValidationIssue;
 import de.adorsys.opba.protocol.api.dto.context.ServiceContext;
+import de.adorsys.opba.protocol.api.dto.request.ChallengeData;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent;
 import de.adorsys.opba.protocol.api.dto.request.authorization.AuthorizationRequest;
 import de.adorsys.opba.protocol.api.dto.request.payments.SinglePaymentBody;
+import de.adorsys.opba.protocol.api.dto.result.body.AuthRequestData;
 import de.adorsys.opba.protocol.api.dto.result.body.AuthStateBody;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
@@ -53,6 +55,7 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
     private final HistoryService historyService;
     private final ViolationsMapper violationsMapper;
     private final ScaMethodsMapper scaMethodsMapper;
+    private final ChallengeDataMapper challengeDataMapper;
 
     @Override
     public CompletableFuture<Result<AuthStateBody>> execute(ServiceContext<AuthorizationRequest> serviceContext) {
@@ -112,20 +115,20 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
         List<ScaMethod> scaMethods = ctx.getAvailableSca();
         String redirectTo = null == redirectionTarget ? null : redirectionTarget.getRedirectTo();
 
-        Object resultBody = null;
-
-        if (ctx instanceof Xs2aPisContext) {
-            resultBody = pisBodyMapper.map(((Xs2aPisContext) ctx).getPayment());
-        } else if (ctx instanceof Xs2aAisContext) {
-            resultBody = aisBodyMapper.map(((Xs2aAisContext) ctx).getAisConsent());
-        }
+        AuthRequestData authRequestData = AuthRequestData.builder()
+                .aisConsent(ctx instanceof Xs2aAisContext ? aisBodyMapper.map(((Xs2aAisContext) ctx).getAisConsent()) : null)
+                .singlePaymentBody(ctx instanceof Xs2aPisContext ? pisBodyMapper.map(((Xs2aPisContext) ctx).getPayment()) : null)
+                .bankName(ctx.getRequestScoped().aspspProfile().getName())
+                .fintechName(ctx.getRequestScoped().fintechProfile().getName())
+                .build();
 
         return new AuthStateBody(
                 action.name(),
                 violationsMapper.map(issues.getViolations()),
                 scaMethodsMapper.map(scaMethods),
                 redirectTo,
-                resultBody
+                authRequestData,
+                challengeDataMapper.map(ctx.getChallengeData())
         );
     }
 
@@ -135,6 +138,10 @@ public class Xs2aGetAuthorizationState implements GetAuthorizationState {
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface ScaMethodsMapper extends DtoMapper<List<ScaMethod>, Set<de.adorsys.opba.protocol.api.dto.result.body.ScaMethod>> {
+    }
+
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
+    public interface ChallengeDataMapper extends DtoMapper<de.adorsys.xs2a.adapter.service.model.ChallengeData, ChallengeData> {
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, uses = Xs2aUuidMapper.class, implementationPackage = XS2A_MAPPERS_PACKAGE)

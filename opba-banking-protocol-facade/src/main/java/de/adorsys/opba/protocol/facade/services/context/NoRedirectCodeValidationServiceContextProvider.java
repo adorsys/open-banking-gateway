@@ -4,11 +4,10 @@ import de.adorsys.opba.db.domain.entity.sessions.AuthSession;
 import de.adorsys.opba.db.repository.jpa.AuthorizationSessionRepository;
 import de.adorsys.opba.db.repository.jpa.BankProfileJpaRepository;
 import de.adorsys.opba.db.repository.jpa.ServiceSessionRepository;
-import de.adorsys.opba.db.repository.jpa.fintech.FintechRepository;
 import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.facade.config.encryption.ConsentAuthorizationEncryptionServiceProvider;
-import de.adorsys.opba.protocol.facade.config.encryption.impl.fintech.FintechSecureStorage;
 import de.adorsys.opba.protocol.facade.services.EncryptionKeySerde;
+import de.adorsys.opba.protocol.facade.services.fintech.FintechAuthenticator;
 import de.adorsys.opba.protocol.facade.services.scoped.RequestScopedProvider;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +16,16 @@ public class NoRedirectCodeValidationServiceContextProvider extends ServiceConte
 
     public static final String NO_REDIRECT_CODE_VALIDATION = "NO_REDIRECT_CODE_VALIDATION_CONTEXT_PROVIDER";
 
-    public NoRedirectCodeValidationServiceContextProvider(AuthorizationSessionRepository authSessions,
-                                                          FintechSecureStorage fintechSecureStorage,
-                                                          FintechRepository fintechRepository,
-                                                          EncryptionKeySerde serde,
-                                                          ServiceSessionRepository serviceSessions,
-                                                          BankProfileJpaRepository bankProfileJpaRepository,
-                                                          ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider,
-                                                          RequestScopedProvider requestScopedProvider) {
-        super(authSessions, fintechSecureStorage, fintechRepository, bankProfileJpaRepository, consentAuthorizationEncryptionServiceProvider, requestScopedProvider, serde, serviceSessions);
+    public NoRedirectCodeValidationServiceContextProvider(
+            AuthorizationSessionRepository authSessions,
+            FintechAuthenticator authenticator,
+            BankProfileJpaRepository profileJpaRepository,
+            ConsentAuthorizationEncryptionServiceProvider consentAuthorizationEncryptionServiceProvider,
+            RequestScopedProvider provider,
+            EncryptionKeySerde encryptionKeySerde,
+            ServiceSessionRepository serviceSessions
+    ) {
+        super(authSessions, authenticator, profileJpaRepository, consentAuthorizationEncryptionServiceProvider, provider, encryptionKeySerde, serviceSessions);
     }
 
     protected <T extends FacadeServiceableGetter> void validateRedirectCode(T request, AuthSession session) {

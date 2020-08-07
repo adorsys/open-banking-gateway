@@ -15,7 +15,7 @@ import java.util.List;
  * Data is encrypted using {@link RequestScopedServicesProvider}.
  */
 @RequiredArgsConstructor
-class JsonCustomSerializer implements VariableType {
+public class JsonCustomSerializer implements VariableType {
 
     static final String JSON = "as_json";
 

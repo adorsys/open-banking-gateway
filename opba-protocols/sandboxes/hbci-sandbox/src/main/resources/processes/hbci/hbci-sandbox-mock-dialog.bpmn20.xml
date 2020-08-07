@@ -1,0 +1,556 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="hbci-sandbox-mock-dialog" isExecutable="true" name="hbci-sandbox-mock-dialog">
+    <documentation>HBCI Sandbox dialog</documentation>
+    <startEvent flowable:formFieldValidation="true" id="start" name="start">
+      <documentation>HBCI Sandbox Server</documentation>
+    </startEvent>
+    <subProcess id="sid-36197947-f323-4391-9588-2cd604101e00" flowable:async="false" flowable:exclusive="false" name="Anonymous dialog">
+      <startEvent id="sid-eb9d98fa-2592-428b-91d1-0bd81485d82a"/>
+      <serviceTask id="anonymousBpd" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Reply with anonymous BPD" flowable:delegateExpression="${anonymousDialogInitBpd}"/>
+      <serviceTask id="awaitForDialogEnd" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Await for anonymous dialog end" flowable:delegateExpression="${anonymousDialogEnd}"/>
+      <serviceTask id="anonymousBpdNotSupported" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Reply with anonymous dialog not supported" flowable:delegateExpression="${anonymousDialogInitNotSupported}"/>
+      <exclusiveGateway id="isAnonymousBpdSupported" default="anonymousBpdUnsupported"/>
+      <sequenceFlow id="sid-c153780d-00ba-482c-bec1-bccbd64d169b" sourceRef="sid-eb9d98fa-2592-428b-91d1-0bd81485d82a" targetRef="isAnonymousBpdSupported"/>
+      <sequenceFlow id="anonymousBpdSupported" sourceRef="isAnonymousBpdSupported" targetRef="anonymousBpd">
+        <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.anonymousBpdSupported(CONTEXT)}</conditionExpression>
+      </sequenceFlow>
+      <sequenceFlow id="anonymousBpdUnsupported" sourceRef="isAnonymousBpdSupported" targetRef="anonymousBpdNotSupported">
+        <conditionExpression xsi:type="tFormalExpression"/>
+      </sequenceFlow>
+      <sequenceFlow id="sid-1da7cd0f-95cc-48d4-a99a-abb949e54ae1" sourceRef="anonymousBpd" targetRef="awaitForDialogEnd"/>
+      <sequenceFlow id="sid-761160bf-280e-4709-979c-7eebd0699e81" sourceRef="anonymousBpdNotSupported" targetRef="awaitForDialogEnd"/>
+      <endEvent id="sid-4f0e8b84-2f76-40e7-aa5b-3ccd23e0ba58"/>
+      <sequenceFlow id="sid-bf1e5f34-8083-4ca2-a90a-d3d75308a3f5" sourceRef="awaitForDialogEnd" targetRef="sid-4f0e8b84-2f76-40e7-aa5b-3ccd23e0ba58"/>
+    </subProcess>
+    <subProcess id="sid-525799be-3a9d-488b-95dd-7344741c1ff8" flowable:async="false" flowable:exclusive="false" name="Authenticated dialog">
+      <subProcess id="sid-c616973f-74ef-4798-bc69-3dc4b7371833" flowable:async="false" flowable:exclusive="false" name="Authorized dialog (with TAN)">
+        <startEvent id="sid-788a14aa-7e06-4ea4-8d0e-11d90b2023df"/>
+        <endEvent id="sid-a853df77-d5f8-4e9c-984e-24264cbca8af"/>
+        <serviceTask id="withAuthorizationDialogInit" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Dialog init" flowable:delegateExpression="${authorizedDialogInit}"/>
+        <serviceTask id="withAuthorizationCustomMessage" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Custom message" flowable:delegateExpression="${authorizedCustomMsg}"/>
+        <serviceTask id="withAuthorizationDialogEnd" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Dialog end" flowable:delegateExpression="${authorizedDialogEnd}"/>
+        <serviceTask id="withAuthorizationSynch" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Synchronization" flowable:delegateExpression="${authorizedSynchronization}"/>
+        <exclusiveGateway id="handleRequestWithAuthorization"/>
+        <serviceTask id="authorizedUpdateUserAndBankInContext" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Update user and bank in context" flowable:delegateExpression="${extractBankAndUser}"/>
+        <sequenceFlow id="sid-71bcc07c-1d1d-4d04-bd67-059d559d8d9a" sourceRef="sid-788a14aa-7e06-4ea4-8d0e-11d90b2023df" targetRef="handleRequestWithAuthorization"/>
+        <sequenceFlow id="sid-1dfd6f81-8030-4572-8cc0-84543816efcf" sourceRef="handleRequestWithAuthorization" targetRef="withAuthorizationDialogInit">
+          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogInitSca(CONTEXT)}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sid-44e72bba-3022-468c-99d8-27d79c569a26" sourceRef="handleRequestWithAuthorization" targetRef="withAuthorizationCustomMessage">
+          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isCustomMessage(CONTEXT)}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sid-5f60267b-e559-4377-8676-f4120b860258" sourceRef="handleRequestWithAuthorization" targetRef="withAuthorizationSynch">
+          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isSynchronization(CONTEXT)}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sid-03267a64-0900-4454-b13c-9217f9c9aa48" sourceRef="handleRequestWithAuthorization" targetRef="withAuthorizationDialogEnd">
+          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogEnd(CONTEXT)}</conditionExpression>
+        </sequenceFlow>
+        <exclusiveGateway id="checkIfDialogIsStillAuthorized" default="pinOrTanIsWrong"/>
+        <sequenceFlow id="sid-a93dc7fd-24f4-4dac-baed-92f7e98288ed" sourceRef="withAuthorizationDialogInit" targetRef="authorizedUpdateUserAndBankInContext"/>
+        <sequenceFlow id="sid-86eefd3d-c1fe-4879-8213-646efe62c240" sourceRef="withAuthorizationCustomMessage" targetRef="authorizedUpdateUserAndBankInContext"/>
+        <sequenceFlow id="sid-6fbf3e68-65a3-4f6d-92a8-3396b6204c6b" sourceRef="withAuthorizationSynch" targetRef="authorizedUpdateUserAndBankInContext"/>
+        <sequenceFlow id="pinOrTanIsWrong" sourceRef="checkIfDialogIsStillAuthorized" targetRef="authorizationLost">
+          <conditionExpression xsi:type="tFormalExpression"/>
+        </sequenceFlow>
+        <sequenceFlow id="pinTanIsOk" sourceRef="checkIfDialogIsStillAuthorized" targetRef="handleRequestWithAuthorization">
+          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogPinTanOk(CONTEXT)}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sid-d82ed265-7a90-408f-84f1-b0cc034ecd96" sourceRef="withAuthorizationDialogEnd" targetRef="sid-a853df77-d5f8-4e9c-984e-24264cbca8af"/>
+        <serviceTask id="authorizationLost" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Wrong or no authorization" flowable:delegateExpression="${authorizedAuthLost}"/>
+        <sequenceFlow id="sid-d8c121da-ad96-40ff-8d11-8ba01e9bb910" sourceRef="authorizationLost" targetRef="sid-a853df77-d5f8-4e9c-984e-24264cbca8af"/>
+        <sequenceFlow id="sid-fc6cf3a3-120a-4389-86b3-7d8ac6a570c8" sourceRef="authorizedUpdateUserAndBankInContext" targetRef="checkIfDialogIsStillAuthorized"/>
+      </subProcess>
+      <subProcess id="sid-5510acbc-343c-421b-9c75-c005db1d39ae" flowable:async="false" flowable:exclusive="false" name="Non-authorized dialog (no TAN)">
+        <startEvent id="sid-6694b0e9-a95d-4a5c-ae77-845cb309fc74"/>
+        <endEvent id="sid-e0b56cf1-5c28-4edd-93b0-0b3f768f7d88"/>
+        <serviceTask id="noAuthorizationDialogInit" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Dialog init" flowable:delegateExpression="${authenticatedDialogInit}"/>
+        <serviceTask id="noAuthorizationCustomMsg" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Custom message" flowable:delegateExpression="${authenticatedCustomMsg}"/>
+        <serviceTask id="noAuthorizationSynch" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Synchronization" flowable:delegateExpression="${authenticatedSynchronization}"/>
+        <serviceTask id="noAuthorizationDialogEnd" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Dialog end" flowable:delegateExpression="${authenticatedDialogEnd}"/>
+        <serviceTask id="authenticatedUpdateUserAndBankInContext" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Update user and bank in context" flowable:delegateExpression="${extractBankAndUser}"/>
+        <exclusiveGateway id="checkIfDialogIsStillAuthenticated" default="pinIsWrong"/>
+        <exclusiveGateway id="handleRequestWithoutAuthorization"/>
+        <sequenceFlow id="sid-0666c55d-6876-42f0-8432-baa8029a8328" sourceRef="handleRequestWithoutAuthorization" targetRef="noAuthorizationDialogEnd">
+          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogEnd(CONTEXT)}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sid-1ea2964e-df6f-46b4-a40f-2bcf5ab04009" sourceRef="handleRequestWithoutAuthorization" targetRef="noAuthorizationSynch">
+          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isSynchronization(CONTEXT)}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sid-a4ac985e-ef4d-477a-b6c1-ac723f4c15e1" sourceRef="handleRequestWithoutAuthorization" targetRef="noAuthorizationCustomMsg">
+          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isCustomMessage(CONTEXT)}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sid-d07f235c-5ab7-48c5-ab7c-66e7822199ee" sourceRef="handleRequestWithoutAuthorization" targetRef="noAuthorizationDialogInit">
+          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogInit(CONTEXT)}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sid-2ab91f13-0051-4d77-8a4e-8d94eae7333d" sourceRef="sid-6694b0e9-a95d-4a5c-ae77-845cb309fc74" targetRef="handleRequestWithoutAuthorization"/>
+        <sequenceFlow id="sid-e1ab1d95-3fad-4d45-acdf-ca7ca63d0d8e" sourceRef="noAuthorizationCustomMsg" targetRef="authenticatedUpdateUserAndBankInContext"/>
+        <sequenceFlow id="sid-a30851a1-ccfc-4097-8813-9e5dd1d711bf" sourceRef="noAuthorizationDialogInit" targetRef="authenticatedUpdateUserAndBankInContext"/>
+        <sequenceFlow id="sid-083f0679-8a0f-4e6a-a114-c4129948fd6c" sourceRef="noAuthorizationSynch" targetRef="authenticatedUpdateUserAndBankInContext"/>
+        <sequenceFlow id="pinIsOk" sourceRef="checkIfDialogIsStillAuthenticated" targetRef="handleRequestWithoutAuthorization">
+          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogPinOkAndNoTan(CONTEXT)}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sid-d2c93495-6de7-4ec9-b61a-f80d96e58d56" sourceRef="noAuthorizationDialogEnd" targetRef="sid-e0b56cf1-5c28-4edd-93b0-0b3f768f7d88"/>
+        <serviceTask id="authenticationLost" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Wrong or no authentication" flowable:delegateExpression="${authenticatedAuthLost}"/>
+        <sequenceFlow id="pinIsWrong" sourceRef="checkIfDialogIsStillAuthenticated" targetRef="authenticationLost">
+          <conditionExpression xsi:type="tFormalExpression"/>
+        </sequenceFlow>
+        <sequenceFlow id="sid-80397a31-736b-4ff7-98a8-9c0c24c37061" sourceRef="authenticationLost" targetRef="sid-e0b56cf1-5c28-4edd-93b0-0b3f768f7d88"/>
+        <sequenceFlow id="sid-50835ca4-6fb1-4b17-a677-0cb324b3a82b" sourceRef="authenticatedUpdateUserAndBankInContext" targetRef="checkIfDialogIsStillAuthenticated"/>
+        <serviceTask id="noAuthorizationDialogInitScaTan2Step" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Dialog init TAN 2 step (SCA)" flowable:delegateExpression="${authenticatedDialogInitTan2Step}">
+          <documentation>Dialog init TAN 2 step (SCA)</documentation>
+        </serviceTask>
+        <sequenceFlow id="sid-2a8854a7-397e-4dba-862e-9a8a1c437fe3" sourceRef="noAuthorizationDialogInitScaTan2Step" targetRef="authenticatedUpdateUserAndBankInContext"/>
+        <sequenceFlow id="sid-8b14ea45-50fd-4d38-95d5-33d57501462d" sourceRef="handleRequestWithoutAuthorization" targetRef="noAuthorizationDialogInitScaTan2Step">
+          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogInitScaTan2Step(CONTEXT)}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="noAuthorizationTanWasProvided" sourceRef="checkIfDialogIsStillAuthenticated" targetRef="sid-e0b56cf1-5c28-4edd-93b0-0b3f768f7d88" name="Tan was provided">
+          <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogPinTanOk(CONTEXT)}</conditionExpression>
+        </sequenceFlow>
+      </subProcess>
+      <endEvent id="sid-69dda285-07b3-4433-9d39-a074f97f60ab"/>
+      <exclusiveGateway id="isDialogAuthorized" default="dialogHasWrongPinOrTan"/>
+      <startEvent id="sid-a44b1524-6994-4834-820c-5c9ecf81dc8f"/>
+      <sequenceFlow id="sid-1979a1fe-11ae-4887-8b2c-03032fbd1ed5" sourceRef="sid-c616973f-74ef-4798-bc69-3dc4b7371833" targetRef="sid-69dda285-07b3-4433-9d39-a074f97f60ab"/>
+      <sequenceFlow id="sid-ede9cace-3ba2-4504-bc58-74f8ce61674e" sourceRef="sid-5510acbc-343c-421b-9c75-c005db1d39ae" targetRef="sid-69dda285-07b3-4433-9d39-a074f97f60ab"/>
+      <sequenceFlow id="dialogHasValidPinTan" sourceRef="isDialogAuthorized" targetRef="sid-a04150db-257d-4f5d-be14-2a5f1bbd4b55">
+        <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogPinTanOk(CONTEXT)}</conditionExpression>
+      </sequenceFlow>
+      <sequenceFlow id="dialogHasValidPin" sourceRef="isDialogAuthorized" targetRef="sid-5510acbc-343c-421b-9c75-c005db1d39ae">
+        <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogPinOkAndNoTan(CONTEXT)}</conditionExpression>
+      </sequenceFlow>
+      <sequenceFlow id="sid-79c6fef5-0003-4f74-a325-00584d121232" sourceRef="sid-a44b1524-6994-4834-820c-5c9ecf81dc8f" targetRef="isDialogAuthorized"/>
+      <serviceTask id="wrongPinOrTanOrLogin" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Wrong Login or PIN or TAN" flowable:delegateExpression="${wrongPinTanOrLogin}"/>
+      <sequenceFlow id="sid-410cc5d0-4acd-4f8e-8287-3ed6fdb0a7d3" sourceRef="wrongPinOrTanOrLogin" targetRef="sid-69dda285-07b3-4433-9d39-a074f97f60ab"/>
+      <sequenceFlow id="dialogHasWrongPinOrTan" sourceRef="isDialogAuthorized" targetRef="wrongPinOrTanOrLogin">
+        <conditionExpression xsi:type="tFormalExpression"/>
+      </sequenceFlow>
+      <serviceTask id="onWrongScaMethod" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="true" flowable:useLocalScopeForResultVariable="false" name="Handle wrong SCA method ID" flowable:delegateExpression="${wrongScaMethodId}"/>
+      <exclusiveGateway id="sid-a04150db-257d-4f5d-be14-2a5f1bbd4b55" default="okScaMethodIdProvided"/>
+      <sequenceFlow id="wrongScaMethodIdProvided" sourceRef="sid-a04150db-257d-4f5d-be14-2a5f1bbd4b55" targetRef="onWrongScaMethod">
+        <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isWrongScaMethod(CONTEXT)}</conditionExpression>
+      </sequenceFlow>
+      <sequenceFlow id="okScaMethodIdProvided" sourceRef="sid-a04150db-257d-4f5d-be14-2a5f1bbd4b55" targetRef="sid-c616973f-74ef-4798-bc69-3dc4b7371833">
+        <conditionExpression xsi:type="tFormalExpression"/>
+      </sequenceFlow>
+      <sequenceFlow id="sid-6625a733-22de-4ae0-bc66-bc022ba773b9" sourceRef="onWrongScaMethod" targetRef="sid-69dda285-07b3-4433-9d39-a074f97f60ab"/>
+    </subProcess>
+    <exclusiveGateway id="isAnonymousDialog" default="authenticatedDialog"/>
+    <sequenceFlow id="anonymousDialog" sourceRef="isAnonymousDialog" targetRef="setBankInContext">
+      <conditionExpression xsi:type="tFormalExpression">#{decisionSwitch.isDialogAnonymous(CONTEXT)}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-adb58746-fc3e-4b7c-b507-5b8bc8dfcb9a" sourceRef="start" targetRef="setDialogId"/>
+    <sequenceFlow id="authenticatedDialog" sourceRef="isAnonymousDialog" targetRef="setUserInContext">
+      <conditionExpression xsi:type="tFormalExpression"/>
+    </sequenceFlow>
+    <serviceTask id="setBankInContext" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Set bank in the context" flowable:delegateExpression="${extractBankAndUser}"/>
+    <sequenceFlow id="sid-5b9c0cf7-217c-4f1f-8953-5258d4f3bd98" sourceRef="setBankInContext" targetRef="sid-36197947-f323-4391-9588-2cd604101e00"/>
+    <serviceTask id="setUserInContext" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Set user in context" flowable:delegateExpression="${extractBankAndUser}"/>
+    <sequenceFlow id="sid-1b734353-7ad8-4756-97c9-611cdb7d4bc6" sourceRef="setUserInContext" targetRef="sid-525799be-3a9d-488b-95dd-7344741c1ff8"/>
+    <serviceTask id="setDialogId" isForCompensation="false" flowable:async="false" flowable:exclusive="false" flowable:triggerable="false" flowable:useLocalScopeForResultVariable="false" name="Set dialog ID in context" flowable:delegateExpression="${setDialogId}"/>
+    <sequenceFlow id="sid-f7f718c1-ac0e-44a2-bc0b-eb403ff76198" sourceRef="setDialogId" targetRef="isAnonymousDialog"/>
+    <sequenceFlow id="sid-5a379c32-1a7f-44c9-b896-ab6d6b3812ea" sourceRef="sid-36197947-f323-4391-9588-2cd604101e00" targetRef="sid-562c4497-99e0-4a37-a872-972088bac3c7"/>
+    <sequenceFlow id="sid-be2336e5-89fa-49b3-a065-45f0f60ed113" sourceRef="sid-525799be-3a9d-488b-95dd-7344741c1ff8" targetRef="sid-562c4497-99e0-4a37-a872-972088bac3c7"/>
+    <inclusiveGateway id="sid-562c4497-99e0-4a37-a872-972088bac3c7"/>
+    <sequenceFlow id="sid-61fc5d07-15ef-463a-80ce-75b5fad5bf75" sourceRef="sid-562c4497-99e0-4a37-a872-972088bac3c7" targetRef="isAnonymousDialog">
+      <conditionExpression xsi:type="tFormalExpression"/>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_hbci-dialog">
+    <bpmndi:BPMNPlane bpmnElement="hbci-sandbox-mock-dialog" id="BPMNPlane_hbci-dialog">
+      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+        <omgdc:Bounds height="30.0" width="30.0" x="-1107.1666" y="905.2383"/>
+      </bpmndi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-d1dc96b9-1235-45d9-9483-92b5e2e20638" bpmnElement="sid-c616973f-74ef-4798-bc69-3dc4b7371833">
+        <omgdc:Bounds x="-391.83932" y="-353.271" width="547.3078" height="465.0193"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-f0902a98-3914-4bd0-9f94-1b7ab2309353" bpmnElement="sid-5510acbc-343c-421b-9c75-c005db1d39ae">
+        <omgdc:Bounds x="-385.95953" y="261.3404" width="542.87726" height="624.1288"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-9605a457-3d79-4f90-816b-83d133baea79" bpmnElement="sid-36197947-f323-4391-9588-2cd604101e00">
+        <omgdc:Bounds x="-550.0503" y="935.2383" width="599.6201" height="374.88428"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-6b5162e9-fe33-4d66-b2c8-71142b96321d" bpmnElement="sid-525799be-3a9d-488b-95dd-7344741c1ff8">
+        <omgdc:Bounds x="-614.02673" y="-400.1002" width="1012.4531" height="1313.0181"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-fe97fb50-3ee2-411f-9b1a-93c3b51f4aab" bpmnElement="isAnonymousDialog">
+        <omgdc:Bounds x="-838.01434" y="900.23834" width="40.0" height="40.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-f3bc5d02-9aa2-4451-b1f1-ee362972c75b" bpmnElement="anonymousDialog">
+        <omgdi:waypoint x="-818.01434" y="940.23834"/>
+        <omgdi:waypoint x="-818.0026" y="1123.1198"/>
+        <omgdi:waypoint x="-764.4195" y="1122.6804"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-ae443cf9-667e-4d7a-90a5-af809c0fe76a" bpmnElement="sid-adb58746-fc3e-4b7c-b507-5b8bc8dfcb9a">
+        <omgdi:waypoint x="-1077.1666" y="920.2383"/>
+        <omgdi:waypoint x="-1028.7256" y="920.23834"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-7310db46-e204-4138-b372-928252f8f8ca" bpmnElement="sid-a44b1524-6994-4834-820c-5c9ecf81dc8f">
+        <omgdc:Bounds x="-585.789" y="226.34038" width="30.0" height="30.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-bdb4c238-8166-4d66-8132-04dd4b88a893" bpmnElement="sid-69dda285-07b3-4433-9d39-a074f97f60ab">
+        <omgdc:Bounds x="331.60153" y="166.8603" width="30.0" height="30.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-b7bc61d8-e240-4cfa-8a6d-22f91d250fda" bpmnElement="sid-eb9d98fa-2592-428b-91d1-0bd81485d82a">
+        <omgdc:Bounds x="-530.8617" y="1118.6958" width="30.0" height="30.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-253279f1-79b4-4d86-afd5-94e061ff34ff" bpmnElement="sid-4f0e8b84-2f76-40e7-aa5b-3ccd23e0ba58">
+        <omgdc:Bounds x="5.857258" y="1118.6958" width="30.0" height="30.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-6a6440c2-9094-44b2-b7dd-33d0541c6b15" bpmnElement="isDialogAuthorized">
+        <omgdc:Bounds x="-512.575" y="221.3404" width="40.0" height="40.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-1d3780fa-ad22-4827-a809-3f613d10e60a" bpmnElement="sid-788a14aa-7e06-4ea4-8d0e-11d90b2023df">
+        <omgdc:Bounds x="-382.241" y="-167.65202" width="30.0" height="30.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-34939c1e-7d9f-46ca-9ed3-1a2e39b6185a" bpmnElement="sid-a853df77-d5f8-4e9c-984e-24264cbca8af">
+        <omgdc:Bounds x="-93.78208" y="45.65655" width="30.0" height="30.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-b9c8128a-f42f-4172-a311-34ee2d712c1b" bpmnElement="withAuthorizationDialogInit">
+        <omgdc:Bounds x="-176.67163" y="-290.90192" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-2e553f05-c730-4067-90aa-1eafdb601ab2" bpmnElement="withAuthorizationCustomMessage">
+        <omgdc:Bounds x="-176.67166" y="-192.65202" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-bded3411-1c20-4aab-a327-79802b21fd17" bpmnElement="withAuthorizationDialogEnd">
+        <omgdc:Bounds x="-229.67168" y="20.656551" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-37c28dfb-c2aa-4ad9-9293-711ec36e57df" bpmnElement="withAuthorizationSynch">
+        <omgdc:Bounds x="-176.67166" y="-86.018715" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-f5e3b574-f456-483d-bc94-a0f81887bd0c" bpmnElement="handleRequestWithAuthorization">
+        <omgdc:Bounds x="-298.7977" y="-172.65202" width="40.0" height="40.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-f934ebc8-6305-44af-8b9a-aa05c7e6171b" bpmnElement="authorizedUpdateUserAndBankInContext">
+        <omgdc:Bounds x="-15.779587" y="-290.90192" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-490554d5-4462-4018-9777-a9a07edfe55d" bpmnElement="sid-71bcc07c-1d1d-4d04-bd67-059d559d8d9a">
+        <omgdi:waypoint x="-352.241" y="-152.65202"/>
+        <omgdi:waypoint x="-298.7977" y="-152.65202"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-b8a49191-909d-458d-9864-eb4a9f712ba9" bpmnElement="sid-1dfd6f81-8030-4572-8cc0-84543816efcf">
+        <omgdi:waypoint x="-258.7977" y="-152.65202"/>
+        <omgdi:waypoint x="-217.73468" y="-152.65204"/>
+        <omgdi:waypoint x="-217.00552" y="-250.90192"/>
+        <omgdi:waypoint x="-176.67163" y="-250.90192"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-739e28ff-671d-4ca4-8850-e92a92a56969" bpmnElement="sid-44e72bba-3022-468c-99d8-27d79c569a26">
+        <omgdi:waypoint x="-258.7977" y="-152.65202"/>
+        <omgdi:waypoint x="-176.67166" y="-152.65204"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-283a3cf7-0416-46f6-8d95-a7241c1917e0" bpmnElement="sid-5f60267b-e559-4377-8676-f4120b860258">
+        <omgdi:waypoint x="-258.7977" y="-152.65202"/>
+        <omgdi:waypoint x="-217.73468" y="-152.65204"/>
+        <omgdi:waypoint x="-217.0055" y="-46.018715"/>
+        <omgdi:waypoint x="-176.67166" y="-46.018715"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-09759c03-6824-48da-ab51-f237aab6f2a0" bpmnElement="sid-03267a64-0900-4454-b13c-9217f9c9aa48">
+        <omgdi:waypoint x="-278.7977" y="-132.65204"/>
+        <omgdi:waypoint x="-277.9644" y="60.656548"/>
+        <omgdi:waypoint x="-229.67168" y="60.65655"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-e218c8b2-90e8-483a-a921-ace816fd4a74" bpmnElement="checkIfDialogIsStillAuthorized">
+        <omgdc:Bounds x="14.220411" y="-46.51728" width="40.0" height="40.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-09317632-f6a4-44b5-bd4a-632cae5a62e7" bpmnElement="sid-a93dc7fd-24f4-4dac-baed-92f7e98288ed">
+        <omgdi:waypoint x="-76.67164" y="-270.90192"/>
+        <omgdi:waypoint x="-15.779587" y="-270.90192"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-e768bf13-8c6a-4603-8d1d-7170a47d2327" bpmnElement="sid-86eefd3d-c1fe-4879-8213-646efe62c240">
+        <omgdi:waypoint x="-76.67164" y="-152.65204"/>
+        <omgdi:waypoint x="-50.06342" y="-152.65202"/>
+        <omgdi:waypoint x="-49.103962" y="-250.90187"/>
+        <omgdi:waypoint x="-15.779587" y="-250.90189"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-a43721e6-4bab-4168-ae4e-00a231813388" bpmnElement="sid-6fbf3e68-65a3-4f6d-92a8-3396b6204c6b">
+        <omgdi:waypoint x="-76.671646" y="-66.018715"/>
+        <omgdi:waypoint x="-49.455788" y="-66.01872"/>
+        <omgdi:waypoint x="-31.962048" y="-66.018715"/>
+        <omgdi:waypoint x="-31.96205" y="-230.90189"/>
+        <omgdi:waypoint x="-15.779587" y="-230.90189"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-515871fb-8912-4899-97f2-b73c5c2cf470" bpmnElement="pinOrTanIsWrong">
+        <omgdi:waypoint x="34.220413" y="-6.5172825"/>
+        <omgdi:waypoint x="34.22041" y="20.656548"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-848c0584-ca14-4b12-96b3-4946308d6366" bpmnElement="pinTanIsOk">
+        <omgdi:waypoint x="54.22043" y="-26.517282"/>
+        <omgdi:waypoint x="129.7266" y="-26.306633"/>
+        <omgdi:waypoint x="128.8357" y="-309.83704"/>
+        <omgdi:waypoint x="-277.9644" y="-309.8371"/>
+        <omgdi:waypoint x="-278.7977" y="-172.65202"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-89146673-01e0-4eb1-b29c-b60b0abde591" bpmnElement="sid-d82ed265-7a90-408f-84f1-b0cc034ecd96">
+        <omgdi:waypoint x="-129.67166" y="60.65655"/>
+        <omgdi:waypoint x="-93.78208" y="60.65655"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-52322057-3e24-488a-a510-679e93bf1766" bpmnElement="sid-6694b0e9-a95d-4a5c-ae77-845cb309fc74">
+        <omgdc:Bounds x="-363.0055" y="587.4907" width="30.0" height="30.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-283b8f39-b8b3-4b88-bebd-b9fa4d42b4cb" bpmnElement="sid-e0b56cf1-5c28-4edd-93b0-0b3f768f7d88">
+        <omgdc:Bounds x="-69.83679" y="785.59955" width="30.0" height="30.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-46f03d31-01bc-4093-a6ba-4a0f15b231d2" bpmnElement="noAuthorizationDialogInit">
+        <omgdc:Bounds x="-185.9289" y="368.45532" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-fce607f3-965b-49c0-9352-0354e9c3c596" bpmnElement="noAuthorizationCustomMsg">
+        <omgdc:Bounds x="-185.92888" y="562.4908" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-31a03f5c-c35f-410e-bee1-0f87f3aed3d9" bpmnElement="noAuthorizationSynch">
+        <omgdc:Bounds x="-185.9289" y="657.99316" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-0256a3d7-38e9-427b-8d1e-8fd4967f3813" bpmnElement="noAuthorizationDialogEnd">
+        <omgdc:Bounds x="-214.92888" y="760.59955" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-9c36ba85-7bfe-41e4-965e-51031ac61772" bpmnElement="authenticatedUpdateUserAndBankInContext">
+        <omgdc:Bounds x="-1.0367908" y="458.92755" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-bb493b0d-3566-41ec-afce-082a0a61c072" bpmnElement="checkIfDialogIsStillAuthenticated">
+        <omgdc:Bounds x="28.963211" y="685.17114" width="40.0" height="40.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-1f8a1a25-230b-4e74-9e62-e9de2075100d" bpmnElement="sid-1979a1fe-11ae-4887-8b2c-03032fbd1ed5">
+        <omgdi:waypoint x="155.46848" y="-4.506531"/>
+        <omgdi:waypoint x="346.6015" y="-4.506531"/>
+        <omgdi:waypoint x="346.60153" y="166.8603"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-64ff3792-5c45-4e82-8522-eee1864c9487" bpmnElement="sid-ede9cace-3ba2-4504-bc58-74f8ce61674e">
+        <omgdi:waypoint x="156.91774" y="417.37262"/>
+        <omgdi:waypoint x="344.72653" y="417.625"/>
+        <omgdi:waypoint x="346.6015" y="196.86029"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-3236ceb0-8709-457b-bfac-cd5f4210d82d" bpmnElement="dialogHasValidPinTan">
+        <omgdi:waypoint x="-492.57504" y="221.3404"/>
+        <omgdi:waypoint x="-493.65506" y="135.22595"/>
+        <omgdi:waypoint x="-455.6923" y="135.22594"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-fdd67521-d527-452b-8638-661cf8b7ebaa" bpmnElement="dialogHasValidPin">
+        <omgdi:waypoint x="-492.57504" y="261.3404"/>
+        <omgdi:waypoint x="-490.71503" y="417.62503"/>
+        <omgdi:waypoint x="-385.95953" y="417.37262"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-0dcb0b96-c928-47a7-8875-81c670a29328" bpmnElement="sid-79c6fef5-0003-4f74-a325-00584d121232">
+        <omgdi:waypoint x="-555.789" y="241.34038"/>
+        <omgdi:waypoint x="-512.575" y="241.3404"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-f336b92f-4534-4cef-9310-0f4aa2375b70" bpmnElement="handleRequestWithoutAuthorization">
+        <omgdc:Bounds x="-284.05493" y="582.4908" width="40.0" height="40.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-bcb4b6f5-f04c-41fb-a012-693b58b96464" bpmnElement="sid-0666c55d-6876-42f0-8432-baa8029a8328">
+        <omgdi:waypoint x="-264.05493" y="622.4908"/>
+        <omgdi:waypoint x="-264.05493" y="799.5994"/>
+        <omgdi:waypoint x="-214.92888" y="800.59955"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-2d4c0ba8-2603-4735-b8f6-56b57e1981f3" bpmnElement="sid-1ea2964e-df6f-46b4-a40f-2bcf5ab04009">
+        <omgdi:waypoint x="-244.05493" y="602.4908"/>
+        <omgdi:waypoint x="-223.52338" y="602.4908"/>
+        <omgdi:waypoint x="-223.52338" y="649.24194"/>
+        <omgdi:waypoint x="-223.52338" y="697.9931"/>
+        <omgdi:waypoint x="-185.92891" y="697.9932"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-5c07637a-3bce-4bcd-8fc9-f07dccc4c5c6" bpmnElement="sid-a4ac985e-ef4d-477a-b6c1-ac723f4c15e1">
+        <omgdi:waypoint x="-244.05496" y="602.4907"/>
+        <omgdi:waypoint x="-185.92886" y="602.49084"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-f1ead242-07a1-4f1d-bd79-249e7bdc7d14" bpmnElement="sid-d07f235c-5ab7-48c5-ab7c-66e7822199ee">
+        <omgdi:waypoint x="-244.05496" y="602.4908"/>
+        <omgdi:waypoint x="-223.52339" y="602.4907"/>
+        <omgdi:waypoint x="-223.53154" y="408.88934"/>
+        <omgdi:waypoint x="-185.9289" y="408.45532"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-8e820e2e-f4f5-46c4-8da3-4075533439c0" bpmnElement="sid-2ab91f13-0051-4d77-8a4e-8d94eae7333d">
+        <omgdi:waypoint x="-333.0055" y="602.4907"/>
+        <omgdi:waypoint x="-284.05493" y="602.4908"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-33cdb174-d212-4b04-82e4-a42f2f52f534" bpmnElement="sid-e1ab1d95-3fad-4d45-acdf-ca7ca63d0d8e">
+        <omgdi:waypoint x="-85.92888" y="602.4908"/>
+        <omgdi:waypoint x="-46.70585" y="602.4908"/>
+        <omgdi:waypoint x="-46.70585" y="498.92755"/>
+        <omgdi:waypoint x="-1.0367908" y="498.92755"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-8079db3d-488d-47c8-91ce-4446daf5c010" bpmnElement="sid-a30851a1-ccfc-4097-8813-9e5dd1d711bf">
+        <omgdi:waypoint x="-85.9289" y="388.45532"/>
+        <omgdi:waypoint x="48.963215" y="388.88934"/>
+        <omgdi:waypoint x="48.96321" y="458.92755"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-1b99c97b-ca57-43c8-9d9e-c495b90cf3d3" bpmnElement="sid-083f0679-8a0f-4e6a-a114-c4129948fd6c">
+        <omgdi:waypoint x="-85.928894" y="677.99316"/>
+        <omgdi:waypoint x="-31.48283" y="677.99316"/>
+        <omgdi:waypoint x="-31.482834" y="518.92755"/>
+        <omgdi:waypoint x="-1.0367908" y="518.92755"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-49e71d66-a1cd-4beb-aa47-a3f8059c2ca6" bpmnElement="pinIsOk">
+        <omgdi:waypoint x="68.96321" y="705.17114"/>
+        <omgdi:waypoint x="145.36029" y="705.1712"/>
+        <omgdi:waypoint x="145.3603" y="360.80167"/>
+        <omgdi:waypoint x="-266.6469" y="360.3481"/>
+        <omgdi:waypoint x="-264.05493" y="587.4908"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-fe57e146-a573-4710-874b-c1f22656ecc5" bpmnElement="authenticatedDialog">
+        <omgdi:waypoint x="-818.01434" y="900.23834"/>
+        <omgdi:waypoint x="-818.2644" y="256.40887"/>
+        <omgdi:waypoint x="-771.61957" y="256.40887"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-6b912a2b-550a-4b00-b8fb-9078be7469d3" bpmnElement="anonymousBpd">
+        <omgdc:Bounds x="-306.41632" y="980.5369" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-6bca030a-5533-4b01-a42b-61ab084a3731" bpmnElement="awaitForDialogEnd">
+        <omgdc:Bounds x="-147.34158" y="1093.6958" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-7a4130c8-0c03-4c9c-bb96-e8d955a5a421" bpmnElement="anonymousBpdNotSupported">
+        <omgdc:Bounds x="-306.41635" y="1212.3771" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-7df2c032-be19-4345-8e00-7981551b52c2" bpmnElement="isAnonymousBpdSupported">
+        <omgdc:Bounds x="-436.01636" y="1113.6958" width="40.0" height="40.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-c4a6f66a-5990-4584-bb5f-5b11af2d58dc" bpmnElement="sid-c153780d-00ba-482c-bec1-bccbd64d169b">
+        <omgdi:waypoint x="-500.86172" y="1133.6958"/>
+        <omgdi:waypoint x="-436.01636" y="1133.6958"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-783616f7-4181-415b-bb65-4694a4fb41d5" bpmnElement="anonymousBpdSupported">
+        <omgdi:waypoint x="-416.01636" y="1113.6958"/>
+        <omgdi:waypoint x="-416.01633" y="1020.53687"/>
+        <omgdi:waypoint x="-306.41635" y="1020.5369"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-5a23ead5-534d-4605-90f4-94bbe1756083" bpmnElement="anonymousBpdUnsupported">
+        <omgdi:waypoint x="-416.01636" y="1153.6958"/>
+        <omgdi:waypoint x="-415.18402" y="1252.3771"/>
+        <omgdi:waypoint x="-306.41632" y="1252.3771"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-3e4bbaa2-dfd4-4772-bf00-947727769037" bpmnElement="sid-1da7cd0f-95cc-48d4-a99a-abb949e54ae1">
+        <omgdi:waypoint x="-206.41632" y="1020.537"/>
+        <omgdi:waypoint x="-97.34158" y="1020.537"/>
+        <omgdi:waypoint x="-97.34158" y="1093.6957"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-50bb409f-8fb2-416e-93eb-09398d179d8a" bpmnElement="sid-761160bf-280e-4709-979c-7eebd0699e81">
+        <omgdi:waypoint x="-206.41635" y="1252.3772"/>
+        <omgdi:waypoint x="-97.34158" y="1252.377"/>
+        <omgdi:waypoint x="-97.34158" y="1173.6958"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-d814e984-3986-4dc4-9339-461ea75e3a50" bpmnElement="sid-bf1e5f34-8083-4ca2-a90a-d3d75308a3f5">
+        <omgdi:waypoint x="-47.341583" y="1133.6958"/>
+        <omgdi:waypoint x="5.857258" y="1133.6958"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-6b27dc65-dad0-44d4-b42f-e1d98e7d51a6" bpmnElement="sid-d2c93495-6de7-4ec9-b61a-f80d96e58d56">
+        <omgdi:waypoint x="-114.92888" y="800.59955"/>
+        <omgdi:waypoint x="-69.83679" y="800.59955"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-1a35e965-66be-4ae4-b258-4806d489af72" bpmnElement="authenticationLost">
+        <omgdc:Bounds x="-1.036789" y="760.59955" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-c91de1d3-f463-4058-8186-86c8e6339865" bpmnElement="pinIsWrong">
+        <omgdi:waypoint x="48.96321" y="725.17114"/>
+        <omgdi:waypoint x="48.96321" y="760.59955"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-b22be783-29ab-4529-9fc7-30d252e044ec" bpmnElement="sid-80397a31-736b-4ff7-98a8-9c0c24c37061">
+        <omgdi:waypoint x="-1.036789" y="800.59955"/>
+        <omgdi:waypoint x="-39.836792" y="800.59955"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-fbda9585-7910-437c-8b7c-2e6cc1ef7242" bpmnElement="authorizationLost">
+        <omgdc:Bounds x="-15.779587" y="20.656548" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-308fdc0d-295f-4316-8668-02d7b64cad4d" bpmnElement="sid-d8c121da-ad96-40ff-8d11-8ba01e9bb910">
+        <omgdi:waypoint x="-15.779587" y="60.656548"/>
+        <omgdi:waypoint x="-63.78208" y="60.65655"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-7481d800-e204-4be2-a936-eeabb492202a" bpmnElement="wrongPinOrTanOrLogin">
+        <omgdc:Bounds x="173.95566" y="201.3404" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-2a95710a-4a68-40e5-9c2a-7c8a25993d9a" bpmnElement="sid-410cc5d0-4acd-4f8e-8287-3ed6fdb0a7d3">
+        <omgdi:waypoint x="273.95563" y="241.3404"/>
+        <omgdi:waypoint x="306.17212" y="241.1234"/>
+        <omgdi:waypoint x="305.65182" y="181.8603"/>
+        <omgdi:waypoint x="331.60153" y="181.8603"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-17df5dab-dd31-480a-95fd-860e8d891bc6" bpmnElement="dialogHasWrongPinOrTan">
+        <omgdi:waypoint x="-472.57504" y="241.3404"/>
+        <omgdi:waypoint x="73.96316" y="240.47235"/>
+        <omgdi:waypoint x="173.95566" y="241.3404"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-cdfccb95-3eb1-449d-b005-77b64db7b66d" bpmnElement="setBankInContext">
+        <omgdc:Bounds x="-764.4195" y="1082.6804" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-1b42cffc-e20d-4533-a936-e7bbbcfbb619" bpmnElement="sid-5b9c0cf7-217c-4f1f-8953-5258d4f3bd98">
+        <omgdi:waypoint x="-664.4195" y="1122.6804"/>
+        <omgdi:waypoint x="-550.0503" y="1122.6804"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-f39c8a98-ae08-4375-9b2f-b84667928764" bpmnElement="setUserInContext">
+        <omgdc:Bounds x="-771.61957" y="216.40887" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-f68e1637-3d1a-4fc2-903c-69cc5212460d" bpmnElement="sid-1b734353-7ad8-4756-97c9-611cdb7d4bc6">
+        <omgdi:waypoint x="-671.61957" y="256.40887"/>
+        <omgdi:waypoint x="-614.02673" y="256.40884"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-0c9eb17b-ab1c-44f7-b079-7d8bfb98372d" bpmnElement="sid-fc6cf3a3-120a-4389-86b3-7d8ac6a570c8">
+        <omgdi:waypoint x="34.220413" y="-210.90192"/>
+        <omgdi:waypoint x="34.220413" y="-46.517273"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-7f89b72b-1bbd-4af0-9a5f-58844defcf43" bpmnElement="sid-50835ca4-6fb1-4b17-a677-0cb324b3a82b">
+        <omgdi:waypoint x="48.96321" y="538.92755"/>
+        <omgdi:waypoint x="48.963215" y="685.1712"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-6c782f87-439e-4d9a-bbdd-66872353195c" bpmnElement="setDialogId">
+        <omgdc:Bounds x="-1028.7255" y="880.2383" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-d23610e5-b119-4299-9415-0341ee456199" bpmnElement="sid-f7f718c1-ac0e-44a2-bc0b-eb403ff76198">
+        <omgdi:waypoint x="-928.72546" y="920.2383"/>
+        <omgdi:waypoint x="-838.01434" y="920.23834"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-35828286-4c84-46fc-9dd3-1fcd658bb249" bpmnElement="sid-5a379c32-1a7f-44c9-b896-ab6d6b3812ea">
+        <omgdi:waypoint x="-550.0503" y="1028.9594"/>
+        <omgdi:waypoint x="-728.7982" y="1028.9595"/>
+        <omgdi:waypoint x="-728.7983" y="940.2384"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-1705f711-da45-46c3-999f-d033a3bad2e8" bpmnElement="sid-be2336e5-89fa-49b3-a065-45f0f60ed113">
+        <omgdi:waypoint x="-614.02673" y="584.6633"/>
+        <omgdi:waypoint x="-728.7982" y="584.66327"/>
+        <omgdi:waypoint x="-728.79816" y="900.2384"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-4a6139f6-c88a-461c-8123-08cff41cd426" bpmnElement="sid-562c4497-99e0-4a37-a872-972088bac3c7">
+        <omgdc:Bounds x="-748.7982" y="900.2384" width="40.0" height="40.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-7f25d640-288c-4a60-b5f7-1a30631a41cd" bpmnElement="sid-61fc5d07-15ef-463a-80ce-75b5fad5bf75">
+        <omgdi:waypoint x="-748.7982" y="920.2384"/>
+        <omgdi:waypoint x="-798.01434" y="920.23834"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-c73544c5-4b7b-4d80-b4e7-f5f58acd73ca" bpmnElement="noAuthorizationDialogInitScaTan2Step">
+        <omgdc:Bounds x="-185.9289" y="458.92755" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-9516309e-e1c9-4ed5-8101-24e1051aad6e" bpmnElement="sid-2a8854a7-397e-4dba-862e-9a8a1c437fe3">
+        <omgdi:waypoint x="-85.928894" y="478.92755"/>
+        <omgdi:waypoint x="-1.036789" y="478.92755"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-c71d385e-94dc-4a5a-a405-dbc91d2f513c" bpmnElement="sid-8b14ea45-50fd-4d38-95d5-33d57501462d">
+        <omgdi:waypoint x="-244.05496" y="602.49066"/>
+        <omgdi:waypoint x="-223.52339" y="602.4907"/>
+        <omgdi:waypoint x="-223.52748" y="498.61505"/>
+        <omgdi:waypoint x="-185.9289" y="498.92755"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-d5f40f10-9f61-4882-8623-29e2754116ce" bpmnElement="noAuthorizationTanWasProvided">
+        <omgdi:waypoint x="28.963211" y="705.17114"/>
+        <omgdi:waypoint x="-55.804058" y="705.17114"/>
+        <omgdi:waypoint x="-54.836792" y="785.59955"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-6e9f39d6-4ba6-49a9-a2e7-d23254b16468" bpmnElement="onWrongScaMethod">
+        <omgdc:Bounds x="173.95566" y="95.22596" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-15729002-ccee-41c0-b1ce-c318aade9c85" bpmnElement="sid-a04150db-257d-4f5d-be14-2a5f1bbd4b55">
+        <omgdc:Bounds x="-455.6923" y="115.225945" width="40.0" height="40.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-fc58204d-79b3-422a-9d85-aa8ea3525f5a" bpmnElement="wrongScaMethodIdProvided">
+        <omgdi:waypoint x="-415.6923" y="135.22594"/>
+        <omgdi:waypoint x="173.95564" y="135.22595"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-dd630707-8ec6-4a41-9411-8a944baabba1" bpmnElement="okScaMethodIdProvided">
+        <omgdi:waypoint x="-435.6923" y="115.22594"/>
+        <omgdi:waypoint x="-435.69232" y="-4.506531"/>
+        <omgdi:waypoint x="-391.83932" y="-4.506531"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-6387c9d6-8d5e-4652-8c0f-3cebdec82647" bpmnElement="sid-6625a733-22de-4ae0-bc66-bc022ba773b9">
+        <omgdi:waypoint x="273.9557" y="135.22595"/>
+        <omgdi:waypoint x="305.65036" y="134.81293"/>
+        <omgdi:waypoint x="305.65182" y="181.8603"/>
+        <omgdi:waypoint x="331.60153" y="181.8603"/>
+      </bpmdi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

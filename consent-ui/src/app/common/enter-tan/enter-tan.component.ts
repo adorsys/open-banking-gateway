@@ -12,11 +12,15 @@ import { SessionService } from '../session.service';
 })
 export class EnterTanComponent implements OnInit {
   @Input() authorizationSessionId: string;
+  @Input() scaType: string;
   @Input() wrongSca: boolean;
   @Output() enteredSca = new EventEmitter<any>();
 
   reportScaResultForm: FormGroup;
   redirectCode: string;
+
+  public tanConfig: TanConfig;
+  public tanType = TanType;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -29,6 +33,12 @@ export class EnterTanComponent implements OnInit {
     this.reportScaResultForm = this.formBuilder.group({
       tan: ['', Validators.required]
     });
+    this.tanConfig = {
+      type: TanType.PIN,
+      data: '17850120452019980412345678041234567804123456789E',
+      description:
+        'We have sent you the confirmation number. Please check your ' + this.scaType + ' and fill in the field below.'
+    };
   }
 
   onSubmit(): void {
@@ -46,4 +56,17 @@ export class EnterTanComponent implements OnInit {
         this.enteredSca.emit(res);
       });
   }
+}
+
+export class TanConfig {
+  type: TanType;
+  data?: string;
+  description: string;
+}
+
+export enum TanType {
+  PIN,
+  PHOTO_TAN,
+  QR_CODE,
+  FLICKER_CODE
 }

@@ -58,12 +58,12 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
         given()
                 .enabled_embedded_sandbox_mode()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
         when()
                 .fintech_calls_initiate_payment_for_max_musterman()
                 .and()
-                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url_pis(OPBA_LOGIN, OPBA_PASSWORD)
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
                 .user_max_musterman_provided_initial_parameters_to_make_payment()
                 .and()
@@ -71,11 +71,11 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
                 .and()
                 .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
                 .and()
-                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok_pis();
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
 
         then()
-                .open_banking_has_consent_for_max_musterman_payment()
-                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
                 .fintech_calls_payment_status()
                 .fintech_calls_payment_information_iban_700();
     }
@@ -86,17 +86,17 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
         given()
                 .enabled_redirect_sandbox_mode()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
                 .fintech_calls_initiate_payment_for_anton_brueckner()
                 .and()
-                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url_pis(OPBA_LOGIN, OPBA_PASSWORD)
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
                 .user_anton_brueckner_provided_initial_parameters_to_authorize_initiation_payment()
                 .and()
-                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp_pis()
+                .user_anton_brueckner_sees_that_he_needs_to_be_redirected_to_aspsp_and_redirects_to_aspsp()
                 .and()
                 .sandbox_anton_brueckner_navigates_to_bank_auth_page(firefoxDriver)
                 .and()
@@ -110,8 +110,8 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
                 .and()
                 .sandbox_anton_brueckner_clicks_redirect_back_to_tpp_button_api_localhost_cookie_only(firefoxDriver);
         then()
-                .open_banking_has_consent_for_anton_brueckner_payment()
-                .fintech_calls_consent_activation_for_current_authorization_id()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
                 .fintech_calls_payment_status()
                 .fintech_calls_payment_information_iban_400();
     }
