@@ -62,7 +62,7 @@ public class HbciPaymentInitiationRequest<SELF extends HbciPaymentInitiationRequ
     }
 
     public SELF fintech_calls_payment_info_for_max_musterman(String resourceId, String bankId) {
-        ExtractableResponse<Response> response = withPaymentInfoHeaders(MAX_MUSTERMAN, requestSigningService, PIS)
+        ExtractableResponse<Response> response = withPaymentInfoHeaders(MAX_MUSTERMAN)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .contentType(APPLICATION_JSON_VALUE)
                 .when()

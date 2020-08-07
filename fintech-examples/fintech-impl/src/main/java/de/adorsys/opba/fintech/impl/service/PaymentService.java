@@ -16,7 +16,6 @@ import de.adorsys.opba.fintech.impl.tppclients.TppPisSinglePaymentClient;
 import de.adorsys.opba.tpp.pis.api.model.generated.AccountReference;
 import de.adorsys.opba.tpp.pis.api.model.generated.Amount;
 import de.adorsys.opba.tpp.pis.api.model.generated.PaymentInformationResponse;
-import de.adorsys.opba.tpp.pis.api.model.generated.PaymentInformationResponse;
 import de.adorsys.opba.tpp.pis.api.model.generated.PaymentInitiation;
 import de.adorsys.opba.tpp.pis.api.model.generated.PaymentInitiationResponse;
 import lombok.RequiredArgsConstructor;
@@ -133,7 +132,9 @@ public class PaymentService {
         return new ResponseEntity<>(Collections.singletonList(paymentInfo), HttpStatus.OK);
     }
 
-    private ResponseEntity redirectResponse(String bankId, String accountId, String fintechOkUrl, String fintechNOkUrl, SessionEntity sessionEntity, String fintechRedirectCode, ResponseEntity<PaymentInformationResponse> response) {
+    private ResponseEntity redirectResponse(String bankId, String accountId, String fintechOkUrl, String fintechNOkUrl,
+                                            SessionEntity sessionEntity, String fintechRedirectCode,
+                                            ResponseEntity<PaymentInformationResponse> response) {
         log.debug("create redirect entity for redirect code {}", fintechRedirectCode);
         redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
         return handleAcceptedService.handleAccepted(

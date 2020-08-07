@@ -96,6 +96,11 @@ public class HbciContext extends BaseContext {
      */
     private boolean consentIncompatible;
 
+    /**
+     * saves entered by user TAN
+     */
+    private String psuTan;
+
     private HbciResultCache cachedResult;
 
     public HbciConsent getHbciDialogConsent() {
@@ -119,19 +124,8 @@ public class HbciContext extends BaseContext {
     }
 
     @JsonIgnore
-    public String getPsuTan() {
-        TransientDataEntry entry = this.transientStorage().get();
-        return null != entry ? entry.getTanValue() : null;
-    }
-
-    @JsonIgnore
     public void setPsuPin(String psuPassword) {
         this.transientStorage().set(new TransientDataEntry(psuPassword, null));
-    }
-
-    @JsonIgnore
-    public void setPsuTan(String scaChallengeResult) {
-        this.transientStorage().set(new TransientDataEntry(null, scaChallengeResult));
     }
 
     @JsonIgnore
