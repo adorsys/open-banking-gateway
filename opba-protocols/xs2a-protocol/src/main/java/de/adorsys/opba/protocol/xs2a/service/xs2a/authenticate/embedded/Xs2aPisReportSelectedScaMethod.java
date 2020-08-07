@@ -53,7 +53,10 @@ public class Xs2aPisReportSelectedScaMethod extends ValidatedExecution<Xs2aPisCo
 
         ContextUtil.getAndUpdateContext(
                 execution,
-                (Xs2aContext ctx) -> ctx.setScaSelected(authResponse.getBody().getChosenScaMethod())
+                (Xs2aContext ctx) -> {
+                    ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
+                    ctx.setChallengeData(authResponse.getBody().getChallengeData());
+                }
         );
     }
 

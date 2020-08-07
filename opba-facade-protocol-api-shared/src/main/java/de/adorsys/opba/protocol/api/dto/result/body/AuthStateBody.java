@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.api.dto.result.body;
 
+import de.adorsys.opba.protocol.api.dto.request.ChallengeData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -34,9 +35,15 @@ public class AuthStateBody implements ResultBody {
     private String redirectTo;
 
     /**
-     * Result body
+     * Authorization request data - describes what data was requested or is being requested (by FinTech or is current):
+     * Consent object, Payment, which ASPSP or FinTech.
      */
-    private AuthResultBody resultBody;
+    private AuthRequestData requestData;
+
+    /**
+     * Challenge data, needed for embedded SCA for OpticTAN, PhotoTAN and other challenges that require some data to be shown to user
+     */
+    private ChallengeData challengeData;
 
     public AuthStateBody(Set<ValidationError> violations) {
         this.violations = violations;

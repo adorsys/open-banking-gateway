@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 /**
  * Happy-path payment test that uses HBCI Sandbox to drive banking-protocol.
  */
+@Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, statements = "DELETE FROM opb_hbci_sandbox_payment") // Cleanup after test
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 @SpringBootTest(classes = {
         HbciProtocolApplication.class,
@@ -72,9 +74,9 @@ class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
     }
 
     @Test
-    void testPaymentStatusWithSca() {
+    void testPaymentAndStatusWithSca() {
         given()
-                .rest_assured_points_to_opba_server()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
@@ -92,7 +94,7 @@ class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
         then()
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
-                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.ACSC.name());
+                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.PDNG.name());
     }
 
     private void makeHbciAdapterToPointToHbciMockEndpoints() {

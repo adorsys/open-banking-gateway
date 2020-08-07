@@ -6,12 +6,15 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
 import com.google.common.primitives.Longs;
+import de.adorsys.multibanking.domain.PaymentStatus;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Account;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Bank;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Transaction;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.User;
+import de.adorsys.opba.protocol.sandbox.hbci.domain.HbciSandboxPayment;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.context.HbciSandboxContext;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.parsing.ParsingUtil;
+import de.adorsys.opba.protocol.sandbox.hbci.repository.HbciSandboxPaymentRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -42,6 +45,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +69,7 @@ public class JsonTemplateInterpolation {
     private final Pattern mt940LoopTransactions = Pattern.compile("(\\$\\{mt940Begin}.+?\\$\\{mt940End})", Pattern.DOTALL);
 
     private final ObjectMapper mapper;
+    private final HbciSandboxPaymentRepository paymentRepository;
 
     @SneakyThrows
     public String interpolateToHbci(String templateResourcePath, HbciSandboxContext context) {
@@ -262,6 +267,8 @@ public class JsonTemplateInterpolation {
                     .filter(it -> it.getFrom().contains(acc.getNumber()))
                     .collect(Collectors.toList());
 
+            processPaymentsThatAreTransactionsNow(staticCtx, acc, transactions);
+
             // Empty transaction list special handling
             if (transactions.isEmpty()) {
                 TransactionsContext txns = new TransactionsContext(0, staticCtx, accPos, 0, transactions);
@@ -276,6 +283,21 @@ public class JsonTemplateInterpolation {
                 value.append(interpolateTransactions(initialValue, txns));
             }
             result.put(entry.getKey(), value.toString());
+        }
+    }
+
+    private void processPaymentsThatAreTransactionsNow(AccountsContext staticCtx, Account acc, List<Transaction> transactions) {
+        BigDecimal balance = acc.getBalance();
+        List<HbciSandboxPayment> payments = paymentRepository.findByOwnerLoginAndStatusInOrderByCreatedAtDesc(
+                staticCtx.getUser().getLogin(),
+                ImmutableSet.of(PaymentStatus.ACSC) // only 'done' payments into transactions
+        ).stream() // As it is sandbox we don't expect many transactions present, so filtering in code
+                .filter(it -> it.getDeduceFrom().endsWith(acc.getNumber()) || it.getSendTo().endsWith(acc.getNumber()))
+                .collect(Collectors.toList());
+        for (HbciSandboxPayment payment : payments) {
+            Transaction transaction = payment.toTransaction(acc.getNumber(), balance);
+            balance = new BigDecimal(transaction.getBalanceAfter());
+            transactions.add(transaction);
         }
     }
 

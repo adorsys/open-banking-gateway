@@ -9,6 +9,10 @@ addons:
 jdk:
   - openjdk8
 
+# Override Travis install step with our own for control
+install:
+  - ./scripts/install_mvn.sh
+
 script:
   # tests are not done with mvn test - dont know why
   - ./scripts/build_mvn.sh

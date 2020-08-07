@@ -1,8 +1,7 @@
 package de.adorsys.opba.tppbankingapi.controller;
 
-import de.adorsys.opba.api.security.external.domain.OperationType;
-import de.adorsys.opba.api.security.external.domain.signdata.BankSearchDataToSign;
 import de.adorsys.opba.api.security.external.service.RequestSigningService;
+import de.adorsys.opba.api.security.requestsigner.OpenBankingDataToSignProvider;
 import de.adorsys.opba.tppbankingapi.BaseMockitoTest;
 import de.adorsys.opba.tppbankingapi.dto.TestResult;
 import de.adorsys.opba.tppbankingapi.services.StatisticService;
@@ -29,9 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.FINTECH_ID;
-import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_OPERATION_TYPE;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_REQUEST_ID;
-import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_REQUEST_SIGNATURE;
 import static de.adorsys.opba.api.security.external.domain.HttpHeaders.X_TIMESTAMP_UTC;
 import static de.adorsys.opba.tppbankingapi.TestProfiles.ONE_TIME_POSTGRES_ON_DISK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -100,20 +97,13 @@ class TestBankSearchPerformance extends BaseMockitoTest {
                 MvcResult mvcResult = mockMvc.perform(
                         get("/v1/banking/search/bank-search")
                                 .header("Authorization", "123")
-                                .header("Compute-PSU-IP-Address", "true")
                                 .header(X_REQUEST_ID, xRequestId)
                                 .header(X_TIMESTAMP_UTC, xTimestampUtc)
-                                .header(X_OPERATION_TYPE, OperationType.BANK_SEARCH)
-                                .header(X_REQUEST_SIGNATURE, requestSigningService.signature(BankSearchDataToSign.builder()
-                                                                                                     .xRequestId(xRequestId)
-                                                                                                     .instant(xTimestampUtc)
-                                                                                                     .operationType(OperationType.BANK_SEARCH)
-                                                                                                     .keyword(keyword)
-                                                                                                     .build()))
                                 .header(FINTECH_ID, "MY-SUPER-FINTECH-ID")
                                 .param("keyword", keyword)
                                 .param("max", "10")
-                                .param("start", "0"))
+                                .param("start", "0")
+                                .with(new SignaturePostProcessor(requestSigningService, new OpenBankingDataToSignProvider())))
                                               .andExpect(status().isOk())
                                               .andReturn();
                 long end = System.currentTimeMillis();

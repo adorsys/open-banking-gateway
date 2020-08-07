@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.Bank;
 import de.adorsys.opba.protocol.sandbox.hbci.config.dto.User;
+import de.adorsys.opba.protocol.sandbox.hbci.domain.HbciSandboxPayment;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.MapRegexUtil;
 import de.adorsys.opba.protocol.sandbox.hbci.protocol.Operation;
 import lombok.Data;
@@ -34,6 +35,10 @@ public class HbciSandboxContext {
     private String dialogId;
     private String userId;
     private String sysId;
+    private String orderReference;
+
+    @JsonIgnore
+    private HbciSandboxPayment payment;
 
     @JsonIgnore
     public Operation getRequestOperation() {

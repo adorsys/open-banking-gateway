@@ -50,7 +50,7 @@ class WiremockE2EStressXs2aProtocolTest extends SpringScenarioTest<MockServers, 
     private ProtocolUrlsConfiguration urlsConfiguration;
 
     @Autowired
-    private AutowireCapableBeanFactory signingService;
+    private AutowireCapableBeanFactory autowireCapableBeanFactory;
 
     // See https://github.com/spring-projects/spring-boot/issues/14879 for the 'why setting port'
     void beforeEach() {
@@ -58,8 +58,8 @@ class WiremockE2EStressXs2aProtocolTest extends SpringScenarioTest<MockServers, 
         aisUrls.setOk(aisUrls.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
         aisUrls.setNok(aisUrls.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
 
-        // Forcefully injecting signer
-        E2EStress.PARENT_SPRING_CTX_AUTOWIRER.set(signingService);
+        // Forcefully injecting bean factory
+        E2EStress.PARENT_SPRING_CTX_AUTOWIRER.set(autowireCapableBeanFactory);
     }
 
     // JGivenConfig doesn't seem to be applied
@@ -102,7 +102,7 @@ class WiremockE2EStressXs2aProtocolTest extends SpringScenarioTest<MockServers, 
             if ("testEmbeddedAccountListConcurrent".equals(context.getTestMethod().get().getName())) {
                 instance.given()
                     .embedded_mock_of_sandbox_for_max_musterman_accounts_running_stateless()
-                    .rest_assured_points_to_opba_server();
+                    .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api();
 
                 // register FinTech to avoid normal concurrent failures - if FinTech doesn't exist some requests
                 // trying to register it can fail because only one can succeed
@@ -112,7 +112,7 @@ class WiremockE2EStressXs2aProtocolTest extends SpringScenarioTest<MockServers, 
             if ("testEmbeddedTransactionListConcurrent".equals(context.getTestMethod().get().getName())) {
                 instance.given()
                     .embedded_mock_of_sandbox_for_max_musterman_transactions_running_stateless()
-                    .rest_assured_points_to_opba_server();
+                    .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api();
 
                 // register FinTech to avoid normal concurrent failures - if FinTech doesn't exist some requests
                 // trying to register it can fail because only one can succeed

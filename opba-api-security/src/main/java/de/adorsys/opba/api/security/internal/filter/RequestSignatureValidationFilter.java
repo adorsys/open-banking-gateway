@@ -1,12 +1,14 @@
 package de.adorsys.opba.api.security.internal.filter;
 
-
+import com.google.common.io.CharStreams;
 import de.adorsys.opba.api.security.external.domain.FilterValidationHeaderValues;
 import de.adorsys.opba.api.security.external.domain.HttpHeaders;
-import de.adorsys.opba.api.security.external.domain.OperationType;
-import de.adorsys.opba.api.security.external.mapper.HttpRequestToDataToSignMapper;
-import de.adorsys.opba.api.security.internal.config.OperationTypeProperties;
+import de.adorsys.opba.api.security.generator.api.DataToSignProvider;
+import de.adorsys.opba.api.security.generator.api.RequestDataToSignNormalizer;
+import de.adorsys.opba.api.security.generator.api.RequestToSign;
 import de.adorsys.opba.api.security.internal.service.RequestVerifyingService;
+import de.adorsys.opba.api.security.requestsigner.OpenBankingDataToSignProvider;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.Filter;
@@ -20,6 +22,9 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentMap;
 
@@ -34,14 +39,12 @@ public class RequestSignatureValidationFilter implements Filter {
     private final RequestVerifyingService requestVerifyingService;
     private final Duration requestTimeLimit;
     private final ConcurrentMap<String, String> consumerKeysMap;
-    private final OperationTypeProperties properties;
 
     public RequestSignatureValidationFilter(RequestVerifyingService requestVerifyingService, Duration requestTimeLimit,
-                                            ConcurrentMap<String, String> consumerKeysMap, OperationTypeProperties properties) {
+                                            ConcurrentMap<String, String> consumerKeysMap) {
         this.requestVerifyingService = requestVerifyingService;
         this.requestTimeLimit = requestTimeLimit;
         this.consumerKeysMap = consumerKeysMap;
-        this.properties = properties;
     }
 
     @Override
@@ -53,11 +56,6 @@ public class RequestSignatureValidationFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         FilterValidationHeaderValues headerValues = buildRequestValidationData(request);
-        String expectedPath = properties.getAllowedPath().get(headerValues.getOperationType());
-
-        if (isInvalidOperationType(headerValues, expectedPath, response)) {
-            return;
-        }
 
         if (isUnparsableRequestTimeStamp(headerValues.getRequestTimeStamp(), response)
                     || isMissingFintechId(headerValues.getFintechId(), response)
@@ -72,21 +70,11 @@ public class RequestSignatureValidationFilter implements Filter {
             return;
         }
 
-        boolean verificationResult = verifyRequestSignature(request, headerValues, instant, fintechApiKey);
+        boolean verificationResult = verifyRequestSignature(request, fintechApiKey);
 
         if (validateVerificationResult(verificationResult, response) && validateExpirationDate(instant, response)) {
             filterChain.doFilter(request, response);
         }
-    }
-
-    private boolean isInvalidOperationType(FilterValidationHeaderValues headerValues, String expectedPath, HttpServletResponse response) throws IOException {
-        if (isNotAllowedOperation(headerValues.getRequestPath(), expectedPath)) {
-            log.error("Request operation type is not allowed");
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Wrong Operation Type");
-            return true;
-        }
-
-        return false;
     }
 
     private boolean isMissingFintechApiKey(String fintechApiKey, String fintechId, HttpServletResponse response) throws IOException {
@@ -165,38 +153,46 @@ public class RequestSignatureValidationFilter implements Filter {
         return true;
     }
 
-    private boolean verifyRequestSignature(HttpServletRequest request, FilterValidationHeaderValues headerValues, Instant instant, String fintechApiKey) {
-        HttpRequestToDataToSignMapper mapper = new HttpRequestToDataToSignMapper();
-        OperationType operationType = OperationType.valueOf(headerValues.getOperationType());
+    @SneakyThrows
+    private boolean verifyRequestSignature(HttpServletRequest request, String fintechApiKey) {
+        // OpenBankingSigner - This is generated class by opba-api-security-signer-generator-impl annotation processor
+        DataToSignProvider dataToSignProvider = new OpenBankingDataToSignProvider();
+        String body = request.getContentLengthLong() >= 0 ? CharStreams.toString(request.getReader()) : null;
+        RequestToSign toSign = RequestToSign.builder()
+                .method(DataToSignProvider.HttpMethod.valueOf(request.getMethod()))
+                .path(request.getRequestURI())
+                .headers(extractHeaders(request))
+                .queryParams(extractQueryParams(request))
+                .body(body)
+                .build();
+        RequestDataToSignNormalizer signatureGen = dataToSignProvider.normalizerFor(toSign);
+        String expectedSignature = signatureGen.canonicalStringToSign(toSign);
 
-        switch (operationType) {
-            case AIS:
-                if (OperationType.isTransactionsPath(request.getRequestURI())) {
-                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToListTransactions(request, instant));
-                } else {
-                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToListAccounts(request, instant));
-                }
-            case BANK_SEARCH:
-                if (OperationType.isBankSearchPath(request.getRequestURI())) {
-                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToBankSearch(request, instant));
-                } else {
-                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToBankProfile(request, instant));
-                }
-            case CONFIRM_CONSENT:
-                return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToConfirmConsent(request, instant));
-            case CONFIRM_PAYMENT:
-                return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToConfirmPayment(request, instant));
-            case PIS:
-                if (OperationType.isGetPaymentStatus(request.getRequestURI())) {
-                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToGetPaymentStatus(request, instant));
-                } else if (OperationType.isGetPayment(request.getMethod())) {
-                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToGetPayment(request, instant));
-                } else {
-                    return requestVerifyingService.verify(headerValues.getXRequestSignature(), fintechApiKey, mapper.mapToPaymentInititation(request, instant));
-                }
-            default:
-                throw new IllegalArgumentException(String.format("Unsupported operation type %s", operationType));
+        return requestVerifyingService.verify(request.getHeader(HttpHeaders.X_REQUEST_SIGNATURE), fintechApiKey, expectedSignature);
+    }
+
+    private Map<String, String> extractHeaders(HttpServletRequest request) {
+        Map<String, String> result = new HashMap<>();
+        Enumeration<String> names = request.getHeaderNames();
+        while (names.hasMoreElements()) {
+            String headerName = names.nextElement();
+            // Skip signature itself and other headers not relevant to signature
+            if (HttpHeaders.X_REQUEST_SIGNATURE.toLowerCase().equals(headerName.toLowerCase())) {
+                continue;
+            }
+            result.put(headerName, request.getHeader(headerName));
         }
+        return result;
+    }
+
+    private Map<String, String> extractQueryParams(HttpServletRequest request) {
+        Map<String, String> result = new HashMap<>();
+        Enumeration<String> names = request.getParameterNames();
+        while (names.hasMoreElements()) {
+            String parameterName = names.nextElement();
+            result.put(parameterName, request.getParameter(parameterName));
+        }
+        return result;
     }
 
     private boolean isRequestExpired(Instant operationTime) {
@@ -205,18 +201,11 @@ public class RequestSignatureValidationFilter implements Filter {
                        || now.minus(requestTimeLimit).isAfter(operationTime);
     }
 
-    private boolean isNotAllowedOperation(String requestURI, String expectedPath) {
-        return expectedPath == null || !requestURI.startsWith(expectedPath);
-    }
-
     private FilterValidationHeaderValues buildRequestValidationData(HttpServletRequest request) {
         return FilterValidationHeaderValues.builder()
                        .fintechId(request.getHeader(HttpHeaders.FINTECH_ID))
                        .xRequestId(request.getHeader(HttpHeaders.X_REQUEST_ID))
                        .requestTimeStamp(request.getHeader(HttpHeaders.X_TIMESTAMP_UTC))
-                       .operationType(request.getHeader(HttpHeaders.X_OPERATION_TYPE))
-                       .xRequestSignature(request.getHeader(HttpHeaders.X_REQUEST_SIGNATURE))
-                       .requestPath(request.getRequestURI())
                        .build();
     }
 }

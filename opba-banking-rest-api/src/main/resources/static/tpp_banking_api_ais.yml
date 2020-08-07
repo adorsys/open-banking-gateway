@@ -31,7 +31,6 @@ paths:
         #header
         #common header parameter
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Operation-Type"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
@@ -68,7 +67,6 @@ paths:
         #header
         #common header parameter
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Operation-Type"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"
@@ -107,7 +105,6 @@ paths:
         #header
         #common header parameter
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Timestamp-UTC"
-        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Operation-Type"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-Signature"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Fintech-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/ServiceSessionPassword"

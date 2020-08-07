@@ -10,8 +10,16 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    enabled: true
+    change-log: classpath:hbci-sandbox-migration/master.xml
+    parameters:
+      table-prefix:
 
 hbci:
+  payment-schedule: PT1M
   banks:
     - name: anonymous-bpd-no-sca
       bic: FOO1DEH1XXX

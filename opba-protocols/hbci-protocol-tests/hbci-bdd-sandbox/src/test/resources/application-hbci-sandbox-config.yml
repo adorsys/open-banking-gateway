@@ -1,4 +1,11 @@
+spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:bdd-migration/migration.xml
+    parameters:
+      table-prefix: opb_
 hbci:
+  payment-schedule: PT1M
   banks:
     - name: anonymous-bpd-no-sca
       bic: FOO1DEH1XXX

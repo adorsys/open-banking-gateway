@@ -1,6 +1,5 @@
 package de.adorsys.opba.fintech.impl.service;
 
-import de.adorsys.opba.api.security.external.domain.OperationType;
 import de.adorsys.opba.fintech.api.model.generated.PaymentInitiationWithStatusResponse;
 import de.adorsys.opba.fintech.api.model.generated.SinglePaymentInitiationRequest;
 import de.adorsys.opba.fintech.impl.config.FintechUiConfig;
@@ -73,7 +72,6 @@ public class PaymentService {
                 UUID.fromString(restRequestContext.getRequestId()),
                 paymentProduct,
                 COMPUTE_X_TIMESTAMP_UTC,
-                OperationType.PIS.toString(),
                 COMPUTE_X_REQUEST_SIGNATURE,
                 COMPUTE_FINTECH_ID,
                 bankId,
@@ -99,7 +97,6 @@ public class PaymentService {
                     UUID.fromString(restRequestContext.getRequestId()),
                     paymentProduct,
                     COMPUTE_X_TIMESTAMP_UTC,
-                    OperationType.PIS.toString(),
                     COMPUTE_X_REQUEST_SIGNATURE,
                     COMPUTE_FINTECH_ID,
                     bankId,

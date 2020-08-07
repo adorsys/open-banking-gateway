@@ -3,8 +3,6 @@ package de.adorsys.opba.protocol.xs2a.tests.e2e.stages;
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.ExpectedScenarioState;
 import com.tngtech.jgiven.integration.spring.JGivenStage;
-import de.adorsys.opba.api.security.external.domain.OperationType;
-import de.adorsys.opba.api.security.external.service.RequestSigningService;
 import de.adorsys.opba.db.repository.jpa.PaymentRepository;
 import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
 import de.adorsys.xs2a.adapter.service.model.TransactionStatus;
@@ -40,9 +38,6 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
 
     @Autowired
     private PaymentRepository payments;
-
-    @Autowired
-    private RequestSigningService requestSigningService;
 
     @ExpectedScenarioState
     protected String serviceSessionId;
@@ -88,7 +83,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     }
 
     public SELF fintech_calls_payment_information(String iban) {
-        withPaymentInfoHeaders("", requestSigningService, OperationType.PIS)
+        withPaymentInfoHeaders(UUID.randomUUID().toString())
                 .header(SERVICE_SESSION_ID, serviceSessionId)
             .when()
                 .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
@@ -118,11 +113,11 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     }
 
     public SELF fintech_calls_payment_status(String bankId, String expectedStatus) {
-        withPaymentInfoHeaders("", requestSigningService, OperationType.PIS, bankId)
+        withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
-            .when()
+                .when()
                 .get(PIS_PAYMENT_STATUS_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
-            .then()
+                .then()
                 .statusCode(OK.value())
                 .body("transactionStatus", equalTo(expectedStatus))
                 .extract();
@@ -133,7 +128,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         withSignatureHeaders(RestAssured
                                      .given()
                                      .header(SERVICE_SESSION_PASSWORD, SESSION_PASSWORD)
-                                     .contentType(APPLICATION_JSON_VALUE), requestSigningService, OperationType.CONFIRM_PAYMENT)
+                                     .contentType(APPLICATION_JSON_VALUE))
                 .when()
                     .post(CONFIRM_PAYMENT_ENDPOINT, serviceSessionId)
                 .then()
