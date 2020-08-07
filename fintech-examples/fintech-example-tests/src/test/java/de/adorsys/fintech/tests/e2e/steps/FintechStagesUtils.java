@@ -14,7 +14,7 @@ public class FintechStagesUtils {
     public static final String X_XSRF_TOKEN = "xsrfToken";
     public static final String SESSION_COOKIE = "sessionCookie";
     public static final String ACCOUNT = "/account";
-    public static final String PAYMENT = "/payments";
+    public static final String PAYMENT = "/accounts";
     public static final String BANKSEARCH_LOGIN = "/login";
     public static final String KEYWORD = "adorsys xs2a";
     public static final String ACCOUNT_ENDPOINT = "https://obg-dev-fintechserver.cloud.adorsys.de/v1/ais/banks/{bank-id}/accounts";

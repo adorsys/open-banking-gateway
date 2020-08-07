@@ -179,28 +179,82 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF user_already_login_in_bank_profile(WebDriver firefoxDriver, String username, String fintech, String profile) {
-        user_opens_fintechui_login_page(firefoxDriver)
+    public SELF user_already_login_in_bank_profile(WebDriver driver, String username, String fintech, String profile) {
+        user_opens_fintechui_login_page(driver)
                 .and()
-                .user_login_with_its_credentials(firefoxDriver, username)
+                .user_login_with_its_credentials(driver, username)
                 .and()
-                .user_looks_for_a_bank_in_the_bank_search_input_place(firefoxDriver, profile)
+                .user_looks_for_a_bank_in_the_bank_search_input_place(driver, profile)
                 .and()
-                .user_wait_for_the_result_in_bank_search(firefoxDriver)
+                .user_wait_for_the_result_in_bank_search(driver)
                 .and()
-                .user_navigates_to_page(firefoxDriver)
+                .user_navigates_to_page(driver)
                 .and()
-                .user_select_account_button(firefoxDriver)
+                .user_select_account_button(driver)
                 .and()
-                .user_accepts_to_get_redirected_to_consentui(firefoxDriver)
+                .user_accepts_to_get_redirected_to_consentui(driver)
                 .and()
-                .user_click_on_register_button(firefoxDriver)
+                .user_click_on_register_button(driver)
                 .and()
-                .user_register_on_consent(firefoxDriver, fintech)
+                .user_register_on_consent(driver, fintech)
                 .and()
-                .user_navigates_to_page(firefoxDriver)
+                .user_navigates_to_page(driver)
                 .and()
-                .user_login_in_consent(firefoxDriver, fintech);
+                .user_login_in_consent(driver, fintech);
+        return self();
+    }
+
+    public SELF user_authorizes_payment_in_embedded_mode(WebDriver driver, String username, String fintech, String profile) {
+        user_already_login_in_bank_profile(driver, username, fintech, profile)
+                .and()
+                .user_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(driver)
+                .and()
+                .user_max_musterman_in_consent_ui_reviews_transactions_consent_and_accepts(driver)
+                .and()
+                .user_in_consent_ui_provides_pin_for_embeeded(driver)
+                .and()
+                .user_in_consent_ui_provides_sca_result_to_embedded_authorization_for_redirect(driver)
+                .and()
+                .user_anton_brueckner_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(driver)
+                .and()
+                .user_navigates_to_page(driver);
+
+        return self();
+    }
+
+    public SELF user_authorizes_payment_in_redirect_mode(WebDriver driver, String username, String fintech, String profile) {
+        user_already_login_in_bank_profile(driver, username, fintech, profile)
+                .and()
+                .user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent_for_redirect(driver)
+                .and()
+                .user_in_consent_ui_reviews_transaction_consent_and_accepts_for_redirect(driver)
+                .and()
+                .user_in_consent_ui_sees_redirection_info_to_aspsp_and_accepts(driver)
+                .and()
+                .user_navigates_from_consent_ui_to_bank_auth_page(driver)
+                .and()
+                .user_inputs_username_and_password_for_redirect(driver)
+                .and()
+                .user_navigates_to_page(driver)
+                .and()
+                .user_confirm_login(driver)
+                .and()
+                .user_navigates_to_page(driver)
+                .and()
+                .user_in_consent_ui_sees_sca_select_and_confirm_type_email2_to_redirect_authorization(driver)
+                .and()
+                .user_provides_sca_challenge_result_for_redirect(driver)
+                .and()
+                .user_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp_for_redirect(driver)
+                .and()
+                .user_navigates_to_page(driver)
+                .and()
+                .user_anton_brueckner_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(driver)
+                .and()
+                .user_navigates_to_page(driver)
+                .and()
+                .user_sees_account_and_list_transactions(driver);
+
         return self();
     }
 
