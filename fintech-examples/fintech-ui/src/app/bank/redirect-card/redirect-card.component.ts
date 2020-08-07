@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-redirect-card',
@@ -10,7 +11,7 @@ export class RedirectCardComponent {
   @Output() cancelRedirect: EventEmitter<boolean> = new EventEmitter();
   @Output() proceedRedirect: EventEmitter<boolean> = new EventEmitter();
 
-  constructor() {}
+  constructor(public modal: NgbActiveModal) {}
 
   proceed(): void {
     this.proceedRedirect.emit(true);
