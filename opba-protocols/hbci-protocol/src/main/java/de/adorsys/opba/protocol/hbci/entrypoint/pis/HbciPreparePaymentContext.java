@@ -45,6 +45,7 @@ public class HbciPreparePaymentContext {
         PaymentHbciContext savedPaymentContext = (PaymentHbciContext) safeSerDe.safeDeserialize(payment.getPaymentContext());
         PaymentHbciContext mergedContext = mergeContextMapper.merge(context, savedPaymentContext);
         mergedContext.getPayment().setPaymentId(payment.getPaymentId());
+        mergedContext.getHbciDialogConsent().setWithHktan(false);
         return mergedContext;
     }
 
