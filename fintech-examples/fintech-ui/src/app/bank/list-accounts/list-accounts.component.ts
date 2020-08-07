@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AccountDetails } from '../../api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
@@ -7,13 +7,15 @@ import { HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 import { SettingsService } from '../services/settings.service';
 import { tap } from 'rxjs/operators';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-list-accounts',
   templateUrl: './list-accounts.component.html',
   styleUrls: ['./list-accounts.component.scss']
 })
-export class ListAccountsComponent implements OnInit {
+export class ListAccountsComponent implements OnInit, AfterViewInit {
+  @ViewChild('content', { static: false }) modalContent: any;
   accounts: AccountDetails[];
   selectedAccount: string;
   bankId = '';
@@ -24,7 +26,8 @@ export class ListAccountsComponent implements OnInit {
     private route: ActivatedRoute,
     private aisService: AisService,
     private storageService: StorageService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private modalService: NgbModal
   ) {
     this.settingsService
       .getLoA()
@@ -34,7 +37,11 @@ export class ListAccountsComponent implements OnInit {
 
   ngOnInit() {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
-    this.loadAccount();
+    // this.loadAccount();
+  }
+
+  ngAfterViewInit(): void {
+    this.openVerticallyCentered(this.modalContent);
   }
 
   selectAccount(id) {
@@ -47,6 +54,10 @@ export class ListAccountsComponent implements OnInit {
 
   visibleAccountNumber(acc: AccountDetails) {
     return !acc.iban || acc.iban.length === 0 ? acc.bban : acc.iban;
+  }
+
+  openVerticallyCentered(content) {
+    this.modalService.open(content, { centered: true });
   }
 
   private loadAccount(): void {

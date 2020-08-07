@@ -9,7 +9,7 @@ import { SessionExpiredComponent } from './session-expired/session-expired.compo
 import { RedirectAfterPaymentDeniedComponent } from './redirect-after-payment-denied/redirect-after-payment-denied.component';
 import { RedirectAfterPaymentComponent } from './redirect-after-payment/redirect-after-payment.component';
 import { Oauth2LoginComponent } from './oauth2-login/oauth2-login.component';
-import { ForbiddenOauth2Component } from "./invalid-oauth2/forbidden-oauth2.component";
+import { ForbiddenOauth2Component } from './invalid-oauth2/forbidden-oauth2.component';
 
 const routes: Routes = [
   {
@@ -72,8 +72,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {enableTracing: false, paramsInheritanceStrategy: 'always'})],
+  imports: [RouterModule.forRoot(routes, { enableTracing: false, paramsInheritanceStrategy: 'always' })],
   exports: [RouterModule]
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

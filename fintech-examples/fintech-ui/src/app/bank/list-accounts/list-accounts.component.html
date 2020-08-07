@@ -9,10 +9,21 @@
       <div class="lacc-list-container lacc-list-container--{{ isSelected(account.resourceId) }}">
         <div class="lacc-list-item ">
           <h1 class="lacc-list-item__headline lacc-list-item__headline--small">{{ account.name }}</h1>
-          <p class="lacc-list-item__subheadline lacc-list-item__subheadline--large">{{ visibleAccountNumber(account)}}</p>
+          <p class="lacc-list-item__subheadline lacc-list-item__subheadline--large">
+            {{ visibleAccountNumber(account) }}
+          </p>
         </div>
       </div>
     </div>
   </div>
   <router-outlet></router-outlet>
 </div>
+
+<ng-template #content let-modal>
+  <app-redirect-card
+    bankName="some bank"
+    (cancelRedirect)="modal.dismiss('Cross click')"
+    (proceedRedirect)="modal.close('Close click')"
+  >
+  </app-redirect-card>
+</ng-template>
