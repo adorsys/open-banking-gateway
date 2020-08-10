@@ -1,0 +1,15 @@
+# This Dockerfile will build HBCI Sandbox and contain it inside, so that no Java is needed on build host
+FROM openjdk:8
+
+ENV APP_HOME /usr/app/
+WORKDIR $APP_HOME
+
+COPY .mvn /usr/app/.mvn
+COPY . /usr/app/
+
+RUN ./mvnw clean install -DskipTests
+WORKDIR "$APP_HOME/opba-protocols/sandboxes/hbci-sandbox"
+
+EXPOSE 8090
+
+ENTRYPOINT ["sh", "-c", "java -jar target/hbci-sandbox-*exec.jar"]
