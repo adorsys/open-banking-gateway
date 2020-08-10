@@ -7,11 +7,20 @@ This is the default implementation of HBCI protocol Sandbox that imitates HBCI p
 **Note:** All operations presume you are **in the same directory as current file is**.  
 
 ## Building and running the HBCI-Sandbox using Docker (No Java required locally):
+1. Build docker image:
 ```shell script
-docker run -v `pwd`"/../../..":/hbci-sandbox -p 8090:8090 openjdk:8 sh -c 'cd /hbci-sandbox && ./mvnw clean install -DskipTests && cd opba-protocols/sandboxes/hbci-sa&& ../../../mvnw spring-boot:run'
+cd ../../.. && docker build . -f opba-protocols/sandboxes/hbci-sandbox/Dockerfile-no-java-needed -t adorsys/hbci-sandbox-local
 ```
+2. Run docker image:
+```shell script
+docker run -p 8090:8090 adorsys/hbci-sandbox-local:latest
+```
+3. HBCI sandbox endpoint with POST operation accepting `application/octet-stream` or `text/plain` will be available at
+`http://hbci-sandbox:8090/hbci-mock/`
+
 It will take some time as this will cause maven to download all dependencies into the container, later we will release
-HBCI-Sandbox to public dockerhub.
+HBCI-Sandbox to public DockerHub.
+
 
 ## Building and running the HBCI-Sandbox locally:
 
