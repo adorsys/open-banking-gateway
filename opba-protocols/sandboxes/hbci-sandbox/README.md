@@ -16,7 +16,7 @@ cd ../../.. && docker build . -f opba-protocols/sandboxes/hbci-sandbox/Dockerfil
 docker run -p 8090:8090 adorsys/hbci-sandbox-local:latest
 ```
 3. HBCI sandbox endpoint with POST operation accepting `application/octet-stream` or `text/plain` will be available at
-`http://hbci-sandbox:8090/hbci-mock/`
+`http://localhost:8090/hbci-mock/`
 
 It will take some time as this will cause maven to download all dependencies into the container, later we will release
 HBCI-Sandbox to public DockerHub.
