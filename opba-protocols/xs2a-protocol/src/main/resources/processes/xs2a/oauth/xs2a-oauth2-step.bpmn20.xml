@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="xs2a-oauth2-step" name="xs2a-oauth2-step" isExecutable="true">
+    <startEvent id="sid-00cfc121-44b4-41b7-93fe-d90e3e9ab50f"/>
+    <endEvent id="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448"/>
+    <sequenceFlow id="sid-c2566b77-4973-4caf-b125-70ec5b9eb85a" sourceRef="sid-00cfc121-44b4-41b7-93fe-d90e3e9ab50f" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-oauth2-step">
+    <bpmndi:BPMNPlane bpmnElement="xs2a-oauth2-step" id="BPMNPlane_xs2a-oauth2-step">
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-e9bbaf6b-a61e-419f-a838-ce9912aae0d0" bpmnElement="sid-00cfc121-44b4-41b7-93fe-d90e3e9ab50f">
+        <omgdc:Bounds x="136.0" y="249.0" width="30.0" height="30.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-890f6be9-ffbe-4920-9e3e-baa594979f69" bpmnElement="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448">
+        <omgdc:Bounds x="764.0" y="249.0" width="30.0" height="30.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-e569f6dd-959e-4bf0-972d-cf2a541b0811" bpmnElement="sid-c2566b77-4973-4caf-b125-70ec5b9eb85a">
+        <omgdi:waypoint x="166.0" y="264.0"/>
+        <omgdi:waypoint x="764.0" y="264.0"/>
+      </bpmdi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

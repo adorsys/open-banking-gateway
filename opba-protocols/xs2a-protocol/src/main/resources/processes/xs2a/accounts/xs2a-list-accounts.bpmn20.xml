@@ -33,7 +33,7 @@
     <sequenceFlow id="wrongIban" name="wrong IBAN" sourceRef="isCreationSuccess" targetRef="askUserForIBAN">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.hasWrongCredentials(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
-    <callActivity id="sid-69dd48bc-0657-4dfe-a1fb-e6a9ebc8870c" name="(If needed) Oauth2 pre-step for user authentication" flowable:async="true" flowable:inheritVariables="true"/>
+    <callActivity id="sid-69dd48bc-0657-4dfe-a1fb-e6a9ebc8870c" name="(If needed) Oauth2 pre-step for user authentication" flowable:async="true" flowable:inheritVariables="true" calledElement="xs2a-oauth2-step"/>
     <sequenceFlow id="sid-5fce0661-7ead-435d-8c3a-c20ab357a5c3" sourceRef="sid-69dd48bc-0657-4dfe-a1fb-e6a9ebc8870c" targetRef="createConsent"/>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-list-accounts">
