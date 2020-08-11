@@ -65,7 +65,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
             throw new IllegalStateException(String.format("Resource server returned error: %s for %s", error, state));
         }
 
-        UserEntity user = authorizeService.loginWithOAuth2(code, state);
+        UserEntity user = authorizeService.loginWithOAuth2(code, state, restRequestContext.getOauth2StateCookieValue());
         return performUserLogin(user);
     }
 

@@ -4,15 +4,23 @@ import lombok.Data;
 import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.Nullable;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.NotNull;
 
 @Data
+@Validated
 @Configuration
 @ToString
 @ConfigurationProperties(prefix = "server.controller")
 public class CookieConfigProperties {
-    @Nullable
+
+    @NotNull
     private CookieConfigPropertiesSpecific sessioncookie;
-    @Nullable
+
+    @NotNull
     private CookieConfigPropertiesSpecific redirectcookie;
+
+    @NotNull
+    private CookieConfigPropertiesSpecific oauth2cookie;
 }
