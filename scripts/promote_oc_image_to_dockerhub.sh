@@ -3,7 +3,7 @@
 echo "Docker image promotion..."
 
 SOURCE_IMAGE_TAG=${TRAVIS_COMMIT:0:7}
-TARGET_IMAGE_TAG=$TRAVIS_TAG
+TARGET_IMAGE_TAG="${TRAVIS_TAG#v}" # Strip leading 'v' from image tag
 SOURCE_REGISTRY_DOMAIN=openshift-registry.adorsys.de
 PROJECT_NAME=open-banking-gateway-dev
 TARGET_REGISTRY_DOMAIN=openshift-registry.adorsys.de
