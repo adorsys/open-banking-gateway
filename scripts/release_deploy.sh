@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-bash ./promote_oc_image_to_dockerhub.sh
-bash ./deploy_mvn.sh
+bash "$(dirname "$0")/promote_oc_image_to_dockerhub.sh"
+bash "$(dirname "$0")/deploy_mvn.sh"
