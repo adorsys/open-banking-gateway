@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+SCRIPT_DIR="$(dirname "$0")"
 IMAGE_TAG=${TRAVIS_COMMIT:0:7}
 REGISTRY_DOMAIN=openshift-registry.adorsys.de
 PROJECT_NAME=open-banking-gateway-dev
@@ -18,4 +19,4 @@ do
     docker tag "$IMAGE_NAME" "$LATEST_IMAGE_NAME"
     docker push "$IMAGE_NAME"
     docker push "$LATEST_IMAGE_NAME"
-done < "$(dirname "$0")/service.list"
+done < "$SCRIPT_DIR/service.list"
