@@ -1,0 +1,5 @@
+open-banking-gateway=./opba-embedded-starter
+fintech-server=./fintech-examples/fintech-server
+fintech-ui=./fintech-examples/fintech-ui
+consent-ui=./consent-ui
+hbci-sandbox-server=./opba-protocols/sandboxes/hbci-sandbox
