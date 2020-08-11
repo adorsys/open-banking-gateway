@@ -177,7 +177,8 @@ class GmailOAuth2AuthenticationTest {
 
         String state = UriComponentsBuilder.fromUri(target).build().getQueryParams().getFirst("state");
         assertThat(state).isNotNull();
-        assertThat(stateCookie).isEqualTo(state);
-        return URLDecoder.decode(state, StandardCharsets.UTF_8.name());
+        String stateDecoded = URLDecoder.decode(state, StandardCharsets.UTF_8.name());
+        assertThat(stateCookie).isEqualTo(stateDecoded);
+        return stateDecoded;
     }
 }
