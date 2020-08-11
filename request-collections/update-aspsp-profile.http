@@ -62,7 +62,7 @@ Content-Type: application/json
     "piisConsentSupported": "NOT_SUPPORTED"
   },
   "common": {
-    "scaRedirectFlow": "OAUTH",
+    "scaRedirectFlow": "OAUTH_PRE_STEP",
     "oauthConfigurationUrl": "http://localhost:4400/oauth/authorization-server",
     "startAuthorisationMode": "AUTO",
     "tppSignatureRequired": false,

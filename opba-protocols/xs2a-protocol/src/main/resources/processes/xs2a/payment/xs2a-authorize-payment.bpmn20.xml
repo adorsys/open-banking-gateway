@@ -13,7 +13,7 @@
     </exclusiveGateway>
     <sequenceFlow id="sid-D15341DB-F89B-491F-9F3D-FFA8D98F770F" sourceRef="startAuthorization" targetRef="scaChallengeSelector"/>
     <serviceTask id="notifyUserWithRedirect" name="Notify user with redirect url for challenge. Suspends to wait" flowable:async="true" flowable:delegateExpression="${xs2aDoRedirectToAspspForScaChallenge}" flowable:triggerable="true"/>
-    <sequenceFlow id="redirect" name="redirect" sourceRef="scaChallengeSelector" targetRef="notifyUserWithRedirect">
+    <sequenceFlow id="redirect" name="redirect" sourceRef="scaChallengeSelector" targetRef="sid-b161ab3c-a45b-4ad8-84f7-2f3c23641eb5">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isRedirect(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
     <serviceTask id="authenticateUser" name="Authenticate user" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aPisAuthenticateUserWithPin}">
@@ -70,6 +70,18 @@
     <sequenceFlow id="zeroScaAvailable" sourceRef="isMultipleScaAvailable" targetRef="isScaFinalized" name="Zero SCA">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isZeroScaAvailable(CONTEXT)}</conditionExpression>
     </sequenceFlow>
+    <sequenceFlow id="sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643" name="On singlePaymentBody denied" sourceRef="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A" targetRef="sid-xs2aReportToFintechPaymentDenied"/>
+    <serviceTask id="sid-xs2aReportToFintechPaymentDenied" name="Calls FinTech webhook to notify  revoke authorization" flowable:async="true" flowable:delegateExpression="${xs2aReportToFintechPaymentDenied}"/>
+    <sequenceFlow id="sid-74F0F25F-E309-400F-ABEF-378D608C16C1" sourceRef="sid-xs2aReportToFintechPaymentDenied" targetRef="end"/>
+    <callActivity id="sid-d703df63-d2ab-448d-ae9b-cf344c0d32b2" name="Oauth2 step for user authorization" flowable:async="true" flowable:inheritVariables="true"/>
+    <sequenceFlow id="onOauth2Authorization" name="On Oauth2 authorization" targetRef="sid-d703df63-d2ab-448d-ae9b-cf344c0d32b2" sourceRef="sid-b161ab3c-a45b-4ad8-84f7-2f3c23641eb5">
+      <conditionExpression xsi:type="tFormalExpression"/>
+    </sequenceFlow>
+    <sequenceFlow id="sid-0d710e07-f06f-46bc-ba9e-760744521777" sourceRef="sid-d703df63-d2ab-448d-ae9b-cf344c0d32b2" targetRef="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A"/>
+    <exclusiveGateway id="sid-b161ab3c-a45b-4ad8-84f7-2f3c23641eb5" default="onPlainRedirectAuthorization"/>
+    <sequenceFlow id="onPlainRedirectAuthorization" sourceRef="sid-b161ab3c-a45b-4ad8-84f7-2f3c23641eb5" targetRef="notifyUserWithRedirect" name="On plain redirect authorization">
+      <conditionExpression xsi:type="tFormalExpression"/>
+    </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-singlePaymentBody">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-singlePaymentBody" id="BPMNPlane_xs2a-authorize-singlePaymentBody">
@@ -80,7 +92,7 @@
         <omgdc:Bounds height="80.0" width="100.0" x="185.0" y="300.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
-        <omgdc:Bounds height="28.0" width="28.0" x="1626.0" y="435.0"/>
+        <omgdc:Bounds height="28.0" width="28.0" x="1626.0" y="415.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="scaChallengeSelector" id="BPMNShape_scaChallengeSelector">
         <omgdc:Bounds height="40.0" width="40.0" x="335.0" y="318.0"/>
@@ -125,7 +137,7 @@
         <omgdc:Bounds height="80.0" width="100.0" x="1590.0" y="300.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="sid-xs2aReportToFintechPaymentDenied" id="BPMNShape_sid-xs2aReportToFintechPaymentDenied">
-        <omgdc:Bounds height="79.99999999999994" width="100.0" x="1485.0000000000002" y="495.00000000000006"/>
+        <omgdc:Bounds height="79.99999999999994" width="100.0" x="1492.0" y="435.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="sid-1139B3D0-261B-4594-B84F-638928669262" id="BPMNEdge_sid-1139B3D0-261B-4594-B84F-638928669262">
         <omgdi:waypoint x="119.94999891869115" y="340.0"/>
@@ -184,7 +196,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-7985590B-669B-4877-AFEF-B3BD5824C52B" id="BPMNEdge_sid-7985590B-669B-4877-AFEF-B3BD5824C52B">
         <omgdi:waypoint x="1640.0" y="379.95000000000005"/>
-        <omgdi:waypoint x="1640.0" y="435.0"/>
+        <omgdi:waypoint x="1640.0" y="415.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="oneScaAvailable" id="BPMNEdge_oneScaAvailable">
         <omgdi:waypoint x="784.946931713082" y="235.0"/>
@@ -245,6 +257,26 @@
         <omgdi:waypoint x="765.0" y="19.0"/>
         <omgdi:waypoint x="1360.0" y="19.0"/>
         <omgdi:waypoint x="1360.0" y="215.00002"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-9924638d-bd81-4b12-9de9-8f2c7c6db186" bpmnElement="sid-d703df63-d2ab-448d-ae9b-cf344c0d32b2">
+        <omgdc:Bounds x="801.1667" y="586.0" width="100.0" height="80.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-20c83bd3-1739-4835-8a00-9dbd7c200fc2" bpmnElement="onOauth2Authorization">
+        <omgdi:waypoint x="528.0892" y="494.99997"/>
+        <omgdi:waypoint x="528.0891" y="626.00006"/>
+        <omgdi:waypoint x="801.1667" y="626.0"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-4a34c340-aab0-44e7-8a43-b2027d998bd5" bpmnElement="sid-0d710e07-f06f-46bc-ba9e-760744521777">
+        <omgdi:waypoint x="901.1667" y="626.0"/>
+        <omgdi:waypoint x="995.0" y="626.0"/>
+        <omgdi:waypoint x="995.0" y="494.99997"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-72fe0a19-d760-4ebc-a51f-e29d5244f937" bpmnElement="sid-b161ab3c-a45b-4ad8-84f7-2f3c23641eb5">
+        <omgdc:Bounds x="508.0891" y="455.0" width="40.0" height="40.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-4c39a6f7-9021-4e59-aa21-9d599c7909de" bpmnElement="onPlainRedirectAuthorization">
+        <omgdi:waypoint x="548.0891" y="475.0"/>
+        <omgdi:waypoint x="780.0" y="475.0"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
