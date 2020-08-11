@@ -1,0 +1,96 @@
+###
+# Updates ASPSP profile - Enable Oauth REDIRECT
+PUT http://localhost:20010/api/v1/aspsp-profile/for-debug/aspsp-settings
+Content-Type: application/json
+
+{
+  "ais": {
+    "consentTypes": {
+      "bankOfferedConsentSupported": true,
+      "globalConsentSupported": true,
+      "availableAccountsConsentSupported": true,
+      "accountAccessFrequencyPerDay": 100,
+      "notConfirmedConsentExpirationTimeMs": 86400000,
+      "maxConsentValidityDays": 0,
+      "accountOwnerInformationSupported": false,
+      "trustedBeneficiariesSupported": false
+    },
+    "redirectLinkToOnlineBanking": {
+      "aisRedirectUrlToAspsp": "http://localhost:4400/account-information/login?encryptedConsentId={encrypted-consent-id}&redirectId={redirect-id}"
+    },
+    "transactionParameters": {
+      "availableBookingStatuses": [
+        "both",
+        "booked",
+        "pending"
+      ],
+      "transactionsWithoutBalancesSupported": false,
+      "supportedTransactionApplicationTypes": [
+        "application/json"
+      ]
+    },
+    "deltaReportSettings": {
+      "entryReferenceFromSupported": false,
+      "deltaListSupported": false
+    },
+    "scaRequirementsForOneTimeConsents": {
+      "scaByOneTimeAvailableAccountsConsentRequired": true,
+      "scaByOneTimeGlobalConsentRequired": true
+    }
+  },
+  "pis": {
+    "supportedPaymentTypeAndProductMatrix": {
+      "payments": [
+        "sepa-credit-transfers",
+        "instant-sepa-credit-transfers"
+      ]
+    },
+    "maxTransactionValidityDays": 0,
+    "notConfirmedPaymentExpirationTimeMs": 86400000,
+    "paymentCancellationAuthorisationMandated": false,
+    "redirectLinkToOnlineBanking": {
+      "pisRedirectUrlToAspsp": "http://localhost:4400/payment-initiation/login?paymentId={encrypted-payment-id}&redirectId={redirect-id}",
+      "pisPaymentCancellationRedirectUrlToAspsp": "http://localhost:4400/payment-cancellation/login?paymentId={encrypted-payment-id}&redirectId={redirect-id}",
+      "paymentCancellationRedirectUrlExpirationTimeMs": 600000
+    },
+    "countryValidationSupported": "DE",
+    "supportedTransactionStatusFormats": [
+      "application/json"
+    ]
+  },
+  "piis": {
+    "piisConsentSupported": "NOT_SUPPORTED"
+  },
+  "common": {
+    "scaRedirectFlow": "OAUTH",
+    "oauthConfigurationUrl": "http://localhost:4400/oauth/authorization-server",
+    "startAuthorisationMode": "AUTO",
+    "tppSignatureRequired": false,
+    "psuInInitialRequestMandated": false,
+    "redirectUrlExpirationTimeMs": 600000,
+    "authorisationExpirationTimeMs": 86400000,
+    "forceXs2aBaseLinksUrl": false,
+    "xs2aBaseLinksUrl": "http://myhost.com/",
+    "supportedAccountReferenceFields": [
+      "IBAN"
+    ],
+    "multicurrencyAccountLevelSupported": "SUBACCOUNT",
+    "aisPisSessionsSupported": false,
+    "signingBasketSupported": false,
+    "checkTppRolesFromCertificateSupported": true,
+    "aspspNotificationsSupported": [
+      "NONE"
+    ],
+    "authorisationConfirmationRequestMandated": false,
+    "authorisationConfirmationCheckByXs2a": false,
+    "checkUriComplianceToDomainSupported": false,
+    "tppUriComplianceResponse": "WARNING"
+  }
+}
+
+###
+# Updates ASPSP profile - prefer REDIRECT
+PUT http://localhost:20010/api/v1/aspsp-profile/for-debug/sca-approaches
+Content-Type: application/json
+
+["REDIRECT", "EMBEDDED"]
