@@ -173,9 +173,11 @@ class GmailOAuth2AuthenticationTest {
         assertThat(target).hasParameter("client_id", "test-client-id");
         assertThat(target).hasParameter("state");
         assertThat(target).hasParameter("nonce");
+        assertThat(stateCookie).isNotNull();
 
         String state = UriComponentsBuilder.fromUri(target).build().getQueryParams().getFirst("state");
         assertThat(state).isNotNull();
+        assertThat(stateCookie).isEqualTo(state);
         return URLDecoder.decode(state, StandardCharsets.UTF_8.name());
     }
 }
