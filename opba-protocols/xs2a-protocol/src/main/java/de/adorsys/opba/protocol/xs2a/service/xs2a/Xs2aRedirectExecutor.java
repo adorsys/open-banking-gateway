@@ -77,7 +77,7 @@ public class Xs2aRedirectExecutor {
     ) {
         setDestinationUriInContext(execution, destinationUri);
 
-        URI screenUri = ContextUtil.buildURI(uiScreenUriSpel);
+        URI screenUri = ContextUtil.buildAndExpandQueryParameters(uiScreenUriSpel, context, null);
 
 
         Redirect.RedirectBuilder redirect = Redirect.builder();

@@ -41,9 +41,9 @@ public class HbciReportValidationError implements JavaDelegate {
                         .executionId(execution.getId())
                         .consentIncompatible(violations.isConsentIncompatible())
                         .provideMoreParamsDialog(
-                                ContextUtil.buildAndExpandQueryParametersIfAuthContinued(
+                                ContextUtil.buildAndExpandQueryParameters(
                                                 configuration.getAis().getRedirect().getParameters().getProvideMore(),
-                                                current
+                                                current, current.getRedirectCodeIfAuthContinued()
                                 )
                         )
                         .issues(current.getViolations())
