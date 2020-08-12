@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
   <process id="if-needed-xs2a-oauth2-step" name="if-needed-xs2a-oauth2-step" isExecutable="true">
+    <documentation>Xs2a Oauth2 pre-step that allows bypass if not needed</documentation>
     <startEvent id="sid-00cfc121-44b4-41b7-93fe-d90e3e9ab50f"/>
     <endEvent id="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448"/>
     <sequenceFlow id="sid-c2566b77-4973-4caf-b125-70ec5b9eb85a" sourceRef="sid-00cfc121-44b4-41b7-93fe-d90e3e9ab50f" targetRef="sid-ef5a15f0-fbfd-48ac-b35a-f64d250e0f9d"/>
     <exclusiveGateway id="sid-ef5a15f0-fbfd-48ac-b35a-f64d250e0f9d" default="oauth2FlowNotRequired"/>
-    <serviceTask id="sid-1adf2519-4ebf-411a-b0d7-9ed126bdcf28" flowable:exclusive="true"/>
+    <serviceTask id="sid-1adf2519-4ebf-411a-b0d7-9ed126bdcf28" flowable:exclusive="true" flowable:expression="1+1"/>
     <sequenceFlow id="oauth2FlowNotRequired" sourceRef="sid-ef5a15f0-fbfd-48ac-b35a-f64d250e0f9d" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448" name="Oauth2 not required">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
-    <serviceTask id="sid-137d03a1-a1b7-4a0a-9b5e-3be59e6feac7" flowable:exclusive="true"/>
+    <serviceTask id="sid-137d03a1-a1b7-4a0a-9b5e-3be59e6feac7" flowable:exclusive="true" flowable:expression="1+1"/>
     <sequenceFlow id="oauth2AuthorizationRequired" sourceRef="sid-ef5a15f0-fbfd-48ac-b35a-f64d250e0f9d" targetRef="sid-137d03a1-a1b7-4a0a-9b5e-3be59e6feac7" name="Oauth2 Authorization required">
-      <conditionExpression xsi:type="tFormalExpression">${xs2aConsentInfo.isOauth2Authorization(CONTEXT)}</conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2Authorization(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="oauth2AuthenticationRequired" sourceRef="sid-ef5a15f0-fbfd-48ac-b35a-f64d250e0f9d" targetRef="sid-1adf2519-4ebf-411a-b0d7-9ed126bdcf28" name="Oauth2 Authentication (pre-step) required">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2AuthenticationPreStep(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-aa5c802b-92ba-4f55-b69c-6513491102e2" sourceRef="sid-137d03a1-a1b7-4a0a-9b5e-3be59e6feac7" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448"/>
     <sequenceFlow id="sid-e030f649-cb5b-4b10-bcd3-edb973529961" sourceRef="sid-1adf2519-4ebf-411a-b0d7-9ed126bdcf28" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448"/>
-    <documentation>Xs2a Oauth2 pre-step that allows bypass if not needed</documentation>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-oauth2-step">
     <bpmndi:BPMNPlane bpmnElement="if-needed-xs2a-oauth2-step" id="BPMNPlane_xs2a-oauth2-step">

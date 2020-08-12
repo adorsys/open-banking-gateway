@@ -32,14 +32,14 @@ public class Xs2aConsentInfo {
      * Is the current consent authorization in OAUTH (not OAUTH pre-step) mode.
      */
     public boolean isOauth2Authorization(Xs2aContext ctx) {
-        return ctx.getActiveScaApproach() == Approach.REDIRECT_OAUTH;
+        return false;
     }
 
     /**
      * Is the current consent in OAUTH-Pre-step (authentication) mode.
      */
     public boolean isOauth2AuthenticationPreStep(Xs2aContext ctx) {
-        return ctx.getActiveScaApproach() == Approach.REDIRECT_OAUTH_PRE_STEP;
+        return false;
     }
 
     /**

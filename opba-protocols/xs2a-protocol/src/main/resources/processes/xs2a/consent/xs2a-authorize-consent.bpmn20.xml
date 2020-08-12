@@ -275,6 +275,5 @@
         <omgdi:waypoint x="995.0" y="494.9334"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
-    </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </definitions>
