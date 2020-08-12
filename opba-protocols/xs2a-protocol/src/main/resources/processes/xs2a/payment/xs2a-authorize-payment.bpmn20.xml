@@ -70,9 +70,9 @@
     <sequenceFlow id="sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643" name="On singlePaymentBody denied" sourceRef="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A" targetRef="sid-xs2aReportToFintechPaymentDenied"/>
     <serviceTask id="sid-xs2aReportToFintechPaymentDenied" name="Calls FinTech webhook to notify  revoke authorization" flowable:async="true" flowable:delegateExpression="${xs2aReportToFintechPaymentDenied}"/>
     <sequenceFlow id="sid-74F0F25F-E309-400F-ABEF-378D608C16C1" sourceRef="sid-xs2aReportToFintechPaymentDenied" targetRef="end"/>
-    <callActivity id="sid-d703df63-d2ab-448d-ae9b-cf344c0d32b2" name="Oauth2 step for user authorization" flowable:async="true" flowable:inheritVariables="true" calledElement="xs2a-oauth2-step"/>
+    <callActivity id="sid-d703df63-d2ab-448d-ae9b-cf344c0d32b2" name="Oauth2 step for user authorization" flowable:async="true" flowable:inheritVariables="true" calledElement="if-needed-xs2a-oauth2-step"/>
     <sequenceFlow id="onOauth2Authorization" name="On Oauth2 authorization" targetRef="sid-d703df63-d2ab-448d-ae9b-cf344c0d32b2" sourceRef="sid-b161ab3c-a45b-4ad8-84f7-2f3c23641eb5">
-      <conditionExpression xsi:type="tFormalExpression"/>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2Authorization(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-0d710e07-f06f-46bc-ba9e-760744521777" sourceRef="sid-d703df63-d2ab-448d-ae9b-cf344c0d32b2" targetRef="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A"/>
     <exclusiveGateway id="sid-b161ab3c-a45b-4ad8-84f7-2f3c23641eb5" default="onPlainRedirectAuthorization"/>
