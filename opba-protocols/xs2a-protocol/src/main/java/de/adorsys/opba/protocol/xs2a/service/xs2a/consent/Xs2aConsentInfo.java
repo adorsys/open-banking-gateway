@@ -1,5 +1,6 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.consent;
 
+import de.adorsys.opba.protocol.api.common.Approach;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,20 @@ public class Xs2aConsentInfo {
      */
     public boolean isRedirect(Xs2aContext ctx) {
         return REDIRECT.name().equalsIgnoreCase(ctx.getAspspScaApproach());
+    }
+
+    /**
+     * Is the current consent authorization in OAUTH (not OAUTH pre-step) mode.
+     */
+    public boolean isOauth2Authorization(Xs2aContext ctx) {
+        return ctx.getActiveScaApproach() == Approach.REDIRECT_OAUTH;
+    }
+
+    /**
+     * Is the current consent in OAUTH-Pre-step (authentication) mode.
+     */
+    public boolean isOauth2AuthenticationPreStep(Xs2aContext ctx) {
+        return ctx.getActiveScaApproach() == Approach.REDIRECT_OAUTH_PRE_STEP;
     }
 
     /**
