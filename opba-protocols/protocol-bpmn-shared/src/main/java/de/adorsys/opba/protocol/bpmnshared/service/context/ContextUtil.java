@@ -63,17 +63,17 @@ public class ContextUtil {
         URI uri =  UriComponentsBuilder.fromHttpUrl(urlTemplate)
                 .buildAndExpand(
                         ImmutableMap.of(
-                                "sessionId", context.getAuthorizationSessionIdIfOpened(),
-                                "redirectCode", redirectCode
+                                "sessionId", context.getAuthorizationSessionIdIfOpened()
                         )
                 ).toUri();
 
-        if (uri.toString().contains("?wrong=")) {
+        if (uri.toString().contains("wrong=")) {
             uri.getQuery().replaceAll("wrong=", "wrong=" + context.getWrongAuthCredentials());
         }
+        if (uri.toString().contains("redirectCode=")) {
+            uri.getQuery().replaceAll("redirectCode=", "redirectCode=" + redirectCode);
+        }
         return uri;
-
-
     }
 
     public URI buildURI(String urlTemplate) {
