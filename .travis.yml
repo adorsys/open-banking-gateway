@@ -25,7 +25,7 @@ after_success:
 deploy:
   - provider: script
     skip_cleanup: true
-    script: /bin/bash scripts/deploy_mvn.sh
+    script: /bin/bash scripts/release_deploy.sh
     on:
       tags: true
       # matches: vX.Y.Z, vX.Y.Z-A, vX.Y.Z-RCA, vX.Y.Z-A-B.C.D, vX.Y.Z-A-B.C.D-E, vX.Y.Z-RCA-B.C.D-E
