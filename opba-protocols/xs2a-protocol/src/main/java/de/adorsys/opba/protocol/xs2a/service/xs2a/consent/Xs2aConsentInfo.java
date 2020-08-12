@@ -38,7 +38,8 @@ public class Xs2aConsentInfo {
      * Is the current consent authorization using zero SCA flow
      */
     public boolean isZeroScaAvailable(Xs2aContext ctx) {
-        return null != ctx.getAvailableSca() && ctx.getAvailableSca().isEmpty();
+        return null == ctx.getAvailableSca()
+                       || null != ctx.getAvailableSca() && ctx.getAvailableSca().isEmpty();
     }
 
     /**

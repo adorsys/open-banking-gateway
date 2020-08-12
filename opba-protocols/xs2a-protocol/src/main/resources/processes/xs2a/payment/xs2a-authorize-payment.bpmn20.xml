@@ -71,7 +71,7 @@
     <sequenceFlow id="sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643" name="On singlePaymentBody denied" sourceRef="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A" targetRef="sid-xs2aReportToFintechPaymentDenied"/>
     <serviceTask id="sid-xs2aReportToFintechPaymentDenied" name="Calls FinTech webhook to notify  revoke authorization" flowable:async="true" flowable:delegateExpression="${xs2aReportToFintechPaymentDenied}"/>
     <sequenceFlow id="sid-74F0F25F-E309-400F-ABEF-378D608C16C1" sourceRef="sid-xs2aReportToFintechPaymentDenied" targetRef="end"/>
-    <sequenceFlow id="Flow_02ee3v4" name="Zero SCA" sourceRef="isMultipleScaAvailable" targetRef="isScaFinalized">
+    <sequenceFlow id="zeroScaAvailable" name="Zero SCA" sourceRef="isMultipleScaAvailable" targetRef="isScaFinalized">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isZeroScaAvailable(CONTEXT)}</conditionExpression>
     </sequenceFlow>
   </process>
@@ -226,7 +226,7 @@
         <omgdi:waypoint x="189.94999891869116" y="420"/>
         <omgdi:waypoint x="255" y="420"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_02ee3v4_di" bpmnElement="Flow_02ee3v4">
+      <bpmndi:BPMNEdge id="Flow_02ee3v4_di" bpmnElement="zeroScaAvailable">
         <omgdi:waypoint x="835" y="295"/>
         <omgdi:waypoint x="835" y="100"/>
         <omgdi:waypoint x="1430" y="100"/>
