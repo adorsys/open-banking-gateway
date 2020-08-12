@@ -5,7 +5,7 @@
   <parent>
     <groupId>de.adorsys.opba</groupId>
     <artifactId>open-banking-gateway</artifactId>
-    <version>0.0.7-SNAPSHOT</version>
+    <version>0.19</version>
   </parent>
 
   <artifactId>opba-consent-rest-api</artifactId>
@@ -13,7 +13,7 @@
 
   <properties>
     <!-- Hard reference to root directory. Used to reference pmd and checkstyle files from root.
-    Change this if depth changes. Current: /open-banking-gateway/open-banking-gateway -->
+    Change this  depth changes. Current: /open-banking-gateway/open-banking-gateway -->
     <main.basedir>${project.parent.basedir}</main.basedir>
     <openapi-spec-file-location>${project.basedir}/src/main/resources/static/tpp_consent_api.yml</openapi-spec-file-location>
   </properties>
