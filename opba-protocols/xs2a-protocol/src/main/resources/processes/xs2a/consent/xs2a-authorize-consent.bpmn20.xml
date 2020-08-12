@@ -1,242 +1,322 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:flowable="http://flowable.org/bpmn" targetNamespace="http://www.flowable.org/processdef" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="7.3.0">
   <process id="xs2a-authorize-consent" name="xs2a-authorize-consent" isExecutable="true">
     <documentation>XS2A consent authorization process</documentation>
-    <startEvent id="start" name="start" flowable:formFieldValidation="true"/>
+    <startEvent id="start" name="start" flowable:formFieldValidation="true" />
     <serviceTask id="startAuthorization" name="Start consent authorization" flowable:async="true" flowable:delegateExpression="${xs2aStartConsentAuthorization}">
       <documentation>scaStatus: recieved -&gt; psuIdentified</documentation>
     </serviceTask>
-    <endEvent id="end" name="end"/>
-    <sequenceFlow id="sid-1139B3D0-261B-4594-B84F-638928669262" sourceRef="start" targetRef="startAuthorization"/>
+    <endEvent id="end" name="end" />
+    <sequenceFlow id="sid-1139B3D0-261B-4594-B84F-638928669262" sourceRef="start" targetRef="startAuthorization" />
     <exclusiveGateway id="scaChallengeSelector">
       <documentation>Determines which SCA method was selected by bank</documentation>
     </exclusiveGateway>
-    <sequenceFlow id="sid-D15341DB-F89B-491F-9F3D-FFA8D98F770F" sourceRef="startAuthorization" targetRef="scaChallengeSelector"/>
-    <serviceTask id="notifyUserWithRedirect" name="Notify user with redirect url for challenge. Suspends to wait" flowable:async="true" flowable:delegateExpression="${xs2aDoRedirectToAspspForScaChallenge}" flowable:triggerable="true"/>
+    <sequenceFlow id="sid-D15341DB-F89B-491F-9F3D-FFA8D98F770F" sourceRef="startAuthorization" targetRef="scaChallengeSelector" />
+    <serviceTask id="notifyUserWithRedirect" name="Notify user with redirect url for challenge. Suspends to wait" flowable:async="true" flowable:delegateExpression="${xs2aDoRedirectToAspspForScaChallenge}" flowable:triggerable="true" />
     <sequenceFlow id="redirect" name="redirect" sourceRef="scaChallengeSelector" targetRef="notifyUserWithRedirect">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isRedirect(CONTEXT)}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isRedirect(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <serviceTask id="authenticateUser" name="Authenticate user" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAuthenticateUserConsentWithPin}">
       <documentation>scaStatus: psuIdentified -&gt; psuAuthenticated</documentation>
     </serviceTask>
-    <serviceTask id="selectScaMethod" name="Ask user to select SCA method. Suspends to wait" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAskForSelectedScaMethod}" flowable:triggerable="true"/>
-    <serviceTask id="embeddedScaChallenge" name="Inform user about SCA challenge. Suspends to wait for reply" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAskForScaChallenge}" flowable:triggerable="true"/>
-    <exclusiveGateway id="isMultipleScaAvailable" name="Multiple SCA available?" default="oneScaAvailable"/>
-    <exclusiveGateway id="isScaFinalized" name="SCA finalized?" default="moreScaChallenges"/>
-    <serviceTask id="persistConsentAndContext" name="Persist consent and its context for future service session invocation" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aPersistConsentAndContext}"/>
-    <sequenceFlow id="oneScaAvailable" name="One SCA" sourceRef="isMultipleScaAvailable" targetRef="embeddedScaChallenge"/>
-    <exclusiveGateway id="isPasswordPresent" name="Password/OTA present?" default="noUserPasswordPresent"/>
-    <serviceTask id="askUserForPassword" name="Ask user to input OTP/password. Suspends to wait" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAskForPassword}" flowable:triggerable="true"/>
-    <sequenceFlow id="sid-54FE7BD4-78A9-4391-8A37-1D323F32A029" sourceRef="authenticateUser" targetRef="isMultipleScaAvailable"/>
+    <serviceTask id="selectScaMethod" name="Ask user to select SCA method. Suspends to wait" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAskForSelectedScaMethod}" flowable:triggerable="true" />
+    <serviceTask id="embeddedScaChallenge" name="Inform user about SCA challenge. Suspends to wait for reply" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAskForScaChallenge}" flowable:triggerable="true" />
+    <exclusiveGateway id="isMultipleScaAvailable" name="Multiple SCA available?" default="oneScaAvailable">
+      <outgoing>Flow_18w9hak</outgoing>
+    </exclusiveGateway>
+    <exclusiveGateway id="isScaFinalized" name="SCA finalized?" default="moreScaChallenges">
+      <incoming>Flow_0eg9vlu</incoming>
+    </exclusiveGateway>
+    <serviceTask id="persistConsentAndContext" name="Persist consent and its context for future service session invocation" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aPersistConsentAndContext}" />
+    <sequenceFlow id="oneScaAvailable" name="One SCA" sourceRef="isMultipleScaAvailable" targetRef="embeddedScaChallenge" />
+    <exclusiveGateway id="isPasswordPresent" name="Password/OTA present?" default="noUserPasswordPresent" />
+    <serviceTask id="askUserForPassword" name="Ask user to input OTP/password. Suspends to wait" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAskForPassword}" flowable:triggerable="true" />
+    <sequenceFlow id="sid-54FE7BD4-78A9-4391-8A37-1D323F32A029" sourceRef="authenticateUser" targetRef="isMultipleScaAvailable" />
     <sequenceFlow id="passwordAvailable" name="Password present" sourceRef="isPasswordPresent" targetRef="authenticateUser">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isPasswordPresent(CONTEXT)}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isPasswordPresent(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="scaFinalized" name="SCA finalized" sourceRef="isScaFinalized" targetRef="persistConsentAndContext">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isConsentFinalized(CONTEXT)}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isConsentFinalized(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="embedded" name="embedded" sourceRef="scaChallengeSelector" targetRef="isPasswordPresent">
       <documentation>ASPSP selected embedded SCA</documentation>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isEmbedded(CONTEXT)}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isEmbedded(CONTEXT)}</conditionExpression>
     </sequenceFlow>
-    <serviceTask id="sendChallengeResult" name="Sends SCA challenge result" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAuthenticateConsentWithScaChallenge}"/>
-    <sequenceFlow id="sid-BC0026EE-A538-4399-8BA7-080F7C2383C9" sourceRef="sendChallengeResult" targetRef="isScaFinalized"/>
-    <sequenceFlow id="sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6" sourceRef="embeddedScaChallenge" targetRef="sendChallengeResult"/>
-    <serviceTask id="reportSelectedScaMethod" name="Notify ASPS with selected SCA method" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aReportSelectedScaMethod}"/>
-    <sequenceFlow id="sid-F1C336CA-1C21-44CA-9CB4-C1E83F5ED1CE" sourceRef="selectScaMethod" targetRef="reportSelectedScaMethod"/>
-    <exclusiveGateway id="wasRedirectConsentGrantSuccessful" default="redirectConsentWasDenied" name="Was redirect consent succesfully granted?"/>
-    <sequenceFlow id="sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE" sourceRef="notifyUserWithRedirect" targetRef="wasRedirectConsentGrantSuccessful"/>
+    <serviceTask id="sendChallengeResult" name="Sends SCA challenge result" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aAuthenticateConsentWithScaChallenge}" />
+    <sequenceFlow id="sid-BC0026EE-A538-4399-8BA7-080F7C2383C9" sourceRef="sendChallengeResult" targetRef="isScaFinalized" />
+    <sequenceFlow id="sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6" sourceRef="embeddedScaChallenge" targetRef="sendChallengeResult" />
+    <serviceTask id="reportSelectedScaMethod" name="Notify ASPS with selected SCA method" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${xs2aReportSelectedScaMethod}" />
+    <sequenceFlow id="sid-F1C336CA-1C21-44CA-9CB4-C1E83F5ED1CE" sourceRef="selectScaMethod" targetRef="reportSelectedScaMethod" />
+    <exclusiveGateway id="wasRedirectConsentGrantSuccessful" name="Was redirect consent succesfully granted?" default="redirectConsentWasDenied" />
+    <sequenceFlow id="sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE" sourceRef="notifyUserWithRedirect" targetRef="wasRedirectConsentGrantSuccessful" />
     <sequenceFlow id="multipleScaAvailable" name="Multiple SCA" sourceRef="isMultipleScaAvailable" targetRef="selectScaMethod">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isMultipleScaAvailable(CONTEXT)}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isMultipleScaAvailable(CONTEXT)}</conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="noUserPasswordPresent" name="No password available" sourceRef="isPasswordPresent" targetRef="askUserForPassword"/>
-    <sequenceFlow id="moreScaChallenges" name="More challenges" sourceRef="isScaFinalized" targetRef="embeddedScaChallenge"/>
+    <sequenceFlow id="noUserPasswordPresent" name="No password available" sourceRef="isPasswordPresent" targetRef="askUserForPassword" />
+    <sequenceFlow id="moreScaChallenges" name="More challenges" sourceRef="isScaFinalized" targetRef="embeddedScaChallenge" />
     <sequenceFlow id="wrongScaChallenge" name="Wrong SCA challenge" sourceRef="isScaFinalized" targetRef="embeddedScaChallenge">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isWrongScaChallenge(CONTEXT)}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isWrongScaChallenge(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="wrongPassword" name="Wrong password" sourceRef="isMultipleScaAvailable" targetRef="askUserForPassword">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isWrongPassword(CONTEXT)}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isWrongPassword(CONTEXT)}</conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-C9002EF3-5531-4787-8754-96515CEFCE8C" sourceRef="askUserForPassword" targetRef="authenticateUser"/>
-    <sequenceFlow id="sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB" sourceRef="reportSelectedScaMethod" targetRef="embeddedScaChallenge"/>
-    <serviceTask id="callFintechWebhook" name="Calls FinTech webhook to notify completed authorization" flowable:delegateExpression="${xs2aReportToFintechConsentAuthorized}"/>
-    <sequenceFlow id="sid-7985590B-669B-4877-AFEF-B3BD5824C52B" sourceRef="callFintechWebhook" targetRef="end"/>
-    <sequenceFlow id="sid-59AE4CB4-9545-4CD9-9495-6A5D8AF74CBE" sourceRef="persistConsentAndContext" targetRef="callFintechWebhook"/>
+    <sequenceFlow id="sid-C9002EF3-5531-4787-8754-96515CEFCE8C" sourceRef="askUserForPassword" targetRef="authenticateUser" />
+    <sequenceFlow id="sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB" sourceRef="reportSelectedScaMethod" targetRef="embeddedScaChallenge" />
+    <serviceTask id="callFintechWebhook" name="Calls FinTech webhook to notify completed authorization" flowable:delegateExpression="${xs2aReportToFintechConsentAuthorized}" />
+    <sequenceFlow id="sid-7985590B-669B-4877-AFEF-B3BD5824C52B" sourceRef="callFintechWebhook" targetRef="end" />
+    <sequenceFlow id="sid-59AE4CB4-9545-4CD9-9495-6A5D8AF74CBE" sourceRef="persistConsentAndContext" targetRef="callFintechWebhook" />
     <sequenceFlow id="isOkConsent" name="Consent OK" sourceRef="wasRedirectConsentGrantSuccessful" targetRef="persistConsentAndContext">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isOkRedirectConsent(CONTEXT)}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOkRedirectConsent(CONTEXT)}</conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="redirectConsentWasDenied" name="On consent denied" sourceRef="wasRedirectConsentGrantSuccessful" targetRef="sid-xs2aReportToFintechConsentDenied"/>
-    <serviceTask id="sid-xs2aReportToFintechConsentDenied" name="Calls FinTech webhook to notify  revoke authorization" flowable:async="true" flowable:delegateExpression="${xs2aReportToFintechConsentDenied}"/>
-    <sequenceFlow id="sid-74F0F25F-E309-400F-ABEF-378D608C16C1" sourceRef="sid-xs2aReportToFintechConsentDenied" targetRef="end"/>
+    <sequenceFlow id="redirectConsentWasDenied" name="On consent denied" sourceRef="wasRedirectConsentGrantSuccessful" targetRef="sid-xs2aReportToFintechConsentDenied" />
+    <serviceTask id="sid-xs2aReportToFintechConsentDenied" name="Calls FinTech webhook to notify  revoke authorization" flowable:async="true" flowable:delegateExpression="${xs2aReportToFintechConsentDenied}" />
+    <sequenceFlow id="sid-74F0F25F-E309-400F-ABEF-378D608C16C1" sourceRef="sid-xs2aReportToFintechConsentDenied" targetRef="end" />
+    <task id="Activity_039wuqg" name="Inform user about 0 SCA result">
+      <incoming>Flow_18w9hak</incoming>
+      <outgoing>Flow_0eg9vlu</outgoing>
+    </task>
+    <sequenceFlow id="Flow_18w9hak" name="Zero SCA" sourceRef="isMultipleScaAvailable" targetRef="Activity_039wuqg" />
+    <sequenceFlow id="Flow_0eg9vlu" sourceRef="Activity_039wuqg" targetRef="isScaFinalized" />
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
-    <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
-      <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
-        <omgdc:Bounds height="30.0" width="30.0" x="90.0" y="325.0"/>
+    <bpmndi:BPMNPlane id="BPMNPlane_xs2a-authorize-consent" bpmnElement="xs2a-authorize-consent">
+      <bpmndi:BPMNEdge id="BPMNEdge_sid-74F0F25F-E309-400F-ABEF-378D608C16C1" bpmnElement="sid-74F0F25F-E309-400F-ABEF-378D608C16C1">
+        <omgdi:waypoint x="1654.9500000000003" y="535" />
+        <omgdi:waypoint x="1710" y="535" />
+        <omgdi:waypoint x="1710" y="462.9499383700888" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643" bpmnElement="redirectConsentWasDenied">
+        <omgdi:waypoint x="1065" y="494.9334026622295" />
+        <omgdi:waypoint x="1065" y="535" />
+        <omgdi:waypoint x="1555.0000000000002" y="535" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1052" y="505" width="57" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_isOkConsent" bpmnElement="isOkConsent">
+        <omgdi:waypoint x="1064.591836734694" y="455.3885480572597" />
+        <omgdi:waypoint x="1064" y="427" />
+        <omgdi:waypoint x="1555" y="427" />
+        <omgdi:waypoint x="1555" y="379.95000000000005" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1280" y="402" width="60" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_sid-59AE4CB4-9545-4CD9-9495-6A5D8AF74CBE" bpmnElement="sid-59AE4CB4-9545-4CD9-9495-6A5D8AF74CBE">
+        <omgdi:waypoint x="1604.95" y="340" />
+        <omgdi:waypoint x="1660" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_sid-7985590B-669B-4877-AFEF-B3BD5824C52B" bpmnElement="sid-7985590B-669B-4877-AFEF-B3BD5824C52B">
+        <omgdi:waypoint x="1710" y="379.95000000000005" />
+        <omgdi:waypoint x="1710" y="435" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB" bpmnElement="sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB">
+        <omgdi:waypoint x="1114.9499999999928" y="104" />
+        <omgdi:waypoint x="1135" y="104" />
+        <omgdi:waypoint x="1152.3664122137404" y="195" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_sid-C9002EF3-5531-4787-8754-96515CEFCE8C" bpmnElement="sid-C9002EF3-5531-4787-8754-96515CEFCE8C">
+        <omgdi:waypoint x="669.9499999998807" y="344" />
+        <omgdi:waypoint x="715" y="344" />
+        <omgdi:waypoint x="715" y="274.95000000000005" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_wrongPassword" bpmnElement="wrongPassword">
+        <omgdi:waypoint x="835" y="254.94463997850616" />
+        <omgdi:waypoint x="835" y="421" />
+        <omgdi:waypoint x="620" y="421" />
+        <omgdi:waypoint x="620" y="383.95000000000005" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="686" y="396" width="83" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_wrongScaChallenge" bpmnElement="wrongScaChallenge">
+        <omgdi:waypoint x="1430" y="215" />
+        <omgdi:waypoint x="1430" y="103" />
+        <omgdi:waypoint x="1185" y="103" />
+        <omgdi:waypoint x="1167.566287878788" y="195" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1279" y="78" width="58" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_moreScaChallenges" bpmnElement="moreScaChallenges">
+        <omgdi:waypoint x="1430" y="254.94267083027182" />
+        <omgdi:waypoint x="1430" y="371" />
+        <omgdi:waypoint x="1160" y="371" />
+        <omgdi:waypoint x="1160" y="274.95000000000005" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1255" y="346" width="81" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_noUserPasswordPresent" bpmnElement="noUserPasswordPresent">
+        <omgdi:waypoint x="480" y="254.9408570119157" />
+        <omgdi:waypoint x="480" y="344" />
+        <omgdi:waypoint x="569.9999999998886" y="344" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="463" y="289" width="65" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_multipleScaAvailable" bpmnElement="multipleScaAvailable">
+        <omgdi:waypoint x="835" y="215" />
+        <omgdi:waypoint x="835" y="104" />
+        <omgdi:waypoint x="880" y="104" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="818" y="150" width="64" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE" bpmnElement="sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE">
+        <omgdi:waypoint x="949.9499999999999" y="475" />
+        <omgdi:waypoint x="1045" y="475" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_sid-F1C336CA-1C21-44CA-9CB4-C1E83F5ED1CE" bpmnElement="sid-F1C336CA-1C21-44CA-9CB4-C1E83F5ED1CE">
+        <omgdi:waypoint x="979.9499999999999" y="104" />
+        <omgdi:waypoint x="1014.9999999999961" y="104" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6" bpmnElement="sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6">
+        <omgdi:waypoint x="1209.95" y="235" />
+        <omgdi:waypoint x="1260" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_sid-BC0026EE-A538-4399-8BA7-080F7C2383C9" bpmnElement="sid-BC0026EE-A538-4399-8BA7-080F7C2383C9">
+        <omgdi:waypoint x="1359.9499999999755" y="235" />
+        <omgdi:waypoint x="1410" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_embedded" bpmnElement="embedded">
+        <omgdi:waypoint x="425" y="318" />
+        <omgdi:waypoint x="425" y="235" />
+        <omgdi:waypoint x="460" y="235" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="414" y="267" width="52" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_scaFinalized" bpmnElement="scaFinalized">
+        <omgdi:waypoint x="1449.9420263788604" y="235" />
+        <omgdi:waypoint x="1555" y="235" />
+        <omgdi:waypoint x="1555" y="300" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1469" y="210" width="67" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_passwordAvailable" bpmnElement="passwordAvailable">
+        <omgdi:waypoint x="499.94575712457055" y="235" />
+        <omgdi:waypoint x="664.9999999999643" y="235" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="538" y="210" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_sid-54FE7BD4-78A9-4391-8A37-1D323F32A029" bpmnElement="sid-54FE7BD4-78A9-4391-8A37-1D323F32A029">
+        <omgdi:waypoint x="764.9499999999756" y="235" />
+        <omgdi:waypoint x="815" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_oneScaAvailable" bpmnElement="oneScaAvailable">
+        <omgdi:waypoint x="854.946931713082" y="235" />
+        <omgdi:waypoint x="1109.9999999999827" y="235" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="959" y="210" width="47" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_redirect" bpmnElement="redirect">
+        <omgdi:waypoint x="425" y="357.9427242888402" />
+        <omgdi:waypoint x="425" y="475" />
+        <omgdi:waypoint x="849.9999999990612" y="475" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="422" y="406" width="37" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_sid-D15341DB-F89B-491F-9F3D-FFA8D98F770F" bpmnElement="sid-D15341DB-F89B-491F-9F3D-FFA8D98F770F">
+        <omgdi:waypoint x="354.9499999999989" y="339.1666666666667" />
+        <omgdi:waypoint x="405.327868852459" y="338.32704918032783" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_sid-1139B3D0-261B-4594-B84F-638928669262" bpmnElement="sid-1139B3D0-261B-4594-B84F-638928669262">
+        <omgdi:waypoint x="189.94999891869116" y="340" />
+        <omgdi:waypoint x="255" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18w9hak_di" bpmnElement="Flow_18w9hak">
+        <omgdi:waypoint x="835" y="255" />
+        <omgdi:waypoint x="835" y="344" />
+        <omgdi:waypoint x="940" y="344" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="865" y="323" width="49" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0eg9vlu_di" bpmnElement="Flow_0eg9vlu">
+        <omgdi:waypoint x="1040" y="344" />
+        <omgdi:waypoint x="1430" y="344" />
+        <omgdi:waypoint x="1430" y="255" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_start" bpmnElement="start">
+        <omgdc:Bounds x="160" y="325" width="30" height="30" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="164" y="355" width="22" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="startAuthorization" id="BPMNShape_startAuthorization">
-        <omgdc:Bounds height="80.0" width="100.0" x="185.0" y="300.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_startAuthorization" bpmnElement="startAuthorization">
+        <omgdc:Bounds x="255" y="300" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
-        <omgdc:Bounds height="28.0" width="28.0" x="1626.0" y="435.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_end" bpmnElement="end">
+        <omgdc:Bounds x="1696" y="435" width="28" height="28" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1701" y="463" width="19" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="scaChallengeSelector" id="BPMNShape_scaChallengeSelector">
-        <omgdc:Bounds height="40.0" width="40.0" x="335.0" y="318.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_scaChallengeSelector" bpmnElement="scaChallengeSelector" isMarkerVisible="true">
+        <omgdc:Bounds x="405" y="318" width="40" height="40" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="notifyUserWithRedirect" id="BPMNShape_notifyUserWithRedirect">
-        <omgdc:Bounds height="80.0" width="100.0" x="780.0" y="435.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_notifyUserWithRedirect" bpmnElement="notifyUserWithRedirect">
+        <omgdc:Bounds x="850" y="435" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="authenticateUser" id="BPMNShape_authenticateUser">
-        <omgdc:Bounds height="80.0" width="100.0" x="595.0" y="195.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_authenticateUser" bpmnElement="authenticateUser">
+        <omgdc:Bounds x="665" y="195" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="selectScaMethod" id="BPMNShape_selectScaMethod">
-        <omgdc:Bounds height="80.0" width="100.0" x="810.0" y="64.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_selectScaMethod" bpmnElement="selectScaMethod">
+        <omgdc:Bounds x="880" y="64" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="embeddedScaChallenge" id="BPMNShape_embeddedScaChallenge">
-        <omgdc:Bounds height="80.0" width="100.0" x="1040.0" y="195.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_embeddedScaChallenge" bpmnElement="embeddedScaChallenge">
+        <omgdc:Bounds x="1110" y="195" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="isMultipleScaAvailable" id="BPMNShape_isMultipleScaAvailable">
-        <omgdc:Bounds height="40.0" width="40.0" x="745.0" y="215.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_isMultipleScaAvailable" bpmnElement="isMultipleScaAvailable" isMarkerVisible="true">
+        <omgdc:Bounds x="815" y="215" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="803" y="255" width="64" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="isScaFinalized" id="BPMNShape_isScaFinalized">
-        <omgdc:Bounds height="40.0" width="40.0" x="1340.0" y="215.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_isScaFinalized" bpmnElement="isScaFinalized" isMarkerVisible="true">
+        <omgdc:Bounds x="1410" y="215" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1394" y="255" width="73" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="persistConsentAndContext" id="BPMNShape_persistConsentAndContext">
-        <omgdc:Bounds height="80.0" width="100.0" x="1435.0" y="300.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_persistConsentAndContext" bpmnElement="persistConsentAndContext">
+        <omgdc:Bounds x="1505" y="300" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="isPasswordPresent" id="BPMNShape_isPasswordPresent">
-        <omgdc:Bounds height="40.0" width="40.0" x="390.0" y="215.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_isPasswordPresent" bpmnElement="isPasswordPresent" isMarkerVisible="true">
+        <omgdc:Bounds x="460" y="215" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="443" y="255" width="74" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="askUserForPassword" id="BPMNShape_askUserForPassword">
-        <omgdc:Bounds height="80.0" width="100.0" x="500.0" y="304.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_askUserForPassword" bpmnElement="askUserForPassword">
+        <omgdc:Bounds x="570" y="304" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="sendChallengeResult" id="BPMNShape_sendChallengeResult">
-        <omgdc:Bounds height="80.0" width="100.0" x="1190.0" y="195.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_sendChallengeResult" bpmnElement="sendChallengeResult">
+        <omgdc:Bounds x="1260" y="195" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="reportSelectedScaMethod" id="BPMNShape_reportSelectedScaMethod">
-        <omgdc:Bounds height="80.0" width="100.0" x="945.0" y="64.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_reportSelectedScaMethod" bpmnElement="reportSelectedScaMethod">
+        <omgdc:Bounds x="1015" y="64" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="wasRedirectConsentGrantSuccessful" id="BPMNShape_sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A">
-        <omgdc:Bounds height="40.0" width="40.0" x="975.0" y="455.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A" bpmnElement="wasRedirectConsentGrantSuccessful" isMarkerVisible="true">
+        <omgdc:Bounds x="1045" y="455" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="1034" y="495" width="62" height="53" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="callFintechWebhook" id="BPMNShape_callFintechWebhook">
-        <omgdc:Bounds height="80.0" width="100.0" x="1590.0" y="300.0"/>
+      <bpmndi:BPMNShape id="BPMNShape_callFintechWebhook" bpmnElement="callFintechWebhook">
+        <omgdc:Bounds x="1660" y="300" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="sid-xs2aReportToFintechConsentDenied" id="BPMNShape_sid-xs2aReportToFintechConsentDenied">
-        <omgdc:Bounds height="79.99999999999994" width="100.0" x="1485.0000000000002" y="495.00000000000006"/>
+      <bpmndi:BPMNShape id="BPMNShape_sid-xs2aReportToFintechConsentDenied" bpmnElement="sid-xs2aReportToFintechConsentDenied">
+        <omgdc:Bounds x="1555" y="495" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="sid-1139B3D0-261B-4594-B84F-638928669262" id="BPMNEdge_sid-1139B3D0-261B-4594-B84F-638928669262">
-        <omgdi:waypoint x="119.94999891869115" y="340.0"/>
-        <omgdi:waypoint x="185.0" y="340.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="redirect" id="BPMNEdge_redirect">
-        <omgdi:waypoint x="355.0" y="357.9427242888402"/>
-        <omgdi:waypoint x="355.0" y="475.0"/>
-        <omgdi:waypoint x="779.9999999990612" y="475.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="wrongPassword" id="BPMNEdge_wrongPassword">
-        <omgdi:waypoint x="765.0" y="254.94463997850616"/>
-        <omgdi:waypoint x="765.0" y="421.0"/>
-        <omgdi:waypoint x="550.0" y="421.0"/>
-        <omgdi:waypoint x="550.0" y="383.95000000000005"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-D15341DB-F89B-491F-9F3D-FFA8D98F770F" id="BPMNEdge_sid-D15341DB-F89B-491F-9F3D-FFA8D98F770F">
-        <omgdi:waypoint x="284.9499999999989" y="339.1666666666667"/>
-        <omgdi:waypoint x="335.327868852459" y="338.32704918032783"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="isOkConsent" id="BPMNEdge_isOkConsent">
-        <omgdi:waypoint x="994.5918367346939" y="455.3885480572597"/>
-        <omgdi:waypoint x="994.0" y="427.0"/>
-        <omgdi:waypoint x="1485.0" y="427.0"/>
-        <omgdi:waypoint x="1485.0" y="379.95000000000005"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="wrongScaChallenge" id="BPMNEdge_wrongScaChallenge">
-        <omgdi:waypoint x="1360.0" y="215.0"/>
-        <omgdi:waypoint x="1360.0" y="103.0"/>
-        <omgdi:waypoint x="1115.0" y="103.0"/>
-        <omgdi:waypoint x="1097.566287878788" y="195.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB" id="BPMNEdge_sid-4C32CFE7-9B58-463D-85E7-4DB93064F2BB">
-        <omgdi:waypoint x="1044.9499999999928" y="104.0"/>
-        <omgdi:waypoint x="1065.0" y="104.0"/>
-        <omgdi:waypoint x="1082.3664122137404" y="195.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE" id="BPMNEdge_sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE">
-        <omgdi:waypoint x="879.9499999999999" y="475.0"/>
-        <omgdi:waypoint x="975.0" y="475.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="noUserPasswordPresent" id="BPMNEdge_noUserPasswordPresent">
-        <omgdi:waypoint x="410.0" y="254.9408570119157"/>
-        <omgdi:waypoint x="410.0" y="344.0"/>
-        <omgdi:waypoint x="499.9999999998886" y="344.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-54FE7BD4-78A9-4391-8A37-1D323F32A029" id="BPMNEdge_sid-54FE7BD4-78A9-4391-8A37-1D323F32A029">
-        <omgdi:waypoint x="694.9499999999756" y="235.0"/>
-        <omgdi:waypoint x="745.0" y="235.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="moreScaChallenges" id="BPMNEdge_moreScaChallenges">
-        <omgdi:waypoint x="1360.0" y="254.94267083027182"/>
-        <omgdi:waypoint x="1360.0" y="371.0"/>
-        <omgdi:waypoint x="1090.0" y="371.0"/>
-        <omgdi:waypoint x="1090.0" y="274.95000000000005"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-7985590B-669B-4877-AFEF-B3BD5824C52B" id="BPMNEdge_sid-7985590B-669B-4877-AFEF-B3BD5824C52B">
-        <omgdi:waypoint x="1640.0" y="379.95000000000005"/>
-        <omgdi:waypoint x="1640.0" y="435.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="oneScaAvailable" id="BPMNEdge_oneScaAvailable">
-        <omgdi:waypoint x="784.946931713082" y="235.0"/>
-        <omgdi:waypoint x="1039.9999999999827" y="235.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="scaFinalized" id="BPMNEdge_scaFinalized">
-        <omgdi:waypoint x="1379.9420263788604" y="235.0"/>
-        <omgdi:waypoint x="1485.0" y="235.0"/>
-        <omgdi:waypoint x="1485.0" y="300.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-F1C336CA-1C21-44CA-9CB4-C1E83F5ED1CE" id="BPMNEdge_sid-F1C336CA-1C21-44CA-9CB4-C1E83F5ED1CE">
-        <omgdi:waypoint x="909.9499999999999" y="104.0"/>
-        <omgdi:waypoint x="944.9999999999961" y="104.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-C9002EF3-5531-4787-8754-96515CEFCE8C" id="BPMNEdge_sid-C9002EF3-5531-4787-8754-96515CEFCE8C">
-        <omgdi:waypoint x="599.9499999998807" y="344.0"/>
-        <omgdi:waypoint x="645.0" y="344.0"/>
-        <omgdi:waypoint x="645.0" y="274.95000000000005"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="redirectConsentWasDenied" id="BPMNEdge_sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643">
-        <omgdi:waypoint x="995.0" y="494.9334026622295"/>
-        <omgdi:waypoint x="995.0" y="535.0"/>
-        <omgdi:waypoint x="1485.0000000000002" y="535.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="multipleScaAvailable" id="BPMNEdge_multipleScaAvailable">
-        <omgdi:waypoint x="765.0" y="215.0"/>
-        <omgdi:waypoint x="765.0" y="104.0"/>
-        <omgdi:waypoint x="810.0" y="104.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6" id="BPMNEdge_sid-7485A215-3632-43C3-A3FE-3B3F33F30FA6">
-        <omgdi:waypoint x="1139.95" y="235.0"/>
-        <omgdi:waypoint x="1190.0" y="235.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-74F0F25F-E309-400F-ABEF-378D608C16C1" id="BPMNEdge_sid-74F0F25F-E309-400F-ABEF-378D608C16C1">
-        <omgdi:waypoint x="1584.9500000000003" y="535.0"/>
-        <omgdi:waypoint x="1640.0" y="535.0"/>
-        <omgdi:waypoint x="1640.0" y="462.9499383700888"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-BC0026EE-A538-4399-8BA7-080F7C2383C9" id="BPMNEdge_sid-BC0026EE-A538-4399-8BA7-080F7C2383C9">
-        <omgdi:waypoint x="1289.9499999999755" y="235.0"/>
-        <omgdi:waypoint x="1340.0" y="235.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="passwordAvailable" id="BPMNEdge_passwordAvailable">
-        <omgdi:waypoint x="429.94575712457055" y="235.0"/>
-        <omgdi:waypoint x="594.9999999999643" y="235.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="embedded" id="BPMNEdge_embedded">
-        <omgdi:waypoint x="355.0" y="318.0"/>
-        <omgdi:waypoint x="355.0" y="235.0"/>
-        <omgdi:waypoint x="390.0" y="235.0"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-59AE4CB4-9545-4CD9-9495-6A5D8AF74CBE" id="BPMNEdge_sid-59AE4CB4-9545-4CD9-9495-6A5D8AF74CBE">
-        <omgdi:waypoint x="1534.95" y="340.0"/>
-        <omgdi:waypoint x="1590.0" y="340.0"/>
-      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_039wuqg_di" bpmnElement="Activity_039wuqg">
+        <omgdc:Bounds x="940" y="304" width="100" height="80" />
+      </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </definitions>
