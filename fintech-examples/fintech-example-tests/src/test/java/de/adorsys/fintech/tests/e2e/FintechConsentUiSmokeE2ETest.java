@@ -94,8 +94,6 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and()
                 .sandbox_user_provides_sca_challenge_result(firefoxDriver)
                 .and()
-                .user_navigates_to_page(firefoxDriver)
-                .and()
                 .sandbox_user_clicks_redirect_back_to_tpp_button(firefoxDriver)
                 .and()
                 .user_navigates_to_page(firefoxDriver)
