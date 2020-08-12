@@ -20,6 +20,9 @@ public class FintechStagesUtils {
     public static final String ACCOUNT_ENDPOINT = "https://obg-dev-fintechserver.cloud.adorsys.de/v1/ais/banks/{bank-id}/accounts";
     public static final String FINTECH_SERVER_LOGIN = "https://obg-dev-fintechserver.cloud.adorsys.de/v1/login";
     public static final String FINTECH_UI_URI = "https://obg-dev-fintechui.cloud.adorsys.de";
+    public static final String REDIRECT_MODE = "adorsys redirect";
+    public static final String EMBEDDED_MODE = "adorsys embedded";
+
 
     public static RequestSpecification withDefaultHeaders() {
         return RestAssured

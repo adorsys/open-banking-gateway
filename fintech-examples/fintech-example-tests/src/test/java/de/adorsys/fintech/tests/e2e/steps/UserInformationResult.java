@@ -46,7 +46,7 @@ public class UserInformationResult extends AccountInformationResult {
     }
 
     @SneakyThrows
-    public UserInformationResult fintech_can_read_users_transactions() {
+    public UserInformationResult fintech_can_read_users_accounts_and_transactions() {
         ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .given()
                                                          .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
@@ -60,7 +60,7 @@ public class UserInformationResult extends AccountInformationResult {
         return (UserInformationResult) self();
     }
 
-    public UserInformationResult fintech_can_read_user_accounts_and_transactions() {
+    public UserInformationResult fintech_can_read_user_accounts() {
         ExtractableResponse<Response> response = withDefaultHeaders()
                                                          .given()
                                                          .header(X_XSRF_TOKEN, UUID.randomUUID().toString())

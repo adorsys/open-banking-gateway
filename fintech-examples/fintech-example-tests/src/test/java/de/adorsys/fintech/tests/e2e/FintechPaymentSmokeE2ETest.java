@@ -25,6 +25,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.*;
+import static de.adorsys.fintech.tests.e2e.steps.FintechStagesUtils.PIN;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.ENABLE_SMOKE_TESTS;
 import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
@@ -72,7 +74,11 @@ public class FintechPaymentSmokeE2ETest extends SpringScenarioTest<FintechServer
     @SneakyThrows
     @Test
     void testUserAfterInitiatingAPaymentWantsToSeeItsTransactionsOnFintechRedirectMode(FirefoxDriver firefoxDriver) {
-        when().user_authorizes_payment_in_redirect_mode(firefoxDriver, username, fintech_login, "adorsys redirect")
+        given().create_new_user_in_sandbox_tpp_management(username, PIN)
+                .enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri())
+                .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
+
+        when().user_authorizes_payment_in_redirect_mode(firefoxDriver, username, fintech_login, REDIRECT_MODE)
                 .and()
                 .user_navigates_to_page(firefoxDriver)
                 .and()
@@ -98,15 +104,17 @@ public class FintechPaymentSmokeE2ETest extends SpringScenarioTest<FintechServer
                 .and()
                 .user_navigates_to_page(firefoxDriver);
 
-        then().fintech_can_read_users_transactions();
+        then().fintech_can_read_users_accounts_and_transactions();
     }
 
     @SneakyThrows
     @Test
     void testUserAfterInitiatingAPaymentWantsToSeeItsTransactionsOnFintechEmbeddedMode(FirefoxDriver firefoxDriver) {
-        given().enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri())
+        given().create_new_user_in_sandbox_tpp_management(username, PIN)
+                .enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri())
                 .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
-        when().user_authorizes_payment_in_embedded_mode(firefoxDriver, username, fintech_login, "adorsys embedded")
+
+        when().user_authorizes_payment_in_embedded_mode(firefoxDriver, username, fintech_login, EMBEDDED_MODE)
                 .and()
                 .user_select_transfert_button(firefoxDriver)
                 .and()
@@ -132,7 +140,7 @@ public class FintechPaymentSmokeE2ETest extends SpringScenarioTest<FintechServer
                 .and()
                 .user_navigates_to_page(firefoxDriver);
 
-        then().fintech_can_read_users_transactions();
+        then().fintech_can_read_users_accounts_and_transactions();
     }
 
 }

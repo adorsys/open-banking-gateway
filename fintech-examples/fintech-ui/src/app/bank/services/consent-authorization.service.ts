@@ -21,7 +21,7 @@ export class ConsentAuthorizationService {
     this.authService.fromConsentGET(authId, okOrNotOk, redirectCode, '', xsrfToken, 'response').subscribe(resp => {
       console.log('fromConsent has returned. now delete redirect cookie for redirect code', redirectCode);
       this.storageService.resetRedirectCode(redirectCode);
-      let location = resp.headers.get('Location');
+      const location = resp.headers.get('Location');
 
       // this is added to handle url where to forward after redirection
       // to be removed when issue https://github.com/adorsys/open-banking-gateway/issues/848 is resolved
