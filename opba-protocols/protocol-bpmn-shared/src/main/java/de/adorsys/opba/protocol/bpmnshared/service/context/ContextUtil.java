@@ -60,26 +60,29 @@ public class ContextUtil {
     }
 
     public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context, String redirectCode) {
-        URI uri =  UriComponentsBuilder.fromHttpUrl(urlTemplate)
-                .buildAndExpand(
-                        ImmutableMap.of(
-                                "sessionId", context.getAuthorizationSessionIdIfOpened()
-                        )
-                ).toUri();
-
-        if (uri.toString().contains("wrong=")) {
-            uri.getQuery().replaceAll("wrong=", "wrong=" + context.getWrongAuthCredentials());
+        URI uri;
+        if (redirectCode != null) {
+            uri =  UriComponentsBuilder.fromHttpUrl(urlTemplate)
+                    .queryParam("redirectCode", redirectCode)
+                    .buildAndExpand(
+                            ImmutableMap.of(
+                                    "sessionId", context.getAuthorizationSessionIdIfOpened()
+                            )
+                    ).toUri();
+        } else {
+            uri =  UriComponentsBuilder.fromHttpUrl(urlTemplate)
+                    .buildAndExpand(
+                            ImmutableMap.of(
+                                    "sessionId", context.getAuthorizationSessionIdIfOpened()
+                            )
+                    ).toUri();
         }
-        if (uri.toString().contains("redirectCode=")) {
-            uri.getQuery().replaceAll("redirectCode=", "redirectCode=" + redirectCode);
+
+        if (uri.toString().contains("{wrong}")) {
+            uri.toString().replace("{wrong}", context.getWrongAuthCredentials().toString());
         }
         return uri;
     }
-
-    public URI buildURI(String urlTemplate) {
-        return URI.create(urlTemplate);
-    }
-
     /**
      * Helper class for string interpolation that allows:
      * <ul>

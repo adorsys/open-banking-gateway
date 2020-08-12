@@ -168,11 +168,11 @@ protocol:
       common:
         to-aspsp: /{sessionId}/to-aspsp-redirection
         web-hooks:
-          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok?redirectCode={redirectCode}
-          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok?redirectCode={redirectCode}
-          result: /{sessionId}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok
+          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok
+          result: /{sessionId}/consent-result
         parameters:
-          provide-more: /{sessionId}?redirectCode={redirectCode}
+          provide-more: /{sessionId}
           provide-psu-password: /{sessionId}/authenticate?wrong={wrong}
           select-sca-method: /{sessionId}/select-sca-method
           report-sca-result: /{sessionId}/sca-result/#{context.getUserSelectScaType()}?wrong={wrong}
@@ -196,13 +196,13 @@ protocol:
       ais:
         redirect:
           to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/to-aspsp-redirection
-          consent-accounts:
-            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
-            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
-            result: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+          web-hooks:
+            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok
+            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok
+            result: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/consent-result
           parameters:
             max-array-size: 32
-            provide-more: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}?redirectCode={redirectCode}
+            provide-more: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}
             provide-psu-password: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/authenticate?wrong={wrong}
             select-sca-method: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/select-sca-method
             report-sca-result: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/sca-result/#{context.getUserSelectScaType()}?wrong={wrong}
@@ -216,7 +216,7 @@ protocol:
             result: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
           parameters:
             max-array-size: 32
-            provide-more: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+            provide-more: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}
             provide-psu-password: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/authenticate?wrong={wrong}
             select-sca-method: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/select-sca-method
             report-sca-result: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/sca-result/#{context.getUserSelectScaType()}?wrong={wrong}

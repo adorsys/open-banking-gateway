@@ -17,9 +17,9 @@ protocol:
     urls:
       ais:
         web-hooks:
-          ok: ${protocol.gateway-base-url}/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok?redirectCode={redirectCode}
-          nok: ${protocol.gateway-base-url}/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok?redirectCode={redirectCode}
+          ok: ${protocol.gateway-base-url}/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok
+          nok: ${protocol.gateway-base-url}/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok
       pis:
         web-hooks:
-          ok: ${protocol.gateway-base-url}/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok?redirectCode={redirectCode}
-          nok: ${protocol.gateway-base-url}/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok?redirectCode={redirectCode}
+          ok: ${protocol.gateway-base-url}/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok
+          nok: ${protocol.gateway-base-url}/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok
