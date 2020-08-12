@@ -316,7 +316,7 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
     @EnumSource(Approach.class)
     void testPaymentInitializationUsingZeroScaEmbedded(Approach expectedApproach) {
         given()
-                .embedded_mock_of_sandbox_for_max_musterman_payments_running()
+                .embedded_mock_of_sandbox_for_max_musterman_zero_sca_payments_running()
                 .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()

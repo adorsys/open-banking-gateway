@@ -72,7 +72,7 @@
     <serviceTask id="sid-xs2aReportToFintechConsentDenied" name="Calls FinTech webhook to notify  revoke authorization" flowable:async="true" flowable:delegateExpression="${xs2aReportToFintechConsentDenied}"/>
     <sequenceFlow id="sid-74F0F25F-E309-400F-ABEF-378D608C16C1" sourceRef="sid-xs2aReportToFintechConsentDenied" targetRef="end"/>
     <sequenceFlow id="zeroScaAvailable" name="Zero SCA" sourceRef="isMultipleScaAvailable" targetRef="isScaFinalized">
-      <conditionExpression>#{xs2aConsentInfo.isZeroScaAvailable(CONTEXT)}</conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isZeroScaAvailable(CONTEXT)}</conditionExpression>
     </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
