@@ -67,6 +67,9 @@
     <sequenceFlow id="redirectConsentWasDenied" name="On consent denied" sourceRef="wasRedirectConsentGrantSuccessful" targetRef="sid-xs2aReportToFintechConsentDenied"/>
     <serviceTask id="sid-xs2aReportToFintechConsentDenied" name="Calls FinTech webhook to notify  revoke authorization" flowable:async="true" flowable:delegateExpression="${xs2aReportToFintechConsentDenied}"/>
     <sequenceFlow id="sid-74F0F25F-E309-400F-ABEF-378D608C16C1" sourceRef="sid-xs2aReportToFintechConsentDenied" targetRef="end"/>
+    <sequenceFlow id="zeroScaAvailable" sourceRef="isMultipleScaAvailable" targetRef="isScaFinalized" name="Zero SCA">
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isZeroScaAvailable(CONTEXT)}</conditionExpression>
+    </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
@@ -237,6 +240,12 @@
         <omgdi:waypoint x="1534.95" y="340.0"/>
         <omgdi:waypoint x="1590.0" y="340.0"/>
       </bpmndi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-e19611f8-59e8-4922-a93f-331c57c328ca" bpmnElement="zeroScaAvailable">
+        <omgdi:waypoint x="765.0" y="215.0"/>
+        <omgdi:waypoint x="765.0" y="37.0"/>
+        <omgdi:waypoint x="1360.0" y="37.0"/>
+        <omgdi:waypoint x="1360.0" y="215.0"/>
+      </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </definitions>
