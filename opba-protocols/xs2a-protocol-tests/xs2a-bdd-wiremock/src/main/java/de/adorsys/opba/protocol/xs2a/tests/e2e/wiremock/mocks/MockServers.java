@@ -117,9 +117,25 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    public SELF embedded_mock_of_sandbox_for_max_musterman_zero_sca_accounts_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                                               .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/zero-sca/accounts/sandbox/");
+        startWireMock(config);
+
+        return self();
+    }
+
     public SELF embedded_mock_of_sandbox_for_max_musterman_payments_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                                                .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/payments/sandbox/");
+        startWireMock(config);
+
+        return self();
+    }
+
+    public SELF embedded_mock_of_sandbox_for_max_musterman_zero_sca_payments_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                                               .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/zero-sca/payments/sandbox/");
         startWireMock(config);
 
         return self();
@@ -154,6 +170,14 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
     public SELF embedded_mock_of_sandbox_for_max_musterman_transactions_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/transactions/sandbox/");
+        startWireMock(config);
+
+        return self();
+    }
+
+    public SELF embedded_mock_of_sandbox_for_max_musterman_zero_sca_transactions_running() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+                                               .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/zero-sca/transactions/sandbox/");
         startWireMock(config);
 
         return self();
