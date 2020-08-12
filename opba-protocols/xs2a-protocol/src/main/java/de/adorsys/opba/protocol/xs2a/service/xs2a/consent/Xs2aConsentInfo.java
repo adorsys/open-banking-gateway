@@ -35,6 +35,13 @@ public class Xs2aConsentInfo {
     }
 
     /**
+     * Is the current consent authorization using zero SCA flow
+     */
+    public boolean isZeroScaAvailable(Xs2aContext ctx) {
+        return null != ctx.getAvailableSca() && ctx.getAvailableSca().isEmpty();
+    }
+
+    /**
      * Is the PSU password present in the context.
      */
     public boolean isPasswordPresent(Xs2aContext ctx) {
