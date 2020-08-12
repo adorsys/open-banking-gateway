@@ -701,7 +701,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     @EnumSource(Approach.class)
     void testAccountsListWithConsentUsingZeroScaEmbedded(Approach expectedApproach) {
         given()
-                .embedded_mock_of_sandbox_for_max_musterman_accounts_running()
+                .embedded_mock_of_sandbox_for_max_musterman_zero_sca_accounts_running()
                 .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
@@ -725,7 +725,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
     @EnumSource(Approach.class)
     void testTransactionsListWithConsentUsingZeroScaEmbedded(Approach expectedApproach) {
         given()
-                .embedded_mock_of_sandbox_for_max_musterman_transactions_running()
+                .embedded_mock_of_sandbox_for_max_musterman_zero_sca_transactions_running()
                 .set_default_preferred_approach()
                 .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
                 .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
