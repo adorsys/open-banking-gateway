@@ -60,14 +60,20 @@ public class ContextUtil {
     }
 
     public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context, String redirectCode) {
-        return UriComponentsBuilder.fromHttpUrl(urlTemplate)
+        URI uri =  UriComponentsBuilder.fromHttpUrl(urlTemplate)
                 .buildAndExpand(
                         ImmutableMap.of(
                                 "sessionId", context.getAuthorizationSessionIdIfOpened(),
-                                "redirectCode", redirectCode,
-                                "wrong", context.getWrongAuthCredentials()
+                                "redirectCode", redirectCode
                         )
                 ).toUri();
+
+        if (uri.toString().contains("?wrong=")) {
+            uri.getQuery().replaceAll("wrong=", "wrong=" + context.getWrongAuthCredentials());
+        }
+        return uri;
+
+
     }
 
     public URI buildURI(String urlTemplate) {
