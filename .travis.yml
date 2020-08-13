@@ -44,7 +44,7 @@ deploy:
     script: bash scripts/deploy_openshift.sh
     on:
       tags: true
-      # matches: rc-X.Y.Z, rcX.Y.Z-A, rc-X.Y.Z-RCA, rc-X.Y.Z-A-B.C.D, rc-X.Y.Z-A-B.C.D-E, rc-X.Y.Z-RCA-B.C.D-E
+      # matches: rc-X.Y.Z, rc-X.Y.Z-A, rc-X.Y.Z-RCA, rc-X.Y.Z-A-B.C.D, rc-X.Y.Z-A-B.C.D-E, rc-X.Y.Z-RCA-B.C.D-E
       condition: "$TRAVIS_TAG =~ ^rc-([[:digit:]]+\\.)+[[:digit:]]+(-(RC)?[[:digit:]]+)?(-([[:digit:]]+\\.)+[[:digit:]]+(-[[:digit:]]+)?)?$"
 
   - provider: script
@@ -73,5 +73,5 @@ deploy:
     script: bash scripts/validate_dev_deploy.sh
     on:
       tags: true
-      # matches: rc-X.Y.Z, rcX.Y.Z-A, rc-X.Y.Z-RCA, rc-X.Y.Z-A-B.C.D, rc-X.Y.Z-A-B.C.D-E, rc-X.Y.Z-RCA-B.C.D-E
+      # matches: rc-X.Y.Z, rc-X.Y.Z-A, rc-X.Y.Z-RCA, rc-X.Y.Z-A-B.C.D, rc-X.Y.Z-A-B.C.D-E, rc-X.Y.Z-RCA-B.C.D-E
       condition: "$TRAVIS_TAG =~ ^rc-([[:digit:]]+\\.)+[[:digit:]]+(-(RC)?[[:digit:]]+)?(-([[:digit:]]+\\.)+[[:digit:]]+(-[[:digit:]]+)?)?$"
