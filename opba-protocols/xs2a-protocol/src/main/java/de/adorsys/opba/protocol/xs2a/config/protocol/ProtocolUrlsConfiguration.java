@@ -1,5 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.config.protocol;
 
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
+import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -40,6 +42,10 @@ public class ProtocolUrlsConfiguration {
      */
     @NotNull
     private UrlSet common;
+
+    public UrlSet getUrlAisOrPisSetBasedOnContext(Xs2aContext context) {
+        return ProtocolAction.SINGLE_PAYMENT.equals(context.getAction()) ? getPis() : getAis();
+    }
 
     @Data
     public static class UrlSet {

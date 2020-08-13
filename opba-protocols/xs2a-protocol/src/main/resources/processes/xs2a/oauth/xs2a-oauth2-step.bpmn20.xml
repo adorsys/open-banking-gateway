@@ -6,18 +6,18 @@
     <endEvent id="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448"/>
     <sequenceFlow id="sid-c2566b77-4973-4caf-b125-70ec5b9eb85a" sourceRef="sid-00cfc121-44b4-41b7-93fe-d90e3e9ab50f" targetRef="sid-ef5a15f0-fbfd-48ac-b35a-f64d250e0f9d"/>
     <exclusiveGateway id="sid-ef5a15f0-fbfd-48ac-b35a-f64d250e0f9d" default="oauth2FlowNotRequired"/>
-    <serviceTask id="redirectUserToOauth2AuthorizationServer" flowable:exclusive="true" name="Redirect user to Oauth2 authorization server" flowable:async="true" flowable:triggerable="true" flowable:delegateExpression="${redirectUserToOauth2AuthorizationServer}"/>
+    <serviceTask id="redirectUserToOauth2AuthorizationServer" flowable:exclusive="true" name="Redirect user to Oauth2 authorization server" flowable:async="true" flowable:triggerable="true" flowable:delegateExpression="${xs2aRedirectUserToOauth2AuthorizationServer}"/>
     <sequenceFlow id="oauth2FlowNotRequired" sourceRef="sid-ef5a15f0-fbfd-48ac-b35a-f64d250e0f9d" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448" name="Oauth2 not required">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
     <serviceTask id="oauth2ExchangeCodeToToken" flowable:exclusive="true" name="Exchange Oauth2 code to token. Expecting PKCE" flowable:async="true" flowable:triggerable="false"/>
     <sequenceFlow id="sid-64007d67-937b-4d29-9404-e47c84b3c5cd" sourceRef="redirectUserToOauth2AuthorizationServer" targetRef="oauth2ExchangeCodeToToken"/>
-    <serviceTask id="readOauth2TokenIfAvailable" flowable:exclusive="true" name="Read Oauth2 token into context from consent (if available)" flowable:async="true" flowable:delegateExpression="${oauth2ReadTokenIntoContext}"/>
+    <serviceTask id="readOauth2TokenIfAvailable" flowable:exclusive="true" name="Read Oauth2 token into context from consent (if available)" flowable:async="true" flowable:delegateExpression="${xs2aOauth2ReadTokenIntoContext}"/>
     <sequenceFlow id="oauth2Required" sourceRef="sid-ef5a15f0-fbfd-48ac-b35a-f64d250e0f9d" targetRef="readOauth2TokenIfAvailable" name="Oauth2 required">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2Required(CONTEXT)}</conditionExpression>
     </sequenceFlow>
     <exclusiveGateway id="checkThatOauth2TokenIsPresentAndNotExpired" default="oauth2TokenNeedsRefresh"/>
-    <serviceTask id="putOauth2TokenIntoContext" flowable:exclusive="true" name="Put Oauth2 token into context" flowable:async="true"/>
+    <serviceTask id="putOauth2TokenIntoContext" flowable:exclusive="true" name="Put Oauth2 token into context" flowable:async="true" flowable:delegateExpression="${xs2aOauth2PutTokenIntoContext}"/>
     <sequenceFlow id="oauth2TokenNeedsRefresh" sourceRef="checkThatOauth2TokenIsPresentAndNotExpired" targetRef="redirectUserToOauth2AuthorizationServer" name="Need Oauth2 token">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
