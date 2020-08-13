@@ -20,5 +20,4 @@ import { SearchComponent } from './search/search.component';
     AngularIbanModule
   ]
 })
-export class ShareModule {
-}
+export class ShareModule {}
