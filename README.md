@@ -59,6 +59,12 @@ The following picture displays the overall technical architecture concept of thi
   - [Banking protocol API](opba-protocols/opba-protocol-api)
   - [XS2A compliant banking protocol Impl](opba-protocols/xs2a-protocol)
 
+
+## Running the project locally
+
+ - [Docker-compose-dev](docker-compose-dev.yml) - docker-compose file for **Development** (requires building docker images)
+ - [Docker-compose](docker-compose.yml) - docker-compose file for **Demo** (Images will be pulled from DockerHub)
+
 ## Information for developers:
  
  - Working with BPMN: As most protocols use BPMN, we have developed 
