@@ -43,7 +43,7 @@ public class HbciReportValidationError implements JavaDelegate {
                         .provideMoreParamsDialog(
                                 ContextUtil.buildAndExpandQueryParameters(
                                                 configuration.getAis().getRedirect().getParameters().getProvideMore(),
-                                                current, current.getRedirectCodeIfAuthContinued()
+                                                current, current.getRedirectCodeIfAuthContinued(), current.getUserSelectScaType()
                                 )
                         )
                         .issues(current.getViolations())

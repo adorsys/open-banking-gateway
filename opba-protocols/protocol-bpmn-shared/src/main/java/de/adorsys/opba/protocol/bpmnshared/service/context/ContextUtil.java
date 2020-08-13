@@ -59,10 +59,16 @@ public class ContextUtil {
         return parser.parseExpression(expression, new TemplateParserContext()).getValue(parseContext, resultClass);
     }
 
-    public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context, String redirectCode) {
+    public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context, String redirectCode, String scaType) {
         URI uri;
+        if (urlTemplate.contains("{wrong}")) {
+            urlTemplate = urlTemplate.replace("{wrong}", context.getWrongAuthCredentials().toString());
+        }
+        if (urlTemplate.contains("{userSelectScaType}") && scaType != null) {
+            urlTemplate = urlTemplate.replace("{userSelectScaType}", scaType);
+        }
         if (redirectCode != null) {
-            uri =  UriComponentsBuilder.fromHttpUrl(urlTemplate)
+            uri = UriComponentsBuilder.fromHttpUrl(urlTemplate)
                     .queryParam("redirectCode", redirectCode)
                     .buildAndExpand(
                             ImmutableMap.of(
@@ -70,16 +76,12 @@ public class ContextUtil {
                             )
                     ).toUri();
         } else {
-            uri =  UriComponentsBuilder.fromHttpUrl(urlTemplate)
+            uri = UriComponentsBuilder.fromHttpUrl(urlTemplate)
                     .buildAndExpand(
                             ImmutableMap.of(
                                     "sessionId", context.getAuthorizationSessionIdIfOpened()
                             )
                     ).toUri();
-        }
-
-        if (uri.toString().contains("{wrong}")) {
-            uri.toString().replace("{wrong}", context.getWrongAuthCredentials().toString());
         }
         return uri;
     }
