@@ -38,11 +38,11 @@ public class CreateAisTransactionListConsentService extends ValidatedExecution<T
     protected void doPrepareContext(DelegateExecution execution, TransactionListXs2aContext context) {
         context.setRedirectUriOk(
                 ContextUtil.buildAndExpandQueryParameters(urlsConfiguration.getAis().
-                        getWebHooks().getOk(), context, context.getAspspRedirectCode()).toString()
+                        getWebHooks().getOk(), context, context.getAspspRedirectCode(), context.getUserSelectScaType()).toString()
         );
         context.setRedirectUriNok(
                 ContextUtil.buildAndExpandQueryParameters(urlsConfiguration.getAis().
-                        getWebHooks().getNok(), context, context.getAspspRedirectCode()).toString()
+                        getWebHooks().getNok(), context, context.getAspspRedirectCode(), context.getUserSelectScaType()).toString()
         );
     }
 

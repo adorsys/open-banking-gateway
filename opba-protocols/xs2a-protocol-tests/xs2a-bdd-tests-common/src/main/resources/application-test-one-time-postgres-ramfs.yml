@@ -175,7 +175,7 @@ protocol:
           provide-more: /{sessionId}
           provide-psu-password: /{sessionId}/authenticate?wrong={wrong}
           select-sca-method: /{sessionId}/select-sca-method
-          report-sca-result: /{sessionId}/sca-result/#{context.getUserSelectScaType()}?wrong={wrong}
+          report-sca-result: /{sessionId}/sca-result/{userSelectScaType}?wrong={wrong}
           provide-psu-iban: /{sessionId}/entry-consent-transactions/dedicated-account-access?wrong={wrong}
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
@@ -205,7 +205,7 @@ protocol:
             provide-more: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}
             provide-psu-password: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/authenticate?wrong={wrong}
             select-sca-method: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/select-sca-method
-            report-sca-result: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/sca-result/#{context.getUserSelectScaType()}?wrong={wrong}
+            report-sca-result: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/sca-result/{userSelectScaType}?wrong={wrong}
             provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/entry-consent-transactions/dedicated-account-access?wrong={wrong}
       pis:
         redirect:
@@ -219,7 +219,7 @@ protocol:
             provide-more: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}
             provide-psu-password: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/authenticate?wrong={wrong}
             select-sca-method: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/select-sca-method
-            report-sca-result: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/sca-result/#{context.getUserSelectScaType()}?wrong={wrong}
+            report-sca-result: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/sca-result/{userSelectScaType}?wrong={wrong}
             provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/entry-consent-transactions/dedicated-account-access?wrong={wrong}
 
 # Flowable comes for all protocols shared
