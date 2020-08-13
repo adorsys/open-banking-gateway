@@ -1,0 +1,32 @@
+@startuml
+
+skinparam componentStyle uml2
+
+
+component "BankSearch"
+component "TppBankingApi"
+component "ConsentAuthAPI"
+
+component "BankingProtocol" as BankingProtocol {
+    component BankingProtocolFacade
+    component FlowableRunner {
+        component XS2AAdapter
+    }
+    database PsuConsentData
+
+    BankingProtocolFacade ..> FlowableRunner
+    BankingProtocolFacade .> PsuConsentData : load PsuUserContext
+
+}
+TppBankingApi ..> BankingProtocolFacade
+BankSearch ..> BankingProtocolFacade
+ConsentAuthAPI ..> BankingProtocolFacade
+
+BankSearch <.. FlowableRunner : load\nBankingProtocol
+
+component ASPSP
+
+
+XS2AAdapter ..> ASPSP
+
+@enduml

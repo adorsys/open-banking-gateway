@@ -1,0 +1,64 @@
+@startuml
+title "List of Accounts"
+autonumber 1 1 "<b><color blue>[RED-000]</color></b>"
+actor FinTechUI
+FinTechUI -> FinTechServer : listOfAccounts(userid, bankid, ok/nok-urls)
+FinTechServer -> FinTechServer : storeUrlsInUsersSession(userid, orig-fintech-n/ok-urls)
+note left
+with usersSession the SessionEntity in the Database of the
+FinTechServer is ment. The SessionEntity can be found by
+sessionCookie or by users login name. SessionEntity contains
+everything which needs to be persisted for user.
+<color blue>-> Francis: We have to distinguish between an existing 
+<color blue>login session of a user and a persistent user data. 
+Currently there exists another Entity in parallel, which is the
+RedirectUlrEntity. Its key is the redirecCode. As FinTechServer
+currently is not able to cope with more than one redirection at
+a time, this should be an embedabble of the SessionEntity.
+<color red>1) Is this sufficiant or in which case must FinTechServer
+<color red>be able to cope with more than one redirect at a time?
+<color blue>-> Francis: I think there shall be a 1:n relationship
+<color blue>between the session cookie table ans the user data table.
+<color blue>The user-id can be the foreign key.
+end note
+FinTechServer -> FinTechServer : new-fintech-n/ok-urls = createURL(application.yml, new redirectCode)
+FinTechServer -> TppServer : listOfAccounts(userid, bankid, new-fintech-n/ok-urls)
+note left
+new-fintech-n/ok-urls
+contains redirectCode
+end note
+FinTechServer <-- TppServer : redirect(authID, consent-redirect-url)
+FinTechServer -> FinTechServer : storeRedirectCodeInUsersSession(userid, redirectCode)
+FinTechUI <-- FinTechServer : redirectToConsentAPI(consent-redirect-url)
+FinTechUI -> ConsentAPI : redirect(consent-redirect-url)
+FinTechUI <-- ConsentAPI : redirectToFintechUI(new-fintech-n/ok-urls)
+FinTechUI -> FinTechServer : fromConsentOk(authID,redirectCode)
+note over FinTechUI, FinTechServer
+authID currently is hard coded.
+<color blue>-> Francis: In wouldn't mind having it variable. As it seems more 
+<color blue>complicated to deal with this simplified version than the normal case.
+end note
+FinTechServer -> TppServer : call4CAuthorizeConsent(authID)
+note left 
+    is authID really needed?
+    <color blue>-> Francis: I think yes.
+end note
+FinTechUI <-- FinTechServer : redirectTo(orig-fintech-n/ok-urls)
+FinTechUI -> FinTechServer : listOfAccounts(userid, bankid, ok/nok-urls)
+note over FinTechUI, ConsentAPI
+This is how redirection currently is implemented. It works, as authID used in RED-010 is hard coded.
+Problem is, that authID is first known when RED-005 returns. But urls have been passsed to TppServer in RED-004.
+<color red>2) Is authID really needed in call RED-011 ?
+<color red>if no, is it ok, to completly remove authID from finTechUI and finTechServer?
+<color red>if yes:
+<color red>   3) Is it ok, to store authID in finTechServer, or has it to be passed from FinTechUI to FinTechServer after reidrection?
+   As FinTechServer is only able to cope with ONE redirectCode at a time, an easy solution would be to
+   store authID in usersSession in finTechServer. Than finTechUI would call finTechServer just with redirectCode.
+   And FinTechServer would call TppServer with authID which was retrieved from usersSesssion.
+<color blue>This is what matters:
+auth-id: is needed by the server so the authorization instance can be found
+state: is provided by the client and used to reference the oauthorization instance 
+in the client application.
+Let us discuss this and see how to synchronize bith information as they have the same purpose.
+end note
+@enduml
