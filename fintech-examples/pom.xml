@@ -24,6 +24,7 @@
         <module>fintech-server</module>
         <module>fintech-impl</module>
         <module>fintech-db-schema</module>
+        <module>fintech-example-tests</module>
         <module>fintech-last-module-codecoverage</module>
     </modules>
 </project>
