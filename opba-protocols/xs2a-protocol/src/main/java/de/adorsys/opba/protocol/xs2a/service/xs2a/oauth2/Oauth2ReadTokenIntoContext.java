@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
-@Service("oauth2ReadTokenIntoContext")
+@Service("xs2aOauth2ReadTokenIntoContext")
 @RequiredArgsConstructor
 public class Oauth2ReadTokenIntoContext extends ValidatedExecution<Xs2aContext> {
 

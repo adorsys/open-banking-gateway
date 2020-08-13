@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.authenticate.redirect;
 
-import de.adorsys.opba.protocol.api.common.ProtocolAction;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.RedirectToAspsp;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
@@ -24,8 +23,7 @@ public class Xs2aDoScaRedirectToAspspForScaChallenge extends ValidatedExecution<
 
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        ProtocolUrlsConfiguration.UrlSet urlSet = ProtocolAction.SINGLE_PAYMENT.equals(context.getAction())
-                ? urlsConfiguration.getPis() : urlsConfiguration.getAis();
+        ProtocolUrlsConfiguration.UrlSet urlSet = urlsConfiguration.getUrlAisOrPisSetBasedOnContext(context);
 
         redirectExecutor.redirect(
                 execution,
