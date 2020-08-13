@@ -38,6 +38,15 @@ deploy:
     on:
       branch: develop
 
+  # Deploy Release-Candidate to open banking gateway dev (FIXME: should be DEMO/Staging eventually!)
+  - provider: script
+    skip_cleanup: true
+    script: bash scripts/deploy_openshift.sh
+    on:
+      tags: true
+      # matches: rc-X.Y.Z, rcX.Y.Z-A, rc-X.Y.Z-RCA, rc-X.Y.Z-A-B.C.D, rc-X.Y.Z-A-B.C.D-E, rc-X.Y.Z-RCA-B.C.D-E
+      condition: "$TRAVIS_TAG =~ ^rc-([[:digit:]]+\\.)+[[:digit:]]+(-(RC)?[[:digit:]]+)?(-([[:digit:]]+\\.)+[[:digit:]]+(-[[:digit:]]+)?)?$"
+
   - provider: script
     skip_cleanup: true
     script: bash scripts/deploy_doc.sh
@@ -57,3 +66,12 @@ deploy:
     script: bash scripts/validate_dev_deploy.sh
     on:
       branch: develop
+
+  # Validate Release-Candidate deployment status (FIXME: should be DEMO/Staging eventually!)
+  - provider: script
+    skip_cleanup: true
+    script: bash scripts/validate_dev_deploy.sh
+    on:
+      tags: true
+      # matches: rc-X.Y.Z, rcX.Y.Z-A, rc-X.Y.Z-RCA, rc-X.Y.Z-A-B.C.D, rc-X.Y.Z-A-B.C.D-E, rc-X.Y.Z-RCA-B.C.D-E
+      condition: "$TRAVIS_TAG =~ ^rc-([[:digit:]]+\\.)+[[:digit:]]+(-(RC)?[[:digit:]]+)?(-([[:digit:]]+\\.)+[[:digit:]]+(-[[:digit:]]+)?)?$"
