@@ -15,6 +15,7 @@ import lombok.ToString;
 public class RestRequestContext {
     String uri;
     String sessionCookieValue;
+    String oauth2StateCookieValue;
     String redirectCookieValue;
     String xsrfTokenHeaderField;
     String requestId;

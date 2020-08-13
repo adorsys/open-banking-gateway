@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Optional;
 
+import static de.adorsys.opba.fintech.impl.service.oauth2.Oauth2Const.COOKIE_OAUTH2_COOKIE_NAME;
+
 @Slf4j
 @Configuration
 public class RestRequestContextConfig {
@@ -22,6 +24,7 @@ public class RestRequestContextConfig {
     public RestRequestContext provideCurrentRestRequest(HttpServletRequest httpServletRequest) {
         String sessionCookieValue = null;
         String redirectCookieValue = null;
+        String oauth2StateCookieValue = null;
         if (httpServletRequest.getCookies() != null) {
             Optional<Cookie> sessionCookie = Arrays.stream(httpServletRequest.getCookies()).filter(cookie -> Consts.COOKIE_SESSION_COOKIE_NAME.equalsIgnoreCase(cookie.getName())).findFirst();
             if (sessionCookie.isPresent()) {
@@ -31,9 +34,16 @@ public class RestRequestContextConfig {
             if (redirectCookie.isPresent()) {
                 redirectCookieValue = redirectCookie.get().getValue();
             }
+
+            oauth2StateCookieValue = Arrays.stream(httpServletRequest.getCookies())
+                    .filter(cookie -> COOKIE_OAUTH2_COOKIE_NAME.equalsIgnoreCase(cookie.getName()))
+                    .map(Cookie::getValue)
+                    .findFirst()
+                    .orElse(null);
         }
         RestRequestContext c = RestRequestContext.builder()
                 .sessionCookieValue(sessionCookieValue)
+                .oauth2StateCookieValue(oauth2StateCookieValue)
                 .redirectCookieValue(redirectCookieValue)
                 .xsrfTokenHeaderField(httpServletRequest.getHeader(Consts.HEADER_XSRF_TOKEN))
                 .requestId(httpServletRequest.getHeader(Consts.HEADER_X_REQUEST_ID))

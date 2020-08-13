@@ -10,6 +10,7 @@ import de.adorsys.opba.fintech.impl.database.repositories.OauthSessionEntityRepo
 import de.adorsys.opba.fintech.impl.database.repositories.SessionRepository;
 import de.adorsys.opba.fintech.impl.database.repositories.UserRepository;
 import de.adorsys.opba.fintech.impl.exceptions.Oauth2UnauthorizedException;
+import de.adorsys.opba.fintech.impl.service.oauth2.Oauth2Authenticator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Hex;
@@ -60,10 +61,14 @@ public class AuthorizeService {
     }
 
     @Transactional
-    public UserEntity loginWithOAuth2(String code, String state) {
+    public UserEntity loginWithOAuth2(String code, String state, String expectedState) {
         Oauth2Provider provider = Arrays.stream(Oauth2Provider.values())
                 .filter(it -> it.matches(state)).findFirst()
                 .orElseThrow(() -> new Oauth2UnauthorizedException("Unknown state provider: " + state));
+
+        if (null == expectedState || !expectedState.equals(state)) {
+            throw new Oauth2UnauthorizedException(String.format("Unauthorized state value: %s expected %s", state, expectedState));
+        }
 
         Optional<OauthSessionEntity> session = oauthSessions.findById(state);
         if (!session.isPresent()) {

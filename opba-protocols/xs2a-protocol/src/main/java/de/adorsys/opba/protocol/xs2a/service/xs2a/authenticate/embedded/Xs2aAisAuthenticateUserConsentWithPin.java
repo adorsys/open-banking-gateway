@@ -13,6 +13,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.authenticate.embedded.Prov
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.Response;
+import de.adorsys.xs2a.adapter.service.model.ScaStatus;
 import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthentication;
 import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +64,8 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                 params.getBody()
         );
 
+        ScaStatus scaStatus = authResponse.getBody().getScaStatus();
+
         ContextUtil.getAndUpdateContext(
                 execution,
                 (Xs2aContext ctx) -> {
@@ -71,6 +74,7 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                     setScaAvailableMethodsIfCanBeChosen(authResponse, ctx);
                     ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
+                    ctx.setScaStatus(null == scaStatus ? null : scaStatus.getValue());
                 }
         );
     }

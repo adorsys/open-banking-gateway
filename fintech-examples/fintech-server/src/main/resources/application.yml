@@ -8,6 +8,13 @@ server:
       path: /
       sameSite: Strict
 
+    oauth2cookie:
+      secure: false
+      maxAge: 600
+      httpOnly: true
+      path: /
+      sameSite: Strict
+
     redirectcookie:
       secure: false
       maxAge: 1200
