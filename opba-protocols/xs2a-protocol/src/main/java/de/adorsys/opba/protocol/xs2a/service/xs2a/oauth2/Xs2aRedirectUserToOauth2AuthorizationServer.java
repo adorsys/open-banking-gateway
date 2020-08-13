@@ -14,6 +14,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.Oauth2Service;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +25,9 @@ import java.net.URI;
  */
 @Service("xs2aRedirectUserToOauth2AuthorizationServer")
 @RequiredArgsConstructor
-public class RedirectUserToOauth2AuthorizationServer extends ValidatedExecution<Xs2aContext> {
+public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecution<Xs2aContext> {
 
+    private final RuntimeService runtimeService;
     private final ProtocolUrlsConfiguration urlsConfiguration;
     private final Xs2aValidator validator;
     private final Extractor extractor;
@@ -56,6 +58,7 @@ public class RedirectUserToOauth2AuthorizationServer extends ValidatedExecution<
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
         validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
+        runtimeService.trigger(execution.getId());
     }
 
     @Service
