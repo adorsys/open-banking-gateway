@@ -150,6 +150,26 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>regex-property</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>cheminCible</name>
+                            <value>${project.build.directory}</value>
+                            <regex>\\</regex>
+                            <replacement>/</replacement>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Protocol customization: -->
             <!--
             This plugin performs replacement of flowable-called beans with protocol customary ones.
