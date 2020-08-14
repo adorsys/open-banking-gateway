@@ -56,4 +56,9 @@ fdescribe('ConfirmComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  //
+  // it('amount of money to be wired should be rounded properly', ()) => {
+  //   const roundToTwoDigitsAfterCommaSpy =
+  // }
 });
