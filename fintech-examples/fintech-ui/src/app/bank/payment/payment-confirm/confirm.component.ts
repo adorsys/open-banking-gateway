@@ -42,6 +42,6 @@ export class ConfirmComponent implements OnInit {
   }
 
   roundToTwoDigitsAfterComma(floatNumber) {
-    return parseFloat((Math.round(floatNumber * 100) / 100).toFixed(2));
+    return (Math.round(floatNumber * 100) / 100).toFixed(2);
   }
 }
