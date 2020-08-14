@@ -69,8 +69,8 @@ The following picture displays the overall technical architecture concept of thi
 
 ## Running the project locally
 
- - [Docker-compose-dev](docker-compose-dev.yml) - docker-compose file for **Development** (requires building docker images)
- - [Docker-compose](docker-compose.yml) - docker-compose file for **Demo** (Images will be pulled from DockerHub)
+ - [docker-compose-dev.yml](https://github.com/adorsys/open-banking-gateway/tree/develop/docker-compose-dev.yml) - docker-compose file in the project root for **Development** (requires building docker images)
+ - [docker-compose.yml](https://github.com/adorsys/open-banking-gateway/tree/develop/docker-compose.yml) - docker-compose file in the project root for **Demo** (Images will be pulled from DockerHub)
 
 ## Information for developers:
  
