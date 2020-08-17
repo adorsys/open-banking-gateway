@@ -23,8 +23,9 @@ public class HbciSandboxPaymentService {
     private final HbciSandboxPaymentRepository paymentRepository;
 
     @Transactional
-    public void createPayment(HbciSandboxContext context) {
-        String paymentBody = MapRegexUtil.getDataRegex(context.getRequestData(), "GV\\.UebSEPA\\d+\\.sepapain");
+    public void createPayment(HbciSandboxContext context, boolean instantPayment) {
+        String paymentBodyKey = instantPayment ? "GV\\.InstantUebSEPA1\\.sepapain" : "GV\\.UebSEPA\\d+\\.sepapain";
+        String paymentBody = MapRegexUtil.getDataRegex(context.getRequestData(), paymentBodyKey);
         HbciSandboxPayment payment = new HbciSandboxPayment();
         payment.setOrderReference(context.getOrderReference());
         payment.setDeduceFrom(findDebitorAccount(paymentBody));
@@ -33,6 +34,7 @@ public class HbciSandboxPaymentService {
         payment.setCurrency(findCurrency(paymentBody));
         payment.setRemittanceUnstructured(findRemittanceUnstructuredWithEmptyDefault(paymentBody));
         payment.setOwnerLogin(context.getUser().getLogin());
+        payment.setInstantPayment(instantPayment);
         if (!payment.getDeduceFrom().endsWith(context.getAccountNumberRequestedBeforeSca())) {
             throw new IllegalStateException("Wrong account number referenced, not matches debitor account number");
         }
@@ -42,13 +44,17 @@ public class HbciSandboxPaymentService {
     @Transactional
     public void createPaymentIfNeededAndPossibleFromContext(HbciSandboxContext context) {
         if (null != MapRegexUtil.getDataRegex(context.getRequestData(), "GV\\.UebSEPA\\d+\\.sepapain")) {
-            createPayment(context);
+            createPayment(context, false);
+        }
+
+        if (null != MapRegexUtil.getDataRegex(context.getRequestData(), "GV\\.InstantUebSEPA1\\.sepapain")) {
+            createPayment(context, true);
         }
     }
 
     @Transactional
-    public void acceptPayment(HbciSandboxContext context) {
-        String orderReference = MapRegexUtil.getDataRegex(context.getRequestData(), "GV\\.TAN2Step\\d+\\.orderref");
+    public void acceptPayment(HbciSandboxContext context, boolean instantPayment) {
+        String orderReference = MapRegexUtil.getDataRegex(context.getRequestData(), instantPayment ? "GV\\.InstantUebSEPA1\\.orderref" : "GV\\.TAN2Step\\d+\\.orderref");
         HbciSandboxPayment payment = paymentRepository.findByOwnerLoginAndOrderReference(context.getUser().getLogin(), orderReference)
                 .orElseThrow(() -> new IllegalStateException(String.format("Order with reference %s of user %s not found", orderReference, context.getUser().getLogin())));
         // Some magic flag to accept payment immediately

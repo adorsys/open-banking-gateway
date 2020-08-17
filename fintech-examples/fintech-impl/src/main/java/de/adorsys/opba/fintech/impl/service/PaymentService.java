@@ -64,6 +64,7 @@ public class PaymentService {
         payment.setCreditorName(singlePaymentInitiationRequest.getName());
         payment.setInstructedAmount(getAmountWithCurrency(singlePaymentInitiationRequest.getAmount()));
         payment.remittanceInformationUnstructured(singlePaymentInitiationRequest.getPurpose());
+        payment.instantPayment(singlePaymentInitiationRequest.isInstantPayment());
         log.info("start call for payment {} {}", fintechOkUrl, fintechNOkUrl);
         ResponseEntity<PaymentInitiationResponse> responseOfTpp = tppPisSinglePaymentClient.initiatePayment(
                 payment,

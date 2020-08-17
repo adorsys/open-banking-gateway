@@ -29,6 +29,10 @@
             <!-- Nullable as null is for not yet authorized payments -->
             <column name="status" type="VARCHAR(64)"/>
 
+            <column name="instant_payment" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="created_at" type="TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
