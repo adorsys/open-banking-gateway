@@ -70,6 +70,7 @@ services:
       - FACADE_URLS_EMBEDDED-UI-BASE-URL=http://localhost:14200
       - PROTOCOL_GATEWAY-BASE-URL=http://localhost:18085
       - SPRING_PROFILES_ACTIVE=no-signature-filter
+      - BPMNSHARED_FLOWABLE_SERIALIZATION_MAX_LENGTH=1
     image: adorsys/open-banking-gateway-open-banking-gateway:0.19.1
     ports:
       - "18085:8085"
