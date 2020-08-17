@@ -28,4 +28,5 @@ public class PaymentInitiateBody {
     private String remittanceInformationUnstructured;
     private LocalDate requestedExecutionDate;
     private String requestedExecutionTime;
+    private boolean instantPayment;
 }

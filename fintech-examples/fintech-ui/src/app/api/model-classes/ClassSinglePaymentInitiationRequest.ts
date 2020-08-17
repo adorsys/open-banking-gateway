@@ -6,4 +6,5 @@ export class ClassSinglePaymentInitiationRequest implements SinglePaymentInitiat
   debitorIban: string;
   amount: string;
   purpose?: string;
+  instantPayment?: boolean;
 }

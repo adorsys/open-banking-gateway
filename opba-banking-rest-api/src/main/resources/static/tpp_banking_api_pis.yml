@@ -195,6 +195,8 @@ components:
           format: date
         requestedExecutionTime:
           type: string
+        instantPayment:
+          type: boolean
 
     remittanceInformationUnstructured:
       description: |
