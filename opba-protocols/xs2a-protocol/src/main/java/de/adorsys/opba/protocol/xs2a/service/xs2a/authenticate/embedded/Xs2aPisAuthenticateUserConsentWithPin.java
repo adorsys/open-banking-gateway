@@ -15,6 +15,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
 import de.adorsys.xs2a.adapter.service.RequestParams;
 import de.adorsys.xs2a.adapter.service.Response;
+import de.adorsys.xs2a.adapter.service.model.ScaStatus;
 import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthentication;
 import de.adorsys.xs2a.adapter.service.model.UpdatePsuAuthenticationResponse;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +69,8 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                 params.getBody()
         );
 
+        ScaStatus scaStatus = authResponse.getBody().getScaStatus();
+
         ContextUtil.getAndUpdateContext(
                 execution,
                 (Xs2aPisContext ctx) -> {
@@ -76,6 +79,7 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
                     setScaAvailableMethodsIfCanBeChosen(authResponse, ctx);
                     ctx.setScaSelected(authResponse.getBody().getChosenScaMethod());
                     ctx.setChallengeData(authResponse.getBody().getChallengeData());
+                    ctx.setScaStatus(null == scaStatus ? null : scaStatus.getValue());
                 }
         );
     }

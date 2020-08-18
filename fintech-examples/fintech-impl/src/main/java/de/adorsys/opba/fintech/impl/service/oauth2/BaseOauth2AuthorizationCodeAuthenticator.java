@@ -24,13 +24,11 @@ import de.adorsys.opba.fintech.impl.database.repositories.OauthSessionEntityRepo
 import de.adorsys.opba.fintech.impl.exceptions.EmailNotAllowed;
 import de.adorsys.opba.fintech.impl.exceptions.EmailNotVerified;
 import de.adorsys.opba.fintech.impl.exceptions.Oauth2UnauthorizedException;
-import de.adorsys.opba.fintech.impl.service.Oauth2Authenticator;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.minidev.json.JSONObject;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URI;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -42,7 +40,7 @@ public abstract class BaseOauth2AuthorizationCodeAuthenticator implements Oauth2
 
     @SneakyThrows
     @Transactional
-    public URI authenticateByRedirectingUserToIdp() {
+    public Oauth2AuthResult authenticateByRedirectingUserToIdp() {
         ClientID clientID = getClientID();
         State state = new State(getProvider().encode(new State().getValue()));
         Nonce nonce = new Nonce();
@@ -60,7 +58,7 @@ public abstract class BaseOauth2AuthorizationCodeAuthenticator implements Oauth2
                 .build();
 
         sessions.save(new OauthSessionEntity(state.getValue()));
-        return request.toURI();
+        return new Oauth2AuthResult(state.getValue(), request.toURI());
     }
 
     @Override

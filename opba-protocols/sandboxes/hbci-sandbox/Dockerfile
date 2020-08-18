@@ -1,3 +1,4 @@
+# This Dockerfile is for deployment
 FROM openjdk:8-jre-alpine
 
 ENV APP_HOME /usr/app

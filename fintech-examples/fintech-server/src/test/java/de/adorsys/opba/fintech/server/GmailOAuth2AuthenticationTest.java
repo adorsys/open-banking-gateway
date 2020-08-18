@@ -15,15 +15,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.servlet.http.Cookie;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
+import static de.adorsys.opba.fintech.impl.service.oauth2.Oauth2Const.COOKIE_OAUTH2_COOKIE_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
@@ -81,6 +84,7 @@ class GmailOAuth2AuthenticationTest {
 
         this.mvc.perform(
                 get(FIN_TECH_BANK_OAUTH2_LOGIN, CODE_TO_BE_EXCHANGED, stateValue, SCOPE)
+                        .cookie(new Cookie(COOKIE_OAUTH2_COOKIE_NAME, stateValue))
         ).andExpect(status().isOk()).andExpect(header().exists("Set-Cookie"));
     }
 
@@ -91,9 +95,10 @@ class GmailOAuth2AuthenticationTest {
         String stateValue = oauth2RedirectUserForAuthenticationInResourceServerAndReturnRedirectState();
         assertThat(stateValue).isNotBlank();
 
-        this.mvc.perform(get(FIN_TECH_BANK_OAUTH2_LOGIN, CODE_TO_BE_EXCHANGED, stateValue, SCOPE))
-                .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.message", is("Email is not allowed: vbe@example.com")));
+        this.mvc.perform(
+                get(FIN_TECH_BANK_OAUTH2_LOGIN, CODE_TO_BE_EXCHANGED, stateValue, SCOPE)
+                        .cookie(new Cookie(COOKIE_OAUTH2_COOKIE_NAME, stateValue))
+        ).andExpect(status().isForbidden()).andExpect(jsonPath("$.message", is("Email is not allowed: vbe@example.com")));
     }
 
     @Test
@@ -101,9 +106,33 @@ class GmailOAuth2AuthenticationTest {
     void testOAuth2AuthenticationWrongState() {
         String stateValue = oauth2RedirectUserForAuthenticationInResourceServerAndReturnRedirectState() + "FAKE";
 
-        this.mvc.perform(get(FIN_TECH_BANK_OAUTH2_LOGIN, CODE_TO_BE_EXCHANGED, stateValue, SCOPE))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.message", is("")));
+        this.mvc.perform(
+                get(FIN_TECH_BANK_OAUTH2_LOGIN, CODE_TO_BE_EXCHANGED, stateValue, SCOPE)
+                        .cookie(new Cookie(COOKIE_OAUTH2_COOKIE_NAME, stateValue))
+        ).andExpect(status().isUnauthorized()).andExpect(jsonPath("$.message", is("")));
+    }
+
+    @Test
+    @SneakyThrows
+    void testOAuth2AuthenticationNoStateCookie() {
+        String stateValue = oauth2RedirectUserForAuthenticationInResourceServerAndReturnRedirectState();
+        assertThat(stateValue).isNotBlank();
+
+        this.mvc.perform(
+                get(FIN_TECH_BANK_OAUTH2_LOGIN, CODE_TO_BE_EXCHANGED, stateValue, SCOPE)
+        ).andExpect(status().isUnauthorized()).andExpect(jsonPath("$.message", is("")));
+    }
+
+    @Test
+    @SneakyThrows
+    void testOAuth2AuthenticationNonMatchingStateCookie() {
+        String stateValue = oauth2RedirectUserForAuthenticationInResourceServerAndReturnRedirectState();
+        assertThat(stateValue).isNotBlank();
+
+        this.mvc.perform(
+                get(FIN_TECH_BANK_OAUTH2_LOGIN, CODE_TO_BE_EXCHANGED, stateValue, SCOPE)
+                        .cookie(new Cookie(COOKIE_OAUTH2_COOKIE_NAME, stateValue + "12345"))
+        ).andExpect(status().isUnauthorized()).andExpect(jsonPath("$.message", is("")));
     }
 
     @Test
@@ -113,24 +142,28 @@ class GmailOAuth2AuthenticationTest {
 
         this.mvc.perform(
                 get(FIN_TECH_BANK_OAUTH2_LOGIN, CODE_TO_BE_EXCHANGED, stateValue, SCOPE)
+                        .cookie(new Cookie(COOKIE_OAUTH2_COOKIE_NAME, stateValue))
         ).andExpect(status().isOk()).andExpect(header().exists("Set-Cookie"));
 
-        this.mvc.perform(get(FIN_TECH_BANK_OAUTH2_LOGIN, CODE_TO_BE_EXCHANGED, stateValue, SCOPE))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.message", is("")));
+        this.mvc.perform(
+                get(FIN_TECH_BANK_OAUTH2_LOGIN, CODE_TO_BE_EXCHANGED, stateValue, SCOPE)
+                        .cookie(new Cookie(COOKIE_OAUTH2_COOKIE_NAME, stateValue))
+        ).andExpect(status().isUnauthorized()).andExpect(jsonPath("$.message", is("")));
     }
 
     @SneakyThrows
     private String oauth2RedirectUserForAuthenticationInResourceServerAndReturnRedirectState() {
-        String location = this.mvc
+        MockHttpServletResponse response = this.mvc
                 .perform(
                         post(FIN_TECH_INITIATE_OAUTH2, "gmail")
                                 .header(Consts.HEADER_X_REQUEST_ID, UUID.randomUUID().toString())
                 )
                 .andExpect(status().isAccepted())
                 .andReturn()
-                .getResponse()
-                .getHeader("Location");
+                .getResponse();
+
+        String location = response.getHeader("Location");
+        String stateCookie = response.getCookie(COOKIE_OAUTH2_COOKIE_NAME).getValue();
 
         assertThat(location).isNotNull();
         URI target = URI.create(location);
@@ -140,9 +173,12 @@ class GmailOAuth2AuthenticationTest {
         assertThat(target).hasParameter("client_id", "test-client-id");
         assertThat(target).hasParameter("state");
         assertThat(target).hasParameter("nonce");
+        assertThat(stateCookie).isNotNull();
 
         String state = UriComponentsBuilder.fromUri(target).build().getQueryParams().getFirst("state");
         assertThat(state).isNotNull();
-        return URLDecoder.decode(state, StandardCharsets.UTF_8.name());
+        String stateDecoded = URLDecoder.decode(state, StandardCharsets.UTF_8.name());
+        assertThat(stateCookie).isEqualTo(stateDecoded);
+        return stateDecoded;
     }
 }
