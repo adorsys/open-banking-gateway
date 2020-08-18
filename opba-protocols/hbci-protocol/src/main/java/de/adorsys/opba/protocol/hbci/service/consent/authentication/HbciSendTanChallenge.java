@@ -34,9 +34,7 @@ public class HbciSendTanChallenge extends ValidatedExecution<HbciContext> {
         UpdateAuthResponse response = onlineBankingService.getStrongCustomerAuthorisation().authorizeConsent(request);
         ContextUtil.getAndUpdateContext(
                 execution,
-                (HbciContext ctx) -> {
-                    ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData());
-                }
+                (HbciContext ctx) -> ctx.setHbciDialogConsent((HbciConsent) response.getBankApiConsentData())
         );
     }
 

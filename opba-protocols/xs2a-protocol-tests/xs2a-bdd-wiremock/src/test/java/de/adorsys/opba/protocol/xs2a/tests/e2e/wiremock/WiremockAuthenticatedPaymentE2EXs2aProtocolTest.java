@@ -279,7 +279,7 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
         then()
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
-                .fintech_calls_payment_status();
+                .fintech_calls_payment_info();
     }
 
     @ParameterizedTest
@@ -309,7 +309,7 @@ public class WiremockAuthenticatedPaymentE2EXs2aProtocolTest extends SpringScena
         then()
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
-                .fintech_calls_payment_status();
+                .fintech_calls_payment_info();
     }
 
     @ParameterizedTest
