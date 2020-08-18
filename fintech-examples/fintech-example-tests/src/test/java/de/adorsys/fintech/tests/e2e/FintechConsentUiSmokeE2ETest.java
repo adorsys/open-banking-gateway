@@ -30,7 +30,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 @SuppressWarnings({"PMD.UnusedPrivateField"})
-@ActiveProfiles("test-mocked-fintech")
+@ActiveProfiles("test-smoke-fintech")
 @EnabledIfEnvironmentVariable(named = ENABLE_SMOKE_TESTS, matches = TRUE_BOOL)
 @ExtendWith({SeleniumExtension.class})
 @SpringBootTest(classes = {JGivenConfig.class, SmokeConfig.class}, webEnvironment = NONE)
@@ -70,9 +70,9 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri())
                 .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
 
-        when().user_already_login_in_bank_profile(firefoxDriver, username, fintech_login, REDIRECT_MODE)
+        when().user_already_login_in_bank_profile(firefoxDriver, username, fintech_login, REDIRECT_MODE, username)
                 .and()
-                .user_user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent(firefoxDriver)
+                .user_user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent(firefoxDriver, username)
                 .and()
                 .user_user_in_consent_ui_reviews_transaction_consent_and_accepts(firefoxDriver)
                 .and()
@@ -80,7 +80,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and()
                 .sandbox_anton_brueckner_from_consent_ui_navigates_to_bank_auth_page(firefoxDriver)
                 .and()
-                .sandbox_user_inputs_username_and_password(firefoxDriver)
+                .sandbox_user_inputs_username_and_password(firefoxDriver, username)
                 .and()
                 .user_navigates_to_page(firefoxDriver)
                 .and()
@@ -112,7 +112,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri())
                 .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
 
-        when().user_authorizes_payment_in_embedded_mode(firefoxDriver, username, fintech_login, EMBEDDED_MODE);
+        when().user_consent_authorization_in_embedded_mode(firefoxDriver, username, fintech_login, EMBEDDED_MODE, username);
 
         then().fintech_can_read_user_accounts();
     }
@@ -123,9 +123,9 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
         given().create_new_user_in_sandbox_tpp_management(username, PIN)
                 .enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri())
                 .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
-        when().user_already_login_in_bank_profile(firefoxDriver, username, fintech_login, EMBEDDED_MODE)
+        when().user_already_login_in_bank_profile(firefoxDriver, username, fintech_login, EMBEDDED_MODE, username)
                 .and()
-                .user_for_embeeded_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(firefoxDriver)
+                .user_for_embeeded_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(firefoxDriver, username)
                 .and()
                 .user_click_on_confirm_button(firefoxDriver)
                 .and()
@@ -158,7 +158,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .and()
                 .user_navigates_to_page(firefoxDriver)
                 .and()
-                .user_looks_for_a_bank_in_the_bank_search_input_place(firefoxDriver, "adorsys xsa")
+                .user_looks_for_a_bank_in_the_bank_search_input_place(firefoxDriver, ADORSYS_XS2A)
                 .and()
                 .user_wait_for_the_result_in_bank_search(firefoxDriver)
                 .and()
@@ -180,7 +180,7 @@ public class FintechConsentUiSmokeE2ETest extends SpringScenarioTest<FintechServ
                 .enabled_embedded_sandbox_mode(smokeConfig.getAspspProfileServerUri())
                 .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
 
-        when().user_authorizes_payment_in_redirect_mode(firefoxDriver, username, fintech_login, EMBEDDED_MODE);
+        when().user_authorizes_payment_in_redirect_mode(firefoxDriver, username, fintech_login, EMBEDDED_MODE, username);
 
         then().fintech_can_read_user_accounts();
     }

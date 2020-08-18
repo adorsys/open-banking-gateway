@@ -42,8 +42,8 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF sandbox_user_clicks_redirect_back_to_tpp_button(WebDriver driver) {
-        wait(driver);
-        clickOnButton(driver, By.className("btn-primary"), true);
+        waitForPageLoadAndUrlContains(driver, "consent-result?redirectCode");
+        performClick(driver, By.className("btn-primary"));
         return self();
     }
 
@@ -61,26 +61,26 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF user_inputs_username_and_password_for_redirect(WebDriver driver) {
+    public SELF user_inputs_username_and_password_for_redirect(WebDriver driver, String username) {
         waitPlusTimer(driver, timeout.getSeconds());
         clickOnButton(driver, By.name("login"));
-        sendText(driver, By.name("login"), OBA_USERNAME);
+        sendText(driver, By.name("login"), username);
         sendText(driver, By.name("pin"), "12345");
         clickOnButton(driver, By.xpath("//button[@type='submit']"));
         return self();
     }
 
-    public SELF user_for_embeeded_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(WebDriver driver) {
+    public SELF user_for_embeeded_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(WebDriver driver, String username) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
-        sendText(driver, By.id("PSU_ID"), OBA_USERNAME);
+        sendText(driver, By.id("PSU_ID"), username);
         clickOnButton(driver, By.id("ALL_PSD2"));
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
-    public SELF user_for_embeeded_provided_to_consent_ui_initial_parameters_to_list_transactions_consent(WebDriver driver) {
+    public SELF user_for_embeeded_provided_to_consent_ui_initial_parameters_to_list_transactions_consent(WebDriver driver, String username) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-payments");
-        sendText(driver, By.id("PSU_ID"), OBA_USERNAME);
+        sendText(driver, By.id("PSU_ID"), username);
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
@@ -103,10 +103,10 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF sandbox_user_inputs_username_and_password(WebDriver driver) {
+    public SELF sandbox_user_inputs_username_and_password(WebDriver driver, String username) {
         wait(driver);
         clickOnButton(driver, By.name("login"));
-        sendText(driver, By.name("login"), OBA_USERNAME);
+        sendText(driver, By.name("login"), username);
         sendText(driver, By.name("pin"), "12345");
         clickOnButton(driver, By.xpath("//button[@type='submit']"));
         return self();
@@ -130,9 +130,9 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent_for_redirect(WebDriver driver) {
+    public SELF user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent_for_redirect(WebDriver driver, String username) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
-        sendText(driver, By.id("PSU_ID"), OBA_USERNAME);
+        sendText(driver, By.id("PSU_ID"), username);
         clickOnButton(driver, By.id("ALL_PSD2"));
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
@@ -165,9 +165,9 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF user_user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent(WebDriver driver) {
+    public SELF user_user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent(WebDriver driver, String username) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
-        sendText(driver, By.id("PSU_ID"), OBA_USERNAME);
+        sendText(driver, By.id("PSU_ID"), username);
         clickOnButton(driver, By.id("ALL_PSD2"));
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
@@ -179,7 +179,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF user_already_login_in_bank_profile(WebDriver driver, String username, String fintech, String profile) {
+    public SELF user_already_login_in_bank_profile(WebDriver driver, String username, String fintech, String profile, String obaUsername) {
         user_opens_fintechui_login_page(driver)
                 .and()
                 .user_login_with_its_credentials(driver, username)
@@ -204,28 +204,30 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF user_authorizes_payment_in_embedded_mode(WebDriver driver, String username, String fintech, String profile) {
-        user_already_login_in_bank_profile(driver, username, fintech, profile)
+    public SELF user_consent_authorization_in_embedded_mode(WebDriver driver, String username, String fintech, String profile, String obaUsername) {
+        user_already_login_in_bank_profile(driver, username, fintech, profile, obaUsername)
                 .and()
-                .user_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(driver)
+                .user_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(driver, obaUsername)
                 .and()
                 .user_max_musterman_in_consent_ui_reviews_transactions_consent_and_accepts(driver)
                 .and()
                 .user_in_consent_ui_provides_pin_for_embeeded(driver)
                 .and()
+                .user_in_consent_ui_sees_sca_select_and_selected_type_email2_to_embedded_authorization(driver)
+                .and()
                 .user_in_consent_ui_provides_sca_result_to_embedded_authorization_for_redirect(driver)
                 .and()
-                .user_anton_brueckner_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(driver)
+                .user_navigates_to_page(driver)
                 .and()
-                .user_navigates_to_page(driver);
+                .sandbox_user_clicks_redirect_back_to_tpp_button(driver);
 
         return self();
     }
 
-    public SELF user_authorizes_payment_in_redirect_mode(WebDriver driver, String username, String fintech, String profile) {
-        user_already_login_in_bank_profile(driver, username, fintech, profile)
+    public SELF user_authorizes_payment_in_redirect_mode(WebDriver driver, String username, String fintech, String profile, String obaUsername) {
+        user_already_login_in_bank_profile(driver, username, fintech, profile, obaUsername)
                 .and()
-                .user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent_for_redirect(driver)
+                .user_provided_to_consent_ui_initial_parameters_to_list_accounts_with_all_accounts_transactions_consent_for_redirect(driver, obaUsername)
                 .and()
                 .user_in_consent_ui_reviews_transaction_consent_and_accepts_for_redirect(driver)
                 .and()
@@ -233,7 +235,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
                 .and()
                 .user_navigates_from_consent_ui_to_bank_auth_page(driver)
                 .and()
-                .user_inputs_username_and_password_for_redirect(driver)
+                .user_inputs_username_and_password_for_redirect(driver, obaUsername)
                 .and()
                 .user_navigates_to_page(driver)
                 .and()
@@ -269,17 +271,27 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
-    public SELF user_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(WebDriver driver) {
+    private void waitForPageLoad(WebDriver driver) {
+        new WebDriverWait(driver, timeout.getSeconds())
+                .until(wd -> ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));
+    }
+
+    public SELF user_provided_to_consent_ui_initial_parameters_to_list_transactions_with_all_accounts_consent(WebDriver driver, String username) {
         waitForPageLoadAndUrlEndsWithPath(driver, "entry-consent-transactions");
-        sendText(driver, By.id("PSU_ID"), OBA_USERNAME);
+        sendText(driver, By.id("PSU_ID"), username);
         clickOnButton(driver, By.id("ALL_PSD2"));
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
 
+    private void waitForPageToLoad(WebDriver driver) {
+        new WebDriverWait(driver, timeout.getSeconds())
+                .until(wd -> ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));
+    }
+
+
     public SELF user_in_consent_ui_sees_sca_select_and_selected_type_email2_to_embedded_authorization(WebDriver driver) {
         waitForPageLoadAndUrlEndsWithPath(driver, "select-sca-method");
-        selectByVisibleInDropdown(driver, By.id("scaMethod"), "EMAIL:htc@mail.de");
         clickOnButton(driver, By.id(SUBMIT_ID));
         return self();
     }
@@ -308,6 +320,12 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
+    public SELF user_confirm_button_for_payment(WebDriver driver) {
+        waitForPageLoadAndUrlContains(driver, "entry-payments/review-consent");
+        clickOnButton(driver, By.xpath("//button[@type='submit']"));
+        return self();
+    }
+
     public SELF user_accepts_to_get_redirected_to_consentui(WebDriver webDriver) {
         wait(webDriver);
         performClick(webDriver, By.xpath("//button[@class='btn btn-primary btn-center']"));
@@ -320,7 +338,6 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_select_transfert_button(WebDriver webDriver) {
-        wait(webDriver).until(ExpectedConditions.elementToBeClickable(By.linkText("Transfer")));
         performClick(webDriver, By.linkText("Transfer"));
         return self();
     }
@@ -331,6 +348,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_click_on_confirm_button(WebDriver webDriver) {
+        waitForPageToLoad(webDriver);
         performClick(webDriver, By.id(SUBMIT_ID));
         return self();
     }
@@ -370,8 +388,6 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         clickOnButton(driver, By.xpath("//button[@type='submit']"));
         return self();
     }
-
-    //TODO add stages for accountList and TransactionList
 
     private void clickOnButton(WebDriver driver, By identifier) {
         clickOnButton(driver, identifier, false);

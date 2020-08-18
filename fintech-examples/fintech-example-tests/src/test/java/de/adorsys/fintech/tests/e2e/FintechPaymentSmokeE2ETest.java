@@ -31,7 +31,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.Const.TRUE_BOOL;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 @SuppressWarnings("PMD.UnusedPrivateField")
-@ActiveProfiles("test-mocked-fintech")
+@ActiveProfiles("test-smoke-fintech")
 @EnabledIfEnvironmentVariable(named = ENABLE_SMOKE_TESTS, matches = TRUE_BOOL)
 @ExtendWith({SeleniumExtension.class})
 @SpringBootTest(classes = {JGivenConfig.class, SmokeConfig.class}, webEnvironment = NONE)
@@ -77,7 +77,7 @@ public class FintechPaymentSmokeE2ETest extends SpringScenarioTest<FintechServer
                 .enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri())
                 .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
 
-        when().user_authorizes_payment_in_redirect_mode(firefoxDriver, username, fintech_login, REDIRECT_MODE)
+        when().user_authorizes_payment_in_redirect_mode(firefoxDriver, username, fintech_login, REDIRECT_MODE, username)
                 .and()
                 .user_navigates_to_page(firefoxDriver)
                 .and()
@@ -93,35 +93,25 @@ public class FintechPaymentSmokeE2ETest extends SpringScenarioTest<FintechServer
                 .and()
                 .user_click_on_confirm_button(firefoxDriver)
                 .and()
-                .user_for_embeeded_provided_to_consent_ui_initial_parameters_to_list_transactions_consent(firefoxDriver)
+                .user_for_embeeded_provided_to_consent_ui_initial_parameters_to_list_transactions_consent(firefoxDriver, username)
+                .and()
+                .user_confirm_button_for_payment(firefoxDriver)
                 .and()
                 .user_click_on_confirm_button(firefoxDriver)
                 .and()
-                .sandbox_user_clicks_redirect_back_to_tpp_button(firefoxDriver)
-                .and()
-                .sandbox_user_inputs_username_and_password(firefoxDriver)
-                .and()
-                .user_navigates_to_page(firefoxDriver)
+                .user_inputs_username_and_password_for_redirect(firefoxDriver, username)
                 .and()
                 .user_confirm_login(firefoxDriver)
                 .and()
-                .user_navigates_to_page(firefoxDriver)
+                .user_in_consent_ui_sees_sca_select_and_confirm_type_email2_to_redirect_authorization(firefoxDriver)
                 .and()
-                .sandbox_user_selects_sca_method(firefoxDriver)
+                .user_provides_sca_challenge_result_for_redirect(firefoxDriver)
                 .and()
-                .user_navigates_to_page(firefoxDriver)
-                .and()
-                .sandbox_user_provides_sca_challenge_result(firefoxDriver)
-                .and()
-                .user_navigates_to_page(firefoxDriver)
-                .and()
-                .sandbox_user_clicks_redirect_back_to_tpp_button(firefoxDriver)
-                .and()
-                .user_navigates_to_page(firefoxDriver)
+                .user_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp_for_redirect(firefoxDriver)
                 .and()
                 .user_anton_brueckner_in_consent_ui_sees_thank_you_for_consent_and_clicks_to_tpp(firefoxDriver)
                 .and()
-                .user_navigates_to_page(firefoxDriver);
+                .user_sees_account_and_list_transactions(firefoxDriver);
 
         then().fintech_can_read_users_accounts_and_transactions();
     }
@@ -133,7 +123,7 @@ public class FintechPaymentSmokeE2ETest extends SpringScenarioTest<FintechServer
                 .enabled_redirect_sandbox_mode(smokeConfig.getAspspProfileServerUri())
                 .fintech_points_to_fintechui_login_page(smokeConfig.getFintechServerUri());
 
-        when().user_authorizes_payment_in_embedded_mode(firefoxDriver, username, fintech_login, EMBEDDED_MODE)
+        when().user_consent_authorization_in_embedded_mode(firefoxDriver, username, fintech_login, EMBEDDED_MODE, username)
                 .and()
                 .user_select_transfert_button(firefoxDriver)
                 .and()
@@ -147,15 +137,17 @@ public class FintechPaymentSmokeE2ETest extends SpringScenarioTest<FintechServer
                 .and()
                 .user_click_on_confirm_button(firefoxDriver)
                 .and()
-                .user_for_embeeded_provided_to_consent_ui_initial_parameters_to_list_transactions_consent(firefoxDriver)
+                .user_for_embeeded_provided_to_consent_ui_initial_parameters_to_list_transactions_consent(firefoxDriver, username)
                 .and()
                 .user_click_on_confirm_button(firefoxDriver)
                 .and()
                 .user_in_consent_ui_provides_pin_for_embeeded(firefoxDriver)
                 .and()
+                .user_in_consent_ui_sees_sca_select_and_selected_type_email2_to_embedded_authorization(firefoxDriver)
+                .and()
                 .user_in_consent_ui_provides_sca_result_to_embedded_authorization_for_redirect(firefoxDriver)
                 .and()
-                .sandbox_user_clicks_redirect_back_to_tpp_button(firefoxDriver)
+                .user_click_on_confirm_button(firefoxDriver)
                 .and()
                 .user_navigates_to_page(firefoxDriver);
 

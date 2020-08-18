@@ -52,7 +52,7 @@ public class UserInformationResult extends AccountInformationResult {
                                                          .header(X_XSRF_TOKEN, UUID.randomUUID().toString())
                                                          .header(SESSION_COOKIE, UUID.randomUUID().toString())
                                                          .when()
-                                                         .get(PAYMENT)
+                                                         .get(TRANSACTION)
                                                          .then()
                                                          .statusCode(HttpStatus.OK.value())
                                                          .extract();
