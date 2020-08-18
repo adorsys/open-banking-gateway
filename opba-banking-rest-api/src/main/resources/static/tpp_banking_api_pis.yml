@@ -63,8 +63,6 @@ paths:
       responses:
         200:
           $ref: "#/components/responses/200_PaymentInformationResponse"
-        202:
-          $ref: "#/components/responses/202_PaymentInitiationResponse:"
 
   /v1/banking/pis/payments/{payment-product}/status:
     get:
@@ -91,8 +89,7 @@ paths:
       responses:
         200:
           $ref: "#/components/responses/200_PaymentStatusResponse"
-        202:
-          $ref: "#/components/responses/202_PaymentInitiationResponse:"
+
 components:
   parameters:
     PaymentProduct:
