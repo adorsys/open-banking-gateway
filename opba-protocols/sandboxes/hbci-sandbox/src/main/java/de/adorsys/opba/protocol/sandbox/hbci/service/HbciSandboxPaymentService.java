@@ -53,8 +53,8 @@ public class HbciSandboxPaymentService {
     }
 
     @Transactional
-    public void acceptPayment(HbciSandboxContext context, boolean instantPayment) {
-        String orderReference = MapRegexUtil.getDataRegex(context.getRequestData(), instantPayment ? "GV\\.InstantUebSEPA1\\.orderref" : "GV\\.TAN2Step\\d+\\.orderref");
+    public void acceptPayment(HbciSandboxContext context) {
+        String orderReference = MapRegexUtil.getDataRegex(context.getRequestData(), "GV\\.TAN2Step\\d+\\.orderref");
         HbciSandboxPayment payment = paymentRepository.findByOwnerLoginAndOrderReference(context.getUser().getLogin(), orderReference)
                 .orElseThrow(() -> new IllegalStateException(String.format("Order with reference %s of user %s not found", orderReference, context.getUser().getLogin())));
         // Some magic flag to accept payment immediately
