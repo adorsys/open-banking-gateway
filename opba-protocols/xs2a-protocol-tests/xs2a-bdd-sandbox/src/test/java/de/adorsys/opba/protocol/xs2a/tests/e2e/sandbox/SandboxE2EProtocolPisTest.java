@@ -76,7 +76,7 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
         then()
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
-                .fintech_calls_payment_status()
+                .fintech_calls_payment_info()
                 .fintech_calls_payment_information_iban_700();
     }
 
@@ -112,7 +112,7 @@ public class SandboxE2EProtocolPisTest extends SandboxCommonTest<
         then()
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
-                .fintech_calls_payment_status()
+                .fintech_calls_payment_info()
                 .fintech_calls_payment_information_iban_400();
     }
 }

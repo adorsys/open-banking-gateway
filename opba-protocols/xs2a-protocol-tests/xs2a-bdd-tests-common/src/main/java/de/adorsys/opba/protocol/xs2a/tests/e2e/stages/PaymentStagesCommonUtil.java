@@ -56,13 +56,6 @@ public class PaymentStagesCommonUtil {
 
     public static RequestSpecification withPaymentHeaders(
             String fintechUserId,
-            String bankId
-    ) {
-        return withPaymentHeaders(fintechUserId, bankId, true);
-    }
-
-    public static RequestSpecification withPaymentHeaders(
-            String fintechUserId,
             String bankId,
             boolean psuAuthenticationRequired
     ) {
@@ -85,7 +78,7 @@ public class PaymentStagesCommonUtil {
     }
 
     public static RequestSpecification withPaymentInfoHeaders(String fintechUserId) {
-        return withPaymentHeaders(fintechUserId, SANDBOX_BANK_ID);
+        return withPaymentInfoHeaders(fintechUserId, SANDBOX_BANK_ID);
     }
 
     public static RequestSpecification withPaymentInfoHeaders(String fintechUserId, String bankId) {

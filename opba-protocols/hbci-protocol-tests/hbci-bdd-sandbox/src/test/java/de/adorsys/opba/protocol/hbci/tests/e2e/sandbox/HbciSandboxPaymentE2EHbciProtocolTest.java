@@ -75,16 +75,13 @@ class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
     }
 
     @Test
-    void testSinglePaymentWithSca() {
-        makeSinglePaymentWithSca();
-    }
-
-    @Test
-    void testPaymentAndStatusWithSca() {
-        makeSinglePaymentWithSca();
+    void testInstantPaymentWithStatus() {
+        given()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-                .fintech_calls_payment_info_for_max_musterman_for_blz_30000003()
+                .fintech_calls_instant_payment_for_max_musterman_for_blz_30000003()
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
@@ -98,10 +95,11 @@ class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
         then()
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
-                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.PDNG.name());
+                .fintech_calls_payment_info(BANK_BLZ_30000003_ID, TransactionStatus.ACSC.name());
     }
 
-    private void makeSinglePaymentWithSca() {
+    @Test
+    void testSinglePaymentWithStatus() {
         given()
                 .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -121,7 +119,7 @@ class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
         then()
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
-                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.PDNG.name())
+                .fintech_calls_payment_info(BANK_BLZ_30000003_ID, TransactionStatus.ACCC.name())
                 .fintech_calls_payment_information_hbci(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID);
     }
 
