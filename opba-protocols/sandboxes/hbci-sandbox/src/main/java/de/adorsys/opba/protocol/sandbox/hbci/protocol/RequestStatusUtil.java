@@ -20,7 +20,7 @@ public class RequestStatusUtil {
     }
 
     public boolean isForInstantPayment(Map<String, String> requestData) {
-        return "HKIPZ".equals(MapRegexUtil.getDataRegex(requestData, "GV\\.InstantUebSEPA1\\.SegHead\\.code"));
+        return "HKIPZ".equals(MapRegexUtil.getDataRegex(requestData, "TAN2Step\\d*\\.ordersegcode"));
     }
 
     public boolean isForPaymentStatus(Map<String, String> requestData) {

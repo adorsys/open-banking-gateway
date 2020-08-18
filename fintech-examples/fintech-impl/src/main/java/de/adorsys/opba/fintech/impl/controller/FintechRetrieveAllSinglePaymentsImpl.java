@@ -25,9 +25,7 @@ public class FintechRetrieveAllSinglePaymentsImpl implements FintechRetrieveAllS
             String bankId,
             String accountId,
             UUID xRequestID,
-            String xsrfToken,
-            String fintechRedirectURLOK,
-            String fintechRedirectURLNOK
+            String xsrfToken
     ) {
         log.debug("got list all payment requrest");
 
@@ -37,7 +35,7 @@ public class FintechRetrieveAllSinglePaymentsImpl implements FintechRetrieveAllS
         }
 
         return sessionLogicService.addSessionMaxAgeToHeader(
-                paymentService.retrieveAllSinglePayments(bankId, accountId, fintechRedirectURLOK, fintechRedirectURLNOK)
+                paymentService.retrieveAllSinglePayments(bankId, accountId)
         );
     }
 }

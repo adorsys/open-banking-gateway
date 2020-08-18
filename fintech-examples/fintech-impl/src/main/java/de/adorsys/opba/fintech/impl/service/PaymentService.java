@@ -87,7 +87,7 @@ public class PaymentService {
                 responseOfTpp.getHeaders());
     }
 
-    public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankId, String accountId, String fintechOkUrl, String fintechNOkUrl) {
+    public ResponseEntity<List<PaymentInitiationWithStatusResponse>> retrieveAllSinglePayments(String bankId, String accountId) {
         SessionEntity sessionEntity = sessionLogicService.getSession();
         // TODO https://app.zenhub.com/workspaces/open-banking-gateway-5dd3b3daf010250001260675/issues/adorsys/open-banking-gateway/812
         // TODO https://app.zenhub.com/workspaces/open-banking-gateway-5dd3b3daf010250001260675/issues/adorsys/open-banking-gateway/794
@@ -97,14 +97,10 @@ public class PaymentService {
         }
         PaymentEntity payment = payments.get(0);
 
-        final String fintechRedirectCode = UUID.randomUUID().toString();
-
         ResponseEntity<PaymentInformationResponse> response = tppPisPaymentStatusClient.getPaymentInformation(
                 tppProperties.getServiceSessionPassword(),
                 sessionEntity.getUserEntity().getFintechUserId(),
                 UUID.fromString(restRequestContext.getRequestId()),
-                RedirectUrlsEntity.buildPaymentOkUrl(uiConfig, fintechRedirectCode),
-                RedirectUrlsEntity.buildPaymentNokUrl(uiConfig, fintechRedirectCode),
                 paymentProduct,
                 COMPUTE_X_TIMESTAMP_UTC,
                 COMPUTE_X_REQUEST_SIGNATURE,
@@ -116,8 +112,6 @@ public class PaymentService {
         switch (response.getStatusCode()) {
             case OK:
                 return paymentInfoResponse(payment, response);
-            case ACCEPTED:
-                return redirectResponse(bankId, accountId, fintechOkUrl, fintechNOkUrl, sessionEntity, fintechRedirectCode, response);
             case UNAUTHORIZED:
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             default:
@@ -131,22 +125,6 @@ public class PaymentService {
                 .getMapper(PaymentInitiationWithStatusResponseMapper.class)
                 .mapFromTppToFintech(paymentInfoTpp);
         return new ResponseEntity<>(Collections.singletonList(paymentInfo), HttpStatus.OK);
-    }
-
-    private ResponseEntity redirectResponse(String bankId, String accountId, String fintechOkUrl, String fintechNOkUrl,
-                                            SessionEntity sessionEntity, String fintechRedirectCode,
-                                            ResponseEntity<PaymentInformationResponse> response) {
-        log.debug("create redirect entity for redirect code {}", fintechRedirectCode);
-        redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOkUrl);
-        return handleAcceptedService.handleAccepted(
-                paymentRepository,
-                ConsentType.PIS,
-                bankId,
-                accountId,
-                fintechRedirectCode,
-                sessionEntity,
-                response.getHeaders()
-        );
     }
 
     private AccountReference getAccountReference(String iban) {

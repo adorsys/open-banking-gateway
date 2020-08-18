@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public enum Operation {
 
+    CUSTOM_MSG("CustomMsg", Operation::typeMatch),
     DIALOG_INIT_ANON("DialogInitAnon", Operation::typeMatch),
     DIALOG_INIT_SCA_TAN_2_STEP("DialogInitScaTAN", Operation::isScaInit),
     DIALOG_INIT_SCA("DialogInitSCA", Operation::typeMatchAndNotAfterSca),
     DIALOG_INIT("DialogInit", Operation::typeMatch),
-    CUSTOM_MSG("CustomMsg", Operation::typeMatch),
     SYNCH("Synch", Operation::typeMatch),
     DIALOG_END("DialogEnd", Operation::typeMatch),
     ANY("*", Operation::typeMatch);

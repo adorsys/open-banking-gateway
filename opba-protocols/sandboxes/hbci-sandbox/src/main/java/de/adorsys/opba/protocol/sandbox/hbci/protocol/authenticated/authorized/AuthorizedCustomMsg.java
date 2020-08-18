@@ -37,17 +37,11 @@ public class AuthorizedCustomMsg extends TemplateBasedOperationHandler {
             return "response-templates/authorized/custom-message-konto-mt940.json";
         }
 
-        if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(PAYMENT))
-                || RequestStatusUtil.isForPayment(context.getRequestData())) {
-            paymentService.createPaymentIfNeededAndPossibleFromContext(context);
-            paymentService.acceptPayment(context, false);
-            return "response-templates/authorized/custom-message-payment-response.json";
-        }
-
-        if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(INSTANT_PAYMENT))
+        if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(PAYMENT) || it.startsWith(INSTANT_PAYMENT))
+                || RequestStatusUtil.isForPayment(context.getRequestData())
                 || RequestStatusUtil.isForInstantPayment(context.getRequestData())) {
             paymentService.createPaymentIfNeededAndPossibleFromContext(context);
-            paymentService.acceptPayment(context, true);
+            paymentService.acceptPayment(context);
             return "response-templates/authorized/custom-message-payment-response.json";
         }
 
