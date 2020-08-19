@@ -47,6 +47,12 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
         return self();
     }
 
+    public SELF user_clicks_redirect_back_to_tpp_button(WebDriver driver) {
+        waitForPageLoadAndUrlContains(driver, "consent-result?redirectCode");
+        performClick(driver, By.className("btn-primary"));
+        return self();
+    }
+
     public SELF sandbox_user_provides_sca_challenge_result(WebDriver driver) {
         wait(driver);
         sendText(driver, By.name("authCode"), "123456");
@@ -322,7 +328,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
 
     public SELF user_confirm_button_for_payment(WebDriver driver) {
         waitForPageLoadAndUrlContains(driver, "entry-payments/review-consent");
-        clickOnButton(driver, By.xpath("//button[@type='submit']"));
+        performClick(driver, By.id(SUBMIT_ID));
         return self();
     }
 
