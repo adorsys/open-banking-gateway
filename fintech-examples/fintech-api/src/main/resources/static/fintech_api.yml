@@ -125,10 +125,10 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           $ref: "#/components/responses/200_UserProfile"
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
 
   /v1/oauth2/{idpProvider}/login:
     post:
@@ -150,8 +150,8 @@ paths:
           required: true
           description: IDP provider id for Oauth2 authentication (i.e. `gmail`)
       responses:
-        '202':
-          $ref: '#/components/responses/202_ToOauth2'
+        "202":
+          $ref: "#/components/responses/202_ToOauth2"
 
   /v1/logout:
     post:
@@ -351,17 +351,17 @@ paths:
         #query
         - $ref: "#/components/parameters/redirectCode"
         #header
-        - $ref: '#/components/parameters/X-Request-ID'
-        - $ref: '#/components/parameters/X-XSRF-TOKEN'
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
       security:
         - redirectCookie: []
       responses:
-        '202':
-          $ref: '#/components/responses/202_ReloadUI'
-        '401':
-          $ref: '#/components/responses/401_Unauthorized'
-        '404':
-          $ref: '#/components/responses/404_NotFound'
+        "202":
+          $ref: "#/components/responses/202_ReloadUI"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
+        "404":
+          $ref: "#/components/responses/404_NotFound"
 
   /v1/pis/banks/{bank-id}/accounts/{account-id}/payments/single:
     get:
@@ -384,35 +384,35 @@ paths:
         "401":
           $ref: "#/components/responses/401_Unauthorized"
 
-post:
-  summary: Single payment initiation request
-  description: This method is used to initiate a payment at the Fintech Server.
-  operationId: initiateSinglePayment
-  tags:
-    - FintechSinglePaymentInitiation
-  parameters:
-    #path
-    - $ref: "#/components/parameters/bank-id"
-    - $ref: "#/components/parameters/account-id"
-    #header
-    - $ref: "#/components/parameters/X-Request-ID"
-    - $ref: '#/components/parameters/X-XSRF-TOKEN'
-    - $ref: '#/components/parameters/X-Pis-Psu-Authentication-Required'
-    - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
-    - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
+    post:
+      summary: Single payment initiation request
+      description: This method is used to initiate a payment at the Fintech Server.
+      operationId: initiateSinglePayment
+      tags:
+        - FintechSinglePaymentInitiation
+      parameters:
+        #path
+        - $ref: "#/components/parameters/bank-id"
+        - $ref: "#/components/parameters/account-id"
+        #header
+        - $ref: "#/components/parameters/X-Request-ID"
+        - $ref: "#/components/parameters/X-XSRF-TOKEN"
+        - $ref: "#/components/parameters/X-Pis-Psu-Authentication-Required"
+        - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
+        - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
 
-  requestBody:
-    description: Single payment initiation request
-    content:
-      application/json:
-        schema:
-          $ref: '#/components/schemas/singlePaymentInitiationRequest'
-    required: true
-  responses:
-    '202':
-      $ref: '#/components/responses/202_ToConsentAuthApi'
-    '401':
-      $ref: '#/components/responses/401_Unauthorized'
+      requestBody:
+        description: Single payment initiation request
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/singlePaymentInitiationRequest"
+        required: true
+      responses:
+        "202":
+          $ref: "#/components/responses/202_ToConsentAuthApi"
+        "401":
+          $ref: "#/components/responses/401_Unauthorized"
 
 components:
   securitySchemes:
@@ -840,7 +840,7 @@ components:
         Request to perform Oauth2 authentication
       headers:
         Location:
-          $ref: '#/components/headers/Location-Oauth2-Auth'
+          $ref: "#/components/headers/Location-Oauth2-Auth"
 
     202_ReloadUI:
       description: |
