@@ -9,11 +9,11 @@ import { Payment } from '../models/consts';
   styleUrls: ['./redirect-after-payment.component.scss']
 })
 export class RedirectAfterPaymentComponent implements OnInit {
-  constructor(private authService: ConsentAuthorizationService, private route: ActivatedRoute) {}
+  constructor(private consentAuthorizationService: ConsentAuthorizationService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     const redirectCode = this.route.snapshot.queryParams.redirectCode;
 
-    this.authService.fromPaymentOk(Payment.OK, redirectCode);
+    this.consentAuthorizationService.fromPayment(Payment.OK, redirectCode);
   }
 }

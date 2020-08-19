@@ -46,10 +46,7 @@ public class AccountService {
         log.info("List of accounts {}", loARetrievalInformation);
         final String fintechRedirectCode = UUID.randomUUID().toString();
 
-        if (loARetrievalInformation.equals(LoARetrievalInformation.FROM_TPP_WITH_NEW_CONSENT)) {
-            consentService.deleteConsent(sessionEntity.getUserEntity(), ConsentType.AIS, bankId);
-        }
-        ResponseEntity accounts = readOpbaResponse(bankId, sessionEntity, fintechRedirectCode);
+        ResponseEntity accounts = readOpbaResponse(bankId, sessionEntity, fintechRedirectCode, loARetrievalInformation);
 
         switch (accounts.getStatusCode()) {
             case OK:
@@ -66,26 +63,29 @@ public class AccountService {
     }
 
 
-    private ResponseEntity readOpbaResponse(String bankID, SessionEntity sessionEntity, String redirectCode) {
+    private ResponseEntity readOpbaResponse(String bankID, SessionEntity sessionEntity, String redirectCode, LoARetrievalInformation loARetrievalInformation) {
         UUID xRequestId = UUID.fromString(restRequestContext.getRequestId());
-        Optional<ConsentEntity> optionalConsent = consentRepository.findByUserEntityAndBankIdAndConsentTypeAndConsentConfirmed(sessionEntity.getUserEntity(),
+        Optional<ConsentEntity> optionalConsent = Optional.empty();
+        if (loARetrievalInformation.equals(LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT)) {
+            optionalConsent = consentRepository.findFirstByUserEntityAndBankIdAndConsentTypeAndConsentConfirmedOrderByCreationTimeDesc(sessionEntity.getUserEntity(),
                 bankID, ConsentType.AIS, Boolean.TRUE);
+        }
         if (optionalConsent.isPresent()) {
             log.info("LoA found valid ais consent for user {} bank {}", sessionEntity.getUserEntity().getLoginUserName(), bankID);
-            return bankDoesNotRequireConsent(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent);
+            return consentAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent);
         }
 
         BankProfileResponse bankProfile = searchService.getBankProfileById(bankID).getBody();
         if (null != bankProfile.getBankProfileDescriptor().getConsentSupportByService()
                 && "true".equals(bankProfile.getBankProfileDescriptor().getConsentSupportByService().get(Actions.LIST_ACCOUNTS.name()))) {
             log.info("LoA no valid ais consent for user {} bank {} available", sessionEntity.getUserEntity().getLoginUserName(), bankID);
-            return bankRequiresConsent(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent);
+            return consentNotYetAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent);
         }
 
-        return bankDoesNotRequireConsent(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent);
+        return consentAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent);
     }
 
-    private ResponseEntity bankDoesNotRequireConsent(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId, Optional<ConsentEntity> optionalConsent) {
+    private ResponseEntity consentAvailable(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId, Optional<ConsentEntity> optionalConsent) {
         log.info("do LOA for bank {} {} consent", bankID, optionalConsent.isPresent() ? "with" : "without");
         UUID serviceSessionID = optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null);
         return tppAisClient.getAccounts(
@@ -102,7 +102,7 @@ public class AccountService {
                 serviceSessionID);
     }
 
-    private ResponseEntity bankRequiresConsent(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId, Optional<ConsentEntity> optionalConsent) {
+    private ResponseEntity consentNotYetAvailable(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId, Optional<ConsentEntity> optionalConsent) {
         log.info("do LOT (instead of loa) for bank {} {} consent", bankID, optionalConsent.isPresent() ? "with" : "without");
         UUID serviceSessionID = optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null);
         return tppAisClient.getTransactionsWithoutAccountId(

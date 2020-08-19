@@ -33,7 +33,7 @@ export class ConfirmComponent implements OnInit {
 
   onDeny() {
     console.log('call from consent NOT ok for redirect ' + this.confirmData.redirectStruct.redirectCode);
-    this.consentAuthorizationService.fromConsentOk(Consent.NOT_OK, this.confirmData.redirectStruct.redirectCode);
+    this.consentAuthorizationService.fromConsent(Consent.NOT_OK, this.confirmData.redirectStruct.redirectCode);
   }
 
   onConfirm() {

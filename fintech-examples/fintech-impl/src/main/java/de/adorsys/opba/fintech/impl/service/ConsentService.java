@@ -54,14 +54,4 @@ public class ConsentService {
         log.debug("consent confirmation response code: {}", statusCode);
         return statusCode.is2xxSuccessful();
     }
-
-    public void deleteConsent(UserEntity userEntity, ConsentType consentType, String bankID) {
-        Optional<ConsentEntity> optionalConsent = consentRepository.findByUserEntityAndBankIdAndConsentTypeAndConsentConfirmed(userEntity,
-                bankID, consentType, Boolean.TRUE);
-        if (optionalConsent.isPresent()) {
-            consentRepository.delete(optionalConsent.get());
-            log.info("consent {} for user {} is deleted", consentType, userEntity.getLoginUserName());
-        }
-    }
-
 }

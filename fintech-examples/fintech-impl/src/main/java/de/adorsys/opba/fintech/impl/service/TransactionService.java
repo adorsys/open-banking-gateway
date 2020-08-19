@@ -45,13 +45,14 @@ public class TransactionService {
                                            String bookingStatus, Boolean deltaList, LoTRetrievalInformation loTRetrievalInformation) {
 
         log.info("LoT {}", loTRetrievalInformation);
-        if (loTRetrievalInformation.equals(LoTRetrievalInformation.FROM_TPP_WITH_NEW_CONSENT)) {
-            consentService.deleteConsent(sessionEntity.getUserEntity(), ConsentType.AIS, bankId);
-        }
 
         String fintechRedirectCode = UUID.randomUUID().toString();
-        Optional<ConsentEntity> optionalConsent = consentRepository.findByUserEntityAndBankIdAndConsentTypeAndConsentConfirmed(sessionEntity.getUserEntity(),
+        Optional<ConsentEntity> optionalConsent = Optional.empty();
+        if (loTRetrievalInformation.equals(LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT)) {
+            optionalConsent = consentRepository.findFirstByUserEntityAndBankIdAndConsentTypeAndConsentConfirmedOrderByCreationTimeDesc(sessionEntity.getUserEntity(),
                 bankId, ConsentType.AIS, Boolean.TRUE);
+        }
+
         if (optionalConsent.isPresent()) {
             log.info("LoT found valid ais consent for user {} bank {}", sessionEntity.getUserEntity().getLoginUserName(), bankId);
         } else {
@@ -59,16 +60,16 @@ public class TransactionService {
         }
 
         ResponseEntity<TransactionsResponse> transactions = tppAisClient.getTransactions(
-                accountId, tppProperties.getServiceSessionPassword(),
-                sessionEntity.getUserEntity().getLoginUserName(),
-                RedirectUrlsEntity.buildOkUrl(uiConfig, fintechRedirectCode),
-                RedirectUrlsEntity.buildNokUrl(uiConfig, fintechRedirectCode),
-                UUID.fromString(restRequestContext.getRequestId()),
-                COMPUTE_X_TIMESTAMP_UTC,
-                COMPUTE_X_REQUEST_SIGNATURE,
-                COMPUTE_FINTECH_ID, bankId, null,
-                optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
-                dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList);
+            accountId, tppProperties.getServiceSessionPassword(),
+            sessionEntity.getUserEntity().getLoginUserName(),
+            RedirectUrlsEntity.buildOkUrl(uiConfig, fintechRedirectCode),
+            RedirectUrlsEntity.buildNokUrl(uiConfig, fintechRedirectCode),
+            UUID.fromString(restRequestContext.getRequestId()),
+            COMPUTE_X_TIMESTAMP_UTC,
+            COMPUTE_X_REQUEST_SIGNATURE,
+            COMPUTE_FINTECH_ID, bankId, null,
+            optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
+            dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList);
         switch (transactions.getStatusCode()) {
             case OK:
                 return new ResponseEntity<>(ManualMapper.fromTppToFintech(transactions.getBody()), HttpStatus.OK);

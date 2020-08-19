@@ -28,12 +28,13 @@ export class RedirectPageComponent implements OnInit {
   }
 
   cancel(): void {
-    console.log('call from consent NOT ok for redirect ' + this.redirectStruct.redirectCode);
-    this.authService.fromConsentOk(Consent.NOT_OK, this.redirectStruct.redirectCode);
+    console.log('REDIRECT PAGE: CANCEL ' + this.redirectStruct.redirectCode);
+    this.storageService.isUserRedirected = false;
+    this.authService.fromConsent(Consent.NOT_OK, this.redirectStruct.redirectCode);
   }
 
   proceed(): void {
-    console.log('NOW GO TO:', decodeURIComponent(this.redirectStruct.redirectUrl));
+    console.log('REDIRECT PAGE: OK:', decodeURIComponent(this.redirectStruct.redirectUrl));
     // save user redirected state
     this.storageService.isUserRedirected = true;
     window.location.href = decodeURIComponent(this.redirectStruct.redirectUrl);

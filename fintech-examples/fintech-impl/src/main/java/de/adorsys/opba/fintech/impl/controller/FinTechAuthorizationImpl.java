@@ -18,6 +18,7 @@ import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.ConsentService;
 import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
 import de.adorsys.opba.fintech.impl.service.SessionLogicService;
+import de.adorsys.opba.fintech.impl.tppclients.ConsentType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -76,20 +78,39 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
+        Optional<ConsentEntity> consent = consentRepository.findByTppAuthId(authId);
+        if (!consent.isPresent()) {
+            throw new RuntimeException("consent for authid " + authId + " can not be found");
+        }
+        ConsentEntity consentEntity = consent.get();
+
         if (okOrNotOk.equals(OkOrNotOk.OK) && consentService.confirmConsent(authId, xRequestID)) {
 
-            Optional<ConsentEntity> consent = consentRepository.findByTppAuthId(authId);
-
-            if (!consent.isPresent()) {
-                throw new RuntimeException("consent for authid " + authId + " can not be found");
+            if (Boolean.TRUE.equals(consentEntity.getConsentConfirmed())) {
+                throw new RuntimeException("Programming error, " + consentEntity.getConsentType() +
+                    " consent createed at " + consentEntity.getCreationTime() + " must not be confirmed yet");
+            }
+            // There may exist a valid consent that has not been used, because client
+            // wanted to retrieve new consent. So we search all valid consents and delete them.
+            List<ConsentEntity> consentList = consentRepository.findListByUserEntityAndBankIdAndConsentTypeAndConsentConfirmed(
+                consentEntity.getUserEntity(),
+                consentEntity.getBankId(),
+                consentEntity.getConsentType(),
+                Boolean.TRUE);
+            for (ConsentEntity oldValidConsent : consentList) {
+                log.info("DELETE OLD VALID {} CONSENT from {}", oldValidConsent.getConsentType(), oldValidConsent.getCreationTime());
             }
 
             log.debug("consent with authId {} is now valid", authId);
-            consent.get().setConsentConfirmed(true);
-            consentRepository.save(consent.get());
+            consentEntity.setConsentConfirmed(true);
+            consentRepository.save(consentEntity);
+
+        } else {
+            log.info("Consent was denied by user: DELETE {} CONSENT from {}", consentEntity.getConsentType(), consentEntity.getCreationTime());
+            consentRepository.delete(consentEntity);
         }
         return sessionLogicService.addSessionMaxAgeToHeader(
-                redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk));
+            redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk));
     }
 
     @Override
@@ -112,7 +133,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
             paymentRepository.save(payment.get());
         }
         return sessionLogicService.addSessionMaxAgeToHeader(
-                redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk));
+            redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk));
     }
 
     @Override

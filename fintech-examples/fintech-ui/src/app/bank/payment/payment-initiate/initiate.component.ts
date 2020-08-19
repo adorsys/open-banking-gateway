@@ -67,7 +67,8 @@ export class InitiateComponent implements OnInit {
     paymentRequest.debitorIban = this.debitorIban;
     paymentRequest.purpose = this.paymentForm.getRawValue().purpose;
     this.fintechSinglePaymentInitiationService
-      .initiateSinglePayment(this.bankId, this.accountId, '', '', okurl, notOkUrl, paymentRequest, this.paymentRequiresAuthentication, 'response')
+      .initiateSinglePayment(this.bankId, this.accountId, '', '', okurl, notOkUrl, paymentRequest,
+        this.paymentRequiresAuthentication, 'response')
       .pipe(map(response => response))
       .subscribe(response => {
         console.log('response status of payment call is ', response.status);

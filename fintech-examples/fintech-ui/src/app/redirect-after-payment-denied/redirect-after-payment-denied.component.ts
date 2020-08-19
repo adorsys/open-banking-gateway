@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConsentAuthorizationService } from '../bank/services/consent-authorization.service';
-import { StorageService } from '../services/storage.service';
 import { Consent } from '../models/consts';
 
 @Component({
@@ -13,9 +12,8 @@ export class RedirectAfterPaymentDeniedComponent implements OnInit {
   private redirectCode;
 
   constructor(
-    private authService: ConsentAuthorizationService,
-    private route: ActivatedRoute,
-    private storageService: StorageService
+    private consentAuthorizationService: ConsentAuthorizationService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -24,6 +22,6 @@ export class RedirectAfterPaymentDeniedComponent implements OnInit {
 
   submit() {
     this.redirectCode = this.route.snapshot.queryParams.redirectCode;
-    this.authService.fromConsentOk(Consent.NOT_OK, this.redirectCode);
+    this.consentAuthorizationService.fromConsent(Consent.NOT_OK, this.redirectCode);
   }
 }
