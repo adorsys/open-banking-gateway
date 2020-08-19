@@ -71,7 +71,11 @@ public class AccountService {
                 bankID, ConsentType.AIS, Boolean.TRUE);
         }
         if (optionalConsent.isPresent()) {
-            log.info("LoA found valid ais consent for user {} bank {}", sessionEntity.getUserEntity().getLoginUserName(), bankID);
+            log.info("LoA found valid {} consent for user {} bank {} from {}",
+                optionalConsent.get().getConsentType(),
+                optionalConsent.get().getUserEntity().getLoginUserName(),
+                optionalConsent.get().getBankId(),
+                optionalConsent.get().getCreationTime());
             return consentAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent);
         }
 

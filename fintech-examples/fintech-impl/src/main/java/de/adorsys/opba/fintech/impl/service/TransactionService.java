@@ -43,22 +43,20 @@ public class TransactionService {
     public ResponseEntity listTransactions(SessionEntity sessionEntity, String fintechOkUrl, String fintechNOkUrl, String bankId,
                                            String accountId, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom,
                                            String bookingStatus, Boolean deltaList, LoTRetrievalInformation loTRetrievalInformation) {
-
         log.info("LoT {}", loTRetrievalInformation);
-
         String fintechRedirectCode = UUID.randomUUID().toString();
         Optional<ConsentEntity> optionalConsent = Optional.empty();
         if (loTRetrievalInformation.equals(LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT)) {
             optionalConsent = consentRepository.findFirstByUserEntityAndBankIdAndConsentTypeAndConsentConfirmedOrderByCreationTimeDesc(sessionEntity.getUserEntity(),
                 bankId, ConsentType.AIS, Boolean.TRUE);
         }
-
         if (optionalConsent.isPresent()) {
-            log.info("LoT found valid ais consent for user {} bank {}", sessionEntity.getUserEntity().getLoginUserName(), bankId);
+            log.info("LoT found valid {} consent for user {} bank {} from {}",
+                optionalConsent.get().getConsentType(), optionalConsent.get().getUserEntity().getLoginUserName(),
+                optionalConsent.get().getBankId(), optionalConsent.get().getCreationTime());
         } else {
             log.info("LoT no valid ais consent for user {} bank {} available", sessionEntity.getUserEntity().getLoginUserName(), bankId);
         }
-
         ResponseEntity<TransactionsResponse> transactions = tppAisClient.getTransactions(
             accountId, tppProperties.getServiceSessionPassword(),
             sessionEntity.getUserEntity().getLoginUserName(),

@@ -3,8 +3,6 @@ import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Consent, LoARetrievalInformation, LoTRetrievalInformation, Payment } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
-import { SettingsService } from './settings.service';
-import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +11,7 @@ export class ConsentAuthorizationService {
   constructor(
     private router: Router,
     private finTechAuthorizationService: FinTechAuthorizationService,
-    private storageService: StorageService,
-    private settingsService: SettingsService
+    private storageService: StorageService
   ) {
   }
 
@@ -37,8 +34,11 @@ export class ConsentAuthorizationService {
         // we use the redirect url from the Fintech server when we are redirected back
         this.storageService.isUserRedirected = false;
       }
-      this.settingsService.setLoA(LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT);
-      this.settingsService.setLoT(LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT);
+      const settings = this.storageService.getSettings();
+      settings.loa = LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
+      settings.lot = LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
+      this.storageService.setSettings(settings);
+
       console.log('changed settings');
       console.log('ConsentAuthorizationService.fromConsent: location (from response header) to navigate to is now:', location);
       this.router.navigate([location]);

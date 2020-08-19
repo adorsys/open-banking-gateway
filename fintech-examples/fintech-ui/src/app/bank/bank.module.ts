@@ -6,13 +6,11 @@ import { CommonModule } from '@angular/common';
 import { ListAccountsModule } from './list-accounts/list-accounts.module';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { SettingsComponent } from './settings/settings.component';
-import { SettingsService } from './services/settings.service';
 
 @NgModule({
   declarations: [SidebarComponent, BankComponent, SettingsComponent],
   imports: [CommonModule, ShareModule, BankRoutingModule, ListAccountsModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [SettingsService]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class BankModule {
 }

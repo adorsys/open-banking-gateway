@@ -18,7 +18,6 @@ import de.adorsys.opba.fintech.impl.service.AuthorizeService;
 import de.adorsys.opba.fintech.impl.service.ConsentService;
 import de.adorsys.opba.fintech.impl.service.RedirectHandlerService;
 import de.adorsys.opba.fintech.impl.service.SessionLogicService;
-import de.adorsys.opba.fintech.impl.tppclients.ConsentType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -87,8 +86,8 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
         if (okOrNotOk.equals(OkOrNotOk.OK) && consentService.confirmConsent(authId, xRequestID)) {
 
             if (Boolean.TRUE.equals(consentEntity.getConsentConfirmed())) {
-                throw new RuntimeException("Programming error, " + consentEntity.getConsentType() +
-                    " consent createed at " + consentEntity.getCreationTime() + " must not be confirmed yet");
+                throw new RuntimeException("Programming error, " + consentEntity.getConsentType()
+                    + " consent createed at " + consentEntity.getCreationTime() + " must not be confirmed yet");
             }
             // There may exist a valid consent that has not been used, because client
             // wanted to retrieve new consent. So we search all valid consents and delete them.

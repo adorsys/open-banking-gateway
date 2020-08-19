@@ -5,8 +5,6 @@ import { AccountReport } from '../../api';
 import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
 import { HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
-import { tap } from 'rxjs/operators';
-import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-list-transactions',
@@ -23,10 +21,8 @@ export class ListTransactionsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private aisService: AisService,
-    private storageService: StorageService,
-    private settingsService: SettingsService
+    private storageService: StorageService
   ) {
-    this.settingsService.getLoT().pipe(tap(el => this.loTRetrievalInformation = el)).subscribe();
   }
 
   ngOnInit() {
@@ -36,7 +32,7 @@ export class ListTransactionsComponent implements OnInit {
   }
 
   private loadTransactions(): void {
-    this.aisService.getTransactions(this.bankId, this.accountId, this.loTRetrievalInformation).subscribe(response => {
+    this.aisService.getTransactions(this.bankId, this.accountId, this.storageService.getSettings().lot).subscribe(response => {
       switch (response.status) {
         case 202:
           console.log('list tx got REDIRECT');
