@@ -12,7 +12,7 @@ describe('PaymentAccountPaymentsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
-      declarations: [ PaymentAccountPaymentsComponent ],
+      declarations: [PaymentAccountPaymentsComponent],
       providers: [
         {
           provide: ActivatedRoute,
@@ -21,8 +21,7 @@ describe('PaymentAccountPaymentsComponent', () => {
           }
         }
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

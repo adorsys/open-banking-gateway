@@ -40,4 +40,8 @@ export class ConfirmComponent implements OnInit {
     console.log('NOW GO TO:', decodeURIComponent(this.confirmData.redirectStruct.redirectUrl));
     window.location.href = decodeURIComponent(this.confirmData.redirectStruct.redirectUrl);
   }
+
+  roundToTwoDigitsAfterComma(floatNumber) {
+    return (Math.round(floatNumber * 100) / 100).toFixed(2);
+  }
 }
