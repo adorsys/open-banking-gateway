@@ -148,4 +148,11 @@
             </where>
         </update>
     </changeSet>
+
+    <changeSet id="load_csv_bank_action_data" author="iiu">
+        <comment>Loads XS2A and HBCI bank action and bank sub action for an external sql file</comment>
+        <sqlFile path="bank_action_data.sql"
+                 relativeToChangelogFile="true"/>
+        <rollback />
+    </changeSet>
 </databaseChangeLog>
