@@ -97,7 +97,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
                 consentEntity.getConsentType(),
                 Boolean.TRUE);
             for (ConsentEntity oldValidConsent : consentList) {
-                log.info("DELETE OLD VALID {} CONSENT from {}", oldValidConsent.getConsentType(), oldValidConsent.getCreationTime());
+                log.debug("delete old valid {} consent from {}", oldValidConsent.getConsentType(), oldValidConsent.getCreationTime());
             }
 
             log.debug("consent with authId {} is now valid", authId);
@@ -105,7 +105,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
             consentRepository.save(consentEntity);
 
         } else {
-            log.info("Consent was denied by user: DELETE {} CONSENT from {}", consentEntity.getConsentType(), consentEntity.getCreationTime());
+            log.info("Consent was denied by user: delete {} consent from {}", consentEntity.getConsentType(), consentEntity.getCreationTime());
             consentRepository.delete(consentEntity);
         }
         return sessionLogicService.addSessionMaxAgeToHeader(

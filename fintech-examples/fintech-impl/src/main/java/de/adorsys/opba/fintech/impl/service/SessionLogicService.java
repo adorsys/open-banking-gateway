@@ -160,7 +160,7 @@ public class SessionLogicService {
         if (sessionCookieValue == null) {
             throw new RuntimeException("did expect session cookie to exist for " + restRequestContext.getUri());
         }
-        log.info("add renewed session cookie and header field for max age to response {}", restRequestContext.getUri());
+        log.debug("add renewed session cookie and header field for max age to response {}", restRequestContext.getUri());
         HttpHeaders h = HttpHeaders.writableHttpHeaders(e.getHeaders());
         h.set(Consts.HEADER_SESSION_MAX_AGE, "" + cookieConfigProperties.getSessioncookie().getMaxAge());
         h.add(HttpHeaders.SET_COOKIE, getSessionCookieAsStringForHeader(sessionCookieValue));

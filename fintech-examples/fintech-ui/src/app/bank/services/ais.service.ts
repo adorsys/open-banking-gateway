@@ -22,8 +22,6 @@ export class AisService {
     const okurl = window.location.pathname;
     const notOkUrl = okurl.replace(/account.*/, '');
 
-    console.log('loa ', loARetrievalInformation, ' with ok url    ',  okurl );
-    console.log('loa ', loARetrievalInformation, ' with not ok url',  notOkUrl );
     return this.finTechAccountInformationService
       .aisAccountsGET(bankId, '', '', okurl, notOkUrl, loARetrievalInformation, 'response')
       .pipe(map(response => response));
@@ -33,8 +31,6 @@ export class AisService {
     const okurl = window.location.pathname;
     const notOkUrl = okurl.replace(/account.*/, 'account');
 
-    console.log('lot ', loTRetrievalInformation, ' with ok url    ',  okurl );
-    console.log('lot ', loTRetrievalInformation, ' with not ok url',  notOkUrl );
     return this.finTechAccountInformationService.aisTransactionsGET(
       bankId,
       accountId,
