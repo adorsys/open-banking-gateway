@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.util.List;
 
 import static de.adorsys.opba.db.CsvConvertTest.ENABLE_HEAVY_TESTS;
@@ -35,7 +36,7 @@ public class CsvConvertTest {
     public void convertToDbCsv() {
         List<String> banks = readResourceLines(BANKS_SOURCE);
         banks.remove(0);
-        createTargetFileIfNotExists(BANKS_TARGET);
+        createOrClearFile(BANKS_TARGET);
 
         for (String bank : banks) {
             writeXs2aData(bank);
@@ -122,13 +123,25 @@ public class CsvConvertTest {
         return Resources.readLines(Resources.getResource(path), UTF_8);
     }
 
-    @SneakyThrows
-    private void createTargetFileIfNotExists(String filePath) {
-        boolean exists = new File(filePath).exists();
+    private void createOrClearFile(String path) {
+        boolean exists = new File(path).exists();
 
         if (!exists){
-            Files.touch(new File(filePath));
+            createFile(path);
+            return;
         }
+
+        clearFile(path);
+    }
+
+    @SneakyThrows
+    private void clearFile(String path) {
+        new FileWriter(path, false).close();
+    }
+
+    @SneakyThrows
+    private void createFile(String path) {
+        Files.touch(new File(path));
     }
 
     @SneakyThrows
