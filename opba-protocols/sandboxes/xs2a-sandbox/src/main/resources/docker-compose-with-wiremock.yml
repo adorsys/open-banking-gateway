@@ -1,9 +1,9 @@
 version: "3.4"
 
 services:
-  xs2a-sandbox-postgres:
+  xs2a-wiremock:
     image: rodolpheche/wiremock:2.27.1
     ports:
-      - 8090:8080
+      - 20014:8080
     volumes:
-      - ./src/main/resources/wiremock-mixtures
+      - ./wiremock-fixtures/:/home/wiremock
