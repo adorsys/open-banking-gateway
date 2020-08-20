@@ -20,10 +20,10 @@ import { RedirectAfterConsentDeniedComponent } from './redirect-after-consent-de
 import { SessionExpiredComponent } from './session-expired/session-expired.component';
 import { SimpleTimer } from 'ng2-simple-timer';
 import { NgHttpLoaderModule } from 'ng-http-loader';
-import { RedirectAfterPaymentComponent } from "./redirect-after-payment/redirect-after-payment.component";
-import { RedirectAfterPaymentDeniedComponent } from "./redirect-after-payment-denied/redirect-after-payment-denied.component";
-import { Oauth2LoginComponent } from "./oauth2-login/oauth2-login.component";
-import { ForbiddenOauth2Component } from "./invalid-oauth2/forbidden-oauth2.component";
+import { RedirectAfterPaymentComponent } from './redirect-after-payment/redirect-after-payment.component';
+import { RedirectAfterPaymentDeniedComponent } from './redirect-after-payment-denied/redirect-after-payment-denied.component';
+import { Oauth2LoginComponent } from './oauth2-login/oauth2-login.component';
+import { ForbiddenOauth2Component } from './invalid-oauth2/forbidden-oauth2.component';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {

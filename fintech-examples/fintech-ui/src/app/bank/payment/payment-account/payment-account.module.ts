@@ -18,5 +18,4 @@ import { PaymentAccountPaymentsComponent } from '../payment-account-payments/pay
   ],
   imports: [CommonModule, ShareModule, PaymentAccountRoutingModule]
 })
-export class PaymentAccountModule {
-}
+export class PaymentAccountModule {}

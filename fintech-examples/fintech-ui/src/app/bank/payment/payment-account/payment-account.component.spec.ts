@@ -25,8 +25,7 @@ describe('PaymentAccountComponent', () => {
           }
         }
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -41,5 +40,4 @@ describe('PaymentAccountComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
 });

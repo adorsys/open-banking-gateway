@@ -11,9 +11,8 @@ describe('PaymentAccountsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
-      declarations: [ PaymentAccountsComponent ]
-    })
-    .compileComponents();
+      declarations: [PaymentAccountsComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

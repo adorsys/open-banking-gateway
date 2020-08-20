@@ -27,9 +27,8 @@ const routes: Routes = [
         path: ResultComponent.ROUTE,
         component: ResultComponent
       }
-  ]
+    ]
   }
-
 ];
 
 @NgModule({

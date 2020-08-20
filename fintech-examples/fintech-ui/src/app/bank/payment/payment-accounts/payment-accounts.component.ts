@@ -13,10 +13,7 @@ export class PaymentAccountsComponent implements OnInit {
   selectedAccount;
   accounts: AccountStruct[] = [];
 
-  constructor(private storageService: StorageService,
-              private router: Router,
-              private route: ActivatedRoute) {
-  }
+  constructor(private storageService: StorageService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.accounts = this.storageService.getLoa();
@@ -31,5 +28,4 @@ export class PaymentAccountsComponent implements OnInit {
   isSelected(id) {
     return id === this.selectedAccount ? 'selected' : 'unselected';
   }
-
 }
