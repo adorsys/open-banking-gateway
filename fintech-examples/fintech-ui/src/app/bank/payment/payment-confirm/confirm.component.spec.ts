@@ -8,7 +8,7 @@ import { ConfirmData } from './confirm.data';
 import { RedirectStruct } from '../../redirect-page/redirect-struct';
 import { ClassSinglePaymentInitiationRequest } from '../../../api/model-classes/ClassSinglePaymentInitiationRequest';
 
-fdescribe('ConfirmComponent', () => {
+describe('ConfirmComponent', () => {
   let component: ConfirmComponent;
   let fixture: ComponentFixture<ConfirmComponent>;
 
@@ -58,8 +58,9 @@ fdescribe('ConfirmComponent', () => {
   });
 
   it('amount of money to be wired should be rounded properly', () => {
-    const numb = 2122;
+    const numb = 2122.2;
+    const rest = 2122.2;
     spyOn(component, 'roundToTwoDigitsAfterComma').withArgs(numb);
-    expect(numb).toEqual(2122.0);
+    expect(numb).toEqual(rest);
   });
 });
