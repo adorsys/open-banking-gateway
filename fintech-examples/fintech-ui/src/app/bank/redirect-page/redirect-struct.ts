@@ -10,7 +10,6 @@ export class RedirectTupelForMap {
   xsrfToken: string;
   validUntil: Date;
   redirectType: RedirectType;
-
 }
 
 export enum RedirectType {
@@ -19,6 +18,5 @@ export enum RedirectType {
 }
 
 export class AccountStruct {
-  constructor(public resourceId : string, public iban : string, public name : string) {
-  }
+  constructor(public resourceId: string, public iban: string, public name: string) {}
 }
