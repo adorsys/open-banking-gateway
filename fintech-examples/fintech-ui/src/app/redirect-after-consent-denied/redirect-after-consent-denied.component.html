@@ -1,15 +1,1 @@
-<div class="modal">
-  <div class="card card-frame">
-    <div class="d-flex justify-content-center mt-5">
-      <img alt="redirection" class="card-img" src="assets/icons/icons8-network 2.png" />
-    </div>
-    <div class="card-body">
-      <h4 class="card-title">Consent denied</h4>
-      <p class="card-text text-center">Your consent was denied!</p>
-      <div class="d-flex flex-column mt-3">
-        <button (click)="submit()" class="btn btn-primary btn-center">ok</button>
-      </div>
-    </div>
-  </div>
-</div>
-
+<app-modal-card [cardModal]="cardModal" (eventEmitter)="onSubmit($event)"></app-modal-card>

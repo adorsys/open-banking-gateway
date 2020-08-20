@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConsentAuthorizationService } from '../bank/services/consent-authorization.service';
 import { Consent } from '../models/consts';
+import { ModalCard } from '../models/modalCard.model';
 
 @Component({
   selector: 'app-redirect-after-consent',
@@ -9,6 +10,11 @@ import { Consent } from '../models/consts';
   styleUrls: ['./redirect-after-consent.component.scss']
 })
 export class RedirectAfterConsentComponent implements OnInit {
+  cardModal: ModalCard = {
+    title: 'Consent has been granted',
+    description: 'Consent has been granted'
+  };
+
   constructor(private authService: ConsentAuthorizationService, private route: ActivatedRoute) {}
 
   ngOnInit() {

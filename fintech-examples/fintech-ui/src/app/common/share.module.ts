@@ -6,9 +6,10 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularIbanModule } from 'angular-iban';
 import { InfoModule } from '../errorsHandler/info/info.module';
 import { SearchComponent } from './search/search.component';
+import { ModalCardComponent } from './modal-card/modal-card.component';
 
 @NgModule({
-  declarations: [SearchComponent],
+  declarations: [SearchComponent, ModalCardComponent],
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule, InfoModule, NgbModalModule, AngularIbanModule],
   exports: [
     CommonModule,
@@ -16,6 +17,7 @@ import { SearchComponent } from './search/search.component';
     HttpClientModule,
     InfoModule,
     SearchComponent,
+    ModalCardComponent,
     NgbModalModule,
     AngularIbanModule
   ]

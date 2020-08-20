@@ -104,7 +104,7 @@ export class StorageService {
     return JSON.parse(value);
   }
 
-  public get isUserRedirected(): boolean {
+  public getUserRedirected(): boolean {
     const value = localStorage.getItem(Session.USER_REDIRECTED);
     if (value === null) {
       return false;
@@ -112,7 +112,7 @@ export class StorageService {
     return JSON.parse(value);
   }
 
-  public set isUserRedirected(redirected: boolean) {
+  public setUserRedirected(redirected: boolean): void {
     localStorage.setItem(Session.USER_REDIRECTED, JSON.stringify(redirected));
   }
 
