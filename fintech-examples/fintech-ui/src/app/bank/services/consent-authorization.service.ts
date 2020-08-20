@@ -12,8 +12,7 @@ export class ConsentAuthorizationService {
     private router: Router,
     private finTechAuthorizationService: FinTechAuthorizationService,
     private storageService: StorageService
-  ) {
-  }
+  ) {}
 
   fromConsent(okOrNotOk: Consent, redirectCode: string) {
     const authId = this.storageService.getRedirectMap().get(redirectCode).authId;
@@ -30,9 +29,9 @@ export class ConsentAuthorizationService {
       // this is added to handle url where to forward after redirection
       // to be removed when issue https://github.com/adorsys/open-banking-gateway/issues/848 is resolved
       // or Fintech UI refactored
-      if (this.storageService.isUserRedirected) {
+      if (this.storageService.getUserRedirected) {
         // we use the redirect url from the Fintech server when we are redirected back
-        this.storageService.isUserRedirected = false;
+        this.storageService.setUserRedirected(false);
       }
       const settings = this.storageService.getSettings();
       settings.loa = LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;

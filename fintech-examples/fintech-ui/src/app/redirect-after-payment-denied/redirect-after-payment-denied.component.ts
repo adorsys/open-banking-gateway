@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConsentAuthorizationService } from '../bank/services/consent-authorization.service';
 import { Consent, Payment } from '../models/consts';
+import { ModalCard } from '../models/modalCard.model';
 
 @Component({
   selector: 'app-redirect-after-payment-denied',
@@ -10,6 +11,12 @@ import { Consent, Payment } from '../models/consts';
 })
 export class RedirectAfterPaymentDeniedComponent implements OnInit {
   private redirectCode;
+  cardModal: ModalCard = {
+    title: 'Request to abort payment was sent',
+    description: 'Your payment was denied!',
+    imageUrl: 'assets/icons/icons8-network 2.png',
+    confirmBtn: true
+  };
 
   constructor(
     private consentAuthorizationService: ConsentAuthorizationService,
@@ -20,8 +27,10 @@ export class RedirectAfterPaymentDeniedComponent implements OnInit {
     this.redirectCode = this.route.snapshot.queryParams.redirectCode;
   }
 
-  submit() {
-    this.redirectCode = this.route.snapshot.queryParams.redirectCode;
-    this.consentAuthorizationService.fromPayment(Payment.NOT_OK, this.redirectCode);
+  onSubmit(value: boolean) {
+    if (value) {
+      this.redirectCode = this.route.snapshot.queryParams.redirectCode;
+      this.consentAuthorizationService.fromPayment(Consent.NOT_OK, this.redirectCode);
+    }
   }
 }

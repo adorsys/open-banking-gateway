@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 
 import { RedirectPageComponent } from './redirect-page.component';
-import { RedirectCardComponent } from '../redirect-card/redirect-card.component';
 import { ConsentAuthorizationService } from '../services/consent-authorization.service';
 import { RedirectStruct } from './redirect-struct';
 
@@ -14,7 +14,8 @@ describe('RedirectPageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
-      declarations: [RedirectPageComponent, RedirectCardComponent]
+      declarations: [RedirectPageComponent],
+      schemas: [NO_ERRORS_SCHEMA]
     })
       .overrideComponent(RedirectPageComponent, {
         set: {
