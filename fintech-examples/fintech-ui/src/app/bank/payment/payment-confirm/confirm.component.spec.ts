@@ -58,8 +58,8 @@ describe('ConfirmComponent', () => {
   });
 
   it('amount of money to be wired should be rounded properly', () => {
-    const numb = 2122.2;
-    const rest = 2122.2;
+    const numb = 2122;
+    const rest = 2122.0;
     spyOn(component, 'roundToTwoDigitsAfterComma').withArgs(numb);
     expect(numb).toEqual(rest);
   });
