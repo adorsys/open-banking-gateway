@@ -149,7 +149,7 @@
         </update>
     </changeSet>
 
-    <changeSet id="load_csv_bank_action_data" author="iiu">
+    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-20">
         <comment>Loads XS2A and HBCI bank action and bank sub action for an external sql file</comment>
         <sqlFile path="bank_action_data.sql"
                  relativeToChangelogFile="true"/>
