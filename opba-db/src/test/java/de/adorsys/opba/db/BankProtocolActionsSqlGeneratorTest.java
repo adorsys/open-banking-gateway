@@ -14,21 +14,25 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 
-import static de.adorsys.opba.db.SqlConvertTest.ENABLE_SQL_CONVERSION;
+import static de.adorsys.opba.db.BankProtocolActionsSqlGeneratorTest.ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+/**
+ * Is not truly a test. This class generates 'banks_random_data.csv' out of 'banks.csv',
+ * which contains sql insert statements into 'opb_bank_action' and 'opb_bank_sub_action' tables
+ */
 @SpringBootTest(classes = TestConfig.class)
-@EnabledIfEnvironmentVariable(named = ENABLE_SQL_CONVERSION, matches = "true")
-public class SqlConvertTest {
-    public static final String ENABLE_SQL_CONVERSION = "ENABLE_SQL_CONVERSION";
+@EnabledIfEnvironmentVariable(named = ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION, matches = "true")
+public class BankProtocolActionsSqlGeneratorTest {
+    public static final String ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION = "ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION";
 
     private static final String BANKS_SOURCE = "migration/migrations/banks.csv";
     private static final String BANKS_TARGET = "src/main/resources/migration/migrations/bank_action_data.sql";
 
-    @Value("${test.bank-action-id}")
+    @Value("${bank-action-generator.action.start-id}")
     private Integer bankActionId;
 
-    @Value("${test.bank-sub-action-id}")
+    @Value("${bank-action-generator.sub-action.start-id}")
     private Integer bankSubActionId;
 
     @Test

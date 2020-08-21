@@ -1,3 +1,5 @@
-test:
-    bank-action-id: 20
-    bank-sub-action-id: 20
+bank-action-generator:
+    action:
+        start-id: 20
+    sub-action:
+        start-id: 20
