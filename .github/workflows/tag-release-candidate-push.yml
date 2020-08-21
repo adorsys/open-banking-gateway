@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Build project and run default test suite
+      - name: Build project and run full test suite
         run: ./scripts/build_and_test.sh
 
       - name: Deploy release-candidate JARs to Github packages
