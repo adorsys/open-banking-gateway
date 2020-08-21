@@ -14,13 +14,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 
-import static de.adorsys.opba.db.CsvConvertTest.ENABLE_HEAVY_TESTS;
+import static de.adorsys.opba.db.SqlConvertTest.ENABLE_SQL_CONVERSION;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @SpringBootTest(classes = TestConfig.class)
-@EnabledIfEnvironmentVariable(named = ENABLE_HEAVY_TESTS, matches = "true")
-public class CsvConvertTest {
-    public static final String ENABLE_HEAVY_TESTS = "ENABLE_CSV_CONVERSION";
+@EnabledIfEnvironmentVariable(named = ENABLE_SQL_CONVERSION, matches = "true")
+public class SqlConvertTest {
+    public static final String ENABLE_SQL_CONVERSION = "ENABLE_SQL_CONVERSION";
 
     private static final String BANKS_SOURCE = "migration/migrations/banks.csv";
     private static final String BANKS_TARGET = "src/main/resources/migration/migrations/bank_action_data.sql";
@@ -33,7 +33,7 @@ public class CsvConvertTest {
 
     @Test
     @SneakyThrows
-    public void convertToDbCsv() {
+    public void convertToDbSql() {
         List<String> banks = readResourceLines(BANKS_SOURCE);
         banks.remove(0);
         prepareDestinationFile(BANKS_TARGET);
