@@ -36,7 +36,7 @@ public class CsvConvertTest {
     public void convertToDbCsv() {
         List<String> banks = readResourceLines(BANKS_SOURCE);
         banks.remove(0);
-        createOrClearFile(BANKS_TARGET);
+        prepareDestinationFile(BANKS_TARGET);
 
         for (String bank : banks) {
             writeXs2aData(bank);
@@ -44,7 +44,7 @@ public class CsvConvertTest {
         }
     }
 
-    private void writeXs2aData(String bankRecord) { ;
+    private void writeXs2aData(String bankRecord) {
         String[] data = bankRecord.split(",");
         int authorizationId;
 
@@ -123,7 +123,7 @@ public class CsvConvertTest {
         return Resources.readLines(Resources.getResource(path), UTF_8);
     }
 
-    private void createOrClearFile(String path) {
+    private void prepareDestinationFile(String path) {
         boolean exists = new File(path).exists();
 
         if (!exists){
