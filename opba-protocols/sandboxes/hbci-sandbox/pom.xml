@@ -139,7 +139,6 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>de.adorsys.opba.protocol.sandbox.hbci.HbciServerApplication</mainClass>
-                    <executable>true</executable>
                     <skip>false</skip>
                     <classifier>exec</classifier>
                 </configuration>
