@@ -7,14 +7,12 @@ on:
       - rc-.*
 
 env:
-  DEVELOP_MAVEN_REPOSITORY: 'https://maven.pkg.github.com/valb3r/open-banking-gateway'
-  GITHUB_TOKEN:
-  # Note that these are DEVELOP secrets, not ones used for real deployment
-  # They are used to have very close pipeline to one present on production
+  GITHUB_USER: valb3r-adorsys
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GPG_EXECUTABLE: gpg
-  GPG_PASSPHRASE: ${{ secrets.DEVELOP_GPG_PASSPHRASE }}
-  GPG_SECRET_KEY: ${{ secrets.DEVELOP_GPG_SECRET_KEY }}
-  GPG_OWNERTRUST: ${{ secrets.DEVELOP_GPG_OWNERTRUST }}
+  GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+  GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
+  GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
   DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
 
 jobs:
@@ -29,7 +27,7 @@ jobs:
       - name: Build project and run default test suite
         run: ./scripts/build_and_test.sh
 
-      - name: Deploy develop JARs to Github packages
+      - name: Deploy release-candidate JARs to Github packages
         run: ./scripts/deploy_mvn_release_candidate.sh
 
       - name: Deploy develop artifacts to OpenShift

@@ -18,11 +18,9 @@ jobs:
       - name: Build project and run default test suite
         run: ./scripts/build_and_test.sh
 
-      - name: Deploy develop JARs to Github packages
-        run: ./scripts/deploy_mvn_develop.sh
+      - name: Check deployment flow and check artifact signing
+        run: ./scripts/deploy_check_mvn_develop.sh
         env:
-          GITHUB_USER: valb3r-adorsys
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Note that these BELOW are DEVELOP secrets, not ones used for real deployment
           # They are used to have very close pipeline to one present on production
           GPG_EXECUTABLE: gpg
