@@ -541,6 +541,14 @@
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <configuration>
                             <doclint>none</doclint>
+                            <!-- Fixes error - class file for javax.interceptor.InterceptorBinding not found -->
+                            <additionalDependencies>
+                                <additionalDependency>
+                                    <groupId>javax.interceptor</groupId>
+                                    <artifactId>javax.interceptor-api</artifactId>
+                                    <version>1.2.2</version>
+                                </additionalDependency>
+                            </additionalDependencies>
                         </configuration>
                         <executions>
                             <execution>
