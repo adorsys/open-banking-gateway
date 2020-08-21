@@ -6,23 +6,19 @@ getProp = (name, defaultValue) => {
   return defaultValue;
 };
 
-getOpbaUrl = () => {
-  return getProp('OPBA_SERVER_URL', 'https://obg-dev-openbankinggateway.cloud.adorsys.de');
+getFintechUrl = () => {
+  return getProp('OPBA_FINTECH_URL', 'https://obg-dev-fintechui.cloud.adorsys.de/fintech-api-proxy');
 };
 
 getConsentUiUrl = () => {
   return getProp('OPBA_CONSENT_UI_URL', 'https://obg-dev-consentui.cloud.adorsys.de');
 };
 
-getFintechUiUrl = () => {
-  return getProp('OPBA_CONSENT_UI_URL', 'https://obg-dev-fintechui.cloud.adorsys.de');
-};
-
 const PROXY_CONFIG = {
-  '/embedded-server/*': {
-    target: getOpbaUrl(),
+  '/fintech-api-proxy/*': {
+    target: getFintechUrl(),
     pathRewrite: {
-      '^/embedded-server': ''
+      '^/fintech-api-proxy': ''
     },
     logLevel: 'debug',
     secure: false,
@@ -35,13 +31,6 @@ const PROXY_CONFIG = {
           proxyRes.headers['location'] = proxyRes.headers['location'].replace(
             getConsentUiUrl(),
             'http://localhost:4200'
-          );
-        }
-        //getback to fintechui
-        if (proxyRes.headers['location'].includes(getFintechUiUrl())) {
-          proxyRes.headers['location'] = proxyRes.headers['location'].replace(
-            getFintechUiUrl(),
-            'http://localhost:4444'
           );
         }
       }

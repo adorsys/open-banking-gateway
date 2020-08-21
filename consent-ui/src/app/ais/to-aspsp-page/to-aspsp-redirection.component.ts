@@ -45,7 +45,7 @@ export class ToAspspRedirectionComponent implements OnInit {
   }
 
   private loadRedirectUri() {
-    localStorage.setItem(this.authorizationId, "false")
+    localStorage.setItem(this.authorizationId, 'false');
     this.authStateConsentAuthorizationService
       .authUsingGET(this.authorizationId, this.sessionService.getRedirectCode(this.authorizationId), 'response')
       .subscribe(res => {

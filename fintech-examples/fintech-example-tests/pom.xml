@@ -5,7 +5,7 @@
     <parent>
         <artifactId>fintech-examples</artifactId>
         <groupId>de.adorsys.opba</groupId>
-        <version>0.19.1-SNAPSHOT</version>
+        <version>0.19.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>de.adorsys.opba</groupId>
             <artifactId>opba-embedded-starter-tests</artifactId>
-            <version>0.19.1-SNAPSHOT</version>
+            <version>0.19.2-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

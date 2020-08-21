@@ -10,14 +10,9 @@ import { AccountStruct } from '../../redirect-page/redirect-struct';
 })
 export class PaymentAccountComponent implements OnInit {
   public static ROUTE = 'account';
-  account:AccountStruct;
+  account: AccountStruct;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private storageService: StorageService
-  ) {}
-
+  constructor(private router: Router, private route: ActivatedRoute, private storageService: StorageService) {}
 
   ngOnInit() {
     // const bankId = this.route.snapshot.paramMap.get('bankid');
@@ -26,7 +21,7 @@ export class PaymentAccountComponent implements OnInit {
     this.router.navigate(['payments'], { relativeTo: this.route });
   }
 
-  private getSelectedAccount(accountId: string) : AccountStruct {
+  private getSelectedAccount(accountId: string): AccountStruct {
     const list = this.storageService.getLoa();
     if (list === null) {
       throw new Error('no cached list of accounts available.');
