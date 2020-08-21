@@ -21,7 +21,7 @@ export class InitiateComponent implements OnInit {
   bankId = '';
   accountId = '';
   debitorIban = '';
-  paymentRequiresAuthentication = false
+  paymentRequiresAuthentication = false;
   paymentForm: FormGroup;
 
   constructor(
@@ -34,7 +34,10 @@ export class InitiateComponent implements OnInit {
   ) {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
     this.accountId = this.route.snapshot.paramMap.get('accountid');
-    this.settingsService.getPaymentRequiresAuthentication().pipe(tap(el => this.paymentRequiresAuthentication = el)).subscribe();
+    this.settingsService
+      .getPaymentRequiresAuthentication()
+      .pipe(tap(el => (this.paymentRequiresAuthentication = el)))
+      .subscribe();
   }
 
   ngOnInit() {
@@ -67,8 +70,17 @@ export class InitiateComponent implements OnInit {
     paymentRequest.debitorIban = this.debitorIban;
     paymentRequest.purpose = this.paymentForm.getRawValue().purpose;
     this.fintechSinglePaymentInitiationService
-      .initiateSinglePayment(this.bankId, this.accountId, '', '', okurl, notOkUrl, paymentRequest,
-        this.paymentRequiresAuthentication, 'response')
+      .initiateSinglePayment(
+        this.bankId,
+        this.accountId,
+        '',
+        '',
+        okurl,
+        notOkUrl,
+        paymentRequest,
+        this.paymentRequiresAuthentication,
+        'response'
+      )
       .pipe(map(response => response))
       .subscribe(response => {
         console.log('response status of payment call is ', response.status);
