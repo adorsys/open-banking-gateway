@@ -9,7 +9,7 @@ const routes: Routes = [
     component: BankComponent,
     children: [
       {
-        path: 'account',
+        path: 'accounts',
         loadChildren: () => import('./list-accounts/list-accounts.module').then(m => m.ListAccountsModule)
       },
       {

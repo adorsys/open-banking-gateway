@@ -18,6 +18,9 @@ export class ListAccountsComponent implements OnInit {
   selectedAccount: string;
   bankId = '';
   loARetrievalInformation;
+  id = 'dfdfdfd4drrrrr-444rr33-er43';
+  iban = 'DE27500105174211347926';
+  name = 'bob';
 
   constructor(
     private router: Router,
@@ -75,6 +78,8 @@ export class ListAccountsComponent implements OnInit {
           this.storageService.redirectCancelUrl = this.router.url;
           this.accounts = response.body.accounts;
           const loa = [];
+          loa.push(new AccountStruct(this.id, this.iban, this.name));
+          this.accounts.push(loa.pop());
           for (const accountDetail of this.accounts) {
             loa.push(new AccountStruct(accountDetail.resourceId, accountDetail.iban, accountDetail.name));
           }
