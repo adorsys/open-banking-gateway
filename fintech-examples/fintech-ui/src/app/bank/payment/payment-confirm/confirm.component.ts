@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Consent, Consts, Payment } from '../../../models/consts';
+import { Consts, Payment } from '../../../models/consts';
 import { ConfirmData } from './confirm.data';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsentAuthorizationService } from '../../services/consent-authorization.service';
