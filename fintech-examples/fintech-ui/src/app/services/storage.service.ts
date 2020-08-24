@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { toLocaleString } from '../models/consts';
+import { Consts, LoARetrievalInformation, LoTRetrievalInformation, toLocaleString } from '../models/consts';
 import { AccountStruct, RedirectTupelForMap, RedirectType } from '../bank/redirect-page/redirect-struct';
+import { SettingsData } from '../bank/settings/settings.component';
 
 @Injectable({
   providedIn: 'root'
@@ -115,18 +116,6 @@ export class StorageService {
     localStorage.setItem(Session.USER_REDIRECTED, JSON.stringify(redirected));
   }
 
-  public get redirectCancelUrl(): string {
-    const value = localStorage.getItem(Session.REDIRECT_CANCEL_URL);
-    if (value === null) {
-      return null;
-    }
-    return value;
-  }
-
-  public set redirectCancelUrl(redirectCancelUrl: string) {
-    localStorage.setItem(Session.REDIRECT_CANCEL_URL, redirectCancelUrl);
-  }
-
   private isAnySessionValid(): boolean {
     const date: Date = this.getValidUntilDate();
     if (this.isDateValid(date)) {
@@ -161,6 +150,22 @@ export class StorageService {
   private setRedirectMap(map: Map<string, RedirectTupelForMap>) {
     localStorage.setItem(Session.REDIRECT_MAP, JSON.stringify(Array.from(map.entries())));
   }
+
+  public getSettings(): SettingsData {
+    let data = localStorage.getItem(Consts.LOCAL_STORAGE_SETTINGS)
+    if (!data) {
+      this.setSettings(new SettingsData(LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
+        LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT, false));
+      data = localStorage.getItem(Consts.LOCAL_STORAGE_SETTINGS)
+    }
+
+    return JSON.parse(data) as SettingsData
+  }
+
+  public setSettings(data: SettingsData) {
+    localStorage.setItem(Consts.LOCAL_STORAGE_SETTINGS, JSON.stringify(data));
+  }
+
 }
 
 enum Session {

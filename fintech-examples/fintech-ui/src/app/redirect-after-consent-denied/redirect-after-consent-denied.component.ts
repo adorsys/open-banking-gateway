@@ -13,7 +13,7 @@ export class RedirectAfterConsentDeniedComponent implements OnInit {
   private redirectCode;
 
   constructor(
-    private authService: ConsentAuthorizationService,
+    private consentAuthorizationService: ConsentAuthorizationService,
     private route: ActivatedRoute,
     private storageService: StorageService
   ) {}
@@ -24,6 +24,6 @@ export class RedirectAfterConsentDeniedComponent implements OnInit {
 
   submit() {
     this.redirectCode = this.route.snapshot.queryParams.redirectCode;
-    this.authService.fromPaymentOk(Payment.NOT_OK, this.redirectCode);
+    this.consentAuthorizationService.fromPayment(Payment.NOT_OK, this.redirectCode);
   }
 }

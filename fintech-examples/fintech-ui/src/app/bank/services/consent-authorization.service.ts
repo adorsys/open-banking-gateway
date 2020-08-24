@@ -1,7 +1,7 @@
 import { FinTechAuthorizationService } from '../../api';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { Consent, Payment } from '../../models/consts';
+import { Consent, LoARetrievalInformation, LoTRetrievalInformation, Payment } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 
 @Injectable({
@@ -10,16 +10,20 @@ import { StorageService } from '../../services/storage.service';
 export class ConsentAuthorizationService {
   constructor(
     private router: Router,
-    private authService: FinTechAuthorizationService,
+    private finTechAuthorizationService: FinTechAuthorizationService,
     private storageService: StorageService
-  ) {}
+  ) {
+  }
 
-  fromConsentOk(okOrNotOk: Consent, redirectCode: string) {
+  fromConsent(okOrNotOk: Consent, redirectCode: string) {
     const authId = this.storageService.getRedirectMap().get(redirectCode).authId;
     const xsrfToken = this.storageService.getRedirectMap().get(redirectCode).xsrfToken;
-    console.log('pass auth id:' + authId + ' okOrNotOk ' + okOrNotOk + ' redirect code ' + redirectCode);
-    this.authService.fromConsentGET(authId, okOrNotOk, redirectCode, '', xsrfToken, 'response').subscribe(resp => {
-      console.log('fromConsent has returned. now delete redirect cookie for redirect code', redirectCode);
+    console.log('ConsentAuthorizationService.fromConsent: pass auth id:' + authId + ' for ' + okOrNotOk + ' with redirect code '
+      + redirectCode);
+    this.finTechAuthorizationService.fromConsentGET(authId, okOrNotOk, redirectCode, '', xsrfToken,
+      'response').subscribe(resp => {
+      console.log('ConsentAuthorizationService.fromConsent: ' +
+        'server responded. Now delete redirect cookie for redirect code ', redirectCode);
       this.storageService.resetRedirectCode(redirectCode);
       const location = resp.headers.get('Location');
 
@@ -29,22 +33,29 @@ export class ConsentAuthorizationService {
       if (this.storageService.isUserRedirected) {
         // we use the redirect url from the Fintech server when we are redirected back
         this.storageService.isUserRedirected = false;
-        this.router.navigate([location]);
-      } else {
-        // otherwise we use url saved before redirection occurred
-        this.router.navigate([this.storageService.redirectCancelUrl]);
       }
+      const settings = this.storageService.getSettings();
+      settings.loa = LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
+      settings.lot = LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
+      this.storageService.setSettings(settings);
+
+      console.log('changed settings');
+      console.log('ConsentAuthorizationService.fromConsent: location (from response header) to navigate to is now:', location);
+      this.router.navigate([location]);
     });
   }
 
-  fromPaymentOk(okOrNotOk: Payment, redirectCode: string) {
+  fromPayment(okOrNotOk: Payment, redirectCode: string) {
     const authId = this.storageService.getRedirectMap().get(redirectCode).authId;
     const xsrfToken = this.storageService.getRedirectMap().get(redirectCode).xsrfToken;
-    console.log('pass auth id:' + authId + ' okOrNotOk ' + okOrNotOk + ' redirect code ' + redirectCode);
-    this.authService.fromPaymentGET(authId, okOrNotOk, redirectCode, '', xsrfToken, 'response').subscribe(resp => {
-      console.log('fromPayment has returned. now delete redirect cookie for redirect code', redirectCode);
-      this.storageService.resetRedirectCode(redirectCode);
-      this.router.navigate([resp.headers.get('Location')]);
-    });
+    console.log('ConsentAuthorizationService.fromPayment: pass auth id:' + authId + ' okOrNotOk ' + okOrNotOk + ' redirect code '
+      + redirectCode);
+    this.finTechAuthorizationService.fromPaymentGET(authId, okOrNotOk, redirectCode, '', xsrfToken, 'response')
+      .subscribe(resp => {
+        console.log('ConsentAuthorizationService.fromPayment: server responded. now delete redirect cookie for redirect code ',
+          redirectCode);
+        this.storageService.resetRedirectCode(redirectCode);
+        this.router.navigate([resp.headers.get('Location')]);
+      });
   }
 }

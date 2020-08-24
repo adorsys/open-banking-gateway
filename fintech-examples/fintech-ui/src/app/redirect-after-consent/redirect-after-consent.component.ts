@@ -13,7 +13,6 @@ export class RedirectAfterConsentComponent implements OnInit {
 
   ngOnInit() {
     const redirectCode = this.route.snapshot.queryParams.redirectCode;
-
-    this.authService.fromConsentOk(Consent.OK, redirectCode);
+    this.authService.fromConsent(Consent.OK, redirectCode);
   }
 }

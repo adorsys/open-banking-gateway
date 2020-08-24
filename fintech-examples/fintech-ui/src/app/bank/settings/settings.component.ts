@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
-import { SettingsService } from '../services/settings.service';
-import { tap } from 'rxjs/operators';
-import { LocalStorage } from '../../models/local-storage';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-settings',
@@ -27,23 +25,32 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private settingsService: SettingsService,
     private router: Router,
-    private formBuilder: FormBuilder)
+    private formBuilder: FormBuilder,
+    private storageService : StorageService)
   {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
-    this.settingsService.getLoA().pipe(tap(el => this.loa = el)).subscribe();
-    this.settingsService.getLoT().pipe(tap(el => this.lot = el)).subscribe();
-    this.settingsForm = formBuilder.group({
+
+    const settings = this.storageService.getSettings();
+    this.loa = settings.loa;
+    this.lot = settings.lot;
+    this.paymentRequiresAuthentication.setValue(settings.paymentRequiresAuthentication);
+
+    this.settingsForm = this.formBuilder.group({
       loa: [this.loa, Validators.required],
       lot: [this.lot, Validators.required],
       paymentRequiresAuthentication: this.paymentRequiresAuthentication
     });
-    this.settingsService.getPaymentRequiresAuthentication().subscribe(it => this.paymentRequiresAuthentication.setValue(it));
   }
 
   ngOnInit() {
+    console.log('settings ng on init');
+    const settings = this.storageService.getSettings();
+    this.loa = settings.loa;
+    this.lot = settings.lot;
+    this.paymentRequiresAuthentication.setValue(settings.paymentRequiresAuthentication);
 
+    console.log('this.loa = ', this.loa.toString());
   }
 
   onDeny() {
@@ -53,10 +60,8 @@ export class SettingsComponent implements OnInit {
   onConfirm() {
     this.loa = this.settingsForm.getRawValue().loa;
     this.lot = this.settingsForm.getRawValue().lot;
-    this.settingsService.setLoA(this.loa);
-    this.settingsService.setLoT(this.lot);
-    this.settingsService.setPaymentRequiresAuthentication(this.paymentRequiresAuthentication.value);
-    LocalStorage.setSettings(new SettingsData(this.loa, this.lot, this.paymentRequiresAuthentication.value));
+
+    this.storageService.setSettings(new SettingsData(this.loa, this.lot, this.settingsForm.getRawValue().paymentRequiresAuthentication));
     this.router.navigate(['..'], { relativeTo: this.route });
   }
 

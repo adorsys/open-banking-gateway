@@ -33,8 +33,8 @@ Form the perspective of this analysis, a PSU:
 An Account Servicing Payment Service Provider is a legal entity maintains payment account for natural and/or legal person.
 
 Form the perspective of this analysis, an ASPSP:
-- might provides an online interface for use by a PSU to authorize of a consent (OnlineBankingApi),
-- might provide an application for use by the PSU for use by the PSU to access the OnlineBankingApi (OnlineBankingUI), 
+- might provide an online interface for use by a PSU to authorize a consent (OnlineBankingApi),
+- might provide an application for use by the PSU to access the OnlineBankingApi (OnlineBankingUI), 
 - provides an online interface for use by a TPP for online access to banking services (OpenBankingApi),
 - might provide an online interface for use by a TPP to forward PSU consent authorization to the ASPSP (OpenBankingApi)
 
@@ -50,14 +50,14 @@ Form the perspective of this analysis, a TPP:
 
 The __psu-id@tpp__ is the PSU as known to the TPP. If TPP environment is designed to service a single FinTech, this identity can be set equal to the __psu-id@tpp__.
 
-If a TPPenvironment services multiple FinTech entities, the TPP will have to establish a separated PSU identity that references all corresponding FinTech identities. This requirement only exists because some OpenBanking specifications do not allow TPP to maintain multiple valid consents of the same type on the same bank account.
+If a TPP environment services multiple FinTech entities, the TPP will have to establish a separated PSU identity that references all corresponding FinTech identities. This requirement only exists because some OpenBanking specifications do not allow TPP to maintain multiple valid consents of the same type on the same bank account.
 
 In a situation where the TPP uses the same account information consent to service many FinTech, a TPP consent management layer must allow a PSU to revoke that consent for a designated FinTech without revoking the consent at the ASPSP level. 
 
 ### <a name="FinTech"></a>FinTech
 A FinTech is a legal entity that provides some sort of aggregated online banking/payment services to other natural and legal people.
 
-Form the perspective of this analysis, a FinTech:
+From the perspective of this analysis, a FinTech:
 - provides an online interface for use by a PSU to access banking services (FinTechApi),
 - provides an application for use by the PSU to consume banking services (FinTechUI, FinTechSearchUI).
 
@@ -74,10 +74,12 @@ A web browser is considered compliant with this framework when :
 - it can protect access to cookies.
 - it can manage redirection as defined by the http specification.
 
-For uniformity, we require native applications considered compliant with this framework to provide the same behavior as a compliant web browser based PsuUgerAgent with respect to cookie management and redirection. Following specifications deal with security threads associated with the redirection between UI-Applications on a PsuUserDevice: [RFC8252:OAuth 2.0 for Native Apps](https://tools.ietf.org/html/rfc8252),[RFC7636:Proof Key for Code Exchange by OAuth Public Clients](https://tools.ietf.org/html/rfc7636).
+For uniformity, we require native applications considered to be compliant with this framework to provide the same behavior as a compliant web browser based PsuUgerAgent with respect to cookie management and redirection. Following specifications deal with security threads associated with the redirection between UI-Applications on a PsuUserDevice: 
+[RFC8252:OAuth 2.0 for Native Apps](https://tools.ietf.org/html/rfc8252), 
+[RFC7636:Proof Key for Code Exchange by OAuth Public Clients](https://tools.ietf.org/html/rfc7636).
 
 ### <a name="UserAgentContext"></a>UserAgentContext
-Independent on the type of PsuUgerAgent, OpenBanking interfaces will require transmission of a class of information associated with the PsuUserAgent so they can perform verification of the authenticity of the original PSU request and customize the response produced for intermediary layers. We group these data under the name "UserAgentContext". Following header names account among the UserAgentContext: IP-Address, IP-Port, Accept, Accept-Charset, Accept-Encoding, Accept-Language, Device-ID, User-Agent, Geo-Location, Http-Method.
+Independent on the type of PsuUserAgent, OpenBanking interfaces will require transmission of a class of information associated with the PsuUserAgent so they can perform verification of the authenticity of the original PSU request and customize the response produced for intermediary layers. We group these data under the name "UserAgentContext". Following header names are among the UserAgentContext: IP-Address, IP-Port, Accept, Accept-Charset, Accept-Encoding, Accept-Language, Device-ID, User-Agent, Geo-Location, Http-Method.
 
 ## Security Considerations
 This work deals with details associated with the verification that the natural person that controls credentials used to authorize the initiation of a banking service at the TPP or ASPSP interface also controls credentials used to initiated that service at the FinTech interface. This is, we want to prevent the owner of some online banking credentials to involuntarily use them to authorize a banking service initiated by another natural person.
@@ -86,7 +88,7 @@ This work deals with details associated with the verification that the natural p
 The first measure consists in protecting a session established between a PsuUgerAgent and a ServerApplication (FinTechApi, ConsentAuthorizeApi).
 
 The use of [Cookies RFC6265](https://tools.ietf.org/html/rfc6265) provides the most elaborated way to protect a session established between a PsuUgerAgent and a ServerApplication. We assume a PsuUgerAgent storing a cookie fulfills following requirements:
-- Cookies carrying the attribute __HttpOnly__ are not provided access to scripts run by a web browser based UserAgent. Native applications designed for banking services must undergo thorough security reviews to make sure they fulfill this requirement.
+- Cookies carrying the attribute __HttpOnly__ are not provided access to scripts run by a web browser based UserAgent. Native applications designed for banking services must undergo through security reviews to make sure they fulfill this requirement.
 - Cookies carrying the attribute __Secure__ are only sent to the server over SSL connections.
 - Expired Cookies (attribute __Expires, Max-Age__) are not sent to the server.
 - Cookies set with no value (__SessionCookie=;__) are deleted from the UserAgent.
