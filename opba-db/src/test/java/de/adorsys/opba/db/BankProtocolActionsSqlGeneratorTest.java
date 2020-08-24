@@ -28,6 +28,8 @@ public class BankProtocolActionsSqlGeneratorTest {
     public static final String ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION = "ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION";
 
     private static final String BANK_DATA_SOURCE_PATH = "migration/migrations/banks.csv";
+    private static final String HBCI_BANK_DATA_SOURCE_PATH = "migration/migrations/bank_profile_data.csv";
+
     private static final String BANK_ACTION_DESTINATION_PATH = "src/main/resources/migration/migrations/bank_action_data.csv";
     private static final String BANK_SUB_ACTION_DESTINATION_PATH = "src/main/resources/migration/migrations/bank_sub_action_data.csv";
     private static final String BANK_PROFILE_DESTINATION_PATH = "src/main/resources/migration/migrations/bank_profile_data.csv";
@@ -51,6 +53,12 @@ public class BankProtocolActionsSqlGeneratorTest {
         for (String bank : banks) {
             writeXs2aBankActionData(bank);
             writeHbciBankProfileData(bank);
+        }
+
+        List<String> hbciBanks = readResourceLines(HBCI_BANK_DATA_SOURCE_PATH);
+        hbciBanks.remove(0);
+
+        for (String bank : hbciBanks) {
             writeHbciBankActionData(bank);
         }
     }
