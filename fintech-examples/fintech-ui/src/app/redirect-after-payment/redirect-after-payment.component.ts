@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConsentAuthorizationService } from '../bank/services/consent-authorization.service';
 import { Payment } from '../models/consts';
+import { ModalCard } from '../models/modalCard.model';
 
 @Component({
   selector: 'app-redirect-after-payment',

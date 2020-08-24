@@ -18,10 +18,7 @@ export class RedirectAfterPaymentDeniedComponent implements OnInit {
     confirmBtn: true
   };
 
-  constructor(
-    private consentAuthorizationService: ConsentAuthorizationService,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private consentAuthorizationService: ConsentAuthorizationService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.redirectCode = this.route.snapshot.queryParams.redirectCode;
@@ -30,7 +27,7 @@ export class RedirectAfterPaymentDeniedComponent implements OnInit {
   onSubmit(value: boolean) {
     if (value) {
       this.redirectCode = this.route.snapshot.queryParams.redirectCode;
-      this.consentAuthorizationService.fromPayment(Consent.NOT_OK, this.redirectCode);
+      this.consentAuthorizationService.fromPayment(Payment.NOT_OK, this.redirectCode);
     }
   }
 }

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConsentAuthorizationService } from '../bank/services/consent-authorization.service';
-import { StorageService } from '../services/storage.service';
 import { Payment } from '../models/consts';
 import { ModalCard } from '../models/modalCard.model';
 
@@ -19,11 +18,7 @@ export class RedirectAfterConsentDeniedComponent implements OnInit {
     confirmBtn: true
   };
 
-  constructor(
-    private consentAuthorizationService: ConsentAuthorizationService,
-    private route: ActivatedRoute,
-    private storageService: StorageService
-  ) {}
+  constructor(private consentAuthorizationService: ConsentAuthorizationService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.redirectCode = this.route.snapshot.queryParams.redirectCode;
