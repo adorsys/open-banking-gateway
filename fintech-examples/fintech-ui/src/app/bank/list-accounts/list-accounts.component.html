@@ -1,7 +1,7 @@
 <div>
-  <div class="lacc-parent">
+  <div class="row">
     <div
-      class="withoutOutline"
+      class="col"
       *ngFor="let account of accounts"
       (click)="selectAccount(account.resourceId)"
       [routerLink]="[account.resourceId]"
@@ -9,7 +9,9 @@
       <div class="lacc-list-container lacc-list-container--{{ isSelected(account.resourceId) }}">
         <div class="lacc-list-item ">
           <h1 class="lacc-list-item__headline lacc-list-item__headline--small">{{ account.name }}</h1>
-          <p class="lacc-list-item__subheadline lacc-list-item__subheadline--large">{{ visibleAccountNumber(account)}}</p>
+          <p class="lacc-list-item__subheadline lacc-list-item__subheadline--large">
+            {{ visibleAccountNumber(account) }}
+          </p>
         </div>
       </div>
     </div>
