@@ -19,7 +19,7 @@
     </div>
   </div>
   <div *ngIf="transactions && transactions.booked && transactions.booked.length > 0">
-    <span class="ltx-category">Booked</span>
+    <h6 class="ltx-category">Booked</h6>
     <div *ngFor="let transaction of transactions.booked">
       <div class="ltx-parent ltx-list-container ltx-list-container--shadow">
         <div class="ltx-date">

@@ -20,10 +20,10 @@
   @media (max-width: $breakpoint-sm) {
     flex-wrap: wrap;
   }
+}
 
-  &--shadow {
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
-  }
+.ltx-category {
+  padding-top: 1rem;
 }
 
 .ltx-date {
@@ -44,8 +44,4 @@
 }
 .ltx-amount-currency {
   text-align: right;
-}
-
-.ltx-category {
-  font-size: larger;
 }
