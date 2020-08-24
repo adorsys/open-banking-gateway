@@ -211,10 +211,10 @@
                 file="bank_sub_action_data.csv"
                 catalogName=""
                 tableName="${table-prefix}bank_sub_action">
-            <column header="id"                     name="bank_uuid"        type="NUMERIC"/>
-            <column header="action_id"              name="name"             type="NUMERIC"/>
-            <column header="protocol_action"        name="bic"              type="STRING"/>
-            <column header="sub_protocol_bean_name" name="url"              type="STRING"/>
+            <column header="id"                     name="id"                       type="NUMERIC"/>
+            <column header="action_id"              name="action_id"                type="NUMERIC"/>
+            <column header="protocol_action"        name="protocol_action"          type="STRING"/>
+            <column header="sub_protocol_bean_name" name="sub_protocol_bean_name"   type="STRING"/>
         </loadData>
         <rollback />
     </changeSet>

@@ -28,7 +28,6 @@ public class BankProtocolActionsSqlGeneratorTest {
     public static final String ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION = "ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION";
 
     private static final String BANK_DATA_SOURCE_PATH = "migration/migrations/banks.csv";
-    private static final String HBCI_BANK_DATA_SOURCE_PATH = "migration/migrations/bank_profile_data.csv";
 
     private static final String BANK_ACTION_DESTINATION_PATH = "src/main/resources/migration/migrations/bank_action_data.csv";
     private static final String BANK_SUB_ACTION_DESTINATION_PATH = "src/main/resources/migration/migrations/bank_sub_action_data.csv";
@@ -52,14 +51,7 @@ public class BankProtocolActionsSqlGeneratorTest {
 
         for (String bank : banks) {
             writeXs2aBankActionData(bank);
-            writeHbciBankProfileData(bank);
-        }
-
-        List<String> hbciBanks = readResourceLines(HBCI_BANK_DATA_SOURCE_PATH);
-        hbciBanks.remove(0);
-
-        for (String bank : hbciBanks) {
-            writeHbciBankActionData(bank);
+            writeHbciBankData(bank);
         }
     }
 
@@ -68,15 +60,15 @@ public class BankProtocolActionsSqlGeneratorTest {
     }
 
     private void writeXs2aBankActionData(String bankRecord) {
-        String[] data = bankRecord.split(",");
+        String bankUUID = bankRecord.substring(0, bankRecord.indexOf(','));
         int authorizationId;
 
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_ACCOUNTS,xs2aListAccounts,true", bankActionId++, data[0]));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_TRANSACTIONS,xs2aSandboxListTransactions,true", bankActionId++, data[0]));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,AUTHORIZATION,,true", authorizationId = bankActionId++, data[0]));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,SINGLE_PAYMENT,xs2aInitiateSinglePayment,true", bankActionId++, data[0]));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_INFORMATION,xs2aGetPaymentInfoState,true", bankActionId++, data[0]));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_STATUS,xs2aGetPaymentStatusState,true", bankActionId++, data[0]));
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_ACCOUNTS,xs2aListAccounts,true", bankActionId++, bankUUID));
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_TRANSACTIONS,xs2aSandboxListTransactions,true", bankActionId++, bankUUID));
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,AUTHORIZATION,,true", authorizationId = bankActionId++, bankUUID));
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,SINGLE_PAYMENT,xs2aInitiateSinglePayment,true", bankActionId++, bankUUID));
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_INFORMATION,xs2aGetPaymentInfoState,true", bankActionId++, bankUUID));
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_STATUS,xs2aGetPaymentStatusState,true", bankActionId++, bankUUID));
 
         writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,GET_AUTHORIZATION_STATE,xs2aGetAuthorizationState", bankSubActionId++, authorizationId));
         writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,UPDATE_AUTHORIZATION,xs2aUpdateAuthorization", bankSubActionId++, authorizationId));
@@ -84,20 +76,22 @@ public class BankProtocolActionsSqlGeneratorTest {
         writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,DENY_AUTHORIZATION,xs2aDenyAuthorization", bankSubActionId++, authorizationId));
     }
 
-    private void writeHbciBankProfileData(String bankRecord) {
-        writelnToFile(BANK_PROFILE_DESTINATION_PATH, replaceWithRandomUUID(bankRecord));
+    private void writeHbciBankData(String bankRecord) {
+        String recordWithNewUUID = replaceWithRandomUUID(bankRecord);
+        writelnToFile(BANK_PROFILE_DESTINATION_PATH, recordWithNewUUID);
+        writeHbciBankActionData(recordWithNewUUID);
     }
 
     private void writeHbciBankActionData(String bankRecord) {
-        String[] data = bankRecord.split(",");
+        String bankUUID = bankRecord.substring(0, bankRecord.indexOf(','));
         int authorizationId;
 
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_ACCOUNTS,hbciListAccounts,false", bankActionId++, data[0]));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_TRANSACTIONS,hbciListTransactions,false", bankActionId++, data[0]));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,AUTHORIZATION,,false", authorizationId = bankActionId++, data[0]));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,SINGLE_PAYMENT,hbciInitiateSinglePayment,false", bankActionId++, data[0]));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_INFORMATION,hbciGetPaymentInfoState,false", bankActionId++, data[0]));
-        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_STATUS,hbciGetPaymentStatusState,false", bankActionId++, data[0]));
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_ACCOUNTS,hbciListAccounts,false", bankActionId++, bankUUID));
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,LIST_TRANSACTIONS,hbciListTransactions,false", bankActionId++, bankUUID));
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,AUTHORIZATION,,false", authorizationId = bankActionId++, bankUUID));
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,SINGLE_PAYMENT,hbciInitiateSinglePayment,false", bankActionId++, bankUUID));
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_INFORMATION,hbciGetPaymentInfoState,false", bankActionId++, bankUUID));
+        writelnToFile(BANK_ACTION_DESTINATION_PATH, String.format("%d,%s,GET_PAYMENT_STATUS,hbciGetPaymentStatusState,false", bankActionId++, bankUUID));
 
         writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,GET_AUTHORIZATION_STATE,hbciGetAuthorizationState", bankSubActionId++, authorizationId));
         writelnToFile(BANK_SUB_ACTION_DESTINATION_PATH, String.format("%d,%d,UPDATE_AUTHORIZATION,hbciUpdateAuthorization", bankSubActionId++, authorizationId));
