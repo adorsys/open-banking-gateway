@@ -492,7 +492,7 @@
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>sonatype</serverId>
-                            <nexusUrl>https://maven.pkg.github.com/valb3r-adorsys/sonatype/sonatype-open-banking-gateway</nexusUrl>
+                            <nexusUrl>https://maven.pkg.github.com/valb3r-adorsys/sonatype-open-banking-gateway</nexusUrl>
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
                         </configuration>
                     </plugin>
@@ -650,12 +650,12 @@
     <distributionManagement>
         <repository>
             <id>sonatype</id>
-            <url>https://maven.pkg.github.com/valb3r-adorsys/sonatype/sonatype-open-banking-gateway</url>
+            <url>https://maven.pkg.github.com/valb3r-adorsys/sonatype-open-banking-gateway</url>
         </repository>
         <snapshotRepository>
             <id>github</id>
             <name>GitHub valb3r Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/valb3r-adorsys/staging/open-banking-gateway</url>
+            <url>https://maven.pkg.github.com/valb3r-adorsys/staging-open-banking-gateway</url>
         </snapshotRepository>
     </distributionManagement>
 
