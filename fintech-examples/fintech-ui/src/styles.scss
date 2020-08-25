@@ -98,6 +98,14 @@ label {
   margin-bottom: 4rem;
 }
 
+@media (max-width: 767px) {
+  .card {
+    &-body {
+      padding: 2rem;
+    }
+  }
+}
+
 .header__margin {
   margin-left: 3rem;
   margin-right: 3rem;
