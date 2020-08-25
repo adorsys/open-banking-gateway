@@ -3,3 +3,4 @@ bank-action-generator:
         start-id: 20
     sub-action:
         start-id: 20
+    skip-banks: 7
