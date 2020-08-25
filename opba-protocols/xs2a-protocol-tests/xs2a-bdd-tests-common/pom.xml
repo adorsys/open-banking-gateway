@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.adorsys.opba</groupId>
         <artifactId>xs2a-protocol-tests</artifactId>
-        <version>0.19.2.4</version>
+        <version>0.19.2.5</version>
     </parent>
 
     <!-- BDD Tests common step definitions, etc. -->
