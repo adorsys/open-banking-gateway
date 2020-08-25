@@ -478,18 +478,17 @@
         </profile>
 
         <profile>
-            <id>release</id>
+            <id>release-candidate</id>
             <build>
                 <plugins>
-
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.8</version>
+                        <version>${nexus-staging.plugin.version}</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>sonatype</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <nexusUrl>https://maven.pkg.github.com/valb3r-adorsys/sonatype/sonatype-open-banking-gateway</nexusUrl>
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
                         </configuration>
                     </plugin>
@@ -563,6 +562,46 @@
                 </plugins>
             </build>
         </profile>
+
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.e-gineering</groupId>
+                        <artifactId>gitflow-helper-maven-plugin</artifactId>
+                        <version>${gitflow.helper.plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <releaseDeploymentRepository>sonatype</releaseDeploymentRepository>
+                            <stageDeploymentRepository>github</stageDeploymentRepository>
+                            <snapshotDeploymentRepository>github</snapshotDeploymentRepository>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>update-stage-dependencies</goal>
+                                    <goal>promote-master</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- Needs nexus-staging-maven-plugin:deploy as gitflow-helper-maven-plugin will disable it -->
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>${nexus-staging.plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>sonatype</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <!--
         This profile exist to show Lombok-generated code in javadoc without touching dev and release classes.
         You can generate JavaDoc with comments from lombok using:
@@ -607,12 +646,12 @@
     <distributionManagement>
         <repository>
             <id>sonatype</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+            <url>https://maven.pkg.github.com/valb3r-adorsys/sonatype/sonatype-open-banking-gateway</url>
         </repository>
         <snapshotRepository>
             <id>github</id>
             <name>GitHub valb3r Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/valb3r-adorsys/open-banking-gateway</url>
+            <url>https://maven.pkg.github.com/valb3r-adorsys/staging/open-banking-gateway</url>
         </snapshotRepository>
     </distributionManagement>
 
