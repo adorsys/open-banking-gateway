@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { ListAccountsComponent } from './list-accounts.component';
 import { ListTransactionsComponent } from '../list-transactions/list-transactions.component';
 import { RedirectPageComponent } from '../redirect-page/redirect-page.component';
+import { AccountCardComponent } from './account-card/account-card.component';
 
 const routes: Routes = [
   {
@@ -10,7 +11,11 @@ const routes: Routes = [
     component: ListAccountsComponent,
     children: [
       {
-        path: ':accountid',
+        path: 'accountid',
+        component: AccountCardComponent
+      },
+      {
+        path: '',
         component: ListTransactionsComponent
       }
     ]

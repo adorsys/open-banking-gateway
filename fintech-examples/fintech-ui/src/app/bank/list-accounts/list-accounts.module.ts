@@ -6,9 +6,10 @@ import { ListAccountsRoutingModule } from './list-accounts-routing.module';
 import { ListTransactionsComponent } from '../list-transactions/list-transactions.component';
 import { ListAccountsComponent } from './list-accounts.component';
 import { RedirectPageComponent } from '../redirect-page/redirect-page.component';
+import { AccountCardComponent } from './account-card/account-card.component';
 
 @NgModule({
-  declarations: [ListAccountsComponent, ListTransactionsComponent, RedirectPageComponent],
+  declarations: [ListAccountsComponent, ListTransactionsComponent, RedirectPageComponent, AccountCardComponent],
   imports: [CommonModule, ListAccountsRoutingModule, ShareModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
