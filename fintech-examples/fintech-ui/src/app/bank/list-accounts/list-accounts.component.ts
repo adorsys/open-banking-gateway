@@ -18,13 +18,10 @@ export class ListAccountsComponent implements OnInit {
   loARetrievalInformation;
   id = 'dfdfdfd4drrrrr-444rr33-er43';
   id1 = '4443fdfd4drrrrr-444rr33-er43';
-  iban = 'DE27500105174211347925';
-  iban1 = 'DE27500105174211347926';
+  iban = 'DE2750010517421134792522';
+  iban1 = 'DE2750010517421134792622';
   name = 'bob';
   name1 = 'tom';
-  name2 = 'thoma';
-  iban2 = 'DE22500105174211347926';
-  id2 = '4443fdfd-4ddde-444rr33-er43';
 
   constructor(
     private router: Router,
@@ -77,10 +74,8 @@ export class ListAccountsComponent implements OnInit {
           const loa = [];
           loa.push(new AccountStruct(this.id, this.iban, this.name));
           loa.push(new AccountStruct(this.id1, this.iban1, this.name1));
-          //          loa.push(new AccountStruct(this.id2, this.iban2, this.name2));
           this.accounts.push(loa.pop());
           this.accounts.push(loa.pop());
-          //          this.accounts.push(loa.pop());
           for (const accountDetail of this.accounts) {
             loa.push(new AccountStruct(accountDetail.resourceId, accountDetail.iban, accountDetail.name));
           }

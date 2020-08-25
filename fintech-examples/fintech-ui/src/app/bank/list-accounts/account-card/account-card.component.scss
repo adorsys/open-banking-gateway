@@ -1,9 +1,3 @@
-@import 'src/assets/themes/variables';
-// list-accounts
-.withoutOutline {
-  outline: none;
-}
-
 .add-mr-right:not(:last-child) {
   margin-right: 1rem;
   margin-bottom: 1rem;
@@ -34,14 +28,12 @@
 
     &--small {
       font-size: 0.85rem;
-      color: $primary;
     }
   }
 
   &__subheadline {
     font-size: 0.85rem;
     margin-bottom: 0;
-    color: $primary;
 
     &--large {
       font-size: 1.1rem;
