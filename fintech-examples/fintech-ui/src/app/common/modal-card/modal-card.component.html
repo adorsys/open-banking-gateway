@@ -1,0 +1,15 @@
+<div class="modal">
+  <div class="card card-frame">
+    <div class="d-flex justify-content-center mt-5" *ngIf="cardModal?.imageUrl">
+      <img alt="redirection" class="card-img" [src]="cardModal?.imageUrl" />
+    </div>
+    <div class="card-body">
+      <h4 class="card-title">{{ cardModal?.title }}</h4>
+      <p class="card-text text-center">{{ cardModal?.description }}</p>
+      <div class="d-flex flex-column mt-3" *ngIf="cardModal?.confirmBtn">
+        <button (click)="onSubmit(true)" class="btn btn-primary btn-center">ok</button>
+        <button (click)="onSubmit(false)" class="btn btn-link btn-center" *ngIf="cardModal?.cancelBtn">cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

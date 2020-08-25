@@ -1,4 +1,1 @@
-<div class="modal">
-  <app-redirect-card bankName="{{ redirectStruct.bankName }}" (cancelRedirect)="cancel()" (proceedRedirect)="proceed()">
-  </app-redirect-card>
-</div>
+<app-modal-card [cardModal]="cardModal" (eventEmitter)="onSubmit($event)"></app-modal-card>

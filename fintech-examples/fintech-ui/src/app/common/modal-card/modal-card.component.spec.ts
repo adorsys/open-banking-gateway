@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RedirectCardComponent } from './redirect-card.component';
+import { ModalCardComponent } from './modal-card.component';
 
-describe('RedirectCardComponent', () => {
-  let component: RedirectCardComponent;
-  let fixture: ComponentFixture<RedirectCardComponent>;
+describe('ModalCardComponent', () => {
+  let component: ModalCardComponent;
+  let fixture: ComponentFixture<ModalCardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [RedirectCardComponent]
+      declarations: [ModalCardComponent]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RedirectCardComponent);
+    fixture = TestBed.createComponent(ModalCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

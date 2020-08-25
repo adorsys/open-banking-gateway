@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConsentAuthorizationService } from '../bank/services/consent-authorization.service';
 import { Payment } from '../models/consts';
+import { ModalCard } from '../models/modalCard.model';
 
 @Component({
   selector: 'app-redirect-after-payment',
@@ -9,11 +10,15 @@ import { Payment } from '../models/consts';
   styleUrls: ['./redirect-after-payment.component.scss']
 })
 export class RedirectAfterPaymentComponent implements OnInit {
-  constructor(private authService: ConsentAuthorizationService, private route: ActivatedRoute) {}
+  cardModal: ModalCard = {
+    title: 'Payment was successful',
+    description: 'Please wait while we load data'
+  };
+
+  constructor(private consentAuthorizationService: ConsentAuthorizationService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     const redirectCode = this.route.snapshot.queryParams.redirectCode;
-
-    this.authService.fromPaymentOk(Payment.OK, redirectCode);
+    this.consentAuthorizationService.fromPayment(Payment.OK, redirectCode);
   }
 }
