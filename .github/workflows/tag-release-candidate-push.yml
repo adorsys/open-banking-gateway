@@ -13,6 +13,9 @@ env:
   GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
   GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
   GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
+  # Change these:
+  SONATYPE_USERNAME: valb3r-adorsys
+  SONATYPE_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   build:
