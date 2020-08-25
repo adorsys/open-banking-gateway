@@ -19,8 +19,8 @@ import static de.adorsys.opba.db.BankProtocolActionsSqlGeneratorTest.ENABLE_BANK
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * Is not actually a test. This class generates 'banks_random_data.csv' out of 'banks.csv',
- * which contains sql insert statements into 'opb_bank_action' and 'opb_bank_sub_action' tables
+ * Is not actually a test. This class generates 'bank_action_data.csv', 'bank_profile_data.csv' and 'bank_sub_action_data.csv' out of 'banks.csv',
+ * which data to fill into 'opb_bank', 'opb_bank_profile', 'opb_bank_action' and 'opb_bank_sub_action' tables.
  */
 @SpringBootTest(classes = TestConfig.class)
 @EnabledIfEnvironmentVariable(named = ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION, matches = "true")
