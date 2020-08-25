@@ -43,10 +43,13 @@ public class BankProtocolActionsSqlGeneratorTest {
     @Value("${bank-action-generator.sub-action.start-id}")
     private Integer bankSubActionId;
 
+    @Value("${bank-action-generator.skip-banks}")
+    private Integer skipBanks;
+
     @Test
     @SneakyThrows
     public void convertToDbSql() {
-        List<String> banks = removeXs2aBanks(readResourceLines(BANK_DATA_SOURCE_PATH));
+        List<String> banks = skipBanksFromFileBeginning(readResourceLines(BANK_DATA_SOURCE_PATH));
         prepareDestinationFiles();
 
         for (String bank : banks) {
@@ -55,8 +58,8 @@ public class BankProtocolActionsSqlGeneratorTest {
         }
     }
 
-    private List<String> removeXs2aBanks(List<String> banks) {
-        return banks.subList(7, banks.size());
+    private List<String> skipBanksFromFileBeginning(List<String> banks) {
+        return banks.subList(skipBanks, banks.size());
     }
 
     private void writeXs2aBankActionData(String bankRecord) {
