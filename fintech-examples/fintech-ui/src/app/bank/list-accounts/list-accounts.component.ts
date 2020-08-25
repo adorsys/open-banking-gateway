@@ -13,7 +13,6 @@ import { StorageService } from '../../services/storage.service';
 })
 export class ListAccountsComponent implements OnInit {
   accounts: AccountDetails[];
-  selectedAccount: string;
   bankId = '';
   loARetrievalInformation;
   id = 'dfdfdfd4drrrrr-444rr33-er43';
@@ -33,18 +32,6 @@ export class ListAccountsComponent implements OnInit {
   ngOnInit() {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
     this.loadAccount();
-  }
-
-  selectAccount(id) {
-    this.selectedAccount = id;
-  }
-
-  isSelected(id) {
-    return id === this.selectedAccount ? 'selected' : 'unselected';
-  }
-
-  visibleAccountNumber(acc: AccountDetails) {
-    return !acc.iban || acc.iban.length === 0 ? acc.bban : acc.iban;
   }
 
   private loadAccount(): void {
@@ -82,5 +69,11 @@ export class ListAccountsComponent implements OnInit {
           this.storageService.setLoa(loa);
       }
     });
+  }
+
+  onSubmit(value: boolean, id: string) {
+    if (value) {
+      this.router.navigate([id], { relativeTo: this.route });
+    }
   }
 }

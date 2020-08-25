@@ -14,21 +14,17 @@ export class AccountCardComponent implements OnInit {
 
   ngOnInit() {}
 
-  onSubmit(value: boolean) {
-    this.eventEmitter.emit(value);
-  }
-
-  selectedAccount: string;
-
-  selectAccount(id) {
-    this.selectedAccount = id;
-  }
-
   isSelected(id) {
-    return id === this.selectedAccount ? 'selected' : 'unselected';
+    return id === this.account.resourceId ? 'selected' : 'unselected';
   }
 
   visibleAccountNumber(acc: AccountDetails) {
     return !acc.iban || acc.iban.length === 0 ? acc.bban : acc.iban;
+  }
+
+  onSubmit(value: boolean) {
+    if (value) {
+      this.eventEmitter.emit(value);
+    }
   }
 }

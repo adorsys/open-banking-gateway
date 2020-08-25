@@ -1,4 +1,5 @@
 <div>
+  <app-account-card [account]="account"></app-account-card>
   <div *ngIf="transactions && transactions.pending && transactions.pending.length > 0">
     <span class="ltx-category">Pending</span>
     <div *ngFor="let transaction of transactions.pending">
