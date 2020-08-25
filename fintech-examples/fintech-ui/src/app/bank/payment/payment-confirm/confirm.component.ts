@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Consent, Consts } from '../../../models/consts';
+import { Consts, Payment } from '../../../models/consts';
 import { ConfirmData } from './confirm.data';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConsentAuthorizationService } from '../../services/consent-authorization.service';
@@ -33,7 +33,7 @@ export class ConfirmComponent implements OnInit {
 
   onDeny() {
     console.log('call from consent NOT ok for redirect ' + this.confirmData.redirectStruct.redirectCode);
-    this.consentAuthorizationService.fromConsentOk(Consent.NOT_OK, this.confirmData.redirectStruct.redirectCode);
+    this.consentAuthorizationService.fromPayment(Payment.NOT_OK, this.confirmData.redirectStruct.redirectCode);
   }
 
   onConfirm() {

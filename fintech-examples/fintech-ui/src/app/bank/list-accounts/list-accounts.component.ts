@@ -5,8 +5,6 @@ import { AisService } from '../services/ais.service';
 import { AccountStruct, RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
 import { HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
-import { SettingsService } from '../services/settings.service';
-import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-list-accounts',
@@ -32,14 +30,8 @@ export class ListAccountsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private aisService: AisService,
-    private storageService: StorageService,
-    private settingsService: SettingsService
-  ) {
-    this.settingsService
-      .getLoA()
-      .pipe(tap(el => (this.loARetrievalInformation = el)))
-      .subscribe();
-  }
+    private storageService: StorageService
+  ) {}
 
   ngOnInit() {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
@@ -59,7 +51,7 @@ export class ListAccountsComponent implements OnInit {
   }
 
   private loadAccount(): void {
-    this.aisService.getAccounts(this.bankId, this.loARetrievalInformation).subscribe(response => {
+    this.aisService.getAccounts(this.bankId, this.storageService.getSettings().loa).subscribe(response => {
       switch (response.status) {
         case 202:
           this.storageService.setRedirect(
@@ -81,7 +73,6 @@ export class ListAccountsComponent implements OnInit {
           // if LoT is cancelled after redirect page is displayed
           // to be removed when issue https://github.com/adorsys/open-banking-gateway/issues/848 is resolved
           // or Fintech UI refactored
-          this.storageService.redirectCancelUrl = this.router.url;
           this.accounts = response.body.accounts;
           const loa = [];
           loa.push(new AccountStruct(this.id, this.iban, this.name));

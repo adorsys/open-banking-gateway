@@ -16,16 +16,4 @@ export class LocalStorage {
     localStorage.removeItem(Consts.LOCAL_STORAGE_XSRF_TOKEN);
   }
 
-  public static getSettings(): SettingsData {
-    const data = localStorage.getItem(Consts.LOCAL_STORAGE_SETTINGS)
-    if (!data) {
-      return null
-    }
-
-    return JSON.parse(data) as SettingsData
-  }
-
-  public static setSettings(data: SettingsData) {
-    localStorage.setItem(Consts.LOCAL_STORAGE_SETTINGS, JSON.stringify(data));
-  }
 }
