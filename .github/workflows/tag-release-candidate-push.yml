@@ -13,7 +13,6 @@ env:
   GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
   GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
   GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
-  DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
 
 jobs:
   build:
