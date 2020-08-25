@@ -22,7 +22,7 @@ body {
     height: auto;
 
     &--big {
-      width: 761px;
+      max-width: 761px;
     }
   }
 
@@ -101,6 +101,14 @@ label {
 .header__margin {
   margin-left: 3rem;
   margin-right: 3rem;
+}
+
+@media (max-width: 767px) {
+  .card {
+    &-body {
+      padding: 2rem;
+    }
+  }
 }
 
 @media (max-width: 576px) {
