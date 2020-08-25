@@ -33,7 +33,7 @@
                 <repository>
                     <id>github</id>
                     <name>GitHub valb3r-adorsys Apache Maven Packages</name>
-                    <url>https://maven.pkg.github.com/valb3r-adorsys</url>
+                    <url>https://maven.pkg.github.com/valb3r-adorsys/stage</url>
                 </repository>
             </repositories>
             <properties>
