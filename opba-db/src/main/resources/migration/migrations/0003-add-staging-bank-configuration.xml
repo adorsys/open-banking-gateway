@@ -1,8 +1,8 @@
 <databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-1">
+    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-1" context="prod">
         <loadData
                 encoding="utf8"
                 relativeToChangelogFile="true"
@@ -21,7 +21,7 @@
         <rollback />
     </changeSet>
 
-    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-2">
+    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-2" context="prod">
         <loadData
                 encoding="utf8"
                 relativeToChangelogFile="true"
@@ -40,7 +40,7 @@
         <rollback />
     </changeSet>
 
-    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-3">
+    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-3" context="prod">
         <loadData
                 encoding="utf8"
                 relativeToChangelogFile="true"
@@ -57,7 +57,7 @@
         <rollback />
     </changeSet>
 
-    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-4">
+    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-4" context="prod">
         <loadData
                 encoding="utf8"
                 relativeToChangelogFile="true"
