@@ -324,6 +324,26 @@ components:
           maxLength: 70
         ownerAddress:
           $ref: "./tpp_banking_api_commons.yml#/components/schemas/address"
+        balances:
+          type: array
+          items:
+            $ref: "#/components/schemas/balance"
+
+    balance:
+      description: |
+        A balance
+      type: object
+      properties:
+        balanceAmount:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/amount"
+        balanceType:
+          type: string
+        lastChangedDateTime:
+          type: string
+          format: date-time
+        referenceDate:
+          type: string
+          format: date;
 
     accountList:
       description: |
