@@ -21,6 +21,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 /**
  * Is not actually a test. This class generates 'bank_action_data.csv', 'bank_profile_data.csv' and 'bank_sub_action_data.csv' out of 'banks.csv',
  * which data to fill into 'opb_bank', 'opb_bank_profile', 'opb_bank_action' and 'opb_bank_sub_action' tables.
+ * It is disable by default. To enable it, set 'ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION' environment variable to 'true'
  */
 @SpringBootTest(classes = TestConfig.class)
 @EnabledIfEnvironmentVariable(named = ENABLE_BANK_PROTOCOL_ACTIONS_SQL_GENERATION, matches = "true")
