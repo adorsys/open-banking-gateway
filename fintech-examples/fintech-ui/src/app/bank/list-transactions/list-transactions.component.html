@@ -1,40 +1,39 @@
-<div>
-  <app-account-card [account]="account"></app-account-card>
-  <div *ngIf="transactions && transactions.pending && transactions.pending.length > 0">
-    <span class="ltx-category">Pending</span>
-    <div *ngFor="let transaction of transactions.pending">
-      <div class="ltx-parent ltx-list-container ltx-list-container--shadow">
-        <div class="ltx-date">
-          {{ transaction.bookingDate }}
-        </div>
-        <div class="ltx-description">
-          {{ transaction.additionalInformation }}
-        </div>
-        <div class="ltx-amount-number">
-          {{ transaction.transactionAmount.amount }}
-        </div>
-        <div class="ltx-amount-currency">
-          {{ transaction.transactionAmount.currency }}
-        </div>
+<app-account-card [account]="account"></app-account-card>
+<div *ngIf="transactions && transactions.pending && transactions.pending.length > 0">
+  <span class="ltx-category">Pending</span>
+  <div *ngFor="let transaction of transactions.pending">
+    <div class="ltx-parent ltx-list-container ltx-list-container--shadow">
+      <div class="ltx-date">
+        {{ transaction.bookingDate }}
+      </div>
+      <div class="ltx-description">
+        ^
+        {{ transaction.additionalInformation }}
+      </div>
+      <div class="ltx-amount-number">
+        {{ transaction.transactionAmount.amount }}
+      </div>
+      <div class="ltx-amount-currency">
+        {{ transaction.transactionAmount.currency }}
       </div>
     </div>
   </div>
-  <div *ngIf="transactions && transactions.booked && transactions.booked.length > 0">
-    <h6 class="ltx-category">Booked</h6>
-    <div *ngFor="let transaction of transactions.booked">
-      <div class="ltx-parent ltx-list-container ltx-list-container--shadow">
-        <div class="ltx-date">
-          {{ transaction.bookingDate }}
-        </div>
-        <div class="ltx-description">
-          {{ transaction.remittanceInformationUnstructured }}
-        </div>
-        <div class="ltx-amount-number">
-          {{ transaction.transactionAmount.amount }}
-        </div>
-        <div class="ltx-amount-currency">
-          {{ transaction.transactionAmount.currency }}
-        </div>
+</div>
+<div *ngIf="transactions && transactions.booked && transactions.booked.length > 0">
+  <h6 class="ltx-category">Booked</h6>
+  <div *ngFor="let transaction of transactions.booked">
+    <div class="ltx-parent ltx-list-container ltx-list-container--shadow">
+      <div class="ltx-date">
+        {{ transaction.bookingDate }}
+      </div>
+      <div class="ltx-description">
+        {{ transaction.remittanceInformationUnstructured }}
+      </div>
+      <div class="ltx-amount-number">
+        {{ transaction.transactionAmount.amount }}
+      </div>
+      <div class="ltx-amount-currency">
+        {{ transaction.transactionAmount.currency }}
       </div>
     </div>
   </div>

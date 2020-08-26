@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AccountDetails } from '../../../api';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-account-card',
@@ -10,13 +11,9 @@ export class AccountCardComponent implements OnInit {
   @Input() account: AccountDetails;
   @Output() eventEmitter: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor() {}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit() {}
-
-  isSelected(id) {
-    return id === this.account.resourceId ? 'selected' : 'unselected';
-  }
 
   visibleAccountNumber(acc: AccountDetails) {
     return !acc.iban || acc.iban.length === 0 ? acc.bban : acc.iban;
@@ -26,5 +23,9 @@ export class AccountCardComponent implements OnInit {
     if (value) {
       this.eventEmitter.emit(value);
     }
+  }
+
+  isSelected(id: string): boolean {
+    return id == this.route.snapshot.paramMap.get('accountid');
   }
 }

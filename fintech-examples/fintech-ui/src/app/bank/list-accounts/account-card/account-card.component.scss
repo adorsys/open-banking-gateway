@@ -15,14 +15,6 @@
   //width: 95%;
   text-align: start;
   cursor: pointer;
-
-  &--unselected {
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-  }
-
-  &--selected {
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 1);
-  }
 }
 
 .lacc-list-item {
