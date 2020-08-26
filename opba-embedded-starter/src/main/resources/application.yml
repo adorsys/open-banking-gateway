@@ -24,6 +24,7 @@ spring:
       adorsys-sandbox-url: http://localhost:20014
       adorsys-hbci-sandbox-url: http://localhost:8090/hbci-mock/
       fill-with-mock-data: true
+    contexts: dev
 
 # Actuator:
 management:
