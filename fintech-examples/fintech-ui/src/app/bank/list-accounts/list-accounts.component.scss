@@ -20,23 +20,4 @@
 .lacc-list-item {
   background-color: #fff;
   padding: 16px;
-
-  &__headline {
-    font-size: 0.5rem;
-
-    &--small {
-      font-size: 0.85rem;
-      color: $primary;
-    }
-  }
-
-  &__subheadline {
-    font-size: 0.85rem;
-    margin-bottom: 0;
-    color: $primary;
-
-    &--large {
-      font-size: 1.1rem;
-    }
-  }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
-import { AccountDetails, AccountReport } from '../../api';
+import { AccountReport } from '../../api';
 import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
 import { HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
@@ -29,7 +29,7 @@ export class ListTransactionsComponent implements OnInit {
     this.bankId = this.route.parent.snapshot.paramMap.get('bankid');
     this.accountId = this.route.snapshot.paramMap.get('accountid');
     this.loadTransactions();
-    this.getAccountById(this.accountId);
+    this.account = this.getAccountById(this.accountId);
   }
 
   private loadTransactions(): void {
@@ -61,11 +61,10 @@ export class ListTransactionsComponent implements OnInit {
       });
   }
 
-  private getAccountById(id: string): AccountDetails {
+  private getAccountById(id: string) {
     for (let acc of this.storageService.getLoa()) {
-      if (acc.resourceId == this.accountId) {
-        this.account = acc;
-        return this.account;
+      if (acc.resourceId == id) {
+        return acc;
       }
     }
     return null;

@@ -5,4 +5,11 @@
       {{ visibleAccountNumber(account) }}
     </p>
   </div>
+  <button
+    class="btn btn-primary btn-block"
+    *ngIf="isSelected(account.resourceId)"
+    [routerLink]="'../../payment/accounts'"
+  >
+    Proceed payment
+  </button>
 </div>
