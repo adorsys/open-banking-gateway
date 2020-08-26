@@ -39,7 +39,6 @@ public class Xs2aAccountListingService extends ValidatedExecution<Xs2aContext> {
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
         ValidatedQueryHeaders<Xs2aWithBalanceParameters, Xs2aWithConsentIdHeaders> params = extractor.forExecution(context);
-        RequestParams requestParams = params.getQuery().toParameters();
         params.getQuery().setWithBalance(true);
         Response<AccountListHolder> accounts = ais.getAccountList(
                 params.getHeaders().toHeaders(),
