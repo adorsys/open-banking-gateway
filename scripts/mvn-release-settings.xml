@@ -10,11 +10,24 @@
             <password>${env.SONATYPE_PASSWORD}</password>
         </server>
         <server>
+            <!-- Release Deployment (sonatype) -->
+            <id>release</id>
+            <username>${env.RELEASE_ARTIFACTORY_USERNAME}</username>
+            <password>${env.RELEASE_ARTIFACTORY_PASSWORD}</password>
+        </server>
+        <server>
+            <!-- Staging Deployment -->
+            <id>stage</id>
+            <username>${env.STAGE_ARTIFACTORY_USERNAME}</username>
+            <password>${env.STAGE_ARTIFACTORY_PASSWORD}</password>
+        </server>
+        <server>
             <id>github</id>
             <username>${env.GITHUB_USER}</username>
             <password>${env.GITHUB_TOKEN}</password>
         </server>
     </servers>
+
     <profiles>
         <profile>
             <id>sonatype</id>
@@ -25,21 +38,28 @@
                 <gpg.executable>${env.GPG_EXECUTABLE}</gpg.executable>
                 <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
             </properties>
-        </profile>
-
-        <profile>
-            <id>github</id>
             <repositories>
                 <repository>
-                    <id>github</id>
-                    <name>GitHub valb3r-adorsys Apache Maven Packages</name>
-                    <url>https://maven.pkg.github.com/valb3r-adorsys/stage</url>
+                    <id>stage</id>
+                    <url>http://localhost:8081/repository/release-candidate/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                </repository>
+                <repository>
+                    <id>release</id>
+                    <url>http://localhost:8081/repository/maven-releases/</url>
+                    <snapshots>
+                        <enabled>false</enabled>
+                    </snapshots>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
                 </repository>
             </repositories>
-            <properties>
-                <gpg.executable>${env.GPG_EXECUTABLE}</gpg.executable>
-		        <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
-            </properties>
         </profile>
     </profiles>
 </settings>
