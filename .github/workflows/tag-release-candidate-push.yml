@@ -13,6 +13,7 @@ env:
   GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
   STAGE_ARTIFACTORY_USERNAME: ${{ secrets.GITHUB_USER }}
   STAGE_ARTIFACTORY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+  OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
 
 jobs:
   build:
