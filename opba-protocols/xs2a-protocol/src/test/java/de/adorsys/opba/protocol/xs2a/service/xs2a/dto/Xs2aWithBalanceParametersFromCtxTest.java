@@ -1,7 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.dto;
 
 import de.adorsys.opba.protocol.xs2a.config.MapperTestConfig;
-import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
 import de.adorsys.opba.protocol.xs2a.util.FixtureProvider;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ public class Xs2aWithBalanceParametersFromCtxTest {
     @SneakyThrows
     public void xs2aWithBalanceParametersFromCtxMapperTest() {
         // Given
-        Xs2aContext mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "xs2a_consent_input.json", Xs2aContext.class);
+        Xs2aAisContext mappingInput = fixtureProvider.getFromFile(PATH_PREFIX + "xs2a_consent_input.json", Xs2aAisContext.class);
         Xs2aWithBalanceParameters expected = fixtureProvider.getFromFile(PATH_PREFIX + "xs2a_consent_output.json", Xs2aWithBalanceParameters.class);
 
         // When
