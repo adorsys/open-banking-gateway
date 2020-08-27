@@ -27,6 +27,6 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.DEVELOP_GPG_PASSPHRASE }}
           GPG_SECRET_KEY: ${{ secrets.DEVELOP_GPG_SECRET_KEY }}
           GPG_OWNERTRUST: ${{ secrets.DEVELOP_GPG_OWNERTRUST }}
-
-      - name: Deploy develop artifacts to OpenShift
-        run: ./scripts/deploy_openshift.sh
+# TODO: Enable when Travis is removed
+#      - name: Deploy develop artifacts to OpenShift
+#        run: ./scripts/deploy_openshift.sh
