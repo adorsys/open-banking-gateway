@@ -6,8 +6,7 @@ on:
     branches:
       - develop
 
-env:
-  OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+
 
 jobs:
   build:
@@ -33,3 +32,5 @@ jobs:
 # TODO: Enable when Travis is removed
 #      - name: Deploy develop artifacts to OpenShift
 #        run: ./scripts/deploy_openshift.sh
+#        env:
+#          OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
