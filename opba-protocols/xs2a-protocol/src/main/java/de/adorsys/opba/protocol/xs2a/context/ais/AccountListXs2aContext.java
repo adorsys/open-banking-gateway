@@ -12,9 +12,4 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class AccountListXs2aContext extends Xs2aAisContext {
 
-    /**
-     * Is this consent for account list with account balances.
-     */
-    // Optional consent-specific
-    private Boolean withBalance;
 }

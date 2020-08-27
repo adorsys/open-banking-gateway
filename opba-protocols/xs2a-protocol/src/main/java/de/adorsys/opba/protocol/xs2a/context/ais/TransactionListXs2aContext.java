@@ -44,9 +44,4 @@ public class TransactionListXs2aContext extends Xs2aAisContext {
      */
     private LocalDate dateTo;
 
-    /**
-     * For list accounts balances can be retrieved too
-     */
-    private boolean withBalance;
-
 }

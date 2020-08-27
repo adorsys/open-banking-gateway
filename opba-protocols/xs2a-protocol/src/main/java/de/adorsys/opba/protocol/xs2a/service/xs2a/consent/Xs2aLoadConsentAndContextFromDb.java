@@ -5,9 +5,9 @@ import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingConsen
 import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableObjectMapper;
 import de.adorsys.opba.protocol.bpmnshared.config.flowable.FlowableProperties;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
-import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.AccountListXs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.TransactionListXs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.flowable.engine.delegate.DelegateExecution;
@@ -32,24 +32,24 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
  */
 @Service("xs2aLoadConsentAndContextFromDb")
 @RequiredArgsConstructor
-public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aContext> {
+public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aAisContext> {
 
     private final ContextMerger merger;
     private final FlowableProperties properties;
     private final FlowableObjectMapper mapper;
 
     @Override
-    protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+    protected void doRealExecution(DelegateExecution execution, Xs2aAisContext context) {
         loadContext(execution, context);
     }
 
     @Override
-    protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
+    protected void doMockedExecution(DelegateExecution execution, Xs2aAisContext context) {
         loadContext(execution, context);
     }
 
     @SneakyThrows
-    private void loadContext(DelegateExecution execution, Xs2aContext context) {
+    private void loadContext(DelegateExecution execution, Xs2aAisContext context) {
         Optional<ProtocolFacingConsent> consent = context.consentAccess().findSingleByCurrentServiceSession();
 
         if (!consent.isPresent() || null == consent.get().getConsentContext()) {
@@ -65,7 +65,7 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
             throw new IllegalArgumentException("Class deserialization not allowed " + classNameAndValue.getKey());
         }
 
-        Xs2aContext ctx = (Xs2aContext) mapper.getMapper().readValue(
+        Xs2aAisContext ctx = (Xs2aAisContext) mapper.getMapper().readValue(
                 classNameAndValue.getValue().traverse(),
                 Class.forName(classNameAndValue.getKey())
         );
@@ -80,8 +80,8 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
             ctx = context;
         } else if (ctx instanceof TransactionListXs2aContext) {
             merger.merge(context, (TransactionListXs2aContext) ctx);
-        } else if (ctx instanceof Xs2aContext) {
-            merger.merge(context, (Xs2aContext) ctx);
+        } else if (ctx instanceof Xs2aAisContext) {
+            merger.merge(context, (Xs2aAisContext) ctx);
         }
 
         // Avoid ignoring MOCK mode due to Merged context received REAL mode
@@ -100,13 +100,13 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aCont
         @Mapping(target = "flowByAction", ignore = true)
         @Mapping(target = "psuPassword", ignore = true)
         @Mapping(target = "lastScaChallenge", ignore = true)
-        void merge(Xs2aContext source, @MappingTarget Xs2aContext target);
+        void merge(Xs2aAisContext source, @MappingTarget Xs2aAisContext target);
 
         @Mapping(target = "mode", ignore = true)
         @Mapping(target = "flowByAction", ignore = true)
         @Mapping(target = "psuPassword", ignore = true)
         @Mapping(target = "lastScaChallenge", ignore = true)
-        void merge(Xs2aContext source, @MappingTarget TransactionListXs2aContext target);
+        void merge(Xs2aAisContext source, @MappingTarget TransactionListXs2aContext target);
 
         @Mapping(target = "mode", ignore = true)
         @Mapping(target = "flowByAction", ignore = true)
