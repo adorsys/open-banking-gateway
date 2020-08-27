@@ -1,7 +1,7 @@
-<div>
+<div class="header__margin">
   <div class="row">
-    <div class="add-mr-right" *ngFor="let account of accounts">
-      <app-account-card [account]="account" (eventEmitter)="onSubmit($event, account.resourceId)"></app-account-card>
+    <div class="add-mr-mb" *ngFor="let account of accounts">
+      <app-account-card [account]="account" (eventEmitter)="onSubmit($event)"></app-account-card>
     </div>
   </div>
 </div>

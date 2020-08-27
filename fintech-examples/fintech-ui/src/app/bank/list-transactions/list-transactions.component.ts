@@ -61,6 +61,10 @@ export class ListTransactionsComponent implements OnInit {
       });
   }
 
+  navigateToPayment() {
+    this.router.navigate(['payment'], { relativeTo: this.route.parent.parent });
+  }
+
   private getAccountById(id: string) {
     for (let acc of this.storageService.getLoa()) {
       if (acc.resourceId == id) {
