@@ -89,7 +89,14 @@
 
         <!-- Deployment plugins -->
         <gitflow.helper.plugin.version>3.0.0</gitflow.helper.plugin.version>
-        <nexus-staging.plugin.version>1.6.8</nexus-staging.plugin.version>
+        <!-- Note that 3.0.0-M1 does not work properly with gitflow-maven-plugin
+        It raises:
+        NoFileAssignedException: The packaging plugin for this project did not assign a main file to the project but it has attachments. Change packaging to 'pom'
+        -->
+        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <maven-javadoc-plugin>3.2.0</maven-javadoc-plugin>
 
         <!-- Framework libs -->
         <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
@@ -141,6 +148,7 @@
         <jupiter.version>5.5.2</jupiter.version>
         <junit.platform.commons.version>1.5.2</junit.platform.commons.version>
         <surefire.version>3.0.0-M3</surefire.version>
+        <failsafe.version>3.0.0-M3</failsafe.version>
         <assertj.version>3.12.2</assertj.version>
         <jgiven.version>1.0.0-RC3</jgiven.version>
         <wiremock.version>2.25.1</wiremock.version>
@@ -416,7 +424,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0-M3</version>
+                <version>${failsafe.version}</version>
                 <configuration>
                     <classpathDependencyScopeExclude>provided</classpathDependencyScopeExclude>
                     <trimStackTrace>false</trimStackTrace>
@@ -509,11 +517,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-deploy-plugin</artifactId>
-                        <!-- Note that 3.0.0-M1 does not work properly with gitflow-maven-plugin
-                        It raises
-                        NoFileAssignedException: The packaging plugin for this project did not assign a main file to the project but it has attachments. Change packaging to 'pom'
-                        -->
-                        <version>2.8.2</version>
+                        <version>${maven-deploy-plugin.version}</version>
                         <configuration>
                             <deployAtEnd>true</deployAtEnd>
                         </configuration>
@@ -522,7 +526,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>${maven-source-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -536,7 +540,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>${maven-gpg-plugin.version}</version>
                         <!-- Note that this entry is crucial for execution:configuration to apply for this plugin -->
                         <configuration>
                             <gpgArguments>
@@ -564,6 +568,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven-javadoc-plugin.version}</version>
                         <configuration>
                             <doclint>none</doclint>
                             <!-- Fixes error - class file for javax.interceptor.InterceptorBinding not found -->
@@ -604,7 +609,8 @@
                             <stageDeploymentRepository>stage</stageDeploymentRepository>
                             <snapshotDeploymentRepository>stage</snapshotDeploymentRepository>
 
-                            <masterBranchPattern>(master)|(release/.*)</masterBranchPattern>
+                            <!-- Allow to promote on release/hotfix branches in addition to master -->
+                            <masterBranchPattern>(master)|(release/.*)|(hotfix/.*)</masterBranchPattern>
                         </configuration>
                         <executions>
                             <execution>
@@ -619,11 +625,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-deploy-plugin</artifactId>
-                        <!-- Note that 3.0.0-M1 does not work properly with gitflow-maven-plugin
-                        It raises
-                        NoFileAssignedException: The packaging plugin for this project did not assign a main file to the project but it has attachments. Change packaging to 'pom'
-                        -->
-                        <version>2.8.2</version>
+                        <version>${maven-deploy-plugin.version}</version>
                         <configuration>
                             <deployAtEnd>true</deployAtEnd>
                         </configuration>

@@ -7,12 +7,12 @@ on:
       - v*
 
 env:
-  GITHUB_USER: valb3r-adorsys
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GPG_EXECUTABLE: gpg
   GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
   GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
   GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
+  SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+  SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
 
 jobs:
   build:
