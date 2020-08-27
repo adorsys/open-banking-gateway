@@ -32,7 +32,7 @@
             <repositories>
                 <repository>
                     <id>stage</id>
-                    <url>>https://maven.pkg.github.com/adorsys</url>
+                    <url>https://maven.pkg.github.com/adorsys</url>
                     <snapshots>
                         <enabled>false</enabled>
                     </snapshots>
