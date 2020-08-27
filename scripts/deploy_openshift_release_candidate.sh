@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 SCRIPT_DIR="$(dirname "$0")"
-IMAGE_TAG=${TRAVIS_COMMIT:0:7}
-REGISTRY_DOMAIN=openshift-registry.adorsys.de
-PROJECT_NAME=open-banking-gateway-dev
+IMAGE_TAG=${GITHUB_SHA:0:7}
+REGISTRY_DOMAIN="$RELEASE_CANDIDATE_DOMAIN"
+PROJECT_NAME="$RELEASE_CANDIDATE_PROJECT_NAME"
 
-docker login -u github-image-pusher -p "$OPENSHIFT_TOKEN" $REGISTRY_DOMAIN || exit 1
+docker login -u github-image-pusher -p "$OPENSHIFT_TOKEN" "$REGISTRY_DOMAIN" || exit 1
 
 while IFS="" read -r service_and_context || [ -n "$service_and_context" ]
 do
