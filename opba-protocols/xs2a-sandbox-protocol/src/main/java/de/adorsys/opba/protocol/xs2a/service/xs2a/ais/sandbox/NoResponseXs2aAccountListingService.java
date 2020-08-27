@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.xs2a.service.xs2a.ais.sandbox;
 
-import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.ais.Xs2aAccountListingService;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
@@ -21,7 +20,7 @@ class NoResponseXs2aAccountListingService extends Xs2aAccountListingService {
     }
 
     @Override
-    protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+    protected void doRealExecution(DelegateExecution execution, Xs2aAisContext context) {
         super.doRealExecution(execution, context);
     }
 
