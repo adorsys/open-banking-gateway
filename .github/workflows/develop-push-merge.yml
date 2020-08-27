@@ -6,6 +6,9 @@ on:
     branches:
       - develop
 
+env:
+  OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+
 jobs:
   build:
     runs-on: ubuntu-18.04
