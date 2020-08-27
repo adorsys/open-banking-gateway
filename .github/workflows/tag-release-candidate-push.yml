@@ -6,15 +6,6 @@ on:
     tags:
       - rc-*
 
-env:
-  GPG_EXECUTABLE: gpg
-  GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-  GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
-  GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
-  STAGE_ARTIFACTORY_USERNAME: ${{ secrets.GITHUB_USER }}
-  STAGE_ARTIFACTORY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-  OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
-
 jobs:
   build:
     runs-on: ubuntu-18.04
@@ -29,6 +20,15 @@ jobs:
 
       - name: Deploy release-candidate JARs to Github packages
         run: ./scripts/deploy_mvn_release_candidate.sh
+        env:
+          GPG_EXECUTABLE: gpg
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
+          GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
+          STAGE_ARTIFACTORY_USERNAME: ${{ secrets.GITHUB_USER }}
+          STAGE_ARTIFACTORY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Deploy develop artifacts to OpenShift
         run: ./scripts/deploy_openshift_release_candidate.sh
+        env:
+          OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}

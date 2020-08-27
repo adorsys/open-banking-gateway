@@ -25,6 +25,13 @@ jobs:
 
       - name: Promote artifacts from OpenShift to DockerHub
         run: ./scripts/promote_oc_image_to_dockerhub.sh
+        env:
+          OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+          DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
 
       - name: Promote release-candidate JARs to Maven-central
         run: ./scripts/deploy_mvn.sh
+        env:
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
