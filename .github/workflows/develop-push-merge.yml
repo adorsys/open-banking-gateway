@@ -19,7 +19,7 @@ jobs:
         run: ./scripts/build_and_test.sh
 
       - name: Check deployment flow and check artifact signing
-        run: ./scripts/deploy_check_mvn_develop.sh
+        run: ./scripts/mvn_deploy_check_develop.sh
         env:
           # Note that these BELOW are DEVELOP secrets, not ones used for real deployment
           # They are used to have very close pipeline to one present on production
