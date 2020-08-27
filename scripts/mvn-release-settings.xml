@@ -37,11 +37,12 @@
             <properties>
                 <gpg.executable>${env.GPG_EXECUTABLE}</gpg.executable>
                 <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
+                <gpg.keyname>09BC9864F4034017AAB4ACD720A4D645337052A3</gpg.keyname>
             </properties>
             <repositories>
                 <repository>
                     <id>stage</id>
-                    <url>http://localhost:8081/repository/release-candidate/</url>
+                    <url>http://localhost:8081/repository/maven-candidates/</url>
                     <snapshots>
                         <enabled>false</enabled>
                     </snapshots>
