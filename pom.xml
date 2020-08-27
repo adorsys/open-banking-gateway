@@ -500,9 +500,23 @@
                             <execution>
                                 <goals>
                                     <goal>retarget-deploy</goal>
+                                    <goal>promote-master</goal>
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <!-- Note that 3.0.0-M1 does not work properly with gitflow-maven-plugin
+                        It raises
+                        NoFileAssignedException: The packaging plugin for this project did not assign a main file to the project but it has attachments. Change packaging to 'pom'
+                        -->
+                        <version>2.8.2</version>
+                        <configuration>
+                            <deployAtEnd>true</deployAtEnd>
+                        </configuration>
                     </plugin>
 
                     <plugin>
@@ -595,10 +609,24 @@
                         <executions>
                             <execution>
                                 <goals>
+                                    <goal>retarget-deploy</goal>
                                     <goal>promote-master</goal>
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <!-- Note that 3.0.0-M1 does not work properly with gitflow-maven-plugin
+                        It raises
+                        NoFileAssignedException: The packaging plugin for this project did not assign a main file to the project but it has attachments. Change packaging to 'pom'
+                        -->
+                        <version>2.8.2</version>
+                        <configuration>
+                            <deployAtEnd>true</deployAtEnd>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
