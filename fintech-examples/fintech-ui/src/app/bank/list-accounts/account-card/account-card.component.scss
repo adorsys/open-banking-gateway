@@ -4,17 +4,13 @@
   outline: none;
 }
 
-.add-mr-right:not(:last-child) {
-  margin-right: 1rem;
-  margin-bottom: 1rem;
-}
-
 .lacc-list-container {
   display: flex;
   align-items: center;
   //width: 95%;
   text-align: start;
   cursor: pointer;
+  justify-content: space-between;
 }
 
 .lacc-list-item {
