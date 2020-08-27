@@ -10,17 +10,22 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HttpResponse } from '@angular/common/http';
 import { TransactionsResponse } from '../../api';
 import { LoTRetrievalInformation } from '../../models/consts';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { StorageService } from '../../services/storage.service';
 
 describe('ListTransactionsComponent', () => {
   let component: ListTransactionsComponent;
   let fixture: ComponentFixture<ListTransactionsComponent>;
   let aisService: AisService;
   let route: ActivatedRoute;
+  let storageService;
+  let storageServiceSpy;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
       declarations: [ListTransactionsComponent, BankComponent, SidebarComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         AisService,
         {
@@ -39,6 +44,8 @@ describe('ListTransactionsComponent', () => {
     component = fixture.componentInstance;
     aisService = TestBed.get(AisService);
     route = TestBed.get(ActivatedRoute);
+    storageService = TestBed.get(StorageService);
+    storageServiceSpy = spyOn(storageService, 'getLoa').and.returnValues([]);
     fixture.detectChanges();
   });
 
