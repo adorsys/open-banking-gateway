@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ListAccountsComponent } from './list-accounts.component';
 import { ListTransactionsComponent } from '../list-transactions/list-transactions.component';
@@ -21,6 +21,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  schemas: [NO_ERRORS_SCHEMA]
 })
 export class ListAccountsRoutingModule {}

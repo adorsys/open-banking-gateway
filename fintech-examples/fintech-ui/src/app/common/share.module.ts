@@ -7,9 +7,10 @@ import { AngularIbanModule } from 'angular-iban';
 import { InfoModule } from '../errorsHandler/info/info.module';
 import { SearchComponent } from './search/search.component';
 import { ModalCardComponent } from './modal-card/modal-card.component';
+import { AccountCardComponent } from '../bank/list-accounts/account-card/account-card.component';
 
 @NgModule({
-  declarations: [SearchComponent, ModalCardComponent],
+  declarations: [SearchComponent, ModalCardComponent, AccountCardComponent],
   imports: [CommonModule, ReactiveFormsModule, HttpClientModule, InfoModule, NgbModalModule, AngularIbanModule],
   exports: [
     CommonModule,
@@ -19,7 +20,8 @@ import { ModalCardComponent } from './modal-card/modal-card.component';
     SearchComponent,
     ModalCardComponent,
     NgbModalModule,
-    AngularIbanModule
+    AngularIbanModule,
+    AccountCardComponent
   ]
 })
 export class ShareModule {}

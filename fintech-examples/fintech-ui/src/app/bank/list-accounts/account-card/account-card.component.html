@@ -1,6 +1,6 @@
 <div (click)="onSubmit()" class="lacc-list-container">
   <div class="lacc-list-item">
-    <h1 class="lacc-list-item__headline lacc-list-item__headline--small">{{ account.name }}</h1>
+    <h1 class="lacc-list-item__headline lacc-list-item__headline--small">{{ account?.name }}</h1>
     <p class="lacc-list-item__subheadline lacc-list-item__subheadline--large">
       {{ getAccountNumber(account) }}
     </p>

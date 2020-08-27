@@ -9,8 +9,9 @@ import { AccountList } from '../../api';
 import { BankComponent } from '../bank.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HttpResponse } from '@angular/common/http';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LoARetrievalInformation } from '../../models/consts';
+import { AccountCardComponent } from './account-card/account-card.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('ListAccountsComponent', () => {
   let component: ListAccountsComponent;
@@ -21,7 +22,8 @@ describe('ListAccountsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
-      declarations: [ListAccountsComponent, BankComponent, SidebarComponent],
+      declarations: [ListAccountsComponent, BankComponent, SidebarComponent, AccountCardComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
         AisService,
         {
