@@ -8,6 +8,7 @@ import { EnterTanComponent } from './enter-tan.component';
 import { StubUtilTests } from '../../ais/common/stub-util-tests';
 import { SessionService } from '../session.service';
 import { UpdateConsentAuthorizationService } from '../../api';
+import { ConsentAuthorizationService } from '../../api/api/consentAuthorization.service';
 
 describe('EnterTanComponent', () => {
   let component: EnterTanComponent;
@@ -17,6 +18,8 @@ describe('EnterTanComponent', () => {
   let sessionServiceSpy;
   let updateConsentAuthorizationService;
   let updateConsentAuthorizationServiceSpy;
+  let consentAuthorizationService;
+  let consentAuthorizationServiceSpy;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -31,11 +34,13 @@ describe('EnterTanComponent', () => {
     component = fixture.componentInstance;
     sessionService = TestBed.get(SessionService);
     updateConsentAuthorizationService = TestBed.get(UpdateConsentAuthorizationService);
+    consentAuthorizationService = TestBed.get(ConsentAuthorizationService);
     sessionServiceSpy = spyOn(sessionService, 'getRedirectCode').and.returnValue(StubUtilTests.REDIRECT_ID);
     updateConsentAuthorizationServiceSpy = spyOn(
       updateConsentAuthorizationService,
       'embeddedUsingPOST'
     ).and.returnValue(of());
+    consentAuthorizationServiceSpy = spyOn(consentAuthorizationService, 'authUsingGET').and.returnValue(of());
 
     fixture.detectChanges();
     form = component.reportScaResultForm;
