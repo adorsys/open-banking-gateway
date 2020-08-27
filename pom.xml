@@ -576,7 +576,7 @@
                                 <additionalDependency>
                                     <groupId>javax.interceptor</groupId>
                                     <artifactId>javax.interceptor-api</artifactId>
-                                    <version>1.2.2</version>
+                                    <version>${javax.interceptor.api.version}</version>
                                 </additionalDependency>
                             </additionalDependencies>
                         </configuration>
