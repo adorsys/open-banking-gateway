@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { map } from 'rxjs/operators';
 
 import { StubUtil } from '../utils/stub-util';
 import { UpdateConsentAuthorizationService } from '../../api';
@@ -40,15 +39,21 @@ export class EnterTanComponent implements OnInit {
     });
 
     this.consentAuthorizationService
-      .authUsingGET(this.authorizationSessionId, this.redirectCode)
-      .pipe(map(response => response.consentAuth.challengeData))
+      .authUsingGET(this.authorizationSessionId, this.redirectCode, 'response')
       .subscribe(response => {
         let message = 'Please check your ' + this.scaType + ' and fill in the field below.';
+        this.sessionService.setRedirectCode(
+          this.authorizationSessionId,
+          response.headers.get(ApiHeaders.REDIRECT_CODE)
+        );
 
-        if (response.data[0] != null) {
-          this.buildTanConfig(TanType.CHIP_OTP, response.data[0], message);
-        } else if (response.image) {
-          this.buildTanConfig(TanType.PHOTO_OTP, this.baseImageUrl + response.image, message);
+        const tmp: any = response.body;
+        const challengeData = tmp.challengeData;
+
+        if (challengeData.data[0] != null) {
+          this.buildTanConfig(TanType.CHIP_OTP, challengeData.data[0], message);
+        } else if (challengeData.image) {
+          this.buildTanConfig(TanType.PHOTO_OTP, this.baseImageUrl + challengeData.image, message);
         } else {
           message = 'We have sent you the confirmation number. ' + message;
           this.buildTanConfig(TanType.PIN, '', message);
@@ -62,7 +67,7 @@ export class EnterTanComponent implements OnInit {
         this.authorizationSessionId,
         StubUtil.X_REQUEST_ID, // TODO: real values instead of stubs
         StubUtil.X_XSRF_TOKEN, // TODO: real values instead of stubs
-        this.redirectCode,
+        this.sessionService.getRedirectCode(this.authorizationSessionId),
         { scaAuthenticationData: { SCA_CHALLENGE_DATA: this.reportScaResultForm.get('tan').value } },
         'response'
       )
