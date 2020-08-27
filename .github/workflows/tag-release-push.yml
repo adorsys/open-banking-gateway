@@ -6,13 +6,6 @@ on:
     tags:
       - v*
 
-env:
-  SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-  SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-  OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
-  DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
-  DOCKERHUB_PASS: ${{ secrets.DOCKERHUB_PASS }}
-
 jobs:
   build:
     runs-on: ubuntu-18.04

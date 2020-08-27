@@ -6,8 +6,6 @@ on:
     branches:
       - develop
 
-
-
 jobs:
   build:
     runs-on: ubuntu-18.04
