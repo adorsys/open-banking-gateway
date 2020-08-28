@@ -5,11 +5,11 @@
 To facilitate database population with bank data, `BankProtocolActionsSqlGeneratorTest.java` class contains a script that 
 generates all neccassary data, that can be used by liquibase plugin. The instruction how to use this script is the following:
 
-* add or replace your bank data to the `/Users/ivaniuminov/Workspace/open-banking-gateway/opba-db/src/main/resources/migration/migrations/banks.csv` 
+* add or replace your bank data to the `./opba-db/src/main/resources/migration/migrations/banks.csv` 
 file, with the same format it is now;
 * manually run script `BankProtocolActionsSqlGeneratorTest.java#convertToDbSql` script. It will generate 3 CSV files in 
 the samedirectory with `banks.csv`: `bank_action_data.csv` `bank_profile_data.csv` and `bank_sub_action_data.csv`. This 
-files are a data source for liquibase changesets  `/Users/ivaniuminov/Workspace/open-banking-gateway/opba-db/src/main/resources/migration/migrations/0003-add-staging-bank-configuration.xml`;
+files are a data source for liquibase changesets  `./opba-db/src/main/resources/migration/migrations/0003-add-staging-bank-configuration.xml`;
 * set liquibase context value to the `prod`: in `application.yml` add `spring.liquibase.contexts=dev`. This will enable 
 liquibase script to run during the OBG application start;
 * run Open Banking Gateway.
