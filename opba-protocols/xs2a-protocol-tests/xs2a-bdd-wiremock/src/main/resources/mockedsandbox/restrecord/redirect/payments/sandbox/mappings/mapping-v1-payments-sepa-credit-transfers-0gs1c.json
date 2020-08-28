@@ -1,9 +1,9 @@
 {
-  "id" : "3f4ca944-cee5-331a-9798-82996b90bd4d",
-  "scenarioName": "Embedded max.musterman initiate payment",
+  "id" : "218d776c-cc95-459c-869f-3cde7add39a1",
+  "scenarioName": "Redirect anton.brueckner initiate payment",
   "requiredScenarioState": "Finalised",
   "request" : {
-    "url" : "/v1/payments/sepa-credit-transfers/XWE3m-MOSgiyLSbxm0gs9cTpUIYh6Zd7AGdfJFpzoL6i92f92FPqxs78swMVBY91cgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q",
+    "url" : "/v1/payments/sepa-credit-transfers/ZmKrFV1N5n5mgDQi5Ik_qYVmmNo0VQ0fQ3pCOOsQSTW-Cn1FUKfaIqPYTpfSkPrFcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q",
     "method" : "GET",
     "headers": {
       "X-Request-ID": {
@@ -16,7 +16,7 @@
   },
   "response" : {
     "status" : 200,
-    "bodyFileName" : "body-v1-payments-sepa-credit-transfers-j08oa.json",
+    "bodyFileName" : "body-v1-payments-sepa-credit-transfers-j081a.json",
     "headers" : {
       "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
       "X-Request-Id" : "817856b1-aac1-41d0-98a6-a2fdf9910fe0",
@@ -25,5 +25,5 @@
       "Keep-Alive" : "timeout=60"
     }
   },
-  "uuid" : "3f4ca944-cee5-331a-9798-82996b90bd4d"
+  "uuid" : "218d776c-cc95-459c-869f-3cde7add39a1"
 }
