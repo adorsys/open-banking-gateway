@@ -102,7 +102,6 @@ public class PaymentService {
                     bankId,
                     payment.getTppServiceSessionId()).getBody();
             PaymentInitiationWithStatusResponse paymentInitiationWithStatusResponse = Mappers.getMapper(PaymentInitiationWithStatusResponseMapper.class).mapFromTppToFintech(body);
-            paymentInitiationWithStatusResponse.setInitiationDate(payment.getCreationTime().toLocalDate());
             result.add(paymentInitiationWithStatusResponse);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
