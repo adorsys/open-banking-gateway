@@ -37,6 +37,6 @@ public class ListAccountsRequest implements FacadeServiceableGetter {
     /**
      * For list accounts balances can be retrieved too
      */
-    private boolean withBalance;
+    private Boolean withBalance;
 
 }
