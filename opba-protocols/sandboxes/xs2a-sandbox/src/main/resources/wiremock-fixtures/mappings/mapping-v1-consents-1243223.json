@@ -1,0 +1,30 @@
+{
+  "id" : "13e84835-8e5e-3f65-8732-65852ea3dbb1",
+  "request" : {
+    "url" : "/v1/consents/Xv1G4Il2O5NFS7_tvYzqmHiFJVj1cjG68kxY3ySMxtwysZRh6LIlip9ygXuqonMNW-wY5B9_ytaUuw4OzBvN2cz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q",
+    "method" : "DELETE",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "application/json"
+      },
+      "X-Request-ID" : {
+        "matches" : "[0-9a-zA-z\\-]+"
+      },
+      "PSU-ID" : {
+        "equalTo" : "max.musterman"
+      },
+      "PSU-IP-Address" : {
+        "matches": "\\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\\.|$)){4}\\b"
+      }
+    }
+  },
+  "response" : {
+    "status" : 204,
+    "body" : "",
+    "headers" : {
+      "X-Request-Id" : "c30fa73f-7032-11ea-9ad8-422578fbd335",
+      "Date" : "Fri, 27 Mar 2020 13:57:02 GMT"
+    }
+  },
+  "uuid" : "13e84835-8e5e-3f65-8732-65852ea3dbb9"
+}
