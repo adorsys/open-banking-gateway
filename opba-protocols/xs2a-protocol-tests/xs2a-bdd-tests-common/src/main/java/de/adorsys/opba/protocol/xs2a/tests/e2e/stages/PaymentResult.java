@@ -87,7 +87,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     }
 
     public SELF fintech_calls_payment_information(String iban) {
-        withPaymentInfoHeaders(UUID.randomUUID().toString())
+        ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString())
                 .header(SERVICE_SESSION_ID, serviceSessionId)
             .when()
                 .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
@@ -109,6 +109,8 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
                 .body("remittanceInformationUnstructured", equalTo("Ref. Number WBG-1222"))
                 .body("transactionStatus", equalTo(TransactionStatus.ACSP.name()))
                 .extract();
+
+        assertThat(ZonedDateTime.now(ZoneOffset.UTC)).isAfter(ZonedDateTime.parse(response.body().jsonPath().getString("createdAt")));
         return self();
     }
 
