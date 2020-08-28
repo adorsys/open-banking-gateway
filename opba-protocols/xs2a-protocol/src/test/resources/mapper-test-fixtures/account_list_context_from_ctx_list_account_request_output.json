@@ -7,6 +7,7 @@
     "frequencyPerDay": null,
     "combinedServiceIndicator": null
   },
+  "withBalance": false,
   "aspspId": "33333-33333",
   "psuIpAddress": "1.1.1.1",
   "fintechRedirectUriOk": "localhost:2222",
