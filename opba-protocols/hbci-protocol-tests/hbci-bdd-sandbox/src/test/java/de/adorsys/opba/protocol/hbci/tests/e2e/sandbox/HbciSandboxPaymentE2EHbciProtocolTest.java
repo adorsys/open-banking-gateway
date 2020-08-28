@@ -27,6 +27,7 @@ import java.util.UUID;
 
 import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.Const.HBCI_SANDBOX_CONFIG;
 import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.BANK_BLZ_30000003_ID;
+import static de.adorsys.opba.protocol.hbci.tests.e2e.sandbox.hbcisteps.FixtureConst.MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.MOCKED_SANDBOX;
 import static de.adorsys.opba.protocol.xs2a.tests.TestProfiles.ONE_TIME_POSTGRES_RAMFS;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -94,7 +95,8 @@ class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
         then()
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
-                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.PDNG.name());
+                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.PDNG.name())
+                .fintech_calls_payment_information_hbci(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID);
     }
 
     private void makeHbciAdapterToPointToHbciMockEndpoints() {
