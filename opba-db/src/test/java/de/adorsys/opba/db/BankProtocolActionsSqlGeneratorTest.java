@@ -38,6 +38,9 @@ public class BankProtocolActionsSqlGeneratorTest {
     private static final String BANK_SUB_ACTION_CSV_HEADER = "id,action_id,protocol_action,sub_protocol_bean_name";
     private static final String BANK_PROFILE_CSV_HEADER = "uuid,name,bic,url,adapter_id,bank_code,idp_url,aspsp_sca_approaches";
 
+    private static final String HBCI_NAME_PREFIX = ",HBCI ";
+    private static final String HBCI_ADAPTER_ID_PREFIX = ",hbci-";
+
     @Value("${bank-action-generator.action.start-id}")
     private Integer bankActionId;
 
@@ -81,7 +84,7 @@ public class BankProtocolActionsSqlGeneratorTest {
     }
 
     private void writeHbciBankData(String bankRecord) {
-        String recordWithNewUUID = replaceWithRandomUUID(bankRecord);
+        String recordWithNewUUID = replaceWithHbciData(bankRecord);
         writelnToFile(BANK_PROFILE_DESTINATION_PATH, recordWithNewUUID);
         writeHbciBankActionData(recordWithNewUUID);
     }
@@ -127,8 +130,31 @@ public class BankProtocolActionsSqlGeneratorTest {
         writelnToFile(BANK_PROFILE_DESTINATION_PATH, BANK_PROFILE_CSV_HEADER);
     }
 
-    private String replaceWithRandomUUID(String bankRecord) {
-        return String.format("%s%s", UUID.randomUUID().toString(), bankRecord.substring(bankRecord.indexOf(',')));
+    private String replaceWithHbciData(String bankRecord) {
+        return String.format("%s%s", UUID.randomUUID().toString(), insertHbciPrefixes(bankRecord));
+    }
+
+    /**
+     * Adds 'HBCI ' prefix to the name and 'hbci-' prefix to the adapter_id of the bank
+     */
+    private String insertHbciPrefixes(String input) {
+        StringBuilder result = new StringBuilder(HBCI_NAME_PREFIX);
+        int skipCommas = 3;
+        char[] chars = input.substring(input.indexOf(',') + 1).toCharArray();
+
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i] == ',') {
+                skipCommas--;
+                if (skipCommas == 0) {
+                    result.append(HBCI_ADAPTER_ID_PREFIX);
+                    continue;
+                }
+            }
+
+            result.append(chars[i]);
+        }
+
+        return result.toString();
     }
 
     @SneakyThrows
