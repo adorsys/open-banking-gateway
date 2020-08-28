@@ -23,6 +23,7 @@ import org.mapstruct.Named;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,8 +75,8 @@ public class HbciResultBodyExtractor {
     public interface HbciToAccountBodyMapper {
 
         @Mapping(
-                expression = "java(com.google.common.base.Strings.isNullOrEmpty(account.getIban()) ? account.getAccountNumber() : account.getIban())",
-                target = "resourceId"
+            expression = "java(com.google.common.base.Strings.isNullOrEmpty(account.getIban()) ? account.getAccountNumber() : account.getIban())",
+            target = "resourceId"
         )
         @Mapping(source = "accountNumber", target = "bban")
         @Mapping(source = "balances", target = "balances", qualifiedByName = "hbciBalancesToProtocolBalances")
@@ -85,24 +86,28 @@ public class HbciResultBodyExtractor {
         @Named("hbciBalancesToProtocolBalances")
         static List<Balance> hbciBalancesToProtocolBalances(BalancesReport hbciBalances) {
             List<Balance> protocolBalances = new ArrayList<>();
-            if (hbciBalances != null) {
-                add(protocolBalances, "available", hbciBalances.getAvailableBalance());
-                add(protocolBalances, "credit", hbciBalances.getCreditBalance());
-                add(protocolBalances, "ready", hbciBalances.getReadyBalance());
-                add(protocolBalances, "unready", hbciBalances.getUnreadyBalance());
-                add(protocolBalances, "used", hbciBalances.getUsedBalance());
+            if (hbciBalances == null) {
+                return protocolBalances;
             }
+
+            add(protocolBalances, "available", hbciBalances.getAvailableBalance());
+            add(protocolBalances, "credit", hbciBalances.getCreditBalance());
+            add(protocolBalances, "ready", hbciBalances.getReadyBalance());
+            add(protocolBalances, "unready", hbciBalances.getUnreadyBalance());
+            add(protocolBalances, "used", hbciBalances.getUsedBalance());
             return protocolBalances;
         }
 
         static void add(List<Balance> protocolBalances, String type, de.adorsys.multibanking.domain.Balance hbciBalance) {
-            if (hbciBalance != null) {
-                protocolBalances.add(Balance.builder()
-                    .balanceType(type)
-                    .lastChangeDateTime(hbciBalance.getDate().atStartOfDay(ZoneId.of("Europe/Berlin")).toOffsetDateTime())
-                    .balanceAmount(Amount.builder().amount(hbciBalance.getAmount().toString()).currency(hbciBalance.getCurrency()).build())
-                    .build());
+            if (hbciBalance == null) {
+                return;
             }
+            protocolBalances.add(Balance.builder()
+                .balanceType(type)
+                .lastChangeDateTime(hbciBalance.getDate().atStartOfDay(ZoneOffset.UTC).toOffsetDateTime())
+                .balanceAmount(Amount.builder().amount(hbciBalance.getAmount().toString()).currency(hbciBalance.getCurrency()).build())
+                .build());
+
         }
 
 
