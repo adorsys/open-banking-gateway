@@ -7,11 +7,15 @@ import de.adorsys.opba.db.repository.jpa.PaymentRepository;
 import de.adorsys.xs2a.adapter.adapter.StandardPaymentProduct;
 import de.adorsys.xs2a.adapter.service.model.TransactionStatus;
 import io.restassured.RestAssured;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.SERVICE_SESSION_PASSWORD;
@@ -113,14 +117,15 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
     }
 
     public SELF fintech_calls_payment_status(String bankId, String expectedStatus) {
-        withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
+        ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
                     .get(PIS_PAYMENT_STATUS_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
                 .then()
                     .statusCode(OK.value())
                     .body("transactionStatus", equalTo(expectedStatus))
-                    .body("createdAt", equalTo("122"));
+                .extract();
+        assertThat(ZonedDateTime.now(ZoneOffset.UTC)).isAfter(ZonedDateTime.parse(response.body().jsonPath().getString("createdAt")));
         return self();
     }
 
