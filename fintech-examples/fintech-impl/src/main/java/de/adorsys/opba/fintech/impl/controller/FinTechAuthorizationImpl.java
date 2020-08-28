@@ -86,8 +86,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
         if (okOrNotOk.equals(OkOrNotOk.OK) && consentService.confirmConsent(authId, xRequestID)) {
 
             if (Boolean.TRUE.equals(consentEntity.getConsentConfirmed())) {
-                throw new RuntimeException("Programming error, " + consentEntity.getConsentType()
-                    + " consent createed at " + consentEntity.getCreationTime() + " must not be confirmed yet");
+               log.warn("Consent created at \" + {} + \" must not be confirmed yet (but is OK for HBCI))", consentEntity.getCreationTime());
             }
             // There may exist a valid consent that has not been used, because client
             // wanted to retrieve new consent. So we search all valid consents and delete them.
