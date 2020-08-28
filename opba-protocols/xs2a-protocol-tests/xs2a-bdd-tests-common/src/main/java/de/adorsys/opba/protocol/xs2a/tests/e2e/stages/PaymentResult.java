@@ -31,6 +31,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.SE
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.withSignatureHeaders;
 import static de.adorsys.opba.restapi.shared.HttpHeaders.SERVICE_SESSION_ID;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
@@ -78,12 +79,12 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         return self();
     }
 
-    public void fintech_calls_payment_information_iban_400() {
-        fintech_calls_payment_information("DE80760700240271232400");
+    public SELF fintech_calls_payment_information_iban_400() {
+        return fintech_calls_payment_information("DE80760700240271232400");
     }
 
-    public void fintech_calls_payment_information_iban_700() {
-        fintech_calls_payment_information("DE38760700240320465700");
+    public SELF fintech_calls_payment_information_iban_700() {
+        return fintech_calls_payment_information("DE38760700240320465700");
     }
 
     public SELF fintech_calls_payment_information(String iban) {
@@ -108,6 +109,42 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
                 .body("creditorAddress.country", equalTo("DE"))
                 .body("remittanceInformationUnstructured", equalTo("Ref. Number WBG-1222"))
                 .body("transactionStatus", equalTo(TransactionStatus.ACSP.name()))
+                .extract();
+
+        assertThat(ZonedDateTime.now(ZoneOffset.UTC)).isAfter(ZonedDateTime.parse(response.body().jsonPath().getString("createdAt")));
+        return self();
+    }
+
+    public SELF fintech_calls_payment_information_iban_400_wiremock() {
+        return fintech_calls_payment_information_wiremock("DE80760700240271232400");
+    }
+
+    public SELF fintech_calls_payment_information_iban_700_wiremock() {
+        return fintech_calls_payment_information_wiremock("DE38760700240320465700");
+    }
+
+    public SELF fintech_calls_payment_information_wiremock(String iban) {
+        ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString())
+                .header(SERVICE_SESSION_ID, serviceSessionId)
+                .when()
+                .get(PIS_PAYMENT_INFORMATION_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+                .then()
+                .statusCode(OK.value())
+                .body("endToEndIdentification", emptyOrNullString())
+                .body("debtorAccount.iban", equalTo(iban))
+                .body("debtorAccount.currency", equalTo("EUR"))
+                .body("instructedAmount.currency", equalTo("EUR"))
+                .body("instructedAmount.amount", equalTo("12.34"))
+                .body("creditorAccount.iban", equalTo("AL90208110080000001039531801"))
+                .body("creditorAccount.currency", equalTo("EUR"))
+                .body("creditorAgent", emptyOrNullString())
+                .body("creditorName", equalTo("peter"))
+                .body("creditorAddress.streetName", emptyOrNullString())
+                .body("creditorAddress.buildingNumber", emptyOrNullString())
+                .body("creditorAddress.postCode",emptyOrNullString())
+                .body("creditorAddress.country", emptyOrNullString())
+                .body("remittanceInformationUnstructured", equalTo("test transfer"))
+                .body("transactionStatus", equalTo(TransactionStatus.ACSC.name()))
                 .extract();
 
         assertThat(ZonedDateTime.now(ZoneOffset.UTC)).isAfter(ZonedDateTime.parse(response.body().jsonPath().getString("createdAt")));
