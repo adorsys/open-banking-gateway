@@ -111,7 +111,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
                 .body("transactionStatus", equalTo(TransactionStatus.ACSP.name()))
                 .extract();
 
-        assertThat(ZonedDateTime.now(ZoneOffset.UTC)).isAfter(ZonedDateTime.parse(response.body().jsonPath().getString("createdAt")));
+        assertThat(ZonedDateTime.now(ZoneOffset.UTC)).isAfterOrEqualTo(ZonedDateTime.parse(response.body().jsonPath().getString("createdAt")));
         return self();
     }
 
@@ -147,7 +147,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
                 .body("transactionStatus", equalTo(TransactionStatus.ACSC.name()))
                 .extract();
 
-        assertThat(ZonedDateTime.now(ZoneOffset.UTC)).isAfter(ZonedDateTime.parse(response.body().jsonPath().getString("createdAt")));
+        assertThat(ZonedDateTime.now(ZoneOffset.UTC)).isAfterOrEqualTo(ZonedDateTime.parse(response.body().jsonPath().getString("createdAt")));
         return self();
     }
 
@@ -164,7 +164,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
                     .statusCode(OK.value())
                     .body("transactionStatus", equalTo(expectedStatus))
                 .extract();
-        assertThat(ZonedDateTime.now(ZoneOffset.UTC)).isAfter(ZonedDateTime.parse(response.body().jsonPath().getString("createdAt")));
+        assertThat(ZonedDateTime.now(ZoneOffset.UTC)).isAfterOrEqualTo(ZonedDateTime.parse(response.body().jsonPath().getString("createdAt")));
         return self();
     }
 
