@@ -1,12 +1,12 @@
 package de.adorsys.opba.protocol.bpmnshared.config.flowable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
-import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,33 +27,19 @@ public class JsonCustomSerializerTest {
 
     @Test
     void serializeLessThanMaxValueTest() {
-        String input = generateRandomStringOfLength(2047);
+        String input = Strings.repeat("a", 2047);
         assertThat(serializer.isAbleToStore(input)).isTrue();
     }
 
     @Test
     void serializeEqualsToMaxValueTest() {
-        String input = generateRandomStringOfLength(2048);
+        String input = Strings.repeat("a", 2048);
         assertThat(serializer.isAbleToStore(input)).isTrue();
     }
 
     @Test
     void serializeMoreThanMaxValueTest() {
-        String input = generateRandomStringOfLength(2049);
+        String input = Strings.repeat("a", 2049);
         assertThat(serializer.isAbleToStore(input)).isFalse();
-    }
-
-    private String generateRandomStringOfLength(int length) {
-        int leftLimit = 97;
-        int rightLimit = 122;
-        Random random = new Random();
-        StringBuilder buffer = new StringBuilder(length);
-
-        for (int i = 0; i < length; i++) {
-            int randomLimitedInt = leftLimit + (int) (random.nextFloat() * (rightLimit - leftLimit + 1));
-            buffer.append((char) randomLimitedInt);
-        }
-
-        return buffer.toString();
     }
 }
