@@ -62,6 +62,7 @@ public class HbciTransactionsToFacadeMapper {
         @Mapping(expression = "java(de.adorsys.opba.protocol.api.dto.result.body.Amount.builder().currency(booking.getCurrency()).amount(booking.getAmount().toString()).build())",
                 target = "transactionAmount")
         @Mapping(source = "otherAccount", target = "debtorAccount")
+        @Mapping(expression = "java(null != booking.getUsage() ? booking.getUsage() : booking.getText())", target = "remittanceInformationUnstructured")
         TransactionDetailsBody map(Booking booking);
     }
 }
