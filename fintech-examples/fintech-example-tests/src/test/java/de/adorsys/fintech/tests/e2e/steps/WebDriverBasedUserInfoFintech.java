@@ -48,7 +48,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_clicks_redirect_back_to_tpp_button(WebDriver driver) {
-        waitForPageLoadAndUrlContains(driver, "consent-result?redirectCode");
+        waitForPageLoadAndUrlContains(driver, "account-information/result");
         performClick(driver, By.className("btn-primary"));
         return self();
     }
