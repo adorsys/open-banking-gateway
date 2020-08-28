@@ -14,16 +14,18 @@ import { ConsentAuthorizationService } from '../../api/api/consentAuthorization.
 })
 export class EnterTanComponent implements OnInit {
   @Input() authorizationSessionId: string;
-  @Input() scaType: string;
+  @Input() scaType: ScaType;
   @Input() wrongSca: boolean;
   @Output() enteredSca = new EventEmitter<any>();
 
   reportScaResultForm: FormGroup;
   redirectCode: string;
   baseImageUrl = 'data:image/jpg;base64,';
+  private message = '';
 
   public tanConfig = new TanConfig();
-  public tanType = TanType;
+  public tanType = ScaType;
+  private challengeData: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -33,6 +35,7 @@ export class EnterTanComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.message = 'Please check your ' + this.scaType + ' and fill in the field below.';
     this.redirectCode = this.sessionService.getRedirectCode(this.authorizationSessionId);
     this.reportScaResultForm = this.formBuilder.group({
       tan: ['', Validators.required]
@@ -41,22 +44,24 @@ export class EnterTanComponent implements OnInit {
     this.consentAuthorizationService
       .authUsingGET(this.authorizationSessionId, this.redirectCode, 'response')
       .subscribe(response => {
-        let message = 'Please check your ' + this.scaType + ' and fill in the field below.';
         this.sessionService.setRedirectCode(
           this.authorizationSessionId,
           response.headers.get(ApiHeaders.REDIRECT_CODE)
         );
 
-        const tmp: any = response.body;
-        const challengeData = tmp.challengeData;
+        const authStateResponseBody: any = response.body;
+        this.challengeData = authStateResponseBody.challengeData;
 
-        if (challengeData.data[0] != null) {
-          this.buildTanConfig(TanType.CHIP_OTP, challengeData.data[0], message);
-        } else if (challengeData.image) {
-          this.buildTanConfig(TanType.PHOTO_OTP, this.baseImageUrl + challengeData.image, message);
-        } else {
-          message = 'We have sent you the confirmation number. ' + message;
-          this.buildTanConfig(TanType.PIN, '', message);
+        switch (this.scaType) {
+          case ScaType.CHIP_OTP:
+            this.buildChipOtp();
+            break;
+          case ScaType.PHOTO_OTP:
+            this.buildPhotoOtp();
+            break;
+          default:
+            this.buildEmailOrSmsOtp();
+            break;
         }
       });
   }
@@ -77,20 +82,33 @@ export class EnterTanComponent implements OnInit {
       });
   }
 
-  private buildTanConfig(type: TanType, data: string, message: string): void {
-    this.tanConfig = { type, data, description: message };
+  private buildPhotoOtp(): void {
+    this.tanConfig = {
+      type: ScaType.PHOTO_OTP,
+      data: this.baseImageUrl + this.challengeData.image,
+      description: this.message
+    };
+  }
+
+  private buildChipOtp(): void {
+    this.tanConfig = { type: ScaType.CHIP_OTP, data: this.challengeData.data[0], description: this.message };
+  }
+
+  private buildEmailOrSmsOtp(): void {
+    this.message = 'We have sent you the confirmation number. ' + this.message;
+    this.tanConfig = { type: ScaType.EMAIL, data: '', description: this.message };
   }
 }
 
 export class TanConfig {
-  type?: TanType;
+  type?: ScaType;
   data?: string;
   description?: string;
 }
 
-export enum TanType {
-  PIN,
-  QR_CODE,
-  CHIP_OTP,
-  PHOTO_OTP
+export enum ScaType {
+  EMAIL = 'EMAIL',
+  QR_CODE = 'QR_CODE',
+  CHIP_OTP = 'CHIP_OTP',
+  PHOTO_OTP = 'PHOTO_OTP'
 }
