@@ -382,6 +382,11 @@ components:
       maxLength: 140
       example: "Ref Number Merchant"
 
+    createdAt:
+      description: Payment creation time according to OpenBanking database
+      type: string
+      format: date-time
+
     generalError:
       type: object
       properties:

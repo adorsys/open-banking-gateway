@@ -12,6 +12,7 @@ import de.adorsys.opba.protocol.facade.services.pis.GetPaymentStatusService;
 import de.adorsys.opba.restapi.shared.mapper.FacadeResponseBodyToRestBodyMapper;
 import de.adorsys.opba.restapi.shared.service.FacadeResponseMapper;
 import de.adorsys.opba.tppbankingapi.Const;
+import de.adorsys.opba.tppbankingapi.pis.model.generated.PaymentInitiationStatusResponse;
 import de.adorsys.opba.tppbankingapi.pis.model.generated.PaymentInitiationWithStatusResponse;
 import de.adorsys.opba.tppbankingapi.pis.resource.generated.TppBankingApiPaymentStatusPisApi;
 import lombok.RequiredArgsConstructor;
@@ -96,7 +97,7 @@ public class TppBankingApiPisInfoController implements TppBankingApiPaymentStatu
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = Const.API_MAPPERS_PACKAGE)
-    public interface PaymentStatusBodyToApiMapper extends FacadeResponseBodyToRestBodyMapper<PaymentInitiationWithStatusResponse, PaymentStatusBody> {
-        PaymentInitiationWithStatusResponse map(PaymentStatusBody facade);
+    public interface PaymentStatusBodyToApiMapper extends FacadeResponseBodyToRestBodyMapper<PaymentInitiationStatusResponse, PaymentStatusBody> {
+        PaymentInitiationStatusResponse map(PaymentStatusBody facade);
     }
 }

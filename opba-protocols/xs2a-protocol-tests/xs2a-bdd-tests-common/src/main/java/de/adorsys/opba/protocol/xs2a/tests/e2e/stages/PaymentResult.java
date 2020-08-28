@@ -116,11 +116,11 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
-                .get(PIS_PAYMENT_STATUS_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
+                    .get(PIS_PAYMENT_STATUS_ENDPOINT, StandardPaymentProduct.SEPA_CREDIT_TRANSFERS.getSlug())
                 .then()
-                .statusCode(OK.value())
-                .body("transactionStatus", equalTo(expectedStatus))
-                .extract();
+                    .statusCode(OK.value())
+                    .body("transactionStatus", equalTo(expectedStatus))
+                    .body("createdAt", equalTo("122"));
         return self();
     }
 

@@ -25,6 +25,7 @@ import org.mapstruct.Mapping;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneOffset;
 import java.util.concurrent.CompletableFuture;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
@@ -56,7 +57,10 @@ public class Xs2aGetPaymentInfoEntrypoint implements GetPaymentInfoState {
                 params.getPath().toParameters()
         );
 
+        // All we can do to return guaranteed payment date is read the payment date directly from our payment entity
+        // As NextGenPSD2 1.3.6 does not guarantee any payment date/time fields at this endpoint
         Result<PaymentInfoBody> result = new SuccessResult<>(mapper.map(paymentInformation.getBody()));
+        result.getBody().setCreatedAt(payment.getCreatedAtTime().atOffset(ZoneOffset.UTC));
         return CompletableFuture.completedFuture(result);
     }
 
