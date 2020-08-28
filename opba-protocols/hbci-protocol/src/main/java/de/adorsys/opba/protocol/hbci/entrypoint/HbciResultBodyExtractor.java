@@ -13,7 +13,7 @@ import de.adorsys.opba.protocol.api.dto.result.body.TransactionsResponseBody;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListAccountsResult;
 import de.adorsys.opba.protocol.hbci.service.protocol.ais.dto.AisListTransactionsResult;
-import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PaymentInitiateBody;
+import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PaymentInitiateBodyWithPayment;
 import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PisSinglePaymentResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,11 +57,13 @@ public class HbciResultBodyExtractor {
     }
 
     public PaymentStatusBody extractPaymentStatusBody(ProcessResponse result) {
-        return paymentToFacadeMapper.mapStatus((PaymentInitiateBody) result.getResult());
+        PaymentInitiateBodyWithPayment response = (PaymentInitiateBodyWithPayment) result.getResult();
+        return paymentToFacadeMapper.mapStatus(response);
     }
 
     public PaymentInfoBody extractPaymentInfoBody(ProcessResponse result) {
-        return paymentToFacadeMapper.mapInfo((PaymentInitiateBody) result.getResult());
+        PaymentInitiateBodyWithPayment response = (PaymentInitiateBodyWithPayment) result.getResult();
+        return paymentToFacadeMapper.mapInfo(response);
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE, uses = {HbciToAccountBodyMapper.class})
@@ -119,9 +121,19 @@ public class HbciResultBodyExtractor {
         SinglePaymentBody map(PisSinglePaymentResult paymentResult);
 
         @Mapping(source = "paymentStatus", target = "transactionStatus")
-        PaymentStatusBody mapStatus(PaymentInitiateBody paymentResult);
+        @Mapping(source = "payment.createdAtTime", target = "createdAt")
+        PaymentStatusBody mapStatus(PaymentInitiateBodyWithPayment paymentResult);
 
         @Mapping(source = "paymentStatus", target = "transactionStatus")
-        PaymentInfoBody mapInfo(PaymentInitiateBody paymentResult);
+        @Mapping(source = "payment.createdAtTime", target = "createdAt")
+        PaymentInfoBody mapInfo(PaymentInitiateBodyWithPayment paymentResult);
+
+        default OffsetDateTime mapDateFromOffsetTime(Instant dateTime) {
+            if (null == dateTime) {
+                return null;
+            }
+
+            return dateTime.atZone(ZoneOffset.UTC).toOffsetDateTime();
+        }
     }
 }
