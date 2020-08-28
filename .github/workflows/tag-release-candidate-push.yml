@@ -27,10 +27,10 @@ jobs:
           GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
           STAGE_ARTIFACTORY_USERNAME: ${{ secrets.GITHUB_USER }}
           STAGE_ARTIFACTORY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_CANDIDATE_DOMAIN: openshift-registry.adorsys.de
-          RELEASE_CANDIDATE_PROJECT_NAME: open-banking-gateway-integ
 
       - name: Deploy develop artifacts to OpenShift
         run: ./scripts/deploy_openshift_release_candidate.sh
         env:
           OPENSHIFT_TOKEN: ${{ secrets.OPENSHIFT_TOKEN }}
+          RELEASE_CANDIDATE_DOMAIN: openshift-registry.adorsys.de
+          RELEASE_CANDIDATE_PROJECT_NAME: open-banking-gateway-integ
