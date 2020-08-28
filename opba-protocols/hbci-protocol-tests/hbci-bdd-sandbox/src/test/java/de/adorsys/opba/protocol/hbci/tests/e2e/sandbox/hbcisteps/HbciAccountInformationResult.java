@@ -122,7 +122,8 @@ public class HbciAccountInformationResult<SELF extends HbciAccountInformationRes
         DocumentContext body = JsonPath.parse(responseContent);
 
         // TODO: Currently no IBANs as mapping is not yet completed
-
+        assertThat(body).extracting(it -> it.read("$.transactions.booked[*]")).asList().hasSize(1);
+        assertThat(body).extracting(it -> it.read("$.transactions.pending[*]")).asList().isEmpty();
         assertThat(body)
                 .extracting(it -> it.read("$.transactions.booked[*].transactionAmount.amount"))
                 .asList()
@@ -132,6 +133,8 @@ public class HbciAccountInformationResult<SELF extends HbciAccountInformationRes
                 .containsOnly(
                         new BigDecimal("-100.00")
                 );
+        assertThat(body).extracting(it -> it.read("$.transactions.booked[*].remittanceInformationUnstructured"))
+                .asList().containsOnly("Payment For Account Insurance");
         return self();
     }
 
