@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ShareModule } from '../../common/share.module';
@@ -9,7 +9,6 @@ import { RedirectPageComponent } from '../redirect-page/redirect-page.component'
 
 @NgModule({
   declarations: [ListAccountsComponent, ListTransactionsComponent, RedirectPageComponent],
-  imports: [CommonModule, ListAccountsRoutingModule, ShareModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [CommonModule, ListAccountsRoutingModule, ShareModule]
 })
 export class ListAccountsModule {}

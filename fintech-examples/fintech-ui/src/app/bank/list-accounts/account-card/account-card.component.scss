@@ -1,0 +1,39 @@
+@import 'src/assets/themes/variables';
+// list-accounts
+.withoutOutline {
+  outline: none;
+}
+
+.lacc-list-container {
+  display: flex;
+  align-items: center;
+  //width: 95%;
+  text-align: start;
+  cursor: pointer;
+  justify-content: space-between;
+}
+
+.lacc-list-item {
+  background-color: #fff;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  &__headline {
+    font-size: 0.5rem;
+
+    &--small {
+      font-size: 0.85rem;
+      color: $primary;
+    }
+  }
+
+  &__subheadline {
+    font-size: 0.85rem;
+    margin-bottom: 0;
+    color: $primary;
+
+    &--large {
+      font-size: 1.1rem;
+    }
+  }
+}

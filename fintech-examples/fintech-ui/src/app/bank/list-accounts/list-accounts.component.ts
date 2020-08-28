@@ -13,7 +13,6 @@ import { StorageService } from '../../services/storage.service';
 })
 export class ListAccountsComponent implements OnInit {
   accounts: AccountDetails[];
-  selectedAccount: string;
   bankId = '';
   loARetrievalInformation;
 
@@ -29,16 +28,8 @@ export class ListAccountsComponent implements OnInit {
     this.loadAccount();
   }
 
-  selectAccount(id) {
-    this.selectedAccount = id;
-  }
-
-  isSelected(id) {
-    return id === this.selectedAccount ? 'selected' : 'unselected';
-  }
-
-  visibleAccountNumber(acc: AccountDetails) {
-    return !acc.iban || acc.iban.length === 0 ? acc.bban : acc.iban;
+  onSubmit(id: any) {
+    this.router.navigate([id], { relativeTo: this.route });
   }
 
   private loadAccount(): void {
@@ -65,12 +56,27 @@ export class ListAccountsComponent implements OnInit {
           // to be removed when issue https://github.com/adorsys/open-banking-gateway/issues/848 is resolved
           // or Fintech UI refactored
           this.accounts = response.body.accounts;
-          const loa = [];
+          let loa = [];
+          this.loadTestAccounts();
           for (const accountDetail of this.accounts) {
             loa.push(new AccountStruct(accountDetail.resourceId, accountDetail.iban, accountDetail.name));
           }
           this.storageService.setLoa(loa);
       }
     });
+  }
+
+  loadTestAccounts(): void {
+    const loa = [];
+    const id = 'dfdfdfd4drrrrr-444rr33-er43';
+    const id1 = '4443fdfd4drrrrr-444rr33-er43';
+    const iban = 'DE2750010517421134792522';
+    const iban1 = 'DE2750010517421134792622';
+    const name = 'bob';
+    const name1 = 'tom';
+    loa.push(new AccountStruct(id, iban, name));
+    loa.push(new AccountStruct(id1, iban1, name1));
+    this.accounts.push(loa.pop());
+    this.accounts.push(loa.pop());
   }
 }

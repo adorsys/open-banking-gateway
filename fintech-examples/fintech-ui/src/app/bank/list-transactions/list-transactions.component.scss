@@ -15,14 +15,9 @@
   border-radius: 3px;
   width: 100%;
   text-align: start;
-  margin: 6px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.145);
   @media (max-width: $breakpoint-sm) {
     flex-wrap: wrap;
-  }
-
-  &--shadow {
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -44,8 +39,4 @@
 }
 .ltx-amount-currency {
   text-align: right;
-}
-
-.ltx-category {
-  font-size: larger;
 }

@@ -1,7 +1,7 @@
 <nav class="navbar navbar-light py-3" *ngIf="isLoggedIn()">
   <a class="navbar-brand text-primary mr-4" routerLink="/">
     <img class="logo" [src]="" />
-    <span class="ml-3">Fintechui</span>
+    <span class="ml-3 text-bold">FintechUI</span>
     <ul class="list-group">
       <li class="list-group-item tinyRedirect">session expires {{ sessionValidUntil }}</li>
       <li class="list-group-item tinyRedirect" *ngFor="let validUntil of redirectsValidUntil">
