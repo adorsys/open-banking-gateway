@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  FintechRetrieveAllSinglePaymentsService,
-  FintechSinglePaymentInitiationService,
-  PaymentInitiationWithStatusResponse
-} from '../../../api';
+import { FintechRetrieveAllSinglePaymentsService, PaymentInitiationWithStatusResponse } from '../../../api';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -14,7 +10,7 @@ import { map } from 'rxjs/operators';
 })
 export class PaymentAccountPaymentsComponent implements OnInit {
   public static ROUTE = 'payments';
-  list : PaymentInitiationWithStatusResponse[];
+  list: PaymentInitiationWithStatusResponse[];
 
   constructor(
     private router: Router,
@@ -22,20 +18,18 @@ export class PaymentAccountPaymentsComponent implements OnInit {
     private fintechRetrieveAllSinglePaymentsService: FintechRetrieveAllSinglePaymentsService
   ) {}
 
-
   ngOnInit() {
     const bankId = this.route.snapshot.paramMap.get('bankid');
     const accountId = this.route.snapshot.paramMap.get('accountid');
-    this.fintechRetrieveAllSinglePaymentsService.retrieveAllSinglePayments(bankId, accountId, '', '', 'response')
+    this.fintechRetrieveAllSinglePaymentsService
+      .retrieveAllSinglePayments(bankId, accountId, '', '', 'response')
       .pipe(map(response => response))
-      .subscribe(
-        response => {
-          this.list = response.body;
-        }
-      );
+      .subscribe(response => {
+        this.list = response.body;
+      });
   }
 
-  initiateSinglePayment( ) {
+  initiateSinglePayment() {
     console.log('go to initiate');
     this.router.navigate(['../initiate'], { relativeTo: this.route });
   }
