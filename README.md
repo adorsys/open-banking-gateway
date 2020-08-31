@@ -80,6 +80,8 @@ The following picture displays the overall technical architecture concept of thi
  as you don't need to leave IntelliJ to change diagram or to see what class is used at which step.
  
  - Starting with project: [How to start with project](https://github.com/adorsys/open-banking-gateway/tree/develop/how-to-start-with-project) 
+ 
+  - Populating database with bank data: [How to fill database with bank data](https://github.com/adorsys/open-banking-gateway/tree/develop/opba-db/README.md) 
 
 ## Documentation
 
