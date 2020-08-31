@@ -1,0 +1,74 @@
+<databaseChangeLog logicalFilePath="db.changelog-1.0.xml" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-1" context="staging">
+        <loadData
+                encoding="utf8"
+                relativeToChangelogFile="true"
+                file="bank_profile_data.csv"
+                catalogName=""
+                tableName="${table-prefix}bank">
+            <column header="uuid"       name="uuid"         type="STRING"/>
+            <column header="name"       name="name"         type="STRING"/>
+            <column header="bic"        name="bic"          type="STRING"/>
+            <column header="url"                            type="skip"/>
+            <column header="adapter_id"                     type="skip"/>
+            <column header="bank_code"  name="bank_code"    type="STRING"/>
+            <column header="idp_url"                        type="skip"/>
+            <column header="aspsp_sca_approaches"           type="skip"/>
+        </loadData>
+        <rollback />
+    </changeSet>
+
+    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-2" context="staging">
+        <loadData
+                encoding="utf8"
+                relativeToChangelogFile="true"
+                file="bank_profile_data.csv"
+                catalogName=""
+                tableName="${table-prefix}bank_profile">
+            <column header="uuid"       name="bank_uuid"                type="STRING"/>
+            <column header="name"                                       type="skip"/>
+            <column header="bic"                                        type="skip"/>
+            <column header="url"        name="url"                      type="STRING"/>
+            <column header="adapter_id" name="adapter_id"               type="STRING"/>
+            <column header="bank_code"                                  type="skip"/>
+            <column header="idp_url"    name="idp_url"                  type="STRING"/>
+            <column header="aspsp_sca_approaches" name="sca_approaches" type="STRING"/>
+        </loadData>
+        <rollback />
+    </changeSet>
+
+    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-3" context="staging">
+        <loadData
+                encoding="utf8"
+                relativeToChangelogFile="true"
+                file="bank_action_data.csv"
+                catalogName=""
+                tableName="${table-prefix}bank_action">
+            <column header="id"                 name="id"                   type="NUMERIC"/>
+            <column header="bank_uuid"          name="bank_uuid"            type="STRING"/>
+            <column header="protocol_action"    name="protocol_action"      type="STRING"/>
+            <column header="protocol_bean_name" name="protocol_bean_name"   type="STRING"/>
+            <column header="consent_supported"  name="consent_supported"    type="BOOLEAN"/>
+
+        </loadData>
+        <rollback />
+    </changeSet>
+
+    <changeSet author="iiuex@adorsys.com.ua" id="2020-08-21-4" context="staging">
+        <loadData
+                encoding="utf8"
+                relativeToChangelogFile="true"
+                file="bank_sub_action_data.csv"
+                catalogName=""
+                tableName="${table-prefix}bank_sub_action">
+            <column header="id"                     name="id"                       type="NUMERIC"/>
+            <column header="action_id"              name="action_id"                type="NUMERIC"/>
+            <column header="protocol_action"        name="protocol_action"          type="STRING"/>
+            <column header="sub_protocol_bean_name" name="sub_protocol_bean_name"   type="STRING"/>
+        </loadData>
+        <rollback />
+    </changeSet>
+</databaseChangeLog>
