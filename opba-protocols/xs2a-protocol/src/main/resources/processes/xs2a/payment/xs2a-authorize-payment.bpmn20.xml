@@ -133,13 +133,13 @@
         <omgdc:Bounds height="80.0" width="100.0" x="945.0" y="64.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A" id="BPMNShape_sid-7E036180-B980-4A2D-8B6C-7407E2C90C2A">
-        <omgdc:Bounds height="40.0" width="40.0" x="975.0" y="455.0"/>
+        <omgdc:Bounds height="40.0" width="40.0" x="974.0" y="512.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="callFintechWebhook" id="BPMNShape_callFintechWebhook">
         <omgdc:Bounds height="80.0" width="100.0" x="1590.0" y="300.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="sid-xs2aReportToFintechPaymentDenied" id="BPMNShape_sid-xs2aReportToFintechPaymentDenied">
-        <omgdc:Bounds height="79.99999999999994" width="100.0" x="1473.7334" y="494.43332"/>
+        <omgdc:Bounds height="79.99999999999994" width="100.0" x="1464.7334" y="492.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="sid-1139B3D0-261B-4594-B84F-638928669262" id="BPMNEdge_sid-1139B3D0-261B-4594-B84F-638928669262">
         <omgdi:waypoint x="119.94999891869115" y="340.0"/>
@@ -161,7 +161,7 @@
         <omgdi:waypoint x="335.327868852459" y="338.32704918032783"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="isOkConsent" id="BPMNEdge_isOkConsent">
-        <omgdi:waypoint x="994.5918367346939" y="455.3885480572597"/>
+        <omgdi:waypoint x="993.59186" y="512.38855"/>
         <omgdi:waypoint x="994.0" y="427.0"/>
         <omgdi:waypoint x="1485.0" y="427.0"/>
         <omgdi:waypoint x="1485.0" y="379.95000000000005"/>
@@ -178,8 +178,10 @@
         <omgdi:waypoint x="1082.3664122137404" y="195.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE" id="BPMNEdge_sid-F821ADB7-7314-4ADE-B811-D8A7F49E2DAE">
-        <omgdi:waypoint x="879.9499999999999" y="475.0"/>
-        <omgdi:waypoint x="975.0" y="475.0"/>
+        <omgdi:waypoint x="879.95" y="475.0"/>
+        <omgdi:waypoint x="921.975" y="475.0"/>
+        <omgdi:waypoint x="921.9749" y="532.0"/>
+        <omgdi:waypoint x="974.0" y="532.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="noUserPasswordPresent" id="BPMNEdge_noUserPasswordPresent">
         <omgdi:waypoint x="410.0" y="254.9408570119157"/>
@@ -219,9 +221,8 @@
         <omgdi:waypoint x="645.0" y="274.95000000000005"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643" id="BPMNEdge_sid-DCA3C0C2-1C4E-404E-8C08-582FDD3F6643">
-        <omgdi:waypoint x="995.0" y="494.9334026622295"/>
-        <omgdi:waypoint x="995.0" y="535.0"/>
-        <omgdi:waypoint x="1473.7334" y="534.43335"/>
+        <omgdi:waypoint x="1014.0" y="532.0"/>
+        <omgdi:waypoint x="1464.7334" y="532.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="multipleScaAvailable" id="BPMNEdge_multipleScaAvailable">
         <omgdi:waypoint x="765.0" y="215.0"/>
@@ -233,8 +234,8 @@
         <omgdi:waypoint x="1190.0" y="235.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-74F0F25F-E309-400F-ABEF-378D608C16C1" id="BPMNEdge_sid-74F0F25F-E309-400F-ABEF-378D608C16C1">
-        <omgdi:waypoint x="1573.7334" y="534.43335"/>
-        <omgdi:waypoint x="1640.0" y="534.43335"/>
+        <omgdi:waypoint x="1564.7334" y="532.0"/>
+        <omgdi:waypoint x="1639.0" y="532.0"/>
         <omgdi:waypoint x="1640.0" y="443.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-BC0026EE-A538-4399-8BA7-080F7C2383C9" id="BPMNEdge_sid-BC0026EE-A538-4399-8BA7-080F7C2383C9">
@@ -270,8 +271,8 @@
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-4a34c340-aab0-44e7-8a43-b2027d998bd5" bpmnElement="sid-0d710e07-f06f-46bc-ba9e-760744521777">
         <omgdi:waypoint x="901.1667" y="626.0"/>
-        <omgdi:waypoint x="995.0" y="626.0"/>
-        <omgdi:waypoint x="995.0" y="494.99997"/>
+        <omgdi:waypoint x="994.00006" y="626.0"/>
+        <omgdi:waypoint x="994.0" y="552.0"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-72fe0a19-d760-4ebc-a51f-e29d5244f937" bpmnElement="sid-b161ab3c-a45b-4ad8-84f7-2f3c23641eb5">
         <omgdc:Bounds x="508.0891" y="455.0" width="40.0" height="40.0"/>
