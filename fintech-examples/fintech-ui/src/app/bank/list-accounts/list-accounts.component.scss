@@ -1,23 +1,6 @@
 @import 'src/assets/themes/variables';
-// list-accounts
-.withoutOutline {
-  outline: none;
-}
 
 .add-mr-mb:not(:last-child) {
   margin-right: 1rem;
   margin-bottom: 1rem;
-}
-
-.lacc-list-container {
-  display: flex;
-  align-items: center;
-  //width: 95%;
-  text-align: start;
-  cursor: pointer;
-}
-
-.lacc-list-item {
-  background-color: #fff;
-  padding: 16px;
 }

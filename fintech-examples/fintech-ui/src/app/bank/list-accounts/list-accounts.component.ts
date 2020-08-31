@@ -14,7 +14,6 @@ import { StorageService } from '../../services/storage.service';
 export class ListAccountsComponent implements OnInit {
   accounts: AccountDetails[];
   bankId = '';
-  loARetrievalInformation;
 
   constructor(
     private router: Router,
