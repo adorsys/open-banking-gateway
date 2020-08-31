@@ -1,0 +1,15 @@
+<span *ngIf="payments?.length > 0" class="ltx-category">Payments</span>
+<div *ngFor="let payment of payments">
+  <div class="ltx-list-container">
+    <div class="left">
+      <span class="ltx-description">{{ payment?.transactionStatus }}</span>
+      <span class="ltx-description">{{ payment?.initiationDate }}</span>
+      <span class="ltx-description">{{ payment?.creditorName }}</span>
+      <span class="ltx-description">{{ payment?.remittanceInformationUnstructured }}</span>
+    </div>
+    <div class="right">
+      <span class="ltx-amount-number">{{ payment?.instructedAmount.amount }} </span>
+      <span>{{ payment?.instructedAmount.currency }}</span>
+    </div>
+  </div>
+</div>
