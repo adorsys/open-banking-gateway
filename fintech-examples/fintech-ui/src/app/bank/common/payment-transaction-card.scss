@@ -1,0 +1,32 @@
+@import 'src/assets/themes/variables';
+
+.ltx-list-container {
+  @extend %layout-padding;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 3px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.145);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+.left {
+  display: flex;
+
+  .ltx-description {
+    padding-right: 1.5rem;
+  }
+}
+
+.ltx-amount-number {
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  padding-right: 5px;
+}
+
+@media (max-width: $breakpoint-sm) {
+  .left,
+  .ltx-description {
+    display: block;
+  }
+}
