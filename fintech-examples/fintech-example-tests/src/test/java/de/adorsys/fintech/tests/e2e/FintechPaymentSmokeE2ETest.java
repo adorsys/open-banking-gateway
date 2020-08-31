@@ -95,6 +95,8 @@ public class FintechPaymentSmokeE2ETest extends SpringScenarioTest<FintechServer
                 .and()
                 .user_for_embeeded_provided_to_consent_ui_initial_parameters_to_list_transactions_consent(firefoxDriver, username)
                 .and()
+                .user_navigates_to_page(firefoxDriver)
+                .and()
                 .user_confirm_button_for_payment(firefoxDriver)
                 .and()
                 .user_click_on_confirm_button(firefoxDriver)

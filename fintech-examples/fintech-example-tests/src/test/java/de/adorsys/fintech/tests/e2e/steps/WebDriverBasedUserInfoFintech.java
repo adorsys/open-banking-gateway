@@ -68,7 +68,6 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_inputs_username_and_password_for_redirect(WebDriver driver, String username) {
-        waitPlusTimer(driver, timeout.getSeconds());
         clickOnButton(driver, By.name("login"));
         sendText(driver, By.name("login"), username);
         sendText(driver, By.name("pin"), "12345");
@@ -322,7 +321,7 @@ public class WebDriverBasedUserInfoFintech<SELF extends WebDriverBasedUserInfoFi
     }
 
     public SELF user_confirm_button_for_payment(WebDriver driver) {
-        waitForPageLoadAndUrlContains(driver, "entry-payments/review-consent");
+        waitForPageLoadAndUrlEndsWithPath(driver, "entry-payments/review-consent");
         performClick(driver, By.id(SUBMIT_ID));
         return self();
     }
