@@ -31,14 +31,14 @@ public class Xs2aConsentInfo {
      * Is the current consent authorization in OAUTH (not OAUTH pre-step) mode.
      */
     public boolean isOauth2Authorization(Xs2aContext ctx) {
-        return false;
+        return ctx.isOauth2IntegratedNeeded();
     }
 
     /**
      * Is the current consent in OAUTH-Pre-step (authentication) mode.
      */
     public boolean isOauth2AuthenticationPreStep(Xs2aContext ctx) {
-        return false;
+        return ctx.isOauth2PreStepNeeded();
     }
 
     /**
@@ -52,7 +52,8 @@ public class Xs2aConsentInfo {
      * Is the Oauth2 token available and ready to use (not expired)
      */
     public boolean isOauth2TokenAvailableAndReadyToUse(Xs2aContext ctx) {
-        return false;
+        // FIXME - Token validity check
+        return null == ctx.getOauth2token();
     }
 
     /**

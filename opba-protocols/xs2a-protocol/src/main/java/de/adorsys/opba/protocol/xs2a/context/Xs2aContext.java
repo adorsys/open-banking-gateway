@@ -151,6 +151,16 @@ public class Xs2aContext extends BaseContext {
      */
     private TokenResponse oauth2token;
 
+    /**
+     * Indicates that ASPSP requires Oauth2-pre-step for consent authorization.
+     */
+    private boolean isOauth2PreStepNeeded;
+
+    /**
+     * Indicates that ASPSP requires Oauth2-integrated step for consent authorization.
+     */
+    private boolean isOauth2IntegratedNeeded;
+
     @JsonIgnore
     public String getPsuPassword() {
         TransientDataEntry entry = this.transientStorage().get();
