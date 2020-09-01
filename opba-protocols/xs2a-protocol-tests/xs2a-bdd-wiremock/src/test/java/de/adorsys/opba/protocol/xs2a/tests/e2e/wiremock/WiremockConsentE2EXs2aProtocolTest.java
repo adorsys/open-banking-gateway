@@ -11,6 +11,7 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.Xs2aProtocolApplic
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,12 +63,15 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
         aisUrls.setNok(aisUrls.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
     }
 
-    @Test
-    // @ParameterizedTest
-    // @EnumSource(Approach.class)
-    // void testAccountsListWithBalancesWithConsentUsingEmbedded(Approach expectedApproach) {
-    void testAccountsListWithBalancesWithConsentUsingEmbedded() {
-        Approach expectedApproach = Approach.EMBEDDED;
+
+    @ParameterizedTest
+    @CsvSource({
+        "REDIRECT, 0",
+        "REDIRECT, 2",
+        "EMBEDDED, 0",
+        "EMBEDDED, 2"
+    })
+    void testAccountsListWithBalancesWithConsentUsingEmbedded(Approach expectedApproach, int numberOfExpectedBalances) {
         given()
             .embedded_mock_of_sandbox_for_max_musterman_accounts_running_for_happy_path()
             .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
@@ -75,7 +79,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
             .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-            .fintech_calls_list_accounts_for_max_musterman_with_balance(true)
+            .fintech_calls_list_accounts_for_max_musterman_with_balance(numberOfExpectedBalances > 0)
             .and()
             .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
             .and()
@@ -89,7 +93,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
         then()
             .open_banking_has_consent_for_max_musterman_account_list()
             .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session_with_balance(true, 2);
+            .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session_with_balance(true, numberOfExpectedBalances);
     }
 
     @ParameterizedTest
@@ -776,4 +780,5 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                         MAX_MUSTERMAN_RESOURCE_ID, DATE_FROM, DATE_TO, BOTH_BOOKING
                 );
     }
+
 }

@@ -1,9 +1,9 @@
 {
-  "id": "f3942343-62dd-4f3c-a2f8-cd9e27e6dfc2",
+  "id": "4ad65018-1a5f-43fd-8198-25f0fd4e0a47",
   "scenarioName": "Embedded max.musterman initiate consent",
   "requiredScenarioState": "Finalised",
   "request": {
-    "url": "/v1/accounts?withBalance=true",
+    "url": "/v1/accounts?withBalance=false",
     "method": "GET",
     "headers": {
       "X-Request-ID": {
@@ -19,12 +19,12 @@
   },
   "response": {
     "status": 200,
-    "bodyFileName": "body-v1-accounts-55314.json",
+    "bodyFileName": "body-v1-accounts-with-balance-false.json",
     "headers": {
       "X-Request-Id": "6a5334bd-3233-11ea-b535-e2b5b1f1970b",
       "Content-Type": "application/json;charset=UTF-8",
       "Date": "Wed, 08 Jan 2020 16:25:26 GMT"
     }
   },
-  "uuid": "f3942343-62dd-4f3c-a2f8-cd9e27e6dfc2"
+  "uuid": "4ad65018-1a5f-43fd-8198-25f0fd4e0a47"
 }

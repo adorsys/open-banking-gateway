@@ -197,7 +197,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
     ) {
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER)
             .header(SERVICE_SESSION_ID, serviceSessionId)
-            .queryParam("withBalance", true)
+            .queryParam("withBalance", withBalances > 0)
             .when()
             .get(AIS_ACCOUNTS_ENDPOINT)
             .then()
