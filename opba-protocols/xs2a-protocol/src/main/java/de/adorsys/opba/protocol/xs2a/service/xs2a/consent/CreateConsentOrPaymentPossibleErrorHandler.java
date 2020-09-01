@@ -37,7 +37,7 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
         } catch (ErrorResponseException ex) {
             tryHandleWrongIbanOrCredentialsException(execution, ex);
         } catch (OAuthException ex) {
-            tryHandleOauth2Exception(execution, ex);
+            tryHandleOauth2Exception(execution);
         }
     }
 
@@ -54,7 +54,7 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
         throw ex;
     }
 
-    private void tryHandleOauth2Exception(DelegateExecution execution, OAuthException ex) {
+    private void tryHandleOauth2Exception(DelegateExecution execution) {
         ContextUtil.getAndUpdateContext(
                 execution,
                 (Xs2aContext ctx) -> ctx.setOauth2PreStepNeeded(true)

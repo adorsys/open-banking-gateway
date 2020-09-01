@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class AuthorizationErrorSink {
+public class AuthorizationPossibleErrorHandler {
 
     private final AspspMessages messageConfig;
 
@@ -27,7 +27,7 @@ public class AuthorizationErrorSink {
      * @param tryAuthorize Authorization function to call
      * @param onFail Fallback function to call if retryable exception occurred.
      */
-    public void swallowAuthorizationErrorForLooping(Runnable tryAuthorize, Consumer<ErrorResponseException> onFail) {
+    public void handlePossibleAuthorizationError(Runnable tryAuthorize, Consumer<ErrorResponseException> onFail) {
         try {
             tryAuthorize.run();
         } catch (ErrorResponseException ex) {

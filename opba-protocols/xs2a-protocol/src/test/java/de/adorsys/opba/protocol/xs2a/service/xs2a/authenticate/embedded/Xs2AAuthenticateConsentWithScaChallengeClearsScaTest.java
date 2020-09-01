@@ -35,7 +35,7 @@ class Xs2AAuthenticateConsentWithScaChallengeClearsScaTest extends BaseMockitoTe
     private AccountInformationService ais;
 
     @Mock
-    private AuthorizationErrorSink errorSink;
+    private AuthorizationPossibleErrorHandler errorSink;
 
     @Mock
     private DelegateExecution delegateExecution;
@@ -56,7 +56,7 @@ class Xs2AAuthenticateConsentWithScaChallengeClearsScaTest extends BaseMockitoTe
     void scaChallengeCleaned() {
         Xs2aContext context = new Xs2aContext();
         context.setRequestScoped(new RequestScopedStub());
-        doCallRealMethod().when(errorSink).swallowAuthorizationErrorForLooping(any(), any());
+        doCallRealMethod().when(errorSink).handlePossibleAuthorizationError(any(), any());
         when(mockParams.getHeaders()).thenReturn(new Xs2aStandardHeaders());
         when(mockParams.getBody()).thenReturn(new TransactionAuthorisation());
         when(mockParams.getPath()).thenReturn(new Xs2aAuthorizedConsentParameters());
@@ -74,7 +74,7 @@ class Xs2AAuthenticateConsentWithScaChallengeClearsScaTest extends BaseMockitoTe
     }
 
     public static class Xs2AAuthenticateConsentWithScaChallengeTestable extends Xs2aAisAuthenticateConsentWithScaChallenge {
-        public Xs2AAuthenticateConsentWithScaChallengeTestable(Extractor extractor, Xs2aValidator validator, AccountInformationService ais, AuthorizationErrorSink errorSink) {
+        public Xs2AAuthenticateConsentWithScaChallengeTestable(Extractor extractor, Xs2aValidator validator, AccountInformationService ais, AuthorizationPossibleErrorHandler errorSink) {
             super(extractor, validator, ais, errorSink);
         }
 

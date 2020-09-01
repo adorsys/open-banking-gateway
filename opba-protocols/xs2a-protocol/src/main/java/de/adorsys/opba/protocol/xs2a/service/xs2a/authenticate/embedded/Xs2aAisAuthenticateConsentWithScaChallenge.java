@@ -31,7 +31,7 @@ public class Xs2aAisAuthenticateConsentWithScaChallenge extends ValidatedExecuti
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
-    private final AuthorizationErrorSink errorSink;
+    private final AuthorizationPossibleErrorHandler errorSink;
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
@@ -43,7 +43,7 @@ public class Xs2aAisAuthenticateConsentWithScaChallenge extends ValidatedExecuti
         ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, TransactionAuthorisation> params =
                 extractor.forExecution(context);
 
-        errorSink.swallowAuthorizationErrorForLooping(
+        errorSink.handlePossibleAuthorizationError(
                 () -> aisAuthorizeWithSca(execution, params),
                 ex -> aisOnWrongSca(execution)
         );

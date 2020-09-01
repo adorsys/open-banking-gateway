@@ -33,7 +33,7 @@ public class Xs2aPisAuthenticatePaymentWithScaChallenge extends ValidatedExecuti
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final PaymentInitiationService pis;
-    private final AuthorizationErrorSink errorSink;
+    private final AuthorizationPossibleErrorHandler errorSink;
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aPisContext context) {
@@ -44,7 +44,7 @@ public class Xs2aPisAuthenticatePaymentWithScaChallenge extends ValidatedExecuti
     protected void doRealExecution(DelegateExecution execution, Xs2aPisContext context) {
         ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, TransactionAuthorisation> params = extractor.forExecution(context);
 
-        errorSink.swallowAuthorizationErrorForLooping(
+        errorSink.handlePossibleAuthorizationError(
                 () -> pisAuthorizeWithSca(execution, params),
                 ex -> pisOnWrongSca(execution)
         );
