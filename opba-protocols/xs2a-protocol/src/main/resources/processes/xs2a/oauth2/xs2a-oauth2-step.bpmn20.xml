@@ -10,7 +10,7 @@
     <sequenceFlow id="oauth2FlowNotRequired" sourceRef="sid-ef5a15f0-fbfd-48ac-b35a-f64d250e0f9d" targetRef="sid-e0dbf285-c6c2-4571-ac5e-9038fcbf8448" name="Oauth2 not required">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
-    <serviceTask id="oauth2ExchangeCodeToToken" flowable:exclusive="true" name="Exchange Oauth2 code to token. Expecting PKCE" flowable:async="true" flowable:triggerable="false"/>
+    <serviceTask id="oauth2ExchangeCodeToToken" flowable:exclusive="true" name="Exchange Oauth2 code to token. Expecting PKCE" flowable:async="true" flowable:triggerable="false" flowable:delegateExpression="${xs2aOauth2ExchangeCodeToToken}"/>
     <sequenceFlow id="sid-64007d67-937b-4d29-9404-e47c84b3c5cd" sourceRef="redirectUserToOauth2AuthorizationServer" targetRef="oauth2ExchangeCodeToToken"/>
     <sequenceFlow id="oauth2Required" sourceRef="sid-ef5a15f0-fbfd-48ac-b35a-f64d250e0f9d" targetRef="checkThatOauth2TokenIsPresentAndNotExpired" name="Oauth2 required">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2Required(CONTEXT)}</conditionExpression>

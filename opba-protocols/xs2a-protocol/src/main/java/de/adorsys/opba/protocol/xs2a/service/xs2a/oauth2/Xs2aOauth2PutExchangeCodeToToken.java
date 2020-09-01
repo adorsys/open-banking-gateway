@@ -16,7 +16,7 @@ import lombok.SneakyThrows;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
-@Service("xs2aOauth2PutExchangeCodeToToken")
+@Service("xs2aOauth2ExchangeCodeToToken")
 @RequiredArgsConstructor
 public class Xs2aOauth2PutExchangeCodeToToken extends ValidatedExecution<Xs2aContext> {
 
