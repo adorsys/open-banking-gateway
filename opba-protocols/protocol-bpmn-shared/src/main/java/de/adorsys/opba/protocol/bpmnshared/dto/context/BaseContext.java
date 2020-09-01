@@ -85,6 +85,7 @@ public class BaseContext implements RequestScoped, UsesRequestScoped {
      * Where last redirection is pointing to. Used to finish authorization when process has ended.
      */
     private LastRedirectionTarget lastRedirection;
+
     /**
      * Flag to indicate that last provided credentials (SCA challenge/TAN, PIN/password) were wrong
      */

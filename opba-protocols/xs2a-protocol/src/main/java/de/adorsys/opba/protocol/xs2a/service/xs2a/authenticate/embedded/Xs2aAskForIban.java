@@ -14,7 +14,7 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
 
 /**
  * Special component to return PSU back to IBAN (dedicated consent) input page after the ASPSP replies that
- * the IBAN list is incorrect (after {@link de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateConsentOrPaymentErrorSink} has captured an error).
+ * the IBAN list is incorrect (after {@link de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateConsentOrPaymentPossibleErrorHandler} has captured an error).
  * Suspends the process to wait for user input.
  */
 @Service("xs2aAskForIban")
