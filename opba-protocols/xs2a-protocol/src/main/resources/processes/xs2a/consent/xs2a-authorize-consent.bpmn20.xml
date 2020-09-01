@@ -7,11 +7,10 @@
       <documentation>scaStatus: recieved -&gt; psuIdentified</documentation>
     </serviceTask>
     <endEvent id="end" name="end"/>
-    <sequenceFlow id="sid-1139B3D0-261B-4594-B84F-638928669262" sourceRef="start" targetRef="sid-6dec4a31-4e2c-4fe0-a4fe-c84065dc101f"/>
+    <sequenceFlow id="sid-1139B3D0-261B-4594-B84F-638928669262" sourceRef="start" targetRef="startAuthorization"/>
     <exclusiveGateway id="scaChallengeSelector">
       <documentation>Determines which SCA method was selected by bank</documentation>
     </exclusiveGateway>
-    <sequenceFlow id="sid-D15341DB-F89B-491F-9F3D-FFA8D98F770F" sourceRef="startAuthorization" targetRef="scaChallengeSelector"/>
     <serviceTask id="notifyUserWithRedirect" name="Notify user with redirect url for challenge. Suspends to wait" flowable:async="true" flowable:delegateExpression="${xs2aDoRedirectToAspspForScaChallenge}" flowable:triggerable="true"/>
     <sequenceFlow id="redirect" name="redirect" sourceRef="scaChallengeSelector" targetRef="sid-3424b907-c3e7-43e3-89e7-7bfbeefbe7ad">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.isRedirect(CONTEXT)}]]></conditionExpression>
@@ -80,25 +79,26 @@
     </sequenceFlow>
     <sequenceFlow id="sid-6bd3dc18-27ee-4022-950c-5ff4e2505b97" sourceRef="sid-09316664-e311-425c-bd6a-fa214a377692" targetRef="wasRedirectConsentGrantSuccessful"/>
     <callActivity id="sid-068f587c-6e55-4650-b88e-47a3aa2b7ae7" name="Oauth2 step for user authentication (pre-step)" flowable:async="true" calledElement="xs2a-oauth2-step" flowable:inheritVariables="true"/>
-    <sequenceFlow id="sid-0b996be1-5a25-4a7f-bb5d-0ade084cc429" sourceRef="sid-068f587c-6e55-4650-b88e-47a3aa2b7ae7" targetRef="startAuthorization"/>
-    <sequenceFlow id="sid-0a8789bc-70d3-4328-9e1a-beb8eff091d5" sourceRef="sid-6dec4a31-4e2c-4fe0-a4fe-c84065dc101f" targetRef="sid-068f587c-6e55-4650-b88e-47a3aa2b7ae7" name="Oauth2 pre-step (authentication)">
+    <sequenceFlow id="sid-0a8789bc-70d3-4328-9e1a-beb8eff091d5" sourceRef="sid-a0cc94b7-eece-4d3b-8f42-930f4ecf2a53" targetRef="sid-068f587c-6e55-4650-b88e-47a3aa2b7ae7" name="Oauth2 pre-step (authentication)">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2AuthenticationPreStep(CONTEXT)}</conditionExpression>
-    </sequenceFlow>
-    <exclusiveGateway id="sid-6dec4a31-4e2c-4fe0-a4fe-c84065dc101f" default="noOauth2preStep"/>
-    <sequenceFlow id="noOauth2preStep" sourceRef="sid-6dec4a31-4e2c-4fe0-a4fe-c84065dc101f" targetRef="startAuthorization">
-      <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
     <sequenceFlow id="sid-f4fce3e6-8152-44a1-bfa2-5d7569f8032b" name="Authenticated with Oauth2 pre-step (pre-Authenticated)" sourceRef="scaChallengeSelector" targetRef="isMultipleScaAvailable">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
+    <exclusiveGateway id="sid-a0cc94b7-eece-4d3b-8f42-930f4ecf2a53" default="proceedToAuthentication"/>
+    <sequenceFlow id="sid-bb89bc8d-9d95-4ee7-ae10-c41c6d5e7a9a" sourceRef="startAuthorization" targetRef="sid-a0cc94b7-eece-4d3b-8f42-930f4ecf2a53"/>
+    <sequenceFlow id="proceedToAuthentication" sourceRef="sid-a0cc94b7-eece-4d3b-8f42-930f4ecf2a53" targetRef="scaChallengeSelector">
+      <conditionExpression xsi:type="tFormalExpression"/>
+    </sequenceFlow>
+    <sequenceFlow id="sid-df499483-b302-43ae-90e8-675bfca87935" sourceRef="sid-068f587c-6e55-4650-b88e-47a3aa2b7ae7" targetRef="startAuthorization"/>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-authorize-consent">
     <bpmndi:BPMNPlane bpmnElement="xs2a-authorize-consent" id="BPMNPlane_xs2a-authorize-consent">
       <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
-        <omgdc:Bounds height="30.0" width="30.0" x="13.305555" y="325.0"/>
+        <omgdc:Bounds height="30.0" width="30.0" x="14.972221" y="323.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="startAuthorization" id="BPMNShape_startAuthorization">
-        <omgdc:Bounds height="80.0" width="100.0" x="185.00003" y="300.0"/>
+        <omgdc:Bounds height="80.0" width="100.0" x="94.0278" y="298.00003"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
         <omgdc:Bounds height="28.0" width="28.0" x="1626.0" y="415.0"/>
@@ -149,8 +149,8 @@
         <omgdc:Bounds height="79.99999999999994" width="100.0" x="1483.6" y="435.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="sid-1139B3D0-261B-4594-B84F-638928669262" id="BPMNEdge_sid-1139B3D0-261B-4594-B84F-638928669262">
-        <omgdi:waypoint x="43.255554" y="340.0"/>
-        <omgdi:waypoint x="93.53242" y="340.00003"/>
+        <omgdi:waypoint x="44.92222" y="338.0"/>
+        <omgdi:waypoint x="94.0278" y="338.00003"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="redirect" id="BPMNEdge_redirect">
         <omgdi:waypoint x="355.0" y="357.9427242888402"/>
@@ -162,10 +162,6 @@
         <omgdi:waypoint x="765.0" y="421.0"/>
         <omgdi:waypoint x="550.0" y="421.0"/>
         <omgdi:waypoint x="550.0" y="383.95000000000005"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="sid-D15341DB-F89B-491F-9F3D-FFA8D98F770F" id="BPMNEdge_sid-D15341DB-F89B-491F-9F3D-FFA8D98F770F">
-        <omgdi:waypoint x="284.95004" y="339.16666"/>
-        <omgdi:waypoint x="335.327868852459" y="338.32704918032783"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="isOkConsent" id="BPMNEdge_isOkConsent">
         <omgdi:waypoint x="994.5918367346939" y="455.3885480572597"/>
@@ -287,30 +283,34 @@
         <omgdi:waypoint x="995.0" y="494.9334"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-2010cd7b-46ae-4354-a5b4-304a35913788" bpmnElement="sid-068f587c-6e55-4650-b88e-47a3aa2b7ae7">
-        <omgdc:Bounds x="185.00002" y="82.194435" width="100.0" height="80.0"/>
+        <omgdc:Bounds x="94.0278" y="83.8611" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-3ede8de3-eafa-41d6-a731-a35d5d99d957" bpmnElement="sid-0b996be1-5a25-4a7f-bb5d-0ade084cc429">
-        <omgdi:waypoint x="235.00002" y="162.19443"/>
-        <omgdi:waypoint x="235.00003" y="300.00003"/>
-      </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-9f17f63a-eb1b-4cf9-b4ae-92521bca390e" bpmnElement="sid-0a8789bc-70d3-4328-9e1a-beb8eff091d5">
-        <omgdi:waypoint x="113.53242" y="320.00003"/>
-        <omgdi:waypoint x="111.33334" y="121.49999"/>
-        <omgdi:waypoint x="184.99995" y="122.194435"/>
-      </bpmdi:BPMNEdge>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-4ddc7b2e-1340-40a1-8171-40f5722c2b87" bpmnElement="sid-6dec4a31-4e2c-4fe0-a4fe-c84065dc101f">
-        <omgdc:Bounds x="93.53241" y="320.00003" width="40.0" height="40.0"/>
-      </bpmdi:BPMNShape>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-e0ba7add-fa1b-4213-bfd7-b8c3910cc30f" bpmnElement="noOauth2preStep">
-        <omgdi:waypoint x="133.53241" y="340.00003"/>
-        <omgdi:waypoint x="185.00003" y="340.00003"/>
+        <omgdi:waypoint x="267.32886" y="317.99994"/>
+        <omgdi:waypoint x="267.32886" y="123.86111"/>
+        <omgdi:waypoint x="194.0278" y="123.8611"/>
       </bpmdi:BPMNEdge>
       <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-855482c3-b46b-4a89-85d2-fffc1e840127" bpmnElement="sid-f4fce3e6-8152-44a1-bfa2-5d7569f8032b">
         <omgdi:waypoint x="355.0" y="320.0"/>
-        <omgdi:waypoint x="354.99997" y="142.19443"/>
-        <omgdi:waypoint x="713.8999" y="144.0"/>
+        <omgdi:waypoint x="355.0" y="135.9444"/>
+        <omgdi:waypoint x="713.8999" y="135.9444"/>
         <omgdi:waypoint x="713.8999" y="235.0"/>
         <omgdi:waypoint x="745.0" y="235.0"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-2c619f23-ec8f-4c0f-9252-1c0c612c3015" bpmnElement="sid-a0cc94b7-eece-4d3b-8f42-930f4ecf2a53">
+        <omgdc:Bounds x="247.32887" y="317.99997" width="40.0" height="40.0"/>
+      </bpmdi:BPMNShape>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-229e562f-6f1f-4d55-a5ac-b59207594418" bpmnElement="sid-bb89bc8d-9d95-4ee7-ae10-c41c6d5e7a9a">
+        <omgdi:waypoint x="194.0278" y="338.00003"/>
+        <omgdi:waypoint x="247.32887" y="337.99997"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-3acdbc1f-3eba-4dfb-8814-f6449ba1c211" bpmnElement="proceedToAuthentication">
+        <omgdi:waypoint x="287.3289" y="337.99997"/>
+        <omgdi:waypoint x="335.0" y="338.0"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-84a04c83-950d-4b4d-bdb6-c1511ab2800f" bpmnElement="sid-df499483-b302-43ae-90e8-675bfca87935">
+        <omgdi:waypoint x="144.0278" y="163.8611"/>
+        <omgdi:waypoint x="144.0278" y="298.00003"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
