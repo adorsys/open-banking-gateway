@@ -17,7 +17,7 @@
     </callActivity>
     <endEvent id="end" name="end"/>
     <sequenceFlow id="sid-F617FA73-A930-45E8-80DA-2B6C6393D5AB" sourceRef="listTransactions" targetRef="end"/>
-    <sequenceFlow id="consentMissing" name="Consent missing" sourceRef="consentPresent" targetRef="ifNeededOauth2PreStepForAuthentication"/>
+    <sequenceFlow id="consentMissing" name="Consent missing" sourceRef="consentPresent" targetRef="createConsent"/>
     <sequenceFlow id="consentAvailable" name="Consent available" sourceRef="consentPresent" targetRef="listTransactions">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentFinder.consentExists(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
@@ -33,89 +33,97 @@
     <sequenceFlow id="wrongIban" name="wrong IBAN" sourceRef="isCreationSuccess" targetRef="sid-59D4ACAE-9067-4BD4-BD55-D9277CDD3F44">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.hasWrongCredentials(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
-    <callActivity id="ifNeededOauth2PreStepForAuthentication" name="(If needed) Oauth2 pre-step for user authentication" flowable:async="true" flowable:inheritVariables="true" calledElement="if-needed-xs2a-oauth2-step"/>
-    <sequenceFlow id="sid-d4db70bb-e822-4c70-a725-175717b023b7" sourceRef="ifNeededOauth2PreStepForAuthentication" targetRef="createConsent"/>
+    <callActivity id="sid-400c44f5-a122-446c-9e17-809ec34cd6b5" name="(If needed) Oauth2 pre-step for user authentication" flowable:async="true" calledElement="if-needed-xs2a-oauth2-step" flowable:inheritVariables="true"/>
+    <sequenceFlow id="sid-ea0aedf6-f366-4164-89ca-781f1f454970" sourceRef="sid-400c44f5-a122-446c-9e17-809ec34cd6b5" targetRef="createConsent"/>
+    <sequenceFlow id="sid-7b377a8a-138c-4325-87c3-fd113dc3693d" name="Oauth2 pre-step required" targetRef="sid-400c44f5-a122-446c-9e17-809ec34cd6b5" sourceRef="isCreationSuccess">
+      <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2AuthenticationPreStep(CONTEXT)}</conditionExpression>
+    </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_xs2a-list-transactions">
     <bpmndi:BPMNPlane bpmnElement="xs2a-list-transactions" id="BPMNPlane_xs2a-list-transactions">
       <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
-        <omgdc:Bounds height="30.0" width="30.0" x="15.0" y="274.90909327357264"/>
+        <omgdc:Bounds height="30.0" width="30.0" x="13.689255" y="326.7491"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="consentPresent" id="BPMNShape_consentPresent">
-        <omgdc:Bounds height="40.0" width="40.0" x="238.22728144629912" y="269.90909327357264"/>
+        <omgdc:Bounds height="40.0" width="40.0" x="236.91653" y="321.7491"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="listTransactions" id="BPMNShape_listTransactions">
         <omgdc:Bounds height="80.0" width="100.0" x="596.0" y="165.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="createConsent" id="BPMNShape_createConsent">
-        <omgdc:Bounds height="80.0" width="100.0" x="597.31067" y="318.5091"/>
+        <omgdc:Bounds height="80.0" width="100.0" x="595.99994" y="418.34912"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="authorizeConsent" id="BPMNShape_authorizeConsent">
-        <omgdc:Bounds height="80.0" width="100.0" x="903.66675" y="318.50912"/>
+        <omgdc:Bounds height="80.0" width="100.0" x="902.356" y="418.34915"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
-        <omgdc:Bounds height="28.0" width="28.0" x="1061.3" y="273.5091"/>
+        <omgdc:Bounds height="28.0" width="28.0" x="1059.9893" y="325.34912"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="loadConsent" id="BPMNShape_loadConsent">
-        <omgdc:Bounds height="80.0" width="100.0" x="90.0" y="249.90909327357264"/>
+        <omgdc:Bounds height="80.0" width="100.0" x="88.689255" y="301.7491"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="sid-59D4ACAE-9067-4BD4-BD55-D9277CDD3F44" id="BPMNShape_sid-59D4ACAE-9067-4BD4-BD55-D9277CDD3F44">
-        <omgdc:Bounds height="80.0" width="100.0" x="597.31067" y="447.6"/>
+        <omgdc:Bounds height="80.0" width="100.0" x="595.99994" y="547.44006"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="isCreationSuccess" id="BPMNShape_isCreationSuccess">
-        <omgdc:Bounds height="40.0" width="40.0" x="759.33325" y="338.5091"/>
+        <omgdc:Bounds height="40.0" width="40.0" x="758.0225" y="438.34912"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="sid-CD9AF880-A16D-44AA-AB7D-D7AE8C3A3659" id="BPMNEdge_sid-CD9AF880-A16D-44AA-AB7D-D7AE8C3A3659">
-        <omgdi:waypoint x="647.31067" y="447.6"/>
-        <omgdi:waypoint x="647.31067" y="398.4591"/>
+        <omgdi:waypoint x="645.99994" y="547.44006"/>
+        <omgdi:waypoint x="645.99994" y="498.29913"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="consentAvailable" id="BPMNEdge_consentAvailable">
-        <omgdi:waypoint x="258.1738891220319" y="269.95078871199723"/>
-        <omgdi:waypoint x="258.0" y="205.0"/>
+        <omgdi:waypoint x="256.86316" y="321.7908"/>
+        <omgdi:waypoint x="256.91653" y="205.0"/>
         <omgdi:waypoint x="596.0" y="205.0"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-CF8F3A28-3A34-4098-A5F9-FBBD6073F181" id="BPMNEdge_sid-CF8F3A28-3A34-4098-A5F9-FBBD6073F181">
-        <omgdi:waypoint x="44.9499984899576" y="289.90909327357264"/>
-        <omgdi:waypoint x="89.9999999999917" y="289.90909327357264"/>
+        <omgdi:waypoint x="43.63925" y="341.7491"/>
+        <omgdi:waypoint x="88.689255" y="341.7491"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-62E27F2F-7BD1-4ADE-A2DF-515550120D59" id="BPMNEdge_sid-62E27F2F-7BD1-4ADE-A2DF-515550120D59">
-        <omgdi:waypoint x="1003.6167" y="358.50912"/>
-        <omgdi:waypoint x="1075.3" y="358.5091"/>
-        <omgdi:waypoint x="1075.3" y="301.45905"/>
+        <omgdi:waypoint x="1002.30597" y="458.34915"/>
+        <omgdi:waypoint x="1073.9893" y="458.34912"/>
+        <omgdi:waypoint x="1073.9893" y="353.29907"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="consentCreated" id="BPMNEdge_consentCreated">
-        <omgdi:waypoint x="798.8273" y="358.96014"/>
-        <omgdi:waypoint x="903.66675" y="358.63754"/>
+        <omgdi:waypoint x="797.51654" y="458.80017"/>
+        <omgdi:waypoint x="902.356" y="458.47757"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-F617FA73-A930-45E8-80DA-2B6C6393D5AB" id="BPMNEdge_sid-F617FA73-A930-45E8-80DA-2B6C6393D5AB">
         <omgdi:waypoint x="695.9501" y="205.0"/>
         <omgdi:waypoint x="1075.3" y="205.00002"/>
-        <omgdi:waypoint x="1075.3" y="273.5091"/>
+        <omgdi:waypoint x="1073.9893" y="325.34912"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="consentMissing" id="BPMNEdge_consentMissing">
-        <omgdi:waypoint x="258.16263773115077" y="309.79461116771216"/>
-        <omgdi:waypoint x="258.0" y="360.0"/>
-        <omgdi:waypoint x="414.74463" y="358.50903"/>
+        <omgdi:waypoint x="256.85187" y="361.63464"/>
+        <omgdi:waypoint x="256.68927" y="459.84003"/>
+        <omgdi:waypoint x="596.0" y="458.34912"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-DF90264E-0BAF-47EF-B3A7-99677AB6A36C" id="BPMNEdge_sid-DF90264E-0BAF-47EF-B3A7-99677AB6A36C">
-        <omgdi:waypoint x="189.94999999990387" y="289.90909327357264"/>
-        <omgdi:waypoint x="238.22728144629912" y="289.90909327357264"/>
+        <omgdi:waypoint x="188.63925" y="341.7491"/>
+        <omgdi:waypoint x="236.91653" y="341.7491"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sid-61BBAE8E-76AF-45F4-8CC3-ADAB0A55CA4C" id="BPMNEdge_sid-61BBAE8E-76AF-45F4-8CC3-ADAB0A55CA4C">
-        <omgdi:waypoint x="697.2606" y="358.5091"/>
-        <omgdi:waypoint x="759.33325" y="358.5091"/>
+        <omgdi:waypoint x="695.9499" y="458.34912"/>
+        <omgdi:waypoint x="758.0225" y="458.34912"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="wrongIban" id="BPMNEdge_wrongIban">
-        <omgdi:waypoint x="779.83325" y="377.95175"/>
-        <omgdi:waypoint x="779.83325" y="487.6"/>
-        <omgdi:waypoint x="697.2606" y="487.6"/>
+        <omgdi:waypoint x="778.5225" y="477.79178"/>
+        <omgdi:waypoint x="778.5225" y="587.44006"/>
+        <omgdi:waypoint x="695.9499" y="587.44006"/>
       </bpmndi:BPMNEdge>
-      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="shape-ac20314c-20e5-41a9-b328-8d268df602bf" bpmnElement="ifNeededOauth2PreStepForAuthentication">
-        <omgdc:Bounds x="414.74463" y="318.50906" width="100.0" height="80.0"/>
+      <bpmdi:BPMNShape xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-d4874896-62f5-487d-a9fe-32f213d63a00" bpmnElement="sid-400c44f5-a122-446c-9e17-809ec34cd6b5">
+        <omgdc:Bounds x="596.00006" y="289.16608" width="100.0" height="80.0"/>
       </bpmdi:BPMNShape>
-      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="edge-9081e0fe-c6e5-44d0-b22a-4681a5708e70" bpmnElement="sid-d4db70bb-e822-4c70-a725-175717b023b7">
-        <omgdi:waypoint x="514.7446" y="358.50906"/>
-        <omgdi:waypoint x="597.31067" y="358.5091"/>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-494211d1-e4df-4881-8275-fe91f6aed3b9" bpmnElement="sid-ea0aedf6-f366-4164-89ca-781f1f454970">
+        <omgdi:waypoint x="646.00006" y="369.16608"/>
+        <omgdi:waypoint x="645.9999" y="418.34912"/>
+      </bpmdi:BPMNEdge>
+      <bpmdi:BPMNEdge xmlns:bpmdi="http://www.omg.org/spec/BPMN/20100524/DI" id="sid-09ef6de0-2adb-4e47-a0eb-b993cdc9f2ec" bpmnElement="sid-7b377a8a-138c-4325-87c3-fd113dc3693d">
+        <omgdi:waypoint x="778.02246" y="438.34912"/>
+        <omgdi:waypoint x="778.02246" y="329.16608"/>
+        <omgdi:waypoint x="696.0001" y="329.16608"/>
       </bpmdi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

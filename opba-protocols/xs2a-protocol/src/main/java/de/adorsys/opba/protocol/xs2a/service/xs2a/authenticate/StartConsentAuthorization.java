@@ -9,7 +9,6 @@ import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aInitialConsentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.oauth2.Oauth2RequiredErrorSink;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.AccountInformationService;
 import de.adorsys.xs2a.adapter.service.Response;
@@ -30,7 +29,6 @@ import static de.adorsys.xs2a.adapter.service.ResponseHeaders.ASPSP_SCA_APPROACH
 @RequiredArgsConstructor
 public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
 
-    private final Oauth2RequiredErrorSink oauth2RequiredErrorSink;
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
@@ -50,24 +48,6 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
 
         params.getHeaders().setTppRedirectPreferred(tppRedirectPreferredResolver.isRedirectApproachPreferred(config));
 
-        oauth2RequiredErrorSink.swallowOauth2AuthorizationError(
-                () ->  doCallStartConsentAuthorization(execution, context, config, params),
-                ex -> ContextUtil.getAndUpdateContext(execution, (Xs2aContext ctx) -> ctx.setOauth2PreStepNeeded(true))
-        );
-    }
-
-    @Override
-    protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
-        CurrentBankProfile config = context.aspspProfile();
-
-        ContextUtil.getAndUpdateContext(execution, (Xs2aContext ctx) -> {
-            ctx.setAspspScaApproach(config.getPreferredApproach().name());
-            ctx.setAuthorizationId(UUID.randomUUID().toString());
-        });
-    }
-
-    private void doCallStartConsentAuthorization(
-            DelegateExecution execution, Xs2aContext context, CurrentBankProfile config, ValidatedPathHeaders<Xs2aInitialConsentParameters, Xs2aStandardHeaders> params) {
         Response<StartScaProcessResponse> scaStart = ais.startConsentAuthorisation(
                 params.getPath().getConsentId(),
                 params.getHeaders().toHeaders()
@@ -80,11 +60,21 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
         execution.setVariable(CONTEXT, context);
     }
 
+    @Override
+    protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
+        CurrentBankProfile config = context.aspspProfile();
+
+        ContextUtil.getAndUpdateContext(execution, (Xs2aContext ctx) -> {
+            ctx.setAspspScaApproach(config.getPreferredApproach().name());
+            ctx.setAuthorizationId(UUID.randomUUID().toString());
+        });
+    }
+
     @Service
     public static class Extractor extends PathHeadersMapperTemplate<
-                    Xs2aContext,
-                    Xs2aInitialConsentParameters,
-                    Xs2aStandardHeaders> {
+            Xs2aContext,
+            Xs2aInitialConsentParameters,
+            Xs2aStandardHeaders> {
 
         public Extractor(
                 DtoMapper<Xs2aContext, Xs2aStandardHeaders> toHeaders,

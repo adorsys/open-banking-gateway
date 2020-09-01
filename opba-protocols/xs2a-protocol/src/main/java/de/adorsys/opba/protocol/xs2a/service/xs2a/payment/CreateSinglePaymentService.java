@@ -8,7 +8,7 @@ import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateConsentErrorSink;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateConsentOrPaymentErrorSink;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aInitialPaymentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateHeaders;
@@ -40,7 +40,7 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
     private final PaymentInitiationService pis;
     private final Xs2aValidator validator;
     private final ProtocolUrlsConfiguration urlsConfiguration;
-    private final CreateConsentErrorSink errorSink;
+    private final CreateConsentOrPaymentErrorSink errorSink;
     private final Extractor extractor;
 
     @Override
@@ -62,7 +62,7 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
     protected void doRealExecution(DelegateExecution execution, Xs2aPisContext context) {
         ValidatedPathHeadersBody<Xs2aInitialPaymentParameters, PaymentInitiateHeaders, SinglePaymentInitiationBody> params = extractor.forExecution(context);
 
-        errorSink.swallowConsentCreationErrorForLooping(
+        errorSink.swallowConsentOrPaymentCreationErrorForLooping(
                 () -> initiatePayment(execution, context, params),
                 ex -> pisOnWrongIban(execution, log)
         );
