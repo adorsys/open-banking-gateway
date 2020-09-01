@@ -53,7 +53,7 @@ public class Xs2aConsentInfo {
      */
     public boolean isOauth2TokenAvailableAndReadyToUse(Xs2aContext ctx) {
         // FIXME - Token validity check
-        return null == ctx.getOauth2token();
+        return null != ctx.getOauth2token();
     }
 
     /**
