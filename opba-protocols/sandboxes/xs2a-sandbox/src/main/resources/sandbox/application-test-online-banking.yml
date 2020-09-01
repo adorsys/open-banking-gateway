@@ -18,8 +18,9 @@ cms:
   url: ${common.apps.mapping.consentmgmt}
 ledgers:
   url: ${common.apps.mapping.ledgersapp}
+# Curiously enough it is online-banking-ui URL - ObaOauthController of Psd2-Dynamic-Sandbox
 oba:
-  url: ${common.apps.mapping.onlinebanking}
+  url: ${common.apps.mapping.onlinebanking-ui}
 self:
   url: ${common.apps.mapping.onlinebanking}
 xs2a:
