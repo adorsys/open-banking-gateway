@@ -4,11 +4,10 @@ import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
-import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeadersBody;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersBodyMapperTemplate;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateConsentOrPaymentErrorSink;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateConsentOrPaymentPossibleErrorHandler;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aInitialPaymentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateHeaders;
@@ -21,7 +20,6 @@ import de.adorsys.xs2a.adapter.service.model.SinglePaymentInitiationBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
-import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -40,7 +38,7 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
     private final PaymentInitiationService pis;
     private final Xs2aValidator validator;
     private final ProtocolUrlsConfiguration urlsConfiguration;
-    private final CreateConsentOrPaymentErrorSink errorSink;
+    private final CreateConsentOrPaymentPossibleErrorHandler handler;
     private final Extractor extractor;
 
     @Override
@@ -61,11 +59,7 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aPisContext context) {
         ValidatedPathHeadersBody<Xs2aInitialPaymentParameters, PaymentInitiateHeaders, SinglePaymentInitiationBody> params = extractor.forExecution(context);
-
-        errorSink.swallowConsentOrPaymentCreationErrorForLooping(
-                () -> initiatePayment(execution, context, params),
-                ex -> pisOnWrongIban(execution, log)
-        );
+        handler.tryCreateAndHandleErrors(execution, () -> initiatePayment(execution, context, params));
     }
 
     @Override
@@ -89,18 +83,6 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
         context.setWrongAuthCredentials(false);
         context.setPaymentId(paymentInit.getBody().getPaymentId());
         execution.setVariable(CONTEXT, context);
-    }
-
-    private void pisOnWrongIban(
-            DelegateExecution execution,
-            Logger log) {
-        ContextUtil.getAndUpdateContext(
-                execution,
-                (Xs2aContext ctx) -> {
-                    log.warn("Request {} of {} has provided incorrect IBAN", ctx.getRequestId(), ctx.getSagaId());
-                    ctx.setWrongAuthCredentials(true);
-                }
-        );
     }
 
     @Service
