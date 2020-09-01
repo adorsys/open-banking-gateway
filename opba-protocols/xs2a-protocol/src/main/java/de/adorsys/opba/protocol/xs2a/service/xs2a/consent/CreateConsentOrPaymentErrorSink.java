@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class CreateConsentErrorSink {
+public class CreateConsentOrPaymentErrorSink {
 
     private final AspspMessages messageConfig;
 
@@ -27,7 +27,7 @@ public class CreateConsentErrorSink {
      * @param tryAuthorize Authorization function to call
      * @param onFail Fallback function to call if retryable exception occurred.
      */
-    public void swallowConsentCreationErrorForLooping(Runnable tryAuthorize, Consumer<ErrorResponseException> onFail) {
+    public void swallowConsentOrPaymentCreationErrorForLooping(Runnable tryAuthorize, Consumer<ErrorResponseException> onFail) {
         try {
             tryAuthorize.run();
         } catch (ErrorResponseException ex) {

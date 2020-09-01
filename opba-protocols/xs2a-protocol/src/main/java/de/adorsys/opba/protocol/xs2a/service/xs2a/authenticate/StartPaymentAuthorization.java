@@ -10,7 +10,6 @@ import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedPathHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.PathHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStandardHeaders;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aStartPaymentAuthorizationParameters;
-import de.adorsys.opba.protocol.xs2a.service.xs2a.oauth2.Oauth2RequiredErrorSink;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
 import de.adorsys.xs2a.adapter.service.RequestParams;
@@ -33,7 +32,6 @@ import static de.adorsys.xs2a.adapter.service.ResponseHeaders.ASPSP_SCA_APPROACH
 @RequiredArgsConstructor
 public class StartPaymentAuthorization extends ValidatedExecution<Xs2aPisContext> {
 
-    private final Oauth2RequiredErrorSink oauth2RequiredErrorSink;
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final PaymentInitiationService pis;
@@ -51,24 +49,6 @@ public class StartPaymentAuthorization extends ValidatedExecution<Xs2aPisContext
 
         params.getHeaders().setTppRedirectPreferred(tppRedirectPreferredResolver.isRedirectApproachPreferred(config));
 
-        oauth2RequiredErrorSink.swallowOauth2AuthorizationError(
-                () ->  doStartPaymentAuthorization(execution, context, config, params),
-                ex -> ContextUtil.getAndUpdateContext(execution, (Xs2aContext ctx) -> ctx.setOauth2PreStepNeeded(true))
-        );
-    }
-
-    @Override
-    protected void doMockedExecution(DelegateExecution execution, Xs2aPisContext context) {
-        CurrentBankProfile config = context.aspspProfile();
-
-        ContextUtil.getAndUpdateContext(execution, (Xs2aPisContext ctx) -> {
-            ctx.setAspspScaApproach(config.getPreferredApproach().name());
-            ctx.setAuthorizationId(UUID.randomUUID().toString());
-        });
-    }
-
-    private void doStartPaymentAuthorization(DelegateExecution execution, Xs2aPisContext context, CurrentBankProfile config,
-                                             ValidatedPathHeaders<Xs2aStartPaymentAuthorizationParameters, Xs2aStandardHeaders> params) {
         Response<StartScaProcessResponse> scaStart = pis.startSinglePaymentAuthorisation(
                 params.getPath().getPaymentProduct(),
                 params.getPath().getPaymentId(),
@@ -83,10 +63,20 @@ public class StartPaymentAuthorization extends ValidatedExecution<Xs2aPisContext
         execution.setVariable(CONTEXT, context);
     }
 
+    @Override
+    protected void doMockedExecution(DelegateExecution execution, Xs2aPisContext context) {
+        CurrentBankProfile config = context.aspspProfile();
+
+        ContextUtil.getAndUpdateContext(execution, (Xs2aPisContext ctx) -> {
+            ctx.setAspspScaApproach(config.getPreferredApproach().name());
+            ctx.setAuthorizationId(UUID.randomUUID().toString());
+        });
+    }
+
     @Service
     public static class Extractor extends PathHeadersMapperTemplate<Xs2aPisContext,
-                                                                           Xs2aStartPaymentAuthorizationParameters,
-                                                                           Xs2aStandardHeaders> {
+            Xs2aStartPaymentAuthorizationParameters,
+            Xs2aStandardHeaders> {
 
         public Extractor(
                 DtoMapper<Xs2aContext, Xs2aStandardHeaders> toHeaders,
