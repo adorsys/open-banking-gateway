@@ -154,12 +154,12 @@ public class Xs2aContext extends BaseContext {
     /**
      * Indicates that ASPSP requires Oauth2-pre-step for consent authorization.
      */
-    private boolean isOauth2PreStepNeeded;
+    private boolean oauth2PreStepNeeded;
 
     /**
      * Indicates that ASPSP requires Oauth2-integrated step for consent authorization.
      */
-    private boolean isOauth2IntegratedNeeded;
+    private boolean oauth2IntegratedNeeded;
 
     @JsonIgnore
     public String getPsuPassword() {
