@@ -103,7 +103,7 @@ public class AccountService {
                 COMPUTE_FINTECH_ID,
                 bankID,
                 null,
-                serviceSessionID);
+                serviceSessionID, true);
     }
 
     private ResponseEntity consentNotYetAvailable(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId, Optional<ConsentEntity> optionalConsent) {

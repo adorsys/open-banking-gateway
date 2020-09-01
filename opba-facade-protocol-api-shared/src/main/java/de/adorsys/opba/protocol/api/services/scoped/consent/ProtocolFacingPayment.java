@@ -1,5 +1,7 @@
 package de.adorsys.opba.protocol.api.services.scoped.consent;
 
+import java.time.Instant;
+
 /**
  * PSU payment representation view for protocol execution.
  */
@@ -25,4 +27,6 @@ public interface ProtocolFacingPayment {
      * Get the context of this payment to identify its scope.
      */
     void setPaymentContext(String context);
+
+    Instant getCreatedAtTime();
 }

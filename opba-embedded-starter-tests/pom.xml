@@ -77,7 +77,6 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>de.adorsys.opba.starter.OpenBankingEmbeddedApplication</mainClass>
-                    <executable>true</executable>
                     <skip>false</skip>
                 </configuration>
                 <executions>

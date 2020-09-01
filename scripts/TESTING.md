@@ -1,4 +1,4 @@
-To test image deployment and promotion one can start 2 Docker registries.
+# To test image deployment and promotion one can start 2 Docker registries.
 
 - Creating self-signed certs in `docker/source_docker/certs`, `docker/target_docker/certs`
 1. `cd docker/source_docker/certs && openssl req -new -x509 -nodes -sha1 -days 365 -key domain.key -out domain.crt && chmod 400 domain.key`
@@ -41,3 +41,11 @@ docker run -d \
   -p 6000:6000 \
   registry:2.7.0
 ```
+
+# To test JAR promotion one can use Sonatype Nexus Docker-image:
+
+```shell script
+docker run -d -p 8081:8081 --name nexus sonatype/nexus3
+```
+
+UI will be available at `http://localhost:8081` - one can create multiple registries there

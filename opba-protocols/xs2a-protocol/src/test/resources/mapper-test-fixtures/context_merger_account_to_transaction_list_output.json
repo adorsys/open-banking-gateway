@@ -41,5 +41,6 @@
   "currency": null,
   "bookingStatus": null,
   "dateFrom": null,
-  "dateTo": null
+  "dateTo": null,
+  "withBalance": false
 }

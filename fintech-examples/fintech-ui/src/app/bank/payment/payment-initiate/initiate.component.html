@@ -1,11 +1,28 @@
 <div class="card card-frame--big">
-  <div class="lacc-parent">
+  <div class="card-body">
     <form [formGroup]="paymentForm">
       <section class="payment">
         <h2 class="card-title--normal">Transfer money</h2>
         <p class="text-secondary">Enter the data of the recipient of your payment</p>
         <div class="row">
-          <div class="form-group col-md-12">
+          <div class="form-group col-md-6">
+            <label class="text-secondary" for="name">Name:</label><br />
+            <input
+              [ngClass]="{ 'is-invalid': paymentForm.controls['name'].dirty && paymentForm.controls['name'].errors }"
+              class="form-control"
+              formControlName="name"
+              id="name"
+              name="name"
+              type="text"
+            />
+            <div
+              *ngIf="paymentForm.controls['name'].dirty && paymentForm.controls['name'].errors"
+              class="invalid-feedback"
+            >
+              Name is required
+            </div>
+          </div>
+          <div class="form-group col-md-6">
             <label class="text-secondary" for="creditorIban">IBAN:</label><br />
             <input
               [ngClass]="{
@@ -26,26 +43,7 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="form-group col-md-12">
-            <label class="text-secondary" for="name">Name:</label><br />
-            <input
-              [ngClass]="{ 'is-invalid': paymentForm.controls['name'].dirty && paymentForm.controls['name'].errors }"
-              class="form-control"
-              formControlName="name"
-              id="name"
-              name="name"
-              type="text"
-            />
-            <div
-              *ngIf="paymentForm.controls['name'].dirty && paymentForm.controls['name'].errors"
-              class="invalid-feedback"
-            >
-              Name is required
-            </div>
-          </div>
-          <div class="form-group col-md-12">
+          <div class="form-group col-md-6">
             <label class="text-secondary" for="purpose">Purpose of payment:</label><br />
             <input
               [ngClass]="{
@@ -58,8 +56,6 @@
               type="text"
             />
           </div>
-          <div class="form-group col-md-6"></div>
-
           <div class="form-group col-md-6">
             <label class="text-secondary" for="amount">Amount:</label><br />
             <input

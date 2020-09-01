@@ -1,0 +1,33 @@
+{
+  "psuId": "1111-1111",
+  "contentType": "application/json",
+  "psuIpAddress": "1.1.1.1",
+  "aspspScaApproach": null,
+  "startScaProcessResponse": null,
+  "consentId": "1111-1111",
+  "authorizationId": "2222-2222",
+  "scaStatus": null,
+  "availableSca": [],
+  "userSelectScaId": null,
+  "scaSelected": null,
+  "lastScaChallenge": null,
+  "psuPassword": null,
+  "redirectUriOk": "http://localhost:5500/from-aspsp/v1/consent/c86feb1e-9ba8-4407-918f-8183143df295/fromAspsp/STUB_STATE/ok?redirectCode=a5001521-edd8-4d99-b72d-30670b839d06",
+  "redirectUriNok": "http://localhost:5500/from-aspsp/v1/consent/c86feb1e-9ba8-4407-918f-8183143df295/fromAspsp/STUB_STATE/nok?redirectCode=a5001521-edd8-4d99-b72d-30670b839d06",
+  "redirectConsentOk": false,
+  "mode": "MOCK_REAL_CALLS",
+  "aspspId": "53c47f54-b9a4-465a-8f77-bc6cd5f0cf46",
+  "action": "LIST_ACCOUNTS",
+  "flowByAction": {
+    "LIST_ACCOUNTS": "xs2a-list-accounts",
+    "LIST_TRANSACTIONS": "xs2a-list-transactions",
+    "SINGLE_PAYMENT": "xs2a-single-payments"
+  },
+  "sagaId": "25e0c2a1-6751-11ea-9989-acde48001122",
+  "serviceSessionId": "c86feb1e-9ba8-4407-918f-8183143df295",
+  "authorizationSessionIdIfOpened": "c86feb1e-9ba8-4407-918f-8183143df295",
+  "redirectCodeIfAuthContinued": "194604cc-6798-4f91-b681-a0298ae674f4",
+  "aspspRedirectCode": "a5001521-edd8-4d99-b72d-30670b839d06",
+  "violations": [],
+  "lastRedirection": null
+}

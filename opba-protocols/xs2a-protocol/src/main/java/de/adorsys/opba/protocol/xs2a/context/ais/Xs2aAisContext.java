@@ -18,4 +18,10 @@ public class Xs2aAisContext extends Xs2aContext {
      * AIS consent scope body object - whether it is Dedicated consent, All accounts (Global) consent, etc.
      */
     private AisConsentInitiateBody aisConsent = new AisConsentInitiateBody(); // to avoid initialization in more-parameters
+
+    /**
+     * Is this consent for account list with account balances.
+     */
+    private Boolean withBalance;
+
 }

@@ -39,6 +39,9 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-Consent-Session"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+          # query
+        - $ref: "#/components/parameters/withBalance"
+
       security:
         - BearerAuthOAuth: []
       responses:
@@ -80,6 +83,7 @@ paths:
         - $ref: "#/components/parameters/entryReferenceFrom"
         - $ref: "#/components/parameters/bookingStatus"
         - $ref: "#/components/parameters/deltaList"
+
       security:
         - BearerAuthOAuth: []
       responses:
@@ -188,6 +192,15 @@ components:
       schema:
         type: string
         format: date
+
+    withBalance:
+      name: withBalance
+      in: query
+      description: |
+        For list of accounts this query param defines to not only look for the accounts,
+        but for the balances too.
+      schema:
+        type: boolean
 
     deltaList:
       name: deltaList
@@ -324,6 +337,26 @@ components:
           maxLength: 70
         ownerAddress:
           $ref: "./tpp_banking_api_commons.yml#/components/schemas/address"
+        balances:
+          type: array
+          items:
+            $ref: "#/components/schemas/balance"
+
+    balance:
+      description: |
+        A balance
+      type: object
+      properties:
+        balanceAmount:
+          $ref: "./tpp_banking_api_commons.yml#/components/schemas/amount"
+        balanceType:
+          type: string
+        lastChangedDateTime:
+          type: string
+          format: date-time
+        referenceDate:
+          type: string
+          format: date;
 
     accountList:
       description: |

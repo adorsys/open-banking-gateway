@@ -43,4 +43,5 @@ public class TransactionListXs2aContext extends Xs2aAisContext {
      * List transactions to date.
      */
     private LocalDate dateTo;
+
 }

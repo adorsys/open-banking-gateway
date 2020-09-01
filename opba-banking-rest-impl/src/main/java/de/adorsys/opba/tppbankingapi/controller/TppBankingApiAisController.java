@@ -38,121 +38,124 @@ public class TppBankingApiAisController implements TppBankingApiAccountInformati
 
     @Override
     public CompletableFuture getAccounts(
-            String serviceSessionPassword,
-            String fintechUserID,
-            String fintechRedirectURLOK,
-            String fintechRedirectURLNOK,
-            UUID xRequestID,
-            String xTimestampUTC,
-            String xRequestSignature,
-            String fintechId,
-            String bankID,
-            String psUConsentSession,
-            UUID serviceSessionId
+        String serviceSessionPassword,
+        String fintechUserID,
+        String fintechRedirectURLOK,
+        String fintechRedirectURLNOK,
+        UUID xRequestID,
+        String xTimestampUTC,
+        String xRequestSignature,
+        String fintechId,
+        String bankID,
+        String psUConsentSession,
+        UUID serviceSessionId,
+        Boolean withBalance
     ) {
         return accounts.execute(
-                ListAccountsRequest.builder()
-                        .facadeServiceable(FacadeServiceableRequest.builder()
-                                // Get rid of CGILIB here by copying:
-                                .uaContext(userAgentContext.toBuilder().build())
-                                .authorization(fintechId)
-                                .sessionPassword(serviceSessionPassword)
-                                .fintechUserId(fintechUserID)
-                                .fintechRedirectUrlOk(fintechRedirectURLOK)
-                                .fintechRedirectUrlNok(fintechRedirectURLNOK)
-                                .serviceSessionId(serviceSessionId)
-                                .requestId(xRequestID)
-                                .bankId(bankID)
-                                .build()
-                        ).build()
+            ListAccountsRequest.builder()
+                .facadeServiceable(FacadeServiceableRequest.builder()
+                    // Get rid of CGILIB here by copying:
+                    .uaContext(userAgentContext.toBuilder().build())
+                    .authorization(fintechId)
+                    .sessionPassword(serviceSessionPassword)
+                    .fintechUserId(fintechUserID)
+                    .fintechRedirectUrlOk(fintechRedirectURLOK)
+                    .fintechRedirectUrlNok(fintechRedirectURLNOK)
+                    .serviceSessionId(serviceSessionId)
+                    .requestId(xRequestID)
+                    .bankId(bankID)
+                    .build()
+                )
+                .withBalance(withBalance)
+                .build()
         ).thenApply((FacadeResult<AccountListBody> result) -> mapper.translate(result, accountListRestMapper));
     }
 
     @Override
     public CompletableFuture getTransactions(
-            String accountId,
-            String serviceSessionPassword,
-            String fintechUserID,
-            String fintechRedirectURLOK,
-            String fintechRedirectURLNOK,
-            UUID xRequestID,
-            String xTimestampUTC,
-            String xRequestSignature,
-            String fintechId,
-            String bankID,
-            String psUConsentSession,
-            UUID serviceSessionId,
-            LocalDate dateFrom,
-            LocalDate dateTo,
-            String entryReferenceFrom,
-            String bookingStatus,
-            Boolean deltaList
+        String accountId,
+        String serviceSessionPassword,
+        String fintechUserID,
+        String fintechRedirectURLOK,
+        String fintechRedirectURLNOK,
+        UUID xRequestID,
+        String xTimestampUTC,
+        String xRequestSignature,
+        String fintechId,
+        String bankID,
+        String psUConsentSession,
+        UUID serviceSessionId,
+        LocalDate dateFrom,
+        LocalDate dateTo,
+        String entryReferenceFrom,
+        String bookingStatus,
+        Boolean deltaList
     ) {
         return transactions.execute(
-                ListTransactionsRequest.builder()
-                        .facadeServiceable(FacadeServiceableRequest.builder()
-                                // Get rid of CGILIB here by copying:
-                                .uaContext(userAgentContext.toBuilder().build())
-                                .authorization(fintechId)
-                                .sessionPassword(serviceSessionPassword)
-                                .fintechUserId(fintechUserID)
-                                .fintechRedirectUrlOk(fintechRedirectURLOK)
-                                .fintechRedirectUrlNok(fintechRedirectURLNOK)
-                                .serviceSessionId(serviceSessionId)
-                                .requestId(xRequestID)
-                                .bankId(bankID)
-                                .build()
-                        )
-                        .accountId(accountId)
-                        .dateFrom(dateFrom)
-                        .dateTo(dateTo)
-                        .entryReferenceFrom(entryReferenceFrom)
-                        .bookingStatus(bookingStatus)
-                        .deltaList(deltaList)
-                        .build()
+            ListTransactionsRequest.builder()
+                .facadeServiceable(FacadeServiceableRequest.builder()
+                    // Get rid of CGILIB here by copying:
+                    .uaContext(userAgentContext.toBuilder().build())
+                    .authorization(fintechId)
+                    .sessionPassword(serviceSessionPassword)
+                    .fintechUserId(fintechUserID)
+                    .fintechRedirectUrlOk(fintechRedirectURLOK)
+                    .fintechRedirectUrlNok(fintechRedirectURLNOK)
+                    .serviceSessionId(serviceSessionId)
+                    .requestId(xRequestID)
+                    .bankId(bankID)
+                    .build()
+                )
+                .accountId(accountId)
+                .dateFrom(dateFrom)
+                .dateTo(dateTo)
+                .entryReferenceFrom(entryReferenceFrom)
+                .bookingStatus(bookingStatus)
+                .deltaList(deltaList)
+                .build()
         ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
     }
 
     @Override
     public CompletableFuture getTransactionsWithoutAccountId(
-            String serviceSessionPassword,
-            String fintechUserId,
-            String fintechRedirectURLOK,
-            String fintechRedirectURLNOK,
-            UUID xRequestID,
-            String xTimestampUTC,
-            String xRequestSignature,
-            String fintechId,
-            String bankId,
-            String psUConsentSession,
-            UUID serviceSessionId,
-            LocalDate dateFrom,
-            LocalDate dateTo,
-            String entryReferenceFrom,
-            String bookingStatus,
-            Boolean deltaList
+        String serviceSessionPassword,
+        String fintechUserId,
+        String fintechRedirectURLOK,
+        String fintechRedirectURLNOK,
+        UUID xRequestID,
+        String xTimestampUTC,
+        String xRequestSignature,
+        String fintechId,
+        String bankId,
+        String psUConsentSession,
+        UUID serviceSessionId,
+        LocalDate dateFrom,
+        LocalDate dateTo,
+        String entryReferenceFrom,
+        String bookingStatus,
+        Boolean deltaList
     ) {
         return transactions.execute(
-                ListTransactionsRequest.builder()
-                        .facadeServiceable(FacadeServiceableRequest.builder()
-                                // Get rid of CGILIB here by copying:
-                                .uaContext(userAgentContext.toBuilder().build())
-                                .authorization(fintechId)
-                                .sessionPassword(serviceSessionPassword)
-                                .fintechUserId(fintechUserId)
-                                .fintechRedirectUrlOk(fintechRedirectURLOK)
-                                .fintechRedirectUrlNok(fintechRedirectURLNOK)
-                                .serviceSessionId(serviceSessionId)
-                                .requestId(xRequestID)
-                                .bankId(bankId)
-                                .build()
-                        )
-                        .dateFrom(dateFrom)
-                        .dateTo(dateTo)
-                        .entryReferenceFrom(entryReferenceFrom)
-                        .bookingStatus(bookingStatus)
-                        .deltaList(deltaList)
-                        .build()
+            ListTransactionsRequest.builder()
+                .facadeServiceable(FacadeServiceableRequest.builder()
+                    // Get rid of CGILIB here by copying:
+                    .uaContext(userAgentContext.toBuilder().build())
+                    .authorization(fintechId)
+                    .sessionPassword(serviceSessionPassword)
+                    .fintechUserId(fintechUserId)
+                    .fintechRedirectUrlOk(fintechRedirectURLOK)
+                    .fintechRedirectUrlNok(fintechRedirectURLNOK)
+                    .serviceSessionId(serviceSessionId)
+                    .requestId(xRequestID)
+                    .bankId(bankId)
+                    .build()
+                )
+                .dateFrom(dateFrom)
+                .dateTo(dateTo)
+                .entryReferenceFrom(entryReferenceFrom)
+                .bookingStatus(bookingStatus)
+                .deltaList(deltaList)
+                .build()
         ).thenApply((FacadeResult<TransactionsResponseBody> result) -> mapper.translate(result, transactionsRestMapper));
     }
 

@@ -1,7 +1,7 @@
-import { ClassSinglePaymentInitiationRequest } from '../../../api/model-classes/ClassSinglePaymentInitiationRequest';
 import { RedirectStruct } from '../../redirect-page/redirect-struct';
+import { SinglePaymentInitiationRequest } from '../../../api';
 
 export class ConfirmData {
-  paymentRequest: ClassSinglePaymentInitiationRequest;
+  paymentRequest: SinglePaymentInitiationRequest;
   redirectStruct: RedirectStruct;
 }
