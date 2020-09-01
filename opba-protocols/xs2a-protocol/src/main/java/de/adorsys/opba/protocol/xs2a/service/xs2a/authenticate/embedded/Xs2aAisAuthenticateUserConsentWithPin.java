@@ -36,7 +36,7 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
-    private final AuthorizationErrorSink errorSink;
+    private final AuthorizationPossibleErrorHandler errorSink;
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
@@ -48,7 +48,7 @@ public class Xs2aAisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
         ValidatedPathHeadersBody<Xs2aAuthorizedConsentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params =
                 extractor.forExecution(context);
 
-        errorSink.swallowAuthorizationErrorForLooping(
+        errorSink.handlePossibleAuthorizationError(
                 () -> aisAuthorizeWithPassword(execution, params),
                 ex -> aisOnWrongPassword(execution)
         );

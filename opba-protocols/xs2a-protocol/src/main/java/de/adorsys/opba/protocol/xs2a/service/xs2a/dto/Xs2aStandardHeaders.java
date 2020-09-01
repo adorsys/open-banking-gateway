@@ -24,7 +24,7 @@ import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_GTW_ASPSP_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 
 /**
- * Standard headers to call XS2A-adapter (used for almost all requests).
+ * Standard headers to call XS2A-adapter (excluding consent creation cases).
  */
 @Data
 public class Xs2aStandardHeaders {

@@ -38,7 +38,7 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final PaymentInitiationService pis;
-    private final AuthorizationErrorSink errorSink;
+    private final AuthorizationPossibleErrorHandler errorSink;
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aPisContext context) {
@@ -49,7 +49,7 @@ public class Xs2aPisAuthenticateUserConsentWithPin extends ValidatedExecution<Xs
     protected void doRealExecution(DelegateExecution execution, Xs2aPisContext context) {
         ValidatedPathHeadersBody<Xs2aAuthorizedPaymentParameters, Xs2aStandardHeaders, UpdatePsuAuthentication> params = extractor.forExecution(context);
 
-        errorSink.swallowAuthorizationErrorForLooping(
+        errorSink.handlePossibleAuthorizationError(
                 () -> pisAuthorizeWithPassword(execution, params),
                 ex -> pisOnWrongPassword(execution)
         );

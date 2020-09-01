@@ -34,7 +34,7 @@ class Xs2AAuthenticateWithPinUserConsentClearsPasswordTest extends BaseMockitoTe
     private AccountInformationService ais;
 
     @Mock
-    private AuthorizationErrorSink errorSink;
+    private AuthorizationPossibleErrorHandler errorSink;
 
     @Mock
     private DelegateExecution delegateExecution;
@@ -55,7 +55,7 @@ class Xs2AAuthenticateWithPinUserConsentClearsPasswordTest extends BaseMockitoTe
     void pinCleaned() {
         Xs2aContext context = new Xs2aContext();
         context.setRequestScoped(new RequestScopedStub());
-        doCallRealMethod().when(errorSink).swallowAuthorizationErrorForLooping(any(), any());
+        doCallRealMethod().when(errorSink).handlePossibleAuthorizationError(any(), any());
         when(mockParams.getHeaders()).thenReturn(new Xs2aStandardHeaders());
         when(mockParams.getBody()).thenReturn(new UpdatePsuAuthentication());
         when(mockParams.getPath()).thenReturn(new Xs2aAuthorizedConsentParameters());
@@ -72,7 +72,7 @@ class Xs2AAuthenticateWithPinUserConsentClearsPasswordTest extends BaseMockitoTe
     }
 
     public static class Xs2AAisAuthenticateWithPinUserConsentTestable extends Xs2aAisAuthenticateUserConsentWithPin {
-        public Xs2AAisAuthenticateWithPinUserConsentTestable(Extractor extractor, Xs2aValidator validator, AccountInformationService ais, AuthorizationErrorSink errorSink) {
+        public Xs2AAisAuthenticateWithPinUserConsentTestable(Extractor extractor, Xs2aValidator validator, AccountInformationService ais, AuthorizationPossibleErrorHandler errorSink) {
             super(extractor, validator, ais, errorSink);
         }
 
