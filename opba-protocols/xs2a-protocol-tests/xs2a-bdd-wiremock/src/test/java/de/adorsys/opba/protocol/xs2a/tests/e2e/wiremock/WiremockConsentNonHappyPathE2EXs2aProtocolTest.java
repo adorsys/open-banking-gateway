@@ -65,6 +65,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
         aisUrls.setNok(aisUrls.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
     }
 
+
     @ParameterizedTest
     @EnumSource(Approach.class)
     void testAccountsListWithOnceWrongPasswordThenOkWithConsentUsingEmbedded(Approach expectedApproach) {
@@ -75,7 +76,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-                .fintech_calls_list_accounts_for_max_musterman()
+                .fintech_calls_list_accounts_for_max_musterman_forBank()
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
@@ -237,7 +238,7 @@ public class WiremockConsentNonHappyPathE2EXs2aProtocolTest extends
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-                .fintech_calls_list_accounts_for_max_musterman()
+                .fintech_calls_list_accounts_for_max_musterman_forBank()
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()

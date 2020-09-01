@@ -29,6 +29,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationRequestCommon.REDIRECT_CODE_QUERY;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_ACCOUNTS_WITH_BALANCE_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.ANTON_BRUECKNER;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AUTHORIZE_CONSENT_ENDPOINT;
@@ -174,7 +175,30 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         boolean validateResourceId
     ) {
         ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER)
+            .header(SERVICE_SESSION_ID, serviceSessionId)
+            .when()
+            .get(AIS_ACCOUNTS_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("accounts[0].iban", equalTo(MAX_MUSTERMAN_IBAN))
+            .body("accounts[0].resourceId", validateResourceId ? equalTo("oN7KTVuJSVotMvPPPavhVo") : instanceOf(String.class))
+            .body("accounts[0].currency", equalTo("EUR"))
+            .body("accounts[0].name", equalTo("max.musterman"))
+            .body("accounts", hasSize(1))
+            .extract();
+
+        this.responseContent = response.body().asString();
+        return self();
+    }
+
+    @SneakyThrows
+    public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session_with_balance(
+        boolean validateResourceId,
+        int withBalances
+    ) {
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER)
                     .header(SERVICE_SESSION_ID, serviceSessionId)
+                    .queryParam("withBalance", true)
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
@@ -184,6 +208,7 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
                     .body("accounts[0].currency", equalTo("EUR"))
                     .body("accounts[0].name", equalTo("max.musterman"))
                     .body("accounts", hasSize(1))
+                    .body( "accounts[0].balances", hasSize(withBalances))
                     .extract();
 
         this.responseContent = response.body().asString();

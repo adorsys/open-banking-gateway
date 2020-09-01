@@ -37,7 +37,7 @@ class E2EStress extends ScenarioTest<CommonGivenStages<? extends CommonGivenStag
             .user_registered_in_opba_with_credentials(ACCOUNTS_OPBA_USERNAME, ACCOUNTS_OPBA_PASSWORD);
 
         when()
-            .fintech_calls_list_accounts_for_max_musterman()
+            .fintech_calls_list_accounts_for_max_musterman_forBank()
             .and()
             .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(ACCOUNTS_OPBA_USERNAME, ACCOUNTS_OPBA_PASSWORD)
             .and()

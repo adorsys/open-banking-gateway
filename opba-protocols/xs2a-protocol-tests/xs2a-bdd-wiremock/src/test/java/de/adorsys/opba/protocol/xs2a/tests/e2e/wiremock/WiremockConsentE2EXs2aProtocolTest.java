@@ -8,10 +8,14 @@ import de.adorsys.opba.protocol.xs2a.tests.e2e.stages.AccountInformationResult;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.MockServers;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.WiremockAccountInformationRequest;
 import de.adorsys.opba.protocol.xs2a.tests.e2e.wiremock.mocks.Xs2aProtocolApplication;
+import org.hibernate.annotations.Source;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -60,6 +64,36 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
         ProtocolUrlsConfiguration.WebHooks aisUrls = urlsConfiguration.getAis().getWebHooks();
         aisUrls.setOk(aisUrls.getOk().replaceAll("localhost:\\d+", "localhost:" + port));
         aisUrls.setNok(aisUrls.getNok().replaceAll("localhost:\\d+", "localhost:" + port));
+    }
+
+    @Test
+    // @ParameterizedTest
+    // @EnumSource(Approach.class)
+    // void testAccountsListWithBalancesWithConsentUsingEmbedded(Approach expectedApproach) {
+    void testAccountsListWithBalancesWithConsentUsingEmbedded() {
+        Approach expectedApproach = Approach.EMBEDDED;
+        given()
+            .embedded_mock_of_sandbox_for_max_musterman_accounts_running_for_happy_path()
+            .preferred_sca_approach_selected_for_all_banks_in_opba(expectedApproach)
+            .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+            .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+            .fintech_calls_list_accounts_for_max_musterman_with_balance(true)
+            .and()
+            .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+            .and()
+            .user_max_musterman_provided_initial_parameters_to_list_accounts_all_accounts_consent()
+            .and()
+            .user_max_musterman_provided_password_to_embedded_authorization()
+            .and()
+            .user_max_musterman_selected_sca_challenge_type_email2_to_embedded_authorization()
+            .and()
+            .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+            .open_banking_has_consent_for_max_musterman_account_list()
+            .fintech_calls_consent_activation_for_current_authorization_id()
+            .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session_with_balance(true, 2);
     }
 
     @ParameterizedTest
@@ -276,7 +310,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-                .fintech_calls_list_accounts_for_max_musterman()
+                .fintech_calls_list_accounts_for_max_musterman_forBank()
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
@@ -523,7 +557,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-                .fintech_calls_list_accounts_for_max_musterman()
+                .fintech_calls_list_accounts_for_max_musterman_forBank()
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
@@ -616,7 +650,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-                .fintech_calls_list_accounts_for_max_musterman()
+                .fintech_calls_list_accounts_for_max_musterman_forBank()
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
@@ -646,7 +680,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-                .fintech_calls_list_accounts_for_max_musterman()
+                .fintech_calls_list_accounts_for_max_musterman_forBank()
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()
@@ -708,7 +742,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
 
         when()
-                .fintech_calls_list_accounts_for_max_musterman()
+                .fintech_calls_list_accounts_for_max_musterman_forBank()
                 .and()
                 .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
                 .and()

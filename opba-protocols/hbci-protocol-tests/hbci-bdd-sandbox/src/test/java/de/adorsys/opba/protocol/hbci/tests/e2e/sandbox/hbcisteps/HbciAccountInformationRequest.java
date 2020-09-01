@@ -24,7 +24,7 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRequest<SELF>> extends AccountInformationRequestCommon<SELF> {
 
     public SELF fintech_calls_list_accounts_for_max_musterman_for_blz_30000003() {
-        return fintech_calls_list_accounts_for_max_musterman(BANK_BLZ_30000003_ID);
+        return fintech_calls_list_accounts_for_max_musterman_forBank(BANK_BLZ_30000003_ID);
     }
 
     public SELF fintech_calls_list_accounts_for_anton_brueckner_for_blz_30000003() {
@@ -32,7 +32,7 @@ public class HbciAccountInformationRequest<SELF extends HbciAccountInformationRe
     }
 
     public SELF fintech_calls_list_accounts_max_musterman_for_blz_20000002() {
-        return fintech_calls_list_accounts_for_max_musterman(BANK_BLZ_20000002_ID);
+        return fintech_calls_list_accounts_for_max_musterman_forBank(BANK_BLZ_20000002_ID);
     }
 
     public SELF fintech_calls_list_transactions_for_max_musterman_for_blz_30000003() {

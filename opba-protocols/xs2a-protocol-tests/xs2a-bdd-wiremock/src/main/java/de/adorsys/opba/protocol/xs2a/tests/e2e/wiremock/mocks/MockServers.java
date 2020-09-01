@@ -152,7 +152,15 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
 
     public SELF embedded_mock_of_sandbox_for_max_musterman_accounts_running_for_non_happy_path() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
-                                               .usingFilesUnderClasspath("mockedsandbox/restrecord-nonhappy/embedded/multi-sca/accounts/sandbox/");
+            .usingFilesUnderClasspath("mockedsandbox/restrecord-nonhappy/embedded/multi-sca/accounts/sandbox/");
+        startWireMock(config);
+
+        return self();
+    }
+
+    public SELF embedded_mock_of_sandbox_for_max_musterman_accounts_running_for_happy_path() {
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+            .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/accounts/sandbox/");
         startWireMock(config);
 
         return self();

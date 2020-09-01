@@ -26,6 +26,7 @@ public class StagesCommonUtil {
     public static final String DENY_CONSENT_AUTH_ENDPOINT = "/v1/consent/{serviceSessionId}/deny";
     public static final String AUTHORIZE_CONSENT_ENDPOINT = "/v1/consent/{serviceSessionId}/embedded";
     public static final String AIS_ACCOUNTS_ENDPOINT = "/v1/banking/ais/accounts";
+    public static final String AIS_ACCOUNTS_WITH_BALANCE_ENDPOINT = "/v1/banking/ais/accounts?withBalance=true";
     public static final String AIS_TRANSACTIONS_ENDPOINT = "/v1/banking/ais/accounts/{resourceId}/transactions";
     public static final String AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT = "/v1/banking/ais/transactions";
     public static final String PIS_SINGLE_PAYMENT_ENDPOINT = "/v1/banking/pis/payments/{payment-product}";

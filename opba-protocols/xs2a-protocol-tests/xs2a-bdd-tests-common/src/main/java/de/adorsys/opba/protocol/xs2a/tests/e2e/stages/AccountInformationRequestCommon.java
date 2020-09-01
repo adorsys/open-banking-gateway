@@ -20,6 +20,7 @@ import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_REQUEST_ID;
 import static de.adorsys.opba.protocol.xs2a.tests.HeaderNames.X_XSRF_TOKEN;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.ResourceUtil.readResource;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_ACCOUNTS_ENDPOINT;
+import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_ACCOUNTS_WITH_BALANCE_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_LOGIN_USER_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_TRANSACTIONS_ENDPOINT;
 import static de.adorsys.opba.protocol.xs2a.tests.e2e.stages.StagesCommonUtil.AIS_TRANSACTIONS_WITHOUT_RESOURCE_ID_ENDPOINT;
@@ -85,14 +86,23 @@ public class AccountInformationRequestCommon<SELF extends AccountInformationRequ
     }
 
     // Note that max.musterman is typically used for EMBEDDED (real EMBEDDED that is returned by bank, and not EMBEDDED approach in table)
-    public SELF fintech_calls_list_accounts_for_max_musterman() {
-        return fintech_calls_list_accounts_for_max_musterman(SANDBOX_BANK_ID);
+    public SELF fintech_calls_list_accounts_for_max_musterman_forBank(String bank) {
+        return fintech_calls_list_accounts_for_max_musterman_forBank(bank,false);
+    }
+
+    public SELF fintech_calls_list_accounts_for_max_musterman_forBank() {
+        return fintech_calls_list_accounts_for_max_musterman_forBank(SANDBOX_BANK_ID, false);
+    }
+
+    public SELF fintech_calls_list_accounts_for_max_musterman_with_balance(Boolean withBalance) {
+        return fintech_calls_list_accounts_for_max_musterman_forBank(SANDBOX_BANK_ID, true);
     }
 
     // Note that max.musterman is typically used for EMBEDDED (real EMBEDDED that is returned by bank, and not EMBEDDED approach in table)
-    public SELF fintech_calls_list_accounts_for_max_musterman(String bankId) {
+    public SELF fintech_calls_list_accounts_for_max_musterman_forBank(String bankId, Boolean withBalance) {
         ExtractableResponse<Response> response = withAccountsHeaders(MAX_MUSTERMAN, bankId)
                     .header(SERVICE_SESSION_ID, UUID.randomUUID().toString())
+                    .queryParam("withBalance", withBalance)
                 .when()
                     .get(AIS_ACCOUNTS_ENDPOINT)
                 .then()
