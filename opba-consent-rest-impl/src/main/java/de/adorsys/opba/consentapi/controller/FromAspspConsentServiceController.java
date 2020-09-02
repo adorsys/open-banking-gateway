@@ -53,4 +53,19 @@ public class FromAspspConsentServiceController implements FromAspspConsentAuthor
                         .build()
         ).thenApply(aspspMapper::translate);
     }
+
+    @Override
+    public CompletableFuture fromAspspOauth2UsingGET(String authId, String redirectCode, String code) {
+        return fromAspspRedirectHandler.execute(
+                FromAspspRequest.builder()
+                        .facadeServiceable(serviceableTemplate.toBuilder()
+                                .redirectCode(redirectCode)
+                                .authorizationSessionId(authId)
+                                .build()
+                        )
+                        .isOk(true)
+                        .code(code)
+                        .build()
+        ).thenApply(aspspMapper::translate);
+    }
 }

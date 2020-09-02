@@ -51,7 +51,7 @@ public class HbciProtocolConfiguration {
              * Consent related urls - Consent with IBANs input form, etc.
              */
             @NotNull
-            private Consent consentAccounts;
+            private WebHooks webHooks;
 
             /**
              * Generic parameters input urls - i.e. password page.
@@ -66,7 +66,7 @@ public class HbciProtocolConfiguration {
             private String toAspsp;
 
             @Data
-            public static class Consent {
+            public static class WebHooks {
 
                 /**
                  * URL that represents page saying that consent creation was OK (comes before consent result page).

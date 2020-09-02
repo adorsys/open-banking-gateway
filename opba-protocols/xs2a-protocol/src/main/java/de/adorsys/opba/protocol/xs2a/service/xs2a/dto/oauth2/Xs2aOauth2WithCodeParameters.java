@@ -12,9 +12,12 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
 @Data
 public class Xs2aOauth2WithCodeParameters {
 
-    // TODO - MapStruct?
+    private String oauth2Code;
+
     public Oauth2Service.Parameters toParameters() {
-        return new Oauth2Service.Parameters();
+        Oauth2Service.Parameters parameters = new Oauth2Service.Parameters();
+        parameters.setAuthorizationCode(oauth2Code);
+        return parameters;
     }
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)

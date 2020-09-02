@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Service("xs2aOauth2ExchangeCodeToToken")
 @RequiredArgsConstructor
-public class Xs2aOauth2PutExchangeCodeToToken extends ValidatedExecution<Xs2aContext> {
+public class Xs2aOauth2ExchangeCodeToToken extends ValidatedExecution<Xs2aContext> {
 
     private final Xs2aValidator validator;
     private final Extractor extractor;

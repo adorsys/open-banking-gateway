@@ -37,12 +37,6 @@ public class ProtocolUrlsConfiguration {
     @NotNull
     private UrlSet pis;
 
-    /**
-     * Generic parameters input urls - i.e. password page.
-     */
-    @NotNull
-    private UrlSet common;
-
     public UrlSet getUrlAisOrPisSetBasedOnContext(Xs2aContext context) {
         return ProtocolAction.SINGLE_PAYMENT.equals(context.getAction()) ? getPis() : getAis();
     }
@@ -87,6 +81,12 @@ public class ProtocolUrlsConfiguration {
          */
         @NotBlank
         private String result;
+
+        /**
+         * Returning from ASPSP-OAuth2 (base URL, ASPSP IDP should add code to it) to exchange code to token.
+         */
+        @NotNull
+        private String fromOauth2WithCode;
     }
 
     @Data
