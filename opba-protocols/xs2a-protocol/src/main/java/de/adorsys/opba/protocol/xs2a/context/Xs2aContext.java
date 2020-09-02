@@ -166,6 +166,11 @@ public class Xs2aContext extends BaseContext {
      */
     private boolean oauth2IntegratedNeeded;
 
+    /**
+     * SCA Oauth2 link to follow.
+     */
+    private String scaOauth2Link;
+
     @JsonIgnore
     public String getPsuPassword() {
         TransientDataEntry entry = this.transientStorage().get();

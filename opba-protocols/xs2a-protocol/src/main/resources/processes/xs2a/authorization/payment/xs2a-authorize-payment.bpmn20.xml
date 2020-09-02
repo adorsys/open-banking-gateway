@@ -3,7 +3,7 @@
   <process id="xs2a-authorize-payment" name="Authorize payment" isExecutable="true">
     <documentation>XS2A payment authorization process</documentation>
     <startEvent id="start" name="start" flowable:formFieldValidation="true"/>
-    <serviceTask id="startAuthorization" name="Start singlePaymentBody authorization" flowable:async="true" flowable:delegateExpression="${xs2aStartPaymentAuthorization}">
+    <serviceTask id="startAuthorization" name="Start payment authorization" flowable:async="true" flowable:delegateExpression="${xs2aStartPaymentAuthorization}">
       <documentation>scaStatus: received -&gt; psuIdentified</documentation>
     </serviceTask>
     <endEvent id="end" name="end"/>
