@@ -149,6 +149,11 @@ public class Xs2aContext extends BaseContext {
     /**
      * Is used to store Oauth2 token in case of Oauth2 approaches.
      */
+    private String oauth2Code;
+
+    /**
+     * Is used to store Oauth2 token in case of Oauth2 approaches.
+     */
     private TokenResponse oauth2token;
 
     /**

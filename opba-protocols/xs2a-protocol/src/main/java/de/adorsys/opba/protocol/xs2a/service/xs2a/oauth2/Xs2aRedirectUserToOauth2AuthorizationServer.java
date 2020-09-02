@@ -2,9 +2,12 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.oauth2;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.RedirectToAspsp;
+import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.xs2a.config.protocol.ProtocolUrlsConfiguration;
 import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
+import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
+import de.adorsys.opba.protocol.xs2a.service.dto.QueryHeadersToValidate;
 import de.adorsys.opba.protocol.xs2a.service.dto.ValidatedQueryHeaders;
 import de.adorsys.opba.protocol.xs2a.service.mapper.QueryHeadersMapperTemplate;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.Xs2aRedirectExecutor;
@@ -27,8 +30,8 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecution<Xs2aContext> {
 
-    private final RuntimeService runtimeService;
     private final ProtocolUrlsConfiguration urlsConfiguration;
+    private final RuntimeService runtimeService;
     private final Xs2aValidator validator;
     private final Extractor extractor;
     private final Oauth2Service oauth2Service;
@@ -37,9 +40,8 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
     @Override
     @SneakyThrows
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
-        ProtocolUrlsConfiguration.UrlSet urlSet = urlsConfiguration.getUrlAisOrPisSetBasedOnContext(context);
-
         ValidatedQueryHeaders<Xs2aOauth2Parameters, Xs2aOauth2Headers> validated = extractor.forExecution(context);
+        enrichParameters(execution, context, validated.getQuery());
 
         URI oauth2RedirectUserTo = oauth2Service.getAuthorizationRequestUri(
                 validated.getHeaders().toHeaders().toMap(),
@@ -49,7 +51,7 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
         redirectExecutor.redirect(
                 execution,
                 context,
-                urlSet.getToAspsp(),
+                urlsConfiguration.getUrlAisOrPisSetBasedOnContext(context).getToAspsp(),
                 oauth2RedirectUserTo.toASCIIString(),
                 redirect -> new RedirectToAspsp(redirect.build())
         );
@@ -57,8 +59,28 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
-        validator.validate(execution, context, this.getClass(), extractor.forValidation(context));
+        QueryHeadersToValidate<Xs2aOauth2Parameters, Xs2aOauth2Headers> toValidate = extractor.forValidation(context);
+        enrichParameters(execution, context, toValidate.getQuery());
+
+        validator.validate(execution, context, this.getClass(), toValidate);
         runtimeService.trigger(execution.getId());
+    }
+
+    private void enrichParameters(DelegateExecution execution, Xs2aContext context, Xs2aOauth2Parameters parameters) {
+        ProtocolUrlsConfiguration.UrlSet urlSet = urlsConfiguration.getUrlAisOrPisSetBasedOnContext(context);
+        String redirectBack = ContextUtil.evaluateSpelForCtx(
+                urlSet.getWebHooks().getFromOauth2WithCode(),
+                execution,
+                context
+        );
+        parameters.setFromOauth2WithCode(redirectBack);
+        // redirectCode is technically the `state` parameter and is already encoded into redirect URI
+        parameters.setState(context.getAspspRedirectCode());
+        // necessary for adapter to deduce things:
+        parameters.setConsentId(context.getConsentId());
+        if (context instanceof Xs2aPisContext) {
+            parameters.setPaymentId(((Xs2aPisContext) context).getPaymentId());
+        }
     }
 
     @Service

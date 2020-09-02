@@ -34,6 +34,10 @@ public class FlowableJobEventListener extends AbstractFlowableEngineEventListene
     }
 
     private void handleError(FlowableEngineEntityEvent event) {
+        if (event instanceof FlowableExceptionEvent) {
+            log.error("Exception occurred for execution {} of process {}", event.getExecutionId(), event.getProcessInstanceId(), ((FlowableExceptionEvent) event).getCause());
+        }
+
         ProcessError result = ProcessError.builder()
                 .processId(event.getProcessInstanceId())
                 .executionId(event.getExecutionId())
