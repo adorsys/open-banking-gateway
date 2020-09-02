@@ -20,7 +20,7 @@ export class PaymentAccountsComponent implements OnInit {
   }
 
   selectAccount(id) {
-    console.log('router navigate to ../account');
+    console.log('router navigate to ../account ');
     this.selectedAccount = id;
     this.router.navigate(['../account', id], { relativeTo: this.route });
   }
