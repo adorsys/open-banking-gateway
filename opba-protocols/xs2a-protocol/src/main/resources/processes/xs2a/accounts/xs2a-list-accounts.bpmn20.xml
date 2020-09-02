@@ -33,7 +33,7 @@
     <sequenceFlow id="wrongIban" name="wrong IBAN" sourceRef="isCreationSuccess" targetRef="askUserForIBAN">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[#{xs2aConsentInfo.hasWrongCredentials(CONTEXT)}]]></conditionExpression>
     </sequenceFlow>
-    <callActivity id="sid-69dd48bc-0657-4dfe-a1fb-e6a9ebc8870c" name="(If needed) Oauth2 pre-step for user authentication" flowable:async="true" flowable:inheritVariables="true" calledElement="if-needed-xs2a-oauth2-step"/>
+    <callActivity id="sid-69dd48bc-0657-4dfe-a1fb-e6a9ebc8870c" name="(If needed) Oauth2 pre-step for user authentication" flowable:async="true" flowable:inheritVariables="true" calledElement="if-needed-xs2a-oauth2-step" flowable:calledElementType="key"/>
     <sequenceFlow id="sid-6ccbc12b-9a1b-4679-9f28-d608b36bdfc0" sourceRef="sid-69dd48bc-0657-4dfe-a1fb-e6a9ebc8870c" targetRef="createConsent"/>
     <sequenceFlow id="sid-d08d7e50-fdf4-405b-bc98-0dc8e33e23c3" sourceRef="isCreationSuccess" targetRef="sid-69dd48bc-0657-4dfe-a1fb-e6a9ebc8870c" name="Oauth2 pre-step required">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2AuthenticationPreStep(CONTEXT)}</conditionExpression>
