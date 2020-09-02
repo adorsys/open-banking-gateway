@@ -5,6 +5,7 @@ import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.WithBasicInfo;
 import de.adorsys.xs2a.adapter.service.RequestHeaders;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.Map;
 
@@ -20,6 +21,8 @@ public class PaymentInfoHeaders extends WithBasicInfo {
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface FromPisCtx extends DtoMapper<Xs2aPisContext, PaymentInfoHeaders> {
+
+        @Mapping(source = "ctx.oauth2Token.accessToken", target = "oauth2Token")
         PaymentInfoHeaders map(Xs2aPisContext ctx);
     }
 }
