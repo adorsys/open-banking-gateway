@@ -56,7 +56,12 @@ public class StartConsentAuthorization extends ValidatedExecution<Xs2aContext> {
         String aspspSelectedApproach = scaStart.getHeaders().getHeader(ASPSP_SCA_APPROACH);
         context.setAspspScaApproach(null == aspspSelectedApproach ? config.getPreferredApproach().name() : aspspSelectedApproach);
         context.setAuthorizationId(scaStart.getBody().getAuthorisationId());
+
         context.setStartScaProcessResponse(scaStart.getBody());
+        if (context.getStartScaProcessResponse().getLinks().containsKey("scaOAuth")) {
+            context.setOauth2IntegratedNeeded(true);
+        }
+
         execution.setVariable(CONTEXT, context);
     }
 

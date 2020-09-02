@@ -73,7 +73,11 @@
     <sequenceFlow id="onPlainRedirectAuthorization" sourceRef="sid-3424b907-c3e7-43e3-89e7-7bfbeefbe7ad" targetRef="notifyUserWithRedirect" name="On plain redirect authorization">
       <conditionExpression xsi:type="tFormalExpression"/>
     </sequenceFlow>
-    <callActivity id="sid-09316664-e311-425c-bd6a-fa214a377692" name="Oauth2 step for user authorization" flowable:async="true" flowable:inheritVariables="true" calledElement="xs2a-oauth2-step"/>
+    <callActivity id="sid-09316664-e311-425c-bd6a-fa214a377692" name="Oauth2 step for user authorization" flowable:async="true" flowable:inheritVariables="true" calledElement="if-needed-xs2a-oauth2-step" flowable:calledElementType="key">
+      <extensionElements>
+        <flowable:out source="CONTEXT" target="CONTEXT"/>
+      </extensionElements>
+    </callActivity>
     <sequenceFlow id="onOauth2Authorization" sourceRef="sid-3424b907-c3e7-43e3-89e7-7bfbeefbe7ad" targetRef="sid-09316664-e311-425c-bd6a-fa214a377692" name="On Oauth2 authorization (integrated)">
       <conditionExpression xsi:type="tFormalExpression">#{xs2aConsentInfo.isOauth2Authorization(CONTEXT)}</conditionExpression>
     </sequenceFlow>
