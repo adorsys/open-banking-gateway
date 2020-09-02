@@ -12,6 +12,7 @@ import de.adorsys.xs2a.adapter.service.RequestHeaders;
 import lombok.Getter;
 import lombok.Setter;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Map;
@@ -69,6 +70,8 @@ public class ConsentInitiateHeaders extends WithBasicInfo {
 
     @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
     public interface FromAisCtx extends DtoMapper<Xs2aAisContext, ConsentInitiateHeaders> {
+
+        @Mapping(source = "ctx.oauth2Token.accessToken", target = "oauth2Token")
         ConsentInitiateHeaders map(Xs2aAisContext ctx);
     }
 
