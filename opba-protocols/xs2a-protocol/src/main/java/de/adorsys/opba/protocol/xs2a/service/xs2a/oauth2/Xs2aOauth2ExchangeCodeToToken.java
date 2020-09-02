@@ -27,6 +27,7 @@ public class Xs2aOauth2ExchangeCodeToToken extends ValidatedExecution<Xs2aContex
     @Override
     @SneakyThrows
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
+        // TODO: redirect_uri should be sent (from previous step) here as well
         ValidatedQueryHeaders<Xs2aOauth2WithCodeParameters, Xs2aOauth2Headers> validated = extractor.forExecution(context);
         TokenResponse response = oauth2Service.getToken(
                 validated.getHeaders().toHeaders().toMap(),
