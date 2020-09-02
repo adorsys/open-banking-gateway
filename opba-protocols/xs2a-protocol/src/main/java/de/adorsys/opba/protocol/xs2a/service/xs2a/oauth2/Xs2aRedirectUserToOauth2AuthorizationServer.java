@@ -63,6 +63,10 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
         enrichParameters(execution, context, toValidate.getQuery());
 
         validator.validate(execution, context, this.getClass(), toValidate);
+    }
+
+    @Override
+    protected void doMockedExecution(DelegateExecution execution, Xs2aContext context) {
         runtimeService.trigger(execution.getId());
     }
 
