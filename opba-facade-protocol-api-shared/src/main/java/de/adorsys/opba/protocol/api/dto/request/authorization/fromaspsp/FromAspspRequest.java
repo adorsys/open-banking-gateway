@@ -34,6 +34,5 @@ public class FromAspspRequest implements FacadeServiceableGetter {
     /**
      * OAuth2 code to be exchanged to token. Used only for redirects' back in OAuth2 authentication/authorization.
      */
-    @NonNull
     private String code;
 }
