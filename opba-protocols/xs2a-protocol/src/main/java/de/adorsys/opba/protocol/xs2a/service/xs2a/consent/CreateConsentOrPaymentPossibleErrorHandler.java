@@ -10,6 +10,7 @@ import de.adorsys.xs2a.adapter.service.model.TppMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -35,19 +36,25 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
         try {
             tryCreate.run();
         } catch (ErrorResponseException ex) {
-            tryHandleWrongIbanOrCredentialsException(execution, ex);
+            tryHandleWrongIbanOrCredentialsExceptionOrOauth2(execution, ex);
         } catch (OAuthException ex) {
             tryHandleOauth2Exception(execution);
         }
     }
 
-    private void tryHandleWrongIbanOrCredentialsException(DelegateExecution execution, ErrorResponseException ex) {
+    private void tryHandleWrongIbanOrCredentialsExceptionOrOauth2(DelegateExecution execution, ErrorResponseException ex) {
         if (!ex.getErrorResponse().isPresent() || null == ex.getErrorResponse().get().getTppMessages()) {
             throw ex;
         }
 
         if (isWrongIban(ex)) {
             onWrongIban(execution);
+            return;
+        }
+
+        // TODO: https://github.com/adorsys/open-banking-gateway/issues/976
+        if (HttpStatus.UNAUTHORIZED.value() == ex.getStatusCode() && isPossiblyOauth2Error(ex)) {
+            tryHandleOauth2Exception(execution);
             return;
         }
 
@@ -62,6 +69,14 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
                     ctx.setOauth2PreStepNeeded(true);
                 }
         );
+    }
+
+    private boolean isPossiblyOauth2Error(ErrorResponseException ex) {
+        Set<String> tppMessageCodes = ex.getErrorResponse().get().getTppMessages().stream()
+                .map(TppMessage::getCode)
+                .collect(Collectors.toSet());
+
+        return !Sets.intersection(messageConfig.getMissingOauth2Token(), tppMessageCodes).isEmpty();
     }
 
     private boolean isWrongIban(ErrorResponseException ex) {
