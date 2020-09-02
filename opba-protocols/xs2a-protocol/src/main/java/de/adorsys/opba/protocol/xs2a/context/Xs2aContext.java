@@ -154,7 +154,7 @@ public class Xs2aContext extends BaseContext {
     /**
      * Is used to store Oauth2 token in case of Oauth2 approaches.
      */
-    private TokenResponse oauth2token;
+    private TokenResponse oauth2Token;
 
     /**
      * Indicates that ASPSP requires Oauth2-pre-step for consent authorization.

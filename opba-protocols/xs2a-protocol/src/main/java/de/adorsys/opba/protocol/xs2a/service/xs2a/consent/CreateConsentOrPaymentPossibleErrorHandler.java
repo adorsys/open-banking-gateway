@@ -83,7 +83,7 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
     }
 
     private void checkAndHandleIrrecoverableOAuth2State(Xs2aContext ctx) {
-        if (null != ctx.getOauth2token() && null != ctx.getOauth2Code()) {
+        if (null != ctx.getOauth2Token() && null != ctx.getOauth2Code()) {
             throw new RuntimeException("Unable to handle Oauth2 exception as code and token are already not null");
         }
     }

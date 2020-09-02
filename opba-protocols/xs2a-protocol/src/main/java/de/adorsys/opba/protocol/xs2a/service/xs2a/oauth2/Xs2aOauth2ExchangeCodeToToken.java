@@ -36,7 +36,7 @@ public class Xs2aOauth2ExchangeCodeToToken extends ValidatedExecution<Xs2aContex
         ContextUtil.getAndUpdateContext(
                 execution,
                 (Xs2aContext ctx) -> {
-                    ctx.setOauth2token(response);
+                    ctx.setOauth2Token(response);
                     ctx.setOauth2PreStepNeeded(false);
                 }
         );
