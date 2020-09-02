@@ -57,7 +57,10 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
     private void tryHandleOauth2Exception(DelegateExecution execution) {
         ContextUtil.getAndUpdateContext(
                 execution,
-                (Xs2aContext ctx) -> ctx.setOauth2PreStepNeeded(true)
+                (Xs2aContext ctx) -> {
+                    checkAndHandleIrrecoverableOAuth2State(ctx);
+                    ctx.setOauth2PreStepNeeded(true);
+                }
         );
     }
 
@@ -77,5 +80,11 @@ public class CreateConsentOrPaymentPossibleErrorHandler {
                     ctx.setWrongAuthCredentials(true);
                 }
         );
+    }
+
+    private void checkAndHandleIrrecoverableOAuth2State(Xs2aContext ctx) {
+        if (null != ctx.getOauth2token() && null != ctx.getOauth2Code()) {
+            throw new RuntimeException("Unable to handle Oauth2 exception as code and token are already not null");
+        }
     }
 }
