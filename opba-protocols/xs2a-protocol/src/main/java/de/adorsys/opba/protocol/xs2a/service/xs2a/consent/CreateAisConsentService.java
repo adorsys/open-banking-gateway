@@ -11,6 +11,7 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
+import static de.adorsys.xs2a.adapter.adapter.link.bg.template.LinksTemplate.SCA_OAUTH;
 
 /**
  * Calls Xs2a API to initiate AIS consent.
@@ -30,6 +31,10 @@ public class CreateAisConsentService {
 
         context.setWrongAuthCredentials(false);
         context.setConsentId(consentInit.getBody().getConsentId());
+        if (null != consentInit.getBody().getLinks() && consentInit.getBody().getLinks().containsKey(SCA_OAUTH)) {
+            context.setOauth2IntegratedNeeded(true);
+            context.setScaOauth2Link(consentInit.getBody().getLinks().get(SCA_OAUTH).getHref());
+        }
         execution.setVariable(CONTEXT, context);
     }
 }

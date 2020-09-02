@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.CONTEXT;
+import static de.adorsys.xs2a.adapter.adapter.link.bg.template.LinksTemplate.SCA_OAUTH;
 
 /**
  * Initiates Account list consent by sending mapped {@link de.adorsys.opba.protocol.api.dto.request.authorization.AisConsent}
@@ -82,6 +83,10 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
 
         context.setWrongAuthCredentials(false);
         context.setPaymentId(paymentInit.getBody().getPaymentId());
+        if (context.getStartScaProcessResponse().getLinks().containsKey(SCA_OAUTH)) {
+            context.setOauth2IntegratedNeeded(true);
+            context.setScaOauth2Link(context.getStartScaProcessResponse().getLinks().get(SCA_OAUTH).getHref());
+        }
         execution.setVariable(CONTEXT, context);
     }
 
