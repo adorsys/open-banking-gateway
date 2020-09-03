@@ -6,6 +6,7 @@ import de.adorsys.opba.protocol.xs2a.context.ais.Xs2aAisContext;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ContextCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.FrontendCode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.annotations.ValidationInfo;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ResponseTokenMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ValidationMode;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.WithBasicInfo;
 import de.adorsys.xs2a.adapter.service.RequestHeaders;
@@ -68,10 +69,9 @@ public class ConsentInitiateHeaders extends WithBasicInfo {
         return RequestHeaders.fromMap(headers);
     }
 
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = ResponseTokenMapper.class)
     public interface FromAisCtx extends DtoMapper<Xs2aAisContext, ConsentInitiateHeaders> {
 
-        @Mapping(source = "ctx.oauth2Token.accessToken", target = "oauth2Token")
         ConsentInitiateHeaders map(Xs2aAisContext ctx);
     }
 

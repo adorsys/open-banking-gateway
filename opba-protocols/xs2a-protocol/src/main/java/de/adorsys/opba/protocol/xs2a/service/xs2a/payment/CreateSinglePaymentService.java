@@ -11,6 +11,7 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.consent.CreateConsentOrPayment
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.Xs2aInitialPaymentParameters;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateBody;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment.PaymentInitiateHeaders;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.quirks.QuirkUtil;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.validation.Xs2aValidator;
 import de.adorsys.xs2a.adapter.service.PaymentInitiationService;
 import de.adorsys.xs2a.adapter.service.RequestParams;
@@ -76,7 +77,7 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
 
         Response<PaymentInitiationRequestResponse> paymentInit = pis.initiateSinglePayment(
                 params.getPath().getPaymentProduct(),
-                params.getHeaders().toHeaders(),
+                QuirkUtil.pushBicToXs2aAdapterHeaders(context, params.getHeaders().toHeaders()),
                 RequestParams.empty(),
                 params.getBody()
         );
