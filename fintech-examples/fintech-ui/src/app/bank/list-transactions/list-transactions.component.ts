@@ -67,8 +67,8 @@ export class ListTransactionsComponent implements OnInit {
   }
 
   private getAccountById(id: string) {
-    for (let acc of this.storageService.getLoa()) {
-      if (acc.resourceId == id) {
+    for (const acc of this.storageService.getLoa()) {
+      if (acc.resourceId === id) {
         return acc;
       }
     }
