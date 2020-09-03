@@ -152,20 +152,20 @@ export class StorageService {
   }
 
   public getSettings(): SettingsData {
-    let data = localStorage.getItem(Consts.LOCAL_STORAGE_SETTINGS)
-    if (!data) {
-      this.setSettings(new SettingsData(LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
-        LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT, false));
-      data = localStorage.getItem(Consts.LOCAL_STORAGE_SETTINGS)
+    const setting = localStorage.getItem(Consts.LOCAL_STORAGE_SETTINGS);
+    if (setting == null) {
+      return {
+        loa: LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
+        lot: LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
+        paymentRequiresAuthentication: false
+      };
     }
-
-    return JSON.parse(data) as SettingsData
+    return JSON.parse(setting);
   }
 
   public setSettings(data: SettingsData) {
     localStorage.setItem(Consts.LOCAL_STORAGE_SETTINGS, JSON.stringify(data));
   }
-
 }
 
 enum Session {
