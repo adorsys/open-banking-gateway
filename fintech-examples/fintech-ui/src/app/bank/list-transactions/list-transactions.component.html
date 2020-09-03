@@ -1,46 +1,18 @@
 <div class="header__margin">
-  <div class="d-md-flex justify-content-between align-items-center mb-5">
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-5">
     <app-account-card [account]="account"></app-account-card>
-    <button class="btn btn-primary mt-3 mt-md-0" (click)="navigateToPayment()">
+    <button (click)="navigateToPayment()" class="btn btn-primary mt-3 mt-sm-0">
       Initiate new payment
     </button>
   </div>
-  <div *ngIf="transactions && transactions.pending && transactions.pending.length > 0">
-    <span class="ltx-category">Pending</span>
-    <div *ngFor="let transaction of transactions.pending">
-      <div class="ltx-parent ltx-list-container ltx-list-container--shadow">
-        <div class="ltx-date">
-          {{ transaction.bookingDate }}
-        </div>
-        <div class="ltx-description">
-          {{ transaction.additionalInformation }}
-        </div>
-        <div class="ltx-amount-number">
-          {{ transaction.transactionAmount.amount }}
-        </div>
-        <div class="ltx-amount-currency">
-          {{ transaction.transactionAmount.currency }}
-        </div>
-      </div>
-    </div>
-  </div>
-  <div *ngIf="transactions && transactions.booked && transactions.booked.length > 0">
-    <h6>Booked</h6>
-    <div *ngFor="let transaction of transactions.booked">
-      <div class="ltx-parent ltx-list-container ltx-list-container--shadow">
-        <div class="ltx-date">
-          {{ transaction.bookingDate }}
-        </div>
-        <div class="ltx-description">
-          {{ transaction.remittanceInformationUnstructured }}
-        </div>
-        <div class="ltx-amount-number">
-          {{ transaction.transactionAmount.amount }}
-        </div>
-        <div class="ltx-amount-currency">
-          {{ transaction.transactionAmount.currency }}
-        </div>
-      </div>
-    </div>
-  </div>
+  <app-transaction-card
+    [transactions]="transactions?.pending"
+    [title]="'Pending'"
+    [isBookedTransaction]="transactions?.pending?.length > 0"
+  ></app-transaction-card>
+  <app-transaction-card
+    [transactions]="transactions?.booked"
+    [title]="'Booked'"
+    [isBookedTransaction]="transactions?.booked?.length > 0"
+  ></app-transaction-card>
 </div>

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { StorageService } from '../../../services/storage.service';
-import { AccountStruct } from '../../redirect-page/redirect-struct';
 import { ActivatedRoute, Router } from '@angular/router';
+import { StorageService } from '../../../services/storage.service';
 
 @Component({
   selector: 'app-list-accounts-for-payment',
@@ -11,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class PaymentAccountsComponent implements OnInit {
   public static ROUTE = 'accounts';
   selectedAccount;
-  accounts: AccountStruct[] = [];
+  accounts = [];
 
   constructor(private storageService: StorageService, private router: Router, private route: ActivatedRoute) {}
 
@@ -19,8 +18,8 @@ export class PaymentAccountsComponent implements OnInit {
     this.accounts = this.storageService.getLoa();
   }
 
-  selectAccount(id) {
-    console.log('router navigate to ../account ');
+  onSelectAccount(id) {
+    console.log('router navigate to ../account');
     this.selectedAccount = id;
     this.router.navigate(['../account', id], { relativeTo: this.route });
   }

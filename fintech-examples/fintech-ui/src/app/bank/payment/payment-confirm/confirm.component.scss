@@ -1,13 +1,10 @@
 @import 'src/assets/themes/variables';
-
-.lacc-parent {
-  margin: 50px;
-  display: flex;
-  flex-direction: row;
-}
-
 p {
   margin-bottom: 0;
+}
+
+.pl {
+  padding-left: 88px;
 }
 
 .form-group {
@@ -19,5 +16,17 @@ p {
   .card-img {
     width: 48px;
     height: auto;
+  }
+}
+
+@media (max-width: 1150px) {
+  .row {
+    display: block;
+  }
+}
+
+@media (min-width: 768px) {
+  .col-md-6 {
+    max-width: 100%;
   }
 }

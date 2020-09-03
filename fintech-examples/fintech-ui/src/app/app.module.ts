@@ -6,7 +6,7 @@ import { environment } from '../environments/environment';
 import { ApiModule, Configuration, ConfigurationParameters } from './api';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ShareModule } from './common/share.module';
+import { SharedModule } from './common/shared.module';
 import { AuthGuard } from './guards/auth.guard';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { LoginComponent } from './login/login.component';
@@ -51,7 +51,7 @@ export function apiConfigFactory(): Configuration {
     AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
-    ShareModule,
+    SharedModule,
     HttpClientModule,
     NgHttpLoaderModule.forRoot(),
     HttpClientXsrfModule.withOptions({
