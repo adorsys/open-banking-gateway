@@ -64,7 +64,7 @@ export class InitiateComponent implements OnInit {
         'response'
       )
       .subscribe(response => {
-        if (response.status == 202) {
+        if (response.status === 202) {
           this.setRedirectInfo(response);
           const confirmData = this.setConfirmDataAndGet(response, paymentRequest);
           this.router.navigate(['../confirm', JSON.stringify(confirmData)], { relativeTo: this.route });

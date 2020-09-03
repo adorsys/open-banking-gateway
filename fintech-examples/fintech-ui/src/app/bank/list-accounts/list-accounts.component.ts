@@ -55,7 +55,7 @@ export class ListAccountsComponent implements OnInit {
           // to be removed when issue https://github.com/adorsys/open-banking-gateway/issues/848 is resolved
           // or Fintech UI refactored
           this.accounts = response.body.accounts;
-          let loa = [];
+          const loa = [];
           this.loadTestAccounts();
           for (const accountDetail of this.accounts) {
             loa.push(new AccountStruct(accountDetail.resourceId, accountDetail.iban, accountDetail.name));
