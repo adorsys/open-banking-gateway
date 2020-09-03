@@ -2,6 +2,12 @@ input {
   margin-right: 10px;
 }
 
-.group {
-  margin-bottom: 40px;
+.form-group:not(:last-child) {
+  margin-bottom: 2rem;
+}
+
+.form-check {
+  display: flex;
+  padding-left: 0;
+  align-items: baseline;
 }

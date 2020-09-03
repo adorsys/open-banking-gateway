@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 
@@ -10,68 +11,44 @@ import { StorageService } from '../../services/storage.service';
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit {
-
   bankId = 'unknown';
   loaFromTppWithNewConsent = LoARetrievalInformation.FROM_TPP_WITH_NEW_CONSENT;
   loaFromTppWithAvailableConsent = LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
-  loa;
 
   lotFromTppWithNewConsent = LoTRetrievalInformation.FROM_TPP_WITH_NEW_CONSENT;
   lotFromTppWithAvailableConsent = LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
-  lot;
 
-  paymentRequiresAuthentication = new FormControl(false)
   settingsForm: FormGroup;
 
   constructor(
+    private location: Location,
     private route: ActivatedRoute,
-    private router: Router,
     private formBuilder: FormBuilder,
-    private storageService : StorageService)
-  {
+    private storageService: StorageService
+  ) {}
+
+  ngOnInit() {
     this.bankId = this.route.snapshot.paramMap.get('bankid');
-
-    const settings = this.storageService.getSettings();
-    this.loa = settings.loa;
-    this.lot = settings.lot;
-    this.paymentRequiresAuthentication.setValue(settings.paymentRequiresAuthentication);
-
+    const settingsData = { ...this.storageService.getSettings() };
     this.settingsForm = this.formBuilder.group({
-      loa: [this.loa, Validators.required],
-      lot: [this.lot, Validators.required],
-      paymentRequiresAuthentication: this.paymentRequiresAuthentication
+      loa: [settingsData.loa, Validators.required],
+      lot: [settingsData.lot, Validators.required],
+      paymentRequiresAuthentication: settingsData.paymentRequiresAuthentication
     });
   }
 
-  ngOnInit() {
-    console.log('settings ng on init');
-    const settings = this.storageService.getSettings();
-    this.loa = settings.loa;
-    this.lot = settings.lot;
-    this.paymentRequiresAuthentication.setValue(settings.paymentRequiresAuthentication);
-
-    console.log('this.loa = ', this.loa.toString());
-  }
-
-  onDeny() {
-
-  }
-
   onConfirm() {
-    this.loa = this.settingsForm.getRawValue().loa;
-    this.lot = this.settingsForm.getRawValue().lot;
-
-    this.storageService.setSettings(new SettingsData(this.loa, this.lot, this.settingsForm.getRawValue().paymentRequiresAuthentication));
-    this.router.navigate(['..'], { relativeTo: this.route });
+    this.storageService.setSettings({ ...this.settingsForm.getRawValue() });
+    this.onNavigateBack();
   }
 
+  onNavigateBack() {
+    this.location.back();
+  }
 }
 
 export class SettingsData {
-
-  constructor(
-    public loa: LoARetrievalInformation,
-    public lot: LoTRetrievalInformation,
-    public paymentRequiresAuthentication: boolean) {
-  }
+  loa: LoARetrievalInformation;
+  lot: LoTRetrievalInformation;
+  paymentRequiresAuthentication: boolean;
 }
