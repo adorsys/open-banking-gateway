@@ -17,7 +17,7 @@ export class ListTransactionsComponent implements OnInit {
   makeVisible = false;
   account;
   transactions: AccountReport;
-  loTRetrievalInformation;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -56,6 +56,7 @@ export class ListTransactionsComponent implements OnInit {
           case 200:
             console.log('I got transactions');
             this.transactions = response.body.transactions;
+            console.log(this.transactions);
             this.makeVisible = true;
         }
       });

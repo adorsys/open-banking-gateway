@@ -1,24 +1,13 @@
 @import 'src/assets/themes/variables';
-// list-accounts
-.withoutOutline {
-  outline: none;
-}
 
-.lacc-list-container {
-  display: flex;
-  align-items: center;
-  //width: 95%;
-  text-align: start;
-  cursor: pointer;
-  justify-content: space-between;
-}
-
-.lacc-list-item {
+.card__item {
   background-color: #fff;
   padding: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  cursor: pointer;
 
-  &__headline {
+  .card__headline {
     font-size: 0.5rem;
 
     &--small {
@@ -27,7 +16,7 @@
     }
   }
 
-  &__subheadline {
+  .card__subheadline {
     font-size: 0.85rem;
     margin-bottom: 0;
     color: $primary;

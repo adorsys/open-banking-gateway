@@ -2,6 +2,7 @@
 
 @import '~bootstrap/scss/bootstrap';
 @import './assets/themes/fonts';
+
 * {
   margin: 0;
   padding: 0;
@@ -27,13 +28,13 @@ body {
   }
 
   &-body {
-    padding: 4rem;
+    padding: 3rem;
     color: $dark-80;
   }
 
   &-title {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     font-size: 2rem;
     font-family: geometric-SemiBold, sans-serif;
 
@@ -45,7 +46,7 @@ body {
 
   &-img {
     width: 136px;
-    height: 136px;
+    height: auto;
   }
 }
 
@@ -95,12 +96,29 @@ label {
 }
 
 .payment {
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 767px) {
+  .card {
+    &-title {
+      font-size: 1.5rem;
+    }
+
+    &-body {
+      padding: 2rem;
+    }
+
+    &-img {
+      width: 100px;
+    }
+  }
 }
 
 .header__margin {
   margin-left: 3rem;
   margin-right: 3rem;
+  max-width: 761px;
 }
 
 @media (max-width: 767px) {

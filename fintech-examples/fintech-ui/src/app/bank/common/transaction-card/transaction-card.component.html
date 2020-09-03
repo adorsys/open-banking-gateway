@@ -1,0 +1,18 @@
+<div *ngIf="transactions && transactions?.length > 0">
+  <span class="ltx-category">{{ title }}</span>
+  <div *ngFor="let transaction of transactions">
+    <div class="ltx-list-container">
+      <div class="left">
+        <span class="ltx-description">{{ transaction?.bookingDate }}</span>
+        <span class="ltx-description" *ngIf="!isBookedTransaction">{{ transaction?.additionalInformation }}</span>
+        <span class="ltx-description" *ngIf="isBookedTransaction">{{
+          transaction?.remittanceInformationUnstructured
+        }}</span>
+      </div>
+      <div class="right">
+        <span class="ltx-amount-number">{{ transaction?.transactionAmount?.amount }}</span>
+        <span>{{ transaction?.transactionAmount?.currency }}</span>
+      </div>
+    </div>
+  </div>
+</div>
