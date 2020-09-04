@@ -171,6 +171,11 @@ public class Xs2aContext extends BaseContext {
      */
     private String scaOauth2Link;
 
+    /**
+     * OAuth2 redirect back link that is used for this session.
+     */
+    private String oauth2RedirectBackLink;
+
     @JsonIgnore
     public String getPsuPassword() {
         TransientDataEntry entry = this.transientStorage().get();

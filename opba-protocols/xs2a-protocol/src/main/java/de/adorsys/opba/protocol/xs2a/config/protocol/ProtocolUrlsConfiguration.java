@@ -66,6 +66,7 @@ public class ProtocolUrlsConfiguration {
     public static class WebHooks {
         /**
          * URL that represents page saying that consent creation was OK (comes before consent result page).
+         * Or acts as redirect-back URI for OAuth2.
          */
         @NotBlank
         private String ok;
@@ -81,12 +82,6 @@ public class ProtocolUrlsConfiguration {
          */
         @NotBlank
         private String result;
-
-        /**
-         * Returning from ASPSP-OAuth2 (base URL, ASPSP IDP should add code to it) to exchange code to token.
-         */
-        @NotNull
-        private String fromOauth2WithCode;
     }
 
     @Data

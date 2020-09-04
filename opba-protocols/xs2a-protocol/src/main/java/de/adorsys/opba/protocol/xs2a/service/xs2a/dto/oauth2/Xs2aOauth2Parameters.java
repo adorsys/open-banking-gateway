@@ -15,10 +15,12 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
 public class Xs2aOauth2Parameters {
 
     @NotBlank
-    private String fromOauth2WithCode;
+    private String oauth2RedirectBackLink;
 
     @NotBlank
     private String state;
+
+    private String scaOauthLink;
 
     // can be blank in pre-step (pre-Authentication), but either consentId/paymentId should be filled in integrated Oauth2
     private String consentId;
@@ -29,10 +31,11 @@ public class Xs2aOauth2Parameters {
     // TODO - MapStruct?
     public Oauth2Service.Parameters toParameters() {
         Oauth2Service.Parameters parameters = new Oauth2Service.Parameters();
-        parameters.setRedirectUri(fromOauth2WithCode);
+        parameters.setRedirectUri(oauth2RedirectBackLink);
         parameters.setState(state);
         parameters.setConsentId(consentId);
         parameters.setPaymentId(paymentId);
+        parameters.setScaOAuthLink(scaOauthLink);
         return parameters;
     }
 

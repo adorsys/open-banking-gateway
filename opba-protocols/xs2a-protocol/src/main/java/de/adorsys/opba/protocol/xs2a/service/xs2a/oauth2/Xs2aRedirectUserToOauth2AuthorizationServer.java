@@ -41,17 +41,12 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
     @SneakyThrows
     protected void doRealExecution(DelegateExecution execution, Xs2aContext context) {
         ValidatedQueryHeaders<Xs2aOauth2Parameters, Xs2aOauth2Headers> validated = extractor.forExecution(context);
-        enrichParameters(execution, context, validated.getQuery());
+        enrichParametersAndContext(execution, context, validated.getQuery());
 
-        URI oauth2RedirectUserTo;
-        if (null != context.getScaOauth2Link()) {
-            oauth2RedirectUserTo = URI.create(context.getScaOauth2Link());
-        } else {
-            oauth2RedirectUserTo = oauth2Service.getAuthorizationRequestUri(
-                    validated.getHeaders().toHeaders().toMap(),
-                    validated.getQuery().toParameters()
-            );
-        }
+        URI oauth2RedirectUserTo = oauth2Service.getAuthorizationRequestUri(
+                validated.getHeaders().toHeaders().toMap(),
+                validated.getQuery().toParameters()
+        );
 
         redirectExecutor.redirect(
                 execution,
@@ -65,7 +60,7 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aContext context) {
         QueryHeadersToValidate<Xs2aOauth2Parameters, Xs2aOauth2Headers> toValidate = extractor.forValidation(context);
-        enrichParameters(execution, context, toValidate.getQuery());
+        enrichParametersAndContext(execution, context, toValidate.getQuery());
 
         validator.validate(execution, context, this.getClass(), toValidate);
     }
@@ -75,14 +70,16 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
         runtimeService.trigger(execution.getId());
     }
 
-    private void enrichParameters(DelegateExecution execution, Xs2aContext context, Xs2aOauth2Parameters parameters) {
+    private void enrichParametersAndContext(DelegateExecution execution, Xs2aContext context, Xs2aOauth2Parameters parameters) {
         ProtocolUrlsConfiguration.UrlSet urlSet = urlsConfiguration.getUrlAisOrPisSetBasedOnContext(context);
         String redirectBack = ContextUtil.evaluateSpelForCtx(
-                urlSet.getWebHooks().getFromOauth2WithCode(),
+                urlSet.getWebHooks().getOk(),
                 execution,
                 context
         );
-        parameters.setFromOauth2WithCode(redirectBack);
+
+        parameters.setScaOauthLink(context.getScaOauth2Link());
+        parameters.setOauth2RedirectBackLink(redirectBack);
         // redirectCode is technically the `state` parameter and is already encoded into redirect URI
         parameters.setState(context.getAspspRedirectCode());
         // necessary for adapter to deduce things:
@@ -90,6 +87,8 @@ public class Xs2aRedirectUserToOauth2AuthorizationServer extends ValidatedExecut
         if (context instanceof Xs2aPisContext) {
             parameters.setPaymentId(((Xs2aPisContext) context).getPaymentId());
         }
+
+        ContextUtil.getAndUpdateContext(execution, (Xs2aContext ctx) -> ctx.setOauth2RedirectBackLink(redirectBack));
     }
 
     @Service

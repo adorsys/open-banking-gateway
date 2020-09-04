@@ -6,17 +6,24 @@ import de.adorsys.xs2a.adapter.service.Oauth2Service;
 import lombok.Data;
 import org.mapstruct.Mapper;
 
+import javax.validation.constraints.NotBlank;
+
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
 
 @Data
 public class Xs2aOauth2WithCodeParameters {
 
+    @NotBlank
+    private String oauth2RedirectBackLink;
+
+    @NotBlank
     private String oauth2Code;
 
     public Oauth2Service.Parameters toParameters() {
         Oauth2Service.Parameters parameters = new Oauth2Service.Parameters();
         parameters.setAuthorizationCode(oauth2Code);
+        parameters.setRedirectUri(oauth2RedirectBackLink);
         return parameters;
     }
 
