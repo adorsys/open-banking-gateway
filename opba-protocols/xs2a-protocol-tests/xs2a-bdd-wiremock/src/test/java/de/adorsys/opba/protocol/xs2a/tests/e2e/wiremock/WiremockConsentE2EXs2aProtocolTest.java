@@ -297,7 +297,7 @@ class WiremockConsentE2EXs2aProtocolTest extends SpringScenarioTest<MockServers,
         then()
             .open_banking_has_consent_for_max_musterman_account_list()
             .fintech_calls_consent_activation_for_current_authorization_id()
-            .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session_with_balance(numberOfExpectedBalances);
+            .open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session(true, numberOfExpectedBalances);
     }
 
     @ParameterizedTest
