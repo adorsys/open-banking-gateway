@@ -6,7 +6,6 @@ import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ResponseTokenMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.WithBasicInfo;
 import de.adorsys.xs2a.adapter.service.RequestHeaders;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import java.util.Map;
 
