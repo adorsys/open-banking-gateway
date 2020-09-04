@@ -13,7 +13,6 @@ import de.adorsys.xs2a.adapter.service.RequestHeaders;
 import lombok.Getter;
 import lombok.Setter;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Map;
