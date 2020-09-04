@@ -95,7 +95,8 @@ label {
   }
 }
 
-.payment {
+.payment,
+.settings {
   margin-bottom: 3rem;
 }
 
@@ -140,7 +141,8 @@ label {
     padding-right: 0;
   }
 
-  .payment {
+  .payment,
+  .settings {
     margin-bottom: 2rem;
   }
 }
