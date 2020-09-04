@@ -84,9 +84,9 @@ public class CreateSinglePaymentService extends ValidatedExecution<Xs2aPisContex
 
         context.setWrongAuthCredentials(false);
         context.setPaymentId(paymentInit.getBody().getPaymentId());
-        if (context.getStartScaProcessResponse().getLinks().containsKey(SCA_OAUTH)) {
+        if (null != paymentInit.getBody().getLinks() && paymentInit.getBody().getLinks().containsKey(SCA_OAUTH)) {
             context.setOauth2IntegratedNeeded(true);
-            context.setScaOauth2Link(context.getStartScaProcessResponse().getLinks().get(SCA_OAUTH).getHref());
+            context.setScaOauth2Link(paymentInit.getBody().getLinks().get(SCA_OAUTH).getHref());
         }
         execution.setVariable(CONTEXT, context);
     }
