@@ -190,6 +190,28 @@ public class AccountInformationResult<SELF extends AccountInformationResult<SELF
         return self();
     }
 
+
+    @SneakyThrows
+    public SELF open_banking_can_read_max_musterman_account_data_using_consent_bound_to_service_session_with_balance(int expectedBalances) {
+        Boolean validateResourceId = true;
+        ExtractableResponse<Response> response = withAccountsHeaders(ANTON_BRUECKNER)
+            .header(SERVICE_SESSION_ID, serviceSessionId)
+            .when()
+            .get(AIS_ACCOUNTS_ENDPOINT)
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("accounts[0].iban", equalTo(MAX_MUSTERMAN_IBAN))
+            .body("accounts[0].resourceId", validateResourceId ? equalTo("oN7KTVuJSVotMvPPPavhVo") : instanceOf(String.class))
+            .body("accounts[0].currency", equalTo("EUR"))
+            .body("accounts[0].name", equalTo("max.musterman"))
+            .body("accounts", hasSize(1))
+            .body("accounts[0].balances", hasSize(expectedBalances))
+            .extract();
+
+        this.responseContent = response.body().asString();
+        return self();
+    }
+
     @SneakyThrows
     public SELF open_banking_reads_anton_brueckner_transactions_using_consent_bound_to_service_session_data_validated_by_iban(
         String resourceId, LocalDate dateFrom, LocalDate dateTo, String bookingStatus
