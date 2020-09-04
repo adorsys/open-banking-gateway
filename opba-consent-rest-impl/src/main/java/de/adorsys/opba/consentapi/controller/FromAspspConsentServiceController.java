@@ -22,7 +22,8 @@ public class FromAspspConsentServiceController implements FromAspspConsentAuthor
     public CompletableFuture fromAspspOkUsingGET(
             String authId,
             String redirectState,
-            String redirectCode) {
+            String redirectCode,
+            String code) {
 
         return fromAspspRedirectHandler.execute(
                 FromAspspRequest.builder()
@@ -32,6 +33,7 @@ public class FromAspspConsentServiceController implements FromAspspConsentAuthor
                                 .build()
                         )
                         .isOk(true)
+                        .code(code)
                         .build()
         ).thenApply(aspspMapper::translate);
     }
@@ -50,21 +52,6 @@ public class FromAspspConsentServiceController implements FromAspspConsentAuthor
                                 .build()
                         )
                         .isOk(false)
-                        .build()
-        ).thenApply(aspspMapper::translate);
-    }
-
-    @Override
-    public CompletableFuture fromAspspOauth2UsingGET(String authId, String redirectCode, String code) {
-        return fromAspspRedirectHandler.execute(
-                FromAspspRequest.builder()
-                        .facadeServiceable(serviceableTemplate.toBuilder()
-                                .redirectCode(redirectCode)
-                                .authorizationSessionId(authId)
-                                .build()
-                        )
-                        .isOk(true)
-                        .code(code)
                         .build()
         ).thenApply(aspspMapper::translate);
     }

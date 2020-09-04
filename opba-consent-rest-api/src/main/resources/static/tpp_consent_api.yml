@@ -217,6 +217,7 @@ paths:
         - $ref: "#/components/parameters/redirectState"
         #query
         - $ref: "#/components/parameters/redirectCode"
+        - $ref: "#/components/parameters/code"
       responses:
         "200":
           $ref: "#/components/responses/200_AuthorizeResponse"
@@ -240,30 +241,6 @@ paths:
         - $ref: "#/components/parameters/redirectState"
         #query
         - $ref: "#/components/parameters/redirectCode"
-      responses:
-        "200":
-          $ref: "#/components/responses/200_AuthorizeResponse"
-        "401":
-          $ref: "#/components/responses/401_Unauthorized"
-      security:
-        - redirectCookie: []
-
-  /v1/consent/{auth-id}/fromAspsp/oauth2:
-    get:
-      operationId: fromAspspOauth2UsingGET
-      tags:
-        - From ASPSP Consent Authorization
-      summary:
-        Redirecting back from ASPSP to ConsentAuthorisationApi (OAuth2) to exchange code to token
-      description: |
-        Redirecting back from ASPSP to ConsentAuthorisationApi after a OAuth2 authorization.
-        In any case, the corresponding redirect session of the user will be closed and cookies will be deleted with the response to this request.
-      parameters:
-        #path
-        - $ref: "#/components/parameters/auth-id"
-        #query
-        - $ref: "#/components/parameters/redirectCode"
-        - $ref: "#/components/parameters/code"
       responses:
         "200":
           $ref: "#/components/responses/200_AuthorizeResponse"
