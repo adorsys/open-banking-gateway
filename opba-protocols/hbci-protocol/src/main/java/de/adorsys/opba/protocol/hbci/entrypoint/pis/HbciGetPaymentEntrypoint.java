@@ -9,11 +9,13 @@ import de.adorsys.opba.protocol.api.dto.request.FacadeServiceableGetter;
 import de.adorsys.opba.protocol.api.dto.result.body.ValidationError;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.Result;
 import de.adorsys.opba.protocol.api.dto.result.fromprotocol.ok.SuccessResult;
+import de.adorsys.opba.protocol.api.services.scoped.consent.ProtocolFacingPayment;
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.bpmnshared.service.eventbus.ProcessEventHandlerRegistrar;
 import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
 import de.adorsys.opba.protocol.hbci.entrypoint.HbciOutcomeMapper;
+import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PaymentInitiateBodyWithPayment;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.runtime.ProcessInstance;
@@ -61,8 +63,9 @@ public abstract class HbciGetPaymentEntrypoint<REQUEST extends FacadeServiceable
     }
 
     private CompletableFuture<Result<RESULT_BODY>> acccStatusResult(PaymentHbciContext paymentHbciContext) {
+        ProtocolFacingPayment payment = paymentHbciContext.getRequestScoped().paymentAccess().getFirstByCurrentSession();
         paymentHbciContext.getPayment().setPaymentStatus(PaymentStatus.ACCC.name());
-        ProcessResponse processResponse = new ProcessResponse("", "", paymentHbciContext.getPayment());
+        ProcessResponse processResponse = new ProcessResponse("", "", new PaymentInitiateBodyWithPayment(paymentHbciContext.getPayment(), payment));
         Result<RESULT_BODY> result = new SuccessResult<>(extractResultBodyMapper.apply(processResponse));
         return CompletableFuture.completedFuture(result);
     }
