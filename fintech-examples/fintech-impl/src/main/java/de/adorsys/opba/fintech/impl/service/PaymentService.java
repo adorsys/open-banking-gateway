@@ -111,7 +111,7 @@ public class PaymentService {
 
         switch (response.getStatusCode()) {
             case OK:
-                return paymentInfoResponse(payment, response);
+                return paymentInfoResponse(response);
             case UNAUTHORIZED:
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             default:
@@ -119,7 +119,7 @@ public class PaymentService {
         }
     }
 
-    private ResponseEntity<List<PaymentInitiationWithStatusResponse>> paymentInfoResponse(PaymentEntity payment, ResponseEntity<PaymentInformationResponse> response) {
+    private ResponseEntity<List<PaymentInitiationWithStatusResponse>> paymentInfoResponse(ResponseEntity<PaymentInformationResponse> response) {
         PaymentInformationResponse paymentInfoTpp = response.getBody();
         PaymentInitiationWithStatusResponse paymentInfo = Mappers
                 .getMapper(PaymentInitiationWithStatusResponseMapper.class)

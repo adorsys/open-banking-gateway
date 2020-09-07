@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FintechRetrieveAllSinglePaymentsService, PaymentInitiationWithStatusResponse } from '../../../api';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-list-payments',
@@ -20,13 +21,12 @@ export class PaymentAccountPaymentsComponent implements OnInit {
   ngOnInit() {
     const bankId = this.route.snapshot.paramMap.get('bankid');
     const accountId = this.route.snapshot.paramMap.get('accountid');
-    this.fintechRetrieveAllSinglePaymentsService.retrieveAllSinglePayments(bankId, accountId, '', '', 'response')
+    this.fintechRetrieveAllSinglePaymentsService
+      .retrieveAllSinglePayments(bankId, accountId, '', '', 'response')
       .pipe(map(response => response))
-      .subscribe(
-        response => {
-          this.list = response.body;
-        }
-      );
+      .subscribe(response => {
+        this.list = response.body;
+      });
   }
 
   initiateSinglePayment() {

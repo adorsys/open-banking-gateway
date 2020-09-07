@@ -115,7 +115,7 @@ class HbciSandboxPaymentAndTransactionsAfterE2EHbciProtocolTest extends SpringSc
         then()
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
-                .fintech_calls_payment_info(BANK_BLZ_30000003_ID, TransactionStatus.ACCC.name());
+                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.ACCC.name());
 
         accountInformationRequest
                 .fintech_calls_list_transactions_for_max_musterman_for_blz_30000003()
