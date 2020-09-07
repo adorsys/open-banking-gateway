@@ -45,10 +45,12 @@ public class HbciSandboxPaymentService {
     public void createPaymentIfNeededAndPossibleFromContext(HbciSandboxContext context) {
         if (null != MapRegexUtil.getDataRegex(context.getRequestData(), "GV\\.UebSEPA\\d+\\.sepapain")) {
             createPayment(context, false);
+            return;
         }
 
         if (null != MapRegexUtil.getDataRegex(context.getRequestData(), "GV\\.InstantUebSEPA1\\.sepapain")) {
             createPayment(context, true);
+            return;
         }
     }
 
