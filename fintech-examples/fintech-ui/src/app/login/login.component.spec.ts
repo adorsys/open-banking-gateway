@@ -1,18 +1,17 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
-import { By } from '@angular/platform-browser';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ReactiveFormsModule} from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
+import {Router} from '@angular/router';
+import {RouterTestingModule} from '@angular/router/testing';
+import {By} from '@angular/platform-browser';
+import {of} from 'rxjs';
 
-import { LoginComponent } from './login.component';
-import { BankSearchComponent } from '../bank-search/bank-search.component';
-
-import { BankSearchModule } from '../bank-search/bank-search.module';
-
-import { DocumentCookieService } from '../services/document-cookie.service';
-import { AuthService } from '../services/auth.service';
-import { of } from 'rxjs';
+import {LoginComponent} from './login.component';
+import {BankSearchComponent} from '../bank-search/bank-search.component';
+import {BankSearchModule} from '../bank-search/bank-search.module';
+import {DocumentCookieService} from '../services/document-cookie.service';
+import {AuthService} from '../services/auth.service';
+import {RoutingPath} from '../models/routing-path.model';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -28,7 +27,7 @@ describe('LoginComponent', () => {
         BankSearchModule,
         ReactiveFormsModule,
         HttpClientModule,
-        RouterTestingModule.withRoutes([{ path: 'search', component: BankSearchComponent }])
+        RouterTestingModule.withRoutes([{ path: RoutingPath.BANK_SEARCH, component: BankSearchComponent }])
       ],
       providers: [AuthService, DocumentCookieService],
       declarations: [LoginComponent]
@@ -63,7 +62,7 @@ describe('LoginComponent', () => {
     el.click();
 
     expect(authServiceSpy).toHaveBeenCalledWith({ username: 'test', password: '12345' });
-    expect(routerSpy).toHaveBeenCalledWith(['/search']);
+    expect(routerSpy).toHaveBeenCalledWith([RoutingPath.BANK_SEARCH]);
   });
 
   it('loginForm should be invalid when at least one field is empty', () => {
