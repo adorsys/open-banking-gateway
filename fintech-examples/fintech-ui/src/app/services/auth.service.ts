@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { FinTechAuthorizationService, FinTechOauth2AuthenticationService } from '../api';
-import { Credentials } from '../models/credentials.model';
-import { HeaderConfig } from '../models/consts';
-import { DocumentCookieService } from './document-cookie.service';
-import { StorageService } from './storage.service';
-import { RedirectTupelForMap } from '../bank/redirect-page/redirect-struct';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {FinTechAuthorizationService, FinTechOauth2AuthenticationService} from '../api';
+import {Credentials} from '../models/credentials.model';
+import {HeaderConfig} from '../models/consts';
+import {DocumentCookieService} from './document-cookie.service';
+import {StorageService} from './storage.service';
+import {RedirectTupelForMap} from '../bank/redirect-page/redirect-struct';
 
 @Injectable({
   providedIn: 'root'
@@ -42,8 +42,8 @@ export class AuthService {
   oauth2Login(code: string, state: string, scope: string, error: string): Observable<boolean> {
     return this.finTechAuthorizationService.callbackGetLogin(code, state, scope, error, 'response').pipe(
       map(response => {
-        const creds = new Credentials()
-        creds.username = response.body.userProfile.name
+        const creds = new Credentials();
+        creds.username = response.body.userProfile.name;
         this.setSessionData(response, creds);
         return response.ok;
       })

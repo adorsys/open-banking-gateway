@@ -10,5 +10,5 @@ export enum RoutingPath {
   REDIRECT_AFTER_CONSENT = 'redirect-after-consent',
   REDIRECT_AFTER_CONSENT_DENIED = 'redirect-after-consent-denied',
   REDIRECT_AFTER_PAYMENT = 'redirect-after-payment',
-  REDIRECT_AFTER_PAYMENT_DENIED = 'redirect-after-payment-denied',
+  REDIRECT_AFTER_PAYMENT_DENIED = 'redirect-after-payment-denied'
 }
