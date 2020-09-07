@@ -5,6 +5,7 @@ import { AccountReport } from '../../api';
 import { RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
 import { HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
+import { RoutingPath } from '../../models/routing-path.model';
 
 @Component({
   selector: 'app-list-transactions',
@@ -63,7 +64,7 @@ export class ListTransactionsComponent implements OnInit {
   }
 
   navigateToPayment() {
-    this.router.navigate(['payment'], { relativeTo: this.route.parent.parent });
+    this.router.navigate([RoutingPath.PAYMENT], { relativeTo: this.route.parent.parent });
   }
 
   private getAccountById(id: string) {

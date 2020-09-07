@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { RoutingPath } from '../models/routing-path.model';
 
 @Component({
   selector: 'app-session-expired',
@@ -7,15 +9,15 @@ import {Router} from '@angular/router';
   styleUrls: ['./session-expired.component.scss']
 })
 export class SessionExpiredComponent implements OnInit {
-
-  constructor(private router: Router) {
-
-  }
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate([RoutingPath.BANK_SEARCH]);
+    }
   }
 
   public proceed() {
-    this.router.navigate(['login']);
+    this.router.navigate([RoutingPath.LOGIN]);
   }
 }
