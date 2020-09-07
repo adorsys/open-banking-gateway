@@ -166,6 +166,10 @@ export class StorageService {
   public setSettings(data: SettingsData) {
     localStorage.setItem(Consts.LOCAL_STORAGE_SETTINGS, JSON.stringify(data));
   }
+
+  public deleteSettings(): void {
+    localStorage.removeItem(Consts.LOCAL_STORAGE_SETTINGS);
+  }
 }
 
 enum Session {
