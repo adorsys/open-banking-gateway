@@ -1,5 +1,4 @@
-import { Consts } from './consts';
-import { SettingsData } from '../bank/settings/settings.component';
+import {Consts} from './consts';
 
 export class LocalStorage {
   public static isLoggedIn(): boolean {
@@ -15,5 +14,4 @@ export class LocalStorage {
   public static logout(): void {
     localStorage.removeItem(Consts.LOCAL_STORAGE_XSRF_TOKEN);
   }
-
 }

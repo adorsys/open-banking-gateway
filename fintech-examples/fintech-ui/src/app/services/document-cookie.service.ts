@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { LogException } from '../models/LogException';
+import {Injectable} from '@angular/core';
+import {LogException} from '../models/LogException';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,10 @@ export class DocumentCookieService {
   constructor() {}
 
   public getAll(): string[] {
-    return document.cookie.split(';').map(cookie => cookie.trim()).filter(cookie => cookie.length > 0);
+    return document.cookie
+      .split(';')
+      .map(cookie => cookie.trim())
+      .filter(cookie => cookie.length > 0);
   }
 
   public find(name: string): string {
