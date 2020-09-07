@@ -8,8 +8,7 @@ import { AuthStateConsentAuthorizationService, DenyRequest, UpdateConsentAuthori
 import { ApiHeaders } from '../../api/api.headers';
 import { PaymentUtil } from '../common/payment-util';
 import { PisPayment } from '../common/models/pis-payment.model';
-import { combineLatest } from "rxjs";
-import { ConsentUtil } from "../../ais/common/consent-util";
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'consent-app-to-aspsp-page',
