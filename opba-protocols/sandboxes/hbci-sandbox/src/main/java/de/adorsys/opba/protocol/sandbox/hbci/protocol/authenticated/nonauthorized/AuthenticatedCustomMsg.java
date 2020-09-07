@@ -80,7 +80,7 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
     private String handlePayment(HbciSandboxContext context) {
         if (context.getBank().getSecurity().getPayment() == SensitiveAuthLevel.AUTHENTICATED) {
             paymentService.createPaymentIfNeededAndPossibleFromContext(context);
-            return "response-templates/authenticated/custom-message-konto-mt940.json";
+            return "response-templates/authorized/custom-message-payment-response.json";
         }
         if (RequestStatusUtil.isForPayment(context.getRequestData())) {
             context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "TAN2Step6\\.OrderAccount\\.number"));
@@ -90,10 +90,11 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
         return "response-templates/authenticated/custom-message-authorization-required-payment.json";
     }
 
+    @NotNull
     private String handleInstantPayment(HbciSandboxContext context) {
         if (context.getBank().getSecurity().getPayment() == SensitiveAuthLevel.AUTHENTICATED) {
             paymentService.createPaymentIfNeededAndPossibleFromContext(context);
-            return "response-templates/authenticated/custom-message-konto-mt940.json";
+            return "response-templates/authorized/custom-message-payment-response.json";
         }
         if (RequestStatusUtil.isForInstantPayment(context.getRequestData())) {
             context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "GV\\.InstantUebSEPA1\\.My\\.iban"));
