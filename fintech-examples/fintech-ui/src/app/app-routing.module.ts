@@ -10,59 +10,60 @@ import { RedirectAfterPaymentDeniedComponent } from './redirect-after-payment-de
 import { RedirectAfterPaymentComponent } from './redirect-after-payment/redirect-after-payment.component';
 import { Oauth2LoginComponent } from './oauth2-login/oauth2-login.component';
 import { ForbiddenOauth2Component } from './invalid-oauth2/forbidden-oauth2.component';
+import {RoutingPath} from './models/routing-path.model';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: RoutingPath.LOGIN,
     pathMatch: 'full'
   },
   {
-    path: 'login',
+    path: RoutingPath.LOGIN,
     component: LoginComponent,
     canActivate: [GuestGuard]
   },
   {
-    path: 'login/oauth2',
+    path: RoutingPath.OAUTH2_LOGIN,
     component: Oauth2LoginComponent,
     canActivate: [GuestGuard]
   },
   {
-    path: 'bank',
+    path: RoutingPath.BANK,
     canActivate: [AuthGuard],
     loadChildren: () => import('./bank/bank.module').then(m => m.BankModule)
   },
   {
-    path: 'search',
+    path: RoutingPath.BANK_SEARCH,
     canActivate: [AuthGuard],
     loadChildren: () => import('./bank-search/bank-search.module').then(m => m.BankSearchModule)
   },
   {
-    path: 'redirect-after-consent',
+    path: RoutingPath.REDIRECT_AFTER_CONSENT,
     canActivate: [AuthGuard],
     component: RedirectAfterConsentComponent
   },
   {
-    path: 'redirect-after-consent-denied',
+    path: RoutingPath.REDIRECT_AFTER_CONSENT_DENIED,
     canActivate: [AuthGuard],
     component: RedirectAfterConsentDeniedComponent
   },
   {
-    path: 'redirect-after-payment',
+    path: RoutingPath.REDIRECT_AFTER_PAYMENT,
     canActivate: [AuthGuard],
     component: RedirectAfterPaymentComponent
   },
   {
-    path: 'redirect-after-payment-denied',
+    path: RoutingPath.REDIRECT_AFTER_PAYMENT_DENIED,
     canActivate: [AuthGuard],
     component: RedirectAfterPaymentDeniedComponent
   },
   {
-    path: 'session-expired',
+    path: RoutingPath.SESSION_EXPIRED,
     component: SessionExpiredComponent
   },
   {
-    path: 'forbidden-oauth2',
+    path: RoutingPath.FORBIDDEN_OAUTH2,
     component: ForbiddenOauth2Component
   },
   {
