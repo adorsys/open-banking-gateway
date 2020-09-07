@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { SimpleTimer } from 'ng2-simple-timer';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from './auth.service';
-import { TimerModel } from '../models/Timer.model';
+import { TimerModel } from '../models/timer.model';
 import { RoutingPath } from '../models/routing-path.model';
 
 @Injectable({

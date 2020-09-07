@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { TimerService } from '../../services/timer.service';
-import { TimerModel } from '../../models/Timer.model';
+import { TimerModel } from '../../models/timer.model';
 
 @Component({
   selector: 'app-navbar',
