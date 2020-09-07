@@ -10,27 +10,23 @@ export class GlobalErrorHandler implements ErrorHandler {
   handleError(error) {
     console.error(error);
     let message = 'Something went wrong';
-    let severity;
 
     const errorService = this.injector.get(ErrorService);
     const infoService = this.injector.get(InfoService);
 
     if (error.status === 400) {
       error = 'User does not exist';
-      severity = 'error';
     }
 
     if (error instanceof HttpErrorResponse) {
       message = errorService.getServerMessage(error); // Server Error
-      console.log('SEVERITY ', severity)
     } else {
       message = errorService.getClientMessage(error); // Client Error
-      console.log('SEVERITY ', severity)
     }
 
     this.zone.run(() => {
       infoService.openFeedback(message, {
-        severity: severity
+        severity: 'error'
       });
     });
   }
