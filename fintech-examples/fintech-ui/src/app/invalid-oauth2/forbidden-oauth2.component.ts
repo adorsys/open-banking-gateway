@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {RoutingPath} from '../models/routing-path.model';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { RoutingPath } from '../models/routing-path.model';
 
 @Component({
   selector: 'app-forbidden-oauth2',

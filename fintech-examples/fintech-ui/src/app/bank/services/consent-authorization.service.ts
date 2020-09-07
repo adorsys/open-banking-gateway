@@ -1,8 +1,8 @@
-import {Router} from '@angular/router';
-import {Injectable} from '@angular/core';
-import {FinTechAuthorizationService} from '../../api';
-import {Consent, Payment} from '../../models/consts';
-import {StorageService} from '../../services/storage.service';
+import { Router } from '@angular/router';
+import { Injectable } from '@angular/core';
+import { FinTechAuthorizationService } from '../../api';
+import { Consent, Payment } from '../../models/consts';
+import { StorageService } from '../../services/storage.service';
 
 @Injectable({
   providedIn: 'root'

@@ -1,17 +1,17 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
-import {Router} from '@angular/router';
-import {RouterTestingModule} from '@angular/router/testing';
-import {By} from '@angular/platform-browser';
-import {of} from 'rxjs';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { By } from '@angular/platform-browser';
+import { of } from 'rxjs';
 
-import {LoginComponent} from './login.component';
-import {BankSearchComponent} from '../bank-search/bank-search.component';
-import {BankSearchModule} from '../bank-search/bank-search.module';
-import {DocumentCookieService} from '../services/document-cookie.service';
-import {AuthService} from '../services/auth.service';
-import {RoutingPath} from '../models/routing-path.model';
+import { LoginComponent } from './login.component';
+import { BankSearchComponent } from '../bank-search/bank-search.component';
+import { BankSearchModule } from '../bank-search/bank-search.module';
+import { DocumentCookieService } from '../services/document-cookie.service';
+import { AuthService } from '../services/auth.service';
+import { RoutingPath } from '../models/routing-path.model';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;

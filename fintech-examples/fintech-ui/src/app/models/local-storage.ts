@@ -1,4 +1,4 @@
-import {Consts} from './consts';
+import { Consts } from './consts';
 
 export class LocalStorage {
   public static isLoggedIn(): boolean {
