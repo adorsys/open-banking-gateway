@@ -1,4 +1,4 @@
-<form class="header__margin" [formGroup]="settingsForm" (ngSubmit)="onConfirm()">
+<form class="header__margin" [formGroup]="settingsForm">
   <div class="card card-frame--big">
     <div class="card-body">
       <section class="settings">
@@ -45,7 +45,7 @@
 
       <div class="d-sm-flex">
         <button (click)="onNavigateBack()" class="btn btn-outline-secondary w-100 mr-4" id="do_deny">Cancel</button>
-        <button [disabled]="settingsForm.invalid" class="btn btn-primary w-100" id="do_submit" type="submit">
+        <button  (click)="onConfirm()" [disabled]="settingsForm.invalid" class="btn btn-primary w-100" id="do_submit" type="submit">
           Save
         </button>
       </div>
