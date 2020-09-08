@@ -14,10 +14,6 @@ export class GlobalErrorHandler implements ErrorHandler {
     const errorService = this.injector.get(ErrorService);
     const infoService = this.injector.get(InfoService);
 
-    if (error.status === 400) {
-      error = 'User does not exist';
-    }
-
     if (error instanceof HttpErrorResponse) {
       message = errorService.getServerMessage(error); // Server Error
     } else {
