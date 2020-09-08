@@ -16,6 +16,20 @@
         </update>
     </changeSet>
 
+    <changeSet author="vbeex@adorsys.com.ua" id="2020-09-21-11">
+        <comment>Updates Xs2a Adorsys Sandbox adapter URL to match defined in application.yml</comment>
+        <update tableName="${table-prefix}bank_profile">
+            <column name="idp_url" value="${adorsys-sandbox-oauth-server-url}"/>
+            <where>bank_uuid IN (
+                '53c47f54-b9a4-465a-8f77-bc6cd5f0cf46',
+                'aa750320-2958-455e-9926-e9fca5ddfa92',
+                '2d8b3e75-9e3e-4fd2-b79c-063556ad9ecc',
+                '867a53d8-4cca-4365-a393-7febb0bbd38e',
+                '45e6cda0-69a7-4731-90fc-2b13a42fd3bd')
+            </where>
+        </update>
+    </changeSet>
+
     <changeSet author="vbeex@adorsys.com.ua" id="2020-07-02-16">
         <comment>Updates HBCI Adorsys Sandbox adapter URL to match defined in application.yml</comment>
         <update tableName="${table-prefix}bank_profile">
