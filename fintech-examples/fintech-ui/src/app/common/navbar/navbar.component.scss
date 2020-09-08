@@ -1,4 +1,13 @@
-.tinyRedirect {
-  font-size: 1em;
+.list-group-item {
+  font-size: .70em;
   margin-left: 100px;
+}
+
+.dropdown-menu, .nav {
+  padding: 0;
+  cursor: pointer;
+  .dropdown-item {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
 }

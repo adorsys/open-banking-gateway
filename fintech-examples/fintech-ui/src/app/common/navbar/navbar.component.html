@@ -2,8 +2,8 @@
   <a class="navbar-brand text-primary mr-4" routerLink="/">
     <span class="ml-3 text-bold">FintechUI</span>
     <ul class="list-group">
-      <li class="list-group-item tinyRedirect">session expires {{ timer?.sessionValidUntil }}</li>
-      <li class="list-group-item tinyRedirect" *ngFor="let validUntil of timer?.redirectsValidUntil">
+      <li class="list-group-item">session expires {{ timer?.sessionValidUntil }}</li>
+      <li class="list-group-item" *ngFor="let validUntil of timer?.redirectsValidUntil">
         redirect session {{ validUntil }}
       </li>
     </ul>
@@ -16,10 +16,9 @@
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
-        >{{ getUserName() }}</a
-      >
+        >{{ getUserName() }}</a>
       <div class="dropdown-menu dropdown-menu-right">
-        <a (click)="onLogout()" href="#" class="dropdown-item">Sign out</a>
+        <span (click)="onLogout()" class="dropdown-item">Sign out</span>
       </div>
     </li>
   </ul>
