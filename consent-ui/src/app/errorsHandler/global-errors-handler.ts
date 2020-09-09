@@ -10,13 +10,11 @@ export class GlobalErrorHandler implements ErrorHandler {
 
   handleError(error) {
     console.error(error);
-    let message;
+
     const errorService = this.injector.get(ErrorService);
     const infoService = this.injector.get(InfoService);
 
-    if (error !== null && !(error instanceof HttpErrorResponse)) {
-      message = 'Something went wrong';               // default ErrorMessage
-    }
+    let message = 'Something went wrong';               // default ErrorMessage
 
     if (error instanceof HttpErrorResponse) {
       message = errorService.getServerMessage(error); // Server Error
