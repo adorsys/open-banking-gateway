@@ -61,13 +61,14 @@ export class FinTechAccountInformationService {
      * @param fintechRedirectURLOK 
      * @param fintechRedirectURLNOK 
      * @param loARetrievalInformation 
+     * @param withBalance Provides balances for the given accounts
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', observe?: 'body', reportProgress?: boolean): Observable<AccountList>;
-    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<AccountList>>;
-    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<AccountList>>;
-    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', withBalance?: boolean, observe?: 'body', reportProgress?: boolean): Observable<AccountList>;
+    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', withBalance?: boolean, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<AccountList>>;
+    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', withBalance?: boolean, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<AccountList>>;
+    public aisAccountsGET(bankId: string, xRequestID: string, X_XSRF_TOKEN: string, fintechRedirectURLOK: string, fintechRedirectURLNOK: string, loARetrievalInformation: 'FROM_TPP_WITH_AVAILABLE_CONSENT' | 'FROM_TPP_WITH_NEW_CONSENT', withBalance?: boolean, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
         if (bankId === null || bankId === undefined) {
             throw new Error('Required parameter bankId was null or undefined when calling aisAccountsGET.');
         }
@@ -85,6 +86,11 @@ export class FinTechAccountInformationService {
         }
         if (loARetrievalInformation === null || loARetrievalInformation === undefined) {
             throw new Error('Required parameter loARetrievalInformation was null or undefined when calling aisAccountsGET.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (withBalance !== undefined && withBalance !== null) {
+            queryParameters = queryParameters.set('withBalance', <any>withBalance);
         }
 
         let headers = this.defaultHeaders;
@@ -117,6 +123,7 @@ export class FinTechAccountInformationService {
 
         return this.httpClient.get<AccountList>(`${this.configuration.basePath}/v1/ais/banks/${encodeURIComponent(String(bankId))}/accounts`,
             {
+                params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
