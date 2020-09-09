@@ -1,0 +1,23 @@
+{
+  "id" : "1c721460-9dab-3263-9deb-f39107bf24ba",
+  "request" : {
+    "url" : "/oauth/authorization-server",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-oauth-authorization-server-4479.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "X-Content-Type-Options" : "nosniff",
+      "X-XSS-Protection" : "1; mode=block",
+      "Cache-Control" : "no-cache, no-store, max-age=0, must-revalidate",
+      "Pragma" : "no-cache",
+      "Expires" : "0",
+      "Content-Type" : "application/json",
+      "Date" : "Wed, 09 Sep 2020 12:19:49 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "1c721460-9dab-3263-9deb-f39107bf24ba"
+}
