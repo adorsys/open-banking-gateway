@@ -93,7 +93,7 @@ public class HbciSandboxPayment {
 
     public Transaction toTransaction(String accountNumber, BigDecimal balance) {
         Transaction transaction = new Transaction();
-        transaction.setAmount(getAmount().toString());
+        transaction.setAmount(getAmount().negate().toString());
         if (getDeduceFrom().endsWith(accountNumber)) {
             transaction.setBalanceAfter(balance.subtract(getAmount()).toString());
         } else {
