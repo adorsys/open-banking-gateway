@@ -1,0 +1,33 @@
+{
+  "id" : "22365460-9637-3861-a56a-5ee8170100bf",
+  "request" : {
+    "url" : "/v1/accounts?withBalance=true",
+    "method" : "GET",
+    "headers" : {
+      "Authorization" : {
+        "equalTo" : "Bearer eyJraWQiOiJFWmtfUDNHd1I2OG9iUEwzSGxDbng0IiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJkMGF1dUlxN1J6QXR6dkNEVDh6bV9vIiwidG9rZW5fdXNhZ2UiOiJMT0dJTiIsInJvbGUiOiJDVVNUT01FUiIsInNjYV9pZCI6Im12RU5SbE5pU3NjcXJuWVNqdnZnYlUiLCJhdXRob3Jpc2F0aW9uX2lkIjoibXZFTlJsTmlTc2Nxcm5ZU2p2dmdiVSIsImV4cCI6MTU5OTY1Mzk5NywibG9naW4iOiJhbnRvbi5icnVlY2tuZXIiLCJpYXQiOjE1OTk2NTM2OTcsImp0aSI6ImdMeVZoZlVLUmdRaU9vbmpaMzVqakkifQ.d3A5uBRFkDcpY8IvYHf3niiDA_BmDgp5aIuoaT2t4xE"
+      },
+      "Accept" : {
+        "equalTo" : "application/json"
+      },
+      "X-Request-ID" : {
+        "equalTo" : "0d246713-4e71-4e42-8a97-75b0a9d6f9db"
+      },
+      "PSU-ID" : {
+        "equalTo" : "anton.brueckner"
+      }
+    }
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-v1-accounts-ys5yw.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "X-Request-Id" : "0d246713-4e71-4e42-8a97-75b0a9d6f9db",
+      "Content-Type" : "application/json",
+      "Date" : "Wed, 09 Sep 2020 12:15:40 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "22365460-9637-3861-a56a-5ee8170100bf"
+}
