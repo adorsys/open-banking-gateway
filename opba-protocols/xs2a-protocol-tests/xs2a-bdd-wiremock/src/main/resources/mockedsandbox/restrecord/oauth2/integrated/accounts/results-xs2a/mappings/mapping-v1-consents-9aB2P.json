@@ -1,0 +1,49 @@
+{
+  "id" : "81deba1f-c3ca-3e47-955a-6809bdce1fd3",
+  "request" : {
+    "url" : "/v1/consents",
+    "method" : "POST",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "application/json"
+      },
+      "X-Request-ID" : {
+        "equalTo" : "12b34483-242a-428b-8295-2f4805bb0a30"
+      },
+      "PSU-ID" : {
+        "equalTo" : "anton.brueckner"
+      },
+      "TPP-Nok-Redirect-URI" : {
+        "equalTo" : "http://localhost:4200/embedded-server/v1/consent/9a0d5df6-e28c-4aec-ab83-e4bc1346ed5d/fromAspsp/STUB_STATE/nok?redirectCode=ef989272-b3dd-443b-9934-115b899e1af1"
+      },
+      "PSU-IP-Address" : {
+        "equalTo" : "127.0.0.1"
+      },
+      "TPP-Redirect-URI" : {
+        "equalTo" : "http://localhost:4200/embedded-server/v1/consent/9a0d5df6-e28c-4aec-ab83-e4bc1346ed5d/fromAspsp/STUB_STATE/ok?redirectCode=ef989272-b3dd-443b-9934-115b899e1af1"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/json; charset=UTF-8"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"access\":{\"allPsd2\":\"allAccounts\"},\"recurringIndicator\":true,\"validUntil\":\"2021-09-09\",\"frequencyPerDay\":24}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-v1-consents-9aB2P.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Aspsp-Sca-Approach" : "REDIRECT",
+      "Location" : "http://localhost:30014/v1/consents/pLydRVvYTWeVjWykZ2_q5FQlEVe-grenbBQEMfM1RWdPk02OMCkxWoQ8cEBAlp0FyfjJcs_iMK4aR4KtOiYRKcz9MpaJIQIH3NJX8IHgetw=_=_psGLvQpt9Q",
+      "X-Request-Id" : "12b34483-242a-428b-8295-2f4805bb0a30",
+      "Content-Type" : "application/json",
+      "Date" : "Wed, 09 Sep 2020 12:18:06 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "81deba1f-c3ca-3e47-955a-6809bdce1fd3"
+}
