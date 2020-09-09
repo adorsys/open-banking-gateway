@@ -11,10 +11,9 @@ describe('SettingsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SettingsComponent ],
+      declarations: [SettingsComponent],
       imports: [ReactiveFormsModule, HttpClientTestingModule, RouterTestingModule]
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -24,6 +23,6 @@ describe('SettingsComponent', () => {
   });
 
   it('should create', () => {
-     expect(component).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 });

@@ -75,7 +75,31 @@ class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
     }
 
     @Test
-    void testPaymentAndStatusWithSca() {
+    void testInstantPaymentWithStatus() {
+        given()
+                .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
+                .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
+
+        when()
+                .fintech_calls_instant_payment_for_max_musterman_for_blz_30000003()
+                .and()
+                .user_logged_in_into_opba_as_opba_user_with_credentials_using_fintech_supplied_url(OPBA_LOGIN, OPBA_PASSWORD)
+                .and()
+                .user_max_musterman_provided_initial_parameters_to_make_payment()
+                .and()
+                .user_max_musterman_provided_password_to_embedded_authorization()
+                .and()
+                .user_max_musterman_selected_sca_challenge_type_push_tan_to_embedded_authorization()
+                .and()
+                .user_max_musterman_provided_sca_challenge_result_to_embedded_authorization_and_sees_redirect_to_fintech_ok();
+        then()
+                .open_banking_has_stored_payment()
+                .fintech_calls_payment_activation_for_current_authorization_id()
+                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.ACSC.name());
+    }
+
+    @Test
+    void testSinglePaymentWithStatus() {
         given()
                 .rest_assured_points_to_opba_server_with_fintech_signer_on_banking_api()
                 .user_registered_in_opba_with_credentials(OPBA_LOGIN, OPBA_PASSWORD);
@@ -95,8 +119,8 @@ class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
         then()
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
-                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.PDNG.name())
-                .fintech_calls_payment_information_hbci(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID);
+                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.ACCC.name())
+                .fintech_calls_payment_information_hbci(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, TransactionStatus.ACCC.name());
     }
 
     private void makeHbciAdapterToPointToHbciMockEndpoints() {

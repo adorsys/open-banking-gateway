@@ -109,6 +109,23 @@ public class MockServers<SELF extends MockServers<SELF>> extends CommonGivenStag
         return self();
     }
 
+    public SELF embedded_mock_of_sandbox_for_max_musterman_accounts_running_with_balance_for_happy_path(Path tempDir) {
+        URL resource1 = getClass().getClassLoader().getResource("mockedsandbox/restrecord/embedded/multi-sca/accounts/sandbox/");
+        URL resource2 = getClass().getClassLoader().getResource("mockedsandbox/restrecord/embedded/multi-sca/accounts-with-balance/sandbox/");
+        try {
+            FileSystemUtils.copyRecursively(new File(resource1.getFile()), tempDir.toFile());
+            FileSystemUtils.copyRecursively(new File(resource2.getFile()), tempDir.toFile());
+        } catch (IOException e) {
+            log.error("files copy to temporary directory error", e);
+        }
+
+        WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
+            .usingFilesUnderDirectory(tempDir.toString());
+        startWireMock(config);
+
+        return self();
+    }
+
     public SELF embedded_mock_of_sandbox_for_max_musterman_accounts_running() {
         WireMockConfiguration config = WireMockConfiguration.options().dynamicPort()
                 .usingFilesUnderClasspath("mockedsandbox/restrecord/embedded/multi-sca/accounts/sandbox/");

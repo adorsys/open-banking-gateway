@@ -80,8 +80,8 @@ public class Xs2aLoadConsentAndContextFromDb extends ValidatedExecution<Xs2aAisC
             ctx = context;
         } else if (ctx instanceof TransactionListXs2aContext) {
             merger.merge(context, (TransactionListXs2aContext) ctx);
-        } else if (ctx instanceof Xs2aAisContext) {
-            merger.merge(context, (Xs2aAisContext) ctx);
+        } else {
+            merger.merge(context, ctx);
         }
 
         // Avoid ignoring MOCK mode due to Merged context received REAL mode

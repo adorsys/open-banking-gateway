@@ -40,6 +40,8 @@ common:
       ledgersapp: http://${common.apps.local.ledgersapp.host}:${common.apps.local.ledgersapp.port}
       ledgersgateway: http://${common.apps.local.ledgersgateway.host}:${common.apps.local.ledgersgateway.port}
       onlinebanking: http://${common.apps.local.onlinebanking.host}:${common.apps.local.onlinebanking.port}
+      onlinebanking-self: http://${common.apps.local.onlinebanking.host}:${common.apps.local.onlinebanking.port}
+      onlinebanking-ui: http://${common.apps.local.onlinebankingui.host}:${common.apps.local.onlinebankingui.port}
       tpprest: http://${common.apps.local.tpprest.host}:${common.apps.local.tpprest.port}
 
 # Disable JMX to avoid collisions

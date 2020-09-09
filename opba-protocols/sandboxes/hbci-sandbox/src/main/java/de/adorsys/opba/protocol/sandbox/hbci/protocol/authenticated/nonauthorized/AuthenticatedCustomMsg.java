@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.INSTANT_PAYMENT;
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.PAYMENT;
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.PAYMENT_STATUS;
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.SEPA_INFO;
@@ -48,6 +49,10 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
             return handlePayment(context);
         }
 
+        if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(INSTANT_PAYMENT))) {
+            return handleInstantPayment(context);
+        }
+
         if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(PAYMENT_STATUS))) {
             return handlePaymentStatus(context);
         }
@@ -75,12 +80,26 @@ public class AuthenticatedCustomMsg extends TemplateBasedOperationHandler {
     private String handlePayment(HbciSandboxContext context) {
         if (context.getBank().getSecurity().getPayment() == SensitiveAuthLevel.AUTHENTICATED) {
             paymentService.createPaymentIfNeededAndPossibleFromContext(context);
-            return "response-templates/authenticated/custom-message-konto-mt940.json";
+            return "response-templates/authorized/custom-message-payment-response.json";
         }
         if (RequestStatusUtil.isForPayment(context.getRequestData())) {
             context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "TAN2Step6\\.OrderAccount\\.number"));
             setOrderReference(context);
-            paymentService.createPayment(context);
+            paymentService.createPayment(context, false);
+        }
+        return "response-templates/authenticated/custom-message-authorization-required-payment.json";
+    }
+
+    @NotNull
+    private String handleInstantPayment(HbciSandboxContext context) {
+        if (context.getBank().getSecurity().getPayment() == SensitiveAuthLevel.AUTHENTICATED) {
+            paymentService.createPaymentIfNeededAndPossibleFromContext(context);
+            return "response-templates/authorized/custom-message-payment-response.json";
+        }
+        if (RequestStatusUtil.isForInstantPayment(context.getRequestData())) {
+            context.setAccountNumberRequestedBeforeSca(MapRegexUtil.getDataRegex(context.getRequestData(), "GV\\.InstantUebSEPA1\\.My\\.iban"));
+            setOrderReference(context);
+            paymentService.createPayment(context, true);
         }
         return "response-templates/authenticated/custom-message-authorization-required-payment.json";
     }

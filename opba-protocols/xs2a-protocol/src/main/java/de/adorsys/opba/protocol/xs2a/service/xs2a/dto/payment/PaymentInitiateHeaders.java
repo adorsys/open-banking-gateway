@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ResponseTokenMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.consent.ConsentInitiateHeaders;
 import org.mapstruct.Mapper;
 
@@ -12,8 +13,10 @@ import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PA
  * Object that represents request Headers that are necessary to call ASPSP API for consent initiation.
  */
 public class PaymentInitiateHeaders extends ConsentInitiateHeaders {
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
+
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = ResponseTokenMapper.class)
     public interface FromPisCtx extends DtoMapper<Xs2aPisContext, PaymentInitiateHeaders> {
+
         PaymentInitiateHeaders map(Xs2aPisContext ctx);
     }
 }

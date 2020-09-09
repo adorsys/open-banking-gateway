@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static de.adorsys.opba.protocol.api.dto.codes.TypeCode.STRING;
+import static de.adorsys.xs2a.adapter.service.RequestHeaders.AUTHORIZATION;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.CONTENT_TYPE;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_GTW_ASPSP_ID;
@@ -47,12 +48,20 @@ public class WithBasicInfo {
     @NotBlank
     private String contentType = MediaType.JSON_UTF_8.type();
 
+    // TODO: Validation - it should be present only for OAuth2
+    private String oauth2Token;
+
     public Map<String, String> asMap() {
         Map<String, String> allValues = new HashMap<>();
         allValues.put(PSU_ID, psuId);
         allValues.put(X_GTW_ASPSP_ID, aspspId);
         allValues.put(X_REQUEST_ID, requestId);
         allValues.put(CONTENT_TYPE, contentType);
+
+        if (null != oauth2Token) {
+            allValues.put(AUTHORIZATION, oauth2Token);
+        }
+
         return allValues;
     }
 }

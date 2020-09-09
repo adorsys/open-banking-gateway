@@ -24,6 +24,7 @@ import { RedirectAfterPaymentComponent } from './redirect-after-payment/redirect
 import { RedirectAfterPaymentDeniedComponent } from './redirect-after-payment-denied/redirect-after-payment-denied.component';
 import { Oauth2LoginComponent } from './oauth2-login/oauth2-login.component';
 import { ForbiddenOauth2Component } from './invalid-oauth2/forbidden-oauth2.component';
+import { TimerService } from './services/timer.service';
 
 export function apiConfigFactory(): Configuration {
   const params: ConfigurationParameters = {
@@ -65,6 +66,7 @@ export function apiConfigFactory(): Configuration {
     AuthGuard,
     ErrorService,
     DocumentCookieService,
+    TimerService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

@@ -2,6 +2,7 @@ package de.adorsys.opba.protocol.xs2a.service.xs2a.dto.payment;
 
 import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.xs2a.context.pis.Xs2aPisContext;
+import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.ResponseTokenMapper;
 import de.adorsys.opba.protocol.xs2a.service.xs2a.dto.WithBasicInfo;
 import de.adorsys.xs2a.adapter.service.RequestHeaders;
 import org.mapstruct.Mapper;
@@ -18,8 +19,9 @@ public class PaymentStateHeaders extends WithBasicInfo {
         return RequestHeaders.fromMap(headers);
     }
 
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = ResponseTokenMapper.class)
     public interface FromPisCtx extends DtoMapper<Xs2aPisContext, PaymentStateHeaders> {
+
         PaymentStateHeaders map(Xs2aPisContext ctx);
     }
 }

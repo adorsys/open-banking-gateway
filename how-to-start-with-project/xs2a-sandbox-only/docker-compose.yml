@@ -14,13 +14,14 @@ x-sandbox-hosts: &sandbox-hosts
   COMMON_APPS_LOCAL_LEDGERSAPP_PORT: 8088
   COMMON_APPS_LOCAL_LEDGERSGATEWAY_HOST: x2sa-sandbox-ledgersgateway
   COMMON_APPS_LOCAL_LEDGERSGATEWAY_PORT: 8089
+  COMMON_APPS_MAPPING_ONLINEBANKINGSELF: http://localhost:20015
   COMMON_APPS_LOCAL_ONLINEBANKING_HOST: x2sa-sandbox-onlinebanking
   COMMON_APPS_LOCAL_ONLINEBANKING_PORT: 8090
   COMMON_APPS_LOCAL_TPPREST_HOST: x2sa-sandbox-tpprest
   COMMON_APPS_LOCAL_TPPREST_PORT: 8093
   COMMON_APPS_LOCAL_TPP_UI_HOST: x2sa-sandbox-tpp-ui
   COMMON_APPS_LOCAL_TPP_UI_PORT: 4205
-  COMMON_APPS_LOCAL_ONLINEBANKINGUI_HOST: x2sa-sandbox-onlinebankingui
+  COMMON_APPS_LOCAL_ONLINEBANKINGUI_HOST: localhost # This container is launched in the host network
   COMMON_APPS_LOCAL_ONLINEBANKINGUI_PORT: 4400 # this port seem to be used in lot of places, hard to change
 
 services:

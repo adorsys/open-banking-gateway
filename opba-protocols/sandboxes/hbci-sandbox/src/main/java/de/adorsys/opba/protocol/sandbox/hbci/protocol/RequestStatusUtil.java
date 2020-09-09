@@ -19,6 +19,10 @@ public class RequestStatusUtil {
         return "HKCCS".equals(MapRegexUtil.getDataRegex(requestData, "TAN2Step\\d*\\.ordersegcode"));
     }
 
+    public boolean isForInstantPayment(Map<String, String> requestData) {
+        return "HKIPZ".equals(MapRegexUtil.getDataRegex(requestData, "TAN2Step\\d*\\.ordersegcode"));
+    }
+
     public boolean isForPaymentStatus(Map<String, String> requestData) {
         return "HKIPS".equals(MapRegexUtil.getDataRegex(requestData, "GV\\.InstantUebSEPAStatus1.SegHead\\.code"));
     }

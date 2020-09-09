@@ -22,7 +22,8 @@ public class FromAspspConsentServiceController implements FromAspspConsentAuthor
     public CompletableFuture fromAspspOkUsingGET(
             String authId,
             String redirectState,
-            String redirectCode) {
+            String redirectCode,
+            String code) {
 
         return fromAspspRedirectHandler.execute(
                 FromAspspRequest.builder()
@@ -32,6 +33,7 @@ public class FromAspspConsentServiceController implements FromAspspConsentAuthor
                                 .build()
                         )
                         .isOk(true)
+                        .code(code)
                         .build()
         ).thenApply(aspspMapper::translate);
     }

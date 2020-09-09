@@ -9,6 +9,7 @@ import de.adorsys.opba.protocol.sandbox.hbci.protocol.interpolation.JsonTemplate
 import de.adorsys.opba.protocol.sandbox.hbci.service.HbciSandboxPaymentService;
 import org.springframework.stereotype.Service;
 
+import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.INSTANT_PAYMENT;
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.PAYMENT;
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.PAYMENT_STATUS;
 import static de.adorsys.opba.protocol.sandbox.hbci.protocol.Const.SEPA_INFO;
@@ -36,8 +37,9 @@ public class AuthorizedCustomMsg extends TemplateBasedOperationHandler {
             return "response-templates/authorized/custom-message-konto-mt940.json";
         }
 
-        if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(PAYMENT))
-                || RequestStatusUtil.isForPayment(context.getRequestData())) {
+        if (context.getRequestData().keySet().stream().anyMatch(it -> it.startsWith(PAYMENT) || it.startsWith(INSTANT_PAYMENT))
+                || RequestStatusUtil.isForPayment(context.getRequestData())
+                || RequestStatusUtil.isForInstantPayment(context.getRequestData())) {
             paymentService.createPaymentIfNeededAndPossibleFromContext(context);
             paymentService.acceptPayment(context);
             return "response-templates/authorized/custom-message-payment-response.json";

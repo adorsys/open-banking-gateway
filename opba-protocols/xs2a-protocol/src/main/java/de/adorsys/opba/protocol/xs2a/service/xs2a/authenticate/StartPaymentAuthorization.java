@@ -75,8 +75,8 @@ public class StartPaymentAuthorization extends ValidatedExecution<Xs2aPisContext
 
     @Service
     public static class Extractor extends PathHeadersMapperTemplate<Xs2aPisContext,
-                                                                           Xs2aStartPaymentAuthorizationParameters,
-                                                                           Xs2aStandardHeaders> {
+            Xs2aStartPaymentAuthorizationParameters,
+            Xs2aStandardHeaders> {
 
         public Extractor(
                 DtoMapper<Xs2aContext, Xs2aStandardHeaders> toHeaders,

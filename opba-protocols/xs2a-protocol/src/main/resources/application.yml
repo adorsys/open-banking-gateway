@@ -70,6 +70,7 @@ protocol:
     aspspmessages:
       invalid-credentials: PSU_CREDENTIALS_INVALID
       invalid-consent: FORMAT_ERROR
+      missing-oauth2-token: UNAUTHORIZED
     pkcs12:
       keystore: sample-qwac.keystore
       password: password

@@ -14,34 +14,32 @@ import de.adorsys.opba.protocol.bpmnshared.service.context.ContextUtil;
 import de.adorsys.opba.protocol.bpmnshared.service.exec.ValidatedExecution;
 import de.adorsys.opba.protocol.hbci.context.HbciContext;
 import de.adorsys.opba.protocol.hbci.context.PaymentHbciContext;
-import de.adorsys.opba.protocol.hbci.service.protocol.pis.dto.PaymentInitiateBody;
+import de.adorsys.opba.protocol.hbci.service.consent.HbciScaRequiredUtil;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
-import org.mapstruct.Mapper;
 import org.springframework.stereotype.Service;
-
-import static de.adorsys.opba.protocol.bpmnshared.GlobalConst.SPRING_KEYWORD;
-import static de.adorsys.opba.protocol.hbci.constant.GlobalConst.HBCI_MAPPERS_PACKAGE;
 
 @Service("hbciPaymentStatusExecutor")
 @RequiredArgsConstructor
 public class HbciPaymentStatus extends ValidatedExecution<PaymentHbciContext> {
     private final OnlineBankingService onlineBankingService;
-    private final HbciPaymentStatus.PaymentStatusMapper paymentStatusMapper;
 
     @Override
     protected void doRealExecution(DelegateExecution execution, PaymentHbciContext context) {
         HbciConsent consent = context.getHbciDialogConsent();
-        PaymentStatusReqest paymentStatusReqest = paymentStatusMapper.map(context.getPayment());
+
+        PaymentStatusReqest paymentStatusReqest = new PaymentStatusReqest();
+        paymentStatusReqest.setPaymentId(context.getPayment().getPaymentId());
         BankAccount account = new BankAccount();
         account.setIban(context.getAccountIban());
         paymentStatusReqest.setPsuAccount(account);
 
-        TransactionRequest<PaymentStatusReqest> request = create(paymentStatusReqest, new BankApiUser(), new BankAccess(),
-                context.getBank(), consent);
+        TransactionRequest<PaymentStatusReqest> request = create(paymentStatusReqest, new BankApiUser(),
+                new BankAccess(), context.getBank(), consent);
         PaymentStatusResponse response = onlineBankingService.getStrongCustomerAuthorisation().getPaymentStatus(request);
+        boolean postScaRequired = HbciScaRequiredUtil.extraCheckIfScaRequired(response);
 
-        if (null == response.getAuthorisationCodeResponse()) {
+        if (null == response.getAuthorisationCodeResponse() && !postScaRequired) {
             ContextUtil.getAndUpdateContext(
                     execution,
                     (PaymentHbciContext ctx) -> {
@@ -54,7 +52,9 @@ public class HbciPaymentStatus extends ValidatedExecution<PaymentHbciContext> {
             return;
         }
 
-        onlineBankingService.getStrongCustomerAuthorisation().afterExecute(consent, response.getAuthorisationCodeResponse());
+        if (null != response.getAuthorisationCodeResponse()) {
+            onlineBankingService.getStrongCustomerAuthorisation().afterExecute(consent, response.getAuthorisationCodeResponse());
+        }
         ContextUtil.getAndUpdateContext(
                 execution,
                 (HbciContext ctx) -> {
@@ -76,13 +76,5 @@ public class HbciPaymentStatus extends ValidatedExecution<PaymentHbciContext> {
         transactionRequest.setBank(bank);
 
         return transactionRequest;
-    }
-
-    /**
-     * Mapper to convert single payment body from context to multibanking request dto.
-     */
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = HBCI_MAPPERS_PACKAGE)
-    public interface PaymentStatusMapper {
-        PaymentStatusReqest map(PaymentInitiateBody contextPayment);
     }
 }

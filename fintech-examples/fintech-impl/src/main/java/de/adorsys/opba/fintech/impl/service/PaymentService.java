@@ -15,6 +15,7 @@ import de.adorsys.opba.fintech.impl.tppclients.TppPisPaymentStatusClient;
 import de.adorsys.opba.fintech.impl.tppclients.TppPisSinglePaymentClient;
 import de.adorsys.opba.tpp.pis.api.model.generated.AccountReference;
 import de.adorsys.opba.tpp.pis.api.model.generated.Amount;
+import de.adorsys.opba.tpp.pis.api.model.generated.PaymentInformationResponse;
 import de.adorsys.opba.tpp.pis.api.model.generated.PaymentInitiation;
 import de.adorsys.opba.tpp.pis.api.model.generated.PaymentInitiationResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,6 +64,7 @@ public class PaymentService {
         payment.setCreditorName(singlePaymentInitiationRequest.getName());
         payment.setInstructedAmount(getAmountWithCurrency(singlePaymentInitiationRequest.getAmount()));
         payment.remittanceInformationUnstructured(singlePaymentInitiationRequest.getPurpose());
+        payment.instantPayment(singlePaymentInitiationRequest.isInstantPayment());
         log.info("start call for payment {} {}", fintechOkUrl, fintechNOkUrl);
         ResponseEntity<PaymentInitiationResponse> responseOfTpp = tppPisSinglePaymentClient.initiatePayment(
                 payment,
@@ -89,24 +92,40 @@ public class PaymentService {
         // TODO https://app.zenhub.com/workspaces/open-banking-gateway-5dd3b3daf010250001260675/issues/adorsys/open-banking-gateway/812
         // TODO https://app.zenhub.com/workspaces/open-banking-gateway-5dd3b3daf010250001260675/issues/adorsys/open-banking-gateway/794
         List<PaymentEntity> payments = paymentRepository.findByUserEntityAndBankIdAndAccountIdAndPaymentConfirmed(sessionEntity.getUserEntity(), bankId, accountId, true);
-        List<PaymentInitiationWithStatusResponse> result = new ArrayList<>();
-
-        for (PaymentEntity payment : payments) {
-            de.adorsys.opba.tpp.pis.api.model.generated.PaymentInitiationWithStatusResponse body = tppPisPaymentStatusClient.getPaymentInformation(tppProperties.getServiceSessionPassword(),
-                    sessionEntity.getUserEntity().getFintechUserId(),
-                    UUID.fromString(restRequestContext.getRequestId()),
-                    paymentProduct,
-                    COMPUTE_X_TIMESTAMP_UTC,
-                    COMPUTE_X_REQUEST_SIGNATURE,
-                    COMPUTE_FINTECH_ID,
-                    bankId,
-                    payment.getTppServiceSessionId()).getBody();
-            PaymentInitiationWithStatusResponse paymentInitiationWithStatusResponse = Mappers.getMapper(PaymentInitiationWithStatusResponseMapper.class).mapFromTppToFintech(body);
-            result.add(paymentInitiationWithStatusResponse);
+        if (payments.isEmpty()) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        PaymentEntity payment = payments.get(0);
+
+        ResponseEntity<PaymentInformationResponse> response = tppPisPaymentStatusClient.getPaymentInformation(
+                tppProperties.getServiceSessionPassword(),
+                sessionEntity.getUserEntity().getFintechUserId(),
+                UUID.fromString(restRequestContext.getRequestId()),
+                paymentProduct,
+                COMPUTE_X_TIMESTAMP_UTC,
+                COMPUTE_X_REQUEST_SIGNATURE,
+                COMPUTE_FINTECH_ID,
+                bankId,
+                payment.getTppServiceSessionId()
+        );
+
+        switch (response.getStatusCode()) {
+            case OK:
+                return paymentInfoResponse(response);
+            case UNAUTHORIZED:
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            default:
+                throw new RuntimeException("DID NOT EXPECT RETURNCODE:" + response.getStatusCode());
+        }
     }
 
+    private ResponseEntity<List<PaymentInitiationWithStatusResponse>> paymentInfoResponse(ResponseEntity<PaymentInformationResponse> response) {
+        PaymentInformationResponse paymentInfoTpp = response.getBody();
+        PaymentInitiationWithStatusResponse paymentInfo = Mappers
+                .getMapper(PaymentInitiationWithStatusResponseMapper.class)
+                .mapFromTppToFintech(paymentInfoTpp);
+        return new ResponseEntity<>(Collections.singletonList(paymentInfo), HttpStatus.OK);
+    }
 
     private AccountReference getAccountReference(String iban) {
         AccountReference account = new AccountReference();

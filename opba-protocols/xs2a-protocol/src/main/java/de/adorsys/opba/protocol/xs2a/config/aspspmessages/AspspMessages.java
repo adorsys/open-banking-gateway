@@ -33,4 +33,11 @@ public class AspspMessages {
      */
     @NotEmpty
     private Set<@NotBlank String> invalidConsent;
+
+    /**
+     * Represents message templates for the missing OAuth2 token case.
+     * TODO: https://github.com/adorsys/open-banking-gateway/issues/976
+     */
+    @NotEmpty
+    private Set<@NotBlank String> missingOauth2Token;
 }

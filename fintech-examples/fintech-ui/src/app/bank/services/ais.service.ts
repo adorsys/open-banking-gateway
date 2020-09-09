@@ -1,7 +1,7 @@
-import {map} from 'rxjs/operators';
-import {FinTechAccountInformationService} from '../../api';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Injectable} from '@angular/core';
+import { map } from 'rxjs/operators';
+import { FinTechAccountInformationService } from '../../api';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Injectable } from '@angular/core';
 import { LoARetrievalInformation, LoTRetrievalInformation } from '../../models/consts';
 
 @Injectable({
@@ -15,7 +15,7 @@ export class AisService {
   ) {}
 
   private static isoDate(toConvert: Date) {
-    return toConvert.toISOString().split('T')[0]
+    return toConvert.toISOString().split('T')[0];
   }
 
   getAccounts(bankId: string, loARetrievalInformation: LoARetrievalInformation) {
@@ -29,7 +29,7 @@ export class AisService {
 
   getTransactions(bankId: string, accountId: string, loTRetrievalInformation: LoTRetrievalInformation) {
     const okurl = window.location.pathname;
-    const notOkUrl = okurl.replace(/account.*/, 'account');
+    const notOkUrl = okurl.replace(/account.*/, 'accounts');
 
     return this.finTechAccountInformationService.aisTransactionsGET(
       bankId,

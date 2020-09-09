@@ -8,6 +8,7 @@ import { AuthStateConsentAuthorizationService, DenyRequest, UpdateConsentAuthori
 import { ApiHeaders } from '../../api/api.headers';
 import { PaymentUtil } from '../common/payment-util';
 import { PisPayment } from '../common/models/pis-payment.model';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'consent-app-to-aspsp-page',
@@ -34,10 +35,18 @@ export class ToAspspPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.activatedRoute.parent.params.subscribe(res => {
-      this.aspspName = this.sessionService.getBankName(res.authId);
-      this.finTechName = this.sessionService.getFintechName(res.authId);
-      this.authorizationId = res.authId;
+
+    combineLatest([this.activatedRoute.parent.params, this.activatedRoute.parent.queryParams]).subscribe(res => {
+      let pathParams = res[0]
+      let query = res[1]
+
+      this.authorizationId = pathParams.authId;
+      if (query.redirectCode) {
+        this.sessionService.setRedirectCode(this.authorizationId, query.redirectCode);
+      }
+
+      this.aspspName = this.sessionService.getBankName(pathParams.authId);
+      this.finTechName = this.sessionService.getFintechName(pathParams.authId);
       this.pisPayment = PaymentUtil.getOrDefault(this.authorizationId, this.sessionService);
       this.loadRedirectUri();
     });

@@ -152,7 +152,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         return self();
     }
 
-    public SELF fintech_calls_payment_information_hbci(String iban, String bankId) {
+    public SELF fintech_calls_payment_information_hbci(String iban, String bankId, String expectedStatus) {
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
                     .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
@@ -174,7 +174,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
                     .body("creditorAddress.postCode", equalTo("90543"))
                     .body("creditorAddress.country", equalTo("DE"))
                     .body("remittanceInformationUnstructured", equalTo("Ref. Number WBG-1222"))
-                    .body("transactionStatus", equalTo(TransactionStatus.PDNG.name()))
+                    .body("transactionStatus", equalTo(expectedStatus))
                     .extract();
 
         assertThat(ZonedDateTime.now(ZoneOffset.UTC)).isAfterOrEqualTo(ZonedDateTime.parse(response.body().jsonPath().getString("createdAt")));
@@ -185,7 +185,7 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
         return fintech_calls_payment_status(SANDBOX_BANK_ID, TransactionStatus.ACSP.name());
     }
 
-    public SELF fintech_calls_payment_status(String bankId, String expectedStatus) {
+    public SELF fintech_calls_payment_status(String bankId, String expectedStatus, String serviceSessionId) {
         ExtractableResponse<Response> response = withPaymentInfoHeaders(UUID.randomUUID().toString(), bankId)
                 .header(SERVICE_SESSION_ID, serviceSessionId)
                 .when()
@@ -196,6 +196,10 @@ public class PaymentResult<SELF extends PaymentResult<SELF>> extends Stage<SELF>
                 .extract();
         assertThat(ZonedDateTime.now(ZoneOffset.UTC)).isAfterOrEqualTo(ZonedDateTime.parse(response.body().jsonPath().getString("createdAt")));
         return self();
+    }
+
+    public SELF fintech_calls_payment_status(String bankId, String expectedStatus) {
+        return fintech_calls_payment_status(bankId, expectedStatus, serviceSessionId);
     }
 
     public SELF fintech_calls_payment_activation_for_current_authorization_id(String serviceSessionId) {

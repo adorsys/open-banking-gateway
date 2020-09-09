@@ -11,6 +11,7 @@ public class Const {
     public static final String SEPA_INFO = "GV.SEPAInfo";
     public static final String TRANSACTIONS = "GV.KUmsZeit";
     public static final String PAYMENT = "GV.UebSEPA1";
+    public static final String INSTANT_PAYMENT = "GV.InstantUebSEPA1";
     public static final String PAYMENT_STATUS = "GV.InstantUebSEPAStatus1";
     public static final String DIALOG_ID = "MsgHead.dialogid";
 }

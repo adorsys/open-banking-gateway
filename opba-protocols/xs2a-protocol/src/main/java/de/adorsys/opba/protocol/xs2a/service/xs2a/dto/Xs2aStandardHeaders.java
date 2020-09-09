@@ -18,13 +18,14 @@ import java.util.Map;
 
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.SPRING_KEYWORD;
 import static de.adorsys.opba.protocol.xs2a.constant.GlobalConst.XS2A_MAPPERS_PACKAGE;
+import static de.adorsys.xs2a.adapter.service.RequestHeaders.AUTHORIZATION;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.PSU_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.TPP_REDIRECT_PREFERRED;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_GTW_ASPSP_ID;
 import static de.adorsys.xs2a.adapter.service.RequestHeaders.X_REQUEST_ID;
 
 /**
- * Standard headers to call XS2A-adapter (used for almost all requests).
+ * Standard headers to call XS2A-adapter (excluding consent creation cases).
  */
 @Data
 public class Xs2aStandardHeaders {
@@ -55,6 +56,9 @@ public class Xs2aStandardHeaders {
     @Nullable
     private Boolean tppRedirectPreferred;
 
+    // TODO: Validation - it should be present only for OAuth2
+    private String oauth2Token;
+
     public RequestHeaders toHeaders() {
         Map<String, String> allValues = new HashMap<>();
 
@@ -66,11 +70,16 @@ public class Xs2aStandardHeaders {
             allValues.put(TPP_REDIRECT_PREFERRED, String.valueOf(tppRedirectPreferred));
         }
 
+        if (null != oauth2Token) {
+            allValues.put(AUTHORIZATION, oauth2Token);
+        }
+
         return RequestHeaders.fromMap(allValues);
     }
 
-    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE)
+    @Mapper(componentModel = SPRING_KEYWORD, implementationPackage = XS2A_MAPPERS_PACKAGE, uses = ResponseTokenMapper.class)
     public interface FromCtx extends DtoMapper<Xs2aContext, Xs2aStandardHeaders> {
+
         Xs2aStandardHeaders map(Xs2aContext ctx);
     }
 }

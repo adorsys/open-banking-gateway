@@ -56,6 +56,9 @@ public class HbciSandboxPayment {
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
+    @Column(nullable = false)
+    private boolean instantPayment;
+
     @CreatedDate
     private Instant createdAt;
 

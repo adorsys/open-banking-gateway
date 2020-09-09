@@ -1,5 +1,7 @@
 package de.adorsys.opba.protocol.xs2a.config.protocol;
 
+import de.adorsys.opba.protocol.api.common.ProtocolAction;
+import de.adorsys.opba.protocol.xs2a.context.Xs2aContext;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -35,11 +37,9 @@ public class ProtocolUrlsConfiguration {
     @NotNull
     private UrlSet pis;
 
-    /**
-     * Generic parameters input urls - i.e. password page.
-     */
-    @NotNull
-    private UrlSet common;
+    public UrlSet getUrlAisOrPisSetBasedOnContext(Xs2aContext context) {
+        return ProtocolAction.SINGLE_PAYMENT.equals(context.getAction()) ? getPis() : getAis();
+    }
 
     @Data
     public static class UrlSet {
@@ -66,6 +66,7 @@ public class ProtocolUrlsConfiguration {
     public static class WebHooks {
         /**
          * URL that represents page saying that consent creation was OK (comes before consent result page).
+         * Or acts as redirect-back URI for OAuth2.
          */
         @NotBlank
         private String ok;

@@ -42,8 +42,8 @@ export class AuthService {
   oauth2Login(code: string, state: string, scope: string, error: string): Observable<boolean> {
     return this.finTechAuthorizationService.callbackGetLogin(code, state, scope, error, 'response').pipe(
       map(response => {
-        const creds = new Credentials()
-        creds.username = response.body.userProfile.name
+        const creds = new Credentials();
+        creds.username = response.body.userProfile.name;
         this.setSessionData(response, creds);
         return response.ok;
       })

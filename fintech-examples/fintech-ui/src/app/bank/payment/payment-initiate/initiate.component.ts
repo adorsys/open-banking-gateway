@@ -38,7 +38,8 @@ export class InitiateComponent implements OnInit {
       name: ['test user', Validators.required],
       creditorIban: ['AL90208110080000001039531801', [ValidatorService.validateIban, Validators.required]],
       amount: ['12.34', [Validators.pattern('^[1-9]\\d*(\\.\\d{1,2})?$'), Validators.required]],
-      purpose: ['test transfer']
+      purpose: ['test transfer'],
+      instantPayment: false
     });
   }
 
@@ -50,7 +51,8 @@ export class InitiateComponent implements OnInit {
 
     const paymentRequest: SinglePaymentInitiationRequest = { ...this.paymentForm.getRawValue() };
     paymentRequest.debitorIban = this.debitorIban;
-
+    paymentRequest.purpose = this.paymentForm.getRawValue().purpose;
+    paymentRequest.instantPayment = this.paymentForm.getRawValue().instantPayment;
     this.fintechSinglePaymentInitiationService
       .initiateSinglePayment(
         this.bankId,
