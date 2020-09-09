@@ -1,0 +1,45 @@
+{
+  "id" : "69629a72-7cba-34f6-b179-870ee19ea706",
+  "request" : {
+    "url" : "/v1/consents",
+    "method" : "POST",
+    "headers" : {
+      "Accept" : {
+        "equalTo" : "application/json"
+      },
+      "X-Request-ID" : {
+        "equalTo" : "12b34483-242a-428b-8295-2f4805bb0a30"
+      },
+      "PSU-ID" : {
+        "equalTo" : "anton.brueckner"
+      },
+      "TPP-Nok-Redirect-URI" : {
+        "equalTo" : "http://localhost:4200/embedded-server/v1/consent/7adfcc24-41e5-487c-b7ef-5139484bf925/fromAspsp/STUB_STATE/nok?redirectCode=1e079760-1e23-40e8-a51a-06287f2127f0"
+      },
+      "PSU-IP-Address" : {
+        "equalTo" : "127.0.0.1"
+      },
+      "TPP-Redirect-URI" : {
+        "equalTo" : "http://localhost:4200/embedded-server/v1/consent/7adfcc24-41e5-487c-b7ef-5139484bf925/fromAspsp/STUB_STATE/ok?redirectCode=1e079760-1e23-40e8-a51a-06287f2127f0"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/json; charset=UTF-8"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{\"access\":{\"allPsd2\":\"allAccounts\"},\"recurringIndicator\":true,\"validUntil\":\"2021-09-09\",\"frequencyPerDay\":24}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 401,
+    "bodyFileName" : "body-v1-consents-47431.json",
+    "headers" : {
+      "Content-Type" : "application/json;charset=ISO-8859-1",
+      "Date" : "Wed, 09 Sep 2020 12:14:50 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "69629a72-7cba-34f6-b179-870ee19ea706"
+}

@@ -1,0 +1,39 @@
+{
+  "id" : "fa8553a8-854b-3fa1-bf90-eff0d67656d2",
+  "request" : {
+    "url" : "/v1/payments/sepa-credit-transfers/az89REkp5XULNSY5Oqk24cOV8_tPScF8huTLM73HyYruMdXus0_fi2h52JOC0cDhcgftJbETkzvNvu5mZQqWcA==_=_psGLvQpt9Q/authorisations",
+    "method" : "POST",
+    "headers" : {
+      "Authorization" : {
+        "equalTo" : "Bearer eyJraWQiOiJpc3FyWW04QlNpY2w2ZXhRcEhHREpBIiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiJkMGF1dUlxN1J6QXR6dkNEVDh6bV9vIiwidG9rZW5fdXNhZ2UiOiJMT0dJTiIsInJvbGUiOiJDVVNUT01FUiIsInNjYV9pZCI6IjBiekJRellmUUZjaWFEdkk2VjZoX28iLCJhdXRob3Jpc2F0aW9uX2lkIjoiMGJ6QlF6WWZRRmNpYUR2STZWNmhfbyIsImV4cCI6MTU5OTY1NDExNCwibG9naW4iOiJhbnRvbi5icnVlY2tuZXIiLCJpYXQiOjE1OTk2NTM4MTQsImp0aSI6InNUMGppVGd2VERvb2NCVnM1YTdMYzAifQ.vejR6GNnsONmxGKj_bPV_Hun0n2iUVmQt6WZ6SAZq5g"
+      },
+      "X-Request-ID" : {
+        "equalTo" : "12b34483-242a-428b-8295-2f4805bb0a30"
+      },
+      "PSU-ID" : {
+        "equalTo" : "anton.brueckner"
+      },
+      "Content-Type" : {
+        "equalTo" : "application/json; charset=UTF-8"
+      }
+    },
+    "bodyPatterns" : [ {
+      "equalToJson" : "{}",
+      "ignoreArrayOrder" : true,
+      "ignoreExtraElements" : true
+    } ]
+  },
+  "response" : {
+    "status" : 201,
+    "bodyFileName" : "body-v1-54020.json",
+    "headers" : {
+      "Vary" : [ "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers" ],
+      "Aspsp-Sca-Approach" : "REDIRECT",
+      "X-Request-Id" : "12b34483-242a-428b-8295-2f4805bb0a30",
+      "Content-Type" : "application/json",
+      "Date" : "Wed, 09 Sep 2020 12:16:55 GMT",
+      "Keep-Alive" : "timeout=60"
+    }
+  },
+  "uuid" : "fa8553a8-854b-3fa1-bf90-eff0d67656d2"
+}
