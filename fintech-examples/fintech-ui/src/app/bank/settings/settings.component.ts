@@ -33,6 +33,7 @@ export class SettingsComponent implements OnInit {
     this.settingsForm = this.formBuilder.group({
       loa: [settingsData.loa, Validators.required],
       lot: [settingsData.lot, Validators.required],
+      withBalance: settingsData.withBalance,
       paymentRequiresAuthentication: settingsData.paymentRequiresAuthentication
     });
   }
@@ -50,5 +51,6 @@ export class SettingsComponent implements OnInit {
 export class SettingsData {
   loa: LoARetrievalInformation;
   lot: LoTRetrievalInformation;
+  withBalance: boolean;
   paymentRequiresAuthentication: boolean;
 }
