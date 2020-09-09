@@ -1137,6 +1137,10 @@ components:
           maxLength: 70
         ownerAddress:
           $ref: "#/components/schemas/address"
+        balances:
+          type: array
+          items:
+            $ref: "#/components/schemas/AccountBalance"
 
     accountList:
       description: |
@@ -1838,3 +1842,22 @@ components:
       type: string
       maxLength: 70
       example: "Ultimate Debtor"
+
+    AccountBalance:
+      title: AccountBalance
+      type: object
+      properties:
+        amount:
+          $ref: "#/components/schemas/Amount"
+        balanceType:
+          type: string
+        iban:
+          type: string
+        lastChangeDateTime:
+          type: string
+          format: date-time
+        lastCommittedTransaction:
+          type: string
+        referenceDate:
+          type: string
+          format: date
