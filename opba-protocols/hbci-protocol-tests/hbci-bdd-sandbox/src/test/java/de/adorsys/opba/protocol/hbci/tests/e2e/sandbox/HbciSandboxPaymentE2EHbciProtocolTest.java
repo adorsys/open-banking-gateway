@@ -119,8 +119,8 @@ class HbciSandboxPaymentE2EHbciProtocolTest extends SpringScenarioTest<
         then()
                 .open_banking_has_stored_payment()
                 .fintech_calls_payment_activation_for_current_authorization_id()
-                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.ACCC.name())
-                .fintech_calls_payment_information_hbci(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, TransactionStatus.ACCC.name());
+                .fintech_calls_payment_status(BANK_BLZ_30000003_ID, TransactionStatus.ACSC.name())
+                .fintech_calls_payment_information_hbci(MAX_MUSTERMAN_BANK_BLZ_30000003_ACCOUNT_ID, BANK_BLZ_30000003_ID, TransactionStatus.ACSC.name());
     }
 
     private void makeHbciAdapterToPointToHbciMockEndpoints() {
