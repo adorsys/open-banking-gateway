@@ -41,12 +41,12 @@ public class AccountService {
 
     public ResponseEntity listAccounts(SessionEntity sessionEntity,
                                        String fintechOkUrl, String fintechNOKUrl,
-                                       String bankId, LoARetrievalInformation loARetrievalInformation) {
+                                       String bankId, LoARetrievalInformation loARetrievalInformation, boolean withBalance) {
 
-        log.info("List of accounts {}", loARetrievalInformation);
+        log.info("List of accounts {} with balance {}", loARetrievalInformation, withBalance);
         final String fintechRedirectCode = UUID.randomUUID().toString();
 
-        ResponseEntity accounts = readOpbaResponse(bankId, sessionEntity, fintechRedirectCode, loARetrievalInformation);
+        ResponseEntity accounts = readOpbaResponse(bankId, sessionEntity, fintechRedirectCode, loARetrievalInformation, withBalance);
 
         switch (accounts.getStatusCode()) {
             case OK:
@@ -63,12 +63,12 @@ public class AccountService {
     }
 
 
-    private ResponseEntity readOpbaResponse(String bankID, SessionEntity sessionEntity, String redirectCode, LoARetrievalInformation loARetrievalInformation) {
+    private ResponseEntity readOpbaResponse(String bankID, SessionEntity sessionEntity, String redirectCode, LoARetrievalInformation loARetrievalInformation, boolean withBalance) {
         UUID xRequestId = UUID.fromString(restRequestContext.getRequestId());
         Optional<ConsentEntity> optionalConsent = Optional.empty();
         if (loARetrievalInformation.equals(LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT)) {
             optionalConsent = consentRepository.findFirstByUserEntityAndBankIdAndConsentTypeAndConsentConfirmedOrderByCreationTimeDesc(sessionEntity.getUserEntity(),
-                bankID, ConsentType.AIS, Boolean.TRUE);
+                bankID, ConsentType.AIS, withBalance);
         }
         if (optionalConsent.isPresent()) {
             log.info("LoA found valid {} consent for user {} bank {} from {}",
