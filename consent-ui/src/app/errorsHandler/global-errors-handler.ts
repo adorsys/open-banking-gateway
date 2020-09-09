@@ -16,7 +16,9 @@ export class GlobalErrorHandler implements ErrorHandler {
 
     if (error !== null && !(error instanceof HttpErrorResponse)) {
       message = 'Something went wrong';               // default ErrorMessage
-    } else if (error instanceof HttpErrorResponse) {
+    }
+
+    if (error instanceof HttpErrorResponse) {
       message = errorService.getServerMessage(error); // Server Error
     } else {
       message = errorService.getClientMessage(error); // Client Error
