@@ -35,7 +35,6 @@ export class ToAspspPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-
     combineLatest([this.activatedRoute.parent.params, this.activatedRoute.parent.queryParams]).subscribe(res => {
       const pathParams = res[0];
       const query = res[1];
