@@ -1847,7 +1847,7 @@ components:
       title: AccountBalance
       type: object
       properties:
-        amount:
+        balanceAmount:
           $ref: "#/components/schemas/Amount"
         balanceType:
           type: string
