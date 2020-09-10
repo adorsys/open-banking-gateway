@@ -15,6 +15,15 @@ export class GlobalErrorHandler implements ErrorHandler {
     const infoService = this.injector.get(InfoService);
 
     let message = 'Something went wrong';               // default ErrorMessage
+    let page = error.url;                              // get actual page with error
+
+    if (error.status === 400) {
+      if (page.includes('register')) {
+        error = 'User already exists';
+      } else if (page.includes('login')) {
+        error = 'wrong Username or Password';
+      }
+    }
 
     if (error instanceof HttpErrorResponse) {
       message = errorService.getServerMessage(error); // Server Error
