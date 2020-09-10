@@ -13,7 +13,7 @@ import { Amount } from './amount';
 
 
 export interface AccountBalance { 
-    amount?: Amount;
+    balanceAmount?: Amount;
     balanceType?: string;
     iban?: string;
     lastChangeDateTime?: Date;
