@@ -53,10 +53,10 @@ describe('ListAccountsComponent', () => {
     const mockAccounts: HttpResponse<AccountList> = {} as HttpResponse<AccountList>;
 
     spyOn(aisService, 'getAccounts')
-      .withArgs(bankId, loaRetrievalInformation)
+      .withArgs(bankId, loaRetrievalInformation, false)
       .and.returnValue(of(mockAccounts));
     expect(component.bankId).toEqual(bankId);
-    aisService.getAccounts(bankId, loaRetrievalInformation).subscribe(res => {
+    aisService.getAccounts(bankId, loaRetrievalInformation, false).subscribe(res => {
       expect(res).toEqual(mockAccounts);
     });
   });
