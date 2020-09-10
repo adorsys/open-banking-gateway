@@ -37,8 +37,8 @@ export class ToAspspRedirectionComponent implements OnInit {
 
   ngOnInit() {
     combineLatest([this.activatedRoute.parent.params, this.activatedRoute.parent.queryParams]).subscribe(res => {
-      let pathParams = res[0]
-      let query = res[1]
+      const pathParams = res[0];
+      const query = res[1];
 
       this.authorizationId = pathParams.authId;
       if (query.redirectCode) {
