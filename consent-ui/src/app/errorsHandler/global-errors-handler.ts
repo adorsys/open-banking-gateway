@@ -1,7 +1,7 @@
-import {ErrorHandler, Injectable, Injector, NgZone} from '@angular/core';
-import {ErrorService} from './error.service';
-import {HttpErrorResponse} from '@angular/common/http';
-import {InfoService} from './info/info.service';
+import { ErrorHandler, Injectable, Injector, NgZone } from '@angular/core';
+import { ErrorService } from './error.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { InfoService } from './info/info.service';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -15,13 +15,13 @@ export class GlobalErrorHandler implements ErrorHandler {
     const infoService = this.injector.get(InfoService);
 
     let message = 'Something went wrong';               // default ErrorMessage
-    let page = error.url;                              // get actual page with error
+    const page = error.url;                              // get actual page with error
 
     if (error.status === 400) {
       if (page.includes('register')) {
         error = 'User already exists';
       } else if (page.includes('login')) {
-        error = 'wrong Username or Password';
+        error = 'Incorrect Username or Password';
       }
     }
 
