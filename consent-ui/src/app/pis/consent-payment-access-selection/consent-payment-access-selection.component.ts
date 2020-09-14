@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -32,9 +32,14 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private sessionService: SessionService,
-    private updateConsentAuthorizationService: UpdateConsentAuthorizationService
+    private updateConsentAuthorizationService: UpdateConsentAuthorizationService,
+    private cdRef: ChangeDetectorRef
   ) {
     this.paymentAccessForm = this.formBuilder.group({});
+  }
+
+  ngAfterContentChecked(): void {
+    this.cdRef.detectChanges()
   }
 
   ngOnInit() {

@@ -58,7 +58,7 @@ export class ListAccountsComponent implements OnInit {
           this.accounts = response.body.accounts;
           const loa = [];
           for (const accountDetail of this.accounts) {
-            loa.push(new AccountStruct(accountDetail.resourceId, accountDetail.iban, accountDetail.name));
+            loa.push(new AccountStruct(accountDetail.resourceId, accountDetail.iban, accountDetail.name, accountDetail.currency));
           }
           this.storageService.setLoa(this.bankId, loa);
       }
