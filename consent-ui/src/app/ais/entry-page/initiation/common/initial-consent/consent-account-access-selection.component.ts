@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthConsentState } from '../../../../common/dto/auth-state';
@@ -34,9 +34,14 @@ export class ConsentAccountAccessSelectionComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private formBuilder: FormBuilder,
     private sessionService: SessionService,
-    private updateConsentAuthorizationService: UpdateConsentAuthorizationService
+    private updateConsentAuthorizationService: UpdateConsentAuthorizationService,
+    private cdRef: ChangeDetectorRef
   ) {
     this.accountAccessForm = this.formBuilder.group({});
+  }
+
+  ngAfterContentChecked(): void {
+    this.cdRef.detectChanges()
   }
 
   ngOnInit() {

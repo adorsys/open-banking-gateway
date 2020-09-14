@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RedirectPageComponent } from './redirect-page.component';
 import { ConsentAuthorizationService } from '../services/consent-authorization.service';
 import { RedirectStruct } from './redirect-struct';
+import { HttpClientTestingModule } from '@angular/common/http/testing'
 
 describe('RedirectPageComponent', () => {
   let component: RedirectPageComponent;
@@ -13,7 +14,7 @@ describe('RedirectPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
+      imports: [RouterTestingModule, HttpClientTestingModule],
       declarations: [RedirectPageComponent],
       schemas: [NO_ERRORS_SCHEMA]
     })
