@@ -19,7 +19,7 @@ describe('PaymentAccountPaymentsComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            snapshot: { paramMap: convertToParamMap({ accountid: '1234', bankid: '1234' }) }
+            snapshot: { params: { bankid: '1234', accountid: '1234' } }
           }
         }
       ]

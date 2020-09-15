@@ -2,6 +2,8 @@ export class Consts {
   public static LOCAL_STORAGE_XSRF_TOKEN = 'XSRF_TOKEN';
   public static LOCAL_STORAGE_SETTINGS = 'FINTECH_SETTINGS';
   public static CONFIRM_PAYMENT = 'confirmationData';
+  public static BANK_ID_NAME = 'bankid';
+  public static ACCOUNT_ID_NAME = 'accountid';
 }
 
 export class HeaderConfig {

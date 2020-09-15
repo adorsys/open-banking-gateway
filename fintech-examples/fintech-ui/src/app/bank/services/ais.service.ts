@@ -12,7 +12,7 @@ export class AisService {
     return toConvert.toISOString().split('T')[0];
   }
 
-  getAccounts(bankId: string, loARetrievalInformation: LoARetrievalInformation, withBalance: boolean) {
+  getAccounts(bankId: string, loARetrievalInformation: LoARetrievalInformation, withBalance?: boolean) {
     const okurl = window.location.pathname;
     const notOkUrl = okurl.replace(/account.*/, '');
 
