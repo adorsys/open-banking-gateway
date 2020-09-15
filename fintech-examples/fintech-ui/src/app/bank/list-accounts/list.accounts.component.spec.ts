@@ -11,7 +11,7 @@ import { ListAccountsComponent } from './list-accounts.component';
 import { AccountList } from '../../api';
 import { BankComponent } from '../bank.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { LoARetrievalInformation } from '../../models/consts';
+import { Consts, LoARetrievalInformation } from '../../models/consts';
 import { AccountCardComponent } from '../common/account-card/account-card.component';
 
 describe('ListAccountsComponent', () => {
@@ -29,7 +29,9 @@ describe('ListAccountsComponent', () => {
         AisService,
         {
           provide: ActivatedRoute,
-          useValue: { snapshot: { paramMap: convertToParamMap({ bankid: '1234' }) } }
+          useValue: {
+            snapshot: { params: { bankid: '1234' } }
+          }
         }
       ]
     }).compileComponents();
@@ -48,7 +50,7 @@ describe('ListAccountsComponent', () => {
   });
 
   it('should load accounts', () => {
-    const bankId = route.snapshot.paramMap.get('bankid');
+    const bankId = route.snapshot.params[Consts.BANK_ID_NAME];
     const loaRetrievalInformation = LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
     const mockAccounts: HttpResponse<AccountList> = {} as HttpResponse<AccountList>;
 

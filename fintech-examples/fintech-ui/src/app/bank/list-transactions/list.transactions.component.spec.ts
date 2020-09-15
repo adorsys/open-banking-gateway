@@ -9,7 +9,7 @@ import { BankComponent } from '../bank.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { HttpResponse } from '@angular/common/http';
 import { TransactionsResponse } from '../../api';
-import { LoTRetrievalInformation } from '../../models/consts';
+import { Consts, LoTRetrievalInformation } from '../../models/consts';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { StorageService } from '../../services/storage.service';
 
@@ -20,6 +20,8 @@ describe('ListTransactionsComponent', () => {
   let route: ActivatedRoute;
   let storageService;
   let storageServiceSpy;
+  let bankId;
+  let accountId;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -31,8 +33,7 @@ describe('ListTransactionsComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            parent: { snapshot: { paramMap: convertToParamMap({ bankid: '1234' }) } },
-            snapshot: { paramMap: convertToParamMap({ accountid: '1234' }) }
+            snapshot: { params: { bankid: '1234', accountid: '1234' } }
           }
         }
       ]
@@ -45,7 +46,11 @@ describe('ListTransactionsComponent', () => {
     aisService = TestBed.get(AisService);
     route = TestBed.get(ActivatedRoute);
     storageService = TestBed.get(StorageService);
-    storageServiceSpy = spyOn(storageService, 'getLoa').and.returnValues([]);
+    bankId = route.snapshot.params[Consts.BANK_ID_NAME];
+    accountId = route.snapshot.params[Consts.ACCOUNT_ID_NAME];
+    storageServiceSpy = spyOn(storageService, 'getLoa')
+      .withArgs(bankId)
+      .and.returnValues([]);
     fixture.detectChanges();
   });
 
@@ -54,8 +59,6 @@ describe('ListTransactionsComponent', () => {
   });
 
   it('should load transactions', () => {
-    const bankId = route.parent.snapshot.paramMap.get('bankid');
-    const accountId = route.snapshot.paramMap.get('accountid');
     const mockTransactions: HttpResponse<TransactionsResponse> = {} as HttpResponse<TransactionsResponse>;
     const loTRetrievalInformation: LoTRetrievalInformation = LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT;
 
