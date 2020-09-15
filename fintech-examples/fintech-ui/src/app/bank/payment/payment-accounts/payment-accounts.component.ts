@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StorageService } from '../../../services/storage.service';
+import { Consts } from '../../../models/consts';
 
 @Component({
   selector: 'app-list-accounts-for-payment',
@@ -10,12 +11,14 @@ import { StorageService } from '../../../services/storage.service';
 export class PaymentAccountsComponent implements OnInit {
   public static ROUTE = 'accounts';
   selectedAccount;
+  bankId: string;
   accounts = [];
 
   constructor(private storageService: StorageService, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.accounts = this.storageService.getLoa();
+    this.bankId = this.route.snapshot.params[Consts.BANK_ID_NAME];
+    this.accounts = this.storageService.getLoa(this.bankId);
   }
 
   onSelectAccount(id) {

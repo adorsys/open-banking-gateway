@@ -45,7 +45,7 @@ export class SidebarComponent implements OnInit {
   }
 
   isLoaDone(): boolean {
-    return this.storageService.getLoa() !== null;
+    return this.storageService.getLoa(this.bankId) !== null;
   }
 
   get showPaymentNav(): boolean {
