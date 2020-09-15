@@ -3,7 +3,7 @@ import { AccountDetails } from '../../api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AisService } from '../services/ais.service';
 import { AccountStruct, RedirectStruct, RedirectType } from '../redirect-page/redirect-struct';
-import { HeaderConfig } from '../../models/consts';
+import { Consts, HeaderConfig } from '../../models/consts';
 import { StorageService } from '../../services/storage.service';
 
 @Component({
@@ -23,7 +23,7 @@ export class ListAccountsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.bankId = this.route.snapshot.paramMap.get('bankid');
+    this.bankId = this.route.snapshot.params[Consts.BANK_ID_NAME];
     this.loadAccount();
   }
 
@@ -60,7 +60,7 @@ export class ListAccountsComponent implements OnInit {
           for (const accountDetail of this.accounts) {
             loa.push(new AccountStruct(accountDetail.resourceId, accountDetail.iban, accountDetail.name));
           }
-          this.storageService.setLoa(loa);
+          this.storageService.setLoa(this.bankId, loa);
       }
     });
   }
