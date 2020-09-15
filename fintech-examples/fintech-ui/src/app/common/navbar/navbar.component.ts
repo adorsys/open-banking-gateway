@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { TimerService } from '../../services/timer.service';
 import { TimerModel } from '../../models/timer.model';
+import {StorageService} from "../../services/storage.service";
 
 @Component({
   selector: 'app-navbar',
@@ -11,7 +12,9 @@ import { TimerModel } from '../../models/timer.model';
 export class NavbarComponent implements OnInit {
   timer: TimerModel;
 
-  constructor(private timerService: TimerService, private authService: AuthService) {
+  constructor(private timerService: TimerService,
+              private authService: AuthService,
+              private storageService: StorageService) {
     this.timerService.startTimer();
   }
 
@@ -26,6 +29,8 @@ export class NavbarComponent implements OnInit {
   onLogout() {
     this.authService.logout();
     this.timerService.stopTimer();
+    this.storageService.clearStorage();
+    this.storageService.deleteSettings();
   }
 
   isLoggedIn(): boolean {
