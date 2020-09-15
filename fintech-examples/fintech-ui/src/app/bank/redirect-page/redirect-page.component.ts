@@ -5,7 +5,7 @@ import { Consent, HeaderConfig } from '../../models/consts';
 import { ConsentAuthorizationService } from '../services/consent-authorization.service';
 import { StorageService } from '../../services/storage.service';
 import { ModalCard } from '../../models/modalCard.model';
-import {Location} from "@angular/common";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-redirect-page',
@@ -36,10 +36,6 @@ export class RedirectPageComponent implements OnInit {
       };
     });
   }
-
-  /***
-   * TODO How does consent work, how are the cancel button and ok button called respectively
-   * */
 
   onSubmit(value: boolean) {
     if (value) {

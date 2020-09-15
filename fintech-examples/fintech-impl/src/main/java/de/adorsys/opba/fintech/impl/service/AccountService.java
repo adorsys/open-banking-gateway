@@ -52,7 +52,7 @@ public class AccountService {
             case OK:
                 return new ResponseEntity<>(accounts.getBody(), HttpStatus.OK);
             case ACCEPTED:
-                log.debug("create redirect entity for redirect code {}", fintechRedirectCode);
+                log.info("create redirect entity for redirect code {}", fintechRedirectCode);
                 redirectHandlerService.registerRedirectStateForSession(fintechRedirectCode, fintechOkUrl, fintechNOKUrl);
                 return handleAcceptedService.handleAccepted(consentRepository, ConsentType.AIS, bankId, fintechRedirectCode, sessionEntity, accounts.getHeaders());
             case UNAUTHORIZED:
