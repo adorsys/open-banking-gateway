@@ -85,30 +85,37 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
 
         if (okOrNotOk.equals(OkOrNotOk.OK) && consentService.confirmConsent(authId, xRequestID)) {
 
-            if (Boolean.TRUE.equals(consentEntity.getConsentConfirmed())) {
-               log.warn("Consent created at \" + {} + \" must not be confirmed yet (but is OK for HBCI))", consentEntity.getCreationTime());
-            }
             // There may exist a valid consent that has not been used, because client
             // wanted to retrieve new consent. So we search all valid consents and delete them.
             List<ConsentEntity> consentList = consentRepository.findListByUserEntityAndBankIdAndConsentTypeAndConsentConfirmed(
-                consentEntity.getUserEntity(),
-                consentEntity.getBankId(),
-                consentEntity.getConsentType(),
-                Boolean.TRUE);
+                    consentEntity.getUserEntity(),
+                    consentEntity.getBankId(),
+                    consentEntity.getConsentType(),
+                    Boolean.TRUE);
             for (ConsentEntity oldValidConsent : consentList) {
-                log.debug("delete old valid {} consent from {}", oldValidConsent.getConsentType(), oldValidConsent.getCreationTime());
+                if (Boolean.TRUE.equals(oldValidConsent.getConsentConfirmed())) {
+                    log.warn("Consent created at \" + {} + \" must not be confirmed yet (but is OK for HBCI))", oldValidConsent.getCreationTime());
+                } else {
+                    log.debug("delete old valid {} consent from {}", oldValidConsent.getConsentType(), oldValidConsent.getCreationTime());
+//                    consentRepository.delete(oldValidConsent); Garbage-collection  in fintech-server for HBCI
+                }
             }
 
-            log.debug("consent with authId {} is now valid", authId);
+            log.info("consent with authId {} is now valid", authId);
             consentEntity.setConsentConfirmed(true);
             consentRepository.save(consentEntity);
 
         } else {
-            log.info("Consent was denied by user: delete {} consent from {}", consentEntity.getConsentType(), consentEntity.getCreationTime());
-            consentRepository.delete(consentEntity);
+            if (Boolean.TRUE.equals(consentEntity.getConsentConfirmed())) {
+                log.info("Ignore cancel {} {}", consentEntity.getConsentType(), consentEntity.getCreationTime());
+            } else {
+                log.info("Delete consent {} {}", consentEntity.getConsentType(), consentEntity.getCreationTime());
+                consentRepository.delete(consentEntity);
+            }
         }
+
         return sessionLogicService.addSessionMaxAgeToHeader(
-            redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk));
+                redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk));
     }
 
     @Override
@@ -131,7 +138,7 @@ public class FinTechAuthorizationImpl implements FinTechAuthorizationApi {
             paymentRepository.save(payment.get());
         }
         return sessionLogicService.addSessionMaxAgeToHeader(
-            redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk));
+                redirectHandlerService.doRedirect(authId, finTechRedirectCode, okOrNotOk));
     }
 
     @Override
