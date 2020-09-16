@@ -9,7 +9,7 @@ import { StorageService } from '../../services/storage.service';
 @Component({
   selector: 'app-list-accounts',
   templateUrl: './list-accounts.component.html',
-  styleUrls: ['./list-accounts.component.scss']
+  styleUrls: ['./list-accounts.component.scss'],
 })
 export class ListAccountsComponent implements OnInit {
   accounts: AccountDetails[];
@@ -33,7 +33,7 @@ export class ListAccountsComponent implements OnInit {
 
   private loadAccount(): void {
     const settings = this.storageService.getSettings();
-    this.aisService.getAccounts(this.bankId, settings.loa, settings.withBalance).subscribe(response => {
+    this.aisService.getAccounts(this.bankId, settings.loa, settings.withBalance).subscribe((response) => {
       switch (response.status) {
         case 202:
           this.storageService.setRedirect(
@@ -58,7 +58,7 @@ export class ListAccountsComponent implements OnInit {
           this.accounts = response.body.accounts;
           const loa = [];
           for (const accountDetail of this.accounts) {
-            loa.push(new AccountStruct(accountDetail.resourceId, accountDetail.iban, accountDetail.name, accountDetail.currency));
+            loa.push(new AccountStruct(accountDetail.resourceId, accountDetail.iban, accountDetail.name));
           }
           this.storageService.setLoa(this.bankId, loa);
       }

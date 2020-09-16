@@ -9,7 +9,7 @@ describe('AccountCardComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AccountCardComponent]
+      declarations: [AccountCardComponent],
     }).compileComponents();
   }));
 
@@ -19,7 +19,7 @@ describe('AccountCardComponent', () => {
     component.account = {
       iban: 'DE2750010517421134792622',
       bban: 'DE2750010517421134792622',
-      currency: 'EUR'
+      currency: 'EUR',
     };
     fixture.detectChanges();
   });
@@ -32,8 +32,7 @@ describe('AccountCardComponent', () => {
     const iban = 'DE2750010517421134792622';
     const name = 'bob';
     const id = 'dfdfdfd4drrrrr-444rr33-er43';
-    const currency = 'EUR';
-    const accountStruct = new AccountStruct(id, iban, name, currency);
+    const accountStruct = new AccountStruct(id, iban, name);
     spyOn(component, 'getAccountNumber').withArgs();
     expect(accountStruct.iban).toEqual(component.account.iban);
   });

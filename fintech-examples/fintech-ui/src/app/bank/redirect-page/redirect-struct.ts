@@ -14,9 +14,9 @@ export class RedirectTupelForMap {
 
 export enum RedirectType {
   AIS,
-  PIS
+  PIS,
 }
 
 export class AccountStruct {
-  constructor(public resourceId: string, public iban: string, public name: string, public currency: string) {}
+  constructor(public resourceId: string, public iban: string, public name: string) {}
 }
