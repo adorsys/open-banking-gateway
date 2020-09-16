@@ -19,6 +19,8 @@ public interface ConsentRepository extends JpaRepository<Consent, Long> {
     List<Consent> findByServiceSessionIdOrderByModifiedAtDesc(UUID serviceSessionId);
     Collection<Consent> findByPsu(Psu owner);
 
+    void deleteByServiceSessionId(UUID serviceSessionId);
+
     @Modifying
     @Transactional
     @Query("UPDATE Consent c SET c.confirmed = true WHERE c.serviceSession.id = :serviceSessionId")

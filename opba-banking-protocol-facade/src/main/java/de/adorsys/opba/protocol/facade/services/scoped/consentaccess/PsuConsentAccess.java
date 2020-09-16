@@ -70,4 +70,9 @@ public class PsuConsentAccess implements ConsentAccess {
                 .map(it -> new ProtocolFacingConsentImpl(it, encryptionService))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteByCurrentServiceSession() {
+        consentRepository.deleteByServiceSessionId(serviceSession.getId());
+    }
 }

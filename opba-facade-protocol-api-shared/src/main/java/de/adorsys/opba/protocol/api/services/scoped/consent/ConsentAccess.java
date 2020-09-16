@@ -41,6 +41,11 @@ public interface ConsentAccess {
     Optional<ProtocolFacingConsent> findSingleByCurrentServiceSession();
 
     /**
+     * Delete consent for current session execution.
+     */
+    void deleteByCurrentServiceSession();
+
+    /**
      * Lists all consents that are available for current PSU.
      */
     Collection<ProtocolFacingConsent> getAvailableConsentsForCurrentPsu();
