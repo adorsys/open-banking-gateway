@@ -14,6 +14,7 @@ import de.adorsys.opba.protocol.bpmnshared.dto.DtoMapper;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ConsentAcquired;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.Redirect;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalReturnableProcessError;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
 import de.adorsys.opba.protocol.bpmnshared.outcome.OutcomeMapper;
 import lombok.RequiredArgsConstructor;
@@ -76,6 +77,11 @@ public class HbciOutcomeMapper<T> implements OutcomeMapper<T> {
             // Facade knows redirection target
             new ConsentAcquiredResult<>(null, null)
         );
+    }
+
+    @Override
+    public void onReturnableProcessError(InternalReturnableProcessError internalReturnableProcessError) {
+        throw new RuntimeException("NYI");
     }
 
     @Override

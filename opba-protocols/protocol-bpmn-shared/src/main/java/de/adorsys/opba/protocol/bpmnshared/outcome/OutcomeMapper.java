@@ -3,6 +3,7 @@ package de.adorsys.opba.protocol.bpmnshared.outcome;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ConsentAcquired;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ProcessResponse;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.Redirect;
+import de.adorsys.opba.protocol.bpmnshared.dto.messages.InternalReturnableProcessError;
 import de.adorsys.opba.protocol.bpmnshared.dto.messages.ValidationProblem;
 
 /**
@@ -15,5 +16,6 @@ public interface OutcomeMapper<T> {
     void onRedirect(Redirect redirectResult);
     void onValidationProblem(ValidationProblem problem);
     void onConsentAcquired(ConsentAcquired acquired);
+    void onReturnableProcessError(InternalReturnableProcessError internalReturnableProcessError);
     void onError();
 }

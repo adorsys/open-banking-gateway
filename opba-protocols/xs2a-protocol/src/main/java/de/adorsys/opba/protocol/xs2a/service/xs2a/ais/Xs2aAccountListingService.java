@@ -30,6 +30,7 @@ public class Xs2aAccountListingService extends ValidatedExecution<Xs2aAisContext
     private final Extractor extractor;
     private final Xs2aValidator validator;
     private final AccountInformationService ais;
+    private final Xs2aConsentErrorHandler handler;
 
     @Override
     protected void doValidate(DelegateExecution execution, Xs2aAisContext context) {
@@ -39,14 +40,15 @@ public class Xs2aAccountListingService extends ValidatedExecution<Xs2aAisContext
     @Override
     protected void doRealExecution(DelegateExecution execution, Xs2aAisContext context) {
         ValidatedQueryHeaders<Xs2aWithBalanceParameters, Xs2aWithConsentIdHeaders> params = extractor.forExecution(context);
-        Response<AccountListHolder> accounts = ais.getAccountList(
+        handler.tryActionOrHandleConsentErrors(execution, eventPublisher, () -> {
+            Response<AccountListHolder> accounts = ais.getAccountList(
                 params.getHeaders().toHeaders(),
                 params.getQuery().toParameters()
-        );
-
-        eventPublisher.publishEvent(
+            );
+            eventPublisher.publishEvent(
                 new ProcessResponse(execution.getRootProcessInstanceId(), execution.getId(), accounts.getBody())
-        );
+            );
+        });
     }
 
     @Service
