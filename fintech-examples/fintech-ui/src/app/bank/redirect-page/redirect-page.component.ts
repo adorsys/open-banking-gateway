@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { RedirectStruct } from './redirect-struct';
-import { Consent, HeaderConfig } from '../../models/consts';
-import { ConsentAuthorizationService } from '../services/consent-authorization.service';
-import { StorageService } from '../../services/storage.service';
-import { ModalCard } from '../../models/modalCard.model';
-import { Location } from '@angular/common';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {RedirectStruct} from './redirect-struct';
+import {Consent, HeaderConfig} from '../../models/consts';
+import {ConsentAuthorizationService} from '../services/consent-authorization.service';
+import {StorageService} from '../../services/storage.service';
+import {ModalCard} from '../../models/modalCard.model';
 
 @Component({
   selector: 'app-redirect-page',
@@ -21,7 +20,6 @@ export class RedirectPageComponent implements OnInit {
     private storageService: StorageService,
     private router: Router,
     private route: ActivatedRoute,
-    private location: Location
   ) {}
 
   ngOnInit() {
