@@ -32,9 +32,9 @@ describe('InitiateComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(InitiateComponent);
     component = fixture.componentInstance;
-    route = TestBed.get(ActivatedRoute);
+    route = TestBed.inject(ActivatedRoute);
     bankId = route.snapshot.params[Consts.BANK_ID_NAME];
-    const storageService = TestBed.get(StorageService);
+    const storageService = TestBed.inject(StorageService);
     spyOn(storageService, 'getLoa')
       .withArgs(bankId)
       .and.returnValue([{ resourceId: '1234', iban: '2', name: '3' }]);
