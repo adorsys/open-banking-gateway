@@ -32,7 +32,7 @@ class BankSearchServiceTest {
     private RestRequestContext restRequestContext;
 
     @Test
-    void searchBank() {
+    void searchBank_nonExistingBank() {
         // Given
         int start = 1;
         int max = 10;
