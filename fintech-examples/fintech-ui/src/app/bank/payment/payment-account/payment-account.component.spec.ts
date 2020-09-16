@@ -35,8 +35,8 @@ describe('PaymentAccountComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PaymentAccountComponent);
     component = fixture.componentInstance;
-    route = TestBed.get(ActivatedRoute);
-    const storageService = TestBed.get(StorageService);
+    route = TestBed.inject(ActivatedRoute);
+    const storageService = TestBed.inject(StorageService);
     bankId = route.snapshot.params[Consts.BANK_ID_NAME];
     spyOn(storageService, 'getLoa')
       .withArgs(bankId)
