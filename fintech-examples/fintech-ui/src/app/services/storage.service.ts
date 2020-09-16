@@ -157,6 +157,7 @@ export class StorageService {
       return {
         loa: LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
         lot: LoTRetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT,
+        withBalance: true,
         paymentRequiresAuthentication: false
       };
     }

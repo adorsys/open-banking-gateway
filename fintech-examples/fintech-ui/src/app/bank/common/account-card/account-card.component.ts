@@ -9,16 +9,32 @@ import { AccountDetails } from '../../../api';
 export class AccountCardComponent implements OnInit {
   @Input() account: AccountDetails;
   @Output() eventEmitter: EventEmitter<string> = new EventEmitter<string>();
+  internalAccount: InternalAccount = new InternalAccount();
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.internalAccount = { accountNumber: this.getAccountNumber(), name: this.account.name };
+    const accountBalance = this.account.balances;
 
-  getAccountNumber(acc: AccountDetails) {
-    return !acc.iban || acc.iban.length === 0 ? acc.bban : acc.iban;
+    if (accountBalance) {
+      this.internalAccount.amount = accountBalance[0].balanceAmount.amount;
+      this.internalAccount.currency = accountBalance[0].balanceAmount.currency;
+    }
+  }
+
+  public getAccountNumber(): string {
+    return !this.account.iban || this.account.iban.length === 0 ? this.account.bban : this.account.iban;
   }
 
   onSubmit() {
     this.eventEmitter.emit(this.account.resourceId);
   }
+}
+
+export class InternalAccount {
+  name: string;
+  accountNumber: string;
+  amount?: string;
+  currency?: string;
 }

@@ -259,6 +259,8 @@ paths:
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "#/components/parameters/LoARetrievalInformation"
+        #query
+        - $ref: "#/components/parameters/withBalance"
 
       security:
         - sessionCookie: []
@@ -623,6 +625,13 @@ components:
       required: true
       schema:
         type: string
+
+    withBalance:
+      name: withBalance
+      in: query
+      description: Provides balances for the given accounts
+      schema:
+        type: boolean
 
     bookingStatus:
       name: bookingStatus
@@ -1128,6 +1137,10 @@ components:
           maxLength: 70
         ownerAddress:
           $ref: "#/components/schemas/address"
+        balances:
+          type: array
+          items:
+            $ref: "#/components/schemas/AccountBalance"
 
     accountList:
       description: |
@@ -1829,3 +1842,22 @@ components:
       type: string
       maxLength: 70
       example: "Ultimate Debtor"
+
+    AccountBalance:
+      title: AccountBalance
+      type: object
+      properties:
+        balanceAmount:
+          $ref: "#/components/schemas/Amount"
+        balanceType:
+          type: string
+        iban:
+          type: string
+        lastChangeDateTime:
+          type: string
+          format: date-time
+        lastCommittedTransaction:
+          type: string
+        referenceDate:
+          type: string
+          format: date

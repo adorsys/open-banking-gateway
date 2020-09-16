@@ -30,7 +30,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
     @Override
     public ResponseEntity<AccountList> aisAccountsGET(String bankId, UUID xRequestID, String xsrfToken,
                                                       String fintechRedirectURLOK, String fintechRedirectURLNOK,
-                                                      String loARetrievalInformation) {
+                                                      String loARetrievalInformation, Boolean withBalance) {
         if (!sessionLogicService.isSessionAuthorized()) {
             log.warn("aisAccountsGET failed: user is not authorized!");
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -38,7 +38,7 @@ public class FinTechAccountInformationImpl implements FinTechAccountInformationA
 
         SessionEntity sessionEntity = sessionLogicService.getSession();
         return sessionLogicService.addSessionMaxAgeToHeader(accountService.listAccounts(sessionEntity,
-                fintechRedirectURLOK, fintechRedirectURLNOK, bankId, LoARetrievalInformation.valueOf(loARetrievalInformation)));
+                fintechRedirectURLOK, fintechRedirectURLNOK, bankId, LoARetrievalInformation.valueOf(loARetrievalInformation), withBalance));
     }
 
     @Override
