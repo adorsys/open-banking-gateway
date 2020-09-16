@@ -21,6 +21,8 @@ describe('ConsentAccountAccessSelectionComponent', () => {
   let fixture: ComponentFixture<ConsentAccountAccessSelectionComponent>;
   let updateConsentAuthorizationService: UpdateConsentAuthorizationService;
 
+  beforeAll(()=> window.onbeforeunload = jasmine.createSpy());
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ConsentAccountAccessSelectionComponent],
