@@ -44,11 +44,11 @@ class BankSearchServiceTest {
                 any(),
                 any(),
                 any(),
-                eq(1),
-                eq(10))).thenReturn(ResponseEntity.ok().body(bankSearchResponse));
+                eq(start),
+                eq(max))).thenReturn(ResponseEntity.ok().body(bankSearchResponse));
 
         // When
-        InlineResponse2001 actual = bankSearchService.searchBank(INVALID_KEYWORD, 1, 10);
+        InlineResponse2001 actual = bankSearchService.searchBank(INVALID_KEYWORD, start, max);
 
         // Then
         assertThat(actual).isNotNull();
