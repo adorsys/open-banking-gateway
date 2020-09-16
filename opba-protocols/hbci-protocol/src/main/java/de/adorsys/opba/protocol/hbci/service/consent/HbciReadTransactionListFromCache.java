@@ -25,7 +25,7 @@ public class HbciReadTransactionListFromCache extends ValidatedExecution<Transac
     @SneakyThrows
     private void convertConsentToResponseIfPresent(DelegateExecution execution) {
         ContextUtil.getAndUpdateContext(execution, (TransactionListHbciContext ctx) -> {
-            if (null != ctx.getCachedResult() && null != ctx.getCachedResult().getTransactionsByIban()) {
+            if (ctx.getUseCache() != Boolean.FALSE && null != ctx.getCachedResult() && null != ctx.getCachedResult().getTransactionsByIban()) {
                 ctx.setResponse(ctx.getCachedResult().getTransactionsByIban().get(ctx.getAccountIban()));
             }
         });

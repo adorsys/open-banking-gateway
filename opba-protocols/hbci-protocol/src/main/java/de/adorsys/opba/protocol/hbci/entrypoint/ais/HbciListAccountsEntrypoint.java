@@ -85,6 +85,7 @@ public class HbciListAccountsEntrypoint implements ListAccounts {
         @Mapping(source = "facadeServiceable.requestId", target = "requestId")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlOk", target = "fintechRedirectUriOk")
         @Mapping(source = "facadeServiceable.fintechRedirectUrlNok", target = "fintechRedirectUriNok")
+        @Mapping(source = "facadeServiceable.useCache", target = "useCache")
         AccountListHbciContext map(ListAccountsRequest ctx);
     }
 }
