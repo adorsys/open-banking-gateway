@@ -259,6 +259,7 @@ paths:
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "#/components/parameters/LoARetrievalInformation"
+        - $ref: "#/components/parameters/Use-OPB-Cache"
         #query
         - $ref: "#/components/parameters/withBalance"
 
@@ -298,6 +299,7 @@ paths:
         - $ref: "#/components/parameters/Fintech-Redirect-URL-OK"
         - $ref: "#/components/parameters/Fintech-Redirect-URL-NOK"
         - $ref: "#/components/parameters/LoTRetrievalInformation"
+        - $ref: "#/components/parameters/Use-OPB-Cache"
 
       security:
         - sessionCookie: []
@@ -609,6 +611,16 @@ components:
       example: faadsf93nlas32wx
       schema:
         type: string
+
+    Use-OPB-Cache:
+      name: Use-OPB-Cache
+      in: header
+      description: |
+        If false, new data will be requested and cache will be updated
+      example: "true"
+      schema:
+        type: boolean
+        default: "true"
 
     auth-id:
       name: auth-id

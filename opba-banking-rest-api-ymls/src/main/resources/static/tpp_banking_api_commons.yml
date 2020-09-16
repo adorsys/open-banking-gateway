@@ -196,6 +196,17 @@ components:
         type: string
       example: "https://example.com/myservice/sf3-3r33-3535/failure"
 
+    Use-Cache:
+      name: Use-Cache
+      in: header
+      required: false
+      description: |
+        Makes possible to request actual data and update cache if cache is used by protocol implementation.
+      example: "false"
+      schema:
+        type: boolean
+        default: "true"
+
   responses:
     401_UNAUTHORIZED:
       description: |

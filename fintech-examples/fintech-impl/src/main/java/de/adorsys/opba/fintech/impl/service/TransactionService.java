@@ -38,11 +38,11 @@ public class TransactionService {
     private final RedirectHandlerService redirectHandlerService;
     private final ConsentRepository consentRepository;
     private final HandleAcceptedService handleAcceptedService;
-    private final ConsentService consentService;
 
     public ResponseEntity listTransactions(SessionEntity sessionEntity, String fintechOkUrl, String fintechNOkUrl, String bankId,
                                            String accountId, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom,
-                                           String bookingStatus, Boolean deltaList, LoTRetrievalInformation loTRetrievalInformation) {
+                                           String bookingStatus, Boolean deltaList, LoTRetrievalInformation loTRetrievalInformation,
+                                           Boolean useOpbCache) {
         log.info("LoT {}", loTRetrievalInformation);
         String fintechRedirectCode = UUID.randomUUID().toString();
         Optional<ConsentEntity> optionalConsent = Optional.empty();
@@ -67,6 +67,7 @@ public class TransactionService {
             COMPUTE_X_REQUEST_SIGNATURE,
             COMPUTE_FINTECH_ID, bankId, null,
             optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null),
+            useOpbCache,
             dateFrom, dateTo, entryReferenceFrom, bookingStatus, deltaList);
         switch (transactions.getStatusCode()) {
             case OK:

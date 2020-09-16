@@ -39,6 +39,7 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-Consent-Session"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Use-Cache"
           # query
         - $ref: "#/components/parameters/withBalance"
 
@@ -81,6 +82,7 @@ paths:
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/PSU-Consent-Session"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Service-Session-ID"
         - $ref: "./tpp_banking_api_commons.yml#/components/parameters/X-Request-ID"
+        - $ref: "./tpp_banking_api_commons.yml#/components/parameters/Use-Cache"
         #query
         - $ref: "#/components/parameters/dateFrom"
         - $ref: "#/components/parameters/dateTo"

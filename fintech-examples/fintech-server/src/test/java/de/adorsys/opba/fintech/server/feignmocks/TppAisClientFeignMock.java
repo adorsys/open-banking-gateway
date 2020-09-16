@@ -27,6 +27,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             String bankID,
             String psUConsentSession,
             UUID serviceSessionID,
+            Boolean useObgCache,
             Boolean withBalance
     ) {
         return null;
@@ -46,6 +47,7 @@ public class TppAisClientFeignMock implements TppAisClient {
             String bankID,
             String psUConsentSession,
             UUID serviceSessionID,
+            Boolean useObgCache,
             LocalDate dateFrom, @Valid LocalDate dateTo,
             String entryReferenceFrom, @Valid String bookingStatus, @Valid Boolean deltaList
     ) {
