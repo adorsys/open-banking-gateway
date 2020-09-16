@@ -34,7 +34,7 @@ describe('AccountCardComponent', () => {
     const id = 'dfdfdfd4drrrrr-444rr33-er43';
     const currency = 'EUR';
     const accountStruct = new AccountStruct(id, iban, name, currency);
-    spyOn(component, 'getAccountNumber').withArgs(accountStruct);
+    spyOn(component, 'getAccountNumber').withArgs();
     expect(accountStruct.iban).toEqual(component.account.iban);
   });
 });
