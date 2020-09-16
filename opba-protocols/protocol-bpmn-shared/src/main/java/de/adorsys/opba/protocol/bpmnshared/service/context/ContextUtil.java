@@ -1,6 +1,5 @@
 package de.adorsys.opba.protocol.bpmnshared.service.context;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.net.UrlEscapers;
 import de.adorsys.opba.protocol.bpmnshared.GlobalConst;
 import de.adorsys.opba.protocol.bpmnshared.dto.context.BaseContext;
@@ -15,6 +14,8 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -58,30 +59,24 @@ public class ContextUtil {
         StandardEvaluationContext parseContext = new StandardEvaluationContext(new SpelCtx<>(execution, context));
         return parser.parseExpression(expression, new TemplateParserContext()).getValue(parseContext, resultClass);
     }
+    public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context,
+                                             String redirectCode, String scaType) {
+        Map<String, String> expansionContext = new HashMap<>();
 
-    public URI buildAndExpandQueryParameters(String urlTemplate, BaseContext context, String redirectCode, String scaType) {
-        URI uri;
-        if (urlTemplate.contains("{wrong}")) {
-            urlTemplate = urlTemplate.replace("{wrong}", context.getWrongAuthCredentials().toString());
-        }
-        if (urlTemplate.contains("{userSelectScaType}") && scaType != null) {
-            urlTemplate = urlTemplate.replace("{userSelectScaType}", scaType);
-        }
+        expansionContext.put("sessionId", context.getAuthorizationSessionIdIfOpened());
+        expansionContext.put("wrong", null == context.getWrongAuthCredentials() ? null : context.getWrongAuthCredentials().toString());
+        expansionContext.put("userSelectScaType", null == scaType ? null : scaType);
+
+        URI uri = UriComponentsBuilder.fromHttpUrl(urlTemplate)
+                .buildAndExpand(expansionContext)
+                .toUri();
+
         if (redirectCode != null) {
-            uri = UriComponentsBuilder.fromHttpUrl(urlTemplate)
+            uri = UriComponentsBuilder
+                    .fromUri(uri)
                     .queryParam("redirectCode", redirectCode)
-                    .buildAndExpand(
-                            ImmutableMap.of(
-                                    "sessionId", context.getAuthorizationSessionIdIfOpened()
-                            )
-                    ).toUri();
-        } else {
-            uri = UriComponentsBuilder.fromHttpUrl(urlTemplate)
-                    .buildAndExpand(
-                            ImmutableMap.of(
-                                    "sessionId", context.getAuthorizationSessionIdIfOpened()
-                            )
-                    ).toUri();
+                    .build()
+                    .toUri();
         }
         return uri;
     }

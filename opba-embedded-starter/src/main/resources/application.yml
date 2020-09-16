@@ -161,7 +161,7 @@ protocol:
           report-sca-result: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.report-sca-result}
           provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais${protocol.xs2a.urls.common.parameters.provide-psu-iban}
       pis:
-        to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
+        to-aspsp: ${facade.urls.embedded-ui-base-url}/pis${protocol.xs2a.urls.common.to-aspsp}
         web-hooks:
           ok: ${protocol.xs2a.urls.common.web-hooks.ok}
           nok: ${protocol.xs2a.urls.common.web-hooks.nok}
@@ -193,8 +193,8 @@ protocol:
       password: password
   hbci:
     adapter:
-    # hbci-product: product - Your product ID here
-    # hbci-version: 300 - Your HBCI ID here
+      # hbci-product: product - Your product ID here
+      # hbci-version: 300 - Your HBCI ID here
       adorsys-mock-banks-blz:
         - 10000001
         - 20000002
@@ -202,13 +202,8 @@ protocol:
     urls:
       ais:
         redirect:
-          to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
-          web-hooks:
-            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
-            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
-            result: ${facade.urls.embedded-ui-base-url}/ais/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
           to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/to-aspsp-redirection
-          consent-accounts:
+          web-hooks:
             ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok
             nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok
             result: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/consent-result
@@ -221,13 +216,8 @@ protocol:
             provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/entry-consent-transactions/dedicated-account-access?wrong={wrong}
       pis:
         redirect:
-          to-aspsp: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/to-aspsp-redirection
-          web-hooks:
-            ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/ok?redirectCode=#{context.getAspspRedirectCode()}
-            nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/#{context.getAuthorizationSessionIdIfOpened()}/fromAspsp/STUB_STATE/nok?redirectCode=#{context.getAspspRedirectCode()}
-            result: ${facade.urls.embedded-ui-base-url}/pis/#{context.getAuthorizationSessionIdIfOpened()}/consent-result?redirectCode=#{context.getRedirectCodeIfAuthContinued()}
           to-aspsp: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/to-aspsp-redirection
-          consent-accounts:
+          web-hooks:
             ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok
             nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok
             result: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/consent-result
@@ -238,20 +228,6 @@ protocol:
             select-sca-method: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/select-sca-method
             report-sca-result: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/sca-result/#{context.getUserSelectScaType()}?wrong={wrong}
             provide-psu-iban: ${facade.urls.embedded-ui-base-url}/pis/{sessionId}/entry-consent-transactions/dedicated-account-access?wrong={wrong}
-
-      redirect:
-        to-aspsp: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/to-aspsp-redirection
-        consent-accounts:
-          ok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/ok
-          nok: ${facade.urls.embedded-ui-base-url}/embedded-server/v1/consent/{sessionId}/fromAspsp/STUB_STATE/nok
-          result: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/consent-result
-        parameters:
-          max-array-size: 32
-          provide-more: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}
-          provide-psu-password: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/authenticate?wrong={wrong}
-          select-sca-method: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/select-sca-method
-          report-sca-result: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/sca-result?wrong={wrong}
-          provide-psu-iban: ${facade.urls.embedded-ui-base-url}/ais/{sessionId}/entry-consent-transactions/dedicated-account-access?wrong={wrong}
 
 # Flowable comes for all protocols shared
 bpmnshared:
