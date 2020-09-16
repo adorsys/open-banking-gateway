@@ -11,6 +11,8 @@ describe('ResultPageComponent', () => {
   let component: ResultPageComponent;
   let fixture: ComponentFixture<ResultPageComponent>;
 
+  beforeAll(()=> window.onbeforeunload = jasmine.createSpy());
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ResultPageComponent],

@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+
 import { StubUtil } from '../../common/utils/stub-util';
 import { AisConsentToGrant } from '../common/dto/ais-consent';
-import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { SessionService } from '../../common/session.service';
 import { ConsentUtil } from '../common/consent-util';
 import { ApiHeaders } from '../../api/api.headers';
 import { UpdateConsentAuthorizationService } from '../../api';
 import { AuthStateConsentAuthorizationService, DenyRequest } from '../../api';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'consent-app-result-page',
