@@ -72,7 +72,8 @@ public class AccountService {
     }
 
 
-    private ResponseEntity readOpbaResponse(String bankID, SessionEntity sessionEntity, String redirectCode, LoARetrievalInformation loARetrievalInformation, boolean withBalance, Boolean useOpbCache) {
+    private ResponseEntity readOpbaResponse(String bankID, SessionEntity sessionEntity, String redirectCode,
+                                            LoARetrievalInformation loARetrievalInformation, boolean withBalance, Boolean useOpbCache) {
         UUID xRequestId = UUID.fromString(restRequestContext.getRequestId());
         Optional<ConsentEntity> optionalConsent = Optional.empty();
         if (loARetrievalInformation.equals(LoARetrievalInformation.FROM_TPP_WITH_AVAILABLE_CONSENT)) {
@@ -98,7 +99,8 @@ public class AccountService {
         return consentAvailable(bankID, sessionEntity, redirectCode, xRequestId, optionalConsent, withBalance, useOpbCache);
     }
 
-    private ResponseEntity consentAvailable(String bankID, SessionEntity sessionEntity, String redirectCode, UUID xRequestId, Optional<ConsentEntity> optionalConsent, boolean withBalance, Boolean useOpbCache) {
+    private ResponseEntity consentAvailable(String bankID, SessionEntity sessionEntity, String redirectCode,
+                                            UUID xRequestId, Optional<ConsentEntity> optionalConsent, boolean withBalance, Boolean useOpbCache) {
         log.info("do LOA for bank {} {} consent", bankID, optionalConsent.isPresent() ? "with" : "without");
         UUID serviceSessionID = optionalConsent.map(ConsentEntity::getTppServiceSessionId).orElse(null);
         return tppAisClient.getAccounts(
