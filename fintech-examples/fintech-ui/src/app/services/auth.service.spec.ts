@@ -1,14 +1,17 @@
 import { TestBed } from '@angular/core/testing';
-import { AuthService } from './auth.service';
 import { RouterTestingModule } from '@angular/router/testing';
+import { HttpResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
+
 import { DocumentCookieService } from './document-cookie.service';
 import { Consts } from '../models/consts';
 import { StorageService } from './storage.service';
+import { AuthService } from './auth.service';
 import { FinTechAuthorizationService } from '../api';
-import { of } from 'rxjs';
-import { HttpResponse } from '@angular/common/http';
+import { RoutingPath } from '../models/routing-path.model';
+import { LoginComponent } from '../login/login.component';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -17,17 +20,22 @@ describe('AuthService', () => {
   let storageService: StorageService;
   let router: Router;
 
+  beforeAll(() => (window.onbeforeunload = jasmine.createSpy()));
+
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
-      providers: [AuthService, DocumentCookieService]
+      imports: [
+        HttpClientTestingModule,
+        RouterTestingModule.withRoutes([{ path: RoutingPath.LOGIN, component: LoginComponent }]),
+      ],
+      providers: [AuthService, DocumentCookieService],
     });
 
-    cookieService = TestBed.get(DocumentCookieService);
-    storageService = TestBed.get(StorageService);
-    finTechAuthorizationService = TestBed.get(FinTechAuthorizationService);
-    authService = TestBed.get(AuthService);
-    router = TestBed.get(Router);
+    cookieService = TestBed.inject(DocumentCookieService);
+    storageService = TestBed.inject(StorageService);
+    finTechAuthorizationService = TestBed.inject(FinTechAuthorizationService);
+    authService = TestBed.inject(AuthService);
+    router = TestBed.inject(Router);
   });
 
   it('should be created', () => {
@@ -40,7 +48,7 @@ describe('AuthService', () => {
 
     // login credential is not correct
     const credentialsMock = { username: 'test', password: '12345' };
-    authService.login(credentialsMock).subscribe(response => {
+    authService.login(credentialsMock).subscribe((response) => {
       expect(response).toBeTruthy();
     });
   });
@@ -66,6 +74,6 @@ describe('AuthService', () => {
     authService.logout();
 
     // user must be navigated to login page
-    expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+    expect(navigateSpy).toHaveBeenCalledWith(['/'.concat(RoutingPath.LOGIN)]);
   });
 });

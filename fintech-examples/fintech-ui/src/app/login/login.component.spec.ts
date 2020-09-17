@@ -27,18 +27,18 @@ describe('LoginComponent', () => {
         BankSearchModule,
         ReactiveFormsModule,
         HttpClientModule,
-        RouterTestingModule.withRoutes([{ path: RoutingPath.BANK_SEARCH, component: BankSearchComponent }])
+        RouterTestingModule.withRoutes([{ path: RoutingPath.BANK_SEARCH, component: BankSearchComponent }]),
       ],
       providers: [AuthService, DocumentCookieService],
-      declarations: [LoginComponent]
+      declarations: [LoginComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
-    authService = TestBed.get(AuthService);
-    router = TestBed.get(Router);
+    authService = TestBed.inject(AuthService);
+    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
