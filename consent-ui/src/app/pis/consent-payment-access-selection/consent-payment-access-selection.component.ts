@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import { AfterContentChecked, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -13,9 +13,9 @@ import { PisPayment } from '../common/models/pis-payment.model';
 @Component({
   selector: 'consent-app-payment-access-selection',
   templateUrl: './consent-payment-access-selection.component.html',
-  styleUrls: ['./consent-payment-access-selection.component.scss']
+  styleUrls: ['./consent-payment-access-selection.component.scss'],
 })
-export class ConsentPaymentAccessSelectionComponent implements OnInit {
+export class ConsentPaymentAccessSelectionComponent implements OnInit, AfterContentChecked {
   public finTechName: string;
   public aspspName: string;
 
@@ -39,11 +39,11 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
   }
 
   ngAfterContentChecked(): void {
-    this.cdRef.detectChanges()
+    this.cdRef.detectChanges();
   }
 
   ngOnInit() {
-    this.activatedRoute.parent.parent.params.subscribe(res => {
+    this.activatedRoute.parent.parent.params.subscribe((res) => {
       this.authorizationId = res.authId;
       this.aspspName = this.sessionService.getBankName(res.authId);
       this.finTechName = this.sessionService.getFintechName(res.authId);
@@ -74,7 +74,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
         {} as DenyRequest,
         'response'
       )
-      .subscribe(res => {
+      .subscribe((res) => {
         window.location.href = res.headers.get(ApiHeaders.LOCATION);
       });
   }
@@ -86,7 +86,7 @@ export class ConsentPaymentAccessSelectionComponent implements OnInit {
       paymentObj.extras = paymentObj.extras ? paymentObj.extras : {};
       this.state
         .getGeneralViolations()
-        .forEach(it => (paymentObj.extras[it.code] = this.paymentAccessForm.get(it.code).value));
+        .forEach((it) => (paymentObj.extras[it.code] = this.paymentAccessForm.get(it.code).value));
     }
 
     this.sessionService.setPaymentObject(this.authorizationId, paymentObj);
